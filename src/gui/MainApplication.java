@@ -36,64 +36,19 @@ public class MainApplication extends javax.swing.JFrame
      */
     public static void main(String p_args[])
     {
-        boolean single_design_option = false;
-        boolean test_version_option = false;
-        boolean session_file_option = false;
-        boolean webstart_option = false;
-        String design_file_name = null;
-        String design_dir_name = null;
-        java.util.Locale current_locale = java.util.Locale.ENGLISH;
-        for (int i = 0; i < p_args.length; ++i)
-        {
-            if (p_args[i].startsWith("-de"))
-            // the design file is provided
-            {
-                if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
-                {
-                    single_design_option = true;
-                    design_file_name = p_args[i + 1];
-                }
-            }
-            else if (p_args[i].startsWith("-di"))
-            // the design directory is provided
-            {
-                if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
-                {
-                    design_dir_name = p_args[i + 1];
-                }
-            }
-            else if (p_args[i].startsWith("-l"))
-            // the locale is provided
-            {
-                if (p_args.length > i + 1 && p_args[i + 1].startsWith("d"))
-                {
-                    current_locale = java.util.Locale.GERMAN;
-                }
-            }
-            else if (p_args[i].startsWith("-s"))
-            {
-                session_file_option = true;
-            }
-            else if (p_args[i].startsWith("-w"))
-            {
-                webstart_option = true;
-            }
-            else if (p_args[i].startsWith("-test"))
-            {
-                test_version_option = true;
-            }
-        }
-        if (!(OFFLINE_ALLOWED || webstart_option))
+        StartupOptions startupOptions = StartupOptions.parse(p_args);
+
+        if (!(OFFLINE_ALLOWED || startupOptions.webstart_option))
         {
             Runtime.getRuntime().exit(1);
         }
 
-        if (single_design_option)
+        if (startupOptions.single_design_option)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("gui.resources.MainApplication", current_locale);
+                    java.util.ResourceBundle.getBundle("gui.resources.MainApplication", startupOptions.current_locale);
             BoardFrame.Option board_option;
-            if (session_file_option)
+            if (startupOptions.session_file_option)
             {
                 board_option = BoardFrame.Option.SESSION_FILE;
             }
@@ -101,18 +56,18 @@ public class MainApplication extends javax.swing.JFrame
             {
                 board_option = BoardFrame.Option.SINGLE_FRAME;
             }
-            DesignFile design_file = DesignFile.get_instance(design_file_name, false);
+            DesignFile design_file = DesignFile.get_instance(startupOptions.design_file_name, false);
             if (design_file == null)
             {
                 System.out.print(resources.getString("message_6") + " ");
-                System.out.print(design_file_name);
+                System.out.print(startupOptions.design_file_name);
                 System.out.println(" " + resources.getString("message_7"));
                 return;
             }
-            String message = resources.getString("loading_design") + " " + design_file_name;
+            String message = resources.getString("loading_design") + " " + startupOptions.design_file_name;
             WindowMessage welcome_window = WindowMessage.show(message);
             final BoardFrame new_frame =
-                    create_board_frame(design_file, null, board_option, test_version_option, current_locale);
+                    create_board_frame(design_file, null, board_option, startupOptions.test_version_option, startupOptions.current_locale);
             welcome_window.dispose();
             if (new_frame == null)
             {
@@ -129,7 +84,7 @@ public class MainApplication extends javax.swing.JFrame
         }
         else
         {
-            new MainApplication(design_dir_name, test_version_option, webstart_option, current_locale).setVisible(true);
+            new MainApplication(startupOptions).setVisible(true);
         }
     }
 
@@ -137,15 +92,14 @@ public class MainApplication extends javax.swing.JFrame
      * Creates new form MainApplication
      * It takes the directory of the board designs as optional argument.
      */
-    public MainApplication(String p_design_dir, boolean p_is_test_version,
-            boolean p_webstart_option, java.util.Locale p_current_locale)
+    public MainApplication(StartupOptions startupOptions)
     {
-        this.design_dir_name = p_design_dir;
-        this.is_test_version = p_is_test_version;
-        this.is_webstart = p_webstart_option;
-        this.locale = p_current_locale;
+        this.design_dir_name = startupOptions.getDesignDir();
+        this.is_test_version = startupOptions.isTestVersion();
+        this.is_webstart = startupOptions.getWebstartOption();
+        this.locale = startupOptions.getCurrentLocale();
         this.resources =
-                java.util.ResourceBundle.getBundle("gui.resources.MainApplication", p_current_locale);
+                java.util.ResourceBundle.getBundle("gui.resources.MainApplication", locale);
         main_panel = new javax.swing.JPanel();
         getContentPane().add(main_panel);
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
@@ -161,16 +115,16 @@ public class MainApplication extends javax.swing.JFrame
         restore_defaults_button = new javax.swing.JButton();
         message_field = new javax.swing.JTextField();
         message_field.setText("");
-        this.window_net_demonstrations = new WindowNetDemonstrations(p_current_locale);
+        this.window_net_demonstrations = new WindowNetDemonstrations(locale);
         java.awt.Point location = getLocation();
         this.window_net_demonstrations.setLocation((int) location.getX() + 50, (int) location.getY() + 50);
-        this.window_net_sample_designs = new WindowNetSampleDesigns(p_current_locale);
+        this.window_net_sample_designs = new WindowNetSampleDesigns(locale);
         this.window_net_sample_designs.setLocation((int) location.getX() + 90, (int) location.getY() + 90);
 
-        setTitle(resources.getString("title"));
+        setTitle(resources.getString("title") + " " + VERSION_NUMBER_STRING);
         boolean add_buttons = true;
 
-        if (p_webstart_option)
+        if (startupOptions.getWebstartOption())
         {
 
             if (add_buttons)
@@ -222,7 +176,7 @@ public class MainApplication extends javax.swing.JFrame
             main_panel.add(open_board_button, gridbag_constraints);
         }
 
-        if (p_webstart_option && add_buttons)
+        if (startupOptions.getWebstartOption() && add_buttons)
         {
             restore_defaults_button.setText(resources.getString("restore_defaults"));
             restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
@@ -444,5 +398,5 @@ public class MainApplication extends javax.swing.JFrame
     /**
      * Change this string when creating a new version
      */
-    static final String VERSION_NUMBER_STRING = "1.2.43";
+    static final String VERSION_NUMBER_STRING = "1.2.43 Extra";
 }
