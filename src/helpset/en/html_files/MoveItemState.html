@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Move-Zustand</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>The Move State</h3>You will get into this state after selecting in the popup menu of  the <a href="SelectedItemState.html">Selected Item State</a> the menu entry <i>move</i>.  The selected items are now following the cursor.		<p>If parts of the moving items are marked red, inserting at the current location would cause a clearance violation.</p>
+		<p>Several components can be moved at once. The internal route will also change location, if he is completely marked for moving. Components connected to items, which are not marked for moving, will not change location. Such components can eventually be moved in the  <a href="MenuState.html#DragMenuState">Drag Menu State </a>by dragging  them with the left mouse button. If that does not work, you have to remove the route first.</p>
+		<p>The settings in the <a href="WindowMoveParameter.html">Move Parameter</a> window are evaluated while moving components.</p>
+		<h4>The entries in the popup menu under the left mouse button:</h4>
+		<blockquote>
+			<a name="Rotate"></a><i>turn</i>
+			<blockquote>
+				<p>Here you can rotate the selected components by multiples of 45 degree around the cursor location. For turning by 90, 180, and -90 degree there are the shortcuts +, * and - on the right of the number key block. If you want to rotate by an angle, which is not a multiple of 45 degree, you can do that with the mouse wheel after first changing in the <a href="WindowMoveParameter.html">Move Parameter </a>window the wheel function from <i>zoom</i> to <i>rotate</i>.</p>
+			</blockquote>
+			<p><a name="ChangeSide"></a><i>change side</i></p>
+			<blockquote>
+				<p>Here you can change the placement side of the selected components. Shortcut is /.</p>
+			</blockquote>
+			<p><i>reset rotation</i></p>
+			<blockquote>
+				<p>Here you can reset the rotation of the selected components, which you have changed with the mouse wheel, to 0 degree.</p>
+			</blockquote>
+			<p><a name="Insert"></a><i>insert</i></p>
+			<blockquote>
+				<p>To insert the moving components. If there would occur clearance violations, he insertion will be rejected. Shortcut is the left mouse button.</p>
+			</blockquote>
+			<p><i>cancel</i></p>
+			<blockquote>
+				<p>To cancel the move action. The selected components will spring back to their location before the moving. Shortcut is the Esc-key.</p>
+			</blockquote>
+		</blockquote>
+		<div align="left">
+			<a href="SelectedItemState.html#Move">back </a></div>
+	</body>
+
+</html>

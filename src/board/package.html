@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html><head><title>java.text package</title><!--
+
+  @(#)package.html	1.60 98/01/27
+
+  Copyright 1993-1997 Sun Microsystems, Inc. 901 San Antonio Road, 
+  Palo Alto, California, 94303, U.S.A.  All Rights Reserved.
+
+  This software is the confidential and proprietary information of Sun
+  Microsystems, Inc. ("Confidential Information").  You shall not
+  disclose such Confidential Information and shall use it only in
+  accordance with the terms of the license agreement you entered into
+  with Sun.
+
+  CopyrightVersion 1.2
+
+--></head>
+
+<body bgcolor="white">
+		Contains classes describing items on a printed circuit board and the board itself.
+		<div class=Section1>
+			<div class=Section1>
+				<p class=MsoNormal><span lang=EN-US style="mso-ansi-language:EN-US">The class <span class=SpellE>LayeredBoard</span> implements elementary functionality for the layout of 2-dimensional items on a board. The board may have several layers.<span style="mso-spacerun:yes">&nbsp; </span>It allows to insert, change, or delete items, or to check, if inserting would result in violations (overlaps) with other items. For fast checking, <span class=GramE>picking<span style="mso-spacerun:yes">&nbsp; </span>and</span> changing <span class=SpellE>items</span><span style="mso-spacerun:yes">&nbsp; </span>the class contains a  2-dimensional search tree, whose entries point into the list of items on the board.<span style="mso-spacerun:yes">&nbsp; </span>The search <span class=GramE>tree<span style="mso-spacerun:yes">&nbsp; </span>is</span> decoupled from the items it is pointing to and may even point into several different databases at the same time.</span></p>
+				<p class=MsoNormal><span class=SpellE><span lang=EN-US style="mso-ansi-language:
+EN-US">LayeredBoard</span></span><span lang=EN-US style="mso-ansi-language:
+EN-US"> contains also a list of components, a library of packages and padstacks, and a collection of rules and restrictions, which must be respected by the items on the board.</span><span lang=EN-US style="font-size:10.0pt;mso-ansi-language:EN-US"> </span></p>
+				<p class=MsoNormal><span lang=EN-US style="mso-ansi-language:EN-US">The class <span class=SpellE>RoutingBoard</span> derived from <span class=SpellE>BasicBoard</span> contains higher level functionality, such as shoving items and pulling tight <span class=SpellE>traces, and autorouting incomplete connections</span>.</span><span lang=EN-US style="font-size:10.0pt;
+mso-ansi-language:EN-US"> </span></p>
+				<p class=MsoNormal><span lang=EN-US style="mso-ansi-language:EN-US">The base classes of all physical items on the board is the abstract <span class=GramE>class<span style="mso-spacerun:yes">&nbsp; </span>Item</span>. Items must implement the interfaces <span class=SpellE>ShapeTree.Storable</span> and <span class=SpellE>Drawable</span>, so that they can be stored in a search <span class=SpellE>ree</span> and painted onto a graphics screen. Additionally an item contains a pointer to the physical board the item is on, an id number and a list of numbers of nets it belongs to, which may be empty. </span></p>
+				<p class=MsoNormal><span lang=EN-US style="mso-ansi-language:EN-US">Classes derived from Item are currently Trace, <span class=SpellE><span class=GramE>DrillItem</span></span><span class=GramE> ,</span> <span class=SpellE>ObstacleArea</span> and <span class=SpellE>BoardOutline</span>. The <span class=GramE>class <span class=SpellE>ObstacleArea</span> describe</span> areas on the board, which may be conduction areas or obstacle areas for traces or <span class=SpellE>vias</span>. The <span class=SpellE>abstact</span> class <span class=SpellE>DrillItem</span> describes items with a layer range, a centre point and a (convex) shape on <span class=GramE>each<span style="mso-spacerun:yes">&nbsp; </span>layer</span>. It has the two implementations Pin and <span class=GramE>Via</span>. Pins belong to a component, and its shapes are defined by the <span class=SpellE>padstack</span> of the corresponding pin of the components library package. The shapes of a <span class=GramE>Via</span> are defined directly by a library <span class=SpellE>padstack</span>. The class abstract Trace is used for paths <span class=GramE>connecting<span style="mso-spacerun:yes">&nbsp; </span>drill</span> items and eventual conduction areas. The only implementation of the class Trace is currently the class <span class=SpellE>PolylineTrace</span>.<span style="mso-spacerun:yes">&nbsp; </span>It adds the concrete description of the geometric path as a <span class=SpellE>Polyline</span> to the class Trace. The reason, why <span class=SpellE>Polylines</span> and not Polygons are used to implement the paths of non-curved tracess, has to do with numerical exactness and performance, as described in the package <span class=SpellE>geometry.planar</span>. </span></p>
+				<p class=MsoNormal><span lang=EN-US style="mso-ansi-language:EN-US">Items, which may be electrically <span class=GramE>connected</span> must implement the interface Connectable. Connectable Items are currently Pins, <span class=SpellE>Vias</span>, Traces and <span class=SpellE>ConductionAreas</span>. </span></p>
+			</div>
+		</div>
+	</body></html>

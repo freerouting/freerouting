@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Via-Regeln</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>The Via Rules</h3>
+		<p>A via rule consists of a ordered set of  <a href="#Via">vias</a>,  which is used in the routing .  If  a layer is changed while routing and several vias would contain the previous and the next layer and would cause no clearance violations, vias earlier in the rule will be preferred to vias later on in the rule.</p>
+		<h4><a name="Via"></a>Vias</h4>
+		<p>A via consists of a name, a via padstack, a clearance class and a switch, if attaching smd-pins of the same net is allowed  or not.</p>
+		<h4>Via Padstacks</h4>
+		<p>A via padstack consists of a begin layer and an end layer and of a circle shape on each layer between the begin and the end layer.</p>
+		<p>The following  is a description of the window with the via rules.</p>
+		<h4>Available Via Padstacks</h4>Here you see the three buttons <i>Info, Create</i> and <i>Remove</i>.
+		<p>After pushing the <i>Info</i> button a list with all available via padstacks will be displayed.</p>
+		<p>With  the<i> Create</i> Button you can create a new via padstack. You you will be asked to provide the name of the new via padstack, the start and the end layer, and the default radius of the circle shape. In the following input window you can adjust this radius on each single layer, if you want  the shapes of the new via padstack to be layer dependent </p>
+		<p>With the <i>Remove</i> button  you can  delete an existing via padstack in the database.  The deletion will be refused, if the padstack is still used in a via definition or somewhere else.</p>
+		<h4>Available Vias</h4>Description of the buttons:		<blockquote>
+			<p><i>Info</i></p>
+			<blockquote>
+				<p>Outputs a list of all vias available for routing.</p>
+			</blockquote>
+			<p><a name="EditVia"></a><i>Edit</i> </p>
+			<blockquote>
+				<p>If you push this button, a window with a table for editing the vias will appear. Here you can adjust the <i>name</i>, the <i>padstack,</i> the<i> clearance class</i> and the <i>attach smd</i> property of the via according to your needs. Below this window are two buttons for adding new vias or removing existing vias.</p>
+			</blockquote>
+		</blockquote>
+		<h4>Via Rules</h4>Below the Via Rules label is a window with a list of the names of all existing via rules. The following is a description of the four buttons at the lower border.		<blockquote>
+			<p><i>Info</i></p>
+			<blockquote>
+				<p>After selecting a via rule with the left button, you can output the rule with <i>Info</i> to a new window. In routing the vias earlier in the list in this window are preferred to vias later on in the list </p>
+			</blockquote>
+			<p><i>Create</i></p>
+			<blockquote>
+				<p>If you push the <i>Create</i> button you will be asks for the name of the new via rule. After you have provided this name, a new empty via rule with the new name will be appended to the list above. Select the new rule with the left button and push the <i>Edit</i> to insert vias into the new rule.</p>
+			</blockquote>
+			<p><i>Edit</i></p>
+			<blockquote>
+				<p>After selecting a via rule with the left mouse button and pushing <i>Edit</i>, a new window appears where you can change the selected via rule. For a detailed  description see  <a href="#EditViaRule">Edit Via Rule </a>below.</p>
+			</blockquote>
+			<p><i>Remove</i></p>
+			<blockquote>
+				<p>To delete the selected via rule.</p>
+			</blockquote>
+		</blockquote>
+		<h4><a name="EditViaRule"></a>Edit Via Rule</h4>
+		<blockquote>
+			After selecting a via rule for editing, a new window appears with a list of all vias contained in the selected rule. In routing the vias earlier in this list are preferred to vias later on in the list. The following is a description of the buttons in this new window. 
+			<p><i>Append</i></p>
+			<blockquote>
+				<p>A window with a combo box with all available vias not yet contained in the rule appears.  After you have selected a via and  pushed the  OK button, the selected via will be appended to the end of the list..</p>
+			</blockquote>
+			<p><i>Remove</i></p>
+			<blockquote>
+				<p>After selecting a via with the left mouse button you can remove it from the via rule by pushing the <i>Remove</i> button.</p>
+			</blockquote>
+			<p><i>Move Up</i></p>
+			<blockquote>
+				<p>After selecting a via with the left mouse button you can exchange its position with the previous via in the list by pushing the <i>Move Up</i> button. That increases the priority of the selected  via. In routing vias earlier in the list are preferred to vias later on in the list.</p>
+			</blockquote>
+			<p><i>Move Down</i></p>
+			<blockquote>
+				<p>After selecting a via with the left mouse button you can exchange its position with the next via in the list by pushing the <i>Move  Down</i> button. That decreases the priority of the selected  via. In routing vias earlier in the list are preferred to vias later on in the list.</p>
+				<p></p>
+			</blockquote>
+		</blockquote>
+		<p></p>
+	</body>
+
+</html>

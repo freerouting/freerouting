@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Clearance-Matrix</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>Die Clearance-Matrix</h3>
+		<p>Im Fenster mit der Clearance-Matrix k&ouml;nnen Sie die Mindestabstandsregeln zwischen Objekten festlegen. Das geschieht mittels Clearance-Klassen. Eine Objekt-Clearance-Klasse ist durch die Festlegung eines Mindestabstand zu Objekten von allen vorhandenen Clearance-Klasssen definiert. Diese Werte k&ouml;nnen in der Clearance-Matrix eingesehen und editiert werden.</p>
+		<p>Vordefiniert sind die Clearance-Klassen <i>null</i>  und <i>default</i>. Objekte der Clearance-Klasse <i>null</i> haben einen Mindestabstand von 0 zu allen anderen Objekten. Dieser Wert kann in der Clearance-Matrix nicht ver&auml;ndert werden.</p>
+		<p>Das Specctra-DSN-Format kennt nur die hard-codierten Clearance-Klassen <i>pin, smd, via, wire, area </i>und <i>testpoint</i>. Beim Einlesen des DSN-Files  nach dem Start des Programms werden die Clearance-Klassen aus dem Hostsystem &uuml;bernommen.  Dabei wird die Clearance-Klasse <i>wire</i> in <i>default</i> umbenannt. Die anderen hard-codierten Clearance-Klassen werden nur dann beim Einlesen erzeugt, wenn daf&uuml;r eigene Werte im  DSN-File gefunden werden.</p>
+		<h4><a name="Append"></a>Eine neue Clearance-Klasse hinzuf&uuml;gen</h4>
+		Dr&uuml;cken Sie den Button <i>Klasse hinzuf&uuml;gen</i> und geben Sie im daraufhin erscheinenden Dialogfeld den Namen der neuen Klasse ein. Die Matrix wird um eine Zeile und eine Spalte mit den Werten f&uuml;r die neue Clearance-Klasse erweitert. &Auml;ndern Sie die voreingestellten Werte in der neuen Zeile nach Ihren Anforderungen.		<h4>Redundante Clearance-Klassen entfernen</h4>
+		Indem Sie den Button <i>Trimmen</i> dr&uuml;cken, k&ouml;nnen Sie Clearance-Klassen, deren Matrixeintr&auml;ge mit den Werten einer anderen Clearance-Klasse genau &uuml;bereinstimmen, als redundant entfernen. Alle Objekte, die zu der gel&ouml;schten Clearance-Klasse geh&ouml;rten, werden dann dieser anderen Clearance-Klasse zugewiesen.		<h4>Lagenabh&auml;ngige Clearance-Werte</h4>
+		Das Lagenfeld oben am Fenster gibt an, auf welchen Lagen die Clearance-Werte in der Matrix gelten sollen. Bei der voreingestellten Auswahl von <i>alle</i> gelten die Werte auf allen Lagen. Ob  f&uuml;r ein bestimmtes Feld lagenabh&auml;ngige Clearance-Werte definiert sind, sehen Sie daran, dass bei der Einstellung von <i>alle</i> in diesem Feld der Wert -1 erscheint. (Es kann n&auml;mlich kein f&uuml;r alle Lagen g&uuml;ltiger Wert ausgegeben werden.) Analoges gilt bei der Auswahl von <i>innere</i>, die f&uuml;r alle Innenlagen gilt. Einen lagenabh&auml;ngigen Wert k&ouml;nnen Sie ansehen oder &auml;ndern, nachdem Sie im Lagenfeld den Namen Ihrer gew&uuml;nschten Lage eingestellt haben.		<p></p>
+	</body>
+
+</html>

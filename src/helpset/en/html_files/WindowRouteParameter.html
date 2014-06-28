@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Route Parameter</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>Route Parameter</h3>Description of the Route Parameter window.		<h4><a name="AngleRestriction"></a>snap angle:</h4>
+		<blockquote>90 degree:			<blockquote>
+				<p>Only orthogonal traces are created in interactive routing.</p>
+			</blockquote>
+			<p>45 Grad:</p>
+			<blockquote>
+				<p>The angles of the traces created in interactive routing are restricted to multiples of 45 degree.</p>
+			</blockquote>
+			<p>none:</p>
+			<blockquote>
+				<p>There are no angle restrictions in interactive routing.</p>
+			</blockquote>
+		</blockquote>
+		<h4><a name="RoutingMode"></a>route mode:</h4>
+		<blockquote>dynamic:			<blockquote>
+				<p>Trace will be inserted when the cursor position changes.</p>
+			</blockquote>
+			<p>stitching:</p>
+			<blockquote>
+				<p>Trace will be inserted after clicking the left button.</p>
+			</blockquote>
+		</blockquote>
+		<h4><a name="RuleSelection"></a>rule selection:</h4>
+		<blockquote>automatic:			<blockquote>
+				<p>The routing rules are defined by the <a href="WindowNetClasses.html">net class </a> of  the current net.</p>
+			</blockquote>
+			<p>manual:</p>
+			<blockquote>
+				<p>The routing rules are defined  in the <i><a href="WindowManualRules.html">Manual Rules</a> </i>window. The window opens automatically after selecting <i>manual</i>.</p>
+			</blockquote>
+		</blockquote>
+		<h4>push and shove enabled</h4>
+		<blockquote>To define, if foreign traces can be pushed aside in interactive routing.</blockquote>
+		<h4>drag components enabled</h4>
+		<blockquote>Here you can define, if components can be dragged with the left button pressed. The already routed connections of the component will be adjusted automatically.</blockquote>
+		<h4>vias snap to the smd center</h4>
+		<blockquote>
+			Here you can define, if  vias, for which attaching smd pins is allowed, should snap automatically to the pin center  in this case.</blockquote>
+		<h4>highlight routing obstacle</h4>
+		<blockquote>If selected, the current routing obstacle will be highlighted.</blockquote>
+		<h4>ignore conduction areas</h4>
+		<blockquote>If selected, conduction areas of foreign nets  will not be treated as obstacles. The host system can for example automatically create gaps for traces overlapping with such a conduction area.</blockquote>
+		<h4><a name="Neckdown"></a>automatic neckdown</h4>
+		<blockquote>When starting on pins or connecting to pins smaller than the current routing trace width, the trace width will be automatically reduced to the pin width, if connecting is not possible otherwise.</blockquote>
+		<h4><a name="ExitDirections"></a>restrict pin exit directions</h4>
+		<blockquote>Here you can define, if connecting to rectangular pins is only allowed on the smaller sides.</blockquote>
+		<h4>pad to turn gap</h4>
+		<blockquote>To define the minimum distance from the pad border of a pin with exit restriction, where connecting traces are allowed to change direction.</blockquote>
+		<h4><a name="PullTightRegion"></a>pull tight region</h4>
+		<blockquote>
+			To restrict the region around the cursor, where traces are pulled tight while routing. If  the value is 0, the pull tight algorithm is switched off, if the value is 999, the pull tight region is unrestricted. Setting the value to 0 makes only sense in the <i>stitching </i>route mode.</blockquote>
+		<p><a href="RouteState.html">back</a></p>
+	</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Route-Zustand</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>The Route States</h3>After you have <a href="MenuState.html#start_route">started a new route</a>  in a basic state, the IDE will change to the  <a href="#DynamicRouteState">Dynamic Route State</a> or to the <a href="#StitchingRouteState">Stitching Route State</a> depending on your selection for the  <a href="WindowRouteParameter.html#RoutingMode">route mode</a>  in the Route Parameter window.
+		<p>If  <a href="WindowRouteParameter.html#RuleSelection">rule selection</a> is set to <i>automatic,</i> the routing rules such as trace width, trace clearance class and via rule are defined by the <a href="WindowNetClasses.html">net class</a>  of the current net, if it is set to<i> manual</i>, the routing rules are defined by the settings in the <a href="WindowManualRules.html">Manual Rules</a> window.</p>
+		<p>If the new trace gets near to a not yet connected item of the same net on the same layer, the connection will be completed automatically. After completion the IDE will return to the state before routing.</p>
+		<p><a href="MenuState.html#RouteMenuState">back</a></p>
+		<h3><a name="DynamicRouteState"></a>The Dynamic Route State</h3>If the IDE is in this route state, at each change of the cursor location a piece of trace will be inserted automatically from the previous  cursor location to the current cursor location. The new trace piece will then immediately be optimized depending on the settings for the <a href="WindowRouteParameter.html#PullTightRegion">pull tight region</a> in the Route Parameter window.	<h4>The entries in the popup menu under the left mouse button in the Dynamic Route state:</h4>
+		<blockquote>
+			<i>change layer</i>
+			<blockquote>
+				<p>To change to a different layer. The corresponding via will be selected  from the selected <a href="WindowVia.html">via rule</a> in the following way. The vias in the via rules will be tried from top to bottom, if they contain the old and the new layer, and if inserting would be possible without clearance violations. The first via found in this way will be inserted. Shortcuts are the number keys 1-9 and the keys &quot;+&quot; and &quot;-&quot;. With &quot;+&quot; you can change to the next bigger layer and with &quot;-&quot; to the next smaller layer.</p>
+			</blockquote>
+			<p><i>end route</i></p>
+			<blockquote>
+				<p>The routing will be finished and the IDE changes back to the previous state. Shortcut is the left mouse button.</p>
+			</blockquote>
+			<p><i>cancel route</i></p>
+			<blockquote>
+				<p>The last routed trace will be discarded and the IDE changes back to the previous state  Shortcut is the Esc-key.</p>
+			</blockquote>
+			<p><i>generate snapshot</i></p>
+			<blockquote>
+				<p>The program generates a snapshot, so that the current situation can be restored later on with Undo. Otherwise you could only restore the situation before starting the last trace with Undo.</p>
+			</blockquote>
+		</blockquote>
+		<p><a href="RouteState.html">back</a></p>
+		<h3><a name="StitchingRouteState"></a>Der Stitching Route State</h3>
+		
+		In this route state a piece of trace will be inserted from the previous click position to the current cursor position, when you click the left mouse key. The new trace piece will then be optimized depending on the settings for the <a href="WindowRouteParameter.html#PullTightRegion">pull tight region</a> in the Route Parameter window. 
+		<h4>The entries in the popup menu under the left mouse button in the Stitching Route state:</h4>
+		<blockquote>
+			<p><i>insert</i></p>
+			<blockquote>
+				<p>A trace will be inserted from the previous insert position to the current position  and then be optimized depending on the settings for the <a href="WindowRouteParameter.html#PullTightRegion">pull tight region</a> in the Route Parameter window. </p>
+			</blockquote>
+			<p><i>done</i></p>
+			<blockquote>
+				<p>The program returns to the state before routing. Shortcut is the Esc-key.</p>
+			</blockquote>
+			<p><i>change layer</i></p>
+			<blockquote>
+				<p>To change to a different layer. The corresponding via will be selected from the selected <a href="WindowVia.html">via rule</a> in the following way. The vias in the via rules will be tried from top to bottom, if they contain the old and the new layer, and if inserting would be possible without clearance violations. The first via found in this way will be inserted. Shortcuts are the number keys 1-9 and the keys &quot;+&quot; and &quot;-&quot;. With &quot;+&quot; you can change to the next bigger layer and with &quot;-&quot; to the next smaller layer.</p>
+			</blockquote>
+		</blockquote>
+		<p><a href="RouteState.html">back</a></p>
+	</body>
+
+</html>

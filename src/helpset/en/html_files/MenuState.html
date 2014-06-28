@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Men&uuml;-Zustand</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>The Menu States</h3>
+		The program contains the following three Menu States: <i><a href="#SelectMenuState">Select</a>, <a href="#RouteMenuState">Route</a></i> and <i><a href="#DragMenuState">Drag</a></i>. By selecting one of the three buttons on the upper left side of the tool bar you can switch between this states. In the beginning the program will be in the Select Menu State.<p>The three states have a common tool bar and a common popup menu under the right mouse button.</p>
+		<h4>Further Entries in the Tool Bar:</h4>
+		<blockquote>
+			<a name="Autorouter"></a><i>Autorouter</i>
+			<blockquote>
+				<p>To start the batch autorouter on the whole board.</p>
+			</blockquote>
+			<p><a name="Undo"></a><i>Undo, Redo</i></p>
+			<blockquote>
+				<p>The program has unlimited Undo Redo capability. In the offline version the Undo stack does not get lost even after saving the design and restarting the program. Shortcuts are <i>u</i> for Undo and <i>b</i> for Redo.</p>
+			</blockquote>
+			<p><a name="Incompletes"></a><i>Incompletes</i></p>
+			<blockquote>
+				<p>Here you can switch on or off displaying the open connections as air lines. If the airlines were switched off before, they will be switched on and vice versa. Shortcut is<i> g</i>.</p>
+			</blockquote>
+			<p><a name="Violations"></a><i>Violations</i></p>
+			<blockquote>
+				<p>Here you can switch on or off displaying the clearance violations. If the violations were switched off before, they will be switched on and vice versa. Shortcut is<i> v.</i></p>
+			</blockquote>
+			<p><i>Zoom All</i></p>
+			<blockquote>
+				<p>To display the whole board. Shortcut is <i>a</i>.</p>
+			</blockquote>
+			<p><a name="DisplayRegion"></a><i>Zoom Region</i></p>
+			<blockquote>
+				<p>After selecting this button you can choose a display rectangle by dragging the mouse with the left button pressed. Shortcut is <i>f. </i>You can  also zoom by turning the mouse wheel and pan by dragging the mouse with the mouse wheel pressed.</p>
+			</blockquote>
+			<p><a name="Unit"></a>Unit</p>
+			<blockquote>
+				<p>To change the Unit or the Unit Factor. Possible choices are <i>mil</i>, <i>inch,</i> <i>mm </i>and<i> um. </i>After selecting for example <i>0.1 mm </i>all coordinates in the IDE are displayed as multiples of 0.1 mm<i>.</i></p>
+			</blockquote>
+		</blockquote>
+		<h4>The Entries in the Popup Menu:</h4>
+		<blockquote>
+			<a name="select_object"></a><i>select item</i>
+			<blockquote>
+				<p>To select the items under the cursor. Only items switched on in the <a href="WindowSelectParameter.html">Select Parameter</a> window can be selected. After selecting some items the current interactive state will change to the <a href="SelectedItemState.html">Selected Item State</a>. In the <a href="#SelectMenuState">Select Menu State</a> you can select items also with the left mouse button.</p>
+			</blockquote>
+			<a name="start_route"></a><i>start route</i>
+			<blockquote>A new trace will be started beginning at the item under the cursor. For the selection of the start item the settings in the <a href="WindowSelectParameter.html">Select Parameter</a> window are evaluated . If a suitable item was found the interactive state will change to the <a href="RouteState.html">Route State</a>. In the <a href="#RouteMenuState">Route Menu State </a>you can do this also by clicking the left mouse button.</blockquote>
+			<a name="CreateKeepout"></a><i>create keepout</i>
+			<blockquote>
+				To create a keepout on the current layer. You can create a circle, a polygons or a hole into an existing polygonal keepout.</blockquote>
+			<a name="Pinswap"></a><i>swap pin</i>
+			<blockquote>
+				This menu entry appears only if the board contains swappable pins. If the pin under the cursor is swappable, you can change the net of this pin with a suitable other pin.</blockquote>
+			<p>The letters in brackets behind the Popup Menu entries describe the shortcuts for the corresponding actions.</p>
+		</blockquote>
+		<h4>The Function of the Mouse Wheel:</h4>
+		<blockquote>
+			<p><a name="MouseWheel"></a>By rotating the mouse wheel you can zoom in or out and by dragging the mouse with the mouse wheel pressed you can change the displayed section of the board.</p>
+			<p></p>
+		</blockquote>
+		<h4><a name="SelectMenuState"></a></h4>
+		<h3>The Select Menu State</h3>
+		If on the upper left side in the tool bar the button <i>Select</i> is selected, the program will be in the Select Menu State. Here you can use the left mouse button as a shortcut for the action <i>select item</i> in the popup menu.<i> </i>You also can select all items in a rectangle by dragging the mouse with the left button pressed.
+		
+		<p><a href="MenuState.html">back </a></p>
+		<h4><a name="RouteMenuState"></a></h4>
+		<h3>The Route Menu State</h3>
+		If on the upper left side in the tool bar the button <i>Route</i> is selected, the program will be in the Route Menu State. Here you can use the left mouse button as a shortcut for the action <i>start route</i> in the popup menu.
+		
+		<p><a href="MenuState.html">back</a></p>
+		<h4><a name="DragMenuState"></a></h4>
+		<h3>The Drag Menu State</h3>
+		If on the upper left side in the tool bar the button <i>Drag</i> is selected, the program will be in the Drag Menu State Here you can drag vias or components with the left button pressed. The connected traces will be adjusted automatically. You can also out of the empty space shove traces aside with the left button pressed This way you can for example make space for inserting another component. This action will be performed on the <i>current layer</i>, which can be set in the <a href="WindowSelectParameter.html">Select Parameter</a> window.
+	
+		<p><a href="MenuState.html">back </a></p>
+	</body>
+
+</html>

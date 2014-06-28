@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Die Objektlisten</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>The Object Lists</h3>
+		Here the windows with the object lists are documented, as they can be found in the <i>Info</i> menu of the menu bar.
+		<p>The objects in such a list can be selected with the left button. If you hold the Ctrl-key pressed you can select several objects at once. With pressed Shift-key you can choose all objects between the first and last selected object.</p>
+		<h4>The buttons in an object list window:</h4>
+		<blockquote>
+			<p><i>Info</i></p>
+			<blockquote>
+				<p>Opens a text window with information about the selected objects. By clicking a blue marked word you can get more information about the corresponding object.</p>
+			</blockquote>
+			<p><i>Show</i> </p>
+			<blockquote>
+				<p>Displays rectangle on the board containing the selected objects. The selected objects get highlighted and the IDE changes to the <a href="SelectedItemState.html">Selected Item State</a>.</p>
+			</blockquote>
+			<p><i>Invert</i></p>
+			<blockquote>
+				<p>Selected objects will be deselected and vice versa.</p>
+			</blockquote>
+			<p><i>Recalculate</i></p>
+			<blockquote>
+				<p>The object list will be recalculated.</p>
+			</blockquote>
+			<p><i>Filter</i></p>
+			<blockquote>
+				<p>Were you can input a pattern in order to filter the objects in the list. After pushing the <i>Recalculate</i> button only the objects matching this pattern will be displayed.</p>
+			</blockquote>
+		</blockquote>
+		<p>There are object lists for incomplete connections, length violations, clearance violations, library packages, library padstacks, board components and nets. The following contains a short description of these lists.</p>
+		<h4>The individual object lists:</h4>
+		<blockquote>
+			<p></p>
+			<p><a name="LibraryPackages"></a><i>Library Packages</i></p>
+			<blockquote>
+				<p>All packages in the library will be output. After pushing the <i>Show</i> button you will see all components on the board containing the selected packages.</p>
+			</blockquote>
+			<p><a name="LibraryPadstacks"></a><i>Library Padstacks</i></p>
+			<blockquote>
+				<p>Outputs all padstacks in the library. After pushing the <i>Show</i> button you will see all  pins and vias on the board using the selected padstack.</p>
+			</blockquote>
+			<p><a name="BoardComponents"></a><i>Placed Components</i></p>
+			<blockquote>
+				<p>Outputs all components placed on the board.  After pushing the <i>Show</i> button you will see the selected components on the board. </p>
+			</blockquote>
+			<p><a name="Incompletes"></a><i>Incompletes</i></p>
+			<blockquote>
+				<p>All open connections will be displayed. The entries contain the net name followed by component and pin name of both end items of the incomplete. If there are only a few open connections left on the board, you can find them easily by pushing the <i>Show</i> button.</p>
+			</blockquote>
+			<p><a name="LengthViolations"></a><i>Length Violations</i></p>
+			<blockquote>
+				<p>Outputs the routed connections, which are shorter than the minimal allowed length or longer than the maximal allowed length. If the minimum length is violated, at the end points of the connection appears a circle containing a &quot;-&quot;. If the maximum length is violated, at the end points of the connection appears a circle containing a &quot;+&quot;. The size of such a circle corresponds to the size of the length violation.</p>
+			</blockquote>
+			<p><a name="ClearanceViolations"></a><i>Clearance Violations</i></p>
+			<blockquote>
+				<p>Outputs the item pairs where the the minimal allowed spacing is violated. By pushing the <i>Show</i> button you can find the selected violations easily on the board.</p>
+			</blockquote>
+			<p><a name="UnconnectedRoute"></a><i>Unconnected Route</i></p>
+			<blockquote>
+				<p>Outputs the sets of electrically connected traces  and vias without contact to a terminal item. By pushing the <i>Show</i> button you can find the selected unconnected items on the board. Then you can remove them by pushing the <i>Delete</i> button in the board toolbar.</p>
+			</blockquote>
+			<p><a name="RouteStubs"></a><i>Route Stubs</i></p>
+			<blockquote>
+				<p>Outputs unsufficiantly connected traces and vias. By pushing the <i>Show</i> button you can find the selected  stubs on the board. After that you can remove the whole connections containing the stubs by  pushing  first the <i>Connections</i> button and then the <i>Delete</i> button in the board toolbar.</p>
+			</blockquote>
+			<p><a name="Nets"></a><i>Nets</i></p>
+			<blockquote>
+				<p>All nets of the design will be output. This window contains two more buttons. With the <i>Assign Class</i> button you can assign a new net class to the selected nets. After pushing the <i>Filter Incompletes </i>button only the airlines of open connections belonging to a selected net will be displayed.</p>
+			</blockquote>
+			<p></p>
+		</blockquote>
+		<h3></h3>
+		<h3></h3>
+	</body>
+
+</html>

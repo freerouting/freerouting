@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Das Datei-Men&uuml;</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>The File Menu Entries</h3>
+		<blockquote>
+			<p><a name="save"></a><i>Save</i></p>
+			<blockquote>
+				<p>The current state of the design will be saved in the internal .bin file format. Not available in the web-based  version because designs in the .bin format may be not compatible acrosss different versions of the router.</p>
+			</blockquote>
+			<p><a name="save_and_exit"></a><i>Save and Exit</i></p>
+			<blockquote>
+				<p>The program exits after saving the current state of the design in the internal .bin file format.Not available in the web-based version because designs in the .bin format may be not compatible across different versions of the router.</p>
+			</blockquote>
+			<p><a name="cancel_and_exit"></a><i>Cancel and Exit</i></p>
+			<blockquote>
+				<p>The program exits discarding the changes in the design.</p>
+			</blockquote>
+			<p><a name="save_as"></a><i>Save as</i></p>
+			<blockquote>
+				<p>Here you can save the current state of the design in a file with a file name of your choice. Allowed are the extensions .bin and .dsn. If you choose the extension .bin, the design will be saved in the internal binary format. In this case the current state of the IDE will also be saved. Because a design saved in this file format cannot be read in general by a later version of the router, the .bin-format  is only available in the offline version. If you want to be able to read the saved design with a later version of this software, you have to select the extension .dsn.The design will then be saved in a text file format which is an extension of the Specctra-dsn format.</p>
+			</blockquote>
+			<p><a name="generate_logfile"></a><i>Generate Logfile</i></p>
+			<blockquote>
+				<p>From now on all interactive actions are written to a log-file, so that this sequence can be repeated later on with <i>Replay Logfile</i>. Only actions, where the design is changed, are saved. This menu entry is provided in order to make short interactive actions repeatable for debugging. There is no warranty that it will work correctly on long interactive sequences. The name of such a log-file must have the extension .log. Not available in the web-based version.</p>
+			</blockquote>
+			<p><a name="replay_logfile"></a><i>Replay Logfile</i></p>
+			<blockquote>
+				<p>The sequence of actions in a file with the extension .log generated  by <i>Generate Logfile </i>will be repeated. The design must be in the same state as it was before generating the log-file. Not available in the web-based version.</p>
+			</blockquote>
+			<p><a name="settings"></a> <i>Save</i> <i>GUI Settings as  Default </i></p>
+			<blockquote>
+				<p>The current interactive settings will be saved in a file with name gui_defaults.par. In the web-based version this file is hidden  in the the Java Control Panel cache. You can delete it with Restore System Defaults in the router control panel. When you open later on a design in the .dsn format and a file with name gui_defaults.par is found, the saved settings are restored. In this way you can save your personal preferences for the GUI independent of the design. If you prefer different colors for the object types, or if you have two display screens and want to move the positions of the subwindows to the second screen, you do not have to make this change each time you open a new design. It is recommended to create the file gui_defaults.par from a design with as many layers as possible. Otherwise the layer dependent colors of the single object types would repeat, if this file was created from a design with fewer layers than the current design.</p>
+			</blockquote>
+			<p><a name="session_file"></a><i>Export Specctra Session File</i></p>
+			<blockquote>
+				<p>If you want to transfer the changes of the design created by this software back to the host system, you can write here a session file in the Specctra .ses format. You can then import this file into the host system, as you would do it when using the Specctra or Electra autorouter. After the session file is written, you will be asked if you also want to save the rules created inside this program for later reuse. Answer with yes, if for example you have created Via Rules, which you want to reuse after switching forth and back to the host system. However a new created rule in the host system might be overwritten by a saved rule in this case.</p>
+				<p>If the original design file was created  by Cadsoft-Eagle, you will see the following entry instead: </p>
+			</blockquote>
+			<p><a name="eagle_script"></a><i>Export Eagle Session Script </i></p>
+			<blockquote>
+				<p>A text file with the same name as the design file and the extension <i>.scr</i> will be written. You can import the changes of the design to Cadsoft Eagle by selecting in the Files pull down menu of Eagle  <i>script... </i>  and choosing this text file. After the text file is written, you will be asked if you also want to save the rules created inside this program for later reuse. Answer with yes, if for example you have created Via Rules, which you want to reuse after switching forth and back to Eagle. However a new created rule in the Eagle might be overwritten by a saved rule in this case</p>
+				<p></p>
+				<p></p>
+			</blockquote>
+		</blockquote>
+	</body>
+
+</html>

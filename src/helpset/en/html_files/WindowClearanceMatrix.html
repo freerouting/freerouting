@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Clearance-Matrix</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>The Clearance Matrix</h3>
+		<p>In the window with the Clearance Matrix you can define the spacing rules between the object types.  This is done via clearance classes. An Item clearance class is described by the definition of a minimal spacing to items of all existing clearance classes. These values can be looked up and changed in the Clearance Matrix</p>
+		<p>Predefined are the clearance classes <i>null</i> and <i>default</i>. Items of the clearance class <i>null</i>  have a minimal spacing of 0 to all other items. This value cannot be changed in the Clearance Matrix.</p>
+		<p>In the Specctra-DSN-Format there exist only the hard coded clearance classes  <i>pin, smd, via, wire, area a</i>nd <i>testpoint</i>. When reading the DSN-file at  the program start the clearance classes of the host system will be taken over. The class <i>wire</i> will be  renamed to <i>default</i>.  The rest of the hard coded clearance classes will only be generated, if values for these classes are found in the DSN-file.</p>
+		<h4><a name="Append"></a>To add a new clearance class</h4>
+		Press the button  <i>Add Class</i> and enter the name of the new class into the dialog field, which is popping up. The Clearance Matrix will be extended by a row and a column with the values for the new class. Change the predefined values in the new row according to your needs.
+		<h4>To remove redundant clearance classes</h4>By pushing the <i>Trim </i>Button you can remove classes as redundant, whose entries in the Clearance Matrix are exact equal to the entries of an other class. All items belonging to the deleted clearance class will then be assigned to this other clearance class.	<h4>Layer dependent clearance classes</h4>
+		In the layer field on top of the window you see the layers, for which the entries in the Clearance Matrix are valid. When <i>all</i> is selected in the combo box, the matrix entries are valid on all layers. If  in this case layer dependent clearance values are defined for a special field,  the value -1 is displayed, because it is not possible to output a value, which is valid on all layers.  Analog if<i> inner</i> is selected in the combo box. You can view or edit a layer dependent clearance value after selecting the name of the layer of  your choice in the layer combo box.
+		<p></p>
+	</body>
+
+</html>

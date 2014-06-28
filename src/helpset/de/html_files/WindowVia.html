@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Via-Regeln</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>Die Via-Regeln</h3>
+		<p>Eine Via-Regel besteht aus einem Satz von <a href="#Via">Vias</a>, die bei einer bestimmten Route-Einstellung verwendet werden d&uuml;rfen.  Wenn beim Lagenwechsel mehrere Vias die alte und die neue Lage umfassen und keine Clearance-Verletzungen verursachen w&uuml;rden,  werden die Vias weiter vorne in der Regel werden gegen&uuml;ber Vias weiter hinten in der Regel bevorzugt.</p>
+		<h4><a name="Via"></a>Vias</h4>
+		<p>Ein Via besteht aus einem Namen, einem Via-Padstack, einer Clearance-Klasse und einem Eintrag, ob &Uuml;berlappungen mit SMD-Pins vom gleichen Netz erlaubt sind oder nicht.</p>
+		<h4>Via-Padstacks</h4>
+		<p>Ein Via-Padstack besteht aus einer Anfangs- und einer Endlage, sowie aus einem kreisf&ouml;rmigen Shape auf jeder Lage zwischen Anfangs- und Endlage.</p>
+		<p>Es folgt eine Beschreibung der Funktionalit&auml;t im Fenster mit den Via-Regeln.</p>
+		<h4>Verf&uuml;gbare Via-Padstacks</h4>
+		Hier sehen Sie die drei Buttons <i>Info, Neu</i> und <i>L&ouml;schen</i>.
+		<p>Mit <i>Info</i> k&ouml;nnen Sie sich alle verf&uuml;gbaren Via-Padstacks anzeigen lassen.</p>
+		<p>Mit<i> Neu</i> k&ouml;nne Sie einen neuen Via-Padstack anlegen. Geben Sie den Namen des neuen Via-Padstacks in das erscheinende Eingabefeld ein. Danach werden Sie aufgefordert, die erste und die letzte Lage des neuen Padstacks auszuw&auml;hlen. In das darauf erscheinende Eingabefeld geben Sie bitte den Default-Radius f&uuml;r die kreisf&ouml;rmigen Shapes des neuen Padstacks ein. Im nachfolgenden Fenster k&ouml;nnen diesen Radius auf jeder einzelnen Lage ver&auml;ndern, falls die Shapes des neuen Padstacks lagenabh&auml;ngig sein sollen.</p>
+		<p>Mit  <i>L&ouml;schen</i> k&ouml;nnen Sie einen existierenden Via-Padstack l&ouml;schen. Das L&ouml;schen wird verweigert, wenn der Padstack in einer Via-Definition oder an anderer Stelle verwendet wird. </p>
+		<h4>Verf&uuml;gbare Vias</h4>
+		Beschreibung der Buttons:
+		<blockquote>
+			<p><i>Info</i></p>
+			<blockquote>
+				<p>Gibt alle Vias aus, die f&uuml;r das Routen zur Verf&uuml;gung stehen.</p>
+			</blockquote>
+			<p><a name="EditVia"></a><i>Editieren</i> </p>
+			<blockquote>
+				<p>Wenn Sie diesen Button dr&uuml;cken, erscheint ein neues Fenster mit einer Tabelle zum Editieren der Vias. Hier k&ouml;nnen Sie Namen, Padstack, Clearance-Klasse und die SMD-&Uuml;berlappungseigenschaft gem&auml;&szlig; Ihren Anforderungen ver&auml;ndern. Unten an diesem Fenster befinden sich zwei Buttons, mit denen Sie neue Vias hinzuf&uuml;gen oder existierende Vias l&ouml;schen k&ouml;nnen.</p>
+			</blockquote>
+		</blockquote>
+		<h4>Via-Regeln</h4>Unterhalb befindet sich ein Fenster, in dem alle Via-Regeln namentlich aufgelistet sind. Im Folgenden wird die Funktion der vier Buttons am unteren Rand beschrieben:
+		<blockquote>
+			<p><i>Info</i></p>
+			<blockquote>
+				<p>Nachdem Sie mit der linken Maustaste eine Via-Regel ausgew&auml;hlt haben, k&ouml;nnen Sie sich diese mit<i> Info</i> anzeigen lassen. Die Vias weiter oben in der dann erscheinenden Liste werden gegen&uuml;ber den Vias weiter unten beim Routen bevorzugt.</p>
+			</blockquote>
+			<p><i>Neu</i></p>
+			<blockquote>
+				<p>Wenn Sie den Button <i>Neu</i> dr&uuml;cken, werden Sie nach dem Namen der neuen Via-Regel gefragt. Nachdem Sie diesen angegeben haben, wird im Fenster oberhalb eine leere Regel mit dem neuen Namen hinzugef&uuml;gt. W&auml;hlen Sie jetzt die neue Regel mit der linken Maustaste aus und dr&uuml;cken Sie den Button <i>Editieren</i>, um Vias in die neue Regel einzuf&uuml;gen.</p>
+			</blockquote>
+			<p><i>Editieren</i></p>
+			<blockquote>
+				<p>Wenn Sie eine Via-Regel mit der linken Maustaste ausw&auml;hlen und danach den Button <i>Editieren</i> dr&uuml;cken,  erscheint  ein neues Fenster, in dem Sie die Via-Regel ver&auml;ndern k&ouml;nnen. Weiteres finden Sie unter <a href="#EditViaRule">Via-Regel editieren.</a></p>
+			</blockquote>
+			<p><i>L&ouml;schen</i></p>
+			<blockquote>
+				<p>Mit diesem Button k&ouml;nnen Sie die ausgew&auml;hlte Via-Regel l&ouml;schen.</p>
+			</blockquote>
+		</blockquote>
+		<h4><a name="EditViaRule"></a>Via-Regel editieren</h4>
+		<blockquote>Wenn Sie eine Via-Regel zum Editieren ausgew&auml;hlt haben, erscheint ein neues Fenster, in dem alle Vias aufgelistet sind, die in der selektierten Regel vorkommen. Vias weiter oben in dieser Liste werden gegen&uuml;ber Vias weiter unten beim Routen bevorzugt. Im Folgenden wird die Funktion der Buttons in diesem neuen Fenster beschrieben.		<p><i>Hinzuf&uuml;gen</i></p>
+			<blockquote>
+				<p>Es erscheint ein Fenster in dem Sie ein Via aus allen zur Verf&uuml;gung stehenden Vias  ausw&auml;hlen k&ouml;nnen. Nachdem Sie das Via ausgew&auml;hlt haben und den OK-Button gedr&uuml;ckt haben,  wird das ausgew&auml;hlte Via an das Ende der Liste angeh&auml;ngt.</p>
+			</blockquote>
+			<p><i>L&ouml;schen</i></p>
+			<blockquote>
+				<p>Nachdem Sie mit der linken Maustaste ein Via ausgew&auml;hlt haben, k&ouml;nnen Sie es durch Dr&uuml;cken des Button <i>L&ouml;schen</i> aus der Liste entfernen.</p>
+			</blockquote>
+			<p><i>Aufw&auml;rts</i></p>
+			<blockquote>
+				<p>Nachdem Sie mit der linken Maustaste ein Via ausgew&auml;hlt haben, k&ouml;nnen Sie durch Dr&uuml;cken des Button <i>Aufw&auml;rts </i>die Position des Vias in der Liste um einen Platz nach oben verschieben. Dadurch wird die Priorit&auml;t dieses Vias beim Routen erh&ouml;ht. Vias weiter oben in der Liste werden gegen&uuml;ber Vias weiter unten bevorzugt.</p>
+			</blockquote>
+			<p><i>Abw&auml;rts</i> </p>
+			<blockquote>
+				<p>Nachdem Sie mit der linken Maustaste ein Via ausgew&auml;hlt haben, k&ouml;nnen Sie durch Dr&uuml;cken des Button <i>Abw&auml;rts </i>die Position des Vias in der Liste um einen Platz nach unten verschieben. Dadurch wird die Priorit&auml;t dieses Vias beim Routen verringert. Vias weiter oben in der Liste werden gegen&uuml;ber Vias weiter unten bevorzugt.</p>
+				<p></p>
+			</blockquote>
+		</blockquote>
+		<p></p>
+	</body>
+
+</html>

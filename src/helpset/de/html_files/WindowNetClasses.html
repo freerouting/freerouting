@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Netzklassen</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>Netzklassen</h3>
+		<p>Eine Netzklasse besteht aus einem Satz von Regeln, die standardm&auml;&szlig;ig beim Routen von Netzen aus dieser Netzklasse verwendet werden. Diese Regeln k&ouml;nnen in der Tabelle im Netzklassen-Fenster editiert werden. Im Folgenden werden die Spalteneintr&auml;ge in dieser Tabelle beschrieben:</p>
+		<h4>Die Netzklassentabelle:</h4>
+		<blockquote>
+			<p><i>Name</i></p>
+			<blockquote>
+				<p>Hier steht der Name der Netzklasse, deren Regeln in dieser Zeile beschrieben sind.</p>
+			</blockquote>
+			<p><i>Via-Rege</i>l</p>
+			<blockquote>
+				<p>Hier k&ouml;nnen Sie die <a href="WindowVia.html">Via-Regel</a> einstellen, die beim Routen eines Netz aus dieser Klasse verwendet werden soll.</p>
+			</blockquote>
+			<p><i>Clearance-Klasse</i></p>
+			<blockquote>
+				<p>Dieses Feld  ist zum Einstellen der <a href="WindowClearanceMatrix.html">Clearance-Klasse </a>f&uuml;r die neu gerouteten Bahnen eines Netz aus dieser Klasse.</p>
+			</blockquote>
+			<p><i>Bahnbreite</i></p>
+			<blockquote>
+				<p>Hier k&ouml;nnen Sie die Bahnbreite f&uuml;r die neu gerouteten Bahnen eines Netz aus dieser Klasse einstellen.</p>
+				<p>Wenn Sie die Bahnbreite auf 0 setzen,  werden  beim automatischen und interaktiven Routen auf den im folgenden Feld  eingestellten  Lagen f&uuml;r diese Netzklasse keine Bahnen zugelassen.</p>
+			</blockquote>
+			<p><i>auf Lage</i></p>
+			<blockquote>
+				<p>Geben Sie hier an, f&uuml;r welchen Lagen der im Bahnbreitenfeld eingestellte Wert gelten soll. Wenn <i>alle</i> eingestellt ist, gilt der Wert auf allen Lagen. Bei der Einstellung von <i>innere</i> gilt der Wert auf allen Innenlagen. Sonst gilt der Wert nur auf der Lage mit dem ausgew&auml;hlten Namen. Wenn die Bahnbreite lagenabh&auml;ngig ist,  wird bei Einstellung von <i>alle</i> im Bahnbreitenfeld der Wert -1 angezeigt. (Es kann n&auml;mlich kein f&uuml;r alle Lagen g&uuml;ltiger Wert ausgegeben werden.)</p>
+			</blockquote>
+			<p><i>schiebe-fixier</i>t</p>
+			<blockquote>
+				<p>Wenn dieses Feld angew&auml;hlt ist, k&ouml;nnen Bahnen aus dieser Netzklasse beim Routen nicht verschoben oder glatt gezogen werden.</p>
+			</blockquote>
+			<p><i>Zyklen mit Fl&auml;chen</i></p>
+			<blockquote>
+				<p>Normalerweise werden beim Routen entstehende geschlossene Zyklen automatisch entfernt. Wenn dieses Feld angew&auml;hlt ist, geschieht das nur, wenn dabei keine Leitungsfl&auml;chen involviert sind. So k&ouml;nnen Sie zum Beispiel Objekte mehrfach mit einer Kupferfl&auml;che verbinden, ohne dass dabei die redundanten Anschl&uuml;sse automatisch entfernt werden.</p>
+			</blockquote>
+			<p><i>min. L&auml;nge</i></p>
+			<blockquote>
+				<p>Hier k&ouml;nnen Sie einen Minimalwert f&uuml;r die kumulative Bahnl&auml;nge eines Netz aus dieser Klasse angeben. Beim Routen erscheint dann eine Ellipse. Ob die Minimall&auml;nge unterschritten wurde sehen Sie daran, dass sich der Cursor beim Anschlie&szlig;en au&szlig;erhalb dieser Ellipse befindet. Diese Software bietet allerdings noch keine gute Unterst&uuml;tzung beim Routen mit Minimall&auml;ngen. Es empfiehlt sich, in den <a href="WindowRouteParameter.html">Route-Parametern</a>  den <a href="WindowRouteParameter.html#RoutingMode">Route-Modus</a> auf <i>stitching</i> zu stellen  und den Wert f&uuml;r den <a href="WindowRouteParameter.html#PullTightRegion">Glattzieh-Bereich</a> auf 0 zu setzen. </p>
+			</blockquote>
+			<p><i>max. L&auml;nge</i></p>
+			<blockquote>
+				<p>Hier k&ouml;nnen Sie einen Maximalwert f&uuml;r die kumulative Bahnl&auml;nge eines Netz aus dieser Klasse angeben. Beim Routen erscheint dann ein Ellipsen-Ring. Ob die Maximall&auml;nge eingehalten wurde sehen Sie daran, dass sich der Cursor beim Anschlie&szlig;en innerhalb dieses Ellipsenring befindet.</p>
+			</blockquote>
+		</blockquote>
+		<h4>Die Buttons im Netzklassen-Fenster:</h4>
+		<blockquote>
+			<p><i>Hinzuf&uuml;gen</i></p>
+			<blockquote>
+				<p>Wenn Sie den Button <i>Hinzuf&uuml;gen</i> dr&uuml;cken, wird am Ende der Netzklassen-Tabelle eine neue Zeile mit Default-Werten angeh&auml;ngt. Dort k&ouml;nnen Sie in der ersten Spalte den vordefinierten Namen der neuen Netzklasse &auml;ndern, und danach die Eintr&auml;ge in den anderen Spalten an Ihre Erfordernisse anpassen.</p>
+			</blockquote>
+			<p><i>L&ouml;schen</i></p>
+			<blockquote>
+				<p>Nachdem Sie mit der linken Maustaste eine Zeile in der Netzklassen-Tabelle  ausgew&auml;hlt haben, k&ouml;nnen Sie die zugeh&ouml;rige Netzklasse durch Dr&uuml;cken  dieses Buttons l&ouml;schen.  Das L&ouml;schen wird verweigert, wenn es noch Netze gibt, die an diese Netzklasse zugewiesen sind.</p>
+			</blockquote>
+			<p><a name="AssignNetClass"></a><i>Zuweisen</i></p>
+			<blockquote>
+				<p>Nach Dr&uuml;cken dieses Buttons erscheint ein Fenster mit einer Tabelle, wo Sie den Netzen in der ersten Spalte einzeln eine Netzklasse in der zweiten Spalte neu zuweisen k&ouml;nnen.</p>
+			</blockquote>
+			<p><i>Selektieren</i></p>
+			<blockquote>
+				<p>Auf der Platine werden alle Objekte von allen Netzen selektiert, die zu der in der Tabelle ausgew&auml;hlten Netzklasse geh&ouml;ren. Anschlie&szlig;end befindet sich das Programm im <a href="SelectedItemState.html">Auswahl-Zustand</a>.</p>
+			</blockquote>
+			<p><i>Netze anzeigen</i></p>
+			<blockquote>
+				<p>&Ouml;ffnet eine Liste mit allen in den selektierten Klassen enthaltenen Netzen.</p>
+			</blockquote>
+			<p><i>Incompletes filtern</i></p>
+			<blockquote>
+				<p>Es werden nur die Luftlinien der offenen Verbindungen abgebildet, die zu Netzen aus der ausgew&auml;hlten Netzklasse geh&ouml;ren. Diese M&ouml;glichkeit ist als Hilfe gedacht, wenn Sie die Netze einer bestimmten Klasse zuerst routen wollen.</p>
+				<p></p>
+			</blockquote>
+		</blockquote>
+	</body>
+
+</html>

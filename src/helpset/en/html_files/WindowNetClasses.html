@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Netzklassen</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>Net Classes</h3>
+		<p>A net class consists of a rule set, which is used by default when routing nets of this class. These rules can be edited in the table in the Net Classes window. The following  is a description of the columns of this table. </p>
+		<h4>The  net class table:</h4>
+		<blockquote>
+			<p><i>name</i></p>
+			<blockquote>
+				<p>Contains the name of the net class, whose rules are described in the corresponding row.</p>
+			</blockquote>
+			<p><i>via rule</i></p>
+			<blockquote>
+				<p>In this combo box you can select the <a href="WindowVia.html">via rule</a> you want to use when routing a net of this class.</p>
+			</blockquote>
+			<p><i>clearance class</i></p>
+			<blockquote>
+				<p>Combo box to select the <a href="WindowClearanceMatrix.html">clearance class </a>for routing traces of nets of this class.</p>
+			</blockquote>
+			<p><i>trace width</i></p>
+			<blockquote>
+				<p>To define the trace width for new routed traces of nets of this class.</p>
+				<p>You can set the value to 0 to disallow traces of this net class in automatic and interactive routing on the layers  defined in the following field.</p>
+			</blockquote>
+			<p><i>on layer</i></p>
+			<blockquote>
+				<p>In this combo box you can select the layers for which the value in the trace width field is valid. If <i>all</i> is selected, the value is valid on all layers. If you select <i>inner</i>, the value is valid on all inner layers. Otherwise the value in the trace width field is only valid on the layer with the selected name. If the trace width of this net class is layer dependent and <i>all </i>is selected  in this combo box, in the trace width field appears the value -1,  because it is not possible to output a value which is valid on all layers.</p>
+			</blockquote>
+			<p><i>shove fixed</i></p>
+			<blockquote>
+				<p>If this field is selected, traces of this net class cannot be shoved or pulled tight while routing.</p>
+			</blockquote>
+			<p><i>cycles with areas</i></p>
+			<blockquote>
+				<p>Normally closed cycles created while routing will be removed automatically.  If this field is selected, that will only happen, if no conduction areas are involved. In that way you can for example connect items several times to a copper area without the redundant connections being removed automatically.</p>
+			</blockquote>
+			<p><i>min. length</i></p>
+			<blockquote>
+				<p>Here you can define a minimal value for the cumulative trace length of the nets from this class. In interactive routing than appears an ellipse. If  the actual trace length is smaller than allowed,  the cursor will be on the outside of this ellipse. This software however has no good support for routing nets with minimal lengths. We suggest to switch the <a href="WindowRouteParameter.html#RoutingMode">route mode</a> in the Route Parameter window to <i>stitching</i>  and  to set the value in the <a href="WindowRouteParameter.html#PullTightRegion">pull tight region</a> to 0 .</p>
+			</blockquote>
+			<p><i>max. length</i></p>
+			<blockquote>
+				<p>Here you can define a maximal value for the cumulative trace length of the nets from this class. In interactive routing than appears an elliptic ring. If the cursor is outside this ring when connecting a trace, the actual trace length is smaller than allowed.</p>
+			</blockquote>
+		</blockquote>
+		<h4>The buttons in the net class window:</h4>
+		<blockquote>
+			<p><i>Add</i></p>
+			<blockquote>
+				<p>When you press the <i>Add</i> button,  a new row with default values will be appended to the table. After changing the predefined name of the new class in the first column you can adjust the values in the other columns according to your  needs.</p>
+			</blockquote>
+			<p><i>Remove</i></p>
+			<blockquote>
+				<p>After selecting a row in the table with the left button, you can delete the corresponding net class by pushing the <i>Remove</i> button. The deletion will be refused, if there are still nets assigned  to this class.</p>
+			</blockquote>
+			<p><a name="AssignNetClass"></a><i>Assign</i></p>
+			<blockquote>
+				<p>After pushing this button a window with a table will appear, where you can assign to a each net in the first row a  new class with the combo box in the second row.</p>
+			</blockquote>
+			<p><i>Select</i></p>
+			<blockquote>
+				<p>All items of all nets belonging to the selected net class will be highlighted on the board. The IDE then changes to the  <a href="SelectedItemState.html">Selected Item State</a>.</p>
+			</blockquote>
+			<p><i>Show Nets</i></p>
+			<blockquote>
+				<p>Displays a list with all nets contained in  the selected classes.</p>
+			</blockquote>
+			<p><i>Filter Incompletes</i></p>
+			<blockquote>
+				<p>Only airlines of the open connections belonging to nets of the selected class will be displayed. This possibility is meant as an aid, if you want to route the nets of a certain class first.</p>
+				<p></p>
+			</blockquote>
+		</blockquote>
+	</body>
+
+</html>

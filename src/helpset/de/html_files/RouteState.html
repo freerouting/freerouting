@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive 6">
+		<title>Route-Zustand</title>
+	</head>
+
+	<body bgcolor="#ffffff">
+		<h3>Die Route-Zust&auml;nde</h3>
+		Nachdem Sie im Grundzustand einen <a href="MenuState.html#start_route">Route gestartet</a> haben, befindet sich das Programm in einem Route-Zustand., und zwar im <a href="#DynamicRouteState">Dynamic-Route-Zustand</a> oder im <a href="#StitchingRouteState">Stitching-Route-Zustand</a>, abh&auml;ngig davon ob im Route-Parameter-Fenster der  <a href="WindowRouteParameter.html#RoutingMode">Route-Modus</a> auf <i>dynamisch</i> oder <i>stitching</i> eingestellt ist. 
+		<p>Je nachdem ob die <a href="WindowRouteParameter.html#RuleSelection">Regel-Auswahl</a> auf <i>automatisch</i> oder<i> manuell</i> eingestellt ist, werden die Regeln zum Routen wie Bahnbreite, Clearance-Klasse und Via-Regel durch die <a href="WindowNetClasses.html">Netzklasse</a> des aktiven Netz oder durch die Einstellungen im Fenster f&uuml;r die<a href="WindowManualRules.html"> manuellen Regeln</a> bestimmt.
+</p>
+		<p>N&auml;hert sich die neu geroutete Bahn einem noch nicht verbundenen Objekt vom gleichen Netz auf der gleichen Lage, wird dort automatisch angeschlossen. Danach kehrt das Programm in den  interaktiven Zustand vor dem Routen zur&uuml;ck.</p>
+		<p><a href="MenuState.html#RouteMenuState">zur&uuml;ck</a></p>
+		<h3><a name="DynamicRouteState"></a>Der Dynamic-Route-Zustand</h3>
+		
+		In diesem Route-Zustand wird bei jeder Bewegung des Cursors automatisch ein St&uuml;ck Bahn von der letzten Cursor-Position zur aktuellen Cursor-Position eingef&uuml;gt. Abh&auml;ngig von der Einstellung f&uuml;r den <a href="WindowRouteParameter.html#PullTightRegion">Glattzieh-Bereich</a> im Route-Parameter-Fenster wird die Bahn danach sofort glatt gezogen.		<h4>Die Eintr&auml;ge im Popup-Men&uuml; unter der rechten Maustaste im Dynamic-Route-Zustand:</h4>
+		<blockquote>
+			<i>Lage wechseln</i>
+			<blockquote>
+				<p>Zum Wechseln auf eine andere Lage. Das zugeh&ouml;rige Via wird folgenderma&szlig;en aus der eingestellten <a href="../../en/html_files/WindowVia.html">Via-Regel</a> bestimmt: Die Vias in der Via-Regel werden von oben nach unten durchprobiert, ob sie die alte und die neue Lage umfassen, und ob ein Einf&uuml;gen ohne Clearance-Verletzungen m&ouml;glich ist. Das erste dabei gefundene Via wird eingesetzt. Shortcut sind die Zifferntasten 1-9 und die Tasten + und -. Mit &quot;+&quot; k&ouml;nnen Sie zur n&auml;chst gr&ouml;&szlig;eren Lage wechseln und mit &quot;-&quot; zur n&auml;chst kleineren.</p>
+			</blockquote>
+			<p><i>Route beenden</i></p>
+			<blockquote>
+				<p>Das Routen wird beendet und das Programm kehrt in den vorherigen Zustand zur&uuml;ck. Shortcut ist die linke Maustaste</p>
+			</blockquote>
+			<p><i>Route abbrechen</i></p>
+			<blockquote>
+				<p>Die zuletzt geroutete Bahn wird weggeworfen und das Programm kehrt in den vorherigen Zustand zur&uuml;ck. Shortcut ist die Esc-Taste.</p>
+			</blockquote>
+			<p><i>Snapshot erzeugen</i></p>
+			<blockquote>
+				<p>Das Programm erzeugt einen Snapshot, so dass Sie sp&auml;ter die Situation zum Zeitpunkt des Snapshots mit Undo wiederherstellen k&ouml;nnen. Sonst k&ouml;nnen Sie mit Undo nur die Situation vor dem Beginn der letzten Bahn wiederherstellen. Shortcut ist <i>s</i>.</p>
+			</blockquote>
+		</blockquote>
+		<p><a href="RouteState.html">zur&uuml;ck</a></p>
+		<blockquote>
+			<blockquote>
+				<p></p>
+			</blockquote>
+		</blockquote>
+		<h3><a name="StitchingRouteState"></a>Der Stitching-Route-Zustand</h3>In diesem Route-Zustand wird bei Klicken der linken Maustaste ein St&uuml;ck Bahn von der letzten Klick-Position zur aktuellen Cursor-Position eingef&uuml;gt. Abh&auml;ngig von der Einstellung f&uuml;r den <a href="WindowRouteParameter.html#PullTightRegion">Glattzieh-Bereich</a> im Route-Parameter-Fenster wird die Bahn danach glatt gezogen.
+		<h4>Die Eintr&auml;ge im Popup-Men&uuml; unter der rechten Maustaste im Stitching-Route-Zustand:</h4>
+		<blockquote>
+			<p><i>einf&uuml;gen</i></p>
+			<blockquote>
+				<p>Vom letzten Einf&uuml;gepunkt zum aktuellen Einf&uuml;gepunkt  wird eine Bahn gezogen  und abh&auml;ngig von der Einstellung f&uuml;r den <a href="WindowRouteParameter.html#PullTightRegion">Glattzieh-Bereich</a> im Route-Parameter-Fenster glatt gezogen. Shortcut ist die linke Maustaste</p>
+			</blockquote>
+			<p><i>beenden</i></p>
+			<blockquote>
+				<p>Das Programm kehrt in den Zustand vor dem Routen zur&uuml;ck. Shortcut ist die Esc-Taste.</p>
+			</blockquote>
+			<p><i>Lage wechseln</i></p>
+			<blockquote>
+				<p>Zum Wechseln auf eine andere Lage. Das zugeh&ouml;rige Via wird folgenderma&szlig;en aus der eingestellten <a href="/en/html_files/WindowVia.html">Via-Regel</a> bestimmt: Die Vias in der Via-Regel werden von oben nach unten durchprobiert, ob sie die alte und die neue Lage umfassen, und ob ein Einf&uuml;gen ohne Clearance-Verletzungen m&ouml;glich ist. Das erste dabei gefundene Via wird eingesetzt. Shortcut sind die Zifferntasten 1-9 und die Tasten + und -. Mit &quot;+&quot; k&ouml;nnen Sie zur n&auml;chst gr&ouml;&szlig;eren Lage wechseln und mit &quot;-&quot; zur n&auml;chst kleineren.</p>
+			</blockquote>
+		</blockquote>
+		<p><a href="RouteState.html">zur&uuml;ck</a></p>
+	</body>
+
+</html>
