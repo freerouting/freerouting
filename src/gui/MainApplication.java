@@ -36,6 +36,7 @@ public class MainApplication extends javax.swing.JFrame
      */
     public static void main(String p_args[])
     {
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(p_args);
 
         if (!(OFFLINE_ALLOWED || startupOptions.webstart_option))

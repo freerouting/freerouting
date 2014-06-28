@@ -27,6 +27,9 @@ import board.TestLevel;
 import board.BoardObservers;
 
 import designformats.specctra.DsnFile;
+import logger.FRLogger;
+
+import javax.swing.*;
 
 /**
  *
@@ -365,6 +368,9 @@ public class BoardFrame extends javax.swing.JFrame
      */
     public void set_context_sensitive_help(java.awt.Component p_component, String p_help_id)
     {
+        if (p_component == null)
+            throw new NullPointerException("p_component");
+
         if (this.help_system_used)
         {
             java.awt.Component curr_component;
@@ -378,10 +384,11 @@ public class BoardFrame extends javax.swing.JFrame
             }
             String help_id = "html_files." + p_help_id;
             javax.help.CSH.setHelpIDString(curr_component, help_id);
-            if (!this.is_web_start)
-            {
-                help_broker.enableHelpKey(curr_component, help_id, help_set);
+            if (help_broker==null) {
+                FRLogger.warning("help_broker is null");
+                return;
             }
+            help_broker.enableHelpKey(curr_component, help_id, help_set);
         }
     }
     

@@ -21,6 +21,8 @@
 
 package gui;
 
+import logger.FRLogger;
+
 import javax.help.CSH;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
@@ -77,7 +79,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
                 URL hsURL = HelpSet.findHelpSet(this.getClass().getClassLoader(), helpset_name);
                 if (hsURL == null)
                 {
-                    System.out.println("HelpSet " + helpset_name + " not found.");
+                    FRLogger.warning("HelpSet " + helpset_name + " not found.");
                 }
                 else
                 {
