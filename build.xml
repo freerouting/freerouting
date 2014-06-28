@@ -5,7 +5,7 @@
 
     <target name="compile">
         <mkdir dir="build/classes"/>
-        <javac destdir="build/classes" classpath="lib/jh.jar:lib/javaws.jar">
+        <javac destdir="build/classes" classpath="lib/jh.jar:lib/javaws.jar" target="1.5">
 		<src path="src"/>
 	</javac>
     </target>
