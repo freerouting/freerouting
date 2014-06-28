@@ -71,7 +71,8 @@ public class MainApplication extends javax.swing.JFrame
             welcome_window.dispose();
             if (new_frame == null)
             {
-                Runtime.getRuntime().exit(1);
+                System.exit(1);
+                return;
             }
             new_frame.addWindowListener(new java.awt.event.WindowAdapter()
             {
