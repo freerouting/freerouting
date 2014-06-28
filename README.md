@@ -4,13 +4,19 @@ freerouting
 Yet another copy of the original freerouting.net source
 
 ChangeLog over original version 1.2.43:
+
 0) ant build script & missing dependencies added
+
 1) Refactoring: StartupOptions class extracted
+
 2) DefaultUncaughtExceptionHandler added
+
 3) Refactoring: FRLogger added for future logging & error handling improvements.
-4) launch4j configuration added
+
+4) launch4j configuration & pre-compiled Windows binary added
 
 Known issues:
+
 I have not yet figured out the help system
 
 ===========
