@@ -38,13 +38,16 @@ public class DsnFile
         OK, OUTLINE_MISSING, ERROR
     }
 
+    private DsnFile() {
+    }
+
     /**
      * Creates a routing board from a Specctra dns file.
      * The parameters p_item_observers and p_item_id_no_generator are used,
      * in case the board is embedded into a host system.
      * Returns false, if an error occured.
      */
-    public static ReadResult read(java.io.InputStream p_input_stream, interactive.BoardHandling p_board_handling,
+    public static ReadResult read(java.io.InputStream p_input_stream, interactive.IBoardHandling p_board_handling,
                                   board.BoardObservers p_observers, datastructures.IdNoGenerator p_item_id_no_generator, TestLevel p_test_level)
     {
         Scanner scanner = new SpecctraFileScanner(p_input_stream);
@@ -108,7 +111,7 @@ public class DsnFile
      * This is useful in case the layer type was not set correctly to plane in the dsn-file.
      * Returns true, if something was changed.
      */
-    private static boolean adjust_plane_autoroute_settings(interactive.BoardHandling p_board_handling)
+    private static boolean adjust_plane_autoroute_settings(interactive.IBoardHandling p_board_handling)
     {
         BasicBoard routing_board = p_board_handling.get_routing_board();
         board.LayerStructure board_layer_structure = routing_board.layer_structure;
@@ -202,7 +205,7 @@ public class DsnFile
         }
         // Adjust the layer prefered directions in the autoroute settings.
         // and deactivate the changed layers.
-        interactive.AutorouteSettings autoroute_settings = p_board_handling.settings.autoroute_settings;
+        interactive.AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
         int layer_count = routing_board.get_layer_count();
         boolean curr_preferred_direction_is_horizontal =
                 autoroute_settings.get_preferred_direction_is_horizontal(0);

@@ -58,7 +58,7 @@ import designformats.specctra.DsnFile;
  *
  * @author  Alfons Wirtz
  */
-public class BoardHandling
+public class BoardHandling implements IBoardHandling
 {
 
     /**
@@ -95,6 +95,7 @@ public class BoardHandling
     /**
      * Return the current language for the GUI messages.
      */
+    @Override
     public java.util.Locale get_locale()
     {
         return this.locale;
@@ -115,6 +116,7 @@ public class BoardHandling
     /**
      * Gets the routing board of this board handling.
      */
+    @Override
     public RoutingBoard get_routing_board()
     {
         return this.board;
@@ -378,6 +380,7 @@ public class BoardHandling
     /**
      * Initializes the manual trace widths from the default trace widths in the board rules.
      */
+    @Override
     public void initialize_manual_trace_half_widths()
     {
         for (int i = 0; i < settings.manual_trace_half_width_arr.length; ++i)
@@ -583,6 +586,7 @@ public class BoardHandling
     /**
      * Creates the Routingboard, the graphic context and the interactive settings.
      */
+    @Override
     public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure,
                              PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name,
                              BoardRules p_rules, board.Communication p_board_communication, TestLevel p_test_level)
@@ -1719,6 +1723,11 @@ public class BoardHandling
         {
             panel.move_mouse(graphics_context.coordinate_transform.board_to_screen(p_to_location));
         }
+    }
+
+    @Override
+    public Settings get_settings() {
+        return settings;
     }
 
     /**

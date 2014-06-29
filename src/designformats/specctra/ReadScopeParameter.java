@@ -32,7 +32,7 @@ public class ReadScopeParameter
 {
     
     /** Creates a new instance of ReadScopeParameter */
-    ReadScopeParameter(Scanner p_scanner, interactive.BoardHandling p_board_handling,
+    ReadScopeParameter(Scanner p_scanner, interactive.IBoardHandling p_board_handling,
             board.BoardObservers p_observers, 
             datastructures.IdNoGenerator p_item_id_no_generator,board.TestLevel p_test_level)
     {
@@ -44,7 +44,7 @@ public class ReadScopeParameter
     }
     
     final Scanner scanner;
-    final interactive.BoardHandling board_handling;
+    final interactive.IBoardHandling board_handling;
     final NetList netlist = new NetList();
     
     final board.BoardObservers  observers;

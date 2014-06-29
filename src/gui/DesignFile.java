@@ -113,6 +113,7 @@ public class DesignFile
                 result = this.file_contents.getInputStream();
             } catch (Exception e)
             {
+                // todo: better error handling...
                 result = null;
             }
         }
@@ -127,6 +128,7 @@ public class DesignFile
                 result = new java.io.FileInputStream(this.input_file);
             } catch (Exception e)
             {
+                // todo: better error handling...
                 result = null;
             }
         }

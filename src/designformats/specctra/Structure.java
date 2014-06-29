@@ -286,7 +286,7 @@ class Structure extends ScopeKeyword
         p_par.board_handling.initialize_manual_trace_half_widths();
         if (p_par.autoroute_settings != null)
         {
-            p_par.board_handling.settings.autoroute_settings = p_par.autoroute_settings;
+            p_par.board_handling.get_settings().autoroute_settings = p_par.autoroute_settings;
         }
         return result;
     }
