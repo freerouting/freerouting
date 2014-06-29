@@ -41,7 +41,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
     protected BatchAutorouterThread(BoardHandling p_board_handling)
     {
         super(p_board_handling);
-        AutorouteSettings autoroute_settings = p_board_handling.settings.autoroute_settings;
+        AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
         this.batch_autorouter = new BatchAutorouter(this, !autoroute_settings.get_with_fanout(), true, autoroute_settings.get_start_ripup_costs());
         this.batch_opt_route = new BatchOptRoute(this);
 
@@ -63,18 +63,18 @@ public class BatchAutorouterThread extends InteractiveActionThread
             String start_message = resources.getString("batch_autorouter") + " " + resources.getString("stop_message");
             hdlg.screen_messages.set_status_message(start_message);
             boolean fanout_first =
-                    hdlg.settings.autoroute_settings.get_with_fanout() &&
-                    hdlg.settings.autoroute_settings.get_pass_no() <= 1;
+                    hdlg.get_settings().autoroute_settings.get_with_fanout() &&
+                    hdlg.get_settings().autoroute_settings.get_pass_no() <= 1;
             if (fanout_first)
             {
                 BatchFanout.fanout_board(this);
             }
-            if (hdlg.settings.autoroute_settings.get_with_autoroute() && !this.is_stop_requested())
+            if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_requested())
             {
                 batch_autorouter.autoroute_passes();
             }
             hdlg.get_routing_board().finish_autoroute();
-            if (hdlg.settings.autoroute_settings.get_with_postroute() && !this.is_stop_requested())
+            if (hdlg.get_settings().autoroute_settings.get_with_postroute() && !this.is_stop_requested())
             {
                 String opt_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message");
                 hdlg.screen_messages.set_status_message(opt_message);

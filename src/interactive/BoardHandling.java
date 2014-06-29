@@ -66,7 +66,6 @@ public class BoardHandling extends BoardHandlingImpl
      */
     public BoardHandling(gui.BoardPanel p_panel, java.util.Locale p_locale)
     {
-        super();
         this.locale = p_locale;
         this.panel = p_panel;
         this.screen_messages = p_panel.screen_messages;
