@@ -58,7 +58,7 @@ import designformats.specctra.DsnFile;
  *
  * @author  Alfons Wirtz
  */
-public class BoardHandling implements IBoardHandling
+public class BoardHandling extends BoardHandlingImpl
 {
 
     /**
@@ -66,10 +66,10 @@ public class BoardHandling implements IBoardHandling
      */
     public BoardHandling(gui.BoardPanel p_panel, java.util.Locale p_locale)
     {
+        super();
         this.locale = p_locale;
         this.panel = p_panel;
         this.screen_messages = p_panel.screen_messages;
-        this.logfile = new Logfile();
         this.set_interactive_state(SelectMenuState.get_instance(this, logfile));
         this.resources = java.util.ResourceBundle.getBundle("interactive.resources.BoardHandling", p_locale);
     }
@@ -111,15 +111,6 @@ public class BoardHandling implements IBoardHandling
             return 0;
         }
         return board.get_layer_count();
-    }
-
-    /**
-     * Gets the routing board of this board handling.
-     */
-    @Override
-    public RoutingBoard get_routing_board()
-    {
-        return this.board;
     }
 
     /**
@@ -378,18 +369,6 @@ public class BoardHandling implements IBoardHandling
     }
 
     /**
-     * Initializes the manual trace widths from the default trace widths in the board rules.
-     */
-    @Override
-    public void initialize_manual_trace_half_widths()
-    {
-        for (int i = 0; i < settings.manual_trace_half_width_arr.length; ++i)
-        {
-            settings.manual_trace_half_width_arr[i] = this.board.rules.get_default_net_class().get_trace_half_width(i);
-        }
-    }
-
-    /**
      * Sets the manual trace half width used in interactive routing.
      * If p_layer_no < 0, the manual trace half width is changed on all layers.
      */
@@ -591,33 +570,12 @@ public class BoardHandling implements IBoardHandling
                              PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name,
                              BoardRules p_rules, board.Communication p_board_communication, TestLevel p_test_level)
     {
-        if (this.board != null)
-        {
-            System.out.println(" BoardHandling.create_board: board already created");
-        }
-        int outline_cl_class_no = 0;
-
-        if (p_rules != null)
-        {
-            if (p_outline_clearance_class_name != null && p_rules.clearance_matrix != null)
-            {
-                outline_cl_class_no = p_rules.clearance_matrix.get_no(p_outline_clearance_class_name);
-                outline_cl_class_no = Math.max(outline_cl_class_no, 0);
-            }
-            else
-            {
-                outline_cl_class_no =
-                        p_rules.get_default_net_class().default_item_clearance_classes.get(rules.DefaultItemClearanceClasses.ItemClass.AREA);
-            }
-        }
-        this.board =
-                new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no,
-                p_rules, p_board_communication, p_test_level);
+        super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules,
+                p_board_communication, p_test_level);
 
         // create the interactive settings with default
         double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
         this.coordinate_transform = new CoordinateTransform(1, p_board_communication.unit, unit_factor, p_board_communication.unit);
-        this.settings = new Settings(this.board, this.logfile);
 
         // create a graphics context for the board
         Dimension panel_size = panel.getPreferredSize();
@@ -1725,11 +1683,6 @@ public class BoardHandling implements IBoardHandling
         }
     }
 
-    @Override
-    public Settings get_settings() {
-        return settings;
-    }
-
     /**
      * Gets the current interactive state.
      */
@@ -1791,8 +1744,6 @@ public class BoardHandling implements IBoardHandling
     public CoordinateTransform coordinate_transform = null;
     /** The text message fields displayed on the screen */
     public final ScreenMessages screen_messages;
-    /** The current settings for interactive actions on the board*/
-    public Settings settings = null;
     /** The currently active interactive state. */
     InteractiveState interactive_state = null;
     /**
@@ -1803,15 +1754,8 @@ public class BoardHandling implements IBoardHandling
     private RatsNest ratsnest = null;
     /** To display all clearance violations between items on the screen. */
     private ClearanceViolations clearance_violations = null;
-    /** The board database used in this interactive handling. */
-    private RoutingBoard board = null;
     /** The graphical panel used for displaying the board. */
     private final gui.BoardPanel panel;
-    /**
-     * The file used for logging interactive action,
-     * so that they can be replayed later
-     */
-    public final Logfile logfile;
     /**
      * True if currently a logfile is being processed.
      * Used to prevent interactive changes of the board database
