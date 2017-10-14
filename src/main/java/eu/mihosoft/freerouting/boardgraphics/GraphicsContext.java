@@ -429,8 +429,8 @@ public class GraphicsContext implements java.io.Serializable
                 System.out.println("GraphicsContext.fill_area: shape not bounded");
                 return;
             }
-            Rectangle clip_shape = (Rectangle)p_g.getClip() ;
-            IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
+            java.awt.Shape clip_shape = p_g.getClip() ;
+            IntBox clip_box = coordinate_transform.screen_to_board(clip_shape.getBounds());
             if (!border.bounding_box().intersects(clip_box))
             {
                 return;
