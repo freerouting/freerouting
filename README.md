@@ -1,5 +1,7 @@
 # freerouting
 
+[ ![Download](https://api.bintray.com/packages/miho/Freerouting/freerouting/images/download.svg) ](https://bintray.com/miho/Freerouting/freerouting/_latestVersion)
+
 Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.
 
 It basically does this:
