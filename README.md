@@ -4,6 +4,8 @@ Freerouting is an advanced autorouter for all PCB programs that support the stan
 
 It basically does this:
 
+![](https://raw.githubusercontent.com/miho/freerouting/master/res/img/freerouting.jpg)
+
 ## What has changed?
 
 Freerouting is a fantastic piece of software. But the code hasn't been updated in a while and had some design flaws. Some of them are fixed now. This version of freerouting has been refactored to be fully compatible with JDK9.
