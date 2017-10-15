@@ -28,6 +28,7 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
+
 Date buildTimeAndDate = new Date()
 ext {
     buildDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
@@ -85,6 +86,7 @@ publishing {
             from components.java
             artifact sourcesJar
             artifact javadocJar
+            artifact executableJar
 
             pom.withXml {
                 def root = asNode()
