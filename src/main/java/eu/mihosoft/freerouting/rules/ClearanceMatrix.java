@@ -409,7 +409,7 @@ public class ClearanceMatrix implements java.io.Serializable
         public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
             p_window.append_bold(resources.getString("spacing_from_clearance_class") + " ");
             p_window.append_bold(this.name);
             for (int i = 1; i < this.column.length; ++i)

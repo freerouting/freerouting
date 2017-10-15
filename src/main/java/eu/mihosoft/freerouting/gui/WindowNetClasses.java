@@ -36,7 +36,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
     /** Creates a new instance of NetClassesWindow */
     public WindowNetClasses(BoardFrame p_board_frame)
     {
-        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowNetClasses", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowNetClasses", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
 
         this.board_frame = p_board_frame;

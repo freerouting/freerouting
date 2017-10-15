@@ -1256,7 +1256,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     protected void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         for (int i = 0; i < this.net_count(); ++i)
         {
             p_window.append(", " + resources.getString("net") + " ");
@@ -1273,7 +1273,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (this.clearance_class > 0)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
             p_window.append(", " + resources.getString("clearance_class") + " ");
             String name = board.rules.clearance_matrix.get_name(this.clearance_class);
             p_window.append(name, resources.getString("clearance_info"), board.rules.clearance_matrix.get_row(this.clearance_class));
@@ -1288,7 +1288,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (this.fixed_state != FixedState.UNFIXED)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.FixedState", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.FixedState", p_locale);
             p_window.append(", ");
             p_window.append(resources.getString(this.fixed_state.toString()));
         }
@@ -1303,7 +1303,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (!contacts.isEmpty())
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
             p_window.append(", " + resources.getString("contacts") + " ");
             Integer contact_count = contacts.size();
             p_window.append_items(contact_count.toString(), resources.getString("contact_info"), contacts);
@@ -1319,7 +1319,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (!clearance_violations.isEmpty())
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
             p_window.append(", ");
             Integer violation_count = clearance_violations.size();
             Collection<ObjectInfoPanel.Printable> violations = new java.util.LinkedList<ObjectInfoPanel.Printable>();

@@ -55,7 +55,7 @@ public class BoardMenuOther extends javax.swing.JMenu
     private BoardMenuOther(BoardFrame p_board_frame)
     {
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuOther", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.BoardMenuOther", p_board_frame.get_locale());
     }
     
     private final BoardFrame board_frame;

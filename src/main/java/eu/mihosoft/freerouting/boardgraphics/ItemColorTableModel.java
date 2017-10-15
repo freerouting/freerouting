@@ -143,7 +143,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
     public String getColumnName(int p_col)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.boardgraphics.resources.ColorTableModel", this.locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.boardgraphics.ColorTableModel", this.locale);
         return resources.getString(ColumnNames.values()[p_col].toString());
     }
     

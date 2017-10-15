@@ -32,7 +32,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
     {
         super(p_board_frame);
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowObjectList", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowObjectList", p_board_frame.get_locale());
         javax.swing.JPanel input_panel = new javax.swing.JPanel();
         this.south_panel.add(input_panel, java.awt.BorderLayout.SOUTH);
         

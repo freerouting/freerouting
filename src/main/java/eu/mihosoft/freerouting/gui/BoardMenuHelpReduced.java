@@ -35,7 +35,7 @@ public class BoardMenuHelpReduced extends javax.swing.JMenu
     public BoardMenuHelpReduced(BoardFrame p_board_frame)
     {
         this.board_frame = p_board_frame;
-        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuHelp", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.BoardMenuHelp", p_board_frame.get_locale());
         this.setText(this.resources.getString("help"));
         
         javax.swing.JMenuItem about_window = new javax.swing.JMenuItem();

@@ -183,7 +183,7 @@ public class ConductionArea extends ObstacleArea implements Connectable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("conduction_area"));
         this.print_shape_info(p_window, p_locale);
         this.print_connectable_item_info(p_window, p_locale);

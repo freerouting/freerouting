@@ -39,7 +39,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
         this.manual_rule_window = new WindowManualRules(p_board_frame);
         
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowRouteParameter", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowRouteParameter", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
@@ -479,7 +479,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
             if (free_angle_traces_found)
             {
                 java.util.ResourceBundle resources = 
-                        java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowRouteParameter", current_locale);
+                        java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowRouteParameter", current_locale);
                 String curr_message = resources.getString("change_snap_angle_90");
                 if (!WindowMessage.confirm(curr_message))
                 {
@@ -515,7 +515,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
             if (free_angle_traces_found)
             {
                 java.util.ResourceBundle resources = 
-                        java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowRouteParameter", current_locale);
+                        java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowRouteParameter", current_locale);
                 String curr_message = resources.getString("change_snap_angle_45");
                 if (!WindowMessage.confirm(curr_message))
                 {

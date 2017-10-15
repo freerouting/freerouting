@@ -129,7 +129,7 @@ public class BoardMenuInfo extends javax.swing.JMenu
     private BoardMenuInfo(BoardFrame p_board_frame)
     {
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuInfo", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.BoardMenuInfo", p_board_frame.get_locale());
     }
     
     

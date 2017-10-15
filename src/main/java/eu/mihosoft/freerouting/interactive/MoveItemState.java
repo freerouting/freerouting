@@ -51,7 +51,7 @@ public class MoveItemState extends InteractiveState
     public static MoveItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list,
             InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
     {
-        java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", p_board_handling.get_locale());
+        java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
         if (p_item_list.isEmpty())
         {
             p_board_handling.screen_messages.set_status_message(resources.getString("move_component_failed_because_no_item_selected"));

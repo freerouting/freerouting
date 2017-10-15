@@ -60,7 +60,7 @@ public class MainApplication extends javax.swing.JFrame
         if (startupOptions.single_design_option)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.MainApplication", startupOptions.current_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.MainApplication", startupOptions.current_locale);
             BoardFrame.Option board_option;
             if (startupOptions.session_file_option)
             {
@@ -119,7 +119,7 @@ public class MainApplication extends javax.swing.JFrame
         this.is_webstart = startupOptions.getWebstartOption();
         this.locale = startupOptions.getCurrentLocale();
         this.resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.MainApplication", locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.MainApplication", locale);
         main_panel = new javax.swing.JPanel();
         getContentPane().add(main_panel);
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
@@ -265,7 +265,7 @@ public class MainApplication extends javax.swing.JFrame
             BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.MainApplication", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.MainApplication", p_locale);
 
         java.io.InputStream input_stream = p_design_file.get_input_stream();
         if (input_stream == null)

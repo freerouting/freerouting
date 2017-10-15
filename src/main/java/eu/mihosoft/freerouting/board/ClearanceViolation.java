@@ -43,7 +43,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("clearance_violation_2"));
         p_window.append(" " + resources.getString("at") + " ");
         p_window.append(shape.centre_of_gravity());

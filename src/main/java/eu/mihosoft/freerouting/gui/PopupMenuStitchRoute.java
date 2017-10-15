@@ -44,7 +44,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay
             change_layer_menu = null;
         }
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem insert_item = new javax.swing.JMenuItem();
         insert_item.setText(resources.getString("insert"));
         insert_item.addActionListener(new java.awt.event.ActionListener()

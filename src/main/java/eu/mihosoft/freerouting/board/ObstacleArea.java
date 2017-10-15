@@ -295,7 +295,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("keepout"));
         int cmp_no = this.get_component_no();
         if (cmp_no > 0)
@@ -315,7 +315,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
     protected final void print_shape_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append(" " + resources.getString("at") + " ");
         eu.mihosoft.freerouting.geometry.planar.FloatPoint center = this.get_area().get_border().centre_of_gravity();
         p_window.append(center);

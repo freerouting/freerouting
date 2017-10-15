@@ -140,7 +140,7 @@ public class ViaRule implements java.io.Serializable, eu.mihosoft.freerouting.bo
     public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("via_rule_2") + " ");
         p_window.append_bold(this.name);
         p_window.append_bold(":");

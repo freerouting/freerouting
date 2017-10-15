@@ -76,7 +76,7 @@ public class NetClasses implements java.io.Serializable
     NetClass append(eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.rules.resources.Default", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.rules.Default", p_locale);
         String name_front = resources.getString("class");
         String new_name = null;
         Integer index = 0;

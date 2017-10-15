@@ -103,7 +103,7 @@ public class ViaInfos implements java.io.Serializable, eu.mihosoft.freerouting.b
     public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("vias") + ": ");
         int counter = 0;
         boolean first_time = true;

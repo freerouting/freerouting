@@ -34,7 +34,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
     /** Creates a new instance of AssignNetRulesWindow */
     public WindowAssignNetClass(BoardFrame p_board_frame)
     {
-        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowAssignNetClass", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowAssignNetClass", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         this.board_frame = p_board_frame;

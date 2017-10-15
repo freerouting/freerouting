@@ -52,7 +52,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
         try
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", hdlg.get_locale());
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", hdlg.get_locale());
             boolean saved_board_read_only = hdlg.is_board_read_only();
             hdlg.set_board_read_only(true);
             boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();

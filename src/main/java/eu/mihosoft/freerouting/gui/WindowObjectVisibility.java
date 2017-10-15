@@ -33,7 +33,7 @@ public class WindowObjectVisibility extends WindowVisibility
     public static WindowObjectVisibility get_instance(BoardFrame p_board_frame)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowObjectVisibility", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowObjectVisibility", p_board_frame.get_locale());
         String title = resources.getString("title");
         String header_message = resources.getString("header_message");
         String [] message_arr = new String [ObjectNames.values().length];

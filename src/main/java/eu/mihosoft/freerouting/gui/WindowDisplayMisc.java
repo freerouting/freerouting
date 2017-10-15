@@ -33,7 +33,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     {
         this.panel = p_board_frame.board_panel;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.DisplayMisc", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.DisplayMisc", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         // Create main panel

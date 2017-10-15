@@ -34,7 +34,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
         super(p_board_frame);
         
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.Default", p_board_frame.get_locale());
         eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
         
         

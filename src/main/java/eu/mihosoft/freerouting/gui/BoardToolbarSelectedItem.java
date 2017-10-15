@@ -37,7 +37,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         this.board_frame = p_board_frame;
         
         this.resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardToolbarSelectedItem", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.BoardToolbarSelectedItem", p_board_frame.get_locale());
         
         javax.swing.JButton cancel_button = new javax.swing.JButton();
         cancel_button.setText(resources.getString("cancel"));

@@ -36,7 +36,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow
         this.board_handling = p_board_frame.board_panel.board_handling;
         
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowSelectParameter", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowSelectParameter", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         // create main panel

@@ -38,7 +38,7 @@ public abstract class WindowNetSamples extends BoardSubWindow
     public WindowNetSamples(java.util.Locale p_locale, String p_title, String p_button_name, int p_row_count)
     {
         this.locale = p_locale;
-        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowNetSamples", p_locale);
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowNetSamples", p_locale);
         this.setTitle(resources.getString(p_title));
         
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE );

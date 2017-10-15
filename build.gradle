@@ -65,21 +65,21 @@ dependencies {
     compile files("./lib/eu.mihosoft.freerouting.deps.jh.jar")
 }
 
-//ext.moduleName = 'eu.mihosoft.freerouting'
+ext.moduleName = 'eu.mihosoft.freerouting'
 //javaModule.name = 'eu.mihosoft.freerouting'
-//
-//compileJava {
-//    inputs.property("moduleName", moduleName)
-//    doFirst {
-//
-//        System.err.println(": modulepath-jar: " + classpath.asPath)
-//
-//        options.compilerArgs = [
-//            '--module-path', classpath.asPath,
-//        ]
-//        classpath = files()
-//    }
-//}
+
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+
+        System.err.println(": modulepath-jar: " + classpath.asPath)
+
+        options.compilerArgs = [
+            '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -101,7 +101,7 @@ jar {
 //    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
 
     // // project class files compiled from source
-    from files(sourceSets.main.output)
+    // from files(sourceSets.main.output)
 
     manifest {
 

@@ -649,7 +649,7 @@ public class Pin extends DrillItem implements java.io.Serializable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("pin") + ": ");
         p_window.append(resources.getString("component_2") + " ");
         Component component = board.components.get(this.get_component_no());

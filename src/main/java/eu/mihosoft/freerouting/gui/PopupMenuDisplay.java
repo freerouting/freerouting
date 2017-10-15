@@ -36,7 +36,7 @@ public class PopupMenuDisplay extends javax.swing.JPopupMenu
     {
         this.board_panel = p_board_frame.board_panel;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem center_display_item = new javax.swing.JMenuItem();
         center_display_item.setText(resources.getString("center_display"));
         center_display_item.addActionListener(new java.awt.event.ActionListener()

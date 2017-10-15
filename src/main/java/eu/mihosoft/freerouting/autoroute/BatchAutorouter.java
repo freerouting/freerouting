@@ -112,7 +112,7 @@ public class BatchAutorouter
     public boolean autoroute_passes()
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", hdlg.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", hdlg.get_locale());
         boolean still_unrouted_items = true;
         while (still_unrouted_items && !this.is_interrupted)
         {

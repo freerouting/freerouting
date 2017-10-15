@@ -32,7 +32,7 @@ public class WindowAbout extends BoardSavableSubWindow
     public WindowAbout(java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowAbout", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowAbout", p_locale);
         this.setTitle(resources.getString("title"));
         
         final javax.swing.JPanel window_panel = new javax.swing.JPanel();

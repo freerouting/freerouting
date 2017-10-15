@@ -208,7 +208,7 @@ public class Net implements Comparable<Net>, eu.mihosoft.freerouting.board.Objec
         Integer terminal_item_count = terminals.size();
 
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("net") + " ");
         p_window.append_bold(this.name);
         p_window.append_bold(": ");

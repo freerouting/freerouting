@@ -98,7 +98,7 @@ public class Nets implements java.io.Serializable
      */
     public Net new_net(java.util.Locale p_locale)
     {
-        java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.rules.resources.Default", p_locale);
+        java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.rules.Default", p_locale);
         String net_name = resources.getString("net#") + (new Integer(net_arr.size() + 1)).toString();
         return add(net_name, 1, false);
     }

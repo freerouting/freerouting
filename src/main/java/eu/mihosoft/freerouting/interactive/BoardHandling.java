@@ -74,7 +74,7 @@ public class BoardHandling extends BoardHandlingImpl
         this.panel = p_panel;
         this.screen_messages = p_panel.screen_messages;
         this.set_interactive_state(SelectMenuState.get_instance(this, logfile));
-        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.BoardHandling", p_locale);
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.BoardHandling", p_locale);
     }
 
     /**

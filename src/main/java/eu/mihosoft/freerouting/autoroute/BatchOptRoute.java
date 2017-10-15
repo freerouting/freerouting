@@ -114,7 +114,7 @@ public class BatchOptRoute
     private boolean opt_route_item(Item p_item, int p_pass_no, boolean p_with_prefered_directions)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", this.thread.hdlg.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
         String start_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + (new Integer(p_pass_no)).toString() + ": ";
         this.thread.hdlg.screen_messages.set_status_message(start_message);
         this.thread.hdlg.remove_ratsnest();

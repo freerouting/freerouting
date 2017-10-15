@@ -34,7 +34,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow
     {
         this.board_handling = p_board_frame.board_panel.board_handling;
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowRouteDetail", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowRouteDetail", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
 
         // create main panel

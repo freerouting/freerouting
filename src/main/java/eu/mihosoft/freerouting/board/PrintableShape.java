@@ -56,7 +56,7 @@ public abstract class PrintableShape
         public String toString()
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", this.locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", this.locale);
             String result = resources.getString("circle") + ": ";
             if (center.x != 0 || center.y != 0)
             {
@@ -89,7 +89,7 @@ public abstract class PrintableShape
         public String toString()
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", this.locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", this.locale);
             String result = resources.getString("rectangle") + ": " + resources.getString("lower_left") + " = "
                     + lower_left.to_string(this.locale) + ", " + resources.getString("upper_right") + " = "
                     + upper_right.to_string(this.locale) ;
@@ -112,7 +112,7 @@ public abstract class PrintableShape
         public String toString()
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", this.locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.ObjectInfoPanel", this.locale);
             String result = resources.getString("polygon") + ": ";
             for (int i = 0; i < corner_arr.length; ++i)
             {

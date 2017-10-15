@@ -87,7 +87,7 @@ public class BoardMenuRules extends javax.swing.JMenu
     private BoardMenuRules(BoardFrame p_board_frame)
     {
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuRules", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.BoardMenuRules", p_board_frame.get_locale());
     }
     
     

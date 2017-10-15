@@ -34,7 +34,7 @@ public class ScreenMessages
     public ScreenMessages(JLabel p_status_field, JLabel p_add_field,
             JLabel p_layer_field, JLabel p_mouse_position, java.util.Locale p_locale)
     {
-        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.ScreenMessages", p_locale);
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.ScreenMessages", p_locale);
         locale = p_locale;
         active_layer_string = resources.getString("current_layer") + " ";
         target_layer_string = resources.getString("target_layer") + " ";

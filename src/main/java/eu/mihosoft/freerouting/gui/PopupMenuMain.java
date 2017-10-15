@@ -33,7 +33,7 @@ class PopupMenuMain extends PopupMenuDisplay
     {
         super(p_board_frame) ;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.PopupMenuMain", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.PopupMenuMain", p_board_frame.get_locale());
         
         // add the item for selecting items
         

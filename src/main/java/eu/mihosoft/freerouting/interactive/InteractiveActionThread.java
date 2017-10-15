@@ -155,7 +155,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
         {
 
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", hdlg.get_locale());
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", hdlg.get_locale());
             boolean saved_board_read_only = hdlg.is_board_read_only();
             hdlg.set_board_read_only(true);
             String start_message = resources.getString("logfile") + " " + resources.getString("stop_message");
