@@ -1,25 +1,25 @@
-freerouting
-===========
+# freerouting
 
-Yet another copy of the original freerouting.net source
+Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.
 
-ChangeLog over original version 1.2.43:
+It basically does this:
 
-0) ant build script & missing dependencies added
+## What has changed?
 
-1) Refactoring: StartupOptions class extracted
+Freerouting is a fantastic piece of software. But the code hasn't been updated in a while and had some design flaws. Some of them are fixed now. This version of freerouting has been refactored to be fully compatible with JDK9.
 
-2) DefaultUncaughtExceptionHandler added
+### New Features
 
-3) Refactoring: FRLogger added for future logging & error handling improvements.
+- Uses gradle as build system (which is compatible with command line, NetBeans, IntelliJ, Eclipse and more)
+- New code base uses proper package names. That is, freerouting can finally be used as library.
+- Removed local dependencies. Publication via maven central and/or bintray is now possibe.
+- WebStart code has been removed (WebStart is officially deprecated)
+- Several `ClassCastException` bugs in the graphics package have been fixed
+- Swing UI uses native look&feel if possible
+- Prepared module support (still WIP)
+- other minor fixes
 
-4) launch4j configuration & pre-compiled Windows binary added
-
-Known issues:
-
-I have not yet figured out the help system
-
-===========
+## From the original author:
 
 Java Based Printed Circuit Board Routing Software from FreeRouting.net written by Alfons Wirtz.
 
