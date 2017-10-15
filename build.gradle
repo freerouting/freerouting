@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.hierynomus.license" version "0.13.1"
+//    id "com.github.hierynomus.license" version "0.13.1"
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '2.4.0'
     id 'com.jfrog.bintray' version '1.7.3'
@@ -60,26 +60,26 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.10'
 
     // https://mvnrepository.com/artifact/javax.help/javahelp
-//    compile group: 'javax.help', name: 'javahelp', version: '2.0.05'
+    compile group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
-    compile files("./lib/eu.mihosoft.freerouting.deps.jh.jar")
+//    compile files("./lib/eu.mihosoft.freerouting.deps.jh.jar")
 }
 
-ext.moduleName = 'eu.mihosoft.freerouting'
-//javaModule.name = 'eu.mihosoft.freerouting'
-
-compileJava {
-    inputs.property("moduleName", moduleName)
-    doFirst {
-
-        System.err.println(": modulepath-jar: " + classpath.asPath)
-
-        options.compilerArgs = [
-            '--module-path', classpath.asPath,
-        ]
-        classpath = files()
-    }
-}
+// ext.moduleName = 'eu.mihosoft.freerouting'
+// javaModule.name = 'eu.mihosoft.freerouting'
+//
+//compileJava {
+//    inputs.property("moduleName", moduleName)
+//    doFirst {
+//
+//        System.err.println(": modulepath-jar: " + classpath.asPath)
+//
+//        options.compilerArgs = [
+//            '--module-path', classpath.asPath,
+//        ]
+//        classpath = files()
+//    }
+//}
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -114,10 +114,38 @@ jar {
                 'Specification-Title': project.name,
                 'Specification-Version': project.version,
                 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+//                ,'Main-Class': mainClass
+        )
+    }
+}
+
+task executableJar(type: Jar) {
+    classifier = 'executable'
+
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+    
+    from files(sourceSets.main.output)
+
+    manifest {
+
+        attributes(
+                'Built-By': System.properties['user.name'],
+                'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+                'Build-Date': project.buildDate,
+                'Build-Time': project.buildTime,
+                'Build-Revision': versioning.info.commit,
+                'Specification-Title': project.name,
+                'Specification-Version': project.version,
+                'Implementation-Title': project.name,
                 'Implementation-Version': project.version,
                 'Main-Class': mainClass
         )
     }
+}
+
+artifacts {
+    archives executableJar
 }
 
 
