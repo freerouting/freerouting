@@ -18,7 +18,7 @@
  * Created on 4. Februar 2003, 14:10
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 import java.math.BigInteger;
 
 /**

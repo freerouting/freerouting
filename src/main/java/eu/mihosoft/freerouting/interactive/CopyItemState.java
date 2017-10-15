@@ -18,12 +18,12 @@
  * Created on 11. November 2003, 08:23
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.Point;
-import geometry.planar.Vector;
-import geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,15 +31,15 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import library.Padstack;
-import library.Package;
+import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.library.Package;
 
-import board.Item;
-import board.DrillItem;
-import board.ObstacleArea;
-import board.Via;
-import board.Component;
-import board.RoutingBoard;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.DrillItem;
+import eu.mihosoft.freerouting.board.ObstacleArea;
+import eu.mihosoft.freerouting.board.Via;
+import eu.mihosoft.freerouting.board.Component;
+import eu.mihosoft.freerouting.board.RoutingBoard;
 
 /**
  * Interactive copying of items.
@@ -106,10 +106,10 @@ public class CopyItemState extends InteractiveState
         if (!current_position.equals(previous_position))
         {
             Vector translate_vector = current_position.difference_by(previous_position);
-            Iterator<board.Item> it = item_list.iterator();
+            Iterator<eu.mihosoft.freerouting.board.Item> it = item_list.iterator();
             while (it.hasNext())
             {
-                board.Item curr_item = it.next();
+                eu.mihosoft.freerouting.board.Item curr_item = it.next();
                 curr_item.translate_by(translate_vector);
             }
             previous_position = current_position;
@@ -133,7 +133,7 @@ public class CopyItemState extends InteractiveState
     }
     
     /**
-     * Inserts the items in the copy list into the board.
+     * Inserts the items in the copy list into the eu.mihosoft.freerouting.board.
      * Items, which would produce a clearance violation, are not inserted.
      */
     public void insert()

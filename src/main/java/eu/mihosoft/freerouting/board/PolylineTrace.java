@@ -13,23 +13,23 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
-import datastructures.Signum;
-import datastructures.Stoppable;
+import eu.mihosoft.freerouting.datastructures.Signum;
+import eu.mihosoft.freerouting.datastructures.Stoppable;
 
-import geometry.planar.IntBox;
-import geometry.planar.IntOctagon;
-import geometry.planar.Line;
-import geometry.planar.LineSegment;
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.FloatPoint;
-import geometry.planar.Polyline;
-import geometry.planar.Shape;
-import geometry.planar.TileShape;
-import geometry.planar.Direction;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.LineSegment;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Direction;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 /**
  *
@@ -577,7 +577,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
                                 if (found_trace_split)
                                 {
                                     // reread the overlapping tree entries and reset the iterator,
-                                    // because the board has changed
+                                    // because the eu.mihosoft.freerouting.board has changed
                                     default_tree.overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
                                     it = overlapping_tree_entries.iterator();
                                     break;
@@ -649,7 +649,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
                     boolean ignore_areas = false;
                     if (this.net_no_arr.length > 0)
                     {
-                        rules.Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
+                        eu.mihosoft.freerouting.rules.Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
                         if (curr_net != null && curr_net.get_class() != null)
                         {
                             ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();

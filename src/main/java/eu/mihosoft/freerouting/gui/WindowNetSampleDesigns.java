@@ -18,7 +18,7 @@
  * Created on 14. November 2006, 10:13
  *
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  *

@@ -18,9 +18,13 @@
  * Created on 19. Oktober 2002, 17:58
  *
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.board.TestLevel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -33,21 +37,30 @@ public class MainApplication extends javax.swing.JFrame
 
     /**
      * Main function of the Application
+     * @param args
      */
-    public static void main(String p_args[])
+    public static void main(String args[])
     {
-        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
-        StartupOptions startupOptions = StartupOptions.parse(p_args);
-
-        if (!(OFFLINE_ALLOWED || startupOptions.webstart_option))
-        {
-            Runtime.getRuntime().exit(1);
+        
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
+        StartupOptions startupOptions = StartupOptions.parse(args);
 
         if (startupOptions.single_design_option)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("resources.MainApplication", startupOptions.current_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.MainApplication", startupOptions.current_locale);
             BoardFrame.Option board_option;
             if (startupOptions.session_file_option)
             {
@@ -65,10 +78,13 @@ public class MainApplication extends javax.swing.JFrame
                 System.out.println(" " + resources.getString("message_7"));
                 return;
             }
-            String message = resources.getString("loading_design") + " " + startupOptions.design_file_name;
+            String message = resources.getString("loading_design") + " "
+                    + startupOptions.design_file_name;
             WindowMessage welcome_window = WindowMessage.show(message);
             final BoardFrame new_frame =
-                    create_board_frame(design_file, null, board_option, startupOptions.test_version_option, startupOptions.current_locale);
+                    create_board_frame(design_file, null, board_option,
+                            startupOptions.test_version_option, 
+                            startupOptions.current_locale);
             welcome_window.dispose();
             if (new_frame == null)
             {
@@ -78,6 +94,7 @@ public class MainApplication extends javax.swing.JFrame
             new_frame.addWindowListener(new java.awt.event.WindowAdapter()
             {
 
+                @Override
                 public void windowClosed(java.awt.event.WindowEvent evt)
                 {
                     Runtime.getRuntime().exit(0);
@@ -92,7 +109,8 @@ public class MainApplication extends javax.swing.JFrame
 
     /**
      * Creates new form MainApplication
-     * It takes the directory of the eu.mihosoft.freerouting.board designs as optional argument.
+     * It takes the directory of the board designs as optional argument.
+     * @param startupOptions
      */
     public MainApplication(StartupOptions startupOptions)
     {
@@ -101,7 +119,7 @@ public class MainApplication extends javax.swing.JFrame
         this.is_webstart = startupOptions.getWebstartOption();
         this.locale = startupOptions.getCurrentLocale();
         this.resources =
-                java.util.ResourceBundle.getBundle("resources.MainApplication", locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.MainApplication", locale);
         main_panel = new javax.swing.JPanel();
         getContentPane().add(main_panel);
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
@@ -133,13 +151,8 @@ public class MainApplication extends javax.swing.JFrame
             {
                 demonstration_button.setText(resources.getString("router_demonstrations"));
                 demonstration_button.setToolTipText(resources.getString("router_demonstrations_tooltip"));
-                demonstration_button.addActionListener(new java.awt.event.ActionListener()
-                {
-
-                    public void actionPerformed(java.awt.event.ActionEvent evt)
-                    {
-                        window_net_demonstrations.setVisible(true);
-                    }
+                demonstration_button.addActionListener((java.awt.event.ActionEvent evt) -> {
+                    window_net_demonstrations.setVisible(true);
                 });
 
                 gridbag.setConstraints(demonstration_button, gridbag_constraints);
@@ -147,13 +160,8 @@ public class MainApplication extends javax.swing.JFrame
 
                 sample_board_button.setText(resources.getString("sample_designs"));
                 sample_board_button.setToolTipText(resources.getString("sample_designs_tooltip"));
-                sample_board_button.addActionListener(new java.awt.event.ActionListener()
-                {
-
-                    public void actionPerformed(java.awt.event.ActionEvent evt)
-                    {
-                        window_net_sample_designs.setVisible(true);
-                    }
+                sample_board_button.addActionListener((java.awt.event.ActionEvent evt) -> {
+                    window_net_sample_designs.setVisible(true);
                 });
 
                 gridbag.setConstraints(sample_board_button, gridbag_constraints);
@@ -163,13 +171,8 @@ public class MainApplication extends javax.swing.JFrame
 
         open_board_button.setText(resources.getString("open_own_design"));
         open_board_button.setToolTipText(resources.getString("open_own_design_tooltip"));
-        open_board_button.addActionListener(new java.awt.event.ActionListener()
-        {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                open_board_design_action(evt);
-            }
+        open_board_button.addActionListener((java.awt.event.ActionEvent evt) -> {
+            open_board_design_action(evt);
         });
 
         gridbag.setConstraints(open_board_button, gridbag_constraints);
@@ -182,15 +185,10 @@ public class MainApplication extends javax.swing.JFrame
         {
             restore_defaults_button.setText(resources.getString("restore_defaults"));
             restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
-            restore_defaults_button.addActionListener(new java.awt.event.ActionListener()
-            {
-
-                public void actionPerformed(java.awt.event.ActionEvent evt)
+            restore_defaults_button.addActionListener((java.awt.event.ActionEvent evt) -> {
+                if (is_webstart)
                 {
-                    if (is_webstart)
-                    {
-                        restore_defaults_action(evt);
-                    }
+                    restore_defaults_action(evt);
                 }
             });
 
@@ -205,6 +203,8 @@ public class MainApplication extends javax.swing.JFrame
 
         this.addWindowListener(new WindowStateListener());
         pack();
+        setSize(450,250);
+
     }
 
     /** opens a eu.mihosoft.freerouting.board design from a binary file or a specctra dsn file. */
@@ -265,7 +265,7 @@ public class MainApplication extends javax.swing.JFrame
             BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("resources.MainApplication", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.MainApplication", p_locale);
 
         java.io.InputStream input_stream = p_design_file.get_input_stream();
         if (input_stream == null)
@@ -295,7 +295,7 @@ public class MainApplication extends javax.swing.JFrame
         new_frame.menubar.add_design_dependent_items();
         if (p_design_file.is_created_from_text_file())
         {
-            // Read the file  with the saved eu.mihosoft.freerouting.rules, if it is existing.
+            // Read the file  with the saved rules, if it is existing.
 
             String file_name = p_design_file.get_name();
             String[] name_parts = file_name.split("\\.");
@@ -312,8 +312,8 @@ public class MainApplication extends javax.swing.JFrame
     private final javax.swing.JButton sample_board_button;
     private final javax.swing.JButton open_board_button;
     private final javax.swing.JButton restore_defaults_button;
-    private javax.swing.JTextField message_field;
-    private javax.swing.JPanel main_panel;
+    private final javax.swing.JTextField message_field;
+    private final javax.swing.JPanel main_panel;
     /**
      * A Frame with routing demonstrations in the net.
      */
@@ -323,7 +323,8 @@ public class MainApplication extends javax.swing.JFrame
      */
     private final WindowNetSamples window_net_sample_designs;
     /** The list of open eu.mihosoft.freerouting.board frames */
-    private java.util.Collection<BoardFrame> board_frames = new java.util.LinkedList<BoardFrame>();
+    private final java.util.Collection<BoardFrame> board_frames 
+            = new java.util.LinkedList<>();
     private String design_dir_name = null;
     private final boolean is_test_version;
     private final boolean is_webstart;
@@ -338,6 +339,7 @@ public class MainApplication extends javax.swing.JFrame
             this.board_frame = p_board_frame;
         }
 
+        @Override
         public void windowClosed(java.awt.event.WindowEvent evt)
         {
             if (board_frame != null)
@@ -354,13 +356,15 @@ public class MainApplication extends javax.swing.JFrame
     private class WindowStateListener extends java.awt.event.WindowAdapter
     {
 
+        @Override
         public void windowClosing(java.awt.event.WindowEvent evt)
         {
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             boolean exit_program = true;
             if (!is_test_version && board_frames.size() > 0)
             {
-                int option = javax.swing.JOptionPane.showConfirmDialog(null, resources.getString("confirm_cancel"),
+                int option = javax.swing.JOptionPane.showConfirmDialog(null,
+                        resources.getString("confirm_cancel"),
                         null, javax.swing.JOptionPane.YES_NO_OPTION);
                 if (option == javax.swing.JOptionPane.NO_OPTION)
                 {
@@ -374,20 +378,21 @@ public class MainApplication extends javax.swing.JFrame
             }
         }
 
+        @Override
         public void windowIconified(java.awt.event.WindowEvent evt)
         {
             window_net_sample_designs.parent_iconified();
         }
 
+        @Override
         public void windowDeiconified(java.awt.event.WindowEvent evt)
         {
             window_net_sample_designs.parent_deiconified();
         }
     }
-    static final String WEB_FILE_BASE_NAME = "http://www.freerouting.net/java/";
-    private static final boolean OFFLINE_ALLOWED = true;
+    static final String WEB_FILE_BASE_NAME = "http://www.freerouting.mihosoft.eu";
     /**
      * Change this string when creating a new version
      */
-    static final String VERSION_NUMBER_STRING = "1.2.43 Extra";
+    static final String VERSION_NUMBER_STRING = "v1.3.0 (JDK9 version by mihosoft.eu)";
 }

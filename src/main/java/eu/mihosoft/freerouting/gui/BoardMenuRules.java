@@ -18,22 +18,22 @@
  * Created on 20. Februar 2005, 06:00
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
- * Creates the eu.mihosoft.freerouting.rules menu of a eu.mihosoft.freerouting.board frame.
+ * Creates the rules menu of a board frame.
  *
  * @author Alfons Wirtz
  */
 public class BoardMenuRules extends javax.swing.JMenu
 {
     
-    /** Returns a new windows menu for the eu.mihosoft.freerouting.board frame. */
+    /** Returns a new windows menu for the board frame. */
     public static BoardMenuRules get_instance(BoardFrame p_board_frame)
     {
         final BoardMenuRules rules_menu = new BoardMenuRules(p_board_frame);
         
-        rules_menu.setText(rules_menu.resources.getString("eu/mihosoft/freerouting/rules"));
+        rules_menu.setText(rules_menu.resources.getString("rules"));
         
         javax.swing.JMenuItem clearance_window = new javax.swing.JMenuItem();
         clearance_window.setText(rules_menu.resources.getString("clearance_matrix"));
@@ -87,7 +87,7 @@ public class BoardMenuRules extends javax.swing.JMenu
     private BoardMenuRules(BoardFrame p_board_frame)
     {
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("resources.BoardMenuRules", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuRules", p_board_frame.get_locale());
     }
     
     

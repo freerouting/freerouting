@@ -18,16 +18,16 @@
  * Created on 25. April 2006, 07:58
  *
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.FloatLine;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatLine;
 
-import board.Unit;
+import eu.mihosoft.freerouting.board.Unit;
 
-import autoroute.BatchAutorouter;
-import autoroute.BatchFanout;
-import autoroute.BatchOptRoute;
+import eu.mihosoft.freerouting.autoroute.BatchAutorouter;
+import eu.mihosoft.freerouting.autoroute.BatchFanout;
+import eu.mihosoft.freerouting.autoroute.BatchOptRoute;
 
 /**
  * Thread for the batch autorouter.
@@ -52,7 +52,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
         try
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("interactive.resources.InteractiveState", hdlg.get_locale());
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", hdlg.get_locale());
             boolean saved_board_read_only = hdlg.is_board_read_only();
             hdlg.set_board_read_only(true);
             boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
@@ -117,9 +117,9 @@ public class BatchAutorouterThread extends InteractiveActionThread
             }
 
             hdlg.get_panel().board_frame.refresh_windows();
-            if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == board.AngleRestriction.FORTYFIVE_DEGREE && hdlg.get_routing_board().get_test_level() != board.TestLevel.RELEASE_VERSION)
+            if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == eu.mihosoft.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE && hdlg.get_routing_board().get_test_level() != eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION)
             {
-                tests.Validate.multiple_of_45_degree("after autoroute: ", hdlg.get_routing_board());
+                eu.mihosoft.freerouting.tests.Validate.multiple_of_45_degree("after eu.mihosoft.freerouting.autoroute: ", hdlg.get_routing_board());
             }
         } catch (Exception e)
         {

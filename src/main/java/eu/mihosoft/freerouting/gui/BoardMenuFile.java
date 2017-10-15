@@ -17,7 +17,7 @@
  *
  * Created on 11. Februar 2005, 11:26
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Creates the file menu of a eu.mihosoft.freerouting.board frame.
@@ -313,7 +313,7 @@ public class BoardMenuFile extends javax.swing.JMenu
     {
         session_file_option = p_session_file_option;
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("resources.BoardMenuFile", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuFile", p_board_frame.get_locale());
     }
     private final BoardFrame board_frame;
     private final boolean session_file_option;

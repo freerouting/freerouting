@@ -18,20 +18,20 @@
  * Created on 26. Maerz 2005, 06:14
  */
 
-package library;
+package eu.mihosoft.freerouting.library;
 
 /**
  * Contains contain information for gate swap and pin swap for a single component.
  *
  * @author Alfons Wirtz
  */
-public class LogicalPart implements board.ObjectInfoPanel.Printable, java.io.Serializable
+public class LogicalPart implements eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
     
     /**
      * Creates a new instance of LogicalPart.
      * The part pins are sorted by pin_no.
-     * The pin_no's of the part pins must be the same number as in the componnents library package.
+     * The pin_no's of the part pins must be the same number as in the componnents eu.mihosoft.freerouting.library package.
      */
     public LogicalPart(String p_name, int p_no, PartPin[] p_part_pin_arr)
     {
@@ -56,10 +56,10 @@ public class LogicalPart implements board.ObjectInfoPanel.Printable, java.io.Ser
         return part_pin_arr[p_no];
     }
     
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("logical_part_2") + " ");
         p_window.append_bold(this.name);
         for (int i = 0; i < this.part_pin_arr.length; ++i)
@@ -106,10 +106,10 @@ public class LogicalPart implements board.ObjectInfoPanel.Printable, java.io.Ser
             return this.pin_no - p_other.pin_no;
         }
         
-        /** The number of the part pin. Must be the same number as in the componnents library package. */
+        /** The number of the part pin. Must be the same number as in the componnents eu.mihosoft.freerouting.library package. */
         public final int pin_no;
         
-        /** The name of the part pin. Must be the same name as in the componnents library package. */
+        /** The name of the part pin. Must be the same name as in the componnents eu.mihosoft.freerouting.library package. */
         public final String pin_name;
         
         /** The name of the gate this pin belongs to. */

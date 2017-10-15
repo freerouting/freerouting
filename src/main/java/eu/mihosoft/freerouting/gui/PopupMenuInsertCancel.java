@@ -18,7 +18,7 @@
  * Created on 17. Februar 2005, 08:05
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Popup menu containing the 2 items complete and cancel.
@@ -33,7 +33,7 @@ class PopupMenuInsertCancel extends javax.swing.JPopupMenu
     {
         this.board_panel = p_board_frame.board_panel;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem insert_item = new javax.swing.JMenuItem();
         insert_item.setText(resources.getString("insert"));
         insert_item.addActionListener(new java.awt.event.ActionListener()

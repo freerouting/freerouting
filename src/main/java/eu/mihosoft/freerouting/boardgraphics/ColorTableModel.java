@@ -17,12 +17,12 @@
  *
  * Created on 5. August 2003, 10:18
  */
-package boardgraphics;
+package eu.mihosoft.freerouting.boardgraphics;
 
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Abstract class to store colors used for drawing the board.
+ * Abstract class to store colors used for drawing the eu.mihosoft.freerouting.board.
  *
  * @author Alfons Wirtz
  */

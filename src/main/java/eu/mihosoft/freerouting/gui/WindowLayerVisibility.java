@@ -18,7 +18,7 @@
  * Created on 5. November 2004, 11:29
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Interactive Frame to adjust the visibility of the individual eu.mihosoft.freerouting.board layers
@@ -32,7 +32,7 @@ public class WindowLayerVisibility extends WindowVisibility
     {
         BoardPanel board_panel = p_board_frame.board_panel;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         String title = resources.getString("layer_visibility");
         String header_message = resources.getString("layer_visibility_header");
         eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;

@@ -18,14 +18,14 @@
  * Created on 8. Mai 2005, 07:28
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 
-import geometry.planar.Area;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 /**
- * Describes areas of the board, where components arre not allowed.
+ * Describes areas of the eu.mihosoft.freerouting.board, where components arre not allowed.
  *
  * @author alfons
  */
@@ -71,12 +71,12 @@ public class ComponentObstacleArea extends ObstacleArea
     }
     
     
-    public java.awt.Color[] get_draw_colors(boardgraphics.GraphicsContext p_graphics_context)
+    public java.awt.Color[] get_draw_colors(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return  p_graphics_context.get_place_obstacle_colors();
     }
     
-    public double get_draw_intensity(boardgraphics.GraphicsContext p_graphics_context)
+    public double get_draw_intensity(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_place_obstacle_color_intensity();
     }
@@ -93,7 +93,7 @@ public class ComponentObstacleArea extends ObstacleArea
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("component_keepout"));
         this.print_shape_info(p_window, p_locale);
         this.print_clearance_info(p_window, p_locale);

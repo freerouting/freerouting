@@ -18,14 +18,14 @@
  * Created on 10. Januar 2004, 10:08
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 /**
- * Common ShapeSearchTree functionality for board.Items and autoroute.ExpansionRooms
+ * Common ShapeSearchTree functionality for eu.mihosoft.freerouting.board.Items and eu.mihosoft.freerouting.autoroute.ExpansionRooms
  *
  * @author  Alfons Wirtz
  */
-public interface SearchTreeObject extends datastructures.ShapeTree.Storable
+public interface SearchTreeObject extends eu.mihosoft.freerouting.datastructures.ShapeTree.Storable
 {
     /**
      * Returns true if this object is an obstacle to objects containing

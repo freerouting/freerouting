@@ -18,9 +18,9 @@
  * Created on 1. Februar 2003, 14:47
  */
 
-package geometry.planar;
-import datastructures.BigIntAux;
-import datastructures.Signum;
+package eu.mihosoft.freerouting.geometry.planar;
+import eu.mihosoft.freerouting.datastructures.BigIntAux;
+import eu.mihosoft.freerouting.datastructures.Signum;
 
 /**
  *

@@ -14,20 +14,20 @@
  *   for more details.
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import datastructures.Stoppable;
-import geometry.planar.Limits;
-import datastructures.Signum;
+import eu.mihosoft.freerouting.datastructures.Stoppable;
+import eu.mihosoft.freerouting.geometry.planar.Limits;
+import eu.mihosoft.freerouting.datastructures.Signum;
 
-import geometry.planar.Direction;
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.Point;
-import geometry.planar.Line;
-import geometry.planar.Polyline;
-import geometry.planar.Side;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Direction;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
  *

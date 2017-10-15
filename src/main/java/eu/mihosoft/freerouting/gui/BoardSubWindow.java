@@ -19,7 +19,7 @@
  *
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Subwindows of the eu.mihosoft.freerouting.board frame.

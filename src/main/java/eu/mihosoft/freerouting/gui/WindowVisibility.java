@@ -18,7 +18,7 @@
  * Created on 7. November 2004, 11:29
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Interactive Frame to adjust the visibility of a set of objects
@@ -69,7 +69,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
         main_panel.add(empty_label);
         gridbag_constraints.gridwidth = 2;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         javax.swing.JButton min_all_button = new javax.swing.JButton(resources.getString("minimum_all"));
         min_all_button.setToolTipText(resources.getString("minimum_all_tooltip"));
         min_all_button.addActionListener(new MinAllButtonListener());

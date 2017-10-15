@@ -18,13 +18,13 @@
  * Created on 4. Juni 2004, 06:37
  */
 
-package library;
+package eu.mihosoft.freerouting.library;
 
 import java.util.List;
 import java.util.Vector;
 
 /**
- * Describes a board library of packages and padstacks.
+ * Describes a eu.mihosoft.freerouting.board eu.mihosoft.freerouting.library of packages and padstacks.
  *
  * @author  alfons
  */
@@ -127,9 +127,9 @@ public class BoardLibrary implements java.io.Serializable
     /** 
      * Removes p_padstack from the via padstack list. 
      * Returns false, if p_padstack was not found in the list.
-     * If the padstack is no more used on the board, it will also be removed from the board padstacks. 
+     * If the padstack is no more used on the eu.mihosoft.freerouting.board, it will also be removed from the eu.mihosoft.freerouting.board padstacks.
      */
-    public boolean remove_via_padstack(Padstack p_padstack, board.BasicBoard p_board)
+    public boolean remove_via_padstack(Padstack p_padstack, eu.mihosoft.freerouting.board.BasicBoard p_board)
     {
         boolean result = via_padstacks.remove(p_padstack);
         return result;
@@ -137,7 +137,7 @@ public class BoardLibrary implements java.io.Serializable
     
         
     /**
-     * Gets the via padstack mirrored to the back side of the board.
+     * Gets the via padstack mirrored to the back side of the eu.mihosoft.freerouting.board.
      * Returns null, if no such via padstack exists.
      */
     public Padstack get_mirrored_via_padstack(Padstack p_via_padstack)
@@ -162,19 +162,19 @@ public class BoardLibrary implements java.io.Serializable
     /**
      * Looks, if the input padstack is used on p_board in a Package or in drill.
      */
-    public boolean is_used (Padstack p_padstack, board.BasicBoard p_board)
+    public boolean is_used (Padstack p_padstack, eu.mihosoft.freerouting.board.BasicBoard p_board)
     {
-        java.util.Iterator<datastructures.UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
+        java.util.Iterator<eu.mihosoft.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
         for(;;)
         {
-            datastructures.UndoableObjects.Storable curr_item = p_board.item_list.read_object(it);
+            eu.mihosoft.freerouting.datastructures.UndoableObjects.Storable curr_item = p_board.item_list.read_object(it);
             if (curr_item == null)
             {
                 break;
             }
-            if (curr_item instanceof board.DrillItem)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.DrillItem)
             {
-                if (((board.DrillItem) curr_item).get_padstack() == p_padstack)
+                if (((eu.mihosoft.freerouting.board.DrillItem) curr_item).get_padstack() == p_padstack)
                 {
                     return true;
                 }
@@ -199,6 +199,6 @@ public class BoardLibrary implements java.io.Serializable
     /** Containes information for gate swap and pin swap in the Specctra-dsn format. */
     public LogicalParts logical_parts = new LogicalParts();
     
-    /** The subset of padstacks in the board library, which can be used in routing for inserting vias. */
+    /** The subset of padstacks in the eu.mihosoft.freerouting.board eu.mihosoft.freerouting.library, which can be used in routing for inserting vias. */
     private List<Padstack> via_padstacks = null;
 }

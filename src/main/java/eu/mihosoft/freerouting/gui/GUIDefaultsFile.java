@@ -18,7 +18,7 @@
  * Created on 26. Dezember 2004, 08:29
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 

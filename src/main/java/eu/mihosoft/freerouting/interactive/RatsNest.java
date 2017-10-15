@@ -18,7 +18,7 @@
  * Created on 18. Maerz 2004, 07:30
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -27,16 +27,16 @@ import java.util.Vector;
 
 import java.awt.Graphics;
 
-import datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-import rules.Net;
+import eu.mihosoft.freerouting.rules.Net;
 
-import board.BasicBoard;
-import board.Item;
-import board.Connectable;
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.board.BasicBoard;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.Connectable;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 /**
  * Creates all Incompletes (Ratsnest) to display them on the screen
@@ -201,7 +201,7 @@ public class RatsNest
     }
     
     /**
-     * Used for  example to hide the incompletes during interactive routiing.
+     * Used for  example to hide the incompletes during eu.mihosoft.freerouting.interactive routiing.
      */
     public boolean is_hidden()
     {
@@ -242,7 +242,7 @@ public class RatsNest
     /**
      * Describes a single incomplete connection of the ratsnest.
      */
-    public static class AirLine implements Comparable<AirLine>, board.ObjectInfoPanel.Printable
+    public static class AirLine implements Comparable<AirLine>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable
     {
         AirLine(Net p_net, Item p_from_item, FloatPoint p_from_corner, Item p_to_item, 
                 FloatPoint p_to_corner, java.util.Locale p_locale)
@@ -270,22 +270,22 @@ public class RatsNest
         private String item_info(Item p_item)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("interactive.resources.RatsNest", this.locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.RatsNest", this.locale);
             String result;
-            if (p_item instanceof board.Pin)
+            if (p_item instanceof eu.mihosoft.freerouting.board.Pin)
             {
-                board.Pin curr_pin = (board.Pin) p_item;
+                eu.mihosoft.freerouting.board.Pin curr_pin = (eu.mihosoft.freerouting.board.Pin) p_item;
                 result = curr_pin.component_name() + ", " + curr_pin.name();
             }
-            else if (p_item instanceof board.Via)
+            else if (p_item instanceof eu.mihosoft.freerouting.board.Via)
             {
                 result = resources.getString("via");
             }
-            else if (p_item instanceof board.Trace)
+            else if (p_item instanceof eu.mihosoft.freerouting.board.Trace)
             {
                 result = resources.getString("trace");
             }
-            else if (p_item instanceof board.ConductionArea)
+            else if (p_item instanceof eu.mihosoft.freerouting.board.ConductionArea)
             {
                 result = resources.getString("conduction_area");
             }
@@ -296,10 +296,10 @@ public class RatsNest
             return result;
         }
         
-        public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+        public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("interactive.resources.RatsNest", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.RatsNest", p_locale);
             p_window.append_bold(resources.getString("incomplete"));
             p_window.append(" " + resources.getString("net") + " ");
             p_window.append(net.name);

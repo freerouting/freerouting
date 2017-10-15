@@ -17,15 +17,15 @@
  *
  * Created on 2. Februar 2004, 12:59
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.Simplex;
-import geometry.planar.TileShape;
-import board.Item;
-import board.ShapeSearchTree;
+import eu.mihosoft.freerouting.geometry.planar.Simplex;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
 
 /**
- * An expansion door leading to a start or destination item of the autoroute algorithm.
+ * An expansion door leading to a start or destination item of the eu.mihosoft.freerouting.autoroute algorithm.
  *
  * @author  Alfons Wirtz
  */

@@ -19,7 +19,7 @@
  *
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;

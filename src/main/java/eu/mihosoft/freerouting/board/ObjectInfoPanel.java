@@ -18,10 +18,10 @@
  * Created on 6. Januar 2005, 13:15
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 /**
- * Output window for printing information about board objects.
+ * Output window for printing information about eu.mihosoft.freerouting.board objects.
  *
  * @author Alfons Wirtz
  */
@@ -58,14 +58,14 @@ public interface ObjectInfoPanel
      * after transforming to the user coordinate sytem.
      * Returns false, if that was not possible.
      */
-    boolean append(geometry.planar.FloatPoint p_point);
+    boolean append(eu.mihosoft.freerouting.geometry.planar.FloatPoint p_point);
     
     /**
      * Appends p_shape to the window
      * after transforming to the user coordinate sytem.
      * Returns false, if that was not possible.
      */
-    boolean append(geometry.planar.Shape p_shape, java.util.Locale p_locale);
+    boolean append(eu.mihosoft.freerouting.geometry.planar.Shape p_shape, java.util.Locale p_locale);
     
     /**
      * Begins a new line in the window.
@@ -88,7 +88,7 @@ public interface ObjectInfoPanel
      * Appends a link for creating a new PrintInfoWindow with the information
      * of p_items to the window. Returns false, if that was not possible.
      */
-    boolean append_items( String p_link_name, String p_window_title, java.util.Collection<board.Item> p_items);
+    boolean append_items( String p_link_name, String p_window_title, java.util.Collection<eu.mihosoft.freerouting.board.Item> p_items);
     
     /**
      * Appends a link for creating a new PrintInfoWindow with the information

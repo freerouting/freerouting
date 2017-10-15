@@ -18,7 +18,7 @@
  * Created on 8. Dezember 2005, 06:20
  *
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Startup window visible when the program is loading.

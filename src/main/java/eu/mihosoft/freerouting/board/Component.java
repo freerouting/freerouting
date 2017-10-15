@@ -18,20 +18,20 @@
  * Created on 27. Mai 2004, 07:23
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 
-import datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
-import library.Package;
+import eu.mihosoft.freerouting.library.Package;
 
 
 /**
- * Describes board components consisting of an array of pins
+ * Describes eu.mihosoft.freerouting.board components consisting of an array of pins
  * und other stuff like component keepouts.
  *
  * @author  Alfons Wirtz
@@ -85,7 +85,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     }
     
     /**
-     * If false, the component will be placed on the back side of the board.
+     * If false, the component will be placed on the back side of the eu.mihosoft.freerouting.board.
      */
     public boolean placed_on_front()
     {
@@ -94,7 +94,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     
     /**
      * Translates the location of this Component by p_p_vector.
-     * The Pins in the board must be moved seperately.
+     * The Pins in the eu.mihosoft.freerouting.board must be moved seperately.
      */
     public void translate_by(Vector p_vector)
     {
@@ -139,7 +139,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
         double turn_angle = p_angle_in_degree;
         if (p_flip_style_rotate_first && !this.placed_on_front())
         {
-            // take care of the order of mirroring and rotating on the back side of the board
+            // take care of the order of mirroring and rotating on the back side of the eu.mihosoft.freerouting.board
             turn_angle = 360 - p_angle_in_degree;
         }
         this.rotation_in_degree = this.rotation_in_degree  + turn_angle;
@@ -199,7 +199,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     /**
      * Returns information for pin swap and gate swap, if != null.
      */
-    public library.LogicalPart get_logical_part()
+    public eu.mihosoft.freerouting.library.LogicalPart get_logical_part()
     {
         return this.logical_part;
     }
@@ -207,7 +207,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     /**
      * Sets the infomation for pin swap and gate swap.
      */
-    public void set_logical_part(library.LogicalPart p_logical_part)
+    public void set_logical_part(eu.mihosoft.freerouting.library.LogicalPart p_logical_part)
     {
         this.logical_part = p_logical_part;
     }
@@ -215,7 +215,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("component") + " ");
         p_window.append_bold(this.name);
         if (this.location != null)
@@ -251,7 +251,7 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     }
     
     /**
-     * Returns the library package of this component.
+     * Returns the eu.mihosoft.freerouting.library package of this component.
      */
     public Package get_package()
     {
@@ -273,19 +273,19 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
     /** The location of the component. */
     private Point location;
     
-    /** The rotation of the library package of the component in degree */
+    /** The rotation of the eu.mihosoft.freerouting.library package of the component in degree */
     private double rotation_in_degree;
     
     /** Contains information for gate swapping and pin swapping, if != null */
-    private library.LogicalPart logical_part = null;
+    private eu.mihosoft.freerouting.library.LogicalPart logical_part = null;
     
-    /** If false, the component will be placed on the back side of the board. */
+    /** If false, the component will be placed on the back side of the eu.mihosoft.freerouting.board. */
     private boolean on_front;
     
-    /** The library package of the component if it is placed on the component side. */
+    /** The eu.mihosoft.freerouting.library package of the component if it is placed on the component side. */
     private final Package lib_package_front;
     
-    /** The library package of the component if it is placed on the solder side. */
+    /** The eu.mihosoft.freerouting.library package of the component if it is placed on the solder side. */
     private final Package lib_package_back;
     
     /** Internal generated unique identification number. */

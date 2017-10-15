@@ -36,7 +36,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
 {
     /**
      * Creates a new instance of BoardMenuHelp
-     * Separated from BoardMenuHelpReduced to avoid ClassNotFound exception when the eu.mihosoft.freerouting.library
+     * Separated from BoardMenuHelpReduced to avoid ClassNotFound exception when the library
      * jh.jar is not found, which is only used in this extended class.
      */
     public BoardMenuHelp(BoardFrame p_board_frame)

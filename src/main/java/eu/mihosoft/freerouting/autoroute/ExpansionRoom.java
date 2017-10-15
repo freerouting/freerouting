@@ -19,11 +19,11 @@
  *
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.List;
 
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
  *

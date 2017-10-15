@@ -17,7 +17,7 @@
  *
  * Created on 18. November 2004, 09:08
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Used for manual choice of trace widths in eu.mihosoft.freerouting.interactive routing.
@@ -32,7 +32,7 @@ public class WindowManualRules extends BoardSavableSubWindow
     {
         this.board_handling = p_board_frame.board_panel.board_handling;
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("resources.WindowManualRule", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowManualRule", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
 
         // create main panel

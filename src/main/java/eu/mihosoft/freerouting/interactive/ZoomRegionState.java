@@ -18,14 +18,14 @@
  * Created on 9. November 2003, 13:05
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import java.awt.geom.Point2D;
 
 /**
- * Class for interactive zooming to a rectangle.
+ * Class for eu.mihosoft.freerouting.interactive zooming to a rectangle.
  *
  * @author Alfons Wirtz
  */
@@ -56,7 +56,7 @@ public class ZoomRegionState extends SelectRegionState
         super(p_parent_state, p_board_handling, p_logfile);
         if (this.logfile != null)
         {
-            logfile.start_scope(interactive.LogfileScope.ZOOM_FRAME);
+            logfile.start_scope(eu.mihosoft.freerouting.interactive.LogfileScope.ZOOM_FRAME);
         }
     }
     

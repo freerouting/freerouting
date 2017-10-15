@@ -18,7 +18,7 @@
  * Created on 11. Februar 2005, 10:17
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Creates the menu bar of a eu.mihosoft.freerouting.board frame together with its menu items.

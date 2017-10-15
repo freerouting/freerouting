@@ -19,7 +19,7 @@
  *
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Window with the parameters for moving components.
@@ -34,7 +34,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     {
         this.board_handling = p_board_frame.board_panel.board_handling;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.WindowMoveParameter", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowMoveParameter", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         // create main panel

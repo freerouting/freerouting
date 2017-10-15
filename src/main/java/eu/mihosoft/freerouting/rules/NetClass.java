@@ -17,18 +17,18 @@
  *
  * Created on 7. April 2005, 06:08
  */
-package rules;
+package eu.mihosoft.freerouting.rules;
 
 /**
  * Describes routing rules for individual nets.
  *
  * @author Alfons Wirtz
  */
-public class NetClass implements java.io.Serializable, board.ObjectInfoPanel.Printable
+public class NetClass implements java.io.Serializable, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable
 {
 
     /** Creates a new instance of NetClass */
-    public NetClass(String p_name, board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
+    public NetClass(String p_name, eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
     {
         this.name = p_name;
         this.board_layer_structure = p_layer_structure;
@@ -267,10 +267,10 @@ public class NetClass implements java.io.Serializable, board.ObjectInfoPanel.Pri
         }
     }
 
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("net_class_2") + " ");
         p_window.append_bold(this.name);
         p_window.append_bold(":");
@@ -365,10 +365,10 @@ public class NetClass implements java.io.Serializable, board.ObjectInfoPanel.Pri
     private double minimum_trace_length = 0;
     private double maximum_trace_length = 0;
     private final ClearanceMatrix clearance_matrix;
-    private final board.LayerStructure board_layer_structure;
+    private final eu.mihosoft.freerouting.board.LayerStructure board_layer_structure;
     /**
      * The clearance classes of the item types, if this net class comes from a class in a Speccctra dsn-file
-     * Should evtl be moved to designformats.specctra.NetClass and used only when reading a dsn-file.
+     * Should evtl be moved to NetClass and used only when reading a dsn-file.
      */
     public DefaultItemClearanceClasses default_item_clearance_classes = new DefaultItemClearanceClasses();
 }

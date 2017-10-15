@@ -13,18 +13,18 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 import java.util.SortedSet;
 
-import datastructures.TimeLimit;
+import eu.mihosoft.freerouting.datastructures.TimeLimit;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-import board.RoutingBoard;
+import eu.mihosoft.freerouting.board.RoutingBoard;
 
-import interactive.InteractiveActionThread;
+import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 
 /**
  * Handles the sequencing of the fanout inside the batch autorouter.
@@ -52,11 +52,11 @@ public class BatchFanout
     {
         this.thread = p_thread;
         this.routing_board = p_thread.hdlg.get_routing_board();
-        Collection<board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
+        Collection<eu.mihosoft.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
         this.sorted_components = new java.util.TreeSet<Component>();
         for (int i = 1; i <= routing_board.components.count(); ++i)
         {
-            board.Component curr_board_component = routing_board.components.get(i);
+            eu.mihosoft.freerouting.board.Component curr_board_component = routing_board.components.get(i);
             Component curr_component = new Component(curr_board_component, board_smd_pin_list);
             if (curr_component.smd_pin_count > 0)
             {
@@ -109,7 +109,7 @@ public class BatchFanout
             }
             --components_to_go;
         }
-        if (this.routing_board.get_test_level() != board.TestLevel.RELEASE_VERSION)
+        if (this.routing_board.get_test_level() != eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION)
         {
             System.out.println("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count 
                     + ", not routed: " + not_routed_count + ", errors: " + insert_error_count);
@@ -123,14 +123,14 @@ public class BatchFanout
     private static class Component implements Comparable<Component>
     {
 
-        Component(board.Component p_board_component, Collection<board.Pin> p_board_smd_pin_list)
+        Component(eu.mihosoft.freerouting.board.Component p_board_component, Collection<eu.mihosoft.freerouting.board.Pin> p_board_smd_pin_list)
         {
             this.board_component = p_board_component;
 
             // calcoulate the center of gravity of all SMD pins of this component.
-            Collection<board.Pin> curr_pin_list = new java.util.LinkedList<board.Pin>();
+            Collection<eu.mihosoft.freerouting.board.Pin> curr_pin_list = new java.util.LinkedList<eu.mihosoft.freerouting.board.Pin>();
             int cmp_no = p_board_component.no;
-            for (board.Pin curr_board_pin : p_board_smd_pin_list)
+            for (eu.mihosoft.freerouting.board.Pin curr_board_pin : p_board_smd_pin_list)
             {
                 if (curr_board_pin.get_component_no() == cmp_no)
                 {
@@ -139,7 +139,7 @@ public class BatchFanout
             }
             double x = 0;
             double y = 0;
-            for (board.Pin curr_pin : curr_pin_list)
+            for (eu.mihosoft.freerouting.board.Pin curr_pin : curr_pin_list)
             {
                 FloatPoint curr_point = curr_pin.get_center().to_float();
                 x += curr_point.x;
@@ -153,7 +153,7 @@ public class BatchFanout
             // calculate the sorted SMD pins of this component
             this.smd_pins = new java.util.TreeSet<Pin>();
 
-            for (board.Pin curr_board_pin : curr_pin_list)
+            for (eu.mihosoft.freerouting.board.Pin curr_board_pin : curr_pin_list)
             {
                 this.smd_pins.add(new Pin(curr_board_pin));
             }
@@ -181,7 +181,7 @@ public class BatchFanout
             }
             return result;
         }
-        final board.Component board_component;
+        final eu.mihosoft.freerouting.board.Component board_component;
         final int smd_pin_count;
         final SortedSet<Pin> smd_pins;
         /** The center of gravity of all SMD pins of this component. */
@@ -190,7 +190,7 @@ public class BatchFanout
         class Pin implements Comparable<Pin>
         {
 
-            Pin(board.Pin p_board_pin)
+            Pin(eu.mihosoft.freerouting.board.Pin p_board_pin)
             {
                 this.board_pin = p_board_pin;
                 FloatPoint pin_location = p_board_pin.get_center().to_float();
@@ -215,7 +215,7 @@ public class BatchFanout
                 }
                 return result;
             }
-            final board.Pin board_pin;
+            final eu.mihosoft.freerouting.board.Pin board_pin;
             final double distance_to_component_center;
         }
     }

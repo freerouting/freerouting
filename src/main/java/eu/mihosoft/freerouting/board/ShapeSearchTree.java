@@ -17,22 +17,22 @@
  *
  * Created on 1. September 2004, 10:13
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.ConvexShape;
-import geometry.planar.ShapeBoundingDirections;
-import geometry.planar.IntOctagon;
-import geometry.planar.Line;
-import geometry.planar.LineSegment;
-import geometry.planar.Polyline;
-import geometry.planar.PolylineShape;
-import geometry.planar.RegularTileShape;
-import geometry.planar.Shape;
-import geometry.planar.Side;
-import geometry.planar.Simplex;
-import geometry.planar.TileShape;
-import geometry.planar.IntBox;
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.ShapeBoundingDirections;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.LineSegment;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.geometry.planar.RegularTileShape;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.Simplex;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -40,22 +40,22 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import rules.ClearanceMatrix;
+import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 
-import datastructures.Signum;
+import eu.mihosoft.freerouting.datastructures.Signum;
 
-import autoroute.IncompleteFreeSpaceExpansionRoom;
-import autoroute.CompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 
 /**
  *
  * Elementary geometric search functions making direct use
- * of the MinAreaTree in the package datastructures.
+ * of the MinAreaTree in the package eu.mihosoft.freerouting.datastructures.
  *
  *
  * @author Alfons Wirtz
  */
-public class ShapeSearchTree extends datastructures.MinAreaTree
+public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinAreaTree
 {
 
     /**
@@ -398,13 +398,13 @@ public class ShapeSearchTree extends datastructures.MinAreaTree
         }
         if (p_tree_entries == null)
         {
-            System.out.println("board.ShapeSearchTree.overlaps: p_obstacle_entries is null");
+            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps: p_obstacle_entries is null");
             return;
         }
         RegularTileShape bounds = p_shape.bounding_shape(bounding_directions);
         if (bounds == null)
         {
-            System.out.println("board.ShapeSearchTree.overlaps: p_shape not bounded");
+            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps: p_shape not bounded");
             return;
         }
         Collection<Leaf> tmp_list = this.overlaps(bounds);
@@ -472,14 +472,14 @@ public class ShapeSearchTree extends datastructures.MinAreaTree
         }
         if (p_obstacle_entries == null)
         {
-            System.out.println("board.ShapeSearchTree.overlaps_with_clearance: p_obstacle_entries is null");
+            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps_with_clearance: p_obstacle_entries is null");
             return;
         }
         ClearanceMatrix cl_matrix = board.rules.clearance_matrix;
         RegularTileShape bounds = p_shape.bounding_shape(bounding_directions);
         if (bounds == null)
         {
-            System.out.println("board.ShapeSearchTree.overlaps_with_clearance: p_shape is not bounded");
+            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps_with_clearance: p_shape is not bounded");
             bounds = board.get_bounding_box();
         }
         int max_clearance =

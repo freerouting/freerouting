@@ -19,7 +19,7 @@
  *
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 /**
  * Describes functionality of an elllipse in the plane.

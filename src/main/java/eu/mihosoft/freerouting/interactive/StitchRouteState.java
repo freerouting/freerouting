@@ -18,13 +18,13 @@
  * Created on 8. Dezember 2003, 08:05
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
- * State for interactive routing by adding corners with the left mouse button.
+ * State for eu.mihosoft.freerouting.interactive routing by adding corners with the left mouse button.
  *
  * @author  Alfons Wirtz
  */
@@ -82,8 +82,8 @@ public class StitchRouteState extends RouteState
         double display_width = hdlg.get_trace_halfwidth(route.net_no_arr[0], hdlg.settings.layer);
         int clearance_draw_width = 50;
         double radius_with_clearance = display_width;
-        rules.NetClass default_net_class = hdlg.get_routing_board().rules.get_default_net_class();
-        int cl_class = default_net_class.default_item_clearance_classes.get(rules.DefaultItemClearanceClasses.ItemClass.TRACE);
+        eu.mihosoft.freerouting.rules.NetClass default_net_class = hdlg.get_routing_board().rules.get_default_net_class();
+        int cl_class = default_net_class.default_item_clearance_classes.get(eu.mihosoft.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
         radius_with_clearance +=  hdlg.get_routing_board().clearance_value(cl_class, cl_class, hdlg.settings.layer);
         hdlg.graphics_context.draw(draw_points, display_width, draw_color, p_graphics, 0.5);
         // draw the clearance boundary around the end point

@@ -18,7 +18,7 @@
  * Created on 3. Oktober 2002, 18:47
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.interactive.BoardHandling;
 import eu.mihosoft.freerouting.interactive.ScreenMessages;

@@ -18,7 +18,7 @@
  * Created on 2. Februar 2003, 14:09
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 /**
  *

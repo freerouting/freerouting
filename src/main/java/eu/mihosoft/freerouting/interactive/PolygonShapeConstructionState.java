@@ -18,15 +18,15 @@
  * Created on 7. November 2003, 17:19
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.PolygonShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.PolygonShape;
 
 import java.util.Iterator;
 
-import rules.BoardRules;
+import eu.mihosoft.freerouting.rules.BoardRules;
 
 /**
  * Interactive state for constructing an obstacle with a polygon shape.
@@ -56,7 +56,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
     }
     
     /**
-     * Inserts the polygon shape item into the board, if possible
+     * Inserts the polygon shape item into the eu.mihosoft.freerouting.board, if possible
      * and returns to the main state
      */
     public InteractiveState complete()
@@ -92,7 +92,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
                     hdlg.get_routing_board().start_notify_observers();
                 }
                 hdlg.get_routing_board().generate_snapshot();
-                hdlg.get_routing_board().insert_obstacle(obstacle_shape, hdlg.settings.layer, cl_class, board.FixedState.UNFIXED);
+                hdlg.get_routing_board().insert_obstacle(obstacle_shape, hdlg.settings.layer, cl_class, eu.mihosoft.freerouting.board.FixedState.UNFIXED);
                 hdlg.get_routing_board().end_notify_observers();
                         if (this.observers_activated)
         {

@@ -18,15 +18,15 @@
  * Created on 2. Maerz 2006, 07:23
  *
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 /**
- * Used for running an interactive action in a seperate Thread,
+ * Used for running an eu.mihosoft.freerouting.interactive action in a seperate Thread,
  * that can be stopped by the user.
  *
  * @author Alfons Wirtz
  */
-public abstract class InteractiveActionThread extends Thread implements datastructures.Stoppable
+public abstract class InteractiveActionThread extends Thread implements eu.mihosoft.freerouting.datastructures.Stoppable
 {
 
     public static InteractiveActionThread get_autoroute_instance(BoardHandling p_board_handling)
@@ -155,7 +155,7 @@ public abstract class InteractiveActionThread extends Thread implements datastru
         {
 
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("interactive.resources.InteractiveState", hdlg.get_locale());
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", hdlg.get_locale());
             boolean saved_board_read_only = hdlg.is_board_read_only();
             hdlg.set_board_read_only(true);
             String start_message = resources.getString("logfile") + " " + resources.getString("stop_message");

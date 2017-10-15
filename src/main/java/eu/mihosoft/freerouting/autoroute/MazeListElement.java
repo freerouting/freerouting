@@ -18,9 +18,9 @@
  * Created on 25. Januar 2004, 08:21
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.FloatLine;
+import eu.mihosoft.freerouting.geometry.planar.FloatLine;
 
 /**
  * Information for the maze expand Algorithm contained in expansion doors and drills

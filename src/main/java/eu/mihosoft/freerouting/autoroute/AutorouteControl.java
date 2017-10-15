@@ -17,17 +17,17 @@
  *
  * Created on 25. Januar 2004, 09:38
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 
-import rules.ViaInfo;
-import rules.ViaRule;
+import eu.mihosoft.freerouting.rules.ViaInfo;
+import eu.mihosoft.freerouting.rules.ViaRule;
 
-import board.RoutingBoard;
+import eu.mihosoft.freerouting.board.RoutingBoard;
 
 /**
- * Structure for controlling the autoroute algorithm.
+ * Structure for controlling the eu.mihosoft.freerouting.autoroute algorithm.
  *
  * @author  Alfons Wirtz
  */
@@ -35,21 +35,21 @@ public class AutorouteControl
 {
 
     /** Creates a new instance of AutorouteControl for the input net */
-    public AutorouteControl(RoutingBoard p_board, int p_net_no, interactive.Settings p_settings)
+    public AutorouteControl(RoutingBoard p_board, int p_net_no, eu.mihosoft.freerouting.interactive.Settings p_settings)
     {
         this(p_board, p_settings, p_settings.autoroute_settings.get_trace_cost_arr());
         init_net(p_net_no, p_board, p_settings.autoroute_settings.get_via_costs());
     }
 
     /** Creates a new instance of AutorouteControl for the input net */
-    public AutorouteControl(RoutingBoard p_board, int p_net_no, interactive.Settings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr)
+    public AutorouteControl(RoutingBoard p_board, int p_net_no, eu.mihosoft.freerouting.interactive.Settings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr)
     {
         this(p_board, p_settings, p_trace_cost_arr);
         init_net(p_net_no, p_board, p_via_costs);
     }
 
     /** Creates a new instance of AutorouteControl */
-    private AutorouteControl(RoutingBoard p_board, interactive.Settings p_settings,
+    private AutorouteControl(RoutingBoard p_board, eu.mihosoft.freerouting.interactive.Settings p_settings,
                              ExpansionCostFactor[] p_trace_costs_arr)
     {
         layer_count = p_board.get_layer_count();
@@ -93,8 +93,8 @@ public class AutorouteControl
     private void init_net(int p_net_no, RoutingBoard p_board, int p_via_costs)
     {
         net_no = p_net_no;
-        rules.Net curr_net = p_board.rules.nets.get(p_net_no);
-        rules.NetClass curr_net_class;
+        eu.mihosoft.freerouting.rules.Net curr_net = p_board.rules.nets.get(p_net_no);
+        eu.mihosoft.freerouting.rules.NetClass curr_net_class;
         if (curr_net != null)
         {
             curr_net_class = curr_net.get_class();
@@ -139,7 +139,7 @@ public class AutorouteControl
             {
                 this.attach_smd_allowed = true;
             }
-            library.Padstack curr_via_padstack = curr_via.get_padstack();
+            eu.mihosoft.freerouting.library.Padstack curr_via_padstack = curr_via.get_padstack();
             int from_layer = curr_via_padstack.from_layer();
             int to_layer = curr_via_padstack.to_layer();
             for (int j = from_layer; j <= to_layer; ++j)
@@ -173,18 +173,18 @@ public class AutorouteControl
     public final ExpansionCostFactor[] trace_costs;
     /** Defines for each layer, if it may used for routing. */
     final boolean[] layer_active;
-    /** The currently used net number in the autoroute algorithm */
+    /** The currently used net number in the eu.mihosoft.freerouting.autoroute algorithm */
     int net_no;
-    /** The currently used trace half widths in the autoroute algorithm on each layer */
+    /** The currently used trace half widths in the eu.mihosoft.freerouting.autoroute algorithm on each layer */
     final int[] trace_half_width;
     /**
-     * The currently used compensated trace half widths in the autoroute algorithm on each layer.
+     * The currently used compensated trace half widths in the eu.mihosoft.freerouting.autoroute algorithm on each layer.
      * Equal to trace_half_width if no clearance compensation is used.
      */
     final int[] compensated_trace_half_width;
-    /** The currently used clearance class for traces in the autoroute algorithm */
+    /** The currently used clearance class for traces in the eu.mihosoft.freerouting.autoroute algorithm */
     public int trace_clearance_class_no;
-    /** The currently used clearance class for vias in the autoroute algorithm */
+    /** The currently used clearance class for vias in the eu.mihosoft.freerouting.autoroute algorithm */
     int via_clearance_class;
     /** The possible (partial) vias, which can be used by the autorouter */
     ViaRule via_rule;
@@ -220,14 +220,14 @@ public class AutorouteControl
     public int ripup_costs;
     public int ripup_pass_no;
     public final boolean with_neckdown;
-    /** If true, the autoroute algorithm completes after the first drill */
+    /** If true, the eu.mihosoft.freerouting.autoroute algorithm completes after the first drill */
     public boolean is_fanout;
     /**
      *  Normally true, if the autorouter contains no fanout pass
      */
     public boolean remove_unconnected_vias;
 
-    /** horizontal and vertical costs for traces on a board layer */
+    /** horizontal and vertical costs for traces on a eu.mihosoft.freerouting.board layer */
     public static class ExpansionCostFactor
     {
 
@@ -236,9 +236,9 @@ public class AutorouteControl
             horizontal = p_horizontal;
             vertical = p_vertical;
         }
-        /** The horizontal expansion cost factor on a layer of the board */
+        /** The horizontal expansion cost factor on a layer of the eu.mihosoft.freerouting.board */
         public final double horizontal;
-        /** The verical expansion cost factor on a layer of the board */
+        /** The verical expansion cost factor on a layer of the eu.mihosoft.freerouting.board */
         public final double vertical;
     }
 

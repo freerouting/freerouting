@@ -17,13 +17,13 @@
  *
  * Created on 9. Juni 2004, 10:24
  */
-package rules;
+package eu.mihosoft.freerouting.rules;
 
 import java.util.Vector;
 import java.util.Collection;
 
 /**
- * Describes the electrical Nets on a board.
+ * Describes the electrical Nets on a eu.mihosoft.freerouting.board.
  *
  * @author  alfons
  */
@@ -37,7 +37,7 @@ public class Nets implements java.io.Serializable
     }
 
     /**
-     * Returns the biggest net number on the board.
+     * Returns the biggest net number on the eu.mihosoft.freerouting.board.
      */
     public int max_net_no()
     {
@@ -98,7 +98,7 @@ public class Nets implements java.io.Serializable
      */
     public Net new_net(java.util.Locale p_locale)
     {
-        java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("rules.resources.Default", p_locale);
+        java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.rules.resources.Default", p_locale);
         String net_name = resources.getString("net#") + (new Integer(net_arr.size() + 1)).toString();
         return add(net_name, 1, false);
     }
@@ -133,7 +133,7 @@ public class Nets implements java.io.Serializable
      * Sets the Board of this net list.
      * Used for example to get access to the Items of the net.
      */
-    public void set_board(board.BasicBoard p_board)
+    public void set_board(eu.mihosoft.freerouting.board.BasicBoard p_board)
     {
         this.board = p_board;
     }
@@ -142,7 +142,7 @@ public class Nets implements java.io.Serializable
      * Gets the Board of this net list.
      * Used for example to get access to the Items of the net.
      */
-    public board.BasicBoard get_board()
+    public eu.mihosoft.freerouting.board.BasicBoard get_board()
     {
         return this.board;
     }
@@ -153,7 +153,7 @@ public class Nets implements java.io.Serializable
     public static final int max_legal_net_no = 9999999;
     /** auxiliary net number for internal use */
     public static final int hidden_net_no = 10000001;
-    /** The list of electrical nets on the board */
+    /** The list of electrical nets on the eu.mihosoft.freerouting.board */
     private Vector<Net> net_arr;
-    private board.BasicBoard board;
+    private eu.mihosoft.freerouting.board.BasicBoard board;
 }

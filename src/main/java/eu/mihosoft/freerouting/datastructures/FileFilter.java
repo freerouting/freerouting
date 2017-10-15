@@ -18,7 +18,7 @@
  * Created on 31. Mai 2004, 09:23
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 /**
  * Used in the file chooser to filter all files which do not have an extension from the input array.

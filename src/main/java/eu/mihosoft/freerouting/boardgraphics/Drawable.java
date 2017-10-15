@@ -14,7 +14,7 @@
  *   for more details.
  */
 
-package boardgraphics;
+package eu.mihosoft.freerouting.boardgraphics;
 
 import java.awt.Color;
 import java.awt.Graphics;

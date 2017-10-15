@@ -18,21 +18,21 @@
  * Created on 25. April 2004, 09:55
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.ConvexShape;
-import geometry.planar.IntPoint;
-import geometry.planar.Point;
-import geometry.planar.FloatPoint;
-import geometry.planar.Shape;
-import geometry.planar.TileShape;
-import geometry.planar.Simplex;
-import geometry.planar.IntBox;
-import geometry.planar.Circle;
-import geometry.planar.Vector;
-import geometry.planar.Limits;
-import rules.ViaInfo;
-import library.Padstack;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Simplex;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.Circle;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Limits;
+import eu.mihosoft.freerouting.rules.ViaInfo;
+import eu.mihosoft.freerouting.library.Padstack;
 
 
 /**

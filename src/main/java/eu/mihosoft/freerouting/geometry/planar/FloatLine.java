@@ -18,7 +18,7 @@
  * Created on 19. Februar 2004, 07:22
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 /**
  * Defines a line in the plane by to FloatPoints.

@@ -18,22 +18,22 @@
  * Created on 31. Januar 2006, 08:20
  *
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.LinkedList;
 import java.util.Iterator;
 
-import geometry.planar.IntPoint;
-import geometry.planar.FloatPoint;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
-import board.Connectable;
-import board.Item;
-import board.AngleRestriction;
-import board.ShapeSearchTree;
-import board.TestLevel;
+import eu.mihosoft.freerouting.board.Connectable;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.AngleRestriction;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.TestLevel;
 
 /**
  *
@@ -269,7 +269,7 @@ public abstract class LocateFoundConnectionAlgo
     protected abstract Collection<FloatPoint> calculate_next_trace_corners();
 
     /** Test display of the baktrack rooms. */
-    public void draw(java.awt.Graphics p_graphics, boardgraphics.GraphicsContext p_graphics_context)
+    public void draw(java.awt.Graphics p_graphics, eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         for (int i = 0; i < backtrack_array.length; ++i)
         {

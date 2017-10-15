@@ -17,29 +17,29 @@
  *
  * Created on 23. Februar 2004, 08:18
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.IntPoint;
-import geometry.planar.Point;
-import geometry.planar.FloatPoint;
-import geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
 
 import java.util.Iterator;
 import java.util.Set;
 
-import library.Padstack;
-import rules.ViaInfo;
+import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.rules.ViaInfo;
 
-import board.ForcedViaAlgo;
-import board.PolylineTrace;
-import board.Trace;
-import board.Item;
-import board.RoutingBoard;
-import board.ItemSelectionFilter;
-import board.TestLevel;
+import eu.mihosoft.freerouting.board.ForcedViaAlgo;
+import eu.mihosoft.freerouting.board.PolylineTrace;
+import eu.mihosoft.freerouting.board.Trace;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.board.TestLevel;
 
 /**
- * Inserts the traces and vias of the connection found by the autoroute algorithm.
+ * Inserts the traces and vias of the connection found by the eu.mihosoft.freerouting.autoroute algorithm.
  *
  * @author  Alfons Wirtz
  */
@@ -121,8 +121,8 @@ public class InsertFoundConnectionAlgo
         board.rules.set_pin_edge_to_turn_dist(-1);
 
         // Look for pins att the start and the end of p_trace in case that neckdown is necessecary.
-        board.Pin start_pin = null;
-        board.Pin end_pin = null;
+        eu.mihosoft.freerouting.board.Pin start_pin = null;
+        eu.mihosoft.freerouting.board.Pin end_pin = null;
         if (ctrl.with_neckdown)
         {
             ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
@@ -132,7 +132,7 @@ public class InsertFoundConnectionAlgo
                 Set<Item> picked_items = this.board.pick_items(curr_end_corner, p_trace.layer, item_filter);
                 for (Item curr_item : picked_items)
                 {
-                    board.Pin curr_pin = (board.Pin) curr_item;
+                    eu.mihosoft.freerouting.board.Pin curr_pin = (eu.mihosoft.freerouting.board.Pin) curr_item;
                     if (curr_pin.contains_net(ctrl.net_no) && curr_pin.get_center().equals(curr_end_corner))
                     {
                         if (i == 0)
@@ -220,7 +220,7 @@ public class InsertFoundConnectionAlgo
         return result;
     }
 
-    boolean insert_neckdown(Point p_from_corner, Point p_to_corner, int p_layer, board.Pin p_start_pin, board.Pin p_end_pin)
+    boolean insert_neckdown(Point p_from_corner, Point p_to_corner, int p_layer, eu.mihosoft.freerouting.board.Pin p_start_pin, eu.mihosoft.freerouting.board.Pin p_end_pin)
     {
         if (p_start_pin != null)
         {
@@ -241,7 +241,7 @@ public class InsertFoundConnectionAlgo
         return false;
     }
 
-    private Point try_neck_down(Point p_from_corner, Point p_to_corner, int p_layer, board.Pin p_pin, boolean p_at_start)
+    private Point try_neck_down(Point p_from_corner, Point p_to_corner, int p_layer, eu.mihosoft.freerouting.board.Pin p_pin, boolean p_at_start)
     {
         if (!p_pin.is_on_layer(p_layer))
         {

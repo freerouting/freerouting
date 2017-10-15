@@ -18,7 +18,7 @@
  * Created on 20. Dezember 2004, 09:03
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Subwindow of the eu.mihosoft.freerouting.board frame, whose location and visibility can be saved and read from disc.

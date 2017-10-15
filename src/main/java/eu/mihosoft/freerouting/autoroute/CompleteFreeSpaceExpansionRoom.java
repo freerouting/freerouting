@@ -18,20 +18,20 @@
  * Created on 10. Februar 2004, 10:12
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import datastructures.ShapeTree;
+import eu.mihosoft.freerouting.datastructures.ShapeTree;
 
-import board.SearchTreeObject;
-import board.ShapeSearchTree;
-import board.Connectable;
-import board.Item;
+import eu.mihosoft.freerouting.board.SearchTreeObject;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.Connectable;
+import eu.mihosoft.freerouting.board.Item;
 
 
 /**
@@ -158,7 +158,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     }
     
     /**
-     * Calculates the doors to the start and destination items of the autoroute algorithm.
+     * Calculates the doors to the start and destination items of the eu.mihosoft.freerouting.autoroute algorithm.
      */
     public  void calculate_target_doors(ShapeTree.TreeEntry p_own_net_object, int p_net_no, ShapeSearchTree p_autoroute_search_tree)
     {
@@ -186,7 +186,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     /**
      * Draws the shape of this room.
      */
-    public void draw(java.awt.Graphics p_graphics, boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
+    public void draw(java.awt.Graphics p_graphics, eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
     {
         java.awt.Color draw_color = p_graphics_context.get_trace_colors(false)[this.get_layer()];
         double layer_visibility = p_graphics_context.get_layer_visibility(this.get_layer());

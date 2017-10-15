@@ -17,11 +17,11 @@
  *
  * Created on 11. Januar 2004, 11:14
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.Line;
-import geometry.planar.Simplex;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Simplex;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,19 +31,19 @@ import java.util.TreeSet;
 import java.util.Set;
 import java.util.SortedSet;
 
-import datastructures.Stoppable;
-import datastructures.TimeLimit;
+import eu.mihosoft.freerouting.datastructures.Stoppable;
+import eu.mihosoft.freerouting.datastructures.TimeLimit;
 
-import board.SearchTreeObject;
-import board.Item;
-import board.RoutingBoard;
-import board.ShapeSearchTree;
-import board.ShapeSearchTree90Degree;
-import board.ShapeSearchTree45Degree;
-import board.TestLevel;
+import eu.mihosoft.freerouting.board.SearchTreeObject;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.ShapeSearchTree90Degree;
+import eu.mihosoft.freerouting.board.ShapeSearchTree45Degree;
+import eu.mihosoft.freerouting.board.TestLevel;
 
 /**
- * Temporary autoroute data stored on the RoutingBoard.
+ * Temporary eu.mihosoft.freerouting.autoroute data stored on the RoutingBoard.
  *
  * @author  Alfons Wirtz
  */
@@ -186,7 +186,7 @@ public class AutorouteEngine
                 changed_nets.add(curr_ripped_item.get_net_no(i));
             }
         }
-        // let the observers know the changes in the board database.
+        // let the observers know the changes in the eu.mihosoft.freerouting.board database.
         boolean observers_activated = !this.board.observers_active();
         if (observers_activated)
         {
@@ -261,7 +261,7 @@ public class AutorouteEngine
     /**
      * Draws the shapes of the expansion rooms created so far.
      */
-    public void draw(java.awt.Graphics p_graphics, boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
+    public void draw(java.awt.Graphics p_graphics, eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
     {
         if (complete_expansion_rooms == null)
         {
@@ -640,7 +640,7 @@ public class AutorouteEngine
     }
     /**
      * The current search tree used in autorouting.
-     * It depends on the trac clearance class used in the autoroute algorithm.
+     * It depends on the trac clearance class used in the eu.mihosoft.freerouting.autoroute algorithm.
      */
     public final ShapeSearchTree autoroute_search_tree;
     /** If maintain_database, the autorouter database is maintained after a  connection is
@@ -649,7 +649,7 @@ public class AutorouteEngine
     public final boolean maintain_database;
     static final int TRACE_WIDTH_TOLERANCE = 2;
     /**
-     * The net number used for routing in this autoroute algorithm.
+     * The net number used for routing in this eu.mihosoft.freerouting.autoroute algorithm.
      */
     private int net_no;
     /**
@@ -664,11 +664,11 @@ public class AutorouteEngine
      * To stop the expansion algorithm after a time limit is exceeded.
      */
     private TimeLimit time_limit;
-    /** The PCB-board of this autoroute algorithm. */
+    /** The PCB-eu.mihosoft.freerouting.board of this eu.mihosoft.freerouting.autoroute algorithm. */
     final RoutingBoard board;
-    /** The list of incomplete expansion rooms on the routing board */
+    /** The list of incomplete expansion rooms on the routing eu.mihosoft.freerouting.board */
     private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms = null;
-    /** The list of complete expansion rooms on the routing board */
+    /** The list of complete expansion rooms on the routing eu.mihosoft.freerouting.board */
     private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms = null;
     /** The count of expansion rooms created so far */
     private int expansion_room_instance_count = 0;

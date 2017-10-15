@@ -18,9 +18,9 @@
  * Created on 12. November 2003, 11:10
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 
 /**
@@ -40,7 +40,7 @@ public abstract class LogfileScope
     public static final LogfileScope REDO = new RedoScope("redo");
     public static final LogfileScope GENERATE_SNAPSHOT = new GenerateSnapshotScope("generate_snapshot");
     
-    // Scopes for logging changes in the interactive setting:
+    // Scopes for logging changes in the eu.mihosoft.freerouting.interactive setting:
     public static final LogfileScope SET_CLEARANCE_COMPENSATION = new SetClearanceCompensationScope("set_clearance_compensation");
     public static final LogfileScope SET_DRAG_COMPONENTS_ENABLED = new SetDragComponentsEnabledScope("set_drag_componente_enabled");
     public static final LogfileScope SET_LAYER = new SetLayerScope("set_layer");
@@ -78,7 +78,7 @@ public abstract class LogfileScope
     public static final LogfileScope AUTOROUTE_SELECTED = new AutorouteSelectedScope("autoroute_selected");
     public static final LogfileScope FANOUT_SELECTED = new FanoutSelectedScope("fanout_selected");
     
-    // scopes for logging interactive creating or moving items.
+    // scopes for logging eu.mihosoft.freerouting.interactive creating or moving items.
     public static final LogfileScope COMPLETE_SCOPE = new CompleteScope("complete_scope");
     public static final LogfileScope CANCEL_SCOPE = new CancelScope("cancel_scope");
     public static final LogfileScope CREATING_TILE = new CreateTileScope("creating_tile");
@@ -126,7 +126,7 @@ public abstract class LogfileScope
     
     /**
      * Reads the scope from the input logfile.
-     * Returns the active interactive state after reading the scope.
+     * Returns the active eu.mihosoft.freerouting.interactive state after reading the scope.
      */
     public abstract InteractiveState read_scope(Logfile p_logfile,
             InteractiveState p_return_state, BoardHandling p_board_handling);
@@ -175,7 +175,7 @@ public abstract class LogfileScope
         /**
          * Reads the next corner list scope togethet with its
          * interiour scopes (layer change for example) from the input logfile.
-         * Returns the active interactive state after reading the scope.
+         * Returns the active eu.mihosoft.freerouting.interactive state after reading the scope.
          */
         public InteractiveState  read_scope(Logfile p_logfile,
                 InteractiveState p_return_state, BoardHandling p_board_handling)
@@ -345,7 +345,7 @@ public abstract class LogfileScope
             InteractiveState result;
             if (p_return_state instanceof SelectedItemState)
             {
-                java.util.Collection<board.Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
+                java.util.Collection<eu.mihosoft.freerouting.board.Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
                 result =  CopyItemState.get_instance(p_location, item_list, p_return_state.return_state, p_board_handling, null);
             }
             else
@@ -371,7 +371,7 @@ public abstract class LogfileScope
             InteractiveState result;
             if (p_return_state instanceof SelectedItemState)
             {
-                java.util.Collection<board.Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
+                java.util.Collection<eu.mihosoft.freerouting.board.Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
                 result =  MoveItemState.get_instance(p_location, item_list, p_return_state.return_state, p_board_handling, null);
             }
             else
@@ -602,7 +602,7 @@ public abstract class LogfileScope
             {
                 System.out.println("CutoutRouteScope.read_scope: electedItemState expected");
             }
-            java.util.Collection<board.Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
+            java.util.Collection<eu.mihosoft.freerouting.board.Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
             FloatPoint lower_left = p_logfile.read_corner();
             if (lower_left == null)
             {
@@ -1162,7 +1162,7 @@ public abstract class LogfileScope
         public InteractiveState read_scope(Logfile p_logfile, InteractiveState p_return_state, BoardHandling p_board_handling)
         {
             int new_snap_angle_no = p_logfile.read_int();
-            p_board_handling.get_routing_board().rules.set_trace_angle_restriction(board.AngleRestriction.arr[new_snap_angle_no]);
+            p_board_handling.get_routing_board().rules.set_trace_angle_restriction(eu.mihosoft.freerouting.board.AngleRestriction.arr[new_snap_angle_no]);
             return p_return_state;
         }
     }
@@ -1209,7 +1209,7 @@ public abstract class LogfileScope
         {
             int item_type_no = p_logfile.read_int();
             int selection = p_logfile.read_int();
-            board.ItemSelectionFilter.SelectableChoices item_type = board.ItemSelectionFilter.SelectableChoices.values()[item_type_no];
+            eu.mihosoft.freerouting.board.ItemSelectionFilter.SelectableChoices item_type = eu.mihosoft.freerouting.board.ItemSelectionFilter.SelectableChoices.values()[item_type_no];
             if (selection == 0)
             {
                 p_board_handling.settings.item_selection_filter.set_selected(item_type, false);

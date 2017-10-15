@@ -18,7 +18,7 @@
  * Created on 22. Maerz 2005, 05:40
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.board.ClearanceViolation;
@@ -36,7 +36,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
     public WindowClearanceViolations(BoardFrame p_board_frame)
     {
         super(p_board_frame);
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowClearanceViolations", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowClearanceViolations", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         this.list_empty_message.setText(resources.getString("list_empty_message"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_ClearanceViolations");

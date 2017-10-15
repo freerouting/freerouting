@@ -18,7 +18,7 @@
  * Created on 20. Februar 2005, 08:14
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.board.LayerStructure;
 
 /**
@@ -33,7 +33,7 @@ public class ComboBoxLayer extends javax.swing.JComboBox
     public ComboBoxLayer(LayerStructure p_layer_structure, java.util.Locale p_locale)
     {     
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_locale);
         int signal_layer_count = p_layer_structure.signal_layer_count();
         int item_count = signal_layer_count + 1;
         boolean add_inner_layer_item = signal_layer_count > 2;

@@ -19,19 +19,19 @@
  *
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
 
-import board.Item;
-import board.PolylineTrace;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.PolylineTrace;
 
 /**
  *
@@ -121,7 +121,7 @@ public class CutoutRouteState extends SelectRegionState
         
         for (PolylineTrace curr_trace : this.trace_list)
         {
-            board.ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
+            eu.mihosoft.freerouting.board.ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
             for (int i = 0; i < curr_trace.net_count(); ++i)
             {
                 changed_nets.add(curr_trace.get_net_no(i));

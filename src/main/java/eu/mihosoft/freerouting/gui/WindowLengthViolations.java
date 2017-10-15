@@ -19,7 +19,7 @@
  *
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.rules.Net;
 import eu.mihosoft.freerouting.rules.Nets;
@@ -38,7 +38,7 @@ public class WindowLengthViolations  extends WindowObjectListWithFilter
     public WindowLengthViolations(BoardFrame p_board_frame)
     {
         super(p_board_frame);
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowLengthViolations", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowLengthViolations", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         this.list_empty_message.setText(resources.getString("list_empty"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LengthViolations");

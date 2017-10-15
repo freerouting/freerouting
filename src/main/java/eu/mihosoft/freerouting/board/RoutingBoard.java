@@ -13,18 +13,18 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntBox;
-import geometry.planar.IntOctagon;
-import geometry.planar.IntPoint;
-import geometry.planar.LineSegment;
-import geometry.planar.Point;
-import geometry.planar.Polyline;
-import geometry.planar.PolylineShape;
-import geometry.planar.TileShape;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.LineSegment;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,22 +32,22 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import datastructures.UndoableObjects;
-import datastructures.Stoppable;
-import datastructures.TimeLimit;
-import datastructures.ShapeTree.TreeEntry;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.Stoppable;
+import eu.mihosoft.freerouting.datastructures.TimeLimit;
+import eu.mihosoft.freerouting.datastructures.ShapeTree.TreeEntry;
 
-import rules.ViaInfo;
-import rules.BoardRules;
+import eu.mihosoft.freerouting.rules.ViaInfo;
+import eu.mihosoft.freerouting.rules.BoardRules;
 
-import autoroute.AutorouteControl;
-import autoroute.AutorouteEngine;
-import autoroute.AutorouteControl.ExpansionCostFactor;
-import autoroute.CompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.autoroute.AutorouteControl;
+import eu.mihosoft.freerouting.autoroute.AutorouteEngine;
+import eu.mihosoft.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
+import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 
 /**
  *
- * Contains higher level functions of a board
+ * Contains higher level functions of a eu.mihosoft.freerouting.board
  *
  * @author Alfons Wirtz
  */
@@ -183,7 +183,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * marks the whole board as changed
+     * marks the whole eu.mihosoft.freerouting.board as changed
      */
     public void mark_all_changed_area()
     {
@@ -902,8 +902,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Initialises the autoroute database for routing a connection.
-     * If p_retain_autoroute_database, the autoroute database is retained and maintained after
+     * Initialises the eu.mihosoft.freerouting.autoroute database for routing a connection.
+     * If p_retain_autoroute_database, the eu.mihosoft.freerouting.autoroute database is retained and maintained after
      * the algorithm for performance reasons.
      */
     public AutorouteEngine init_autoroute(int p_net_no, int p_trace_clearance_class_no,
@@ -918,7 +918,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Clears the autoroute database in case it was retained.
+     * Clears the eu.mihosoft.freerouting.autoroute database in case it was retained.
      */
     public void finish_autoroute()
     {
@@ -934,7 +934,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
      * is not yet electrically connected.
      * Returns an enum of type AutorouteEngine.AutorouteResult
      */
-    public AutorouteEngine.AutorouteResult autoroute(Item p_item, interactive.Settings p_settings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+    public AutorouteEngine.AutorouteResult autoroute(Item p_item, eu.mihosoft.freerouting.interactive.Settings p_settings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
     {
         if (!(p_item instanceof Connectable) || p_item.net_count() == 0)
         {
@@ -942,18 +942,18 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
         }
         if (p_item.net_count() > 1)
         {
-            System.out.println("RoutingBoard.autoroute: net_count > 1 not yet implemented");
+            System.out.println("RoutingBoard.eu.mihosoft.freerouting.autoroute: net_count > 1 not yet implemented");
         }
         int route_net_no = p_item.get_net_no(0);
         AutorouteControl ctrl_settings = new AutorouteControl(this, route_net_no, p_settings, p_via_costs, p_settings.autoroute_settings.get_trace_cost_arr());
         ctrl_settings.remove_unconnected_vias = false;
         Set<Item> route_start_set = p_item.get_connected_set(route_net_no);
-        rules.Net route_net = rules.nets.get(route_net_no);
+        eu.mihosoft.freerouting.rules.Net route_net = rules.nets.get(route_net_no);
         if (route_net != null && route_net.contains_plane())
         {
             for (Item curr_item : route_start_set)
             {
-                if (curr_item instanceof board.ConductionArea)
+                if (curr_item instanceof eu.mihosoft.freerouting.board.ConductionArea)
                 {
                     return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // already connected to plane
                 }
@@ -982,8 +982,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
      *  has only 1 layer. Ripup is allowed if p_ripup_costs is >= 0.
      *  Returns an enum of type AutorouteEngine.AutorouteResult
      */
-    public AutorouteEngine.AutorouteResult fanout(Pin p_pin, interactive.Settings p_settings, int p_ripup_costs,
-            Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+    public AutorouteEngine.AutorouteResult fanout(Pin p_pin, eu.mihosoft.freerouting.interactive.Settings p_settings, int p_ripup_costs,
+                                                  Stoppable p_stoppable_thread, TimeLimit p_time_limit)
     {
         if (p_pin.first_layer() != p_pin.last_layer() || p_pin.net_count() != 1)
         {
@@ -1200,7 +1200,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Sets, if all conduction areas on the board are obstacles for route of foreign nets.
+     * Sets, if all conduction areas on the eu.mihosoft.freerouting.board are obstacles for route of foreign nets.
      */
     public void change_conduction_is_obstacle(boolean p_value)
     {
@@ -1209,7 +1209,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
             return; // no muultiply
         }
         boolean something_changed = false;
-        // Change the is_obstacle property of all conduction areas of the board.
+        // Change the is_obstacle property of all conduction areas of the eu.mihosoft.freerouting.board.
         Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
         for (;;)
         {
@@ -1367,8 +1367,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Sets, if the autoroute database has to be maintained outside the outoroute algorithm
-     * while changing items on rhe board.
+     * Sets, if the eu.mihosoft.freerouting.autoroute database has to be maintained outside the outoroute algorithm
+     * while changing items on rhe eu.mihosoft.freerouting.board.
      */
     void set_maintaining_autoroute_database(boolean p_value)
     {
@@ -1383,8 +1383,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns, if the autoroute database is maintained outside the outoroute algorithm
-     * while changing items on rhe board.
+     * Returns, if the eu.mihosoft.freerouting.autoroute database is maintained outside the outoroute algorithm
+     * while changing items on rhe eu.mihosoft.freerouting.board.
      */
     boolean is_maintaining_autoroute_database()
     {

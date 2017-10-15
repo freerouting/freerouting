@@ -18,37 +18,37 @@
  * Created on 7. Dezember 2002, 18:26
  */
 
-package tests;
+package eu.mihosoft.freerouting.tests;
 
-import geometry.planar.IntOctagon;
-import geometry.planar.IntPoint;
-import geometry.planar.Polyline;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-import board.Item;
-import board.BasicBoard;
-import board.PolylineTrace;
-import board.SearchTreeObject;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.BasicBoard;
+import eu.mihosoft.freerouting.board.PolylineTrace;
+import eu.mihosoft.freerouting.board.SearchTreeObject;
 
 
 /**
- * Some consistancy checking on a routing board.
+ * Some consistancy checking on a routing eu.mihosoft.freerouting.board.
  *
  * @author  Alfons Wirtz
  */
 public class Validate
 {
     /**
-     * Does some consistancy checking on the routing board and may be some
+     * Does some consistancy checking on the routing eu.mihosoft.freerouting.board and may be some
      * other actions.
      * Returns false, if problems were detected.
      */
     public static boolean check(String p_s, BasicBoard p_board)
     {
-        if (p_board.get_test_level() == board.TestLevel.RELEASE_VERSION)
+        if (p_board.get_test_level() == eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION)
         {
             return true;
         }
@@ -64,7 +64,7 @@ public class Validate
         {
             if (first_time)
             {
-                System.out.println(" validate board is on ");
+                System.out.println(" validate eu.mihosoft.freerouting.board is on ");
                 first_time = false;
             }
             Collection<SearchTreeObject> l = p_board.overlapping_objects(surr_oct, layer) ;
@@ -271,11 +271,11 @@ public class Validate
         while (it.hasNext())
         {
             Item  curr_item = it.next();
-            if (!(curr_item instanceof board.Trace))
+            if (!(curr_item instanceof eu.mihosoft.freerouting.board.Trace))
             {
                 continue;
             }
-            if(((board.Trace)curr_item).is_cycle())
+            if(((eu.mihosoft.freerouting.board.Trace)curr_item).is_cycle())
             {
                 System.out.print(p_s);
                 System.out.println(": cycle found");
@@ -295,9 +295,9 @@ public class Validate
         while (it.hasNext())
         {
             Item curr_ob = it.next();
-            if(curr_ob instanceof board.Trace)
+            if(curr_ob instanceof eu.mihosoft.freerouting.board.Trace)
             {
-                if (((board.Trace)curr_ob).contains_net(p_net_no))
+                if (((eu.mihosoft.freerouting.board.Trace)curr_ob).contains_net(p_net_no))
                 {
                     ++found_traces;
                 }
@@ -315,7 +315,7 @@ public class Validate
     }
     
     /**
-     * checks, if there are unconnectedtraces ore vias on the board
+     * checks, if there are unconnectedtraces ore vias on the eu.mihosoft.freerouting.board
      */
     static public boolean unconnnected_routing_items(String p_s, BasicBoard p_board)
     {

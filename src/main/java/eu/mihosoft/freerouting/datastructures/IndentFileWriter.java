@@ -18,7 +18,7 @@
  * Created on 21. Juni 2004, 09:36
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 /**
  * Handles the indenting  of scopes while writing to an output text file.

@@ -18,18 +18,18 @@
  * Created on 10. Dezember 2003, 09:08
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import java.util.Iterator;
 
-import board.Trace;
-import board.DrillItem;
-import board.Item;
+import eu.mihosoft.freerouting.board.Trace;
+import eu.mihosoft.freerouting.board.DrillItem;
+import eu.mihosoft.freerouting.board.Item;
 
 /**
- * Class implementing functionality when the mouse is dragged on a routing board
+ * Class implementing functionality when the mouse is dragged on a routing eu.mihosoft.freerouting.board
  *
  * @author  Alfons Wirtz
  */

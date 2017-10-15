@@ -18,7 +18,7 @@
  * Created on 1. August 2004, 07:46
  */
 
-package boardgraphics;
+package eu.mihosoft.freerouting.boardgraphics;
 
 /**
  * The color intensities for each item type.

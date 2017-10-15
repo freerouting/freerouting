@@ -17,7 +17,7 @@
  *
  * Created on 24. August 2003, 06:41
  */
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -246,7 +246,7 @@ public class UndoableObjects implements java.io.Serializable
             }
             if (p_restored_objects == null || !p_restored_objects.remove(curr_deleted_node.object))
             {
-                // the object needs only be cancelled if it is already in the board
+                // the object needs only be cancelled if it is already in the eu.mihosoft.freerouting.board
                 if (p_cancelled_objects != null)
                 {
                     p_cancelled_objects.add(curr_deleted_node.object);

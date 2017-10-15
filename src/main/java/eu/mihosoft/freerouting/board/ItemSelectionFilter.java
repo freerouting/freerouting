@@ -18,13 +18,13 @@
  * Created on 14. Dezember 2004, 10:57
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Filter for selecting items on the board.
+ * Filter for selecting items on the eu.mihosoft.freerouting.board.
  *
  * @author Alfons Wirtz
  */
@@ -118,10 +118,10 @@ public class ItemSelectionFilter implements java.io.Serializable
     /**
      * Filters a collection of items with this filter.
      */
-    public Set<Item> filter(java.util.Set<board.Item> p_items)
+    public Set<Item> filter(java.util.Set<eu.mihosoft.freerouting.board.Item> p_items)
     {
         Set<Item> result = new TreeSet<Item>();
-        for (board.Item curr_item : p_items)
+        for (eu.mihosoft.freerouting.board.Item curr_item : p_items)
         {
             if (curr_item.is_selected_by_filter(this))
             {

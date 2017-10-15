@@ -17,17 +17,17 @@
  *
  * Created on 9. November 2003, 12:02
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntBox;
-import geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
 
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import board.Item;
+import eu.mihosoft.freerouting.board.Item;
 
 /**
  * Interactive state for selecting all items in a rectangle.

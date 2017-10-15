@@ -18,7 +18,7 @@
  * Created on 17. Februar 2005, 07:47
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Popup menu used in the eu.mihosoft.freerouting.interactive selected item state..
@@ -33,7 +33,7 @@ class PopupMenuSelectedItems extends PopupMenuDisplay
     {
         super(p_board_frame);
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem copy_item = new javax.swing.JMenuItem();
         copy_item.setText(resources.getString("copy"));
         copy_item.addActionListener(new java.awt.event.ActionListener()

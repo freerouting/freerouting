@@ -18,7 +18,7 @@
  * Created on 15. November 2002, 08:44
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 /**
  * A shape is defined as convex, if for each line segment with both endpoints

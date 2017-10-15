@@ -18,16 +18,16 @@
  * Created on 31. Maerz 2005, 05:34
  */
 
-package rules;
-import library.Padstack;
+package eu.mihosoft.freerouting.rules;
+import eu.mihosoft.freerouting.library.Padstack;
 
 /**
  * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed
- * used in interactive and automatic routing.
+ * used in eu.mihosoft.freerouting.interactive and automatic routing.
  *
  * @author Alfons Wirtz
  */
-public class ViaInfo implements Comparable<ViaInfo>, board.ObjectInfoPanel.Printable, java.io.Serializable
+public class ViaInfo implements Comparable<ViaInfo>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
     
     /** Creates a new instance of ViaRule */
@@ -91,10 +91,10 @@ public class ViaInfo implements Comparable<ViaInfo>, board.ObjectInfoPanel.Print
         return this.name.compareTo(p_other.name);
     }
     
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("via") + " ");
         p_window.append_bold(this.name);
         p_window.append_bold(": ");

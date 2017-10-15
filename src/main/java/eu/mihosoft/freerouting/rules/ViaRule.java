@@ -18,7 +18,7 @@
  * Created on 31. Maerz 2005, 06:44
  */
 
-package rules;
+package eu.mihosoft.freerouting.rules;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ import java.util.LinkedList;
  *
  * @author Alfons Wirtz
  */
-public class ViaRule implements java.io.Serializable, board.ObjectInfoPanel.Printable
+public class ViaRule implements java.io.Serializable, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable
 {
     
     /** Empty via rule. Must nott be changed. */
@@ -88,7 +88,7 @@ public class ViaRule implements java.io.Serializable, board.ObjectInfoPanel.Prin
     /**
      * Returns true, if this rule contains a via with padstack p_padstack
      */
-    public boolean contains_padstack(library.Padstack p_padstack)
+    public boolean contains_padstack(eu.mihosoft.freerouting.library.Padstack p_padstack)
     {
         for (ViaInfo curr_info : this.list)
         {
@@ -137,10 +137,10 @@ public class ViaRule implements java.io.Serializable, board.ObjectInfoPanel.Prin
         return true;
     }
     
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("via_rule_2") + " ");
         p_window.append_bold(this.name);
         p_window.append_bold(":");

@@ -18,19 +18,19 @@
  * Created on 4. August 2003, 08:26
  */
 
-package boardgraphics;
+package eu.mihosoft.freerouting.boardgraphics;
 
 import java.awt.Color;
 
 /**
- * Stores the layer dependent colors used for drawing for the items on the board.
+ * Stores the layer dependent colors used for drawing for the items on the eu.mihosoft.freerouting.board.
  *
  * @author Alfons Wirtz
  */
 public class ItemColorTableModel extends ColorTableModel implements java.io.Serializable
 {
     
-    public ItemColorTableModel(board.LayerStructure p_layer_structure, java.util.Locale p_locale)
+    public ItemColorTableModel(eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, java.util.Locale p_locale)
     {
         super(p_layer_structure.arr.length, p_locale);
   
@@ -143,7 +143,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
     public String getColumnName(int p_col)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("boardgraphics.resources.ColorTableModel", this.locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.boardgraphics.resources.ColorTableModel", this.locale);
         return resources.getString(ColumnNames.values()[p_col].toString());
     }
     

@@ -18,7 +18,7 @@
  * Created on 31. Maerz 2005, 08:36
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.rules.ViaRule;
 import eu.mihosoft.freerouting.rules.BoardRules;
@@ -26,7 +26,7 @@ import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.board.Layer;
 
 /**
- * Window for eu.mihosoft.freerouting.interactive editing of via eu.mihosoft.freerouting.rules.
+ * Window for eu.mihosoft.freerouting.interactive editing of via rules.
  *
  * @author Alfons Wirtz
  */
@@ -36,7 +36,7 @@ public class WindowVia extends BoardSavableSubWindow
     /** Creates a new instance of ViaWindow */
     public WindowVia(BoardFrame p_board_frame)
     {
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowVia", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowVia", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         this.board_frame = p_board_frame;

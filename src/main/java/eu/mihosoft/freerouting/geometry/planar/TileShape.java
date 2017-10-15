@@ -13,7 +13,7 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 import java.util.Collection;
 import java.util.Iterator;

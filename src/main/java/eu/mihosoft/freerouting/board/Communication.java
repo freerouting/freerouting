@@ -18,10 +18,10 @@
  * Created on 5. Juli 2004, 07:31
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import datastructures.IdNoGenerator;
-import designformats.specctra.CoordinateTransform;
+import eu.mihosoft.freerouting.datastructures.IdNoGenerator;
+import eu.mihosoft.freerouting.designforms.specctra.CoordinateTransform;
 
 /**
  * Communication information to host systems or host design formats.
@@ -48,7 +48,7 @@ public class Communication implements java.io.Serializable
     public Communication()
     {
         this(Unit.MIL, 1, new SpecctraParserInfo("\"", null, null, null, null, false), 
-                new CoordinateTransform(1, 0, 0), new board.ItemIdNoGenerator(), new BoardObserverAdaptor());
+                new CoordinateTransform(1, 0, 0), new eu.mihosoft.freerouting.board.ItemIdNoGenerator(), new BoardObserverAdaptor());
     }
     
     public boolean host_cad_is_eagle()

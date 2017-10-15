@@ -18,14 +18,14 @@
  * Created on 2. Juni 2003, 13:43
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 /**
  * Creates unique Item identication nunbers.
  *
  * @author  Alfons Wirtz
  */
-public class ItemIdNoGenerator implements datastructures.IdNoGenerator, java.io.Serializable
+public class ItemIdNoGenerator implements eu.mihosoft.freerouting.datastructures.IdNoGenerator, java.io.Serializable
 {
     
     /**

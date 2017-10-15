@@ -14,9 +14,9 @@
  *   for more details.
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *  Logfile to track the actions in the interactive board handling
+ *  Logfile to track the actions in the eu.mihosoft.freerouting.interactive eu.mihosoft.freerouting.board handling
  *  for automatic replay.
  *
  * @author Alfons Wirtz

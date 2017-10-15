@@ -9,7 +9,7 @@
  * Created on 5. January 2003, 11:26
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 import java.math.BigInteger;
 

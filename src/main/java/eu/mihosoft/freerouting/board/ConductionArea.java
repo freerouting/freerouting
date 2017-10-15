@@ -18,15 +18,15 @@
  * Created on 29. Juni 2003, 11:49
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Iterator;
 
-import geometry.planar.Area;
-import geometry.planar.Point;
-import geometry.planar.Vector;
-import geometry.planar.FloatPoint;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -170,12 +170,12 @@ public class ConductionArea extends ObstacleArea implements Connectable
         return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.CONDUCTION);
     }
     
-    public java.awt.Color[] get_draw_colors(boardgraphics.GraphicsContext p_graphics_context)
+    public java.awt.Color[] get_draw_colors(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_conduction_colors();
     }
     
-    public double get_draw_intensity(boardgraphics.GraphicsContext p_graphics_context)
+    public double get_draw_intensity(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_conduction_color_intensity();
     }
@@ -183,7 +183,7 @@ public class ConductionArea extends ObstacleArea implements Connectable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("conduction_area"));
         this.print_shape_info(p_window, p_locale);
         this.print_connectable_item_info(p_window, p_locale);

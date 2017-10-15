@@ -18,12 +18,12 @@
  * Created on 5. Januar 2005, 08:02
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
- * Shape class used for printing a geometry.planar.Shape after transforming it to user coordinates.
+ * Shape class used for printing a eu.mihosoft.freerouting.geometry.planar.Shape after transforming it to user coordinates.
  *
  * @author Alfons Wirtz
  */
@@ -56,7 +56,7 @@ public abstract class PrintableShape
         public String toString()
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", this.locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", this.locale);
             String result = resources.getString("circle") + ": ";
             if (center.x != 0 || center.y != 0)
             {
@@ -89,7 +89,7 @@ public abstract class PrintableShape
         public String toString()
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", this.locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", this.locale);
             String result = resources.getString("rectangle") + ": " + resources.getString("lower_left") + " = "
                     + lower_left.to_string(this.locale) + ", " + resources.getString("upper_right") + " = "
                     + upper_right.to_string(this.locale) ;
@@ -112,7 +112,7 @@ public abstract class PrintableShape
         public String toString()
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", this.locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", this.locale);
             String result = resources.getString("polygon") + ": ";
             for (int i = 0; i < corner_arr.length; ++i)
             {

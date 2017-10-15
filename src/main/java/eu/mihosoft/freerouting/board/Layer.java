@@ -18,10 +18,10 @@
  * Created on 26. Mai 2004, 06:31
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 /**
- * Describes the structure of a board layer.
+ * Describes the structure of a eu.mihosoft.freerouting.board layer.
  *
  * @author  alfons
  */

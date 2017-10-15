@@ -1,4 +1,4 @@
-package logger;
+package eu.mihosoft.freerouting.logger;
 
 /**
  * Andrey Belomutskiy

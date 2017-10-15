@@ -17,9 +17,9 @@
  *
  * Created on 6. April 2004, 07:30
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
  * An object, which can be expanded by the maze expansion algorithm.

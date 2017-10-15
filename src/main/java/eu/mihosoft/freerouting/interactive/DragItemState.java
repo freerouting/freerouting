@@ -18,22 +18,22 @@
  * Created on 9. November 2003, 08:13
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Iterator;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.Vector;
-import board.AngleRestriction;
-import board.Item;
-import board.MoveComponent;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.board.AngleRestriction;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.MoveComponent;
 
 /**
- * Class for interactive dragging items with the mouse on a routing board
+ * Class for eu.mihosoft.freerouting.interactive dragging items with the mouse on a routing eu.mihosoft.freerouting.board
  *
  * @author Alfons Wirtz
  */

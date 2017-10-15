@@ -18,15 +18,15 @@
  * Created on 3. Juni 2004, 09:29
  */
 
-package library;
+package eu.mihosoft.freerouting.library;
 
 import java.util.Iterator;
 import java.util.Vector;
 
-import geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
 
 /**
- * Describes a library of component packages.
+ * Describes a eu.mihosoft.freerouting.library of component packages.
  *
  * @author  Alfons Wirtz
  */

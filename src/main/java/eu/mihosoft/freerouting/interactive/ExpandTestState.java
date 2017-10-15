@@ -17,10 +17,10 @@
  *
  * Created on 23. Dezember 2003, 07:56
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.util.Collection;
 import java.util.Set;
@@ -28,16 +28,16 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Iterator;
 
-import autoroute.AutorouteControl;
-import autoroute.CompleteFreeSpaceExpansionRoom;
-import autoroute.IncompleteFreeSpaceExpansionRoom;
-import autoroute.InsertFoundConnectionAlgo;
-import autoroute.LocateFoundConnectionAlgo;
-import autoroute.MazeSearchAlgo;
-import autoroute.AutorouteEngine;
+import eu.mihosoft.freerouting.autoroute.AutorouteControl;
+import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.autoroute.InsertFoundConnectionAlgo;
+import eu.mihosoft.freerouting.autoroute.LocateFoundConnectionAlgo;
+import eu.mihosoft.freerouting.autoroute.MazeSearchAlgo;
+import eu.mihosoft.freerouting.autoroute.AutorouteEngine;
 
-import board.Item;
-import board.RoutingBoard;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.RoutingBoard;
 
 /**
  * State for testing the expanding algorithm of the autorouter.
@@ -178,7 +178,7 @@ public class ExpandTestState extends InteractiveState
 
     private void init(FloatPoint p_location)
     {
-        // look if an autoroute can be started at the input location
+        // look if an eu.mihosoft.freerouting.autoroute can be started at the input location
         RoutingBoard board = hdlg.get_routing_board();
         int layer = hdlg.settings.layer;
         Collection<Item> found_items = board.pick_items(p_location.round(), layer, null);
@@ -188,7 +188,7 @@ public class ExpandTestState extends InteractiveState
         while (it.hasNext())
         {
             Item curr_ob = it.next();
-            if (curr_ob instanceof board.Connectable)
+            if (curr_ob instanceof eu.mihosoft.freerouting.board.Connectable)
             {
                 Item curr_item = curr_ob;
                 if (curr_item.net_count() == 1 && curr_item.get_net_no(0) > 0)
@@ -221,7 +221,7 @@ public class ExpandTestState extends InteractiveState
         Set<Item> route_dest_set = route_item.get_unconnected_set(route_net_no);
         if (route_dest_set.size() > 0)
         {
-            hdlg.screen_messages.set_status_message("autoroute test started");
+            hdlg.screen_messages.set_status_message("eu.mihosoft.freerouting.autoroute test started");
             this.maze_search_algo =
                     MazeSearchAlgo.get_instance(route_start_set, route_dest_set, autoroute_engine, control_settings);
             this.in_autoroute = (this.maze_search_algo != null);
@@ -238,7 +238,7 @@ public class ExpandTestState extends InteractiveState
                     LocateFoundConnectionAlgo.get_instance(search_result, control_settings,
                     this.autoroute_engine.autoroute_search_tree,
                     hdlg.get_routing_board().rules.get_trace_angle_restriction(),
-                    ripped_item_list, board.TestLevel.ALL_DEBUGGING_OUTPUT);
+                    ripped_item_list, eu.mihosoft.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT);
             hdlg.get_routing_board().generate_snapshot();
             SortedSet<Item> ripped_connections = new TreeSet<Item>();
             for (Item curr_ripped_item : ripped_item_list)

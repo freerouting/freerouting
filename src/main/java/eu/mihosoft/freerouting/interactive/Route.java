@@ -13,19 +13,19 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import datastructures.TimeLimit;
+import eu.mihosoft.freerouting.datastructures.TimeLimit;
 
-import geometry.planar.Area;
-import geometry.planar.FloatPoint;
-import geometry.planar.IntBox;
-import geometry.planar.IntOctagon;
-import geometry.planar.IntPoint;
-import geometry.planar.Vector;
-import geometry.planar.Point;
-import geometry.planar.Polyline;
-import geometry.planar.Ellipse;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.Ellipse;
 
 import java.awt.Graphics;
 import java.util.Collection;
@@ -33,28 +33,28 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
-import library.Padstack;
+import eu.mihosoft.freerouting.library.Padstack;
 
-import rules.ViaRule;
-import rules.ViaInfo;
-import rules.Net;
+import eu.mihosoft.freerouting.rules.ViaRule;
+import eu.mihosoft.freerouting.rules.ViaInfo;
+import eu.mihosoft.freerouting.rules.Net;
 
-import board.AngleRestriction;
-import board.Trace;
-import board.ConductionArea;
-import board.DrillItem;
-import board.Item;
-import board.PolylineTrace;
-import board.RoutingBoard;
-import board.ItemSelectionFilter;
-import board.TestLevel;
-import board.Unit;
+import eu.mihosoft.freerouting.board.AngleRestriction;
+import eu.mihosoft.freerouting.board.Trace;
+import eu.mihosoft.freerouting.board.ConductionArea;
+import eu.mihosoft.freerouting.board.DrillItem;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.PolylineTrace;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.board.Unit;
 
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 /**
  *
- * Functionality for interactive routing.
+ * Functionality for eu.mihosoft.freerouting.interactive routing.
  *
  * @author Alfons Wirtz
  */
@@ -64,7 +64,7 @@ public class Route
     /**
      * Starts routing a connection.
      * p_pen_half_width_arr is provided because it may be different from
-     * the half width array in p_board.rules.
+     * the half width array in p_board.eu.mihosoft.freerouting.rules.
      */
     public Route(Point p_start_corner, int p_layer, int[] p_pen_half_width_arr, boolean[] p_layer_active_arr, int[] p_net_no_arr,
             int p_clearance_class, ViaRule p_via_rule, boolean p_push_enabled,
@@ -170,12 +170,12 @@ public class Route
         }
 
 
-        // tests.Validate.check("before insert", board);
+        // eu.mihosoft.freerouting.tests.Validate.check("before insert", eu.mihosoft.freerouting.board);
         Point ok_point = board.insert_forced_trace_segment(prev_corner,
                 curr_corner, pen_half_width_arr[layer], layer, net_no_arr, clearance_class,
                 max_shove_trace_recursion_depth, max_shove_via_recursion_depth, max_spring_over_recursion_depth,
                 trace_tidy_width, pull_tight_accuracy, !is_stitch_mode, check_forced_trace_time_limit);
-        // tests.Validate.check("after insert", board);
+        // eu.mihosoft.freerouting.tests.Validate.check("after insert", eu.mihosoft.freerouting.board);
         if (ok_point == prev_corner && this.with_neckdown)
         {
             ok_point = try_neckdown_at_start(curr_corner);
@@ -245,7 +245,7 @@ public class Route
     }
 
     /**
-     * Changing the layer in interactive route and inserting a via.
+     * Changing the layer in eu.mihosoft.freerouting.interactive route and inserting a via.
      *  Returns false, if changing the layer was not possible.
      */
     public boolean change_layer(int p_to_layer)
@@ -315,12 +315,12 @@ public class Route
     {
         ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
         java.util.Collection<Item> picked_items = board.pick_items(this.prev_corner, p_layer, selection_filter);
-        board.Pin found_smd_pin = null;
+        eu.mihosoft.freerouting.board.Pin found_smd_pin = null;
         for (Item curr_item : picked_items)
         {
-            if (curr_item instanceof board.Pin && curr_item.shares_net_no(this.net_no_arr))
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Pin && curr_item.shares_net_no(this.net_no_arr))
             {
-                board.Pin curr_pin = (board.Pin) curr_item;
+                eu.mihosoft.freerouting.board.Pin curr_pin = (eu.mihosoft.freerouting.board.Pin) curr_item;
                 if (curr_pin.first_layer() == p_layer && curr_pin.last_layer() == p_layer)
                 {
                     found_smd_pin = curr_pin;
@@ -463,10 +463,10 @@ public class Route
         }
         for (Item curr_item : this.target_set)
         {
-            if (curr_item instanceof board.Pin)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Pin)
             {
-                Collection<board.Pin> curr_swapppable_pins = ((board.Pin) curr_item).get_swappable_pins();
-                for (board.Pin curr_swappable_pin : curr_swapppable_pins)
+                Collection<eu.mihosoft.freerouting.board.Pin> curr_swapppable_pins = ((eu.mihosoft.freerouting.board.Pin) curr_item).get_swappable_pins();
+                for (eu.mihosoft.freerouting.board.Pin curr_swappable_pin : curr_swapppable_pins)
                 {
                     result.add(new SwapPinInfo(curr_swappable_pin));
                 }
@@ -477,10 +477,10 @@ public class Route
         java.util.Collection<Item> picked_items = board.pick_items(this.prev_corner, this.layer, selection_filter);
         for (Item curr_item : picked_items)
         {
-            if (curr_item instanceof board.Pin)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Pin)
             {
-                Collection<board.Pin> curr_swapppable_pins = ((board.Pin) curr_item).get_swappable_pins();
-                for (board.Pin curr_swappable_pin : curr_swapppable_pins)
+                Collection<eu.mihosoft.freerouting.board.Pin> curr_swapppable_pins = ((eu.mihosoft.freerouting.board.Pin) curr_item).get_swappable_pins();
+                for (eu.mihosoft.freerouting.board.Pin curr_swappable_pin : curr_swapppable_pins)
                 {
                     result.add(new SwapPinInfo(curr_swappable_pin));
                 }
@@ -549,8 +549,8 @@ public class Route
                 // trace_length_add is != 0 only in stitching mode.
                 if (max_trace_length <= 0)
                 {
-                    // max_trace_length not provided. Create an ellipse containing the whole board.
-                    max_trace_length = 0.3 * geometry.planar.Limits.CRIT_INT;
+                    // max_trace_length not provided. Create an ellipse containing the whole eu.mihosoft.freerouting.board.
+                    max_trace_length = 0.3 * eu.mihosoft.freerouting.geometry.planar.Limits.CRIT_INT;
                 }
                 double curr_max_trace_length = max_trace_length - (curr_net.get_trace_length() + trace_length_add);
                 double curr_min_trace_length = min_trace_length - (curr_net.get_trace_length() + trace_length_add);
@@ -772,11 +772,11 @@ public class Route
      */
     private Point try_neckdown_at_start(IntPoint p_to_corner)
     {
-        if (!(this.start_item instanceof board.Pin))
+        if (!(this.start_item instanceof eu.mihosoft.freerouting.board.Pin))
         {
             return this.prev_corner;
         }
-        board.Pin start_pin = (board.Pin) this.start_item;
+        eu.mihosoft.freerouting.board.Pin start_pin = (eu.mihosoft.freerouting.board.Pin) this.start_item;
         if (!start_pin.is_on_layer(this.layer))
         {
             return this.prev_corner;
@@ -824,11 +824,11 @@ public class Route
      */
     private Point try_neckdown_at_end(Point p_from_corner, Point p_to_corner)
     {
-        if (!(this.nearest_target_item instanceof board.Pin))
+        if (!(this.nearest_target_item instanceof eu.mihosoft.freerouting.board.Pin))
         {
             return p_from_corner;
         }
-        board.Pin target_pin = (board.Pin) this.nearest_target_item;
+        eu.mihosoft.freerouting.board.Pin target_pin = (eu.mihosoft.freerouting.board.Pin) this.nearest_target_item;
         if (!target_pin.is_on_layer(this.layer))
         {
             return p_from_corner;
@@ -903,7 +903,7 @@ public class Route
     private class SwapPinInfo implements Comparable<SwapPinInfo>
     {
 
-        SwapPinInfo(board.Pin p_pin)
+        SwapPinInfo(eu.mihosoft.freerouting.board.Pin p_pin)
         {
             pin = p_pin;
             incomplete = null;
@@ -932,7 +932,7 @@ public class Route
             }
             if (nearest_point != null)
             {
-                incomplete = new geometry.planar.FloatLine(pin_center, nearest_point);
+                incomplete = new eu.mihosoft.freerouting.geometry.planar.FloatLine(pin_center, nearest_point);
             }
         }
 
@@ -940,7 +940,7 @@ public class Route
         {
             return this.pin.compareTo(p_other.pin);
         }
-        final board.Pin pin;
-        geometry.planar.FloatLine incomplete;
+        final eu.mihosoft.freerouting.board.Pin pin;
+        eu.mihosoft.freerouting.geometry.planar.FloatLine incomplete;
     }
 }

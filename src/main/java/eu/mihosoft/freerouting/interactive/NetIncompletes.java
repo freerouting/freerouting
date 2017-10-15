@@ -18,7 +18,7 @@
  * Created on 16. Maerz 2004, 06:47
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 import java.awt.Graphics;
 import java.util.Collection;
@@ -27,16 +27,16 @@ import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import datastructures.PlanarDelaunayTriangulation;
+import eu.mihosoft.freerouting.datastructures.PlanarDelaunayTriangulation;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
 
-import rules.Net;
+import eu.mihosoft.freerouting.rules.Net;
 
-import board.Item;
-import board.BasicBoard;
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.BasicBoard;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 /**
  * Creates the Incompletes (Ratsnest) of one net to display them on the screen.
@@ -178,8 +178,8 @@ public class NetIncompletes
             return;
         }
         // draw the length violation around every Pin of the net.
-        Collection<board.Pin> net_pins = this.net.get_pins();
-        for (board.Pin curr_pin : net_pins)
+        Collection<eu.mihosoft.freerouting.board.Pin> net_pins = this.net.get_pins();
+        for (eu.mihosoft.freerouting.board.Pin curr_pin : net_pins)
         {
             draw_length_violation_marker(curr_pin.get_center().to_float(), this.length_violation, p_graphics, p_graphics_context);
         }
@@ -321,7 +321,7 @@ public class NetIncompletes
                     result = this.to_corner.y - p_other.to_corner.y;
                 }
             }
-            return datastructures.Signum.as_int(result);
+            return eu.mihosoft.freerouting.datastructures.Signum.as_int(result);
         }
     }
     

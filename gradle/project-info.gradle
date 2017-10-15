@@ -1,0 +1,25 @@
+// -----------------------------------------------------------------------------
+// publishing information
+// -----------------------------------------------------------------------------
+ext.publishing.artifactId =  project.name.toLowerCase()
+ext.publishing.groupId    =  'eu.mihosoft.jcapture'
+ext.publishing.versionId  =  '0.1.2'
+
+ext.publishing.developerName         = 'Michael Hoffer'
+ext.publishing.developerAlias        = 'miho'
+ext.publishing.developerEmail        = 'info@michaelhoffer.de'
+ext.publishing.inceptionYear         = '2017'
+
+ext.publishing.bintray.repo          = 'JCapture'
+ext.publishing.bintray.userOrg       = 'miho'
+ext.publishing.bintray.name          = project.name
+
+ext.publishing.desc                  = 'Simple API for capturing video devices'
+ext.publishing.license               = 'Apache-2.0'
+ext.publishing.licenseUrl            = 'https://github.com/miho/JCapture/blob/master/LICENSE.txt'
+ext.publishing.labels                = ['video', 'webcam', 'capture']
+ext.publishing.websiteUrl            = 'https://github.com/miho/JCapture'
+ext.publishing.issueTrackerUrl       = 'https://github.com/miho/JCapture/issues'
+ext.publishing.vcsUrl                = 'https://github.com/miho/JCapture.git'
+
+ext.publishing.pomName               =  ext.publishing.artifactId

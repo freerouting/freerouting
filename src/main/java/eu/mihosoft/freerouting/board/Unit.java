@@ -18,7 +18,7 @@
  * Created on 13. Dezember 2004, 08:01
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 /**
  * Enum for the userunits inch, mil or millimeter.

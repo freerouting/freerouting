@@ -18,7 +18,7 @@
  * Created on 12. Februar 2005, 06:08
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Creates the parameter menu of a eu.mihosoft.freerouting.board frame.
@@ -59,7 +59,7 @@ public class BoardMenuParameter extends javax.swing.JMenu
         parameter_menu.add(routewindow);
         
         javax.swing.JMenuItem autoroutewindow = new javax.swing.JMenuItem();
-        autoroutewindow.setText(parameter_menu.resources.getString("eu/mihosoft/freerouting/autoroute"));
+        autoroutewindow.setText(parameter_menu.resources.getString("autoroute"));
         autoroutewindow.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -89,7 +89,7 @@ public class BoardMenuParameter extends javax.swing.JMenu
     private BoardMenuParameter(BoardFrame p_board_frame)
     {
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("resources.BoardMenuParameter", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuParameter", p_board_frame.get_locale());
     }
     
     private final BoardFrame board_frame;

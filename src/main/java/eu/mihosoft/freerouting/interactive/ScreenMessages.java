@@ -18,7 +18,7 @@
  * Created on 8. August 2003, 19:10
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 import javax.swing.JLabel;
 
@@ -34,7 +34,7 @@ public class ScreenMessages
     public ScreenMessages(JLabel p_status_field, JLabel p_add_field,
             JLabel p_layer_field, JLabel p_mouse_position, java.util.Locale p_locale)
     {
-        resources = java.util.ResourceBundle.getBundle("interactive.resources.ScreenMessages", p_locale);
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.ScreenMessages", p_locale);
         locale = p_locale;
         active_layer_string = resources.getString("current_layer") + " ";
         target_layer_string = resources.getString("target_layer") + " ";
@@ -110,7 +110,7 @@ public class ScreenMessages
     
     /**
      * Sets the displayed layer of the nearest target item
-     * in interactive routing.
+     * in eu.mihosoft.freerouting.interactive routing.
      */
     public void set_target_layer(String p_layer_name)
     {
@@ -121,7 +121,7 @@ public class ScreenMessages
         }
     }
     
-    public void set_mouse_position(geometry.planar.FloatPoint p_pos)
+    public void set_mouse_position(eu.mihosoft.freerouting.geometry.planar.FloatPoint p_pos)
     {
         if (p_pos == null || this.mouse_position == null || this.write_protected)
         {

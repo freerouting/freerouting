@@ -1,11 +1,11 @@
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import board.LayerStructure;
-import board.RoutingBoard;
-import board.TestLevel;
-import geometry.planar.IntBox;
-import geometry.planar.PolylineShape;
-import rules.BoardRules;
+import eu.mihosoft.freerouting.board.LayerStructure;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.rules.BoardRules;
 
 /**
  * Andrey Belomutskiy
@@ -20,7 +20,7 @@ public interface IBoardHandling {
 
     void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure,
                       PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name,
-                      BoardRules p_rules, board.Communication p_board_communication, TestLevel p_test_level);
+                      BoardRules p_rules, eu.mihosoft.freerouting.board.Communication p_board_communication, TestLevel p_test_level);
 
     Settings get_settings();
 }

@@ -18,9 +18,9 @@
  * Created on 29. November 2003, 07:50
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
  * Class implementing the different functionality in the route menu,

@@ -18,7 +18,7 @@
  * Created on 6. Maerz 2005, 06:47
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
@@ -38,7 +38,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
     {
         super(p_board_frame);
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         this.setTitle(resources.getString("padstacks"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LibraryPadstacks");
     }

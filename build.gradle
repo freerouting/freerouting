@@ -1,0 +1,147 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        //
+    }
+}
+
+plugins {
+    id "com.github.hierynomus.license" version "0.13.1"
+    id 'maven-publish'
+    id 'net.nemerosa.versioning' version '2.4.0'
+    id 'com.jfrog.bintray' version '1.7.3'
+    id 'com.github.ben-manes.versions' version '0.13.0'
+
+    // jigsaw:
+//    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
+}
+
+apply plugin: 'java'
+apply from: 'gradle/publishing.gradle'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2.1'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
+sourceCompatibility = '1.9'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}
+
+// javadoc is way too strict for my taste.
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption("encoding", "UTF-8")
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'eu.mihosoft.freerouting.gui.MainApplication'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+
+    // https://mvnrepository.com/artifact/javax.help/javahelp
+//    compile group: 'javax.help', name: 'javahelp', version: '2.0.05'
+
+    compile files("./lib/eu.mihosoft.freerouting.deps.jh.jar")
+}
+
+//ext.moduleName = 'eu.mihosoft.freerouting'
+//javaModule.name = 'eu.mihosoft.freerouting'
+//
+//compileJava {
+//    inputs.property("moduleName", moduleName)
+//    doFirst {
+//
+//        System.err.println(": modulepath-jar: " + classpath.asPath)
+//
+//        options.compilerArgs = [
+//            '--module-path', classpath.asPath,
+//        ]
+//        classpath = files()
+//    }
+//}
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new java.text.SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+}
+
+// create a fat-jar (class files plus dependencies
+// excludes VRL.jar (plugin jar files must not start with 'vrl-\\d+')
+jar {
+
+
+    // TODO add switch for fat-jar generation
+    // dependencies except VRL
+    // from configurations.runtime.asFileTree.
+    //     filter({file->return !file.name.startsWith("vrl-0")}).
+    //     files.collect { zipTree(it) }
+    //
+//    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    // // project class files compiled from source
+    from files(sourceSets.main.output)
+
+    manifest {
+
+        attributes(
+                'Built-By': System.properties['user.name'],
+                'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+                'Build-Date': project.buildDate,
+                'Build-Time': project.buildTime,
+                'Build-Revision': versioning.info.commit,
+                'Specification-Title': project.name,
+                'Specification-Version': project.version,
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Main-Class': mainClass
+        )
+    }
+}
+
+
+//license {
+//    header = rootProject.file('config/HEADER')
+//    strictCheck = true
+//    ignoreFailures = true
+//    mapping {
+//        java   = 'SLASHSTAR_STYLE'
+//        groovy = 'SLASHSTAR_STYLE'
+//        fxml   = 'XML_STYLE'
+//    }
+//    ext.yearSince1   = '2017'
+//    ext.yearCurrent  = new java.text.SimpleDateFormat("yyyy").format(new Date())
+//    ext.author1 = 'Michael Hoffer <info@michaelhoffer.de>'
+//    exclude '**/*.svg'
+//}
+
+ task run(type: JavaExec) {
+     classpath = sourceSets.main.runtimeClasspath
+
+     main = mainClass
+
+     // arguments to pass to the application
+ //    args 'appArg1'
+     // jvmArgs 'arg1'
+ }

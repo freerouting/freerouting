@@ -18,18 +18,18 @@
  * Created on 6. November 2003, 09:37
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.Circle;
-import geometry.planar.ConvexShape;
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Circle;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
 
-import rules.BoardRules;
+import eu.mihosoft.freerouting.rules.BoardRules;
 
-import board.AngleRestriction;
-import board.RoutingBoard;
-import board.FixedState;
+import eu.mihosoft.freerouting.board.AngleRestriction;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.FixedState;
 
 /**
  * Interactive creation of a circle obstacle

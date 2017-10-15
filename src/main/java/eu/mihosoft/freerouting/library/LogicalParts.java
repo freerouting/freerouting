@@ -18,7 +18,7 @@
  * Created on 26. Maerz 2005, 06:08
  */
 
-package library;
+package eu.mihosoft.freerouting.library;
 
 import java.util.Vector;
 

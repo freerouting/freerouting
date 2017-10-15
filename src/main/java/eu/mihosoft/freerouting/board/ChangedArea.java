@@ -14,14 +14,14 @@
  *   for more details.
  */
 
-package board;
-import geometry.planar.FloatPoint;
-import geometry.planar.IntBox;
-import geometry.planar.IntOctagon;
+package eu.mihosoft.freerouting.board;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
 
 /**
  *
- * Used internally for marking changed areas on the board
+ * Used internally for marking changed areas on the eu.mihosoft.freerouting.board
  * after shoving and optimizing items.
  *
 
@@ -66,7 +66,7 @@ class ChangedArea
      /**
      * enlarges the octagon on p_layer, so that it contains p_shape
      */
-    public void join (geometry.planar.TileShape p_shape, int p_layer)
+    public void join (eu.mihosoft.freerouting.geometry.planar.TileShape p_shape, int p_layer)
     {
         if (p_shape == null)
         {
@@ -121,7 +121,7 @@ class ChangedArea
     MutableOctagon [] arr;
 
     /**
-     * mutable octagon with double coordinates (see geometry.planar.IntOctagon)
+     * mutable octagon with double coordinates (see eu.mihosoft.freerouting.geometry.planar.IntOctagon)
      */
     private static class MutableOctagon
     {

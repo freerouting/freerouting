@@ -17,23 +17,22 @@
  *
  * Created on 8. November 2003, 08:22
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
 
 import java.util.Collection;
 import java.util.Set;
 
-import board.Trace;
-import board.Via;
-import board.PolylineTrace;
-import board.ConductionArea;
-import board.DrillItem;
-import board.Item;
-import board.RoutingBoard;
-import board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.board.Trace;
+import eu.mihosoft.freerouting.board.Via;
+import eu.mihosoft.freerouting.board.PolylineTrace;
+import eu.mihosoft.freerouting.board.ConductionArea;
+import eu.mihosoft.freerouting.board.DrillItem;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 
 /**
  * Interactive routing state.
@@ -68,10 +67,10 @@ public class RouteState extends InteractiveState
             return null;
         }
         int[] route_net_no_arr;
-        if (picked_item instanceof board.Pin && net_count > 1)
+        if (picked_item instanceof eu.mihosoft.freerouting.board.Pin && net_count > 1)
         {
             // tie pin, remove nets, which are already conneccted to this pin on the current layer.
-            route_net_no_arr = get_route_net_numbers_at_tie_pin((board.Pin) picked_item, p_board_handling.settings.layer);
+            route_net_no_arr = get_route_net_numbers_at_tie_pin((eu.mihosoft.freerouting.board.Pin) picked_item, p_board_handling.settings.layer);
         }
         else
         {
@@ -85,7 +84,7 @@ public class RouteState extends InteractiveState
         {
             return null;
         }
-        board.RoutingBoard routing_board = p_board_handling.get_routing_board();
+        eu.mihosoft.freerouting.board.RoutingBoard routing_board = p_board_handling.get_routing_board();
         int[] trace_half_widths = new int[routing_board.get_layer_count()];
         boolean[] layer_active_arr = new boolean[trace_half_widths.length];
         for (int i = 0; i < trace_half_widths.length; ++i)
@@ -151,7 +150,7 @@ public class RouteState extends InteractiveState
         }
 
 
-        rules.Net curr_net = routing_board.rules.nets.get(route_net_no_arr[0]);
+        eu.mihosoft.freerouting.rules.Net curr_net = routing_board.rules.nets.get(route_net_no_arr[0]);
         if (curr_net == null)
         {
             return null;
@@ -205,13 +204,13 @@ public class RouteState extends InteractiveState
     }
 
     /**
-     * Checks starting an interactive route at p_location.
+     * Checks starting an eu.mihosoft.freerouting.interactive route at p_location.
      * Returns the picked start item of the routing at p_location,
      * or null, if no such item was found.
      */
     static protected Item start_ok(IntPoint p_location, BoardHandling p_hdlg)
     {
-        board.RoutingBoard routing_board = p_hdlg.get_routing_board();
+        eu.mihosoft.freerouting.board.RoutingBoard routing_board = p_hdlg.get_routing_board();
 
         /**
          * look if an already exististing trace ends at p_start_corner
@@ -290,12 +289,12 @@ public class RouteState extends InteractiveState
         if (Character.isDigit(p_key_char))
         {
             // change to the p_key_char-ths signal layer
-            board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
+            eu.mihosoft.freerouting.board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
             int d = Character.digit(p_key_char, 10);
             d = Math.min(d, layer_structure.signal_layer_count());
             // Board layers start at 0, keyboard input for layers starts at 1.
             d = Math.max(d - 1, 0);
-            board.Layer new_layer = layer_structure.get_signal_layer(d);
+            eu.mihosoft.freerouting.board.Layer new_layer = layer_structure.get_signal_layer(d);
             d = layer_structure.get_no(new_layer);
 
             if (d >= 0)
@@ -306,7 +305,7 @@ public class RouteState extends InteractiveState
         else if (p_key_char == '+')
         {
             // change to the next signal layer
-            board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
+            eu.mihosoft.freerouting.board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
             int current_layer_no = hdlg.settings.layer;
             for (;;)
             {
@@ -324,7 +323,7 @@ public class RouteState extends InteractiveState
         else if (p_key_char == '-')
         {
             // change to the to the previous signal layer
-            board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
+            eu.mihosoft.freerouting.board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
             int current_layer_no = hdlg.settings.layer;
             for (;;)
             {
@@ -521,7 +520,7 @@ public class RouteState extends InteractiveState
     /**
      * get nets of p_tie_pin except nets of traces, which are already conneccted to this pin on p_layer.
      */
-    static int[] get_route_net_numbers_at_tie_pin(board.Pin p_pin, int p_layer)
+    static int[] get_route_net_numbers_at_tie_pin(eu.mihosoft.freerouting.board.Pin p_pin, int p_layer)
     {
         Set<Integer> net_number_list = new java.util.TreeSet<Integer>();
         for (int i = 0; i < p_pin.net_count(); ++i)
@@ -561,7 +560,7 @@ public class RouteState extends InteractiveState
     {
         if (route != null)
         {
-            rules.Net curr_net = hdlg.get_routing_board().rules.nets.get(route.net_no_arr[0]);
+            eu.mihosoft.freerouting.rules.Net curr_net = hdlg.get_routing_board().rules.nets.get(route.net_no_arr[0]);
             hdlg.screen_messages.set_status_message(resources.getString("routing_net") + " " + curr_net.name);
         }
     }

@@ -17,22 +17,21 @@
  *
  * Created on 18. August 2004, 07:24
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.IntBox;
-import geometry.planar.IntPoint;
-import geometry.planar.LineSegment;
-import geometry.planar.TileShape;
-import geometry.planar.PolylineShape;
-import geometry.planar.PolylineArea;
-import geometry.planar.Area;
-import geometry.planar.Vector;
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.geometry.planar.PolylineArea;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 /**
- * Class describing a board outline.
+ * Class describing a eu.mihosoft.freerouting.board outline.
  *
  * @author  alfons
  */
@@ -179,7 +178,7 @@ public class BoardOutline extends Item implements java.io.Serializable
 
     public int get_draw_priority()
     {
-        return boardgraphics.Drawable.MAX_DRAW_PRIORITY;
+        return eu.mihosoft.freerouting.boardgraphics.Drawable.MAX_DRAW_PRIORITY;
     }
 
     public int shape_count()
@@ -218,7 +217,7 @@ public class BoardOutline extends Item implements java.io.Serializable
     }
 
     /**
-     * The board shape outside the outline curves, where a keepout will be generated
+     * The eu.mihosoft.freerouting.board shape outside the outline curves, where a keepout will be generated
      * The outline curves are holes of the keepout_area.
      */
     Area get_keepout_area()
@@ -268,7 +267,7 @@ public class BoardOutline extends Item implements java.io.Serializable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("board_outline"));
         print_clearance_info(p_window, p_locale);
         p_window.newline();
@@ -287,7 +286,7 @@ public class BoardOutline extends Item implements java.io.Serializable
     }
 
     /**
-     *  Returns, if keepout is generated outside the board outline.
+     *  Returns, if keepout is generated outside the eu.mihosoft.freerouting.board outline.
      *  Otherwise only the line shapes of the outlines  are inserted as keepout.
      */
     public boolean keepout_outside_outline_generated()
@@ -340,10 +339,10 @@ public class BoardOutline extends Item implements java.io.Serializable
     {
         return p_search_tree.calculate_tree_shapes(this);
     }
-    /** The board shapes inside the outline curves. */
+    /** The eu.mihosoft.freerouting.board shapes inside the outline curves. */
     private PolylineShape[] shapes;
     /**
-     * The board shape outside the outline curves, where a keepout will be generated
+     * The eu.mihosoft.freerouting.board shape outside the outline curves, where a keepout will be generated
      * The outline curves are holes of the keepout_area.
      */
     private Area keepout_area = null;

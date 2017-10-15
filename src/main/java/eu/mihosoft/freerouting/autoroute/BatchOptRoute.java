@@ -13,27 +13,27 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.Set;
 
-import datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-import board.Item;
-import board.Via;
-import board.Trace;
-import board.RoutingBoard;
-import board.FixedState;
-import board.TestLevel;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.Via;
+import eu.mihosoft.freerouting.board.Trace;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.FixedState;
+import eu.mihosoft.freerouting.board.TestLevel;
 
-import interactive.InteractiveActionThread;
+import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 
 /**
- * To optimize the vias and traces after the batch autorouter has completed the board.
+ * To optimize the vias and traces after the batch autorouter has completed the eu.mihosoft.freerouting.board.
  * 
  * @author  Alfons Wirtz
  */
@@ -41,7 +41,7 @@ public class BatchOptRoute
 {
 
     /**
-     *  To optimize the route on the board after the autoroute task is finished.
+     *  To optimize the route on the eu.mihosoft.freerouting.board after the eu.mihosoft.freerouting.autoroute task is finished.
      */
     public BatchOptRoute(InteractiveActionThread p_thread)
     {
@@ -51,7 +51,7 @@ public class BatchOptRoute
     }
 
     /**
-     * Optimize the route on the board.
+     * Optimize the route on the eu.mihosoft.freerouting.board.
      */
     public void optimize_board()
     {
@@ -72,7 +72,7 @@ public class BatchOptRoute
     }
 
     /**
-     * Pass to reduce the number of vias an to shorten the trace lengthon a completely routed board.
+     * Pass to reduce the number of vias an to shorten the trace lengthon a completely routed eu.mihosoft.freerouting.board.
      * Returns true, if the route was improved.
      */
     private boolean opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
@@ -114,7 +114,7 @@ public class BatchOptRoute
     private boolean opt_route_item(Item p_item, int p_pass_no, boolean p_with_prefered_directions)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("interactive.resources.InteractiveState", this.thread.hdlg.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", this.thread.hdlg.get_locale());
         String start_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + (new Integer(p_pass_no)).toString() + ": ";
         this.thread.hdlg.screen_messages.set_status_message(start_message);
         this.thread.hdlg.remove_ratsnest();
@@ -214,12 +214,12 @@ public class BatchOptRoute
 
     /**
      *  Calculates the cumulative trace lengths multiplied by the trace radius of all traces
-     *  on the board, which are not shove_fixed.
+     *  on the eu.mihosoft.freerouting.board, which are not shove_fixed.
      */
     private static double calc_weighted_trace_length(RoutingBoard p_board)
     {
         double result = 0;
-        int default_clearance_class = rules.BoardRules.default_clearance_class();
+        int default_clearance_class = eu.mihosoft.freerouting.rules.BoardRules.default_clearance_class();
         Iterator<UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
         for (;;)
         {
@@ -267,9 +267,9 @@ public class BatchOptRoute
     private static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
 
     /**
-     *  Reads the vias and traces on the board in ascending x order.
-     *  Because the vias and traces on the board change while optimizing the item list
-     *  of the board is read from scratch each time the next route item is returned.
+     *  Reads the vias and traces on the eu.mihosoft.freerouting.board in ascending x order.
+     *  Because the vias and traces on the eu.mihosoft.freerouting.board change while optimizing the item list
+     *  of the eu.mihosoft.freerouting.board is read from scratch each time the next route item is returned.
      */
     private class ReadSortedRouteItems
     {

@@ -18,21 +18,21 @@
  * Created on 7. November 2003, 18:40
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.Area;
-import geometry.planar.Circle;
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.PolygonShape;
-import geometry.planar.PolylineArea;
-import geometry.planar.PolylineShape;
-import geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.Circle;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.PolygonShape;
+import eu.mihosoft.freerouting.geometry.planar.PolylineArea;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
 
 import java.util.Iterator;
 
-import board.ObstacleArea;
-import board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.board.ObstacleArea;
+import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 
 /**
  * Interactive cutting a hole into an obstacle shape
@@ -75,14 +75,14 @@ public class HoleConstructionState extends CornerItemConstructionState
           ItemSelectionFilter.SelectableChoices.CONDUCTION
         };
         ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-        java.util.Collection<board.Item> found_items = hdlg.get_routing_board().pick_items(pick_location,
+        java.util.Collection<eu.mihosoft.freerouting.board.Item> found_items = hdlg.get_routing_board().pick_items(pick_location,
                 hdlg.settings.layer, selection_filter);
         if (found_items.size() != 1)
         {
             hdlg.screen_messages.set_status_message(resources.getString("no_item_found_for_adding_hole"));
             return false;
         }
-        board.Item found_item = found_items.iterator().next();
+        eu.mihosoft.freerouting.board.Item found_item = found_items.iterator().next();
         if (!(found_item instanceof ObstacleArea))
         {
             hdlg.screen_messages.set_status_message(resources.getString("no_obstacle_area_found_for_adding_hole"));
@@ -183,7 +183,7 @@ public class HoleConstructionState extends CornerItemConstructionState
                 hdlg.get_routing_board().generate_snapshot();
                 hdlg.get_routing_board().remove_item( item_to_modify);
                 hdlg.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(),
-                        item_to_modify.clearance_class_no(), board.FixedState.UNFIXED);
+                        item_to_modify.clearance_class_no(), eu.mihosoft.freerouting.board.FixedState.UNFIXED);
                 if (this.observers_activated)
                 {
                     hdlg.get_routing_board().end_notify_observers();

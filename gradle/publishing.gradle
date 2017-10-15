@@ -1,0 +1,122 @@
+// -----------------------------------------------------------------------------
+// Collect publishing information
+// -----------------------------------------------------------------------------
+ext.publishing = [:]
+ext.publishing.bintray = [:]
+
+ext.publishing.pomName =  ext.publishing.artifactId
+
+apply from: "gradle/project-info.gradle"
+
+// -----------------------------------------------------------------------------
+// Performs publishing
+// -----------------------------------------------------------------------------
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// create one jar for the source files
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new java.text.SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+}
+
+jar {
+    manifest {
+        attributes(
+          'Built-By': System.properties['user.name'],
+          'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+          'Build-Date': project.buildDate,
+          'Build-Time': project.buildTime,
+          'Build-Revision': versioning.info.commit,
+          'Specification-Title': project.name,
+          'Specification-Version': project.version,
+          'Implementation-Title': project.name,
+          'Implementation-Version': project.version
+        )
+    }
+}
+
+
+def pomConfig = {
+    name ext.publishing.pomName
+    description ext.publishing.desc
+    url ext.publishing.websiteUrl
+    inceptionYear ext.publishing.inceptionYear
+    licenses {
+        license([:]) {
+            name ext.publishing.license
+            url ext.publishing.licenseUrl
+            distribution 'repo'
+        }
+    }
+    scm {
+        url ext.publishing.vcsUrl
+        connection ext.publishing.vcsUrl
+        developerConnection ext.publishing.vcsUrl
+    }
+    developers {
+        developer {
+            id ext.publishing.developerNameAlias
+            name ext.publishing.developerName
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenCustom(MavenPublication) {
+            groupId publishing.groupId
+            artifactId publishing.artifactId
+            version publishing.versionId
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode 'description', publishing.desc
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenCustom']
+    pkg {
+        repo                  = publishing.bintray.repo
+        userOrg               = publishing.bintray.userOrg
+        name                  = publishing.bintray.name
+        desc                  = publishing.desc
+        licenses              = [publishing.license]
+        labels                = publishing.labels
+        websiteUrl            = publishing.websiteUrl
+        issueTrackerUrl       = publishing.issueTrackerUrl
+        vcsUrl                = publishing.vcsUrl
+        publicDownloadNumbers = true
+        
+        version {
+            name              = publishing.versionId
+            vcsTag            = 'v' + publishing.versionId
+        }
+    }
+}

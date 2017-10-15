@@ -19,21 +19,21 @@
  *
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.List;
 import java.util.Collection;
 
-import board.ShapeSearchTree;
-import board.SearchTreeObject;
-import board.PolylineTrace;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.SearchTreeObject;
+import eu.mihosoft.freerouting.board.PolylineTrace;
 
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
-import board.Item;
+import eu.mihosoft.freerouting.board.Item;
 
 /**
- * Expansion Room used for pushing and ripping obstacles in the autoroute algorithm.
+ * Expansion Room used for pushing and ripping obstacles in the eu.mihosoft.freerouting.autoroute algorithm.
  *
  * @author Alfons Wirtz
  */
@@ -91,7 +91,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
     }
     
     /**
-     * Creates a 2-dim door with the other obstacle room, if that is useful for the autoroute algorithm.
+     * Creates a 2-dim door with the other obstacle room, if that is useful for the eu.mihosoft.freerouting.autoroute algorithm.
      * It is assumed that this room and p_other have a 2-dimensional overlap.
      * Returns false, if no door was created.
      */
@@ -188,7 +188,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
     /**
      * Draws the shape of this room.
      */
-    public void draw(java.awt.Graphics p_graphics, boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
+    public void draw(java.awt.Graphics p_graphics, eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
     {
         java.awt.Color draw_color = java.awt.Color.WHITE;
         double layer_visibility = p_graphics_context.get_layer_visibility(this.get_layer());

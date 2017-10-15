@@ -18,11 +18,11 @@
  * Created on 26. Januar 2004, 10:08
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntBox;
-import autoroute.AutorouteControl.ExpansionCostFactor;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 
 
 

@@ -18,19 +18,19 @@
  * Created on 27. Mai 2004, 06:35
  */
 
-package library;
+package eu.mihosoft.freerouting.library;
 
-import geometry.planar.ConvexShape;
-import geometry.planar.Direction;
-import geometry.planar.IntBox;
-import geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.Direction;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
 
 /**
  * Describes padstack masks for pins or vias located at the origin.
  *
  * @author  alfons
  */
-public class Padstack implements Comparable<Padstack>, board.ObjectInfoPanel.Printable, java.io.Serializable
+public class Padstack implements Comparable<Padstack>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
     
     /**
@@ -98,7 +98,7 @@ public class Padstack implements Comparable<Padstack>, board.ObjectInfoPanel.Pri
         return result;
     }
     
-    /** Returns the layer ciount of the board of this padstack. */
+    /** Returns the layer ciount of the eu.mihosoft.freerouting.board of this padstack. */
     public int board_layer_count()
     {
         return shapes.length;
@@ -152,10 +152,10 @@ public class Padstack implements Comparable<Padstack>, board.ObjectInfoPanel.Pri
         return result;
     }
     
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("padstack") + " ");
         p_window.append_bold(this.name);
         for (int i = 0; i < shapes.length; ++i)

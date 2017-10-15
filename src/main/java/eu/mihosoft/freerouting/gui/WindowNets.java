@@ -18,7 +18,7 @@
  * Created on 24. Maerz 2005, 07:41
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.rules.Net;
 import eu.mihosoft.freerouting.rules.Nets;
@@ -37,7 +37,7 @@ public class WindowNets extends WindowObjectListWithFilter
     public WindowNets(BoardFrame p_board_frame)
     {
         super(p_board_frame);
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowNets", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowNets", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         javax.swing.JPanel curr_button_panel =  new javax.swing.JPanel();

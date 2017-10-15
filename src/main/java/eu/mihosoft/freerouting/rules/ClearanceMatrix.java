@@ -14,7 +14,7 @@
  *   for more details.
  */
 
-package rules;
+package eu.mihosoft.freerouting.rules;
 
 /**
  *
@@ -31,7 +31,7 @@ public class ClearanceMatrix implements java.io.Serializable
      * Creates a new instance with the 2 clearance classes "none"and "default"
      * ans initializes it with p_default_value.
      */
-    public static ClearanceMatrix get_default_instance(board.LayerStructure p_layer_structure, int p_default_value)
+    public static ClearanceMatrix get_default_instance(eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, int p_default_value)
     {
         String [] name_arr = new String [2];
         name_arr[0] = "null";
@@ -46,7 +46,7 @@ public class ClearanceMatrix implements java.io.Serializable
      * p_layer_count layers.
      * p_names is an array of dimension p_class_count;
      */
-    public ClearanceMatrix(int p_class_count, board.LayerStructure p_layer_structure, String [] p_name_arr)
+    public ClearanceMatrix(int p_class_count, eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, String [] p_name_arr)
     {
         class_count = Math.max(p_class_count, 1);
         layer_structure = p_layer_structure;
@@ -385,7 +385,7 @@ public class ClearanceMatrix implements java.io.Serializable
      */
     private int class_count;
     
-    private final board.LayerStructure layer_structure;
+    private final eu.mihosoft.freerouting.board.LayerStructure layer_structure;
     private Row [] row; // vector of class_count rows of the clearance matrix
     private int [] max_value_on_layer; //  maximum clearance value for each layer
     
@@ -393,7 +393,7 @@ public class ClearanceMatrix implements java.io.Serializable
     /**
      * contains a row of entries of the clearance matrix
      */
-    private class Row implements board.ObjectInfoPanel.Printable, java.io.Serializable
+    private class Row implements eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
     {
         private Row(String p_name)
         {
@@ -406,10 +406,10 @@ public class ClearanceMatrix implements java.io.Serializable
             max_value = new int[layer_structure.arr.length];
         }
         
-        public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+        public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
             p_window.append_bold(resources.getString("spacing_from_clearance_class") + " ");
             p_window.append_bold(this.name);
             for (int i = 1; i < this.column.length; ++i)

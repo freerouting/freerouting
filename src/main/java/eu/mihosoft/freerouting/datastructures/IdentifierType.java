@@ -18,7 +18,7 @@
  * Created on 25. Januar 2005, 09:50
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 import java.io.OutputStreamWriter;
 

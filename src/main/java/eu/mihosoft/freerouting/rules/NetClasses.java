@@ -18,11 +18,11 @@
  * Created on 7. April 2005, 07:52
  */
 
-package rules;
+package eu.mihosoft.freerouting.rules;
 
 
 /**
- * Contains the array of net classes for interactive routing.
+ * Contains the array of net classes for eu.mihosoft.freerouting.interactive routing.
  *
  * @author Alfons Wirtz
  */
@@ -63,7 +63,7 @@ public class NetClasses implements java.io.Serializable
     /**
      * Appends a new empty class with name p_name to the class array
      */
-    NetClass append(String p_name, board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
+    NetClass append(String p_name, eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
     {
         NetClass new_class = new NetClass(p_name, p_layer_structure, p_clearance_matrix);
         class_arr.add(new_class);
@@ -73,10 +73,10 @@ public class NetClasses implements java.io.Serializable
     /**
      * Appends a new empty class to the class array. A name for the class is created internally
      */
-    NetClass append(board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, java.util.Locale p_locale)
+    NetClass append(eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("rules.resources.Default", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.rules.resources.Default", p_locale);
         String name_front = resources.getString("class");
         String new_name = null;
         Integer index = 0;

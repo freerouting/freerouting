@@ -18,15 +18,15 @@
  * Created on 17. August 2003, 07:36
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.Line;
-import geometry.planar.LineSegment;
-import geometry.planar.Point;
-import geometry.planar.Polyline;
-import geometry.planar.TileShape;
-import geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.LineSegment;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Side;
 
 /**
  *

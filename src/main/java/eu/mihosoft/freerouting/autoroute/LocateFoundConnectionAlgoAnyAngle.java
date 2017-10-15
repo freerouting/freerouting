@@ -18,21 +18,21 @@
  * Created on 14. Februar 2004, 07:55
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.FloatLine;
-import geometry.planar.FloatPoint;
-import geometry.planar.Side;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatLine;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.LinkedList;
 
-import board.ShapeSearchTree;
-import board.AngleRestriction;
-import board.Item;
-import board.TestLevel;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.AngleRestriction;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.TestLevel;
 
 
 /**

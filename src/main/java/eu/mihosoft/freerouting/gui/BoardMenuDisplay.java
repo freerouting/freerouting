@@ -18,7 +18,7 @@
  * Created on 12. Februar 2005, 05:42
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Creates the display menu of a eu.mihosoft.freerouting.board frame.
@@ -91,7 +91,7 @@ public class BoardMenuDisplay extends javax.swing.JMenu
     private BoardMenuDisplay(BoardFrame p_board_frame)
     {
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("resources.BoardMenuDisplay", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuDisplay", p_board_frame.get_locale());
     }
     
     private final BoardFrame board_frame;

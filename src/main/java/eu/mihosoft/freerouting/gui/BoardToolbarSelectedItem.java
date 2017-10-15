@@ -18,7 +18,7 @@
  * Created on 16. Februar 2005, 05:59
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Describes the toolbar of the eu.mihosoft.freerouting.board frame, when it is in the selected item state.
@@ -37,7 +37,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         this.board_frame = p_board_frame;
         
         this.resources = 
-                java.util.ResourceBundle.getBundle("resources.BoardToolbarSelectedItem", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardToolbarSelectedItem", p_board_frame.get_locale());
         
         javax.swing.JButton cancel_button = new javax.swing.JButton();
         cancel_button.setText(resources.getString("cancel"));
@@ -119,7 +119,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         this.add(unfix_button);
              
         javax.swing.JButton autoroute_button = new javax.swing.JButton();
-        autoroute_button.setText(resources.getString("eu/mihosoft/freerouting/autoroute"));
+        autoroute_button.setText(resources.getString("autoroute"));
         autoroute_button.setToolTipText(resources.getString("autoroute_tooltip"));
         autoroute_button.addActionListener(new java.awt.event.ActionListener()
         {

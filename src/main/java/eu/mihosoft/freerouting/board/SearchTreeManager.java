@@ -19,17 +19,17 @@
  *
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Iterator;
 
-import datastructures.UndoableObjects;
-import datastructures.ShapeTree;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.ShapeTree;
 
-import geometry.planar.FortyfiveDegreeBoundingDirections;
-import geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
 
 /**
  *
@@ -85,7 +85,7 @@ public class SearchTreeManager
     }
     
     /**
-     * Returns the default tree used in interactive routing.
+     * Returns the default tree used in eu.mihosoft.freerouting.interactive routing.
      */
     public ShapeSearchTree get_default_tree()
     {
@@ -229,7 +229,7 @@ public class SearchTreeManager
     }
     
     /**
-     * Clears all compensated trees used in the autoroute algorithm apart from the default tree.
+     * Clears all compensated trees used in the eu.mihosoft.freerouting.autoroute algorithm apart from the default tree.
      */
     public void reset_compensated_trees()
     {
@@ -255,7 +255,7 @@ public class SearchTreeManager
     {
         if (this.board == null)
         {
-            System.out.println("SearchtreeManager.remove_all_board_items: board is null");
+            System.out.println("SearchtreeManager.remove_all_board_items: eu.mihosoft.freerouting.board is null");
             return;
         }
         Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
@@ -274,7 +274,7 @@ public class SearchTreeManager
     {
         if (this.board == null)
         {
-            System.out.println("SearchtreeManager.insert_all_board_items: board is null");
+            System.out.println("SearchtreeManager.insert_all_board_items: eu.mihosoft.freerouting.board is null");
             return;
         }
         Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();

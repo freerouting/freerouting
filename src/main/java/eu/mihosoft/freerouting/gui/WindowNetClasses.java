@@ -17,7 +17,7 @@
  *
  * Created on 10. April 2005, 07:49
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.rules.NetClass;
 import eu.mihosoft.freerouting.rules.ViaRule;
@@ -26,7 +26,7 @@ import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable;
 
 /**
- * Edit window for the table of net eu.mihosoft.freerouting.rules.
+ * Edit window for the table of net rules.
  *
  * @author Alfons Wirtz
  */
@@ -36,7 +36,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
     /** Creates a new instance of NetClassesWindow */
     public WindowNetClasses(BoardFrame p_board_frame)
     {
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowNetClasses", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowNetClasses", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
 
         this.board_frame = p_board_frame;

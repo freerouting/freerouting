@@ -18,9 +18,9 @@
  * Created on 4. November 2004, 11:14
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
  * Class implementing the different functionality in the drag menu

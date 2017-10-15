@@ -14,9 +14,9 @@
  *   for more details.
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.util.Set;
 

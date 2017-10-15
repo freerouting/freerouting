@@ -18,21 +18,21 @@
  * Created on 15. Juli 2007, 07:26
  *
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-import geometry.planar.FortyfiveDegreeBoundingDirections;
-import geometry.planar.TileShape;
-import geometry.planar.Shape;
-import geometry.planar.IntOctagon;
-import geometry.planar.IntBox;
-import geometry.planar.Side;
-import geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.Line;
 
-import autoroute.IncompleteFreeSpaceExpansionRoom;
-import autoroute.CompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 
 /**
  * A special simple ShapeSearchtree, where the shapes are of class IntOctagon.

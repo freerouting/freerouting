@@ -17,12 +17,12 @@
  *
  * Created on 6. Januar 2004, 07:23
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import geometry.planar.TileShape;
-import geometry.planar.FloatPoint;
-import geometry.planar.FloatLine;
-import geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatLine;
+import eu.mihosoft.freerouting.geometry.planar.Point;
 
 /**
  * An ExpansionDoor is a common edge between two ExpansionRooms
@@ -52,6 +52,7 @@ public class ExpansionDoor implements ExpandableObject
     /**
      * Calculates the intersection of the shapes of the 2 rooms belonging to this door.
      */
+    @Override
     public TileShape get_shape()
     {
         TileShape first_shape = first_room.get_shape();
@@ -63,6 +64,7 @@ public class ExpansionDoor implements ExpandableObject
      * The dimension of a door may be 1 or 2.
      * 2-dimensional doors can only exist between ObstacleExpansionRooms
      */
+    @Override
     public int get_dimension()
     {
         return this.dimension;

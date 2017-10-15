@@ -18,7 +18,7 @@
  * Created on 20. Februar 2005, 06:09
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 
@@ -36,7 +36,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     public WindowClearanceMatrix(BoardFrame p_board_frame)
     {
         this.board_frame = p_board_frame;
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowClearanceMatrix", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowClearanceMatrix", p_board_frame.get_locale());
         
         this.setTitle(resources.getString("title"));
         

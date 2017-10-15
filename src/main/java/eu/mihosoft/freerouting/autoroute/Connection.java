@@ -19,16 +19,16 @@
  *
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Point;
 
-import board.Item;
-import board.Trace;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.Trace;
 
 /**
  * Describes a routing connection ending at the next fork or terminal item.

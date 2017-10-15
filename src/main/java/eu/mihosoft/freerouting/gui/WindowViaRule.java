@@ -18,7 +18,7 @@
  * Created on 5. April 2005, 06:29
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.rules.ViaRule;
 import eu.mihosoft.freerouting.rules.ViaInfo;
@@ -38,7 +38,7 @@ public class WindowViaRule extends javax.swing.JFrame
         this.via_rule = p_via_rule;
         this.via_list = p_via_list;
         
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowViaRule", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowViaRule", p_board_frame.get_locale());
         this.setTitle(resources.getString("title")  + " " + p_via_rule.name);
         
         this.main_panel = new javax.swing.JPanel();

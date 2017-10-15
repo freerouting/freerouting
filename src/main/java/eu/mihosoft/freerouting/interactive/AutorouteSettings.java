@@ -18,13 +18,13 @@
  * Created on 27. Juli 2006, 09:16
  *
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import board.RoutingBoard;
-import autoroute.AutorouteControl.ExpansionCostFactor;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 
 /**
- * Contains the interactive settings for the autorouter.
+ * Contains the eu.mihosoft.freerouting.interactive settings for the autorouter.
  *
  * @author Alfons Wirtz
  */
@@ -66,7 +66,7 @@ public class AutorouteSettings implements java.io.Serializable
 
         double vertical_add_costs_against_preferred_dir = 0.1 * Math.round(10 * vertical_width / horizontal_width);
 
-        // make more horizontal pefered direction, if the board is horizontal.
+        // make more horizontal pefered direction, if the eu.mihosoft.freerouting.board is horizontal.
 
         boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
         for (int i = 0; i < layer_count; ++i)

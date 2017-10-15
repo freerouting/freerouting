@@ -1,4 +1,4 @@
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import java.util.Locale;
 

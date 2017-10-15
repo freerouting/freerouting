@@ -18,7 +18,7 @@
  * Created on 3. August 2003, 11:16
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -57,7 +57,7 @@ public class ColorManager extends BoardSavableSubWindow
     {
         GraphicsContext graphics_context = p_board_frame.board_panel.board_handling.graphics_context;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         this.setTitle(resources.getString("color_manager"));
         final JPanel panel =  new JPanel();
         final int textfield_height = 17;
@@ -135,7 +135,7 @@ public class ColorManager extends BoardSavableSubWindow
             }
         };
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_locale);
         final JDialog dialog = JColorChooser.createDialog(button,
                 resources.getString("pick_a_color"), true, colorChooser, okListener, null);
         

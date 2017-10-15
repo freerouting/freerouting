@@ -19,7 +19,7 @@
  *
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Class for temporary subwindows of the boarrd frame

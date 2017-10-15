@@ -18,7 +18,7 @@
  * Created on 14. Juli 2003, 07:40
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 /**
  * Enum for angle restrictions none, fortyfive degree and ninety degree.

@@ -19,7 +19,7 @@
  *
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Window for the settinngs of eu.mihosoft.freerouting.interactive snapshots.
@@ -35,7 +35,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
         this.board_handling = p_board_frame.board_panel.board_handling;
         
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.WindowSnapshotSettings", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowSnapshotSettings", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         // create main panel

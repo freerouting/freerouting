@@ -18,7 +18,7 @@
  * Created on 13. Februar 2005, 08:21
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 /**
  * Interface for creatiing unique identification number.

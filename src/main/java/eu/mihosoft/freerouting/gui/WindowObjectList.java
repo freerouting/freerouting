@@ -18,7 +18,7 @@
  * Created on 7. Maerz 2005, 09:26
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  *  Abstract class for windows displaying a list of objects
@@ -32,7 +32,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     public WindowObjectList(BoardFrame p_board_frame)
     {
         this.board_frame = p_board_frame;
-        this.resources = java.util.ResourceBundle.getBundle("resources.WindowObjectList", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowObjectList", p_board_frame.get_locale());
         
         // create main panel
         this.main_panel = new javax.swing.JPanel();

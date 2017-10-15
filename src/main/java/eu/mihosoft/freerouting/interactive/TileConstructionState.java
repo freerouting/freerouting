@@ -18,25 +18,25 @@
  * Created on 6. November 2003, 14:46
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 
 import java.util.Iterator;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.Line;
-import geometry.planar.Side;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
-import rules.BoardRules;
+import eu.mihosoft.freerouting.rules.BoardRules;
 
-import board.AngleRestriction;
-import board.RoutingBoard;
-import board.FixedState;
+import eu.mihosoft.freerouting.board.AngleRestriction;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.FixedState;
 
 /**
- * Class for interactive construction of a tile shaped obstacle
+ * Class for eu.mihosoft.freerouting.interactive construction of a tile shaped obstacle
  *
  * @author  Alfons Wirtz
  */

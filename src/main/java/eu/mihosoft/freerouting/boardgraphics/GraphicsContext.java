@@ -270,7 +270,7 @@ public class GraphicsContext implements java.io.Serializable
         }
         Point2D center = coordinate_transform.board_to_screen(p_circle.center.to_float());
         double radius = coordinate_transform.board_to_screen(p_circle.radius);
-        if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle)p_g.getClip(), radius))
+        if (!point_near_rectangle(center.getX(), center.getY(), p_g.getClip().getBounds(), radius))
         {
             return;
         }

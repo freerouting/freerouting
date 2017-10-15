@@ -18,13 +18,13 @@
  * Created on 1. Juni 2004, 07:16
  */
 
-package rules;
+package eu.mihosoft.freerouting.rules;
 
-import geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 
 /**
  * Contains the rules and constraints required for items
- * to be inserted into a routing board
+ * to be inserted into a routing eu.mihosoft.freerouting.board
  *
  * @author Alfons Wirtz
  */
@@ -33,12 +33,12 @@ public class BoardRules implements java.io.Serializable
     /**
      * Creates a new instance of this class.
      */
-    public BoardRules(board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
+    public BoardRules(eu.mihosoft.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
     {
         layer_structure = p_layer_structure;
         clearance_matrix = p_clearance_matrix;
         nets = new Nets();
-        this.trace_angle_restriction = board.AngleRestriction.FORTYFIVE_DEGREE;
+        this.trace_angle_restriction = eu.mihosoft.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE;
         
         this.min_trace_half_width = 100000;
         this.max_trace_half_width = 100;
@@ -181,7 +181,7 @@ public class BoardRules implements java.io.Serializable
             ViaInfo curr_via_info = this.via_infos.get(i);
             if (curr_via_info.get_clearance_class() == default_via_cl_class)
             {
-                library.Padstack curr_padstack = curr_via_info.get_padstack();
+                eu.mihosoft.freerouting.library.Padstack curr_padstack = curr_via_info.get_padstack();
                 int curr_from_layer = curr_padstack.from_layer();
                 int curr_to_layer = curr_padstack.to_layer();
                 ViaInfo existing_via = default_rule.get_layer_range(curr_from_layer, curr_to_layer);
@@ -276,12 +276,12 @@ public class BoardRules implements java.io.Serializable
     }
     
     /**
-     * Changes the clearance class index of all objects on the board with index p_from_no
+     * Changes the clearance class index of all objects on the eu.mihosoft.freerouting.board with index p_from_no
      * to p_to_no.
      */
-    public void change_clearance_class_no(int p_from_no, int p_to_no, java.util.Collection<board.Item> p_board_items)
+    public void change_clearance_class_no(int p_from_no, int p_to_no, java.util.Collection<eu.mihosoft.freerouting.board.Item> p_board_items)
     {
-        for(board.Item curr_item : p_board_items)
+        for(eu.mihosoft.freerouting.board.Item curr_item : p_board_items)
         {
             if (curr_item.clearance_class_no() == p_from_no)
             {
@@ -291,7 +291,7 @@ public class BoardRules implements java.io.Serializable
         
         for (int i = 0; i < this.net_classes.count(); ++i)
         {
-            rules.NetClass curr_net_class = this.net_classes.get(i);
+            eu.mihosoft.freerouting.rules.NetClass curr_net_class = this.net_classes.get(i);
             if (curr_net_class.get_trace_clearance_class() == p_from_no)
             {
                 curr_net_class.set_trace_clearance_class(p_to_no);
@@ -307,7 +307,7 @@ public class BoardRules implements java.io.Serializable
         
         for (int i = 0; i < this.via_infos.count(); ++i)
         {
-            rules.ViaInfo curr_via = this.via_infos.get(i);
+            eu.mihosoft.freerouting.rules.ViaInfo curr_via = this.via_infos.get(i);
             if (curr_via.get_clearance_class() == p_from_no)
             {
                 curr_via.set_clearance_class(p_to_no);
@@ -320,9 +320,9 @@ public class BoardRules implements java.io.Serializable
      * Removes the clearance class with number p_index.
      * Returns false, if that was not possible, because there were still items assigned to this class.
      */
-    public boolean remove_clearance_class(int p_index, java.util.Collection<board.Item> p_board_items)
+    public boolean remove_clearance_class(int p_index, java.util.Collection<eu.mihosoft.freerouting.board.Item> p_board_items)
     {
-        for(board.Item curr_item : p_board_items)
+        for(eu.mihosoft.freerouting.board.Item curr_item : p_board_items)
         {
             if (curr_item.clearance_class_no() == p_index)
             {
@@ -331,7 +331,7 @@ public class BoardRules implements java.io.Serializable
         }
         for (int i = 0; i < this.net_classes.count(); ++i)
         {
-            rules.NetClass curr_net_class = this.net_classes.get(i);
+            eu.mihosoft.freerouting.rules.NetClass curr_net_class = this.net_classes.get(i);
             if (curr_net_class.get_trace_clearance_class() == p_index)
             {
                 return false;
@@ -347,14 +347,14 @@ public class BoardRules implements java.io.Serializable
         
         for (int i = 0; i < this.via_infos.count(); ++i)
         {
-            rules.ViaInfo curr_via = this.via_infos.get(i);
+            eu.mihosoft.freerouting.rules.ViaInfo curr_via = this.via_infos.get(i);
             if (curr_via.get_clearance_class() == p_index)
             {
                 return false;
             }
         }
         
-        for(board.Item curr_item : p_board_items)
+        for(eu.mihosoft.freerouting.board.Item curr_item : p_board_items)
         {
             if (curr_item.clearance_class_no() > p_index)
             {
@@ -364,7 +364,7 @@ public class BoardRules implements java.io.Serializable
         
         for (int i = 0; i < this.net_classes.count(); ++i)
         {
-            rules.NetClass curr_net_class = this.net_classes.get(i);
+            eu.mihosoft.freerouting.rules.NetClass curr_net_class = this.net_classes.get(i);
             if (curr_net_class.get_trace_clearance_class() > p_index)
             {
                 curr_net_class.set_trace_clearance_class(curr_net_class.get_trace_clearance_class() - 1);
@@ -381,7 +381,7 @@ public class BoardRules implements java.io.Serializable
         
         for (int i = 0; i < this.via_infos.count(); ++i)
         {
-            rules.ViaInfo curr_via = this.via_infos.get(i);
+            eu.mihosoft.freerouting.rules.ViaInfo curr_via = this.via_infos.get(i);
             if (curr_via.get_clearance_class() > p_index)
             {
                 curr_via.set_clearance_class(curr_via.get_clearance_class() - 1);
@@ -429,13 +429,13 @@ public class BoardRules implements java.io.Serializable
     }
     
     /** The angle restriction for tracese: 90 degree, 45 degree or none. */
-    public board.AngleRestriction get_trace_angle_restriction()
+    public eu.mihosoft.freerouting.board.AngleRestriction get_trace_angle_restriction()
     {
         return this.trace_angle_restriction;
     }
     
     /** Sets the angle restriction for tracese: 90 degree, 45 degree or none. */
-    public void set_trace_angle_restriction(board.AngleRestriction p_angle_restriction)
+    public void set_trace_angle_restriction(eu.mihosoft.freerouting.board.AngleRestriction p_angle_restriction)
     {
         this.trace_angle_restriction = p_angle_restriction;
     }
@@ -475,7 +475,7 @@ public class BoardRules implements java.io.Serializable
         {
             return 0;
         }
-        library.Padstack via_padstack = default_via_rule.get_via(0).get_padstack();
+        eu.mihosoft.freerouting.library.Padstack via_padstack = default_via_rule.get_via(0).get_padstack();
         ConvexShape curr_shape = via_padstack.get_shape(via_padstack.from_layer());
         double result = curr_shape.max_width();
         curr_shape = via_padstack.get_shape(via_padstack.to_layer());
@@ -498,7 +498,7 @@ public class BoardRules implements java.io.Serializable
     {
         p_stream.defaultReadObject();
         int snap_angle_no = p_stream.readInt();
-        this.trace_angle_restriction = board.AngleRestriction.arr[snap_angle_no];
+        this.trace_angle_restriction = eu.mihosoft.freerouting.board.AngleRestriction.arr[snap_angle_no];
     }
     
     /**
@@ -509,20 +509,20 @@ public class BoardRules implements java.io.Serializable
     
     
     /**
-     * Describes the electrical nets on the board.
+     * Describes the electrical nets on the eu.mihosoft.freerouting.board.
      */
     public final Nets nets;
     
     
     /** The angle restriction for traces: 90 degree, 45 degree or none. */
-    private transient board.AngleRestriction trace_angle_restriction;
+    private transient eu.mihosoft.freerouting.board.AngleRestriction trace_angle_restriction;
     
     /**
      * If true, the router ignores conduction areas.
      */
     private boolean ignore_conduction = true;
     
-    private final board.LayerStructure layer_structure;
+    private final eu.mihosoft.freerouting.board.LayerStructure layer_structure;
     
     public final ViaInfos via_infos = new ViaInfos();
     

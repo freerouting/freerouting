@@ -18,17 +18,19 @@
  * Created on 8. November 2004, 08:01
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
+
+import eu.mihosoft.freerouting.gui.BoardFrame;
 
 /**
- * Snapshot of the client situation in an interactive session.
+ * Snapshot of the client situation in an eu.mihosoft.freerouting.interactive session.
  *
  * @author  Alfons Wirtz
  */
 public class SnapShot implements java.io.Serializable
 {
     /**
-     * Returns a new snapshot or null, if the current interactive state
+     * Returns a new snapshot or null, if the current eu.mihosoft.freerouting.interactive state
      * is not suitable to generate a snapshot.
      */
     public static SnapShot get_instance(String p_name, BoardHandling p_board_handling)
@@ -41,13 +43,13 @@ public class SnapShot implements java.io.Serializable
         return new SnapShot(p_name, p_board_handling);
     }
     
-    /** Creates a SnapShot of the display region and the interactive settings */
+    /** Creates a SnapShot of the display region and the eu.mihosoft.freerouting.interactive settings */
     private SnapShot(String p_name, BoardHandling p_board_handling)
     {
         this.name = p_name;
         this.settings = new Settings(p_board_handling.settings);
         this.interactive_state_no = get_no(p_board_handling.interactive_state);
-        this.graphics_context = new boardgraphics.GraphicsContext(p_board_handling.graphics_context);
+        this.graphics_context = new eu.mihosoft.freerouting.boardgraphics.GraphicsContext(p_board_handling.graphics_context);
         this.viewport_position = new java.awt.Point(p_board_handling.get_panel().get_viewport_position());
         this.subwindow_filters = p_board_handling.get_panel().board_frame.get_snapshot_subwindow_selections();
     }
@@ -68,16 +70,16 @@ public class SnapShot implements java.io.Serializable
     }
     
     /**
-     * Goes to this shnapshot in interactive board etiting.
+     * Goes to this shnapshot in eu.mihosoft.freerouting.interactive eu.mihosoft.freerouting.board etiting.
      */
-    public void go_to(interactive.BoardHandling p_board_handling)
+    public void go_to(eu.mihosoft.freerouting.interactive.BoardHandling p_board_handling)
     {
-        interactive.SnapShot.Attributes snapshot_attributes = this.settings.snapshot_attributes;
+        eu.mihosoft.freerouting.interactive.SnapShot.Attributes snapshot_attributes = this.settings.snapshot_attributes;
 
         if (snapshot_attributes.object_visibility)
         {
             p_board_handling.graphics_context.color_intensity_table =
-                    new boardgraphics.ColorIntensityTable(this.graphics_context.color_intensity_table);
+                    new eu.mihosoft.freerouting.boardgraphics.ColorIntensityTable(this.graphics_context.color_intensity_table);
         }
         if (snapshot_attributes.layer_visibility)
         {
@@ -94,7 +96,7 @@ public class SnapShot implements java.io.Serializable
         }
         if (snapshot_attributes.selectable_items)
         {
-            p_board_handling.settings.item_selection_filter = new board.ItemSelectionFilter(this.settings.item_selection_filter);
+            p_board_handling.settings.item_selection_filter = new eu.mihosoft.freerouting.board.ItemSelectionFilter(this.settings.item_selection_filter);
         }
         if (snapshot_attributes.current_layer)
         {
@@ -157,7 +159,7 @@ public class SnapShot implements java.io.Serializable
     }
     
     /**
-     * Create a number for writing an interactive state to disk.
+     * Create a number for writing an eu.mihosoft.freerouting.interactive state to disk.
      * Only MenuStates are saved. The default is SelectState.
      */
     private static int get_no(InteractiveState p_interactive_state)
@@ -181,9 +183,9 @@ public class SnapShot implements java.io.Serializable
     private final String name;
     public final Settings settings;
     private final int interactive_state_no;
-    public final boardgraphics.GraphicsContext graphics_context;
+    public final eu.mihosoft.freerouting.boardgraphics.GraphicsContext graphics_context;
     private final java.awt.Point viewport_position;
-    public final gui.BoardFrame.SubwindowSelections subwindow_filters;
+    public final BoardFrame.SubwindowSelections subwindow_filters;
     
     /**
      * Defines the data of the snapshot selected for restoring.

@@ -18,7 +18,7 @@
  * Created on 13. Juni 2003, 12:12
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 import java.util.Collection;
 import java.util.Iterator;

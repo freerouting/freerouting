@@ -18,12 +18,12 @@
  * Created on 9. November 2003, 11:34
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
- * Common base class for interactive selection of a rectangle.
+ * Common base class for eu.mihosoft.freerouting.interactive selection of a rectangle.
  *
  * @author Alfons Wirtz
  */

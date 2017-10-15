@@ -18,13 +18,13 @@
  * Created on 19. August 2004, 07:34
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.Area;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 /**
- * Describes Areas on the board, where vias are not allowed.
+ * Describes Areas on the eu.mihosoft.freerouting.board, where vias are not allowed.
  *
  * @author  alfons
  */
@@ -85,7 +85,7 @@ public class ViaObstacleArea extends ObstacleArea
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("via_keepout"));
         this.print_shape_info(p_window, p_locale);
         this.print_clearance_info(p_window, p_locale);
@@ -93,12 +93,12 @@ public class ViaObstacleArea extends ObstacleArea
         p_window.newline();
     }
     
-    public java.awt.Color[] get_draw_colors(boardgraphics.GraphicsContext p_graphics_context)
+    public java.awt.Color[] get_draw_colors(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_via_obstacle_colors();
     }
     
-    public double get_draw_intensity(boardgraphics.GraphicsContext p_graphics_context)
+    public double get_draw_intensity(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_via_obstacle_color_intensity();
     }

@@ -18,7 +18,7 @@
  * Created on 5. November 2003, 13:02
  *
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -31,30 +31,34 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Set;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntBox;
-import geometry.planar.IntPoint;
-import geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.designforms.specctra.SessionFile;
+import eu.mihosoft.freerouting.designforms.specctra.SessionToEagle;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
 
-import rules.BoardRules;
-import board.LayerStructure;
-import board.RoutingBoard;
-import board.Item;
-import board.PolylineTrace;
-import board.FixedState;
-import board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.gui.BoardPanel;
+import eu.mihosoft.freerouting.gui.ComboBoxLayer;
+import eu.mihosoft.freerouting.rules.BoardRules;
+import eu.mihosoft.freerouting.board.LayerStructure;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.PolylineTrace;
+import eu.mihosoft.freerouting.board.FixedState;
+import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 
-import boardgraphics.GraphicsContext;
-import board.CoordinateTransform;
-import board.Unit;
-import board.TestLevel;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.board.CoordinateTransform;
+import eu.mihosoft.freerouting.board.Unit;
+import eu.mihosoft.freerouting.board.TestLevel;
 
-import designformats.specctra.DsnFile;
+import eu.mihosoft.freerouting.designforms.specctra.DsnFile;
 
 /**
  *
  * Central connection class between the graphical user interface and
- * the board database.
+ * the eu.mihosoft.freerouting.board database.
  *
  * @author  Alfons Wirtz
  */
@@ -64,18 +68,18 @@ public class BoardHandling extends BoardHandlingImpl
     /**
      * Creates a new BoardHandling
      */
-    public BoardHandling(gui.BoardPanel p_panel, java.util.Locale p_locale)
+    public BoardHandling(BoardPanel p_panel, java.util.Locale p_locale)
     {
         this.locale = p_locale;
         this.panel = p_panel;
         this.screen_messages = p_panel.screen_messages;
         this.set_interactive_state(SelectMenuState.get_instance(this, logfile));
-        this.resources = java.util.ResourceBundle.getBundle("interactive.resources.BoardHandling", p_locale);
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.BoardHandling", p_locale);
     }
 
     /**
-     * Sets the board to read only for example when running a seperate action thread
-     * to avoid unsynchronized change of the board.
+     * Sets the eu.mihosoft.freerouting.board to read only for example when running a seperate action thread
+     * to avoid unsynchronized change of the eu.mihosoft.freerouting.board.
      */
     public void set_board_read_only(boolean p_value)
     {
@@ -84,7 +88,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Return true, if the board is set to read only.
+     * Return true, if the eu.mihosoft.freerouting.board is set to read only.
      */
     public boolean is_board_read_only()
     {
@@ -101,7 +105,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * returns the number of layers of the board design.
+     * returns the number of layers of the eu.mihosoft.freerouting.board design.
      */
     public int get_layer_count()
     {
@@ -153,8 +157,8 @@ public class BoardHandling extends BoardHandlingImpl
         if (edge_to_turn_dist != board.rules.get_pin_edge_to_turn_dist())
         {
             // unfix the pin exit stubs
-            Collection<board.Pin> pin_list = board.get_pins();
-            for (board.Pin curr_pin : pin_list)
+            Collection<eu.mihosoft.freerouting.board.Pin> pin_list = board.get_pins();
+            for (eu.mihosoft.freerouting.board.Pin curr_pin : pin_list)
             {
                 if (curr_pin.has_trace_exit_restrictions())
                 {
@@ -203,7 +207,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Gets the trace half width used in interactive routing for the input net on the input layer.
+     * Gets the trace half width used in eu.mihosoft.freerouting.interactive routing for the input net on the input layer.
      */
     public int get_trace_halfwidth(int p_net_no, int p_layer)
     {
@@ -220,7 +224,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     *  Returns if p_layer is active for interactive routing of traces.
+     *  Returns if p_layer is active for eu.mihosoft.freerouting.interactive routing of traces.
      */
     public boolean is_active_routing_layer(int p_net_no, int p_layer)
     {
@@ -228,12 +232,12 @@ public class BoardHandling extends BoardHandlingImpl
         {
             return true;
         }
-        rules.Net curr_net = this.board.rules.nets.get(p_net_no);
+        eu.mihosoft.freerouting.rules.Net curr_net = this.board.rules.nets.get(p_net_no);
         if (curr_net == null)
         {
             return true;
         }
-        rules.NetClass curr_net_class = curr_net.get_class();
+        eu.mihosoft.freerouting.rules.NetClass curr_net_class = curr_net.get_class();
         if (curr_net_class == null)
         {
             return true;
@@ -241,7 +245,7 @@ public class BoardHandling extends BoardHandlingImpl
         return curr_net_class.is_active_routing_layer(p_layer);
     }
 
-    /** Gets the trace clearance class used in interactive routing. */
+    /** Gets the trace clearance class used in eu.mihosoft.freerouting.interactive routing. */
     public int get_trace_clearance_class(int p_net_no)
     {
         int result;
@@ -256,10 +260,10 @@ public class BoardHandling extends BoardHandlingImpl
         return result;
     }
 
-    /** Gets the via rule used in interactive routing. */
-    public rules.ViaRule get_via_rule(int p_net_no)
+    /** Gets the via rule used in eu.mihosoft.freerouting.interactive routing. */
+    public eu.mihosoft.freerouting.rules.ViaRule get_via_rule(int p_net_no)
     {
-        rules.ViaRule result = null;
+        eu.mihosoft.freerouting.rules.ViaRule result = null;
         if (settings.manual_rule_selection)
         {
             result = board.rules.via_rules.get(this.settings.manual_via_rule_index);
@@ -272,7 +276,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Changes the default trace halfwidth currently used in interactive routing on the input layer.
+     * Changes the default trace halfwidth currently used in eu.mihosoft.freerouting.interactive routing on the input layer.
      */
     public void set_default_trace_halfwidth(int p_layer, int p_value)
     {
@@ -302,9 +306,9 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Changes the current snap angle in the interactive board handling.
+     * Changes the current snap angle in the eu.mihosoft.freerouting.interactive eu.mihosoft.freerouting.board handling.
      */
-    public void set_current_snap_angle(board.AngleRestriction p_snap_angle)
+    public void set_current_snap_angle(eu.mihosoft.freerouting.board.AngleRestriction p_snap_angle)
     {
         if (board_is_read_only)
         {
@@ -315,7 +319,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Changes the current layer in the interactive board handling.
+     * Changes the current layer in the eu.mihosoft.freerouting.interactive eu.mihosoft.freerouting.board handling.
      */
     public void set_current_layer(int p_layer)
     {
@@ -335,7 +339,7 @@ public class BoardHandling extends BoardHandlingImpl
      */
     void set_layer(int p_layer_no)
     {
-        board.Layer curr_layer = board.layer_structure.arr[p_layer_no];
+        eu.mihosoft.freerouting.board.Layer curr_layer = board.layer_structure.arr[p_layer_no];
         screen_messages.set_layer(curr_layer.name);
         settings.layer = p_layer_no;
 
@@ -363,24 +367,24 @@ public class BoardHandling extends BoardHandlingImpl
     public void display_layer_messsage()
     {
         screen_messages.clear_add_field();
-        board.Layer curr_layer = board.layer_structure.arr[this.settings.layer];
+        eu.mihosoft.freerouting.board.Layer curr_layer = board.layer_structure.arr[this.settings.layer];
         screen_messages.set_layer(curr_layer.name);
     }
 
     /**
-     * Sets the manual trace half width used in interactive routing.
+     * Sets the manual trace half width used in eu.mihosoft.freerouting.interactive routing.
      * If p_layer_no < 0, the manual trace half width is changed on all layers.
      */
     public void set_manual_trace_half_width(int p_layer_no, int p_value)
     {
-        if (p_layer_no == gui.ComboBoxLayer.ALL_LAYER_INDEX)
+        if (p_layer_no == ComboBoxLayer.ALL_LAYER_INDEX)
         {
             for (int i = 0; i < settings.manual_trace_half_width_arr.length; ++i)
             {
                 this.settings.set_manual_trace_half_width(i, p_value);
             }
         }
-        else if (p_layer_no == gui.ComboBoxLayer.INNER_LAYER_INDEX)
+        else if (p_layer_no == ComboBoxLayer.INNER_LAYER_INDEX)
         {
             for (int i = 1; i < settings.manual_trace_half_width_arr.length - 1; ++i)
             {
@@ -394,7 +398,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Changes the interactive selectability of p_item_type.
+     * Changes the eu.mihosoft.freerouting.interactive selectability of p_item_type.
      */
     public void set_selectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value)
     {
@@ -562,21 +566,21 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Creates the Routingboard, the graphic context and the interactive settings.
+     * Creates the Routingboard, the graphic context and the eu.mihosoft.freerouting.interactive settings.
      */
     @Override
     public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure,
                              PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name,
-                             BoardRules p_rules, board.Communication p_board_communication, TestLevel p_test_level)
+                             BoardRules p_rules, eu.mihosoft.freerouting.board.Communication p_board_communication, TestLevel p_test_level)
     {
         super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules,
                 p_board_communication, p_test_level);
 
-        // create the interactive settings with default
+        // create the eu.mihosoft.freerouting.interactive settings with default
         double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
         this.coordinate_transform = new CoordinateTransform(1, p_board_communication.unit, unit_factor, p_board_communication.unit);
 
-        // create a graphics context for the board
+        // create a graphics context for the eu.mihosoft.freerouting.board
         Dimension panel_size = panel.getPreferredSize();
         graphics_context = new GraphicsContext(p_bounding_box, panel_size, p_layer_structure, this.locale);
     }
@@ -604,7 +608,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * From here on the interactive actions are written to a logfile.
+     * From here on the eu.mihosoft.freerouting.interactive actions are written to a logfile.
      */
     public void start_logfile(File p_filename)
     {
@@ -616,7 +620,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Repaints the board panel on the screen.
+     * Repaints the eu.mihosoft.freerouting.board panel on the screen.
      */
     public void repaint()
     {
@@ -632,7 +636,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Repaints a rectangle of board panel on the screen.
+     * Repaints a rectangle of eu.mihosoft.freerouting.board panel on the screen.
      */
     public void repaint(Rectangle p_rect)
     {
@@ -647,15 +651,15 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Gets the panel for graphical display of the board.
+     * Gets the panel for graphical display of the eu.mihosoft.freerouting.board.
      */
-    gui.BoardPanel get_panel()
+    BoardPanel get_panel()
     {
         return this.panel;
     }
 
     /**
-     * Gets the popup menu used in the current interactive state.
+     * Gets the popup menu used in the current eu.mihosoft.freerouting.interactive state.
      * Returns null, if the current state uses no popup menu.
      */
     public javax.swing.JPopupMenu get_current_popup_menu()
@@ -673,8 +677,8 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Draws the board and all temporary construction graphics in the
-     * current interactive state.
+     * Draws the eu.mihosoft.freerouting.board and all temporary construction graphics in the
+     * current eu.mihosoft.freerouting.interactive state.
      */
     public void draw(Graphics p_graphics)
     {
@@ -771,7 +775,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Actions to be taken in the current interactive state
+     * Actions to be taken in the current eu.mihosoft.freerouting.interactive state
      * when the left mouse butten is clicked.
      */
     public void left_button_clicked(Point2D p_point)
@@ -780,7 +784,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             if (this.interactive_action_thread != null)
             {
-                // The left button is used to stop the interactive action thread.
+                // The left button is used to stop the eu.mihosoft.freerouting.interactive action thread.
                 this.interactive_action_thread.request_stop();
             }
             return;
@@ -800,14 +804,14 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Actions to be taken in the current interactive state
+     * Actions to be taken in the current eu.mihosoft.freerouting.interactive state
      * when the mouse pointer has moved.
      */
     public void mouse_moved(Point2D p_point)
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         if (interactive_state != null && graphics_context != null)
@@ -816,7 +820,7 @@ public class BoardHandling extends BoardHandlingImpl
                     graphics_context.coordinate_transform.screen_to_board(p_point);
             InteractiveState return_state = interactive_state.mouse_moved();
             // An automatic repaint here would slow down the display
-            // performance in interactive route.
+            // performance in eu.mihosoft.freerouting.interactive route.
             // If a repaint is necessary, it should be done in the individual mouse_moved
             // method of the class derived from InteractiveState
             if (return_state != this.interactive_state)
@@ -841,7 +845,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Actions to be taken in the current interactive state
+     * Actions to be taken in the current eu.mihosoft.freerouting.interactive state
      * when the mouse is dragged.
      */
     public void mouse_dragged(Point2D p_point)
@@ -861,7 +865,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Actions to be taken in the current interactive state
+     * Actions to be taken in the current eu.mihosoft.freerouting.interactive state
      * when a mouse button is released.
      */
     public void button_released()
@@ -878,7 +882,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Actions to be taken in the current interactive state
+     * Actions to be taken in the current eu.mihosoft.freerouting.interactive state
      * when the mouse wheel is moved
      */
     public void mouse_wheel_moved(int p_rotation)
@@ -895,14 +899,14 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Action to be taken in the current interactive state
+     * Action to be taken in the current eu.mihosoft.freerouting.interactive state
      * when a key on the keyboard is typed.
      */
     public void key_typed_action(char p_key_char)
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         InteractiveState return_state = interactive_state.key_typed(p_key_char);
@@ -916,14 +920,14 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Completes the curreent interactive state and returns to
+     * Completes the curreent eu.mihosoft.freerouting.interactive state and returns to
      * its return state.
      */
     public void return_from_state()
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
 
@@ -938,13 +942,13 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Cancels the current interactive state.
+     * Cancels the current eu.mihosoft.freerouting.interactive state.
      */
     public void cancel_state()
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
 
@@ -959,8 +963,8 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Actions to be taken in the current interactive state when
-     * the current board layer is changed.
+     * Actions to be taken in the current eu.mihosoft.freerouting.interactive state when
+     * the current eu.mihosoft.freerouting.board layer is changed.
      * Returns false, if the layer change failed.
      */
     public boolean change_layer_action(int p_new_layer)
@@ -974,7 +978,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Sets the interactive state to SelectMenuState
+     * Sets the eu.mihosoft.freerouting.interactive state to SelectMenuState
      */
     public void set_select_menu_state()
     {
@@ -983,7 +987,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Sets the interactive state to RouteMenuState
+     * Sets the eu.mihosoft.freerouting.interactive state to RouteMenuState
      */
     public void set_route_menu_state()
     {
@@ -992,7 +996,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Sets the interactive state to DragMenuState
+     * Sets the eu.mihosoft.freerouting.interactive state to DragMenuState
      */
     public void set_drag_menu_state()
     {
@@ -1001,8 +1005,8 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Reads an existing board design from the input stream.
-     * Returns false,  if the input stream does not contains a legal board design.
+     * Reads an existing eu.mihosoft.freerouting.board design from the input stream.
+     * Returns false,  if the input stream does not contains a legal eu.mihosoft.freerouting.board design.
      */
     public boolean read_design(java.io.ObjectInputStream p_design, TestLevel p_test_level)
     {
@@ -1024,14 +1028,14 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Imports a board design from a Specctra dsn-file.
+     * Imports a eu.mihosoft.freerouting.board design from a Specctra dsn-file.
      * The parameters p_item_observers and p_item_id_no_generator are used,
-     * in case the board is embedded into a host system.
+     * in case the eu.mihosoft.freerouting.board is embedded into a host system.
      * Returns false, if the dsn-file is currupted.
      */
     public DsnFile.ReadResult import_design(java.io.InputStream p_design,
-                                            board.BoardObservers p_observers,
-                                            datastructures.IdNoGenerator p_item_id_no_generator, TestLevel p_test_level)
+                                            eu.mihosoft.freerouting.board.BoardObservers p_observers,
+                                            eu.mihosoft.freerouting.datastructures.IdNoGenerator p_item_id_no_generator, TestLevel p_test_level)
     {
         if (p_design == null)
         {
@@ -1073,7 +1077,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Writes the currently edited board design to a text file in the Specctra dsn format.
+     * Writes the currently edited eu.mihosoft.freerouting.board design to a text file in the Specctra dsn format.
      * If p_compat_mode is true, only standard speecctra dsn scopes are written, so that any
      * host system with an specctra interface can read them.
      */
@@ -1083,7 +1087,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             return false;
         }
-        return designformats.specctra.DsnFile.write(this, p_output_stream, p_design_name, p_compat_mode);
+        return DsnFile.write(this, p_output_stream, p_design_name, p_compat_mode);
     }
 
     /**
@@ -1095,7 +1099,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             return false;
         }
-        return designformats.specctra.SessionToEagle.get_instance(p_input_stream, p_output_stream, this.board);
+        return SessionToEagle.get_instance(p_input_stream, p_output_stream, this.board);
     }
 
     /**
@@ -1107,11 +1111,11 @@ public class BoardHandling extends BoardHandlingImpl
         {
             return false;
         }
-        return designformats.specctra.SessionFile.write(this.get_routing_board(), p_output_stream, p_design_name);
+        return SessionFile.write(this.get_routing_board(), p_output_stream, p_design_name);
     }
 
     /**
-     * Saves the currently edited board design to p_design_file.
+     * Saves the currently edited eu.mihosoft.freerouting.board design to p_design_file.
      */
     public boolean save_design_file(java.io.ObjectOutputStream p_object_stream)
     {
@@ -1156,13 +1160,13 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Starts interactive routing at the input location.
+     * Starts eu.mihosoft.freerouting.interactive routing at the input location.
      */
     public void start_route(Point2D p_point)
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         FloatPoint location =
@@ -1172,7 +1176,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Selects board items at the input location.
+     * Selects eu.mihosoft.freerouting.board items at the input location.
      */
     public void select_items(Point2D p_point)
     {
@@ -1188,7 +1192,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Selects all items in an interactive defined rectangle.
+     * Selects all items in an eu.mihosoft.freerouting.interactive defined rectangle.
      */
     public void select_items_in_region()
     {
@@ -1206,7 +1210,7 @@ public class BoardHandling extends BoardHandlingImpl
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         this.display_layer_messsage();
@@ -1534,7 +1538,7 @@ public class BoardHandling extends BoardHandlingImpl
     {
         if (board_is_read_only || !(interactive_state instanceof MoveItemState))
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         ((MoveItemState) interactive_state).turn_45_degree(p_factor);
@@ -1544,14 +1548,14 @@ public class BoardHandling extends BoardHandlingImpl
     {
         if (board_is_read_only || !(interactive_state instanceof MoveItemState))
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         ((MoveItemState) interactive_state).change_placement_side();
     }
 
     /**
-     * Zooms display to an interactive defined rectangle.
+     * Zooms display to an eu.mihosoft.freerouting.interactive defined rectangle.
      */
     public void zoom_region()
     {
@@ -1565,7 +1569,7 @@ public class BoardHandling extends BoardHandlingImpl
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
@@ -1579,7 +1583,7 @@ public class BoardHandling extends BoardHandlingImpl
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
@@ -1593,7 +1597,7 @@ public class BoardHandling extends BoardHandlingImpl
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
@@ -1603,13 +1607,13 @@ public class BoardHandling extends BoardHandlingImpl
 
     /**
      * Actions to be taken, when adding a hole to an existing obstacle shape
-     * on the board is started.
+     * on the eu.mihosoft.freerouting.board is started.
      */
     public void start_adding_hole(Point2D p_point)
     {
         if (board_is_read_only)
         {
-            // no interactive action when logfile is running
+            // no eu.mihosoft.freerouting.interactive action when logfile is running
             return;
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
@@ -1620,7 +1624,7 @@ public class BoardHandling extends BoardHandlingImpl
 
     /**
      * Gets a surrounding rectangle of the area, where an update of the
-     * graphics is needed caused by the previous interactive actions.
+     * graphics is needed caused by the previous eu.mihosoft.freerouting.interactive actions.
      */
     Rectangle get_graphics_update_rectangle()
     {
@@ -1639,7 +1643,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Gets all items at p_location on the active board layer.
+     * Gets all items at p_location on the active eu.mihosoft.freerouting.board layer.
      * If nothing is found on the active layer and settings.select_on_all_layers
      * is true, all layers are selected.
      */
@@ -1649,7 +1653,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Gets all items at p_location on the active board layer with the inputt  item filter.
+     * Gets all items at p_location on the active eu.mihosoft.freerouting.board layer with the inputt  item filter.
      * If nothing is found on the active layer and settings.select_on_all_layers
      * is true, all layers are selected.
      */
@@ -1683,7 +1687,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Gets the current interactive state.
+     * Gets the current eu.mihosoft.freerouting.interactive state.
      */
     public InteractiveState get_interactive_state()
     {
@@ -1705,7 +1709,7 @@ public class BoardHandling extends BoardHandlingImpl
 
     /**
      * Adjust the design bounds, so that also all items being still placed outside the
-     * board outline are contained in the new bounds.
+     * eu.mihosoft.freerouting.board outline are contained in the new bounds.
      */
     public void adjust_design_bounds()
     {
@@ -1737,34 +1741,34 @@ public class BoardHandling extends BoardHandlingImpl
         clearance_violations = null;
         board = null;
     }
-    /** The graphical context for drawing the board. */
+    /** The graphical context for drawing the eu.mihosoft.freerouting.board. */
     public GraphicsContext graphics_context = null;
-    /** For ransforming coordinates between the user and the board coordinate space */
+    /** For ransforming coordinates between the user and the eu.mihosoft.freerouting.board coordinate space */
     public CoordinateTransform coordinate_transform = null;
     /** The text message fields displayed on the screen */
     public final ScreenMessages screen_messages;
-    /** The currently active interactive state. */
+    /** The currently active eu.mihosoft.freerouting.interactive state. */
     InteractiveState interactive_state = null;
     /**
-     * Used for running an interactive action in a seperate thread.
+     * Used for running an eu.mihosoft.freerouting.interactive action in a seperate thread.
      */
     private InteractiveActionThread interactive_action_thread = null;
     /** To display all incomplete connections on the screen. */
     private RatsNest ratsnest = null;
     /** To display all clearance violations between items on the screen. */
     private ClearanceViolations clearance_violations = null;
-    /** The graphical panel used for displaying the board. */
-    private final gui.BoardPanel panel;
+    /** The graphical panel used for displaying the eu.mihosoft.freerouting.board. */
+    private final BoardPanel panel;
     /**
      * True if currently a logfile is being processed.
-     * Used to prevent interactive changes of the board database
+     * Used to prevent eu.mihosoft.freerouting.interactive changes of the eu.mihosoft.freerouting.board database
      * in this case.
      */
     private boolean board_is_read_only = false;
     /** The current position of the mouse pointer. */
     private FloatPoint current_mouse_position = null;
     /**
-     * To repaint the board immediately for example when reading a logfile.
+     * To repaint the eu.mihosoft.freerouting.board immediately for example when reading a logfile.
      */
     boolean paint_immediately = false;
     private final java.util.ResourceBundle resources;

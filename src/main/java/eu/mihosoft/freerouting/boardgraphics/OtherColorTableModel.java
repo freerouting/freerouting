@@ -18,7 +18,7 @@
  * Created on 5. August 2003, 07:39
  */
 
-package boardgraphics;
+package eu.mihosoft.freerouting.boardgraphics;
 
 import java.awt.Color;
 
@@ -73,7 +73,7 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
     public String getColumnName(int p_col)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("boardgraphics.resources.ColorTableModel", this.locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.boardgraphics.resources.ColorTableModel", this.locale);
         return resources.getString(ColumnNames.values()[p_col].toString());
     }
     

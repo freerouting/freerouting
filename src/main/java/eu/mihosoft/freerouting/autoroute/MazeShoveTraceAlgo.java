@@ -19,23 +19,23 @@
  *
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 
-import geometry.planar.TileShape;
-import geometry.planar.Line;
-import geometry.planar.Polyline;
-import geometry.planar.Point;
-import geometry.planar.FloatPoint;
-import geometry.planar.FloatLine;
-import geometry.planar.Side;
-import geometry.planar.Direction;
-import geometry.planar.LineSegment;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatLine;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.Direction;
+import eu.mihosoft.freerouting.geometry.planar.LineSegment;
 
-import board.Item;
-import board.RoutingBoard;
-import board.ShoveTraceAlgo;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.ShoveTraceAlgo;
 
 /**
  * Auxiliary functions used in MazeSearchAlgo.
@@ -58,11 +58,11 @@ public class MazeShoveTraceAlgo
             return true;
         }
         ExpansionDoor from_door = (ExpansionDoor) p_list_element.door;
-        if (!(p_obstacle_room.get_item() instanceof board.PolylineTrace))
+        if (!(p_obstacle_room.get_item() instanceof eu.mihosoft.freerouting.board.PolylineTrace))
         {
             return true;
         }
-        board.PolylineTrace obstacle_trace = (board.PolylineTrace)p_obstacle_room.get_item();
+        eu.mihosoft.freerouting.board.PolylineTrace obstacle_trace = (eu.mihosoft.freerouting.board.PolylineTrace)p_obstacle_room.get_item();
         int trace_layer = p_obstacle_room.get_layer();
         // only traces with the same halfwidth and the same clearance class can be shoved.
         if (obstacle_trace.get_half_width() != p_ctrl.trace_half_width[trace_layer]
@@ -291,7 +291,7 @@ public class MazeShoveTraceAlgo
                 FloatLine curr_door_segment = curr_door_shape.diagonal_corner_segment();
                 if (curr_door_segment == null)
                 {
-                    if (p_board.get_test_level() == board.TestLevel.ALL_DEBUGGING_OUTPUT)
+                    if (p_board.get_test_level() == eu.mihosoft.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT)
                     {
                         System.out.println("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
                     }
@@ -361,7 +361,7 @@ public class MazeShoveTraceAlgo
      * Check if the endpoints of p_trace and p_from_item are maching, so that the
      * shove can continue through a link door.
      */
-    private static boolean end_points_matching(board.PolylineTrace p_trace, Item p_from_item)
+    private static boolean end_points_matching(eu.mihosoft.freerouting.board.PolylineTrace p_trace, Item p_from_item)
     {
         if (p_from_item == p_trace)
         {
@@ -372,14 +372,14 @@ public class MazeShoveTraceAlgo
             return false;
         }
         boolean points_matching;
-        if (p_from_item instanceof board.DrillItem)
+        if (p_from_item instanceof eu.mihosoft.freerouting.board.DrillItem)
         {
-            Point from_center = ((board.DrillItem) p_from_item).get_center();
+            Point from_center = ((eu.mihosoft.freerouting.board.DrillItem) p_from_item).get_center();
             points_matching =  from_center.equals(p_trace.first_corner()) || from_center.equals(p_trace.last_corner());
         }
-        else if (p_from_item instanceof board.PolylineTrace)
+        else if (p_from_item instanceof eu.mihosoft.freerouting.board.PolylineTrace)
         {
-            board.PolylineTrace from_trace = (board.PolylineTrace) p_from_item;
+            eu.mihosoft.freerouting.board.PolylineTrace from_trace = (eu.mihosoft.freerouting.board.PolylineTrace) p_from_item;
             points_matching = p_trace.first_corner().equals(from_trace.first_corner()) ||
                     p_trace.first_corner().equals(from_trace.last_corner()) ||
                     p_trace.last_corner().equals(from_trace.first_corner()) ||

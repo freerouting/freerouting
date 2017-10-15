@@ -19,7 +19,7 @@
  *
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 /**
  * Class used to cancel a performance critical algorithm after a time limit is exceeded.

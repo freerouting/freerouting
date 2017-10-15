@@ -18,17 +18,17 @@
  * Created on 28. November 2005, 06:42
  *
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.awt.Color;
 
-import geometry.planar.Area;
-import geometry.planar.Vector;
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 /**
  *
@@ -103,9 +103,9 @@ public class ComponentOutline extends Item implements java.io.Serializable
         return 0;
     }
 
-    protected geometry.planar.TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
+    protected eu.mihosoft.freerouting.geometry.planar.TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
     {
-        return new geometry.planar.TileShape[0];
+        return new eu.mihosoft.freerouting.geometry.planar.TileShape[0];
     }
 
     public double get_draw_intensity(GraphicsContext p_graphics_context)
@@ -130,7 +130,7 @@ public class ComponentOutline extends Item implements java.io.Serializable
 
     public int get_draw_priority()
     {
-        return boardgraphics.Drawable.MIDDLE_DRAW_PRIORITY;
+        return eu.mihosoft.freerouting.boardgraphics.Drawable.MIDDLE_DRAW_PRIORITY;
     }
 
     public void draw(java.awt.Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity)
@@ -146,7 +146,7 @@ public class ComponentOutline extends Item implements java.io.Serializable
         p_graphics_context.draw_boundary(this.get_area(), draw_width, color, p_g, intensity);
     }
 
-    public geometry.planar.IntBox bounding_box()
+    public eu.mihosoft.freerouting.geometry.planar.IntBox bounding_box()
     {
         return get_area().bounding_box();
     }

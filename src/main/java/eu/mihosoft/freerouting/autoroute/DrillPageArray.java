@@ -19,19 +19,19 @@
  *
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-import geometry.planar.IntBox;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
-import board.RoutingBoard;
+import eu.mihosoft.freerouting.board.RoutingBoard;
 
 /**
  * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm.
- * The pages are rectangles of about equal width and height covering covering the bounding box of the board area.
+ * The pages are rectangles of about equal width and height covering covering the bounding box of the eu.mihosoft.freerouting.board area.
  *
  * @author Alfons Wirtz
  */
@@ -139,7 +139,7 @@ public class DrillPageArray
    /*
     * Test draw of the all drills
     */
-    public void draw(java.awt.Graphics p_graphics, boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
+    public void draw(java.awt.Graphics p_graphics, eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
     {
         for (int j = 0; j < page_arr.length; ++j)
         {

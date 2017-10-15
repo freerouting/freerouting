@@ -18,7 +18,7 @@
  * Created on 1. Januar 2005, 07:28
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import java.util.Collection;
 
@@ -157,7 +157,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements eu.miho
     {
         super(p_board_frame);
         this.resources = 
-                java.util.ResourceBundle.getBundle("resources.WindowObjectInfo", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowObjectInfo", p_board_frame.get_locale());
         this.coordinate_transform = p_coordinate_transform;
         
         // create the text pane

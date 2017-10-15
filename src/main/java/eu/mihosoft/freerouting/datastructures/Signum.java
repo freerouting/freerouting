@@ -14,7 +14,7 @@
  *   for more details.
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 /**
  *

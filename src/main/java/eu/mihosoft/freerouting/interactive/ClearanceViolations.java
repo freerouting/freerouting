@@ -18,7 +18,7 @@
  * Created on 3. Oktober 2004, 09:13
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -27,10 +27,10 @@ import java.util.Iterator;
 
 import java.awt.Graphics;
 
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
-import board.Item;
-import board.ClearanceViolation;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.ClearanceViolation;
 
 /**
  * To display the clearance violations between items on the screen.

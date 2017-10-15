@@ -18,11 +18,11 @@
  * Created on 27. Mai 2004, 06:53
  */
 
-package library;
+package eu.mihosoft.freerouting.library;
 
-import geometry.planar.Vector;
-import geometry.planar.Shape;
-import geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.Area;
 
 /**
  * Component package templates describing the padstacks and
@@ -31,7 +31,7 @@ import geometry.planar.Area;
  *
  * @author  alfons
  */
-public class Package implements Comparable<Package>, board.ObjectInfoPanel.Printable, java.io.Serializable
+public class Package implements Comparable<Package>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
     
     /**
@@ -103,10 +103,10 @@ public class Package implements Comparable<Package>, board.ObjectInfoPanel.Print
         return this.name;
     }
     
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("package") + " ");
         p_window.append_bold(this.name);
         for (int i = 0; i < this.pin_arr.length; ++i)
@@ -145,7 +145,7 @@ public class Package implements Comparable<Package>, board.ObjectInfoPanel.Print
     
     public final Keepout[] place_keepout_arr;
     
-    /** If false, the package is placed on the back side of the board */
+    /** If false, the package is placed on the back side of the eu.mihosoft.freerouting.board */
     public final boolean is_front;
     
     private final Packages package_list;

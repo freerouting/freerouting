@@ -18,7 +18,7 @@
  * Created on 20. Dezember 2004, 08:23
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Window for eu.mihosoft.freerouting.interactive changing of miscellanious display properties.
@@ -33,7 +33,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     {
         this.panel = p_board_frame.board_panel;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.DisplayMisc", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.DisplayMisc", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
         
         // Create main panel

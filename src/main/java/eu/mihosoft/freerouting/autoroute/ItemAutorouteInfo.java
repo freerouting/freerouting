@@ -18,15 +18,15 @@
  * Created on 22. Februar 2004, 12:09
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
-import board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
 
-import board.Item;
+import eu.mihosoft.freerouting.board.Item;
 
 
 /**
- * Temporary data stored in board Items used in the autoroute algorithm
+ * Temporary data stored in eu.mihosoft.freerouting.board Items used in the eu.mihosoft.freerouting.autoroute algorithm
  *
  * @author  Alfons Wirtz
  */
@@ -38,7 +38,7 @@ public class ItemAutorouteInfo
         this.item = p_item;
     }
     /**
-     * Looks, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
+     * Looks, if the corresponding item belongs to the start or destination set of the eu.mihosoft.freerouting.autoroute algorithm.
      * Only used, if the item belongs to the net, which will be currently routed.
      */
     public boolean is_start_info()
@@ -47,7 +47,7 @@ public class ItemAutorouteInfo
     }
     
     /**
-     * Sets, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
+     * Sets, if the corresponding item belongs to the start or destination set of the eu.mihosoft.freerouting.autoroute algorithm.
      * Only used, if the item belongs to the net, which will be currently routed.
      */
     public void set_start_info(boolean p_value)
@@ -114,7 +114,7 @@ public class ItemAutorouteInfo
     /**
      * Draws the shapes of the expansion rooms of this info for testing purposes.
      */
-    public void draw(java.awt.Graphics p_graphics, boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
+    public void draw(java.awt.Graphics p_graphics, eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
     {
         if (expansion_room_arr == null)
         {

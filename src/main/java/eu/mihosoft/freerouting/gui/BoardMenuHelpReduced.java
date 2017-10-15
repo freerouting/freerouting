@@ -19,7 +19,7 @@
  *
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  *
@@ -29,23 +29,19 @@ public class BoardMenuHelpReduced extends javax.swing.JMenu
 {
     /**
      * Creates a new instance of BoardMenuHelpReduced
-     * Separated from BoardMenuHelp to avoid ClassNotFound exception when the eu.mihosoft.freerouting.library
+     * Separated from BoardMenuHelp to avoid ClassNotFound exception when the library
      * jh.jar is not found, which is only used in the  extended help menu.
      */
     public BoardMenuHelpReduced(BoardFrame p_board_frame)
     {
         this.board_frame = p_board_frame;
-        this.resources = java.util.ResourceBundle.getBundle("resources.BoardMenuHelp", p_board_frame.get_locale());
+        this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuHelp", p_board_frame.get_locale());
         this.setText(this.resources.getString("help"));
         
         javax.swing.JMenuItem about_window = new javax.swing.JMenuItem();
         about_window.setText(this.resources.getString("about"));
-        about_window.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                board_frame.about_window.setVisible(true);
-            }
+        about_window.addActionListener((java.awt.event.ActionEvent evt) -> {
+            board_frame.about_window.setVisible(true);
         });
         this.add(about_window);
     }

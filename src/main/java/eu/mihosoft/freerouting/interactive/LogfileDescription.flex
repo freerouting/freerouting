@@ -1,4 +1,4 @@
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 @SuppressWarnings("all")
 %%
 

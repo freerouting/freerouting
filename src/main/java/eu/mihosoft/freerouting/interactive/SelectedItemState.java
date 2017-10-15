@@ -17,38 +17,39 @@
  *
  * Created on 10. November 2003, 08:02
  */
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.Point;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import datastructures.Stoppable;
+import eu.mihosoft.freerouting.datastructures.Stoppable;
 
-import library.Package;
+import eu.mihosoft.freerouting.gui.WindowObjectInfo;
+import eu.mihosoft.freerouting.library.Package;
 
-import rules.Net;
+import eu.mihosoft.freerouting.rules.Net;
 
-import autoroute.AutorouteEngine;
+import eu.mihosoft.freerouting.autoroute.AutorouteEngine;
 
-import board.Component;
-import board.Connectable;
-import board.DrillItem;
-import board.Via;
-import board.Pin;
-import board.Item;
-import board.ObstacleArea;
-import board.PolylineTrace;
-import board.RoutingBoard;
-import board.FixedState;
-import board.OptViaAlgo;
-import board.TestLevel;
+import eu.mihosoft.freerouting.board.Component;
+import eu.mihosoft.freerouting.board.Connectable;
+import eu.mihosoft.freerouting.board.DrillItem;
+import eu.mihosoft.freerouting.board.Via;
+import eu.mihosoft.freerouting.board.Pin;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.ObstacleArea;
+import eu.mihosoft.freerouting.board.PolylineTrace;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.FixedState;
+import eu.mihosoft.freerouting.board.OptViaAlgo;
+import eu.mihosoft.freerouting.board.TestLevel;
 
 /**
  *  Class implementing actions on the currently selected items.
@@ -434,7 +435,7 @@ public class SelectedItemState extends InteractiveState
                 continue;
             }
             boolean contains_plane = false;
-            rules.Net route_net = hdlg.get_routing_board().rules.nets.get(curr_item.get_net_no(0));
+            eu.mihosoft.freerouting.rules.Net route_net = hdlg.get_routing_board().rules.nets.get(curr_item.get_net_no(0));
             if (route_net != null)
             {
                 contains_plane = route_net.contains_plane();
@@ -658,7 +659,7 @@ public class SelectedItemState extends InteractiveState
      */
     public InteractiveState assign_clearance_class(int p_cl_class_index)
     {
-        board.BasicBoard routing_board = this.hdlg.get_routing_board();
+        eu.mihosoft.freerouting.board.BasicBoard routing_board = this.hdlg.get_routing_board();
         if (p_cl_class_index < 0 || p_cl_class_index >= routing_board.rules.clearance_matrix.get_class_count())
         {
             return this.return_state;
@@ -882,7 +883,7 @@ public class SelectedItemState extends InteractiveState
     }
 
     /**
-     * Removes items not selected by the current interactive filter from the selected item list.
+     * Removes items not selected by the current eu.mihosoft.freerouting.interactive filter from the selected item list.
      */
     public InteractiveState filter()
     {
@@ -901,7 +902,7 @@ public class SelectedItemState extends InteractiveState
      */
     public SelectedItemState info()
     {
-        gui.WindowObjectInfo.display(this.item_list, hdlg.get_panel().board_frame, hdlg.coordinate_transform, new java.awt.Point(100, 100));
+        WindowObjectInfo.display(this.item_list, hdlg.get_panel().board_frame, hdlg.coordinate_transform, new java.awt.Point(100, 100));
         return this;
     }
 
@@ -917,7 +918,7 @@ public class SelectedItemState extends InteractiveState
             return;
         }
 
-        for (board.Item curr_item : item_list)
+        for (eu.mihosoft.freerouting.board.Item curr_item : item_list)
         {
             curr_item.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
                     hdlg.graphics_context.get_hilight_color_intensity());

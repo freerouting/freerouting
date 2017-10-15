@@ -19,22 +19,22 @@
  *
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Iterator;
 
-import geometry.planar.Point;
-import geometry.planar.IntBox;
-import geometry.planar.TileShape;
-import geometry.planar.PolylineArea;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.PolylineArea;
 
-import datastructures.ShapeTree.TreeEntry;
+import eu.mihosoft.freerouting.datastructures.ShapeTree.TreeEntry;
 
-import board.RoutingBoard;
-import board.ShapeSearchTree;
-import board.Item;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.Item;
 
 /**
  *
@@ -82,9 +82,9 @@ class DrillPage implements ExpandableObject
                 {
                     continue;
                 }
-                if (curr_item instanceof board.Pin)
+                if (curr_item instanceof eu.mihosoft.freerouting.board.Pin)
                 {
-                    if (p_attach_smd && ((board.Pin) curr_item).drill_allowed())
+                    if (p_attach_smd && ((eu.mihosoft.freerouting.board.Pin) curr_item).drill_allowed())
                     {
                         continue;
                     }
@@ -193,7 +193,7 @@ class DrillPage implements ExpandableObject
      * Test draw of the drills on this page.
      */
     public void draw(java.awt.Graphics p_graphics,
-            boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
+                     eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context, double p_intensity)
     {
         if (true || drills == null)
         {
@@ -220,9 +220,9 @@ class DrillPage implements ExpandableObject
         Point result = null;
         for (Item curr_item : overlapping_items)
         {
-            if (curr_item instanceof board.Pin)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Pin)
             {
-                board.Pin curr_pin = (board.Pin) curr_item;
+                eu.mihosoft.freerouting.board.Pin curr_pin = (eu.mihosoft.freerouting.board.Pin) curr_item;
                 if (curr_pin.drill_allowed() && p_drill_shape.contains_inside(curr_pin.get_center()))
                 {
                     result = curr_pin.get_center();

@@ -19,9 +19,9 @@
  *
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import datastructures.Observers;
+import eu.mihosoft.freerouting.datastructures.Observers;
 
 /**
  *

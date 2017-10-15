@@ -18,17 +18,17 @@
  * Created on 2. April 2005, 06:49
  */
 
-package rules;
+package eu.mihosoft.freerouting.rules;
 
 import java.util.List;
 import java.util.LinkedList;
 
 /**
- * Contains the lists of different ViaInfo's, which can be used in interactive and automatic routing.
+ * Contains the lists of different ViaInfo's, which can be used in eu.mihosoft.freerouting.interactive and automatic routing.
  *
  * @author Alfons Wirtz
  */
-public class ViaInfos implements java.io.Serializable, board.ObjectInfoPanel.Printable
+public class ViaInfos implements java.io.Serializable, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable
 {
     /**
      * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed.
@@ -100,10 +100,10 @@ public class ViaInfos implements java.io.Serializable, board.ObjectInfoPanel.Pri
         return this.list.remove(p_via_info);
     }
     
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("vias") + ": ");
         int counter = 0;
         boolean first_time = true;

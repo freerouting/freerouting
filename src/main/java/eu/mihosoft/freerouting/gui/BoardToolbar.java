@@ -18,7 +18,7 @@
  * Created on 15. Februar 2005, 09:44
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Implements the toolbar panel of the eu.mihosoft.freerouting.board frame.
@@ -34,7 +34,7 @@ class BoardToolbar extends javax.swing.JPanel
         this.board_frame = p_board_frame;
         
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.BoardToolbar", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardToolbar", p_board_frame.get_locale());
         
         this.setLayout(new java.awt.BorderLayout());
         

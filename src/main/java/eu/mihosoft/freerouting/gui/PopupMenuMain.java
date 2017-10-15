@@ -18,7 +18,7 @@
  * Created on 17. Februar 2005, 05:42
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Popup Menu used in the eu.mihosoft.freerouting.interactive select state.
@@ -33,7 +33,7 @@ class PopupMenuMain extends PopupMenuDisplay
     {
         super(p_board_frame) ;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.PopupMenuMain", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.PopupMenuMain", p_board_frame.get_locale());
         
         // add the item for selecting items
         

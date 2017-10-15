@@ -19,20 +19,20 @@
  *
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.Vector;
-import geometry.planar.Polyline;
-import geometry.planar.FloatPoint;
-import geometry.planar.FloatLine;
-import geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatLine;
+import eu.mihosoft.freerouting.geometry.planar.Side;
 
-import autoroute.AutorouteControl.ExpansionCostFactor;
+import eu.mihosoft.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 
 /**
  * Contains functions for optimizing and improving via locations.

@@ -16,13 +16,13 @@
  * Created on 1. September 2003, 08:40
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.Line;
-import geometry.planar.Polyline;
-import geometry.planar.Side;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
  * Used in the shove algorithm to calculate the fromside for pushing and

@@ -18,7 +18,7 @@
  * Created on 16. November 2002, 17:11
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 /**
  *  TileShapes whose border lines may have only directions out of

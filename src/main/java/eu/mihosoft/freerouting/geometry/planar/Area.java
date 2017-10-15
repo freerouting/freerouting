@@ -18,7 +18,7 @@
  * Created on 22. Juni 2003, 10:16
  */
 
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 /**
  * An Area is a not necessarily simply connected Shape, which means,

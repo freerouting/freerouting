@@ -18,13 +18,13 @@
  * Created on 28. Maerz 2005, 09:25
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-import board.Pin;
-import board.Item;
-import board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.board.Pin;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 
 /**
  *

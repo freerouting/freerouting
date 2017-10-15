@@ -18,7 +18,7 @@
  * Created on 31. Januar 2004, 07:46
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 /**
  * Describes the structure of a section of an ExpandebleObject.

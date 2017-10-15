@@ -18,23 +18,23 @@
  * Created on 27. Juni 2003, 11:38
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 
-import geometry.planar.IntBox;
-import geometry.planar.FloatPoint;
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.Shape;
-import geometry.planar.TileShape;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import library.Padstack;
+import eu.mihosoft.freerouting.library.Padstack;
 
 /**
  * Common superclass for Pins and Vias
@@ -387,7 +387,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         return TileShape.get_instance(this.get_center());
     }
     
-    /** False, if this drillitem is places on the back side of the board */
+    /** False, if this drillitem is places on the back side of the eu.mihosoft.freerouting.board */
     public boolean is_placed_on_front()
     {
         return true;
@@ -431,10 +431,10 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
     
     public int get_draw_priority()
     {
-        return boardgraphics.Drawable.MIDDLE_DRAW_PRIORITY;
+        return eu.mihosoft.freerouting.boardgraphics.Drawable.MIDDLE_DRAW_PRIORITY;
     }
     
-    public void draw(java.awt.Graphics p_g, boardgraphics.GraphicsContext p_graphics_context,
+    public void draw(java.awt.Graphics p_g, eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context,
             java.awt.Color[] p_color_arr, double p_intensity)
     {
         if (p_graphics_context == null|| p_intensity <= 0)

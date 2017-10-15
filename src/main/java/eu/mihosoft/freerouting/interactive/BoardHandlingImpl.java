@@ -1,12 +1,12 @@
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import board.Communication;
-import board.LayerStructure;
-import board.RoutingBoard;
-import board.TestLevel;
-import geometry.planar.IntBox;
-import geometry.planar.PolylineShape;
-import rules.BoardRules;
+import eu.mihosoft.freerouting.board.Communication;
+import eu.mihosoft.freerouting.board.LayerStructure;
+import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.rules.BoardRules;
 
 import java.util.Locale;
 
@@ -18,20 +18,20 @@ import java.util.Locale;
  */
 public class BoardHandlingImpl implements IBoardHandling {
     /**
-     * The file used for logging interactive action,
+     * The file used for logging eu.mihosoft.freerouting.interactive action,
      * so that they can be replayed later
      */
     public final Logfile logfile = new Logfile();
-    /** The current settings for interactive actions on the board*/
+    /** The current settings for eu.mihosoft.freerouting.interactive actions on the eu.mihosoft.freerouting.board*/
     public Settings settings = null;
-    /** The board database used in this interactive handling. */
+    /** The eu.mihosoft.freerouting.board database used in this eu.mihosoft.freerouting.interactive handling. */
     protected RoutingBoard board = null;
 
     public BoardHandlingImpl() {
     }
 
     /**
-     * Gets the routing board of this board handling.
+     * Gets the routing eu.mihosoft.freerouting.board of this eu.mihosoft.freerouting.board handling.
      */
     @Override
     public RoutingBoard get_routing_board()
@@ -45,7 +45,7 @@ public class BoardHandlingImpl implements IBoardHandling {
     }
 
     /**
-     * Initializes the manual trace widths from the default trace widths in the board rules.
+     * Initializes the manual trace widths from the default trace widths in the eu.mihosoft.freerouting.board rules.
      */
     @Override
     public void initialize_manual_trace_half_widths()
@@ -60,7 +60,7 @@ public class BoardHandlingImpl implements IBoardHandling {
     public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name, BoardRules p_rules, Communication p_board_communication, TestLevel p_test_level) {
         if (this.board != null)
         {
-            System.out.println(" BoardHandling.create_board: board already created");
+            System.out.println(" BoardHandling.create_board: eu.mihosoft.freerouting.board already created");
         }
         int outline_cl_class_no = 0;
 
@@ -74,7 +74,7 @@ public class BoardHandlingImpl implements IBoardHandling {
             else
             {
                 outline_cl_class_no =
-                        p_rules.get_default_net_class().default_item_clearance_classes.get(rules.DefaultItemClearanceClasses.ItemClass.AREA);
+                        p_rules.get_default_net_class().default_item_clearance_classes.get(eu.mihosoft.freerouting.rules.DefaultItemClearanceClasses.ItemClass.AREA);
             }
         }
         this.board =

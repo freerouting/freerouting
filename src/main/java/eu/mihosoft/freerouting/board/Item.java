@@ -13,17 +13,17 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.FloatPoint;
-import geometry.planar.TileShape;
-import geometry.planar.Vector;
-import geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -32,16 +32,16 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import rules.Nets;
-import boardgraphics.Drawable;
-import boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.rules.Nets;
+import eu.mihosoft.freerouting.boardgraphics.Drawable;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
-import datastructures.UndoableObjects;
-import datastructures.ShapeTree;
-import datastructures.ShapeTree.TreeEntry;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.ShapeTree;
+import eu.mihosoft.freerouting.datastructures.ShapeTree.TreeEntry;
 
 /**
- * Basic class of the items on a board.
+ * Basic class of the items on a eu.mihosoft.freerouting.board.
  *
  * @author Alfons Wirtz
  */
@@ -147,7 +147,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     {
         if (this.board == null)
         {
-            System.out.println("Item.get_tile_shape: board is null");
+            System.out.println("Item.get_tile_shape: eu.mihosoft.freerouting.board is null");
             return null;
         }
         return get_tree_shape(this.board.search_tree_manager.get_default_tree(), p_index);
@@ -195,7 +195,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
 
     /**
      * Returns false, if this item is deleted oor not inserted into
-     * the board.
+     * the eu.mihosoft.freerouting.board.
      */
     public boolean is_on_the_board()
     {
@@ -240,25 +240,25 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
 
     /**
      * Translates the shapes of this item by p_vector.
-     * Does not move the item in the board.
+     * Does not move the item in the eu.mihosoft.freerouting.board.
      */
     public abstract void translate_by(Vector p_vector);
 
     /**
      * Turns this Item by p_factor times 90 degree around p_pole.
-     * Does not update the item in the board.
+     * Does not update the item in the eu.mihosoft.freerouting.board.
      */
     public abstract void turn_90_degree(int p_factor, IntPoint p_pole);
 
     /**
      * Rotates this Item by p_angle_in_degree around p_pole.
-     * Does not update the item in the board.
+     * Does not update the item in the eu.mihosoft.freerouting.board.
      */
     public abstract void rotate_approx(double p_angle_in_degree, FloatPoint p_pole);
 
     /**
      * Changes the placement side of this Item and mirrors it at the vertical line through p_pole.
-     * Does not update the item in the board.
+     * Does not update the item in the eu.mihosoft.freerouting.board.
      */
     public abstract void change_placement_side(IntPoint p_pole);
 
@@ -268,7 +268,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     public abstract IntBox bounding_box();
 
     /**
-     *  Translates this item by p_vector in the board.
+     *  Translates this item by p_vector in the eu.mihosoft.freerouting.board.
      */
     public void move_by(Vector p_vector)
     {
@@ -1209,28 +1209,28 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * Gets the information for the autoroute algorithm.
+     * Gets the information for the eu.mihosoft.freerouting.autoroute algorithm.
      * Creates it, if it does not yet exist.
      */
-    public autoroute.ItemAutorouteInfo get_autoroute_info()
+    public eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info()
     {
         if (autoroute_info == null)
         {
-            autoroute_info = new autoroute.ItemAutorouteInfo(this);
+            autoroute_info = new eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo(this);
         }
         return autoroute_info;
     }
 
     /**
-     * Gets the information for the autoroute algorithm.
+     * Gets the information for the eu.mihosoft.freerouting.autoroute algorithm.
      */
-    public autoroute.ItemAutorouteInfo get_autoroute_info_pur()
+    public eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info_pur()
     {
         return autoroute_info;
     }
 
     /**
-     * Clears the data allocated for the autoroute algorithm.
+     * Clears the data allocated for the eu.mihosoft.freerouting.autoroute algorithm.
      */
     public void clear_autoroute_info()
     {
@@ -1256,11 +1256,11 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     protected void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         for (int i = 0; i < this.net_count(); ++i)
         {
             p_window.append(", " + resources.getString("net") + " ");
-            rules.Net curr_net = board.rules.nets.get(this.get_net_no(i));
+            eu.mihosoft.freerouting.rules.Net curr_net = board.rules.nets.get(this.get_net_no(i));
             p_window.append(curr_net.name, resources.getString("net_info"), curr_net);
         }
     }
@@ -1273,7 +1273,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (this.clearance_class > 0)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
             p_window.append(", " + resources.getString("clearance_class") + " ");
             String name = board.rules.clearance_matrix.get_name(this.clearance_class);
             p_window.append(name, resources.getString("clearance_info"), board.rules.clearance_matrix.get_row(this.clearance_class));
@@ -1288,7 +1288,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (this.fixed_state != FixedState.UNFIXED)
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("board.resources.FixedState", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.FixedState", p_locale);
             p_window.append(", ");
             p_window.append(resources.getString(this.fixed_state.toString()));
         }
@@ -1303,7 +1303,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (!contacts.isEmpty())
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
             p_window.append(", " + resources.getString("contacts") + " ");
             Integer contact_count = contacts.size();
             p_window.append_items(contact_count.toString(), resources.getString("contact_info"), contacts);
@@ -1319,7 +1319,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         if (!clearance_violations.isEmpty())
         {
             java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
             p_window.append(", ");
             Integer violation_count = clearance_violations.size();
             Collection<ObjectInfoPanel.Printable> violations = new java.util.LinkedList<ObjectInfoPanel.Printable>();
@@ -1450,7 +1450,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
      * to other items
      */
     private int clearance_class;
-    /** The board this Itewm is on */
+    /** The eu.mihosoft.freerouting.board this Itewm is on */
     transient public BasicBoard board;
     /** The nets, to which this item belongs */
     int[] net_no_arr;
@@ -1461,11 +1461,11 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     private int component_no = 0;
     private final int id_no;
     /**
-     * Folse, if the item is deleted or not inserted into the board
+     * Folse, if the item is deleted or not inserted into the eu.mihosoft.freerouting.board
      */
     private boolean on_the_board = false;
-    /** Temporary data used in the autoroute algorithm. */
-    transient private autoroute.ItemAutorouteInfo autoroute_info = null;
+    /** Temporary data used in the eu.mihosoft.freerouting.autoroute algorithm. */
+    transient private eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo autoroute_info = null;
     private static double PROTECT_FANOUT_LENGTH = 400;
 
     /**

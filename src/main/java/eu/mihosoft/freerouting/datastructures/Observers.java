@@ -18,7 +18,7 @@
  * Created on 13. Februar 2005, 09:14
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 /**
  * Interface to observe changes on objects for syncronisatiation purposes.

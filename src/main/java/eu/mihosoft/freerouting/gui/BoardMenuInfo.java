@@ -18,7 +18,7 @@
  * Created on 6. Maerz 2005, 05:37
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  *
@@ -129,7 +129,7 @@ public class BoardMenuInfo extends javax.swing.JMenu
     private BoardMenuInfo(BoardFrame p_board_frame)
     {
         board_frame = p_board_frame;
-        resources = java.util.ResourceBundle.getBundle("resources.BoardMenuInfo", p_board_frame.get_locale());
+        resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuInfo", p_board_frame.get_locale());
     }
     
     

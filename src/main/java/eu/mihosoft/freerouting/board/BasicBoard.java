@@ -13,17 +13,17 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
-import geometry.planar.Area;
-import geometry.planar.ConvexShape;
-import geometry.planar.IntBox;
-import geometry.planar.IntOctagon;
-import geometry.planar.Point;
-import geometry.planar.Vector;
-import geometry.planar.Polyline;
-import geometry.planar.PolylineShape;
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.awt.Graphics;
 
@@ -34,21 +34,21 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import datastructures.ShapeTree.TreeEntry;
+import eu.mihosoft.freerouting.datastructures.ShapeTree.TreeEntry;
 
-import library.BoardLibrary;
-import library.Padstack;
-import rules.BoardRules;
-import boardgraphics.GraphicsContext;
-import boardgraphics.Drawable;
-import datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.library.BoardLibrary;
+import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.rules.BoardRules;
+import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.boardgraphics.Drawable;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
 /**
  *
- * Provides basic functionality of a board with geometric items.
+ * Provides basic functionality of a eu.mihosoft.freerouting.board with geometric items.
  * Contains functions such as inserting, deleting, modifying
  * and picking items and elementary checking functions.
- * A board may have 1 or several layers.
+ * A eu.mihosoft.freerouting.board may have 1 or several layers.
  *
  * @author Alfons Wirtz
  */
@@ -60,7 +60,7 @@ public class BasicBoard implements java.io.Serializable
      * p_bounding_box
      * Rules contains the restrictions to obey when inserting items.
      * Among other things it may contain a clearance matrix.
-     * p_observers is used for syncronisation, if the board is generated
+     * p_observers is used for syncronisation, if the eu.mihosoft.freerouting.board is generated
      * by a host database. Otherwise it is null.
      * If p_test_level  != RELEASE_VERSION,, some features may be used, which are still in experimental state.
      * Also warnings  for debugging may be printed depending on the size of p_test_level.
@@ -82,7 +82,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a trace into the board, whose geometry is described by
+     * Inserts a trace into the eu.mihosoft.freerouting.board, whose geometry is described by
      * a Polyline. p_clearance_class is the index in the clearance_matix,
      * which describes the required clearance restrictions to other items.
      * Because no internal cleaning of items is done, the new inserted
@@ -114,7 +114,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a trace into the board, whose geometry is described by
+     * Inserts a trace into the eu.mihosoft.freerouting.board, whose geometry is described by
      * a Polyline. p_clearance_class is the index in the clearance_matix,
      * which describes the required clearance restrictions to other items.
      */
@@ -141,7 +141,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a trace into the board, whose geometry is described by
+     * Inserts a trace into the eu.mihosoft.freerouting.board, whose geometry is described by
      * an array of points, and cleans up the net.
      */
     public void insert_trace(Point[] p_points, int p_layer,
@@ -159,7 +159,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a via into the board. p_attach_allowed indicates, if the via may overlap with smd pins
+     * Inserts a via into the eu.mihosoft.freerouting.board. p_attach_allowed indicates, if the via may overlap with smd pins
      * of the same net.
      */
     public Via insert_via(Padstack p_padstack, Point p_center, int[] p_net_no_arr, int p_clearance_class,
@@ -181,8 +181,8 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a pin into the board.
-     *  p_pin_no is the number of this pin in the library package of its component (starting with 0).
+     * Inserts a pin into the eu.mihosoft.freerouting.board.
+     *  p_pin_no is the number of this pin in the eu.mihosoft.freerouting.library package of its component (starting with 0).
      */
     public Pin insert_pin(int p_component_no, int p_pin_no, int[] p_net_no_arr, int p_clearance_class, FixedState p_fixed_state)
     {
@@ -192,7 +192,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts an obstacle into the board , whose geometry is described
+     * Inserts an obstacle into the eu.mihosoft.freerouting.board , whose geometry is described
      * by a polygonyal shape, which may have holes.
      * If p_component_no != 0, the obstacle belongs to a component.
      */
@@ -209,7 +209,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts an obstacle belonging to a component into the board
+     * Inserts an obstacle belonging to a component into the eu.mihosoft.freerouting.board
      * p_name is to identify the corresponding ObstacstacleArea in the component package.
      */
     public ObstacleArea insert_obstacle(Area p_area, int p_layer, Vector p_translation, double p_rotation_in_degree,
@@ -227,7 +227,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts an via obstacle area into the board , whose geometry is described
+     * Inserts an via obstacle area into the eu.mihosoft.freerouting.board , whose geometry is described
      * by a polygonyal shape, which may have holes.
      */
     public ViaObstacleArea insert_via_obstacle(Area p_area, int p_layer, int p_clearance_class,
@@ -245,7 +245,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts an via obstacle belonging to a component into the board
+     * Inserts an via obstacle belonging to a component into the eu.mihosoft.freerouting.board
      * p_name is to identify the corresponding ObstacstacleArea in the component package.
      */
     public ViaObstacleArea insert_via_obstacle(Area p_area, int p_layer, Vector p_translation, double p_rotation_in_degree,
@@ -264,7 +264,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a component obstacle area into the board , whose geometry is described
+     * Inserts a component obstacle area into the eu.mihosoft.freerouting.board , whose geometry is described
      * by a polygonyal shape, which may have holes.
      */
     public ComponentObstacleArea insert_component_obstacle(Area p_area, int p_layer,
@@ -282,7 +282,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a component obstacle belonging to a component into the board.
+     * Inserts a component obstacle belonging to a component into the eu.mihosoft.freerouting.board.
      * p_name is to identify the corresponding ObstacstacleArea in the component package.
      */
     public ComponentObstacleArea insert_component_obstacle(Area p_area, int p_layer, Vector p_translation, double p_rotation_in_degree,
@@ -300,7 +300,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a component ouline into the board.
+     * Inserts a component ouline into the eu.mihosoft.freerouting.board.
      */
     public ComponentOutline insert_component_outline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree,
                                                      int p_component_no, FixedState p_fixed_state)
@@ -322,7 +322,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts a condution area into the board , whose geometry is described
+     * Inserts a condution area into the eu.mihosoft.freerouting.board , whose geometry is described
      * by a polygonyal shape, which may have holes.
      * If p_is_obstacle is false, it is possible to route through the conduction area
      * with traces and vias of foreign nets.
@@ -342,7 +342,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts an Outline into the board.
+     * Inserts an Outline into the eu.mihosoft.freerouting.board.
      */
     public BoardOutline insert_outline(PolylineShape[] p_outline_shapes, int p_clearance_class_no)
     {
@@ -352,7 +352,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the outline of the board.
+     * Returns the outline of the eu.mihosoft.freerouting.board.
      */
     public BoardOutline get_outline()
     {
@@ -373,7 +373,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Removes an item from the board
+     * Removes an item from the eu.mihosoft.freerouting.board
      */
     public void remove_item(Item p_item)
     {
@@ -390,7 +390,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * looks, if an item with id_no p_id_no is on the board.
+     * looks, if an item with id_no p_id_no is on the eu.mihosoft.freerouting.board.
      * Returns the found item or null, if no such item is found.
      */
     public Item get_item(int p_id_no)
@@ -412,7 +412,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the list of all items on the board
+     * Returns the list of all items on the eu.mihosoft.freerouting.board
      */
     public Collection<Item> get_items()
     {
@@ -431,7 +431,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns all connectable items on the board containing p_net_no
+     * Returns all connectable items on the eu.mihosoft.freerouting.board containing p_net_no
      */
     public Collection<Item> get_connectable_items(int p_net_no)
     {
@@ -567,7 +567,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the list of all conduction areas on the board
+     * Returns the list of all conduction areas on the eu.mihosoft.freerouting.board
      */
     public Collection<ConductionArea> get_conduction_areas()
     {
@@ -589,7 +589,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the list of all pins on the board
+     * Returns the list of all pins on the eu.mihosoft.freerouting.board
      */
     public Collection<Pin> get_pins()
     {
@@ -611,7 +611,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the list of all pins on the board with only 1 layer
+     * Returns the list of all pins on the eu.mihosoft.freerouting.board with only 1 layer
      */
     public Collection<Pin> get_smd_pins()
     {
@@ -637,7 +637,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the list of all vias on the board
+     * Returns the list of all vias on the eu.mihosoft.freerouting.board
      */
     public Collection<Via> get_vias()
     {
@@ -659,7 +659,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the list of all traces on the board
+     * Returns the list of all traces on the eu.mihosoft.freerouting.board
      */
     public Collection<Trace> get_traces()
     {
@@ -681,7 +681,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the cumulative length of all traces on the board
+     * Returns the cumulative length of all traces on the eu.mihosoft.freerouting.board
      */
     public double cumulative_trace_length()
     {
@@ -1034,7 +1034,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the layer count of this board.
+     * Returns the layer count of this eu.mihosoft.freerouting.board.
      */
     public int get_layer_count()
     {
@@ -1042,7 +1042,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Draws all items of the board on their visible layers. Called in the overwritten
+     * Draws all items of the eu.mihosoft.freerouting.board on their visible layers. Called in the overwritten
      * paintComponent method of a class derived from JPanel.
      * The value of p_layer_visibility is expected between 0 and 1 for each layer.
      */
@@ -1053,7 +1053,7 @@ public class BasicBoard implements java.io.Serializable
             return;
         }
 
-        // draw all items on the board
+        // draw all items on the eu.mihosoft.freerouting.board
         for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MIDDLE_DRAW_PRIORITY; ++curr_priority)
         {
             Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
@@ -1081,7 +1081,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns the list of items on the board, whose shape on layer p_layer contains the point at p_location.
+     * Returns the list of items on the eu.mihosoft.freerouting.board, whose shape on layer p_layer contains the point at p_location.
      * If p_layer < 0, the layer is ignored.
      * If p_item_selection_filter != null, only items of types selected by the filter are picked.
      */
@@ -1105,7 +1105,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * checks, if p_point is contained in the bounding box of this board.
+     * checks, if p_point is contained in the bounding box of this eu.mihosoft.freerouting.board.
      */
     public boolean contains(Point p_point)
     {
@@ -1127,7 +1127,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * returns the biggest half width of all traces on the board.
+     * returns the biggest half width of all traces on the eu.mihosoft.freerouting.board.
      */
     public int get_max_trace_half_width()
     {
@@ -1135,7 +1135,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * returns the smallest half width of all traces on the board.
+     * returns the smallest half width of all traces on the eu.mihosoft.freerouting.board.
      */
     public int get_min_trace_half_width()
     {
@@ -1143,7 +1143,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns a surrounding box of the geometry of this board
+     * Returns a surrounding box of the geometry of this eu.mihosoft.freerouting.board
      */
     public IntBox get_bounding_box()
     {
@@ -1214,7 +1214,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns, if the observer of the board items is activated.
+     * Returns, if the observer of the eu.mihosoft.freerouting.board items is activated.
      */
     public boolean observers_active()
     {
@@ -1254,7 +1254,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Inserts an item into the board data base
+     * Inserts an item into the eu.mihosoft.freerouting.board data base
      */
     public void insert_item(Item p_item)
     {
@@ -1379,7 +1379,7 @@ public class BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Makes the current board situation restorable by undo.
+     * Makes the current eu.mihosoft.freerouting.board situation restorable by undo.
      */
     public void generate_snapshot()
     {
@@ -1505,7 +1505,7 @@ public class BasicBoard implements java.io.Serializable
             throws java.io.IOException, java.lang.ClassNotFoundException
     {
         p_stream.defaultReadObject();
-        // insert the items on the board into the search trees
+        // insert the items on the eu.mihosoft.freerouting.board into the search trees
         search_tree_manager = new SearchTreeManager(this);
         Iterator<Item> it = this.get_items().iterator();
         while (it.hasNext())
@@ -1516,27 +1516,27 @@ public class BasicBoard implements java.io.Serializable
         }
     }
     /**
-     * List of items inserted into this board
+     * List of items inserted into this eu.mihosoft.freerouting.board
      */
     public final UndoableObjects item_list;
-    /** List of placed components on the board. */
+    /** List of placed components on the eu.mihosoft.freerouting.board. */
     public final Components components;
     /**
-     * Class defining the rules for items to be inserted into this board.
+     * Class defining the eu.mihosoft.freerouting.rules for items to be inserted into this eu.mihosoft.freerouting.board.
      * Contains for example the clearance matrix.
      */
     public final BoardRules rules;
     /**
-     * The library containing pastack masks, packagages and other
-     * templates used on the board.
+     * The eu.mihosoft.freerouting.library containing pastack masks, packagages and other
+     * templates used on the eu.mihosoft.freerouting.board.
      */
     public final BoardLibrary library;
     /**
-     * The layer structure of this board.
+     * The layer structure of this eu.mihosoft.freerouting.board.
      */
     public final LayerStructure layer_structure;
     /**
-     * Handels the search trees pointing into the items of this board
+     * Handels the search trees pointing into the items of this eu.mihosoft.freerouting.board
      */
     public transient SearchTreeManager search_tree_manager;
     /**
@@ -1544,7 +1544,7 @@ public class BasicBoard implements java.io.Serializable
      */
     public final Communication communication;
     /**
-     * bounding orthogonal rectangle of this board
+     * bounding orthogonal rectangle of this eu.mihosoft.freerouting.board
      */
     public final IntBox bounding_box;
     /**
@@ -1555,11 +1555,11 @@ public class BasicBoard implements java.io.Serializable
     /** the rectangle, where the graphics may be not uptodate */
     transient private IntBox update_box = IntBox.EMPTY;
     /**
-     * the biggest half width of all traces on the board
+     * the biggest half width of all traces on the eu.mihosoft.freerouting.board
      */
     private int max_trace_half_width = 1000;
     /**
-     * the smallest half width of all traces on the board
+     * the smallest half width of all traces on the eu.mihosoft.freerouting.board
      */
     private int min_trace_half_width = 10000;
     /**

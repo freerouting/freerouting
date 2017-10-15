@@ -18,22 +18,22 @@
  * Created on 3. Juni 2004, 09:42
  */
 
-package library;
+package eu.mihosoft.freerouting.library;
 
 import java.util.Iterator;
 import java.util.Vector;
 
-import geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 
 /**
- * Describes a library of padstacks for pins or vias.
+ * Describes a eu.mihosoft.freerouting.library of padstacks for pins or vias.
  *
  * @author  alfons
  */
 public class Padstacks implements java.io.Serializable
 {
     /** Creates a new instance of Padstacks */
-    public Padstacks(board.LayerStructure p_layer_structure)
+    public Padstacks(eu.mihosoft.freerouting.board.LayerStructure p_layer_structure)
     {
         board_layer_structure = p_layer_structure;
         padstack_arr = new Vector<Padstack>();
@@ -86,7 +86,7 @@ public class Padstacks implements java.io.Serializable
     
     /**
      * Appends a new padstack with the input shapes to this padstacks.
-     * p_shapes is an array of dimension board layer_count.
+     * p_shapes is an array of dimension eu.mihosoft.freerouting.board layer_count.
      * p_drill_allowed indicates, if vias of the own net are allowed to overlap with this padstack
      * If p_placed_absolute is false, the layers of the padstack are mirrored, if it is placed on the back side.
      */
@@ -100,7 +100,7 @@ public class Padstacks implements java.io.Serializable
     
     /**
      * Appends a new padstack with the input shapes to this padstacks.
-     * p_shapes is an array of dimension board layer_count.
+     * p_shapes is an array of dimension eu.mihosoft.freerouting.board layer_count.
      * The padatack name is generated internally.
      */
     public Padstack add(ConvexShape [] p_shapes)
@@ -130,5 +130,5 @@ public class Padstacks implements java.io.Serializable
     private Vector<Padstack> padstack_arr;
     
     /** The layer structure of each padstack. */
-    public final board.LayerStructure board_layer_structure;
+    public final eu.mihosoft.freerouting.board.LayerStructure board_layer_structure;
 }

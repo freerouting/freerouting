@@ -18,7 +18,7 @@
  * Created on 1. Maerz 2005, 09:27
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 
 /**

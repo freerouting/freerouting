@@ -18,9 +18,9 @@
  * Created on 5. November 2003, 12:55
  */
 
-package interactive;
+package eu.mihosoft.freerouting.interactive;
 
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import java.awt.Graphics;
 
@@ -39,7 +39,7 @@ public class InteractiveState
         this.hdlg = p_board_handling;
         this.logfile = p_logfile;
         this.resources =
-                java.util.ResourceBundle.getBundle("interactive.resources.InteractiveState", p_board_handling.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", p_board_handling.get_locale());
     }
     
     /**
@@ -174,7 +174,7 @@ public class InteractiveState
         else if (Character.isDigit(p_key_char))
         {
             // change the current layer to the p_key_char-ths signal layer
-            board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
+            eu.mihosoft.freerouting.board.LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
             int d = Character.digit(p_key_char, 10);
             d = Math.min(d, layer_structure.signal_layer_count());
             // Board layers start at 0, keyboard input for layers starts at 1.
@@ -250,7 +250,7 @@ public class InteractiveState
     
     
     /**
-     * Returns the popup menu from board_panel, which is used in this interactive state.
+     * Returns the popup menu from board_panel, which is used in this eu.mihosoft.freerouting.interactive state.
      * Default function to be overwritten in derived classes.
      */
     public javax.swing.JPopupMenu get_popup_menu()
@@ -264,13 +264,13 @@ public class InteractiveState
     {
     }
     
-    /** board setting access handler for the derived classes */
+    /** eu.mihosoft.freerouting.board setting access handler for the derived classes */
     protected final BoardHandling hdlg;
     
     /** The intended state after this state is finished */
     protected InteractiveState return_state;
     
-    /** if logfile != null, the interactive actions are stored in a logfile */
+    /** if logfile != null, the eu.mihosoft.freerouting.interactive actions are stored in a logfile */
     protected final Logfile logfile;
     
     /** Contains the files  with the language dependent messages */

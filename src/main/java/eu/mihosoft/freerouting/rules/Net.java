@@ -17,19 +17,19 @@
  *
  * Created on 11. Juni 2004, 08:17
  */
-package rules;
+package eu.mihosoft.freerouting.rules;
 
-import board.Item;
-import board.ObjectInfoPanel.Printable;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable;
 
-import datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
 /**
  * Describes properties for an individual electrical net.
  *
  * @author  Alfons Wirtz
  */
-public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, java.io.Serializable
+public class Net implements Comparable<Net>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
 
     /**
@@ -78,7 +78,7 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
     public java.util.Collection<Item> get_terminal_items()
     {
         java.util.Collection<Item> result = new java.util.LinkedList<Item>();
-        board.BasicBoard board = this.net_list.get_board();
+        eu.mihosoft.freerouting.board.BasicBoard board = this.net_list.get_board();
         java.util.Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
         for (;;)
         {
@@ -87,7 +87,7 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
             {
                 break;
             }
-            if (curr_item instanceof board.Connectable)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Connectable)
             {
                 if (curr_item.contains_net(this.net_number) && !curr_item.is_route())
                 {
@@ -101,10 +101,10 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
     /**
      * Returns the pins of this net.
      */
-    public java.util.Collection<board.Pin> get_pins()
+    public java.util.Collection<eu.mihosoft.freerouting.board.Pin> get_pins()
     {
-        java.util.Collection<board.Pin> result = new java.util.LinkedList<board.Pin>();
-        board.BasicBoard board = this.net_list.get_board();
+        java.util.Collection<eu.mihosoft.freerouting.board.Pin> result = new java.util.LinkedList<eu.mihosoft.freerouting.board.Pin>();
+        eu.mihosoft.freerouting.board.BasicBoard board = this.net_list.get_board();
         java.util.Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
         for (;;)
         {
@@ -113,11 +113,11 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
             {
                 break;
             }
-            if (curr_item instanceof board.Pin)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Pin)
             {
                 if (curr_item.contains_net(this.net_number))
                 {
-                    result.add((board.Pin) curr_item);
+                    result.add((eu.mihosoft.freerouting.board.Pin) curr_item);
                 }
             }
         }
@@ -127,10 +127,10 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
     /**
      * Returns all items of this net.
      */
-    public java.util.Collection<board.Item> get_items()
+    public java.util.Collection<eu.mihosoft.freerouting.board.Item> get_items()
     {
-        java.util.Collection<board.Item> result = new java.util.LinkedList<board.Item>();
-        board.BasicBoard board = this.net_list.get_board();
+        java.util.Collection<eu.mihosoft.freerouting.board.Item> result = new java.util.LinkedList<eu.mihosoft.freerouting.board.Item>();
+        eu.mihosoft.freerouting.board.BasicBoard board = this.net_list.get_board();
         java.util.Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
         for (;;)
         {
@@ -148,7 +148,7 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
     }
 
     /**
-     * Returns the cumulative trace length of all traces on the board belonging to this net.
+     * Returns the cumulative trace length of all traces on the eu.mihosoft.freerouting.board belonging to this net.
      */
     public double get_trace_length()
     {
@@ -157,16 +157,16 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
         for (Item curr_item : net_items)
         {
 
-            if (curr_item instanceof board.Trace)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Trace)
             {
-                cumulative_trace_length += ((board.Trace) curr_item).get_length();
+                cumulative_trace_length += ((eu.mihosoft.freerouting.board.Trace) curr_item).get_length();
             }
         }
         return cumulative_trace_length;
     }
 
     /**
-     * Returns the count of vias on the board belonging to this net.
+     * Returns the count of vias on the eu.mihosoft.freerouting.board belonging to this net.
      */
     public int get_via_count()
     {
@@ -174,7 +174,7 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
         java.util.Collection<Item> net_items = net_list.get_board().get_connectable_items(this.net_number);
         for (Item curr_item : net_items)
         {
-            if (curr_item instanceof board.Via)
+            if (curr_item instanceof eu.mihosoft.freerouting.board.Via)
             {
                 ++result;
             }
@@ -198,7 +198,7 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
         return contains_plane;
     }
 
-    public void print_info(board.ObjectInfoPanel p_window, java.util.Locale p_locale)
+    public void print_info(eu.mihosoft.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         Integer via_count = this.get_via_count();
         double cumulative_trace_length = this.get_trace_length();
@@ -208,7 +208,7 @@ public class Net implements Comparable<Net>, board.ObjectInfoPanel.Printable, ja
         Integer terminal_item_count = terminals.size();
 
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("net") + " ");
         p_window.append_bold(this.name);
         p_window.append_bold(": ");

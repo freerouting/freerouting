@@ -18,7 +18,7 @@
  * Created on 16. Februar 2005, 08:11
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Panel at the lower border of the eu.mihosoft.freerouting.board frame containing amongst others the message line
@@ -33,7 +33,7 @@ class BoardPanelStatus extends javax.swing.JPanel
     BoardPanelStatus(java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("resources.BoardPanelStatus", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardPanelStatus", p_locale);
         this.setLayout(new java.awt.BorderLayout());
         this.setPreferredSize(new java.awt.Dimension(300, 20));
         

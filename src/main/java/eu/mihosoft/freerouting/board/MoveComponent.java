@@ -17,23 +17,23 @@
  *
  * Created on 25. Oktober 2003, 09:03
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
-import datastructures.TimeLimit;
+import eu.mihosoft.freerouting.datastructures.TimeLimit;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.IntPoint;
-import geometry.planar.Point;
-import geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import datastructures.Signum;
+import eu.mihosoft.freerouting.datastructures.Signum;
 
 /**
- * Class for moving a group of items on the board
+ * Class for moving a group of items on the eu.mihosoft.freerouting.board
  * @author  Alfons Wirtz
  */
 public class MoveComponent

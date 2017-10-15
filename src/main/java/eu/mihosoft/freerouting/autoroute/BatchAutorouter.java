@@ -13,7 +13,7 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Iterator;
 import java.util.Collection;
@@ -21,22 +21,22 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import datastructures.TimeLimit;
-import datastructures.UndoableObjects;
+import eu.mihosoft.freerouting.datastructures.TimeLimit;
+import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
-import geometry.planar.FloatPoint;
-import geometry.planar.FloatLine;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatLine;
 
-import board.Connectable;
-import board.Item;
-import board.DrillItem;
-import board.RoutingBoard;
+import eu.mihosoft.freerouting.board.Connectable;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.DrillItem;
+import eu.mihosoft.freerouting.board.RoutingBoard;
 
-import interactive.BoardHandling;
-import interactive.InteractiveActionThread;
+import eu.mihosoft.freerouting.interactive.BoardHandling;
+import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 
 /**
- * Handles the sequencing of the batch autoroute passes.
+ * Handles the sequencing of the batch eu.mihosoft.freerouting.autoroute passes.
  * 
  * @author  Alfons Wirtz
  */
@@ -44,10 +44,10 @@ public class BatchAutorouter
 {
 
     /**
-     *  Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user,
+     *  Autoroutes ripup passes until the eu.mihosoft.freerouting.board is completed or the autorouter is stopped by the user,
      *  or if p_max_pass_count is exceeded. Is currently used in the optimize via batch pass.
-     *  Returns the number of oasses to complete the board or p_max_pass_count + 1,
-     *  if the board is not completed.
+     *  Returns the number of oasses to complete the eu.mihosoft.freerouting.board or p_max_pass_count + 1,
+     *  if the eu.mihosoft.freerouting.board is not completed.
      */
     public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread,
             int p_max_pass_count, int p_ripup_costs, boolean p_with_prefered_directions)
@@ -106,13 +106,13 @@ public class BatchAutorouter
     }
 
     /**
-     *  Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user.
-     *  Returns true if the board is completed.
+     *  Autoroutes ripup passes until the eu.mihosoft.freerouting.board is completed or the autorouter is stopped by the user.
+     *  Returns true if the eu.mihosoft.freerouting.board is completed.
      */
     public boolean autoroute_passes()
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("interactive.resources.InteractiveState", hdlg.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.resources.InteractiveState", hdlg.get_locale());
         boolean still_unrouted_items = true;
         while (still_unrouted_items && !this.is_interrupted)
         {
@@ -131,15 +131,15 @@ public class BatchAutorouter
         }
         if (!(this.remove_unconnected_vias || still_unrouted_items || this.is_interrupted))
         {
-            // clean up the route if the board is completed and if fanout is used.
+            // clean up the route if the eu.mihosoft.freerouting.board is completed and if fanout is used.
             remove_tails(Item.StopConnectionOption.NONE);
         }
         return !this.is_interrupted;
     }
 
     /**
-     * Autoroutes one ripup pass of all items of the board.
-     * Returns false, if the board is already completely routed.
+     * Autoroutes one ripup pass of all items of the eu.mihosoft.freerouting.board.
+     * Returns false, if the eu.mihosoft.freerouting.board is already completely routed.
      */
     private boolean autoroute_pass(int p_pass_no, boolean p_with_screen_message)
     {
@@ -228,7 +228,7 @@ public class BatchAutorouter
                     }
                 }
             }
-            if (routing_board.get_test_level() != board.TestLevel.ALL_DEBUGGING_OUTPUT)
+            if (routing_board.get_test_level() != eu.mihosoft.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT)
             {
                 Item.StopConnectionOption stop_connection_option;
                 if (this.remove_unconnected_vias)
@@ -263,7 +263,7 @@ public class BatchAutorouter
         try
         {
             boolean contains_plane = false;
-            rules.Net route_net = routing_board.rules.nets.get(p_route_net_no);
+            eu.mihosoft.freerouting.rules.Net route_net = routing_board.rules.nets.get(p_route_net_no);
             if (route_net != null)
             {
                 contains_plane = route_net.contains_plane();
@@ -296,7 +296,7 @@ public class BatchAutorouter
             {
                 for (Item curr_item : connected_set)
                 {
-                    if (curr_item instanceof board.ConductionArea)
+                    if (curr_item instanceof eu.mihosoft.freerouting.board.ConductionArea)
                     {
                         return true; // already connected to plane
 
@@ -326,7 +326,7 @@ public class BatchAutorouter
             {
                 routing_board.opt_changed_area(new int[0], null, this.hdlg.get_settings().get_trace_pull_tight_accuracy(), autoroute_control.trace_costs, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
             }
-            // tests.Validate.check("Autoroute  ", hdlg.get_routing_board());
+            // eu.mihosoft.freerouting.tests.Validate.check("Autoroute  ", hdlg.get_routing_board());
             boolean result = autoroute_result == AutorouteEngine.AutorouteResult.ROUTED || autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
             return result;
         } catch (Exception e)

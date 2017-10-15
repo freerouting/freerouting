@@ -17,7 +17,7 @@
  *
  * Created on 19. Juni 2003, 07:58
  */
-package geometry.planar;
+package eu.mihosoft.freerouting.geometry.planar;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -182,7 +182,7 @@ public class PolylineArea implements Area, java.io.Serializable
      * instead of Polygons, so that no intersection points are needed in the result.
      *  If p_stoppable_thread != null, this function can be interrupted.
      */
-    public TileShape[] split_to_convex(datastructures.Stoppable p_stoppable_thread)
+    public TileShape[] split_to_convex(eu.mihosoft.freerouting.datastructures.Stoppable p_stoppable_thread)
     {
         if (precalculated_convex_pieces == null)
         {

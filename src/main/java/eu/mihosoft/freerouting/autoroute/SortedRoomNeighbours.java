@@ -19,7 +19,7 @@
  *
  */
 
-package autoroute;
+package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -27,24 +27,24 @@ import java.util.TreeSet;
 import java.util.SortedSet;
 import java.util.Iterator;
 
-import datastructures.Signum;
-import datastructures.ShapeTree;
+import eu.mihosoft.freerouting.datastructures.Signum;
+import eu.mihosoft.freerouting.datastructures.ShapeTree;
 
-import geometry.planar.Side;
-import geometry.planar.Direction;
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.FloatPoint;
-import geometry.planar.Line;
-import geometry.planar.TileShape;
-import geometry.planar.Simplex;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.Direction;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Simplex;
 
-import board.ShapeSearchTree;
-import board.SearchTreeObject;
-import board.Connectable;
-import board.Item;
-import board.PolylineTrace;
-import board.TestLevel;
+import eu.mihosoft.freerouting.board.ShapeSearchTree;
+import eu.mihosoft.freerouting.board.SearchTreeObject;
+import eu.mihosoft.freerouting.board.Connectable;
+import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.board.PolylineTrace;
+import eu.mihosoft.freerouting.board.TestLevel;
 
 /**
  * To calculate the neigbour rooms of an expansion room.

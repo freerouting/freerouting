@@ -18,7 +18,7 @@
  * Created on 17. Februar 2005, 08:58
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Used as submenu in a popup menu for change layer actions.
@@ -36,7 +36,7 @@ class PopupMenuChangeLayer extends javax.swing.JMenu
         eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
         this.item_arr = new LayermenuItem[layer_structure.signal_layer_count()];
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         
         this.setText(resources.getString("change_layer"));
         this.setToolTipText(resources.getString("change_layer_tooltip"));
@@ -80,7 +80,7 @@ class PopupMenuChangeLayer extends javax.swing.JMenu
         LayermenuItem(int p_layer_no)
         {
             java.util.ResourceBundle resources = 
-                    java.util.ResourceBundle.getBundle("resources.Default", board_frame.get_locale());
+                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", board_frame.get_locale());
             message1 = resources.getString("layer_changed_to") + " ";
             layer_no = p_layer_no;
             addActionListener(new java.awt.event.ActionListener()

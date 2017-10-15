@@ -13,21 +13,21 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
-import datastructures.TimeLimit;
+import eu.mihosoft.freerouting.datastructures.TimeLimit;
 
-import geometry.planar.ConvexShape;
-import geometry.planar.Direction;
-import geometry.planar.FloatPoint;
-import geometry.planar.IntBox;
-import geometry.planar.Line;
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.Vector;
-import geometry.planar.Polyline;
-import geometry.planar.TileShape;
-import geometry.planar.LineSegment;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.Direction;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.IntBox;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.LineSegment;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -244,7 +244,7 @@ public class ShoveTraceAlgo
         FloatPoint end_corner_appprox = p_line_segment.end_point_approx();
         double segment_length = end_corner_appprox.distance(start_corner_appprox);
 
-        rules.ClearanceMatrix cl_matrix = p_board.rules.clearance_matrix;
+        eu.mihosoft.freerouting.rules.ClearanceMatrix cl_matrix = p_board.rules.clearance_matrix;
 
         double result = Integer.MAX_VALUE;
 

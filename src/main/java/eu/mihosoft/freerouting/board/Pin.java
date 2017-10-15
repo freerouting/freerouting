@@ -18,25 +18,25 @@
  * Created on 6. Juni 2003, 08:04
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.Shape;
-import geometry.planar.ConvexShape;
-import geometry.planar.TileShape;
-import geometry.planar.Vector;
-import geometry.planar.Direction;
-import geometry.planar.Line;
-import geometry.planar.Polyline;
-import geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.geometry.planar.Direction;
+import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-import library.Package;
-import library.Padstack;
+import eu.mihosoft.freerouting.library.Package;
+import eu.mihosoft.freerouting.library.Padstack;
 
 /**
- * Class describing the functionality of an electrical Item on the board
+ * Class describing the functionality of an electrical Item on the eu.mihosoft.freerouting.board
  * with a shape on 1 or several layers.
  *
  * @author  Alfons Wirtz
@@ -167,7 +167,7 @@ public class Pin extends DrillItem implements java.io.Serializable
     }
     
     /**
-     * Gets index of this pin in the library package of the pins component.
+     * Gets index of this pin in the eu.mihosoft.freerouting.library package of the pins component.
      */
     public int get_index_in_package()
     {
@@ -454,12 +454,12 @@ public class Pin extends DrillItem implements java.io.Serializable
         {
             return result;
         }
-        library.LogicalPart logical_part = component.get_logical_part();
+        eu.mihosoft.freerouting.library.LogicalPart logical_part = component.get_logical_part();
         if (logical_part == null)
         {
             return result;
         }
-        library.LogicalPart.PartPin this_part_pin = logical_part.get_pin(this.pin_no);
+        eu.mihosoft.freerouting.library.LogicalPart.PartPin this_part_pin = logical_part.get_pin(this.pin_no);
         if (this_part_pin == null)
         {
             return result;
@@ -475,7 +475,7 @@ public class Pin extends DrillItem implements java.io.Serializable
             {
                 continue;
             }
-            library.LogicalPart.PartPin curr_part_pin =  logical_part.get_pin(i);
+            eu.mihosoft.freerouting.library.LogicalPart.PartPin curr_part_pin =  logical_part.get_pin(i);
             if (curr_part_pin != null && curr_part_pin.gate_pin_swap_code == this_part_pin.gate_pin_swap_code
                     && curr_part_pin.gate_name.equals(this_part_pin.gate_name))
             {
@@ -502,7 +502,7 @@ public class Pin extends DrillItem implements java.io.Serializable
         return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.PINS);
     }
     
-    public java.awt.Color[] get_draw_colors(boardgraphics.GraphicsContext p_graphics_context)
+    public java.awt.Color[] get_draw_colors(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         java.awt.Color[] result;
         if (this.net_count() > 0)
@@ -517,7 +517,7 @@ public class Pin extends DrillItem implements java.io.Serializable
         return result;
     }
     
-    public double get_draw_intensity(boardgraphics.GraphicsContext p_graphics_context)
+    public double get_draw_intensity(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_pin_color_intensity();
     }
@@ -581,7 +581,7 @@ public class Pin extends DrillItem implements java.io.Serializable
     }
     
     
-    /** False, if this drillitem is places on the back side of the board */
+    /** False, if this drillitem is places on the back side of the eu.mihosoft.freerouting.board */
     public boolean is_placed_on_front()
     {
         boolean result = true;
@@ -605,7 +605,7 @@ public class Pin extends DrillItem implements java.io.Serializable
             System.out.println("Pin.get_min_width: padstack_shape is null");
             return 0;
         }
-        geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
+        eu.mihosoft.freerouting.geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
         if (padstack_bounding_box == null)
         {
             System.out.println("Pin.get_min_width: padstack_bounding_box is null");
@@ -637,7 +637,7 @@ public class Pin extends DrillItem implements java.io.Serializable
             System.out.println("Pin.get_max_width: padstack_shape is null");
             return 0;
         }
-        geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
+        eu.mihosoft.freerouting.geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
         if (padstack_bounding_box == null)
         {
             System.out.println("Pin.get_max_width: padstack_bounding_box is null");
@@ -649,7 +649,7 @@ public class Pin extends DrillItem implements java.io.Serializable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("pin") + ": ");
         p_window.append(resources.getString("component_2") + " ");
         Component component = board.components.get(this.get_component_no());
@@ -657,7 +657,7 @@ public class Pin extends DrillItem implements java.io.Serializable
         p_window.append(", " + resources.getString("pin_2") + " ");
         p_window.append(component.get_package().get_pin(this.pin_no).name);
         p_window.append(", " + resources.getString("padstack") + " ");
-        library.Padstack padstack = this.get_padstack();
+        eu.mihosoft.freerouting.library.Padstack padstack = this.get_padstack();
         p_window.append(padstack.name, resources.getString("padstack_info"), padstack);
         p_window.append(" " +  resources.getString("at") + " ");
         p_window.append(this.get_center().to_float());

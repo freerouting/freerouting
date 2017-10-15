@@ -18,7 +18,7 @@
  * Created on 8. Januar 2005, 10:12
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.Side;
-import geometry.planar.Limits;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.geometry.planar.Limits;
 
 /**
  * Creates a Delaunay triangulation in the plane for the input objects.
@@ -349,7 +349,7 @@ public class PlanarDelaunayTriangulation
         /**
          * Returns an array of corners, which can be used in a planar triangulation.
          */
-        geometry.planar.Point[] get_triangulation_corners();
+        eu.mihosoft.freerouting.geometry.planar.Point[] get_triangulation_corners();
     }
     
     /**

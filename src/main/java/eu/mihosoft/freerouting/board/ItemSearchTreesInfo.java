@@ -19,17 +19,17 @@
  *
  */
 
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-import  datastructures.ShapeTree;
+import  eu.mihosoft.freerouting.datastructures.ShapeTree;
 
-import geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
- * Stores information about the search trees of the board items,
+ * Stores information about the search trees of the eu.mihosoft.freerouting.board items,
  * which is precalculated for performance reasons.
  *
  * @author Alfons Wirtz

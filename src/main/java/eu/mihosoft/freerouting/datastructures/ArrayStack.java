@@ -19,7 +19,7 @@
  *
  */
 
-package datastructures;
+package eu.mihosoft.freerouting.datastructures;
 
 @SuppressWarnings("unchecked")
 

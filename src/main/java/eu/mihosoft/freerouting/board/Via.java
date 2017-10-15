@@ -17,20 +17,20 @@
  *
  * Created on 5. Juni 2003, 10:36
  */
-package board;
+package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-import geometry.planar.Point;
-import geometry.planar.IntPoint;
-import geometry.planar.TileShape;
-import geometry.planar.Shape;
-import geometry.planar.Vector;
-import library.Padstack;
+import eu.mihosoft.freerouting.geometry.planar.Point;
+import eu.mihosoft.freerouting.geometry.planar.IntPoint;
+import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.geometry.planar.Vector;
+import eu.mihosoft.freerouting.library.Padstack;
 
 /**
- * Class describing the functionality of an electrical Item on the board,
+ * Class describing the functionality of an electrical Item on the eu.mihosoft.freerouting.board,
  * which may have a shape on several layer, whose geometry is described by a
  * padstack.
  *
@@ -164,14 +164,14 @@ public class Via extends DrillItem implements java.io.Serializable
         clear_derived_data();
     }
 
-    public autoroute.ExpansionDrill get_autoroute_drill_info(ShapeSearchTree p_autoroute_tree)
+    public eu.mihosoft.freerouting.autoroute.ExpansionDrill get_autoroute_drill_info(ShapeSearchTree p_autoroute_tree)
     {
         if (this.autoroute_drill_info == null)
         {
-            autoroute.ItemAutorouteInfo via_autoroute_info = this.get_autoroute_info();
+            eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo via_autoroute_info = this.get_autoroute_info();
             TileShape curr_drill_shape = TileShape.get_instance(this.get_center());
             this.autoroute_drill_info =
-                    new autoroute.ExpansionDrill(curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
+                    new eu.mihosoft.freerouting.autoroute.ExpansionDrill(curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
             int via_layer_count = this.last_layer() - this.first_layer() + 1;
             for (int i = 0; i < via_layer_count; ++i)
             {
@@ -203,7 +203,7 @@ public class Via extends DrillItem implements java.io.Serializable
         return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.VIAS);
     }
 
-    public java.awt.Color[] get_draw_colors(boardgraphics.GraphicsContext p_graphics_context)
+    public java.awt.Color[] get_draw_colors(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         java.awt.Color[] result;
         if (this.net_count() == 0)
@@ -224,7 +224,7 @@ public class Via extends DrillItem implements java.io.Serializable
         return result;
     }
 
-    public double get_draw_intensity(boardgraphics.GraphicsContext p_graphics_context)
+    public double get_draw_intensity(eu.mihosoft.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         double result;
         if (this.net_count() == 0)
@@ -248,7 +248,7 @@ public class Via extends DrillItem implements java.io.Serializable
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.board.resources.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("via"));
         p_window.append(" " + resources.getString("at"));
         p_window.append(this.get_center().to_float());
@@ -273,6 +273,6 @@ public class Via extends DrillItem implements java.io.Serializable
     /** True, if coppersharing of this via with smd pins of the same net  is allowed. */
     public final boolean attach_allowed;
     transient private Shape[] precalculated_shapes = null;
-    /** Temporary data used in the autoroute algorithm. */
-    transient private autoroute.ExpansionDrill autoroute_drill_info = null;
+    /** Temporary data used in the eu.mihosoft.freerouting.autoroute algorithm. */
+    transient private eu.mihosoft.freerouting.autoroute.ExpansionDrill autoroute_drill_info = null;
 }

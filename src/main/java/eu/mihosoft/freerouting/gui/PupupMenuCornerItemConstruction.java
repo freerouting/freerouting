@@ -18,7 +18,7 @@
  * Created on 17. Februar 2005, 07:31
  */
 
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Popup menu used while constructing a cornered shape..
@@ -33,7 +33,7 @@ class PupupMenuCornerItemConstruction extends javax.swing.JPopupMenu
     {
         this.board_panel = p_board_frame.board_panel;
         java.util.ResourceBundle resources = 
-                java.util.ResourceBundle.getBundle("resources.Default", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem add_corner_item = new javax.swing.JMenuItem();
         add_corner_item.setText(resources.getString("add_corner"));
         add_corner_item.addActionListener(new java.awt.event.ActionListener()

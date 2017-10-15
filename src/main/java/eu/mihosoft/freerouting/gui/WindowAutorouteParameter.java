@@ -18,7 +18,7 @@
  * Created on 24. Juli 2006, 07:20
  *
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 /**
  * Window handling parameters of the automatic routing.
@@ -33,7 +33,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     {
         this.board_handling = p_board_frame.board_panel.board_handling;
         java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("resources.WindowAutorouteParameter", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.WindowAutorouteParameter", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -118,7 +118,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         main_panel.add(passes_label);
 
         this.fanout_pass_button = new javax.swing.JRadioButton(resources.getString("fanout"));
-        this.autoroute_pass_button = new javax.swing.JRadioButton(resources.getString("eu/mihosoft/freerouting/autoroute"));
+        this.autoroute_pass_button = new javax.swing.JRadioButton(resources.getString("autoroute"));
         this.postroute_pass_button = new javax.swing.JRadioButton(resources.getString("postroute"));
 
         fanout_pass_button.addActionListener(new FanoutListener());

@@ -18,7 +18,7 @@
  * Created on 25. Oktober 2006, 07:48
  *
  */
-package eu.mihosoft.freerouting.gui.resources;
+package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.datastructures.FileFilter;
 import eu.mihosoft.freerouting.designforms.specctra.RulesFile;
@@ -135,7 +135,7 @@ public class DesignFile
     public void save_as_dialog(java.awt.Component p_parent, BoardFrame p_board_frame)
     {
         final java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("resources.BoardMenuFile", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuFile", p_board_frame.get_locale());
         String[] file_name_parts = this.get_name().split("\\.", 2);
         String design_name = file_name_parts[0];
 
@@ -204,7 +204,7 @@ public class DesignFile
     public boolean write_specctra_session_file(BoardFrame p_board_frame)
     {
         final java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("resources.BoardMenuFile", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuFile", p_board_frame.get_locale());
         String design_file_name = this.get_name();
         String[] file_name_parts = design_file_name.split("\\.", 2);
         String design_name = file_name_parts[0];
@@ -255,7 +255,7 @@ public class DesignFile
                 output_stream = new java.io.FileOutputStream(rules_file);
             } catch (java.io.IOException e)
             {
-                System.out.println("unable to create eu.mihosoft.freerouting.rules file");
+                System.out.println("unable to create rules file");
                 return false;
             }
 
@@ -268,7 +268,7 @@ public class DesignFile
     {
 
         boolean result = true;
-        String rule_file_name = p_design_name + ".eu.mihosoft.freerouting.rules";
+        String rule_file_name = p_design_name + ".rules";
         boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
 
         {
@@ -306,7 +306,7 @@ public class DesignFile
     public void update_eagle(BoardFrame p_board_frame)
     {
         final java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("resources.BoardMenuFile", p_board_frame.get_locale());
+                java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuFile", p_board_frame.get_locale());
         String design_file_name = get_name();
         java.io.ByteArrayOutputStream session_output_stream = new java.io.ByteArrayOutputStream();
         if (!p_board_frame.board_panel.board_handling.export_specctra_session_file(design_file_name, session_output_stream))
@@ -401,7 +401,7 @@ public class DesignFile
 //        if (!new_session_file_name.equalsIgnoreCase(session_file_name))
 //        {
 //            final java.util.ResourceBundle resources =
-//                    java.util.ResourceBundle.getBundle("resources.BoardMenuFile", p_board_frame.get_locale());
+//                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuFile", p_board_frame.get_locale());
 //            String curr_message = resources.getString("message_20") + " " + session_file_name + "\n" + resources.getString("message_21");
 //            WindowMessage.ok(curr_message);
 //        }
@@ -442,7 +442,7 @@ public class DesignFile
 //        if (!new_script_file_name.endsWith(".scr"))
 //        {
 //            final java.util.ResourceBundle resources =
-//                    java.util.ResourceBundle.getBundle("resources.BoardMenuFile", p_board_frame.get_locale());
+//                    java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.resources.BoardMenuFile", p_board_frame.get_locale());
 //            String curr_message = resources.getString("message_22") + "\n" + resources.getString("message_21");
 //            WindowMessage.ok(curr_message);
 //        }
@@ -493,5 +493,5 @@ public class DesignFile
     private java.io.File output_file;
     private final java.io.File input_file;
     private javax.swing.JFileChooser file_chooser;
-    private static final String RULES_FILE_EXTENSION = ".eu.mihosoft.freerouting.rules";
+    private static final String RULES_FILE_EXTENSION = ".rules";
 }
