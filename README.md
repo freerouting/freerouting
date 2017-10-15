@@ -21,8 +21,6 @@ Freerouting is a fantastic piece of software. But the code hasn't been updated i
 
 ## From the original author:
 
-===========
-
 Java Based Printed Circuit Board Routing Software from FreeRouting.net written by Alfons Wirtz.
 
 http://www.freerouting.net/fen/viewtopic.php?f=4&t=255
