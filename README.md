@@ -75,29 +75,3 @@ Additional steps for users of CadSoft-Eagle:
 6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
 
 
-Here are some instructions how to run the Freerouting project in the NetBeans IDE.
-==================================================================================
-
-1) Go to the Java SE download web page of Oracle to download and install JDK 8 with NetBeans 8.0
-
-2) Start the NetBeans IDE and select File | New Project in the pull down menu.
-
-3) In this sheet select Java Project with existing sources.
-
-4) Add your downloaded Freerouting source code with Add Source Package.
-
-5) Build your new project in NetBeans. 
-
-6) To get rid of the undefined's download and unzip the attached library jh.jar. It is the system library of the Java Help system. 
-
-7) Right click on the name of your new project on the left of NetBeans and select Properties.
-
-8) In the Property sheet select Libraries on the left and add your jh.jar with Add JAR/Folder.
-
-9) Click on Web Start in the Property sheet and select Enable Web Start.
-
-10) Build the project again. The router should run now.
-
-For optional parameters of the Freerouting outfile check the usage of the variable p_args in the source file gui/MainApplication.java.
-
-
