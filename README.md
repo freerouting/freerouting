@@ -20,7 +20,7 @@ Freerouting is a fantastic piece of software. But the code hasn't been updated i
 - WebStart code has been removed (WebStart is officially deprecated)
 - Several `ClassCastException` bugs in the graphics package have been fixed
 - Swing UI uses native look&feel if possible
-- Prepared module support (still WIP)
+- Prepared Jigsaw module support (still WIP)
 - other minor fixes
 
 ## How to Build It
