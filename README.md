@@ -23,6 +23,31 @@ Freerouting is a fantastic piece of software. But the code hasn't been updated i
 - Prepared module support (still WIP)
 - other minor fixes
 
+## How to Build It
+
+### Requirements
+
+- Java >= 1.8
+- Internet connection (dependencies are downloaded automatically)
+- IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
+
+### IDE
+
+Open the `freerouting` [Gradle](http://www.gradle.org/) project in your favourite IDE (NB, IntelliJ, Eclipse etc. with Gradle Plugin) and build it
+by calling the `assemble` task.
+
+### Command Line
+
+Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerouting`) and enter the following command
+
+#### Bash (Linux/OS X/Cygwin/other Unix-like shell)
+
+    bash gradlew assemble
+    
+#### Windows (CMD)
+
+    gradlew assemble
+
 ## From the original author:
 
 Java Based Printed Circuit Board Routing Software from FreeRouting.net written by Alfons Wirtz.
