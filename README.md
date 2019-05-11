@@ -27,7 +27,7 @@ Freerouting is a fantastic piece of software. But the code hasn't been updated i
 
 ### Requirements
 
-- Java >= 9
+- Java >= 11
 - Internet connection (dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 
