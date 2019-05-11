@@ -10,7 +10,7 @@ It basically does this:
 
 ## What has changed?
 
-Freerouting is a fantastic piece of software. But the code hasn't been updated in a while and had some design flaws. Some of them are fixed now. This version of freerouting has been refactored to be fully compatible with JDK9.
+Freerouting is a fantastic piece of software. But the code hasn't been updated in a while and had some design flaws. Some of them are fixed now. This version of freerouting has been refactored to be fully compatible with JDK11.
 
 ### New Features
 
