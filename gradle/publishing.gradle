@@ -86,7 +86,9 @@ publishing {
             from components.java
             artifact sourcesJar
             artifact javadocJar
-            artifact executableJar
+            afterEvaluate {
+                artifact executableJar
+            }
 
             pom.withXml {
                 def root = asNode()

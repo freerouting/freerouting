@@ -13,7 +13,7 @@ plugins {
 //    id "com.github.hierynomus.license" version "0.13.1"
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '2.4.0'
-    id 'com.jfrog.bintray' version '1.7.3'
+    id 'com.jfrog.bintray' version '1.8.4'
     id 'com.github.ben-manes.versions' version '0.13.0'
 
     // jigsaw:
@@ -23,12 +23,11 @@ plugins {
 apply plugin: 'java'
 apply from: 'gradle/publishing.gradle'
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.2.1'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+wrapper {
+    gradleVersion = '5.4'
 }
 
-sourceCompatibility = '1.9'
+sourceCompatibility = '1.11'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 gradle.projectsEvaluated {
@@ -124,7 +123,7 @@ task executableJar(type: Jar) {
     classifier = 'executable'
 
     from configurations.runtime.asFileTree.files.collect { zipTree(it) }
-    
+
     from files(sourceSets.main.output)
 
     manifest {
@@ -164,12 +163,12 @@ artifacts {
 //    exclude '**/*.svg'
 //}
 
- task run(type: JavaExec) {
-     classpath = sourceSets.main.runtimeClasspath
+task run(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
 
-     main = mainClass
+    main = mainClass
 
-     // arguments to pass to the application
- //    args 'appArg1'
-     // jvmArgs 'arg1'
- }
+    // arguments to pass to the application
+    //    args 'appArg1'
+    // jvmArgs 'arg1'
+}
