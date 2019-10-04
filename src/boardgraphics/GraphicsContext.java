@@ -127,7 +127,7 @@ public class GraphicsContext implements java.io.Serializable
             return;
         }
         Graphics2D g2 = (Graphics2D)p_g;
-        Rectangle clip_shape = (Rectangle)p_g.getClip() ;
+        Rectangle clip_shape = p_g.getClip().getBounds();
         // the class member update_box cannot be used here, because
         // the dirty rectangle is internally enlarged by the system.
         // Therefore we can not improve the performance by using an
@@ -270,10 +270,7 @@ public class GraphicsContext implements java.io.Serializable
         }
         Point2D center = coordinate_transform.board_to_screen(p_circle.center.to_float());
         double radius = coordinate_transform.board_to_screen(p_circle.radius);
-        if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle)p_g.getClip(), radius))
-        {
-            return;
-        }
+        if (!point_near_rectangle(center.getX(), center.getY(), p_g.getClip().getBounds(), radius))  return;
         double diameter = 2 * radius;
         Ellipse2D circle =
                 new Ellipse2D.Double(center.getX() - radius,center.getY() - radius, diameter, diameter);
@@ -310,7 +307,7 @@ public class GraphicsContext implements java.io.Serializable
         {
             Point2D center = coordinate_transform.board_to_screen(curr_ellipse.center);
             double bigger_radius = coordinate_transform.board_to_screen(curr_ellipse.bigger_radius);
-            if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle)p_g.getClip(), bigger_radius))
+            if (!point_near_rectangle(center.getX(), center.getY(), p_g.getClip().getBounds(), bigger_radius))            
             {
                 continue;
             }
@@ -379,7 +376,7 @@ public class GraphicsContext implements java.io.Serializable
     }
     
     /**
-     * Fill the interiour of a list of polygons.
+     * Fill the interior of a list of polygons.
      * Used for example with an area consisting of a border polygon and some holes.
      */
     public void fill_area(FloatPoint[][] p_point_lists, Graphics p_g, Color p_color, double p_translucency_factor)
@@ -409,7 +406,7 @@ public class GraphicsContext implements java.io.Serializable
     }
     
     /**
-     * draws the interiour of an item of class geometry.planar.Area
+     * draws the interior of an item of class geometry.planar.Area
      */
     public void fill_area(Area p_area, Graphics p_g, Color p_color, double p_translucency_factor)
     {
@@ -429,7 +426,9 @@ public class GraphicsContext implements java.io.Serializable
                 System.out.println("GraphicsContext.fill_area: shape not bounded");
                 return;
             }
-            Rectangle clip_shape = (Rectangle)p_g.getClip() ;
+            // Neu
+            //Rectangle clip_shape = (Rectangle)p_g.getClip() ;
+            Rectangle clip_shape = p_g.getClip().getBounds();
             IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
             if (!border.bounding_box().intersects(clip_box))
             {
