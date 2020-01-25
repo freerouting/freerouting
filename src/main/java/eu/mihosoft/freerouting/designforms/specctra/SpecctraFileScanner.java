@@ -1424,7 +1424,7 @@ class SpecctraFileScanner implements Scanner {
           }
         case 235: break;
         case 5: 
-          { return new Integer(yytext());
+          { return Integer.valueOf(yytext());
           }
         case 236: break;
         case 25: 

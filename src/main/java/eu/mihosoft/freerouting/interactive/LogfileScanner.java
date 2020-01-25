@@ -510,7 +510,7 @@ class LogfileScanner {
           }
         case 6: break;
         case 4: 
-          { return new Integer(yytext());
+          { return Integer.valueOf(yytext());
           }
         case 7: break;
         case 2: 

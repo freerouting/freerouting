@@ -1656,7 +1656,7 @@ class GUIDefaultsScanner {
           }
         case 165: break;
         case 4: 
-          { return new Integer(yytext());
+          { return Integer.valueOf(yytext());
           }
         case 166: break;
         case 13: 

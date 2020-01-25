@@ -108,7 +108,7 @@ public class Padstacks implements java.io.Serializable
      */
     public Padstack add(ConvexShape [] p_shapes)
     {
-        String new_name = "padstack#" + (new Integer(padstack_arr.size() + 1).toString());
+        String new_name = "padstack#" + (Integer.valueOf(padstack_arr.size() + 1).toString());
         return add(new_name, p_shapes, false, false);
     }
     
