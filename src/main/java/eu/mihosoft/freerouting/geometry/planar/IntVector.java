@@ -210,8 +210,8 @@ public class IntVector extends Vector implements java.io.Serializable
     
     /**
      * The function returns
-     *   Signum.POSITIVE, if the scalar product of this vector and p_other > 0,
-     *   Signum.NEGATIVE, if the scalar product Vector is < 0,
+     *   Signum.POSITIVE, if the scalar product of this vector and p_other {@literal >} 0,
+     *   Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0,
      *   and Signum.ZERO, if the scalar product is equal 0.
      */
     public Signum projection(Vector p_other)

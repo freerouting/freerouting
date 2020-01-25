@@ -58,7 +58,7 @@ public class BoardRules implements java.io.Serializable
     
     /**
      * Returns true, if the trace widths used for routing for the input net are equal on all layers.
-     * If p_net_no < 0, the default trace widths for all nets are checked.
+     * If p_net_no {@literal <} 0, the default trace widths for all nets are checked.
      */
     public boolean trace_widths_are_layer_dependent(int p_net_no)
     {
@@ -397,7 +397,7 @@ public class BoardRules implements java.io.Serializable
     /**
      * Returns the minimum distance between the pin border and the next corner
      * of a connected trace por a pin with connection restrictions.
-     * If the result is <= 0, there are no exit restrictions.
+     * If the result is {@literal <}= 0, there are no exit restrictions.
      */
     public double get_pin_edge_to_turn_dist()
     {
@@ -407,7 +407,7 @@ public class BoardRules implements java.io.Serializable
     /**
      * Sets he minimum distance between the pin border and the next corner
      * of a connected trace por a pin with connection restrictions.
-     * if p_value is <= 0, there are no exit restrictions.
+     * if p_value is {@literal <}= 0, there are no exit restrictions.
      */
     public void set_pin_edge_to_turn_dist(double p_value)
     {
@@ -542,7 +542,7 @@ public class BoardRules implements java.io.Serializable
     /**
      * The minimum distance of the pad border to the first turn of a connected trace
      * to a pin with restricted exit directions.
-     * If the value is <= 0, there are no exit restrictions.
+     * If the value is {@literal <}= 0, there are no exit restrictions.
      */
     private double pin_edge_to_turn_dist;
     

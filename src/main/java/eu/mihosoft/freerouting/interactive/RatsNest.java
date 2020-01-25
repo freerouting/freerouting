@@ -144,8 +144,8 @@ public class RatsNest
     
     /**
      *  Returns the length of the violation of the length restriction of the net with number p_net_no,
-     *  > 0, if the cumulative trace length is to big,
-     *  < 0, if the trace length is to smalll,
+     *  {@literal >} 0, if the cumulative trace length is to big,
+     *  {@literal <} 0, if the trace length is to small,
      *  0, if the thace length is ok or the net has no length restrictions
      */
     public double get_length_violation(int p_net_no)
