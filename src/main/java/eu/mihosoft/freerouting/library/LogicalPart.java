@@ -120,7 +120,7 @@ public class LogicalPart implements eu.mihosoft.freerouting.board.ObjectInfoPane
         
         /**
          * The gate swap  code. Gates with the same gate swap code can be swapped.
-         * Gates with swap code <= 0 are not swappable.
+         * Gates with swap code {@literal <}= 0 are not swappable.
          */
         public final int gate_swap_code;
         
@@ -129,7 +129,7 @@ public class LogicalPart implements eu.mihosoft.freerouting.board.ObjectInfoPane
         
         /**
          * The pin swap code of the gate. Pins with the same pin swap code can be swapped inside a gate.
-         * Pins with swap code <= 0 are not swappable.
+         * Pins with swap code {@literal <}= 0 are not swappable.
          */
         public final int gate_pin_swap_code;
     }

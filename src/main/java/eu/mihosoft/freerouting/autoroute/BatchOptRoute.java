@@ -118,7 +118,7 @@ public class BatchOptRoute
     {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
-        String start_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + (new Integer(p_pass_no)).toString() + ": ";
+        String start_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + (Integer.valueOf(p_pass_no)).toString() + ": ";
         this.thread.hdlg.screen_messages.set_status_message(start_message);
         this.thread.hdlg.remove_ratsnest();
         int incomplete_count_before = this.thread.hdlg.get_ratsnest().incomplete_count();

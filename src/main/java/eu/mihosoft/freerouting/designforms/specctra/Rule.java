@@ -182,7 +182,7 @@ public abstract class Rule
         double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(default_trace_half_width);
         p_par.file.new_line();
         p_par.file.write("(width ");
-        p_par.file.write((new Double(trace_width)).toString());
+        p_par.file.write((Double.valueOf(trace_width)).toString());
         p_par.file.write(")");
         p_par.file.end_scope();
         for (int i = 1; i < p_par.board.layer_structure.arr.length; ++i)
@@ -211,7 +211,7 @@ public abstract class Rule
         double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(curr_trace_half_width);
         p_par.file.new_line();
         p_par.file.write("(width ");
-        p_par.file.write((new Double(trace_width)).toString());
+        p_par.file.write((Double.valueOf(trace_width)).toString());
         p_par.file.write(") ");
         p_par.file.end_scope();
         p_par.file.end_scope();
@@ -228,7 +228,7 @@ public abstract class Rule
         double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_default_net_class().get_trace_half_width(0));
         p_par.file.new_line();
         p_par.file.write("(width ");
-        p_par.file.write((new Double(trace_width)).toString());
+        p_par.file.write((Double.valueOf(trace_width)).toString());
         p_par.file.write(")");
         // write the default clearance rule
         int default_cl_no = eu.mihosoft.freerouting.rules.BoardRules.default_clearance_class();
@@ -236,7 +236,7 @@ public abstract class Rule
         double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
         p_par.file.new_line();
         p_par.file.write("(clear ");
-        p_par.file.write((new Double(default_clearance)).toString());
+        p_par.file.write((Double.valueOf(default_clearance)).toString());
         p_par.file.write(")");
         // write the Smd_to_turn_gap
         Double smd_to_turn_dist = p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
@@ -269,7 +269,7 @@ public abstract class Rule
             double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
             p_par.file.new_line();
             p_par.file.write("(clear ");
-            p_par.file.write((new Double(curr_clearance)).toString());
+            p_par.file.write((Double.valueOf(curr_clearance)).toString());
             p_par.file.write(" (type ");
             p_par.identifier_type.write(cl_matrix.get_name(p_cl_class), p_par.file);
             p_par.file.write("_");

@@ -1579,7 +1579,7 @@ class GUIDefaultsScanner {
           }
         case 146: break;
         case 7: 
-          { return new Double(yytext());
+          { return Double.valueOf(yytext());
           }
         case 147: break;
         case 69: 
@@ -1656,7 +1656,7 @@ class GUIDefaultsScanner {
           }
         case 165: break;
         case 4: 
-          { return new Integer(yytext());
+          { return Integer.valueOf(yytext());
           }
         case 166: break;
         case 13: 

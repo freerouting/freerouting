@@ -34,7 +34,7 @@ public interface ConvexShape extends Shape
     
     /**
      * Calculates the offset shape by p_distance.
-     * If p_distance > 0, the shape will be enlarged, else the result
+     * If p_distance {@literal >} 0, the shape will be enlarged, else the result
      * shape will be smaller.
      */
     ConvexShape offset(double p_distance);

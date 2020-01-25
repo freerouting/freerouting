@@ -69,7 +69,7 @@ public class Padstacks implements java.io.Serializable
     }
     
     /**
-     * Returns the padstack with index p_padstack_no for 1 <= p_padstack_no <= padstack_count
+     * Returns the padstack with index p_padstack_no for 1 {@literal <}= p_padstack_no {@literal <}= padstack_count
      */
     public Padstack get(int p_padstack_no)
     {
@@ -108,7 +108,7 @@ public class Padstacks implements java.io.Serializable
      */
     public Padstack add(ConvexShape [] p_shapes)
     {
-        String new_name = "padstack#" + (new Integer(padstack_arr.size() + 1).toString());
+        String new_name = "padstack#" + (Integer.valueOf(padstack_arr.size() + 1).toString());
         return add(new_name, p_shapes, false, false);
     }
     

@@ -476,19 +476,19 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
     
     /**
      * Contains the precalculated mininal width of the shapes of this DrillItem on all layers.
-     * If < 0, the value is not yet calculated
+     * If {@literal <} 0, the value is not yet calculated
      */
     private double precalculated_min_width = -1;
     
     /**
      * Contains the precalculated first layer, where this DrillItem contains a pad shape.
-     * If < 0, the value is not yet calculated
+     * If {@literal <} 0, the value is not yet calculated
      */
     private int precalculated_first_layer = -1;
     
     /**
      * Contains the precalculated last layer, where this DrillItem contains a pad shape.
-     * If < 0, the value is not yet calculated
+     * If {@literal <} 0, the value is not yet calculated
      */
     private int precalculated_last_layer = -1;
     

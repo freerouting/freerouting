@@ -98,7 +98,7 @@ public class ScreenMessages
     public void set_batch_fanout_info(int p_pass_no, int p_components_to_go)
     {
         Integer components_to_go = p_components_to_go;
-        Integer pass_no = new  Integer(p_pass_no);
+        Integer pass_no = Integer.valueOf(p_pass_no);
         add_field.setText(resources.getString("fanout_pass") + " " +  pass_no.toString() + ": ");
         layer_field.setText(resources.getString("still") + " " 
                 + components_to_go.toString() + " " + resources.getString("components"));

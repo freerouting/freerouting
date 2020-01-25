@@ -45,7 +45,7 @@ public class Polyline implements java.io.Serializable
      * creates a polyline of length p_polygon.corner_count + 1 from p_polygon,
      * so that the i-th corner of p_polygon will be the intersection of
      * the i-th and the i+1-th lines of the new created p_polyline
-     * for 0 <= i < p_point_arr.length. p_polygon must have at least 2 corners
+     * for 0 {@literal <}= i {@literal <} p_point_arr.length. p_polygon must have at least 2 corners
      */
     public Polyline(Polygon p_polygon)
     {
@@ -597,7 +597,7 @@ public class Polyline implements java.io.Serializable
     /**
      * Calculates for the p_no-th line segment a shape around this line
      * where the right and left edge lines have the distance p_half_width
-     * from the center line. 0 <= p_no <=  arr.length - 3
+     * from the center line. 0 {@literal <}= p_no {@literal <}=  arr.length - 3
      */
     public TileShape offset_shape(int p_half_width, int p_no)
     {
@@ -613,7 +613,7 @@ public class Polyline implements java.io.Serializable
     /**
      * Calculates for the p_no-th line segment a box shape around this line
      * where the border lines have the distance p_half_width
-     * from the center line. 0 <= p_no <=  arr.length - 3
+     * from the center line. 0 {@literal <}= p_no {@literal <}=  arr.length - 3
      */
     public IntBox offset_box(int p_half_width, int p_no)
     {

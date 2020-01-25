@@ -87,7 +87,7 @@ public class BoardFrame extends javax.swing.JFrame
      * files are allowed, so that the frame can be used in an applet.
      * Currently Option.EXTENDED_TOOL_BAR is used only if a new eu.mihosoft.freerouting.board is
      * created by the application from scratch.
-     * If p_test_level > RELEASE_VERSION, functionality not yet ready for release is included.
+     * If p_test_level {@literal >} RELEASE_VERSION, functionality not yet ready for release is included.
      * Also the warning output depends on p_test_level.
      */
     public BoardFrame(DesignFile p_design, Option p_option, TestLevel p_test_level,

@@ -170,7 +170,7 @@ public class DragItemState extends DragState
                     Item curr_moved_item = it.next();
                     for (int i = 0; i < curr_moved_item.net_count(); ++i)
                     {
-                        changed_nets.add(new Integer(curr_moved_item.get_net_no(i)));
+                        changed_nets.add(Integer.valueOf(curr_moved_item.get_net_no(i)));
                     }
                 }
                 for (Integer curr_net_no : changed_nets)

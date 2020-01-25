@@ -68,7 +68,7 @@ public class Components implements java.io.Serializable
      */
     public Component add(Point p_location, double p_rotation, boolean p_on_front, Package p_package)
     {
-        String component_name = "Component#" + (new Integer(component_arr.size() + 1)).toString();
+        String component_name = "Component#" + (Integer.valueOf(component_arr.size() + 1)).toString();
         return add(component_name, p_location, p_rotation, p_on_front, p_package, p_package, false);
     }
     

@@ -304,7 +304,7 @@ public class SelectedItemState extends InteractiveState
         {
             Via curr_via = (Via) it.next();
             Vector rel_coor = curr_via.get_center().difference_by(gravity_point);
-            String pin_name = (new Integer(i + 1)).toString();
+            String pin_name = (Integer.valueOf(i + 1)).toString();
             pin_arr[i] = new Package.Pin(pin_name, curr_via.get_padstack().no, rel_coor, 0);
         }
         Package new_package = board.library.packages.add(pin_arr);
@@ -873,7 +873,7 @@ public class SelectedItemState extends InteractiveState
         if (clearance_violations == null)
         {
             clearance_violations = new ClearanceViolations(this.item_list);
-            Integer violation_count = new Integer(clearance_violations.list.size());
+            Integer violation_count = Integer.valueOf(clearance_violations.list.size());
             String curr_message = violation_count.toString() + " " + resources.getString("clearance_violations_found");
             hdlg.screen_messages.set_status_message(curr_message);
         }
