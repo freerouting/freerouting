@@ -1299,7 +1299,7 @@ class SpecctraFileScanner implements Scanner {
           }
         case 204: break;
         case 15: 
-          { return new Double(yytext());
+          { return Double.valueOf(yytext());
           }
         case 205: break;
         case 42: 

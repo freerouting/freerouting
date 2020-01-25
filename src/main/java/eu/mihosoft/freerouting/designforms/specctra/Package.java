@@ -188,7 +188,7 @@ public class Package
             for(int j = 0; j < rel_coor.length; ++j)
             {
                 p_par.file.write(" ");
-                p_par.file.write((new Double(rel_coor[j])).toString());
+                p_par.file.write((Double.valueOf(rel_coor[j])).toString());
             }
             int rotation = (int) Math.round(curr_pin.rotation_in_degree);
             if (rotation != 0)

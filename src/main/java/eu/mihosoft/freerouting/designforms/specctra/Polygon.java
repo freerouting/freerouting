@@ -112,9 +112,9 @@ public class Polygon extends Shape
         for (int i = 0; i < corner_count; ++i)
         {
             p_file.new_line();
-            p_file.write(new Double(coor[2 * i]).toString());
+            p_file.write(Double.valueOf(coor[2 * i]).toString());
             p_file.write(" ");
-            p_file.write(new Double(coor[2 * i + 1]).toString());
+            p_file.write(Double.valueOf(coor[2 * i + 1]).toString());
         }
         p_file.end_scope();
     }

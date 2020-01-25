@@ -50,14 +50,14 @@ public class PolylinePath extends Path
         p_file.write("polyline_path ");
         p_identifier.write(this.layer.name, p_file);
         p_file.write(" ");
-        p_file.write((new Double(this.width)).toString());
+        p_file.write((Double.valueOf(this.width)).toString());
         int line_count = coordinate_arr.length/ 4;
         for (int i = 0; i < line_count; ++i)
         {
             p_file.new_line();
             for (int j = 0; j < 4; ++j)
             {
-                p_file.write(new Double(coordinate_arr[4 * i + j]).toString());
+                p_file.write(Double.valueOf(coordinate_arr[4 * i + j]).toString());
                 p_file.write(" ");
             }
         }
@@ -70,7 +70,7 @@ public class PolylinePath extends Path
         p_file.write("polyline_path ");
         p_identifier.write(this.layer.name, p_file);
         p_file.write(" ");
-        p_file.write((new Double(this.width)).toString());
+        p_file.write((Double.valueOf(this.width)).toString());
         int line_count = coordinate_arr.length/ 4;
         for (int i = 0; i < line_count; ++i)
         {

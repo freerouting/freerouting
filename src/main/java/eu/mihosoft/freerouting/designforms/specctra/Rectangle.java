@@ -109,7 +109,7 @@ public class Rectangle extends Shape
         for (int i = 0; i < coor.length; ++i)
         {
             p_file.write(" ");
-            p_file.write(new Double(coor[i]).toString());
+            p_file.write(Double.valueOf(coor[i]).toString());
         }
         p_file.write(")");
     }
