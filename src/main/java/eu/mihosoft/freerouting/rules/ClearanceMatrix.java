@@ -91,7 +91,7 @@ public class ClearanceMatrix implements java.io.Serializable
     }
     
     /**
-     * Sets the value of all clearance classes with number >= 1
+     * Sets the value of all clearance classes with number {@literal >}= 1
      * to p_value on all layers.
      */
     public void set_default_value(int p_value)
@@ -103,7 +103,7 @@ public class ClearanceMatrix implements java.io.Serializable
     }
     
     /**
-     * Sets the value of all clearance classes with number >= 1
+     * Sets the value of all clearance classes with number {@literal >}= 1
      * to p_value on p_layer.
      */
     public void set_default_value(int p_layer, int p_value)

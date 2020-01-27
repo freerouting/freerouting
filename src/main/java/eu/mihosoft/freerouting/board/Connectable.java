@@ -68,7 +68,7 @@ public interface Connectable
     /**
      * Returns all connectable items of the net with number p_net_no, which can be reached recursively
      * from this item via normal contacts.
-     * if (p_net_no <= 0, the net number is ignored.
+     * if (p_net_no {@literal <}= 0, the net number is ignored.
      */
     Set<Item> get_connected_set(int p_net_no);
     

@@ -100,3 +100,19 @@ Additional steps for users of CadSoft-Eagle:
 6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
 
 
+Additional steps for users of KiCad:
+====================================
+
+1) Download the latest freerouting-executable.jar file from the [Releases](https://github.com/miho/freerouting/releases)
+
+2) Start KiCad and open your project in Pcbnew.
+
+3) Export the PCB into Specctra DSN (File / Export... / Specctra DSN).
+
+4) Start the router by running the freerouting-executable.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+
+5) Do the routing.
+
+5) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
+
+6) Go back to KiCad's Pcbnew and import the results (File / Import Specctra Session...).

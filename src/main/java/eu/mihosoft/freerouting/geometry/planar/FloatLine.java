@@ -90,7 +90,7 @@ public class FloatLine
     
     /**
      * translates the line perpendicular at about p_dist.
-     * If p_dist > 0, the line will be translated to the left, else to the right
+     * If p_dist {@literal >} 0, the line will be translated to the left, else to the right
      */
     public FloatLine translate(double p_dist)
     {

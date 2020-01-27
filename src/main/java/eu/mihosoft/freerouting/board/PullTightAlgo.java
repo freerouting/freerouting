@@ -577,7 +577,7 @@ public abstract class PullTightAlgo
 
     abstract Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace);
     protected final RoutingBoard board;
-    /** If only_net_no > 0, only nets with this net numbers are optimized. */
+    /** If only_net_no {@literal >} 0, only nets with this net numbers are optimized. */
     protected final int[] only_net_no_arr;
     protected int curr_layer;
     protected int curr_half_width;

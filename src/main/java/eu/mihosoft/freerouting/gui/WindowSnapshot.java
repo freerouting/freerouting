@@ -154,7 +154,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             this.snapshot_count = saved_attributes.snapshot_count;
             this.list_model = saved_attributes.list_model;
             this.list.setModel(this.list_model);
-            String next_default_name = "snapshot " + (new Integer(snapshot_count + 1)).toString();
+            String next_default_name = "snapshot " + (Integer.valueOf(snapshot_count + 1)).toString();
             this.name_field.setText(next_default_name);
             this.setLocation(saved_attributes.location);
             this.setVisible(saved_attributes.is_visible);
@@ -251,7 +251,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             {
                 ++snapshot_count;
                 list_model.addElement(new_snapshot);
-                String next_default_name = resources.getString("snapshot") + " " + (new Integer(snapshot_count + 1)).toString();
+                String next_default_name = resources.getString("snapshot") + " " + (Integer.valueOf(snapshot_count + 1)).toString();
                 name_field.setText(next_default_name);
             }
         }

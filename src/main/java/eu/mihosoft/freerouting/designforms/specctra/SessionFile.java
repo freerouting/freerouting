@@ -185,7 +185,7 @@ public class SessionFile
             p_file.write(" back ");
         }
         int rotation = (int) Math.round(p_component.get_rotation_in_degree());
-        p_file.write((new Integer(rotation).toString()));
+        p_file.write((Integer.valueOf(rotation).toString()));
         if (p_component.position_fixed)
         {
             p_file.new_line();
@@ -470,14 +470,14 @@ public class SessionFile
         p_file.write("path ");
         p_identifier_type.write(p_layer_name, p_file);
         p_file.write(" ");
-        p_file.write((new Integer(p_width)).toString());
+        p_file.write((Integer.valueOf(p_width)).toString());
         int corner_count = p_coors.length/ 2;
         for (int i = 0; i < corner_count; ++i)
         {
             p_file.new_line();
-            p_file.write(new Integer(p_coors[2 * i]).toString());
+            p_file.write(Integer.valueOf(p_coors[2 * i]).toString());
             p_file.write(" ");
-            p_file.write(new Integer(p_coors[2 * i + 1]).toString());
+            p_file.write(Integer.valueOf(p_coors[2 * i + 1]).toString());
         }
         p_file.end_scope();
     }

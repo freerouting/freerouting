@@ -109,7 +109,7 @@ public class Packages implements java.io.Serializable
      */
     public Package add(Package.Pin [] p_pin_arr)
     {
-        String package_name = "Package#" + (new Integer(package_arr.size() + 1)).toString();
+        String package_name = "Package#" + (Integer.valueOf(package_arr.size() + 1)).toString();
         
         return add(package_name, p_pin_arr, null, new Package.Keepout [0], new Package.Keepout [0],
                 new Package.Keepout [0], true);
