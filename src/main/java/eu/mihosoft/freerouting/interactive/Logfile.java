@@ -20,6 +20,7 @@
 package eu.mihosoft.freerouting.interactive;
 
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -88,7 +89,7 @@ public class Logfile
             }
             catch (IOException e)
             {
-                System.out.println("unable to close logfile");
+                FRLogger.logger.error("Unable to close logfile", e);
             }
         }
         this.write_enabled = false;
@@ -105,7 +106,7 @@ public class Logfile
         }
         catch (IOException e)
         {
-            System.out.println("unable to create logfile");
+            FRLogger.logger.error("Unable to create logfile", e);
             return false;
         }
         write_enabled = true;
@@ -113,7 +114,7 @@ public class Logfile
     }
     
     /**
-     * Marks the beginning of a new item in the olutput stream
+     * Marks the beginning of a new item in the output stream
      */
     public void start_scope(LogfileScope p_logfile_scope)
     {
@@ -124,15 +125,15 @@ public class Logfile
                 this.file_writer.write(p_logfile_scope.name);
                 this.file_writer.write("\n");
             }
-            catch (IOException e2)
+            catch (IOException e)
             {
-                System.out.println("Logfile.start_scope: write failed");
+                FRLogger.logger.error("Logfile.start_scope: write failed", e);
             }
         }
     }
     
     /**
-     * Marks the beginning of a new scope in the olutput stream
+     * Marks the beginning of a new scope in the output stream
      * Writes also an integer value.
      */
     public void start_scope(LogfileScope p_logfile_scope,  int p_int_value)
@@ -142,7 +143,7 @@ public class Logfile
     }
     
     /**
-     * Marks the beginning of a new scope in the olutput stream
+     * Marks the beginning of a new scope in the output stream
      * Writes also 1, if p_boolean_value is true, or 0, if p_boolean_value is false;
      */
     public void start_scope(LogfileScope p_logfile_scope,  boolean p_boolean_value)
@@ -161,7 +162,7 @@ public class Logfile
     }
     
     /**
-     * Marks the beginning of a new item in the olutput stream
+     * Marks the beginning of a new item in the output stream
      * Writes also the start corner.
      */
     public void start_scope(LogfileScope p_logfile_scope, FloatPoint p_start_corner)
@@ -173,7 +174,7 @@ public class Logfile
     
     
     /**
-     * Reads the next scope iidentifier  from the logfile.
+     * Reads the next scope identifier  from the logfile.
      * Returns null if no more item scope was found.
      */
     public LogfileScope start_read_scope()
@@ -185,7 +186,7 @@ public class Logfile
         }
         if (!(curr_ob instanceof String))
         {
-            System.out.println("Logfile.start_read_scope: String expected");
+            FRLogger.logger.error("Logfile.start_read_scope: String expected");
             this.pending_token = curr_ob;
             return null;
         }
@@ -206,9 +207,9 @@ public class Logfile
                 this.file_writer.write((Integer.valueOf(p_int)).toString());
                 this.file_writer.write("\n");
             }
-            catch (IOException e2)
+            catch (IOException e)
             {
-                System.out.println("unable to write integer to logfile");
+                FRLogger.logger.error("Unable to write integer to logfile", e);
             }
         }
     }
@@ -222,7 +223,7 @@ public class Logfile
         Object curr_ob = this.next_token();
         if (!(curr_ob instanceof Integer))
         {
-            System.out.println("Logfile.read_int: Integer expected");
+            FRLogger.logger.error("Logfile.read_int: Integer expected");
             this.pending_token = curr_ob;
             return -1;
         }
@@ -238,7 +239,7 @@ public class Logfile
         {
             if (p_corner == null)
             {
-                System.out.println("logfile.add_corner: p_corner is null");
+                FRLogger.logger.error("Logfile.add_corner: p_corner is null");
                 return;
             }
             try
@@ -248,9 +249,9 @@ public class Logfile
                 this.file_writer.write((Double.valueOf(p_corner.y)).toString());
                 this.file_writer.write("\n");
             }
-            catch (IOException e2)
+            catch (IOException e)
             {
-                System.out.println("unable to write to logfile while adding corner");
+                FRLogger.logger.error("Unable to write to logfile while adding corner", e);
             }
         }
     }
@@ -270,7 +271,7 @@ public class Logfile
         }
         catch (IOException e)
         {
-            System.out.println("Logfile.next_token: IO error scanning file");
+            FRLogger.logger.error("Logfile.next_token: IO error scanning file", e);
             return null;
         }
     }

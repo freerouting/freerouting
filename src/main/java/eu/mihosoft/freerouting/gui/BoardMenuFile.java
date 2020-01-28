@@ -238,6 +238,7 @@ public class BoardMenuFile extends javax.swing.JMenu
         }
         else
         {
+
             board_frame.screen_messages.set_status_message(resources.getString("message_9"));
             board_frame.board_panel.board_handling.start_logfile(filename);
         }
