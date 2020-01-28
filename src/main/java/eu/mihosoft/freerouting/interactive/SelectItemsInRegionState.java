@@ -44,24 +44,24 @@ public class SelectItemsInRegionState extends SelectRegionState
      * Returns a new instance of this class.
      */
     public static SelectItemsInRegionState get_instance(InteractiveState p_parent_state,
-            BoardHandling p_board_handling, Logfile p_logfile)
+            BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        return get_instance(null, p_parent_state, p_board_handling, p_logfile);
+        return get_instance(null, p_parent_state, p_board_handling, p_activityReplayFile);
     }
 
     /**
      * Returns a new instance of this class with first point p_location.
      */
     public static SelectItemsInRegionState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-            BoardHandling p_board_handling, Logfile p_logfile)
+            BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         p_board_handling.display_layer_messsage();
         SelectItemsInRegionState new_instance =
-                new SelectItemsInRegionState(p_parent_state, p_board_handling, p_logfile);
+                new SelectItemsInRegionState(p_parent_state, p_board_handling, p_activityReplayFile);
         new_instance.corner1 = p_location;
-        if (new_instance.logfile != null)
+        if (new_instance.activityReplayFile != null)
         {
-            new_instance.logfile.add_corner(p_location);
+            new_instance.activityReplayFile.add_corner(p_location);
         }
         new_instance.hdlg.screen_messages.set_status_message(new_instance.resources.getString("drag_left_mouse_button_to_selects_items_in_region"));
         return new_instance;
@@ -69,12 +69,12 @@ public class SelectItemsInRegionState extends SelectRegionState
 
     /** Creates a new instance of SelectItemsInRegionState */
     private SelectItemsInRegionState(InteractiveState p_parent_state,
-            BoardHandling p_board_handling, Logfile p_logfile)
+            BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
-        if (logfile != null)
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.SELECT_REGION);
+            activityReplayFile.start_scope(ActivityReplayFileScope.SELECT_REGION);
         }
     }
 
@@ -84,9 +84,9 @@ public class SelectItemsInRegionState extends SelectRegionState
         {
             hdlg.screen_messages.set_status_message("");
             corner2 = hdlg.get_current_mouse_position();
-            if (logfile != null)
+            if (activityReplayFile != null)
             {
-                logfile.add_corner(corner2);
+                activityReplayFile.add_corner(corner2);
             }
             this.select_all_in_region();
         }
@@ -140,7 +140,7 @@ public class SelectItemsInRegionState extends SelectRegionState
             }
             else
             {
-                this.return_state = SelectedItemState.get_instance(found_items, this.return_state, hdlg, logfile);
+                this.return_state = SelectedItemState.get_instance(found_items, this.return_state, hdlg, activityReplayFile);
             }
         }
         else

@@ -34,16 +34,16 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 public class SelectMenuState extends MenuState
 {
     /** Returns a new instance of SelectMenuState */
-    public static SelectMenuState get_instance(BoardHandling p_board_handling, Logfile p_logfile)
+    public static SelectMenuState get_instance(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        SelectMenuState new_state = new SelectMenuState(p_board_handling, p_logfile);
+        SelectMenuState new_state = new SelectMenuState(p_board_handling, p_activityReplayFile);
         return new_state;
     }
     
     /** Creates a new instance of SelectMenuState */
-    private SelectMenuState(BoardHandling p_board_handling, Logfile p_logfile)
+    private SelectMenuState(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_board_handling, p_logfile);
+        super(p_board_handling, p_activityReplayFile);
     }
     
     public InteractiveState left_button_clicked(FloatPoint p_location)
@@ -54,7 +54,7 @@ public class SelectMenuState extends MenuState
     
     public InteractiveState mouse_dragged(FloatPoint p_point)
     {
-        return SelectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, logfile);
+        return SelectItemsInRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
     }
     
     public void display_default_message()

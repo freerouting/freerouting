@@ -34,9 +34,9 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 public class Settings implements java.io.Serializable
 {
     /** Creates a new eu.mihosoft.freerouting.interactive settings variable. */
-    public Settings(RoutingBoard p_board,  Logfile p_logfile)
+    public Settings(RoutingBoard p_board,  ActivityReplayFile p_activityReplayFile)
     {
-        this.logfile = p_logfile;
+        this.activityReplayFile = p_activityReplayFile;
         // Initialise with default values.
         layer = 0;
         push_enabled = true;
@@ -69,7 +69,7 @@ public class Settings implements java.io.Serializable
      */
     public Settings(Settings p_settings)
     {
-        this.logfile = p_settings.logfile;
+        this.activityReplayFile = p_settings.activityReplayFile;
         this.read_only = p_settings.read_only;
         this.layer = p_settings.layer;
         this.push_enabled = p_settings.push_enabled;
@@ -304,7 +304,7 @@ public class Settings implements java.io.Serializable
             return;
         }
         push_enabled = p_value;
-        logfile.start_scope(LogfileScope.SET_PUSH_ENABLED, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_PUSH_ENABLED, p_value);
     }
     
     /**
@@ -317,7 +317,7 @@ public class Settings implements java.io.Serializable
             return;
         }
         drag_components_enabled = p_value;
-        logfile.start_scope(LogfileScope.SET_DRAG_COMPONENTS_ENABLED, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_DRAG_COMPONENTS_ENABLED, p_value);
     }
     
     
@@ -332,7 +332,7 @@ public class Settings implements java.io.Serializable
             return;
         }
         select_on_all_visible_layers = p_value;
-        logfile.start_scope(LogfileScope.SET_SELECT_ON_ALL_LAYER, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_SELECT_ON_ALL_LAYER, p_value);
     }
     
     /** Route mode: stitching or dynamic */
@@ -344,7 +344,7 @@ public class Settings implements java.io.Serializable
         }
         is_stitch_route = p_value;
         
-        logfile.start_scope(LogfileScope.SET_STITCH_ROUTE, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_STITCH_ROUTE, p_value);
     }
     
     /**
@@ -357,7 +357,7 @@ public class Settings implements java.io.Serializable
             return;
         }
         trace_pull_tight_region_width = p_value;
-        logfile.start_scope(LogfileScope.SET_PULL_TIGHT_REGION_WIDTH, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_PULL_TIGHT_REGION_WIDTH, p_value);
     }
     
     /**
@@ -370,7 +370,7 @@ public class Settings implements java.io.Serializable
             return;
         }
         trace_pull_tight_accuracy = p_value;
-        logfile.start_scope(LogfileScope.SET_PULL_TIGHT_ACCURACY, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_PULL_TIGHT_ACCURACY, p_value);
     }
     
     /**
@@ -396,7 +396,7 @@ public class Settings implements java.io.Serializable
             return;
         }
         manual_rule_selection = p_value;
-        logfile.start_scope(LogfileScope.SET_MANUAL_TRACEWITH_SELECTION, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACEWITH_SELECTION, p_value);
     }
     
     /**
@@ -409,8 +409,8 @@ public class Settings implements java.io.Serializable
             return;
         }
         manual_trace_half_width_arr[p_layer_no] = p_value;
-        logfile.start_scope(LogfileScope.SET_MANUAL_TRACE_HALF_WIDTH, p_layer_no);
-        logfile.add_int(p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACE_HALF_WIDTH, p_layer_no);
+        activityReplayFile.add_int(p_value);
     }
     
     
@@ -425,7 +425,7 @@ public class Settings implements java.io.Serializable
             return;
         }
         manual_trace_clearance_class = p_index;
-        logfile.start_scope(LogfileScope.SET_MANUAL_TRACE_CLEARANCE_CLASS, p_index);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACE_CLEARANCE_CLASS, p_index);
     }
     
     /**
@@ -440,9 +440,9 @@ public class Settings implements java.io.Serializable
         if (zoom_with_wheel != p_value)
         {
             zoom_with_wheel = p_value;
-            if (logfile != null)
+            if (activityReplayFile != null)
             {
-                logfile.start_scope(LogfileScope.SET_ZOOM_WITH_WHEEL, p_value);
+                activityReplayFile.start_scope(ActivityReplayFileScope.SET_ZOOM_WITH_WHEEL, p_value);
             }
         }
     }
@@ -458,7 +458,7 @@ public class Settings implements java.io.Serializable
         }
         item_selection_filter.set_selected(p_item_type, p_value);
         
-        logfile.start_scope(LogfileScope.SET_SELECTABLE, p_item_type.ordinal());
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_SELECTABLE, p_item_type.ordinal());
         int logged_value;
         if (p_value)
         {
@@ -468,7 +468,7 @@ public class Settings implements java.io.Serializable
         {
             logged_value = 0;
         }
-        logfile.add_int(logged_value);
+        activityReplayFile.add_int(logged_value);
     }
     
     /**
@@ -479,9 +479,9 @@ public class Settings implements java.io.Serializable
         this.read_only =  p_value;
     }
     
-    void set_logfile(Logfile p_logfile)
+    void set_logfile(ActivityReplayFile p_activityReplayFile)
     {
-        this.logfile = p_logfile;
+        this.activityReplayFile = p_activityReplayFile;
     }
     
     /** Reads an instance of this class from a file */
@@ -583,5 +583,5 @@ public class Settings implements java.io.Serializable
      * The file used for logging eu.mihosoft.freerouting.interactive action,
      * so that they can be replayed later
      */
-    private transient Logfile logfile;
+    private transient ActivityReplayFile activityReplayFile;
 }

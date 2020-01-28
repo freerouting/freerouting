@@ -21,7 +21,7 @@ public class BoardHandlingImpl implements IBoardHandling {
      * The file used for logging eu.mihosoft.freerouting.interactive action,
      * so that they can be replayed later
      */
-    public final Logfile logfile = new Logfile();
+    public final ActivityReplayFile activityReplayFile = new ActivityReplayFile();
     /** The current settings for eu.mihosoft.freerouting.interactive actions on the eu.mihosoft.freerouting.board*/
     public Settings settings = null;
     /** The eu.mihosoft.freerouting.board database used in this eu.mihosoft.freerouting.interactive handling. */
@@ -81,7 +81,7 @@ public class BoardHandlingImpl implements IBoardHandling {
                 new RoutingBoard(p_bounding_box, p_layer_structure, p_outline_shapes, outline_cl_class_no,
                         p_rules, p_board_communication, p_test_level);
 
-        this.settings = new Settings(this.board, this.logfile);
+        this.settings = new Settings(this.board, this.activityReplayFile);
     }
 
     @Override

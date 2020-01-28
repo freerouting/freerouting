@@ -76,7 +76,7 @@ public class BoardHandling extends BoardHandlingImpl
         this.locale = p_locale;
         this.panel = p_panel;
         this.screen_messages = p_panel.screen_messages;
-        this.set_interactive_state(SelectMenuState.get_instance(this, logfile));
+        this.set_interactive_state(SelectMenuState.get_instance(this, activityReplayFile));
         this.resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.BoardHandling", p_locale);
     }
 
@@ -147,7 +147,7 @@ public class BoardHandling extends BoardHandlingImpl
         }
         board.change_conduction_is_obstacle(!p_value);
 
-        logfile.start_scope(LogfileScope.SET_IGNORE_CONDUCTION, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_IGNORE_CONDUCTION, p_value);
     }
 
     public void set_pin_edge_to_turn_dist(double p_value)
@@ -290,8 +290,8 @@ public class BoardHandling extends BoardHandlingImpl
         if (p_layer >= 0 && p_layer <= board.get_layer_count())
         {
             board.rules.set_default_trace_half_width(p_layer, p_value);
-            logfile.start_scope(LogfileScope.SET_TRACE_HALF_WIDTH, p_layer);
-            logfile.add_int(p_value);
+            activityReplayFile.start_scope(ActivityReplayFileScope.SET_TRACE_HALF_WIDTH, p_layer);
+            activityReplayFile.add_int(p_value);
         }
     }
 
@@ -305,7 +305,7 @@ public class BoardHandling extends BoardHandlingImpl
             return;
         }
         board.search_tree_manager.set_clearance_compensation_used(p_value);
-        logfile.start_scope(LogfileScope.SET_CLEARANCE_COMPENSATION, p_value);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_CLEARANCE_COMPENSATION, p_value);
     }
 
     /**
@@ -318,7 +318,7 @@ public class BoardHandling extends BoardHandlingImpl
             return;
         }
         board.rules.set_trace_angle_restriction(p_snap_angle);
-        logfile.start_scope(LogfileScope.SET_SNAP_ANGLE, p_snap_angle.get_no());
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_SNAP_ANGLE, p_snap_angle.get_no());
     }
 
     /**
@@ -333,7 +333,7 @@ public class BoardHandling extends BoardHandlingImpl
         int layer = Math.max(p_layer, 0);
         layer = Math.min(layer, board.get_layer_count() - 1);
         set_layer(layer);
-        logfile.start_scope(LogfileScope.SET_LAYER, p_layer);
+        activityReplayFile.start_scope(ActivityReplayFileScope.SET_LAYER, p_layer);
     }
 
     /**
@@ -619,7 +619,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             return;
         }
-        logfile.start_write(p_filename);
+        activityReplayFile.start_write(p_filename);
     }
 
     /**
@@ -716,7 +716,7 @@ public class BoardHandling extends BoardHandlingImpl
             return;
         }
         board.generate_snapshot();
-        logfile.start_scope(LogfileScope.GENERATE_SNAPSHOT);
+        activityReplayFile.start_scope(ActivityReplayFileScope.GENERATE_SNAPSHOT);
     }
 
     /**
@@ -747,7 +747,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             screen_messages.set_status_message(resources.getString("no_more_undo_possible"));
         }
-        logfile.start_scope(LogfileScope.UNDO);
+        activityReplayFile.start_scope(ActivityReplayFileScope.UNDO);
         repaint();
     }
 
@@ -773,7 +773,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             screen_messages.set_status_message(resources.getString("no_more_redo_possible"));
         }
-        logfile.start_scope(LogfileScope.REDO);
+        activityReplayFile.start_scope(ActivityReplayFileScope.REDO);
         repaint();
     }
 
@@ -985,7 +985,7 @@ public class BoardHandling extends BoardHandlingImpl
      */
     public void set_select_menu_state()
     {
-        this.interactive_state = SelectMenuState.get_instance(this, logfile);
+        this.interactive_state = SelectMenuState.get_instance(this, activityReplayFile);
         screen_messages.set_status_message(resources.getString("select_menu"));
     }
 
@@ -994,7 +994,7 @@ public class BoardHandling extends BoardHandlingImpl
      */
     public void set_route_menu_state()
     {
-        this.interactive_state = RouteMenuState.get_instance(this, logfile);
+        this.interactive_state = RouteMenuState.get_instance(this, activityReplayFile);
         screen_messages.set_status_message(resources.getString("route_menu"));
     }
 
@@ -1003,7 +1003,7 @@ public class BoardHandling extends BoardHandlingImpl
      */
     public void set_drag_menu_state()
     {
-        this.interactive_state = DragMenuState.get_instance(this, logfile);
+        this.interactive_state = DragMenuState.get_instance(this, activityReplayFile);
         screen_messages.set_status_message(resources.getString("drag_menu"));
     }
 
@@ -1017,7 +1017,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             board = (RoutingBoard) p_design.readObject();
             settings = (Settings) p_design.readObject();
-            settings.set_logfile(this.logfile);
+            settings.set_logfile(this.activityReplayFile);
             coordinate_transform = (CoordinateTransform) p_design.readObject();
             graphics_context = (GraphicsContext) p_design.readObject();
         }
@@ -1156,9 +1156,9 @@ public class BoardHandling extends BoardHandlingImpl
      */
     public void close_files()
     {
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.close_output();
+            activityReplayFile.close_output();
         }
     }
 
@@ -1174,7 +1174,7 @@ public class BoardHandling extends BoardHandlingImpl
         }
         FloatPoint location =
                 graphics_context.coordinate_transform.screen_to_board(p_point);
-        InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this, logfile);
+        InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this, activityReplayFile);
         set_interactive_state(new_state);
     }
 
@@ -1203,7 +1203,7 @@ public class BoardHandling extends BoardHandlingImpl
         {
             return;
         }
-        set_interactive_state(SelectItemsInRegionState.get_instance(this.interactive_state, this, logfile));
+        set_interactive_state(SelectItemsInRegionState.get_instance(this.interactive_state, this, activityReplayFile));
     }
 
     /**
@@ -1219,7 +1219,7 @@ public class BoardHandling extends BoardHandlingImpl
         this.display_layer_messsage();
         if (interactive_state instanceof MenuState)
         {
-            set_interactive_state(SelectedItemState.get_instance(p_items, interactive_state, this, logfile));
+            set_interactive_state(SelectedItemState.get_instance(p_items, interactive_state, this, activityReplayFile));
         }
         else if (interactive_state instanceof SelectedItemState)
         {
@@ -1398,7 +1398,7 @@ public class BoardHandling extends BoardHandlingImpl
         Collection<Item> item_list = curr_state.get_item_list();
         FloatPoint from_location = graphics_context.coordinate_transform.screen_to_board(p_from_location);
         InteractiveState new_state =
-                MoveItemState.get_instance(from_location, item_list, interactive_state, this, logfile);
+                MoveItemState.get_instance(from_location, item_list, interactive_state, this, activityReplayFile);
         set_interactive_state(new_state);
         repaint();
     }
@@ -1417,7 +1417,7 @@ public class BoardHandling extends BoardHandlingImpl
         Collection<Item> item_list = curr_state.get_item_list();
         FloatPoint from_location = graphics_context.coordinate_transform.screen_to_board(p_from_location);
         InteractiveState new_state =
-                CopyItemState.get_instance(from_location, item_list, interactive_state.return_state, this, logfile);
+                CopyItemState.get_instance(from_location, item_list, interactive_state.return_state, this, activityReplayFile);
         set_interactive_state(new_state);
     }
 
@@ -1562,7 +1562,7 @@ public class BoardHandling extends BoardHandlingImpl
      */
     public void zoom_region()
     {
-        interactive_state = ZoomRegionState.get_instance(this.interactive_state, this, this.logfile);
+        interactive_state = ZoomRegionState.get_instance(this.interactive_state, this, this.activityReplayFile);
     }
 
     /**
@@ -1576,7 +1576,7 @@ public class BoardHandling extends BoardHandlingImpl
             return;
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-        set_interactive_state(CircleConstructionState.get_instance(location, this.interactive_state, this, logfile));
+        set_interactive_state(CircleConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
     }
 
     /**
@@ -1590,7 +1590,7 @@ public class BoardHandling extends BoardHandlingImpl
             return;
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-        set_interactive_state(TileConstructionState.get_instance(location, this.interactive_state, this, logfile));
+        set_interactive_state(TileConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile));
     }
 
     /**
@@ -1605,7 +1605,7 @@ public class BoardHandling extends BoardHandlingImpl
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
         set_interactive_state(PolygonShapeConstructionState.get_instance(location, this.interactive_state,
-                this, logfile));
+                this, activityReplayFile));
     }
 
     /**
@@ -1621,7 +1621,7 @@ public class BoardHandling extends BoardHandlingImpl
         }
         FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
         InteractiveState new_state =
-                HoleConstructionState.get_instance(location, this.interactive_state, this, logfile);
+                HoleConstructionState.get_instance(location, this.interactive_state, this, activityReplayFile);
         set_interactive_state(new_state);
     }
 
