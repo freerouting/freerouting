@@ -199,7 +199,7 @@ public class MainApplication extends javax.swing.JFrame
             main_panel.add(restore_defaults_button, gridbag_constraints);
         }
 
-        message_field.setPreferredSize(new java.awt.Dimension(230, 20));
+        message_field.setPreferredSize(new java.awt.Dimension(400, 20));
         message_field.setRequestFocusEnabled(false);
         gridbag.setConstraints(message_field, gridbag_constraints);
         main_panel.add(message_field, gridbag_constraints);
