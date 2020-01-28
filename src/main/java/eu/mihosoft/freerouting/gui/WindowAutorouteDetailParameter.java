@@ -23,6 +23,9 @@
  */
 package eu.mihosoft.freerouting.gui;
 
+import java.awt.*;
+import java.text.DecimalFormat;
+
 /**
  *
  * @author Alfons Wirtz
@@ -85,7 +88,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
         main_panel.add(start_pass_label);
 
         start_pass_no = new javax.swing.JFormattedTextField(number_format);
-        start_pass_no.setColumns(2);
+        start_pass_no.setColumns(4);
         this.start_pass_no.addKeyListener(new StartPassFieldKeyListener());
         this.start_pass_no.addFocusListener(new StartPassFieldFocusListener());
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -163,6 +166,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
         number_format = java.text.NumberFormat.getInstance(p_board_frame.get_locale());
         number_format.setMaximumFractionDigits(2);
         final int TEXT_FIELD_LENGTH = 2;
+        java.text.NumberFormat float_number_format = new DecimalFormat("0.0");
         for (int i = 0; i < signal_layer_count; ++i)
         {
             layer_name_arr[i] = new javax.swing.JLabel();
@@ -171,13 +175,13 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
             gridbag_constraints.gridwidth = 3;
             gridbag.setConstraints(layer_name_arr[i], gridbag_constraints);
             main_panel.add(layer_name_arr[i]);
-            preferred_direction_trace_cost_arr[i] = new javax.swing.JFormattedTextField(number_format);
+            preferred_direction_trace_cost_arr[i] = new javax.swing.JFormattedTextField(float_number_format);
             preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
             preferred_direction_trace_cost_arr[i].addKeyListener(new PreferredDirectionTraceCostKeyListener(i));
             preferred_direction_trace_cost_arr[i].addFocusListener(new PreferredDirectionTraceCostFocusListener(i));
             gridbag.setConstraints(preferred_direction_trace_cost_arr[i], gridbag_constraints);
             main_panel.add(preferred_direction_trace_cost_arr[i]);
-            against_preferred_direction_trace_cost_arr[i] = new javax.swing.JFormattedTextField(number_format);
+            against_preferred_direction_trace_cost_arr[i] = new javax.swing.JFormattedTextField(float_number_format);
             against_preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
             against_preferred_direction_trace_cost_arr[i].addKeyListener(new AgainstPreferredDirectionTraceCostKeyListener(i));
             against_preferred_direction_trace_cost_arr[i].addFocusListener(new AgainstPreferredDirectionTraceCostFocusListener(i));
