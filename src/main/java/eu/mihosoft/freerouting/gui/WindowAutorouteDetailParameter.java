@@ -192,6 +192,11 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
             against_preferred_direction_trace_costs_input_completed[i] = true;
         }
 
+        javax.swing.JLabel applyValuesNote = new javax.swing.JLabel("(note: you need to press Enter to apply the new values)");
+        gridbag.setConstraints(applyValuesNote, gridbag_constraints);
+        main_panel.add(applyValuesNote, gridbag_constraints);
+
+
         p_board_frame.set_context_sensitive_help(this, "WindowAutorouteDetailParameter");
 
         this.refresh();
