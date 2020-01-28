@@ -41,6 +41,7 @@ import eu.mihosoft.freerouting.datastructures.ShapeTree.TreeEntry;
 
 import eu.mihosoft.freerouting.library.BoardLibrary;
 import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 import eu.mihosoft.freerouting.boardgraphics.Drawable;
@@ -1386,6 +1387,8 @@ public class BasicBoard implements java.io.Serializable
      */
     public void generate_snapshot()
     {
+        FRLogger.logger.info("Generating snapshot");
+
         item_list.generate_snapshot();
         components.generate_snapshot();
     }

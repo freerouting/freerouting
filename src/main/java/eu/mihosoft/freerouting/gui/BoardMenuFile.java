@@ -22,6 +22,8 @@
  */
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Creates the file menu of a eu.mihosoft.freerouting.board frame.
  *
@@ -67,7 +69,6 @@ public class BoardMenuFile extends javax.swing.JMenu
             save_and_exit_item.setToolTipText(file_menu.resources.getString("save_and_exit_tooltip"));
             save_and_exit_item.addActionListener(new java.awt.event.ActionListener()
             {
-
                 public void actionPerformed(java.awt.event.ActionEvent evt)
                 {
                     if (file_menu.session_file_option)
@@ -272,24 +273,25 @@ public class BoardMenuFile extends javax.swing.JMenu
     {
         java.io.OutputStream output_stream = null;
 
-            java.io.File defaults_file = new java.io.File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
-            if (defaults_file.exists())
+        FRLogger.logger.info("Saving '"+BoardFrame.GUI_DEFAULTS_FILE_NAME+"'...");
+        java.io.File defaults_file = new java.io.File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
+        if (defaults_file.exists())
+        {
+            // Make a backup copy of the old defaulds file.
+            java.io.File defaults_file_backup = new java.io.File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
+            if (defaults_file_backup.exists())
             {
-                // Make a backup copy of the old defaulds file.
-                java.io.File defaults_file_backup = new java.io.File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
-                if (defaults_file_backup.exists())
-                {
-                    defaults_file_backup.delete();
-                }
-                defaults_file.renameTo(defaults_file_backup);
+                defaults_file_backup.delete();
             }
-            try
-            {
-                output_stream = new java.io.FileOutputStream(defaults_file);
-            } catch (Exception e)
-            {
-                output_stream = null;
-            }
+            defaults_file.renameTo(defaults_file_backup);
+        }
+        try
+        {
+            output_stream = new java.io.FileOutputStream(defaults_file);
+        } catch (Exception e)
+        {
+            output_stream = null;
+        }
 
         boolean write_ok;
         if (output_stream == null)

@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>eu.mihosoft.freerouting.gui</headerType>
-  <jar>F:\stuff\freerouting.freerouting\build\FreeRouting.jar</jar>
+  <jar>.\build\libs\FreeRouting.jar</jar>
   <outfile>FreeRouting.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>

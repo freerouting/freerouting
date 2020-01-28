@@ -62,6 +62,9 @@ dependencies {
     compile group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
 //    compile files("./lib/eu.mihosoft.freerouting.deps.jh.jar")
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
 }
 
 // ext.moduleName = 'eu.mihosoft.freerouting'
@@ -172,3 +175,4 @@ task run(type: JavaExec) {
     //    args 'appArg1'
     // jvmArgs 'arg1'
 }
+

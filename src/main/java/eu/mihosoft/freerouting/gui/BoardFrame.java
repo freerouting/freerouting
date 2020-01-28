@@ -308,6 +308,8 @@ public class BoardFrame extends javax.swing.JFrame
         {
             return false;
         }
+        FRLogger.logger.info("Saving '"+design_file.get_output_file().getName()+"'...");
+
         java.io.OutputStream output_stream = null;
         java.io.ObjectOutputStream object_stream = null;
         try
@@ -380,7 +382,7 @@ public class BoardFrame extends javax.swing.JFrame
             String help_id = "html_files." + p_help_id;
             javax.help.CSH.setHelpIDString(curr_component, help_id);
             if (help_broker==null) {
-                FRLogger.warning("help_broker is null");
+                FRLogger.logger.warn("help_broker is null");
                 return;
             }
             help_broker.enableHelpKey(curr_component, help_id, help_set);
