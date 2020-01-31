@@ -30,6 +30,11 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 import java.awt.Graphics;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -84,6 +89,73 @@ public class BasicBoard implements java.io.Serializable
         p_rules.nets.set_board(this);
         insert_outline(p_outline_shapes, p_outline_cl_class_no);
     }
+
+    private byte[] serialize()
+    {
+        try
+        {
+            var output_stream = new ByteArrayOutputStream();
+            var object_stream = new ObjectOutputStream(output_stream);
+
+            object_stream.writeObject(this);
+            object_stream.close();
+
+            return output_stream.toByteArray();
+        }
+        catch (Exception e) {
+            FRLogger.logger.error(e);
+        }
+
+        return null;
+    }
+
+    private static BasicBoard deserialize(byte[] object_byte_array)
+    {
+        try
+        {
+            var input_stream = new ByteArrayInputStream(object_byte_array);
+            var object_stream = new ObjectInputStream(input_stream);
+
+            return (BasicBoard)object_stream.readObject();
+        }
+        catch (Exception e) {
+            FRLogger.logger.error(e);
+        }
+
+        return null;
+    }
+
+    public BasicBoard clone()
+    {
+        return deserialize(this.serialize());
+    }
+
+    public String get_hash()
+    {
+        try
+        {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(this.serialize());
+            byte[] hashedBytes = digest.digest();
+
+            return convert_byte_array_to_hex_string(hashedBytes);
+        }
+        catch (Exception e) {
+            FRLogger.logger.error(e);
+        }
+
+        return null;
+    }
+
+    private static String convert_byte_array_to_hex_string(byte[] arrayBytes) {
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < arrayBytes.length; i++) {
+            stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16)
+                    .substring(1));
+        }
+        return stringBuffer.toString();
+    }
+
 
     /**
      * Inserts a trace into the eu.mihosoft.freerouting.board, whose geometry is described by

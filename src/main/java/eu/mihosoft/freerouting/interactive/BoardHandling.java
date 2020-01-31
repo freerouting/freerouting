@@ -43,6 +43,7 @@ import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
 
 import eu.mihosoft.freerouting.gui.BoardPanel;
 import eu.mihosoft.freerouting.gui.ComboBoxLayer;
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.board.LayerStructure;
 import eu.mihosoft.freerouting.board.RoutingBoard;
@@ -1023,6 +1024,7 @@ public class BoardHandling extends BoardHandlingImpl
         }
         catch (Exception e)
         {
+            FRLogger.logger.error(e);
             return false;
         }
         board.set_test_level(p_test_level);
