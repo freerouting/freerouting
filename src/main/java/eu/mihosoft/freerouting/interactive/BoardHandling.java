@@ -1468,15 +1468,18 @@ public class BoardHandling extends BoardHandlingImpl
     /**
      * Start the batch autorouter on the whole Board
      */
-    public void start_batch_autorouter()
+    public InteractiveActionThread start_batch_autorouter()
     {
         if (board_is_read_only)
         {
-            return;
+            return null;
         }
         board.generate_snapshot();
         this.interactive_action_thread = InteractiveActionThread.get_batch_autorouter_instance(this);
+
         this.interactive_action_thread.start();
+
+        return this.interactive_action_thread;
     }
 
     /**
