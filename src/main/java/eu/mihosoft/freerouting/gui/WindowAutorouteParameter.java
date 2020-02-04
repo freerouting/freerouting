@@ -120,9 +120,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         gridbag.setConstraints(passes_label, gridbag_constraints);
         main_panel.add(passes_label);
 
-        this.fanout_pass_button = new javax.swing.JRadioButton(resources.getString("fanout"));
-        this.autoroute_pass_button = new javax.swing.JRadioButton(resources.getString("autoroute"));
-        this.postroute_pass_button = new javax.swing.JRadioButton(resources.getString("postroute"));
+        this.fanout_pass_button = new javax.swing.JCheckBox(resources.getString("fanout"));
+        this.autoroute_pass_button = new javax.swing.JCheckBox(resources.getString("autoroute"));
+        this.postroute_pass_button = new javax.swing.JCheckBox(resources.getString("postroute"));
 
         fanout_pass_button.addActionListener(new FanoutListener());
         autoroute_pass_button.addActionListener(new AutorouteListener());
@@ -217,9 +217,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     private final javax.swing.JCheckBox[] signal_layer_active_arr;
     private final javax.swing.JComboBox[] combo_box_arr;
     private final javax.swing.JCheckBox vias_allowed;
-    private final javax.swing.JRadioButton fanout_pass_button;
-    private final javax.swing.JRadioButton autoroute_pass_button;
-    private final javax.swing.JRadioButton postroute_pass_button;
+    private final javax.swing.JCheckBox fanout_pass_button;
+    private final javax.swing.JCheckBox autoroute_pass_button;
+    private final javax.swing.JCheckBox postroute_pass_button;
     private final WindowAutorouteDetailParameter detail_window;
     private final DetailListener detail_listener;
     private final String horizontal;
