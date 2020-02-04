@@ -38,9 +38,9 @@ public class MakeSpaceState extends DragState
 {
     
     /** Creates a new instance of MakeSpaceState */
-    public MakeSpaceState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    public MakeSpaceState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_location, p_parent_state, p_board_handling, p_logfile);
+        super(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
         int [] shove_trace_width_arr = new int[hdlg.get_routing_board().get_layer_count()];
         boolean [] layer_active_arr = new boolean[shove_trace_width_arr.length];
         int shove_trace_width = Math.min (100, hdlg.get_routing_board().get_min_trace_half_width() / 10);
@@ -70,12 +70,12 @@ public class MakeSpaceState extends DragState
             }
             // make the situation restorable by undo
             hdlg.get_routing_board().generate_snapshot();
-            if (logfile != null)
+            if (activityReplayFile != null)
             {
                 // Delayed till here because otherwise the mouse
                 // might have been only clicked for selecting
                 // and not pressed for moving.
-                logfile.start_scope(LogfileScope.MAKING_SPACE, previous_location);
+                activityReplayFile.start_scope(ActivityReplayFileScope.MAKING_SPACE, previous_location);
             }
             something_dragged = true;
         }
@@ -102,9 +102,9 @@ public class MakeSpaceState extends DragState
             hdlg.get_routing_board().end_notify_observers();
             this.observers_activated = false;
         }
-        if (logfile != null && something_dragged)
+        if (activityReplayFile != null && something_dragged)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         hdlg.show_ratsnest();
         return this.return_state;

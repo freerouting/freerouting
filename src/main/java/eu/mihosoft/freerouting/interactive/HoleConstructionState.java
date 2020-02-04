@@ -49,9 +49,9 @@ public class HoleConstructionState extends CornerItemConstructionState
      * if that was not possible with the input parameters.
      * If p_logfile != null, the construction of this hole is stored in a logfile.
      */
-    public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        HoleConstructionState new_instance = new HoleConstructionState(p_parent_state, p_board_handling, p_logfile);
+        HoleConstructionState new_instance = new HoleConstructionState(p_parent_state, p_board_handling, p_activityReplayFile);
         if (!new_instance.start_ok(p_location))
         {
             new_instance = null;
@@ -60,9 +60,9 @@ public class HoleConstructionState extends CornerItemConstructionState
     }
     
     /** Creates a new instance of HoleConstructionState */
-    private  HoleConstructionState(InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    private  HoleConstructionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     /**
@@ -97,9 +97,9 @@ public class HoleConstructionState extends CornerItemConstructionState
             hdlg.screen_messages.set_status_message(resources.getString("adding_hole_to_circle_not_yet_implemented"));
             return false;
         }
-        if (this.logfile != null)
+        if (this.activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.ADDING_HOLE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.ADDING_HOLE);
         }
         this.add_corner(p_location);
         return true;
@@ -202,9 +202,9 @@ public class HoleConstructionState extends CornerItemConstructionState
         {
             hdlg.screen_messages.set_status_message(resources.getString("adding_hole_failed"));
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         return this.return_state;
     }

@@ -5,5 +5,5 @@ out
 .idea/
 freerouting.iml
 tmp
-
+/logs/
 

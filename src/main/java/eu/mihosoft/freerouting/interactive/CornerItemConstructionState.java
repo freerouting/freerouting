@@ -36,9 +36,9 @@ public class CornerItemConstructionState extends InteractiveState
 {
     
     /** Creates a new instance of CornerItemConstructionState */
-    protected CornerItemConstructionState(InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected CornerItemConstructionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
         p_board_handling.remove_ratsnest(); // Constructing an item may change the connectivity.
     }
     
@@ -59,9 +59,9 @@ public class CornerItemConstructionState extends InteractiveState
         // make shure that the coordinates are integer
         this.corner_list.add(location);
         hdlg.repaint();
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.add_corner(p_location);
+            activityReplayFile.add_corner(p_location);
         }
         return this;
     }

@@ -52,7 +52,7 @@ public class MoveItemState extends InteractiveState
      * to a single component.
      */
     public static MoveItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list,
-            InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+            InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
         if (p_item_list.isEmpty())
@@ -174,21 +174,21 @@ public class MoveItemState extends InteractiveState
         }
         item_list.addAll(add_items);
         return new MoveItemState(p_location, item_list, component_list, grid_snap_component,
-                p_parent_state.return_state, p_board_handling, p_logfile);
+                p_parent_state.return_state, p_board_handling, p_activityReplayFile);
     }
     
     /** Creates a new instance of MoveComponentState */
     private MoveItemState(FloatPoint p_location, Set<Item> p_item_list, Set<Component> p_component_list,
-            Component p_first_component, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+            Component p_first_component, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
         this.component_list = p_component_list;
         this.grid_snap_component = p_first_component;
         this.current_position = p_location.round();
         this.previous_position = current_position;
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.MOVE_ITEMS, p_location);
+            activityReplayFile.start_scope(ActivityReplayFileScope.MOVE_ITEMS, p_location);
         }
         eu.mihosoft.freerouting.board.BasicBoard routing_board = hdlg.get_routing_board();
         this.observers_activated = !hdlg.get_routing_board().observers_active();
@@ -239,9 +239,9 @@ public class MoveItemState extends InteractiveState
     {
         super.mouse_moved();
         move(hdlg.get_current_mouse_position());
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.add_corner(this.current_position.to_float());
+            activityReplayFile.add_corner(this.current_position.to_float());
         }
         return this;
     }
@@ -284,9 +284,9 @@ public class MoveItemState extends InteractiveState
             this.hdlg.update_ratsnest(curr_net_items.net_no);
         }
         
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         hdlg.screen_messages.set_status_message(resources.getString("move_completed"));
         hdlg.repaint();
@@ -300,9 +300,9 @@ public class MoveItemState extends InteractiveState
         {
             this.hdlg.update_ratsnest(curr_net_items.net_no);
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CANCEL_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CANCEL_SCOPE);
         }
         return this.return_state;
     }
@@ -390,9 +390,9 @@ public class MoveItemState extends InteractiveState
         {
             this.hdlg.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.TURN_90_DEGREE, p_factor);
+            activityReplayFile.start_scope(ActivityReplayFileScope.TURN_90_DEGREE, p_factor);
         }
         hdlg.repaint();
     }
@@ -420,9 +420,9 @@ public class MoveItemState extends InteractiveState
         {
             this.hdlg.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.ROTATE, (int) p_angle_in_degree);
+            activityReplayFile.start_scope(ActivityReplayFileScope.ROTATE, (int) p_angle_in_degree);
         }
         hdlg.repaint();
     }
@@ -496,9 +496,9 @@ public class MoveItemState extends InteractiveState
         {
             this.hdlg.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CHANGE_PLACEMENT_SIDE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CHANGE_PLACEMENT_SIDE);
         }
         hdlg.repaint();
     }

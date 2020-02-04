@@ -34,9 +34,9 @@ public class DynamicRouteState extends RouteState
 {
     
     /** Creates a new instance of DynamicRouteState */
-    protected DynamicRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected DynamicRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     public InteractiveState mouse_moved()
@@ -55,9 +55,9 @@ public class DynamicRouteState extends RouteState
             hdlg.get_routing_board().end_notify_observers();
             this.observers_activated = false;
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         for (int curr_net_no : this.route.net_no_arr)
         {

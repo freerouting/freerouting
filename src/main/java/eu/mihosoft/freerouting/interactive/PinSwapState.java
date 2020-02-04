@@ -35,9 +35,9 @@ import eu.mihosoft.freerouting.board.ItemSelectionFilter;
  */
 public class PinSwapState extends InteractiveState
 {
-    public static InteractiveState get_instance(Pin p_pin_to_swap, InteractiveState p_return_state, BoardHandling p_board_handling, Logfile p_logfile)
+    public static InteractiveState get_instance(Pin p_pin_to_swap, InteractiveState p_return_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        PinSwapState new_state = new PinSwapState(p_pin_to_swap, p_return_state, p_board_handling, p_logfile);
+        PinSwapState new_state = new PinSwapState(p_pin_to_swap, p_return_state, p_board_handling, p_activityReplayFile);
         if (new_state.swappable_pins.isEmpty())
         {
             new_state.hdlg.screen_messages.set_status_message(new_state.resources.getString("no_swappable_pin_found"));
@@ -47,9 +47,9 @@ public class PinSwapState extends InteractiveState
         return new_state;
     }
     /** Creates a new instance of PinSwapState */
-    private PinSwapState(Pin p_pin_to_swap, InteractiveState p_return_state, BoardHandling p_board_handling, Logfile p_logfile)
+    private PinSwapState(Pin p_pin_to_swap, InteractiveState p_return_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_return_state, p_board_handling, p_logfile);
+        super(p_return_state, p_board_handling, p_activityReplayFile);
         this.from_pin = p_pin_to_swap;
         this.swappable_pins = p_pin_to_swap.get_swappable_pins();
     }

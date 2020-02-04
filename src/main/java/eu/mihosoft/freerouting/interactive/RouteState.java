@@ -51,7 +51,7 @@ public class RouteState extends InteractiveState
      * If p_logfile != null, the creation of the route is stored
      * in the logfile.
      **/
-    public static RouteState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    public static RouteState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         if (!(p_parent_state instanceof MenuState))
         {
@@ -164,11 +164,11 @@ public class RouteState extends InteractiveState
         RouteState new_instance;
         if (is_stitch_route)
         {
-            new_instance = new StitchRouteState(p_parent_state, p_board_handling, p_logfile);
+            new_instance = new StitchRouteState(p_parent_state, p_board_handling, p_activityReplayFile);
         }
         else
         {
-            new_instance = new DynamicRouteState(p_parent_state, p_board_handling, p_logfile);
+            new_instance = new DynamicRouteState(p_parent_state, p_board_handling, p_activityReplayFile);
         }
         new_instance.routing_target_set = picked_item.get_unconnected_set(-1);
 
@@ -186,9 +186,9 @@ public class RouteState extends InteractiveState
         p_board_handling.repaint();
         if (new_instance != null)
         {
-            if (new_instance.logfile != null)
+            if (new_instance.activityReplayFile != null)
             {
-                new_instance.logfile.start_scope(LogfileScope.CREATING_TRACE, p_location);
+                new_instance.activityReplayFile.start_scope(ActivityReplayFileScope.CREATING_TRACE, p_location);
                 p_board_handling.hide_ratsnest();
             }
             new_instance.display_default_message();
@@ -201,9 +201,9 @@ public class RouteState extends InteractiveState
      * If p_logfile != null, the creation of the route is stored
      * in the logfile.
      */
-    protected RouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected RouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
 
     /**
@@ -359,9 +359,9 @@ public class RouteState extends InteractiveState
         boolean route_completed = route.next_corner(p_location);
         String layer_string = hdlg.get_routing_board().layer_structure.arr[route.nearest_target_layer()].name;
         hdlg.screen_messages.set_target_layer(layer_string);
-        if (this.logfile != null)
+        if (this.activityReplayFile != null)
         {
-            this.logfile.add_corner(p_location);
+            this.activityReplayFile.add_corner(p_location);
         }
         if (route_completed)
         {
@@ -411,9 +411,9 @@ public class RouteState extends InteractiveState
             hdlg.get_routing_board().end_notify_observers();
             this.observers_activated = false;
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CANCEL_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CANCEL_SCOPE);
         }
         hdlg.screen_messages.clear();
         for (int curr_net_no : this.route.net_no_arr)
@@ -496,9 +496,9 @@ public class RouteState extends InteractiveState
                     // make the current situation restorable by undo
                     hdlg.get_routing_board().generate_snapshot();
                 }
-                if (logfile != null)
+                if (activityReplayFile != null)
                 {
-                    logfile.start_scope(LogfileScope.CHANGE_LAYER, p_new_layer);
+                    activityReplayFile.start_scope(ActivityReplayFileScope.CHANGE_LAYER, p_new_layer);
                 }
             }
             else

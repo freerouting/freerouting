@@ -40,9 +40,9 @@ public class MenuState extends InteractiveState
 {
     
     /** Creates a new instance of MenuState */
-    MenuState(BoardHandling p_board_handle, Logfile p_logfile)
+    MenuState(BoardHandling p_board_handle, ActivityReplayFile p_activityReplayFile)
     {
-        super(null, p_board_handle, p_logfile);
+        super(null, p_board_handle, p_activityReplayFile);
         this.return_state = this;
     }
     
@@ -64,11 +64,11 @@ public class MenuState extends InteractiveState
         InteractiveState result;
         if (something_found)
         {
-            result = SelectedItemState.get_instance(picked_items, this, hdlg, this.logfile);
+            result = SelectedItemState.get_instance(picked_items, this, hdlg, this.activityReplayFile);
             hdlg.screen_messages.set_status_message(resources.getString("in_select_mode"));
-            if (logfile != null)
+            if (activityReplayFile != null)
             {
-                logfile.start_scope(LogfileScope.START_SELECT, p_location);
+                activityReplayFile.start_scope(ActivityReplayFileScope.START_SELECT, p_location);
             }
         }
         else
@@ -93,7 +93,7 @@ public class MenuState extends InteractiveState
                 return this;
             }
             eu.mihosoft.freerouting.board.Pin selected_pin = (eu.mihosoft.freerouting.board.Pin) first_item;
-            result = PinSwapState.get_instance(selected_pin, this, hdlg, this.logfile);
+            result = PinSwapState.get_instance(selected_pin, this, hdlg, this.activityReplayFile);
         }
         else
         {
@@ -115,7 +115,7 @@ public class MenuState extends InteractiveState
         }
         else if (p_key_char == 'd')
         {
-            curr_return_state = DragMenuState.get_instance(hdlg, logfile);
+            curr_return_state = DragMenuState.get_instance(hdlg, activityReplayFile);
         }
         else if (p_key_char == 'e')
         {
@@ -139,15 +139,15 @@ public class MenuState extends InteractiveState
         }
         else if (p_key_char == 'r')
         {
-            curr_return_state = RouteMenuState.get_instance(hdlg, logfile);
+            curr_return_state = RouteMenuState.get_instance(hdlg, activityReplayFile);
         }
         else if (p_key_char == 's')
         {
-            curr_return_state = SelectMenuState.get_instance(hdlg, logfile);
+            curr_return_state = SelectMenuState.get_instance(hdlg, activityReplayFile);
         }
         else if (p_key_char == 't')
         {
-            curr_return_state = RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, logfile);
+            curr_return_state = RouteState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
         }
         else if (p_key_char == 'u')
         {

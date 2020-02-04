@@ -49,18 +49,18 @@ public class TileConstructionState extends CornerItemConstructionState
      * Returns a new instance of this class
      * If p_logfile != null; the creation of this item is stored in a logfile
      */
-    public static TileConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    public static TileConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        return new TileConstructionState(p_location, p_parent_state, p_board_handling, p_logfile);
+        return new TileConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     /** Creates a new instance of TileConstructionState */
-    private TileConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    private TileConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
-        if (this.logfile != null)
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
+        if (this.activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CREATING_TILE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CREATING_TILE);
         }
         this.add_corner(p_location);
     }
@@ -131,9 +131,9 @@ public class TileConstructionState extends CornerItemConstructionState
         {
             hdlg.screen_messages.set_status_message(resources.getString("keepout_cancelled_because_of_overlaps"));
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         return this.return_state;
     }

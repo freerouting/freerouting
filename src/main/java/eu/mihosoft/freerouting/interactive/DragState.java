@@ -43,7 +43,7 @@ public abstract class DragState extends InteractiveState
      * location; null otherwise.
      */
     public static DragState get_instance(FloatPoint p_location, InteractiveState p_parent_state,
-            BoardHandling p_board_handling, Logfile p_logfile)
+            BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         p_board_handling.display_layer_messsage();
         Item item_to_move = null;
@@ -94,11 +94,11 @@ public abstract class DragState extends InteractiveState
         DragState result;
         if (item_to_move != null)
         {
-            result = new DragItemState(item_to_move, p_location, p_parent_state, p_board_handling, p_logfile);
+            result = new DragItemState(item_to_move, p_location, p_parent_state, p_board_handling, p_activityReplayFile);
         }
         else if (!item_found)
         {
-            result = new MakeSpaceState(p_location, p_parent_state, p_board_handling, p_logfile);
+            result = new MakeSpaceState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
         }
         else
         {
@@ -112,9 +112,9 @@ public abstract class DragState extends InteractiveState
     }
     
     /** Creates a new instance of DragState */
-    protected DragState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected DragState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
         previous_location = p_location;
     }
     
@@ -136,9 +136,9 @@ public abstract class DragState extends InteractiveState
         }
         if (this.something_dragged)
         {
-            if (logfile != null )
+            if (activityReplayFile != null )
             {
-                logfile.add_corner(p_point);
+                activityReplayFile.add_corner(p_point);
             }
         }
         return result;

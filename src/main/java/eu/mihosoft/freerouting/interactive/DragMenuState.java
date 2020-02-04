@@ -33,21 +33,21 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 public class DragMenuState extends MenuState
 {
     /** Returns a new instance of DragMenuState */
-    public static DragMenuState get_instance(BoardHandling p_board_handling, Logfile p_logfile)
+    public static DragMenuState get_instance(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        DragMenuState new_state = new DragMenuState(p_board_handling, p_logfile);
+        DragMenuState new_state = new DragMenuState(p_board_handling, p_activityReplayFile);
         return new_state;
     }
     
     /** Creates a new instance of DragMenuState */
-    public DragMenuState(BoardHandling p_board_handling, Logfile p_logfile)
+    public DragMenuState(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_board_handling, p_logfile);
+        super(p_board_handling, p_activityReplayFile);
     }
     
     public InteractiveState mouse_pressed(FloatPoint p_point)
     {
-        return DragState.get_instance(p_point, this, hdlg, logfile);
+        return DragState.get_instance(p_point, this, hdlg, activityReplayFile);
     }
     
     public String get_help_id()

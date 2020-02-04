@@ -37,6 +37,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 
 import eu.mihosoft.freerouting.interactive.BoardHandling;
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Handles the sequencing of the batch eu.mihosoft.freerouting.autoroute passes.
@@ -126,7 +127,9 @@ public class BatchAutorouter
             Integer curr_pass_no = hdlg.get_settings().autoroute_settings.get_pass_no();
             String start_message = resources.getString("batch_autorouter") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + curr_pass_no.toString() + ": ";
             hdlg.screen_messages.set_status_message(start_message);
+            FRLogger.traceEntry("BatchAutorouter.autoroute_pass("+curr_pass_no+")");
             still_unrouted_items = autoroute_pass(curr_pass_no, true);
+            FRLogger.traceExit("BatchAutorouter.autoroute_pass("+curr_pass_no+")");
             if (still_unrouted_items && !is_interrupted)
             {
                 hdlg.get_settings().autoroute_settings.increment_pass_no();

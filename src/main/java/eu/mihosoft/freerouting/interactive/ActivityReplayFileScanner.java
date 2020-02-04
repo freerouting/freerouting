@@ -9,7 +9,7 @@ package eu.mihosoft.freerouting.interactive;
  * on 06.07.05 18:12 from the specification file
  * <tt>C:/Dokumente und Einstellungen/alfons/Eigene Dateien/freeroute/eu.mihosoft.freerouting.interactive/LogfileDescription.flex</tt>
  */
-class LogfileScanner {
+class ActivityReplayFileScanner {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -224,7 +224,7 @@ class LogfileScanner {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  LogfileScanner(java.io.Reader in) {
+  ActivityReplayFileScanner(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -234,7 +234,7 @@ class LogfileScanner {
    *
    * @param   in  the java.io.Inputstream to read input from.
    */
-  LogfileScanner(java.io.InputStream in) {
+  ActivityReplayFileScanner(java.io.InputStream in) {
     this(new java.io.InputStreamReader(in));
   }
 
