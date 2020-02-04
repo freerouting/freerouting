@@ -102,7 +102,12 @@ public class MainApplication extends javax.swing.JFrame
                 new_frame.board_panel.board_handling.settings.autoroute_settings.set_start_pass_no(startupOptions.pass_number_first);
                 new_frame.board_panel.board_frame.autoroute_parameter_window.refresh();
             }
+
             new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(startupOptions.pass_number_last);
+            if (startupOptions.pass_number_last < 99999)
+            {
+                new_frame.board_panel.board_handling.start_batch_autorouter();
+            }
 
             new_frame.addWindowListener(new java.awt.event.WindowAdapter()
             {

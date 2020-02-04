@@ -132,6 +132,11 @@ public class BatchAutorouter
             }
 
             Integer curr_pass_no = hdlg.get_settings().autoroute_settings.get_start_pass_no();
+            if (curr_pass_no > hdlg.get_settings().autoroute_settings.get_stop_pass_no())
+            {
+                break;
+            }
+
             String start_message = resources.getString("batch_autorouter") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + curr_pass_no.toString() + ": ";
             hdlg.screen_messages.set_status_message(start_message);
 
