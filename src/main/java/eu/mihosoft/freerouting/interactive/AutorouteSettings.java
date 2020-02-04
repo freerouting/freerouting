@@ -138,7 +138,7 @@ public class AutorouteSettings implements java.io.Serializable
     public void set_pass_no(int p_value)
     {
         start_pass_no = Math.max(p_value, 1);
-        start_pass_no = Math.min(start_pass_no, 99);
+        start_pass_no = Math.min(start_pass_no, 99999);
     }
 
     public int get_pass_no()
