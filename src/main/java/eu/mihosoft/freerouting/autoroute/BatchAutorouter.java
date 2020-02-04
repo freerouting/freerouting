@@ -106,6 +106,8 @@ public class BatchAutorouter
         this.retain_autoroute_database = false;
     }
 
+    private LinkedList<Integer> diffBetweenBoards = new LinkedList<Integer>();
+
     /**
      *  Autoroutes ripup passes until the eu.mihosoft.freerouting.board is completed or the autorouter is stopped by the user.
      *  Returns true if the eu.mihosoft.freerouting.board is completed.
@@ -132,10 +134,33 @@ public class BatchAutorouter
             Integer curr_pass_no = hdlg.get_settings().autoroute_settings.get_pass_no();
             String start_message = resources.getString("batch_autorouter") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + curr_pass_no.toString() + ": ";
             hdlg.screen_messages.set_status_message(start_message);
-            FRLogger.traceEntry("BatchAutorouter.autoroute_pass("+curr_pass_no+") on board '"+current_board_hash+"'");
+
+            var boardBefore = this.routing_board.clone();
+
+            FRLogger.traceEntry("BatchAutorouter.autoroute_pass #"+curr_pass_no+" on board '"+current_board_hash+"' making {} changes");
             already_checked_board_hashes.add(this.routing_board.get_hash());
             still_unrouted_items = autoroute_pass(curr_pass_no, true);
-            FRLogger.traceExit("BatchAutorouter.autoroute_pass("+curr_pass_no+") on board '"+current_board_hash+"'");
+
+            // let's check if there was enough change in the last pass, because if it were little, so should probably stop
+            var newTraceDifferences = this.routing_board.diff_traces(boardBefore);
+            diffBetweenBoards.add(newTraceDifferences);
+
+            if (diffBetweenBoards.size() > 20) {
+                diffBetweenBoards.removeFirst();
+
+                OptionalDouble average = diffBetweenBoards
+                        .stream()
+                        .mapToDouble(a -> a)
+                        .average();
+
+                if (average.getAsDouble() < 20.0)
+                {
+                    FRLogger.logger.warn("There were only " + average.getAsDouble() + " changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.");
+                }
+            }
+            FRLogger.traceExit("BatchAutorouter.autoroute_pass #"+curr_pass_no+" on board '"+current_board_hash+"' making {} changes", newTraceDifferences);
+
+            // check if there are still unrouted items
             if (still_unrouted_items && !is_interrupted)
             {
                 hdlg.get_settings().autoroute_settings.increment_pass_no();
@@ -143,7 +168,7 @@ public class BatchAutorouter
         }
         if (!(this.remove_unconnected_vias || still_unrouted_items || this.is_interrupted))
         {
-            // clean up the route if the eu.mihosoft.freerouting.board is completed and if fanout is used.
+            // clean up the route if the board is completed and if fanout is used.
             remove_tails(Item.StopConnectionOption.NONE);
         }
 
