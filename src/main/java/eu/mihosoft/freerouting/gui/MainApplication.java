@@ -137,7 +137,7 @@ public class MainApplication extends javax.swing.JFrame
         open_board_button = new javax.swing.JButton();
         restore_defaults_button = new javax.swing.JButton();
         message_field = new javax.swing.JTextField();
-        message_field.setText("-de or -di not specified");
+        message_field.setText("Neither '-de <design file>' nor '-di <design directory>' are specified.");
         this.window_net_demonstrations = new WindowNetDemonstrations(locale);
         java.awt.Point location = getLocation();
         this.window_net_demonstrations.setLocation((int) location.getX() + 50, (int) location.getY() + 50);
@@ -199,7 +199,7 @@ public class MainApplication extends javax.swing.JFrame
             main_panel.add(restore_defaults_button, gridbag_constraints);
         }
 
-        message_field.setPreferredSize(new java.awt.Dimension(230, 20));
+        message_field.setPreferredSize(new java.awt.Dimension(400, 20));
         message_field.setRequestFocusEnabled(false);
         gridbag.setConstraints(message_field, gridbag_constraints);
         main_panel.add(message_field, gridbag_constraints);
