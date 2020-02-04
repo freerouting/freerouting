@@ -16,8 +16,7 @@ public class StartupOptions {
     String design_input_filename = null;
     String design_output_filename = null;
     String design_input_directory_name = null;
-    int pass_number_first = 0;
-    int pass_number_last = 99999;
+    int max_passes = 99999;
     java.util.Locale current_locale = java.util.Locale.ENGLISH;
 
     private StartupOptions() {
@@ -51,13 +50,9 @@ public class StartupOptions {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                         design_output_filename = p_args[i + 1];
                     }
-                } else if (p_args[i].startsWith("-pf")) {
+                } else if (p_args[i].startsWith("-mp")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-                        pass_number_first = Integer.decode(p_args[i + 1]);
-                    }
-                } else if (p_args[i].startsWith("-pl")) {
-                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-                        pass_number_last = Integer.decode(p_args[i + 1]);
+                        max_passes = Integer.decode(p_args[i + 1]);
                     }
                 } else if (p_args[i].startsWith("-l")) {
                     // the locale is provided

@@ -29,6 +29,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.io.File;
 
 /**
  *
@@ -99,13 +100,8 @@ public class MainApplication extends javax.swing.JFrame
                 return;
             }
 
-            if (startupOptions.pass_number_first > 0) {
-                new_frame.board_panel.board_handling.settings.autoroute_settings.set_start_pass_no(startupOptions.pass_number_first);
-                new_frame.board_panel.board_frame.autoroute_parameter_window.refresh();
-            }
-
-            new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(startupOptions.pass_number_last);
-            if (startupOptions.pass_number_last < 99999)
+            new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + startupOptions.max_passes);
+            if (startupOptions.max_passes < 99999)
             {
                 var thread = new_frame.board_panel.board_handling.start_batch_autorouter();
 
@@ -116,15 +112,15 @@ public class MainApplication extends javax.swing.JFrame
 
                     @Override
                     public void autorouterAborted() {
-                        SaveDSNFile();
+                        ExportBoardToDSNFile();
                     }
 
                     @Override
                     public void autorouterFinished() {
-                        SaveDSNFile();
+                        ExportBoardToDSNFile();
                     }
 
-                    private void SaveDSNFile()
+                    private void ExportBoardToDSNFile()
                     {
                         if ((startupOptions.design_output_filename != null) && (startupOptions.design_output_filename.toLowerCase().endsWith(".dsn")))
                         {
@@ -132,10 +128,10 @@ public class MainApplication extends javax.swing.JFrame
                             FRLogger.logger.info("Saving '"+startupOptions.design_output_filename+"'...");
                             try
                             {
-                                java.io.OutputStream output_stream = new java.io.FileOutputStream(startupOptions.design_output_filename);
-                                String[] file_name_parts = startupOptions.design_output_filename.split("\\.", 2);
-                                String design_name = file_name_parts[0];
+                                String filename_only = new File(startupOptions.design_output_filename).getName();
+                                String design_name = filename_only.substring(0, filename_only.length() - 4);
 
+                                java.io.OutputStream output_stream = new java.io.FileOutputStream(startupOptions.design_output_filename);
                                 new_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
                                 Runtime.getRuntime().exit(0);
                             } catch (Exception e)
