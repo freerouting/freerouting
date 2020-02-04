@@ -290,7 +290,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         {
             eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autoroute_settings;
             autoroute_settings.set_with_fanout(fanout_pass_button.isSelected());
-            autoroute_settings.set_pass_no(1);
+            autoroute_settings.set_start_pass_no(1);
         }
     }
 
@@ -301,7 +301,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         {
             eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autoroute_settings;
             autoroute_settings.set_with_autoroute(autoroute_pass_button.isSelected());
-            autoroute_settings.set_pass_no(1);
+            autoroute_settings.set_start_pass_no(1);
         }
     }
 
@@ -312,7 +312,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         {
             eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autoroute_settings;
             autoroute_settings.set_with_postroute(postroute_pass_button.isSelected());
-            autoroute_settings.set_pass_no(1);
+            autoroute_settings.set_start_pass_no(1);
         }
     }
 }

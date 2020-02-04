@@ -70,7 +70,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             hdlg.screen_messages.set_status_message(start_message);
             boolean fanout_first =
                     hdlg.get_settings().autoroute_settings.get_with_fanout() &&
-                    hdlg.get_settings().autoroute_settings.get_pass_no() <= 1;
+                    hdlg.get_settings().autoroute_settings.get_start_pass_no() <= 1;
             if (fanout_first)
             {
                 BatchFanout.fanout_board(this);

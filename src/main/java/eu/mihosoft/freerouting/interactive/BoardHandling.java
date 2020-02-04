@@ -740,7 +740,7 @@ public class BoardHandling extends BoardHandlingImpl
             {
                 // reset the start pass number in the autorouter in case
                 // a batch autorouter is undone.
-                this.settings.autoroute_settings.set_pass_no(1);
+                this.settings.autoroute_settings.set_start_pass_no(1);
             }
             screen_messages.set_status_message(resources.getString("undo"));
         }

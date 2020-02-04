@@ -76,13 +76,11 @@ public class MainApplication extends javax.swing.JFrame
                 board_option = BoardFrame.Option.SINGLE_FRAME;
             }
 
-            FRLogger.logger.info("Opening '"+startupOptions.design_input_filename +"'...");
+            FRLogger.logger.info("Opening '"+startupOptions.design_input_filename+"'...");
             DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename, false);
             if (design_file == null)
             {
-                System.out.print(resources.getString("message_6") + " ");
-                System.out.print(startupOptions.design_input_filename);
-                System.out.println(" " + resources.getString("message_7"));
+                FRLogger.logger.error(resources.getString("message_6") + " " +  startupOptions.design_input_filename + " " + resources.getString("message_7"));
                 return;
             }
             String message = resources.getString("loading_design") + " "
@@ -95,9 +93,17 @@ public class MainApplication extends javax.swing.JFrame
             welcome_window.dispose();
             if (new_frame == null)
             {
+                FRLogger.logger.error("Couldn't create window frame");
                 System.exit(1);
                 return;
             }
+
+            if (startupOptions.pass_number_first > 0) {
+                new_frame.board_panel.board_handling.settings.autoroute_settings.set_start_pass_no(startupOptions.pass_number_first);
+                new_frame.board_panel.board_frame.autoroute_parameter_window.refresh();
+            }
+            new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(startupOptions.pass_number_last);
+
             new_frame.addWindowListener(new java.awt.event.WindowAdapter()
             {
 

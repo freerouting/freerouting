@@ -23,7 +23,6 @@
  */
 package eu.mihosoft.freerouting.gui;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 
 /**
@@ -214,7 +213,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
         this.via_cost_field.setValue(settings.get_via_costs());
         this.plane_via_cost_field.setValue(settings.get_plane_via_costs());
         this.start_ripup_costs.setValue(settings.get_start_ripup_costs());
-        this.start_pass_no.setValue(settings.get_pass_no());
+        this.start_pass_no.setValue(settings.get_start_pass_no());
         for (int i = 0; i < preferred_direction_trace_cost_arr.length; ++i)
         {
             this.preferred_direction_trace_cost_arr[i].setValue(settings.get_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
@@ -398,7 +397,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
         {
             if (p_evt.getKeyChar() == '\n')
             {
-                int old_value = board_handling.settings.autoroute_settings.get_pass_no();
+                int old_value = board_handling.settings.autoroute_settings.get_start_pass_no();
                 Object input = start_pass_no.getValue();
                 int input_value;
                 if (input instanceof Number)
@@ -416,11 +415,21 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
                 {
                     input_value = old_value;
                 }
-                board_handling.settings.autoroute_settings.set_pass_no(input_value);
-                start_pass_no.setValue(input_value);
 
+                set_start_pass_no(input_value);
             }
         }
+    }
+
+    public void set_start_pass_no(int input_value)
+    {
+        board_handling.settings.autoroute_settings.set_start_pass_no(input_value);
+        start_pass_no.setValue(input_value);
+    }
+
+    public void set_stop_pass_no(int input_value)
+    {
+        board_handling.settings.autoroute_settings.set_stop_pass_no(input_value);
     }
 
     private class StartPassFieldFocusListener implements java.awt.event.FocusListener
