@@ -88,7 +88,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
         main_panel.add(start_pass_label);
 
         start_pass_no = new javax.swing.JFormattedTextField(number_format);
-        start_pass_no.setColumns(4);
+        start_pass_no.setColumns(5);
         this.start_pass_no.addKeyListener(new StartPassFieldKeyListener());
         this.start_pass_no.addFocusListener(new StartPassFieldFocusListener());
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
