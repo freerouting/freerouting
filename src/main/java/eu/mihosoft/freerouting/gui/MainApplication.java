@@ -137,7 +137,7 @@ public class MainApplication extends javax.swing.JFrame
                                 String design_name = file_name_parts[0];
 
                                 new_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
-
+                                Runtime.getRuntime().exit(0);
                             } catch (Exception e)
                             {
                                 FRLogger.logger.error(e);
