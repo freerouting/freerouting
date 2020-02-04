@@ -24,6 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.interactive.ThreadActionListener;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 import javax.swing.UIManager;
@@ -106,12 +107,48 @@ public class MainApplication extends javax.swing.JFrame
             new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(startupOptions.pass_number_last);
             if (startupOptions.pass_number_last < 99999)
             {
-                new_frame.board_panel.board_handling.start_batch_autorouter();
+                var thread = new_frame.board_panel.board_handling.start_batch_autorouter();
+
+                thread.addListener(new ThreadActionListener() {
+                    @Override
+                    public void autorouterStarted() {
+                    }
+
+                    @Override
+                    public void autorouterAborted() {
+                        SaveDSNFile();
+                    }
+
+                    @Override
+                    public void autorouterFinished() {
+                        SaveDSNFile();
+                    }
+
+                    private void SaveDSNFile()
+                    {
+                        if ((startupOptions.design_output_filename != null) && (startupOptions.design_output_filename.toLowerCase().endsWith(".dsn")))
+                        {
+                            // save dsn file
+                            FRLogger.logger.info("Saving '"+startupOptions.design_output_filename+"'...");
+                            try
+                            {
+                                java.io.OutputStream output_stream = new java.io.FileOutputStream(startupOptions.design_output_filename);
+                                String[] file_name_parts = startupOptions.design_output_filename.split("\\.", 2);
+                                String design_name = file_name_parts[0];
+
+                                new_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
+
+                            } catch (Exception e)
+                            {
+                                FRLogger.logger.error(e);
+                            }
+                        }
+                    }
+                });
             }
 
             new_frame.addWindowListener(new java.awt.event.WindowAdapter()
             {
-
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent evt)
                 {
