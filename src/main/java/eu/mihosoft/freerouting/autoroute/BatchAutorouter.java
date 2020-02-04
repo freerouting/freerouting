@@ -128,12 +128,14 @@ public class BatchAutorouter
             if (already_checked_board_hashes.contains(current_board_hash))
             {
                 FRLogger.logger.warn("This board was already evaluated, so we stop autorouter to avoid the endless loop.");
+                thread.request_stop();
                 break;
             }
 
             Integer curr_pass_no = hdlg.get_settings().autoroute_settings.get_start_pass_no();
             if (curr_pass_no > hdlg.get_settings().autoroute_settings.get_stop_pass_no())
             {
+                thread.request_stop();
                 break;
             }
 
