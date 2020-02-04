@@ -53,6 +53,9 @@ public class BatchAutorouterThread extends InteractiveActionThread
 
     protected void thread_action()
     {
+        for (ThreadActionListener hl : this.listeners)
+            hl.autorouterStarted();
+
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
 
         try
@@ -133,6 +136,16 @@ public class BatchAutorouterThread extends InteractiveActionThread
         }
 
         FRLogger.traceExit("BatchAutorouterThread.thread_action()");
+
+        for (ThreadActionListener hl : this.listeners)
+        {
+            if (this.is_stop_requested()) {
+                hl.autorouterAborted();
+            }
+            else {
+                hl.autorouterFinished();
+            }
+        }
     }
 
     public void draw(java.awt.Graphics p_graphics)
