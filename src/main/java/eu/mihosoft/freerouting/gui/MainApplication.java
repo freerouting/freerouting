@@ -76,17 +76,17 @@ public class MainApplication extends javax.swing.JFrame
                 board_option = BoardFrame.Option.SINGLE_FRAME;
             }
 
-            FRLogger.logger.info("Opening '"+startupOptions.design_file_name+"'...");
-            DesignFile design_file = DesignFile.get_instance(startupOptions.design_file_name, false);
+            FRLogger.logger.info("Opening '"+startupOptions.design_input_filename +"'...");
+            DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename, false);
             if (design_file == null)
             {
                 System.out.print(resources.getString("message_6") + " ");
-                System.out.print(startupOptions.design_file_name);
+                System.out.print(startupOptions.design_input_filename);
                 System.out.println(" " + resources.getString("message_7"));
                 return;
             }
             String message = resources.getString("loading_design") + " "
-                    + startupOptions.design_file_name;
+                    + startupOptions.design_input_filename;
             WindowMessage welcome_window = WindowMessage.show(message);
             final BoardFrame new_frame =
                     create_board_frame(design_file, null, board_option,
