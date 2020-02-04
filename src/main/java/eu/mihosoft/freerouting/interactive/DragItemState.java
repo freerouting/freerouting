@@ -44,9 +44,9 @@ public class DragItemState extends DragState
 {
     
     /** Creates a new instance of MoveItemState */
-    protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_location, p_parent_state, p_board_handling, p_logfile);
+        super(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
         item_to_move = p_item_to_move;
     }
     
@@ -118,12 +118,12 @@ public class DragItemState extends DragState
                 }
                 // make the situation restorable by undo
                 hdlg.get_routing_board().generate_snapshot();
-                if (logfile != null)
+                if (activityReplayFile != null)
                 {
                     // Delayed till here because otherwise the mouse
                     // might have been only clicked for selecting
                     // and not pressed for moving.
-                    logfile.start_scope(LogfileScope.DRAGGING_ITEMS, this.previous_location);
+                    activityReplayFile.start_scope(ActivityReplayFileScope.DRAGGING_ITEMS, this.previous_location);
                 }
                 this.something_dragged = true;
             }
@@ -146,9 +146,9 @@ public class DragItemState extends DragState
             hdlg.get_routing_board().end_notify_observers();
             this.observers_activated = false;
         }
-        if (logfile != null && something_dragged)
+        if (activityReplayFile != null && something_dragged)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         if (something_dragged)
         {

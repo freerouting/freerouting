@@ -87,7 +87,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
                 URL hsURL = getClass().getResource(helpset_name);
                 if (hsURL == null)
                 {
-                    FRLogger.warning("HelpSet " + helpset_name + " not found.");
+                    FRLogger.logger.warn("HelpSet " + helpset_name + " not found.");
                 }
                 else
                 {

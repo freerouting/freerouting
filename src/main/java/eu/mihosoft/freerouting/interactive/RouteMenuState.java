@@ -34,21 +34,21 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 public class RouteMenuState extends MenuState
 {
     /** Returns a new instance of RouteMenuState */
-    public static RouteMenuState get_instance(BoardHandling p_board_handling, Logfile p_logfile)
+    public static RouteMenuState get_instance(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        RouteMenuState new_state = new RouteMenuState(p_board_handling, p_logfile);
+        RouteMenuState new_state = new RouteMenuState(p_board_handling, p_activityReplayFile);
         return new_state;
     }
     
     /** Creates a new instance of RouteMenuState */
-    private RouteMenuState(BoardHandling p_board_handling, Logfile p_logfile)
+    private RouteMenuState(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_board_handling, p_logfile);
+        super(p_board_handling, p_activityReplayFile);
     }
     
     public InteractiveState left_button_clicked(FloatPoint p_location)
     {
-        return RouteState.get_instance(p_location, this, hdlg, logfile);
+        return RouteState.get_instance(p_location, this, hdlg, activityReplayFile);
     }
     
     public void display_default_message()

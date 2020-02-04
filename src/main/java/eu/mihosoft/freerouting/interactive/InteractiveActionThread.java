@@ -166,7 +166,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
             hdlg.screen_messages.set_write_protected(true);
             boolean done = false;
             InteractiveState previous_state = hdlg.interactive_state;
-            if (!hdlg.logfile.start_read(this.input_stream))
+            if (!hdlg.activityReplayFile.start_read(this.input_stream))
             {
                 done = true;
             }
@@ -182,7 +182,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
                     done = true;
                 }
                 ++debug_counter;
-                LogfileScope logfile_scope = hdlg.logfile.start_read_scope();
+                ActivityReplayFileScope logfile_scope = hdlg.activityReplayFile.start_read_scope();
                 if (logfile_scope == null)
                 {
                     done = true; // end of logfile
@@ -192,7 +192,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
                     try
                     {
                         InteractiveState new_state =
-                                logfile_scope.read_scope(hdlg.logfile, hdlg.interactive_state, hdlg);
+                                logfile_scope.read_scope(hdlg.activityReplayFile, hdlg.interactive_state, hdlg);
                         if (new_state == null)
                         {
                             System.out.println("BoardHandling:read_logfile: inconsistent logfile scope");

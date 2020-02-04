@@ -47,16 +47,16 @@ public class CutoutRouteState extends SelectRegionState
      * Returns a new instance of this class.
      */
     public static CutoutRouteState get_instance( Collection<Item> p_item_list, InteractiveState p_parent_state,
-            BoardHandling p_board_handling, Logfile p_logfile)
+            BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        return get_instance(p_item_list,  null, p_parent_state, p_board_handling, p_logfile);
+        return get_instance(p_item_list,  null, p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     /**
      * Returns a new instance of this class.
      */
     public static CutoutRouteState get_instance( Collection<Item> p_item_list, FloatPoint p_location, InteractiveState p_parent_state,
-            BoardHandling p_board_handling, Logfile p_logfile)
+            BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         p_board_handling.display_layer_messsage();
         // filter items, whichh cannnot be cutout
@@ -70,23 +70,23 @@ public class CutoutRouteState extends SelectRegionState
             }
         }
         
-        CutoutRouteState new_instance =  new CutoutRouteState(item_list, p_parent_state, p_board_handling, p_logfile);
+        CutoutRouteState new_instance =  new CutoutRouteState(item_list, p_parent_state, p_board_handling, p_activityReplayFile);
         new_instance.corner1 = p_location;
-        if (p_location != null && new_instance.logfile != null)
+        if (p_location != null && new_instance.activityReplayFile != null)
         {
-            new_instance.logfile.add_corner(p_location);
+            new_instance.activityReplayFile.add_corner(p_location);
         }
         new_instance.hdlg.screen_messages.set_status_message(new_instance.resources.getString("drag_left_mouse_button_to_select_cutout_rectangle"));
         return new_instance;
     }
     
     /** Creates a new instance of CutoutRouteState */
-    private CutoutRouteState(Collection<PolylineTrace> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    private CutoutRouteState(Collection<PolylineTrace> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
-        if (logfile != null)
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CUTOUT_ROUTE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CUTOUT_ROUTE);
         }
         this.trace_list = p_item_list;
     }
@@ -95,9 +95,9 @@ public class CutoutRouteState extends SelectRegionState
     {
         hdlg.screen_messages.set_status_message("");
         corner2 = hdlg.get_current_mouse_position();
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.add_corner(corner2);
+            activityReplayFile.add_corner(corner2);
         }
         this.cutout_route();
         return this.return_state;

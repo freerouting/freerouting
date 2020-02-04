@@ -46,28 +46,28 @@ public class CircleConstructionState extends InteractiveState
      * If p_logfile != null; the creation of this item is stored in a logfile
      */
     public static CircleConstructionState get_instance(FloatPoint p_location,
-            InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+            InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         p_board_handling.remove_ratsnest(); // inserting a circle may change the connectivity.
-        return new CircleConstructionState(p_location, p_parent_state, p_board_handling, p_logfile);
+        return new CircleConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     /** Creates a new instance of CircleConstructionState */
-    private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
         circle_center = p_location;
-        if (this.logfile != null)
+        if (this.activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CREATING_CIRCLE, p_location);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CREATING_CIRCLE, p_location);
         }
     }
     
     public InteractiveState left_button_clicked(FloatPoint p_location)
     {
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.add_corner(p_location);
+            activityReplayFile.add_corner(p_location);
         }
         return this.complete();
     }
@@ -128,9 +128,9 @@ public class CircleConstructionState extends InteractiveState
         {
             hdlg.screen_messages.set_status_message(resources.getString("keepout_cancelled_because_of_overlaps"));
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         hdlg.repaint();
         return this.return_state;

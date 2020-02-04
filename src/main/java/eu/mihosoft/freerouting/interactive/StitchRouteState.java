@@ -35,9 +35,9 @@ public class StitchRouteState extends RouteState
 {
     
     /** Creates a new instance of StichRouteState */
-    protected StitchRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected StitchRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     public InteractiveState left_button_clicked(FloatPoint p_location)

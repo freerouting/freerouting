@@ -24,8 +24,8 @@
 package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.board.TestLevel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -37,26 +37,28 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class MainApplication extends javax.swing.JFrame
 {
-
     /**
      * Main function of the Application
      * @param args
      */
     public static void main(String args[])
     {
-        
+        FRLogger.traceEntry("MainApplication.main()");
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
+            FRLogger.logger.error(ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
+            FRLogger.logger.error(ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
+            FRLogger.logger.error(ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MainApplication.class.getName()).log(Level.SEVERE, null, ex);
+            FRLogger.logger.error(ex);
         }
-        
+
+        FRLogger.logger.info("Freerouting application is started.");
+
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
 
@@ -73,6 +75,8 @@ public class MainApplication extends javax.swing.JFrame
             {
                 board_option = BoardFrame.Option.SINGLE_FRAME;
             }
+
+            FRLogger.logger.info("Opening '"+startupOptions.design_file_name+"'...");
             DesignFile design_file = DesignFile.get_instance(startupOptions.design_file_name, false);
             if (design_file == null)
             {
@@ -108,6 +112,8 @@ public class MainApplication extends javax.swing.JFrame
         {
             new MainApplication(startupOptions).setVisible(true);
         }
+
+        FRLogger.traceExit("MainApplication.main()");
     }
 
     /**
@@ -137,7 +143,7 @@ public class MainApplication extends javax.swing.JFrame
         open_board_button = new javax.swing.JButton();
         restore_defaults_button = new javax.swing.JButton();
         message_field = new javax.swing.JTextField();
-        message_field.setText("-de or -di not specified");
+        message_field.setText("Neither '-de <design file>' nor '-di <design directory>' are specified.");
         this.window_net_demonstrations = new WindowNetDemonstrations(locale);
         java.awt.Point location = getLocation();
         this.window_net_demonstrations.setLocation((int) location.getX() + 50, (int) location.getY() + 50);
@@ -199,7 +205,7 @@ public class MainApplication extends javax.swing.JFrame
             main_panel.add(restore_defaults_button, gridbag_constraints);
         }
 
-        message_field.setPreferredSize(new java.awt.Dimension(230, 20));
+        message_field.setPreferredSize(new java.awt.Dimension(400, 20));
         message_field.setRequestFocusEnabled(false);
         gridbag.setConstraints(message_field, gridbag_constraints);
         main_panel.add(message_field, gridbag_constraints);
@@ -207,13 +213,11 @@ public class MainApplication extends javax.swing.JFrame
         this.addWindowListener(new WindowStateListener());
         pack();
         setSize(450,250);
-
     }
 
     /** opens a eu.mihosoft.freerouting.board design from a binary file or a specctra dsn file. */
     private void open_board_design_action(java.awt.event.ActionEvent evt)
     {
-
         DesignFile design_file = DesignFile.open_dialog(this.design_dir_name);
 
         if (design_file == null)
@@ -221,6 +225,8 @@ public class MainApplication extends javax.swing.JFrame
             message_field.setText(resources.getString("message_3"));
             return;
         }
+
+        FRLogger.logger.info("Opening '"+design_file.get_name()+"'...");
 
         BoardFrame.Option option;
         if (this.is_webstart)

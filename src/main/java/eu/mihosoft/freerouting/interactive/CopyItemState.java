@@ -55,21 +55,21 @@ public class CopyItemState extends InteractiveState
      * Returns a new instance of CopyItemState or null, if p_item_list is empty.
      */
     public static CopyItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list,
-    InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         if (p_item_list.size() == 0)
         {
             return null;
         }
         p_board_handling.remove_ratsnest(); // copying an item may change the connectivity.
-        return new CopyItemState(p_location, p_item_list, p_parent_state, p_board_handling, p_logfile);
+        return new CopyItemState(p_location, p_item_list, p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     /** Creates a new instance of CopyItemState */
     private CopyItemState(FloatPoint p_location, Collection<Item> p_item_list,
-    InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
         item_list = new LinkedList<Item>();
         
         start_position = p_location.round();
@@ -87,9 +87,9 @@ public class CopyItemState extends InteractiveState
                 item_list.add(new_item);
             }
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.COPYING_ITEMS, p_location);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COPYING_ITEMS, p_location);
         }
     }
     
@@ -125,9 +125,9 @@ public class CopyItemState extends InteractiveState
      */
     public boolean change_layer_action(int p_new_layer)
     {
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CHANGE_LAYER, p_new_layer);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CHANGE_LAYER, p_new_layer);
         }
         current_layer = p_new_layer;
         layer_changed = true;
@@ -259,9 +259,9 @@ public class CopyItemState extends InteractiveState
         {
             hdlg.screen_messages.set_status_message(resources.getString("some_items_not_inserted_because_of_obstacles"));
         }
-        if (logfile != null)
+        if (activityReplayFile != null)
         {
-            logfile.add_corner(this.current_position.to_float());
+            activityReplayFile.add_corner(this.current_position.to_float());
         }
         start_position = current_position;
         layer_changed = false;

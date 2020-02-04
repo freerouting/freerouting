@@ -31,6 +31,7 @@ import eu.mihosoft.freerouting.board.Unit;
 import eu.mihosoft.freerouting.autoroute.BatchAutorouter;
 import eu.mihosoft.freerouting.autoroute.BatchFanout;
 import eu.mihosoft.freerouting.autoroute.BatchOptRoute;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Thread for the batch autorouter.
@@ -52,6 +53,8 @@ public class BatchAutorouterThread extends InteractiveActionThread
 
     protected void thread_action()
     {
+        FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
+
         try
         {
             java.util.ResourceBundle resources =
@@ -126,8 +129,10 @@ public class BatchAutorouterThread extends InteractiveActionThread
             }
         } catch (Exception e)
         {
-
+            FRLogger.logger.error(e.getLocalizedMessage(),e);
         }
+
+        FRLogger.traceExit("BatchAutorouterThread.thread_action()");
     }
 
     public void draw(java.awt.Graphics p_graphics)

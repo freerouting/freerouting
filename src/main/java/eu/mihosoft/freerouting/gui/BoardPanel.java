@@ -23,6 +23,7 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.interactive.ActivityReplayFileScope;
 import eu.mihosoft.freerouting.interactive.BoardHandling;
 import eu.mihosoft.freerouting.interactive.ScreenMessages;
 
@@ -298,9 +299,9 @@ public class BoardPanel extends javax.swing.JPanel
                 new java.awt.Point((int)(new_center.getX() - delta.getX()), (int)(new_center.getY() - delta.getY()));
         move_mouse(new_mouse_location);
         repaint();
-        this.board_handling.logfile.start_scope(eu.mihosoft.freerouting.interactive.LogfileScope.CENTER_DISPLAY);
+        this.board_handling.activityReplayFile.start_scope(ActivityReplayFileScope.CENTER_DISPLAY);
         eu.mihosoft.freerouting.geometry.planar.FloatPoint curr_corner = new eu.mihosoft.freerouting.geometry.planar.FloatPoint(p_new_center.getX(), p_new_center.getY());
-        this.board_handling.logfile.add_corner(curr_corner);
+        this.board_handling.activityReplayFile.add_corner(curr_corner);
     }
     
     

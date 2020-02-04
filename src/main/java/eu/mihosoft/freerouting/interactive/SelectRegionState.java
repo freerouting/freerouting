@@ -34,9 +34,9 @@ public class SelectRegionState extends InteractiveState
 {
     
     /** Creates a new instance of SelectRegionState */
-    protected SelectRegionState(InteractiveState p_parent_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected SelectRegionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
-        super(p_parent_state, p_board_handling, p_logfile);
+        super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
     
     public InteractiveState button_released()
@@ -50,9 +50,9 @@ public class SelectRegionState extends InteractiveState
         if (corner1 == null)
         {
             corner1 = p_point;
-            if (logfile != null)
+            if (activityReplayFile != null)
             {
-                logfile.add_corner(corner1);
+                activityReplayFile.add_corner(corner1);
             }
         }
         hdlg.repaint();

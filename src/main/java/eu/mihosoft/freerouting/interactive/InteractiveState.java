@@ -36,11 +36,11 @@ import java.awt.Graphics;
 public class InteractiveState
 {
     /** Creates a new instance of InteractiveState */
-    protected InteractiveState(InteractiveState p_return_state, BoardHandling p_board_handling, Logfile p_logfile)
+    protected InteractiveState(InteractiveState p_return_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         this.return_state = p_return_state;
         this.hdlg = p_board_handling;
-        this.logfile = p_logfile;
+        this.activityReplayFile = p_activityReplayFile;
         this.resources =
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
     }
@@ -139,7 +139,7 @@ public class InteractiveState
         }
         else if (p_key_char == 'f')
         {
-            result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, logfile);
+            result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
         }
         else if (p_key_char =='h')
         {
@@ -195,9 +195,9 @@ public class InteractiveState
      */
     public InteractiveState complete()
     {
-        if (this.return_state != this &&logfile != null)
+        if (this.return_state != this && activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.COMPLETE_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
         }
         return this.return_state;
     }
@@ -209,9 +209,9 @@ public class InteractiveState
      */
     public InteractiveState cancel()
     {
-        if (this.return_state != this && logfile != null)
+        if (this.return_state != this && activityReplayFile != null)
         {
-            logfile.start_scope(LogfileScope.CANCEL_SCOPE);
+            activityReplayFile.start_scope(ActivityReplayFileScope.CANCEL_SCOPE);
         }
         return this.return_state;
     }
@@ -274,7 +274,7 @@ public class InteractiveState
     protected InteractiveState return_state;
     
     /** if logfile != null, the eu.mihosoft.freerouting.interactive actions are stored in a logfile */
-    protected final Logfile logfile;
+    protected final ActivityReplayFile activityReplayFile;
     
     /** Contains the files  with the language dependent messages */
     protected final java.util.ResourceBundle resources;

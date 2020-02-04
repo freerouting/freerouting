@@ -91,7 +91,7 @@ public class SnapShot implements java.io.Serializable
  
         if (snapshot_attributes.interactive_state)
         {
-            p_board_handling.set_interactive_state(this.get_interactive_state(p_board_handling, p_board_handling.logfile));
+            p_board_handling.set_interactive_state(this.get_interactive_state(p_board_handling, p_board_handling.activityReplayFile));
         }
         if (snapshot_attributes.selection_layers)
         {
@@ -143,20 +143,20 @@ public class SnapShot implements java.io.Serializable
     /**
      * Returns a new InterativeState from the data of this instance.
      */
-    public InteractiveState get_interactive_state(BoardHandling p_board_handling, Logfile p_logfile)
+    public InteractiveState get_interactive_state(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         InteractiveState result;
         if (this.interactive_state_no == 1)
         {
-            result = RouteMenuState.get_instance(p_board_handling, p_logfile);
+            result = RouteMenuState.get_instance(p_board_handling, p_activityReplayFile);
         }
         else if (this.interactive_state_no == 2)
         {
-            result = DragMenuState.get_instance(p_board_handling, p_logfile);
+            result = DragMenuState.get_instance(p_board_handling, p_activityReplayFile);
         }
         else
         {
-            result = SelectMenuState.get_instance(p_board_handling, p_logfile);
+            result = SelectMenuState.get_instance(p_board_handling, p_activityReplayFile);
         }
         return result;
     }
