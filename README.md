@@ -47,6 +47,10 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerou
 #### Windows (CMD)
 
     gradlew assemble
+    
+#### Generated Executables
+
+All four .jar files will be generated in the _build\libs_ subfolder. You would typically run the _freerouting-executable.jar_ file.
 
 ## From the original author:
 
@@ -54,7 +58,7 @@ Java Based Printed Circuit Board Routing Software from FreeRouting.net written b
 
 http://www.freerouting.net/fen/viewtopic.php?f=4&t=255
 
-by alfons � Sat Mar 08, 2014 12:07 pm
+by alfons © Sat Mar 08, 2014 12:07 pm
 
 Because I am no more maintaining the Freerouting project since 4 years and future Java versions may block my Freerouting Java Web Start application completely, I finally decided to open the source of the Freerouting project under the GNU public license version 3.
 
@@ -116,3 +120,23 @@ Additional steps for users of KiCad:
 5) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
 
 6) Go back to KiCad's Pcbnew and import the results (File / Import Specctra Session...).
+
+
+Using the command line arguments:
+=================================
+
+Freerouter was designed as a GUI program, but it also can function as a command line tool. Typically you would have an input file (e.g. Specctra DSN) that you exported from you EDA (e.g. KiCad). If this file has unconnected routes, you would want to wire those with autorouter, and save the result in a format that you can then import back into your EDA.
+
+The following command line arguments are supported by freerouter:
+
+* -de [design input file]: loads up a Specctra .dsn file at startup 
+* -di [design input directory]
+* -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished
+* -mp [number of passes]: sets the upper limit of the number of passes that will be performed
+* -l [language]: "de" for German, otherwise it's English
+
+A complete command line looks something like this:
+
+`
+freerouter-executable.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 
+`
