@@ -29,6 +29,8 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 /**
@@ -112,32 +114,44 @@ public class MainApplication extends javax.swing.JFrame
 
                     @Override
                     public void autorouterAborted() {
-                        if ((startupOptions.design_output_filename != null) && (startupOptions.design_output_filename.toLowerCase().endsWith(".dsn"))) {
-                            ExportBoardToDSNFile();
-                        }
+                        ExportBoardToFile(startupOptions.design_output_filename);
                     }
 
                     @Override
                     public void autorouterFinished() {
-                        if ((startupOptions.design_output_filename != null) && (startupOptions.design_output_filename.toLowerCase().endsWith(".dsn"))) {
-                            ExportBoardToDSNFile();
-                        }
+                        ExportBoardToFile(startupOptions.design_output_filename);
                     }
 
-                    private void ExportBoardToDSNFile()
-                    {
-                        FRLogger.logger.info("Saving '"+startupOptions.design_output_filename+"'...");
-                        try
-                        {
-                            String filename_only = new File(startupOptions.design_output_filename).getName();
-                            String design_name = filename_only.substring(0, filename_only.length() - 4);
+                    private void ExportBoardToFile(String filename) {
+                        if ((filename != null)
+                                && ((filename.toLowerCase().endsWith(".dsn"))
+                                || (filename.toLowerCase().endsWith(".ses"))
+                                || (filename.toLowerCase().endsWith(".scr")))) {
 
-                            java.io.OutputStream output_stream = new java.io.FileOutputStream(startupOptions.design_output_filename);
-                            new_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
-                            Runtime.getRuntime().exit(0);
-                        } catch (Exception e)
-                        {
-                            FRLogger.logger.error(e);
+                            FRLogger.logger.info("Saving '" + filename + "'...");
+                            try {
+                                String filename_only = new File(filename).getName();
+                                String design_name = filename_only.substring(0, filename_only.length() - 4);
+
+                                java.io.OutputStream output_stream = new java.io.FileOutputStream(filename);
+
+                                if (filename.toLowerCase().endsWith(".dsn")) {
+                                    new_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
+                                } else if (filename.toLowerCase().endsWith(".ses")) {
+                                    new_frame.board_panel.board_handling.export_specctra_session_file(design_name, output_stream);
+                                } else if (filename.toLowerCase().endsWith(".scr")) {
+                                    java.io.ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
+                                    new_frame.board_panel.board_handling.export_specctra_session_file(filename, session_output_stream);
+                                    java.io.InputStream input_stream = new ByteArrayInputStream(session_output_stream.toByteArray());
+                                    new_frame.board_panel.board_handling.export_eagle_session_file(input_stream, output_stream);
+                                }
+
+                                Runtime.getRuntime().exit(0);
+                            } catch (Exception e) {
+                                FRLogger.logger.error(e);
+                            }
+                        } else {
+                            FRLogger.logger.error("Couldn't export board to '" + filename + "'.");
                         }
                     }
                 });
