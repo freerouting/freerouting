@@ -130,7 +130,7 @@ Freerouter was designed as a GUI program, but it also can function as a command 
 The following command line arguments are supported by freerouter:
 
 * -de [design input file]: loads up a Specctra .dsn file at startup 
-* -di [design input directory]
+* -di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs
 * -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished
 * -mp [number of passes]: sets the upper limit of the number of passes that will be performed
 * -l [language]: "de" for German, otherwise it's English
