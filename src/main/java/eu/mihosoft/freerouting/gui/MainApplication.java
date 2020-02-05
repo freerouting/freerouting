@@ -112,32 +112,32 @@ public class MainApplication extends javax.swing.JFrame
 
                     @Override
                     public void autorouterAborted() {
-                        ExportBoardToDSNFile();
+                        if ((startupOptions.design_output_filename != null) && (startupOptions.design_output_filename.toLowerCase().endsWith(".dsn"))) {
+                            ExportBoardToDSNFile();
+                        }
                     }
 
                     @Override
                     public void autorouterFinished() {
-                        ExportBoardToDSNFile();
+                        if ((startupOptions.design_output_filename != null) && (startupOptions.design_output_filename.toLowerCase().endsWith(".dsn"))) {
+                            ExportBoardToDSNFile();
+                        }
                     }
 
                     private void ExportBoardToDSNFile()
                     {
-                        if ((startupOptions.design_output_filename != null) && (startupOptions.design_output_filename.toLowerCase().endsWith(".dsn")))
+                        FRLogger.logger.info("Saving '"+startupOptions.design_output_filename+"'...");
+                        try
                         {
-                            // save dsn file
-                            FRLogger.logger.info("Saving '"+startupOptions.design_output_filename+"'...");
-                            try
-                            {
-                                String filename_only = new File(startupOptions.design_output_filename).getName();
-                                String design_name = filename_only.substring(0, filename_only.length() - 4);
+                            String filename_only = new File(startupOptions.design_output_filename).getName();
+                            String design_name = filename_only.substring(0, filename_only.length() - 4);
 
-                                java.io.OutputStream output_stream = new java.io.FileOutputStream(startupOptions.design_output_filename);
-                                new_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
-                                Runtime.getRuntime().exit(0);
-                            } catch (Exception e)
-                            {
-                                FRLogger.logger.error(e);
-                            }
+                            java.io.OutputStream output_stream = new java.io.FileOutputStream(startupOptions.design_output_filename);
+                            new_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
+                            Runtime.getRuntime().exit(0);
+                        } catch (Exception e)
+                        {
+                            FRLogger.logger.error(e);
                         }
                     }
                 });
