@@ -1,5 +1,7 @@
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Locale;
 
 /**
@@ -11,8 +13,10 @@ public class StartupOptions {
     boolean test_version_option = false;
     boolean session_file_option = false;
     boolean webstart_option = false;
-    String design_file_name = null;
-    String design_dir_name = null;
+    String design_input_filename = null;
+    String design_output_filename = null;
+    String design_input_directory_name = null;
+    int max_passes = 99999;
     java.util.Locale current_locale = java.util.Locale.ENGLISH;
 
     private StartupOptions() {
@@ -30,31 +34,42 @@ public class StartupOptions {
 
     private void process(String[] p_args) {
         for (int i = 0; i < p_args.length; ++i) {
-            if (p_args[i].startsWith("-de"))
-            // the design file is provided
-            {
-                if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-                    single_design_option = true;
-                    design_file_name = p_args[i + 1];
+            try {
+                if (p_args[i].startsWith("-de")) {
+                    // the design file is provided
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                        single_design_option = true;
+                        design_input_filename = p_args[i + 1];
+                    }
+                } else if (p_args[i].startsWith("-di")) {
+                    // the design directory is provided
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                        design_input_directory_name = p_args[i + 1];
+                    }
+                } else if (p_args[i].startsWith("-do")) {
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                        design_output_filename = p_args[i + 1];
+                    }
+                } else if (p_args[i].startsWith("-mp")) {
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                        max_passes = Integer.decode(p_args[i + 1]);
+                    }
+                } else if (p_args[i].startsWith("-l")) {
+                    // the locale is provided
+                    if (p_args.length > i + 1 && p_args[i + 1].startsWith("d")) {
+                        current_locale = java.util.Locale.GERMAN;
+                    }
+                } else if (p_args[i].startsWith("-s")) {
+                    session_file_option = true;
+                } else if (p_args[i].startsWith("-w")) {
+                    webstart_option = true;
+                } else if (p_args[i].startsWith("-test")) {
+                    test_version_option = true;
                 }
-            } else if (p_args[i].startsWith("-di"))
-            // the design directory is provided
+            }
+            catch (Exception e)
             {
-                if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-                    design_dir_name = p_args[i + 1];
-                }
-            } else if (p_args[i].startsWith("-l"))
-            // the locale is provided
-            {
-                if (p_args.length > i + 1 && p_args[i + 1].startsWith("d")) {
-                    current_locale = java.util.Locale.GERMAN;
-                }
-            } else if (p_args[i].startsWith("-s")) {
-                session_file_option = true;
-            } else if (p_args[i].startsWith("-w")) {
-                webstart_option = true;
-            } else if (p_args[i].startsWith("-test")) {
-                test_version_option = true;
+                FRLogger.logger.error("There was a problem parsing the '"+p_args[i]+"' parameter", e);
             }
         }
     }
@@ -68,6 +83,6 @@ public class StartupOptions {
     }
 
     public String getDesignDir() {
-        return design_dir_name;
+        return design_input_directory_name;
     }
 }

@@ -23,6 +23,10 @@
  */
 package eu.mihosoft.freerouting.interactive;
 
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Used for running an eu.mihosoft.freerouting.interactive action in a seperate Thread,
  * that can be stopped by the user.
@@ -31,6 +35,11 @@ package eu.mihosoft.freerouting.interactive;
  */
 public abstract class InteractiveActionThread extends Thread implements eu.mihosoft.freerouting.datastructures.Stoppable
 {
+    protected List<ThreadActionListener> listeners = new ArrayList<ThreadActionListener>();
+
+    public void addListener(ThreadActionListener toAdd) {
+        listeners.add(toAdd);
+    }
 
     public static InteractiveActionThread get_autoroute_instance(BoardHandling p_board_handling)
     {
@@ -234,3 +243,4 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
         private final java.io.InputStream input_stream;
     }
 }
+
