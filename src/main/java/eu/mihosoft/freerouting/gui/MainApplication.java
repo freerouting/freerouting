@@ -102,7 +102,7 @@ public class MainApplication extends javax.swing.JFrame
                 return;
             }
 
-            new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + startupOptions.max_passes);
+            new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + startupOptions.max_passes - 1);
             if (startupOptions.max_passes < 99999)
             {
                 var thread = new_frame.board_panel.board_handling.start_batch_autorouter();
