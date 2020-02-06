@@ -31,7 +31,7 @@ import java.util.LinkedList;
 /**
  * Contains the information of a Specctra Class scope.
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public class NetClass
 {

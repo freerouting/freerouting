@@ -29,7 +29,7 @@ import java.util.Vector;
 /**
  * Describes a board library of packages and padstacks.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class BoardLibrary implements java.io.Serializable
 {

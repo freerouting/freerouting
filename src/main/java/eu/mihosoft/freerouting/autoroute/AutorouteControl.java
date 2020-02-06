@@ -32,7 +32,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 /**
  * Structure for controlling the autoroute algorithm.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class AutorouteControl
 {

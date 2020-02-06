@@ -45,7 +45,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class with functionality for optimising traces and vias.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class PullTightAlgo
 {

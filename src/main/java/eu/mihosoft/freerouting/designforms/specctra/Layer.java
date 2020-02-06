@@ -30,7 +30,7 @@ import java.util.LinkedList;
 /**
  * Describes a layer in a Specctra dsn file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Layer
 {

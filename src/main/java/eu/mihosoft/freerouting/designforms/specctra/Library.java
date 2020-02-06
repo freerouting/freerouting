@@ -37,7 +37,7 @@ import java.util.LinkedList;
 /**
  * Class for reading and writing library scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Library extends ScopeKeyword
 {

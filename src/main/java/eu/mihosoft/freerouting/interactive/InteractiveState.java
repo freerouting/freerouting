@@ -30,7 +30,7 @@ import java.awt.Graphics;
 /**
  * Common base class of all interaction states with the graphical interface
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  *
  */
 public class InteractiveState

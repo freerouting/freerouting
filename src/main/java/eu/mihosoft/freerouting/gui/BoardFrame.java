@@ -36,7 +36,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  *
  * Graphical frame of for interactive editing of a routing board.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 
 public class BoardFrame extends javax.swing.JFrame

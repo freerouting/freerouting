@@ -35,7 +35,7 @@ import java.util.Vector;
  * Database of objects, for which Undo and Redo operations are made possible.
  * The algorithm works only for objects containing no references.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class UndoableObjects implements java.io.Serializable
 {

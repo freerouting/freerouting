@@ -49,7 +49,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Temporary autoroute data stored on the RoutingBoard.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class AutorouteEngine
 {

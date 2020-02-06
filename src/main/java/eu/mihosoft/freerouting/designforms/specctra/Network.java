@@ -42,7 +42,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 /**
  * Class for reading and writing net network from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Network extends ScopeKeyword
 {

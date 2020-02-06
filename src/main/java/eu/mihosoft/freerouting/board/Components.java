@@ -39,7 +39,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Contains the lists of components on the board.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Components implements java.io.Serializable
 {

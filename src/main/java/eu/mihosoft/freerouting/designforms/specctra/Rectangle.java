@@ -31,7 +31,7 @@ import eu.mihosoft.freerouting.datastructures.IdentifierType;
 /**
  * Describes a rectangle in a Specctra dsn file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Rectangle extends Shape
 {

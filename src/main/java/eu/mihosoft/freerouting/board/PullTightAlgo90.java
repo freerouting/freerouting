@@ -33,7 +33,7 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 class PullTightAlgo90 extends PullTightAlgo
 {

@@ -35,7 +35,7 @@ import java.util.LinkedList;
  * The corners are normalysed, so that the corner with the lowest y-value comes first.
  * In case of equal y-value the corner with the lowest x-value comes first.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class PolygonShape extends PolylineShape
 {

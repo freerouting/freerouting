@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.gui;
 /**
  * Interactive Frame to adjust the visibility of a set of objects
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class WindowVisibility extends BoardSavableSubWindow
 {

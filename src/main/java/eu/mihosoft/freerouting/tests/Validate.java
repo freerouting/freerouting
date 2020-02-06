@@ -40,7 +40,7 @@ import eu.mihosoft.freerouting.board.SearchTreeObject;
 /**
  * Some consistancy checking on a routing board.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Validate
 {

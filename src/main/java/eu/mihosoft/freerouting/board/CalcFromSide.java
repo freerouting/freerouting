@@ -34,7 +34,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CalcFromSide
 {

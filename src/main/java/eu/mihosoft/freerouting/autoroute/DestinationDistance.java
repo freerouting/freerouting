@@ -33,7 +33,7 @@ import eu.mihosoft.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
  * Calculation of a good lower bound for the distance between a new MazeExpansionElement
  * and the destination set of the expansion.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class DestinationDistance
 {

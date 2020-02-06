@@ -36,7 +36,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class for reading and writing net scopes from dsn-files.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Net
 {

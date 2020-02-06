@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.gui.BoardFrame;
 /**
  * Snapshot of the client situation in an interactive session.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class SnapShot implements java.io.Serializable
 {

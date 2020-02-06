@@ -42,7 +42,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * An expansion room, whose shape is completely calculated,
  * so that it can be stored in a shape tree.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom implements CompleteExpansionRoom, SearchTreeObject
 {

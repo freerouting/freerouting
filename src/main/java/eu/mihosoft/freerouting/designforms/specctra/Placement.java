@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.designforms.specctra;
 /**
  * Class for writing placement scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Placement extends ScopeKeyword
 {

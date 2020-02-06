@@ -28,7 +28,7 @@ import java.util.Collection;
 
 /**
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public interface CompleteExpansionRoom extends ExpansionRoom
 {

@@ -44,7 +44,7 @@ import javax.swing.event.TableModelListener;
  *
  * Panel containing the graphical representation of a routing board.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class BoardPanel extends javax.swing.JPanel
 {

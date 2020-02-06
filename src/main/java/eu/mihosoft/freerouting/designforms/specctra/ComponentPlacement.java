@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Describes the placement data of a library component
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ComponentPlacement
 {

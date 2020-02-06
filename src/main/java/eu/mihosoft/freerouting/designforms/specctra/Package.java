@@ -33,7 +33,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class for reading and writing package scopes from dsn-files.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Package
 {

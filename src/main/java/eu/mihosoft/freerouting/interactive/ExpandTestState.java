@@ -45,7 +45,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 /**
  * State for testing the expanding algorithm of the autorouter.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class ExpandTestState extends InteractiveState
 {

@@ -43,7 +43,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Common superclass for Pins and Vias
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class DrillItem extends Item implements Connectable, java.io.Serializable
 {

@@ -35,7 +35,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Common base class for the main menus, which can be selected in the tool bar.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MenuState extends InteractiveState
 {

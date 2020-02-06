@@ -57,7 +57,7 @@ import eu.mihosoft.freerouting.board.TestLevel;
 /**
  *  Class implementing actions on the currently selected items.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class SelectedItemState extends InteractiveState
 {

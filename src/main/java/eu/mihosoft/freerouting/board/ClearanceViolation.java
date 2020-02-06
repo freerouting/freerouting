@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 /**
  * Information of a clearance violation between 2 items.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ClearanceViolation implements ObjectInfoPanel.Printable
 {

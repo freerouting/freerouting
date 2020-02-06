@@ -45,7 +45,7 @@ import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 /**
  * Creates the Incompletes (Ratsnest) of one net to display them on the screen.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class NetIncompletes
 {

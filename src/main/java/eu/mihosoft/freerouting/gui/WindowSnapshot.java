@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Window handling snapshots of the interactive situation.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class WindowSnapshot extends BoardSavableSubWindow
 {

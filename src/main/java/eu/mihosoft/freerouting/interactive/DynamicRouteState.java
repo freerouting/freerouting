@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 /**
  * State for dynamic interactive routing, which is routing while moving the mouse pointer.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class DynamicRouteState extends RouteState
 {

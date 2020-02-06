@@ -36,7 +36,7 @@ import java.awt.event.WindowFocusListener;
  * The shapes are stored in the leafs of the tree.
  * Objects to be stored in the tree must implement the interface ShapeTree.Storable.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class ShapeTree
 {

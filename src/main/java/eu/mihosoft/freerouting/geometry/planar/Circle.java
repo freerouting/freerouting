@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Discribes functionality of a circle shape in the plane.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Circle implements ConvexShape, java.io.Serializable
 {

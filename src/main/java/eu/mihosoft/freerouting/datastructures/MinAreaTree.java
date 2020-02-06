@@ -40,7 +40,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * Instead any algorithm to calculate a bounding shape of two input shapes can be used.
  * The algorithm would of course also work for higher dimensions.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MinAreaTree extends ShapeTree
 {

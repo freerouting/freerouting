@@ -45,7 +45,7 @@ import eu.mihosoft.freerouting.board.TestLevel;
 /**
  * Inserts the traces and vias of the connection found by the autoroute algorithm.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class InsertFoundConnectionAlgo
 {

@@ -38,7 +38,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Handles the sequencing of the batch autoroute passes.
  * 
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class BatchAutorouter
 {

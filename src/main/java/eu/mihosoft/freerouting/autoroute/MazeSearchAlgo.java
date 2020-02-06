@@ -52,7 +52,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class for autorouting an incomplete connection via a maze search algorithm.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MazeSearchAlgo
 {

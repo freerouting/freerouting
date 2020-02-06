@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Creates unique Item identication nunbers.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class ItemIdNoGenerator implements eu.mihosoft.freerouting.datastructures.IdNoGenerator, java.io.Serializable
 {

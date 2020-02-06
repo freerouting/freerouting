@@ -32,7 +32,7 @@ import java.util.LinkedList;
  * A PolylineArea is an  Area, where the outside border curve and the hole borders
  * consist of straight lines.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class PolylineArea implements Area, java.io.Serializable
 {

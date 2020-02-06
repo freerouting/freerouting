@@ -28,7 +28,7 @@ import java.awt.Color;
 /**
  * Information for drawing an item on the screen.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ItemDrawInfo
 {

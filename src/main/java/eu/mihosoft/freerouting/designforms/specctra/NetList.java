@@ -33,7 +33,7 @@ import java.util.Set;
  * Describes a list of nets sorted by its names.
  * The net number is generated internally.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class NetList
 {

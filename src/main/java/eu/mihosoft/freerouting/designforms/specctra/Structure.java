@@ -47,7 +47,7 @@ import eu.mihosoft.freerouting.board.TestLevel;
 /**
  * Class for reading and writing structure scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 class Structure extends ScopeKeyword
 {

@@ -64,7 +64,7 @@ import eu.mihosoft.freerouting.designforms.specctra.DsnFile;
  * Central connection class between the graphical user interface and
  * the board database.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class BoardHandling extends BoardHandlingImpl
 {

@@ -40,7 +40,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Methods to handle a Specctra session file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class SessionFile
 {

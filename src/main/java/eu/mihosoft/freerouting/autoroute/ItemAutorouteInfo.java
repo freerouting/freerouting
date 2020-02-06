@@ -32,7 +32,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Temporary data stored in board Items used in the autoroute algorithm
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 
 public class ItemAutorouteInfo

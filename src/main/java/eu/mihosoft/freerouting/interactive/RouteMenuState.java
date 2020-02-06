@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
  * Class implementing the different functionality in the route menu,
  * especially the different behaviour of the mouse button 1.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class RouteMenuState extends MenuState
 {

@@ -41,7 +41,7 @@ import eu.mihosoft.freerouting.library.Padstack;
 /**
  * Class with static functions for checking and inserting forced vias.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ForcedViaAlgo
 {

@@ -31,7 +31,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * Enumeration class defining scopes in a logfile,
  * Each Object of the class must implement the read_scope method.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class ActivityReplayFileScope
 {

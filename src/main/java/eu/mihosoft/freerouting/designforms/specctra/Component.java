@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Handels the placement data of a library component.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Component extends ScopeKeyword
 {

@@ -27,7 +27,7 @@ package eu.mihosoft.freerouting.datastructures;
 /**
  * Interface for stoppable threads.
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public interface Stoppable
 {

@@ -32,7 +32,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Describes a library of padstacks for pins or vias.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Padstacks implements java.io.Serializable
 {

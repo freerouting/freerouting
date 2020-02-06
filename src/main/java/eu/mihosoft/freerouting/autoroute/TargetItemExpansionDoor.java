@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.board.ShapeSearchTree;
 /**
  * An expansion door leading to a start or destination item of the autoroute algorithm.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class TargetItemExpansionDoor implements ExpandableObject
 {

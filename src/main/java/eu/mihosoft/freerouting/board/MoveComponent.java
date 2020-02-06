@@ -37,7 +37,7 @@ import eu.mihosoft.freerouting.datastructures.Signum;
 
 /**
  * Class for moving a group of items on the board
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MoveComponent
 {

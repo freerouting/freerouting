@@ -43,7 +43,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * Class describing the functionality of an electrical Item on the board
  * with a shape on 1 or several layers.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Pin extends DrillItem implements java.io.Serializable
 {

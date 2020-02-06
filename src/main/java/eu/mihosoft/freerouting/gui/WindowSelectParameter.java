@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Window for the handling of the interactive selection parameters,
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class WindowSelectParameter extends BoardSavableSubWindow
 {

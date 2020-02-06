@@ -38,7 +38,7 @@ import eu.mihosoft.freerouting.board.ClearanceViolation;
 /**
  * To display the clearance violations between items on the screen.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ClearanceViolations
 {

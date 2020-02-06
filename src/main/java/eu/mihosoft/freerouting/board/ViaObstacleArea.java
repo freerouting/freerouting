@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.geometry.planar.Vector;
 /**
  * Describes Areas on the board, where vias are not allowed.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ViaObstacleArea extends ObstacleArea
 {

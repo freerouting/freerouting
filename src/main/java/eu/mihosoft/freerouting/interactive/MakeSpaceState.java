@@ -32,7 +32,7 @@ import eu.mihosoft.freerouting.board.BasicBoard;
  * Class for shoving items out of a region to make space to insert something else.
  * For that purpose traces of an unvisible net are created tempory for shoving.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MakeSpaceState extends DragState
 {

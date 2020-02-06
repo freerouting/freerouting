@@ -28,7 +28,7 @@ import javax.swing.JLabel;
 /**
  * Text fields to display messages on the screen.
  *
- * @author  arbeit
+ * @author Alfons Wirtz
  */
 public class ScreenMessages
 {

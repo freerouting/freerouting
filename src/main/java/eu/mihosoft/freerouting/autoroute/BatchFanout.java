@@ -33,7 +33,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Handles the sequencing of the fanout inside the batch autorouter.
  * 
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class BatchFanout
 {

@@ -30,7 +30,7 @@ import java.util.Collection;
 /**
  * Describes the electrical Nets on a board.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Nets implements java.io.Serializable
 {

@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
 /**
  * Interactive Frame to adjust the visibility of the individual board items
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class WindowObjectVisibility extends WindowVisibility
 {

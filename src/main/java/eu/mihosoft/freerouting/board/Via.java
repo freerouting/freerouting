@@ -38,7 +38,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * which may have a shape on several layer, whose geometry is described by a
  * padstack.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Via extends DrillItem implements java.io.Serializable
 {

@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * The color intensities for each item type.
  * The values are between 0 (invisible) and 1 (full intensity).
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ColorIntensityTable implements java.io.Serializable
 {

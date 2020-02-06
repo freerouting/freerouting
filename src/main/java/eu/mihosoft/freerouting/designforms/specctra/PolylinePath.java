@@ -31,7 +31,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Describes a path defined by a sequence of lines (instead of a sequence of corners.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class PolylinePath extends Path
 {

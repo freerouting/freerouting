@@ -48,7 +48,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Interactive copying of items.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CopyItemState extends InteractiveState
 {

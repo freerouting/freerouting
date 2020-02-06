@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Contains the values of the interactive settings of the board handling.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Settings implements java.io.Serializable
 {

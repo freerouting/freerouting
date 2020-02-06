@@ -32,7 +32,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Describes a library of component packages.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Packages implements java.io.Serializable
 {

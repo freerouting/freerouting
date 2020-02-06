@@ -37,7 +37,7 @@ import eu.mihosoft.freerouting.library.Package;
  * Describes board components consisting of an array of pins
  * und other stuff like component keepouts.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Printable, java.io.Serializable
 {

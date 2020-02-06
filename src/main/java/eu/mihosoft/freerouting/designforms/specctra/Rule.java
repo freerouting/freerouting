@@ -32,7 +32,7 @@ import java.util.LinkedList;
 /**
  * Class for reading and writing rule scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class Rule
 {

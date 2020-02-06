@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Handles the indenting  of scopes while writing to an output text file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class IndentFileWriter extends java.io.OutputStreamWriter
 {

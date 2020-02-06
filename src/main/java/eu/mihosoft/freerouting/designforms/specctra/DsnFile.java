@@ -31,7 +31,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class for reading and writing dsn-files.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class DsnFile
 {

@@ -33,7 +33,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * relative locations of the packege pins,
  * and optional other stuff like an outline package keepouts.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Package implements Comparable<Package>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {

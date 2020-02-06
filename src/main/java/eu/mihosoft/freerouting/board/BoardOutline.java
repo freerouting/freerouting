@@ -37,7 +37,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class describing a board outline.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class BoardOutline extends Item implements java.io.Serializable
 {

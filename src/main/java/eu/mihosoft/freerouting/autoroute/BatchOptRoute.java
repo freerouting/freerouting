@@ -39,7 +39,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * To optimize the vias and traces after the batch autorouter has completed the board.
  * 
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class BatchOptRoute
 {

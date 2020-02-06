@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class for reading place_control scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class PlaceControl extends ScopeKeyword
 {

@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatLine;
  * Information for the maze expand Algorithm contained in expansion doors and drills
  * while the maze expanding algorithm is in progress.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MazeListElement implements Comparable<MazeListElement>
 {

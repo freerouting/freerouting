@@ -25,7 +25,7 @@ package eu.mihosoft.freerouting.designforms.specctra;
 
 /**
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 
 import eu.mihosoft.freerouting.logger.FRLogger;

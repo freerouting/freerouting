@@ -32,7 +32,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Describes padstack masks for pins or vias located at the origin.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Padstack implements Comparable<Padstack>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {

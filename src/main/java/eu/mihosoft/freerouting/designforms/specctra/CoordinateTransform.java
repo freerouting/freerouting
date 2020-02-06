@@ -33,7 +33,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Computes transformations between a specctra dsn-file coordinates and board coordinates.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CoordinateTransform implements java.io.Serializable
 {

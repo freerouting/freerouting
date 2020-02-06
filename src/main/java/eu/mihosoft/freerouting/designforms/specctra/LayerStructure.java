@@ -28,7 +28,7 @@ import java.util.Iterator;
 /**
  * Describes a layer structure read from a dsn file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class LayerStructure
 {

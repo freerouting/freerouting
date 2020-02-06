@@ -34,7 +34,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Describes a shape in a Specctra dsn file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public abstract class Shape
 {

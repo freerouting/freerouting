@@ -51,7 +51,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Class for reading and writing wiring scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 class Wiring extends ScopeKeyword
 {

@@ -37,7 +37,7 @@ import java.io.File;
  *
  * Main application for creating frames with new or existing board designs.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MainApplication extends javax.swing.JFrame
 {

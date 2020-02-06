@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.geometry.planar.Vector;
 /**
  * Describes areas of the board, where components are not allowed.
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public class ComponentObstacleArea extends ObstacleArea
 {

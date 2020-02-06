@@ -695,7 +695,7 @@ public class SortedRoomNeighbours
      * Helper class to sort the doors of an expansion room counterclockwise
      * arount the border of the room shape.
      *
-     * @author  Alfons Wirtz
+     * @author Alfons Wirtz
      */
     
     private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour>

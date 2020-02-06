@@ -38,7 +38,7 @@ import eu.mihosoft.freerouting.datastructures.Signum;
 
 /**
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 class PullTightAlgo45 extends PullTightAlgo
 {

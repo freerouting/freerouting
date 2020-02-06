@@ -30,7 +30,7 @@ import java.io.OutputStreamWriter;
 /**
  * Describes legal identifiers together with the character used for string quotes.
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public class IdentifierType
 {

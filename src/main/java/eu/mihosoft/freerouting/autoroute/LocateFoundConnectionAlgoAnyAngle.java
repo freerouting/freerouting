@@ -43,7 +43,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * Calculates from the backtrack list the location of the traces and vias,
  * which realize a connection found by the maze search algorithm.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
 {

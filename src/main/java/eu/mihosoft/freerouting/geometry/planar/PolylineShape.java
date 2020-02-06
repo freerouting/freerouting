@@ -33,7 +33,7 @@ import java.util.LinkedList;
  * Abstract class with functions for shapes, whose borders consist
  * ob straight lines.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class PolylineShape implements Shape, java.io.Serializable
 {

@@ -43,7 +43,7 @@ import java.util.Collection;
  * Class with functions for checking and inserting pads with eventually
  * shoving aside obstacle traces.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class ForcedPadAlgo
 {

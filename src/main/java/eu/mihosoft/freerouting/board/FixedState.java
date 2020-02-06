@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.board;
 /**
  * Sorted fixed states of board items. The strongest fixed states came last.
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public enum FixedState
 {

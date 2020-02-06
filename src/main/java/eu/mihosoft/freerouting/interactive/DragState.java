@@ -34,7 +34,7 @@ import eu.mihosoft.freerouting.board.Item;
 /**
  * Class implementing functionality when the mouse is dragged on a routing board
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class DragState extends InteractiveState
 {

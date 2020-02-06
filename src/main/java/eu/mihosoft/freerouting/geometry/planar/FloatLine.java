@@ -31,7 +31,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * For that reason collinearity for example is not defined for FloatLines.
  * If exactnesss is needed, use the class Line instead.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class FloatLine
 {

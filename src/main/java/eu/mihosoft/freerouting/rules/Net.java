@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 /**
  * Describes properties for an individual electrical net.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Net implements Comparable<Net>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
