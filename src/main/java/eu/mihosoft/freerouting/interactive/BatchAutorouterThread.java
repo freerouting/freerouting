@@ -132,7 +132,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             }
         } catch (Exception e)
         {
-            FRLogger.logger.error(e.getLocalizedMessage(),e);
+            FRLogger.error(e.getLocalizedMessage(),e);
         }
 
         FRLogger.traceExit("BatchAutorouterThread.thread_action()");

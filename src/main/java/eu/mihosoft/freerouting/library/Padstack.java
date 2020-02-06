@@ -27,11 +27,12 @@ import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 import eu.mihosoft.freerouting.geometry.planar.Direction;
 import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Describes padstack masks for pins or vias located at the origin.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Padstack implements Comparable<Padstack>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
@@ -69,7 +70,7 @@ public class Padstack implements Comparable<Padstack>, eu.mihosoft.freerouting.b
     {
         if (p_layer < 0 || p_layer >= shapes.length)
         {
-            System.out.println("Padstack.get_layer p_layer out of range");
+            FRLogger.warn("Padstack.get_layer p_layer out of range");
             return null;
         }
         return shapes[p_layer];
@@ -101,7 +102,7 @@ public class Padstack implements Comparable<Padstack>, eu.mihosoft.freerouting.b
         return result;
     }
     
-    /** Returns the layer ciount of the eu.mihosoft.freerouting.board of this padstack. */
+    /** Returns the layer ciount of the board of this padstack. */
     public int board_layer_count()
     {
         return shapes.length;

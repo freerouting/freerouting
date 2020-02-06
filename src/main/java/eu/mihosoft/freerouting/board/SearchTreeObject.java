@@ -24,9 +24,9 @@
 package eu.mihosoft.freerouting.board;
 
 /**
- * Common ShapeSearchTree functionality for eu.mihosoft.freerouting.board.Items and eu.mihosoft.freerouting.autoroute.ExpansionRooms
+ * Common ShapeSearchTree functionality for board.Items and autoroute.ExpansionRooms
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public interface SearchTreeObject extends eu.mihosoft.freerouting.datastructures.ShapeTree.Storable
 {

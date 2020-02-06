@@ -29,7 +29,7 @@ import java.util.LinkedList;
 /**
  * Default parameter type used while reading a Specctra dsn-file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ReadScopeParameter
 {
@@ -62,14 +62,14 @@ public class ReadScopeParameter
     /**
      * Component placement information.
      * It is filled while reading the placement scope and can be
-     * evaluated after reading the eu.mihosoft.freerouting.library and network scope.
+     * evaluated after reading the library and network scope.
      */
     final Collection<ComponentPlacement> placement_list = new LinkedList<ComponentPlacement>();
     
     
     /**
      * The names of the via padstacks filled while reading the structure scope
-     * and evaluated after reading the eu.mihosoft.freerouting.library scope.
+     * and evaluated after reading the library scope.
      */
     Collection<String> via_padstack_names = null;
     

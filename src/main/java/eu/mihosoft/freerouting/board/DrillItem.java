@@ -38,11 +38,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Common superclass for Pins and Vias
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class DrillItem extends Item implements Connectable, java.io.Serializable
 {
@@ -273,7 +274,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         int to_layer = last_layer();
         if (p_layer < from_layer || p_layer > to_layer)
         {
-            System.out.println("DrillItem.get_tree_shape_on_layer: p_layer out of range");
+            FRLogger.warn("DrillItem.get_tree_shape_on_layer: p_layer out of range");
             return null;
         }
         return get_tree_shape(p_tree, p_layer - from_layer);
@@ -285,7 +286,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         int to_layer = last_layer();
         if (p_layer < from_layer || p_layer > to_layer)
         {
-            System.out.println("DrillItem.get_tile_shape_on_layer: p_layer out of range");
+            FRLogger.warn("DrillItem.get_tile_shape_on_layer: p_layer out of range");
             return null;
         }
         return get_tile_shape(p_layer - from_layer);
@@ -297,7 +298,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         int to_layer = last_layer();
         if (p_layer < from_layer || p_layer > to_layer)
         {
-            System.out.println("DrillItem.get_shape_on_layer: p_layer out of range");
+            FRLogger.warn("DrillItem.get_shape_on_layer: p_layer out of range");
             return null;
         }
         return get_shape(p_layer - from_layer);
@@ -390,7 +391,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         return TileShape.get_instance(this.get_center());
     }
     
-    /** False, if this drillitem is places on the back side of the eu.mihosoft.freerouting.board */
+    /** False, if this drillitem is places on the back side of the board */
     public boolean is_placed_on_front()
     {
         return true;

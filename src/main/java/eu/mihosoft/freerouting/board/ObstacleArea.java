@@ -30,10 +30,11 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import java.awt.Color;
 
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
- * An item on the eu.mihosoft.freerouting.board with an relative_area shape, for example keepout, conduction relative_area
+ * An item on the board with an relative_area shape, for example keepout, conduction relative_area
  *
  *
  *
@@ -81,7 +82,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         {
             if (this.relative_area == null)
             {
-                System.out.println("ObstacleArea.get_area: area is null");
+                FRLogger.warn("ObstacleArea.get_area: area is null");
                 return null;
             }
             Area turned_area = this.relative_area;
@@ -171,7 +172,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         TileShape[] tile_shapes = this.split_to_convex();
         if (tile_shapes == null || p_no < 0 || p_no >= tile_shapes.length)
         {
-            System.out.println("ConvexObstacle.get_tile_shape: p_no out of range");
+            FRLogger.warn("ConvexObstacle.get_tile_shape: p_no out of range");
             return null;
         }
         return tile_shapes[p_no];
@@ -345,7 +346,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
     {
         if (this.relative_area == null)
         {
-            System.out.println("ObstacleArea.split_to_convex: area is null");
+            FRLogger.warn("ObstacleArea.split_to_convex: area is null");
             return null;
         }
         return this.get_area().split_to_convex();

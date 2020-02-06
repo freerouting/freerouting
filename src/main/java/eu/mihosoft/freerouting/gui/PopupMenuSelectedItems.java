@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Popup menu used in the eu.mihosoft.freerouting.interactive selected item state..
+ * Popup menu used in the interactive selected item state..
  *
  * @author Alfons Wirtz
  */

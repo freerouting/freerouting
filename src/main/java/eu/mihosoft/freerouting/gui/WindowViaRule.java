@@ -23,6 +23,7 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.ViaRule;
 import eu.mihosoft.freerouting.rules.ViaInfo;
 import eu.mihosoft.freerouting.rules.ViaInfos;
@@ -153,7 +154,7 @@ public class WindowViaRule extends javax.swing.JFrame
                 {
                     if (curr_index >= possible_values.length)
                     {
-                        System.out.println("ViaRuleWindow.AppendListener.actionPerformed: index inconsistent");
+                        FRLogger.warn("ViaRuleWindow.AppendListener.actionPerformed: index inconsistent");
                         break;
                     }
                     possible_values[curr_index] = curr_via;

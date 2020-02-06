@@ -28,6 +28,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.board.Pin;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -88,7 +89,7 @@ public class PinSwapState extends InteractiveState
         }
         if (this.from_pin.net_count() > 1 || this.to_pin.net_count() > 1)
         {
-            System.out.println("PinSwapState.complete: pin swap not yet implemented for pins belonging to more than 1 net ");
+            FRLogger.warn("PinSwapState.complete: pin swap not yet implemented for pins belonging to more than 1 net ");
             return this.cancel();
         }
         int from_net_no;

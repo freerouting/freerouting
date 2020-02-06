@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.board.AngleRestriction;
 /**
  * Common class for constructing an obstacle with a polygonal shape.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CornerItemConstructionState extends InteractiveState
 {

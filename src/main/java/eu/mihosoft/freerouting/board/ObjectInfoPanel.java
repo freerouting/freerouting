@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.board;
 
 /**
- * Output window for printing information about eu.mihosoft.freerouting.board objects.
+ * Output window for printing information about board objects.
  *
  * @author Alfons Wirtz
  */

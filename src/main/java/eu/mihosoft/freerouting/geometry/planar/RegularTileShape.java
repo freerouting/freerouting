@@ -28,7 +28,7 @@ package eu.mihosoft.freerouting.geometry.planar;
  *  a fixed set, as for example orthoganal directions, which
  *  define axis parallel box shapes.
  * 
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class RegularTileShape extends TileShape
 {

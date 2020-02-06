@@ -45,7 +45,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 /**
  * State for testing the expanding algorithm of the autorouter.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class ExpandTestState extends InteractiveState
 {
@@ -181,7 +181,7 @@ public class ExpandTestState extends InteractiveState
 
     private void init(FloatPoint p_location)
     {
-        // look if an eu.mihosoft.freerouting.autoroute can be started at the input location
+        // look if an autoroute can be started at the input location
         RoutingBoard board = hdlg.get_routing_board();
         int layer = hdlg.settings.layer;
         Collection<Item> found_items = board.pick_items(p_location.round(), layer, null);

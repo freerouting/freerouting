@@ -46,11 +46,12 @@ import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 import eu.mihosoft.freerouting.datastructures.IdentifierType;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class for reading and writing wiring scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 class Wiring extends ScopeKeyword
 {
@@ -73,12 +74,12 @@ class Wiring extends ScopeKeyword
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Wiring.read_scope: IO error scanning file");
+                FRLogger.warn("Wiring.read_scope: IO error scanning file");
                 return false;
             }
             if (next_token == null)
             {
-                System.out.println("Wiring.read_scope: unexpected end of file");
+                FRLogger.warn("Wiring.read_scope: unexpected end of file");
                 return false;
             }
             if (next_token == CLOSED_BRACKET)
@@ -194,7 +195,7 @@ class Wiring extends ScopeKeyword
     {
         if (!(p_wire instanceof PolylineTrace))
         {
-            System.out.println("Wiring.write_wire_scope: trace type not yet implemented");
+            FRLogger.warn("Wiring.write_wire_scope: trace type not yet implemented");
             return;
         }
         PolylineTrace curr_wire = (PolylineTrace) p_wire;
@@ -209,7 +210,7 @@ class Wiring extends ScopeKeyword
         }
         if (wire_net == null)
         {
-            System.out.println("Wiring.write_wire_scope: net not found");
+            FRLogger.warn("Wiring.write_wire_scope: net not found");
             return;
         }
         p_par.file.start_scope();
@@ -245,7 +246,7 @@ class Wiring extends ScopeKeyword
         int net_count = p_conduction_area.net_count();
         if (net_count <= 0 || net_count > 1)
         {
-            System.out.println("Plane.write_scope: unexpected net count");
+            FRLogger.warn("Plane.write_scope: unexpected net count");
             return;
         }
         eu.mihosoft.freerouting.rules.Net curr_net = p_par.board.rules.nets.get(p_conduction_area.get_net_no(0));
@@ -331,12 +332,12 @@ class Wiring extends ScopeKeyword
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Wiring.read_wire_scope: IO error scanning file");
+                FRLogger.error("Wiring.read_wire_scope: IO error scanning file", e);
                 return null;
             }
             if (next_token == null)
             {
-                System.out.println("Wiring.read_wire_scope: unexpected end of file");
+                FRLogger.warn("Wiring.read_wire_scope: unexpected end of file");
                 return null;
             }
             if (next_token == CLOSED_BRACKET)
@@ -380,12 +381,12 @@ class Wiring extends ScopeKeyword
                     }
                     catch (java.io.IOException e)
                     {
-                        System.out.println("Wiring.read_wire_scope: IO error scanning file");
+                        FRLogger.error("Wiring.read_wire_scope: IO error scanning file", e);
                         return null;
                     }
                     if (next_token != CLOSED_BRACKET)
                     {
-                        System.out.println("Wiring.read_wire_scope: closing bracket expected");
+                        FRLogger.warn("Wiring.read_wire_scope: closing bracket expected");
                         return null;
                     }
                 }
@@ -409,7 +410,7 @@ class Wiring extends ScopeKeyword
         }
         if (path == null && border_shape == null)
         {
-            System.out.println("Wiring.read_wire_scope: shape missing");
+            FRLogger.warn("Wiring.read_wire_scope: shape missing");
             return null;
         }
         RoutingBoard board = p_par.board_handling.get_routing_board();
@@ -443,14 +444,14 @@ class Wiring extends ScopeKeyword
         }
         if (layer_no < 0 || layer_no >= board.get_layer_count())
         {
-            System.out.print("Wiring.read_wire_scope: unexpected layer ");
+            FRLogger.warn("Wiring.read_wire_scope: unexpected layer ");
             if (path != null)
             {
-                System.out.println(path.layer.name);
+                FRLogger.warn(path.layer.name);
             }
             else
             {
-                System.out.println(border_shape.layer.name);
+                FRLogger.warn(border_shape.layer.name);
             }
             return null;
         }
@@ -489,7 +490,7 @@ class Wiring extends ScopeKeyword
                 FloatPoint curr_corner =  p_par.coordinate_transform.dsn_to_board(curr_point);
                 if (!bounding_box.contains(curr_corner))
                 {
-                    System.out.println("Wiring.read_wire_scope: wire corner outside eu.mihosoft.freerouting.board");
+                    FRLogger.warn("Wiring.read_wire_scope: wire corner outside board");
                     return null;
                 }
                 corner_arr[i] = curr_corner.round();
@@ -522,7 +523,7 @@ class Wiring extends ScopeKeyword
         }
         else
         {
-            System.out.println("Wiring.read_wire_scope: unexpected Path subclass");
+            FRLogger.warn("Wiring.read_wire_scope: unexpected Path subclass");
             return null;
         }
         if (result != null && result.net_count() == 0)
@@ -590,7 +591,7 @@ class Wiring extends ScopeKeyword
             Object next_token = p_par.scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Wiring.read_via_scope: padstack name expected");
+                FRLogger.warn("Wiring.read_via_scope: padstack name expected");
                 return false;
             }
             String padstack_name = (String) next_token;
@@ -609,7 +610,7 @@ class Wiring extends ScopeKeyword
                 }
                 else
                 {
-                    System.out.println("Wiring.read_via_scope: number expected");
+                    FRLogger.warn("Wiring.read_via_scope: number expected");
                     return false;
                 }
             }
@@ -621,7 +622,7 @@ class Wiring extends ScopeKeyword
                 next_token = p_par.scanner.next_token();
                 if (next_token == null)
                 {
-                    System.out.println("Wiring.read_via_scope: unexpected end of file");
+                    FRLogger.warn("Wiring.read_via_scope: unexpected end of file");
                     return false;
                 }
                 if (next_token == CLOSED_BRACKET)
@@ -653,16 +654,14 @@ class Wiring extends ScopeKeyword
             eu.mihosoft.freerouting.library.Padstack curr_padstack = board.library.padstacks.get(padstack_name);
             if (curr_padstack == null)
             {
-                System.out.println("Wiring.read_via_scope: via padstack not found");
+                FRLogger.warn("Wiring.read_via_scope: via padstack not found");
                 return false;
             }
             eu.mihosoft.freerouting.rules.NetClass net_class = board.rules.get_default_net_class();
             Collection<eu.mihosoft.freerouting.rules.Net> found_nets = get_subnets(net_id, board.rules);
             if (net_id != null && found_nets.isEmpty())
             {
-                System.out.print("Wiring.read_via_scope: net with name ");
-                System.out.print(net_id.name);
-                System.out.println(" not found");
+                FRLogger.warn("Wiring.read_via_scope: net with name '" + net_id.name + "' not found");
             }
             int[] net_no_arr = new int[found_nets.size()];
             int curr_index = 0;
@@ -683,8 +682,7 @@ class Wiring extends ScopeKeyword
             IntPoint board_location = p_par.coordinate_transform.dsn_to_board(location).round();
             if (via_exists(board_location, curr_padstack, net_no_arr, board))
             {
-                System.out.print("Multiple via skipped at (");
-                System.out.println(board_location.x + ", " + board_location.y + ")");
+                FRLogger.warn("Multiple via skipped at (" + board_location.x + ", " + board_location.y + ")");
             }
             else
             {
@@ -695,7 +693,7 @@ class Wiring extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Wiring.read_via_scope: IO error scanning file");
+            FRLogger.error("Wiring.read_via_scope: IO error scanning file", e);
             return false;
         }
     }
@@ -740,14 +738,14 @@ class Wiring extends ScopeKeyword
             next_token = p_scanner.next_token();
             if (next_token != CLOSED_BRACKET)
             {
-                System.out.println("Wiring.is_fixed: ) expected");
+                FRLogger.warn("Wiring.is_fixed: ) expected");
                 return eu.mihosoft.freerouting.board.FixedState.UNFIXED;
             }
             return result;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Wiring.is_fixed: IO error scanning file");
+            FRLogger.error("Wiring.is_fixed: IO error scanning file", e);
             return eu.mihosoft.freerouting.board.FixedState.UNFIXED;
         }
     }
@@ -764,7 +762,7 @@ class Wiring extends ScopeKeyword
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Wiring:read_net_id: String expected");
+                FRLogger.warn("Wiring:read_net_id: String expected");
                 return null;
             }
             String net_name = (String) next_token;
@@ -776,13 +774,13 @@ class Wiring extends ScopeKeyword
             }
             if (next_token != CLOSED_BRACKET)
             {
-                System.out.println("Wiring.read_net_id: closing bracket expected");
+                FRLogger.warn("Wiring.read_net_id: closing bracket expected");
             }
             return new Net.Id(net_name, subnet_number);
         }
         catch (java.io.IOException e)
         {
-            System.out.println("DsnFile.read_string_scope: IO error scanning file");
+            FRLogger.error("DsnFile.read_string_scope: IO error scanning file", e);
             return null;
         }
     }

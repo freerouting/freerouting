@@ -25,8 +25,10 @@ package eu.mihosoft.freerouting.designforms.specctra;
 
 /**
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
+
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /** Keywords defining a scope object*/
 public class ScopeKeyword extends Keyword
@@ -53,8 +55,7 @@ public class ScopeKeyword extends Keyword
             }
             catch (Exception e)
             {
-                System.out.println("ScopeKeyword.skip_scope: Error while scanning file");
-                System.out.println(e);
+                FRLogger.error("ScopeKeyword.skip_scope: Error while scanning file", e);
                 return false;
             }
             if (curr_token == null)
@@ -88,8 +89,7 @@ public class ScopeKeyword extends Keyword
             }
             catch (java.io.IOException e)
             {
-                System.out.println("ScopeKeyword.read_scope: IO error scanning file");
-                System.out.println(e);
+                FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
                 return false;
             }
             if (next_token == null)

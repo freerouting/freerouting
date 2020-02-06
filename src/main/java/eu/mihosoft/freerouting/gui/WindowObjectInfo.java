@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 
 
@@ -35,7 +37,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements eu.miho
 {
     /**
      * Displays a new ObjectInfoWindow with information about the items in p_item_list.
-     * p_coordinate_transform is for transforming eu.mihosoft.freerouting.board to user coordinates,
+     * p_coordinate_transform is for transforming board to user coordinates,
      * and p_location is the location of the window.
      */
     public static void display(Collection<eu.mihosoft.freerouting.board.Item> p_item_list,
@@ -127,7 +129,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements eu.miho
     
     /**
      * Displays a new ObjectInfoWindow with information about the objects in p_object_list.
-     * p_coordinate_transform is for transforming eu.mihosoft.freerouting.board to user coordinates,
+     * p_coordinate_transform is for transforming board to user coordinates,
      * and p_location is the location of the window.
      */
     public static WindowObjectInfo display(String p_title, Collection<Printable> p_object_list,
@@ -211,7 +213,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements eu.miho
         }
         catch (javax.swing.text.BadLocationException e)
         {
-            System.out.println("ObjectInfoWindow.append: unable to insert text into text pane.");
+            FRLogger.warn("ObjectInfoWindow.append: unable to insert text into text pane.");
             return false;
         }
         return true;

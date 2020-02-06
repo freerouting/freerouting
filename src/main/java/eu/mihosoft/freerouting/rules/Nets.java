@@ -22,13 +22,15 @@
  */
 package eu.mihosoft.freerouting.rules;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Vector;
 import java.util.Collection;
 
 /**
- * Describes the electrical Nets on a eu.mihosoft.freerouting.board.
+ * Describes the electrical Nets on a board.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Nets implements java.io.Serializable
 {
@@ -40,7 +42,7 @@ public class Nets implements java.io.Serializable
     }
 
     /**
-     * Returns the biggest net number on the eu.mihosoft.freerouting.board.
+     * Returns the biggest net number on the board.
      */
     public int max_net_no()
     {
@@ -91,7 +93,7 @@ public class Nets implements java.io.Serializable
         Net result = net_arr.elementAt(p_net_no - 1);
         if (result != null && result.net_number != p_net_no)
         {
-            System.out.println("Nets.get: inconsistent net_no");
+            FRLogger.warn("Nets.get: inconsistent net_no");
         }
         return result;
     }
@@ -116,7 +118,7 @@ public class Nets implements java.io.Serializable
         int new_net_no = net_arr.size() + 1;
         if (new_net_no >= max_legal_net_no)
         {
-            System.out.println("Nets.add_net: max_net_no out of range");
+            FRLogger.warn("Nets.add_net: max_net_no out of range");
         }
         Net new_net = new Net(p_name, p_subnet_number, new_net_no, this, p_contains_plane);
         net_arr.add(new_net);
@@ -156,7 +158,7 @@ public class Nets implements java.io.Serializable
     public static final int max_legal_net_no = 9999999;
     /** auxiliary net number for internal use */
     public static final int hidden_net_no = 10000001;
-    /** The list of electrical nets on the eu.mihosoft.freerouting.board */
+    /** The list of electrical nets on the board */
     private Vector<Net> net_arr;
     private eu.mihosoft.freerouting.board.BasicBoard board;
 }

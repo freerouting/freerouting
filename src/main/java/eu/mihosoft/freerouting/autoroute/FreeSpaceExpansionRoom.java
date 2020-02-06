@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Expansion Areas used by the maze search algorithm.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
 {

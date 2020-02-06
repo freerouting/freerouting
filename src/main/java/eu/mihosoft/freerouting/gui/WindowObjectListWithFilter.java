@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  *  Abstract class for windows displaying a list of objects
  *  The object name can be filttered by an alphanumeric input string. * @author Alfons Wirtz
@@ -109,7 +111,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
         }
         catch (java.io.IOException e)
         {
-            System.out.println("WindowObjectListWithFilter.save: save failed");
+            FRLogger.warn("WindowObjectListWithFilter.save: save failed");
         }
         super.save(p_object_stream);
     }
@@ -123,7 +125,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
         }
         catch (Exception e)
         {
-            System.out.println("WindowObjectListWithFilter.read: read failed");
+            FRLogger.warn("WindowObjectListWithFilter.read: read failed");
         }
         return super.read(p_object_stream);
     }

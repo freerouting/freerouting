@@ -27,7 +27,7 @@ import java.awt.Dimension;
 import java.awt.geom.Point2D;
 
 /**
- * Transformation function between the eu.mihosoft.freerouting.board and the screen coordinate systems.
+ * Transformation function between the board and the screen coordinate systems.
  *
  * @author Alfons Wirtz
  */
@@ -79,7 +79,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * scale a value from the eu.mihosoft.freerouting.board to the screen coordinate system
+     * scale a value from the board to the screen coordinate system
      */
     public double board_to_screen(double p_val)
     {
@@ -87,7 +87,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * scale a value the screen to the eu.mihosoft.freerouting.board coordinate system
+     * scale a value the screen to the board coordinate system
      */
     public double screen_to_board(double p_val)
     {
@@ -96,7 +96,7 @@ public class CoordinateTransform implements java.io.Serializable
     
     
     /**
-     * transform a eu.mihosoft.freerouting.geometry.planar.FloatPoint to a java.awt.geom.Point2D
+     * transform a geometry.planar.FloatPoint to a java.awt.geom.Point2D
      */
     public Point2D board_to_screen(FloatPoint p_point)
     {
@@ -123,7 +123,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transform a java.awt.geom.Point2D to a eu.mihosoft.freerouting.geometry.planar.FloatPoint
+     * Transform a java.awt.geom.Point2D to a geometry.planar.FloatPoint
      */
     public FloatPoint screen_to_board(Point2D p_point)
     {
@@ -149,7 +149,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms an angle in radian on the eu.mihosoft.freerouting.board to an angle on the screen.
+     * Transforms an angle in radian on the board to an angle on the screen.
      */
     public double board_to_screen_angle(double p_angle)
     {
@@ -174,7 +174,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transform a eu.mihosoft.freerouting.geometry.planar.IntBox to a java.awt.Rectangle
+     * Transform a geometry.planar.IntBox to a java.awt.Rectangle
      * If the internal rotation is not a multiple of Pi/2, a bounding rectangle of the
      * rotated rectangular shape is returned.
      */
@@ -193,7 +193,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transform a java.awt.Rectangle to a eu.mihosoft.freerouting.geometry.planar.IntBox
+     * Transform a java.awt.Rectangle to a geometry.planar.IntBox
      * If the internal rotation is not a multiple of Pi/2, a bounding box of the
      * rotated rectangular shape is returned.
      */
@@ -210,7 +210,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * If p_value is true, the left side and the right side of the eu.mihosoft.freerouting.board will be swapped.
+     * If p_value is true, the left side and the right side of the board will be swapped.
      */
     public void set_mirror_left_right(boolean p_value)
     {
@@ -218,7 +218,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Returns, if the left side and the right side of the eu.mihosoft.freerouting.board are swapped.
+     * Returns, if the left side and the right side of the board are swapped.
      */
     public boolean is_mirror_left_right()
     {
@@ -226,7 +226,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * If p_value is true, the top side and the botton side of the eu.mihosoft.freerouting.board will be swapped.
+     * If p_value is true, the top side and the botton side of the board will be swapped.
      */
     public void set_mirror_top_bottom(boolean p_value)
     {
@@ -236,7 +236,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Returns, if the top side and the botton side of the eu.mihosoft.freerouting.board are swapped.
+     * Returns, if the top side and the botton side of the board are swapped.
      */
     public boolean is_mirror_top_bottom()
     {
@@ -246,7 +246,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Sets the rotation of the displayed eu.mihosoft.freerouting.board to p_value.
+     * Sets the rotation of the displayed board to p_value.
      */
     public void set_rotation(double p_value)
     {
@@ -254,7 +254,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Returns the rotation of the displayed eu.mihosoft.freerouting.board.
+     * Returns the rotation of the displayed board.
      */
     public double get_rotation()
     {
@@ -287,12 +287,12 @@ public class CoordinateTransform implements java.io.Serializable
     private final double display_y_offset;
     
     /**
-     * Left side and right side of the eu.mihosoft.freerouting.board are swapped.
+     * Left side and right side of the board are swapped.
      */
     private boolean mirror_left_right = false;
     
     /**
-     * Top side and bottom  side of the eu.mihosoft.freerouting.board are swapped.
+     * Top side and bottom  side of the board are swapped.
      */
     private boolean mirror_top_bottom = true;
     

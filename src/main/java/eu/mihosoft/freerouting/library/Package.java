@@ -26,13 +26,14 @@ package eu.mihosoft.freerouting.library;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Component package templates describing the padstacks and
  * relative locations of the packege pins,
  * and optional other stuff like an outline package keepouts.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Package implements Comparable<Package>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
@@ -71,7 +72,7 @@ public class Package implements Comparable<Package>, eu.mihosoft.freerouting.boa
     {
         if (p_no < 0 || p_no >= pin_arr.length)
         {
-            System.out.println("Package.get_pin: p_no out of range");
+            FRLogger.warn("Package.get_pin: p_no out of range");
             return null;
         }
         return pin_arr[p_no];
@@ -148,7 +149,7 @@ public class Package implements Comparable<Package>, eu.mihosoft.freerouting.boa
     
     public final Keepout[] place_keepout_arr;
     
-    /** If false, the package is placed on the back side of the eu.mihosoft.freerouting.board */
+    /** If false, the package is placed on the back side of the board */
     public final boolean is_front;
     
     private final Packages package_list;

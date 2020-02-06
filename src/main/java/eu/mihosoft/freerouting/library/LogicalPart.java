@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.library;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Contains contain information for gate swap and pin swap for a single component.
  *
@@ -34,7 +36,7 @@ public class LogicalPart implements eu.mihosoft.freerouting.board.ObjectInfoPane
     /**
      * Creates a new instance of LogicalPart.
      * The part pins are sorted by pin_no.
-     * The pin_no's of the part pins must be the same number as in the componnents eu.mihosoft.freerouting.library package.
+     * The pin_no's of the part pins must be the same number as in the componnents library package.
      */
     public LogicalPart(String p_name, int p_no, PartPin[] p_part_pin_arr)
     {
@@ -53,7 +55,7 @@ public class LogicalPart implements eu.mihosoft.freerouting.board.ObjectInfoPane
     {
         if (p_no < 0 || p_no >= part_pin_arr.length)
         {
-            System.out.println("LogicalPart.get_pin: p_no out of range");
+            FRLogger.warn("LogicalPart.get_pin: p_no out of range");
             return null;
         }
         return part_pin_arr[p_no];
@@ -109,10 +111,10 @@ public class LogicalPart implements eu.mihosoft.freerouting.board.ObjectInfoPane
             return this.pin_no - p_other.pin_no;
         }
         
-        /** The number of the part pin. Must be the same number as in the componnents eu.mihosoft.freerouting.library package. */
+        /** The number of the part pin. Must be the same number as in the componnents library package. */
         public final int pin_no;
         
-        /** The name of the part pin. Must be the same name as in the componnents eu.mihosoft.freerouting.library package. */
+        /** The name of the part pin. Must be the same name as in the componnents library package. */
         public final String pin_name;
         
         /** The name of the gate this pin belongs to. */

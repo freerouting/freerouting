@@ -31,13 +31,14 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Class describing the functionality of an electrical Item on the eu.mihosoft.freerouting.board,
+ * Class describing the functionality of an electrical Item on the board,
  * which may have a shape on several layer, whose geometry is described by a
  * padstack.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Via extends DrillItem implements java.io.Serializable
 {
@@ -61,7 +62,7 @@ public class Via extends DrillItem implements java.io.Serializable
     {
         if (padstack == null)
         {
-            System.out.println("Via.get_shape: padstack is null");
+            FRLogger.warn("Via.get_shape: padstack is null");
             return null;
         }
         if (this.precalculated_shapes == null)
@@ -276,6 +277,6 @@ public class Via extends DrillItem implements java.io.Serializable
     /** True, if coppersharing of this via with smd pins of the same net  is allowed. */
     public final boolean attach_allowed;
     transient private Shape[] precalculated_shapes = null;
-    /** Temporary data used in the eu.mihosoft.freerouting.autoroute algorithm. */
+    /** Temporary data used in the autoroute algorithm. */
     transient private eu.mihosoft.freerouting.autoroute.ExpansionDrill autoroute_drill_info = null;
 }

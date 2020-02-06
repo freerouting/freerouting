@@ -39,6 +39,7 @@ import eu.mihosoft.freerouting.geometry.planar.LineSegment;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.RoutingBoard;
 import eu.mihosoft.freerouting.board.ShoveTraceAlgo;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Auxiliary functions used in MazeSearchAlgo.
@@ -85,7 +86,7 @@ public class MazeShoveTraceAlgo
         
         if (trace_corner_no >= trace_polyline.arr.length - 1)
         {
-            System.out.println("MazeShoveTraceAlgo.check_shove_trace_line: trace_corner_no to big");
+            FRLogger.warn("MazeShoveTraceAlgo.check_shove_trace_line: trace_corner_no to big");
             return false;
         }
         Collection<ExpansionDoor> room_doors = p_obstacle_room.get_doors();
@@ -296,7 +297,7 @@ public class MazeShoveTraceAlgo
                 {
                     if (p_board.get_test_level() == eu.mihosoft.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT)
                     {
-                        System.out.println("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
+                        FRLogger.warn("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
                     }
                     continue;
                 }

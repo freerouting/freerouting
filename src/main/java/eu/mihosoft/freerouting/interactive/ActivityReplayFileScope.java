@@ -24,13 +24,14 @@
 package eu.mihosoft.freerouting.interactive;
 
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
  * Enumeration class defining scopes in a logfile,
  * Each Object of the class must implement the read_scope method.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public abstract class ActivityReplayFileScope
 {
@@ -43,7 +44,7 @@ public abstract class ActivityReplayFileScope
     public static final ActivityReplayFileScope REDO = new RedoScope("redo");
     public static final ActivityReplayFileScope GENERATE_SNAPSHOT = new GenerateSnapshotScope("generate_snapshot");
     
-    // Scopes for logging changes in the eu.mihosoft.freerouting.interactive setting:
+    // Scopes for logging changes in the interactive setting:
     public static final ActivityReplayFileScope SET_CLEARANCE_COMPENSATION = new SetClearanceCompensationScope("set_clearance_compensation");
     public static final ActivityReplayFileScope SET_DRAG_COMPONENTS_ENABLED = new SetDragComponentsEnabledScope("set_drag_componente_enabled");
     public static final ActivityReplayFileScope SET_LAYER = new SetLayerScope("set_layer");
@@ -81,7 +82,7 @@ public abstract class ActivityReplayFileScope
     public static final ActivityReplayFileScope AUTOROUTE_SELECTED = new AutorouteSelectedScope("autoroute_selected");
     public static final ActivityReplayFileScope FANOUT_SELECTED = new FanoutSelectedScope("fanout_selected");
     
-    // scopes for logging eu.mihosoft.freerouting.interactive creating or moving items.
+    // scopes for logging interactive creating or moving items.
     public static final ActivityReplayFileScope COMPLETE_SCOPE = new CompleteScope("complete_scope");
     public static final ActivityReplayFileScope CANCEL_SCOPE = new CancelScope("cancel_scope");
     public static final ActivityReplayFileScope CREATING_TILE = new CreateTileScope("creating_tile");
@@ -129,7 +130,7 @@ public abstract class ActivityReplayFileScope
     
     /**
      * Reads the scope from the input logfile.
-     * Returns the active eu.mihosoft.freerouting.interactive state after reading the scope.
+     * Returns the active interactive state after reading the scope.
      */
     public abstract InteractiveState read_scope(ActivityReplayFile p_activityReplayFile,
                                                 InteractiveState p_return_state, BoardHandling p_board_handling);
@@ -176,9 +177,9 @@ public abstract class ActivityReplayFileScope
         }
         
         /**
-         * Reads the next corner list scope togethet with its
-         * interiour scopes (layer change for example) from the input logfile.
-         * Returns the active eu.mihosoft.freerouting.interactive state after reading the scope.
+         * Reads the next corner list scope together with its
+         * interior scopes (layer change for example) from the input logfile.
+         * Returns the active interactive state after reading the scope.
          */
         public InteractiveState  read_scope(ActivityReplayFile p_activityReplayFile,
                                             InteractiveState p_return_state, BoardHandling p_board_handling)
@@ -353,7 +354,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("CopyItemScope.start_scope: unexpected p_return_state");
+                FRLogger.warn("CopyItemScope.start_scope: unexpected p_return_state");
                 result = null;
                 
             }
@@ -379,7 +380,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("MoveComponent.start_scope: unexpected p_return_state");
+                FRLogger.warn("MoveComponent.start_scope: unexpected p_return_state");
                 result = null;
                 
             }
@@ -414,8 +415,8 @@ public abstract class ActivityReplayFileScope
                 ((MoveItemState)p_return_state).turn_90_degree(factor);
                 return p_return_state;
             }
-            
-            System.out.println("Turn90DegreeScope.read_scope: unexpected p_return_state");
+
+            FRLogger.warn("Turn90DegreeScope.read_scope: unexpected p_return_state");
             return null;
         }
     }
@@ -436,8 +437,8 @@ public abstract class ActivityReplayFileScope
                 ((MoveItemState)p_return_state).rotate(angle);
                 return p_return_state;
             }
-            
-            System.out.println("RotateScope.read_scope: unexpected p_return_state");
+
+            FRLogger.warn("RotateScope.read_scope: unexpected p_return_state");
             return null;
         }
     }
@@ -457,8 +458,8 @@ public abstract class ActivityReplayFileScope
                 ((MoveItemState)p_return_state).change_placement_side();
                 return p_return_state;
             }
-            
-            System.out.println("ChangePlacementSideScope.read_scope: unexpected p_return_state");
+
+            FRLogger.warn("ChangePlacementSideScope.read_scope: unexpected p_return_state");
             return null;
         }
     }
@@ -486,8 +487,8 @@ public abstract class ActivityReplayFileScope
                 }
                 return p_return_state;
             }
-            
-            System.out.println("SetRotateWithWheelScope.read_scope: unexpected p_return_state");
+
+            FRLogger.warn("SetRotateWithWheelScope.read_scope: unexpected p_return_state");
             return null;
         }
     }
@@ -520,13 +521,13 @@ public abstract class ActivityReplayFileScope
         {
             while (!(p_return_state instanceof MenuState))
             {
-                System.out.println("StartSelectScope.read_scope: menu state expected");
+                FRLogger.warn("StartSelectScope.read_scope: menu state expected");
                 p_return_state = p_return_state.return_state;
             }
             FloatPoint location = p_activityReplayFile.read_corner();
             if (location == null)
             {
-                System.out.println("StartSelectScope.read_scope: unable to read corner");
+                FRLogger.warn("StartSelectScope.read_scope: unable to read corner");
                 return null;
             }
             return ((MenuState) p_return_state).select_items(location);
@@ -545,13 +546,13 @@ public abstract class ActivityReplayFileScope
         {
             if (!(p_return_state instanceof SelectedItemState))
             {
-                System.out.println("ToggleSelectScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("ToggleSelectScope.read_scope: SelectedItemState expected");
                 return null;
             }
             FloatPoint location = p_activityReplayFile.read_corner();
             if (location == null)
             {
-                System.out.println("ToggleSelectScope.read_scope: unable to read corner");
+                FRLogger.warn("ToggleSelectScope.read_scope: unable to read corner");
                 return null;
             }
             return ((SelectedItemState)p_return_state).toggle_select(location);
@@ -570,12 +571,12 @@ public abstract class ActivityReplayFileScope
         {
             if (!(p_return_state instanceof MenuState))
             {
-                System.out.println("SelectRegionScope.read_scope: menu state expected");
+                FRLogger.warn("SelectRegionScope.read_scope: menu state expected");
             }
             FloatPoint lower_left = p_activityReplayFile.read_corner();
             if (lower_left == null)
             {
-                System.out.println("SelectRegionScope.read_scope: unable to read corner");
+                FRLogger.warn("SelectRegionScope.read_scope: unable to read corner");
                 return null;
             }
             InteractiveState curr_state =
@@ -603,13 +604,13 @@ public abstract class ActivityReplayFileScope
         {
             if (!(p_return_state instanceof SelectedItemState))
             {
-                System.out.println("CutoutRouteScope.read_scope: electedItemState expected");
+                FRLogger.warn("CutoutRouteScope.read_scope: electedItemState expected");
             }
             java.util.Collection<eu.mihosoft.freerouting.board.Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
             FloatPoint lower_left = p_activityReplayFile.read_corner();
             if (lower_left == null)
             {
-                System.out.println("CutoutRouteScope.read_scope: unable to read corner");
+                FRLogger.warn("CutoutRouteScope.read_scope: unable to read corner");
                 return null;
             }
             InteractiveState curr_state =
@@ -642,7 +643,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("DeleteSelectedScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("DeleteSelectedScope.read_scope: SelectedItemState expected");
                 result = null;
             }
             return result;
@@ -666,7 +667,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("DeleteSelectedScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("DeleteSelectedScope.read_scope: SelectedItemState expected");
                 result = null;
             }
             return result;
@@ -690,7 +691,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("AutorouteSelectedScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("AutorouteSelectedScope.read_scope: SelectedItemState expected");
                 result = null;
             }
             return result;
@@ -714,7 +715,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("FanoutSelectedScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("FanoutSelectedScope.read_scope: SelectedItemState expected");
                 result = null;
             }
             return result;
@@ -742,7 +743,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("AssignSelectedToNewNetScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("AssignSelectedToNewNetScope.read_scope: SelectedItemState expected");
                 result = null;
             }
             return result;
@@ -770,7 +771,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("AssignSelectedToNewNetScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("AssignSelectedToNewNetScope.read_scope: SelectedItemState expected");
                 result = null;
             }
             return result;
@@ -797,7 +798,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("AssignSelectedToNewGroupScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("AssignSelectedToNewGroupScope.read_scope: SelectedItemState expected");
                 result = null;
             }
             return result;
@@ -820,7 +821,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("ExtendToWholeConnectedSetsScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("ExtendToWholeConnectedSetsScope.read_scope: SelectedItemState expected");
             }
             return return_state;
         }
@@ -842,7 +843,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("ExtendToWholeGroupsScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("ExtendToWholeGroupsScope.read_scope: SelectedItemState expected");
             }
             return return_state;
         }
@@ -864,7 +865,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("ExtendToWholeNetsScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("ExtendToWholeNetsScope.read_scope: SelectedItemState expected");
             }
             return return_state;
         }
@@ -886,7 +887,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("ExtendToWholeConnectionsScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("ExtendToWholeConnectionsScope.read_scope: SelectedItemState expected");
             }
             return return_state;
         }
@@ -907,7 +908,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("FixSelectedScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("FixSelectedScope.read_scope: SelectedItemState expected");
             }
             return p_return_state;
         }
@@ -928,7 +929,7 @@ public abstract class ActivityReplayFileScope
             }
             else
             {
-                System.out.println("UnfixSelectedScope.read_scope: SelectedItemState expected");
+                FRLogger.warn("UnfixSelectedScope.read_scope: SelectedItemState expected");
             }
             return p_return_state;
         }

@@ -26,14 +26,14 @@ package eu.mihosoft.freerouting.interactive;
 import eu.mihosoft.freerouting.gui.BoardFrame;
 
 /**
- * Snapshot of the client situation in an eu.mihosoft.freerouting.interactive session.
+ * Snapshot of the client situation in an interactive session.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class SnapShot implements java.io.Serializable
 {
     /**
-     * Returns a new snapshot or null, if the current eu.mihosoft.freerouting.interactive state
+     * Returns a new snapshot or null, if the current interactive state
      * is not suitable to generate a snapshot.
      */
     public static SnapShot get_instance(String p_name, BoardHandling p_board_handling)
@@ -46,7 +46,7 @@ public class SnapShot implements java.io.Serializable
         return new SnapShot(p_name, p_board_handling);
     }
     
-    /** Creates a SnapShot of the display region and the eu.mihosoft.freerouting.interactive settings */
+    /** Creates a SnapShot of the display region and the interactive settings */
     private SnapShot(String p_name, BoardHandling p_board_handling)
     {
         this.name = p_name;
@@ -73,7 +73,7 @@ public class SnapShot implements java.io.Serializable
     }
     
     /**
-     * Goes to this shnapshot in eu.mihosoft.freerouting.interactive eu.mihosoft.freerouting.board etiting.
+     * Goes to this snapshot in interactive board editing.
      */
     public void go_to(eu.mihosoft.freerouting.interactive.BoardHandling p_board_handling)
     {
@@ -162,7 +162,7 @@ public class SnapShot implements java.io.Serializable
     }
     
     /**
-     * Create a number for writing an eu.mihosoft.freerouting.interactive state to disk.
+     * Create a number for writing an interactive state to disk.
      * Only MenuStates are saved. The default is SelectState.
      */
     private static int get_no(InteractiveState p_interactive_state)

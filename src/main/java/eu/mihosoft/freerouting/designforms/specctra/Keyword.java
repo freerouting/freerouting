@@ -25,7 +25,7 @@ package eu.mihosoft.freerouting.designforms.specctra;
 /**
  * Enumeration class for keywords of the specctra dsn file format
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Keyword
 {

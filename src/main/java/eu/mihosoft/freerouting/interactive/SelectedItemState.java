@@ -57,7 +57,7 @@ import eu.mihosoft.freerouting.board.TestLevel;
 /**
  *  Class implementing actions on the currently selected items.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class SelectedItemState extends InteractiveState
 {
@@ -886,7 +886,7 @@ public class SelectedItemState extends InteractiveState
     }
 
     /**
-     * Removes items not selected by the current eu.mihosoft.freerouting.interactive filter from the selected item list.
+     * Removes items not selected by the current interactive filter from the selected item list.
      */
     public InteractiveState filter()
     {

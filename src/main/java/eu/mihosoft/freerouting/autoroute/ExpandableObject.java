@@ -27,7 +27,7 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 /**
  * An object, which can be expanded by the maze expansion algorithm.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public interface ExpandableObject
 {

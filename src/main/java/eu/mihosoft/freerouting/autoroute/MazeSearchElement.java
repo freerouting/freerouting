@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.autoroute;
 /**
  * Describes the structure of a section of an ExpandebleObject.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MazeSearchElement
 {

@@ -23,10 +23,12 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
- * Window handling snapshots of the eu.mihosoft.freerouting.interactive situation.
+ * Window handling snapshots of the interactive situation.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class WindowSnapshot extends BoardSavableSubWindow
 {
@@ -163,7 +165,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
         }
         catch (Exception e)
         {
-            System.out.println("VisibilityFrame.read_attriutes: read failed");
+            FRLogger.error("VisibilityFrame.read_attriutes: read failed", e);
             return false;
         }
     }
@@ -180,7 +182,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
         }
         catch (java.io.IOException e)
         {
-            System.out.println("VisibilityFrame.save_attriutes: save failed");
+            FRLogger.error("VisibilityFrame.save_attriutes: save failed", e);
         }
         this.settings_window.save(p_object_stream);
     }

@@ -25,6 +25,7 @@ package eu.mihosoft.freerouting.designforms.specctra;
 
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 import eu.mihosoft.freerouting.datastructures.IdentifierType;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -48,12 +49,12 @@ public class AutorouteSettings
                 next_token = p_scanner.next_token();
             } catch (java.io.IOException e)
             {
-                System.out.println("AutorouteSettings.read_scope: IO error scanning file");
+                FRLogger.error("AutorouteSettings.read_scope: IO error scanning file", e);
                 return null;
             }
             if (next_token == null)
             {
-                System.out.println("AutorouteSettings.read_scope: unexpected end of file");
+                FRLogger.warn("AutorouteSettings.read_scope: unexpected end of file");
                 return null;
             }
             if (next_token == Keyword.CLOSED_BRACKET)
@@ -125,18 +126,18 @@ public class AutorouteSettings
             next_token = p_scanner.next_token();
         } catch (java.io.IOException e)
         {
-            System.out.println("AutorouteSettings.read_layer_rule: IO error scanning file");
+            FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
             return null;
         }
         if (!(next_token instanceof String))
         {
-            System.out.println("AutorouteSettings.read_layer_rule: String expected");
+            FRLogger.warn("AutorouteSettings.read_layer_rule: String expected");
             return null;
         }
         int layer_no = p_layer_structure.get_no((String) next_token);
         if (layer_no < 0)
         {
-            System.out.println("AutorouteSettings.read_layer_rule: layer not found");
+            FRLogger.warn("AutorouteSettings.read_layer_rule: layer not found");
             return null;
         }
         for (;;)
@@ -147,12 +148,12 @@ public class AutorouteSettings
                 next_token = p_scanner.next_token();
             } catch (java.io.IOException e)
             {
-                System.out.println("AutorouteSettings.read_layer_rule: IO error scanning file");
+                FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
                 return null;
             }
             if (next_token == null)
             {
-                System.out.println("AutorouteSettings.read_layer_rule: unexpected end of file");
+                FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected end of file");
                 return null;
             }
             if (next_token == Keyword.CLOSED_BRACKET)
@@ -178,19 +179,19 @@ public class AutorouteSettings
                         }
                         else if (next_token != Keyword.HORIZONTAL)
                         {
-                            System.out.println("AutorouteSettings.read_layer_rule: unexpected key word");
+                            FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected key word");
                             return null;
                         }
                         p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
                         next_token = p_scanner.next_token();
                         if (next_token != Keyword.CLOSED_BRACKET)
                         {
-                            System.out.println("AutorouteSettings.read_layer_rule: uclosing bracket expected");
+                            FRLogger.warn("AutorouteSettings.read_layer_rule: uclosing bracket expected");
                             return null;
                         }
                     } catch (java.io.IOException e)
                     {
-                        System.out.println("AutorouteSettings.read_layer_rule: IO error scanning file");
+                        FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
                         return null;
                     }
                 }

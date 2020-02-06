@@ -28,11 +28,12 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.board.RoutingBoard;
 
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Handles the sequencing of the fanout inside the batch autorouter.
  * 
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class BatchFanout
 {
@@ -114,7 +115,7 @@ public class BatchFanout
         }
         if (this.routing_board.get_test_level() != eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION)
         {
-            System.out.println("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count 
+            FRLogger.warn("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count
                     + ", not routed: " + not_routed_count + ", errors: " + insert_error_count);
         }
         return routed_count;

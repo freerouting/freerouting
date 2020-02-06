@@ -19,6 +19,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -98,12 +100,12 @@ public class Simplex extends TileShape implements java.io.Serializable
         int no;
         if (p_no < 0)
         {
-            System.out.println("corner: p_no is < 0");
+            FRLogger.warn("corner: p_no is < 0");
             no = 0;
         }
         else if (p_no >= arr.length)
         {
-            System.out.println("corner: p_index must be less than arr.length - 1");
+            FRLogger.warn("corner: p_index must be less than arr.length - 1");
             no = arr.length - 1;
         }
         else
@@ -171,12 +173,12 @@ public class Simplex extends TileShape implements java.io.Serializable
         int no;
         if (p_no < 0)
         {
-            System.out.println("Simplex.corner: p_no is < 0");
+            FRLogger.warn("Simplex.corner: p_no is < 0");
             no = 0;
         }
         else if (p_no >= arr.length)
         {
-            System.out.println("Simplex.corner: p_no must be less than arr.length - 1");
+            FRLogger.warn("Simplex.corner: p_no must be less than arr.length - 1");
             no = arr.length - 1;
         }
         else
@@ -220,12 +222,12 @@ public class Simplex extends TileShape implements java.io.Serializable
         int no;
         if (p_no < 0)
         {
-            System.out.println("Simplex.corner_approx: p_no is < 0");
+            FRLogger.warn("Simplex.corner_approx: p_no is < 0");
             no = 0;
         }
         else if (p_no >= arr.length)
         {
-            System.out.println("Simplex.corner_approx: p_no must be less than arr.length - 1");
+            FRLogger.warn("Simplex.corner_approx: p_no must be less than arr.length - 1");
             no = arr.length - 1;
         }
         else
@@ -289,18 +291,18 @@ public class Simplex extends TileShape implements java.io.Serializable
     {
         if (arr.length <= 0)
         {
-            System.out.println("Simplex.edge_line : simplex is empty");
+            FRLogger.warn("Simplex.edge_line : simplex is empty");
             return null;
         }
         int no;
         if (p_no < 0)
         {
-            System.out.println("Simplex.edge_line : p_no is < 0");
+            FRLogger.warn("Simplex.edge_line : p_no is < 0");
             no = 0;
         }
         else if (p_no >= arr.length)
         {
-            System.out.println("Simplex.edge_line: p_no must be less than arr.length - 1");
+            FRLogger.warn("Simplex.edge_line: p_no must be less than arr.length - 1");
             no = arr.length - 1;
         }
         else
@@ -353,7 +355,7 @@ public class Simplex extends TileShape implements java.io.Serializable
             }
             if (side_of_line0 == Side.ON_THE_LEFT)
             {
-                System.out.println("empty Simplex not normalized");
+                FRLogger.warn("empty Simplex not normalized");
                 return -1;
             }
             // now the 3 lines intersect in the same point
@@ -864,7 +866,7 @@ public class Simplex extends TileShape implements java.io.Serializable
     {
         if(this.dimension() < 2)
         {
-            System.out.println("Simplex.cutout_from only implemented for 2-dim simplex");
+            FRLogger.warn("Simplex.cutout_from only implemented for 2-dim simplex");
             return null;
         }
         Simplex inner_simplex = this.intersection(p_outer_simplex);
@@ -883,7 +885,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                     inner_simplex.calc_division_lines(inner_corner_no, p_outer_simplex);
             if (division_line_arr[inner_corner_no] == null)
             {
-                System.out.println("Simplex.cutout_from: division line is null");
+                FRLogger.warn("Simplex.cutout_from: division line is null");
                 Simplex[] result = new Simplex[1];
                 result[0] = p_outer_simplex;
                 return result;
@@ -1275,7 +1277,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         FloatPoint intersection = curr_inner_line.intersection_approx(prev_inner_line);
         if (intersection.x >= Integer.MAX_VALUE)
         {
-            System.out.println("Simplex.calc_division_lines: intersection expexted");
+            FRLogger.warn("Simplex.calc_division_lines: intersection expexted");
             return null;
         }
         IntPoint inner_corner = intersection.round();
@@ -1390,7 +1392,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         if (min_distance == Integer.MAX_VALUE)
         {
-            System.out.println("Simplex.calc_division_lines: division not found");
+            FRLogger.warn("Simplex.calc_division_lines: division not found");
             return null;
         }
         Line[] result;

@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.datastructures.Observers;
 
 /**
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public interface BoardObservers extends Observers<Item>
 {

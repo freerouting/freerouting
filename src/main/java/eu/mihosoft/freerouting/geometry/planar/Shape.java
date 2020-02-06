@@ -27,7 +27,7 @@ package eu.mihosoft.freerouting.geometry.planar;
  * Interface describing functionality for connected 2-dimensional shapes in the plane.
  * A Shape object is expected to be simply connected, that means, it may not contain holes.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 
 public interface Shape extends Area

@@ -23,9 +23,9 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Used for manual choice of trace widths in eu.mihosoft.freerouting.interactive routing.
+ * Used for manual choice of trace widths in interactive routing.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class WindowManualRules extends BoardSavableSubWindow
 {

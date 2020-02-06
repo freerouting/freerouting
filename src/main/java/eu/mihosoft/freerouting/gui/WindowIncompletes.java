@@ -45,7 +45,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter
     
     
     /**
-     * Fills the list with the eu.mihosoft.freerouting.board incompletes.
+     * Fills the list with the board incompletes.
      */
     protected void fill_list()
     {

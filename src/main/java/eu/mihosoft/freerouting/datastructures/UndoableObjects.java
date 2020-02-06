@@ -22,6 +22,8 @@
  */
 package eu.mihosoft.freerouting.datastructures;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -33,7 +35,7 @@ import java.util.Vector;
  * Database of objects, for which Undo and Redo operations are made possible.
  * The algorithm works only for objects containing no references.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class UndoableObjects implements java.io.Serializable
 {
@@ -110,7 +112,7 @@ public class UndoableObjects implements java.io.Serializable
         }
         if (object_node.object != p_object)
         {
-            System.out.println("UndoableObjectList.delete: Object inconsistent");
+            FRLogger.warn("UndoableObjectList.delete: Object inconsistent");
             return false;
         }
 
@@ -245,11 +247,11 @@ public class UndoableObjects implements java.io.Serializable
             }
             if (this.objects.remove(curr_deleted_node.object) == null)
             {
-                System.out.println("previous deleted object not found");
+                FRLogger.warn("previous deleted object not found");
             }
             if (p_restored_objects == null || !p_restored_objects.remove(curr_deleted_node.object))
             {
-                // the object needs only be cancelled if it is already in the eu.mihosoft.freerouting.board
+                // the object needs only be cancelled if it is already in the board
                 if (p_cancelled_objects != null)
                 {
                     p_cancelled_objects.add(curr_deleted_node.object);
@@ -327,7 +329,7 @@ public class UndoableObjects implements java.io.Serializable
         UndoableObjectNode curr_node = objects.get(p_object);
         if (curr_node == null)
         {
-            System.out.println("UndoableObjects.save_for_undo: object node not found");
+            FRLogger.warn("UndoableObjects.save_for_undo: object node not found");
             return;
         }
         if (curr_node.level < this.stack_level)

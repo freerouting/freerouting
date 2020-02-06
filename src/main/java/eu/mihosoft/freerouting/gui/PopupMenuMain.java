@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Popup Menu used in the eu.mihosoft.freerouting.interactive select state.
+ * Popup Menu used in the interactive select state.
  *
  * @author Alfons Wirtz
  */
@@ -129,7 +129,7 @@ class PopupMenuMain extends PopupMenuDisplay
         
         if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0)
         {
-            // the eu.mihosoft.freerouting.board contains swappable gates or pins
+            // the board contains swappable gates or pins
             javax.swing.JMenuItem swap_pin_item = new javax.swing.JMenuItem();
             swap_pin_item.setText(resources.getString("swap_pin"));
             swap_pin_item.addActionListener(new java.awt.event.ActionListener()

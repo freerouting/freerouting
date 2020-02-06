@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 /**
  * Class implementing the different functionality in the drag menu
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class DragMenuState extends MenuState
 {

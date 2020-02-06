@@ -43,11 +43,12 @@ import eu.mihosoft.freerouting.board.ObstacleArea;
 import eu.mihosoft.freerouting.board.Via;
 import eu.mihosoft.freerouting.board.Component;
 import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Interactive copying of items.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CopyItemState extends InteractiveState
 {
@@ -136,7 +137,7 @@ public class CopyItemState extends InteractiveState
     }
     
     /**
-     * Inserts the items in the copy list into the eu.mihosoft.freerouting.board.
+     * Inserts the items in the copy list into the board.
      * Items, which would produce a clearance violation, are not inserted.
      */
     public void insert()
@@ -193,7 +194,7 @@ public class CopyItemState extends InteractiveState
                     Component old_component = board.components.get(curr_cmp_no);
                     if (old_component == null)
                     {
-                        System.out.println("CopyItemState: component not found");
+                        FRLogger.warn("CopyItemState: component not found");
                         continue;
                     }
                     Point new_location = old_component.get_location().translate_by(translate_vector);
@@ -208,7 +209,7 @@ public class CopyItemState extends InteractiveState
                             Padstack old_padstack = board.library.padstacks.get(old_pin.padstack_no);
                             if (old_padstack == null)
                             {
-                                System.out.println("CopyItemState.insert: package padstack not found");
+                                FRLogger.warn("CopyItemState.insert: package padstack not found");
                                 return;
                             }
                             Padstack new_padstack = change_padstack_layers( old_padstack, current_layer, board, padstack_pairs);

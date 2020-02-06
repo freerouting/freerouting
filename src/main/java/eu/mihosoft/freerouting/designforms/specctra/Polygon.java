@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.datastructures.IdentifierType;
 /**
  * Describes a polygon in a Specctra dsn file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Polygon extends Shape
 {

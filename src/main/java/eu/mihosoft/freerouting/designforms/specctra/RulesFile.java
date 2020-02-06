@@ -27,9 +27,10 @@ package eu.mihosoft.freerouting.designforms.specctra;
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 
 import  eu.mihosoft.freerouting.board.BasicBoard;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * File for saving the eu.mihosoft.freerouting.board rules, so that they can be restored after the Board
+ * File for saving the board rules, so that they can be restored after the Board
  * is creates anew  from the host system.
  *
  * @author Alfons Wirtz
@@ -51,7 +52,7 @@ public class RulesFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to write rules to file");
+            FRLogger.error("unable to write rules to file", e);
         }
         try
         {
@@ -59,7 +60,7 @@ public class RulesFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to close rules file");
+            FRLogger.error("unable to close rules file", e);
         }
     }
     
@@ -73,32 +74,32 @@ public class RulesFile
             Object curr_token = scanner.next_token();
             if (curr_token != Keyword.OPEN_BRACKET)
             {
-                System.out.println("RulesFile.read: open bracket expected");
+                FRLogger.warn("RulesFile.read: open bracket expected");
                 return false;
             }
             curr_token = scanner.next_token();
             if (curr_token != Keyword.RULES)
             {
-                System.out.println("RulesFile.read: keyword rules expected");
+                FRLogger.warn("RulesFile.read: keyword rules expected");
                 return false;
             }
             curr_token = scanner.next_token();
             if (curr_token != Keyword.PCB_SCOPE)
             {
-                System.out.println("RulesFile.read: keyword pcb expected");
+                FRLogger.warn("RulesFile.read: keyword pcb expected");
                 return false;
             }
             scanner.yybegin(SpecctraFileScanner.NAME);
             curr_token = scanner.next_token();
             if (!(curr_token instanceof String) || !((String) curr_token).equals(p_design_name))
             {
-                System.out.println("RulesFile.read: design_name not matching");
+                FRLogger.warn("RulesFile.read: design_name not matching");
                 return false;
             }
         }
         catch (java.io.IOException e)
         {
-            System.out.println("RulesFile.read: IO error scanning file");
+            FRLogger.error("RulesFile.read: IO error scanning file", e);
             return false;
         }
         LayerStructure layer_structure = new LayerStructure(routing_board.layer_structure);
@@ -113,12 +114,12 @@ public class RulesFile
             }
             catch (java.io.IOException e)
             {
-                System.out.println("RulesFile.read: IO error scanning file");
+                FRLogger.error("RulesFile.read: IO error scanning file", e);
                 return false;
             }
             if (next_token == null)
             {
-                System.out.println("Structure.read_scope: unexpected end of file");
+                FRLogger.warn("Structure.read_scope: unexpected end of file");
                 return false;
             }
             if (next_token == Keyword.CLOSED_BRACKET)
@@ -217,7 +218,7 @@ public class RulesFile
             layer_no = p_board.layer_structure.get_no(p_layer_name);
             if (layer_no < 0)
             {
-                System.out.println("RulesFile.add_rules: layer not found");
+                FRLogger.warn("RulesFile.add_rules: layer not found");
             }
         }
         CoordinateTransform coordinate_transform = p_board.communication.coordinate_transform;
@@ -251,7 +252,7 @@ public class RulesFile
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("RulesFile.add_layer_rules: String expected");
+                FRLogger.warn("RulesFile.add_layer_rules: String expected");
                 return false;
             }
             String layer_string = (String) next_token;
@@ -260,7 +261,7 @@ public class RulesFile
             {
                 if (next_token != Keyword.OPEN_BRACKET)
                 {
-                    System.out.println("RulesFile.add_layer_rules: ( expected");
+                    FRLogger.warn("RulesFile.add_layer_rules: ( expected");
                     return false;
                 }
                 next_token = p_scanner.next_token();
@@ -279,7 +280,7 @@ public class RulesFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("RulesFile.add_layer_rules: IO error scanning file");
+            FRLogger.error("RulesFile.add_layer_rules: IO error scanning file", e);
             return false;
         }
     }

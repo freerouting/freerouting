@@ -33,6 +33,7 @@ import java.util.LinkedList;
 
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 
@@ -46,7 +47,7 @@ import eu.mihosoft.freerouting.board.TestLevel;
 /**
  * Class for reading and writing structure scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 class Structure extends ScopeKeyword
 {
@@ -80,13 +81,12 @@ class Structure extends ScopeKeyword
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Structure.read_scope: IO error scanning file");
-                System.out.println(e);
+                FRLogger.error("Structure.read_scope: IO error scanning file", e);
                 return false;
             }
             if (next_token == null)
             {
-                System.out.println("Structure.read_scope: unexpected end of file");
+                FRLogger.warn("Structure.read_scope: unexpected end of file");
                 return false;
             }
             if (next_token == CLOSED_BRACKET)
@@ -251,7 +251,7 @@ class Structure extends ScopeKeyword
             eu.mihosoft.freerouting.rules.Net curr_net = board.rules.nets.get(plane_info.net_name, 1);
             if (curr_net == null)
             {
-                System.out.println("Plane.read_scope: net not found");
+                FRLogger.warn("Plane.read_scope: net not found");
                 continue;
             }
             eu.mihosoft.freerouting.geometry.planar.Area plane_area =
@@ -265,7 +265,7 @@ class Structure extends ScopeKeyword
                     clearance_class_no = board.rules.clearance_matrix.get_no(plane_info.area.clearance_class_name);
                     if (clearance_class_no < 0)
                     {
-                        System.out.println("Structure.read_scope: clearance class not found");
+                        FRLogger.warn("Structure.read_scope: clearance class not found");
                         clearance_class_no = BoardRules.clearance_class_none();
                     }
                 }
@@ -280,7 +280,7 @@ class Structure extends ScopeKeyword
             }
             else
             {
-                System.out.println("Plane.read_scope: unexpected layer name");
+                FRLogger.warn("Plane.read_scope: unexpected layer name");
                 return false;
             }
         }
@@ -306,7 +306,7 @@ class Structure extends ScopeKeyword
         Rectangle bounding_rectangle = new Rectangle(Layer.PCB, rect_coor);
         bounding_rectangle.write_scope(p_par.file, p_par.identifier_type);
         p_par.file.end_scope();
-        // lookup the outline in the eu.mihosoft.freerouting.board
+        // lookup the outline in the board
         Storable curr_ob = null;
         Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
         for (;;)
@@ -323,7 +323,7 @@ class Structure extends ScopeKeyword
         }
         if (curr_ob == null)
         {
-            System.out.println("Structure.write_scope; outline not found");
+            FRLogger.warn("Structure.write_scope; outline not found");
             return;
         }
         eu.mihosoft.freerouting.board.BoardOutline outline = (eu.mihosoft.freerouting.board.BoardOutline) curr_ob;
@@ -348,7 +348,7 @@ class Structure extends ScopeKeyword
 
         write_default_rules(p_par);
 
-        // write the eu.mihosoft.freerouting.autoroute settings
+        // write the autoroute settings
         AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings,
                 p_par.board.layer_structure, p_par.identifier_type);
 
@@ -432,7 +432,7 @@ class Structure extends ScopeKeyword
             }
             else
             {
-                System.out.println("Structure.write_via_padstacks: padstack is null");
+                FRLogger.warn("Structure.write_via_padstacks: padstack is null");
             }
         }
         p_file.write(")");
@@ -535,12 +535,12 @@ class Structure extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Structure.read_boundary_scope: IO error scanning file");
+            FRLogger.error("Structure.read_boundary_scope: IO error scanning file", e);
             return false;
         }
         if (curr_shape == null)
         {
-            System.out.println("Structure.read_boundary_scope: shape is null");
+            FRLogger.warn("Structure.read_boundary_scope: shape is null");
             return true;
         }
         if (curr_shape.layer == Layer.PCB)
@@ -551,7 +551,7 @@ class Structure extends ScopeKeyword
             }
             else
             {
-                System.out.println("Structure.read_boundary_scope: exact 1 bounding_shape expected");
+                FRLogger.warn("Structure.read_boundary_scope: exact 1 bounding_shape expected");
             }
         }
         else if (curr_shape.layer == Layer.SIGNAL)
@@ -560,7 +560,7 @@ class Structure extends ScopeKeyword
         }
         else
         {
-            System.out.println("Structure.read_boundary_scope: unexpected layer");
+            FRLogger.warn("Structure.read_boundary_scope: unexpected layer");
         }
         return true;
     }
@@ -574,7 +574,7 @@ class Structure extends ScopeKeyword
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Structure.read_layer_scope: String expected");
+                FRLogger.warn("Structure.read_layer_scope: String expected");
                 return false;
             }
             Collection<String> net_names = new LinkedList<String>();
@@ -584,7 +584,7 @@ class Structure extends ScopeKeyword
             {
                 if (next_token != Keyword.OPEN_BRACKET)
                 {
-                    System.out.println("Structure.read_layer_scope: ( expected");
+                    FRLogger.warn("Structure.read_layer_scope: ( expected");
                     return false;
                 }
                 next_token = p_scanner.next_token();
@@ -597,18 +597,19 @@ class Structure extends ScopeKeyword
                     }
                     else if (next_token != Keyword.SIGNAL)
                     {
-                        System.out.print("Structure.read_layer_scope: unknown layer type ");
                         if (next_token instanceof String)
                         {
-                            System.out.print((String) next_token);
+                            FRLogger.warn("Structure.read_layer_scope: unknown layer type '" + (String)next_token + "'");
+                        } else
+                        {
+                            FRLogger.warn("Structure.read_layer_scope: unknown layer type");
                         }
-                        System.out.println();
                         layer_ok = false;
                     }
                     next_token = p_scanner.next_token();
                     if (next_token != Keyword.CLOSED_BRACKET)
                     {
-                        System.out.println("Structure.read_layer_scope: ) expected");
+                        FRLogger.warn("Structure.read_layer_scope: ) expected");
                         return false;
                     }
                 }
@@ -633,7 +634,7 @@ class Structure extends ScopeKeyword
                         }
                         else
                         {
-                            System.out.println("Structure.read_layer_scope: string expected");
+                            FRLogger.warn("Structure.read_layer_scope: string expected");
                         }
                     }
                 }
@@ -652,8 +653,7 @@ class Structure extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Layer.read_scope: IO error scanning file");
-            System.out.println(e);
+            FRLogger.error("Layer.read_scope: IO error scanning file", e);
             return false;
         }
         return true;
@@ -691,7 +691,7 @@ class Structure extends ScopeKeyword
                 }
                 else
                 {
-                    System.out.println("Structure.read_via_padstack: String expected");
+                    FRLogger.warn("Structure.read_via_padstack: String expected");
                     return null;
                 }
             }
@@ -701,7 +701,7 @@ class Structure extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Structure.read_via_padstack: IO error scanning file");
+            FRLogger.error("Structure.read_via_padstack: IO error scanning file", e);
             return null;
         }
     }
@@ -718,12 +718,12 @@ class Structure extends ScopeKeyword
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Structure.read_control_scope: IO error scanning file");
+                FRLogger.error("Structure.read_control_scope: IO error scanning file", e);
                 return false;
             }
             if (next_token == null)
             {
-                System.out.println("Structure.read_control_scope: unexpected end of file");
+                FRLogger.warn("Structure.read_control_scope: unexpected end of file");
                 return false;
             }
             if (next_token == CLOSED_BRACKET)
@@ -766,20 +766,20 @@ class Structure extends ScopeKeyword
             }
             else
             {
-                System.out.println("Structure.read_snap_angle_scope: unexpected token");
+                FRLogger.warn("Structure.read_snap_angle_scope: unexpected token");
                 return null;
             }
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
-                System.out.println("Structure.read_selection_layer_scop: closing bracket expected");
+                FRLogger.warn("Structure.read_selection_layer_scop: closing bracket expected");
                 return null;
             }
             return snap_angle;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Structure.read_snap_angl: IO error scanning file");
+            FRLogger.error("Structure.read_snap_angl: IO error scanning file", e);
             return null;
         }
     }
@@ -810,7 +810,7 @@ class Structure extends ScopeKeyword
         int layer_count = p_board_construction_info.layer_info.size();
         if (layer_count == 0)
         {
-            System.out.println("Structure.create_board: layers missing in structure scope");
+            FRLogger.warn("Structure.create_board: layers missing in structure scope");
             return false;
         }
         if (p_board_construction_info.bounding_shape == null)
@@ -818,7 +818,7 @@ class Structure extends ScopeKeyword
             // happens if the boundary shape with layer pcb is missing
             if (p_board_construction_info.outline_shapes.isEmpty())
             {
-                System.out.println("Structure.create_board: outline missing");
+                FRLogger.warn("Structure.create_board: outline missing");
                 p_par.board_outline_ok = false;
                 return false;
             }
@@ -839,7 +839,7 @@ class Structure extends ScopeKeyword
             Layer curr_layer = it.next();
             if (curr_layer.no < 0 || curr_layer.no >= layer_count)
             {
-                System.out.println("Structure.create_board: illegal layer number");
+                FRLogger.warn("Structure.create_board: illegal layer number");
                 return false;
             }
             board_layer_arr[i] = new eu.mihosoft.freerouting.board.Layer(curr_layer.name, curr_layer.is_signal);
@@ -847,7 +847,7 @@ class Structure extends ScopeKeyword
         eu.mihosoft.freerouting.board.LayerStructure board_layer_structure = new eu.mihosoft.freerouting.board.LayerStructure(board_layer_arr);
         p_par.layer_structure = new LayerStructure(p_board_construction_info.layer_info);
 
-        // Calculate an appropritate scaling between dsn coordinates and eu.mihosoft.freerouting.board coordinates.
+        // Calculate an approximate scaling between dsn coordinates and board coordinates.
         int scale_factor = Math.max(p_par.resolution, 1);
 
         double max_coor = 0;
@@ -921,7 +921,7 @@ class Structure extends ScopeKeyword
 
         eu.mihosoft.freerouting.board.BasicBoard board = p_par.board_handling.get_routing_board();
 
-        // Insert the holes in the eu.mihosoft.freerouting.board outline as keepouts.
+        // Insert the holes in the board outline as keepouts.
         for (PolylineShape curr_outline_hole : hole_shapes)
         {
             for (int i = 0; i < board_layer_structure.arr.length; ++i)
@@ -970,7 +970,7 @@ class Structure extends ScopeKeyword
                 {
                     if (curr_net == null)
                     {
-                        System.out.println("Structure.insert_missing_power_planes: net not found");
+                        FRLogger.warn("Structure.insert_missing_power_planes: net not found");
                         continue;
                     }
                 }
@@ -1090,7 +1090,7 @@ class Structure extends ScopeKeyword
     }
 
     /**
-     * Converts a dsn clearance rule into a eu.mihosoft.freerouting.board clearance rule.
+     * Converts a dsn clearance rule into a board clearance rule.
      * If p_layer_no < 0, the rule is set on all layers.
      * Returns true, if the string smd_to_turn_gap was found.
      */
@@ -1133,7 +1133,7 @@ class Structure extends ScopeKeyword
                 curr_pair = curr_string.split(p_string_quote, 2);
                 if (curr_pair.length != 2 || !curr_pair[1].startsWith("_"))
                 {
-                    System.out.println("Structure.set_clearance_rule: '_' exprcted");
+                    FRLogger.warn("Structure.set_clearance_rule: '_' expected");
                     continue;
                 }
                 curr_pair[1] = curr_pair[1].substring(1);
@@ -1275,13 +1275,13 @@ class Structure extends ScopeKeyword
                 Shape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
         if (keepout_area.dimension() < 2)
         {
-            System.out.println("Structure.insert_keepout: keepout is not an area");
+            FRLogger.warn("Structure.insert_keepout: keepout is not an area");
             return true;
         }
         eu.mihosoft.freerouting.board.BasicBoard board = p_par.board_handling.get_routing_board();
         if (board == null)
         {
-            System.out.println("Structure.insert_keepout: eu.mihosoft.freerouting.board not initialized");
+            FRLogger.warn("Structure.insert_keepout: eu.mihosoft.freerouting.board not initialized");
             return false;
         }
         Layer curr_layer = (p_area.shape_list.iterator().next()).layer;
@@ -1301,7 +1301,7 @@ class Structure extends ScopeKeyword
         }
         else
         {
-            System.out.println("Structure.insert_keepout: unknown layer name");
+            FRLogger.warn("Structure.insert_keepout: unknown layer name");
             return false;
         }
 
@@ -1322,7 +1322,7 @@ class Structure extends ScopeKeyword
             clearance_class_no = p_board.rules.clearance_matrix.get_no(p_clearance_class_name);
             if (clearance_class_no < 0)
             {
-                System.out.println("Keepout.insert_leepout: clearance class not found");
+                FRLogger.warn("Keepout.insert_leepout: clearance class not found");
                 clearance_class_no = BoardRules.clearance_class_none();
             }
         }

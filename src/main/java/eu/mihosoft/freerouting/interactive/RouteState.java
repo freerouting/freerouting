@@ -36,6 +36,7 @@ import eu.mihosoft.freerouting.board.ConductionArea;
 import eu.mihosoft.freerouting.board.DrillItem;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Interactive routing state.
@@ -55,7 +56,7 @@ public class RouteState extends InteractiveState
     {
         if (!(p_parent_state instanceof MenuState))
         {
-            System.out.println("RouteState.get_instance: unexpected parent state");
+            FRLogger.warn("RouteState.get_instance: unexpected parent state");
         }
         p_board_handling.display_layer_messsage();
         IntPoint location = p_location.round();
@@ -207,7 +208,7 @@ public class RouteState extends InteractiveState
     }
 
     /**
-     * Checks starting an eu.mihosoft.freerouting.interactive route at p_location.
+     * Checks starting an interactive route at p_location.
      * Returns the picked start item of the routing at p_location,
      * or null, if no such item was found.
      */
@@ -511,7 +512,7 @@ public class RouteState extends InteractiveState
                 }
                 else
                 {
-                    System.out.println("RouteState.change_layer_action: shove_failing_layer not set");
+                    FRLogger.warn("RouteState.change_layer_action: shove_failing_layer not set");
                 }
                 result = false;
             }

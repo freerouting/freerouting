@@ -28,18 +28,19 @@ import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.Line;
 import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Computes transformations between a specctra dsn-file coordinates and eu.mihosoft.freerouting.board coordinates.
+ * Computes transformations between a specctra dsn-file coordinates and board coordinates.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CoordinateTransform implements java.io.Serializable
 {
     
     /**
      * Creates a new instance of CoordinateTransform.
-     * The base point of the dsn coordinate system will be translated to zero in the eu.mihosoft.freerouting.board
+     * The base point of the dsn coordinate system will be translated to zero in the board
      * coordinate system.
      */
     public CoordinateTransform(double p_scale_factor, double p_base_x, double p_base_y)
@@ -50,7 +51,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Scale a value from the eu.mihosoft.freerouting.board to the dsn coordinate system
+     * Scale a value from the board to the dsn coordinate system
      */
     public double board_to_dsn(double p_val)
     {
@@ -58,7 +59,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Scale a value from the dsn to the eu.mihosoft.freerouting.board coordinate system
+     * Scale a value from the dsn to the board coordinate system
      */
     public double dsn_to_board(double p_val)
     {
@@ -66,7 +67,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a eu.mihosoft.freerouting.geometry.planar.FloatPoint to a tuple of doubles
+     * Transforms a geometry.planar.FloatPoint to a tuple of doubles
      * in the dsn coordinate system.
      */
     public double[]  board_to_dsn(FloatPoint p_point)
@@ -78,7 +79,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a eu.mihosoft.freerouting.geometry.planar.FloatPoint to a tuple of doubles
+     * Transforms a geometry.planar.FloatPoint to a tuple of doubles
      * in the dsn coordinate system in relative (vector) coordinates.
      */
     public double[]  board_to_dsn_rel(FloatPoint p_point)
@@ -90,7 +91,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms an array of n eu.mihosoft.freerouting.geometry.planar.FloatPoints to
+     * Transforms an array of n geometry.planar.FloatPoints to
      * an array of 2*n  doubles in the dsn coordinate system.
      */
     public double [] board_to_dsn(FloatPoint [] p_points)
@@ -105,7 +106,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms an array of n eu.mihosoft.freerouting.geometry.planar.Lines to
+     * Transforms an array of n geometry.planar.Lines to
      * an array of 4*n  doubles in the dsn coordinate system.
      */
     public double [] board_to_dsn(Line [] p_lines)
@@ -124,7 +125,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms an array of n eu.mihosoft.freerouting.geometry.planar.FloatPoints to
+     * Transforms an array of n geometry.planar.FloatPoints to
      * an array of 2*n  doubles in the dsn coordinate system in relative (vector) coordinates.
      */
     public double [] board_to_dsn_rel(FloatPoint [] p_points)
@@ -139,7 +140,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a eu.mihosoft.freerouting.geometry.planar.Vector to a tuple of doubles
+     * Transforms a geometry.planar.Vector to a tuple of doubles
      * in the dsn coordinate system.
      */
     public double[]  board_to_dsn(Vector p_vector)
@@ -152,7 +153,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a dsn tuple to a eu.mihosoft.freerouting.geometry.planar.FloatPoint
+     * Transforms a dsn tuple to a geometry.planar.FloatPoint
      */
     public FloatPoint dsn_to_board(double [] p_tuple)
     {
@@ -162,7 +163,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a dsn tuple to a eu.mihosoft.freerouting.geometry.planar.FloatPoint in relative (vector) coordinates.
+     * Transforms a dsn tuple to a geometry.planar.FloatPoint in relative (vector) coordinates.
      */
     public FloatPoint dsn_to_board_rel(double [] p_tuple)
     {
@@ -172,7 +173,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a eu.mihosoft.freerouting.geometry.planar.Intbox to the coordinates of a Rectangle.
+     * Transforms a geometry.planar.Intbox to the coordinates of a Rectangle.
      */
     public double [] board_to_dsn(IntBox p_box)
     {
@@ -185,7 +186,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a eu.mihosoft.freerouting.geometry.planar.Intbox to a Rectangle in relative (vector) coordinates.
+     * Transforms a geometry.planar.Intbox to a Rectangle in relative (vector) coordinates.
      */
     public double [] board_to_dsn_rel(IntBox p_box)
     {
@@ -198,7 +199,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a eu.mihosoft.freerouting.board shape to a dsn shape.
+     * Transforms a board shape to a dsn shape.
      */
     public Shape board_to_dsn(eu.mihosoft.freerouting.geometry.planar.Shape p_board_shape, Layer p_layer)
     {
@@ -222,14 +223,14 @@ public class CoordinateTransform implements java.io.Serializable
         }
         else
         {
-            System.out.println("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
+            FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
             result = null;
         }
         return result;
     }
     
     /**
-     * Transforms the relative (vector) coordinates of a eu.mihosoft.freerouting.geometry.planar.Shape to a specctra dsn shape.
+     * Transforms the relative (vector) coordinates of a geometry.planar.Shape to a specctra dsn shape.
      */
     public Shape board_to_dsn_rel(eu.mihosoft.freerouting.geometry.planar.Shape p_board_shape, Layer p_layer)
     {
@@ -253,7 +254,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         else
         {
-            System.out.println("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
+            FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
             result = null;
         }
         return result;

@@ -26,7 +26,7 @@ import eu.mihosoft.freerouting.board.Component;
 import eu.mihosoft.freerouting.board.Components;
 
 /**
- * Window displaying the components on the eu.mihosoft.freerouting.board.
+ * Window displaying the components on the board.
  *
  * @author Alfons Wirtz
  */
@@ -44,7 +44,7 @@ public class WindowComponents extends WindowObjectListWithFilter
     }
     
     /**
-     * Fills the list with the eu.mihosoft.freerouting.board components.
+     * Fills the list with the board components.
      */
     protected void fill_list()
     {

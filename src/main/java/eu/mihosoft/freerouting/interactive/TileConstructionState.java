@@ -39,9 +39,9 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 import eu.mihosoft.freerouting.board.FixedState;
 
 /**
- * Class for eu.mihosoft.freerouting.interactive construction of a tile shaped obstacle
+ * Class for interactive construction of a tile shaped obstacle
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class TileConstructionState extends CornerItemConstructionState
 {
