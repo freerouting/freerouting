@@ -35,7 +35,7 @@ import java.util.LinkedList;
 
 
 /**
- * Class for reading and writing eu.mihosoft.freerouting.library scopes from dsn-files.
+ * Class for reading and writing library scopes from dsn-files.
  *
  * @author  Alfons Wirtz
  */
@@ -132,7 +132,7 @@ public class Library extends ScopeKeyword
             board.library.set_via_padstacks(via_padstacks);
         }
         
-        // Create the eu.mihosoft.freerouting.library packages on the eu.mihosoft.freerouting.board
+        // Create the library packages on the board
         board.library.packages = new eu.mihosoft.freerouting.library.Packages(board.library.padstacks);
         Iterator<Package> it = package_list.iterator();
         while (it.hasNext())

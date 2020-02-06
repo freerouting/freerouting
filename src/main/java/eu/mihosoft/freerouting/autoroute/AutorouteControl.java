@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.rules.ViaRule;
 import eu.mihosoft.freerouting.board.RoutingBoard;
 
 /**
- * Structure for controlling the eu.mihosoft.freerouting.autoroute algorithm.
+ * Structure for controlling the autoroute algorithm.
  *
  * @author  Alfons Wirtz
  */
@@ -176,18 +176,18 @@ public class AutorouteControl
     public final ExpansionCostFactor[] trace_costs;
     /** Defines for each layer, if it may used for routing. */
     final boolean[] layer_active;
-    /** The currently used net number in the eu.mihosoft.freerouting.autoroute algorithm */
+    /** The currently used net number in the autoroute algorithm */
     int net_no;
-    /** The currently used trace half widths in the eu.mihosoft.freerouting.autoroute algorithm on each layer */
+    /** The currently used trace half widths in the autoroute algorithm on each layer */
     final int[] trace_half_width;
     /**
-     * The currently used compensated trace half widths in the eu.mihosoft.freerouting.autoroute algorithm on each layer.
+     * The currently used compensated trace half widths in the autoroute algorithm on each layer.
      * Equal to trace_half_width if no clearance compensation is used.
      */
     final int[] compensated_trace_half_width;
-    /** The currently used clearance class for traces in the eu.mihosoft.freerouting.autoroute algorithm */
+    /** The currently used clearance class for traces in the autoroute algorithm */
     public int trace_clearance_class_no;
-    /** The currently used clearance class for vias in the eu.mihosoft.freerouting.autoroute algorithm */
+    /** The currently used clearance class for vias in the autoroute algorithm */
     int via_clearance_class;
     /** The possible (partial) vias, which can be used by the autorouter */
     ViaRule via_rule;
@@ -223,14 +223,14 @@ public class AutorouteControl
     public int ripup_costs;
     public int ripup_pass_no;
     public final boolean with_neckdown;
-    /** If true, the eu.mihosoft.freerouting.autoroute algorithm completes after the first drill */
+    /** If true, the autoroute algorithm completes after the first drill */
     public boolean is_fanout;
     /**
      *  Normally true, if the autorouter contains no fanout pass
      */
     public boolean remove_unconnected_vias;
 
-    /** horizontal and vertical costs for traces on a eu.mihosoft.freerouting.board layer */
+    /** horizontal and vertical costs for traces on a board layer */
     public static class ExpansionCostFactor
     {
 
@@ -239,9 +239,9 @@ public class AutorouteControl
             horizontal = p_horizontal;
             vertical = p_vertical;
         }
-        /** The horizontal expansion cost factor on a layer of the eu.mihosoft.freerouting.board */
+        /** The horizontal expansion cost factor on a layer of the board */
         public final double horizontal;
-        /** The verical expansion cost factor on a layer of the eu.mihosoft.freerouting.board */
+        /** The verical expansion cost factor on a layer of the board */
         public final double vertical;
     }
 

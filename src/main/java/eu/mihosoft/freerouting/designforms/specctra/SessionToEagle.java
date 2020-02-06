@@ -715,7 +715,7 @@ public class SessionToEagle extends javax.swing.JFrame
     /** The generated Eagle script file. */
     private final java.io.OutputStreamWriter out_file;
     
-    /** Some information is read from the eu.mihosoft.freerouting.board, because it is not contained in the speccctra session file. */
+    /** Some information is read from the board, because it is not contained in the speccctra session file. */
     private final eu.mihosoft.freerouting.board.BasicBoard board;
     
     /** The layer structure in specctra format */
@@ -726,7 +726,7 @@ public class SessionToEagle extends javax.swing.JFrame
     /** The scale factor for transforming coordinates from the session file to Eagle */
     private final double session_file_scale_denominator;
     
-    /** The scale factor for transforming coordinates from the eu.mihosoft.freerouting.board to Eagle */
+    /** The scale factor for transforming coordinates from the board to Eagle */
     private final double board_scale_factor;
     
     private static class PinInfo

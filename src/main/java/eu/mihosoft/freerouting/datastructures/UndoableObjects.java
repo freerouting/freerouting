@@ -251,7 +251,7 @@ public class UndoableObjects implements java.io.Serializable
             }
             if (p_restored_objects == null || !p_restored_objects.remove(curr_deleted_node.object))
             {
-                // the object needs only be cancelled if it is already in the eu.mihosoft.freerouting.board
+                // the object needs only be cancelled if it is already in the board
                 if (p_cancelled_objects != null)
                 {
                     p_cancelled_objects.add(curr_deleted_node.object);

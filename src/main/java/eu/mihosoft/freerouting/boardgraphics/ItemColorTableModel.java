@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.boardgraphics;
 import java.awt.Color;
 
 /**
- * Stores the layer dependent colors used for drawing for the items on the eu.mihosoft.freerouting.board.
+ * Stores the layer dependent colors used for drawing for the items on the board.
  *
  * @author Alfons Wirtz
  */

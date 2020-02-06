@@ -120,7 +120,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
     }
     
     /**
-     * Stores the new value in the eu.mihosoft.freerouting.board database, when a slider value was changed.
+     * Stores the new value in the board database, when a slider value was changed.
      */
     protected abstract void set_changed_value(int p_index, double p_value);
     

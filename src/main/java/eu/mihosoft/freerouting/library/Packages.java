@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Describes a eu.mihosoft.freerouting.library of component packages.
+ * Describes a library of component packages.
  *
  * @author  Alfons Wirtz
  */

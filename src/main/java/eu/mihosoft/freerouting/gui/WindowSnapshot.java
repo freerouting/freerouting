@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Window handling snapshots of the eu.mihosoft.freerouting.interactive situation.
+ * Window handling snapshots of the interactive situation.
  *
  * @author  Alfons Wirtz
  */

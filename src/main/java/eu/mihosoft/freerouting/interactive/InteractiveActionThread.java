@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used for running an eu.mihosoft.freerouting.interactive action in a seperate Thread,
+ * Used for running an interactive action in a separate thread,
  * that can be stopped by the user.
  *
  * @author Alfons Wirtz

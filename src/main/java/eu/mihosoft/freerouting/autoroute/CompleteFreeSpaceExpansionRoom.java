@@ -162,7 +162,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     }
     
     /**
-     * Calculates the doors to the start and destination items of the eu.mihosoft.freerouting.autoroute algorithm.
+     * Calculates the doors to the start and destination items of the autoroute algorithm.
      */
     public  void calculate_target_doors(ShapeTree.TreeEntry p_own_net_object, int p_net_no, ShapeSearchTree p_autoroute_search_tree)
     {

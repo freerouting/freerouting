@@ -34,7 +34,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
- * Graphical frame of for eu.mihosoft.freerouting.interactive editing of a routing eu.mihosoft.freerouting.board.
+ * Graphical frame of for interactive editing of a routing board.
  *
  * @author  Alfons Wirtz
  */
@@ -47,7 +47,7 @@ public class BoardFrame extends javax.swing.JFrame
     }
     
     /**
-     * Creates a new eu.mihosoft.freerouting.board frame with the input design file imbedded into a host cad software.
+     * Creates a new board frame with the input design file embedded into a host cad software.
      */
     public static BoardFrame get_embedded_instance(String p_design_file_path_name,
             BoardObservers p_observers, IdNoGenerator p_id_no_generator, java.util.Locale p_locale)
@@ -85,7 +85,7 @@ public class BoardFrame extends javax.swing.JFrame
      * If p_option = Option.IN_SAND_BOX, no security sensitive actions like for example choosing
      *  If p_option = Option.WEBSTART, the application has  been started with Java Webstart.
      * files are allowed, so that the frame can be used in an applet.
-     * Currently Option.EXTENDED_TOOL_BAR is used only if a new eu.mihosoft.freerouting.board is
+     * Currently Option.EXTENDED_TOOL_BAR is used only if a new board is
      * created by the application from scratch.
      * If p_test_level {@literal >} RELEASE_VERSION, functionality not yet ready for release is included.
      * Also the warning output depends on p_test_level.
@@ -160,7 +160,7 @@ public class BoardFrame extends javax.swing.JFrame
     }
     
     /**
-     * Reads eu.mihosoft.freerouting.interactive actions from a logfile.
+     * Reads interactive actions from a logfile.
      */
     void read_logfile(java.io.InputStream p_input_stream)
     {
@@ -169,8 +169,8 @@ public class BoardFrame extends javax.swing.JFrame
     
     
     /**
-     * Reads an existing eu.mihosoft.freerouting.board design from file.
-     * If p_is_import, the design is read from a scpecctra dsn file.
+     * Reads an existing board design from file.
+     * If p_is_import, the design is read from a specctra dsn file.
      * Returns false, if the file is invalid.
      */
     boolean read(java.io.InputStream p_input_stream, boolean p_is_import, javax.swing.JTextField p_message_field) {
@@ -252,7 +252,7 @@ public class BoardFrame extends javax.swing.JFrame
         this.setVisible(true);
         if (p_is_import)
         {
-            // Read the default eu.mihosoft.freerouting.gui settings, if eu.mihosoft.freerouting.gui default file exists.
+            // Read the default gui settings, if gui default file exists.
             java.io.InputStream input_stream = null;
             boolean defaults_file_found;
 
@@ -290,7 +290,7 @@ public class BoardFrame extends javax.swing.JFrame
     
     
     /**
-     * Saves the eu.mihosoft.freerouting.interactive settings and the design file to disk.
+     * Saves the interactive settings and the design file to disk.
      * Returns false, if the save failed.
      */
     boolean save()
@@ -397,7 +397,7 @@ public class BoardFrame extends javax.swing.JFrame
     }
     
     /**
-     * Calculates the absolute location of the eu.mihosoft.freerouting.board frame in his outmost parent frame.
+     * Calculates the absolute location of the board frame in his outmost parent frame.
      */
     java.awt.Point absolute_panel_location()
     {
@@ -413,7 +413,7 @@ public class BoardFrame extends javax.swing.JFrame
         return new java.awt.Point(x, y);
     }
     
-    /** Sets the displayed region to the whole eu.mihosoft.freerouting.board. */
+    /** Sets the displayed region to the whole board. */
     public void zoom_all()
     {
         board_panel.board_handling.adjust_design_bounds();
@@ -510,7 +510,7 @@ public class BoardFrame extends javax.swing.JFrame
     }
     
     /**
-     * Creates the additional frames of the eu.mihosoft.freerouting.board frame.
+     * Creates the additional frames of the board frame.
      */
     private void initialize_windows()
     {
@@ -555,7 +555,7 @@ public class BoardFrame extends javax.swing.JFrame
     }
     
     /**
-     * Sets the background of the eu.mihosoft.freerouting.board panel
+     * Sets the background of the board panel
      */
     public void set_board_background(java.awt.Color p_color)
     {
@@ -646,7 +646,7 @@ public class BoardFrame extends javax.swing.JFrame
     }
     
     /**
-     * Repaints this eu.mihosoft.freerouting.board frame and all the subwindows of the eu.mihosoft.freerouting.board.
+     * Repaints this board frame and all the subwindows of the board.
      */
     public void repaint_all()
     {
@@ -657,13 +657,13 @@ public class BoardFrame extends javax.swing.JFrame
         }
     }
     
-    /** The scroll pane for the panel of the routing eu.mihosoft.freerouting.board. */
+    /** The scroll pane for the panel of the routing board. */
     final javax.swing.JScrollPane scroll_pane;
     
     /** The menubar of this frame */
     final BoardMenuBar menubar;
     
-    /** The panel with the graphical representation of the eu.mihosoft.freerouting.board. */
+    /** The panel with the graphical representation of the board. */
     final BoardPanel board_panel;
     
     /** The panel with the toolbars */

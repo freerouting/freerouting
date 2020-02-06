@@ -954,7 +954,7 @@ public class MazeSearchAlgo
 
         if (this.autoroute_engine.maintain_database)
         {
-            // add the completed start rooms carried over from the last eu.mihosoft.freerouting.autoroute to the start rooms.
+            // add the completed start rooms carried over from the last autoroute to the start rooms.
             completed_start_rooms.addAll(this.autoroute_engine.get_rooms_with_target_items(p_start_items));
         }
 
@@ -1443,7 +1443,7 @@ public class MazeSearchAlgo
         return enter_through_small_door(p_list_element, curr_item);
     }
     /**
-     * The eu.mihosoft.freerouting.autoroute engine of this expansion algorithm.
+     * The autoroute engine of this expansion algorithm.
      */
     public final AutorouteEngine autoroute_engine;
     final AutorouteControl ctrl;

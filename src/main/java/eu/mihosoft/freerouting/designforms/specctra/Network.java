@@ -441,7 +441,7 @@ public class Network extends ScopeKeyword
             curr_subnet.set_pins(curr_pin_list);
             if (!net_rules.isEmpty())
             {
-                // Evaluate the net eu.mihosoft.freerouting.rules.
+                // Evaluate the net rules.
                 eu.mihosoft.freerouting.rules.Net board_net = p_board.rules.nets.get(curr_subnet.id.name, curr_subnet.id.subnet_number);
                 if (board_net == null)
                 {
@@ -712,7 +712,7 @@ public class Network extends ScopeKeyword
     }
 
     /**
-     * Inserts a via rule into the eu.mihosoft.freerouting.board.
+     * Inserts a via rule into the board.
      * Replaces an already existing via rule with the same
      */
     static boolean add_via_rule(Collection<String> p_name_list, eu.mihosoft.freerouting.board.BasicBoard p_board)
@@ -801,7 +801,7 @@ public class Network extends ScopeKeyword
             }
         }
 
-        // read  the trace width  and clearance eu.mihosoft.freerouting.rules.
+        // read  the trace width  and clearance rules.
 
         boolean clearance_rule_found = false;
 
@@ -824,7 +824,7 @@ public class Network extends ScopeKeyword
             }
         }
 
-        // read the layer dependent eu.mihosoft.freerouting.rules.
+        // read the layer dependent rules.
 
         for (Rule.LayerRule curr_layer_rule : p_class.layer_rules)
         {
@@ -1224,8 +1224,8 @@ public class Network extends ScopeKeyword
     }
 
     /**
-     * Create  the part eu.mihosoft.freerouting.library on the eu.mihosoft.freerouting.board. Can be called after the components are inserted.
-     * Returns false, if an error occured.
+     * Create  the part library on the board. Can be called after the components are inserted.
+     * Returns false, if an error occurred.
      */
     private static boolean insert_logical_parts(ReadScopeParameter p_par)
     {
@@ -1318,7 +1318,7 @@ public class Network extends ScopeKeyword
     }
 
     /**
-     * Inserts all eu.mihosoft.freerouting.board components belonging to the input eu.mihosoft.freerouting.library component.
+     * Inserts all board components belonging to the input library component.
      */
     private static void insert_component(ComponentPlacement.ComponentLocation p_location, String p_lib_key,
             ReadScopeParameter p_par)

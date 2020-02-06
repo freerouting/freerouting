@@ -89,7 +89,7 @@ public class SearchTreeManager
     }
     
     /**
-     * Returns the default tree used in eu.mihosoft.freerouting.interactive routing.
+     * Returns the default tree used in interactive routing.
      */
     public ShapeSearchTree get_default_tree()
     {
@@ -233,7 +233,7 @@ public class SearchTreeManager
     }
     
     /**
-     * Clears all compensated trees used in the eu.mihosoft.freerouting.autoroute algorithm apart from the default tree.
+     * Clears all compensated trees used in the autoroute algorithm apart from the default tree.
      */
     public void reset_compensated_trees()
     {

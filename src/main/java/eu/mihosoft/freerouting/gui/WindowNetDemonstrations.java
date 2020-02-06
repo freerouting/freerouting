@@ -99,7 +99,7 @@ public class WindowNetDemonstrations extends WindowNetSamples
     }
     
     /**
-     * Additional Acction to be performed after opening the eu.mihosoft.freerouting.board.
+     * Additional Action to be performed after opening the board.
      */
     private enum AdditionalAction
     {

@@ -34,7 +34,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
- * An item on the eu.mihosoft.freerouting.board with an relative_area shape, for example keepout, conduction relative_area
+ * An item on the board with an relative_area shape, for example keepout, conduction relative_area
  *
  *
  *

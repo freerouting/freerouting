@@ -34,7 +34,7 @@ import java.util.LinkedList;
  */
 public class Layer
 {
-    /** all layers of the eu.mihosoft.freerouting.board */
+    /** all layers of the board */
     public static final Layer PCB = new Layer("pcb", -1, false);
     /** the signal layers */
     public static final Layer SIGNAL = new Layer("signal", -1, true);

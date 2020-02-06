@@ -886,7 +886,7 @@ public class SelectedItemState extends InteractiveState
     }
 
     /**
-     * Removes items not selected by the current eu.mihosoft.freerouting.interactive filter from the selected item list.
+     * Removes items not selected by the current interactive filter from the selected item list.
      */
     public InteractiveState filter()
     {

@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import java.awt.geom.Point2D;
 
 /**
- * Class for eu.mihosoft.freerouting.interactive zooming to a rectangle.
+ * Class for interactive zooming to a rectangle.
  *
  * @author Alfons Wirtz
  */

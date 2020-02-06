@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
 /**
- * Window for eu.mihosoft.freerouting.interactive editing of the clearance Matrix.
+ * Window for interactive editing of the clearance Matrix.
  *
  * @author Alfons Wirtz
  */
@@ -395,7 +395,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
             int curr_row = p_row;
             int curr_column = p_col - 1;
             
-            // check, if there are items on the eu.mihosoft.freerouting.board assigned to clearance class i or j.
+            // check, if there are items on the board assigned to clearance class i or j.
             
             eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
             eu.mihosoft.freerouting.datastructures.UndoableObjects item_list = board_handling.get_routing_board().item_list;

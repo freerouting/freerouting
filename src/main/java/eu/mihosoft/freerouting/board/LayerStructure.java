@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.board;
 
 /**
- * Describes the layer structure of the eu.mihosoft.freerouting.board.
+ * Describes the layer structure of the board.
  *
  * @author  alfons
  */

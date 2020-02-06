@@ -42,7 +42,7 @@ import javax.swing.event.TableModelListener;
 
 /**
  *
- * Panel containing the graphical representation of a routing eu.mihosoft.freerouting.board.
+ * Panel containing the graphical representation of a routing board.
  *
  * @author  Alfons Wirtz
  */
@@ -220,7 +220,7 @@ public class BoardPanel extends javax.swing.JPanel
     }
     
     /**
-     * overwrites the paintComponent method to draw the routing eu.mihosoft.freerouting.board
+     * overwrites the paintComponent method to draw the routing board
      */
     public void paintComponent(Graphics p_g)
     {
@@ -315,7 +315,7 @@ public class BoardPanel extends javax.swing.JPanel
     
     
     /**
-     * zooms the content of the eu.mihosoft.freerouting.board by p_factor
+     * zooms the content of the board by p_factor
      * Returns the change of the cursor location
      */
     public java.awt.geom.Point2D zoom(double p_factor, java.awt.geom.Point2D p_location)
@@ -490,7 +490,7 @@ public class BoardPanel extends javax.swing.JPanel
     private java.awt.Point middle_drag_position = null ;
     
     /**
-     * Defines the appearance of the custom custom_cursor in the eu.mihosoft.freerouting.board panel.
+     * Defines the appearance of the custom custom_cursor in the board panel.
      * Null, if the standard custom_cursor is used.
      */
     private Cursor custom_cursor = null;
@@ -500,7 +500,7 @@ public class BoardPanel extends javax.swing.JPanel
     {
         public void tableChanged(TableModelEvent p_event)
         {
-            //redisplay eu.mihosoft.freerouting.board because some colors have changed.
+            //redisplay board because some colors have changed.
             setBackground(board_handling.graphics_context.get_background_color());
             repaint();
         }

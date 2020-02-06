@@ -24,7 +24,7 @@ import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
 
 /**
  *
- * Used internally for marking changed areas on the eu.mihosoft.freerouting.board
+ * Used internally for marking changed areas on the board
  * after shoving and optimizing items.
  *
 
@@ -124,7 +124,7 @@ class ChangedArea
     MutableOctagon [] arr;
 
     /**
-     * mutable octagon with double coordinates (see eu.mihosoft.freerouting.geometry.planar.IntOctagon)
+     * mutable octagon with double coordinates (see geometry.planar.IntOctagon)
      */
     private static class MutableOctagon
     {

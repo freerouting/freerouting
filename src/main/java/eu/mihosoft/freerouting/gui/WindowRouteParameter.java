@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.gui;
 import java.util.Collection;
 
 /**
- *  Window handling parameters of the eu.mihosoft.freerouting.interactive routing.
+ *  Window handling parameters of the interactive routing.
  *
  * @author  Alfons Wirtz
  */

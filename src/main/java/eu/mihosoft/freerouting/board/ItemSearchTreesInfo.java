@@ -32,7 +32,7 @@ import  eu.mihosoft.freerouting.datastructures.ShapeTree;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
- * Stores information about the search trees of the eu.mihosoft.freerouting.board items,
+ * Stores information about the search trees of the board items,
  * which is precalculated for performance reasons.
  *
  * @author Alfons Wirtz

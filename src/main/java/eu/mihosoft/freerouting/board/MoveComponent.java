@@ -36,7 +36,7 @@ import java.util.LinkedList;
 import eu.mihosoft.freerouting.datastructures.Signum;
 
 /**
- * Class for moving a group of items on the eu.mihosoft.freerouting.board
+ * Class for moving a group of items on the board
  * @author  Alfons Wirtz
  */
 public class MoveComponent

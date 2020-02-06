@@ -28,7 +28,7 @@ import java.util.Vector;
 import java.util.Collection;
 
 /**
- * Describes the electrical Nets on a eu.mihosoft.freerouting.board.
+ * Describes the electrical Nets on a board.
  *
  * @author  alfons
  */
@@ -42,7 +42,7 @@ public class Nets implements java.io.Serializable
     }
 
     /**
-     * Returns the biggest net number on the eu.mihosoft.freerouting.board.
+     * Returns the biggest net number on the board.
      */
     public int max_net_no()
     {
@@ -158,7 +158,7 @@ public class Nets implements java.io.Serializable
     public static final int max_legal_net_no = 9999999;
     /** auxiliary net number for internal use */
     public static final int hidden_net_no = 10000001;
-    /** The list of electrical nets on the eu.mihosoft.freerouting.board */
+    /** The list of electrical nets on the board */
     private Vector<Net> net_arr;
     private eu.mihosoft.freerouting.board.BasicBoard board;
 }

@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Describes a eu.mihosoft.freerouting.library of padstacks for pins or vias.
+ * Describes a library of padstacks for pins or vias.
  *
  * @author  alfons
  */
@@ -90,7 +90,7 @@ public class Padstacks implements java.io.Serializable
     
     /**
      * Appends a new padstack with the input shapes to this padstacks.
-     * p_shapes is an array of dimension eu.mihosoft.freerouting.board layer_count.
+     * p_shapes is an array of dimension board layer_count.
      * p_drill_allowed indicates, if vias of the own net are allowed to overlap with this padstack
      * If p_placed_absolute is false, the layers of the padstack are mirrored, if it is placed on the back side.
      */
@@ -104,7 +104,7 @@ public class Padstacks implements java.io.Serializable
     
     /**
      * Appends a new padstack with the input shapes to this padstacks.
-     * p_shapes is an array of dimension eu.mihosoft.freerouting.board layer_count.
+     * p_shapes is an array of dimension board layer_count.
      * The padatack name is generated internally.
      */
     public Padstack add(ConvexShape [] p_shapes)

@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.geometry.planar.Area;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 /**
- * Describes areas of the eu.mihosoft.freerouting.board, where components arre not allowed.
+ * Describes areas of the board, where components are not allowed.
  *
  * @author alfons
  */

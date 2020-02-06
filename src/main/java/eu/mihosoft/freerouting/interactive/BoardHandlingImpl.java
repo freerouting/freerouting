@@ -19,20 +19,20 @@ import java.util.Locale;
  */
 public class BoardHandlingImpl implements IBoardHandling {
     /**
-     * The file used for logging eu.mihosoft.freerouting.interactive action,
+     * The file used for logging interactive action,
      * so that they can be replayed later
      */
     public final ActivityReplayFile activityReplayFile = new ActivityReplayFile();
-    /** The current settings for eu.mihosoft.freerouting.interactive actions on the eu.mihosoft.freerouting.board*/
+    /** The current settings for interactive actions on the board */
     public Settings settings = null;
-    /** The eu.mihosoft.freerouting.board database used in this eu.mihosoft.freerouting.interactive handling. */
+    /** The board database used in this interactive handling. */
     protected RoutingBoard board = null;
 
     public BoardHandlingImpl() {
     }
 
     /**
-     * Gets the routing eu.mihosoft.freerouting.board of this eu.mihosoft.freerouting.board handling.
+     * Gets the routing board of this board handling.
      */
     @Override
     public RoutingBoard get_routing_board()
@@ -46,7 +46,7 @@ public class BoardHandlingImpl implements IBoardHandling {
     }
 
     /**
-     * Initializes the manual trace widths from the default trace widths in the eu.mihosoft.freerouting.board rules.
+     * Initializes the manual trace widths from the default trace widths in the board rules.
      */
     @Override
     public void initialize_manual_trace_half_widths()

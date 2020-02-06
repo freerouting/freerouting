@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Describes the placement data of a eu.mihosoft.freerouting.library component
+ * Describes the placement data of a library component
  *
  * @author  alfons
  */
@@ -42,10 +42,10 @@ public class ComponentPlacement
         locations = new LinkedList<ComponentLocation>();
     }
     
-    /** The name of the corresponding eu.mihosoft.freerouting.library component */
+    /** The name of the corresponding library component */
     public final String lib_name;
     
-    /** The list of ComponentLocations of the eu.mihosoft.freerouting.library component on the eu.mihosoft.freerouting.board. */
+    /** The list of ComponentLocations of the library component on the board. */
     public final Collection<ComponentLocation> locations;
     
     /** The structure of an entry in the list locations. */

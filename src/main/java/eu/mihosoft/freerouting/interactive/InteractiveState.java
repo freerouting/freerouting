@@ -253,7 +253,7 @@ public class InteractiveState
     
     
     /**
-     * Returns the popup menu from board_panel, which is used in this eu.mihosoft.freerouting.interactive state.
+     * Returns the popup menu from board_panel, which is used in this interactive state.
      * Default function to be overwritten in derived classes.
      */
     public javax.swing.JPopupMenu get_popup_menu()
@@ -267,13 +267,13 @@ public class InteractiveState
     {
     }
     
-    /** eu.mihosoft.freerouting.board setting access handler for the derived classes */
+    /** board setting access handler for the derived classes */
     protected final BoardHandling hdlg;
     
     /** The intended state after this state is finished */
     protected InteractiveState return_state;
     
-    /** if logfile != null, the eu.mihosoft.freerouting.interactive actions are stored in a logfile */
+    /** if logfile != null, the interactive actions are stored in a logfile */
     protected final ActivityReplayFile activityReplayFile;
     
     /** Contains the files  with the language dependent messages */

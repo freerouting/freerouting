@@ -137,7 +137,7 @@ public class CopyItemState extends InteractiveState
     }
     
     /**
-     * Inserts the items in the copy list into the eu.mihosoft.freerouting.board.
+     * Inserts the items in the copy list into the board.
      * Items, which would produce a clearance violation, are not inserted.
      */
     public void insert()

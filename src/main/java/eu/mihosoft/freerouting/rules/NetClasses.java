@@ -25,7 +25,7 @@ package eu.mihosoft.freerouting.rules;
 
 
 /**
- * Contains the array of net classes for eu.mihosoft.freerouting.interactive routing.
+ * Contains the array of net classes for interactive routing.
  *
  * @author Alfons Wirtz
  */

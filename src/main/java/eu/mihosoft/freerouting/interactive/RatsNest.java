@@ -204,7 +204,7 @@ public class RatsNest
     }
     
     /**
-     * Used for  example to hide the incompletes during eu.mihosoft.freerouting.interactive routiing.
+     * Used for  example to hide the incompletes during interactive routing.
      */
     public boolean is_hidden()
     {

@@ -549,5 +549,5 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     
     
     private final int half_width ; // half width of the trace pen
-    private int layer ; // eu.mihosoft.freerouting.board layer of the trace
+    private int layer ; // board layer of the trace
 }

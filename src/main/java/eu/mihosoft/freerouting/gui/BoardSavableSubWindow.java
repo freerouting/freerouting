@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Subwindow of the eu.mihosoft.freerouting.board frame, whose location and visibility can be saved and read from disc.
+ * Subwindow of the board frame, whose location and visibility can be saved and read from disc.
  *
  * @author Alfons Wirtz
  */

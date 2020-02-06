@@ -306,7 +306,7 @@ class Structure extends ScopeKeyword
         Rectangle bounding_rectangle = new Rectangle(Layer.PCB, rect_coor);
         bounding_rectangle.write_scope(p_par.file, p_par.identifier_type);
         p_par.file.end_scope();
-        // lookup the outline in the eu.mihosoft.freerouting.board
+        // lookup the outline in the board
         Storable curr_ob = null;
         Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
         for (;;)
@@ -348,7 +348,7 @@ class Structure extends ScopeKeyword
 
         write_default_rules(p_par);
 
-        // write the eu.mihosoft.freerouting.autoroute settings
+        // write the autoroute settings
         AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings,
                 p_par.board.layer_structure, p_par.identifier_type);
 
@@ -847,7 +847,7 @@ class Structure extends ScopeKeyword
         eu.mihosoft.freerouting.board.LayerStructure board_layer_structure = new eu.mihosoft.freerouting.board.LayerStructure(board_layer_arr);
         p_par.layer_structure = new LayerStructure(p_board_construction_info.layer_info);
 
-        // Calculate an appropritate scaling between dsn coordinates and eu.mihosoft.freerouting.board coordinates.
+        // Calculate an approximate scaling between dsn coordinates and board coordinates.
         int scale_factor = Math.max(p_par.resolution, 1);
 
         double max_coor = 0;
@@ -921,7 +921,7 @@ class Structure extends ScopeKeyword
 
         eu.mihosoft.freerouting.board.BasicBoard board = p_par.board_handling.get_routing_board();
 
-        // Insert the holes in the eu.mihosoft.freerouting.board outline as keepouts.
+        // Insert the holes in the board outline as keepouts.
         for (PolylineShape curr_outline_hole : hole_shapes)
         {
             for (int i = 0; i < board_layer_structure.arr.length; ++i)
@@ -1090,7 +1090,7 @@ class Structure extends ScopeKeyword
     }
 
     /**
-     * Converts a dsn clearance rule into a eu.mihosoft.freerouting.board clearance rule.
+     * Converts a dsn clearance rule into a board clearance rule.
      * If p_layer_no < 0, the rule is set on all layers.
      * Returns true, if the string smd_to_turn_gap was found.
      */

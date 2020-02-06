@@ -391,7 +391,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         return TileShape.get_instance(this.get_center());
     }
     
-    /** False, if this drillitem is places on the back side of the eu.mihosoft.freerouting.board */
+    /** False, if this drillitem is places on the back side of the board */
     public boolean is_placed_on_front()
     {
         return true;

@@ -34,7 +34,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 
 /**
  * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm.
- * The pages are rectangles of about equal width and height covering covering the bounding box of the eu.mihosoft.freerouting.board area.
+ * The pages are rectangles of about equal width and height covering covering the bounding box of the board area.
  *
  * @author Alfons Wirtz
  */

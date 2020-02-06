@@ -46,9 +46,9 @@ public class DsnFile
     }
 
     /**
-     * Creates a routing eu.mihosoft.freerouting.board from a Specctra dns file.
+     * Creates a routing board from a Specctra dns file.
      * The parameters p_item_observers and p_item_id_no_generator are used,
-     * in case the eu.mihosoft.freerouting.board is embedded into a host system.
+     * in case the board is embedded into a host system.
      * Returns false, if an error occured.
      */
     public static ReadResult read(java.io.InputStream p_input_stream, eu.mihosoft.freerouting.interactive.IBoardHandling p_board_handling,
@@ -92,7 +92,7 @@ public class DsnFile
             result = ReadResult.OK;
             if (read_scope_par.autoroute_settings == null)
             {
-                // look for power planes with incorrect layer type and adjust eu.mihosoft.freerouting.autoroute parameters
+                // look for power planes with incorrect layer type and adjust autoroute parameters
                 adjust_plane_autoroute_settings(p_board_handling);
             }
         }
@@ -185,7 +185,7 @@ public class DsnFile
             }
             if (curr_area < 0.5 * board_area)
             {
-                // skip conduction areas not covering most of the eu.mihosoft.freerouting.board
+                // skip conduction areas not covering most of the board
                 continue;
             }
 
@@ -206,7 +206,7 @@ public class DsnFile
         {
             return false;
         }
-        // Adjust the layer prefered directions in the eu.mihosoft.freerouting.autoroute settings.
+        // Adjust the layer preferred directions in the autoroute settings.
         // and deactivate the changed layers.
         eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
         int layer_count = routing_board.get_layer_count();

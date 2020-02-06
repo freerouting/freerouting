@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Contains the rules and constraints required for items
- * to be inserted into a routing eu.mihosoft.freerouting.board
+ * to be inserted into a routing board
  *
  * @author Alfons Wirtz
  */
@@ -280,7 +280,7 @@ public class BoardRules implements java.io.Serializable
     }
     
     /**
-     * Changes the clearance class index of all objects on the eu.mihosoft.freerouting.board with index p_from_no
+     * Changes the clearance class index of all objects on the board with index p_from_no
      * to p_to_no.
      */
     public void change_clearance_class_no(int p_from_no, int p_to_no, java.util.Collection<eu.mihosoft.freerouting.board.Item> p_board_items)
@@ -513,7 +513,7 @@ public class BoardRules implements java.io.Serializable
     
     
     /**
-     * Describes the electrical nets on the eu.mihosoft.freerouting.board.
+     * Describes the electrical nets on the board.
      */
     public final Nets nets;
     

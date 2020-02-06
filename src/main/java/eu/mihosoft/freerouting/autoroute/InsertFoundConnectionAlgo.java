@@ -43,7 +43,7 @@ import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 import eu.mihosoft.freerouting.board.TestLevel;
 
 /**
- * Inserts the traces and vias of the connection found by the eu.mihosoft.freerouting.autoroute algorithm.
+ * Inserts the traces and vias of the connection found by the autoroute algorithm.
  *
  * @author  Alfons Wirtz
  */

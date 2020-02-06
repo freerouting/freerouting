@@ -24,13 +24,13 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Creates the display menu of a eu.mihosoft.freerouting.board frame.
+ * Creates the display menu of a board frame.
  *
  * @author Alfons Wirtz
  */
 public class BoardMenuDisplay extends javax.swing.JMenu
 {
-    /** Returns a new display menu for the eu.mihosoft.freerouting.board frame. */
+    /** Returns a new display menu for the board frame. */
     public static BoardMenuDisplay get_instance(BoardFrame p_board_frame)
     {
         final BoardMenuDisplay display_menu = new BoardMenuDisplay(p_board_frame);

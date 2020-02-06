@@ -247,7 +247,7 @@ public class DesignFile
     }
 
     /**
-     * Saves the eu.mihosoft.freerouting.board rule to file, so that they can be reused later on.
+     * Saves the board rule to file, so that they can be reused later on.
      */
     private boolean write_rules_file(String p_design_name, eu.mihosoft.freerouting.interactive.BoardHandling p_board_handling)
     {

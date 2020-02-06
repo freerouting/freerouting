@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
- * Contains the lists of different ViaInfo's, which can be used in eu.mihosoft.freerouting.interactive and automatic routing.
+ * Contains the lists of different ViaInfo's, which can be used in interactive and automatic routing.
  *
  * @author Alfons Wirtz
  */

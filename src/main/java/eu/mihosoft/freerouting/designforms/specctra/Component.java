@@ -27,7 +27,7 @@ package eu.mihosoft.freerouting.designforms.specctra;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Handels the placement bata of a eu.mihosoft.freerouting.library component.
+ * Handels the placement data of a library component.
  *
  * @author  alfons
  */

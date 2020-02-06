@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Describes the toolbar of the eu.mihosoft.freerouting.board frame, when it is in the selected item state.
+ * Describes the toolbar of the board frame, when it is in the selected item state.
  *
  * @author Alfons Wirtz
  */

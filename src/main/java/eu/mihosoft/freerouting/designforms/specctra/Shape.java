@@ -680,7 +680,7 @@ public abstract class Shape
     }
 
     /**
-     * Transforms a shape with holes to the eu.mihosoft.freerouting.board coordinate system.
+     * Transforms a shape with holes to the board coordinate system.
      * The first shape in the Collection p_area is the border,
      * the other shapes are holes of the area.
      */
@@ -726,7 +726,7 @@ public abstract class Shape
     }
 
     /**
-     * Transforms the relative coordinates of a shape with holes to the eu.mihosoft.freerouting.board coordinate system.
+     * Transforms the relative coordinates of a shape with holes to the board coordinate system.
      * The first shape in the Collection p_area is the border,
      * the other shapes are holes of the area.
      */
@@ -780,7 +780,7 @@ public abstract class Shape
     }
 
     /**
-     * Transforms a specctra dsn shape to a eu.mihosoft.freerouting.geometry.planar.Shape.
+     * Transforms a specctra dsn shape to a geometry.planar.Shape.
      */
     public abstract eu.mihosoft.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform);
 
@@ -790,7 +790,7 @@ public abstract class Shape
     public abstract Rectangle bounding_box();
 
     /**
-     * Transforms the relative (vector) coordinates of a specctra dsn shape to a eu.mihosoft.freerouting.geometry.planar.Shape.
+     * Transforms the relative (vector) coordinates of a specctra dsn shape to a geometry.planar.Shape.
      */
     public abstract eu.mihosoft.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform);
 

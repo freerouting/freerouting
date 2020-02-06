@@ -208,7 +208,7 @@ public class RouteState extends InteractiveState
     }
 
     /**
-     * Checks starting an eu.mihosoft.freerouting.interactive route at p_location.
+     * Checks starting an interactive route at p_location.
      * Returns the picked start item of the routing at p_location,
      * or null, if no such item was found.
      */

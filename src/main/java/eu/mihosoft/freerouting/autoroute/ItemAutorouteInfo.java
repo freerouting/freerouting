@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
- * Temporary data stored in eu.mihosoft.freerouting.board Items used in the eu.mihosoft.freerouting.autoroute algorithm
+ * Temporary data stored in board Items used in the autoroute algorithm
  *
  * @author  Alfons Wirtz
  */
@@ -42,7 +42,7 @@ public class ItemAutorouteInfo
         this.item = p_item;
     }
     /**
-     * Looks, if the corresponding item belongs to the start or destination set of the eu.mihosoft.freerouting.autoroute algorithm.
+     * Looks, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
      * Only used, if the item belongs to the net, which will be currently routed.
      */
     public boolean is_start_info()
@@ -51,7 +51,7 @@ public class ItemAutorouteInfo
     }
     
     /**
-     * Sets, if the corresponding item belongs to the start or destination set of the eu.mihosoft.freerouting.autoroute algorithm.
+     * Sets, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
      * Only used, if the item belongs to the net, which will be currently routed.
      */
     public void set_start_info(boolean p_value)

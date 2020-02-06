@@ -102,7 +102,7 @@ public class Padstack implements Comparable<Padstack>, eu.mihosoft.freerouting.b
         return result;
     }
     
-    /** Returns the layer ciount of the eu.mihosoft.freerouting.board of this padstack. */
+    /** Returns the layer ciount of the board of this padstack. */
     public int board_layer_count()
     {
         return shapes.length;

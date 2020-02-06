@@ -27,7 +27,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Class for transforming objects between user coordinate space and eu.mihosoft.freerouting.board coordinate space.
+ * Class for transforming objects between user coordinate space and board coordinate space.
  *
  * @author Alfons Wirtz
  */
@@ -46,7 +46,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Scale a value from the eu.mihosoft.freerouting.board to the user coordinate system.
+     * Scale a value from the board to the user coordinate system.
      */
     public double board_to_user(double p_value)
     {
@@ -54,7 +54,7 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Scale a value from the user to the eu.mihosoft.freerouting.board coordinate system.
+     * Scale a value from the user to the board coordinate system.
      */
     public double user_to_board(double p_value)
     {
@@ -63,7 +63,7 @@ public class CoordinateTransform implements java.io.Serializable
     
     
     /**
-     * Transforms a eu.mihosoft.freerouting.geometry.planar.FloatPoint from the eu.mihosoft.freerouting.board coordinate space
+     * Transforms a geometry.planar.FloatPoint from the board coordinate space
      * to the user coordinate space.
      */
     public FloatPoint board_to_user(FloatPoint p_point)
@@ -72,8 +72,8 @@ public class CoordinateTransform implements java.io.Serializable
     }
     
     /**
-     * Transforms a eu.mihosoft.freerouting.geometry.planar.FloatPoint from the user coordinate space.
-     * to the eu.mihosoft.freerouting.board coordinate space.
+     * Transforms a geometry.planar.FloatPoint from the user coordinate space.
+     * to the board coordinate space.
      */
     public FloatPoint user_to_board(FloatPoint p_point)
     {
@@ -133,13 +133,13 @@ public class CoordinateTransform implements java.io.Serializable
     /** The factor of the user unit */
     public final double user_unit_factor;
     
-    /** The unit used for eu.mihosoft.freerouting.board coordinates */
+    /** The unit used for board coordinates */
     public final Unit board_unit;
     
-    /** The factor of the eu.mihosoft.freerouting.board unit */
+    /** The factor of the board unit */
     public final double board_unit_factor;
     
-    /** The factor used for transforming coordinates between user coordinate space and eu.mihosoft.freerouting.board coordinate space */
+    /** The factor used for transforming coordinates between user coordinate space and board coordinate space */
     private final double scale_factor;
     
 }

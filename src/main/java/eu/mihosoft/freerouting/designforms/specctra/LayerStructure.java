@@ -45,7 +45,7 @@ public class LayerStructure
     }
 
     /**
-     * Creates a dsn-LayerStructure from a eu.mihosoft.freerouting.board LayerStructure.
+     * Creates a dsn-LayerStructure from a board LayerStructure.
      */
     public LayerStructure(eu.mihosoft.freerouting.board.LayerStructure p_board_layer_structure)
     {

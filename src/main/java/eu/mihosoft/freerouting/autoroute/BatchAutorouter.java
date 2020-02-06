@@ -36,7 +36,7 @@ import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Handles the sequencing of the batch eu.mihosoft.freerouting.autoroute passes.
+ * Handles the sequencing of the batch autoroute passes.
  * 
  * @author  Alfons Wirtz
  */
@@ -45,10 +45,10 @@ public class BatchAutorouter
     private HashSet<String> already_checked_board_hashes = new HashSet<String>();
 
     /**
-     *  Autoroutes ripup passes until the eu.mihosoft.freerouting.board is completed or the autorouter is stopped by the user,
+     *  Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user,
      *  or if p_max_pass_count is exceeded. Is currently used in the optimize via batch pass.
-     *  Returns the number of oasses to complete the eu.mihosoft.freerouting.board or p_max_pass_count + 1,
-     *  if the eu.mihosoft.freerouting.board is not completed.
+     *  Returns the number of oasses to complete the board or p_max_pass_count + 1,
+     *  if the board is not completed.
      */
     public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread,
             int p_max_pass_count, int p_ripup_costs, boolean p_with_prefered_directions)
@@ -109,8 +109,8 @@ public class BatchAutorouter
     private LinkedList<Integer> diffBetweenBoards = new LinkedList<Integer>();
 
     /**
-     *  Autoroutes ripup passes until the eu.mihosoft.freerouting.board is completed or the autorouter is stopped by the user.
-     *  Returns true if the eu.mihosoft.freerouting.board is completed.
+     *  Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user.
+     *  Returns true if the board is completed.
      */
     public boolean autoroute_passes()
     {
@@ -185,8 +185,8 @@ public class BatchAutorouter
     }
 
     /**
-     * Autoroutes one ripup pass of all items of the eu.mihosoft.freerouting.board.
-     * Returns false, if the eu.mihosoft.freerouting.board is already completely routed.
+     * Autoroutes one ripup pass of all items of the board.
+     * Returns false, if the board is already completely routed.
      */
     private boolean autoroute_pass(int p_pass_no, boolean p_with_screen_message)
     {

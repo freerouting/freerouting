@@ -581,7 +581,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
                                 if (found_trace_split)
                                 {
                                     // reread the overlapping tree entries and reset the iterator,
-                                    // because the eu.mihosoft.freerouting.board has changed
+                                    // because the board has changed
                                     default_tree.overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
                                     it = overlapping_tree_entries.iterator();
                                     break;

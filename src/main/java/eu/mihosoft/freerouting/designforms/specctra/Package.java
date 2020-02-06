@@ -481,7 +481,7 @@ public class Package
     public final Collection<Shape.ReadAreaScopeResult> via_keepouts;
     /** Collection of place keepoouts belonging to this package */
     public final Collection<Shape.ReadAreaScopeResult> place_keepouts;
-    /** If false, the package is placed on the back side of the eu.mihosoft.freerouting.board */
+    /** If false, the package is placed on the back side of the board */
     public final boolean is_front;
     
     

@@ -44,7 +44,7 @@ public abstract class ActivityReplayFileScope
     public static final ActivityReplayFileScope REDO = new RedoScope("redo");
     public static final ActivityReplayFileScope GENERATE_SNAPSHOT = new GenerateSnapshotScope("generate_snapshot");
     
-    // Scopes for logging changes in the eu.mihosoft.freerouting.interactive setting:
+    // Scopes for logging changes in the interactive setting:
     public static final ActivityReplayFileScope SET_CLEARANCE_COMPENSATION = new SetClearanceCompensationScope("set_clearance_compensation");
     public static final ActivityReplayFileScope SET_DRAG_COMPONENTS_ENABLED = new SetDragComponentsEnabledScope("set_drag_componente_enabled");
     public static final ActivityReplayFileScope SET_LAYER = new SetLayerScope("set_layer");
@@ -82,7 +82,7 @@ public abstract class ActivityReplayFileScope
     public static final ActivityReplayFileScope AUTOROUTE_SELECTED = new AutorouteSelectedScope("autoroute_selected");
     public static final ActivityReplayFileScope FANOUT_SELECTED = new FanoutSelectedScope("fanout_selected");
     
-    // scopes for logging eu.mihosoft.freerouting.interactive creating or moving items.
+    // scopes for logging interactive creating or moving items.
     public static final ActivityReplayFileScope COMPLETE_SCOPE = new CompleteScope("complete_scope");
     public static final ActivityReplayFileScope CANCEL_SCOPE = new CancelScope("cancel_scope");
     public static final ActivityReplayFileScope CREATING_TILE = new CreateTileScope("creating_tile");
@@ -130,7 +130,7 @@ public abstract class ActivityReplayFileScope
     
     /**
      * Reads the scope from the input logfile.
-     * Returns the active eu.mihosoft.freerouting.interactive state after reading the scope.
+     * Returns the active interactive state after reading the scope.
      */
     public abstract InteractiveState read_scope(ActivityReplayFile p_activityReplayFile,
                                                 InteractiveState p_return_state, BoardHandling p_board_handling);
@@ -177,9 +177,9 @@ public abstract class ActivityReplayFileScope
         }
         
         /**
-         * Reads the next corner list scope togethet with its
-         * interiour scopes (layer change for example) from the input logfile.
-         * Returns the active eu.mihosoft.freerouting.interactive state after reading the scope.
+         * Reads the next corner list scope together with its
+         * interior scopes (layer change for example) from the input logfile.
+         * Returns the active interactive state after reading the scope.
          */
         public InteractiveState  read_scope(ActivityReplayFile p_activityReplayFile,
                                             InteractiveState p_return_state, BoardHandling p_board_handling)

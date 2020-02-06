@@ -25,7 +25,7 @@ package eu.mihosoft.freerouting.boardgraphics;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Abstract class to store colors used for drawing the eu.mihosoft.freerouting.board.
+ * Abstract class to store colors used for drawing the board.
  *
  * @author Alfons Wirtz
  */

@@ -25,14 +25,14 @@ package eu.mihosoft.freerouting.gui;
 
 /**
  *
- * Window with a list for selecting sample eu.mihosoft.freerouting.board designs in the net.
+ * Window with a list for selecting sample board designs in the net.
  *
  * @author Alfons Wirtz
  */
 public class WindowNetSampleDesigns extends WindowNetSamples
 {
 
-    /** Creates a new instance of WindowNeetSampleDesigns */
+    /** Creates a new instance of WindowNetSampleDesigns */
     public WindowNetSampleDesigns(java.util.Locale p_locale)
     {
         super(p_locale, "sample_designs", "open_sample_design", 11);

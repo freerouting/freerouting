@@ -58,7 +58,7 @@ import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 /**
  *
- * Functionality for eu.mihosoft.freerouting.interactive routing.
+ * Functionality for interactive routing.
  *
  * @author Alfons Wirtz
  */
@@ -68,7 +68,7 @@ public class Route
     /**
      * Starts routing a connection.
      * p_pen_half_width_arr is provided because it may be different from
-     * the half width array in p_board.eu.mihosoft.freerouting.rules.
+     * the half width array in p_board.rules.
      */
     public Route(Point p_start_corner, int p_layer, int[] p_pen_half_width_arr, boolean[] p_layer_active_arr, int[] p_net_no_arr,
             int p_clearance_class, ViaRule p_via_rule, boolean p_push_enabled,
@@ -249,8 +249,8 @@ public class Route
     }
 
     /**
-     * Changing the layer in eu.mihosoft.freerouting.interactive route and inserting a via.
-     *  Returns false, if changing the layer was not possible.
+     * Changing the layer in interactive route and inserting a via.
+     * Returns false, if changing the layer was not possible.
      */
     public boolean change_layer(int p_to_layer)
     {
@@ -553,7 +553,7 @@ public class Route
                 // trace_length_add is != 0 only in stitching mode.
                 if (max_trace_length <= 0)
                 {
-                    // max_trace_length not provided. Create an ellipse containing the whole eu.mihosoft.freerouting.board.
+                    // max_trace_length not provided. Create an ellipse containing the whole board.
                     max_trace_length = 0.3 * eu.mihosoft.freerouting.geometry.planar.Limits.CRIT_INT;
                 }
                 double curr_max_trace_length = max_trace_length - (curr_net.get_trace_length() + trace_length_add);

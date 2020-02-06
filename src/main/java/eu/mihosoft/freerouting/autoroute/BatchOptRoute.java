@@ -37,7 +37,7 @@ import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * To optimize the vias and traces after the batch autorouter has completed the eu.mihosoft.freerouting.board.
+ * To optimize the vias and traces after the batch autorouter has completed the board.
  * 
  * @author  Alfons Wirtz
  */
@@ -45,7 +45,7 @@ public class BatchOptRoute
 {
 
     /**
-     *  To optimize the route on the eu.mihosoft.freerouting.board after the eu.mihosoft.freerouting.autoroute task is finished.
+     *  To optimize the route on the board after the autoroute task is finished.
      */
     public BatchOptRoute(InteractiveActionThread p_thread)
     {
@@ -55,7 +55,7 @@ public class BatchOptRoute
     }
 
     /**
-     * Optimize the route on the eu.mihosoft.freerouting.board.
+     * Optimize the route on the board.
      */
     public void optimize_board()
     {
@@ -76,7 +76,7 @@ public class BatchOptRoute
     }
 
     /**
-     * Pass to reduce the number of vias an to shorten the trace lengthon a completely routed eu.mihosoft.freerouting.board.
+     * Pass to reduce the number of vias an to shorten the trace length a completely routed board.
      * Returns true, if the route was improved.
      */
     private boolean opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
@@ -218,7 +218,7 @@ public class BatchOptRoute
 
     /**
      *  Calculates the cumulative trace lengths multiplied by the trace radius of all traces
-     *  on the eu.mihosoft.freerouting.board, which are not shove_fixed.
+     *  on the board, which are not shove_fixed.
      */
     private static double calc_weighted_trace_length(RoutingBoard p_board)
     {
@@ -271,9 +271,9 @@ public class BatchOptRoute
     private static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
 
     /**
-     *  Reads the vias and traces on the eu.mihosoft.freerouting.board in ascending x order.
-     *  Because the vias and traces on the eu.mihosoft.freerouting.board change while optimizing the item list
-     *  of the eu.mihosoft.freerouting.board is read from scratch each time the next route item is returned.
+     *  Reads the vias and traces on the board in ascending x order.
+     *  Because the vias and traces on the board change while optimizing the item list
+     *  of the board is read from scratch each time the next route item is returned.
      */
     private class ReadSortedRouteItems
     {

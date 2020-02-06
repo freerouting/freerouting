@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.board;
 
 /**
- * Sorted fixed states of eu.mihosoft.freerouting.board items. The strongest fixed states came last.
+ * Sorted fixed states of board items. The strongest fixed states came last.
  *
  * @author alfons
  */

@@ -318,7 +318,7 @@ public class Validate
     }
     
     /**
-     * checks, if there are unconnectedtraces ore vias on the eu.mihosoft.freerouting.board
+     * checks, if there are unconnected traces ore vias on the board
      */
     static public boolean unconnnected_routing_items(String p_s, BasicBoard p_board)
     {

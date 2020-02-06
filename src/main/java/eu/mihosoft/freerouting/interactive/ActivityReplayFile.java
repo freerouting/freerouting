@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *  ActivityReplayFile to track the actions in the eu.mihosoft.freerouting.interactive eu.mihosoft.freerouting.board handling
+ *  ActivityReplayFile to track the actions in the interactive board handling
  *  for automatic replay.
  *
  * @author Alfons Wirtz

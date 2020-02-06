@@ -27,7 +27,7 @@ import eu.mihosoft.freerouting.geometry.planar.Area;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 
 /**
- * Describes Areas on the eu.mihosoft.freerouting.board, where vias are not allowed.
+ * Describes Areas on the board, where vias are not allowed.
  *
  * @author  alfons
  */

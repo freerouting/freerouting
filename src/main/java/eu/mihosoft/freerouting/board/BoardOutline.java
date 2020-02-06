@@ -35,7 +35,7 @@ import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Class describing a eu.mihosoft.freerouting.board outline.
+ * Class describing a board outline.
  *
  * @author  alfons
  */
@@ -221,7 +221,7 @@ public class BoardOutline extends Item implements java.io.Serializable
     }
 
     /**
-     * The eu.mihosoft.freerouting.board shape outside the outline curves, where a keepout will be generated
+     * The board shape outside the outline curves, where a keepout will be generated
      * The outline curves are holes of the keepout_area.
      */
     Area get_keepout_area()
@@ -290,7 +290,7 @@ public class BoardOutline extends Item implements java.io.Serializable
     }
 
     /**
-     *  Returns, if keepout is generated outside the eu.mihosoft.freerouting.board outline.
+     *  Returns, if keepout is generated outside the board outline.
      *  Otherwise only the line shapes of the outlines  are inserted as keepout.
      */
     public boolean keepout_outside_outline_generated()
@@ -343,10 +343,10 @@ public class BoardOutline extends Item implements java.io.Serializable
     {
         return p_search_tree.calculate_tree_shapes(this);
     }
-    /** The eu.mihosoft.freerouting.board shapes inside the outline curves. */
+    /** The board shapes inside the outline curves. */
     private PolylineShape[] shapes;
     /**
-     * The eu.mihosoft.freerouting.board shape outside the outline curves, where a keepout will be generated
+     * The board shape outside the outline curves, where a keepout will be generated
      * The outline curves are holes of the keepout_area.
      */
     private Area keepout_area = null;

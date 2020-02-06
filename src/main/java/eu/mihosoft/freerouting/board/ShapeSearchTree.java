@@ -54,7 +54,7 @@ import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 /**
  *
  * Elementary geometric search functions making direct use
- * of the MinAreaTree in the package eu.mihosoft.freerouting.datastructures.
+ * of the MinAreaTree in the package datastructures.
  *
  *
  * @author Alfons Wirtz

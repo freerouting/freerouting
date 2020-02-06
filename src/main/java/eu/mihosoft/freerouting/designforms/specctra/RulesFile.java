@@ -30,7 +30,7 @@ import  eu.mihosoft.freerouting.board.BasicBoard;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * File for saving the eu.mihosoft.freerouting.board rules, so that they can be restored after the Board
+ * File for saving the board rules, so that they can be restored after the Board
  * is creates anew  from the host system.
  *
  * @author Alfons Wirtz

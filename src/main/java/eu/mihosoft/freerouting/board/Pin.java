@@ -40,7 +40,7 @@ import eu.mihosoft.freerouting.library.Padstack;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Class describing the functionality of an electrical Item on the eu.mihosoft.freerouting.board
+ * Class describing the functionality of an electrical Item on the board
  * with a shape on 1 or several layers.
  *
  * @author  Alfons Wirtz
@@ -171,7 +171,7 @@ public class Pin extends DrillItem implements java.io.Serializable
     }
     
     /**
-     * Gets index of this pin in the eu.mihosoft.freerouting.library package of the pins component.
+     * Gets index of this pin in the library package of the pins component.
      */
     public int get_index_in_package()
     {
@@ -585,7 +585,7 @@ public class Pin extends DrillItem implements java.io.Serializable
     }
     
     
-    /** False, if this drillitem is places on the back side of the eu.mihosoft.freerouting.board */
+    /** False, if this drillitem is places on the back side of the board */
     public boolean is_placed_on_front()
     {
         boolean result = true;

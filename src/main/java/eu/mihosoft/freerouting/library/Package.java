@@ -149,7 +149,7 @@ public class Package implements Comparable<Package>, eu.mihosoft.freerouting.boa
     
     public final Keepout[] place_keepout_arr;
     
-    /** If false, the package is placed on the back side of the eu.mihosoft.freerouting.board */
+    /** If false, the package is placed on the back side of the board */
     public final boolean is_front;
     
     private final Packages package_list;

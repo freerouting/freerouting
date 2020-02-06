@@ -28,7 +28,7 @@ import eu.mihosoft.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Contains the eu.mihosoft.freerouting.interactive settings for the autorouter.
+ * Contains the interactive settings for the autorouter.
  *
  * @author Alfons Wirtz
  */
@@ -65,12 +65,12 @@ public class AutorouteSettings implements java.io.Serializable
 
         int layer_count = p_board.get_layer_count();
 
-        // additional costs aagainst  preferred direcction with 1 digit behind the decimal point.
+        // additional costs against  preferred direction with 1 digit behind the decimal point.
         double horizontal_add_costs_against_preferred_dir = 0.1 * Math.round(10 * horizontal_width / vertical_width);
 
         double vertical_add_costs_against_preferred_dir = 0.1 * Math.round(10 * vertical_width / horizontal_width);
 
-        // make more horizontal pefered direction, if the eu.mihosoft.freerouting.board is horizontal.
+        // make more horizontal preferred direction, if the board is horizontal.
 
         boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
         for (int i = 0; i < layer_count; ++i)

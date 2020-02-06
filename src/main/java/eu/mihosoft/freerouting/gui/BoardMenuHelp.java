@@ -104,7 +104,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
             }
             if (BoardFrame.help_broker != null)
             {
-                // CSH.DisplayHelpFromSource is a convenience class to display the eu.mihosoft.freerouting.helpset
+                // CSH.DisplayHelpFromSource is a convenience class to display the helpset
                 contents_help = new CSH.DisplayHelpFromSource(BoardFrame.help_broker);
                 direct_help = new CSH.DisplayHelpAfterTracking(BoardFrame.help_broker);
             }

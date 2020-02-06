@@ -30,7 +30,7 @@ package eu.mihosoft.freerouting.gui;
  */
 public class BoardMenuOther extends javax.swing.JMenu
 {
-    /** Returns a new other menu for the eu.mihosoft.freerouting.board frame. */
+    /** Returns a new other menu for the board frame. */
     public static BoardMenuOther get_instance(BoardFrame p_board_frame)
     {
         final BoardMenuOther other_menu = new BoardMenuOther(p_board_frame);

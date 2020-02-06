@@ -48,7 +48,7 @@ import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 
 
 /**
- * Window for changing the colors of eu.mihosoft.freerouting.board objects.
+ * Window for changing the colors of board objects.
  *
  * @author  Alfons Wirtz
  */

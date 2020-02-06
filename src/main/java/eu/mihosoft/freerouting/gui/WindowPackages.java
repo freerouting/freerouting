@@ -27,7 +27,7 @@ import eu.mihosoft.freerouting.library.Packages;
 import eu.mihosoft.freerouting.library.Package;
 
 /**
- * Window displaying the eu.mihosoft.freerouting.library packagess.
+ * Window displaying the library packagess.
  *
  * @author Alfons Wirtz
  */
@@ -45,7 +45,7 @@ public class WindowPackages extends WindowObjectListWithFilter
     }
     
     /**
-     * Fills the list with the eu.mihosoft.freerouting.library packages.
+     * Fills the list with the library packages.
      */
     protected void fill_list()
     {

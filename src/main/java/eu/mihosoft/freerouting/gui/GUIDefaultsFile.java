@@ -29,14 +29,14 @@ import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Description of a text file,  where the eu.mihosoft.freerouting.board independent eu.mihosoft.freerouting.interactive settings are stored.
+ * Description of a text file,  where the board independent interactive settings are stored.
  *
  * @author Alfons Wirtz
  */
 public class GUIDefaultsFile
 {
     /**
-     * Keywords in the eu.mihosoft.freerouting.gui defaults file.
+     * Keywords in the gui defaults file.
      */
     enum Keyword
     {

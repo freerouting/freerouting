@@ -27,7 +27,7 @@ package eu.mihosoft.freerouting.interactive;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
- * State for eu.mihosoft.freerouting.interactive routing by adding corners with the left mouse button.
+ * State for interactive routing by adding corners with the left mouse button.
  *
  * @author  Alfons Wirtz
  */

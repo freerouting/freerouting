@@ -47,7 +47,7 @@ import java.awt.geom.AffineTransform;
 
 
 /**
- * Context for drawing items in the eu.mihosoft.freerouting.board package to the screen.
+ * Context for drawing items in the board package to the screen.
  *
  * @author Alfons Wirtz
  */
@@ -89,7 +89,7 @@ public class GraphicsContext implements java.io.Serializable
     }
     
     /**
-     *  Changes  the bounds of the eu.mihosoft.freerouting.board design to p_design_bounds.
+     *  Changes  the bounds of the board design to p_design_bounds.
      *  Useful when components are still placed outside the boaed.
      */
     public void change_design_bounds(IntBox p_new_design_bounds)
@@ -413,7 +413,7 @@ public class GraphicsContext implements java.io.Serializable
     }
     
     /**
-     * draws the interiour of an item of class eu.mihosoft.freerouting.geometry.planar.Area
+     * draws the interior of an item of class geometry.planar.Area
      */
     public void fill_area(Area p_area, Graphics p_g, Color p_color, double p_translucency_factor)
     {
@@ -748,7 +748,7 @@ public class GraphicsContext implements java.io.Serializable
         return result;
     }
     
-    /** Returns the number of layers on the eu.mihosoft.freerouting.board */
+    /** Returns the number of layers on the board */
     public int layer_count()
     {
         return layer_visibility_arr.length;

@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Interactive Frame to adjust the visibility of the individual eu.mihosoft.freerouting.board layers
+ * Interactive Frame to adjust the visibility of the individual board layers
  *
  * @author  alfons
  */

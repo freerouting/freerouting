@@ -46,7 +46,7 @@ public class BoardTemporarySubWindow extends BoardSubWindow
         });
     }
     
-    /** Used,  when the eu.mihosoft.freerouting.board frame with all the subwindows is disposed. */
+    /** Used,  when the board frame with all the subwindows is disposed. */
     public void board_frame_disposed()
     {
         super.dispose();

@@ -45,7 +45,7 @@ import eu.mihosoft.freerouting.datastructures.ShapeTree;
 import eu.mihosoft.freerouting.datastructures.ShapeTree.TreeEntry;
 
 /**
- * Basic class of the items on a eu.mihosoft.freerouting.board.
+ * Basic class of the items on a board.
  *
  * @author Alfons Wirtz
  */
@@ -199,7 +199,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
 
     /**
      * Returns false, if this item is deleted oor not inserted into
-     * the eu.mihosoft.freerouting.board.
+     * the board.
      */
     public boolean is_on_the_board()
     {
@@ -244,25 +244,25 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
 
     /**
      * Translates the shapes of this item by p_vector.
-     * Does not move the item in the eu.mihosoft.freerouting.board.
+     * Does not move the item in the board.
      */
     public abstract void translate_by(Vector p_vector);
 
     /**
      * Turns this Item by p_factor times 90 degree around p_pole.
-     * Does not update the item in the eu.mihosoft.freerouting.board.
+     * Does not update the item in the board.
      */
     public abstract void turn_90_degree(int p_factor, IntPoint p_pole);
 
     /**
      * Rotates this Item by p_angle_in_degree around p_pole.
-     * Does not update the item in the eu.mihosoft.freerouting.board.
+     * Does not update the item in the board.
      */
     public abstract void rotate_approx(double p_angle_in_degree, FloatPoint p_pole);
 
     /**
      * Changes the placement side of this Item and mirrors it at the vertical line through p_pole.
-     * Does not update the item in the eu.mihosoft.freerouting.board.
+     * Does not update the item in the board.
      */
     public abstract void change_placement_side(IntPoint p_pole);
 
@@ -272,7 +272,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     public abstract IntBox bounding_box();
 
     /**
-     *  Translates this item by p_vector in the eu.mihosoft.freerouting.board.
+     *  Translates this item by p_vector in the board.
      */
     public void move_by(Vector p_vector)
     {
@@ -1213,7 +1213,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * Gets the information for the eu.mihosoft.freerouting.autoroute algorithm.
+     * Gets the information for the autoroute algorithm.
      * Creates it, if it does not yet exist.
      */
     public eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info()
@@ -1226,7 +1226,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * Gets the information for the eu.mihosoft.freerouting.autoroute algorithm.
+     * Gets the information for the autoroute algorithm.
      */
     public eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info_pur()
     {
@@ -1234,7 +1234,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * Clears the data allocated for the eu.mihosoft.freerouting.autoroute algorithm.
+     * Clears the data allocated for the autoroute algorithm.
      */
     public void clear_autoroute_info()
     {
@@ -1454,7 +1454,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
      * to other items
      */
     private int clearance_class;
-    /** The eu.mihosoft.freerouting.board this Item is on */
+    /** The board this Item is on */
     transient public BasicBoard board;
     /** The nets, to which this item belongs */
     int[] net_no_arr;
@@ -1465,10 +1465,10 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     private int component_no = 0;
     private final int id_no;
     /**
-     * Folse, if the item is deleted or not inserted into the eu.mihosoft.freerouting.board
+     * False, if the item is deleted or not inserted into the board
      */
     private boolean on_the_board = false;
-    /** Temporary data used in the eu.mihosoft.freerouting.autoroute algorithm. */
+    /** Temporary data used in the autoroute algorithm. */
     transient private eu.mihosoft.freerouting.autoroute.ItemAutorouteInfo autoroute_info = null;
     private static double PROTECT_FANOUT_LENGTH = 400;
 

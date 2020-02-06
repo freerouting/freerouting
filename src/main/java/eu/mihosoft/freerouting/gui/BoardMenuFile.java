@@ -25,14 +25,14 @@ package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Creates the file menu of a eu.mihosoft.freerouting.board frame.
+ * Creates the file menu of a board frame.
  *
  * @author Alfons Wirtz
  */
 public class BoardMenuFile extends javax.swing.JMenu
 {
 
-    /** Returns a new file menu for the eu.mihosoft.freerouting.board frame. */
+    /** Returns a new file menu for the board frame. */
     public static BoardMenuFile get_instance(BoardFrame p_board_frame, boolean p_session_file_option)
     {
         final BoardMenuFile file_menu = new BoardMenuFile(p_board_frame, p_session_file_option);
@@ -198,7 +198,7 @@ public class BoardMenuFile extends javax.swing.JMenu
     }
 
     /**
-     * Adds a menu item for saving the current eu.mihosoft.freerouting.interactive settings as default.
+     * Adds a menu item for saving the current interactive settings as default.
      */
     private void add_save_settings_item()
     {

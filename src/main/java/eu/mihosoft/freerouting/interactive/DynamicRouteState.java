@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.interactive;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
- * State for dynamic eu.mihosoft.freerouting.interactive routing, which is routing while moving the mouse pointer.
+ * State for dynamic interactive routing, which is routing while moving the mouse pointer.
  *
  * @author  Alfons Wirtz
  */

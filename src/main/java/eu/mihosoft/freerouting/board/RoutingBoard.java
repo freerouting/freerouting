@@ -51,7 +51,7 @@ import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 
 /**
  *
- * Contains higher level functions of a eu.mihosoft.freerouting.board
+ * Contains higher level functions of a board
  *
  * @author Alfons Wirtz
  */
@@ -187,7 +187,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * marks the whole eu.mihosoft.freerouting.board as changed
+     * marks the whole board as changed
      */
     public void mark_all_changed_area()
     {
@@ -906,8 +906,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Initialises the eu.mihosoft.freerouting.autoroute database for routing a connection.
-     * If p_retain_autoroute_database, the eu.mihosoft.freerouting.autoroute database is retained and maintained after
+     * Initialises the autoroute database for routing a connection.
+     * If p_retain_autoroute_database, the autoroute database is retained and maintained after
      * the algorithm for performance reasons.
      */
     public AutorouteEngine init_autoroute(int p_net_no, int p_trace_clearance_class_no,
@@ -922,7 +922,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Clears the eu.mihosoft.freerouting.autoroute database in case it was retained.
+     * Clears the autoroute database in case it was retained.
      */
     public void finish_autoroute()
     {
@@ -1204,7 +1204,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Sets, if all conduction areas on the eu.mihosoft.freerouting.board are obstacles for route of foreign nets.
+     * Sets, if all conduction areas on the board are obstacles for route of foreign nets.
      */
     public void change_conduction_is_obstacle(boolean p_value)
     {
@@ -1213,7 +1213,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
             return; // no muultiply
         }
         boolean something_changed = false;
-        // Change the is_obstacle property of all conduction areas of the eu.mihosoft.freerouting.board.
+        // Change the is_obstacle property of all conduction areas of the board.
         Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
         for (;;)
         {
@@ -1371,8 +1371,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Sets, if the eu.mihosoft.freerouting.autoroute database has to be maintained outside the outoroute algorithm
-     * while changing items on rhe eu.mihosoft.freerouting.board.
+     * Sets, if the autoroute database has to be maintained outside the outoroute algorithm
+     * while changing items on rhe board.
      */
     void set_maintaining_autoroute_database(boolean p_value)
     {
@@ -1387,8 +1387,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
     }
 
     /**
-     * Returns, if the eu.mihosoft.freerouting.autoroute database is maintained outside the outoroute algorithm
-     * while changing items on rhe eu.mihosoft.freerouting.board.
+     * Returns, if the autoroute database is maintained outside the outoroute algorithm
+     * while changing items on rhe board.
      */
     boolean is_maintaining_autoroute_database()
     {

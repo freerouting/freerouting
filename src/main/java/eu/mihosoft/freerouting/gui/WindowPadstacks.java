@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.library.Padstack;
 import eu.mihosoft.freerouting.library.Padstacks;
 
 /**
- * Window displaying the eu.mihosoft.freerouting.library padstacks.
+ * Window displaying the library padstacks.
  *
  * @author Alfons Wirtz
  */
@@ -47,7 +47,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
     }
     
     /**
-     * Fills the list with the eu.mihosoft.freerouting.library padstacks.
+     * Fills the list with the library padstacks.
      */
     protected void fill_list()
     {
