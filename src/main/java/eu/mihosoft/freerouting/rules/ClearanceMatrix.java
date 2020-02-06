@@ -19,6 +19,8 @@
 
 package eu.mihosoft.freerouting.rules;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  *
  * NxN Matrix describing the spacing restrictions
@@ -84,7 +86,7 @@ public class ClearanceMatrix implements java.io.Serializable
     {
         if (p_cl_class < 0 || p_cl_class >= row.length)
         {
-            System.out.println("CleatranceMatrix.get_name: p_cl_class out of range");
+            FRLogger.warn("CleatranceMatrix.get_name: p_cl_class out of range");
             return null;
         }
         return row[p_cl_class].name;
@@ -236,7 +238,7 @@ public class ClearanceMatrix implements java.io.Serializable
     {
         if (p_no < 0 || p_no >= this.row.length)
         {
-            System.out.println("ClearanceMatrix.get_row: p_no out of range");
+            FRLogger.warn("ClearanceMatrix.get_row: p_no out of range");
             return null;
         }
         return this.row[p_no];

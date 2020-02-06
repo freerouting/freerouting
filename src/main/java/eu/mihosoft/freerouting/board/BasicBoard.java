@@ -105,7 +105,7 @@ public class BasicBoard implements java.io.Serializable
             return output_stream.toByteArray();
         }
         catch (Exception e) {
-            FRLogger.logger.error(e);
+            FRLogger.error("Couldn't serialize board", e);
         }
 
         return null;
@@ -121,7 +121,7 @@ public class BasicBoard implements java.io.Serializable
             return (BasicBoard)object_stream.readObject();
         }
         catch (Exception e) {
-            FRLogger.logger.error(e);
+            FRLogger.error("Couldn't deserialize board", e);
         }
 
         return null;
@@ -143,7 +143,7 @@ public class BasicBoard implements java.io.Serializable
             return convert_byte_array_to_hex_string(hashedBytes);
         }
         catch (Exception e) {
-            FRLogger.logger.error(e);
+            FRLogger.error("Couldn't calculate hash for board", e);
         }
 
         return null;
@@ -250,7 +250,7 @@ public class BasicBoard implements java.io.Serializable
         {
             if (!this.bounding_box.contains(p_points[i]))
             {
-                System.out.println("LayeredBoard.insert_trace: input point out of range");
+                FRLogger.warn("LayeredBoard.insert_trace: input point out of range");
             }
         }
         Polyline poly = new Polyline(p_points);
@@ -299,7 +299,7 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_obstacle: p_area is null");
+            FRLogger.warn("BasicBoard.insert_obstacle: p_area is null");
             return null;
         }
         ObstacleArea obs = new ObstacleArea(p_area, p_layer, Vector.ZERO, 0, false, p_clearance_class, 0, 0, null, p_fixed_state, this);
@@ -316,7 +316,7 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_obstacle: p_area is null");
+            FRLogger.warn("BasicBoard.insert_obstacle: p_area is null");
             return null;
         }
         ObstacleArea obs = new ObstacleArea(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed,
@@ -334,7 +334,7 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_via_obstacle: p_area is null");
+            FRLogger.warn("BasicBoard.insert_via_obstacle: p_area is null");
             return null;
         }
         ViaObstacleArea obs = new ViaObstacleArea(p_area, p_layer, Vector.ZERO, 0, false,
@@ -353,7 +353,7 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_via_obstacle: p_area is null");
+            FRLogger.warn("BasicBoard.insert_via_obstacle: p_area is null");
             return null;
         }
         ViaObstacleArea obs = new ViaObstacleArea(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed,
@@ -371,7 +371,7 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_component_obstacle: p_area is null");
+            FRLogger.warn("BasicBoard.insert_component_obstacle: p_area is null");
             return null;
         }
         ComponentObstacleArea obs = new ComponentObstacleArea(p_area, p_layer, Vector.ZERO, 0, false,
@@ -389,7 +389,7 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_component_obstacle: p_area is null");
+            FRLogger.warn("BasicBoard.insert_component_obstacle: p_area is null");
             return null;
         }
         ComponentObstacleArea obs = new ComponentObstacleArea(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed,
@@ -406,12 +406,12 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_component_outline: p_area is null");
+            FRLogger.warn("BasicBoard.insert_component_outline: p_area is null");
             return null;
         }
         if (!p_area.is_bounded())
         {
-            System.out.println("BasicBoard.insert_component_outline: p_area is not bounded");
+            FRLogger.warn("BasicBoard.insert_component_outline: p_area is not bounded");
             return null;
         }
         ComponentOutline outline = new ComponentOutline(p_area, p_is_front, p_translation, p_rotation_in_degree,
@@ -431,7 +431,7 @@ public class BasicBoard implements java.io.Serializable
     {
         if (p_area == null)
         {
-            System.out.println("BasicBoard.insert_conduction_area: p_area is null");
+            FRLogger.warn("BasicBoard.insert_conduction_area: p_area is null");
             return null;
         }
         ConductionArea c = new ConductionArea(p_area, p_layer, Vector.ZERO, 0, false, p_net_no_arr, p_clearance_class,
@@ -1365,7 +1365,7 @@ public class BasicBoard implements java.io.Serializable
         if (rules == null || rules.clearance_matrix == null || p_item.clearance_class_no() < 0 ||
                 p_item.clearance_class_no() >= rules.clearance_matrix.get_class_count())
         {
-            System.out.println("LayeredBoard.insert_item: clearance_class no out of range");
+            FRLogger.warn("LayeredBoard.insert_item: clearance_class no out of range");
             p_item.set_clearance_class_no(0);
         }
         p_item.board = this;
@@ -1482,7 +1482,7 @@ public class BasicBoard implements java.io.Serializable
      */
     public void generate_snapshot()
     {
-        FRLogger.logger.info("Generating snapshot");
+        FRLogger.info("Generating snapshot");
 
         item_list.generate_snapshot();
         components.generate_snapshot();

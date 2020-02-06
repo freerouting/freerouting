@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -252,8 +254,8 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
     {
         if (this.is_empty())
         {
-             System.out.println("PolylineShape.polar_line_segment: shape is empty");
-             return null;
+            FRLogger.warn("PolylineShape.polar_line_segment: shape is empty");
+            return null;
         }
         FloatPoint left_most_corner = corner_approx(0);
         FloatPoint right_most_corner = corner_approx(0);

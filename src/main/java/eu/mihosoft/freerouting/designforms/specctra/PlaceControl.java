@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.designforms.specctra;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Class for reading place_control scopes from dsn-files.
  *
@@ -51,12 +53,12 @@ public class PlaceControl extends ScopeKeyword
             }
             catch (java.io.IOException e)
             {
-                System.out.println("PlaceControl.read_scope: IO error scanning file");
+                FRLogger.error("PlaceControl.read_scope: IO error scanning file", e);
                 return false;
             }
             if (next_token == null)
             {
-                System.out.println("PlaceControl.read_scope: unexpected end of file");
+                FRLogger.warn("PlaceControl.read_scope: unexpected end of file");
                 return false;
             }
             if (next_token == CLOSED_BRACKET)
@@ -98,15 +100,15 @@ public class PlaceControl extends ScopeKeyword
             next_token = p_scanner.next_token();
             if (next_token != CLOSED_BRACKET)
             {
-                System.out.println("Structure.read_flip_style: closing bracket expected");
-                return  false;
+                FRLogger.warn("Structure.read_flip_style: closing bracket expected");
+                return false;
             }
             return result;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Structure.read_flip_style: IO error scanning file");
-            return  false;
+            FRLogger.error("Structure.read_flip_style: IO error scanning file", e);
+            return false;
         }
     }
     

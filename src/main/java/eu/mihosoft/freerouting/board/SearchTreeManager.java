@@ -33,6 +33,7 @@ import eu.mihosoft.freerouting.datastructures.ShapeTree;
 
 import eu.mihosoft.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import eu.mihosoft.freerouting.geometry.planar.Polyline;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -176,7 +177,7 @@ public class SearchTreeManager
         Iterator<ShapeSearchTree> it = this.compensated_search_trees.iterator();
         if (p_no == default_tree.compensated_clearance_class_no)
         {
-            System.out.println("SearchtreeManager.clearance_class_removed: unable to remove default tree");
+            FRLogger.warn("SearchtreeManager.clearance_class_removed: unable to remove default tree");
             return;
         }
         while(it.hasNext())
@@ -258,7 +259,7 @@ public class SearchTreeManager
     {
         if (this.board == null)
         {
-            System.out.println("SearchtreeManager.remove_all_board_items: eu.mihosoft.freerouting.board is null");
+            FRLogger.warn("SearchtreeManager.remove_all_board_items: eu.mihosoft.freerouting.board is null");
             return;
         }
         Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
@@ -277,7 +278,7 @@ public class SearchTreeManager
     {
         if (this.board == null)
         {
-            System.out.println("SearchtreeManager.insert_all_board_items: eu.mihosoft.freerouting.board is null");
+            FRLogger.warn("SearchtreeManager.insert_all_board_items: eu.mihosoft.freerouting.board is null");
             return;
         }
         Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();

@@ -25,6 +25,7 @@ package eu.mihosoft.freerouting.designforms.specctra;
 
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 import eu.mihosoft.freerouting.datastructures.IdentifierType;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
@@ -87,20 +88,20 @@ public class PolylinePath extends Path
     
     public eu.mihosoft.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
     {
-        System.out.println("PolylinePath.transform_to_board_rel not implemented");
+        FRLogger.warn("PolylinePath.transform_to_board_rel not implemented");
         return null;
     }
     
     public eu.mihosoft.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform)
     {
-        System.out.println("PolylinePath.transform_to_board_rel not implemented");
+        FRLogger.warn("PolylinePath.transform_to_board_rel not implemented");
         return null;
     }
     
     
     public Rectangle bounding_box()
     {
-        System.out.println("PolylinePath.boundingbox not implemented");
+        FRLogger.warn("PolylinePath.boundingbox not implemented");
         return null;
     }
 }

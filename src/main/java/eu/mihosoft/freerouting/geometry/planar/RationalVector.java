@@ -26,6 +26,7 @@ import java.math.BigInteger;
 
 import eu.mihosoft.freerouting.datastructures.BigIntAux;
 import eu.mihosoft.freerouting.datastructures.Signum;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -177,7 +178,7 @@ public class RationalVector extends Vector implements java.io.Serializable
     
     public Vector change_length_approx(double p_lenght)
     {
-        System.out.println("RationalVector: change_length_approx not yet implemented");
+        FRLogger.warn("RationalVector: change_length_approx not yet implemented");
         return this;
     }
     

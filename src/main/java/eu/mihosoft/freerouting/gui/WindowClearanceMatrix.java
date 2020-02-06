@@ -23,6 +23,7 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
@@ -231,7 +232,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
                         routing_board.rules.change_clearance_class_no(i, j, board_items);
                         if (!routing_board.rules.remove_clearance_class(i, board_items))
                         {
-                            System.out.println("WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");
+                            FRLogger.warn("WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");
                             return;
                         }
                         routing_board.search_tree_manager.clearance_class_removed(i);

@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Describes a eu.mihosoft.freerouting.library of padstacks for pins or vias.
@@ -76,13 +77,13 @@ public class Padstacks implements java.io.Serializable
         if (p_padstack_no <= 0 || p_padstack_no > padstack_arr.size())
         {
             Integer padstack_count = padstack_arr.size();
-            System.out.println("Padstacks.get: 1 <= p_padstack_no <= " + padstack_count.toString() + " expected");
+            FRLogger.warn("Padstacks.get: 1 <= p_padstack_no <= " + padstack_count.toString() + " expected");
             return null;
         }
         Padstack result = padstack_arr.elementAt(p_padstack_no - 1);
         if (result != null && result.no != p_padstack_no)
         {
-            System.out.println("Padstacks.get: inconsistent padstack number");
+            FRLogger.warn("Padstacks.get: inconsistent padstack number");
         }
         return result;
     }

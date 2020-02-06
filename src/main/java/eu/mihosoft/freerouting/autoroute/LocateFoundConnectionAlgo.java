@@ -37,6 +37,7 @@ import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.AngleRestriction;
 import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -88,7 +89,7 @@ public abstract class LocateFoundConnectionAlgo
         BacktrackElement start_info = this.backtrack_array[backtrack_array.length - 1];
         if (!(start_info.door instanceof TargetItemExpansionDoor))
         {
-            System.out.println("LocateFoundConnectionAlgo: ItemExpansionDoor expected for start_info.door");
+            FRLogger.warn("LocateFoundConnectionAlgo: ItemExpansionDoor expected for start_info.door");
             this.start_item = null;
             this.start_layer = 0;
             this.target_item = null;
@@ -120,7 +121,7 @@ public abstract class LocateFoundConnectionAlgo
         }
         else
         {
-            System.out.println("LocateFoundConnectionAlgo: unexpected type of destination_door");
+            FRLogger.warn("LocateFoundConnectionAlgo: unexpected type of destination_door");
             this.target_item = null;
             this.target_layer = 0;
             return;
@@ -348,7 +349,7 @@ public abstract class LocateFoundConnectionAlgo
             int curr_section_no = curr_maze_search_element.section_no_of_backtrack_door;
             if (curr_section_no >= curr_backtrack_door.maze_search_element_count())
             {
-                System.out.println("LocateFoundConnectionAlgo: curr_section_no to big");
+                FRLogger.warn("LocateFoundConnectionAlgo: curr_section_no to big");
                 curr_section_no = curr_backtrack_door.maze_search_element_count() - 1;
             }
             if (curr_backtrack_door instanceof ExpansionDrill)

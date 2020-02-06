@@ -24,6 +24,7 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.Net;
 import eu.mihosoft.freerouting.rules.NetClass;
 
@@ -200,7 +201,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
             Object first_row_object = getValueAt(p_row, 0);
             if (!(first_row_object instanceof Net))
             {
-                System.out.println("AssignNetRuLesVindow.setValueAt: Net expected");
+                FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
                 return;
             }
             Net curr_net = (Net) first_row_object;

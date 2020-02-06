@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Defines a line in the plane by to FloatPoints.
  * Calculations with FloatLines are generally not exact.
@@ -41,7 +43,7 @@ public class FloatLine
     {
         if (p_a == null || p_b == null)
         {
-            System.out.println("FloatLine: Parameter is null");
+            FRLogger.warn("FloatLine: Parameter is null");
         }
         a = p_a;
         b = p_b;

@@ -35,6 +35,7 @@ import eu.mihosoft.freerouting.datastructures.PlanarDelaunayTriangulation;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.geometry.planar.Point;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.Net;
 
 import eu.mihosoft.freerouting.board.Item;
@@ -243,7 +244,7 @@ public class NetIncompletes
                 Item curr_item = it.next();
                 if (curr_index >= result.length)
                 {
-                    System.out.println("NetIncompletes.calculate_net_items: to many items");
+                    FRLogger.warn("NetIncompletes.calculate_net_items: to many items");
                     return result;
                 }
                 result[curr_index] = new NetItem(curr_item, curr_connected_set);
@@ -252,7 +253,7 @@ public class NetIncompletes
         }
         if (curr_index < result.length)
         {
-            System.out.println("NetIncompletes.calculate_net_items: to few items");
+            FRLogger.warn("NetIncompletes.calculate_net_items: to few items");
         }
         return result;
     }

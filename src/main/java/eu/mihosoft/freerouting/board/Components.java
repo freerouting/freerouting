@@ -34,6 +34,7 @@ import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.IntPoint;
 
 import eu.mihosoft.freerouting.library.Package;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Contains the lists of components on the eu.mihosoft.freerouting.board.
@@ -100,7 +101,7 @@ public class Components implements java.io.Serializable
         Component result =  component_arr.elementAt(p_component_no - 1);
         if (result != null && result.no != p_component_no)
         {
-            System.out.println("Components.get: inconsistent component number");
+            FRLogger.warn("Components.get: inconsistent component number");
         }
         return result;
     }

@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.designforms.specctra;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -44,7 +46,7 @@ public class NetClass
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("NetClass.read_scope: String expected");
+                FRLogger.warn("NetClass.read_scope: String expected");
                 return null;
             }
             String class_name = (String) next_token;
@@ -66,7 +68,7 @@ public class NetClass
                 }
                 if (!(next_token instanceof String))
                 {
-                    System.out.println("NetClass.read_scope: String expected");
+                    FRLogger.warn("NetClass.read_scope: String expected");
                     return null;
                 }
                 net_list.add((String) next_token);
@@ -89,7 +91,7 @@ public class NetClass
                     next_token = p_scanner.next_token();
                     if (next_token == null)
                     {
-                        System.out.println("NetClass.read_scope: unexpected end of file");
+                        FRLogger.warn("NetClass.read_scope: unexpected end of file");
                         return null;
                     }
                     if (next_token == Keyword.CLOSED_BRACKET)
@@ -151,7 +153,7 @@ public class NetClass
         }
         catch (java.io.IOException e)
         {
-            System.out.println("NetClass.read_scope: IO error while scanning file");
+            FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
             return null;
         }
     }
@@ -169,7 +171,7 @@ public class NetClass
                 Object next_token = p_scanner.next_token();
                 if (next_token == null)
                 {
-                    System.out.println("ClassClass.read_scope: unexpected end of file");
+                    FRLogger.warn("ClassClass.read_scope: unexpected end of file");
                     return null;
                 }
                 if (next_token == Keyword.CLOSED_BRACKET)
@@ -198,7 +200,7 @@ public class NetClass
         }
         catch (java.io.IOException e)
         {
-            System.out.println("NetClass.read_scope: IO error while scanning file");
+            FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
             return null;
         }
     }

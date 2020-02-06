@@ -127,7 +127,7 @@ public class BoardFrame extends javax.swing.JFrame
             // the system-file jh.jar may be missing
             curr_help_system_used = false;
             curr_menubar = BoardMenuBar.get_instance(this, false, session_file_option);
-            System.out.println("Online-Help deactivated because system file jh.jar is missing");
+            FRLogger.warn("Online-Help deactivated because system file jh.jar is missing");
         }
         this.menubar = curr_menubar;
         this.help_system_used = curr_help_system_used;
@@ -299,7 +299,7 @@ public class BoardFrame extends javax.swing.JFrame
         {
             return false;
         }
-        FRLogger.logger.info("Saving '"+design_file.get_output_file().getName()+"'...");
+        FRLogger.info("Saving '"+design_file.get_output_file().getName()+"'...");
 
         java.io.OutputStream output_stream = null;
         java.io.ObjectOutputStream object_stream = null;
@@ -373,7 +373,7 @@ public class BoardFrame extends javax.swing.JFrame
             String help_id = "html_files." + p_help_id;
             javax.help.CSH.setHelpIDString(curr_component, help_id);
             if (help_broker==null) {
-                FRLogger.logger.warn("help_broker is null");
+                FRLogger.warn("help_broker is null");
                 return;
             }
             help_broker.enableHelpKey(curr_component, help_id, help_set);

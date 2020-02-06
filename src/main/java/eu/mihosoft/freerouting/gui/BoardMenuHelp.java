@@ -87,7 +87,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
                 URL hsURL = getClass().getResource(helpset_name);
                 if (hsURL == null)
                 {
-                    FRLogger.logger.warn("HelpSet " + helpset_name + " not found.");
+                    FRLogger.warn("HelpSet " + helpset_name + " not found.");
                 }
                 else
                 {
@@ -96,8 +96,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
             }
             catch (HelpSetException ee)
             {
-                System.out.println("HelpSet " + helpset_name + " could not be opened.");
-                System.out.println(ee.getMessage());
+                FRLogger.error("HelpSet " + helpset_name + " could not be opened.", ee);
             }
             if (BoardFrame.help_set != null)
             {

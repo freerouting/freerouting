@@ -1009,7 +1009,7 @@ public class BoardHandling extends BoardHandlingImpl
     }
 
     /**
-     * Reads an existing eu.mihosoft.freerouting.board design from the input stream.
+     * Reads an existing board design from the input stream.
      * Returns false,  if the input stream does not contains a legal eu.mihosoft.freerouting.board design.
      */
     public boolean read_design(java.io.ObjectInputStream p_design, TestLevel p_test_level)
@@ -1024,7 +1024,7 @@ public class BoardHandling extends BoardHandlingImpl
         }
         catch (Exception e)
         {
-            FRLogger.logger.error(e);
+            FRLogger.error("Couldn't read design file", e);
             return false;
         }
         board.set_test_level(p_test_level);

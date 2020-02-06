@@ -35,6 +35,7 @@ import eu.mihosoft.freerouting.board.Via;
 import eu.mihosoft.freerouting.board.ConductionArea;
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 import eu.mihosoft.freerouting.datastructures.IdentifierType;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Methods to handle a Specctra session file.
@@ -59,7 +60,7 @@ public class SessionFile
         }
         catch (Exception e)
         {
-            System.out.println("unable to create session file");
+            FRLogger.error("unable to create session file", e);
             return false;
         }
         String session_name = p_design_name.replace(".dsn", ".ses");
@@ -71,7 +72,7 @@ public class SessionFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to write session file");
+            FRLogger.error("unable to write session file", e);
             return false;
         }
         try
@@ -80,7 +81,7 @@ public class SessionFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to close session file");
+            FRLogger.error("unable to close session file", e);
             return false;
         }
         return true;
@@ -217,7 +218,7 @@ public class SessionFile
                 }
                 else
                 {
-                    System.out.println("SessionFile.write_was_is: component not found");
+                    FRLogger.warn("SessionFile.write_was_is: component not found");
                 }
                 p_file.write(" ");
                 eu.mihosoft.freerouting.board.Component swap_cmp = p_board.components.get(swapped_with.get_component_no());
@@ -230,7 +231,7 @@ public class SessionFile
                 }
                 else
                 {
-                    System.out.println("SessionFile.write_was_is: component not found");
+                    FRLogger.warn("SessionFile.write_was_is: component not found");
                 }
                 p_file.write(")");
             }
@@ -287,7 +288,7 @@ public class SessionFile
         }
         if (first_layer_no >= p_board.get_layer_count() || last_layer_no < 0)
         {
-            System.out.println("SessionFile.write_padstack: padstack shape not found");
+            FRLogger.warn("SessionFile.write_padstack: padstack shape not found");
             return;
         }
         
@@ -355,7 +356,7 @@ public class SessionFile
                 eu.mihosoft.freerouting.rules.Net curr_net = p_board.rules.nets.get(p_net_no);
                 if (curr_net == null)
                 {
-                    System.out.println("SessionFile.write_net: net not found");
+                    FRLogger.warn("SessionFile.write_net: net not found");
                 }
                 else
                 {
@@ -489,7 +490,7 @@ public class SessionFile
         int net_count = p_conduction_area.net_count();
         if (net_count <= 0 || net_count > 1)
         {
-            System.out.println("SessionFile.write_conduction_area: unexpected net count");
+            FRLogger.warn("SessionFile.write_conduction_area: unexpected net count");
             return;
         }
         eu.mihosoft.freerouting.geometry.planar.Area curr_area = p_conduction_area.get_area();

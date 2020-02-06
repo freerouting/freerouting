@@ -22,6 +22,8 @@
  */
 package eu.mihosoft.freerouting.rules;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Vector;
 import java.util.Collection;
 
@@ -91,7 +93,7 @@ public class Nets implements java.io.Serializable
         Net result = net_arr.elementAt(p_net_no - 1);
         if (result != null && result.net_number != p_net_no)
         {
-            System.out.println("Nets.get: inconsistent net_no");
+            FRLogger.warn("Nets.get: inconsistent net_no");
         }
         return result;
     }
@@ -116,7 +118,7 @@ public class Nets implements java.io.Serializable
         int new_net_no = net_arr.size() + 1;
         if (new_net_no >= max_legal_net_no)
         {
-            System.out.println("Nets.add_net: max_net_no out of range");
+            FRLogger.warn("Nets.add_net: max_net_no out of range");
         }
         Net new_net = new Net(p_name, p_subnet_number, new_net_no, this, p_contains_plane);
         net_arr.add(new_net);

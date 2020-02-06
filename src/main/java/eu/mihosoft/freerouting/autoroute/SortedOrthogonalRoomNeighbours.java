@@ -39,6 +39,7 @@ import eu.mihosoft.freerouting.geometry.planar.Limits;
 import eu.mihosoft.freerouting.board.SearchTreeObject;
 import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -89,7 +90,7 @@ public class SortedOrthogonalRoomNeighbours
         TileShape room_shape = p_room.get_shape();
         if (!(room_shape instanceof IntBox))
         {
-            System.out.println("SortedOrthoganelRoomNeighbours.calculate_incomplete_rooms_with_empty_neighbours: IntBox expected for room_shape");
+            FRLogger.warn("SortedOrthoganelRoomNeighbours.calculate_incomplete_rooms_with_empty_neighbours: IntBox expected for room_shape");
             return;
         }
         IntBox room_box = (IntBox) room_shape;
@@ -115,7 +116,7 @@ public class SortedOrthogonalRoomNeighbours
             }
             else
             {
-                System.out.println("SortedOrthoganelRoomNeighbours.calculate_incomplete_rooms_with_empty_neighbours: illegal index i");
+                FRLogger.warn("SortedOrthoganelRoomNeighbours.calculate_incomplete_rooms_with_empty_neighbours: illegal index i");
                 return;
             }
             IntBox new_contained_box = room_box.intersection(new_room_box);
@@ -136,7 +137,7 @@ public class SortedOrthogonalRoomNeighbours
         TileShape room_shape = p_room.get_shape();
         if (!(room_shape instanceof IntBox))
         {
-            System.out.println("SortedOrthogonalRoomNeighbours.calculate: IntBox expected for room_shape");
+            FRLogger.warn("SortedOrthogonalRoomNeighbours.calculate: IntBox expected for room_shape");
             return null;
         }
         IntBox room_box = (IntBox) room_shape;
@@ -151,7 +152,7 @@ public class SortedOrthogonalRoomNeighbours
         }
         else
         {
-            System.out.println("SortedOrthogonalRoomNeighbours.calculate: unexpected expansion room type");
+            FRLogger.warn("SortedOrthogonalRoomNeighbours.calculate: unexpected expansion room type");
             return null;
         }
         SortedOrthogonalRoomNeighbours result = new SortedOrthogonalRoomNeighbours(p_room, completed_room);
@@ -176,7 +177,7 @@ public class SortedOrthogonalRoomNeighbours
                     curr_object.get_tree_shape(p_autoroute_search_tree, curr_entry.shape_index_in_object);
             if (!(curr_shape instanceof IntBox))
             {
-                System.out.println("OrthogonalAutorouteEngine:calculate_sorted_neighbours: IntBox expected for curr_shape");
+                FRLogger.warn("OrthogonalAutorouteEngine:calculate_sorted_neighbours: IntBox expected for curr_shape");
                 return null;
             }
             IntBox curr_box = (IntBox) curr_shape;
@@ -201,8 +202,8 @@ public class SortedOrthogonalRoomNeighbours
             }
             if (dimension < 0)
             {
-                
-                System.out.println("AutorouteEngine.calculate_doors: dimension >= 0 expected");
+
+                FRLogger.warn("AutorouteEngine.calculate_doors: dimension >= 0 expected");
                 continue;
             }
             result.add_sorted_neighbour(curr_box, intersection);
@@ -392,7 +393,7 @@ public class SortedOrthogonalRoomNeighbours
                 }
                 else
                 {
-                    System.out.println("SortedOrthogonalRoomNeighbour.calculate_new_incomplete: illegal touching side");
+                    FRLogger.warn("SortedOrthogonalRoomNeighbour.calculate_new_incomplete: illegal touching side");
                 }
             }
             prev_neighbour = next_neighbour;
@@ -449,7 +450,7 @@ public class SortedOrthogonalRoomNeighbours
         IncompleteFreeSpaceExpansionRoom curr_incomplete_room = (IncompleteFreeSpaceExpansionRoom) this.from_room;
         if (!(curr_incomplete_room.get_shape() instanceof IntBox))
         {
-            System.out.println("SortedOrthogonalRoomNeighbours.try_remove_edge: IntBox expected for room_shape type");
+            FRLogger.warn("SortedOrthogonalRoomNeighbours.try_remove_edge: IntBox expected for room_shape type");
             return false;
         }
         IntBox  room_box = (IntBox) curr_incomplete_room.get_shape();
@@ -537,7 +538,7 @@ public class SortedOrthogonalRoomNeighbours
         }
         else
         {
-            System.out.println("SortedOrthogonalRoomNeighbours.remove_border_line: illegal p_remove_edge_no");
+            FRLogger.warn("SortedOrthogonalRoomNeighbours.remove_border_line: illegal p_remove_edge_no");
             result = null;
         }
         return result;
@@ -608,7 +609,7 @@ public class SortedOrthogonalRoomNeighbours
             }
             else
             {
-                System.out.println("SortedRoomNeighbour: case not expected");
+                FRLogger.warn("SortedRoomNeighbour: case not expected");
                 this.first_touching_side = -1;
             }
             
@@ -630,7 +631,7 @@ public class SortedOrthogonalRoomNeighbours
             }
             else
             {
-                System.out.println("SortedRoomNeighbour: case not expected");
+                FRLogger.warn("SortedRoomNeighbour: case not expected");
                 this.last_touching_side = -1;
             }
         }
@@ -673,7 +674,7 @@ public class SortedOrthogonalRoomNeighbours
             }
             else
             {
-                System.out.println("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
+                FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
                 return 0;
             }
             if (cmp_value == 0)
@@ -710,7 +711,7 @@ public class SortedOrthogonalRoomNeighbours
                 }
                 else
                 {
-                    System.out.println("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
+                    FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
                     return 0;
                 }
             }

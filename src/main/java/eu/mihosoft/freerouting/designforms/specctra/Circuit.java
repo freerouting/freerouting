@@ -24,6 +24,8 @@
 
 package eu.mihosoft.freerouting.designforms.specctra;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  *
  * @author Alfons Wirtz
@@ -50,12 +52,12 @@ public class Circuit
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Circuit.read_scope: IO error scanning file");
+                FRLogger.error("Circuit.read_scope: IO error scanning file", e);
                 return null;
             }
             if (next_token == null)
             {
-                System.out.println("Circuit.read_scope: unexpected end of file");
+                FRLogger.warn("Circuit.read_scope: unexpected end of file");
                 return null;
             }
             if (next_token == Keyword.CLOSED_BRACKET)
@@ -104,7 +106,7 @@ public class Circuit
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Circuit.read_length_scope: IO error scanning file");
+                FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
                 return null;
             }
             if (next_token instanceof Double)
@@ -117,7 +119,7 @@ public class Circuit
             }
             else
             {
-                System.out.println("Circuit.read_length_scope: number expected");
+                FRLogger.warn("Circuit.read_length_scope: number expected");
                 return null;
             }
         }
@@ -131,12 +133,12 @@ public class Circuit
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Circuit.read_length_scope: IO error scanning file");
+                FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
                 return null;
             }
             if (next_token == null)
             {
-                System.out.println("Circuit.read_length_scope: unexpected end of file");
+                FRLogger.warn("Circuit.read_length_scope: unexpected end of file");
                 return null;
             }
             if (next_token == Keyword.CLOSED_BRACKET)

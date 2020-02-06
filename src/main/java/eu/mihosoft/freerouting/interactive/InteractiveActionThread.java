@@ -23,6 +23,8 @@
  */
 package eu.mihosoft.freerouting.interactive;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -204,7 +206,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
                                 logfile_scope.read_scope(hdlg.activityReplayFile, hdlg.interactive_state, hdlg);
                         if (new_state == null)
                         {
-                            System.out.println("BoardHandling:read_logfile: inconsistent logfile scope");
+                            FRLogger.warn("BoardHandling:read_logfile: inconsistent logfile scope");
                             new_state = previous_state;
                         }
                         hdlg.repaint();
@@ -222,7 +224,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
                 this.input_stream.close();
             } catch (java.io.IOException e)
             {
-                System.out.println("ReadLogfileThread: unable to close input stream");
+                FRLogger.error("ReadLogfileThread: unable to close input stream", e);
             }
             hdlg.get_panel().board_frame.refresh_windows();
             hdlg.screen_messages.set_write_protected(false);

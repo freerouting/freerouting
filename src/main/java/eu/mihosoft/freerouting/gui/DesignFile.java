@@ -110,7 +110,7 @@ public class DesignFile
                 result = new java.io.FileInputStream(this.input_file);
             } catch (Exception e)
             {
-                FRLogger.logger.error(e.getLocalizedMessage(), e);
+                FRLogger.error(e.getLocalizedMessage(), e);
                 result = null;
             }
 
@@ -167,7 +167,7 @@ public class DesignFile
             return;
         }
         String new_file_name = new_file.getName();
-        FRLogger.logger.info("Saving '"+new_file_name+"'...");
+        FRLogger.info("Saving '"+new_file_name+"'...");
         String[] new_name_parts = new_file_name.split("\\.");
         String found_file_extension = new_name_parts[new_name_parts.length - 1];
         if (found_file_extension.compareToIgnoreCase(binary_file_extension) == 0)
@@ -216,7 +216,7 @@ public class DesignFile
 
         {
             String output_file_name = design_name + ".ses";
-            FRLogger.logger.info("Saving '"+output_file_name+"'...");
+            FRLogger.info("Saving '"+output_file_name+"'...");
             java.io.File curr_output_file = new java.io.File(get_parent(), output_file_name);
             java.io.OutputStream output_stream;
             try
@@ -254,7 +254,7 @@ public class DesignFile
         String rules_file_name = p_design_name + RULES_FILE_EXTENSION;
         java.io.OutputStream output_stream;
 
-        FRLogger.logger.info("Saving '"+rules_file_name+"'...");
+        FRLogger.info("Saving '"+rules_file_name+"'...");
 
         java.io.File rules_file = new java.io.File(this.get_parent(), rules_file_name);
         try
@@ -262,7 +262,7 @@ public class DesignFile
             output_stream = new java.io.FileOutputStream(rules_file);
         } catch (java.io.IOException e)
         {
-            System.out.println("unable to create rules file");
+            FRLogger.error("unable to create rules file", e);
             return false;
         }
 
@@ -282,7 +282,7 @@ public class DesignFile
             try
             {
                 java.io.File rules_file = new java.io.File(p_parent_name, rule_file_name);
-                FRLogger.logger.info("Opening '"+rule_file_name+"'...");
+                FRLogger.info("Opening '"+rule_file_name+"'...");
                 java.io.InputStream input_stream = new java.io.FileInputStream(rules_file);
                 if (input_stream != null && dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message))
                 {
@@ -326,7 +326,7 @@ public class DesignFile
         String[] file_name_parts = design_file_name.split("\\.", 2);
         String design_name = file_name_parts[0];
         String output_file_name = design_name + ".scr";
-        FRLogger.logger.info("Saving '"+output_file_name+"'...");
+        FRLogger.info("Saving '"+output_file_name+"'...");
 
         {
             java.io.File curr_output_file = new java.io.File(get_parent(), output_file_name);

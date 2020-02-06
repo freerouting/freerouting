@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.library;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Vector;
 
 /**
@@ -64,7 +66,7 @@ public class LogicalParts implements java.io.Serializable
         LogicalPart result = part_arr.elementAt(p_part_no - 1);
         if (result != null && result.no != p_part_no)
         {
-            System.out.println("LogicalParts.get: inconsistent part number");
+            FRLogger.warn("LogicalParts.get: inconsistent part number");
         }
         return result;
     }

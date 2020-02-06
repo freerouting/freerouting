@@ -22,6 +22,8 @@
  */
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -204,7 +206,7 @@ public class PolylineArea implements Area, java.io.Serializable
             {
                 if (hole_arr[i].dimension() < 2)
                 {
-                    System.out.println("PolylineArea. split_to_convex: dimennsion 2 for hole expected");
+                    FRLogger.warn("PolylineArea. split_to_convex: dimennsion 2 for hole expected");
                     continue;
                 }
                 TileShape[] convex_hole_pieces = hole_arr[i].split_to_convex();

@@ -25,6 +25,7 @@ package eu.mihosoft.freerouting.interactive;
 
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Contains the values of the eu.mihosoft.freerouting.interactive settings of the eu.mihosoft.freerouting.board handling.
@@ -219,7 +220,7 @@ public class Settings implements java.io.Serializable
     {
         if (p_layer_no < 0 || p_layer_no >= this.manual_trace_half_width_arr.length)
         {
-            System.out.println("Settings.get_manual_trace_half_width p_layer_no out of range");
+            FRLogger.warn("Settings.get_manual_trace_half_width p_layer_no out of range");
             return 0;
         }
         return this.manual_trace_half_width_arr[p_layer_no];
@@ -491,12 +492,12 @@ public class Settings implements java.io.Serializable
         p_stream.defaultReadObject();
         if (this.item_selection_filter == null)
         {
-            System.out.println("Settings.readObject: item_selection_filter is null");
+            FRLogger.warn("Settings.readObject: item_selection_filter is null");
             this.item_selection_filter = new ItemSelectionFilter();
         }
         if (this.snapshot_attributes == null)
         {
-            System.out.println("Settings.readObject: snapshot_attributes is null");
+            FRLogger.warn("Settings.readObject: snapshot_attributes is null");
             this.snapshot_attributes = new SnapShot.Attributes();
         }
         this.read_only = false;

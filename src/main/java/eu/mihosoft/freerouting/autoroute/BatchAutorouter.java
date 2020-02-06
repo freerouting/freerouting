@@ -127,7 +127,7 @@ public class BatchAutorouter
             var current_board_hash = this.routing_board.get_hash();
             if (already_checked_board_hashes.contains(current_board_hash))
             {
-                FRLogger.logger.warn("This board was already evaluated, so we stop autorouter to avoid the endless loop.");
+                FRLogger.warn("This board was already evaluated, so we stop autorouter to avoid the endless loop.");
                 thread.request_stop();
                 break;
             }
@@ -162,7 +162,7 @@ public class BatchAutorouter
 
                 if (average.getAsDouble() < 20.0)
                 {
-                    FRLogger.logger.warn("There were only " + average.getAsDouble() + " changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.");
+                    FRLogger.warn("There were only " + average.getAsDouble() + " changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.");
                 }
             }
             FRLogger.traceExit("BatchAutorouter.autoroute_pass #"+curr_pass_no+" on board '"+current_board_hash+"' making {} changes", newTraceDifferences);

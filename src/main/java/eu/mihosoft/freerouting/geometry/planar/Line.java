@@ -22,6 +22,7 @@ package eu.mihosoft.freerouting.geometry.planar;
 import java.math.BigInteger;
 
 import eu.mihosoft.freerouting.datastructures.Signum;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -43,7 +44,7 @@ public class Line implements Comparable<Line>, java.io.Serializable
         dir = null;
         if (!(a instanceof IntPoint && b instanceof IntPoint))
         {
-            System.out.println("Line(p_a, p_b) only implemented for IntPoints till now");
+            FRLogger.warn("Line(p_a, p_b) only implemented for IntPoints till now");
         }
     }
     
@@ -67,7 +68,7 @@ public class Line implements Comparable<Line>, java.io.Serializable
         dir = p_dir;
         if (!(a instanceof IntPoint && b instanceof IntPoint))
         {
-            System.out.println("Line(p_a, p_dir) only implemented for IntPoints till now");
+            FRLogger.warn("Line(p_a, p_dir) only implemented for IntPoints till now");
         }
     }
     
@@ -633,7 +634,7 @@ public class Line implements Comparable<Line>, java.io.Serializable
         double dx = p2.x - p1.x;
         if (dx == 0)
         {
-            System.out.println("function_value_approx: line is vertical");
+            FRLogger.warn("function_value_approx: line is vertical");
             return 0;
         }
         double dy = p2.y - p1.y;
@@ -653,7 +654,7 @@ public class Line implements Comparable<Line>, java.io.Serializable
         double dy = p2.y - p1.y;
         if (dy == 0)
         {
-            System.out.println("function_in_y_value_approx: line is horizontal");
+            FRLogger.warn("function_in_y_value_approx: line is horizontal");
             return 0;
         }
         double dx = p2.x - p1.x;

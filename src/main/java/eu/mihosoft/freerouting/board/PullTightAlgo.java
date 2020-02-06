@@ -40,6 +40,7 @@ import eu.mihosoft.freerouting.datastructures.Stoppable;
 import eu.mihosoft.freerouting.datastructures.TimeLimit;
 
 import eu.mihosoft.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class with functionality for optimising traces and vias.
@@ -204,7 +205,7 @@ public abstract class PullTightAlgo
         boolean time_limit_exceeded = this.time_limit.limit_exceeded();
         if (time_limit_exceeded && this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
         {
-            System.out.println("PullTightAlgo.is_stop_requested: time limit exceeded");
+            FRLogger.warn("PullTightAlgo.is_stop_requested: time limit exceeded");
         }
         return time_limit_exceeded;
     }

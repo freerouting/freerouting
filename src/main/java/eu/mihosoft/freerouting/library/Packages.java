@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import eu.mihosoft.freerouting.geometry.planar.Shape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Describes a eu.mihosoft.freerouting.library of component packages.
@@ -77,7 +78,7 @@ public class Packages implements java.io.Serializable
         Package result = package_arr.elementAt(p_package_no - 1);
         if (result != null && result.no != p_package_no)
         {
-            System.out.println("Padstacks.get: inconsistent padstack number");
+            FRLogger.warn("Padstacks.get: inconsistent padstack number");
         }
         return result;
     }

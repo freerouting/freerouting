@@ -52,16 +52,16 @@ public class MainApplication extends javax.swing.JFrame
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         } catch (InstantiationException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         } catch (IllegalAccessException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         }
 
-        FRLogger.logger.info("Freerouting application is started.");
+        FRLogger.info("Freerouting application is started.");
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
@@ -80,11 +80,11 @@ public class MainApplication extends javax.swing.JFrame
                 board_option = BoardFrame.Option.SINGLE_FRAME;
             }
 
-            FRLogger.logger.info("Opening '"+startupOptions.design_input_filename+"'...");
+            FRLogger.info("Opening '"+startupOptions.design_input_filename+"'...");
             DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename, false);
             if (design_file == null)
             {
-                FRLogger.logger.error(resources.getString("message_6") + " " +  startupOptions.design_input_filename + " " + resources.getString("message_7"));
+                FRLogger.warn(resources.getString("message_6") + " " +  startupOptions.design_input_filename + " " + resources.getString("message_7"));
                 return;
             }
             String message = resources.getString("loading_design") + " "
@@ -97,7 +97,7 @@ public class MainApplication extends javax.swing.JFrame
             welcome_window.dispose();
             if (new_frame == null)
             {
-                FRLogger.logger.error("Couldn't create window frame");
+                FRLogger.warn("Couldn't create window frame");
                 System.exit(1);
                 return;
             }
@@ -128,7 +128,7 @@ public class MainApplication extends javax.swing.JFrame
                                 || (filename.toLowerCase().endsWith(".ses"))
                                 || (filename.toLowerCase().endsWith(".scr")))) {
 
-                            FRLogger.logger.info("Saving '" + filename + "'...");
+                            FRLogger.info("Saving '" + filename + "'...");
                             try {
                                 String filename_only = new File(filename).getName();
                                 String design_name = filename_only.substring(0, filename_only.length() - 4);
@@ -148,10 +148,10 @@ public class MainApplication extends javax.swing.JFrame
 
                                 Runtime.getRuntime().exit(0);
                             } catch (Exception e) {
-                                FRLogger.logger.error(e);
+                                FRLogger.error("Couldn't export board to file", e);
                             }
                         } else {
-                            FRLogger.logger.error("Couldn't export board to '" + filename + "'.");
+                            FRLogger.warn("Couldn't export board to '" + filename + "'.");
                         }
                     }
                 });
@@ -284,7 +284,7 @@ public class MainApplication extends javax.swing.JFrame
             return;
         }
 
-        FRLogger.logger.info("Opening '"+design_file.get_name()+"'...");
+        FRLogger.info("Opening '"+design_file.get_name()+"'...");
 
         BoardFrame.Option option;
         if (this.is_webstart)

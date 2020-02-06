@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.library;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Contains contain information for gate swap and pin swap for a single component.
  *
@@ -53,7 +55,7 @@ public class LogicalPart implements eu.mihosoft.freerouting.board.ObjectInfoPane
     {
         if (p_no < 0 || p_no >= part_pin_arr.length)
         {
-            System.out.println("LogicalPart.get_pin: p_no out of range");
+            FRLogger.warn("LogicalPart.get_pin: p_no out of range");
             return null;
         }
         return part_pin_arr[p_no];

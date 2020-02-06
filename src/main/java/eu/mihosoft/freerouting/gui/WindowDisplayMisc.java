@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Window for eu.mihosoft.freerouting.interactive changing of miscellanious display properties.
  *
@@ -210,7 +212,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         }
         else
         {
-            System.out.println("DisplayMiscWindow: unexpected ninety_degree_rotation");
+            FRLogger.warn("DisplayMiscWindow: unexpected ninety_degree_rotation");
             rotation_none_checkbox.setSelected(true);
         }
         

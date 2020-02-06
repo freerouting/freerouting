@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  *
  * Implements functionality of orthogonal rectangles in the plane
@@ -524,7 +526,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable
     
     public int border_line_index(Line p_line)
     {
-        System.out.println("edge_index_of_line not yet implemented for IntBoxes");
+        FRLogger.warn("edge_index_of_line not yet implemented for IntBoxes");
         return -1;
     }
     

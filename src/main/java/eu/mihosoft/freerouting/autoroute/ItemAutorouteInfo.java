@@ -26,6 +26,7 @@ package eu.mihosoft.freerouting.autoroute;
 import eu.mihosoft.freerouting.board.ShapeSearchTree;
 
 import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
@@ -87,7 +88,7 @@ public class ItemAutorouteInfo
         }
         if (p_index < 0 || p_index >= expansion_room_arr.length)
         {
-            System.out.println("ItemAutorouteInfo.get_expansion_room: p_index out of range");
+            FRLogger.warn("ItemAutorouteInfo.get_expansion_room: p_index out of range");
             return null;
         }
         if (expansion_room_arr[p_index] == null)

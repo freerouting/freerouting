@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.datastructures;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Handles the indenting  of scopes while writing to an output text file.
  *
@@ -49,7 +51,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter
         }
         catch (java.io.IOException e)
         {
-            System.out.println("IndentFileWriter.start_scope: unable to write to file");
+            FRLogger.error("IndentFileWriter.start_scope: unable to write to file", e);
         }
         ++current_indent_level;
     }
@@ -67,7 +69,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter
         }
         catch (java.io.IOException e)
         {
-            System.out.println("IndentFileWriter.end_scope: unable to write to file");
+            FRLogger.error("IndentFileWriter.end_scope: unable to write to file", e);
         }
     }
     
@@ -86,7 +88,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter
         }
         catch (java.io.IOException e)
         {
-            System.out.println("IndentFileWriter.new_line: unable to write to file");
+            FRLogger.error("IndentFileWriter.new_line: unable to write to file", e);
         }
     }
     

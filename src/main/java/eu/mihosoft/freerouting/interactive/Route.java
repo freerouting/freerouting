@@ -38,6 +38,7 @@ import java.util.Set;
 
 import eu.mihosoft.freerouting.library.Padstack;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.ViaRule;
 import eu.mihosoft.freerouting.rules.ViaInfo;
 import eu.mihosoft.freerouting.rules.Net;
@@ -259,7 +260,7 @@ public class Route
         }
         if (p_to_layer < 0 || p_to_layer >= this.layer_active.length)
         {
-            System.out.println("Route.change_layer: p_to_layer out of range");
+            FRLogger.warn("Route.change_layer: p_to_layer out of range");
             return false;
         }
         if (!this.layer_active[p_to_layer])

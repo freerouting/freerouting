@@ -26,6 +26,7 @@ import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 
 import eu.mihosoft.freerouting.board.BasicBoard;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class for reading and writing dsn-files.
@@ -63,8 +64,7 @@ public class DsnFile
             }
             catch (java.io.IOException e)
             {
-                System.out.println("DsnFile.read: IO error scanning file");
-                System.out.println(e);
+                FRLogger.error("DsnFile.read: IO error scanning file", e);
                 return ReadResult.ERROR;
             }
             boolean keyword_ok = true;
@@ -79,7 +79,7 @@ public class DsnFile
             }
             if (!keyword_ok)
             {
-                System.out.println("DsnFile.read: specctra dsn file format expected");
+                FRLogger.warn("DsnFile.read: specctra dsn file format expected");
                 return ReadResult.ERROR;
             }
         }
@@ -239,7 +239,7 @@ public class DsnFile
         IndentFileWriter output_file = new IndentFileWriter(p_file);
         if (output_file == null)
         {
-            System.out.println("unable to write dsn file");
+            FRLogger.warn("unable to write dsn file");
             return false;
         }
 
@@ -249,7 +249,7 @@ public class DsnFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to write dsn file");
+            FRLogger.error("unable to write dsn file", e);
             return false;
         }
         try
@@ -258,7 +258,7 @@ public class DsnFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to close dsn file");
+            FRLogger.error("unable to close dsn file", e);
             return false;
         }
         return true;
@@ -300,14 +300,14 @@ public class DsnFile
             }
             else if (next_token != Keyword.OFF)
             {
-                System.out.println("DsnFile.read_boolean: Keyword.OFF expected");
+                FRLogger.warn("DsnFile.read_boolean: Keyword.OFF expected");
             }
             ScopeKeyword.skip_scope(p_scanner);
             return result;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("DsnFile.read_boolean: IO error scanning file");
+            FRLogger.warn("DsnFile.read_boolean: IO error scanning file");
             return false;
         }
     }
@@ -324,20 +324,20 @@ public class DsnFile
             }
             else
             {
-                System.out.println("DsnFile.read_integer_scope: number expected");
+                FRLogger.warn("DsnFile.read_integer_scope: number expected");
                 return 0;
             }
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
-                System.out.println("DsnFile.read_integer_scope: closing bracket expected");
+                FRLogger.warn("DsnFile.read_integer_scope: closing bracket expected");
                 return 0;
             }
             return value;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("DsnFile.read_integer_scope: IO error scanning file");
+            FRLogger.error("DsnFile.read_integer_scope: IO error scanning file", e);
             return 0;
         }
     }
@@ -358,20 +358,20 @@ public class DsnFile
             }
             else
             {
-                System.out.println("DsnFile.read_float_scope: number expected");
+                FRLogger.warn("DsnFile.read_float_scope: number expected");
                 return 0;
             }
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
-                System.out.println("DsnFile.read_float_scope: closing bracket expected");
+                FRLogger.warn("DsnFile.read_float_scope: closing bracket expected");
                 return 0;
             }
             return value;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("DsnFile.read_float_scope: IO error scanning file");
+            FRLogger.error("DsnFile.read_float_scope: IO error scanning file", e);
             return 0;
         }
     }
@@ -384,20 +384,20 @@ public class DsnFile
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("DsnFile:read_string_scope: String expected");
+                FRLogger.warn("DsnFile:read_string_scope: String expected");
                 return null;
             }
             String result = (String) next_token;
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
-                System.out.println("DsnFile.read_string_scope: closing bracket expected");
+                FRLogger.warn("DsnFile.read_string_scope: closing bracket expected");
             }
             return result;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("DsnFile.read_string_scope: IO error scanning file");
+            FRLogger.error("DsnFile.read_string_scope: IO error scanning file", e);
             return null;
         }
     }
@@ -417,7 +417,7 @@ public class DsnFile
                 }
                 if (!(next_token instanceof String))
                 {
-                    System.out.println("DsnFileread_string_list_scope: string expected");
+                    FRLogger.warn("DsnFileread_string_list_scope: string expected");
                     return null;
                 }
                 result.add((String) next_token);
@@ -425,7 +425,7 @@ public class DsnFile
         }
         catch (java.io.IOException e)
         {
-            System.out.println("DsnFile.read_string_list_scope: IO error scanning file");
+            FRLogger.error("DsnFile.read_string_list_scope: IO error scanning file", e);
         }
         return result;
     }

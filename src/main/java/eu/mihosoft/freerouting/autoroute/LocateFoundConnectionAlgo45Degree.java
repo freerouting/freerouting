@@ -40,6 +40,7 @@ import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.AngleRestriction;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -71,7 +72,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         
         if (curr_from_info.next_room == null)
         {
-            System.out.println("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: next_room is null");
+            FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: next_room is null");
             return result;
         }
         
@@ -126,7 +127,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         BacktrackElement curr_to_info = this.backtrack_array[this.current_to_door_index];
         if (!(curr_to_info.door instanceof ExpansionDoor))
         {
-            System.out.println("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
+            FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
             return result;
         }
         ExpansionDoor curr_to_door = (ExpansionDoor) curr_to_info.door;
@@ -147,7 +148,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
             FloatLine[] line_sections = curr_to_door.get_section_segments(trace_halfwidth);
             if (curr_to_info.section_no_of_door >= line_sections.length)
             {
-                System.out.println("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: line_sections inconsistent");
+                FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: line_sections inconsistent");
                 return result;
             }
             FloatLine curr_line_section = line_sections[curr_to_info.section_no_of_door];

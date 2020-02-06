@@ -274,7 +274,7 @@ public class BoardMenuFile extends javax.swing.JMenu
     {
         java.io.OutputStream output_stream = null;
 
-        FRLogger.logger.info("Saving '"+BoardFrame.GUI_DEFAULTS_FILE_NAME+"'...");
+        FRLogger.info("Saving '"+BoardFrame.GUI_DEFAULTS_FILE_NAME+"'...");
         java.io.File defaults_file = new java.io.File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
         if (defaults_file.exists())
         {

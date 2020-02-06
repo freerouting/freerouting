@@ -24,6 +24,7 @@
 package eu.mihosoft.freerouting.board;
 
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class for transforming objects between user coordinate space and eu.mihosoft.freerouting.board coordinate space.
@@ -96,7 +97,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         else
         {
-            System.out.println("CoordinateTransform.board_to_user not yet implemented for p_shape");
+            FRLogger.warn("CoordinateTransform.board_to_user not yet implemented for p_shape");
             result = null;
         }
         return result;

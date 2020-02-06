@@ -35,6 +35,7 @@ import eu.mihosoft.freerouting.board.SearchTreeObject;
 import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.Connectable;
 import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
@@ -230,7 +231,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
             TileShape intersection = this.get_shape().intersection(curr_shape);
             if (intersection.dimension() > 1)
             {
-                System.out.println("ExpansionRoom overlap conflict");
+                FRLogger.warn("ExpansionRoom overlap conflict");
                 result = false;
             }
         }

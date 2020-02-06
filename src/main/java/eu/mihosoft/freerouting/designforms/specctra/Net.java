@@ -30,6 +30,7 @@ import java.util.Iterator;
 
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 import eu.mihosoft.freerouting.datastructures.IdentifierType;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
@@ -80,13 +81,13 @@ public class Net
         eu.mihosoft.freerouting.board.Component curr_component = p_par.board.components.get(p_pin.get_component_no());
         if (curr_component == null)
         {
-            System.out.println("Net.write_scope: component not found");
+            FRLogger.warn("Net.write_scope: component not found");
             return;
         }
         eu.mihosoft.freerouting.library.Package.Pin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
         if (lib_pin == null)
         {
-            System.out.println("Net.write_scope:  pin number out of range");
+            FRLogger.warn("Net.write_scope:  pin number out of range");
             return;
         }
         p_par.file.new_line();

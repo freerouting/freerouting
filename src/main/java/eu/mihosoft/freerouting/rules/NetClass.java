@@ -22,6 +22,8 @@
  */
 package eu.mihosoft.freerouting.rules;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Describes routing rules for individual nets.
  *
@@ -105,7 +107,7 @@ public class NetClass implements java.io.Serializable, eu.mihosoft.freerouting.b
     {
         if (p_layer < 0 || p_layer >= trace_half_width_arr.length)
         {
-            System.out.println(" NetClass.get_trace_half_width: p_layer out of range");
+            FRLogger.warn(" NetClass.get_trace_half_width: p_layer out of range");
             return 0;
         }
         return trace_half_width_arr[p_layer];

@@ -27,6 +27,7 @@ import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
 import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -429,7 +430,7 @@ public class GraphicsContext implements java.io.Serializable
             PolylineShape border = (PolylineShape) p_area.get_border();
             if (!border.is_bounded())
             {
-                System.out.println("GraphicsContext.fill_area: shape not bounded");
+                FRLogger.warn("GraphicsContext.fill_area: shape not bounded");
                 return;
             }
             java.awt.Shape clip_shape = p_g.getClip() ;

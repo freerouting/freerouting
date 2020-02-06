@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 
 
@@ -211,7 +213,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements eu.miho
         }
         catch (javax.swing.text.BadLocationException e)
         {
-            System.out.println("ObjectInfoWindow.append: unable to insert text into text pane.");
+            FRLogger.warn("ObjectInfoWindow.append: unable to insert text into text pane.");
             return false;
         }
         return true;

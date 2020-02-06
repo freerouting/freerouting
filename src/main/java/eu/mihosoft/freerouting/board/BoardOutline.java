@@ -32,6 +32,7 @@ import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class describing a eu.mihosoft.freerouting.board outline.
@@ -85,7 +86,7 @@ public class BoardOutline extends Item implements java.io.Serializable
         }
         if (result < 0 || result >= this.board.layer_structure.arr.length)
         {
-            System.out.println("BoardOutline.shape_layer: p_index out of range");
+            FRLogger.warn("BoardOutline.shape_layer: p_index out of range");
         }
         return result;
     }
@@ -193,7 +194,7 @@ public class BoardOutline extends Item implements java.io.Serializable
     {
         if (p_index < 0 || p_index >= this.shapes.length)
         {
-            System.out.println("BoardOutline.get_shape: p_index out of range");
+            FRLogger.warn("BoardOutline.get_shape: p_index out of range");
             return null;
         }
         return this.shapes[p_index];

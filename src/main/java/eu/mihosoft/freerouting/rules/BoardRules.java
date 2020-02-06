@@ -24,6 +24,7 @@
 package eu.mihosoft.freerouting.rules;
 
 import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Contains the rules and constraints required for items
@@ -108,7 +109,7 @@ public class BoardRules implements java.io.Serializable
     {
         if (p_value <= 0)
         {
-            System.out.println("BoardRules.set_trace_half_widths: p_value out of range");
+            FRLogger.warn("BoardRules.set_trace_half_widths: p_value out of range");
             return;
         }
         this.get_default_net_class().set_trace_half_width(p_value);

@@ -27,6 +27,7 @@ import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
 import eu.mihosoft.freerouting.geometry.planar.Direction;
 import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Describes padstack masks for pins or vias located at the origin.
@@ -69,7 +70,7 @@ public class Padstack implements Comparable<Padstack>, eu.mihosoft.freerouting.b
     {
         if (p_layer < 0 || p_layer >= shapes.length)
         {
-            System.out.println("Padstack.get_layer p_layer out of range");
+            FRLogger.warn("Padstack.get_layer p_layer out of range");
             return null;
         }
         return shapes[p_layer];

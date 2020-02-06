@@ -27,6 +27,9 @@ import eu.mihosoft.freerouting.geometry.planar.ShapeBoundingDirections;
 import eu.mihosoft.freerouting.geometry.planar.RegularTileShape;
 import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
+
+import java.awt.event.WindowFocusListener;
 
 /**
  * Abstract binary search tree for shapes in the plane.
@@ -79,7 +82,7 @@ public abstract class ShapeTree
         RegularTileShape  bounding_shape = object_shape.bounding_shape(bounding_directions) ;
         if (  bounding_shape == null )
         {
-            System.out.println("ShapeTree.insert: bounding shape of TreeObject is null");
+            FRLogger.warn("ShapeTree.insert: bounding shape of TreeObject is null");
             return null;
         }
         // Construct a new KdLeaf and set it up
@@ -169,17 +172,11 @@ public abstract class ShapeTree
             }
         }
         double everage_depth = cumulative_depth / leaf_arr.length;
-        System.out.print("MinAreaTree: Entry count: ");
-        System.out.print(leaf_arr.length);
-        System.out.print(" log: ");
-        System.out.print(Math.round(Math.log(leaf_arr.length)));
-        System.out.print(" Everage depth: ");
-        System.out.print(Math.round(everage_depth));
-        System.out.print(" ");
-        System.out.print(" Maximum depth: ");
-        System.out.print(maximum_depth);
-        System.out.print(" ");
-        System.out.println(p_message);
+        FRLogger.info("MinAreaTree: Entry count: " + leaf_arr.length
+                + " log: " + Math.round(Math.log(leaf_arr.length))
+                + " Everage depth: " + Math.round(everage_depth) +  " "
+                + " Maximum depth: " + maximum_depth + " "
+                + p_message);
     }
     
     

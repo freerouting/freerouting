@@ -26,6 +26,7 @@ package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.interactive.ActivityReplayFileScope;
 import eu.mihosoft.freerouting.interactive.BoardHandling;
 import eu.mihosoft.freerouting.interactive.ScreenMessages;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -62,7 +63,7 @@ public class BoardPanel extends javax.swing.JPanel
             }
             catch (java.awt.AWTException e)
             {
-                System.out.println("unable to create robot");
+                FRLogger.warn("unable to create robot");
             }
         }
         board_frame = p_board_frame;

@@ -28,6 +28,7 @@ import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.Line;
 import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Computes transformations between a specctra dsn-file coordinates and eu.mihosoft.freerouting.board coordinates.
@@ -222,7 +223,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         else
         {
-            System.out.println("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
+            FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
             result = null;
         }
         return result;
@@ -253,7 +254,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         else
         {
-            System.out.println("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
+            FRLogger.warn("CoordinateTransform.board_to_dsn not yet implemented for p_board_shape");
             result = null;
         }
         return result;

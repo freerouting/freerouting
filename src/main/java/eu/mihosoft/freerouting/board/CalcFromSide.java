@@ -30,6 +30,7 @@ import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.Polyline;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
 import eu.mihosoft.freerouting.geometry.planar.Side;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -99,7 +100,7 @@ public class CalcFromSide
         this.no = p_shape.contains_on_border_line_no(border_projection);
         if (this.no < 0)
         {
-            System.out.println("CalcFromSide: this.no >= 0 expected");
+            FRLogger.warn("CalcFromSide: this.no >= 0 expected");
         }
         this.border_intersection = border_projection.to_float();
     }
@@ -143,7 +144,7 @@ public class CalcFromSide
         }
         if (front_side_no < 0)
         {
-            System.out.println("CalcFromSide: start corner not found");
+            FRLogger.warn("CalcFromSide: start corner not found");
             no = -1;
             border_intersection = null;
             return;

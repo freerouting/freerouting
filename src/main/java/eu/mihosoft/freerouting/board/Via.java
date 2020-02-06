@@ -31,6 +31,7 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class describing the functionality of an electrical Item on the eu.mihosoft.freerouting.board,
@@ -61,7 +62,7 @@ public class Via extends DrillItem implements java.io.Serializable
     {
         if (padstack == null)
         {
-            System.out.println("Via.get_shape: padstack is null");
+            FRLogger.warn("Via.get_shape: padstack is null");
             return null;
         }
         if (this.precalculated_shapes == null)

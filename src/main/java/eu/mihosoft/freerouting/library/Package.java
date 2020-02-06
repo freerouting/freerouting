@@ -26,6 +26,7 @@ package eu.mihosoft.freerouting.library;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.geometry.planar.Area;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Component package templates describing the padstacks and
@@ -71,7 +72,7 @@ public class Package implements Comparable<Package>, eu.mihosoft.freerouting.boa
     {
         if (p_no < 0 || p_no >= pin_arr.length)
         {
-            System.out.println("Package.get_pin: p_no out of range");
+            FRLogger.warn("Package.get_pin: p_no out of range");
             return null;
         }
         return pin_arr[p_no];

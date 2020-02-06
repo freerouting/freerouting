@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.board;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Creates unique Item identication nunbers.
  *
@@ -47,7 +49,7 @@ public class ItemIdNoGenerator implements eu.mihosoft.freerouting.datastructures
     {
         if (last_generated_id_no >= c_max_id_no)
         {
-            System.out.println("IdNoGenerator: danger of overflow, please regenerate id numbers from scratch!");
+            FRLogger.warn("IdNoGenerator: danger of overflow, please regenerate id numbers from scratch!");
         }
         ++last_generated_id_no;
         return last_generated_id_no;

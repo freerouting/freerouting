@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.ViaInfo;
 
 import eu.mihosoft.freerouting.board.ForcedViaAlgo;
@@ -75,8 +76,7 @@ public class InsertFoundConnectionAlgo
             {
                 if (p_board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.print("InsertFoundConnectionAlgo: insert trace failed for net ");
-                    System.out.println(p_ctrl.net_no);
+                    FRLogger.warn("InsertFoundConnectionAlgo: insert trace failed for net #" + p_ctrl.net_no);
                 }
                 return null;
             }
@@ -194,7 +194,7 @@ public class InsertFoundConnectionAlgo
                 }
                 if (board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.println("InsertFoundConnectionAlgo: violation corrected");
+                    FRLogger.warn("InsertFoundConnectionAlgo: violation corrected");
                 }
             }
             else
@@ -387,8 +387,7 @@ public class InsertFoundConnectionAlgo
         {
             if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.print("InsertFoundConnectionAlgo: via mask not found for net ");
-                System.out.println(ctrl.net_no);
+                FRLogger.warn("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no);
             }
             return false;
         }
@@ -399,8 +398,7 @@ public class InsertFoundConnectionAlgo
         {
             if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.print("InsertFoundConnectionAlgo: forced via failed for net ");
-                System.out.println(ctrl.net_no);
+                FRLogger.warn("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.net_no);
             }
             return false;
         }

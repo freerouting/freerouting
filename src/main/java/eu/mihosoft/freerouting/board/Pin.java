@@ -37,6 +37,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import eu.mihosoft.freerouting.library.Package;
 import eu.mihosoft.freerouting.library.Padstack;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class describing the functionality of an electrical Item on the eu.mihosoft.freerouting.board
@@ -121,7 +122,7 @@ public class Pin extends DrillItem implements java.io.Serializable
             }
             if (curr_shape == null)
             {
-                System.out.println("Pin: At least 1 shape != null expected");
+                FRLogger.warn("Pin: At least 1 shape != null expected");
             }
             else if (!curr_shape.contains_inside(pin_center))
             {
@@ -137,7 +138,7 @@ public class Pin extends DrillItem implements java.io.Serializable
         Component component = board.components.get(get_component_no());
         if (component == null)
         {
-            System.out.println("Pin.get_padstack; component not found");
+            FRLogger.warn("Pin.get_padstack; component not found");
             return null;
         }
         int padstack_no = component.get_package().get_pin(pin_no).padstack_no;
@@ -163,7 +164,7 @@ public class Pin extends DrillItem implements java.io.Serializable
         Component component = board.components.get(this.get_component_no());
         if (component == null)
         {
-            System.out.println("Pin.name: component not found");
+            FRLogger.warn("Pin.name: component not found");
             return null;
         }
         return component.get_package().get_pin(pin_no).name;
@@ -189,19 +190,19 @@ public class Pin extends DrillItem implements java.io.Serializable
             Component component = board.components.get(this.get_component_no());
             if (component == null)
             {
-                System.out.println("Pin.get_shape: component not found");
+                FRLogger.warn("Pin.get_shape: component not found");
                 return null;
             }
             Package  lib_package = component.get_package();
             if (lib_package == null)
             {
-                System.out.println("Pin.get_shape: package not found");
+                FRLogger.warn("Pin.get_shape: package not found");
                 return null;
             }
             Package.Pin package_pin = lib_package.get_pin(this.pin_no);
             if (package_pin == null)
             {
-                System.out.println("Pin.get_shape: pin_no out of range");
+                FRLogger.warn("Pin.get_shape: pin_no out of range");
                 return null;
             }
             Vector rel_location = package_pin.relative_location;
@@ -364,7 +365,7 @@ public class Pin extends DrillItem implements java.io.Serializable
             int intersecting_border_line_no = pad_shape.intersecting_border_line_no(pin_center, curr_exit_direction);
             if (intersecting_border_line_no < 0)
             {
-                System.out.println("Pin.get_trace_exit_restrictions: border line not found");
+                FRLogger.warn("Pin.get_trace_exit_restrictions: border line not found");
                 continue;
             }
             Line curr_exit_line = new Line(pin_center, curr_exit_direction);
@@ -489,7 +490,7 @@ public class Pin extends DrillItem implements java.io.Serializable
                 }
                 else
                 {
-                    System.out.println("Pin.get_swappable_pins: swappable pin not found");
+                    FRLogger.warn("Pin.get_swappable_pins: swappable pin not found");
                 }
             }
         }
@@ -533,7 +534,7 @@ public class Pin extends DrillItem implements java.io.Serializable
     {
         if (this.net_count() > 1 || p_other.net_count() > 1)
         {
-            System.out.println("Pin.swap not yet implemented for pins belonging to more than 1 net ");
+            FRLogger.warn("Pin.swap not yet implemented for pins belonging to more than 1 net ");
             return false;
         }
         int this_net_no;
@@ -605,13 +606,13 @@ public class Pin extends DrillItem implements java.io.Serializable
         Shape padstack_shape = this.get_padstack().get_shape(padstack_layer);
         if (padstack_shape == null)
         {
-            System.out.println("Pin.get_min_width: padstack_shape is null");
+            FRLogger.warn("Pin.get_min_width: padstack_shape is null");
             return 0;
         }
         eu.mihosoft.freerouting.geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
         if (padstack_bounding_box == null)
         {
-            System.out.println("Pin.get_min_width: padstack_bounding_box is null");
+            FRLogger.warn("Pin.get_min_width: padstack_bounding_box is null");
             return 0;
         }
         return padstack_bounding_box.min_width();
@@ -637,13 +638,13 @@ public class Pin extends DrillItem implements java.io.Serializable
         Shape padstack_shape = this.get_padstack().get_shape(padstack_layer);
         if (padstack_shape == null)
         {
-            System.out.println("Pin.get_max_width: padstack_shape is null");
+            FRLogger.warn("Pin.get_max_width: padstack_shape is null");
             return 0;
         }
         eu.mihosoft.freerouting.geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
         if (padstack_bounding_box == null)
         {
-            System.out.println("Pin.get_max_width: padstack_bounding_box is null");
+            FRLogger.warn("Pin.get_max_width: padstack_bounding_box is null");
             return 0;
         }
         return padstack_bounding_box.max_width();

@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.designforms.specctra;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -50,13 +52,12 @@ public abstract class Rule
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Rule.read_scope: IO error scanning file");
-                System.out.println(e);
+                FRLogger.error("Rule.read_scope: IO error scanning file", e);
                 return null;
             }
             if (next_token == null)
             {
-                System.out.println("Rule.read_scope: unexpected end of file");
+                FRLogger.warn("Rule.read_scope: unexpected end of file");
                 return null;
             }
             if (next_token == Keyword.CLOSED_BRACKET)
@@ -108,8 +109,8 @@ public abstract class Rule
                 }
                 if (!(next_token instanceof String))
                 {
-                    
-                    System.out.println("Rule.read_layer_rule_scope: string expected");
+
+                    FRLogger.warn("Rule.read_layer_rule_scope: string expected");
                     return null;
                 }
                 layer_names.add((String) next_token);
@@ -123,8 +124,8 @@ public abstract class Rule
                 }
                 if (next_token != Keyword.RULE)
                 {
-                    
-                    System.out.println("Rule.read_layer_rule_scope: rule expected");
+
+                    FRLogger.warn("Rule.read_layer_rule_scope: rule expected");
                     return null;
                 }
                 rule_list.addAll(read_scope(p_scanner));
@@ -133,7 +134,7 @@ public abstract class Rule
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Rule.read_layer_rule_scope: IO error scanning file");
+            FRLogger.error("Rule.read_layer_rule_scope: IO error scanning file", e);
             return null;
         }
     }
@@ -154,20 +155,20 @@ public abstract class Rule
             }
             else
             {
-                System.out.println("Rule.read_width_rule: number expected");
+                FRLogger.warn("Rule.read_width_rule: number expected");
                 return null;
             }
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
-                System.out.println("Rule.read_width_rule: closing bracket expected");
+                FRLogger.warn("Rule.read_width_rule: closing bracket expected");
                 return null;
             }
             return new WidthRule(value);
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Rule.read_width_rule: IO error scanning file");
+            FRLogger.error("Rule.read_width_rule: IO error scanning file", e);
             return null;
         }
     }
@@ -294,7 +295,7 @@ public abstract class Rule
             }
             else
             {
-                System.out.println("Rule.read_clearance_rule: number expected");
+                FRLogger.warn("Rule.read_clearance_rule: number expected");
                 return null;
             }
             Collection<String> class_pairs = new LinkedList<String> ();
@@ -303,13 +304,13 @@ public abstract class Rule
             {
                 if (next_token != Keyword.OPEN_BRACKET)
                 {
-                    System.out.println("Rule.read_clearance_rule: ( expected");
+                    FRLogger.warn("Rule.read_clearance_rule: ( expected");
                     return null;
                 }
                 next_token = p_scanner.next_token();
                 if (next_token != Keyword.TYPE)
                 {
-                    System.out.println("Rule.read_clearance_rule: type expected");
+                    FRLogger.warn("Rule.read_clearance_rule: type expected");
                     return null;
                 }
                 for (;;)
@@ -322,7 +323,7 @@ public abstract class Rule
                     }
                     if (!(next_token instanceof String))
                     {
-                        System.out.println("Rule.read_clearance_rule: string expected");
+                        FRLogger.warn("Rule.read_clearance_rule: string expected");
                         return null;
                     }
                     class_pairs.add((String)next_token);
@@ -330,7 +331,7 @@ public abstract class Rule
                 next_token = p_scanner.next_token();
                 if (next_token != Keyword.CLOSED_BRACKET)
                 {
-                    System.out.println("Rule.read_clearance_rule: closing bracket expected");
+                    FRLogger.warn("Rule.read_clearance_rule: closing bracket expected");
                     return null;
                 }
             }
@@ -338,7 +339,7 @@ public abstract class Rule
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Rule.read_clearance_rule: IO error scanning file");
+            FRLogger.error("Rule.read_clearance_rule: IO error scanning file", e);
             return null;
         }
         

@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.designforms.specctra;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Class for reading resolution scopes from dsn-files.
  *
@@ -45,20 +47,20 @@ public class Resolution extends ScopeKeyword
             Object next_token = p_par.scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Resolution.read_scope: string expected");
+                FRLogger.warn("Resolution.read_scope: string expected");
                 return false;
             }
             p_par.unit = eu.mihosoft.freerouting.board.Unit.from_string((String) next_token);
             if (p_par.unit == null)
             {
-                System.out.println("Resolution.read_scope: unit mil, inch or mm expected");
+                FRLogger.warn("Resolution.read_scope: unit mil, inch or mm expected");
                 return false;
             }
             // read the scale factor
             next_token = p_par.scanner.next_token();
             if (!(next_token instanceof Integer))
             {
-                System.out.println("Resolution.read_scope: integer expected");
+                FRLogger.warn("Resolution.read_scope: integer expected");
                 return false;
             }
             p_par.resolution = ((Integer)next_token).intValue();
@@ -66,14 +68,14 @@ public class Resolution extends ScopeKeyword
             next_token = p_par.scanner.next_token();
             if (next_token != CLOSED_BRACKET)
             {
-                System.out.println("Resolution.read_scope: closing bracket expected");
+                FRLogger.warn("Resolution.read_scope: closing bracket expected");
                 return false;
             }
             return true;
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Resolution.read_scope: IO error scanning file");
+            FRLogger.error("Resolution.read_scope: IO error scanning file", e);
             return false;
         }
     }

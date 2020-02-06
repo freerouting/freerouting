@@ -43,6 +43,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 
 import eu.mihosoft.freerouting.datastructures.Signum;
@@ -401,13 +402,13 @@ public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinA
         }
         if (p_tree_entries == null)
         {
-            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps: p_obstacle_entries is null");
+            FRLogger.warn("ShapeSearchTree.overlaps: p_obstacle_entries is null");
             return;
         }
         RegularTileShape bounds = p_shape.bounding_shape(bounding_directions);
         if (bounds == null)
         {
-            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps: p_shape not bounded");
+            FRLogger.warn("ShapeSearchTree.overlaps: p_shape not bounded");
             return;
         }
         Collection<Leaf> tmp_list = this.overlaps(bounds);
@@ -475,14 +476,14 @@ public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinA
         }
         if (p_obstacle_entries == null)
         {
-            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps_with_clearance: p_obstacle_entries is null");
+            FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: p_obstacle_entries is null");
             return;
         }
         ClearanceMatrix cl_matrix = board.rules.clearance_matrix;
         RegularTileShape bounds = p_shape.bounding_shape(bounding_directions);
         if (bounds == null)
         {
-            System.out.println("eu.mihosoft.freerouting.board.ShapeSearchTree.overlaps_with_clearance: p_shape is not bounded");
+            FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: p_shape is not bounded");
             bounds = board.get_bounding_box();
         }
         int max_clearance =
@@ -644,7 +645,7 @@ public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinA
     {
         if (p_room.get_contained_shape() == null)
         {
-            System.out.println("ShapeSearchTree.complete_shape: p_shape_to_be_contained != null expected");
+            FRLogger.warn("ShapeSearchTree.complete_shape: p_shape_to_be_contained != null expected");
             return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
         }
         if (this.root == null)
@@ -756,7 +757,7 @@ public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinA
         {
             if (this.board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
+                FRLogger.warn("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
             }
             return result;
         }
@@ -968,7 +969,7 @@ public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinA
                 int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(), p_drill_item.shape_layer(i));
                 if (curr_tile_shape == null)
                 {
-                    System.out.println("ShapeSearchTree.calculate_tree_shapes: shape is null");
+                    FRLogger.warn("ShapeSearchTree.calculate_tree_shapes: shape is null");
                 }
                 else
                 {
@@ -1158,7 +1159,7 @@ public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinA
             Leaf curr_leaf = curr_tree_entries[i];
             if (curr_leaf.shape_index_in_object != i)
             {
-                System.out.println("tree entry inconsistent for Item");
+                FRLogger.warn("tree entry inconsistent for Item");
                 return false;
             }
         }

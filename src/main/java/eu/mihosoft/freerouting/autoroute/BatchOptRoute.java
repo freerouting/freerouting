@@ -34,6 +34,7 @@ import eu.mihosoft.freerouting.board.FixedState;
 import eu.mihosoft.freerouting.board.TestLevel;
 
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * To optimize the vias and traces after the batch autorouter has completed the eu.mihosoft.freerouting.board.
@@ -60,7 +61,7 @@ public class BatchOptRoute
     {
         if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION)
         {
-            System.out.println("Before optimize: Via count: " + routing_board.get_vias().size() + ", trace length: " + Math.round(routing_board.cumulative_trace_length()));
+            FRLogger.warn("Before optimize: Via count: " + routing_board.get_vias().size() + ", trace length: " + Math.round(routing_board.cumulative_trace_length()));
         }
         boolean route_improved = true;
         int curr_pass_no = 0;

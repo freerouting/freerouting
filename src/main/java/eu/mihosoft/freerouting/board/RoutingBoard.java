@@ -40,6 +40,7 @@ import eu.mihosoft.freerouting.datastructures.Stoppable;
 import eu.mihosoft.freerouting.datastructures.TimeLimit;
 import eu.mihosoft.freerouting.datastructures.ShapeTree.TreeEntry;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.ViaInfo;
 import eu.mihosoft.freerouting.rules.BoardRules;
 
@@ -707,7 +708,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
         }
         if (!(from_corner instanceof IntPoint && to_corner instanceof IntPoint))
         {
-            System.out.println("RoutingBoard.insert_forced_trace_segment: only implemented for IntPoints");
+            FRLogger.warn("RoutingBoard.insert_forced_trace_segment: only implemented for IntPoints");
             return from_corner;
         }
         start_marking_changed_area();
@@ -809,7 +810,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
                 Point curr_last_corner = new_polyline.last_corner();
                 if (!(curr_last_corner instanceof IntPoint))
                 {
-                    System.out.println("insert_forced_trace_segment: IntPoint expected");
+                    FRLogger.warn("insert_forced_trace_segment: IntPoint expected");
                     return from_corner;
                 }
                 new_corner = curr_last_corner;
@@ -846,7 +847,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
                     p_max_via_recursion_depth, p_max_spring_over_recursion_depth);
             if (!insert_ok)
             {
-                System.out.println("shove trace failed");
+                FRLogger.warn("shove trace failed");
                 return null;
             }
         }
@@ -945,7 +946,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
         }
         if (p_item.net_count() > 1)
         {
-            System.out.println("RoutingBoard.eu.mihosoft.freerouting.autoroute: net_count > 1 not yet implemented");
+            FRLogger.warn("RoutingBoard.autoroute: net_count > 1 not yet implemented");
         }
         int route_net_no = p_item.get_net_no(0);
         AutorouteControl ctrl_settings = new AutorouteControl(this, route_net_no, p_settings, p_via_costs, p_settings.autoroute_settings.get_trace_cost_arr());

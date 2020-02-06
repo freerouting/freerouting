@@ -47,6 +47,7 @@ import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.AngleRestriction;
 import eu.mihosoft.freerouting.board.SearchTreeObject;
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class for autorouting an incomplete connection via a maze search algorithm.
@@ -271,7 +272,7 @@ public class MazeSearchAlgo
                 FloatPoint[] nearest_points = next_room_shape.nearest_border_points_approx(shape_entry_middle, 2);
                 if (nearest_points.length < 2)
                 {
-                    System.out.println("MazeSearchAlgo.expand_to_room_doors: nearest_points.length == 2 expected");
+                    FRLogger.warn("MazeSearchAlgo.expand_to_room_doors: nearest_points.length == 2 expected");
                     next_room_is_thick = false;
                 }
                 else
@@ -550,7 +551,7 @@ public class MazeSearchAlgo
             {
                 if (this.autoroute_engine.board.get_test_level().ordinal() >= eu.mihosoft.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.println("MazeSearchAlgo:check_door_width door_shape is empty");
+                    FRLogger.warn("MazeSearchAlgo:check_door_width door_shape is empty");
                 }
                 return true;
             }
@@ -1042,7 +1043,7 @@ public class MazeSearchAlgo
         }
         else
         {
-            System.out.println("MazeSearchAlgo. room_shape_is_thick: unexpected obstacle item");
+            FRLogger.warn("MazeSearchAlgo. room_shape_is_thick: unexpected obstacle item");
             obstacle_half_width = 0;
         }
         return obstacle_half_width >= this.ctrl.compensated_trace_half_width[layer];

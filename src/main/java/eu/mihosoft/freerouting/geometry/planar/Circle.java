@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Discribes functionality of a circle shape in the plane.
  *
@@ -37,7 +39,7 @@ public class Circle implements ConvexShape, java.io.Serializable
         center = p_center;
         if (p_radius < 0)
         {
-            System.out.println("Circle: unexpected negative radius");
+            FRLogger.warn("Circle: unexpected negative radius");
             radius = -p_radius;
         }
         else
@@ -281,7 +283,7 @@ public class Circle implements ConvexShape, java.io.Serializable
         }
         if (!(p_vector instanceof IntVector))
         {
-            System.out.println("Circle.translate_by only implemented for IntVectors till now");
+            FRLogger.warn("Circle.translate_by only implemented for IntVectors till now");
             return this;
         }
         IntPoint new_center = (IntPoint) center.translate_by(p_vector);
@@ -291,7 +293,7 @@ public class Circle implements ConvexShape, java.io.Serializable
     
     public FloatPoint nearest_point_approx(FloatPoint p_point)
     {
-        System.out.println("Circle.nearest_point_approx not yet implemented");
+        FRLogger.warn("Circle.nearest_point_approx not yet implemented");
         return null;
     }
     
@@ -318,7 +320,7 @@ public class Circle implements ConvexShape, java.io.Serializable
     
     public Polyline[] cutout(Polyline p_polyline)
     {
-        System.out.println("Circle.cutout not yet implemented");
+        FRLogger.warn("Circle.cutout not yet implemented");
         return null;
     }
     

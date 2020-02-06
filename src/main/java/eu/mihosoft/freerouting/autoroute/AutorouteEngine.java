@@ -44,6 +44,7 @@ import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.ShapeSearchTree90Degree;
 import eu.mihosoft.freerouting.board.ShapeSearchTree45Degree;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Temporary eu.mihosoft.freerouting.autoroute data stored on the RoutingBoard.
@@ -120,8 +121,7 @@ public class AutorouteEngine
             maze_search_algo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
         } catch (Exception e)
         {
-            System.out.println("AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance");
-            System.out.println(e);
+            FRLogger.error("AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance", e);
             maze_search_algo = null;
         }
         MazeSearchAlgo.Result search_result = null;
@@ -132,7 +132,7 @@ public class AutorouteEngine
                 search_result = maze_search_algo.find_connection();
             } catch (Exception e)
             {
-                System.out.println("AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection");
+                FRLogger.error("AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection", e);
             }
         }
         LocateFoundConnectionAlgo autoroute_result = null;
@@ -145,7 +145,7 @@ public class AutorouteEngine
                         board.rules.get_trace_angle_restriction(), p_ripped_item_list, board.get_test_level());
             } catch (Exception e)
             {
-                System.out.println("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance");
+                FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
             }
         }
         if (!this.maintain_database)
@@ -164,7 +164,7 @@ public class AutorouteEngine
         {
             if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("AutorouteEngine.autoroute_connection: result_items != null expected");
+                FRLogger.warn("AutorouteEngine.autoroute_connection: result_items != null expected");
             }
             return AutorouteResult.ALREADY_CONNECTED;
         }
@@ -371,7 +371,7 @@ public class AutorouteEngine
         }
         else
         {
-            System.out.println("AutorouteEngine.remove_complete_expansion_room: this.complete_expansion_rooms is null");
+            FRLogger.warn("AutorouteEngine.remove_complete_expansion_room: this.complete_expansion_rooms is null");
         }
         this.drill_page_array.invalidate(room_shape);
     }
@@ -444,8 +444,7 @@ public class AutorouteEngine
             return result;
         } catch (Exception e)
         {
-            System.out.print("AutorouteEngine.complete_expansion_room: ");
-            System.out.println(e);
+            FRLogger.error("AutorouteEngine.complete_expansion_room: ", e);
             return new LinkedList<CompleteFreeSpaceExpansionRoom>();
         }
 

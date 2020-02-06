@@ -36,6 +36,7 @@ import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.AngleRestriction;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
@@ -125,7 +126,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
             {
                 if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.println("LocateFoundConnectionAlgo.calculate_next_trace_corner: left tangent point is null");
+                    FRLogger.warn("LocateFoundConnectionAlgo.calculate_next_trace_corner: left tangent point is null");
                 }
                 left_tangent_point = door_left_corner;
             }
@@ -134,7 +135,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
             {
                 if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.println("LocateFoundConnectionAlgo.calculate_next_trace_corner: right tangent point is null");
+                    FRLogger.warn("LocateFoundConnectionAlgo.calculate_next_trace_corner: right tangent point is null");
                 }
                 right_tangent_point = door_right_corner;
             }
@@ -186,7 +187,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
                     // Should not happen because the previous door was not passed compledtely.
                     if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
                     {
-                        System.out.println("LocateFoundConnectionAlgo.calculate_next_trace_corner: next door passed unexpected");
+                        FRLogger.warn("LocateFoundConnectionAlgo.calculate_next_trace_corner: next door passed unexpected");
                     }
                     ++this.current_to_door_index;
                     result.add(this.current_from_point);
@@ -384,7 +385,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo.right_turn_next_corner: left tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo.right_turn_next_corner: left tangential point is null");
             }
             return p_from_corner;
         }
@@ -394,7 +395,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo.right_turn_next_corner: right tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo.right_turn_next_corner: right tangential point is null");
             }
             return p_from_corner;
         }
@@ -418,7 +419,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo.left_turn_next_corner: right tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo.left_turn_next_corner: right tangential point is null");
             }
             return p_from_corner;
         }
@@ -428,7 +429,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo.left_turn_next_corner: left tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo.left_turn_next_corner: left tangential point is null");
             }
             return p_from_corner;
         }
@@ -450,7 +451,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo. right_left_tangential_point: right tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo. right_left_tangential_point: right tangential point is null");
             }
             return null;
         }
@@ -460,7 +461,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo. right_left_tangential_point: left tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo. right_left_tangential_point: left tangential point is null");
             }
             return null;
         }
@@ -481,7 +482,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo. left_right_tangential_point: left tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo. left_right_tangential_point: left tangential point is null");
             }
             return null;
         }
@@ -491,7 +492,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             if (this.test_level.ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("LocateFoundConnectionAlgo. left_right_tangential_point: right tangential point is null");
+                FRLogger.warn("LocateFoundConnectionAlgo. left_right_tangential_point: right tangential point is null");
             }
             return null;
         }

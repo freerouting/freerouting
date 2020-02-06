@@ -24,6 +24,8 @@
 package eu.mihosoft.freerouting.designforms.specctra;
 
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Handels the placement bata of a eu.mihosoft.freerouting.library component.
  *
@@ -54,7 +56,7 @@ public class Component extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Component.read_scope: IO error scanning file");
+            FRLogger.error("Component.read_scope: IO error scanning file", e);
             return false;
         }
         return true;
@@ -68,7 +70,7 @@ public class Component extends ScopeKeyword
         Object next_token = p_scanner.next_token();
         if (!(next_token instanceof String))
         {
-            System.out.println("Component.read_scope: component name expected");
+            FRLogger.warn("Component.read_scope: component name expected");
             return null;
         }
         String name =  (String) next_token;
@@ -141,19 +143,19 @@ public class Component extends ScopeKeyword
         eu.mihosoft.freerouting.library.Package.Pin package_pin = p_component.get_package().get_pin(p_pin_no);
         if (package_pin == null)
         {
-            System.out.println("Component.write_pin_info: package pin not found");
+            FRLogger.warn("Component.write_pin_info: package pin not found");
             return;
         }
         eu.mihosoft.freerouting.board.Pin component_pin = p_par.board.get_pin(p_component.no, p_pin_no);
         if (component_pin == null)
         {
-            System.out.println("Component.write_pin_info: component pin not found");
+            FRLogger.warn("Component.write_pin_info: component pin not found");
             return;
         }
         String cl_class_name = p_par.board.rules.clearance_matrix.get_name(component_pin.clearance_class_no());
         if (cl_class_name == null)
         {
-            System.out.println("Component.write_pin_info: clearance class  name not found");
+            FRLogger.warn("Component.write_pin_info: clearance class  name not found");
             return;
         }
         p_par.file.new_line();
@@ -201,7 +203,7 @@ public class Component extends ScopeKeyword
                 String cl_class_name = p_par.board.rules.clearance_matrix.get_name(curr_obstacle_area.clearance_class_no());
                 if (cl_class_name == null)
                 {
-                    System.out.println("Component.write_keepout_infos: clearance class name not found");
+                    FRLogger.warn("Component.write_keepout_infos: clearance class name not found");
                     return;
                 }
                 p_par.file.new_line();
@@ -253,7 +255,7 @@ public class Component extends ScopeKeyword
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Component.read_place_scope: String expected");
+                FRLogger.warn("Component.read_place_scope: String expected");
                 return null;
             }
             String name = (String) next_token;
@@ -277,7 +279,7 @@ public class Component extends ScopeKeyword
                 }
                 else
                 {
-                    System.out.println("Component.read_place_scope: number  expected");
+                    FRLogger.warn("Component.read_place_scope: number  expected");
                     return null;
                 }
             }
@@ -289,7 +291,7 @@ public class Component extends ScopeKeyword
             }
             else if (next_token != FRONT)
             {
-                System.out.println("Component.read_place_scope: Keyword.FRONT expected");
+                FRLogger.warn("Component.read_place_scope: Keyword.FRONT expected");
             }
             double rotation;
             next_token = p_scanner.next_token();
@@ -303,7 +305,7 @@ public class Component extends ScopeKeyword
             }
             else
             {
-                System.out.println("Component.read_place_scope: number expected");
+                FRLogger.warn("Component.read_place_scope: number expected");
                 return null;
             }
             boolean position_fixed = false;
@@ -359,7 +361,7 @@ public class Component extends ScopeKeyword
             }
             if (next_token != CLOSED_BRACKET)
             {
-                System.out.println("Component.read_place_scope: ) expected");
+                FRLogger.warn("Component.read_place_scope: ) expected");
                 return null;
             }
             ComponentPlacement.ComponentLocation result =
@@ -369,9 +371,8 @@ public class Component extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Component.read_scope: IO error scanning file");
-            System.out.println(e);
-            return  null;
+            FRLogger.error("Component.read_scope: IO error scanning file", e);
+            return null;
         }
     }
     
@@ -381,7 +382,7 @@ public class Component extends ScopeKeyword
         Object next_token = p_scanner.next_token();
         if (!(next_token instanceof String))
         {
-            System.out.println("Component.read_item_clearance_info: String expected");
+            FRLogger.warn("Component.read_item_clearance_info: String expected");
             return null;
         }
         String name = (String) next_token;
@@ -402,12 +403,12 @@ public class Component extends ScopeKeyword
         }
         if (next_token != CLOSED_BRACKET)
         {
-            System.out.println("Component.read_item_clearance_info: ) expected");
+            FRLogger.warn("Component.read_item_clearance_info: ) expected");
             return null;
         }
         if (cl_class_name == null)
         {
-            System.out.println("Component.read_item_clearance_info: clearance class name not found");
+            FRLogger.warn("Component.read_item_clearance_info: clearance class name not found");
             return null;
         }
         return new ComponentPlacement.ItemClearanceInfo(name, cl_class_name);

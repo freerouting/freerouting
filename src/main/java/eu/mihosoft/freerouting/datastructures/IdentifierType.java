@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.datastructures;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.io.OutputStreamWriter;
 
 /**
@@ -60,7 +62,7 @@ public class IdentifierType
         }
         catch (java.io.IOException e)
         {
-            System.out.println("IndentFileWriter.new_line: unable to write to file");
+            FRLogger.warn("IndentFileWriter.new_line: unable to write to file");
         }
     }
     
@@ -71,7 +73,7 @@ public class IdentifierType
     {
         if (p_string == null)
         {
-            System.out.println("IdentifierType.is_legal: p_string is null");
+            FRLogger.warn("IdentifierType.is_legal: p_string is null");
             return false;
         }
         for (int i = 0; i < reserved_chars.length; ++i)
