@@ -135,8 +135,10 @@ The following command line arguments are supported by freerouter:
 * -mp [number of passes]: sets the upper limit of the number of passes that will be performed
 * -l [language]: "de" for German, otherwise it's English
 
-A complete command line looks something like this:
+A complete command line looks something like this if your are using PowerShell on Windows:
 
 `
-freerouter-executable.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 
+& "c:\Program Files\Java\jdk-11.0.6\bin\java.exe" -jar freerouting-executable.jar -de MyBoard.dsn -do MyBoard.ses -mp 100
 `
+
+This would read the _MyBoard.dsn_ file, do the auto-routing for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
