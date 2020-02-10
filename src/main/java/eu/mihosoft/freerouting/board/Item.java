@@ -1453,7 +1453,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
      * to other items
      */
     private int clearance_class;
-    /** The eu.mihosoft.freerouting.board this Itewm is on */
+    /** The eu.mihosoft.freerouting.board this Item is on */
     transient public BasicBoard board;
     /** The nets, to which this item belongs */
     int[] net_no_arr;

@@ -43,6 +43,7 @@ import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
 
 import eu.mihosoft.freerouting.gui.BoardPanel;
 import eu.mihosoft.freerouting.gui.ComboBoxLayer;
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.board.LayerStructure;
 import eu.mihosoft.freerouting.board.RoutingBoard;
@@ -739,7 +740,7 @@ public class BoardHandling extends BoardHandlingImpl
             {
                 // reset the start pass number in the autorouter in case
                 // a batch autorouter is undone.
-                this.settings.autoroute_settings.set_pass_no(1);
+                this.settings.autoroute_settings.set_start_pass_no(1);
             }
             screen_messages.set_status_message(resources.getString("undo"));
         }
@@ -1023,6 +1024,7 @@ public class BoardHandling extends BoardHandlingImpl
         }
         catch (Exception e)
         {
+            FRLogger.logger.error(e);
             return false;
         }
         board.set_test_level(p_test_level);
@@ -1466,15 +1468,18 @@ public class BoardHandling extends BoardHandlingImpl
     /**
      * Start the batch autorouter on the whole Board
      */
-    public void start_batch_autorouter()
+    public InteractiveActionThread start_batch_autorouter()
     {
         if (board_is_read_only)
         {
-            return;
+            return null;
         }
         board.generate_snapshot();
         this.interactive_action_thread = InteractiveActionThread.get_batch_autorouter_instance(this);
+
         this.interactive_action_thread.start();
+
+        return this.interactive_action_thread;
     }
 
     /**

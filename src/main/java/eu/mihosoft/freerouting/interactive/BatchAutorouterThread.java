@@ -53,6 +53,9 @@ public class BatchAutorouterThread extends InteractiveActionThread
 
     protected void thread_action()
     {
+        for (ThreadActionListener hl : this.listeners)
+            hl.autorouterStarted();
+
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
 
         try
@@ -70,7 +73,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             hdlg.screen_messages.set_status_message(start_message);
             boolean fanout_first =
                     hdlg.get_settings().autoroute_settings.get_with_fanout() &&
-                    hdlg.get_settings().autoroute_settings.get_pass_no() <= 1;
+                    hdlg.get_settings().autoroute_settings.get_start_pass_no() <= 1;
             if (fanout_first)
             {
                 BatchFanout.fanout_board(this);
@@ -133,6 +136,16 @@ public class BatchAutorouterThread extends InteractiveActionThread
         }
 
         FRLogger.traceExit("BatchAutorouterThread.thread_action()");
+
+        for (ThreadActionListener hl : this.listeners)
+        {
+            if (this.is_stop_requested()) {
+                hl.autorouterAborted();
+            }
+            else {
+                hl.autorouterFinished();
+            }
+        }
     }
 
     public void draw(java.awt.Graphics p_graphics)

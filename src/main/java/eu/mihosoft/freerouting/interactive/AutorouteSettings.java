@@ -135,15 +135,26 @@ public class AutorouteSettings implements java.io.Serializable
         return start_ripup_costs;
     }
 
-    public void set_pass_no(int p_value)
+    public void set_start_pass_no(int p_value)
     {
         start_pass_no = Math.max(p_value, 1);
-        start_pass_no = Math.min(start_pass_no, 99);
+        start_pass_no = Math.min(start_pass_no, 99999);
     }
 
-    public int get_pass_no()
+    public int get_start_pass_no()
     {
         return start_pass_no;
+    }
+
+    public void set_stop_pass_no(int p_value)
+    {
+        stop_pass_no = Math.max(p_value, start_pass_no);
+        stop_pass_no = Math.min(stop_pass_no, 99999);
+    }
+
+    public int get_stop_pass_no()
+    {
+        return stop_pass_no;
     }
 
     public void increment_pass_no()
@@ -347,6 +358,7 @@ public class AutorouteSettings implements java.io.Serializable
     private int plane_via_costs;
     private int start_ripup_costs;
     private int start_pass_no;
+    private int stop_pass_no;
     private final boolean[] layer_active_arr;
     private final boolean[] preferred_direction_is_horizontal_arr;
     private final double[] preferred_direction_trace_cost_arr;

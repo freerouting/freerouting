@@ -173,78 +173,69 @@ public class BoardFrame extends javax.swing.JFrame
      * If p_is_import, the design is read from a scpecctra dsn file.
      * Returns false, if the file is invalid.
      */
-    boolean read(java.io.InputStream p_input_stream, boolean p_is_import, javax.swing.JTextField p_message_field)
-    {
+    boolean read(java.io.InputStream p_input_stream, boolean p_is_import, javax.swing.JTextField p_message_field) {
         java.awt.Point viewport_position = null;
-        if (p_is_import)
-        {
-            DsnFile.ReadResult read_result = board_panel.board_handling.import_design(p_input_stream, this.board_observers,
+        DsnFile.ReadResult read_result = null;
+        if (p_is_import) {
+            read_result = board_panel.board_handling.import_design(p_input_stream, this.board_observers,
                     this.item_id_no_generator, this.test_level);
-            if (read_result !=  DsnFile.ReadResult.OK)
-            {
-                if (p_message_field != null)
-                {
-                    if (read_result == DsnFile.ReadResult.OUTLINE_MISSING)
-                    {
-                        p_message_field.setText(resources.getString("error_7"));
-                    }
-                    else
-                    {
-                         p_message_field.setText(resources.getString("error_6"));
-                    }
-                }
-                return false;
+            if (read_result == DsnFile.ReadResult.OK) {
+                viewport_position = new java.awt.Point(0, 0);
+                initialize_windows();
             }
-            viewport_position = new java.awt.Point(0,0);
-            initialize_windows();
-        }
-        else
-        {
+        } else {
             java.io.ObjectInputStream object_stream = null;
-            try
-            {
+            try {
                 object_stream = new java.io.ObjectInputStream(p_input_stream);
-            }
-            catch (java.io.IOException e)
-            {
+            } catch (java.io.IOException e) {
                 return false;
             }
             boolean read_ok = board_panel.board_handling.read_design(object_stream, this.test_level);
-            if (!read_ok)
-            {
+            if (!read_ok) {
                 return false;
             }
             java.awt.Point frame_location;
             java.awt.Rectangle frame_bounds;
-            try
-            {
+            try {
                 viewport_position = (java.awt.Point) object_stream.readObject();
                 frame_location = (java.awt.Point) object_stream.readObject();
                 frame_bounds = (java.awt.Rectangle) object_stream.readObject();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 return false;
             }
             this.setLocation(frame_location);
             this.setBounds(frame_bounds);
-            
+
             allocate_permanent_subwindows();
-            
-            for (int i = 0; i < this.permanent_subwindows.length; ++i)
-            {
+
+            for (int i = 0; i < this.permanent_subwindows.length; ++i) {
                 this.permanent_subwindows[i].read(object_stream);
             }
         }
-        try
-        {
+        try {
             p_input_stream.close();
-        }
-        catch (java.io.IOException e)
-        {
+        } catch (java.io.IOException e) {
             return false;
         }
-        
+
+        return update_gui(p_is_import, read_result, viewport_position, p_message_field);
+    }
+
+    private boolean update_gui(boolean p_is_import, DsnFile.ReadResult read_result, java.awt.Point viewport_position, javax.swing.JTextField p_message_field)
+    {
+        if (p_is_import) {
+            if (read_result != DsnFile.ReadResult.OK) {
+                if (p_message_field != null) {
+                    if (read_result == DsnFile.ReadResult.OUTLINE_MISSING) {
+                        p_message_field.setText(resources.getString("error_7"));
+                    } else {
+                        p_message_field.setText(resources.getString("error_6"));
+                    }
+                }
+                return false;
+            }
+        }
+
         java.awt.Dimension panel_size = board_panel.board_handling.graphics_context.get_panel_size();
         board_panel.setSize(panel_size);
         board_panel.setPreferredSize(panel_size);

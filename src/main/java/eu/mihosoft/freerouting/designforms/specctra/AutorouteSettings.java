@@ -93,7 +93,7 @@ public class AutorouteSettings
                 }
                 else if (next_token == Keyword.START_PASS_NO)
                 {
-                    result.set_pass_no(DsnFile.read_integer_scope(p_scanner));
+                    result.set_start_pass_no(DsnFile.read_integer_scope(p_scanner));
                 }
                 else if (next_token == Keyword.LAYER_RULE)
                 {
@@ -280,7 +280,7 @@ public class AutorouteSettings
         p_file.new_line();
         p_file.write("(start_pass_no ");
         {
-            Integer pass_no = p_settings.get_pass_no();
+            Integer pass_no = p_settings.get_start_pass_no();
             p_file.write(pass_no.toString());
         }
         p_file.write(")");

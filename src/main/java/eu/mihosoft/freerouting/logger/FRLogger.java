@@ -30,12 +30,17 @@ public class FRLogger {
 
     public static void traceExit(String perfId)
     {
+        traceExit(perfId, null);
+    }
+
+    public static void traceExit(String perfId, Object result)
+    {
         var timeElapsed = Duration.between(perfData.get(perfId.hashCode()), java.time.Instant.now()).toMillis();
 
         perfData.remove(perfId.hashCode());
         if (timeElapsed < 0) {
             timeElapsed = 0;
         }
-        logger.trace("Method '" + perfId + "' was performed in " + performanceFormat.format(timeElapsed/1000.0) + " seconds.");
+        logger.trace("Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)") + "' was performed in " + performanceFormat.format(timeElapsed/1000.0) + " seconds.");
     }
 }

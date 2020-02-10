@@ -205,7 +205,7 @@ public class ExpandTestState extends InteractiveState
         this.control_settings = new AutorouteControl(hdlg.get_routing_board(), route_net_no, hdlg.settings);
         // this.control_settings.ripup_allowed = true;
         // this.control_settings.is_fanout = true;
-        this.control_settings.ripup_pass_no = hdlg.settings.autoroute_settings.get_pass_no();
+        this.control_settings.ripup_pass_no = hdlg.settings.autoroute_settings.get_start_pass_no();
         this.control_settings.ripup_costs = this.control_settings.ripup_pass_no * hdlg.settings.autoroute_settings.get_start_ripup_costs();
         this.control_settings.vias_allowed = false;
         this.autoroute_engine = new AutorouteEngine(board, this.control_settings.trace_clearance_class_no, false);
