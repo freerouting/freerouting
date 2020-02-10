@@ -28,11 +28,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class for reading and writing package scopes from dsn-files.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Package
 {
@@ -62,7 +63,7 @@ public class Package
             Object next_token = p_scanner.next_token();
             if ( !(next_token instanceof String))
             {
-                System.out.println("Package.read_scope: String expected");
+                FRLogger.warn("Package.read_scope: String expected");
                 return null;
             }
             String package_name = (String) next_token;
@@ -74,7 +75,7 @@ public class Package
                 
                 if (next_token == null)
                 {
-                    System.out.println("Package.read_scope: unexpected end of file");
+                    FRLogger.warn("Package.read_scope: unexpected end of file");
                     return null;
                 }
                 if (next_token == Keyword.CLOSED_BRACKET)
@@ -108,7 +109,7 @@ public class Package
                         next_token = p_scanner.next_token();
                         if (next_token != Keyword.CLOSED_BRACKET)
                         {
-                            System.out.println("Package.read_scope: closed bracket expected");
+                            FRLogger.warn("Package.read_scope: closed bracket expected");
                             return null;
                         }
                     }
@@ -152,8 +153,7 @@ public class Package
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Package.read_scope: IO error scanning file");
-            System.out.println(e);
+            FRLogger.error("Package.read_scope: IO error scanning file", e);
             return null;
         }
     }
@@ -242,8 +242,8 @@ public class Package
         }
         else
         {
-            boundary_shape = p_keepout.area .get_border();
-            holes = p_keepout.area .get_holes();
+            boundary_shape = p_keepout.area.get_border();
+            holes = p_keepout.area.get_holes();
         }
         p_par.file.start_scope();
         if (p_is_via_keepout)
@@ -286,7 +286,7 @@ public class Package
             }
             else
             {
-                System.out.println("Package.read_pin_info: String or Integer expected");
+                FRLogger.warn("Package.read_pin_info: String or Integer expected");
                 return null;
             }
             double rotation = 0;
@@ -320,7 +320,7 @@ public class Package
             }
             else
             {
-                System.out.println("Package.read_pin_info: String or Integer expected");
+                FRLogger.warn("Package.read_pin_info: String or Integer expected");
                 return null;
             }
             
@@ -338,7 +338,7 @@ public class Package
                 }
                 else
                 {
-                    System.out.println("Package.read_pin_info: number expected");
+                    FRLogger.warn("Package.read_pin_info: number expected");
                     return null;
                 }
             }
@@ -350,7 +350,7 @@ public class Package
                 
                 if (next_token == null)
                 {
-                    System.out.println("Package.read_pin_info: unexpected end of file");
+                    FRLogger.warn("Package.read_pin_info: unexpected end of file");
                     return null;
                 }
                 if (next_token == Keyword.CLOSED_BRACKET)
@@ -374,7 +374,7 @@ public class Package
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Package.read_pin_info: IO error while scanning file");
+            FRLogger.error("Package.read_pin_info: IO error while scanning file", e);
             return null;
         }
     }
@@ -395,18 +395,18 @@ public class Package
             }
             else
             {
-                System.out.println("Package.read_rotation: number expected");
+                FRLogger.warn("Package.read_rotation: number expected");
             }
             // Overread The closing bracket.
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
-                System.out.println("Package.read_rotation: closing bracket expected");
+                FRLogger.warn("Package.read_rotation: closing bracket expected");
             }
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Package.read_rotation: IO error while scanning file");
+            FRLogger.error("Package.read_rotation: IO error while scanning file", e);
         }
         return result;
     }
@@ -464,7 +464,7 @@ public class Package
         next_token = p_scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
-            System.out.println("Package.read_placement_side: closing bracket expected");
+            FRLogger.warn("Package.read_placement_side: closing bracket expected");
         }
         return result;
     }
@@ -481,7 +481,7 @@ public class Package
     public final Collection<Shape.ReadAreaScopeResult> via_keepouts;
     /** Collection of place keepoouts belonging to this package */
     public final Collection<Shape.ReadAreaScopeResult> place_keepouts;
-    /** If false, the package is placed on the back side of the eu.mihosoft.freerouting.board */
+    /** If false, the package is placed on the back side of the board */
     public final boolean is_front;
     
     

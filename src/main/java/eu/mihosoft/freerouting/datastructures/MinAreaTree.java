@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 import eu.mihosoft.freerouting.geometry.planar.ShapeBoundingDirections;
 import eu.mihosoft.freerouting.geometry.planar.RegularTileShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Binary search tree for shapes in the plane.
@@ -39,7 +40,7 @@ import eu.mihosoft.freerouting.geometry.planar.RegularTileShape;
  * Instead any algorithm to calculate a bounding shape of two input shapes can be used.
  * The algorithm would of course also work for higher dimensions.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MinAreaTree extends ShapeTree
 {
@@ -200,7 +201,7 @@ public class MinAreaTree extends ShapeTree
         }
         else
         {
-            System.out.println("MinAreaTree.remove_leaf: parent inconsistent");
+            FRLogger.warn("MinAreaTree.remove_leaf: parent inconsistent");
             other_leaf = null;
         }
         // link the other leaf to the grand_parent and remove the parent node
@@ -223,7 +224,7 @@ public class MinAreaTree extends ShapeTree
             }
             else
             {
-                System.out.println("MinAreaTree.remove_leaf: grand_parent inconsistent");
+                FRLogger.warn("MinAreaTree.remove_leaf: grand_parent inconsistent");
             }
         }
         parent.parent = null;

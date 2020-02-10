@@ -25,15 +25,16 @@ package eu.mihosoft.freerouting.interactive;
 
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 import eu.mihosoft.freerouting.board.RoutingBoard;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Contains the values of the eu.mihosoft.freerouting.interactive settings of the eu.mihosoft.freerouting.board handling.
+ * Contains the values of the interactive settings of the board handling.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Settings implements java.io.Serializable
 {
-    /** Creates a new eu.mihosoft.freerouting.interactive settings variable. */
+    /** Creates a new interactive settings variable. */
     public Settings(RoutingBoard p_board,  ActivityReplayFile p_activityReplayFile)
     {
         this.activityReplayFile = p_activityReplayFile;
@@ -42,7 +43,7 @@ public class Settings implements java.io.Serializable
         push_enabled = true;
         drag_components_enabled = true;
         select_on_all_visible_layers = true; // else selection is only on the current layer
-        is_stitch_route = false; // else eu.mihosoft.freerouting.interactive routing is dynamic
+        is_stitch_route = false; // else interactive routing is dynamic
         trace_pull_tight_region_width = Integer.MAX_VALUE;
         trace_pull_tight_accuracy = 500;
         via_snap_to_smd_center = true;
@@ -116,7 +117,7 @@ public class Settings implements java.io.Serializable
         return this.drag_components_enabled;
     }
     
-    /** indicates if eu.mihosoft.freerouting.interactive selections are made on all visible layers or only on the current layer.*/
+    /** indicates if interactive selections are made on all visible layers or only on the current layer.*/
     public  boolean get_select_on_all_visible_layers()
     {
         return this.select_on_all_visible_layers;
@@ -157,7 +158,7 @@ public class Settings implements java.io.Serializable
         return this.zoom_with_wheel;
     }
     
-    /** The filter used in eu.mihosoft.freerouting.interactive selection of eu.mihosoft.freerouting.board items. */
+    /** The filter used in interactive selection of board items. */
     public ItemSelectionFilter get_item_selection_filter()
     {
         return this.item_selection_filter;
@@ -186,7 +187,7 @@ public class Settings implements java.io.Serializable
     }
     
     /**
-     * The index of the clearance class used for traces in eu.mihosoft.freerouting.interactive routing in the clearance matrix,
+     * The index of the clearance class used for traces in interactive routing in the clearance matrix,
      * if manual_route_selection is on.
      */
     public  int get_manual_trace_clearance_class()
@@ -195,7 +196,7 @@ public class Settings implements java.io.Serializable
     }
     
     /**
-     * The index of the via rule used in routing in the eu.mihosoft.freerouting.board via rules if manual_route_selection is on.
+     * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
      */
     public  int get_manual_via_rule_index()
     {
@@ -219,14 +220,14 @@ public class Settings implements java.io.Serializable
     {
         if (p_layer_no < 0 || p_layer_no >= this.manual_trace_half_width_arr.length)
         {
-            System.out.println("Settings.get_manual_trace_half_width p_layer_no out of range");
+            FRLogger.warn("Settings.get_manual_trace_half_width p_layer_no out of range");
             return 0;
         }
         return this.manual_trace_half_width_arr[p_layer_no];
     }
     
     /**
-     * The index of the via rule used in routing in the eu.mihosoft.freerouting.board via rules if manual_route_selection is on.
+     * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
      */
     public  void set_manual_via_rule_index(int p_value)
     {
@@ -284,7 +285,7 @@ public class Settings implements java.io.Serializable
         this.automatic_neckdown = p_value;
     }
     
-    /** The filter used in eu.mihosoft.freerouting.interactive selection of eu.mihosoft.freerouting.board items. */
+    /** The filter used in interactive selection of board items. */
     public  void set_item_selection_filter(ItemSelectionFilter p_value)
     {
         if (read_only)
@@ -295,7 +296,7 @@ public class Settings implements java.io.Serializable
     }
     
     /**
-     * Enables or disables pushing obstacles in eu.mihosoft.freerouting.interactive routing
+     * Enables or disables pushing obstacles in interactive routing
      */
     public void set_push_enabled(boolean p_value)
     {
@@ -322,7 +323,7 @@ public class Settings implements java.io.Serializable
     
     
     /**
-     * Sets, if item selection is on all eu.mihosoft.freerouting.board layers or only
+     * Sets, if item selection is on all board layers or only
      * on the current layer.
      */
     public void set_select_on_all_visible_layers(boolean p_value)
@@ -400,7 +401,7 @@ public class Settings implements java.io.Serializable
     }
     
     /**
-     * Sets the manual trace half width used in eu.mihosoft.freerouting.interactive routing.
+     * Sets the manual trace half width used in interactive routing.
      */
     public void set_manual_trace_half_width( int p_layer_no, int p_value)
     {
@@ -415,7 +416,7 @@ public class Settings implements java.io.Serializable
     
     
     /**
-     * The index of the clearance class used for traces in eu.mihosoft.freerouting.interactive routing in the clearance matrix,
+     * The index of the clearance class used for traces in interactive routing in the clearance matrix,
      * if manual_route_selection is on.
      */
     public void set_manual_trace_clearance_class(int p_index)
@@ -448,7 +449,7 @@ public class Settings implements java.io.Serializable
     }
     
     /**
-     * Changes the eu.mihosoft.freerouting.interactive selectability of p_item_type.
+     * Changes the interactive selectability of p_item_type.
      */
     public void set_selectable(ItemSelectionFilter.SelectableChoices p_item_type, boolean p_value)
     {
@@ -491,12 +492,12 @@ public class Settings implements java.io.Serializable
         p_stream.defaultReadObject();
         if (this.item_selection_filter == null)
         {
-            System.out.println("Settings.readObject: item_selection_filter is null");
+            FRLogger.warn("Settings.readObject: item_selection_filter is null");
             this.item_selection_filter = new ItemSelectionFilter();
         }
         if (this.snapshot_attributes == null)
         {
-            System.out.println("Settings.readObject: snapshot_attributes is null");
+            FRLogger.warn("Settings.readObject: snapshot_attributes is null");
             this.snapshot_attributes = new SnapShot.Attributes();
         }
         this.read_only = false;
@@ -512,7 +513,7 @@ public class Settings implements java.io.Serializable
     /** allows dragging components with the route */
     boolean drag_components_enabled;
     
-    /** indicates if eu.mihosoft.freerouting.interactive selections are made on all visible layers or only on the current layer.*/
+    /** indicates if interactive selections are made on all visible layers or only on the current layer */
     boolean select_on_all_visible_layers ;
     
     /** Route mode: stitching or dynamic */
@@ -552,13 +553,13 @@ public class Settings implements java.io.Serializable
     boolean hilight_routing_obstacle;
     
     /**
-     * The index of the clearance class used for traces in eu.mihosoft.freerouting.interactive routing in the clearance matrix,
+     * The index of the clearance class used for traces in interactive routing in the clearance matrix,
      * if manual_route_selection is on.
      */
     int manual_trace_clearance_class;
     
     /**
-     * The index of the via rule used in routing in the eu.mihosoft.freerouting.board via rules if manual_route_selection is on.
+     * The index of the via rule used in routing in the board via rules if manual_route_selection is on.
      */
     int manual_via_rule_index;
     
@@ -570,17 +571,17 @@ public class Settings implements java.io.Serializable
     
     public AutorouteSettings autoroute_settings;
     
-    /** The filter used in eu.mihosoft.freerouting.interactive selection of eu.mihosoft.freerouting.board items. */
+    /** The filter used in interactive selection of board items. */
     ItemSelectionFilter item_selection_filter;
     
     /** Defines the data of the snapshot selected for restoring. */
     SnapShot.Attributes snapshot_attributes;
     
-    /** Indicates, if the data of this class are not allowed to be changed in ineractive eu.mihosoft.freerouting.board editing. */
+    /** Indicates, if the data of this class are not allowed to be changed in interactive board editing. */
     private transient boolean  read_only = false;
     
     /**
-     * The file used for logging eu.mihosoft.freerouting.interactive action,
+     * The file used for logging interactive action,
      * so that they can be replayed later
      */
     private transient ActivityReplayFile activityReplayFile;

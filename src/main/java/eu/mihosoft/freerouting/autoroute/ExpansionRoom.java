@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 
 /**
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public interface ExpansionRoom
 {

@@ -31,7 +31,7 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 /**
  * An expansion room, whose shape is not yet completely calculated.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
 {

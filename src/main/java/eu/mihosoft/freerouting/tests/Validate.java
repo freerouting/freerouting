@@ -38,14 +38,14 @@ import eu.mihosoft.freerouting.board.SearchTreeObject;
 
 
 /**
- * Some consistancy checking on a routing eu.mihosoft.freerouting.board.
+ * Some consistancy checking on a routing board.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Validate
 {
     /**
-     * Does some consistancy checking on the routing eu.mihosoft.freerouting.board and may be some
+     * Does some consistency checking on the routing board and may be some
      * other actions.
      * Returns false, if problems were detected.
      */
@@ -67,7 +67,7 @@ public class Validate
         {
             if (first_time)
             {
-                System.out.println(" validate eu.mihosoft.freerouting.board is on ");
+                System.out.println(" validate board is on ");
                 first_time = false;
             }
             Collection<SearchTreeObject> l = p_board.overlapping_objects(surr_oct, layer) ;
@@ -80,7 +80,7 @@ public class Validate
                 Item curr_ob = (Item) i.next();
                 if (!curr_ob.validate())
                 {
-                    System.out.println(p_s) ;
+                    System.out.println(p_s);
                 }
                 int cl_count = curr_ob.clearance_violation_count();
                 if (cl_count > 0)
@@ -318,7 +318,7 @@ public class Validate
     }
     
     /**
-     * checks, if there are unconnectedtraces ore vias on the eu.mihosoft.freerouting.board
+     * checks, if there are unconnected traces ore vias on the board
      */
     static public boolean unconnnected_routing_items(String p_s, BasicBoard p_board)
     {

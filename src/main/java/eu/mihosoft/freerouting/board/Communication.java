@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.designforms.specctra.CoordinateTransform;
 /**
  * Communication information to host systems or host design formats.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Communication implements java.io.Serializable
 {

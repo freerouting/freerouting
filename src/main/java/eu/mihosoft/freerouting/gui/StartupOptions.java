@@ -69,7 +69,7 @@ public class StartupOptions {
             }
             catch (Exception e)
             {
-                FRLogger.logger.error("There was a problem parsing the '"+p_args[i]+"' parameter", e);
+                FRLogger.error("There was a problem parsing the '"+p_args[i]+"' parameter", e);
             }
         }
     }

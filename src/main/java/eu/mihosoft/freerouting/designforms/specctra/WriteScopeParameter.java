@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.datastructures.IdentifierType;
 /**
  * Default parameter type used while writing a Specctra dsn-file.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class WriteScopeParameter
 {

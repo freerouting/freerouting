@@ -24,11 +24,12 @@
 package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Window for the handling of the eu.mihosoft.freerouting.interactive selection parameters,
+ * Window for the handling of the interactive selection parameters,
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class WindowSelectParameter extends BoardSavableSubWindow
 {
@@ -152,7 +153,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow
         ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
         if (item_selection_filter == null)
         {
-            System.out.println("SelectParameterWindow.refresh: item_selection_filter is null");
+            FRLogger.warn("SelectParameterWindow.refresh: item_selection_filter is null");
         }
         else
         {

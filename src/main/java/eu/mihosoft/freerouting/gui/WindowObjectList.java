@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  *  Abstract class for windows displaying a list of objects
  *
@@ -263,7 +265,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         catch (java.io.IOException e)
         {
-            System.out.println("WindowObjectList.save: save failed");
+            FRLogger.error("WindowObjectList.save: save failed", e);
         }
         super.save(p_object_stream);
     }
@@ -277,7 +279,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         catch (Exception e)
         {
-            System.out.println("WindowObjectListWithFilter.read: read failed");
+            FRLogger.error("WindowObjectListWithFilter.read: read failed", e);
             return false;
         }
         boolean result = super.read(p_object_stream);

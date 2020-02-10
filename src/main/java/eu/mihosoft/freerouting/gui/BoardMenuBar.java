@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Creates the menu bar of a eu.mihosoft.freerouting.board frame together with its menu items.
+ * Creates the menu bar of a board frame together with its menu items.
  *
  * @author Alfons Wirtz
  */

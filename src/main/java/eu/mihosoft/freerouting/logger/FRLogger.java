@@ -17,7 +17,7 @@ import java.time.Instant;
 import java.util.HashMap;
 
 public class FRLogger {
-    public static Logger logger = LogManager.getLogger(FreeRouting.class);
+    private static Logger logger = LogManager.getLogger(FreeRouting.class);
 
     private static DecimalFormat performanceFormat = new DecimalFormat("0.00");
 
@@ -42,5 +42,20 @@ public class FRLogger {
             timeElapsed = 0;
         }
         logger.trace("Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)") + "' was performed in " + performanceFormat.format(timeElapsed/1000.0) + " seconds.");
+    }
+
+    public static void info(String msg)
+    {
+        logger.info(msg);
+    }
+
+    public static void warn(String msg)
+    {
+        logger.warn(msg);
+    }
+
+    public static void error(String msg, Throwable t)
+    {
+        logger.error(msg, t);
     }
 }

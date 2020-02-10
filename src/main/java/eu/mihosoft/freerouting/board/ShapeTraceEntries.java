@@ -25,6 +25,7 @@ import eu.mihosoft.freerouting.geometry.planar.Line;
 import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.Polyline;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -254,7 +255,7 @@ public class ShapeTraceEntries
     {
         if (!p_trace.is_on_the_board())
         {
-            System.out.println("ShapeTraceEntries.cutout_trace : trace is deleted");
+            FRLogger.warn("ShapeTraceEntries.cutout_trace : trace is deleted");
             return;
         }
         ConvexShape offset_shape;
@@ -500,7 +501,7 @@ public class ShapeTraceEntries
         int edge_count = this.shape.border_line_count();
         if (this.from_side.no < 0 || from_side.no >= edge_count)
         {
-            System.out.println("ShapeTraceEntries.resort: from side not calculated");
+            FRLogger.warn("ShapeTraceEntries.resort: from side not calculated");
             return;
         }
         // resort the intersection points, so that they start in the
@@ -521,8 +522,7 @@ public class ShapeTraceEntries
         {
             from_point_projection = from_side.border_intersection.projection_approx(shape.border_line(from_side.no));
             from_point_dist = from_point_projection.distance_square(compare_corner_1);
-            if (from_point_dist >=
-                    compare_corner_1.distance_square(compare_corner_2))
+            if (from_point_dist >= compare_corner_1.distance_square(compare_corner_2))
             {
                 from_side = new CalcFromSide(from_side.no, null);
             }
@@ -769,8 +769,7 @@ public class ShapeTraceEntries
         }
         if (curr_level != 1)
         {
-            System.out.println(
-                    "ShapeTraceEntries.calculate_stack_levels: curr_level inconsistent");
+            FRLogger.warn("ShapeTraceEntries.calculate_stack_levels: curr_level inconsistent");
             return false;
         }
         return true;
@@ -788,7 +787,7 @@ public class ShapeTraceEntries
         {
             if (this.trace_piece_count != 0)
             {
-                System.out.println("ShapeTraceEntries: trace_piece_count is inconsistent");
+                FRLogger.warn("ShapeTraceEntries: trace_piece_count is inconsistent");
             }
             return null;
         }
@@ -806,7 +805,7 @@ public class ShapeTraceEntries
         }
         if (first == null)
         {
-            System.out.println("ShapeTraceEntries: max_stack_level not found");
+            FRLogger.warn("ShapeTraceEntries: max_stack_level not found");
             return null;
         }
         EntryPoint [] result = new EntryPoint [2];

@@ -18,6 +18,8 @@
  */
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -747,7 +749,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, ja
         }
         if (dir2 == null)
         {
-            System.out.println("touching_side : dir2 not found");
+            FRLogger.warn("touching_side : dir2 not found");
             return new int[0];
         }
         int side_no_1 = 0;

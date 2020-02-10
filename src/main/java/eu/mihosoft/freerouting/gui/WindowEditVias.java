@@ -23,6 +23,7 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.ViaInfo;
 import eu.mihosoft.freerouting.rules.ViaInfos;
 import eu.mihosoft.freerouting.rules.BoardRules;
@@ -270,13 +271,13 @@ public class WindowEditVias extends BoardSavableSubWindow
             Object via_name = getValueAt(p_row, ColumnName.NAME.ordinal());
             if (!(via_name instanceof String))
             {
-                System.out.println("ViaVindow.setValueAt: String expected");
+                FRLogger.warn("ViaVindow.setValueAt: String expected");
                 return;
             }
             ViaInfo via_info = board_rules.via_infos.get((String) via_name);
             if (via_info == null)
             {
-                System.out.println("ViaVindow.setValueAt: via_info not found");
+                FRLogger.warn("ViaVindow.setValueAt: via_info not found");
                 return;
             }
             
@@ -304,7 +305,7 @@ public class WindowEditVias extends BoardSavableSubWindow
                 eu.mihosoft.freerouting.library.Padstack new_padstack = routing_board.library.get_via_padstack(new_name);
                 if (new_padstack == null)
                 {
-                    System.out.println("ViaVindow.setValueAt: via padstack not found");
+                    FRLogger.warn("ViaVindow.setValueAt: via padstack not found");
                     return;
                 }
                 via_info.set_padstack(new_padstack);
@@ -320,7 +321,7 @@ public class WindowEditVias extends BoardSavableSubWindow
                 {
                     if (new_cl_class_index < 0)
                     {
-                        System.out.println("ViaVindow.setValueAt: clearance class not found");
+                        FRLogger.warn("ViaVindow.setValueAt: clearance class not found");
                         return;
                     }
                 }
@@ -330,7 +331,7 @@ public class WindowEditVias extends BoardSavableSubWindow
             {
                 if (!(p_value instanceof Boolean))
                 {
-                    System.out.println("ViaVindow.setValueAt: Boolean expected");
+                    FRLogger.warn("ViaVindow.setValueAt: Boolean expected");
                     return;
                 }
                 Boolean attach_smd = (Boolean) p_value;

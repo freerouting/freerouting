@@ -23,6 +23,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  *
  * Implements a point in the plane as a touple of double's.
@@ -250,7 +252,7 @@ public class FloatPoint implements java.io.Serializable
     {
         if (p_1 == null || p_2 == null)
         {
-            System.out.println("FloatPoint.scalar_product: parameter point is null");
+            FRLogger.warn("FloatPoint.scalar_product: parameter point is null");
             return 0;
         }
         double  dx_1 = p_1.x - this.x;
@@ -287,7 +289,7 @@ public class FloatPoint implements java.io.Serializable
         double dy = p_to_point.y - this.y;
         if (dx == 0 && dy == 0)
         {
-            System.out.println("IntPoint.change_length: Points are equal");
+            FRLogger.warn("IntPoint.change_length: Points are equal");
             return p_to_point;
         }
         double length = Math.sqrt(dx * dx + dy * dy);

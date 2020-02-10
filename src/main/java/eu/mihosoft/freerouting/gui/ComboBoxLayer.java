@@ -25,7 +25,7 @@ package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.board.LayerStructure;
 
 /**
- * A Combo Box with items for individuell eu.mihosoft.freerouting.board layers plus an additional item for all layers.
+ * A Combo Box with items for individual board layers plus an additional item for all layers.
  *
  * @author Alfons Wirtz
  */
@@ -70,8 +70,8 @@ public class ComboBoxLayer extends javax.swing.JComboBox
     private final Layer [] layer_arr;
     
     /**
-     * Layers of the eu.mihosoft.freerouting.board layer structure plus layer "all".
-     * Index is the layer number in the eu.mihosoft.freerouting.board layer structure or -1 for layer "all".
+     * Layers of the board layer structure plus layer "all".
+     * Index is the layer number in the board layer structure or -1 for layer "all".
      */
     public static class Layer
     {
@@ -88,7 +88,7 @@ public class ComboBoxLayer extends javax.swing.JComboBox
         
         final String name;
         
-        /** The index in the eu.mihosoft.freerouting.board layer_structure, -1 for the layers with name "all" or "inner" */
+        /** The index in the board layer_structure, -1 for the layers with name "all" or "inner" */
         final int index;
     }
     

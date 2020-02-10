@@ -19,6 +19,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -52,7 +54,7 @@ public class Polyline implements java.io.Serializable
         Point[] point_arr = p_polygon.corner_array();
         if (point_arr.length < 2)
         {
-            System.out.println("Polyline: must contain at least 2 different points");
+            FRLogger.warn("Polyline: must contain at least 2 different points");
             arr = new Line[0];
             return;
         }
@@ -271,12 +273,12 @@ public class Polyline implements java.io.Serializable
         int no;
         if (p_no < 0)
         {
-            System.out.println("Polyline.corner_approx: p_no is < 0");
+            FRLogger.warn("Polyline.corner_approx: p_no is < 0");
             no = 0;
         }
         else if (p_no >= arr.length - 1)
         {
-            System.out.println("Polyline.corner_approx: p_no must be less than arr.length - 1");
+            FRLogger.warn("Polyline.corner_approx: p_no must be less than arr.length - 1");
             no = arr.length - 2;
         }
         else
@@ -307,18 +309,18 @@ public class Polyline implements java.io.Serializable
     {
         if (arr.length < 2)
         {
-            System.out.println("Polyline.corner: arr.length is < 2");
+            FRLogger.warn("Polyline.corner: arr.length is < 2");
             return null;
         }
         int no;
         if (p_no < 0)
         {
-            System.out.println("Polyline.corner: p_no is < 0");
+            FRLogger.warn("Polyline.corner: p_no is < 0");
             no = 0;
         }
         else if (p_no >= arr.length - 1)
         {
-            System.out.println("Polyline.corner: p_no must be less than arr.length - 1");
+            FRLogger.warn("Polyline.corner: p_no must be less than arr.length - 1");
             no = arr.length - 2;
         }
         else
@@ -584,7 +586,7 @@ public class Polyline implements java.io.Serializable
             shape_arr[curr_shape_no] = bounding_shape.intersection_with_simplify(s1);
             if (shape_arr[curr_shape_no].is_empty())
             {
-                System.out.println("offset_shapes: shape is empty");
+                FRLogger.warn("offset_shapes: shape is empty");
             }
             
             prev_dir = curr_dir;
@@ -603,7 +605,7 @@ public class Polyline implements java.io.Serializable
     {
         if (p_no < 0 || p_no > arr.length - 3)
         {
-            System.out.println("Polyline.offset_shape: p_no out of range");
+            FRLogger.warn("Polyline.offset_shape: p_no out of range");
             return null;
         }
         TileShape[] result = offset_shapes(p_half_width, p_no, p_no + 2);
@@ -927,7 +929,7 @@ public class Polyline implements java.io.Serializable
     {
         if (p_line_no < 1 || p_line_no > arr.length - 2)
         {
-            System.out.println("Polyline.split: p_line_no out of range");
+            FRLogger.warn("Polyline.split: p_line_no out of range");
             return null;
         }
         if (this.arr[p_line_no].is_parallel(p_end_line))

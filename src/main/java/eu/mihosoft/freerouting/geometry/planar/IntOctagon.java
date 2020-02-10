@@ -19,6 +19,8 @@
 
 package eu.mihosoft.freerouting.geometry.planar;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  *
  * Implements functionality for convex shapes, whose borderline directions are
@@ -679,7 +681,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         }
         else
         {
-            System.out.println("IntOctagon.side_of_border_line: p_border_line_no out of range");
+            FRLogger.warn("IntOctagon.side_of_border_line: p_border_line_no out of range");
             tmp = 0;
         }
         Side result;
@@ -1144,8 +1146,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
                 }
                 break;
             default:
-                throw new IllegalArgumentException
-                        ("IntBox.compare: p_edge_no out of range");
+                throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
                 
         }
         return result;
@@ -1158,7 +1159,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     
     public int border_line_index(Line p_line)
     {
-        System.out.println("edge_index_of_line not yet implemented for octagons");
+        FRLogger.warn("edge_index_of_line not yet implemented for octagons");
         return -1;
     }
     /**
@@ -1216,7 +1217,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
                 result_y = p_point.y + p_point.x - result_x;
                 break;
             default:
-                System.out.println("IntOctagon.border_point: unexpected 45 degree direction");
+                FRLogger.warn("IntOctagon.border_point: unexpected 45 degree direction");
                 result_x = 0;
                 result_y = 0;
         }
@@ -1401,7 +1402,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         }
         else
         {
-            System.out.println("IntOctagon.border_line_side_of: p_line_no out of range");
+            FRLogger.warn("IntOctagon.border_line_side_of: p_line_no out of range");
             result = Side.COLLINEAR;
         }
         return result;

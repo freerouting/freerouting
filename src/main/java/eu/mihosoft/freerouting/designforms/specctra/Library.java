@@ -27,6 +27,7 @@ import eu.mihosoft.freerouting.geometry.planar.IntVector;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.PolygonShape;
 import eu.mihosoft.freerouting.geometry.planar.Simplex;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,9 +35,9 @@ import java.util.LinkedList;
 
 
 /**
- * Class for reading and writing eu.mihosoft.freerouting.library scopes from dsn-files.
+ * Class for reading and writing library scopes from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Library extends ScopeKeyword
 {
@@ -62,13 +63,12 @@ public class Library extends ScopeKeyword
             }
             catch (java.io.IOException e)
             {
-                System.out.println("Library.read_scope: IO error scanning file");
-                System.out.println(e);
+                FRLogger.error("Library.read_scope: IO error scanning file", e);
                 return false;
             }
             if (next_token == null)
             {
-                System.out.println("Library.read_scope: unexpected end of file");
+                FRLogger.warn("Library.read_scope: unexpected end of file");
                 return false;
             }
             if (next_token == CLOSED_BRACKET)
@@ -119,9 +119,7 @@ public class Library extends ScopeKeyword
                 }
                 else
                 {
-                    System.out.print("Library.read_scope: via padstack with name ");
-                    System.out.print(curr_padstack_name);
-                    System.out.println(" not found");
+                    FRLogger.warn("Library.read_scope: via padstack with name '" + curr_padstack_name + " not found");
                 }
             }
             if (found_padstack_count != via_padstacks.length)
@@ -134,7 +132,7 @@ public class Library extends ScopeKeyword
             board.library.set_via_padstacks(via_padstacks);
         }
         
-        // Create the eu.mihosoft.freerouting.library packages on the eu.mihosoft.freerouting.board
+        // Create the library packages on the board
         board.library.packages = new eu.mihosoft.freerouting.library.Packages(board.library.padstacks);
         Iterator<Package> it = package_list.iterator();
         while (it.hasNext())
@@ -150,7 +148,7 @@ public class Library extends ScopeKeyword
                 eu.mihosoft.freerouting.library.Padstack board_padstack = board.library.padstacks.get(pin_info.padstack_name);
                 if (board_padstack  == null)
                 {
-                    System.out.println("Library.read_scope: eu.mihosoft.freerouting.board padstack not found");
+                    FRLogger.warn("Library.read_scope: eu.mihosoft.freerouting.board padstack not found");
                     return false;
                 }
                 pin_arr[i] = new eu.mihosoft.freerouting.library.Package.Pin(pin_info.pin_name, board_padstack.no, rel_coor, pin_info.rotation);
@@ -167,7 +165,7 @@ public class Library extends ScopeKeyword
                 }
                 else
                 {
-                    System.out.println("Library.read_scope: outline shape is null");
+                    FRLogger.warn("Library.read_scope: outline shape is null");
                 }
             }
             generate_missing_keepout_names("keepout_", curr_package.keepouts);
@@ -244,7 +242,7 @@ public class Library extends ScopeKeyword
         }
         if (first_layer_no >= p_par.board.get_layer_count() || last_layer_no < 0)
         {
-            System.out.println("Library.write_padstack_scope: padstack shape not found");
+            FRLogger.warn("Library.write_padstack_scope: padstack shape not found");
             return;
         }
         
@@ -295,7 +293,7 @@ public class Library extends ScopeKeyword
             }
             else
             {
-                System.out.println("Library.read_padstack_scope: unexpected padstack identifier");
+                FRLogger.warn("Library.read_padstack_scope: unexpected padstack identifier");
                 return false;
             }
             
@@ -321,7 +319,7 @@ public class Library extends ScopeKeyword
                         }
                         if (curr_next_token != Keyword.CLOSED_BRACKET)
                         {
-                            System.out.println("Library.read_padstack_scope: closing bracket expected");
+                            FRLogger.warn("Library.read_padstack_scope: closing bracket expected");
                             return false;
                         }
                     }
@@ -343,8 +341,7 @@ public class Library extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Library.read_padstack_scope: IO error scanning file");
-            System.out.println(e);
+            FRLogger.error("Library.read_padstack_scope: IO error scanning file", e);
             return false;
         }
         if (p_board_padstacks.get(padstack_name) != null)
@@ -354,8 +351,7 @@ public class Library extends ScopeKeyword
         }
         if (shape_list.isEmpty())
         {
-            System.out.print("Library.read_padstack_scope: shape not found for padstack with name ");
-            System.out.println(padstack_name);
+            FRLogger.warn("Library.read_padstack_scope: shape not found for padstack with name '" + padstack_name + "'");
             return true;
         }
         eu.mihosoft.freerouting.geometry.planar.ConvexShape[] padstack_shapes = new eu.mihosoft.freerouting.geometry.planar.ConvexShape[p_layer_structure.arr.length];
@@ -378,7 +374,7 @@ public class Library extends ScopeKeyword
                 eu.mihosoft.freerouting.geometry.planar.TileShape[] convex_shapes = curr_shape.split_to_convex();
                 if (convex_shapes.length != 1)
                 {
-                    System.out.println("Library.read_padstack_scope: convex shape expected");
+                    FRLogger.warn("Library.read_padstack_scope: convex shape expected");
                 }
                 convex_shape = convex_shapes[0];
                 if (convex_shape instanceof Simplex)
@@ -391,8 +387,8 @@ public class Library extends ScopeKeyword
             {
                 if (padstack_shape.dimension() < 2)
                 {
-                    System.out.print("Library.read_padstack_scope: shape is not an area ");
-                    // enllarge the shape a little bit, so that it is an area
+                    FRLogger.warn("Library.read_padstack_scope: shape is not an area ");
+                    // enlarge the shape a little bit, so that it is an area
                     padstack_shape = padstack_shape.offset(1);
                     if (padstack_shape.dimension() < 2)
                     {
@@ -413,7 +409,7 @@ public class Library extends ScopeKeyword
                 int shape_layer = p_layer_structure.get_no(pad_shape.layer.name);
                 if (shape_layer < 0 || shape_layer >= padstack_shapes.length)
                 {
-                    System.out.println("Library.read_padstack_scope: layer number found");
+                    FRLogger.warn("Library.read_padstack_scope: layer number found");
                     return false;
                 }
                 padstack_shapes[shape_layer] = padstack_shape;

@@ -26,12 +26,13 @@ package eu.mihosoft.freerouting.autoroute;
 import eu.mihosoft.freerouting.board.ShapeSearchTree;
 
 import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
- * Temporary data stored in eu.mihosoft.freerouting.board Items used in the eu.mihosoft.freerouting.autoroute algorithm
+ * Temporary data stored in board Items used in the autoroute algorithm
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 
 public class ItemAutorouteInfo
@@ -41,7 +42,7 @@ public class ItemAutorouteInfo
         this.item = p_item;
     }
     /**
-     * Looks, if the corresponding item belongs to the start or destination set of the eu.mihosoft.freerouting.autoroute algorithm.
+     * Looks, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
      * Only used, if the item belongs to the net, which will be currently routed.
      */
     public boolean is_start_info()
@@ -50,7 +51,7 @@ public class ItemAutorouteInfo
     }
     
     /**
-     * Sets, if the corresponding item belongs to the start or destination set of the eu.mihosoft.freerouting.autoroute algorithm.
+     * Sets, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
      * Only used, if the item belongs to the net, which will be currently routed.
      */
     public void set_start_info(boolean p_value)
@@ -87,7 +88,7 @@ public class ItemAutorouteInfo
         }
         if (p_index < 0 || p_index >= expansion_room_arr.length)
         {
-            System.out.println("ItemAutorouteInfo.get_expansion_room: p_index out of range");
+            FRLogger.warn("ItemAutorouteInfo.get_expansion_room: p_index out of range");
             return null;
         }
         if (expansion_room_arr[p_index] == null)

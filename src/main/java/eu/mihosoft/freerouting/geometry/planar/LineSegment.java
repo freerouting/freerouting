@@ -19,6 +19,7 @@
 package eu.mihosoft.freerouting.geometry.planar;
 
 import eu.mihosoft.freerouting.datastructures.Signum;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Implements functionality for line segments.
@@ -53,7 +54,7 @@ public class LineSegment implements java.io.Serializable
     {
         if (p_no <= 0 || p_no >= p_polyline.arr.length - 1)
         {
-            System.out.println("LineSegment from Polyline: p_no out of range");
+            FRLogger.warn("LineSegment from Polyline: p_no out of range");
             start = null;
             middle = null;
             end = null;
@@ -73,7 +74,7 @@ public class LineSegment implements java.io.Serializable
         int line_count = p_shape.border_line_count();
         if (p_no < 0 || p_no >= line_count)
         {
-            System.out.println("LineSegment from TileShape: p_no out of range");
+            FRLogger.warn("LineSegment from TileShape: p_no out of range");
             start = null;
             middle = null;
             end = null;
@@ -236,7 +237,7 @@ public class LineSegment implements java.io.Serializable
     {
         if (!(p_point instanceof IntPoint))
         {
-            System.out.println("LineSegments.contains currently only implementet for IntPoints");
+            FRLogger.warn("LineSegments.contains currently only implementet for IntPoints");
             return false;
         }
         if (middle.side_of(p_point) != Side.COLLINEAR)
@@ -808,7 +809,7 @@ public class LineSegment implements java.io.Serializable
                         }
                         else
                         {
-                            System.out.println("border_intersections: intersection_count to big!");
+                            FRLogger.warn("border_intersections: intersection_count to big!");
                         }
 
                     }
@@ -844,8 +845,7 @@ public class LineSegment implements java.io.Serializable
 
         if (intersection_count != 1)
         {
-            System.out.println(
-                    "LineSegment.border_intersections: intersection_count 1 expected");
+            FRLogger.warn("LineSegment.border_intersections: intersection_count 1 expected");
         }
 
         int[] normalised_result = new int[1];

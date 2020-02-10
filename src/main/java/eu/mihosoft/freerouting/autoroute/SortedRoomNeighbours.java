@@ -48,6 +48,7 @@ import eu.mihosoft.freerouting.board.Connectable;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.PolylineTrace;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * To calculate the neigbour rooms of an expansion room.
@@ -96,7 +97,7 @@ public class SortedRoomNeighbours
             room_neighbours.calculate_new_incomplete_rooms(p_autoroute_engine);
             if (test_level.ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal() && result.get_shape().dimension() < 2)
             {
-                System.out.println("AutorouteEngine.calculate_new_incomplete_rooms_with_mmore_than_1_neighbour: unexpected dimension for smoothened_shape");
+                FRLogger.warn("AutorouteEngine.calculate_new_incomplete_rooms_with_mmore_than_1_neighbour: unexpected dimension for smoothened_shape");
             }
         }
         
@@ -173,7 +174,7 @@ public class SortedRoomNeighbours
         }
         else
         {
-            System.out.println("SortedRoomNeighbours.calculate: unexpected expansion room type");
+            FRLogger.warn("SortedRoomNeighbours.calculate: unexpected expansion room type");
             return null;
         }
         SortedRoomNeighbours result = new SortedRoomNeighbours(p_room, completed_room);
@@ -214,7 +215,7 @@ public class SortedRoomNeighbours
                 }
                 else if (p_test_level.ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.println("SortedRoomNeighbours.calculate: unexpected area overlap of free space expansion room");
+                    FRLogger.warn("SortedRoomNeighbours.calculate: unexpected area overlap of free space expansion room");
                 }
                 continue;
             }
@@ -222,7 +223,7 @@ public class SortedRoomNeighbours
             {
                 if (p_test_level.ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.println("SortedRoomNeighbours.calculate: dimension >= 0 expected");
+                    FRLogger.warn("SortedRoomNeighbours.calculate: dimension >= 0 expected");
                 }
                 continue;
             }
@@ -233,7 +234,7 @@ public class SortedRoomNeighbours
                 {
                     if (p_test_level.ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
                     {
-                        System.out.println("SortedRoomNeighbours.calculate: touching_sides length 2 expected");
+                        FRLogger.warn("SortedRoomNeighbours.calculate: touching_sides length 2 expected");
                     }
                     continue;
                 }
@@ -283,7 +284,7 @@ public class SortedRoomNeighbours
                     touching_side_no_of_room = room_shape.contains_on_border_line_no(touching_point);
                     if (touching_side_no_of_room < 0 && p_test_level.ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
                     {
-                        System.out.println("SortedRoomNeighbours.calculate: touching_side_no_of_room >= 0 expected");
+                        FRLogger.warn("SortedRoomNeighbours.calculate: touching_side_no_of_room >= 0 expected");
                     }
                 }
                 int neighbour_room_corner_no = curr_shape.equals_corner(touching_point);
@@ -301,7 +302,7 @@ public class SortedRoomNeighbours
                     touching_side_no_of_neighbour_room = curr_shape.contains_on_border_line_no(touching_point);
                     if (touching_side_no_of_neighbour_room < 0 && p_test_level.ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
                     {
-                        System.out.println("AutorouteEngine.SortedRoomNeighbours.calculate: touching_side_no_of_neighbour_room >= 0 expected");
+                        FRLogger.warn("AutorouteEngine.SortedRoomNeighbours.calculate: touching_side_no_of_neighbour_room >= 0 expected");
                     }
                 }
                 result.add_sorted_neighbour(curr_shape, intersection,
@@ -396,7 +397,7 @@ public class SortedRoomNeighbours
             {
                 if (p_test_level.ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
                 {
-                    System.out.println("AutorouteEngine.calculate_doors: 1 completed shape expected");
+                    FRLogger.warn("AutorouteEngine.calculate_doors: 1 completed shape expected");
                 }
                 return false;
             }
@@ -664,7 +665,7 @@ public class SortedRoomNeighbours
     {
         if (p_door_line == null)
         {
-            System.out.println("SortedRoomNeighbours.insert_door_ok: p_door_line is null");
+            FRLogger.warn("SortedRoomNeighbours.insert_door_ok: p_door_line is null");
             return false;
         }
         Item curr_item = p_room.get_item();
@@ -694,7 +695,7 @@ public class SortedRoomNeighbours
      * Helper class to sort the doors of an expansion room counterclockwise
      * arount the border of the room shape.
      *
-     * @author  Alfons Wirtz
+     * @author Alfons Wirtz
      */
     
     private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour>

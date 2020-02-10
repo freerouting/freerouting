@@ -36,6 +36,7 @@ import eu.mihosoft.freerouting.geometry.planar.Line;
 
 import eu.mihosoft.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
 import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * A special simple ShapeSearchtree, where the shapes are of class IntOctagon.
@@ -65,7 +66,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     {
         if (!(p_room.get_contained_shape().is_IntOctagon()) && this.board.get_test_level() != TestLevel.RELEASE_VERSION)
         {
-            System.out.println("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
+            FRLogger.warn("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
             return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
         }
         IntOctagon shape_to_be_contained = p_room.get_contained_shape().bounding_octagon();
@@ -78,7 +79,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
         {
             if (!(p_room.get_shape() instanceof IntOctagon))
             {
-                System.out.println("ShapeSearchTree45Degree.complete_shape: p_start_shape of type IntOctagon expected");
+                FRLogger.warn("ShapeSearchTree45Degree.complete_shape: p_start_shape of type IntOctagon expected");
                 return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
             }
             start_shape = p_room.get_shape().bounding_octagon().intersection(start_shape);
@@ -249,7 +250,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
         {
             if (this.board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
+                FRLogger.warn("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
             }
             return result;
         }
@@ -369,7 +370,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
         }
         else
         {
-            System.out.println("ShapeSearchTree45Degree.signed_line_distance: p_obstacle_line_no out of range");
+            FRLogger.warn("ShapeSearchTree45Degree.signed_line_distance: p_obstacle_line_no out of range");
             result = 0;
         }
         return result;
@@ -423,7 +424,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
         }
         else
         {
-            System.out.println("ShapeSearchTree45Degree.calc_outside_restrained_shape: p_obstacle_line_no out of range");
+            FRLogger.warn("ShapeSearchTree45Degree.calc_outside_restrained_shape: p_obstacle_line_no out of range");
         }
 
         IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
@@ -478,7 +479,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
         }
         else
         {
-            System.out.println("ShapeSearchTree45Degree.calc_inside_restrained_shape: p_obstacle_line_no out of range");
+            FRLogger.warn("ShapeSearchTree45Degree.calc_inside_restrained_shape: p_obstacle_line_no out of range");
         }
 
         IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);

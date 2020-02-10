@@ -35,6 +35,7 @@ import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.Line;
 import eu.mihosoft.freerouting.geometry.planar.Polyline;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Collection;
 
@@ -42,7 +43,7 @@ import java.util.Collection;
  * Class with functions for checking and inserting pads with eventually
  * shoving aside obstacle traces.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class ForcedPadAlgo
 {
@@ -189,7 +190,7 @@ public class ForcedPadAlgo
     {
         if (p_pad_shape.is_empty())
         {
-            System.out.println("ShoveTraceAux.forced_pad: p_pad_shape is empty");
+            FRLogger.warn("ShoveTraceAux.forced_pad: p_pad_shape is empty");
             return true;
         }
         if (!p_pad_shape.is_contained_in(board.get_bounding_box()))
@@ -497,7 +498,7 @@ public class ForcedPadAlgo
                 break;
             default:
             {
-                System.out.println("ForcedPadAlgo.in_front_of_pad: p_from_side out of range");
+                FRLogger.warn("ForcedPadAlgo.in_front_of_pad: p_from_side out of range");
                 result = true;
             }
         }

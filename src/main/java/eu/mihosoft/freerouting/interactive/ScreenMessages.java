@@ -28,7 +28,7 @@ import javax.swing.JLabel;
 /**
  * Text fields to display messages on the screen.
  *
- * @author  arbeit
+ * @author Alfons Wirtz
  */
 public class ScreenMessages
 {
@@ -113,7 +113,7 @@ public class ScreenMessages
     
     /**
      * Sets the displayed layer of the nearest target item
-     * in eu.mihosoft.freerouting.interactive routing.
+     * in interactive routing.
      */
     public void set_target_layer(String p_layer_name)
     {

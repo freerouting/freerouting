@@ -24,10 +24,11 @@
 package eu.mihosoft.freerouting.rules;
 
 import eu.mihosoft.freerouting.geometry.planar.ConvexShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Contains the rules and constraints required for items
- * to be inserted into a routing eu.mihosoft.freerouting.board
+ * to be inserted into a routing board
  *
  * @author Alfons Wirtz
  */
@@ -108,7 +109,7 @@ public class BoardRules implements java.io.Serializable
     {
         if (p_value <= 0)
         {
-            System.out.println("BoardRules.set_trace_half_widths: p_value out of range");
+            FRLogger.warn("BoardRules.set_trace_half_widths: p_value out of range");
             return;
         }
         this.get_default_net_class().set_trace_half_width(p_value);
@@ -279,7 +280,7 @@ public class BoardRules implements java.io.Serializable
     }
     
     /**
-     * Changes the clearance class index of all objects on the eu.mihosoft.freerouting.board with index p_from_no
+     * Changes the clearance class index of all objects on the board with index p_from_no
      * to p_to_no.
      */
     public void change_clearance_class_no(int p_from_no, int p_to_no, java.util.Collection<eu.mihosoft.freerouting.board.Item> p_board_items)
@@ -512,7 +513,7 @@ public class BoardRules implements java.io.Serializable
     
     
     /**
-     * Describes the electrical nets on the eu.mihosoft.freerouting.board.
+     * Describes the electrical nets on the board.
      */
     public final Nets nets;
     

@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.board;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 /**
- * Shape class used for printing a eu.mihosoft.freerouting.geometry.planar.Shape after transforming it to user coordinates.
+ * Shape class used for printing a geometry.planar.Shape after transforming it to user coordinates.
  *
  * @author Alfons Wirtz
  */

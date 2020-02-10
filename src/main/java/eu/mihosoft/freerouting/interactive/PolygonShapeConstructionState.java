@@ -59,7 +59,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
     }
     
     /**
-     * Inserts the polygon shape item into the eu.mihosoft.freerouting.board, if possible
+     * Inserts the polygon shape item into the board, if possible
      * and returns to the main state
      */
     public InteractiveState complete()

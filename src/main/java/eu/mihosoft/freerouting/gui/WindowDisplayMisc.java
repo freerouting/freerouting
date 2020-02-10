@@ -23,8 +23,10 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
- * Window for eu.mihosoft.freerouting.interactive changing of miscellanious display properties.
+ * Window for interactive changing of miscellaneous display properties.
  *
  * @author Alfons Wirtz
  */
@@ -83,7 +85,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
-        // Add label and buttongroup for the rotation of the eu.mihosoft.freerouting.board.
+        // Add label and buttongroup for the rotation of the board.
         
         javax.swing.JLabel rotation_label = new javax.swing.JLabel("   " + resources.getString("rotation"));
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
@@ -126,7 +128,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         main_panel.add(separator, gridbag_constraints);
         
         
-        // add label and buttongroup for the mirroring of the eu.mihosoft.freerouting.board.
+        // add label and buttongroup for the mirroring of the board.
         
         javax.swing.JLabel mirroring_label = new javax.swing.JLabel("   " + resources.getString("board_mirroring"));
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
@@ -210,7 +212,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         }
         else
         {
-            System.out.println("DisplayMiscWindow: unexpected ninety_degree_rotation");
+            FRLogger.warn("DisplayMiscWindow: unexpected ninety_degree_rotation");
             rotation_none_checkbox.setSelected(true);
         }
         
@@ -313,7 +315,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
             {
                 return; // mirroring already switched off
             }
-            // remember the old viewort center to retain the displayed section of the eu.mihosoft.freerouting.board.
+            // remember the old viewort center to retain the displayed section of the board.
             eu.mihosoft.freerouting.geometry.planar.FloatPoint old_viewport_center =
                     coordinate_transform.screen_to_board(panel.get_viewport_center());
             coordinate_transform.set_mirror_left_right(false);
@@ -334,7 +336,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
             {
                 return; // already mirrored
             }
-            // remember the old viewort center to retain the displayed section of the eu.mihosoft.freerouting.board.
+            // remember the old viewport center to retain the displayed section of the board.
             eu.mihosoft.freerouting.geometry.planar.FloatPoint old_viewport_center =
                     coordinate_transform.screen_to_board(panel.get_viewport_center());
             coordinate_transform.set_mirror_left_right(true);
@@ -354,7 +356,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
             {
                 return; // already mirrored
             }
-            // remember the old viewort center to retain the displayed section of the eu.mihosoft.freerouting.board.
+            // remember the old viewport center to retain the displayed section of the board.
             eu.mihosoft.freerouting.geometry.planar.FloatPoint old_viewport_center =
                     coordinate_transform.screen_to_board(panel.get_viewport_center());
             coordinate_transform.set_mirror_top_bottom(true);

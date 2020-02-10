@@ -36,7 +36,7 @@ import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.MoveComponent;
 
 /**
- * Class for eu.mihosoft.freerouting.interactive dragging items with the mouse on a routing eu.mihosoft.freerouting.board
+ * Class for interactive dragging items with the mouse on a routing board
  *
  * @author Alfons Wirtz
  */

@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 /**
  * Describes properties for an individual electrical net.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Net implements Comparable<Net>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
@@ -151,7 +151,7 @@ public class Net implements Comparable<Net>, eu.mihosoft.freerouting.board.Objec
     }
 
     /**
-     * Returns the cumulative trace length of all traces on the eu.mihosoft.freerouting.board belonging to this net.
+     * Returns the cumulative trace length of all traces on the board belonging to this net.
      */
     public double get_trace_length()
     {
@@ -169,7 +169,7 @@ public class Net implements Comparable<Net>, eu.mihosoft.freerouting.board.Objec
     }
 
     /**
-     * Returns the count of vias on the eu.mihosoft.freerouting.board belonging to this net.
+     * Returns the count of vias on the board belonging to this net.
      */
     public int get_via_count()
     {

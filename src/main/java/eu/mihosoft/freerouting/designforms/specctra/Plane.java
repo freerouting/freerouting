@@ -24,11 +24,12 @@
 package eu.mihosoft.freerouting.designforms.specctra;
 
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Class for reading and writing plane scopes from dsn-files.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Plane extends ScopeKeyword
 {
@@ -52,7 +53,7 @@ public class Plane extends ScopeKeyword
             Object next_token = p_par.scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Plane.read_scope: String expected");
+                FRLogger.warn("Plane.read_scope: String expected");
                 return false;
             }
             net_name = (String) next_token;
@@ -60,8 +61,7 @@ public class Plane extends ScopeKeyword
         }
         catch (java.io.IOException e)
         {
-            System.out.println("Plane.read_scope: IO error scanning file");
-            System.out.println(e);
+            FRLogger.error("Plane.read_scope: IO error scanning file", e);
             return false;
         }
         ReadScopeParameter.PlaneInfo plane_info = new ReadScopeParameter.PlaneInfo(conduction_area, net_name);
@@ -74,7 +74,7 @@ public class Plane extends ScopeKeyword
         int net_count = p_conduction.net_count();
         if (net_count <= 0 || net_count > 1)
         {
-            System.out.println("Plane.write_scope: unexpected net count");
+            FRLogger.warn("Plane.write_scope: unexpected net count");
             return;
         }
         String net_name = p_par.board.rules.nets.get(p_conduction.get_net_no(0)).name;

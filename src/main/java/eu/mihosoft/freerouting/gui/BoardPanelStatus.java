@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Panel at the lower border of the eu.mihosoft.freerouting.board frame containing amongst others the message line
+ * Panel at the lower border of the board frame containing amongst others the message line
  * and the current layer and cursor position.
  *
  * @author Alfons Wirtz

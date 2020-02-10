@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Describes a eu.mihosoft.freerouting.board eu.mihosoft.freerouting.library of packages and padstacks.
+ * Describes a board library of packages and padstacks.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class BoardLibrary implements java.io.Serializable
 {
@@ -130,7 +130,7 @@ public class BoardLibrary implements java.io.Serializable
     /** 
      * Removes p_padstack from the via padstack list. 
      * Returns false, if p_padstack was not found in the list.
-     * If the padstack is no more used on the eu.mihosoft.freerouting.board, it will also be removed from the eu.mihosoft.freerouting.board padstacks.
+     * If the padstack is no more used on the board, it will also be removed from the board padstacks.
      */
     public boolean remove_via_padstack(Padstack p_padstack, eu.mihosoft.freerouting.board.BasicBoard p_board)
     {
@@ -140,7 +140,7 @@ public class BoardLibrary implements java.io.Serializable
     
         
     /**
-     * Gets the via padstack mirrored to the back side of the eu.mihosoft.freerouting.board.
+     * Gets the via padstack mirrored to the back side of the board.
      * Returns null, if no such via padstack exists.
      */
     public Padstack get_mirrored_via_padstack(Padstack p_via_padstack)
@@ -202,6 +202,6 @@ public class BoardLibrary implements java.io.Serializable
     /** Containes information for gate swap and pin swap in the Specctra-dsn format. */
     public LogicalParts logical_parts = new LogicalParts();
     
-    /** The subset of padstacks in the eu.mihosoft.freerouting.board eu.mihosoft.freerouting.library, which can be used in routing for inserting vias. */
+    /** The subset of padstacks in the board library, which can be used in routing for inserting vias. */
     private List<Padstack> via_padstacks = null;
 }

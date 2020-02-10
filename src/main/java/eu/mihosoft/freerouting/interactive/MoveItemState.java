@@ -40,6 +40,7 @@ import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.Via;
 import eu.mihosoft.freerouting.board.ClearanceViolation;
 import eu.mihosoft.freerouting.board.LayerStructure;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -72,7 +73,7 @@ public class MoveItemState extends InteractiveState
                 Component curr_component = routing_board.components.get(curr_item.get_component_no());
                 if (curr_component == null)
                 {
-                    System.out.println("MoveComponentState.get_instance inconsistant component number");
+                    FRLogger.warn("MoveComponentState.get_instance inconsistant component number");
                     return null;
                 }
                 if (grid_snap_component == null &&

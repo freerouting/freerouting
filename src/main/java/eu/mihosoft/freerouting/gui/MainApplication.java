@@ -35,9 +35,9 @@ import java.io.File;
 
 /**
  *
- * Main application for creating frames with new or existing eu.mihosoft.freerouting.board designs.
+ * Main application for creating frames with new or existing board designs.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MainApplication extends javax.swing.JFrame
 {
@@ -52,16 +52,16 @@ public class MainApplication extends javax.swing.JFrame
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         } catch (InstantiationException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         } catch (IllegalAccessException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            FRLogger.logger.error(ex);
+            FRLogger.error(ex.getLocalizedMessage(), ex);
         }
 
-        FRLogger.logger.info("Freerouting application is started.");
+        FRLogger.info("Freerouting application is started.");
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
@@ -80,11 +80,11 @@ public class MainApplication extends javax.swing.JFrame
                 board_option = BoardFrame.Option.SINGLE_FRAME;
             }
 
-            FRLogger.logger.info("Opening '"+startupOptions.design_input_filename+"'...");
+            FRLogger.info("Opening '"+startupOptions.design_input_filename+"'...");
             DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename, false);
             if (design_file == null)
             {
-                FRLogger.logger.error(resources.getString("message_6") + " " +  startupOptions.design_input_filename + " " + resources.getString("message_7"));
+                FRLogger.warn(resources.getString("message_6") + " " +  startupOptions.design_input_filename + " " + resources.getString("message_7"));
                 return;
             }
             String message = resources.getString("loading_design") + " "
@@ -97,7 +97,7 @@ public class MainApplication extends javax.swing.JFrame
             welcome_window.dispose();
             if (new_frame == null)
             {
-                FRLogger.logger.error("Couldn't create window frame");
+                FRLogger.warn("Couldn't create window frame");
                 System.exit(1);
                 return;
             }
@@ -128,7 +128,7 @@ public class MainApplication extends javax.swing.JFrame
                                 || (filename.toLowerCase().endsWith(".ses"))
                                 || (filename.toLowerCase().endsWith(".scr")))) {
 
-                            FRLogger.logger.info("Saving '" + filename + "'...");
+                            FRLogger.info("Saving '" + filename + "'...");
                             try {
                                 String filename_only = new File(filename).getName();
                                 String design_name = filename_only.substring(0, filename_only.length() - 4);
@@ -148,10 +148,10 @@ public class MainApplication extends javax.swing.JFrame
 
                                 Runtime.getRuntime().exit(0);
                             } catch (Exception e) {
-                                FRLogger.logger.error(e);
+                                FRLogger.error("Couldn't export board to file", e);
                             }
                         } else {
-                            FRLogger.logger.error("Couldn't export board to '" + filename + "'.");
+                            FRLogger.warn("Couldn't export board to '" + filename + "'.");
                         }
                     }
                 });
@@ -273,7 +273,7 @@ public class MainApplication extends javax.swing.JFrame
         setSize(450,250);
     }
 
-    /** opens a eu.mihosoft.freerouting.board design from a binary file or a specctra dsn file. */
+    /** opens a board design from a binary file or a specctra dsn file. */
     private void open_board_design_action(java.awt.event.ActionEvent evt)
     {
         DesignFile design_file = DesignFile.open_dialog(this.design_dir_name);
@@ -284,7 +284,7 @@ public class MainApplication extends javax.swing.JFrame
             return;
         }
 
-        FRLogger.logger.info("Opening '"+design_file.get_name()+"'...");
+        FRLogger.info("Opening '"+design_file.get_name()+"'...");
 
         BoardFrame.Option option;
         if (this.is_webstart)
@@ -325,8 +325,8 @@ public class MainApplication extends javax.swing.JFrame
     }
 
     /**
-     * Creates a new eu.mihosoft.freerouting.board frame containing the data of the input design file.
-     * Returns null, if an error occured.
+     * Creates a new board frame containing the data of the input design file.
+     * Returns null, if an error occurred.
      */
     static private BoardFrame create_board_frame(DesignFile p_design_file, javax.swing.JTextField p_message_field,
             BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale)
@@ -386,10 +386,10 @@ public class MainApplication extends javax.swing.JFrame
      */
     private final WindowNetSamples window_net_demonstrations;
     /**
-     * A Frame with sample eu.mihosoft.freerouting.board designs in the net.
+     * A Frame with sample board designs in the net.
      */
     private final WindowNetSamples window_net_sample_designs;
-    /** The list of open eu.mihosoft.freerouting.board frames */
+    /** The list of open board frames */
     private final java.util.Collection<BoardFrame> board_frames 
             = new java.util.LinkedList<>();
     private String design_dir_name = null;
@@ -411,7 +411,7 @@ public class MainApplication extends javax.swing.JFrame
         {
             if (board_frame != null)
             {
-                // remove this board_frame from the list of eu.mihosoft.freerouting.board frames
+                // remove this board_frame from the list of board frames
                 board_frame.dispose();
                 board_frames.remove(board_frame);
                 board_frame = null;

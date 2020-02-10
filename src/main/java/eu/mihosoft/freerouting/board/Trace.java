@@ -23,6 +23,7 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.geometry.planar.IntOctagon;
 import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -511,7 +512,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         
         if (this.first_corner().equals(this.last_corner()))
         {
-            System.out.println("Trace.validate: first and last corner are equal");
+            FRLogger.warn("Trace.validate: first and last corner are equal");
             result = false;
         }
         return result;
@@ -548,5 +549,5 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     
     
     private final int half_width ; // half width of the trace pen
-    private int layer ; // eu.mihosoft.freerouting.board layer of the trace
+    private int layer ; // board layer of the trace
 }

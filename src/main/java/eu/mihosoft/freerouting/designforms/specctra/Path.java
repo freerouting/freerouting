@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.datastructures.IdentifierType;
 /**
  * Class for  writing path scopes from dsn-files.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public abstract class Path extends Shape
 {

@@ -23,8 +23,10 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
- * Subwindow of the eu.mihosoft.freerouting.board frame, whose location and visibility can be saved and read from disc.
+ * Subwindow of the board frame, whose location and visibility can be saved and read from disc.
  *
  * @author Alfons Wirtz
  */
@@ -46,7 +48,7 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow
         }
         catch (Exception e)
         {
-            System.out.println("SelectParameterWindow.read: read failed");
+            FRLogger.error("SelectParameterWindow.read: read failed", e);
             return false;
         }
     }
@@ -64,7 +66,7 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow
         }
         catch (java.io.IOException e)
         {
-            System.out.println("BoardSubWindow.save: save failed");
+            FRLogger.error("BoardSubWindow.save: save failed", e);
         }
     }
     

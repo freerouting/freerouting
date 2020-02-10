@@ -26,7 +26,7 @@ package eu.mihosoft.freerouting.datastructures;
 /**
  * Used in the file chooser to filter all files which do not have an extension from the input array.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class FileFilter extends javax.swing.filechooser.FileFilter
 {

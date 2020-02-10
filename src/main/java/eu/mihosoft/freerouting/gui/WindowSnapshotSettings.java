@@ -25,7 +25,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Window for the settinngs of eu.mihosoft.freerouting.interactive snapshots.
+ * Window for the settings of interactive snapshots.
  *
  * @author Alfons Wirtz
  */
@@ -85,7 +85,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
         main_panel.add(separator, gridbag_constraints);
         
         
-        // add check box for the eu.mihosoft.freerouting.interactive state
+        // add check box for the interactive state
         
         this.interactive_state_check_box = new javax.swing.JCheckBox(resources.getString("interactive_state"));
         gridbag.setConstraints(interactive_state_check_box, gridbag_constraints);

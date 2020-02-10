@@ -25,7 +25,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Subwindows of the eu.mihosoft.freerouting.board frame.
+ * Subwindows of the board frame.
  *
  * @author Alfons Wirtz
  */

@@ -22,6 +22,7 @@
  */
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.NetClass;
 import eu.mihosoft.freerouting.rules.ViaRule;
 import eu.mihosoft.freerouting.rules.BoardRules;
@@ -571,13 +572,13 @@ public class WindowNetClasses extends BoardSavableSubWindow
             Object net_class_name = getValueAt(p_row, ColumnName.NAME.ordinal());
             if (!(net_class_name instanceof String))
             {
-                System.out.println("EditNetRuLesVindow.setValueAt: String expected");
+                FRLogger.warn("EditNetRuLesVindow.setValueAt: String expected");
                 return;
             }
             NetClass net_rule = board_rules.net_classes.get((String) net_class_name);
             if (net_rule == null)
             {
-                System.out.println("EditNetRuLesVindow.setValueAt: net_rule not found");
+                FRLogger.warn("EditNetRuLesVindow.setValueAt: net_rule not found");
                 return;
             }
 
@@ -605,7 +606,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
                 ViaRule new_via_rule = board_rules.get_via_rule(new_name);
                 if (new_via_rule == null)
                 {
-                    System.out.println("EditNetRuLesVindow.setValueAt: via_rule not found");
+                    FRLogger.warn("EditNetRuLesVindow.setValueAt: via_rule not found");
                     return;
                 }
                 net_rule.set_via_rule(new_via_rule);
@@ -702,7 +703,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
                 {
                     if (new_cl_class_index < 0)
                     {
-                        System.out.println("EditNetRuLesVindow.setValueAt: clearance class not found");
+                        FRLogger.warn("EditNetRuLesVindow.setValueAt: clearance class not found");
                         return;
                     }
                 }

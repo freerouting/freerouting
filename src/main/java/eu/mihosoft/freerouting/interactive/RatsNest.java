@@ -44,7 +44,7 @@ import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 /**
  * Creates all Incompletes (Ratsnest) to display them on the screen
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class RatsNest
 {
@@ -204,7 +204,7 @@ public class RatsNest
     }
     
     /**
-     * Used for  example to hide the incompletes during eu.mihosoft.freerouting.interactive routiing.
+     * Used for  example to hide the incompletes during interactive routing.
      */
     public boolean is_hidden()
     {

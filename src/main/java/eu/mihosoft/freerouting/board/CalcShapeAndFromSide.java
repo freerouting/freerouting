@@ -31,7 +31,7 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
  * Used in the shove algorithm to calculate the fromside for pushing and
  * to cut off dog ears of the trace shape.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 
 class CalcShapeAndFromSide

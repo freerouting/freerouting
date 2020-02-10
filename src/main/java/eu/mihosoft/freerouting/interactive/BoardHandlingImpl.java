@@ -6,6 +6,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 import eu.mihosoft.freerouting.board.TestLevel;
 import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.BoardRules;
 
 import java.util.Locale;
@@ -18,20 +19,20 @@ import java.util.Locale;
  */
 public class BoardHandlingImpl implements IBoardHandling {
     /**
-     * The file used for logging eu.mihosoft.freerouting.interactive action,
+     * The file used for logging interactive action,
      * so that they can be replayed later
      */
     public final ActivityReplayFile activityReplayFile = new ActivityReplayFile();
-    /** The current settings for eu.mihosoft.freerouting.interactive actions on the eu.mihosoft.freerouting.board*/
+    /** The current settings for interactive actions on the board */
     public Settings settings = null;
-    /** The eu.mihosoft.freerouting.board database used in this eu.mihosoft.freerouting.interactive handling. */
+    /** The board database used in this interactive handling. */
     protected RoutingBoard board = null;
 
     public BoardHandlingImpl() {
     }
 
     /**
-     * Gets the routing eu.mihosoft.freerouting.board of this eu.mihosoft.freerouting.board handling.
+     * Gets the routing board of this board handling.
      */
     @Override
     public RoutingBoard get_routing_board()
@@ -45,7 +46,7 @@ public class BoardHandlingImpl implements IBoardHandling {
     }
 
     /**
-     * Initializes the manual trace widths from the default trace widths in the eu.mihosoft.freerouting.board rules.
+     * Initializes the manual trace widths from the default trace widths in the board rules.
      */
     @Override
     public void initialize_manual_trace_half_widths()
@@ -60,7 +61,7 @@ public class BoardHandlingImpl implements IBoardHandling {
     public void create_board(IntBox p_bounding_box, LayerStructure p_layer_structure, PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name, BoardRules p_rules, Communication p_board_communication, TestLevel p_test_level) {
         if (this.board != null)
         {
-            System.out.println(" BoardHandling.create_board: eu.mihosoft.freerouting.board already created");
+            FRLogger.warn(" BoardHandling.create_board: eu.mihosoft.freerouting.board already created");
         }
         int outline_cl_class_no = 0;
 

@@ -26,7 +26,7 @@ import eu.mihosoft.freerouting.library.Padstack;
 
 /**
  * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed
- * used in eu.mihosoft.freerouting.interactive and automatic routing.
+ * used in interactive and automatic routing.
  *
  * @author Alfons Wirtz
  */

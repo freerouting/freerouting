@@ -22,6 +22,8 @@
  */
 
 package eu.mihosoft.freerouting.geometry.planar;
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 import java.math.BigInteger;
 
 /**
@@ -52,7 +54,7 @@ public class BigIntDirection extends Direction implements java.io.Serializable
     
     public Direction turn_45_degree(int p_factor)
     {
-        System.out.println("BigIntDirection: turn_45_degree not yet implemented");
+        FRLogger.warn("BigIntDirection: turn_45_degree not yet implemented");
         return this;
     }
     

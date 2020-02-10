@@ -25,9 +25,9 @@ package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.board.BoardOutline;
 
 /**
- *  Window handling detail parameters of the eu.mihosoft.freerouting.interactive routing.
+ *  Window handling detail parameters of the interactive routing.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class WindowRouteDetail extends BoardSavableSubWindow
 {

@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -91,7 +92,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
                 }
                 else
                 {
-                    System.out.println("WindowUnconnectedRoute.fill_list: net_count 1 expected");
+                    FRLogger.warn("WindowUnconnectedRoute.fill_list: net_count 1 expected");
                 }
             }
         }

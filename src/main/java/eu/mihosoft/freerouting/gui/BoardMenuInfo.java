@@ -29,7 +29,7 @@ package eu.mihosoft.freerouting.gui;
  */
 public class BoardMenuInfo extends javax.swing.JMenu
 {
-    /** Returns a new info menu for the eu.mihosoft.freerouting.board frame. */
+    /** Returns a new info menu for the board frame. */
     public static BoardMenuInfo get_instance(BoardFrame p_board_frame)
     {
         final BoardMenuInfo info_menu = new BoardMenuInfo(p_board_frame);

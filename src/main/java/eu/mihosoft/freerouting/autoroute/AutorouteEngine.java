@@ -44,11 +44,12 @@ import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.ShapeSearchTree90Degree;
 import eu.mihosoft.freerouting.board.ShapeSearchTree45Degree;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Temporary eu.mihosoft.freerouting.autoroute data stored on the RoutingBoard.
+ * Temporary autoroute data stored on the RoutingBoard.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class AutorouteEngine
 {
@@ -120,8 +121,7 @@ public class AutorouteEngine
             maze_search_algo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
         } catch (Exception e)
         {
-            System.out.println("AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance");
-            System.out.println(e);
+            FRLogger.error("AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance", e);
             maze_search_algo = null;
         }
         MazeSearchAlgo.Result search_result = null;
@@ -132,7 +132,7 @@ public class AutorouteEngine
                 search_result = maze_search_algo.find_connection();
             } catch (Exception e)
             {
-                System.out.println("AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection");
+                FRLogger.error("AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection", e);
             }
         }
         LocateFoundConnectionAlgo autoroute_result = null;
@@ -145,7 +145,7 @@ public class AutorouteEngine
                         board.rules.get_trace_angle_restriction(), p_ripped_item_list, board.get_test_level());
             } catch (Exception e)
             {
-                System.out.println("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance");
+                FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
             }
         }
         if (!this.maintain_database)
@@ -164,7 +164,7 @@ public class AutorouteEngine
         {
             if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("AutorouteEngine.autoroute_connection: result_items != null expected");
+                FRLogger.warn("AutorouteEngine.autoroute_connection: result_items != null expected");
             }
             return AutorouteResult.ALREADY_CONNECTED;
         }
@@ -189,7 +189,7 @@ public class AutorouteEngine
                 changed_nets.add(curr_ripped_item.get_net_no(i));
             }
         }
-        // let the observers know the changes in the eu.mihosoft.freerouting.board database.
+        // let the observers know the changes in the board database.
         boolean observers_activated = !this.board.observers_active();
         if (observers_activated)
         {
@@ -371,7 +371,7 @@ public class AutorouteEngine
         }
         else
         {
-            System.out.println("AutorouteEngine.remove_complete_expansion_room: this.complete_expansion_rooms is null");
+            FRLogger.warn("AutorouteEngine.remove_complete_expansion_room: this.complete_expansion_rooms is null");
         }
         this.drill_page_array.invalidate(room_shape);
     }
@@ -444,8 +444,7 @@ public class AutorouteEngine
             return result;
         } catch (Exception e)
         {
-            System.out.print("AutorouteEngine.complete_expansion_room: ");
-            System.out.println(e);
+            FRLogger.error("AutorouteEngine.complete_expansion_room: ", e);
             return new LinkedList<CompleteFreeSpaceExpansionRoom>();
         }
 
@@ -643,7 +642,7 @@ public class AutorouteEngine
     }
     /**
      * The current search tree used in autorouting.
-     * It depends on the trac clearance class used in the eu.mihosoft.freerouting.autoroute algorithm.
+     * It depends on the trac clearance class used in the autoroute algorithm.
      */
     public final ShapeSearchTree autoroute_search_tree;
     /** If maintain_database, the autorouter database is maintained after a  connection is
@@ -652,7 +651,7 @@ public class AutorouteEngine
     public final boolean maintain_database;
     static final int TRACE_WIDTH_TOLERANCE = 2;
     /**
-     * The net number used for routing in this eu.mihosoft.freerouting.autoroute algorithm.
+     * The net number used for routing in this autoroute algorithm.
      */
     private int net_no;
     /**
@@ -667,11 +666,11 @@ public class AutorouteEngine
      * To stop the expansion algorithm after a time limit is exceeded.
      */
     private TimeLimit time_limit;
-    /** The PCB-eu.mihosoft.freerouting.board of this eu.mihosoft.freerouting.autoroute algorithm. */
+    /** The PCB-board of this autoroute algorithm. */
     final RoutingBoard board;
-    /** The list of incomplete expansion rooms on the routing eu.mihosoft.freerouting.board */
+    /** The list of incomplete expansion rooms on the routing board */
     private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms = null;
-    /** The list of complete expansion rooms on the routing eu.mihosoft.freerouting.board */
+    /** The list of complete expansion rooms on the routing board */
     private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms = null;
     /** The count of expansion rooms created so far */
     private int expansion_room_instance_count = 0;

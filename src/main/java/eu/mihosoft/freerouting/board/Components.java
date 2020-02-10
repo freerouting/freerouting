@@ -34,17 +34,18 @@ import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.IntPoint;
 
 import eu.mihosoft.freerouting.library.Package;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Contains the lists of components on the eu.mihosoft.freerouting.board.
+ * Contains the lists of components on the board.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Components implements java.io.Serializable
 {
     /**
      * Inserts a component into the list.
-     * The items of the component have to be inserted seperately into the eu.mihosoft.freerouting.board.
+     * The items of the component have to be inserted separately into the board.
      * If p_on_front is false, the component will be placed on the back side,
      * and p_package_back is used instead of p_package_front.
      */
@@ -62,7 +63,7 @@ public class Components implements java.io.Serializable
     
     /**
      * Adds a component to this object.
-     * The items of the component have to be inserted seperately into the eu.mihosoft.freerouting.board.
+     * The items of the component have to be inserted separately into the board.
      * If p_on_front is false, the component will be placed on the back side.
      * The component name is generated internally.
      */
@@ -100,13 +101,13 @@ public class Components implements java.io.Serializable
         Component result =  component_arr.elementAt(p_component_no - 1);
         if (result != null && result.no != p_component_no)
         {
-            System.out.println("Components.get: inconsistent component number");
+            FRLogger.warn("Components.get: inconsistent component number");
         }
         return result;
     }
     
     /**
-     * Returns the number of components on the eu.mihosoft.freerouting.board.
+     * Returns the number of components on the board.
      */
     public int count()
     {
@@ -169,7 +170,7 @@ public class Components implements java.io.Serializable
     
     /**
      * Moves the component with number p_component_no.
-     * Works contrary to Component.translate_by with the undo algorithm of the eu.mihosoft.freerouting.board.
+     * Works contrary to Component.translate_by with the undo algorithm of the board.
      */
     public void move(int p_component_no, eu.mihosoft.freerouting.geometry.planar.Vector p_vector )
     {
@@ -180,7 +181,7 @@ public class Components implements java.io.Serializable
     
     /**
      * Turns the component with number p_component_no  by p_factor times 90 degree around p_pole.
-     * Works contrary to Component.turn_90_degree with the undo algorithm of the eu.mihosoft.freerouting.board.
+     * Works contrary to Component.turn_90_degree with the undo algorithm of the board.
      */
     public void turn_90_degree(int p_component_no, int p_factor, IntPoint p_pole)
     {
@@ -191,7 +192,7 @@ public class Components implements java.io.Serializable
     
        /**
      * Rotates the component with number p_component_no  by p_rotation_in_degree around p_pole.
-     * Works contrary to Component.rotate with the undo algorithm of the eu.mihosoft.freerouting.board.
+     * Works contrary to Component.rotate with the undo algorithm of the board.
      */
     public void rotate (int p_component_no, double p_rotation_in_degree, IntPoint p_pole)
     {
@@ -201,9 +202,9 @@ public class Components implements java.io.Serializable
     }
     
     /**
-     * Changes the placement side of the component the component with numberp_component_no and
+     * Changes the placement side of the component the component with number p_component_no and
      * mirrors it  at the vertical line through p_pole.
-     * Works contrary to Component.change_side the undo algorithm of the eu.mihosoft.freerouting.board.
+     * Works contrary to Component.change_side the undo algorithm of the board.
      */
     public void change_side(int p_component_no, IntPoint p_pole)
     {

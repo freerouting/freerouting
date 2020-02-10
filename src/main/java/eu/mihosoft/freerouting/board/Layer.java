@@ -24,9 +24,9 @@
 package eu.mihosoft.freerouting.board;
 
 /**
- * Describes the structure of a eu.mihosoft.freerouting.board layer.
+ * Describes the structure of a board layer.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Layer implements java.io.Serializable
 {

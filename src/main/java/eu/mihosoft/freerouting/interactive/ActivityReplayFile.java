@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *  ActivityReplayFile to track the actions in the eu.mihosoft.freerouting.interactive eu.mihosoft.freerouting.board handling
+ *  ActivityReplayFile to track the actions in the interactive board handling
  *  for automatic replay.
  *
  * @author Alfons Wirtz
@@ -89,7 +89,7 @@ public class ActivityReplayFile
             }
             catch (IOException e)
             {
-                FRLogger.logger.error("Unable to close the file", e);
+                FRLogger.error("Unable to close the file", e);
             }
         }
         this.write_enabled = false;
@@ -106,7 +106,7 @@ public class ActivityReplayFile
         }
         catch (IOException e)
         {
-            FRLogger.logger.error("Unable to create the file", e);
+            FRLogger.error("Unable to create the file", e);
             return false;
         }
         write_enabled = true;
@@ -127,7 +127,7 @@ public class ActivityReplayFile
             }
             catch (IOException e)
             {
-                FRLogger.logger.error("ActivityReplayFile.start_scope: write failed", e);
+                FRLogger.error("ActivityReplayFile.start_scope: write failed", e);
             }
         }
     }
@@ -186,7 +186,7 @@ public class ActivityReplayFile
         }
         if (!(curr_ob instanceof String))
         {
-            FRLogger.logger.error("ActivityReplayFile.start_read_scope: String expected");
+            FRLogger.warn("ActivityReplayFile.start_read_scope: String expected");
             this.pending_token = curr_ob;
             return null;
         }
@@ -209,7 +209,7 @@ public class ActivityReplayFile
             }
             catch (IOException e)
             {
-                FRLogger.logger.error("Unable to write integer to the file", e);
+                FRLogger.error("Unable to write integer to the file", e);
             }
         }
     }
@@ -223,7 +223,7 @@ public class ActivityReplayFile
         Object curr_ob = this.next_token();
         if (!(curr_ob instanceof Integer))
         {
-            FRLogger.logger.error("ActivityReplayFile.read_int: Integer expected");
+            FRLogger.warn("ActivityReplayFile.read_int: Integer expected");
             this.pending_token = curr_ob;
             return -1;
         }
@@ -239,7 +239,7 @@ public class ActivityReplayFile
         {
             if (p_corner == null)
             {
-                FRLogger.logger.error("ActivityReplayFile.add_corner: p_corner is null");
+                FRLogger.warn("ActivityReplayFile.add_corner: p_corner is null");
                 return;
             }
             try
@@ -251,7 +251,7 @@ public class ActivityReplayFile
             }
             catch (IOException e)
             {
-                FRLogger.logger.error("Unable to write to the file  while adding corner", e);
+                FRLogger.error("Unable to write to the file  while adding corner", e);
             }
         }
     }
@@ -271,7 +271,7 @@ public class ActivityReplayFile
         }
         catch (IOException e)
         {
-            FRLogger.logger.error("ActivityReplayFile.next_token: IO error scanning file", e);
+            FRLogger.error("ActivityReplayFile.next_token: IO error scanning file", e);
             return null;
         }
     }

@@ -29,7 +29,7 @@ import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.board.Layer;
 
 /**
- * Window for eu.mihosoft.freerouting.interactive editing of via rules.
+ * Window for interactive editing of via rules.
  *
  * @author Alfons Wirtz
  */
@@ -134,7 +134,7 @@ public class WindowVia extends BoardSavableSubWindow
             this.rule_list_model.addElement(curr_rule);
         }
         
-        // Add buttons to edit the via eu.mihosoft.freerouting.rules.
+        // Add buttons to edit the via rules.
         javax.swing.JPanel via_rule_button_panel = new javax.swing.JPanel();
         via_rule_button_panel.setLayout(new java.awt.FlowLayout());
         this.add(via_rule_button_panel,java.awt.BorderLayout.SOUTH);

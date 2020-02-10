@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -63,7 +64,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
                 p_id_no, p_group_no, p_fixed_state, p_board);
         if (p_polyline.arr.length < 3)
         {
-            System.out.println("PolylineTrace: p_polyline.arr.length >= 3 expected");
+            FRLogger.warn("PolylineTrace: p_polyline.arr.length >= 3 expected");
         }
         lines = p_polyline;
     }
@@ -580,7 +581,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
                                 if (found_trace_split)
                                 {
                                     // reread the overlapping tree entries and reset the iterator,
-                                    // because the eu.mihosoft.freerouting.board has changed
+                                    // because the board has changed
                                     default_tree.overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
                                     it = overlapping_tree_entries.iterator();
                                     break;
@@ -771,7 +772,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
         }
         if (split_polylines.length != 2)
         {
-            System.out.println("PolylineTrace.split: array of length 2 expected for split_polylines");
+            FRLogger.warn("PolylineTrace.split: array of length 2 expected for split_polylines");
             return null;
         }
         if (split_inside_drill_pad_prohibited(p_line_no, p_new_end_line))
@@ -953,7 +954,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
     {
         if (p_index < 0 || p_index >= this.tile_shape_count())
         {
-            System.out.println("PolylineTrace.get_trace_connection_shape p_index out of range");
+            FRLogger.warn("PolylineTrace.get_trace_connection_shape p_index out of range");
             return null;
         }
         LineSegment curr_line_segment = new LineSegment(this.lines, p_index + 1);

@@ -33,7 +33,7 @@ import eu.mihosoft.freerouting.datastructures.IdentifierType;
 /**
  * Class for reading and writing path scopes consisting of a polygon from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class PolygonPath extends Path
 {

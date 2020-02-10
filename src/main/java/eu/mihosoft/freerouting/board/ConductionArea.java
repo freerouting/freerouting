@@ -30,6 +30,7 @@ import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -37,7 +38,7 @@ import java.util.TreeSet;
 /**
  *  A ObstacleArea, which can be electrically conected to other items.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class ConductionArea extends ObstacleArea implements Connectable
 {
@@ -56,7 +57,7 @@ public class ConductionArea extends ObstacleArea implements Connectable
     {
         if (this.net_count() != 1)
         {
-            System.out.println("ConductionArea.copy not yet implemented for areas with more than 1 net");
+            FRLogger.warn("ConductionArea.copy not yet implemented for areas with more than 1 net");
             return null;
         }
         return new ConductionArea(get_relative_area(), get_layer(), get_translation(), get_rotation_in_degree(),
@@ -109,7 +110,7 @@ public class ConductionArea extends ObstacleArea implements Connectable
     {
         if (p_index < 0 || p_index >= this.tree_shape_count(p_search_tree))
         {
-            System.out.println("ConductionArea.get_trace_connection_shape p_index out of range");
+            FRLogger.warn("ConductionArea.get_trace_connection_shape p_index out of range");
             return null;
         }
         return this.get_tree_shape(p_search_tree, p_index);

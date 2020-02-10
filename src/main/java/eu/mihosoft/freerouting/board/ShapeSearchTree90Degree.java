@@ -35,6 +35,7 @@ import eu.mihosoft.freerouting.geometry.planar.Polyline;
 
 import eu.mihosoft.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
 import eu.mihosoft.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * A special simple ShapeSearchtree, where the shapes are of class IntBox.
@@ -64,7 +65,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
     {
         if (!(p_room.get_contained_shape() instanceof IntBox))
         {
-            System.out.println("BoxShapeSearchTree.complete_shape: unexpected p_shape_to_be_contained");
+            FRLogger.warn("BoxShapeSearchTree.complete_shape: unexpected p_shape_to_be_contained");
             return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
         }
         IntBox shape_to_be_contained = (IntBox) p_room.get_contained_shape();
@@ -77,7 +78,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
         {
             if (!(p_room.get_shape() instanceof IntBox))
             {
-                System.out.println("BoxShapeSearchTree.complete_shape: p_start_shape of type IntBox expected");
+                FRLogger.warn("BoxShapeSearchTree.complete_shape: p_start_shape of type IntBox expected");
                 return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
             }
             start_shape = ((IntBox)p_room.get_shape()).intersection(start_shape);
@@ -177,7 +178,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
         {
             if (this.board.get_test_level().ordinal() >=  TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {
-                System.out.println("BoxShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
+                FRLogger.warn("BoxShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
             }
             return result;
         }
@@ -242,7 +243,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
         IntBox is = shape_to_be_contained.intersection(p_obstacle_shape);
         if (is.is_empty())
         {
-            System.out.println("BoxShapeSearchTree.restrain_shape: Intersection between obstacle_shape and shape_to_be_contained expected");
+            FRLogger.warn("BoxShapeSearchTree.restrain_shape: Intersection between obstacle_shape and shape_to_be_contained expected");
             return result;
         }
         IntBox new_shape_1 = null;
@@ -303,7 +304,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
                 int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(), p_drill_item.shape_layer(i));
                 if (curr_tile_shape == null)
                 {
-                    System.out.println("BoxShapeSearchTree.calculate_tree_shapes: shape is null");
+                    FRLogger.warn("BoxShapeSearchTree.calculate_tree_shapes: shape is null");
                 }
                 else
                 {

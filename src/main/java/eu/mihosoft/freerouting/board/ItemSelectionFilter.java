@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Filter for selecting items on the eu.mihosoft.freerouting.board.
+ * Filter for selecting items on the board.
  *
  * @author Alfons Wirtz
  */

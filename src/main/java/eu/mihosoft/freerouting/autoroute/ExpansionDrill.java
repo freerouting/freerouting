@@ -31,7 +31,7 @@ import java.util.Iterator;
 /**
  * Layer change expansion object in the maze search algorithm.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ExpansionDrill implements ExpandableObject
 {

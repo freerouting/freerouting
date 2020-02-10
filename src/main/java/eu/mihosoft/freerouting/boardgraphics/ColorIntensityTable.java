@@ -23,11 +23,13 @@
 
 package eu.mihosoft.freerouting.boardgraphics;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * The color intensities for each item type.
  * The values are between 0 (invisible) and 1 (full intensity).
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class ColorIntensityTable implements java.io.Serializable
 {
@@ -68,7 +70,7 @@ public class ColorIntensityTable implements java.io.Serializable
     {
         if (p_no < 0 || p_no >= ObjectNames.values().length)
         {
-            System.out.println("ColorIntensityTable.get_value: p_no out of range");
+            FRLogger.warn("ColorIntensityTable.get_value: p_no out of range");
             return 0;
         }
         return arr[p_no];
@@ -78,7 +80,7 @@ public class ColorIntensityTable implements java.io.Serializable
     {
         if (p_no < 0 || p_no >= ObjectNames.values().length)
         {
-            System.out.println("ColorIntensityTable.set_value: p_no out of range");
+            FRLogger.warn("ColorIntensityTable.set_value: p_no out of range");
             return;
         }
         arr [p_no] = p_value;

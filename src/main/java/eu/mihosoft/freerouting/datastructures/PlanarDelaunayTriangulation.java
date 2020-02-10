@@ -34,6 +34,7 @@ import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.IntPoint;
 import eu.mihosoft.freerouting.geometry.planar.Side;
 import eu.mihosoft.freerouting.geometry.planar.Limits;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Creates a Delaunay triangulation in the plane for the input objects.
@@ -158,7 +159,7 @@ public class PlanarDelaunayTriangulation
             if (curr_side == Side.ON_THE_RIGHT)
             {
                 // p_corner is outside this triangle
-                System.out.println("PlanarDelaunayTriangulation.split: p_corner is outside");
+                FRLogger.warn("PlanarDelaunayTriangulation.split: p_corner is outside");
                 return false;
             }
             else if (curr_side == Side.COLLINEAR)
@@ -170,7 +171,7 @@ public class PlanarDelaunayTriangulation
                     Corner common_corner = curr_edge.common_corner(containing_edge);
                     if (common_corner == null)
                     {
-                        System.out.println("PlanarDelaunayTriangulation.split: common corner expected");
+                        FRLogger.warn("PlanarDelaunayTriangulation.split: common corner expected");
                         return false;
                     }
                     if (p_corner.object == common_corner.object)
@@ -269,7 +270,7 @@ public class PlanarDelaunayTriangulation
         }
         else
         {
-            System.out.println("PlanarDelaunayTriangulation.legalize_edge: edge lines inconsistant");
+            FRLogger.warn("PlanarDelaunayTriangulation.legalize_edge: edge lines inconsistant");
             return false;
         }
         Edge flipped_edge = p_edge.flip();
@@ -303,11 +304,11 @@ public class PlanarDelaunayTriangulation
         boolean result = this.search_graph.anchor.validate();
         if (result == true)
         {
-            System.out.println("Delauny triangulation check passed ok");
+            FRLogger.warn("Delauny triangulation check passed ok");
         }
         else
         {
-            System.out.println("Delauny triangulation check has detected problems");
+            FRLogger.warn("Delauny triangulation check has detected problems");
         }
         return result;
     }
@@ -477,7 +478,7 @@ public class PlanarDelaunayTriangulation
             }
             else
             {
-                System.out.println("Edge.other_neighbour: inconsistant neigbour triangle");
+                FRLogger.warn("Edge.other_neighbour: inconsistant neigbour triangle");
                 result = null;
             }
             return result;
@@ -532,7 +533,7 @@ public class PlanarDelaunayTriangulation
             }
             if (left_index < 0 || right_index < 0)
             {
-                System.out.println("Edge.flip: edge line inconsistant");
+                FRLogger.warn("Edge.flip: edge line inconsistant");
                 return null;
             }
             Edge left_prev_edge = this.left_triangle.edge_lines[(left_index + 2) % 3];
@@ -604,7 +605,7 @@ public class PlanarDelaunayTriangulation
             {
                 if (this.start_corner.object != null || this.end_corner.object != null)
                 {
-                    System.out.println("Edge.validate: left triangle may be null only for bounding edges");
+                    FRLogger.warn("Edge.validate: left triangle may be null only for bounding edges");
                     result = false;
                 }
             }
@@ -622,7 +623,7 @@ public class PlanarDelaunayTriangulation
                 }
                 if (!found)
                 {
-                    System.out.println("Edge.validate: left triangle does not contain this edge");
+                    FRLogger.warn("Edge.validate: left triangle does not contain this edge");
                     result = false;
                 }
             }
@@ -630,7 +631,7 @@ public class PlanarDelaunayTriangulation
             {
                 if (this.start_corner.object != null || this.end_corner.object != null)
                 {
-                    System.out.println("Edge.validate: right triangle may be null only for bounding edges");
+                    FRLogger.warn("Edge.validate: right triangle may be null only for bounding edges");
                     result = false;
                 }
             }
@@ -648,7 +649,7 @@ public class PlanarDelaunayTriangulation
                 }
                 if (!found)
                 {
-                    System.out.println("Edge.validate: right triangle does not contain this edge");
+                    FRLogger.warn("Edge.validate: right triangle does not contain this edge");
                     result = false;
                 }
             }
@@ -702,7 +703,7 @@ public class PlanarDelaunayTriangulation
         {
             if (p_no < 0 || p_no >= 3)
             {
-                System.out.println("Triangle.get_corner: p_no out of range");
+                FRLogger.warn("Triangle.get_corner: p_no out of range");
                 return null;
             }
             Edge curr_edge = edge_lines[p_no];
@@ -717,7 +718,7 @@ public class PlanarDelaunayTriangulation
             }
             else
             {
-                System.out.println("Triangle.get_corner: inconsistant edge lines");
+                FRLogger.warn("Triangle.get_corner: inconsistant edge lines");
                 result = null;
             }
             return result;
@@ -740,7 +741,7 @@ public class PlanarDelaunayTriangulation
             }
             if (edge_line_no < 0)
             {
-                System.out.println("Triangle.opposite_corner: p_edge_line not found");
+                FRLogger.warn("Triangle.opposite_corner: p_edge_line not found");
                 return null;
             }
             Edge next_edge = this.edge_lines[(edge_line_no + 1)% 3];
@@ -763,7 +764,7 @@ public class PlanarDelaunayTriangulation
         {
             if (this.is_on_the_left_of_edge_line == null)
             {
-                System.out.println("Triangle.contains: array is_on_the_left_of_edge_line not initialized");
+                FRLogger.warn("Triangle.contains: array is_on_the_left_of_edge_line not initialized");
                 return false;
             }
             for (int i = 0; i < 3; ++i)
@@ -917,12 +918,12 @@ public class PlanarDelaunayTriangulation
             }
             if (this_touching_edge_no < 0 || neigbbour_touching_edge_no < 0)
             {
-                System.out.println("Triangle.split_at_border_point: touching edge not found");
+                FRLogger.warn("Triangle.split_at_border_point: touching edge not found");
                 return null;
             }
             if (touching_edge != other_touching_edge)
             {
-                System.out.println("Triangle.split_at_border_point: edges inconsistent");
+                FRLogger.warn("Triangle.split_at_border_point: edges inconsistent");
                 return null;
             }
             
@@ -1080,12 +1081,12 @@ public class PlanarDelaunayTriangulation
                     }
                     else
                     {
-                        System.out.println("Triangle.validate: edge inconsistent");
+                        FRLogger.warn("Triangle.validate: edge inconsistent");
                         return false;
                     }
                     if (curr_start_corner != prev_end_corner)
                     {
-                        System.out.println("Triangle.validate: corner inconsistent");
+                        FRLogger.warn("Triangle.validate: corner inconsistent");
                         result = false;
                     }
                     prev_edge = curr_edge;
@@ -1198,7 +1199,7 @@ public class PlanarDelaunayTriangulation
                     return result;
                 }
             }
-            System.out.println("TriangleGraph.position_locate: containing triangle not found");
+            FRLogger.warn("TriangleGraph.position_locate: containing triangle not found");
             return null;
         }
         
@@ -1224,7 +1225,7 @@ public class PlanarDelaunayTriangulation
                     return result;
                 }
             }
-            System.out.println("TriangleGraph.position_locate_reku: containing triangle not found");
+            FRLogger.warn("TriangleGraph.position_locate_reku: containing triangle not found");
             return null;
         }
         

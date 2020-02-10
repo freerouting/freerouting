@@ -35,13 +35,14 @@ import eu.mihosoft.freerouting.board.SearchTreeObject;
 import eu.mihosoft.freerouting.board.ShapeSearchTree;
 import eu.mihosoft.freerouting.board.Connectable;
 import eu.mihosoft.freerouting.board.Item;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 
 /**
  * An expansion room, whose shape is completely calculated,
  * so that it can be stored in a shape tree.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom implements CompleteExpansionRoom, SearchTreeObject
 {
@@ -161,7 +162,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     }
     
     /**
-     * Calculates the doors to the start and destination items of the eu.mihosoft.freerouting.autoroute algorithm.
+     * Calculates the doors to the start and destination items of the autoroute algorithm.
      */
     public  void calculate_target_doors(ShapeTree.TreeEntry p_own_net_object, int p_net_no, ShapeSearchTree p_autoroute_search_tree)
     {
@@ -230,7 +231,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
             TileShape intersection = this.get_shape().intersection(curr_shape);
             if (intersection.dimension() > 1)
             {
-                System.out.println("ExpansionRoom overlap conflict");
+                FRLogger.warn("ExpansionRoom overlap conflict");
                 result = false;
             }
         }

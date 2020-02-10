@@ -32,6 +32,7 @@ import eu.mihosoft.freerouting.geometry.planar.IntPoint;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
@@ -211,7 +212,7 @@ public class ComponentOutline extends Item implements java.io.Serializable
         {
             if (this.relative_area == null)
             {
-                System.out.println("ObstacleArea.get_area: area is null");
+                FRLogger.warn("ObstacleArea.get_area: area is null");
                 return null;
             }
             Area turned_area = this.relative_area;

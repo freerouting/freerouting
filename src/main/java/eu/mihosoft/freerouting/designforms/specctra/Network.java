@@ -34,6 +34,7 @@ import java.util.Iterator;
 import eu.mihosoft.freerouting.datastructures.IndentFileWriter;
 import eu.mihosoft.freerouting.datastructures.IdentifierType;
 
+import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.BoardRules;
 import eu.mihosoft.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 import eu.mihosoft.freerouting.board.RoutingBoard;
@@ -41,7 +42,7 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 /**
  * Class for reading and writing net network from dsn-files.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class Network extends ScopeKeyword
 {
@@ -67,13 +68,12 @@ public class Network extends ScopeKeyword
                 next_token = p_par.scanner.next_token();
             } catch (java.io.IOException e)
             {
-                System.out.println("Network.read_scope: IO error scanning file");
-                System.out.println(e);
+                FRLogger.error("Network.read_scope: IO error scanning file", e);
                 return false;
             }
             if (next_token == null)
             {
-                System.out.println("Network.read_scope: unexpected end of file");
+                FRLogger.warn("Network.read_scope: unexpected end of file");
                 return false;
             }
             if (next_token == CLOSED_BRACKET)
@@ -317,12 +317,12 @@ public class Network extends ScopeKeyword
             next_token = p_scanner.next_token();
         } catch (java.io.IOException e)
         {
-            System.out.println("Network.read_net_scope: IO error while scanning file");
+            FRLogger.error("Network.read_net_scope: IO error while scanning file", e);
             return false;
         }
         if (!(next_token instanceof String))
         {
-            System.out.println("Network.read_net_scope: String expected");
+            FRLogger.warn("Network.read_net_scope: String expected");
             return false;
         }
         String net_name = (String) next_token;
@@ -332,7 +332,7 @@ public class Network extends ScopeKeyword
             next_token = p_scanner.next_token();
         } catch (java.io.IOException e)
         {
-            System.out.println("Network.read_net_scope: IO error while scanning file");
+            FRLogger.error("Network.read_net_scope: IO error while scanning file", e);
             return false;
         }
         boolean scope_is_empty = (next_token == CLOSED_BRACKET);
@@ -354,12 +354,12 @@ public class Network extends ScopeKeyword
                     next_token = p_scanner.next_token();
                 } catch (java.io.IOException e)
                 {
-                    System.out.println("Network.read_net_scope: IO error scanning file");
+                    FRLogger.error("Network.read_net_scope: IO error scanning file", e);
                     return false;
                 }
                 if (next_token == null)
                 {
-                    System.out.println("Network.read_net_scope: unexpected end of file");
+                    FRLogger.warn("Network.read_net_scope: unexpected end of file");
                     return false;
                 }
                 if (next_token == CLOSED_BRACKET)
@@ -399,7 +399,7 @@ public class Network extends ScopeKeyword
                     }
                     else if (next_token == Keyword.LAYER_RULE)
                     {
-                        System.out.println("Netwark.read_net_scope: layer_rule not yet implemented");
+                        FRLogger.warn("Netwark.read_net_scope: layer_rule not yet implemented");
                         skip_scope(p_scanner);
                     }
                     else
@@ -435,17 +435,17 @@ public class Network extends ScopeKeyword
             Net curr_subnet = p_net_list.get_net(net_id);
             if (curr_subnet == null)
             {
-                System.out.println("Network.read_net_scope: net not found in netlist");
+                FRLogger.warn("Network.read_net_scope: net not found in netlist");
                 return false;
             }
             curr_subnet.set_pins(curr_pin_list);
             if (!net_rules.isEmpty())
             {
-                // Evaluate the net eu.mihosoft.freerouting.rules.
+                // Evaluate the net rules.
                 eu.mihosoft.freerouting.rules.Net board_net = p_board.rules.nets.get(curr_subnet.id.name, curr_subnet.id.subnet_number);
                 if (board_net == null)
                 {
-                    System.out.println("Network.read_net_scope: board net not found");
+                    FRLogger.warn("Network.read_net_scope: board net not found");
                     return false;
                 }
                 Iterator<Rule> it = net_rules.iterator();
@@ -470,7 +470,7 @@ public class Network extends ScopeKeyword
                     }
                     else
                     {
-                        System.out.println("Network.read_net_scope: Rule not yet implemented");
+                        FRLogger.warn("Network.read_net_scope: Rule not yet implemented");
                     }
                 }
             }
@@ -515,7 +515,7 @@ public class Network extends ScopeKeyword
                 next_token = p_scanner.next_token();
             } catch (java.io.IOException e)
             {
-                System.out.println("Network.read_net_pins: IO error while scanning file");
+                FRLogger.error("Network.read_net_pins: IO error while scanning file", e);
                 return false;
             }
             if (next_token == Keyword.CLOSED_BRACKET)
@@ -524,7 +524,7 @@ public class Network extends ScopeKeyword
             }
             if (!(next_token instanceof String))
             {
-                System.out.println("Network.read_net_pins: String expected");
+                FRLogger.warn("Network.read_net_pins: String expected");
                 return false;
             }
             String component_name = (String) next_token;
@@ -536,12 +536,12 @@ public class Network extends ScopeKeyword
                 next_token = p_scanner.next_token();
             } catch (java.io.IOException e)
             {
-                System.out.println("Network.read_net_pins: IO error while scanning file");
+                FRLogger.error("Network.read_net_pins: IO error while scanning file", e);
                 return false;
             }
             if (!(next_token instanceof String))
             {
-                System.out.println("Network.read_net_pins: String expected");
+                FRLogger.warn("Network.read_net_pins: String expected");
                 return false;
             }
             String pin_name = (String) next_token;
@@ -559,7 +559,7 @@ public class Network extends ScopeKeyword
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Network.read_via_info: string expected");
+                FRLogger.warn("Network.read_via_info: string expected");
                 return null;
             }
             String name = (String) next_token;
@@ -567,7 +567,7 @@ public class Network extends ScopeKeyword
             next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Network.read_via_info: string expected");
+                FRLogger.warn("Network.read_via_info: string expected");
                 return null;
             }
             String padstack_name = (String) next_token;
@@ -578,7 +578,7 @@ public class Network extends ScopeKeyword
                 via_padstack = p_board.library.padstacks.get(padstack_name);
                 if (via_padstack == null)
                 {
-                    System.out.println("Network.read_via_info: padstack not found");
+                    FRLogger.warn("Network.read_via_info: padstack not found");
                     return null;
                 }
                 p_board.library.add_via_padstack(via_padstack);
@@ -587,7 +587,7 @@ public class Network extends ScopeKeyword
             next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
-                System.out.println("Network.read_via_info: string expected");
+                FRLogger.warn("Network.read_via_info: string expected");
                 return null;
             }
             int clearance_class = p_board.rules.clearance_matrix.get_no((String) next_token);
@@ -602,21 +602,21 @@ public class Network extends ScopeKeyword
             {
                 if (next_token != Keyword.ATTACH)
                 {
-                    System.out.println("Network.read_via_info: Keyword.ATTACH expected");
+                    FRLogger.warn("Network.read_via_info: Keyword.ATTACH expected");
                     return null;
                 }
                 attach_allowed = true;
                 next_token = p_scanner.next_token();
                 if (next_token != Keyword.CLOSED_BRACKET)
                 {
-                    System.out.println("Network.read_via_info: closing bracket expected");
+                    FRLogger.warn("Network.read_via_info: closing bracket expected");
                     return null;
                 }
             }
             return new eu.mihosoft.freerouting.rules.ViaInfo(name, via_padstack, clearance_class, attach_allowed, p_board.rules);
         } catch (java.io.IOException e)
         {
-            System.out.println("Network.read_via_info: IO error while scanning file");
+            FRLogger.error("Network.read_via_info: IO error while scanning file", e);
             return null;
         }
     }
@@ -636,7 +636,7 @@ public class Network extends ScopeKeyword
                 }
                 if (!(next_token instanceof String))
                 {
-                    System.out.println("Network.read_via_rule: string expected");
+                    FRLogger.warn("Network.read_via_rule: string expected");
                     return null;
                 }
                 result.add((String) next_token);
@@ -644,7 +644,7 @@ public class Network extends ScopeKeyword
             return result;
         } catch (java.io.IOException e)
         {
-            System.out.println("Network.read_via_rule: IO error while scanning file");
+            FRLogger.error("Network.read_via_rule: IO error while scanning file", e);
             return null;
         }
     }
@@ -712,7 +712,7 @@ public class Network extends ScopeKeyword
     }
 
     /**
-     * Inserts a via rule into the eu.mihosoft.freerouting.board.
+     * Inserts a via rule into the board.
      * Replaces an already existing via rule with the same
      */
     static boolean add_via_rule(Collection<String> p_name_list, eu.mihosoft.freerouting.board.BasicBoard p_board)
@@ -731,7 +731,7 @@ public class Network extends ScopeKeyword
             }
             else
             {
-                System.out.println("Network.insert_via_rules: via_info not found");
+                FRLogger.warn("Network.insert_via_rules: via_info not found");
                 rule_ok = false;
             }
         }
@@ -769,7 +769,7 @@ public class Network extends ScopeKeyword
             }
             else
             {
-                System.out.println("Network.insert_net_class: clearance class not found");
+                FRLogger.warn("Network.insert_net_class: clearance class not found");
             }
         }
         if (p_class.via_rule != null)
@@ -781,7 +781,7 @@ public class Network extends ScopeKeyword
             }
             else
             {
-                System.out.println("Network.insert_net_class: via rule not found");
+                FRLogger.warn("Network.insert_net_class: via rule not found");
             }
         }
         if (p_class.max_trace_length > 0)
@@ -801,7 +801,7 @@ public class Network extends ScopeKeyword
             }
         }
 
-        // read  the trace width  and clearance eu.mihosoft.freerouting.rules.
+        // read  the trace width  and clearance rules.
 
         boolean clearance_rule_found = false;
 
@@ -820,12 +820,11 @@ public class Network extends ScopeKeyword
             }
             else
             {
-
-                System.out.println("Network.insert_net_class: rule type not yet implemented");
+                FRLogger.warn("Network.insert_net_class: rule type not yet implemented");
             }
         }
 
-        // read the layer dependent eu.mihosoft.freerouting.rules.
+        // read the layer dependent rules.
 
         for (Rule.LayerRule curr_layer_rule : p_class.layer_rules)
         {
@@ -834,7 +833,7 @@ public class Network extends ScopeKeyword
                 int layer_no = p_board.layer_structure.get_no(curr_layer_name);
                 if (layer_no < 0)
                 {
-                    System.out.println("Network.insert_net_class: layer not found");
+                    FRLogger.warn("Network.insert_net_class: layer not found");
                     continue;
                 }
                 for (Rule curr_rule : curr_layer_rule.rules)
@@ -851,7 +850,7 @@ public class Network extends ScopeKeyword
                     }
                     else
                     {
-                        System.out.println("Network.insert_net_class: layer rule type not yet implemented");
+                        FRLogger.warn("Network.insert_net_class: layer rule type not yet implemented");
                     }
                 }
             }
@@ -893,7 +892,7 @@ public class Network extends ScopeKeyword
                 eu.mihosoft.freerouting.rules.NetClass first_class = routing_board.rules.net_classes.get(first_name);
                 if (first_class == null)
                 {
-                    System.out.println("Network.insert_class_pairs: first class not found");
+                    FRLogger.warn("Network.insert_class_pairs: first class not found");
                 }
                 else
                 {
@@ -904,7 +903,7 @@ public class Network extends ScopeKeyword
                         eu.mihosoft.freerouting.rules.NetClass second_class = routing_board.rules.net_classes.get(second_name);
                         if (second_class == null)
                         {
-                            System.out.println("Network.insert_class_pairs: second class not found");
+                            FRLogger.warn("Network.insert_class_pairs: second class not found");
                         }
                         else
                         {
@@ -930,7 +929,7 @@ public class Network extends ScopeKeyword
             }
             else
             {
-                System.out.println("Network.insert_class_pair_info: unexpected rule");
+                FRLogger.warn("Network.insert_class_pair_info: unexpected rule");
             }
         }
         for (Rule.LayerRule curr_layer_rule : p_class_class.layer_rules)
@@ -940,7 +939,7 @@ public class Network extends ScopeKeyword
                 int layer_no = p_board.layer_structure.get_no(curr_layer_name);
                 if (layer_no < 0)
                 {
-                    System.out.println("Network.insert_class_pair_info: layer not found");
+                    FRLogger.warn("Network.insert_class_pair_info: layer not found");
                     continue;
                 }
                 for (Rule curr_rule : curr_layer_rule.rules)
@@ -953,7 +952,7 @@ public class Network extends ScopeKeyword
                     }
                     else
                     {
-                        System.out.println("Network.insert_class_pair_info: unexpected layer rule type");
+                        FRLogger.warn("Network.insert_class_pair_info: unexpected layer rule type");
                     }
                 }
             }
@@ -1175,7 +1174,7 @@ public class Network extends ScopeKeyword
         int net_class_no = p_clearance_matrix.get_no(net_class_name);
         if (net_class_no < 0 || result < 0)
         {
-            System.out.println("Network.get_clearance_class: clearance class not found");
+            FRLogger.warn("Network.get_clearance_class: clearance class not found");
             return result;
         }
         // initalise the clearance values of p_new_class_name from p_net_class_name
@@ -1225,8 +1224,8 @@ public class Network extends ScopeKeyword
     }
 
     /**
-     * Create  the part eu.mihosoft.freerouting.library on the eu.mihosoft.freerouting.board. Can be called after the components are inserted.
-     * Returns false, if an error occured.
+     * Create  the part library on the board. Can be called after the components are inserted.
+     * Returns false, if an error occurred.
      */
     private static boolean insert_logical_parts(ReadScopeParameter p_par)
     {
@@ -1246,7 +1245,7 @@ public class Network extends ScopeKeyword
                 int pin_no = lib_package.get_pin_no(curr_part_pin.pin_name);
                 if (pin_no < 0)
                 {
-                    System.out.println("Network.insert_logical_parts: package pin not found");
+                    FRLogger.warn("Network.insert_logical_parts: package pin not found");
                     return false;
                 }
                 board_part_pins[curr_index] =
@@ -1264,7 +1263,7 @@ public class Network extends ScopeKeyword
             {
                 if (curr_logical_part == null)
                 {
-                    System.out.println("Network.insert_logical_parts: logical part not found");
+                    FRLogger.warn("Network.insert_logical_parts: logical part not found");
                 }
             }
             for (String curr_cmp_name : next_mapping.components)
@@ -1276,7 +1275,7 @@ public class Network extends ScopeKeyword
                 }
                 else
                 {
-                    System.out.println("Network.insert_logical_parts: eu.mihosoft.freerouting.board component not found");
+                    FRLogger.warn("Network.insert_logical_parts: board component not found");
                 }
             }
         }
@@ -1284,7 +1283,7 @@ public class Network extends ScopeKeyword
     }
 
     /**
-     * Calculates the eu.mihosoft.freerouting.library package belonging to the logical part with name p_part_name.
+     * Calculates the library package belonging to the logical part with name p_part_name.
      * Returns null, if the package was not found.
      */
     private static eu.mihosoft.freerouting.library.Package search_lib_package(String p_part_name,
@@ -1296,32 +1295,30 @@ public class Network extends ScopeKeyword
             {
                 if (curr_mapping.components.isEmpty())
                 {
-                    System.out.println("Network.search_lib_package: component list empty");
+                    FRLogger.warn("Network.search_lib_package: component list empty");
                     return null;
                 }
                 String component_name = curr_mapping.components.first();
                 if (component_name == null)
                 {
-                    System.out.println("Network.search_lib_package: component list empty");
+                    FRLogger.warn("Network.search_lib_package: component list empty");
                     return null;
                 }
                 eu.mihosoft.freerouting.board.Component curr_component = p_board.components.get(component_name);
                 if (curr_component == null)
                 {
-                    System.out.println("Network.search_lib_package: component not found");
+                    FRLogger.warn("Network.search_lib_package: component not found");
                     return null;
                 }
                 return curr_component.get_package();
             }
         }
-        System.out.print("Network.search_lib_package: eu.mihosoft.freerouting.library package ");
-        System.out.print(p_part_name);
-        System.out.println(" not found");
+        FRLogger.warn("Network.search_lib_package: library package '" + p_part_name + "' not found");
         return null;
     }
 
     /**
-     * Inserts all eu.mihosoft.freerouting.board components belonging to the input eu.mihosoft.freerouting.library component.
+     * Inserts all board components belonging to the input library component.
      */
     private static void insert_component(ComponentPlacement.ComponentLocation p_location, String p_lib_key,
             ReadScopeParameter p_par)
@@ -1331,7 +1328,7 @@ public class Network extends ScopeKeyword
         eu.mihosoft.freerouting.library.Package curr_back_package = routing_board.library.packages.get(p_lib_key, false);
         if (curr_front_package == null || curr_back_package == null)
         {
-            System.out.println("Network.insert_component: component package not found");
+            FRLogger.warn("Network.insert_component: component package not found");
             return;
         }
 
@@ -1370,7 +1367,7 @@ public class Network extends ScopeKeyword
             eu.mihosoft.freerouting.library.Padstack curr_padstack = routing_board.library.padstacks.get(curr_pin.padstack_no);
             if (curr_padstack == null)
             {
-                System.out.println("Network.insert_component: pin padstack not found");
+                FRLogger.warn("Network.insert_component: pin padstack not found");
                 return;
             }
             Collection<Net> pin_nets = p_par.netlist.get_nets(p_location.name, curr_pin.name);
@@ -1380,8 +1377,7 @@ public class Network extends ScopeKeyword
                 eu.mihosoft.freerouting.rules.Net curr_board_net = routing_board.rules.nets.get(curr_pin_net.id.name, curr_pin_net.id.subnet_number);
                 if (curr_board_net == null)
                 {
-                    System.out.println("Network.insert_component: eu.mihosoft.freerouting.board net not found");
-
+                    FRLogger.warn("Network.insert_component: board net not found");
                 }
                 else
                 {
@@ -1459,7 +1455,7 @@ public class Network extends ScopeKeyword
                 int layer = curr_keepout.layer;
                 if (layer >= routing_board.get_layer_count())
                 {
-                    System.out.println("Network.insert_component: keepout layer is to big");
+                    FRLogger.warn("Network.insert_component: keepout layer is to big");
                     continue;
                 }
                 if (layer >= 0 && !p_location.is_front)

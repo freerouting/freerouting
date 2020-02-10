@@ -24,7 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Implements the toolbar panel of the eu.mihosoft.freerouting.board frame.
+ * Implements the toolbar panel of the board frame.
  *
  * @author Alfons Wirtz
  */

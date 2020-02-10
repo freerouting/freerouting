@@ -87,7 +87,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
                 URL hsURL = getClass().getResource(helpset_name);
                 if (hsURL == null)
                 {
-                    FRLogger.logger.warn("HelpSet " + helpset_name + " not found.");
+                    FRLogger.warn("HelpSet " + helpset_name + " not found.");
                 }
                 else
                 {
@@ -96,8 +96,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
             }
             catch (HelpSetException ee)
             {
-                System.out.println("HelpSet " + helpset_name + " could not be opened.");
-                System.out.println(ee.getMessage());
+                FRLogger.error("HelpSet " + helpset_name + " could not be opened.", ee);
             }
             if (BoardFrame.help_set != null)
             {
@@ -105,7 +104,7 @@ public class BoardMenuHelp extends BoardMenuHelpReduced
             }
             if (BoardFrame.help_broker != null)
             {
-                // CSH.DisplayHelpFromSource is a convenience class to display the eu.mihosoft.freerouting.helpset
+                // CSH.DisplayHelpFromSource is a convenience class to display the helpset
                 contents_help = new CSH.DisplayHelpFromSource(BoardFrame.help_broker);
                 direct_help = new CSH.DisplayHelpAfterTracking(BoardFrame.help_broker);
             }

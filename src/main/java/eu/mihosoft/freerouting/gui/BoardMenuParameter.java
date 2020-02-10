@@ -24,13 +24,13 @@
 package eu.mihosoft.freerouting.gui;
 
 /**
- * Creates the parameter menu of a eu.mihosoft.freerouting.board frame.
+ * Creates the parameter menu of a board frame.
  *
  * @author Alfons Wirtz
  */
 public class BoardMenuParameter extends javax.swing.JMenu
 {
-    /** Returns a new windows menu for the eu.mihosoft.freerouting.board frame. */
+    /** Returns a new windows menu for the board frame. */
     public static BoardMenuParameter get_instance(BoardFrame p_board_frame)
     {
         final BoardMenuParameter parameter_menu = new BoardMenuParameter(p_board_frame);

@@ -36,7 +36,7 @@ import eu.mihosoft.freerouting.geometry.planar.TileShape;
 import eu.mihosoft.freerouting.board.Item;
 
 /**
- * Expansion Room used for pushing and ripping obstacles in the eu.mihosoft.freerouting.autoroute algorithm.
+ * Expansion Room used for pushing and ripping obstacles in the autoroute algorithm.
  *
  * @author Alfons Wirtz
  */
@@ -94,7 +94,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
     }
     
     /**
-     * Creates a 2-dim door with the other obstacle room, if that is useful for the eu.mihosoft.freerouting.autoroute algorithm.
+     * Creates a 2-dim door with the other obstacle room, if that is useful for the autoroute algorithm.
      * It is assumed that this room and p_other have a 2-dimensional overlap.
      * Returns false, if no door was created.
      */

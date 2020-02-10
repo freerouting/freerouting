@@ -24,6 +24,8 @@
 package eu.mihosoft.freerouting.designforms.specctra;
 
 
+import eu.mihosoft.freerouting.logger.FRLogger;
+
 /**
  * Transformes a Specctra session file into an Eagle script file.
  *
@@ -59,7 +61,7 @@ public class SessionToEagle extends javax.swing.JFrame
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to process session scope");
+            FRLogger.error("unable to process session scope", e);
             result = false;
         }
         
@@ -71,7 +73,7 @@ public class SessionToEagle extends javax.swing.JFrame
         }
         catch (java.io.IOException e)
         {
-            System.out.println("unable to close files");
+            FRLogger.error("unable to close files", e);
         }
         return result;
     }
@@ -112,7 +114,7 @@ public class SessionToEagle extends javax.swing.JFrame
             }
             if (!keyword_ok)
             {
-                System.out.println("SessionToEagle.process_session_scope specctra session file format expected");
+                FRLogger.warn("SessionToEagle.process_session_scope specctra session file format expected");
                 return false;
             }
         }
@@ -364,7 +366,7 @@ public class SessionToEagle extends javax.swing.JFrame
         Object next_token = this.scanner.next_token();
         if (!(next_token instanceof String))
         {
-            System.out.println("SessionToEagle.processnet_scope: String expected");
+            FRLogger.warn("SessionToEagle.processnet_scope: String expected");
             return false;
         }
         String net_name = (String) next_token;
@@ -423,7 +425,7 @@ public class SessionToEagle extends javax.swing.JFrame
             next_token = this.scanner.next_token();
             if (next_token == null)
             {
-                System.out.println("SessionToEagle.process_wire_scope: unexpected end of file");
+                FRLogger.warn("SessionToEagle.process_wire_scope: unexpected end of file");
                 return false;
             }
             if (next_token == Keyword.CLOSED_BRACKET)
@@ -494,7 +496,7 @@ public class SessionToEagle extends javax.swing.JFrame
         Object next_token = this.scanner.next_token();
         if (!(next_token instanceof String))
         {
-            System.out.println("SessionToEagle.process_via_scope: padstack name expected");
+            FRLogger.warn("SessionToEagle.process_via_scope: padstack name expected");
             return false;
         }
         String padstack_name = (String) next_token;
@@ -513,7 +515,7 @@ public class SessionToEagle extends javax.swing.JFrame
             }
             else
             {
-                System.out.println("SessionToEagle.process_via_scope: number expected");
+                FRLogger.warn("SessionToEagle.process_via_scope: number expected");
                 return false;
             }
         }
@@ -526,13 +528,13 @@ public class SessionToEagle extends javax.swing.JFrame
         }
         if (next_token != Keyword.CLOSED_BRACKET)
         {
-            System.out.println("SessionToEagle.process_via_scope: closing bracket expected");
+            FRLogger.warn("SessionToEagle.process_via_scope: closing bracket expected");
             return false;
         }
         
         if (padstack_name == null)
         {
-            System.out.println("SessionToEagle.process_via_scope: padstack_name missing");
+            FRLogger.warn("SessionToEagle.process_via_scope: padstack_name missing");
             return false;
         }
         
@@ -540,7 +542,7 @@ public class SessionToEagle extends javax.swing.JFrame
         
         if (via_padstack == null)
         {
-            System.out.println("SessionToEagle.process_via_scope: via padstack not found");
+            FRLogger.warn("SessionToEagle.process_via_scope: via padstack not found");
             return false;
         }
         
@@ -664,7 +666,7 @@ public class SessionToEagle extends javax.swing.JFrame
                 }
                 if (other_pin_info == null)
                 {
-                    System.out.println("SessuinToEagle.process_swapped_pins: other_pin_info not found");
+                    FRLogger.warn("SessuinToEagle.process_swapped_pins: other_pin_info not found");
                     return false;
                 }
                 write_pin_swap(curr_pin_info.pin, other_pin_info.pin);
@@ -713,7 +715,7 @@ public class SessionToEagle extends javax.swing.JFrame
     /** The generated Eagle script file. */
     private final java.io.OutputStreamWriter out_file;
     
-    /** Some information is read from the eu.mihosoft.freerouting.board, because it is not contained in the speccctra session file. */
+    /** Some information is read from the board, because it is not contained in the speccctra session file. */
     private final eu.mihosoft.freerouting.board.BasicBoard board;
     
     /** The layer structure in specctra format */
@@ -724,7 +726,7 @@ public class SessionToEagle extends javax.swing.JFrame
     /** The scale factor for transforming coordinates from the session file to Eagle */
     private final double session_file_scale_denominator;
     
-    /** The scale factor for transforming coordinates from the eu.mihosoft.freerouting.board to Eagle */
+    /** The scale factor for transforming coordinates from the board to Eagle */
     private final double board_scale_factor;
     
     private static class PinInfo

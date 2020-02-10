@@ -40,7 +40,7 @@ import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 /**
  * Interactive cutting a hole into an obstacle shape
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class HoleConstructionState extends CornerItemConstructionState
 {

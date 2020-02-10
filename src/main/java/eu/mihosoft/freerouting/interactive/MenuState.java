@@ -30,11 +30,12 @@ import java.util.Collection;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Common base class for the main menus, which can be selected in the tool bar.
  *
- * @author  Alfons Wirtz
+ * @author Alfons Wirtz
  */
 public class MenuState extends InteractiveState
 {
@@ -89,7 +90,7 @@ public class MenuState extends InteractiveState
             Item first_item = picked_items.iterator().next();
             if (!(first_item instanceof eu.mihosoft.freerouting.board.Pin))
             {
-                System.out.println("MenuState.swap_pin: Pin expected");
+                FRLogger.warn("MenuState.swap_pin: Pin expected");
                 return this;
             }
             eu.mihosoft.freerouting.board.Pin selected_pin = (eu.mihosoft.freerouting.board.Pin) first_item;

@@ -25,9 +25,9 @@ package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 
 /**
- * A Combo Box with an item for each clearance class of the eu.mihosoft.freerouting.board..
+ * A Combo Box with an item for each clearance class of the board.
  *
- * @author alfons
+ * @author Alfons Wirtz
  */
 public class ComboBoxClearance extends javax.swing.JComboBox
 {

@@ -30,7 +30,7 @@ import eu.mihosoft.freerouting.datastructures.IdentifierType;
 /**
  * Class for reading and writing circle scopes from dsn-files.
  *
- * @author  alfons
+ * @author Alfons Wirtz
  */
 public class Circle extends Shape
 {
