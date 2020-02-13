@@ -291,18 +291,6 @@ public class DesignFile
                 {
                     result = false;
                 }
-                try
-                {
-                    if (input_stream != null)
-                    {
-                        input_stream.close();
-                    }
-                    rules_file.delete();
-                } catch (java.io.IOException e)
-                {
-                    FRLogger.error(e.getLocalizedMessage(), e);
-                    result = false;
-                }
             } catch (java.io.FileNotFoundException e)
             {
                 FRLogger.error("File '"+rules_file_name+"' was not found.", e);
