@@ -15,6 +15,7 @@ public class StartupOptions {
     boolean webstart_option = false;
     String design_input_filename = null;
     String design_output_filename = null;
+    String design_rules_filename = null;
     String design_input_directory_name = null;
     int max_passes = 99999;
     java.util.Locale current_locale = java.util.Locale.ENGLISH;
@@ -49,6 +50,10 @@ public class StartupOptions {
                 } else if (p_args[i].startsWith("-do")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                         design_output_filename = p_args[i + 1];
+                    }
+                } else if (p_args[i].startsWith("-dr")) {
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                        design_rules_filename = p_args[i + 1];
                     }
                 } else if (p_args[i].startsWith("-mp")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {

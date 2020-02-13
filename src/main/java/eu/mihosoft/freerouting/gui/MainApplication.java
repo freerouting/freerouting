@@ -93,7 +93,8 @@ public class MainApplication extends javax.swing.JFrame
             final BoardFrame new_frame =
                     create_board_frame(design_file, null, board_option,
                             startupOptions.test_version_option, 
-                            startupOptions.current_locale);
+                            startupOptions.current_locale,
+                            startupOptions.design_rules_filename);
             welcome_window.dispose();
             if (new_frame == null)
             {
@@ -300,7 +301,7 @@ public class MainApplication extends javax.swing.JFrame
         WindowMessage welcome_window = WindowMessage.show(message);
         welcome_window.setTitle(message);
         BoardFrame new_frame =
-                create_board_frame(design_file, message_field, option, this.is_test_version, this.locale);
+                create_board_frame(design_file, message_field, option, this.is_test_version, this.locale, null);
         welcome_window.dispose();
         if (new_frame == null)
         {
@@ -329,7 +330,7 @@ public class MainApplication extends javax.swing.JFrame
      * Returns null, if an error occurred.
      */
     static private BoardFrame create_board_frame(DesignFile p_design_file, javax.swing.JTextField p_message_field,
-            BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale)
+            BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale, String p_design_rules_file)
     {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.MainApplication", p_locale);
@@ -366,8 +367,21 @@ public class MainApplication extends javax.swing.JFrame
 
             String file_name = p_design_file.get_name();
             String[] name_parts = file_name.split("\\.");
-            String confirm_import_rules_message = resources.getString("confirm_import_rules");
-            DesignFile.read_rules_file(name_parts[0], p_design_file.get_parent(),
+
+            String design_name = name_parts[0];
+
+            String parent_folder_name = null;
+            String rules_file_name = null;
+            String confirm_import_rules_message = null;
+            if (p_design_rules_file == null) {
+                parent_folder_name = p_design_file.get_parent();
+                rules_file_name = design_name + ".rules";
+                confirm_import_rules_message = resources.getString("confirm_import_rules");
+            } else {
+                rules_file_name = p_design_rules_file;
+            }
+
+            DesignFile.read_rules_file(design_name, parent_folder_name, rules_file_name,
                     new_frame.board_panel.board_handling, p_option == BoardFrame.Option.WEBSTART,
                     confirm_import_rules_message);
             new_frame.refresh_windows();
