@@ -293,7 +293,7 @@ public class DesignFile
                 }
             } catch (java.io.FileNotFoundException e)
             {
-                FRLogger.error("File '"+rules_file_name+"' was not found.", e);
+                FRLogger.error("File '"+rules_file_name+"' was not found.", null);
                 result = false;
             }
         }
