@@ -94,7 +94,6 @@ public class RulesFile
             if (!(curr_token instanceof String) || !((String) curr_token).equals(p_design_name))
             {
                 FRLogger.warn("RulesFile.read: design_name not matching");
-                return false;
             }
         }
         catch (java.io.IOException e)

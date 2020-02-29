@@ -131,6 +131,7 @@ The following command line arguments are supported by freerouter:
 
 * -de [design input file]: loads up a Specctra .dsn file at startup 
 * -di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs
+* -dr [design rules file]: reads the rules from a previously saved .rules file
 * -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished
 * -mp [number of passes]: sets the upper limit of the number of passes that will be performed
 * -l [language]: "de" for German, otherwise it's English
@@ -138,7 +139,7 @@ The following command line arguments are supported by freerouter:
 A complete command line looks something like this if your are using PowerShell on Windows:
 
 `
-& "c:\Program Files\Java\jdk-11.0.6\bin\java.exe" -jar freerouting-executable.jar -de MyBoard.dsn -do MyBoard.ses -mp 100
+& "c:\Program Files\Java\jdk-11.0.6\bin\java.exe" -jar freerouting-executable.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
 `
 
-This would read the _MyBoard.dsn_ file, do the auto-routing for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
+This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 

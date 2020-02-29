@@ -270,21 +270,20 @@ public class DesignFile
         return true;
     }
 
-    public static boolean read_rules_file(String p_design_name, String p_parent_name,
+    public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name,
                                           eu.mihosoft.freerouting.interactive.BoardHandling p_board_handling, boolean p_is_web_start, String p_confirm_message)
     {
 
         boolean result = true;
-        String rule_file_name = p_design_name + ".rules";
         boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
 
         {
             try
             {
-                java.io.File rules_file = new java.io.File(p_parent_name, rule_file_name);
-                FRLogger.info("Opening '"+rule_file_name+"'...");
+                java.io.File rules_file = p_parent_name == null ? new java.io.File(rules_file_name) : new java.io.File(p_parent_name, rules_file_name);
+                FRLogger.info("Opening '"+rules_file_name+"'...");
                 java.io.InputStream input_stream = new java.io.FileInputStream(rules_file);
-                if (input_stream != null && dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message))
+                if (input_stream != null && dsn_file_generated_by_host && (WindowMessage.confirm(p_confirm_message) || (p_confirm_message == null)))
                 {
                     result = RulesFile.read(input_stream, p_design_name, p_board_handling);
                 }
@@ -292,19 +291,9 @@ public class DesignFile
                 {
                     result = false;
                 }
-                try
-                {
-                    if (input_stream != null)
-                    {
-                        input_stream.close();
-                    }
-                    rules_file.delete();
-                } catch (java.io.IOException e)
-                {
-                    result = false;
-                }
             } catch (java.io.FileNotFoundException e)
             {
+                FRLogger.error("File '"+rules_file_name+"' was not found.", null);
                 result = false;
             }
         }
