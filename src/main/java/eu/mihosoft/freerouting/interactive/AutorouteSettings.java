@@ -52,7 +52,8 @@ public class AutorouteSettings implements java.io.Serializable
         // set default values
 
         start_ripup_costs = 100;
-        start_pass_no = 1;
+        set_start_pass_no(1);
+        set_stop_pass_no(Integer.MAX_VALUE);
         vias_allowed = true;
         with_fanout = false;
         with_autoroute = true;
@@ -110,7 +111,8 @@ public class AutorouteSettings implements java.io.Serializable
     public AutorouteSettings(AutorouteSettings p_settings)
     {
         start_ripup_costs = p_settings.start_ripup_costs;
-        start_pass_no = p_settings.start_pass_no;
+        set_start_pass_no(p_settings.start_pass_no);
+        set_stop_pass_no(p_settings.stop_pass_no);
         via_costs = p_settings.via_costs;
         plane_via_costs = p_settings.plane_via_costs;
         layer_active_arr = new boolean[p_settings.layer_active_arr.length];
