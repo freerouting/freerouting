@@ -79,7 +79,7 @@ public class DsnFile
             }
             if (!keyword_ok)
             {
-                FRLogger.warn("DsnFile.read: specctra dsn file format expected");
+                FRLogger.warn("DsnFile.read: the input file is not in a Specctra DSN file format. It must be a text file starting with the '(pcb' character array.");
                 return ReadResult.ERROR;
             }
         }
