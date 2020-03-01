@@ -85,7 +85,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
             signal_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
             gridbag.setConstraints(signal_layer_active_arr[i], gridbag_constraints);
             main_panel.add(signal_layer_active_arr[i]);
-            combo_box_arr[i] = new javax.swing.JComboBox();
+            combo_box_arr[i] = new javax.swing.JComboBox<>();
             combo_box_arr[i].addItem(this.horizontal);
             combo_box_arr[i].addItem(this.vertical);
             combo_box_arr[i].addActionListener(new PreferredDirectionListener(i));
@@ -215,7 +215,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     private final eu.mihosoft.freerouting.interactive.BoardHandling board_handling;
     private final javax.swing.JLabel[] signal_layer_name_arr;
     private final javax.swing.JCheckBox[] signal_layer_active_arr;
-    private final javax.swing.JComboBox[] combo_box_arr;
+    private final javax.swing.JComboBox<String>[] combo_box_arr;
     private final javax.swing.JCheckBox vias_allowed;
     private final javax.swing.JCheckBox fanout_pass_button;
     private final javax.swing.JCheckBox autoroute_pass_button;

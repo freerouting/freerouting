@@ -137,7 +137,7 @@ public class WindowNetDemonstrations extends WindowNetSamples
      * For every instance in a String has to be added to the resource file WindowNetSamples fo the
      * String in the field message_name.
      */
-    private static class ListElement
+    protected static class ListElement
     {
         ListElement(String p_design_name, String p_message_name, AdditionalAction p_additional_action)
         {

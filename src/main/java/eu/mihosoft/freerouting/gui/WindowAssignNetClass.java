@@ -94,7 +94,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
     private AssignRuleTable table;
     private AssignRuleTableModel table_model;
     
-    private javax.swing.JComboBox net_rule_combo_box;
+    private javax.swing.JComboBox<NetClass> net_rule_combo_box;
     
     private final java.util.ResourceBundle resources;
     

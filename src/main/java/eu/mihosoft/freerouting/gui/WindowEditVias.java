@@ -132,8 +132,8 @@ public class WindowEditVias extends BoardSavableSubWindow
     private javax.swing.JTable table;
     private ViaTableModel table_model;
     
-    private final javax.swing.JComboBox cl_class_combo_box;
-    private final javax.swing.JComboBox padstack_combo_box;
+    private final javax.swing.JComboBox<String> cl_class_combo_box;
+    private final javax.swing.JComboBox<String> padstack_combo_box;
     
     private final java.util.ResourceBundle resources;
     

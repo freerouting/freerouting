@@ -49,7 +49,7 @@ public class WindowViaRule extends javax.swing.JFrame
         main_panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20,20,20,20));
         main_panel.setLayout(new java.awt.BorderLayout());
         
-        this.rule_list_model = new javax.swing.DefaultListModel();
+        this.rule_list_model = new javax.swing.DefaultListModel<>();
         this.rule_list = new javax.swing.JList(this.rule_list_model);
         
         this.rule_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -133,7 +133,7 @@ public class WindowViaRule extends javax.swing.JFrame
     private final javax.swing.JPanel main_panel;
     
     private final javax.swing.JList rule_list;
-    private final javax.swing.DefaultListModel rule_list_model;
+    private final javax.swing.DefaultListModel<ViaInfo> rule_list_model;
     
     private final java.util.ResourceBundle resources;
     
