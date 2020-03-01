@@ -29,8 +29,6 @@ import eu.mihosoft.freerouting.geometry.planar.Shape;
 import eu.mihosoft.freerouting.geometry.planar.TileShape;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
-import java.awt.event.WindowFocusListener;
-
 /**
  * Abstract binary search tree for shapes in the plane.
  * The shapes are stored in the leafs of the tree.

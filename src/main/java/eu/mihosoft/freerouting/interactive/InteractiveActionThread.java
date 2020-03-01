@@ -25,7 +25,6 @@ package eu.mihosoft.freerouting.interactive;
 
 import eu.mihosoft.freerouting.logger.FRLogger;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
