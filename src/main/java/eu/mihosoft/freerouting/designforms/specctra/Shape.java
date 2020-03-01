@@ -54,7 +54,7 @@ public abstract class Shape
      * Reads shape scope from a Specctra dsn file.
      * If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no induvidual layers.
      */
-    public static final Shape read_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static Shape read_scope(Scanner p_scanner, LayerStructure p_layer_structure)
     {
         Shape result = null;
         try
@@ -202,8 +202,8 @@ public abstract class Shape
      * The first shape in the shape_list of the result is the border of the area.
      * The other shapes in the shape_list are holes (windows).
      */
-    public static final ReadAreaScopeResult read_area_scope(Scanner p_scanner,
-                                                            LayerStructure p_layer_structure, boolean p_skip_window_scopes)
+    public static ReadAreaScopeResult read_area_scope(Scanner p_scanner,
+                                                      LayerStructure p_layer_structure, boolean p_skip_window_scopes)
     {
         Collection<Shape> shape_list = new LinkedList<Shape>();
         String clearance_class_name = null;

@@ -18,7 +18,7 @@
  *
  * BoardDisplayMenu.java
  *
- * Created on 12. Februar 2005, 05:42
+ * Created on 12. February 2005, 05:42
  */
 
 package eu.mihosoft.freerouting.gui;
@@ -75,9 +75,9 @@ public class BoardMenuDisplay extends javax.swing.JMenu
         
         display_menu.add(colors);
         
-        javax.swing.JMenuItem miscellanious = new javax.swing.JMenuItem();
-        miscellanious.setText(display_menu.resources.getString("miscellaneous"));
-        miscellanious.addActionListener(new java.awt.event.ActionListener()
+        javax.swing.JMenuItem miscellaneous = new javax.swing.JMenuItem();
+        miscellaneous.setText(display_menu.resources.getString("miscellaneous"));
+        miscellaneous.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
@@ -85,7 +85,7 @@ public class BoardMenuDisplay extends javax.swing.JMenu
             }
         });
         
-        display_menu.add(miscellanious);
+        display_menu.add(miscellaneous);
         
         return display_menu;
     }

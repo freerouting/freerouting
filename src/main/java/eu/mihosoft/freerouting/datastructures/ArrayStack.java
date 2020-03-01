@@ -18,7 +18,7 @@
  *
  * ArrayStack.java
  *
- * Created on 11. Maerz 2006, 06:52
+ * Created on 11. March 2006, 06:52
  *
  */
 

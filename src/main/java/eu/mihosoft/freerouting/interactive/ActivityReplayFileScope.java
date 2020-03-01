@@ -39,14 +39,14 @@ public abstract class ActivityReplayFileScope
      * The only instances of the internal classes:
      */
     
-    // scpopes logging undo and redo
+    // scopes for logging undo and redo
     public static final ActivityReplayFileScope UNDO = new UndoScope("undo");
     public static final ActivityReplayFileScope REDO = new RedoScope("redo");
     public static final ActivityReplayFileScope GENERATE_SNAPSHOT = new GenerateSnapshotScope("generate_snapshot");
     
-    // Scopes for logging changes in the interactive setting:
+    // scopes for logging changes in the interactive setting:
     public static final ActivityReplayFileScope SET_CLEARANCE_COMPENSATION = new SetClearanceCompensationScope("set_clearance_compensation");
-    public static final ActivityReplayFileScope SET_DRAG_COMPONENTS_ENABLED = new SetDragComponentsEnabledScope("set_drag_componente_enabled");
+    public static final ActivityReplayFileScope SET_DRAG_COMPONENTS_ENABLED = new SetDragComponentsEnabledScope("set_drag_component_enabled");
     public static final ActivityReplayFileScope SET_LAYER = new SetLayerScope("set_layer");
     public static final ActivityReplayFileScope SET_MANUAL_TRACE_CLEARANCE_CLASS = new SetManualTraceClearanceClassScope("set_manual_trace_clearance_class");
     public static final ActivityReplayFileScope SET_MANUAL_TRACE_HALF_WIDTH = new SetManualTraceHalfWidthScope("set_manual_trace_half_width");
@@ -100,7 +100,7 @@ public abstract class ActivityReplayFileScope
     public static final ActivityReplayFileScope CHANGE_PLACEMENT_SIDE = new ChangePlacementSideScope("change_placement_side");
     public static final ActivityReplayFileScope SET_ZOOM_WITH_WHEEL = new SetZoomWithWheelScope("set_zoom_with_wheel");
     
-    // scopes for logging  displax changes
+    // scopes for logging  display changes
     public static final ActivityReplayFileScope CENTER_DISPLAY = new CenterDisplayScope("center_display");
     public static final ActivityReplayFileScope ZOOM_FRAME = new ZoomFrameScope("zoom_frame");
     
@@ -109,8 +109,8 @@ public abstract class ActivityReplayFileScope
     
     /**
      * This array contains all (above) created objects of this class.
-     * Initialializing this static array automatically by the program
-     * did not work correctly, so the programmer has to keep it uptodate by hand.
+     * Initializing this static array automatically by the program
+     * did not work correctly, so the programmer has to keep it up-to-date by hand.
      */
     private static ActivityReplayFileScope[] arr =
     {
@@ -213,7 +213,7 @@ public abstract class ActivityReplayFileScope
                 }
                 else
                 {
-                    // end of corner list, process the next interiour scope
+                    // end of corner list, process the next interior scope
                     ActivityReplayFileScope next_scope = p_activityReplayFile.start_read_scope();
                     if (next_scope == null)
                     {
