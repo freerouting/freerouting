@@ -73,7 +73,7 @@ public class BigIntAux
      * trailingZeroTable[i] is the number of trailing zero bits in the binary
      * representaion of i.
      */
-    final static byte trailingZeroTable[] = {
+    final static byte[] trailingZeroTable = {
       -25, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
 	4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
 	5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,

@@ -129,11 +129,7 @@ public class ShapeTraceEntries
         }
         search_from_side();
         resort();
-        if (!calculate_stack_levels())
-        {
-            return false;
-        }
-        return true;
+        return calculate_stack_levels();
     }
     
     

@@ -416,11 +416,7 @@ public class Pin extends DrillItem implements java.io.Serializable
         {
             return false;
         }
-        if (this.drill_allowed() && p_other instanceof Via && ((Via) p_other).attach_allowed)
-        {
-            return false;
-        }
-        return true;
+        return !this.drill_allowed() || !(p_other instanceof Via) || !((Via) p_other).attach_allowed;
     }
     
     public void turn_90_degree(int p_factor, IntPoint p_pole)

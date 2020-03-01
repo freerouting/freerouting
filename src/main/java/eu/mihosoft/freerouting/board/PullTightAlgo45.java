@@ -260,7 +260,7 @@ class PullTightAlgo45 extends PullTightAlgo
         {
             return p_polyline;
         }
-        Point adjusted_corners[] = new Point[new_corner_count + 2];
+        Point[] adjusted_corners = new Point[new_corner_count + 2];
         for (int i = 0; i < new_corner_count; ++i)
         {
             adjusted_corners[i] = new_corners[i];

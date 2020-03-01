@@ -928,10 +928,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         // Also power planes are delete_fixed.
         if (this instanceof ConductionArea)
         {
-            if (!this.board.layer_structure.arr[((ConductionArea) this).get_layer()].is_signal)
-            {
-                return true;
-            }
+            return !this.board.layer_structure.arr[((ConductionArea) this).get_layer()].is_signal;
         }
         return false;
     }

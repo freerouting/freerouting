@@ -1002,14 +1002,7 @@ public abstract class ActivityReplayFileScope
         public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, BoardHandling p_board_handling)
         {
             int int_value = p_activityReplayFile.read_int();
-            if ( int_value == 0)
-            {
-                p_board_handling.settings.push_enabled = false;
-            }
-            else
-            {
-                p_board_handling.settings.push_enabled = true;
-            }
+            p_board_handling.settings.push_enabled = int_value != 0;
             return p_return_state;
         }
     }
@@ -1024,14 +1017,7 @@ public abstract class ActivityReplayFileScope
         public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, BoardHandling p_board_handling)
         {
             int int_value = p_activityReplayFile.read_int();
-            if ( int_value == 0)
-            {
-                p_board_handling.settings.drag_components_enabled = false;
-            }
-            else
-            {
-                p_board_handling.settings.drag_components_enabled = true;
-            }
+            p_board_handling.settings.drag_components_enabled = int_value != 0;
             return p_return_state;
         }
     }
@@ -1144,14 +1130,7 @@ public abstract class ActivityReplayFileScope
         public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, BoardHandling p_board_handling)
         {
             int manual_selection = p_activityReplayFile.read_int();
-            if ( manual_selection == 0)
-            {
-                p_board_handling.settings.manual_rule_selection = false;
-            }
-            else
-            {
-                p_board_handling.settings.manual_rule_selection = true;
-            }
+            p_board_handling.settings.manual_rule_selection = manual_selection != 0;
             return p_return_state;
         }
     }

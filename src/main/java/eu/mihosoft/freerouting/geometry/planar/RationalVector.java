@@ -280,12 +280,12 @@ public class RationalVector extends Vector implements java.io.Serializable
     
     final Vector add(RationalVector p_other)
     {
-        BigInteger v1[] = new BigInteger[3];
+        BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
         
-        BigInteger v2[] = new BigInteger[3];
+        BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_other.x;
         v2[1] = p_other.y;
         v2[2] = p_other.z;
@@ -304,12 +304,12 @@ public class RationalVector extends Vector implements java.io.Serializable
     
     Point add_to(RationalPoint p_point)
     {
-        BigInteger v1[] = new BigInteger[3];
+        BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
         
-        BigInteger v2[] = new BigInteger[3];
+        BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_point.x;
         v2[1] = p_point.y;
         v2[2] = p_point.z;
