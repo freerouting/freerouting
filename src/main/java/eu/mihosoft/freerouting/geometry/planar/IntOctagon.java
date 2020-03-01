@@ -1183,7 +1183,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
             case RIGHT45:
                 result_x = (int) (Math.ceil(0.5 * (p_point.x - p_point.y + urx)));
                 result_x = Math.min(result_x, rx);
-                result_x = Math.min(result_x, p_point.x - p_point.x + uy);
+                result_x = Math.min(result_x, p_point.x - p_point.y + uy);
                 result_y = p_point.y - p_point.x + result_x;
                 break;
             case UP45:
