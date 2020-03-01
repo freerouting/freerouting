@@ -1403,8 +1403,7 @@ class SpecctraFileScanner implements Scanner {
           }
         case 230: break;
         case 2: 
-          { throw new Error("Illegal character <"+
-                                                    yytext()+">");
+          { throw new Error("Illegal character '"+yytext()+"' was found at position " + zzCurrentPos);
           }
         case 231: break;
         case 95: 
