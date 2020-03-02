@@ -64,7 +64,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
     
     private void add_net_class_combo_box()
     {
-        this.net_rule_combo_box = new javax.swing.JComboBox();
+        this.net_rule_combo_box = new javax.swing.JComboBox<>();
         eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
         for(int i = 0; i < routing_board.rules.net_classes.count(); ++i)
         {

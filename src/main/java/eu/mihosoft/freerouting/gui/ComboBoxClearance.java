@@ -24,12 +24,14 @@
 package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.rules.ClearanceMatrix;
 
+import javax.swing.*;
+
 /**
  * A Combo Box with an item for each clearance class of the board.
  *
  * @author Alfons Wirtz
  */
-public class ComboBoxClearance extends javax.swing.JComboBox
+public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.ClearanceClass>
 {
     
     /** Creates a new instance of ClearanceComboBox */
@@ -40,7 +42,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox
         {
             this.class_arr[i] = new ClearanceClass(p_clearance_matrix.get_name(i), i);
         }
-        this.setModel(new javax.swing.DefaultComboBoxModel(this.class_arr));
+        this.setModel(new DefaultComboBoxModel<>(this.class_arr));
         this.setSelectedIndex(1);
     }
     
@@ -55,7 +57,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox
         {
             this.class_arr[i] = new ClearanceClass(p_new_clearance_matrix.get_name(i), i);
         }
-        this.setModel(new javax.swing.DefaultComboBoxModel(this.class_arr));
+        this.setModel(new javax.swing.DefaultComboBoxModel<>(this.class_arr));
         this.setSelectedIndex(Math.min(old_index, this.class_arr.length - 1));
     }
     
@@ -64,7 +66,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox
      */
     public int get_selected_class_index()
     {
-        return ((ClearanceClass) this.getSelectedItem()).index;
+        return ((ClearanceClass)this.getSelectedItem()).index;
     }
     
     /**
@@ -80,7 +82,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox
     /**
      * Contains the name of a clearance class and its index in the clearance matrix.
      */
-    private static class ClearanceClass
+    protected static class ClearanceClass
     {
         public ClearanceClass(String p_name, int p_index)
         {

@@ -60,7 +60,7 @@ public abstract class WindowNetSamples extends BoardSubWindow
         main_panel.add(open_button, java.awt.BorderLayout.SOUTH);
         
         // create list with the sample designs
-        this.list = new javax.swing.JList(this.list_model);
+        this.list = new javax.swing.JList<>(this.list_model);
         fill_list();
         this.list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         this.list.setSelectedIndex(0);
@@ -194,8 +194,8 @@ public abstract class WindowNetSamples extends BoardSubWindow
     protected final java.util.ResourceBundle resources;
     protected final java.util.Locale locale;
     
-    protected javax.swing.DefaultListModel list_model = new javax.swing.DefaultListModel();
-    protected final javax.swing.JList list;
+    protected javax.swing.DefaultListModel<SampleDesignListElement> list_model = new javax.swing.DefaultListModel<>();
+    protected final javax.swing.JList<SampleDesignListElement> list;
     
     private class OpenListener implements java.awt.event.ActionListener
     {
@@ -203,5 +203,96 @@ public abstract class WindowNetSamples extends BoardSubWindow
         {
             button_pushed();
         }
+    }
+
+    /**
+     * Replays a zipped logfile from an URL in the net.
+     */
+    private static void read_zipped_logfile(BoardFrame p_board_frame, String p_archive_name, String p_logfile_name)
+    {
+        if (p_board_frame == null)
+        {
+            return;
+        }
+        ZipInputStream zip_input_stream = open_zipped_file(p_archive_name, p_logfile_name);
+        if (zip_input_stream == null)
+        {
+            return;
+        }
+        p_board_frame.read_logfile(zip_input_stream);
+    }
+
+    /**
+     * Additional Action to be performed after opening the board.
+     */
+    protected enum AdditionalAction
+    {
+        READ_LOGFILE
+                {
+                    void perform(BoardFrame p_board_frame, String p_archive_name)
+                    {
+                        String logfile_archive_name = "route_" + p_archive_name;
+                        read_zipped_logfile(p_board_frame, logfile_archive_name, logfile_archive_name + ".log");
+                    }
+                },
+
+
+        AUTOROUTE
+                {
+                    void perform(BoardFrame p_board_frame, String p_archive_name)
+                    {
+                        p_board_frame.board_panel.board_handling.start_batch_autorouter();
+                    }
+                },
+
+        NONE
+                {
+                    void perform(BoardFrame p_board_frame, String p_archive_name)
+                    {
+
+                    }
+                };
+
+        abstract void perform(BoardFrame p_board_frame, String p_archive_name);
+    }
+
+    /**
+     * Structure of the elements in the list
+     * For every instance in a String has to be added to the resource file WindowNetSamples or the
+     * String in the field message_name.
+     */
+    protected static class SampleDesignListElement
+    {
+        SampleDesignListElement(String p_design_name, String p_message_name, WindowNetDemonstrations.AdditionalAction p_additional_action)
+        {
+            design_name = p_design_name;
+            message_name = p_message_name;
+            additional_action = p_additional_action;
+        }
+
+        public String toString()
+        {
+            return message_name;
+        }
+
+        public final String design_name;
+        private final String message_name;
+        public final WindowNetDemonstrations.AdditionalAction additional_action;
+    }
+
+    /**
+     * Adds an element to the list.
+     */
+    protected void add(String p_design_name, String p_message_name, AdditionalAction p_additional_action)
+    {
+        list_model.addElement(new SampleDesignListElement(p_design_name, resources.getString(p_message_name), p_additional_action));
+    }
+
+    /**
+     * Adds an element to the list.
+     */
+    protected void add(String p_design_name)
+    {
+        list_model.addElement(new SampleDesignListElement(p_design_name, "", AdditionalAction.NONE));
     }
 }

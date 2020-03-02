@@ -50,8 +50,8 @@ public class WindowNetClasses extends BoardSavableSubWindow
 
         eu.mihosoft.freerouting.board.BasicBoard routing_board = p_board_frame.board_panel.board_handling.get_routing_board();
 
-        this.cl_class_combo_box = new javax.swing.JComboBox();
-        this.via_rule_combo_box = new javax.swing.JComboBox();
+        this.cl_class_combo_box = new javax.swing.JComboBox<>();
+        this.via_rule_combo_box = new javax.swing.JComboBox<>();
         this.layer_combo_box = new ComboBoxLayer(routing_board.layer_structure, p_board_frame.get_locale());
         add_combobox_items();
 

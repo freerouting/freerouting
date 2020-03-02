@@ -50,7 +50,7 @@ public class WindowViaRule extends javax.swing.JFrame
         main_panel.setLayout(new java.awt.BorderLayout());
         
         this.rule_list_model = new javax.swing.DefaultListModel<>();
-        this.rule_list = new javax.swing.JList(this.rule_list_model);
+        this.rule_list = new javax.swing.JList<>(this.rule_list_model);
         
         this.rule_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         this.rule_list.setVisibleRowCount(10);
@@ -132,7 +132,7 @@ public class WindowViaRule extends javax.swing.JFrame
     
     private final javax.swing.JPanel main_panel;
     
-    private final javax.swing.JList rule_list;
+    private final javax.swing.JList<ViaInfo> rule_list;
     private final javax.swing.DefaultListModel<ViaInfo> rule_list_model;
     
     private final java.util.ResourceBundle resources;
@@ -178,7 +178,7 @@ public class WindowViaRule extends javax.swing.JFrame
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            ViaInfo selected_via = (ViaInfo) rule_list.getSelectedValue();
+            ViaInfo selected_via = rule_list.getSelectedValue();
             if (selected_via != null)
             {
                 String message = resources.getString("remove_2") + " " + selected_via.get_name() +

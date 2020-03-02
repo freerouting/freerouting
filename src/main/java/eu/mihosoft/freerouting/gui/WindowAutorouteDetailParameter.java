@@ -116,7 +116,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
         // is used also in the 45 and 90 degree modes.
         this.speed_fast = resources.getString("fast");
         this.speed_slow = resources.getString("slow");
-        speed_combo_box = new javax.swing.JComboBox();
+        speed_combo_box = new javax.swing.JComboBox<>();
         speed_combo_box.addItem(this.speed_fast);
         speed_combo_box.addItem(this.speed_slow);
         speed_combo_box.addActionListener(new SpeedListener());

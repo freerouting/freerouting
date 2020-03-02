@@ -114,8 +114,8 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         main_panel.remove(this.list_empty_message);
         // Create display list
-        this.list_model = new javax.swing.DefaultListModel();
-        this.list = new javax.swing.JList(this.list_model);
+        this.list_model = new javax.swing.DefaultListModel<>();
+        this.list = new javax.swing.JList<Object>(this.list_model);
         this.list.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,10,10,10));
         this.fill_list();
         if (this.list.getVisibleRowCount() > 0)
@@ -172,8 +172,8 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     private javax.swing.JScrollPane list_scroll_pane = null;
     protected javax.swing.JLabel list_empty_message;
     
-    private javax.swing.DefaultListModel list_model = null;
-    protected javax.swing.JList list;
+    private javax.swing.DefaultListModel<Object> list_model = null;
+    protected javax.swing.JList<Object> list;
     
     protected final javax.swing.JPanel south_panel;
     

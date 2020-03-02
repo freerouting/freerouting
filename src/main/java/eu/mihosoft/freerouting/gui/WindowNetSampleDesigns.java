@@ -40,18 +40,18 @@ public class WindowNetSampleDesigns extends WindowNetSamples
 
     protected void fill_list()
     {
-        list_model.addElement("hexapod_empty.dsn");
-        list_model.addElement("hexapod_autorouted.dsn");
-        list_model.addElement("sharc_handrouted.dsn");
-        list_model.addElement("at14_empty.dsn");
-        list_model.addElement("at14_autorouted.dsn");
-        list_model.addElement("sharp_empty.dsn");
-        list_model.addElement("sharp_autorouted.dsn");
-        list_model.addElement("bigdesign_unrouted.dsn");
-        list_model.addElement("int_empty.dsn");
-        list_model.addElement("int_autorouted.dsn");
-        list_model.addElement("single_layer_empty.dsn");
-        list_model.addElement("single_layer_handrouted.dsn");
+        this.add("hexapod_empty.dsn");
+        this.add("hexapod_autorouted.dsn");
+        this.add("sharc_handrouted.dsn");
+        this.add("at14_empty.dsn");
+        this.add("at14_autorouted.dsn");
+        this.add("sharp_empty.dsn");
+        this.add("sharp_autorouted.dsn");
+        this.add("bigdesign_unrouted.dsn");
+        this.add("int_empty.dsn");
+        this.add("int_autorouted.dsn");
+        this.add("single_layer_empty.dsn");
+        this.add("single_layer_handrouted.dsn");
     }
 
     protected void button_pushed()
@@ -61,7 +61,7 @@ public class WindowNetSampleDesigns extends WindowNetSamples
         {
             return;
         }
-        String design_name = (String) list_model.elementAt(index);
+        String design_name = list_model.elementAt(index).design_name;
         String[] name_parts = design_name.split("\\.");
         String archive_name = name_parts[0];
         open_design(archive_name, design_name, this.locale);

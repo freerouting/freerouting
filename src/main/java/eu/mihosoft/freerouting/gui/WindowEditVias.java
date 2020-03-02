@@ -47,8 +47,8 @@ public class WindowEditVias extends BoardSavableSubWindow
         this.main_panel = new javax.swing.JPanel();
         this.main_panel.setLayout(new java.awt.BorderLayout());
         
-        this.cl_class_combo_box = new javax.swing.JComboBox();
-        this.padstack_combo_box = new javax.swing.JComboBox();
+        this.cl_class_combo_box = new javax.swing.JComboBox<>();
+        this.padstack_combo_box = new javax.swing.JComboBox<>();
         add_combobox_items();
         
         add_table();
