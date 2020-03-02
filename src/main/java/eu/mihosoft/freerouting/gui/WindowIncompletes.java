@@ -25,6 +25,8 @@ package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.interactive.RatsNest;
 
+import java.util.List;
+
 /**
  *
  * @author Alfons Wirtz
@@ -62,15 +64,15 @@ public class WindowIncompletes extends WindowObjectListWithFilter
     
     protected void select_instances()
     {
-        Object[] selected_incompletes = list.getSelectedValues();
-        if (selected_incompletes.length <= 0)
+        List<Object> selected_incompletes = list.getSelectedValuesList();
+        if (selected_incompletes.size() <= 0)
         {
             return;
         }
         java.util.Set<eu.mihosoft.freerouting.board.Item> selected_items = new java.util.TreeSet<eu.mihosoft.freerouting.board.Item>();
-        for (int i = 0; i < selected_incompletes.length; ++i)
+        for (int i = 0; i < selected_incompletes.size(); ++i)
         {
-            RatsNest.AirLine curr_airline = (RatsNest.AirLine) selected_incompletes[i];
+            RatsNest.AirLine curr_airline = (RatsNest.AirLine) selected_incompletes.get(i);
             selected_items.add(curr_airline.from_item);
             selected_items.add(curr_airline.to_item);
             

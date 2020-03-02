@@ -28,6 +28,8 @@ import eu.mihosoft.freerouting.rules.BoardRules;
 
 import eu.mihosoft.freerouting.board.Layer;
 
+import java.util.List;
+
 /**
  * Window for interactive editing of via rules.
  *
@@ -467,15 +469,15 @@ public class WindowVia extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            Object[] selected_objects = rule_list.getSelectedValues();
-            if (selected_objects.length <= 0)
+            List<ViaRule> selected_objects = rule_list.getSelectedValuesList();
+            if (selected_objects.size() <= 0)
             {
                 return;
             }
             java.util.Collection<WindowObjectInfo.Printable> object_list = new java.util.LinkedList<WindowObjectInfo.Printable>();
-            for (int i = 0; i < selected_objects.length; ++i)
+            for (int i = 0; i < selected_objects.size(); ++i)
             {
-                object_list.add((WindowObjectInfo.Printable)(selected_objects[i]));
+                object_list.add((WindowObjectInfo.Printable)(selected_objects.get(i)));
             }
             eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
             WindowObjectInfo new_window =

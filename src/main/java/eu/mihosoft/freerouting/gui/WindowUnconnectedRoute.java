@@ -25,6 +25,7 @@
 package eu.mihosoft.freerouting.gui;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -106,15 +107,15 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
     
     protected void select_instances()
     {
-        Object[] selected_list_values = list.getSelectedValues();
-        if (selected_list_values.length <= 0)
+        List<Object> selected_list_values = list.getSelectedValuesList();
+        if (selected_list_values.size() <= 0)
         {
             return;
         }
         Set<eu.mihosoft.freerouting.board.Item> selected_items = new java.util.TreeSet<eu.mihosoft.freerouting.board.Item>();
-        for (int i = 0; i < selected_list_values.length; ++i)
+        for (int i = 0; i < selected_list_values.size(); ++i)
         {
-            selected_items.addAll(((UnconnectedRouteInfo)selected_list_values[i]).item_list);
+            selected_items.addAll(((UnconnectedRouteInfo)selected_list_values.get(i)).item_list);
         }
         eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
         board_handling.select_items(selected_items);
