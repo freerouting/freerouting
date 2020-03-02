@@ -1660,10 +1660,6 @@ public class GUIDefaultsFile
             {
                 item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
             }
-            else if (next_token == Keyword.VIAS)
-            {
-                item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.VIAS, true);
-            }
             else
             {
                 FRLogger.warn("GUIDefaultsFile.read_selectable_item_scope: unexpected token");
