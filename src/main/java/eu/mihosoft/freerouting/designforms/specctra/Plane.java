@@ -72,7 +72,7 @@ public class Plane extends ScopeKeyword
     public static void write_scope(WriteScopeParameter p_par, eu.mihosoft.freerouting.board.ConductionArea p_conduction) throws java.io.IOException
     {
         int net_count = p_conduction.net_count();
-        if (net_count <= 0 || net_count > 1)
+        if (net_count != 1)
         {
             FRLogger.warn("Plane.write_scope: unexpected net count");
             return;

@@ -119,7 +119,7 @@ public class BigIntAux
         bZeros += y;
         b >>>= y;
 
-        int t = (aZeros < bZeros ? aZeros : bZeros);
+        int t = (Math.min(aZeros, bZeros));
 
         while (a != b) {
             if ((a+0x80000000) > (b+0x80000000)) {  // a > b as unsigned

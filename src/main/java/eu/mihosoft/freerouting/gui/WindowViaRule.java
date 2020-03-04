@@ -113,8 +113,8 @@ public class WindowViaRule extends javax.swing.JFrame
      */
     private void swap_position(int p_1, int p_2)
     {
-        ViaInfo via_1 = (ViaInfo) this.rule_list_model.get(p_1);
-        ViaInfo via_2 = (ViaInfo) this.rule_list_model.get(p_2);
+        ViaInfo via_1 = this.rule_list_model.get(p_1);
+        ViaInfo via_2 = this.rule_list_model.get(p_2);
         if (via_1 == null || via_2 == null)
         {
             return;

@@ -72,8 +72,8 @@ public class NetList
      */
     public Net get_net(Net.Id p_net_id)
     {
-        Object value = nets.get(p_net_id);
-        return ((Net) value);
+        Net value = nets.get(p_net_id);
+        return value;
     }
     
     /**

@@ -340,7 +340,6 @@ public class UndoableObjects implements java.io.Serializable
             old_node.redo_object = curr_node;
             curr_node.undo_object = old_node;
             curr_node.level = this.stack_level;
-            return;
         }
     }
 

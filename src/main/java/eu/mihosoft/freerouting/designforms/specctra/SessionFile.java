@@ -488,7 +488,7 @@ public class SessionFile
             IndentFileWriter p_file) throws java.io.IOException
     {
         int net_count = p_conduction_area.net_count();
-        if (net_count <= 0 || net_count > 1)
+        if (net_count != 1)
         {
             FRLogger.warn("SessionFile.write_conduction_area: unexpected net count");
             return;

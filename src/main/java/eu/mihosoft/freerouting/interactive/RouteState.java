@@ -216,8 +216,8 @@ public class RouteState extends InteractiveState
     {
         eu.mihosoft.freerouting.board.RoutingBoard routing_board = p_hdlg.get_routing_board();
 
-        /**
-         * look if an already exististing trace ends at p_start_corner
+        /*
+         * look if an already existing trace ends at p_start_corner
          * and pick it up in this case.
          */
         Item picked_item = routing_board.pick_nearest_routing_item(p_location, p_hdlg.settings.layer, null);

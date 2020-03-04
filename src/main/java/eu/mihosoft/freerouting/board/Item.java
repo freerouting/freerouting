@@ -18,8 +18,7 @@
  */
 package eu.mihosoft.freerouting.board;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.IntPoint;
@@ -31,9 +30,6 @@ import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
 
 import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.rules.Nets;
@@ -836,10 +832,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     public void draw(Graphics p_g, GraphicsContext p_graphics_context, Color p_color, double p_intensity)
     {
         Color[] color_arr = new Color[board.get_layer_count()];
-        for (int i = 0; i < color_arr.length; ++i)
-        {
-            color_arr[i] = p_color;
-        }
+        Arrays.fill(color_arr, p_color);
         draw(p_g, p_graphics_context, color_arr, p_intensity);
     }
 

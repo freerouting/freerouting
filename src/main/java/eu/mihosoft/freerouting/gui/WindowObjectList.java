@@ -89,7 +89,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         this.list_empty_message = new javax.swing.JLabel(resources.getString("list_empty"));
         this.list_empty_message.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,10,10,10));
         
-        /** Dispose this window and all subwindows when closing the window. */
+        // Dispose this window and all subwindows when closing the window.
         this.addWindowListener(new java.awt.event.WindowAdapter()
         {
             public void windowClosing(java.awt.event.WindowEvent evt)

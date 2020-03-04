@@ -43,7 +43,7 @@ public class ActivityReplayFile
     public boolean start_read(InputStream p_input_stream)
     {
         this.scanner = new ActivityReplayFileScanner(p_input_stream);
-        return (this.scanner != null);
+        return true;
     }
     
     /**
@@ -52,7 +52,6 @@ public class ActivityReplayFile
      */
     public FloatPoint read_corner()
     {
-        
         double x = 0;
         double y = 0;
         for (int i = 0; i < 2; ++i)

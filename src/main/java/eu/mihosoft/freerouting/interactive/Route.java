@@ -444,14 +444,7 @@ public class Route
         {
             result = first_layer;
         }
-        else if (this.layer > last_layer)
-        {
-            result = last_layer;
-        }
-        else
-        {
-            result = this.layer;
-        }
+        else result = Math.min(this.layer, last_layer);
         return result;
     }
 

@@ -59,7 +59,7 @@ public class WindowNetDemonstrations extends WindowNetSamples
         {
             return;
         }
-        SampleDesignListElement selected_element = (SampleDesignListElement) list_model.elementAt(index);
+        SampleDesignListElement selected_element = list_model.elementAt(index);
         String[] name_parts = selected_element.design_name.split("\\.");
         String archive_name = name_parts[0];
         BoardFrame new_frame = open_design(archive_name, selected_element.design_name, this.locale);
