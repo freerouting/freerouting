@@ -100,7 +100,7 @@ public, and in some countries other activities as well.
 parties to make or receive copies.  Mere interaction with a user through
 a computer network, with no transfer of a copy, is not conveying.
 
-  An interactive user interface displays "Appropriate Legal Notices"
+  An eu.mihosoft.freerouting.interactive user interface displays "Appropriate Legal Notices"
 to the extent that it includes a convenient and prominently visible
 feature that (1) displays an appropriate copyright notice, and (2)
 tells the user that there is no warranty for the work (except to the
@@ -227,8 +227,8 @@ terms of section 4, provided that you also meet all of these conditions:
     permission to license the work in any other way, but it does not
     invalidate such permission if you have separately received it.
 
-    d) If the work has interactive user interfaces, each must display
-    Appropriate Legal Notices; however, if the Program has interactive
+    d) If the work has eu.mihosoft.freerouting.interactive user interfaces, each must display
+    Appropriate Legal Notices; however, if the Program has eu.mihosoft.freerouting.interactive
     interfaces that do not display Appropriate Legal Notices, your
     work need not make them do so.
 
@@ -331,7 +331,7 @@ requirement to continue to provide support service, warranty, or updates
 for a work that has been modified or installed by the recipient, or for
 the User Product in which it has been modified or installed.  Access to a
 network may be denied when the modification itself materially and
-adversely affects the operation of the network or violates the rules and
+adversely affects the operation of the network or violates the eu.mihosoft.freerouting.rules and
 protocols for communication across the network.
 
   Corresponding Source conveyed, and Installation Information provided,
@@ -650,7 +650,7 @@ the "copyright" line and a pointer to where the full notice is found.
 Also add information on how to contact you by electronic and paper mail.
 
   If the program does terminal interaction, make it output a short
-notice like this when it starts in an interactive mode:
+notice like this when it starts in an eu.mihosoft.freerouting.interactive mode:
 
     {project}  Copyright (C) {year}  {fullname}
     This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
@@ -667,8 +667,8 @@ For more information on this, and how to apply and follow the GNU GPL, see
 <http://www.gnu.org/licenses/>.
 
   The GNU General Public License does not permit incorporating your program
-into proprietary programs.  If your program is a subroutine library, you
+into proprietary programs.  If your program is a subroutine eu.mihosoft.freerouting.library, you
 may consider it more useful to permit linking proprietary applications with
-the library.  If this is what you want to do, use the GNU Lesser General
+the eu.mihosoft.freerouting.library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.

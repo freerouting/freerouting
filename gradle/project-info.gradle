@@ -1,0 +1,25 @@
+// -----------------------------------------------------------------------------
+// publishing information
+// -----------------------------------------------------------------------------
+ext.publishing.artifactId =  project.name.toLowerCase()
+ext.publishing.groupId    =  'eu.mihosoft.freerouting'
+ext.publishing.versionId  =  '1.4.0'
+
+ext.publishing.developerName         = 'Michael Hoffer'
+ext.publishing.developerAlias        = 'miho'
+ext.publishing.developerEmail        = 'info@michaelhoffer.de'
+ext.publishing.inceptionYear         = '2017'
+
+ext.publishing.bintray.repo          = 'Freerouting'
+ext.publishing.bintray.userOrg       = 'miho'
+ext.publishing.bintray.name          = project.name
+
+ext.publishing.desc                  = 'Advanced PCB Autorouter'
+ext.publishing.license               = 'GPL-3.0'
+ext.publishing.licenseUrl            = 'https://github.com/miho/freerouting/blob/master/LICENSE.txt'
+ext.publishing.labels                = ['PCB', 'Autorouter', 'KiCad', 'EAGLE']
+ext.publishing.websiteUrl            = 'https://github.com/miho/freerouting'
+ext.publishing.issueTrackerUrl       = 'https://github.com/miho/freerouting/issues'
+ext.publishing.vcsUrl                = 'https://github.com/miho/freerouting.git'
+
+ext.publishing.pomName               =  ext.publishing.artifactId
