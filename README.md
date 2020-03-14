@@ -1,34 +1,64 @@
-currently most active fork is:
-https://github.com/miho/freerouting
+# freerouting
 
-freerouting
-===========
+[ ![Download](https://api.bintray.com/packages/miho/Freerouting/freerouting/images/download.svg) ](https://bintray.com/miho/Freerouting/freerouting/_latestVersion)
 
-Yet another copy of the original freerouting.net source
+Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.
 
-ChangeLog over original version 1.2.43:
+It basically does this:
 
-0) ant build script & missing dependencies added
+![](https://raw.githubusercontent.com/miho/freerouting/master/res/img/freerouting.jpg)
 
-1) Refactoring: StartupOptions class extracted
+## What has changed?
 
-2) DefaultUncaughtExceptionHandler added
+Freerouting is a fantastic piece of software. But the code hasn't been updated in a while and had some design flaws. Some of them are fixed now. This version of freerouting has been refactored to be fully compatible with JDK11.
 
-3) Refactoring: FRLogger added for future logging & error handling improvements.
+### New Features
 
-4) launch4j configuration & pre-compiled Windows binary added
+- Uses gradle as build system (which is compatible with command line, NetBeans, IntelliJ, Eclipse and more)
+- New code base uses proper package names. That is, freerouting can finally be used as library.
+- Removed local dependencies. Publication via maven central and/or bintray is now possibe.
+- WebStart code has been removed (WebStart is officially deprecated)
+- Several `ClassCastException` bugs in the graphics package have been fixed
+- Swing UI uses native look&feel if possible
+- Prepared Jigsaw module support (still WIP)
+- other minor fixes
 
-Known issues:
+## How to Build It
 
-I have not yet figured out the help system
+### Requirements
 
-===========
+- Java >= 11
+- Internet connection (dependencies are downloaded automatically)
+- IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
+
+### IDE
+
+Open the `freerouting` [Gradle](http://www.gradle.org/) project in your favourite IDE (NB, IntelliJ, Eclipse etc. with Gradle Plugin) and build it
+by calling the `assemble` task.
+
+### Command Line
+
+Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerouting`) and enter the following command
+
+#### Bash (Linux/OS X/Cygwin/other Unix-like shell)
+
+    bash gradlew assemble
+    
+#### Windows (CMD)
+
+    gradlew assemble
+    
+#### Generated Executables
+
+All four .jar files will be generated in the _build\libs_ subfolder. You would typically run the _freerouting-executable.jar_ file.
+
+## From the original author:
 
 Java Based Printed Circuit Board Routing Software from FreeRouting.net written by Alfons Wirtz.
 
 http://www.freerouting.net/fen/viewtopic.php?f=4&t=255
 
-by alfons » Sat Mar 08, 2014 12:07 pm
+by alfons © Sat Mar 08, 2014 12:07 pm
 
 Because I am no more maintaining the Freerouting project since 4 years and future Java versions may block my Freerouting Java Web Start application completely, I finally decided to open the source of the Freerouting project under the GNU public license version 3.
 
@@ -74,29 +104,42 @@ Additional steps for users of CadSoft-Eagle:
 6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
 
 
-Here are some instructions how to run the Freerouting project in the NetBeans IDE.
-==================================================================================
+Additional steps for users of KiCad:
+====================================
 
-1) Go to the Java SE download web page of Oracle to download and install JDK 8 with NetBeans 8.0
+1) Download the latest freerouting-executable.jar file from the [Releases](https://github.com/miho/freerouting/releases)
 
-2) Start the NetBeans IDE and select File | New Project in the pull down menu.
+2) Start KiCad and open your project in Pcbnew.
 
-3) In this sheet select Java Project with existing sources.
+3) Export the PCB into Specctra DSN (File / Export... / Specctra DSN).
 
-4) Add your downloaded Freerouting source code with Add Source Package.
+4) Start the router by running the freerouting-executable.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
 
-5) Build your new project in NetBeans. 
+5) Do the routing.
 
-6) To get rid of the undefined's download and unzip the attached library jh.jar. It is the system library of the Java Help system. 
+5) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
 
-7) Right click on the name of your new project on the left of NetBeans and select Properties.
-
-8) In the Property sheet select Libraries on the left and add your jh.jar with Add JAR/Folder.
-
-9) Click on Web Start in the Property sheet and select Enable Web Start.
-
-10) Build the project again. The router should run now.
-
-For optional parameters of the Freerouting outfile check the usage of the variable p_args in the source file gui/MainApplication.java.
+6) Go back to KiCad's Pcbnew and import the results (File / Import Specctra Session...).
 
 
+Using the command line arguments:
+=================================
+
+Freerouter was designed as a GUI program, but it also can function as a command line tool. Typically you would have an input file (e.g. Specctra DSN) that you exported from you EDA (e.g. KiCad). If this file has unconnected routes, you would want to wire those with autorouter, and save the result in a format that you can then import back into your EDA.
+
+The following command line arguments are supported by freerouter:
+
+* -de [design input file]: loads up a Specctra .dsn file at startup 
+* -di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs
+* -dr [design rules file]: reads the rules from a previously saved .rules file
+* -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished
+* -mp [number of passes]: sets the upper limit of the number of passes that will be performed
+* -l [language]: "de" for German, otherwise it's English
+
+A complete command line looks something like this if your are using PowerShell on Windows:
+
+`
+& "c:\Program Files\Java\jdk-11.0.6\bin\java.exe" -jar freerouting-executable.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+`
+
+This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
