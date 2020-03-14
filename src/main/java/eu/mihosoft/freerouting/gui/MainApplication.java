@@ -475,6 +475,7 @@ public class MainApplication extends javax.swing.JFrame
     static final String WEB_FILE_BASE_NAME = "http://www.freerouting.mihosoft.eu";
     /**
      * Change this string when creating a new version
+     * todo: maybe migrate to 2020.03 version convention?
      */
     static final String VERSION_NUMBER_STRING = "v1.4.1";
 }
