@@ -476,5 +476,5 @@ public class MainApplication extends javax.swing.JFrame
     /**
      * Change this string when creating a new version
      */
-    static final String VERSION_NUMBER_STRING = "v1.4.0 (JDK11 version by mihosoft.eu)";
+    static final String VERSION_NUMBER_STRING = "v1.4.1";
 }
