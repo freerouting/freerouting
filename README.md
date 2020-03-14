@@ -1,3 +1,6 @@
+currently most active fork is:
+https://github.com/miho/freerouting
+
 freerouting
 ===========
 
@@ -25,7 +28,7 @@ Java Based Printed Circuit Board Routing Software from FreeRouting.net written b
 
 http://www.freerouting.net/fen/viewtopic.php?f=4&t=255
 
-by alfons » Sat Mar 08, 2014 12:07 pm
+by alfons Â» Sat Mar 08, 2014 12:07 pm
 
 Because I am no more maintaining the Freerouting project since 4 years and future Java versions may block my Freerouting Java Web Start application completely, I finally decided to open the source of the Freerouting project under the GNU public license version 3.
 
