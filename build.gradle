@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
 //    id "com.github.hierynomus.license" version "0.13.1"
+    id 'java'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '2.4.0'
     id 'com.jfrog.bintray' version '1.8.4'
@@ -20,14 +21,13 @@ plugins {
 //    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
 }
 
-apply plugin: 'java'
 apply from: 'gradle/publishing.gradle'
 
 wrapper {
-    gradleVersion = '5.4'
+    gradleVersion = '6.2'
 }
 
-sourceCompatibility = '1.11'
+sourceCompatibility = '11'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 gradle.projectsEvaluated {
@@ -46,9 +46,9 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 
-if (!hasProperty('mainClass')) {
-    ext.mainClass = 'eu.mihosoft.freerouting.gui.MainApplication'
-}
+
+mainClassName = 'eu.mihosoft.freerouting.gui.MainApplication'
+
 
 repositories {
     mavenCentral()
@@ -108,6 +108,7 @@ jar {
     manifest {
 
         attributes(
+                'Automatic-Module-Name': 'eu.mihosoft.freerouting',
                 'Built-By': System.properties['user.name'],
                 'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
                 'Build-Date': project.buildDate,
@@ -132,6 +133,7 @@ task executableJar(type: Jar) {
     manifest {
 
         attributes(
+                'Automatic-Module-Name': 'eu.mihosoft.freerouting',
                 'Built-By': System.properties['user.name'],
                 'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
                 'Build-Date': project.buildDate,
@@ -141,7 +143,7 @@ task executableJar(type: Jar) {
                 'Specification-Version': project.version,
                 'Implementation-Title': project.name,
                 'Implementation-Version': project.version,
-                'Main-Class': mainClass
+                'Main-Class': mainClassName
         )
     }
 }

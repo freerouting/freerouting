@@ -6,4 +6,9 @@ out
 freerouting.iml
 tmp
 /logs/
+bin/
+.project
+.settings
+.vscode
+.classpath
 
