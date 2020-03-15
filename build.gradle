@@ -21,7 +21,7 @@ plugins {
 //    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
 }
 
-apply from: 'gradle/publishing.gradle'
+ext.mainClassName = 'eu.mihosoft.freerouting.gui.MainApplication'
 
 wrapper {
     gradleVersion = '6.2'
@@ -46,10 +46,6 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 
-
-mainClassName = 'eu.mihosoft.freerouting.gui.MainApplication'
-
-
 repositories {
     mavenCentral()
     jcenter()
@@ -61,27 +57,10 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.help/javahelp
     compile group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
-//    compile files("./lib/eu.mihosoft.freerouting.deps.jh.jar")
-
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
 }
 
-// ext.moduleName = 'eu.mihosoft.freerouting'
-// javaModule.name = 'eu.mihosoft.freerouting'
-//
-//compileJava {
-//    inputs.property("moduleName", moduleName)
-//    doFirst {
-//
-//        System.err.println(": modulepath-jar: " + classpath.asPath)
-//
-//        options.compilerArgs = [
-//            '--module-path', classpath.asPath,
-//        ]
-//        classpath = files()
-//    }
-//}
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -89,36 +68,19 @@ ext {
     buildTime = new java.text.SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
-// create a fat-jar (class files plus dependencies
-// excludes VRL.jar (plugin jar files must not start with 'vrl-\\d+')
 jar {
-
-
-    // TODO add switch for fat-jar generation
-    // dependencies except VRL
-    // from configurations.runtime.asFileTree.
-    //     filter({file->return !file.name.startsWith("vrl-0")}).
-    //     files.collect { zipTree(it) }
-    //
-//    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
-
-    // // project class files compiled from source
-    // from files(sourceSets.main.output)
-
     manifest {
-
         attributes(
-                'Automatic-Module-Name': 'eu.mihosoft.freerouting',
-                'Built-By': System.properties['user.name'],
-                'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
-                'Build-Date': project.buildDate,
-                'Build-Time': project.buildTime,
-                'Build-Revision': versioning.info.commit,
-                'Specification-Title': project.name,
-                'Specification-Version': project.version,
-                'Implementation-Title': project.name,
-                'Implementation-Version': project.version
-//                ,'Main-Class': mainClass
+          'Automatic-Module-Name': 'eu.mihosoft.freerouting',
+          'Built-By': System.properties['user.name'],
+          'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+          'Build-Date': project.buildDate,
+          'Build-Time': project.buildTime,
+          'Build-Revision': versioning.info.commit,
+          'Specification-Title': project.name,
+          'Specification-Version': project.version,
+          'Implementation-Title': project.name,
+          'Implementation-Version': project.version
         )
     }
 }
@@ -148,9 +110,7 @@ task executableJar(type: Jar) {
     }
 }
 
-artifacts {
-    archives executableJar
-}
+apply from: 'gradle/publishing.gradle'
 
 
 //license {
@@ -171,7 +131,7 @@ artifacts {
 task run(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
-    main = mainClass
+    main = mainClassName
 
     // arguments to pass to the application
     //    args 'appArg1'
