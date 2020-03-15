@@ -113,6 +113,13 @@ task executableJar(type: Jar) {
 apply from: 'gradle/publishing.gradle'
 
 
+task dist(type: Copy) {
+    from('build/libs/freerouting-executable.jar')
+    into('build/dist/')
+}
+
+dist.dependsOn+="assemble"
+
 //license {
 //    header = rootProject.file('config/HEADER')
 //    strictCheck = true

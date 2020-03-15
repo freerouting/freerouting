@@ -12,3 +12,8 @@ bin/
 .vscode
 .classpath
 
+/distribution/.jdk14
+/distribution/runtime
+/distribution/Freerouting*
+
+
