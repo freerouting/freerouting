@@ -1,9 +1,9 @@
 #!/bin/bash
 
-export APP_VERSION="1.4.1"
-export APP_TYPE="dmg"
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-13.0.1.jdk/Contents/Home/"
-export JPACKAGE_JVM="https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_osx-x64_bin.tar.gz"
+export APP_VERSION="1.4.2-SNAPSHOT"
+export APP_TYPE="app-image"
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
+export JPACKAGE_JVM="https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz"
 
 
 SOURCE="${BASH_SOURCE[0]}"
@@ -17,7 +17,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
 
-if [ -d ".jdk14/jdk-14.jdk/" ]; then
+if [ -d ".jdk14/jdk-14/" ]; then
     echo "> jdk 14 for package generation already downloaded"
 else
     mkdir -p .jdk14/ ; cd .jdk14
@@ -34,18 +34,18 @@ else
         --strip-native-commands \
         --vm=server \
         --compress=2 \
-        --output ../runtime
+        --output runtime
 fi
 
 cd $DIR
 
-export JPKG_HOME=$(pwd)"/.jdk14/jdk-14.jdk/Contents/Home"
+export JPKG_HOME=$(pwd)"/.jdk14/jdk-14/"
 export JPKG_EXECUTABLE=$JPKG_HOME/bin/jpackage
 
 $JPKG_EXECUTABLE --input ../build/dist/ \
  --name Freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image runtime --app-version $APP_VERSION
+ --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION
 
 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export APP_VERSION="1.4.1"
+export APP_VERSION="1.4.2-SNAPSHOT"
 export APP_TYPE="dmg"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-13.0.1.jdk/Contents/Home/"
 export JPACKAGE_JVM="https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_osx-x64_bin.tar.gz"
@@ -34,7 +34,7 @@ else
         --strip-native-commands \
         --vm=server \
         --compress=2 \
-        --output ../runtime
+        --output runtime
 fi
 
 cd $DIR
@@ -45,7 +45,7 @@ export JPKG_EXECUTABLE=$JPKG_HOME/bin/jpackage
 $JPKG_EXECUTABLE --input ../build/dist/ \
  --name Freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image runtime --app-version $APP_VERSION
+ --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION
 
 
 
