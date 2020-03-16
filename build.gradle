@@ -112,6 +112,25 @@ task executableJar(type: Jar) {
 
 apply from: 'gradle/publishing.gradle'
 
+// write constants to code
+task writeVersionInfo() {
+    doLast {
+        def buildInfoCode = new File("${project.buildDir}/generated-src/eu/mihosoft/freerouting/constants/Constants.java")
+        buildInfoCode.getParentFile().mkdirs()
+        buildInfoCode.write("package eu.mihosoft.freerouting.constants;\n"
+                + "public class Constants {\n"
+                + "  public static final String FREEROUTING_VERSION = \"${publishing.versionId}\";\n"
+                + "  public static final String FREEROUTING_BUILD_DATE = \"${buildDate}\";\n"
+                + "}\n"
+        )
+    }
+}
+
+// add the 'vmfconstants' src dir to the folders to compile (input to groovyc)
+sourceSets.main.java.srcDirs+=file("${project.buildDir}/generated-src/eu/mihosoft/freerouting/constants/")
+
+compileJava.dependsOn+="writeVersionInfo"
+
 
 task dist(type: Copy) {
     from('build/libs/freerouting-executable.jar')

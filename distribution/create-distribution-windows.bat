@@ -1,6 +1,6 @@
 @echo off
 
-SET  APP_VERSION="1.4.2-SNAPSHOT"
+SET  APP_VERSION="1.4.2"
 SET  APP_TYPE="msi"
 SET  JAVA_HOME="C:\Program Files\OpenJDK\jdk-13.0.2\"
 SET  JPACKAGE_JVM="https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_windows-x64_bin.zip"
@@ -37,7 +37,6 @@ cd %DIR%
 set JPKG_HOME=.jdk14\jdk-14\
 set JPKG_EXECUTABLE=%JPKG_HOME%\bin\jpackage
 
-%JPKG_EXECUTABLE% --input ..\build\dist\ --name Freerouting --main-jar freerouting-executable.jar --type %APP_TYPE% --runtime-image .jdk14\runtime --app-version %APP_VERSION%
-
+%JPKG_EXECUTABLE% --input ..\build\dist\ --name Freerouting --main-jar freerouting-executable.jar --type %APP_TYPE% --runtime-image .jdk14\runtime --app-version %APP_VERSION% --win-per-user-install --win-menu --win-menu-group Freerouting 
 
 

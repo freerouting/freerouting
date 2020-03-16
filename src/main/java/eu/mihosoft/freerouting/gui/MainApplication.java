@@ -24,6 +24,7 @@
 package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.board.TestLevel;
+import eu.mihosoft.freerouting.constants.Constants;
 import eu.mihosoft.freerouting.interactive.ThreadActionListener;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
@@ -271,7 +272,7 @@ public class MainApplication extends javax.swing.JFrame
 
         this.addWindowListener(new WindowStateListener());
         pack();
-        setSize(450,250);
+        setSize(620,300);
     }
 
     /** opens a board design from a binary file or a specctra dsn file. */
@@ -472,8 +473,10 @@ public class MainApplication extends javax.swing.JFrame
         }
     }
     static final String WEB_FILE_BASE_NAME = "http://www.freerouting.mihosoft.eu";
-    /**
-     * Change this string when creating a new version
-     */
-    static final String VERSION_NUMBER_STRING = "v1.4.0 (JDK11 version by mihosoft.eu)";
+
+
+    static final String VERSION_NUMBER_STRING = 
+        "v" + Constants.FREEROUTING_VERSION
+            + " (version by mihosoft.eu, build-date: "
+            + Constants.FREEROUTING_BUILD_DATE +")";
 }
