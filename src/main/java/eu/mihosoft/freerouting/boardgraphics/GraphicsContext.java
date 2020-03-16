@@ -314,7 +314,7 @@ public class GraphicsContext implements java.io.Serializable
         {
             Point2D center = coordinate_transform.board_to_screen(curr_ellipse.center);
             double bigger_radius = coordinate_transform.board_to_screen(curr_ellipse.bigger_radius);
-            if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle)p_g.getClip(), bigger_radius))
+            if (!point_near_rectangle(center.getX(), center.getY(), p_g.getClip().getBounds(), bigger_radius))
             {
                 continue;
             }
