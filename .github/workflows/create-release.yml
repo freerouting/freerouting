@@ -64,10 +64,10 @@ jobs:
       with:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
           tagRegexGroup: 1 # Optional. Default is 1.
-    - name: Set App Version
-      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
+#    - name: Set App Version
+#      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
     - name: Create Distribution   
-      run: distribution\create-distribution-windows.bat   
+      run: distribution\create-distribution-windows.bat ${{ steps.tagName.outputs.tag }}   
     - name: Upload Release Assets
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
