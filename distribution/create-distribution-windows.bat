@@ -1,6 +1,6 @@
 @echo off
 
-REM SET  APP_VERSION="1.4.2"
+SET  APP_VERSION=%1
 SET  APP_TYPE="msi"
 REM SET  JAVA_HOME="C:\Program Files\OpenJDK\jdk-13.0.2\"
 SET  JPACKAGE_JVM="https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_windows-x64_bin.zip"
