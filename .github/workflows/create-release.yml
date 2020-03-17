@@ -24,10 +24,28 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist
+      run: ./gradlew dist  
+    - name: Get Tag name 
+      uses: olegtarasov/get-tag@v2    
+      id: tagName
+      with:
+          tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+          tagRegexGroup: 1 # Optional. Default is 1.
+    - name: Set App Version
+      run: export APP_VERSION=${{ steps.tagName.outputs.tag }}
     - name: Create distribution   
       run: distribution/create-distribution-linux.sh
-    
+    - name: Upload Release Assets
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+         upload_url: https://github.com/miho/freerouting/releases/tag/v${{ steps.tagName.outputs.tag }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+         asset_path: ./distribution/Freerouting.zip
+         asset_name: freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip
+         asset_content_type: application/zip  
+   
   build-windows:
 
     runs-on: windows-latest
@@ -48,6 +66,8 @@ jobs:
       with:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
           tagRegexGroup: 1 # Optional. Default is 1.
+    - name: Set App Version
+      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
     - name: Upload Release Assets
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
