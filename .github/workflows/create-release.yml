@@ -42,7 +42,7 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
          upload_url: https://github.com/miho/freerouting/releases/tag/v${{ steps.tagName.outputs.tag }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-         asset_path: ./distribution/Freerouting.zip
+         asset_path: ./distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip
          asset_name: freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip
          asset_content_type: application/zip  
    
@@ -112,6 +112,6 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
          upload_url: https://github.com/miho/freerouting/releases/tag/v${{ steps.tagName.outputs.tag }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-         asset_path: ./distribution/Freerouting.dmg
+         asset_path: ./distribution/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg
          asset_name: freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg
          asset_content_type: application/dmg       
