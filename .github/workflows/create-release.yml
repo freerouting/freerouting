@@ -39,7 +39,7 @@ jobs:
       with:
         java-version: 13
     - name: Build with Gradle
-      run: gradlew.bat dist 
+      run: .\gradlew.bat dist 
     - name: Create distribution   
       run: distribution\create-distribution-windows.bat 
     - name: Get Tag name 
@@ -72,6 +72,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: gradlew.bat dist 
+      run: ./gradlew dist 
     - name: Create distribution   
       run: distribution\create-distribution-macos.sh  
