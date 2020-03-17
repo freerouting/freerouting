@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export APP_VERSION="1.4.2-SNAPSHOT"
+#export APP_VERSION="1.4.2-SNAPSHOT"
 export APP_TYPE="dmg"
 #export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-13.0.1.jdk/Contents/Home/"
 export JPACKAGE_JVM="https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_osx-x64_bin.tar.gz"
