@@ -72,7 +72,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist
       run: gradlew.bat dist 
     - name: Create distribution   
       run: distribution\create-distribution-macos.sh  
