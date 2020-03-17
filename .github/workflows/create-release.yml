@@ -26,7 +26,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist
     - name: Create distribution   
-      run: distribution\create-distribution-linux.sh
+      run: distribution/create-distribution-linux.sh
     
   build-windows:
 
@@ -74,4 +74,4 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist 
     - name: Create distribution   
-      run: distribution\create-distribution-macos.sh  
+      run: distribution/create-distribution-macos.sh  
