@@ -42,8 +42,8 @@ jobs:
       run: gradlew.bat dist 
     - name: Create distribution   
       run: distribution\create-distribution-windows.bat 
-    - uses: olegtarasov/get-tag@v2
-    - name: Get Tag name     
+    - name: Get Tag name 
+      uses: olegtarasov/get-tag@v2    
       id: tagName
       with:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
