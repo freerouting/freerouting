@@ -47,7 +47,8 @@ $JPKG_EXECUTABLE --input ../build/dist/ \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION
  
-mv Freerouting freerouting-$APP_VERSION-linux-x64 
+mv Freerouting freerouting-$APP_VERSION-linux-x64
+mv ../build/dist/freerouting-executable.jar freerouting-$APP_VERSION-executable.jar 
  
 zip -r freerouting-$APP_VERSION-linux-x64.zip freerouting-$APP_VERSION-linux-x64
 
