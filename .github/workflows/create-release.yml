@@ -35,7 +35,7 @@ jobs:
       run: distribution/create-distribution-linux.sh ${{ steps.tagName.outputs.tag }}
     - uses: AButler/upload-release-assets@v2.0
       with:
-          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
+          files: 'build/dist/freerouting-${{ steps.tagName.outputs.tag }}-executable.jar;./distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
           release-tag: v${{ steps.tagName.outputs.tag }}    
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
    
