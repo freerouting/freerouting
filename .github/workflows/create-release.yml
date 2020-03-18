@@ -81,14 +81,14 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew dist 
-    - name: Create Distribution   
-      run: distribution/create-distribution-macos.sh
     - name: Get Tag name 
       uses: olegtarasov/get-tag@v2    
       id: tagName
       with:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1 # Optional. Default is 1.
+          tagRegexGroup: 1 # Optional. Default is 1.     
+    - name: Create Distribution   
+      run: distribution/create-distribution-macos.sh ${{ steps.tagName.outputs.tag }}   
     - name: Create distribution   
       run: distribution/create-distribution-macos.sh
     - uses: AButler/upload-release-assets@v2.0
