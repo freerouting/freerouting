@@ -33,11 +33,16 @@ jobs:
           tagRegexGroup: 1 # Optional. Default is 1.
     - name: Create Distribution   
       run: distribution/create-distribution-linux.sh ${{ steps.tagName.outputs.tag }}
-    - uses: AButler/upload-release-assets@v2.0
+    - name: Upload Release Assets
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
-          release-tag: v${{ steps.tagName.outputs.tag }}    
-          repo-token: ${{ secrets.GITHUB_TOKEN }}      
+         upload_url: https://github.com/miho/freerouting/releases/v${{ steps.tagName.outputs.tag }}/assets? # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+         asset_path: ./distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip
+         asset_name: freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip
+         asset_content_type: application/zip  
    
   build-windows:
 
@@ -61,11 +66,16 @@ jobs:
 #      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
     - name: Create Distribution   
       run: distribution\create-distribution-windows.bat ${{ steps.tagName.outputs.tag }}   
-    - uses: AButler/upload-release-assets@v2.0
+    - name: Upload Release Assets
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          files: './distribution/Freerouting-${{ steps.tagName.outputs.tag }}.msi'
-          release-tag: v${{ steps.tagName.outputs.tag }}    
-          repo-token: ${{ secrets.GITHUB_TOKEN }}   
+         upload_url: https://github.com/miho/freerouting/releases/tag/v${{ steps.tagName.outputs.tag }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+         asset_path: ./distribution/Freerouting-${{ steps.tagName.outputs.tag }}.msi
+         asset_name: freerouting-${{ steps.tagName.outputs.tag }}-windows-x64.msi
+         asset_content_type: application/msi
 
   build-macos:
 
@@ -91,8 +101,13 @@ jobs:
           tagRegexGroup: 1 # Optional. Default is 1.
     - name: Create distribution   
       run: distribution/create-distribution-macos.sh
-    - uses: AButler/upload-release-assets@v2.0
+    - name: Upload Release Assets
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
-          release-tag: v${{ steps.tagName.outputs.tag }}    
-          repo-token: ${{ secrets.GITHUB_TOKEN }}        
+         upload_url: https://github.com/miho/freerouting/releases/tag/v${{ steps.tagName.outputs.tag }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+         asset_path: ./distribution/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg
+         asset_name: freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg
+         asset_content_type: application/dmg       
