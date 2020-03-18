@@ -63,7 +63,7 @@ jobs:
       run: distribution\create-distribution-windows.bat ${{ steps.tagName.outputs.tag }}   
     - uses: AButler/upload-release-assets@v2.0
       with:
-          files: './distribution/Freerouting-${{ steps.tagName.outputs.tag }}.msi'
+          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-windows-x64.msi'
           release-tag: v${{ steps.tagName.outputs.tag }}    
           repo-token: ${{ secrets.GITHUB_TOKEN }}   
 
