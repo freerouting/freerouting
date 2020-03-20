@@ -20,11 +20,9 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist
-    - name: BUILD DATE   
-      run: export BUILD_DATE=$(date +"%Y-%m-%d_%H-%M-%S")    
+      run: ./gradlew dist  
     - name: Create Distribution   
-      run: distribution/create-distribution-linux.sh SNAPSHOT-${BUILD_DATE}
+      run: distribution/create-distribution-linux.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: 'build/dist/freerouting-SNAPSHOT-*-executable.jar;./distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
@@ -44,7 +42,7 @@ jobs:
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows.bat SNAPSHOT   
+      run: distribution\create-distribution-SNAPSHOT-windows.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))"   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-windows-x64.msi'
@@ -64,11 +62,9 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist
-    - name: BUILD DATE   
-      run: export BUILD_DATE=$(date +"%Y-%m-%d_%H-%M-%S")    
+      run: ./gradlew dist  
     - name: Create Distribution   
-      run: distribution/create-distribution-macos.sh SNAPSHOT-${BUILD_DATE}
+      run: distribution/create-distribution-macos.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-macos-x64.dmg'
