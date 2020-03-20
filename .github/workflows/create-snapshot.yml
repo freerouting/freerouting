@@ -25,7 +25,7 @@ jobs:
       run: distribution/create-distribution-linux.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")   
     - uses: AButler/upload-release-assets@v2.0
       with:
-          files: 'build/dist/freerouting-SNAPSHOT-*-executable.jar;./distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
+          files: './distribution/freerouting-SNAPSHOT-*-executable.jar;./distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
    
