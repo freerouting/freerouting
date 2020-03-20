@@ -7,7 +7,7 @@ on: [push, pull_request]
 jobs:
   build-ubuntu:
 
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -31,7 +31,7 @@ jobs:
    
   build-windows:
 
-    runs-on: windows-latest
+    runs-on: [windows]
 
     steps:
     - uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
 
   build-macos:
 
-    runs-on: macos-latest
+    runs-on: [macos]
 
     steps:
     - uses: actions/checkout@v2
