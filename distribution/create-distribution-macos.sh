@@ -45,7 +45,7 @@ export JPKG_EXECUTABLE=$JPKG_HOME/bin/jpackage
 $JPKG_EXECUTABLE --input ../build/dist/ \
  --name Freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION
+ --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION  --license-file ..\LICENSE 
 
 mv Freerouting-$APP_VERSION.dmg freerouting-$APP_VERSION-macos-x64.dmg
 
