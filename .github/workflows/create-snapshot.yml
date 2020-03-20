@@ -42,7 +42,7 @@ jobs:
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
-      run: distribution\create-distribution-windows.bat SNAPSHOT   
+      run: distribution\create-distribution-SNAPSHOT-windows.bat SNAPSHOT   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-windows-x64.msi'
