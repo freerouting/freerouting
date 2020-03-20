@@ -42,10 +42,12 @@ cd $DIR
 export JPKG_HOME=$(pwd)"/.jdk14/jdk-14/"
 export JPKG_EXECUTABLE=$JPKG_HOME/bin/jpackage
 
+cp ../LICENSE ../build/dist/LICENSE
+
 $JPKG_EXECUTABLE --input ../build/dist/ \
  --name Freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION --license-file ../LICENSE 
+ --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION
  
 mv Freerouting freerouting-$APP_VERSION-linux-x64
 mv ../build/dist/freerouting-executable.jar freerouting-$APP_VERSION-executable.jar 
