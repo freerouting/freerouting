@@ -218,8 +218,7 @@ public class BasicBoard implements java.io.Serializable
      * which describes the required clearance restrictions to other items.
      */
     public void insert_trace(Polyline p_polyline, int p_layer,
-                             int p_half_width, int[] p_net_no_arr, int p_clearance_class, FixedState p_fixed_state)
-    {
+                             int p_half_width, int[] p_net_no_arr, int p_clearance_class, FixedState p_fixed_state) {
         PolylineTrace new_trace =
                 insert_trace_without_cleaning(p_polyline, p_layer, p_half_width,
                 p_net_no_arr, p_clearance_class, p_fixed_state);
@@ -236,7 +235,14 @@ public class BasicBoard implements java.io.Serializable
                 clip_shape = changed_area.get_area(p_layer);
             }
         }
-        new_trace.normalize(clip_shape);
+
+        try {
+            new_trace.normalize(clip_shape);
+        }
+        catch (Exception e)
+        {
+            FRLogger.error("Couldn't insert new trace, because its normalization failed.", e);
+        }
     }
 
     /**
@@ -244,8 +250,7 @@ public class BasicBoard implements java.io.Serializable
      * an array of points, and cleans up the net.
      */
     public void insert_trace(Point[] p_points, int p_layer,
-                             int p_half_width, int[] p_net_no_arr, int p_clearance_class, FixedState p_fixed_state)
-    {
+                             int p_half_width, int[] p_net_no_arr, int p_clearance_class, FixedState p_fixed_state) {
         for (int i = 0; i < p_points.length; ++i)
         {
             if (!this.bounding_box.contains(p_points[i]))
@@ -838,7 +843,7 @@ public class BasicBoard implements java.io.Serializable
     /**
      * Normalizes the traces of this net
      */
-    public boolean normalize_traces(int p_net_no)
+    public boolean normalize_traces(int p_net_no) throws Exception
     {
         boolean result = false;
         boolean something_changed = true;

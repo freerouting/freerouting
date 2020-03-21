@@ -471,7 +471,15 @@ public class ShoveTraceAlgo
                 end_corners[1] = curr_substitute_trace.last_corner();
             }
             board.insert_item(curr_substitute_trace);
-            curr_substitute_trace.normalize(board.changed_area.get_area(p_layer));
+
+            try {
+                curr_substitute_trace.normalize(board.changed_area.get_area(p_layer));
+            }
+            catch (Exception e)
+            {
+                FRLogger.error("Couldn't normalize trace.", e);
+            }
+
             if (!tails_exist_before)
             {
                 for (int i = 0; i < 2; ++i)

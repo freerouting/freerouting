@@ -53,6 +53,8 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 public class PolylineTrace extends Trace implements java.io.Serializable
 {
 
+    private static final int MAX_NORMALIZATION_DEPTH = 16;
+
     /**
      * creates a new instance of a PolylineTrace with the input data
      */
@@ -189,8 +191,8 @@ public class PolylineTrace extends Trace implements java.io.Serializable
     }
 
     /**
-     * Looks, if other traces can be combined with this trace.
-     * Returns true, if somthing has been combined.
+     * Checks if other traces can be combined with this trace.
+     * Returns true, if something has been combined.
      * This trace will be the combined trace, so that only other traces may be deleted.
      */
     public boolean combine()
@@ -216,7 +218,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
         }
         if (something_changed)
         {
-            // let the observers syncronize the changes
+            // let the observers synchronize the changes
             board.communication.observers.notify_changed(this);
             board.additional_update_after_change(this);
         }
@@ -225,7 +227,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
 
     /**
      * looks, if this trace can be combined at its first point with
-     * an other trace. Returns true, if somthing was combined.
+     * an other trace. Returns true, if something was combined.
      * The corners of the other trace will be inserted in front of thie trace.
      * In case of combine the other trace will be deleted and this trace will
      * remain.
@@ -793,8 +795,15 @@ public class PolylineTrace extends Trace implements java.io.Serializable
      * Returns true, if something was changed.
      * If p_clip_shape != null, splitting is restricted to p_clip_shape.
      */
-    public boolean normalize(IntOctagon p_clip_shape)
-    {
+    public boolean normalize(IntOctagon p_clip_shape) throws Exception {
+        return normalize(p_clip_shape, 0);
+    }
+
+    private boolean normalize(IntOctagon p_clip_shape, int normalization_depth) throws Exception {
+        if (normalization_depth > MAX_NORMALIZATION_DEPTH) {
+            throw new Exception("We reached the maximum normalization depth ("+MAX_NORMALIZATION_DEPTH+").");
+        }
+
         boolean observers_activated = false;
         BasicBoard routing_board = this.board;
         if (this.board != null)
@@ -823,7 +832,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
                 }
                 else if (trace_combined)
                 {
-                    curr_split_trace.normalize(p_clip_shape);
+                    curr_split_trace.normalize(p_clip_shape, normalization_depth + 1);
                     result = true;
                 }
             }
@@ -977,8 +986,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
     /**
      * changes the geometry of this trace to p_new_polyline
      */
-    void change(Polyline p_new_polyline)
-    {
+    void change(Polyline p_new_polyline) {
         if (!this.is_on_the_board())
         {
             // Just change the polyline of this trace.
@@ -1045,7 +1053,14 @@ public class PolylineTrace extends Trace implements java.io.Serializable
                 clip_shape = changed_area.get_area(this.get_layer());
             }
         }
-        this.normalize(clip_shape);
+
+        try {
+            this.normalize(clip_shape);
+        }
+        catch (Exception e)
+        {
+            FRLogger.error("Couldn't change the trace, because its normalization failed.", e);
+        }
     }
 
     /**
@@ -1140,10 +1155,9 @@ public class PolylineTrace extends Trace implements java.io.Serializable
     /**
      * Tries to correct a connection restriction of this trace.
      * If p_at_start, the start of the trace polygon is corrected, else the end.
-     *Returns true, if this trace was changed.
+     * Returns true, if this trace was changed.
      */
-    public boolean correct_connection_to_pin(boolean p_at_start, AngleRestriction p_angle_restriction)
-    {
+    public boolean correct_connection_to_pin(boolean p_at_start, AngleRestriction p_angle_restriction) {
         if (this.check_connection_to_pin(p_at_start))
         {
             return false;
