@@ -3,7 +3,7 @@
 SET  APP_VERSION=%1
 SET  APP_TYPE="msi"
 REM SET  JAVA_HOME="C:\Program Files\OpenJDK\jdk-13.0.2\"
-SET  JPACKAGE_JVM="http://mihosoft.eu/deps.mihosoft.eu/openjdk/OpenJDK14U-jdk_x86-32_windows_hotspot_14_36.zip"
+SET  JPACKAGE_JVM="http://deps.mihosoft.eu/openjdk/OpenJDK14U-jdk_x86-32_windows_hotspot_14_36.zip"
 
 set DIR="%~dp0\"
 echo "ABC:%DIR%"
