@@ -37,7 +37,7 @@ public class Signum
      * Returns the signum of p_value.
      * Values are Signum.POSITIVE, Signum.NEGATIVE and Signum.ZERO
      */
-    public static final Signum of (double p_value)
+    public static Signum of (double p_value)
     {
         Signum result;
 
@@ -60,7 +60,7 @@ public class Signum
      * Returns the signum of p_value as an int.
      * Values are +1, 0 and -1
      */
-    public static final int as_int (double p_value)
+    public static int as_int (double p_value)
     {
         int result;
 

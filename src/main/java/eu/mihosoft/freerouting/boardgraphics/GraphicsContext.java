@@ -352,11 +352,7 @@ public class GraphicsContext implements java.io.Serializable
         {
             return false;
         }
-        if (p_y > p_rect.y + p_rect.height + p_dist)
-        {
-            return false;
-        }
-        return true;
+        return !(p_y > p_rect.y + p_rect.height + p_dist);
     }
     
     /**
@@ -454,7 +450,7 @@ public class GraphicsContext implements java.io.Serializable
                     curr_draw_shape = (PolylineShape) holes[j - 1];
                 }
                 draw_polygons[j] = new FloatPoint [curr_draw_shape.border_line_count() + 1];
-                FloatPoint curr_draw_polygon[] = draw_polygons[j];
+                FloatPoint[] curr_draw_polygon = draw_polygons[j];
                 for (int i = 0; i <  curr_draw_polygon.length - 1; ++i)
                 {
                     curr_draw_polygon[i] = curr_draw_shape.corner_approx(i);
@@ -778,11 +774,7 @@ public class GraphicsContext implements java.io.Serializable
         {
             return true;
         }
-        if (Math.min(p_1.y, p_2.y) > p_update_box.ur.y + p_update_offset)
-        {
-            return true;
-        }
-        return false;
+        return Math.min(p_1.y, p_2.y) > p_update_box.ur.y + p_update_offset;
     }
     
     /**

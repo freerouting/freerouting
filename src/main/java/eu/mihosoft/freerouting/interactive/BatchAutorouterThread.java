@@ -34,7 +34,7 @@ import eu.mihosoft.freerouting.autoroute.BatchOptRoute;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * Thread for the batch autorouter.
+ * GUI interactive thread for the batch autorouter.
  *
  * @author Alfons Wirtz
  */

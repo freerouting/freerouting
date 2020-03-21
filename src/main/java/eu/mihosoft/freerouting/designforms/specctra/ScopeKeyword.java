@@ -23,14 +23,9 @@
 
 package eu.mihosoft.freerouting.designforms.specctra;
 
-/**
- *
- * @author Alfons Wirtz
- */
-
 import eu.mihosoft.freerouting.logger.FRLogger;
 
-/** Keywords defining a scope object*/
+/** Keywords defining a scope object */
 public class ScopeKeyword extends Keyword
 {
     public ScopeKeyword(String p_name)

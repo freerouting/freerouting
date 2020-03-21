@@ -632,11 +632,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         }
         double tmp_1 = p_point.x - p_point.y;
         double tmp_2 = p_point.x + p_point.y;
-        if (ulx > tmp_1 || lrx < tmp_1 || llx > tmp_2 || urx < tmp_2)
-        {
-            return false;
-        }
-        return true;
+        return !(ulx > tmp_1) && !(lrx < tmp_1) && !(llx > tmp_2) && !(urx < tmp_2);
     }
     
     /**
@@ -847,11 +843,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         {
             is_lrx =  this.lrx;
         }
-        if (is_ulx > is_lrx)
-        {
-            return false;
-        }
-        return true;
+        return is_ulx <= is_lrx;
     }
     
     /**
@@ -946,11 +938,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         {
             is_lrx =  this.lrx;
         }
-        if (is_ulx >= is_lrx)
-        {
-            return false;
-        }
-        return true;
+        return is_ulx < is_lrx;
     }
     
     public boolean intersects(Simplex p_other)
@@ -1195,7 +1183,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
             case RIGHT45:
                 result_x = (int) (Math.ceil(0.5 * (p_point.x - p_point.y + urx)));
                 result_x = Math.min(result_x, rx);
-                result_x = Math.min(result_x, p_point.x - p_point.x + uy);
+                result_x = Math.min(result_x, p_point.x - p_point.y + uy);
                 result_y = p_point.y - p_point.x + result_x;
                 break;
             case UP45:
@@ -1419,10 +1407,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
             return false;
         if (urx != rx + uy)
             return false;
-        if (ulx != lx - uy)
-            return false;
-        return true;
-        
+        return ulx == lx - uy;
+
     }
     
     public TileShape simplify()

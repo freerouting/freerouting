@@ -29,6 +29,7 @@ import eu.mihosoft.freerouting.geometry.planar.PolygonShape;
 import eu.mihosoft.freerouting.geometry.planar.Simplex;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -399,10 +400,7 @@ public class Library extends ScopeKeyword
             
             if (pad_shape.layer == Layer.PCB || pad_shape.layer == Layer.SIGNAL)
             {
-                for (int i = 0; i < padstack_shapes.length; ++i)
-                {
-                    padstack_shapes[i] = padstack_shape;
-                }
+                Arrays.fill(padstack_shapes, padstack_shape);
             }
             else
             {

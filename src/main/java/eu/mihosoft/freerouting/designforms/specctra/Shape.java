@@ -54,7 +54,7 @@ public abstract class Shape
      * Reads shape scope from a Specctra dsn file.
      * If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no induvidual layers.
      */
-    public static final Shape read_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static Shape read_scope(Scanner p_scanner, LayerStructure p_layer_structure)
     {
         Shape result = null;
         try
@@ -131,7 +131,7 @@ public abstract class Shape
                 int layer_no = p_layer_structure.get_no((String) next_token);
                 if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
                 {
-                    FRLogger.warn("Shape.read_polyline_path_scope: layer name '" + (String)next_token + "' not found in layer structure ");
+                    FRLogger.warn("Shape.read_polyline_path_scope: layer name '" + next_token + "' not found in layer structure ");
                     return null;
                 }
                 layer = p_layer_structure.arr[layer_no];
@@ -202,8 +202,8 @@ public abstract class Shape
      * The first shape in the shape_list of the result is the border of the area.
      * The other shapes in the shape_list are holes (windows).
      */
-    public static final ReadAreaScopeResult read_area_scope(Scanner p_scanner,
-                                                            LayerStructure p_layer_structure, boolean p_skip_window_scopes)
+    public static ReadAreaScopeResult read_area_scope(Scanner p_scanner,
+                                                      LayerStructure p_layer_structure, boolean p_skip_window_scopes)
     {
         Collection<Shape> shape_list = new LinkedList<Shape>();
         String clearance_class_name = null;
@@ -308,7 +308,7 @@ public abstract class Shape
         try
         {
             Layer rect_layer = null;
-            double rect_coor[] = new double[4];
+            double[] rect_coor = new double[4];
 
             Object next_token = p_scanner.next_token();
             if (next_token == Keyword.PCB_SCOPE)
@@ -414,7 +414,7 @@ public abstract class Shape
                 int layer_no = p_layer_structure.get_no((String) next_token);
                 if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
                 {
-                    FRLogger.warn("Shape.read_polygon_scope: layer name '" + (String)next_token + "' not found in layer structure ");
+                    FRLogger.warn("Shape.read_polygon_scope: layer name '" + next_token + "' not found in layer structure ");
                     layer_ok = false;
                 }
                 else
@@ -491,7 +491,7 @@ public abstract class Shape
         {
             Layer circle_layer = null;
             boolean layer_ok = true;
-            double circle_coor[] = new double[3];
+            double[] circle_coor = new double[3];
 
             Object next_token = p_scanner.next_token();
             if (next_token == Keyword.PCB_SCOPE)
@@ -517,7 +517,7 @@ public abstract class Shape
                 int layer_no = p_layer_structure.get_no((String) next_token);
                 if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
                 {
-                    FRLogger.warn("Shape.read_circle_scope: layer with name '" + (String)next_token + "' not found in layer stracture ");
+                    FRLogger.warn("Shape.read_circle_scope: layer with name '" + next_token + "' not found in layer stracture ");
                     layer_ok = false;
                 }
                 else
@@ -600,7 +600,7 @@ public abstract class Shape
                 int layer_no = p_layer_structure.get_no((String) next_token);
                 if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
                 {
-                    FRLogger.warn("Shape.read_polygon_path_scope: layer with name '" + (String)next_token + "' not found in layer structure ");
+                    FRLogger.warn("Shape.read_polygon_path_scope: layer with name '" + next_token + "' not found in layer structure ");
                     layer_ok = false;
                 }
                 else

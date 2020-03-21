@@ -236,10 +236,7 @@ public class InsertFoundConnectionAlgo
         if (p_end_pin != null)
         {
             Point ok_point = try_neck_down(p_from_corner, p_to_corner, p_layer, p_end_pin, false);
-            if (ok_point == p_to_corner)
-            {
-                return true;
-            }
+            return ok_point == p_to_corner;
         }
         return false;
     }

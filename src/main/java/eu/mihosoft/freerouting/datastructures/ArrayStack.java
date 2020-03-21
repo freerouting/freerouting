@@ -18,21 +18,17 @@
  *
  * ArrayStack.java
  *
- * Created on 11. Maerz 2006, 06:52
+ * Created on 11. March 2006, 06:52
  *
  */
 
 package eu.mihosoft.freerouting.datastructures;
 
+/** Implementation of a stack as an array */
 @SuppressWarnings("unchecked")
-
-/**
- * Implementation of a stack as an array.
- *
- * @author Alfons Wirtz
- */
 public class ArrayStack <p_element_type>
 {
+
     /**
      * Creates a new instance of ArrayStack with an initial maximal capacity  for p_max_stack_depth elements.
      */

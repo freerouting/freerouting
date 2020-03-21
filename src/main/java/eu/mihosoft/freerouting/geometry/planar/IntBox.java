@@ -414,9 +414,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable
             return false;
         if (this.ll.x > p_other.ur.x)
             return false;
-        if (this.ll.y > p_other.ur.y)
-            return false;
-        return true;
+        return this.ll.y <= p_other.ur.y;
     }
     
     /**
@@ -430,9 +428,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable
             return false;
         if (this.ll.x >= p_other.ur.x)
             return false;
-        if (this.ll.y >= p_other.ur.y)
-            return false;
-        return true;
+        return this.ll.y < p_other.ur.y;
     }
     
     public boolean contains(RegularTileShape p_other)
@@ -732,12 +728,8 @@ public class IntBox extends RegularTileShape implements java.io.Serializable
         {
             return true;
         }
-        if (ll.x < p_other.ll.x || ll.y < p_other.ll.y
-                || ur.x > p_other.ur.x || ur.y > p_other.ur.y)
-        {
-            return false;
-        }
-        return true;
+        return ll.x >= p_other.ll.x && ll.y >= p_other.ll.y
+                && ur.x <= p_other.ur.x && ur.y <= p_other.ur.y;
     }
     
     /**
@@ -749,12 +741,8 @@ public class IntBox extends RegularTileShape implements java.io.Serializable
         {
             return true;
         }
-        if (p_other.ll.x <= ll.x || p_other.ll.y <= ll.y
-                || p_other.ur.x >= ur.x || p_other.ur.y >= ur.y)
-        {
-            return false;
-        }
-        return true;
+        return p_other.ll.x > ll.x && p_other.ll.y > ll.y
+                && p_other.ur.x < ur.x && p_other.ur.y < ur.y;
     }
     
     /**

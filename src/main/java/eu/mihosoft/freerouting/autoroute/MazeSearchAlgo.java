@@ -423,7 +423,7 @@ public class MazeSearchAlgo
             boolean enter_through_small_door = false;
             if (p_list_element.door instanceof ExpansionDoor)
             {
-                CompleteExpansionRoom from_room = ((ExpansionDoor) p_list_element.door).other_room(p_list_element.next_room);
+                CompleteExpansionRoom from_room = p_list_element.door.other_room(p_list_element.next_room);
                 if (from_room instanceof ObstacleExpansionRoom)
                 {
                     // otherwise entering through the small door may fail, because it was not checked.
@@ -573,10 +573,7 @@ public class MazeSearchAlgo
                 FloatLine door_line_segment = door_shape.diagonal_corner_segment();
                 door_length = door_line_segment.b.distance(door_line_segment.a);
             }
-            if (door_length < p_trace_width)
-            {
-                return true;
-            }
+            return door_length < p_trace_width;
         }
         return false;
     }

@@ -300,7 +300,7 @@ public class Validate
             Item curr_ob = it.next();
             if(curr_ob instanceof eu.mihosoft.freerouting.board.Trace)
             {
-                if (((eu.mihosoft.freerouting.board.Trace)curr_ob).contains_net(p_net_no))
+                if (curr_ob.contains_net(p_net_no))
                 {
                     ++found_traces;
                 }

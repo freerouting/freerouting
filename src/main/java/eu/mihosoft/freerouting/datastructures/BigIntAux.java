@@ -26,8 +26,8 @@ public class BigIntAux
      * calculates the determinant of the vectors
      * (p_x_1, p_y_1) and (p_x_2, p_y_2)
      */
-    public static final BigInteger determinant (BigInteger p_x_1, BigInteger p_y_1,
-                              BigInteger p_x_2, BigInteger p_y_2)
+    public static BigInteger determinant (BigInteger p_x_1, BigInteger p_y_1,
+                                          BigInteger p_x_2, BigInteger p_y_2)
     {
         BigInteger tmp1 = p_x_1.multiply(p_y_2);
         BigInteger tmp2 = p_x_2.multiply(p_y_1);
@@ -39,8 +39,8 @@ public class BigIntAux
      * auxiliary function to implement addition and translation in the
      * classes RationalVector and RationalPoint
      */
-    public static final BigInteger[] add_rational_coordinates(BigInteger[] p_first,
-                                              BigInteger [] p_second)
+    public static BigInteger[] add_rational_coordinates(BigInteger[] p_first,
+                                                        BigInteger [] p_second)
     {
         BigInteger[] result = new BigInteger[3];
         if (p_first[2].equals(p_second[2]))
@@ -73,7 +73,7 @@ public class BigIntAux
      * trailingZeroTable[i] is the number of trailing zero bits in the binary
      * representaion of i.
      */
-    final static byte trailingZeroTable[] = {
+    final static byte[] trailingZeroTable = {
       -25, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
 	4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
 	5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
@@ -94,7 +94,7 @@ public class BigIntAux
     /**
      * Calculate GCD of a and b interpreted as unsigned integers.
      */
-    public static final int binaryGcd(int a, int b) {
+    public static int binaryGcd(int a, int b) {
         if (b==0)
             return a;
         if (a==0)
@@ -119,7 +119,7 @@ public class BigIntAux
         bZeros += y;
         b >>>= y;
 
-        int t = (aZeros < bZeros ? aZeros : bZeros);
+        int t = (Math.min(aZeros, bZeros));
 
         while (a != b) {
             if ((a+0x80000000) > (b+0x80000000)) {  // a > b as unsigned

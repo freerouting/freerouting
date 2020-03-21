@@ -93,7 +93,7 @@ public abstract class Point implements java.io.Serializable
     {
         IntPoint result = new IntPoint(p_x, p_y);
         if ( Math.abs(p_x) > Limits.CRIT_INT ||
-                Math.abs(p_x) > Limits.CRIT_INT )
+                Math.abs(p_y) > Limits.CRIT_INT )
         {
             return new RationalPoint(result);
         }

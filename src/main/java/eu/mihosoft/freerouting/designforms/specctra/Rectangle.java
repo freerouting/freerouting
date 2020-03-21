@@ -66,7 +66,7 @@ public class Rectangle extends Shape
     
     public eu.mihosoft.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
     {
-        int box_coor[] = new int[4];
+        int[] box_coor = new int[4];
         for (int i = 0; i < 4; ++i)
         {
             box_coor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(this.coor[i]));

@@ -18,7 +18,7 @@
  *
  * AutorouteControl.java
  *
- * Created on 25. Januar 2004, 09:38
+ * Created on 25. January 2004, 09:38
  */
 package eu.mihosoft.freerouting.autoroute;
 
@@ -241,7 +241,7 @@ public class AutorouteControl
         }
         /** The horizontal expansion cost factor on a layer of the board */
         public final double horizontal;
-        /** The verical expansion cost factor on a layer of the board */
+        /** The vertical expansion cost factor on a layer of the board */
         public final double vertical;
     }
 

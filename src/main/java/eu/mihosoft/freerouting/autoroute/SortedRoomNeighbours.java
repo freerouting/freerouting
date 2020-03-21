@@ -505,13 +505,9 @@ public class SortedRoomNeighbours
                             Line cut_line = new Line(cut_line_start, cut_line_end);
                             TileShape cut_half_plane = TileShape.get_instance(cut_line);
                             ((CompleteFreeSpaceExpansionRoom)this.completed_room).set_shape(this.completed_room.get_shape().intersection(cut_half_plane));
-                            corner_cut_off = true;
-                            if (incomplete_room.get_contained_shape().side_of(cut_line) != Side.ON_THE_LEFT)
-                            {
-                                // Otherwise p_room.contained_shape would no longer be contained
-                                // in the shape after cutting of the corner.
-                                corner_cut_off = false;
-                            }
+                            // Otherwise p_room.contained_shape would no longer be contained
+                            // in the shape after cutting of the corner.
+                            corner_cut_off = incomplete_room.get_contained_shape().side_of(cut_line) == Side.ON_THE_LEFT;
                             if (corner_cut_off)
                             {
                                 middle_edge_line = cut_line.opposite();
@@ -649,10 +645,7 @@ public class SortedRoomNeighbours
         }
         if (p_room_2 instanceof ObstacleExpansionRoom)
         {
-            if (!insert_door_ok((ObstacleExpansionRoom) p_room_2, door_line))
-            {
-                return false;
-            }
+            return insert_door_ok((ObstacleExpansionRoom) p_room_2, door_line);
         }
         return true;
     }
@@ -676,10 +669,7 @@ public class SortedRoomNeighbours
             if (room_index == 0 || room_index == curr_trace.tile_shape_count() - 1)
             {
                 Line curr_trace_line = curr_trace.polyline().arr[room_index + 1];
-                if (!curr_trace_line.is_parallel(p_door_line))
-                {
-                    return false;
-                }
+                return curr_trace_line.is_parallel(p_door_line);
             }
         }
         return true;

@@ -25,6 +25,8 @@ package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.logger.FRLogger;
 
+import java.util.List;
+
 /**
  *  Abstract class for windows displaying a list of objects
  *
@@ -87,7 +89,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         this.list_empty_message = new javax.swing.JLabel(resources.getString("list_empty"));
         this.list_empty_message.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,10,10,10));
         
-        /** Dispose this window and all subwindows when closing the window. */
+        // Dispose this window and all subwindows when closing the window.
         this.addWindowListener(new java.awt.event.WindowAdapter()
         {
             public void windowClosing(java.awt.event.WindowEvent evt)
@@ -114,8 +116,8 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         main_panel.remove(this.list_empty_message);
         // Create display list
-        this.list_model = new javax.swing.DefaultListModel();
-        this.list = new javax.swing.JList(this.list_model);
+        this.list_model = new javax.swing.DefaultListModel<>();
+        this.list = new javax.swing.JList<Object>(this.list_model);
         this.list.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,10,10,10));
         this.fill_list();
         if (this.list.getVisibleRowCount() > 0)
@@ -172,8 +174,8 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     private javax.swing.JScrollPane list_scroll_pane = null;
     protected javax.swing.JLabel list_empty_message;
     
-    private javax.swing.DefaultListModel list_model = null;
-    protected javax.swing.JList list;
+    private javax.swing.DefaultListModel<Object> list_model = null;
+    protected javax.swing.JList<Object> list;
     
     protected final javax.swing.JPanel south_panel;
     
@@ -190,15 +192,15 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            Object[] selected_objects = list.getSelectedValues();
-            if (selected_objects.length <= 0)
+            List<Object> selected_objects = list.getSelectedValuesList();
+            if (selected_objects.size() <= 0)
             {
                 return;
             }
             java.util.Collection<WindowObjectInfo.Printable> object_list = new java.util.LinkedList<WindowObjectInfo.Printable>();
-            for (int i = 0; i < selected_objects.length; ++i)
+            for (int i = 0; i < selected_objects.size(); ++i)
             {
-                object_list.add((WindowObjectInfo.Printable)(selected_objects[i]));
+                object_list.add((WindowObjectInfo.Printable)(selected_objects.get(i)));
             }
             eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
             WindowObjectInfo new_window =

@@ -59,7 +59,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
 {
 
     /**
-     * Creates a new instance of a routing Board with surrrounding box
+     * Creates a new instance of a routing Board with surrounding box
      * p_bounding_box
      * Rules contains the restrictions to obey when inserting items.
      * Among other things it may contain a clearance matrix.

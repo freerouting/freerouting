@@ -34,6 +34,8 @@ import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
+import java.util.Arrays;
+
 /**
  * Class describing a board outline.
  *
@@ -213,10 +215,7 @@ public class BoardOutline extends Item implements java.io.Serializable
     {
         java.awt.Color[] color_arr = new java.awt.Color[this.board.layer_structure.arr.length];
         java.awt.Color draw_color = p_graphics_context.get_outline_color();
-        for (int i = 0; i < color_arr.length; ++i)
-        {
-            color_arr[i] = draw_color;
-        }
+        Arrays.fill(color_arr, draw_color);
         return color_arr;
     }
 

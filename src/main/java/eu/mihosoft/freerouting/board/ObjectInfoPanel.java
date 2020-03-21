@@ -103,7 +103,7 @@ public interface ObjectInfoPanel
     /**
      * Funktionality needed for objects to print information into an ObjectInfoWindow
      */
-    public interface Printable
+    interface Printable
     {
         /**
          * Prints information about an ObjectInfoWindow.Printable object into the input window.

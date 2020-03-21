@@ -18,7 +18,7 @@
  *
  * BoardLibrary.java
  *
- * Created on 4. Juni 2004, 06:37
+ * Created on 4. June 2004, 06:37
  */
 
 package eu.mihosoft.freerouting.library;
@@ -114,7 +114,7 @@ public class BoardLibrary implements java.io.Serializable
     }
     
     /**
-     * Apppends p_padstack to the list of via padstacks.
+     * Appends p_padstack to the list of via padstacks.
      * Returns false, if the list  contains already a  padstack  with p_padstack.name.
      */
     public boolean add_via_padstack(Padstack p_padstack)
@@ -199,7 +199,7 @@ public class BoardLibrary implements java.io.Serializable
     
     public Padstacks padstacks = null;
     public Packages packages = null;
-    /** Containes information for gate swap and pin swap in the Specctra-dsn format. */
+    /** Contains information for gate swap and pin swap in the Specctra-dsn format. */
     public LogicalParts logical_parts = new LogicalParts();
     
     /** The subset of padstacks in the board library, which can be used in routing for inserting vias. */

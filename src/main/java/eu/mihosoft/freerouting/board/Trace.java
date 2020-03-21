@@ -115,11 +115,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         {
             return false;
         }
-        if (!p_other.shares_net(this))
-        {
-            return true;
-        }
-        return false;
+        return !p_other.shares_net(this);
     }
     
     /**

@@ -216,8 +216,8 @@ public class IntPoint extends Point implements java.io.Serializable
      */
     public double signed_area( IntPoint p_1, IntPoint p_2 )
     {
-        IntVector d21 = (IntVector) p_2.difference_by(p_1) ;
-        IntVector d01 = (IntVector) this.difference_by(p_1) ;
+        IntVector d21 = p_2.difference_by(p_1);
+        IntVector d01 = this.difference_by(p_1);
         return d21.determinant(d01) ;
     }
     

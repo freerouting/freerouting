@@ -47,7 +47,7 @@ public class BatchAutorouter
     /**
      *  Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user,
      *  or if p_max_pass_count is exceeded. Is currently used in the optimize via batch pass.
-     *  Returns the number of oasses to complete the board or p_max_pass_count + 1,
+     *  Returns the number of passes to complete the board or p_max_pass_count + 1,
      *  if the board is not completed.
      */
     public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread,

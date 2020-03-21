@@ -28,6 +28,8 @@ import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 import eu.mihosoft.freerouting.library.Padstack;
 import eu.mihosoft.freerouting.library.Padstacks;
 
+import java.util.List;
+
 /**
  * Window displaying the library padstacks.
  *
@@ -67,15 +69,15 @@ public class WindowPadstacks extends WindowObjectListWithFilter
     
     protected void select_instances()
     {
-        Object[] selected_padstacks = list.getSelectedValues();
-        if (selected_padstacks.length <= 0)
+        List<Object> selected_padstacks = list.getSelectedValuesList();
+        if (selected_padstacks.size() <= 0)
         {
             return;
         }
         java.util.Collection<Padstack> padstack_list = new java.util.LinkedList<Padstack>();
-        for (int i = 0; i < selected_padstacks.length; ++i)
+        for (int i = 0; i < selected_padstacks.size(); ++i)
         {
-            padstack_list.add((Padstack)selected_padstacks[i]);
+            padstack_list.add((Padstack)selected_padstacks.get(i));
         }
         eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
         java.util.Set<eu.mihosoft.freerouting.board.Item> board_instances = new java.util.TreeSet<eu.mihosoft.freerouting.board.Item>();

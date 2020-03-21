@@ -27,6 +27,8 @@ import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 import eu.mihosoft.freerouting.board.RoutingBoard;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
+import java.util.Arrays;
+
 /**
  * Contains the values of the interactive settings of the board handling.
  *
@@ -56,10 +58,7 @@ public class Settings implements java.io.Serializable
         manual_via_rule_index = 0;
         zoom_with_wheel = true;
         manual_trace_half_width_arr = new int[p_board.get_layer_count()];
-        for (int i = 0; i < manual_trace_half_width_arr.length; ++i)
-        {
-            manual_trace_half_width_arr[i] = 1000;
-        }
+        Arrays.fill(manual_trace_half_width_arr, 1000);
         autoroute_settings = new AutorouteSettings(p_board);
         item_selection_filter = new ItemSelectionFilter();
         snapshot_attributes = new SnapShot.Attributes();

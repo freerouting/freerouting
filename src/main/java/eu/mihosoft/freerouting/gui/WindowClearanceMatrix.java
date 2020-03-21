@@ -486,8 +486,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
             {
                 return String.class;
             }
-            return String.class;
-            // Should be Number.class or Float.class. But that does not work because of a localisation bug in Java.
+            return Float.class;
         }
         
         /**

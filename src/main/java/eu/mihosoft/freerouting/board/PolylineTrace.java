@@ -1130,11 +1130,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
         double curr_clearance = board.clearance_value(this.clearance_class_no(), contact_pin.clearance_class_no(), this.get_layer());
         double add_width = Math.max(edge_to_turn_dist, curr_clearance + 1);
         double preserve_length = matching_exit_restriction.min_length + this.get_half_width() + add_width;
-        if (preserve_length > end_line_length)
-        {
-            return false;
-        }
-        return true;
+        return !(preserve_length > end_line_length);
     }
 
     /**

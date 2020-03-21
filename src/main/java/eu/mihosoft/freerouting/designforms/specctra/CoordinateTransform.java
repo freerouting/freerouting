@@ -210,7 +210,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         else if (p_board_shape instanceof PolylineShape)
         {
-            FloatPoint [] corners = ((PolylineShape)p_board_shape).corner_approx_arr();
+            FloatPoint [] corners = p_board_shape.corner_approx_arr();
             double [] coors = board_to_dsn(corners);
             result  = new Polygon(p_layer, coors);
         }
@@ -241,7 +241,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         else if (p_board_shape instanceof PolylineShape)
         {
-            FloatPoint [] corners = ((PolylineShape)p_board_shape).corner_approx_arr();
+            FloatPoint [] corners = p_board_shape.corner_approx_arr();
             double [] coors = board_to_dsn_rel(corners);
             result  = new Polygon(p_layer, coors);
         }

@@ -80,7 +80,7 @@ public class AutorouteEngine
                 if (this.complete_expansion_rooms != null)
                 {
                     // invalidate the net dependent complete free space expansion rooms.
-                    Collection<CompleteFreeSpaceExpansionRoom> rooms_to_remove = new LinkedList<CompleteFreeSpaceExpansionRoom>();
+                    Collection<CompleteFreeSpaceExpansionRoom> rooms_to_remove = new LinkedList<>();
                     for (CompleteFreeSpaceExpansionRoom curr_room : complete_expansion_rooms)
                     {
                         if (curr_room.is_net_dependent())
@@ -169,8 +169,8 @@ public class AutorouteEngine
             return AutorouteResult.ALREADY_CONNECTED;
         }
         // Delete the ripped  connections.
-        SortedSet<Item> ripped_connections = new TreeSet<Item>();
-        Set<Integer> changed_nets = new TreeSet<Integer>();
+        SortedSet<Item> ripped_connections = new TreeSet<>();
+        Set<Integer> changed_nets = new TreeSet<>();
         Item.StopConnectionOption stop_connection_option;
         if (p_ctrl.remove_unconnected_vias)
         {
@@ -298,7 +298,7 @@ public class AutorouteEngine
         IncompleteFreeSpaceExpansionRoom new_room = new IncompleteFreeSpaceExpansionRoom(p_shape, p_layer, p_contained_shape);
         if (this.incomplete_expansion_rooms == null)
         {
-            this.incomplete_expansion_rooms = new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+            this.incomplete_expansion_rooms = new LinkedList<>();
         }
         this.incomplete_expansion_rooms.add(new_room);
         return new_room;
@@ -386,7 +386,7 @@ public class AutorouteEngine
 
         try
         {
-            Collection<CompleteFreeSpaceExpansionRoom> result = new LinkedList<CompleteFreeSpaceExpansionRoom>();
+            Collection<CompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
             TileShape from_door_shape = null;
             SearchTreeObject ignore_object = null;
             Collection<ExpansionDoor> room_doors = p_room.get_doors();
@@ -445,7 +445,7 @@ public class AutorouteEngine
         } catch (Exception e)
         {
             FRLogger.error("AutorouteEngine.complete_expansion_room: ", e);
-            return new LinkedList<CompleteFreeSpaceExpansionRoom>();
+            return new LinkedList<>();
         }
 
     }
@@ -461,7 +461,7 @@ public class AutorouteEngine
         {
             if (complete_expansion_rooms == null)
             {
-                complete_expansion_rooms = new LinkedList<CompleteFreeSpaceExpansionRoom>();
+                complete_expansion_rooms = new LinkedList<>();
             }
             complete_expansion_rooms.add(completed_room);
             this.autoroute_search_tree.insert(completed_room);
@@ -571,7 +571,7 @@ public class AutorouteEngine
      */
     Set<CompleteFreeSpaceExpansionRoom> get_rooms_with_target_items(Set<Item> p_items)
     {
-        Set<CompleteFreeSpaceExpansionRoom> result = new TreeSet<CompleteFreeSpaceExpansionRoom>();
+        Set<CompleteFreeSpaceExpansionRoom> result = new TreeSet<>();
         if (this.complete_expansion_rooms != null)
         {
             for (CompleteFreeSpaceExpansionRoom curr_room : this.complete_expansion_rooms)

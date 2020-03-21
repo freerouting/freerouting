@@ -599,7 +599,7 @@ class Structure extends ScopeKeyword
                     {
                         if (next_token instanceof String)
                         {
-                            FRLogger.warn("Structure.read_layer_scope: unknown layer type '" + (String)next_token + "'");
+                            FRLogger.warn("Structure.read_layer_scope: unknown layer type '" + next_token + "'");
                         } else
                         {
                             FRLogger.warn("Structure.read_layer_scope: unknown layer type");
@@ -988,7 +988,7 @@ class Structure extends ScopeKeyword
      */
     private static Collection<PolylineShape> separate_holes(Collection<PolylineShape> p_outline_shapes)
     {
-        OutlineShape shape_arr[] = new OutlineShape[p_outline_shapes.size()];
+        OutlineShape[] shape_arr = new OutlineShape[p_outline_shapes.size()];
         Iterator<PolylineShape> it = p_outline_shapes.iterator();
         for (int i = 0; i < shape_arr.length; ++i)
         {

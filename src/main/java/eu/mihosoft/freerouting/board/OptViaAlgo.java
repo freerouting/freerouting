@@ -481,11 +481,7 @@ public class OptViaAlgo
         {
             return false;
         }
-        if (!MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null))
-        {
-            return false;
-        }
-        return true;
+        return MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null);
     }
     
     /**

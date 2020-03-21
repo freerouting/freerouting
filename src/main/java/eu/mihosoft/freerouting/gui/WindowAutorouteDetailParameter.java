@@ -116,7 +116,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
         // is used also in the 45 and 90 degree modes.
         this.speed_fast = resources.getString("fast");
         this.speed_slow = resources.getString("slow");
-        speed_combo_box = new javax.swing.JComboBox();
+        speed_combo_box = new javax.swing.JComboBox<>();
         speed_combo_box.addItem(this.speed_fast);
         speed_combo_box.addItem(this.speed_slow);
         speed_combo_box.addActionListener(new SpeedListener());
@@ -228,7 +228,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
     private final javax.swing.JFormattedTextField plane_via_cost_field;
     private final javax.swing.JFormattedTextField start_ripup_costs;
     private final javax.swing.JFormattedTextField start_pass_no;
-    private final javax.swing.JComboBox speed_combo_box;
+    private final javax.swing.JComboBox<String> speed_combo_box;
     private final String speed_fast;
     private final String speed_slow;
     private final javax.swing.JLabel[] layer_name_arr;
