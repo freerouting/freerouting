@@ -20,7 +20,7 @@ if not defined FOUNDCURL (
   echo "ERROR: please make sure that Curl is installed and on the path."
 )
 
-if exist ".jdk14\jdk-14\" (
+if exist ".jdk14\jdk-14+36\" (
     echo "> jdk 14 for package generation already downloaded"
 ) else (
     mkdir .jdk14\
