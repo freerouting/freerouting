@@ -2,12 +2,12 @@
 
 SET  APP_VERSION=%1
 SET  APP_TYPE="msi"
-SET  JAVA_HOME=".jdk14\jdk-14+36\"
 SET  JPACKAGE_JVM="http://deps.mihosoft.eu/openjdk/OpenJDK14U-jdk_x86-32_windows_hotspot_14_36.zip"
 
 set DIR="%~dp0\"
-echo "ABC:%DIR%"
 cd %DIR%
+
+SET  JAVA_HOME="%DIR%\.jdk14\jdk-14+36\"
 
 for %%X in (7z.exe) do (set FOUND7Z=%%~$PATH:X)
 for %%X in (curl.exe) do (set FOUNDCURL=%%~$PATH:X)
