@@ -117,7 +117,7 @@ class Wiring extends ScopeKeyword
             }
             catch (Exception e)
             {
-                FRLogger.error("The normalization of net '"+board.rules.nets.get(i).name+"' failed.", e);
+                FRLogger.warn("The normalization of net '"+board.rules.nets.get(i).name+"' failed.");
             }
         }
         return true;

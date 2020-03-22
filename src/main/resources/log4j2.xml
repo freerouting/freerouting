@@ -18,9 +18,9 @@
     </Appenders>
 
     <Loggers>
-        <Root level="TRACE">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="File"/>
+        <Root level="ALL">
+            <AppenderRef ref="Console" level="INFO"/>
+            <AppenderRef ref="File" level="TRACE"/>
         </Root>
     </Loggers>
 </Configuration>

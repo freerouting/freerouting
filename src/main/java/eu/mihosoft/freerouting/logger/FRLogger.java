@@ -56,6 +56,12 @@ public class FRLogger {
 
     public static void error(String msg, Throwable t)
     {
-        logger.error(msg, t);
+        if (t == null)
+        {
+            logger.error(msg);
+        } else
+        {
+            logger.error(msg, t);
+        }
     }
 }
