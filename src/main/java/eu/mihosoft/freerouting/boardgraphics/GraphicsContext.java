@@ -264,7 +264,7 @@ public class GraphicsContext implements java.io.Serializable
     }
     
     /**
-     * Draws the interiour of a circle
+     * Draws the interior of a circle
      */
     public void fill_circle(Circle p_circle, Graphics p_g, Color p_color, double p_translucency_factor)
     {
@@ -289,7 +289,7 @@ public class GraphicsContext implements java.io.Serializable
     }
     
     /**
-     * Draws the interiour of an ellipse.
+     * Draws the interior of an ellipse.
      */
     public void fill_ellipse(Ellipse  p_ellipse, Graphics p_g, Color p_color, double p_translucency_factor)
     {
@@ -300,7 +300,7 @@ public class GraphicsContext implements java.io.Serializable
     
     
     /**
-     * Draws the interiour of an array  of ellipses.
+     * Draws the interior of an array  of ellipses.
      * Ellipses contained in an other ellipse are treated as holes.
      */
     public void fill_ellipse_arr(Ellipse []  p_ellipse_arr, Graphics p_g, Color p_color, double p_translucency_factor)
@@ -379,7 +379,7 @@ public class GraphicsContext implements java.io.Serializable
     }
     
     /**
-     * Fill the interiour of a list of polygons.
+     * Fill the interior of a list of polygons.
      * Used for example with an area consisting of a border polygon and some holes.
      */
     public void fill_area(FloatPoint[][] p_point_lists, Graphics p_g, Color p_color, double p_translucency_factor)
