@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
 
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 import eu.mihosoft.freerouting.datastructures.Stoppable;
@@ -877,23 +878,26 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
                 PullTightAlgo.get_instance(this, opt_net_no_arr, tidy_region,
                 p_pull_tight_accuracy, null, -1, new_corner, p_layer);
 
-        // Remove evtl. generated cycles because otherwise pull_tight may not work correctly.
-        if (new_trace.normalize(changed_area.get_area(p_layer)))
-        {
+        try {
+            // Remove evtl. generated cycles because otherwise pull_tight may not work correctly.
+            if (new_trace.normalize(changed_area.get_area(p_layer))) {
 
-            pull_tight_algo.split_traces_at_keep_point();
-            // otherwise the new corner may no more be contained in the new trace after optimizing
-            ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
-            Set<Item> curr_picked_items = this.pick_items(new_corner, p_layer, item_filter);
-            new_trace = null;
-            if (!curr_picked_items.isEmpty())
-            {
-                Item found_trace = curr_picked_items.iterator().next();
-                if (found_trace instanceof PolylineTrace)
-                {
-                    new_trace = (PolylineTrace) found_trace;
+                pull_tight_algo.split_traces_at_keep_point();
+                // otherwise the new corner may no more be contained in the new trace after optimizing
+                ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
+                Set<Item> curr_picked_items = this.pick_items(new_corner, p_layer, item_filter);
+                new_trace = null;
+                if (!curr_picked_items.isEmpty()) {
+                    Item found_trace = curr_picked_items.iterator().next();
+                    if (found_trace instanceof PolylineTrace) {
+                        new_trace = (PolylineTrace) found_trace;
+                    }
                 }
             }
+        }
+        catch (Exception e)
+        {
+            FRLogger.error("Couldn't remove generated circles from the board.", e);
         }
 
         // To avoid, that a separate handling for moving backwards in the own trace line
@@ -1079,6 +1083,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
         }
 
         this.insert_trace(connection_line, trace_layer, p_pen_half_width, net_no_arr, p_cl_type, FixedState.UNFIXED);
+
         if (!p_from_point.equals(first_corner))
         {
             Trace tail = this.get_trace_tail(first_corner, trace_layer, net_no_arr);

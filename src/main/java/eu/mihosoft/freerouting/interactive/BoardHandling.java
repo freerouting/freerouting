@@ -1049,7 +1049,6 @@ public class BoardHandling extends BoardHandlingImpl
         DsnFile.ReadResult read_result;
         try
         {
-
             read_result =
                     DsnFile.read(p_design, this, p_observers,
                     p_item_id_no_generator, p_test_level);
@@ -1057,6 +1056,7 @@ public class BoardHandling extends BoardHandlingImpl
         catch (Exception e)
         {
             read_result = DsnFile.ReadResult.ERROR;
+            FRLogger.error("There was an error while reading DSN file.", e);
         }
         if (read_result == DsnFile.ReadResult.OK)
         {

@@ -279,7 +279,15 @@ public class ForcedPadAlgo
             {
                 opt_area = null;
             }
-            curr_substitute_trace.normalize(opt_area);
+
+            try {
+                curr_substitute_trace.normalize(opt_area);
+            }
+            catch (Exception e)
+            {
+                FRLogger.error("Couldn't normalize trace.", e);
+            }
+
             if (!tails_exist_before)
             {
                 for (int i = 0; i < 2; ++i)

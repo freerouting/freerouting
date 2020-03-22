@@ -479,7 +479,14 @@ public abstract class PullTightAlgo
                 {
                     board.split_traces(adjusted_polyline.first_corner(), trace_layer, curr_net_no);
                     board.split_traces(adjusted_polyline.last_corner(), trace_layer, curr_net_no);
-                    board.normalize_traces(curr_net_no);
+
+                    try {
+                        board.normalize_traces(curr_net_no);
+                    }
+                    catch (Exception e)
+                    {
+                        FRLogger.error("The normalization of net '"+board.rules.nets.get(curr_net_no).name+"' failed.", e);
+                    }
 
                     if (split_traces_at_keep_point())
                     {
