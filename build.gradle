@@ -28,6 +28,7 @@ wrapper {
 }
 
 sourceCompatibility = '11'
+targetCompatibility = '11'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 gradle.projectsEvaluated {

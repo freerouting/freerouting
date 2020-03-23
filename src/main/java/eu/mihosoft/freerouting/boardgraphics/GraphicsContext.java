@@ -13,7 +13,7 @@
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
+ *   GNU General Public License at <http://www.gnu.org/licenses/>
  *   for more details.
  */
 
@@ -75,7 +75,7 @@ public class GraphicsContext implements java.io.Serializable
             }
         }
     }
-    
+
     /**
      * Copy constructor
      */
@@ -87,7 +87,7 @@ public class GraphicsContext implements java.io.Serializable
         this.color_intensity_table = new ColorIntensityTable(p_graphics_context.color_intensity_table);
         this.layer_visibility_arr = p_graphics_context.copy_layer_visibility_arr();
     }
-    
+
     /**
      *  Changes  the bounds of the board design to p_design_bounds.
      *  Useful when components are still placed outside the boaed.
@@ -101,7 +101,7 @@ public class GraphicsContext implements java.io.Serializable
         Dimension screen_bounds = this.coordinate_transform.screen_bounds;
         this.coordinate_transform = new CoordinateTransform(p_new_design_bounds, screen_bounds);
     }
-    
+
     /**
      * changes the size of the panel to p_new_bounds
      */
@@ -131,23 +131,23 @@ public class GraphicsContext implements java.io.Serializable
             return;
         }
         Graphics2D g2 = (Graphics2D)p_g;
-        java.awt.Shape clip_shape = p_g.getClip() ;
+        Rectangle clip_shape = p_g.getClip().getBounds();
         // the class member update_box cannot be used here, because
         // the dirty rectangle is internally enlarged by the system.
         // Therefore we can not improve the performance by using an
         // update octagon instead of a box.
-        IntBox clip_box = coordinate_transform.screen_to_board(clip_shape.getBounds());
+        IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
         double scaled_width = coordinate_transform.board_to_screen(p_half_width);
-        
+
         init_draw_graphics(g2, p_color, (float)scaled_width*2);
         set_translucency(g2, p_translucency_factor);
-        
+
         GeneralPath draw_path = null;
         if (!show_line_segments)
         {
             draw_path = new GeneralPath();
         }
-        
+
         for(int i= 0; i<(p_points.length-1); i++)
         {
             if (line_outside_update_box(p_points[i], p_points[i + 1],
@@ -175,7 +175,7 @@ public class GraphicsContext implements java.io.Serializable
             g2.draw(draw_path);
         }
     }
-    
+
     /*
      * draws the boundary of a circle
      */
@@ -188,7 +188,7 @@ public class GraphicsContext implements java.io.Serializable
         }
         Graphics2D g2 = (Graphics2D)p_g;
         Point2D center = coordinate_transform.board_to_screen(p_center);
-        
+
         double radius = coordinate_transform.board_to_screen(p_radius);
         double diameter = 2 * radius;
         float draw_width = (float)(2 * coordinate_transform.board_to_screen(p_draw_half_width));
@@ -198,7 +198,7 @@ public class GraphicsContext implements java.io.Serializable
         init_draw_graphics(g2, p_color, draw_width);
         g2.draw(circle);
     }
-    
+
      /*
       * draws a rectangle
       */
@@ -212,10 +212,10 @@ public class GraphicsContext implements java.io.Serializable
         Graphics2D g2 = (Graphics2D)p_g ;
         Point2D corner1 = coordinate_transform.board_to_screen(p_corner1) ;
         Point2D corner2 = coordinate_transform.board_to_screen(p_corner2) ;
-        
+
         double xmin = Math.min(corner1.getX(), corner2.getX()) ;
         double ymin = Math.min(corner1.getY(), corner2.getY()) ;
-        
+
         float draw_width = (float)(2 * coordinate_transform.board_to_screen(p_draw_half_width)) ;
         double width = Math.abs(corner2.getX() - corner1.getX()) ;
         double height = Math.abs(corner2.getY() - corner1.getY()) ;
@@ -224,7 +224,7 @@ public class GraphicsContext implements java.io.Serializable
         init_draw_graphics(g2, p_color, draw_width) ;
         g2.draw(rectangle) ;
     }
-    
+
     /**
      * Draws the boundary of p_shape.
      */
@@ -249,7 +249,7 @@ public class GraphicsContext implements java.io.Serializable
                     p_color, p_g, p_translucency_factor);
         }
     }
-    
+
     /**
      * Draws the boundary of p_area.
      */
@@ -262,7 +262,7 @@ public class GraphicsContext implements java.io.Serializable
             draw_boundary(holes[i], p_draw_half_width, p_color, p_g, p_translucency_factor);
         }
     }
-    
+
     /**
      * Draws the interior of a circle
      */
@@ -287,7 +287,7 @@ public class GraphicsContext implements java.io.Serializable
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.fill(circle);
     }
-    
+
     /**
      * Draws the interior of an ellipse.
      */
@@ -297,8 +297,8 @@ public class GraphicsContext implements java.io.Serializable
         ellipse_arr[0] = p_ellipse;
         fill_ellipse_arr(ellipse_arr, p_g, p_color, p_translucency_factor);
     }
-    
-    
+
+
     /**
      * Draws the interior of an array  of ellipses.
      * Ellipses contained in an other ellipse are treated as holes.
@@ -334,7 +334,7 @@ public class GraphicsContext implements java.io.Serializable
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.fill(draw_path);
     }
-    
+
     /**
      * Checks, if the distance of the point with coordinates p_x, p_y to p_rect ist at most p_dist.
      */
@@ -354,7 +354,7 @@ public class GraphicsContext implements java.io.Serializable
         }
         return !(p_y > p_rect.y + p_rect.height + p_dist);
     }
-    
+
     /**
      * Fill the interior of the polygon shape  represented by p_points.
      */
@@ -377,7 +377,7 @@ public class GraphicsContext implements java.io.Serializable
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.fill(draw_polygon);
     }
-    
+
     /**
      * Fill the interior of a list of polygons.
      * Used for example with an area consisting of a border polygon and some holes.
@@ -407,7 +407,7 @@ public class GraphicsContext implements java.io.Serializable
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.fill(draw_path);
     }
-    
+
     /**
      * draws the interior of an item of class geometry.planar.Area
      */
@@ -429,14 +429,14 @@ public class GraphicsContext implements java.io.Serializable
                 FRLogger.warn("GraphicsContext.fill_area: shape not bounded");
                 return;
             }
-            java.awt.Shape clip_shape = p_g.getClip() ;
-            IntBox clip_box = coordinate_transform.screen_to_board(clip_shape.getBounds());
+            Rectangle clip_shape = p_g.getClip().getBounds();
+            IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
             if (!border.bounding_box().intersects(clip_box))
             {
                 return;
             }
             Shape [] holes = p_area.get_holes();
-            
+
             FloatPoint[] [] draw_polygons = new FloatPoint [holes.length + 1][];
             for (int j = 0; j < draw_polygons.length; ++j)
             {
@@ -476,118 +476,118 @@ public class GraphicsContext implements java.io.Serializable
             }
         }
     }
-    
+
     public Color get_background_color()
     {
         return other_color_table.get_background_color();
     }
-    
+
     public Color get_hilight_color()
     {
         return other_color_table.get_hilight_color();
     }
-    
+
     public Color get_incomplete_color()
     {
         return other_color_table.get_incomplete_color();
     }
-    
+
     public Color get_outline_color()
     {
         return other_color_table.get_outline_color();
     }
-    
+
     public Color get_component_color(boolean p_front)
     {
         return other_color_table.get_component_color(p_front);
     }
-    
+
     public Color get_violations_color()
     {
         return other_color_table.get_violations_color();
     }
-    
+
     public Color get_length_matching_area_color()
     {
         return other_color_table.get_length_matching_area_color();
     }
-    
+
     public Color[] get_trace_colors(boolean p_fixed)
     {
-        
+
         return item_color_table.get_trace_colors(p_fixed);
     }
-    
+
     public Color[] get_via_colors(boolean p_fixed)
     {
         return item_color_table.get_via_colors(p_fixed);
     }
-    
+
     public Color[] get_pin_colors()
     {
         return item_color_table.get_pin_colors();
     }
-    
+
     public Color[] get_conduction_colors()
     {
         return item_color_table.get_conduction_colors();
     }
-    
+
     public Color[] get_obstacle_colors()
     {
         return item_color_table.get_obstacle_colors();
     }
-    
+
     public Color[] get_via_obstacle_colors()
     {
         return item_color_table.get_via_obstacle_colors();
     }
-    
+
     public Color[] get_place_obstacle_colors()
     {
         return item_color_table.get_place_obstacle_colors();
     }
-    
+
     public double get_trace_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.TRACES.ordinal());
     }
-    
+
     public double get_via_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.VIAS.ordinal());
     }
-    
+
     public double get_pin_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.PINS.ordinal());
     }
-    
+
     public double get_conduction_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal());
     }
-    
+
     public double get_obstacle_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal());
     }
-    
+
     public double get_via_obstacle_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal());
     }
-    
+
     public double get_place_obstacle_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.PLACE_KEEPOUTS.ordinal());
     }
-    
+
     public double get_component_outline_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.COMPONENT_OUTLINES.ordinal());
     }
-    
+
     public double get_hilight_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal());
@@ -622,37 +622,37 @@ public class GraphicsContext implements java.io.Serializable
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), p_value);
     }
-    
+
     public void set_obstacle_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.KEEPOUTS.ordinal(), p_value);
     }
-    
+
     public void set_via_obstacle_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.VIA_KEEPOUTS.ordinal(), p_value);
     }
-    
+
     public void set_hilight_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal(), p_value);
     }
-    
+
     public void set_incomplete_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal(), p_value);
     }
-    
+
     public void set_length_matching_area_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal(), p_value);
     }
-    
+
     public java.awt.Dimension get_panel_size()
     {
         return coordinate_transform.screen_bounds;
     }
-    
+
     /**
      * Returns the center of the design on the screen.
      */
@@ -661,7 +661,7 @@ public class GraphicsContext implements java.io.Serializable
         FloatPoint center = coordinate_transform.design_box_with_offset.centre_of_gravity();
         return coordinate_transform.board_to_screen(center);
     }
-    
+
     /**
      * Returns the bounding box of the design in screen coordinates.
      */
@@ -669,7 +669,7 @@ public class GraphicsContext implements java.io.Serializable
     {
         return coordinate_transform.board_to_screen(coordinate_transform.design_box);
     }
-    
+
     /**
      * Sets the factor for automatic layer dimming.
      * Values are between 0 and 1. If 1, there is no automatic layer dimming.
@@ -678,19 +678,19 @@ public class GraphicsContext implements java.io.Serializable
     {
         auto_layer_dim_factor = p_value;
     }
-    
+
     /** gets the factor for automatic layer dimming */
     public double get_auto_layer_dim_factor()
     {
         return this.auto_layer_dim_factor;
     }
-    
+
     /** Sets the layer, which will be excluded from automatic layer  dimming. */
     public void set_fully_visible_layer(int p_layer_no)
     {
         fully_visible_layer = p_layer_no;
     }
-    
+
     /**
      * Gets the visibility factor of the input layer.
      * The result is between 0 and 1.
@@ -710,7 +710,7 @@ public class GraphicsContext implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Gets the visibility factor of the input layer without the aoutomatic layer dimming.
      */
@@ -718,7 +718,7 @@ public class GraphicsContext implements java.io.Serializable
     {
         return layer_visibility_arr[p_layer_no];
     }
-    
+
     /**
      * Gets the visibility factor of the input layer.
      * The value is expected between 0 and 1.
@@ -730,26 +730,26 @@ public class GraphicsContext implements java.io.Serializable
     {
         layer_visibility_arr[p_layer_no] = Math.max(0, Math.min(p_value, 1));
     }
-    
+
     public void set_layer_visibility_arr(double [] p_layer_visibility_arr)
     {
         this.layer_visibility_arr = p_layer_visibility_arr;
     }
-    
-    
+
+
     public double[] copy_layer_visibility_arr()
     {
         double[] result = new double [this.layer_visibility_arr.length];
         System.arraycopy(this.layer_visibility_arr, 0, result, 0, this.layer_visibility_arr.length);
         return result;
     }
-    
+
     /** Returns the number of layers on the board */
     public int layer_count()
     {
         return layer_visibility_arr.length;
     }
-    
+
     /**
      * filter lines, which cannot touch the update_box to improve the
      * performance of the draw function by avoiding unnessesary calls
@@ -776,7 +776,7 @@ public class GraphicsContext implements java.io.Serializable
         }
         return Math.min(p_1.y, p_2.y) > p_update_box.ur.y + p_update_offset;
     }
-    
+
     /**
      * initialise some values in p_graphics
      */
@@ -787,7 +787,7 @@ public class GraphicsContext implements java.io.Serializable
         p_graphics.setColor(p_color);
         p_graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
-    
+
     private static void set_translucency(Graphics2D p_g2, double p_factor)
     {
         AlphaComposite curr_alpha_composite;
@@ -801,8 +801,8 @@ public class GraphicsContext implements java.io.Serializable
         }
         p_g2.setComposite(curr_alpha_composite);
     }
-    
-    /** 
+
+    /**
      * Writes an instance of this class to a file.
      */
     private void writeObject(java.io.ObjectOutputStream p_stream)
@@ -812,7 +812,7 @@ public class GraphicsContext implements java.io.Serializable
         item_color_table.write_object(p_stream);
         other_color_table.write_object(p_stream);
     }
-    
+
     /** Reads an instance of this class from a file */
     private void readObject(java.io.ObjectInputStream p_stream)
     throws java.io.IOException, java.lang.ClassNotFoundException
@@ -821,30 +821,30 @@ public class GraphicsContext implements java.io.Serializable
         this.item_color_table = new ItemColorTableModel(p_stream);
         this.other_color_table = new OtherColorTableModel(p_stream);
     }
-    
+
     public transient ItemColorTableModel item_color_table;
     public transient OtherColorTableModel other_color_table;
     public ColorIntensityTable color_intensity_table;
-    
-        
+
+
     public CoordinateTransform coordinate_transform = null;
-    
+
     /** layer_visibility_arr[i] is between 0 and 1, for each layer i, 0 is invisible and 1 fully visible. */
     private double [] layer_visibility_arr;
-    
-    
+
+
     /**
      * The factor for autoomatic layer dimming of layers different from the current layer.
      * Values are between 0 and 1. If 1, there is no automatic layer dimming.
      */
     private double auto_layer_dim_factor = 0.7;
-    
+
     /** The layer, which is not automatically dimmed. */
     private int fully_visible_layer = 0;
-    
+
     private static final int update_offset = 10000;
-    
+
     private static final boolean show_line_segments = false;
     private static final boolean show_area_division = false;
-    
+
 }

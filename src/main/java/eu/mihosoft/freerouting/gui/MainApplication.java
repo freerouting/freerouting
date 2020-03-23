@@ -25,6 +25,7 @@ package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.board.TestLevel;
 import eu.mihosoft.freerouting.constants.Constants;
+import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.interactive.ThreadActionListener;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
@@ -107,7 +108,7 @@ public class MainApplication extends javax.swing.JFrame
             new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + startupOptions.max_passes - 1);
             if (startupOptions.max_passes < 99999)
             {
-                var thread = new_frame.board_panel.board_handling.start_batch_autorouter();
+                InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();
 
                 thread.addListener(new ThreadActionListener() {
                     @Override
@@ -473,7 +474,6 @@ public class MainApplication extends javax.swing.JFrame
         }
     }
     static final String WEB_FILE_BASE_NAME = "http://www.freerouting.mihosoft.eu";
-
 
     static final String VERSION_NUMBER_STRING = 
         "v" + Constants.FREEROUTING_VERSION

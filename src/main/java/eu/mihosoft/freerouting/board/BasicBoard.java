@@ -89,8 +89,8 @@ public class BasicBoard implements java.io.Serializable
     {
         try
         {
-            var output_stream = new ByteArrayOutputStream();
-            var object_stream = new ObjectOutputStream(output_stream);
+            ByteArrayOutputStream output_stream = new ByteArrayOutputStream();
+            ObjectOutputStream object_stream = new ObjectOutputStream(output_stream);
 
             if (basicProfile) {
                 object_stream.writeObject(this.get_traces());
@@ -115,8 +115,8 @@ public class BasicBoard implements java.io.Serializable
     {
         try
         {
-            var input_stream = new ByteArrayInputStream(object_byte_array);
-            var object_stream = new ObjectInputStream(input_stream);
+            ByteArrayInputStream input_stream = new ByteArrayInputStream(object_byte_array);
+            ObjectInputStream object_stream = new ObjectInputStream(input_stream);
 
             return (BasicBoard)object_stream.readObject();
         }

@@ -1,3 +1,6 @@
+currently most active fork is:
+https://github.com/miho/freerouting
+
 # freerouting
 
 [ ![Download](https://api.bintray.com/packages/miho/Freerouting/freerouting/images/download.svg) ](https://bintray.com/miho/Freerouting/freerouting/_latestVersion)
@@ -27,7 +30,7 @@ Freerouting is a fantastic piece of software. But the code hasn't been updated i
 
 ### Requirements
 
-- Java >= 11
+- Java >= 8
 - Internet connection (dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 

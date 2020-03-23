@@ -28,7 +28,7 @@ public class FRLogger {
 
     public static void traceExit(String perfId, Object result)
     {
-        var timeElapsed = Duration.between(perfData.get(perfId.hashCode()), java.time.Instant.now()).toMillis();
+        long timeElapsed = Duration.between(perfData.get(perfId.hashCode()), java.time.Instant.now()).toMillis();
 
         perfData.remove(perfId.hashCode());
         if (timeElapsed < 0) {

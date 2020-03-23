@@ -20,16 +20,12 @@ package eu.mihosoft.freerouting.autoroute;
 
 import java.util.*;
 
+import eu.mihosoft.freerouting.board.*;
 import eu.mihosoft.freerouting.datastructures.TimeLimit;
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 import eu.mihosoft.freerouting.geometry.planar.FloatLine;
-
-import eu.mihosoft.freerouting.board.Connectable;
-import eu.mihosoft.freerouting.board.Item;
-import eu.mihosoft.freerouting.board.DrillItem;
-import eu.mihosoft.freerouting.board.RoutingBoard;
 
 import eu.mihosoft.freerouting.interactive.BoardHandling;
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
@@ -124,7 +120,7 @@ public class BatchAutorouter
                 this.is_interrupted = true;
             }
 
-            var current_board_hash = this.routing_board.get_hash();
+            String current_board_hash = this.routing_board.get_hash();
             if (already_checked_board_hashes.contains(current_board_hash))
             {
                 FRLogger.warn("This board was already evaluated, so we stop autorouter to avoid the endless loop.");
@@ -142,14 +138,14 @@ public class BatchAutorouter
             String start_message = resources.getString("batch_autorouter") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + curr_pass_no.toString() + ": ";
             hdlg.screen_messages.set_status_message(start_message);
 
-            var boardBefore = this.routing_board.clone();
+            BasicBoard boardBefore = this.routing_board.clone();
 
             FRLogger.traceEntry("BatchAutorouter.autoroute_pass #"+curr_pass_no+" on board '"+current_board_hash+"' making {} changes");
             already_checked_board_hashes.add(this.routing_board.get_hash());
             still_unrouted_items = autoroute_pass(curr_pass_no, true);
 
             // let's check if there was enough change in the last pass, because if it were little, so should probably stop
-            var newTraceDifferences = this.routing_board.diff_traces(boardBefore);
+            int newTraceDifferences = this.routing_board.diff_traces(boardBefore);
             diffBetweenBoards.add(newTraceDifferences);
 
             if (diffBetweenBoards.size() > 20) {
