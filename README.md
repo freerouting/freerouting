@@ -12,6 +12,8 @@ It basically does this:
 
 Freerouting is a fantastic piece of software. But the code hasn't been updated in a while and had some design flaws. Some of them are fixed now. This version of freerouting has been refactored to be fully compatible with JDK11.
 
+[Binary installers for Linux, macOS and Windows can be downloaded here](https://freerouting.mihosoft.eu/).
+
 ### New Features
 
 - Uses gradle as build system (which is compatible with command line, NetBeans, IntelliJ, Eclipse and more)
