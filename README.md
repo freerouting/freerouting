@@ -1,6 +1,3 @@
-currently most active fork is:
-https://github.com/miho/freerouting
-
 # freerouting
 
 [ ![Download](https://api.bintray.com/packages/miho/Freerouting/freerouting/images/download.svg) ](https://bintray.com/miho/Freerouting/freerouting/_latestVersion)
