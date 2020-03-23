@@ -95,7 +95,15 @@ public class InsertFoundConnectionAlgo
             PolylineTrace to_trace = (PolylineTrace) p_connection.start_item;
             p_board.connect_to_trace(new_instance.last_corner, to_trace, p_ctrl.trace_half_width[p_connection.target_layer], p_ctrl.trace_clearance_class_no);
         }
-        p_board.normalize_traces(p_ctrl.net_no);
+
+        try {
+            p_board.normalize_traces(p_ctrl.net_no);
+        }
+        catch (Exception e)
+        {
+            FRLogger.error("The normalization of net '"+p_board.rules.nets.get(p_ctrl.net_no).name+"' failed.", e);
+        }
+
         return new_instance;
     }
 
@@ -236,10 +244,7 @@ public class InsertFoundConnectionAlgo
         if (p_end_pin != null)
         {
             Point ok_point = try_neck_down(p_from_corner, p_to_corner, p_layer, p_end_pin, false);
-            if (ok_point == p_to_corner)
-            {
-                return true;
-            }
+            return ok_point == p_to_corner;
         }
         return false;
     }

@@ -214,11 +214,7 @@ public class Circle implements ConvexShape, java.io.Serializable
         {
             return false;
         }
-        if (p_box.ur.y < center.y + radius)
-        {
-            return false;
-        }
-        return true;
+        return p_box.ur.y >= center.y + radius;
     }
     
     public Circle turn_90_degree(int p_factor, IntPoint p_pole)

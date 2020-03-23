@@ -136,7 +136,7 @@ public class MinAreaTree extends ShapeTree
         }
     }
     
-    private final Leaf position_locate(TreeNode p_curr_node, Leaf p_leaf_to_insert)
+    private Leaf position_locate(TreeNode p_curr_node, Leaf p_leaf_to_insert)
     {
         TreeNode curr_node = p_curr_node;
         

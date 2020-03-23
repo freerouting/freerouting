@@ -36,13 +36,13 @@ public interface Connectable
     /**
      * Returns true if this item belongs to the net with number p_net_no.
      */
-    public boolean contains_net(int p_net_no);
+    boolean contains_net(int p_net_no);
     
     /**
      *  Returns true if the net number array of this and p_net_no_arr have a common
      *  number.
      */
-    public boolean shares_net_no(int [] p_net_no_arr);
+    boolean shares_net_no(int[] p_net_no_arr);
     
     /**
      * Returns a list of all connectable items overlapping

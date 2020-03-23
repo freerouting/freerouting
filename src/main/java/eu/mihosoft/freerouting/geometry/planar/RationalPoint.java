@@ -148,11 +148,7 @@ public class RationalPoint extends Point implements java.io.Serializable
             return false;
         }
         tmp = BigInteger.valueOf(p_box.ur.y).multiply(z);
-        if (y.compareTo(tmp) > 0)
-        {
-            return false;
-        }
-        return true;
+        return y.compareTo(tmp) <= 0;
     }
     
     /**
@@ -175,12 +171,12 @@ public class RationalPoint extends Point implements java.io.Serializable
     
     Point translate_by(RationalVector p_vector)
     {
-        BigInteger v1[] = new BigInteger[3];
+        BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
         
-        BigInteger v2[] = new BigInteger[3];
+        BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_vector.x;
         v2[1] = p_vector.y;
         v2[2] = p_vector.z;
@@ -205,12 +201,12 @@ public class RationalPoint extends Point implements java.io.Serializable
     
     Vector difference_by(RationalPoint p_other)
     {
-        BigInteger v1[] = new BigInteger[3];
+        BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
         
-        BigInteger v2[] = new BigInteger[3];
+        BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_other.x.negate();
         v2[1] = p_other.y.negate();
         v2[2] = p_other.z;

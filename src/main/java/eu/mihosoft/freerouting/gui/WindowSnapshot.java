@@ -57,7 +57,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
         main_panel.add(goto_button, java.awt.BorderLayout.NORTH);
         
         // create snapshot list
-        this.list = new javax.swing.JList(this.list_model);
+        this.list = new javax.swing.JList<>(this.list_model);
         this.list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         this.list.setSelectedIndex(0);
         this.list.setVisibleRowCount(5);
@@ -193,7 +193,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
         if (index >= 0 && list_model.getSize() > index)
         {
             eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
-            eu.mihosoft.freerouting.interactive.SnapShot curr_snapshot =  (eu.mihosoft.freerouting.interactive.SnapShot) list_model.elementAt(index);
+            eu.mihosoft.freerouting.interactive.SnapShot curr_snapshot = list_model.elementAt(index);
             
             curr_snapshot.go_to(board_handling);
             
@@ -237,8 +237,8 @@ public class WindowSnapshot extends BoardSavableSubWindow
     
     private final BoardFrame board_frame;
     
-    private javax.swing.DefaultListModel list_model = new javax.swing.DefaultListModel();
-    private final javax.swing.JList list;
+    private javax.swing.DefaultListModel<eu.mihosoft.freerouting.interactive.SnapShot> list_model = new javax.swing.DefaultListModel<eu.mihosoft.freerouting.interactive.SnapShot>();
+    private final javax.swing.JList<eu.mihosoft.freerouting.interactive.SnapShot> list;
     private final javax.swing.JTextField name_field;
     final WindowSnapshotSettings settings_window;
     private int snapshot_count = 0;
@@ -344,7 +344,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
      */
     static private class SavedAttributes implements java.io.Serializable
     {
-        public SavedAttributes(javax.swing.DefaultListModel p_list_model, int p_snapshot_count, java.awt.Point p_location, boolean p_is_visible)
+        public SavedAttributes(javax.swing.DefaultListModel<eu.mihosoft.freerouting.interactive.SnapShot> p_list_model, int p_snapshot_count, java.awt.Point p_location, boolean p_is_visible)
         {
             list_model = p_list_model;
             snapshot_count = p_snapshot_count;
@@ -353,7 +353,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             
         }
         
-        public final javax.swing.DefaultListModel list_model;
+        public final javax.swing.DefaultListModel<eu.mihosoft.freerouting.interactive.SnapShot> list_model;
         public final int snapshot_count;
         public final java.awt.Point location;
         public final boolean is_visible;

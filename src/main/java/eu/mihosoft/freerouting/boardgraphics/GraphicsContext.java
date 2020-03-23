@@ -264,7 +264,7 @@ public class GraphicsContext implements java.io.Serializable
     }
 
     /**
-     * Draws the interiour of a circle
+     * Draws the interior of a circle
      */
     public void fill_circle(Circle p_circle, Graphics p_g, Color p_color, double p_translucency_factor)
     {
@@ -289,7 +289,7 @@ public class GraphicsContext implements java.io.Serializable
     }
 
     /**
-     * Draws the interiour of an ellipse.
+     * Draws the interior of an ellipse.
      */
     public void fill_ellipse(Ellipse  p_ellipse, Graphics p_g, Color p_color, double p_translucency_factor)
     {
@@ -300,7 +300,7 @@ public class GraphicsContext implements java.io.Serializable
 
 
     /**
-     * Draws the interiour of an array  of ellipses.
+     * Draws the interior of an array  of ellipses.
      * Ellipses contained in an other ellipse are treated as holes.
      */
     public void fill_ellipse_arr(Ellipse []  p_ellipse_arr, Graphics p_g, Color p_color, double p_translucency_factor)
@@ -352,11 +352,7 @@ public class GraphicsContext implements java.io.Serializable
         {
             return false;
         }
-        if (p_y > p_rect.y + p_rect.height + p_dist)
-        {
-            return false;
-        }
-        return true;
+        return !(p_y > p_rect.y + p_rect.height + p_dist);
     }
 
     /**
@@ -383,7 +379,7 @@ public class GraphicsContext implements java.io.Serializable
     }
 
     /**
-     * Fill the interiour of a list of polygons.
+     * Fill the interior of a list of polygons.
      * Used for example with an area consisting of a border polygon and some holes.
      */
     public void fill_area(FloatPoint[][] p_point_lists, Graphics p_g, Color p_color, double p_translucency_factor)
@@ -454,7 +450,7 @@ public class GraphicsContext implements java.io.Serializable
                     curr_draw_shape = (PolylineShape) holes[j - 1];
                 }
                 draw_polygons[j] = new FloatPoint [curr_draw_shape.border_line_count() + 1];
-                FloatPoint curr_draw_polygon[] = draw_polygons[j];
+                FloatPoint[] curr_draw_polygon = draw_polygons[j];
                 for (int i = 0; i <  curr_draw_polygon.length - 1; ++i)
                 {
                     curr_draw_polygon[i] = curr_draw_shape.corner_approx(i);
@@ -778,11 +774,7 @@ public class GraphicsContext implements java.io.Serializable
         {
             return true;
         }
-        if (Math.min(p_1.y, p_2.y) > p_update_box.ur.y + p_update_offset)
-        {
-            return true;
-        }
-        return false;
+        return Math.min(p_1.y, p_2.y) > p_update_box.ur.y + p_update_offset;
     }
 
     /**

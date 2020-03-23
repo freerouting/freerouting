@@ -54,7 +54,7 @@ public class WindowManualRules extends BoardSavableSubWindow
         main_panel.add(via_rule_label);
 
         eu.mihosoft.freerouting.board.RoutingBoard routing_board = this.board_handling.get_routing_board();
-        this.via_rule_combo_box = new javax.swing.JComboBox(routing_board.rules.via_rules);
+        this.via_rule_combo_box = new javax.swing.JComboBox<>(routing_board.rules.via_rules);
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridbag.setConstraints(this.via_rule_combo_box, gridbag_constraints);
         main_panel.add(this.via_rule_combo_box);
@@ -120,7 +120,7 @@ public class WindowManualRules extends BoardSavableSubWindow
     public void refresh()
     {
         eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_handling.get_routing_board();
-        javax.swing.ComboBoxModel new_model = new javax.swing.DefaultComboBoxModel(routing_board.rules.via_rules);
+        javax.swing.ComboBoxModel<eu.mihosoft.freerouting.rules.ViaRule> new_model = new javax.swing.DefaultComboBoxModel<>(routing_board.rules.via_rules);
         this.via_rule_combo_box.setModel(new_model);
         eu.mihosoft.freerouting.rules.ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
         if (this.clearance_combo_box.get_class_count() != routing_board.rules.clearance_matrix.get_class_count())
@@ -210,7 +210,7 @@ public class WindowManualRules extends BoardSavableSubWindow
     private final eu.mihosoft.freerouting.interactive.BoardHandling board_handling;
     private final ComboBoxLayer layer_combo_box;
     private final ComboBoxClearance clearance_combo_box;
-    private final javax.swing.JComboBox via_rule_combo_box;
+    private final javax.swing.JComboBox<eu.mihosoft.freerouting.rules.ViaRule> via_rule_combo_box;
     private final javax.swing.JFormattedTextField trace_width_field;
     private boolean key_input_completed = true;
     private static final int max_slider_value = 15000;

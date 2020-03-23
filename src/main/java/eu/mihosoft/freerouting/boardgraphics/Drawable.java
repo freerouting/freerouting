@@ -61,7 +61,7 @@ public interface Drawable
      */
     Color[] get_draw_colors(GraphicsContext p_graphics_context);
     
-    static final int MIN_DRAW_PRIORITY = 1;
-    static final int MIDDLE_DRAW_PRIORITY = 3;
-    static final int MAX_DRAW_PRIORITY = 3;
+    int MIN_DRAW_PRIORITY = 1;
+    int MIDDLE_DRAW_PRIORITY = 3;
+    int MAX_DRAW_PRIORITY = 3;
 }

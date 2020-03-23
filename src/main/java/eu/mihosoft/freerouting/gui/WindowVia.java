@@ -28,6 +28,8 @@ import eu.mihosoft.freerouting.rules.BoardRules;
 
 import eu.mihosoft.freerouting.board.Layer;
 
+import java.util.List;
+
 /**
  * Window for interactive editing of via rules.
  *
@@ -117,8 +119,8 @@ public class WindowVia extends BoardSavableSubWindow
         north_panel.add(via_rule_list_name, gridbag_constraints);
         
         
-        this.rule_list_model = new javax.swing.DefaultListModel();
-        this.rule_list = new javax.swing.JList(this.rule_list_model);
+        this.rule_list_model = new javax.swing.DefaultListModel<ViaRule>();
+        this.rule_list = new javax.swing.JList<ViaRule>(this.rule_list_model);
         
         this.rule_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         this.rule_list.setSelectedIndex(0);
@@ -210,8 +212,8 @@ public class WindowVia extends BoardSavableSubWindow
     
     private final java.util.ResourceBundle resources;
     
-    private final javax.swing.JList rule_list;
-    private final javax.swing.DefaultListModel rule_list_model;
+    private final javax.swing.JList<ViaRule> rule_list;
+    private final javax.swing.DefaultListModel<ViaRule> rule_list_model;
     
     private final javax.swing.JPanel main_panel;
     
@@ -467,15 +469,15 @@ public class WindowVia extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            Object[] selected_objects = rule_list.getSelectedValues();
-            if (selected_objects.length <= 0)
+            List<ViaRule> selected_objects = rule_list.getSelectedValuesList();
+            if (selected_objects.size() <= 0)
             {
                 return;
             }
             java.util.Collection<WindowObjectInfo.Printable> object_list = new java.util.LinkedList<WindowObjectInfo.Printable>();
-            for (int i = 0; i < selected_objects.length; ++i)
+            for (int i = 0; i < selected_objects.size(); ++i)
             {
-                object_list.add((WindowObjectInfo.Printable)(selected_objects[i]));
+                object_list.add(selected_objects.get(i));
             }
             eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
             WindowObjectInfo new_window =
@@ -492,13 +494,13 @@ public class WindowVia extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            Object selected_object = rule_list.getSelectedValue();
+            ViaRule selected_object = rule_list.getSelectedValue();
             if (selected_object == null || !(selected_object instanceof ViaRule))
             {
                 return;
             }
             eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-            WindowViaRule new_window = new WindowViaRule((ViaRule) selected_object, board_rules.via_infos, board_frame);
+            WindowViaRule new_window = new WindowViaRule(selected_object, board_rules.via_infos, board_frame);
             java.awt.Point loc = getLocation();
             java.awt.Point new_window_location =
                     new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -533,12 +535,12 @@ public class WindowVia extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            Object selected_object = rule_list.getSelectedValue();
+            ViaRule selected_object = rule_list.getSelectedValue();
             if (selected_object == null || !(selected_object instanceof ViaRule))
             {
                 return;
             }
-            ViaRule selected_rule = (ViaRule) selected_object;
+            ViaRule selected_rule = selected_object;
             String message = resources.getString("remove_via_rule") + " " + selected_rule.name + "?";
             if (WindowMessage.confirm(message))
             {

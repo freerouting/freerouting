@@ -1,15 +1,8 @@
 package eu.mihosoft.freerouting.logger;
 
 import eu.mihosoft.freerouting.FreeRouting;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.ConsoleAppender;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.config.builder.api.*;
-import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
@@ -56,6 +49,12 @@ public class FRLogger {
 
     public static void error(String msg, Throwable t)
     {
-        logger.error(msg, t);
+        if (t == null)
+        {
+            logger.error(msg);
+        } else
+        {
+            logger.error(msg, t);
+        }
     }
 }

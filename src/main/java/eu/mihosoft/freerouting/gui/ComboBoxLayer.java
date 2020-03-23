@@ -24,12 +24,14 @@
 package eu.mihosoft.freerouting.gui;
 import eu.mihosoft.freerouting.board.LayerStructure;
 
+import javax.swing.*;
+
 /**
  * A Combo Box with items for individual board layers plus an additional item for all layers.
  *
  * @author Alfons Wirtz
  */
-public class ComboBoxLayer extends javax.swing.JComboBox
+public class ComboBoxLayer extends javax.swing.JComboBox<ComboBoxLayer.Layer>
 {
     
     /** Creates a new instance of LayerComboBox */
@@ -58,7 +60,7 @@ public class ComboBoxLayer extends javax.swing.JComboBox
             eu.mihosoft.freerouting.board.Layer curr_signal_layer = p_layer_structure.get_signal_layer(i);
             layer_arr[curr_layer_no] = new Layer(curr_signal_layer.name, p_layer_structure.get_no(curr_signal_layer));
         }
-        this.setModel(new javax.swing.DefaultComboBoxModel(layer_arr));
+        this.setModel(new DefaultComboBoxModel<>(layer_arr));
         this.setSelectedIndex(0);
     }
     

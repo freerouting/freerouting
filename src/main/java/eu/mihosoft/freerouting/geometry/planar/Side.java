@@ -68,7 +68,7 @@ public class Side
      *         ON_THE_RIGHT, if p_value > 0
      *         and COLLINEAR, if p_value == 0
      */
-     static final Side of(double p_value)
+     static Side of(double p_value)
      {
         Side result;
         if (p_value > 0)

@@ -120,11 +120,7 @@ public class Via extends DrillItem implements java.io.Serializable
         {
             return false;
         }
-        if (this.attach_allowed && p_other instanceof Pin && ((Pin) p_other).drill_allowed())
-        {
-            return false;
-        }
-        return true;
+        return !this.attach_allowed || !(p_other instanceof Pin) || !((Pin) p_other).drill_allowed();
     }
 
     /**

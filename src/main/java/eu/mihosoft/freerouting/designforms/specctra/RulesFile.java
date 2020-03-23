@@ -91,7 +91,7 @@ public class RulesFile
             }
             scanner.yybegin(SpecctraFileScanner.NAME);
             curr_token = scanner.next_token();
-            if (!(curr_token instanceof String) || !((String) curr_token).equals(p_design_name))
+            if (!(curr_token instanceof String) || !curr_token.equals(p_design_name))
             {
                 FRLogger.warn("RulesFile.read: design_name not matching");
             }

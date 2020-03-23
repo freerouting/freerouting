@@ -18,7 +18,7 @@
  *
  * Area.java
  *
- * Created on 22. Juni 2003, 10:16
+ * Created on 22. June 2003, 10:16
  */
 
 package eu.mihosoft.freerouting.geometry.planar;
@@ -85,7 +85,7 @@ public interface Area
      * Returns true, if p_point is contained in this area,
      * but not inside a hole.
      * Being on the border is not defined for FloatPoints
-     * because of numerical inacurracy.
+     * because of numerical inaccuracy.
      */
     boolean contains(FloatPoint p_point);
     
@@ -99,7 +99,7 @@ public interface Area
      * Calculates an approximation of the nearest point of the shape
      * to p_from_point
      */
-    FloatPoint nearest_point_approx(FloatPoint p_ftom_point);
+    FloatPoint nearest_point_approx(FloatPoint p_from_point);
     
     /**
      * Turns this area by p_factor times 90 degree around p_pole.

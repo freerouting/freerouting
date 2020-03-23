@@ -34,6 +34,7 @@ import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.IntPoint;
 import eu.mihosoft.freerouting.geometry.planar.Line;
+import eu.mihosoft.freerouting.geometry.planar.Polygon;
 import eu.mihosoft.freerouting.geometry.planar.Polyline;
 
 import eu.mihosoft.freerouting.board.RoutingBoard;
@@ -111,7 +112,13 @@ class Wiring extends ScopeKeyword
         RoutingBoard board = p_par.board_handling.get_routing_board();
         for (int i = 1; i <= board.rules.nets.max_net_no(); ++i)
         {
-            board.normalize_traces(i);
+            try {
+                board.normalize_traces(i);
+            }
+            catch (Exception e)
+            {
+                FRLogger.warn("The normalization of net '"+board.rules.nets.get(i).name+"' failed.");
+            }
         }
         return true;
     }
@@ -244,7 +251,7 @@ class Wiring extends ScopeKeyword
     private static void write_conduction_area_scope(WriteScopeParameter p_par, eu.mihosoft.freerouting.board.ConductionArea  p_conduction_area) throws java.io.IOException
     {
         int net_count = p_conduction_area.net_count();
-        if (net_count <= 0 || net_count > 1)
+        if (net_count != 1)
         {
             FRLogger.warn("Plane.write_scope: unexpected net count");
             return;
@@ -495,9 +502,15 @@ class Wiring extends ScopeKeyword
                 }
                 corner_arr[i] = curr_corner.round();
             }
-            Polyline trace_polyline = new Polyline(corner_arr);
-            // Traces are not yet normalized here because cycles may be removed premature.
-            result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
+
+            Polygon polygon = new Polygon(corner_arr);
+
+            // if it doesn't have two different points, it's not a valid polygon, so we must skip it
+            if (polygon.corner_array().length >= 2) {
+                Polyline trace_polyline = new Polyline(polygon);
+                // Traces are not yet normalized here because cycles may be removed premature.
+                result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
+            }
         }
         else if (path instanceof PolylinePath)
         {

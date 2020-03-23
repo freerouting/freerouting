@@ -21,6 +21,7 @@ package eu.mihosoft.freerouting.geometry.planar;
 
 import eu.mihosoft.freerouting.logger.FRLogger;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -289,10 +290,7 @@ public class Polyline implements java.io.Serializable
             // corner array is not yet allocated
         {
             precalculated_float_corners = new FloatPoint[arr.length - 1];
-            for (int i = 0; i < precalculated_float_corners.length; ++i)
-            {
-                precalculated_float_corners[i] = null;
-            }
+            Arrays.fill(precalculated_float_corners, null);
         }
         if (precalculated_float_corners [no] == null)
             // corner is not yet calculated
@@ -331,10 +329,7 @@ public class Polyline implements java.io.Serializable
             // corner array is not yet allocated
         {
             precalculated_corners = new Point[arr.length - 1];
-            for (int i = 0; i < precalculated_corners.length; ++i)
-            {
-                precalculated_corners[i] = null;
-            }
+            Arrays.fill(precalculated_corners, null);
         }
         if (precalculated_corners [no] == null)
             // corner is not yet calculated

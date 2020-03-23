@@ -6,4 +6,14 @@ out
 freerouting.iml
 tmp
 /logs/
+bin/
+.project
+.settings
+.vscode
+.classpath
+
+/distribution/.jdk14
+/distribution/runtime
+/distribution/Freerouting*
+
 

@@ -125,7 +125,7 @@ public abstract class Vector implements java.io.Serializable
     {
         IntVector result = new IntVector(p_x, p_y);
         if ( Math.abs(p_x) > Limits.CRIT_INT ||
-                Math.abs(p_x) > Limits.CRIT_INT )
+                Math.abs(p_y) > Limits.CRIT_INT )
         {
             return new RationalVector(result);
         }
