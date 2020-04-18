@@ -49,26 +49,6 @@ jobs:
           release-tag: SNAPSHOT 
           repo-token: ${{ secrets.GITHUB_TOKEN }}   
           
-  build-windows-x86:
-
-    runs-on: [windows-latest]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: joschi/setup-jdk@v1 
-      with:
-          java-version: '11'
-          architecture: x86
-    - name: Build with Gradle
-      run: .\gradlew.bat dist 
-    - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows-x86.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))"   
-    - uses: AButler/upload-release-assets@v2.0
-      with:
-          files: './distribution/freerouting-SNAPSHOT-*-windows-x86.msi'
-          release-tag: SNAPSHOT 
-          repo-token: ${{ secrets.GITHUB_TOKEN }}   
 
   build-macos:
 
