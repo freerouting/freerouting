@@ -17,10 +17,10 @@ jobs:
     - uses: actions/checkout@v2
     #- run: curl -O "https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz"
     - name: Set up JDK 11
-      uses: actions/setup-java@v1
+    - uses: joschi/setup-jdk@v1 
       with:
-        java-version: 13
-      #  jdkFile: ./openjdk-14_linux-x64_bin.tar.gz
+          java-version: '11'
+          architecture: 'x64'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
@@ -46,9 +46,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: actions/setup-java@v1
+    - uses: joschi/setup-jdk@v1 
       with:
-        java-version: 13
+          java-version: '11'
+          architecture: 'x64'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Get Tag name 
@@ -74,9 +75,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: actions/setup-java@v1
+    - uses: joschi/setup-jdk@v1 
       with:
-        java-version: 13
+          java-version: '11'
+          architecture: 'x64'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
