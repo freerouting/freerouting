@@ -477,6 +477,6 @@ public class MainApplication extends javax.swing.JFrame
 
     static final String VERSION_NUMBER_STRING = 
         "v" + Constants.FREEROUTING_VERSION
-            + " (version by mihosoft.eu, build-date: "
+            + " (build-date: "
             + Constants.FREEROUTING_BUILD_DATE +")";
 }
