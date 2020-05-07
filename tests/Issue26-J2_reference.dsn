@@ -1,0 +1,244 @@
+(pcb "/home/khang/Workspace/Dev/dynim_imx8_camera_adapters/adapters/e-con_STEEReoCAM_Nano_FFC_MiniSAS_Adapter/e-con_STEEReoCAM_Nano_FFC_MiniSAS_Adapter.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "5.1.5-52549c5~86~ubuntu16.04.1")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  153035 -98425  106045 -98425  106045 -73025  153035 -73025
+            153035 -98425)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200.1)
+      (clearance 200.1 (type default_smd))
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "TE_1888019-6:TE_1888019-6"
+      (place J2 135255 -85725 front 90 (PN "1888019-6"))
+    )
+    (component "TE_1-84953-5:TE_1-84953-5"
+      (place U1 111410 -85550 front 90 (PN "1-84953-5"))
+    )
+  )
+  (library
+    (image "TE_1888019-6:TE_1888019-6"
+      (outline (path signal 127  -9050 8600  9050 8600))
+      (outline (path signal 127  9050 8600  9050 -16800))
+      (outline (path signal 127  9050 -16800  -9050 -16800))
+      (outline (path signal 127  -9050 -16800  -9050 8600))
+      (outline (path signal 127  -9050 1115  -9050 8600))
+      (outline (path signal 127  9050 8600  9050 1115))
+      (outline (path signal 127  9050 -13220  9050 -16800))
+      (outline (path signal 127  9050 -16800  -9050 -16800))
+      (outline (path signal 127  -9050 -16800  -9050 -13220))
+      (outline (path signal 127  9050 8600  7100 8600))
+      (outline (path signal 127  -9050 8600  -7500 8600))
+      (outline (path signal 50  -9850 8850  9850 8850))
+      (outline (path signal 50  9850 8850  9850 -17050))
+      (outline (path signal 50  9850 -17050  -9850 -17050))
+      (outline (path signal 50  -9850 -17050  -9850 8850))
+      (outline (path signal 200  -10000 5200  -10050 5113.4  -10150 5113.4  -10200 5200
+            -10150 5286.6  -10050 5286.6  -10000 5200))
+      (outline (path signal 200  -10000 5200  -10050 5113.4  -10150 5113.4  -10200 5200
+            -10150 5286.6  -10050 5286.6  -10000 5200))
+      (pin Round[A]Pad_1358_um S1 -8900 -5720)
+      (pin Round[A]Pad_1358_um S2 8900 -5720)
+      (pin Round[A]Pad_1358_um S3 -8900 -9220)
+      (pin Round[A]Pad_1358_um S4 8900 -9220)
+      (pin Round[A]Pad_1358_um S5 -8900 -12220)
+      (pin Round[A]Pad_1358_um S6 8900 -12220)
+      (pin Rect[T]Pad_350x1800_um A1 -6600 5180)
+      (pin Rect[T]Pad_350x1800_um B1 -7000 7690)
+      (pin Rect[T]Pad_350x1800_um A2 -5800 5180)
+      (pin Rect[T]Pad_350x1800_um B2 -6200 7690)
+      (pin Rect[T]Pad_350x1800_um A3 -5000 5180)
+      (pin Rect[T]Pad_350x1800_um B3 -5400 7690)
+      (pin Rect[T]Pad_350x1800_um A4 -4200 5180)
+      (pin Rect[T]Pad_350x1800_um B4 -4600 7690)
+      (pin Rect[T]Pad_350x1800_um A5 -3400 5180)
+      (pin Rect[T]Pad_350x1800_um B5 -3800 7690)
+      (pin Rect[T]Pad_350x1800_um A6 -2600 5180)
+      (pin Rect[T]Pad_350x1800_um B6 -3000 7690)
+      (pin Rect[T]Pad_350x1800_um A7 -1800 5180)
+      (pin Rect[T]Pad_350x1800_um B7 -2200 7690)
+      (pin Rect[T]Pad_350x1800_um A8 -1000 5180)
+      (pin Rect[T]Pad_350x1800_um B8 -1400 7690)
+      (pin Rect[T]Pad_350x1800_um A9 -200 5180)
+      (pin Rect[T]Pad_350x1800_um B9 -600 7690)
+      (pin Rect[T]Pad_350x1800_um A10 600 5180)
+      (pin Rect[T]Pad_350x1800_um B10 200 7690)
+      (pin Rect[T]Pad_350x1800_um A11 1400 5180)
+      (pin Rect[T]Pad_350x1800_um B11 1000 7690)
+      (pin Rect[T]Pad_350x1800_um A12 2200 5180)
+      (pin Rect[T]Pad_350x1800_um B12 1800 7690)
+      (pin Rect[T]Pad_350x1800_um A13 3000 5180)
+      (pin Rect[T]Pad_350x1800_um B13 2600 7690)
+      (pin Rect[T]Pad_350x1800_um A14 3800 5180)
+      (pin Rect[T]Pad_350x1800_um B14 3400 7690)
+      (pin Rect[T]Pad_350x1800_um A15 4600 5180)
+      (pin Rect[T]Pad_350x1800_um B15 4200 7690)
+      (pin Rect[T]Pad_350x1800_um A16 5400 5180)
+      (pin Rect[T]Pad_350x1800_um B16 5000 7690)
+      (pin Rect[T]Pad_350x1800_um A17 6200 5180)
+      (pin Rect[T]Pad_350x1800_um B17 5800 7690)
+      (pin Rect[T]Pad_350x1800_um A18 7000 5180)
+      (pin Rect[T]Pad_350x1800_um B18 6600 7690)
+      (keepout "" (circle F.Cu 1590 -8000 0))
+      (keepout "" (circle B.Cu 1590 -8000 0))
+      (keepout "" (circle F.Cu 1590 8000 0))
+      (keepout "" (circle B.Cu 1590 8000 0))
+    )
+    (image "TE_1-84953-5:TE_1-84953-5"
+      (pin Rect[T]Pad_610x2000_um 1 -7000 3000)
+      (pin Rect[T]Pad_610x2000_um 2 -6000 3000)
+      (pin Rect[T]Pad_610x2000_um 3 -5000 3000)
+      (pin Rect[T]Pad_610x2000_um 4 -4000 3000)
+      (pin Rect[T]Pad_610x2000_um 5 -3000 3000)
+      (pin Rect[T]Pad_610x2000_um 6 -2000 3000)
+      (pin Rect[T]Pad_610x2000_um 7 -1000 3000)
+      (pin Rect[T]Pad_610x2000_um 8 0 3000)
+      (pin Rect[T]Pad_610x2000_um 9 1000 3000)
+      (pin Rect[T]Pad_610x2000_um 10 2000 3000)
+      (pin Rect[T]Pad_610x2000_um 11 3000 3000)
+      (pin Rect[T]Pad_610x2000_um 12 4000 3000)
+      (pin Rect[T]Pad_610x2000_um 13 5000 3000)
+      (pin Rect[T]Pad_610x2000_um 14 6000 3000)
+      (pin Rect[T]Pad_610x2000_um 15 7000 3000)
+      (pin Rect[T]Pad_2680x3600_um PAD -9988.8 197.5)
+      (pin Rect[T]Pad_2680x3600_um PAD. 9989.1 198)
+    )
+    (padstack Round[A]Pad_1358_um
+      (shape (circle F.Cu 1358))
+      (shape (circle B.Cu 1358))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2680x3600_um
+      (shape (rect F.Cu -1340 -1800 1340 1800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_350x1800_um
+      (shape (rect F.Cu -175 -900 175 900))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_610x2000_um
+      (shape (rect F.Cu -305 -1000 305 1000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins J2-S1 J2-S2 J2-S3 J2-S4 J2-S5 J2-S6 J2-A1 J2-B1 J2-A4 J2-B4 J2-A7 J2-B7
+        J2-A12 J2-B12 J2-A15 J2-B15 J2-A18 J2-B18 U1-1 U1-4 U1-7 U1-10)
+    )
+    (net /MIPI_CSI_D0_N
+      (pins J2-A2 U1-2)
+    )
+    (net /MIPI_CSI_CLK_N
+      (pins J2-B2 U1-8)
+    )
+    (net /MIPI_CSI_D0_P
+      (pins J2-A3 U1-3)
+    )
+    (net /MIPI_CSI_CLK_P
+      (pins J2-B3 U1-9)
+    )
+    (net /MIPI_CSI_D1_N
+      (pins J2-A5 U1-5)
+    )
+    (net "Net-(J2-PadB5)"
+      (pins J2-B5)
+    )
+    (net /MIPI_CSI_D1_P
+      (pins J2-A6 U1-6)
+    )
+    (net "Net-(J2-PadB6)"
+      (pins J2-B6)
+    )
+    (net /MIPI_CSI_MCLK
+      (pins J2-A8 U1-12)
+    )
+    (net "Net-(J2-PadB8)"
+      (pins J2-B8)
+    )
+    (net /MIPI_CSI_CAM_nRST
+      (pins J2-A9)
+    )
+    (net "Net-(J2-PadB9)"
+      (pins J2-B9)
+    )
+    (net /I2C_SDA
+      (pins J2-A10 U1-14)
+    )
+    (net "Net-(J2-PadB10)"
+      (pins J2-B10)
+    )
+    (net /I2C_SCL
+      (pins J2-A11 U1-13)
+    )
+    (net /MIPI_CSI_CAM_PWDN
+      (pins J2-B11 U1-11)
+    )
+    (net "Net-(J2-PadA13)"
+      (pins J2-A13)
+    )
+    (net +3V3
+      (pins J2-B13 J2-B14 U1-15)
+    )
+    (net "Net-(J2-PadA14)"
+      (pins J2-A14)
+    )
+    (net "Net-(J2-PadA16)"
+      (pins J2-A16)
+    )
+    (net "Net-(J2-PadB16)"
+      (pins J2-B16)
+    )
+    (net "Net-(J2-PadA17)"
+      (pins J2-A17)
+    )
+    (net "Net-(J2-PadB17)"
+      (pins J2-B17)
+    )
+    (class kicad_default "" +3V3 /I2C_SCL /I2C_SDA /MIPI_CSI_CAM_PWDN /MIPI_CSI_CAM_nRST
+      /MIPI_CSI_CLK_N /MIPI_CSI_CLK_P /MIPI_CSI_D0_N /MIPI_CSI_D0_P /MIPI_CSI_D1_N
+      /MIPI_CSI_D1_P /MIPI_CSI_MCLK GND "Net-(J2-PadA13)" "Net-(J2-PadA14)"
+      "Net-(J2-PadA16)" "Net-(J2-PadA17)" "Net-(J2-PadB10)" "Net-(J2-PadB16)"
+      "Net-(J2-PadB17)" "Net-(J2-PadB5)" "Net-(J2-PadB6)" "Net-(J2-PadB8)"
+      "Net-(J2-PadB9)"
+      (circuit
+        (use_via Via[0-1]_800:400_um)
+      )
+      (rule
+        (width 250)
+        (clearance 200.1)
+      )
+    )
+  )
+  (wiring
+  )
+)
