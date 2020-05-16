@@ -109,7 +109,7 @@ Additional steps for users of CadSoft-Eagle:
 Additional steps for users of KiCad:
 ====================================
 
-1) Download the latest freerouting-executable.jar file from the [Releases](https://github.com/miho/freerouting/releases)
+1) Download the latest freerouting-executable.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
 2) Start KiCad and open your project in Pcbnew.
 
