@@ -1,0 +1,547 @@
+
+(rules PCB hw48na
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (eu.mihosoft.freerouting.autoroute on)
+    (postroute on)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 1510)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 2.0)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 2.0)
+    )
+  )
+  (rule
+    (width 400.0)
+    (clear 152.6)
+    (clear 101.6 (type smd_to_turn_gap))
+    (clear 190.6 (type default_"1A EXTERNAL 1oz"))
+    (clear 190.6 (type default_"2.5A EXTERNAL"))
+    (clear 1016.2 (type default_"3,5A EXT HIGH VOLTAGE"))
+    (clear 190.6 (type default_"3.5A EXTERNAL 1oz"))
+    (clear 190.6 (type default_"5A EXTERNAL 1oz"))
+    (clear 38.2 (type smd_smd))
+    (clear 190.6 (type smd_"1A EXTERNAL 1oz"))
+    (clear 190.6 (type smd_"2.5A EXTERNAL"))
+    (clear 1016.2 (type smd_"3,5A EXT HIGH VOLTAGE"))
+    (clear 190.6 (type smd_"3.5A EXTERNAL 1oz"))
+    (clear 190.6 (type smd_"5A EXTERNAL 1oz"))
+    (clear 190.6 (type "kicad_default"_"1A EXTERNAL 1oz"))
+    (clear 190.6 (type "kicad_default"_"2.5A EXTERNAL"))
+    (clear 1016.2 (type "kicad_default"_"3,5A EXT HIGH VOLTAGE"))
+    (clear 190.6 (type "kicad_default"_"3.5A EXTERNAL 1oz"))
+    (clear 190.6 (type "kicad_default"_"5A EXTERNAL 1oz"))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_"1A EXTERNAL 1oz"))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_"2.5A EXTERNAL"))
+    (clear 1016.2 (type "1A EXTERNAL 1oz"_"3,5A EXT HIGH VOLTAGE"))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_"3.5A EXTERNAL 1oz"))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_"5A EXTERNAL 1oz"))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_CUSTOM))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_"CUSTOM 0.6"))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_"MIN_EXTERN_188A"))
+    (clear 190.6 (type "1A EXTERNAL 1oz"_"MIN_EXTERN_241A"))
+    (clear 190.6 (type "2.5A EXTERNAL"_"2.5A EXTERNAL"))
+    (clear 1016.2 (type "2.5A EXTERNAL"_"3,5A EXT HIGH VOLTAGE"))
+    (clear 190.6 (type "2.5A EXTERNAL"_"3.5A EXTERNAL 1oz"))
+    (clear 190.6 (type "2.5A EXTERNAL"_"5A EXTERNAL 1oz"))
+    (clear 190.6 (type "2.5A EXTERNAL"_CUSTOM))
+    (clear 190.6 (type "2.5A EXTERNAL"_"CUSTOM 0.6"))
+    (clear 190.6 (type "2.5A EXTERNAL"_"MIN_EXTERN_188A"))
+    (clear 190.6 (type "2.5A EXTERNAL"_"MIN_EXTERN_241A"))
+    (clear 1016.2 (type "3,5A EXT HIGH VOLTAGE"_"3,5A EXT HIGH VOLTAGE"))
+    (clear 1016.2 (type "3,5A EXT HIGH VOLTAGE"_"3.5A EXTERNAL 1oz"))
+    (clear 1016.2 (type "3,5A EXT HIGH VOLTAGE"_"5A EXTERNAL 1oz"))
+    (clear 1016.2 (type "3,5A EXT HIGH VOLTAGE"_CUSTOM))
+    (clear 1016.2 (type "3,5A EXT HIGH VOLTAGE"_"CUSTOM 0.6"))
+    (clear 1016.2 (type "3,5A EXT HIGH VOLTAGE"_"MIN_EXTERN_188A"))
+    (clear 1016.2 (type "3,5A EXT HIGH VOLTAGE"_"MIN_EXTERN_241A"))
+    (clear 190.6 (type "3.5A EXTERNAL 1oz"_"3.5A EXTERNAL 1oz"))
+    (clear 190.6 (type "3.5A EXTERNAL 1oz"_"5A EXTERNAL 1oz"))
+    (clear 190.6 (type "3.5A EXTERNAL 1oz"_CUSTOM))
+    (clear 190.6 (type "3.5A EXTERNAL 1oz"_"CUSTOM 0.6"))
+    (clear 190.6 (type "3.5A EXTERNAL 1oz"_"MIN_EXTERN_188A"))
+    (clear 190.6 (type "3.5A EXTERNAL 1oz"_"MIN_EXTERN_241A"))
+    (clear 190.6 (type "5A EXTERNAL 1oz"_"5A EXTERNAL 1oz"))
+    (clear 190.6 (type "5A EXTERNAL 1oz"_CUSTOM))
+    (clear 190.6 (type "5A EXTERNAL 1oz"_"CUSTOM 0.6"))
+    (clear 190.6 (type "5A EXTERNAL 1oz"_"MIN_EXTERN_188A"))
+    (clear 190.6 (type "5A EXTERNAL 1oz"_"MIN_EXTERN_241A"))
+  )
+  (padstack "Via[0-1]_600:300_um"
+    (shape
+      (circle F.Cu 600.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 600.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_685.8:330.2_um"
+    (shape
+      (circle F.Cu 685.8 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 685.8 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_1092.2:685.8_um"
+    (shape
+      (circle F.Cu 1092.2 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 1092.2 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_1541.78:1186.18_um"
+    (shape
+      (circle F.Cu 1541.8 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 1541.8 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_1000:400_um"
+    (shape
+      (circle F.Cu 1000.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 1000.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_1541.8:1186.18_um"
+    (shape
+      (circle F.Cu 1541.8 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 1541.8 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_600:300_um" "Via[0-1]_600:300_um" default
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um" "Via[0-1]_685.8:330.2_um" default
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um" "Via[0-1]_1092.2:685.8_um" default
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um" "Via[0-1]_1541.78:1186.18_um" default
+  )
+  (via 
+    "Via[0-1]_1000:400_um" "Via[0-1]_1000:400_um" default
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um" "Via[0-1]_1541.8:1186.18_um" default
+  )
+  (via 
+    "Via[0-1]_600:300_um-kicad_default" "Via[0-1]_600:300_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-kicad_default" "Via[0-1]_685.8:330.2_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-kicad_default" "Via[0-1]_1092.2:685.8_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-kicad_default" "Via[0-1]_1541.78:1186.18_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-kicad_default" "Via[0-1]_1000:400_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-kicad_default" "Via[0-1]_1541.8:1186.18_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_600:300_um-1A EXTERNAL 1oz" "Via[0-1]_600:300_um" "1A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-1A EXTERNAL 1oz" "Via[0-1]_685.8:330.2_um" "1A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-1A EXTERNAL 1oz" "Via[0-1]_1092.2:685.8_um" "1A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-1A EXTERNAL 1oz" "Via[0-1]_1541.78:1186.18_um" "1A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-1A EXTERNAL 1oz" "Via[0-1]_1000:400_um" "1A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-1A EXTERNAL 1oz" "Via[0-1]_1541.8:1186.18_um" "1A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_600:300_um-2.5A EXTERNAL" "Via[0-1]_600:300_um" "2.5A EXTERNAL"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-2.5A EXTERNAL" "Via[0-1]_685.8:330.2_um" "2.5A EXTERNAL"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-2.5A EXTERNAL" "Via[0-1]_1092.2:685.8_um" "2.5A EXTERNAL"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-2.5A EXTERNAL" "Via[0-1]_1541.78:1186.18_um" "2.5A EXTERNAL"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-2.5A EXTERNAL" "Via[0-1]_1000:400_um" "2.5A EXTERNAL"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-2.5A EXTERNAL" "Via[0-1]_1541.8:1186.18_um" "2.5A EXTERNAL"
+  )
+  (via 
+    "Via[0-1]_600:300_um-3,5A EXT HIGH VOLTAGE" "Via[0-1]_600:300_um" "3,5A EXT HIGH VOLTAGE"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-3,5A EXT HIGH VOLTAGE" "Via[0-1]_685.8:330.2_um" "3,5A EXT HIGH VOLTAGE"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-3,5A EXT HIGH VOLTAGE" "Via[0-1]_1092.2:685.8_um" "3,5A EXT HIGH VOLTAGE"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-3,5A EXT HIGH VOLTAGE" "Via[0-1]_1541.78:1186.18_um" "3,5A EXT HIGH VOLTAGE"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-3,5A EXT HIGH VOLTAGE" "Via[0-1]_1000:400_um" "3,5A EXT HIGH VOLTAGE"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-3,5A EXT HIGH VOLTAGE" "Via[0-1]_1541.8:1186.18_um" "3,5A EXT HIGH VOLTAGE"
+  )
+  (via 
+    "Via[0-1]_600:300_um-3.5A EXTERNAL 1oz" "Via[0-1]_600:300_um" "3.5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-3.5A EXTERNAL 1oz" "Via[0-1]_685.8:330.2_um" "3.5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-3.5A EXTERNAL 1oz" "Via[0-1]_1092.2:685.8_um" "3.5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-3.5A EXTERNAL 1oz" "Via[0-1]_1541.78:1186.18_um" "3.5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-3.5A EXTERNAL 1oz" "Via[0-1]_1000:400_um" "3.5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-3.5A EXTERNAL 1oz" "Via[0-1]_1541.8:1186.18_um" "3.5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_600:300_um-5A EXTERNAL 1oz" "Via[0-1]_600:300_um" "5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-5A EXTERNAL 1oz" "Via[0-1]_685.8:330.2_um" "5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-5A EXTERNAL 1oz" "Via[0-1]_1092.2:685.8_um" "5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-5A EXTERNAL 1oz" "Via[0-1]_1541.78:1186.18_um" "5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-5A EXTERNAL 1oz" "Via[0-1]_1000:400_um" "5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-5A EXTERNAL 1oz" "Via[0-1]_1541.8:1186.18_um" "5A EXTERNAL 1oz"
+  )
+  (via 
+    "Via[0-1]_600:300_um-CUSTOM" "Via[0-1]_600:300_um" CUSTOM
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-CUSTOM" "Via[0-1]_685.8:330.2_um" CUSTOM
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-CUSTOM" "Via[0-1]_1092.2:685.8_um" CUSTOM
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-CUSTOM" "Via[0-1]_1541.78:1186.18_um" CUSTOM
+  )
+  (via 
+    "Via[0-1]_1000:400_um-CUSTOM" "Via[0-1]_1000:400_um" CUSTOM
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-CUSTOM" "Via[0-1]_1541.8:1186.18_um" CUSTOM
+  )
+  (via 
+    "Via[0-1]_600:300_um-CUSTOM 0.6" "Via[0-1]_600:300_um" "CUSTOM 0.6"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-CUSTOM 0.6" "Via[0-1]_685.8:330.2_um" "CUSTOM 0.6"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-CUSTOM 0.6" "Via[0-1]_1092.2:685.8_um" "CUSTOM 0.6"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-CUSTOM 0.6" "Via[0-1]_1541.78:1186.18_um" "CUSTOM 0.6"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-CUSTOM 0.6" "Via[0-1]_1000:400_um" "CUSTOM 0.6"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-CUSTOM 0.6" "Via[0-1]_1541.8:1186.18_um" "CUSTOM 0.6"
+  )
+  (via 
+    "Via[0-1]_600:300_um-MIN_EXTERN_188A" "Via[0-1]_600:300_um" "MIN_EXTERN_188A"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-MIN_EXTERN_188A" "Via[0-1]_685.8:330.2_um" "MIN_EXTERN_188A"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-MIN_EXTERN_188A" "Via[0-1]_1092.2:685.8_um" "MIN_EXTERN_188A"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-MIN_EXTERN_188A" "Via[0-1]_1541.78:1186.18_um" "MIN_EXTERN_188A"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-MIN_EXTERN_188A" "Via[0-1]_1000:400_um" "MIN_EXTERN_188A"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-MIN_EXTERN_188A" "Via[0-1]_1541.8:1186.18_um" "MIN_EXTERN_188A"
+  )
+  (via 
+    "Via[0-1]_600:300_um-MIN_EXTERN_241A" "Via[0-1]_600:300_um" "MIN_EXTERN_241A"
+  )
+  (via 
+    "Via[0-1]_685.8:330.2_um-MIN_EXTERN_241A" "Via[0-1]_685.8:330.2_um" "MIN_EXTERN_241A"
+  )
+  (via 
+    "Via[0-1]_1092.2:685.8_um-MIN_EXTERN_241A" "Via[0-1]_1092.2:685.8_um" "MIN_EXTERN_241A"
+  )
+  (via 
+    "Via[0-1]_1541.78:1186.18_um-MIN_EXTERN_241A" "Via[0-1]_1541.78:1186.18_um" "MIN_EXTERN_241A"
+  )
+  (via 
+    "Via[0-1]_1000:400_um-MIN_EXTERN_241A" "Via[0-1]_1000:400_um" "MIN_EXTERN_241A"
+  )
+  (via 
+    "Via[0-1]_1541.8:1186.18_um-MIN_EXTERN_241A" "Via[0-1]_1541.8:1186.18_um" "MIN_EXTERN_241A"
+  )
+  (via_rule
+    default "Via[0-1]_600:300_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_600:300_um-kicad_default"
+  )
+  (via_rule
+    "1A EXTERNAL 1oz" "Via[0-1]_685.8:330.2_um-1A EXTERNAL 1oz"
+  )
+  (via_rule
+    "2.5A EXTERNAL" "Via[0-1]_685.8:330.2_um-2.5A EXTERNAL"
+  )
+  (via_rule
+    "3,5A EXT HIGH VOLTAGE" "Via[0-1]_685.8:330.2_um-3,5A EXT HIGH VOLTAGE"
+  )
+  (via_rule
+    "3.5A EXTERNAL 1oz" "Via[0-1]_1092.2:685.8_um-3.5A EXTERNAL 1oz"
+  )
+  (via_rule
+    "5A EXTERNAL 1oz" "Via[0-1]_1541.78:1186.18_um-5A EXTERNAL 1oz"
+  )
+  (via_rule
+    CUSTOM "Via[0-1]_600:300_um-CUSTOM"
+  )
+  (via_rule
+    "CUSTOM 0.6" "Via[0-1]_1000:400_um-CUSTOM 0.6"
+  )
+  (via_rule
+    "MIN_EXTERN_188A" "Via[0-1]_685.8:330.2_um-MIN_EXTERN_188A"
+  )
+  (via_rule
+    "MIN_EXTERN_241A" "Via[0-1]_600:300_um-MIN_EXTERN_241A"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 400.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    "/J804_3.3V" "Net-(D11-Pad2)" "/AV8_UNUSED" "/HI2_UNUSED" "/HI4_UNUSED" "Net-(D13-Pad2)" "Net-(D15-Pad2)" "Net-(D17-Pad2)"
+    "Net-(D21-Pad2)" "Net-(D23-Pad2)" "Net-(D27-Pad2)" "/J801_5V" "/J802_12V" /2W /VVT /1G
+    "Net-(D5-Pad2)" /1H "Net-(D10-Pad1)" /2U /2Y /2Z "Net-(D21-Pad1)" "Net-(D24-Pad2)"
+    "Net-(D27-Pad1)" "Net-(D29-Pad2)" "Net-(D30-Pad2)" "Net-(J4-Pad46)" "/AC_FAN" /2V "/5V_SENS2" "/AV9_UNUSED"
+    /1E /1L /2T "/AV7_UNUSED" /TPS "/AV10_UNUSED" "/AT4_UNUSED" /2P
+    "/AV4_UNUSED" "/AV5_UNUSED" "Net-(J4-Pad8)" "/12_MAIN_RELAY" "Net-(J4-Pad4)" "Net-(J4-PadM11)" "Net-(J4-PadM12)" "Net-(J4-PadM13)"
+    "Net-(J4-PadM3)" "Net-(J4-PadM4)" "Net-(J4-PadM21)" "Net-(J4-PadM22)" "Net-(J4-PadM23)" "Net-(J4-PadM51)" "Net-(J4-PadM52)" "Net-(J4-PadM53)"
+    "Net-(J4-PadM61)" "Net-(J4-PadM62)" "Net-(J4-PadM63)" "Net-(J4-PadM71)" "Net-(J4-PadM72)" "Net-(J4-PadM73)" "Net-(J10-Pad5)" "Net-(J10-Pad4)"
+    "Net-(J10-Pad3)" "Net-(J10-Pad2)" "Net-(J10-Pad1)" "Net-(J4-PadLIN1)" "Net-(J4-PadJ53)" "Net-(J4-PadJ52)" "Net-(J4-PadJ54)" "Net-(J4-PadJ51)"
+    "Net-(J12-Pad22)" "Net-(J12-Pad21)" "Net-(J12-Pad20)" "Net-(J12-Pad19)" "Net-(J12-Pad18)" "Net-(J12-Pad17)" "Net-(J12-Pad16)" "Net-(J12-Pad15)"
+    "Net-(J12-Pad14)" "Net-(J12-Pad13)" "Net-(J12-Pad12)" "Net-(J12-Pad11)" "Net-(J12-Pad10)" "Net-(J12-Pad9)" "Net-(J12-Pad8)" "Net-(J12-Pad7)"
+    "Net-(J12-Pad6)" "Net-(J12-Pad5)" "Net-(J12-Pad4)" "Net-(J12-Pad3)" "Net-(J12-Pad2)" "Net-(J12-Pad1)" "Net-(J13-Pad22)" "Net-(J13-Pad21)"
+    "Net-(J13-Pad20)" "Net-(J13-Pad19)" "Net-(J13-Pad18)" "Net-(J13-Pad17)" "Net-(J13-Pad16)" "Net-(J13-Pad15)" "Net-(J13-Pad14)" "Net-(J13-Pad13)"
+    "Net-(J13-Pad12)" "Net-(J13-Pad11)" "Net-(J13-Pad10)" "Net-(J13-Pad9)" "Net-(J13-Pad8)" "Net-(J13-Pad6)" "Net-(J13-Pad4)" "Net-(J13-Pad2)"
+    "Net-(J14-Pad22)" "Net-(J14-Pad21)" "Net-(J14-Pad20)" "Net-(J14-Pad19)" "Net-(J14-Pad18)" "Net-(J14-Pad17)" "Net-(J14-Pad16)" "Net-(J14-Pad15)"
+    "Net-(J14-Pad14)" "Net-(J14-Pad13)" "Net-(J14-Pad12)" "Net-(J14-Pad11)" "Net-(J14-Pad10)" "Net-(J14-Pad9)" "Net-(J14-Pad8)" "Net-(J14-Pad7)"
+    "Net-(J14-Pad6)" "Net-(J14-Pad5)" "Net-(J14-Pad4)" "Net-(J14-Pad3)" "Net-(J14-Pad2)" "Net-(J14-Pad1)" "Net-(J15-Pad22)" "Net-(J15-Pad21)"
+    "Net-(J15-Pad20)" "Net-(J15-Pad19)" "Net-(J15-Pad18)" "Net-(J15-Pad17)" "Net-(J15-Pad16)" "Net-(J15-Pad15)" "Net-(J15-Pad14)" "Net-(J15-Pad13)"
+    "Net-(J15-Pad12)" "Net-(J15-Pad11)" "Net-(J15-Pad10)" "Net-(J15-Pad9)" "Net-(J15-Pad8)" "Net-(J15-Pad7)" "Net-(J15-Pad6)" "Net-(J15-Pad5)"
+    "Net-(J15-Pad4)" "Net-(J15-Pad3)" "Net-(J15-Pad2)" "Net-(J15-Pad1)" "Net-(J16-Pad22)" "Net-(J16-Pad21)" "Net-(J16-Pad20)" "Net-(J16-Pad19)"
+    "Net-(J16-Pad18)" "Net-(J16-Pad17)" "Net-(J16-Pad16)" "Net-(J16-Pad15)" "Net-(J16-Pad14)" "Net-(J16-Pad13)" "Net-(J16-Pad12)" "Net-(J16-Pad11)"
+    "Net-(J16-Pad10)" "Net-(J16-Pad9)" "Net-(J16-Pad8)" "Net-(J16-Pad7)" "Net-(J16-Pad6)" "Net-(J16-Pad5)" "Net-(J16-Pad4)" "Net-(J16-Pad3)"
+    "Net-(J16-Pad2)" "Net-(J16-Pad1)" "Net-(J17-Pad22)" "Net-(J17-Pad21)" "Net-(J17-Pad20)" "Net-(J17-Pad19)" "Net-(J17-Pad18)" "Net-(J17-Pad17)"
+    "Net-(J17-Pad16)" "Net-(J17-Pad15)" "Net-(J17-Pad14)" "Net-(J17-Pad13)" "Net-(J17-Pad12)" "Net-(J17-Pad11)" "Net-(J17-Pad10)" "Net-(J17-Pad9)"
+    "Net-(J17-Pad8)" "Net-(J17-Pad7)" "Net-(J17-Pad6)" "Net-(J17-Pad5)" "Net-(J17-Pad4)" "Net-(J17-Pad3)" "Net-(J17-Pad2)" "Net-(J17-Pad1)"
+    "Net-(J18-Pad22)" "Net-(J18-Pad21)" "Net-(J18-Pad20)" "Net-(J18-Pad19)" "Net-(J18-Pad18)" "Net-(J18-Pad17)" "Net-(J18-Pad16)" "Net-(J18-Pad15)"
+    "Net-(J18-Pad14)" "Net-(J18-Pad13)" "Net-(J18-Pad12)" "Net-(J18-Pad11)" "Net-(J18-Pad10)" "Net-(J18-Pad9)" "Net-(J18-Pad8)" "Net-(J18-Pad7)"
+    "Net-(J18-Pad6)" "Net-(J18-Pad5)" "Net-(J18-Pad4)" "Net-(J18-Pad3)" "Net-(J18-Pad2)" "Net-(J18-Pad1)" "Net-(J19-Pad22)" "Net-(J19-Pad21)"
+    "Net-(J19-Pad20)" "Net-(J19-Pad19)" "Net-(J19-Pad18)" "Net-(J19-Pad17)" "Net-(J19-Pad16)" "Net-(J19-Pad15)" "Net-(J19-Pad14)" "Net-(J19-Pad13)"
+    "Net-(J19-Pad12)" "Net-(J19-Pad11)" "Net-(J19-Pad10)" "Net-(J19-Pad9)" "Net-(J19-Pad8)" "Net-(J19-Pad7)" "Net-(J19-Pad6)" "Net-(J19-Pad5)"
+    "Net-(J19-Pad4)" "Net-(J19-Pad3)" "Net-(J19-Pad2)" "Net-(J19-Pad1)" "Net-(J20-Pad22)" "Net-(J20-Pad21)" "Net-(J20-Pad20)" "Net-(J20-Pad19)"
+    "Net-(J20-Pad18)" "Net-(J20-Pad17)" "Net-(J20-Pad16)" "Net-(J20-Pad15)" "Net-(J20-Pad14)" "Net-(J20-Pad13)" "Net-(J20-Pad12)" "Net-(J20-Pad11)"
+    "Net-(J20-Pad10)" "Net-(J20-Pad9)" "Net-(J20-Pad8)" "Net-(J20-Pad7)" "Net-(J20-Pad6)" "Net-(J20-Pad5)" "Net-(J20-Pad4)" "Net-(J20-Pad3)"
+    "Net-(J20-Pad2)" "Net-(J20-Pad1)" "Net-(J21-Pad22)" "Net-(J21-Pad21)" "Net-(J21-Pad20)" "Net-(J21-Pad19)" "Net-(J21-Pad18)" "Net-(J21-Pad17)"
+    "Net-(J21-Pad16)" "Net-(J21-Pad15)" "Net-(J21-Pad14)" "Net-(J21-Pad13)" "Net-(J21-Pad12)" "Net-(J21-Pad11)" "Net-(J21-Pad10)" "Net-(J21-Pad9)"
+    "Net-(J21-Pad8)" "Net-(J21-Pad7)" "Net-(J21-Pad6)" "Net-(J21-Pad5)" "Net-(J21-Pad4)" "Net-(J21-Pad3)" "Net-(J21-Pad2)" "Net-(J21-Pad1)"
+    "Net-(J22-Pad22)" "Net-(J22-Pad21)" "Net-(J22-Pad20)" "Net-(J22-Pad19)" "Net-(J22-Pad18)" "Net-(J22-Pad17)" "Net-(J22-Pad16)" "Net-(J22-Pad15)"
+    "Net-(J22-Pad14)" "Net-(J22-Pad13)" "Net-(J22-Pad12)" "Net-(J22-Pad11)" "Net-(J22-Pad10)" "Net-(J22-Pad9)" "Net-(J22-Pad8)" "Net-(J22-Pad7)"
+    "Net-(J22-Pad6)" "Net-(J22-Pad5)" "Net-(J22-Pad4)" "Net-(J22-Pad3)" "Net-(J22-Pad2)" "Net-(J22-Pad1)" "Net-(J23-Pad22)" "Net-(J23-Pad21)"
+    "Net-(J23-Pad20)" "Net-(J23-Pad19)" "Net-(J23-Pad18)" "Net-(J23-Pad17)" "Net-(J23-Pad16)" "Net-(J23-Pad15)" "Net-(J23-Pad14)" "Net-(J23-Pad13)"
+    "Net-(J23-Pad12)" "Net-(J23-Pad11)" "Net-(J23-Pad10)" "Net-(J23-Pad9)" "Net-(J23-Pad8)" "Net-(J23-Pad7)" "Net-(J23-Pad6)" "Net-(J23-Pad5)"
+    "Net-(J23-Pad4)" "Net-(J23-Pad3)" "Net-(J23-Pad2)" "Net-(J23-Pad1)" "Net-(J24-Pad22)" "Net-(J24-Pad21)" "Net-(J24-Pad20)" "Net-(J24-Pad19)"
+    "Net-(J24-Pad18)" "Net-(J24-Pad17)" "Net-(J24-Pad16)" "Net-(J24-Pad15)" "Net-(J24-Pad14)" "Net-(J24-Pad13)" "Net-(J24-Pad12)" "Net-(J24-Pad11)"
+    "Net-(J24-Pad10)" "Net-(J24-Pad9)" "Net-(J24-Pad8)" "Net-(J24-Pad7)" "Net-(J24-Pad6)" "Net-(J24-Pad5)" "Net-(J24-Pad4)" "Net-(J24-Pad3)"
+    "Net-(J24-Pad2)" "Net-(J24-Pad1)" "Net-(J25-Pad22)" "Net-(J25-Pad21)" "Net-(J25-Pad20)" "Net-(J25-Pad19)" "Net-(J25-Pad18)" "Net-(J25-Pad17)"
+    "Net-(J25-Pad16)" "Net-(J25-Pad15)" "Net-(J25-Pad14)" "Net-(J25-Pad13)" "Net-(J25-Pad12)" "Net-(J25-Pad11)" "Net-(J25-Pad10)" "Net-(J25-Pad9)"
+    "Net-(J25-Pad8)" "Net-(J25-Pad7)" "Net-(J25-Pad6)" "Net-(J25-Pad5)" "Net-(J25-Pad4)" "Net-(J25-Pad3)" "Net-(J25-Pad2)" "Net-(J25-Pad1)"
+    "Net-(J26-Pad22)" "Net-(J26-Pad21)" "Net-(J26-Pad20)" "Net-(J26-Pad19)" "Net-(J26-Pad18)" "Net-(J26-Pad17)" "Net-(J26-Pad16)" "Net-(J26-Pad15)"
+    "Net-(J26-Pad14)" "Net-(J26-Pad13)" "Net-(J26-Pad12)" "Net-(J26-Pad11)" "Net-(J26-Pad10)" "Net-(J26-Pad9)" "Net-(J26-Pad8)" "Net-(J26-Pad7)"
+    "Net-(J26-Pad6)" "Net-(J26-Pad5)" "Net-(J26-Pad4)" "Net-(J26-Pad3)" "Net-(J26-Pad2)" "Net-(J26-Pad1)" /2S /1R
+    /2L "Net-(U1-Pad34)" "Net-(U1-Pad33)" "Net-(U1-Pad32)" "Net-(U1-Pad31)" "Net-(U1-Pad30)" "Net-(U1-Pad29)" "Net-(U1-Pad28)"
+    "Net-(U1-Pad27)" "Net-(U1-Pad26)" "Net-(U1-Pad25)" "Net-(U1-Pad24)" "Net-(U1-Pad23)" "Net-(U1-Pad20)" "Net-(U1-Pad19)" "Net-(U1-Pad18)"
+    "Net-(U1-Pad17)" "Net-(U1-Pad16)" "Net-(U1-Pad15)" "Net-(U1-Pad3)" "Net-(U1-Pad4)" "Net-(U1-Pad5)" "Net-(U1-Pad6)" "Net-(U1-Pad7)"
+    "Net-(U1-Pad8)" "Net-(U1-Pad9)" "Net-(U1-Pad10)" "Net-(U1-Pad11)" "Net-(U2-Pad2)" "Net-(U2-Pad4)" "Net-(U3-Pad4)" "Net-(U3-Pad2)"
+    /1A /1D /1K /1I /1J /1F /1P /1O
+    /1M /1N /1Q /1S /1T /1V /1U "Net-(JP5-Pad2)"
+    "Net-(JP6-Pad2)" "Net-(JP7-Pad2)" "Net-(JP8-Pad2)" "Net-(JP9-Pad2)" "Net-(JP10-Pad2)" "Net-(JP11-Pad2)" "Net-(JP12-Pad2)" "Net-(JP13-Pad2)"
+    "Net-(JP14-Pad2)" "Net-(JP15-Pad2)" "Net-(JP16-Pad2)" "Net-(JP17-Pad2)" "Net-(JP18-Pad2)" "Net-(JP19-Pad2)" "Net-(JP20-Pad2)" "Net-(JP21-Pad2)"
+    "Net-(JP22-Pad2)" "Net-(JP23-Pad2)" "Net-(JP24-Pad2)" "Net-(JP25-Pad2)" "Net-(JP26-Pad2)" "Net-(JP27-Pad2)" "Net-(JP28-Pad2)" "Net-(JP29-Pad2)"
+    "Net-(JP30-Pad2)" "Net-(JP31-Pad2)" "Net-(JP32-Pad2)" "Net-(JP33-Pad2)" "Net-(JP34-Pad2)" "Net-(JP35-Pad2)" "Net-(JP36-Pad2)" "Net-(JP37-Pad2)"
+    "Net-(JP38-Pad2)" "Net-(JP39-Pad2)" "Net-(JP40-Pad2)" "Net-(JP41-Pad2)" "Net-(JP42-Pad2)" "Net-(JP43-Pad2)" "Net-(JP44-Pad2)" "Net-(JP45-Pad2)"
+    "Net-(JP46-Pad2)" "Net-(JP47-Pad2)" "Net-(JP48-Pad2)" "Net-(JP49-Pad2)" /2X "Net-(JP50-Pad2)" "Net-(JP51-Pad2)" "Net-(JP52-Pad2)"
+    "/ALT_WARN_UNUSED" "/MAIN_RELAY_CONTROL_UNUSED" "/AT3_UNUSED" "/ALTERNATOR_UNUSED" "/VVT_UNUSED"
+    (clearance_class "kicad_default")
+    (via_rule kicad_default)
+    (rule
+      (width 400.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "1A EXTERNAL 1oz"
+    GND /2C /2I /2O /2R /2G /2J /2M
+    /LowSide1/OUT2 /LowSide2/OUT1 /LowSide2/OUT2 "Net-(D3-Pad2)" "Net-(D7-Pad2)" "Net-(R1-Pad1)" "Net-(R2-Pad1)" "Net-(R7-Pad1)"
+    "Net-(R10-Pad1)" /2Q /VBAT "/AV3_UNUSED" "/J808_PC10" "/J805_PC11" /2E /2H
+    /2K /2N "/J807_PA15" "/J803_PB8" "/J806_PB9" "/J810_PC12"
+    (clearance_class "1A EXTERNAL 1oz")
+    (via_rule 1A EXTERNAL 1oz)
+    (rule
+      (width 304.8)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "2.5A EXTERNAL"
+    (clearance_class "2.5A EXTERNAL")
+    (via_rule 2.5A EXTERNAL)
+    (rule
+      (width 1066.8)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "3,5A EXT HIGH VOLTAGE"
+    (clearance_class "3,5A EXT HIGH VOLTAGE")
+    (via_rule 3,5A EXT HIGH VOLTAGE)
+    (rule
+      (width 1676.4)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "3.5A EXTERNAL 1oz"
+    +12V
+    (clearance_class "3.5A EXTERNAL 1oz")
+    (via_rule 3.5A EXTERNAL 1oz)
+    (rule
+      (width 1651.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "5A EXTERNAL 1oz"
+    (clearance_class "5A EXTERNAL 1oz")
+    (via_rule 5A EXTERNAL 1oz)
+    (rule
+      (width 2667.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class CUSTOM
+    (clearance_class CUSTOM)
+    (via_rule CUSTOM)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "CUSTOM 0.6"
+    (clearance_class "CUSTOM 0.6")
+    (via_rule CUSTOM 0.6)
+    (rule
+      (width 600.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "MIN_EXTERN_188A"
+    (clearance_class "MIN_EXTERN_188A")
+    (via_rule MIN_EXTERN_188A)
+    (rule
+      (width 203.2)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "MIN_EXTERN_241A"
+    (clearance_class "MIN_EXTERN_241A")
+    (via_rule MIN_EXTERN_241A)
+    (rule
+      (width 216.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)

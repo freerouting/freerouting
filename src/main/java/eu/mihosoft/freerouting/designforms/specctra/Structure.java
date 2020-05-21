@@ -1128,12 +1128,13 @@ class Structure extends ScopeKeyword
             String[] curr_pair;
             if (curr_string.startsWith(p_string_quote))
             {
-                // split at the second occurance of p_string_quote
+                // split at the second occurrence of p_string_quote
                 curr_string = curr_string.substring(p_string_quote.length());
                 curr_pair = curr_string.split(p_string_quote, 2);
                 if (curr_pair.length != 2 || !curr_pair[1].startsWith("_"))
                 {
                     FRLogger.warn("Structure.set_clearance_rule: '_' expected");
+                    FRLogger.warn("You probably get this error because your clearance rule name has spaces or special characters in its name. Please change them first, and try again.");
                     continue;
                 }
                 curr_pair[1] = curr_pair[1].substring(1);
