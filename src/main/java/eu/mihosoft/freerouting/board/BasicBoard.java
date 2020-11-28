@@ -420,7 +420,7 @@ public class BasicBoard implements java.io.Serializable
             return null;
         }
         ComponentOutline outline = new ComponentOutline(p_area, p_is_front, p_translation, p_rotation_in_degree,
-                p_component_no, p_fixed_state, this);
+                0, p_component_no, p_fixed_state, this);
         insert_item(outline);
         return outline;
     }
