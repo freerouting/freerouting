@@ -43,9 +43,9 @@ public class ComponentOutline extends Item implements java.io.Serializable
 
     /** Creates a new instance of ComponentOutline */
     public ComponentOutline(Area p_area, boolean p_is_front, Vector p_translation, double p_rotation_in_degree,
-            int p_component_no, FixedState p_fixed_state, BasicBoard p_board)
+            int p_id_no, int p_component_no, FixedState p_fixed_state, BasicBoard p_board)
     {
-        super(new int[0], 0, 0, p_component_no, p_fixed_state, p_board);
+        super(new int[0], 0, p_id_no, p_component_no, p_fixed_state, p_board);
         this.relative_area = p_area;
         this.is_front = p_is_front;
         this.translation = p_translation;
@@ -55,7 +55,7 @@ public class ComponentOutline extends Item implements java.io.Serializable
     public Item copy(int p_id_no)
     {
         return new ComponentOutline(this.relative_area, this.is_front, this.translation, this.rotation_in_degree,
-                this.get_component_no(), this.get_fixed_state(), this.board);
+                p_id_no, this.get_component_no(), this.get_fixed_state(), this.board);
     }
 
     public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
