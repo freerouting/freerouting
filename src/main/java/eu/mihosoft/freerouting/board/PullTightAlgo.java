@@ -202,10 +202,34 @@ public abstract class PullTightAlgo
         {
             return false;
         }
-        boolean time_limit_exceeded = this.time_limit.limit_exceeded();
-        if (time_limit_exceeded && this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
+        boolean time_limit_exceeded = this.time_limit.limit_exceeded();       
+        if (time_limit_exceeded)
         {
-            FRLogger.warn("PullTightAlgo.is_stop_requested: time limit exceeded");
+        	int level = TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal();
+            
+            if (this.board == null)
+            {
+            	FRLogger.error("PullTightAlgo.is_stop_requested: board is null", null);
+            }
+            else 
+            {
+            	TestLevel test_level = this.board.get_test_level();
+            	if (test_level == null) 
+            	{
+            		FRLogger.warn("PullTightAlgo.is_stop_requested: board test level is null");
+            		this.board.set_test_level(TestLevel.RELEASE_VERSION);
+            		level = TestLevel.RELEASE_VERSION.ordinal();
+            	}
+            	else 
+            	{ 
+            		level = test_level.ordinal(); 
+            	}
+            }
+            
+            if (level >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
+            {
+            	FRLogger.warn("PullTightAlgo.is_stop_requested: time limit exceeded");
+            }
         }
         return time_limit_exceeded;
     }

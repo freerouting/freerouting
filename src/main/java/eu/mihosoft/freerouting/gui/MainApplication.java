@@ -28,6 +28,7 @@ import eu.mihosoft.freerouting.constants.Constants;
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.interactive.ThreadActionListener;
 import eu.mihosoft.freerouting.logger.FRLogger;
+import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -185,6 +186,9 @@ public class MainApplication extends javax.swing.JFrame
     public MainApplication(StartupOptions startupOptions)
     {
         this.design_dir_name = startupOptions.getDesignDir();
+        this.max_passes = startupOptions.getMaxPasses();
+        this.num_threads = startupOptions.getNumThreads();
+        this.board_update_strategy = startupOptions.getBoardUpdateStrategy();
         this.is_test_version = startupOptions.isTestVersion();
         this.is_webstart = startupOptions.getWebstartOption();
         this.locale = startupOptions.getCurrentLocale();
@@ -309,6 +313,11 @@ public class MainApplication extends javax.swing.JFrame
         {
             return;
         }
+        
+        new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + this.max_passes - 1);
+        new_frame.board_panel.board_handling.set_num_threads(this.num_threads);
+        new_frame.board_panel.board_handling.set_board_update_strategy(this.board_update_strategy);
+        
         message_field.setText(resources.getString("message_4") + " " + design_file.get_name() + " " + resources.getString("message_5"));
         board_frames.add(new_frame);
         new_frame.addWindowListener(new BoardFrameWindowListener(new_frame));
@@ -409,6 +418,14 @@ public class MainApplication extends javax.swing.JFrame
     private final java.util.Collection<BoardFrame> board_frames 
             = new java.util.LinkedList<>();
     private String design_dir_name = null;
+    
+    private int max_passes;
+    private BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY; 
+    private int num_threads;  
+    // Issue: adding a new field into AutorouteSettings caused exception when loading 
+    // an existing design: "Couldn't read design file", "InvalidClassException", incompatible with serialized data
+    // so choose to pass this parameter through BoardHandling 
+    
     private final boolean is_test_version;
     private final boolean is_webstart;
     private final java.util.Locale locale;

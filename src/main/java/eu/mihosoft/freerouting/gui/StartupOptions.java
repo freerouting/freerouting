@@ -1,5 +1,6 @@
 package eu.mihosoft.freerouting.gui;
 
+import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Locale;
@@ -18,6 +19,8 @@ public class StartupOptions {
     String design_rules_filename = null;
     String design_input_directory_name = null;
     int max_passes = 99999;
+    int num_threads = 4; // default thread pool size
+    BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY; // default  
     java.util.Locale current_locale = java.util.Locale.ENGLISH;
 
     private StartupOptions() {
@@ -59,6 +62,15 @@ public class StartupOptions {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                         max_passes = Integer.decode(p_args[i + 1]);
                     }
+                } else if (p_args[i].startsWith("-mt")) {
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                    	num_threads = Integer.decode(p_args[i + 1]);
+                    }
+                } else if (p_args[i].startsWith("-os")) {
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                    	board_update_strategy = p_args[i + 1].toLowerCase().contains("global") ?
+                    			BoardUpdateStrategy.GLOBAL_OPTIMAL : BoardUpdateStrategy.GREEDY;
+                    }                    
                 } else if (p_args[i].startsWith("-l")) {
                     // the locale is provided
                     if (p_args.length > i + 1 && p_args[i + 1].startsWith("d")) {
@@ -89,5 +101,12 @@ public class StartupOptions {
 
     public String getDesignDir() {
         return design_input_directory_name;
+    }
+    
+    public int getMaxPasses()  { return max_passes;  }
+    public int getNumThreads() { return num_threads; }
+    public BoardUpdateStrategy getBoardUpdateStrategy()
+    {
+    	return board_update_strategy;
     }
 }

@@ -53,6 +53,7 @@ import eu.mihosoft.freerouting.board.FixedState;
 import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
+import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
 import eu.mihosoft.freerouting.board.CoordinateTransform;
 import eu.mihosoft.freerouting.board.Unit;
 import eu.mihosoft.freerouting.board.TestLevel;
@@ -657,7 +658,7 @@ public class BoardHandling extends BoardHandlingImpl
     /**
      * Gets the panel for graphical display of the board.
      */
-    BoardPanel get_panel()
+    public BoardPanel get_panel()
     {
         return this.panel;
     }
@@ -1749,6 +1750,37 @@ public class BoardHandling extends BoardHandlingImpl
         clearance_violations = null;
         board = null;
     }
+      
+    public int get_max_passes() 
+    { 
+    	return settings.autoroute_settings.get_stop_pass_no() -
+    	       settings.autoroute_settings.get_start_pass_no() + 1;
+    }
+
+    public void set_board_update_strategy(BoardUpdateStrategy p_board_update_strategy)
+    {
+    	board_update_strategy = p_board_update_strategy;
+    }
+    
+    public BoardUpdateStrategy get_board_update_strategy()
+    {
+    	return board_update_strategy;
+    }
+    
+    public void set_num_threads(int p_value)
+    {
+    	num_threads = p_value;
+    }
+
+    public int get_num_threads()
+    {
+        return num_threads;
+    }
+    
+    /** thread pool size */
+    private int num_threads;
+    private BoardUpdateStrategy board_update_strategy;
+
     /** The graphical context for drawing the board. */
     public GraphicsContext graphics_context = null;
     /** For transforming coordinates between the user and the board coordinate space */

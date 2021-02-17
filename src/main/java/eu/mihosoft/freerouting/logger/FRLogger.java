@@ -1,5 +1,6 @@
 package eu.mihosoft.freerouting.logger;
 
+import eu.FR;
 import eu.mihosoft.freerouting.FreeRouting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +11,10 @@ import java.time.Instant;
 import java.util.HashMap;
 
 public class FRLogger {
-    private static Logger logger = LogManager.getLogger(FreeRouting.class);
+    private static Logger logger = LogManager.getLogger(FR.class);
+    // Use a shorter class path, which appears in every line of the log 
+    // It's meaningless since all are the same, occupies space and makes harder 
+    // to read useful info on size-limited screen
 
     private static DecimalFormat performanceFormat = new DecimalFormat("0.00");
 

@@ -31,6 +31,8 @@ import eu.mihosoft.freerouting.board.Unit;
 import eu.mihosoft.freerouting.autoroute.BatchAutorouter;
 import eu.mihosoft.freerouting.autoroute.BatchFanout;
 import eu.mihosoft.freerouting.autoroute.BatchOptRoute;
+import eu.mihosoft.freerouting.autoroute.BatchOptRouteMT;
+import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
@@ -47,8 +49,13 @@ public class BatchAutorouterThread extends InteractiveActionThread
         super(p_board_handling);
         AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
         this.batch_autorouter = new BatchAutorouter(this, !autoroute_settings.get_with_fanout(), true, autoroute_settings.get_start_ripup_costs());
-        this.batch_opt_route = new BatchOptRoute(this);
 
+        BoardUpdateStrategy strategy = p_board_handling.get_board_update_strategy();
+        int num_threads = p_board_handling.get_num_threads();
+        
+        this.batch_opt_route =  new BatchOptRouteMT(this, num_threads, strategy);
+        //this.batch_opt_route =  num_threads > 1 ? new BatchOptRouteMT(this, num_threads)
+        //		                                : new BatchOptRoute(this);
     }
 
     protected void thread_action()
