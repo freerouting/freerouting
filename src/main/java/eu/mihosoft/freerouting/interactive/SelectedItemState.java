@@ -221,7 +221,7 @@ public class SelectedItemState extends InteractiveState
     {
         RoutingBoard board = hdlg.get_routing_board();
         // make the situation restorable by undo
-        board.generate_snapshot();
+        board.generateSnapshot();
         boolean items_already_connected = false;
         Net new_net = board.rules.nets.new_net(hdlg.get_locale());
         java.util.Iterator<Item> it = item_list.iterator();
@@ -268,7 +268,7 @@ public class SelectedItemState extends InteractiveState
     public InteractiveState assign_items_to_new_group()
     {
         RoutingBoard board = hdlg.get_routing_board();
-        board.generate_snapshot();
+        board.generateSnapshot();
         // Take the gravity point of all item centers for the location of the new component.
         double gravity_x = 0;
         double gravity_y = 0;
@@ -335,7 +335,7 @@ public class SelectedItemState extends InteractiveState
      */
     public InteractiveState delete_items()
     {
-        hdlg.get_routing_board().generate_snapshot();
+        hdlg.get_routing_board().generateSnapshot();
 
         // calculate the changed nets for updating the ratsnest
         Set<Integer> changed_nets = new TreeSet<Integer>();
@@ -446,11 +446,11 @@ public class SelectedItemState extends InteractiveState
             int via_costs;
             if (contains_plane)
             {
-                via_costs = hdlg.settings.autoroute_settings.get_plane_via_costs();
+                via_costs = hdlg.settings.autorouteSettings.get_plane_via_costs();
             }
             else
             {
-                via_costs = hdlg.settings.autoroute_settings.get_via_costs();
+                via_costs = hdlg.settings.autorouteSettings.get_via_costs();
             }
             hdlg.get_routing_board().start_marking_changed_area();
             AutorouteEngine.AutorouteResult autoroute_result =
@@ -673,7 +673,7 @@ public class SelectedItemState extends InteractiveState
             activityReplayFile.add_int(p_cl_class_index);
         }
         // make the situation restorable by undo
-        routing_board.generate_snapshot();
+        routing_board.generateSnapshot();
         for (Item curr_item : this.item_list)
         {
             if (curr_item.clearance_class_no() == p_cl_class_index)
@@ -905,7 +905,7 @@ public class SelectedItemState extends InteractiveState
      */
     public SelectedItemState info()
     {
-        WindowObjectInfo.display(this.item_list, hdlg.get_panel().board_frame, hdlg.coordinate_transform, new java.awt.Point(100, 100));
+        WindowObjectInfo.display(this.item_list, hdlg.get_panel().boardFrame, hdlg.coordinate_transform, new java.awt.Point(100, 100));
         return this;
     }
 
@@ -923,23 +923,23 @@ public class SelectedItemState extends InteractiveState
 
         for (eu.mihosoft.freerouting.board.Item curr_item : item_list)
         {
-            curr_item.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
-                    hdlg.graphics_context.get_hilight_color_intensity());
+            curr_item.draw(p_graphics, hdlg.graphicsContext, hdlg.graphicsContext.get_hilight_color(),
+                           hdlg.graphicsContext.get_hilight_color_intensity());
         }
         if (clearance_violations != null)
         {
-            clearance_violations.draw(p_graphics, hdlg.graphics_context);
+            clearance_violations.draw(p_graphics, hdlg.graphicsContext);
         }
     }
 
     public javax.swing.JPopupMenu get_popup_menu()
     {
-        return hdlg.get_panel().popup_menu_select;
+        return hdlg.get_panel().popupMenuSelect;
     }
 
     public void set_toolbar()
     {
-        hdlg.get_panel().board_frame.set_select_toolbar();
+        hdlg.get_panel().boardFrame.set_select_toolbar();
     }
 
     public void display_default_message()

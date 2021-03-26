@@ -208,7 +208,7 @@ public class DsnFile
         }
         // Adjust the layer preferred directions in the autoroute settings.
         // and deactivate the changed layers.
-        eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
+        eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = p_board_handling.getSettings().autorouteSettings;
         int layer_count = routing_board.get_layer_count();
         boolean curr_preferred_direction_is_horizontal =
                 autoroute_settings.get_preferred_direction_is_horizontal(0);
@@ -269,9 +269,9 @@ public class DsnFile
     {
         BasicBoard routing_board = p_board_handling.get_routing_board();
         WriteScopeParameter write_scope_parameter =
-                new WriteScopeParameter(routing_board, p_board_handling.settings.autoroute_settings, p_file,
-                routing_board.communication.specctra_parser_info.string_quote,
-                routing_board.communication.coordinate_transform, p_compat_mode);
+                new WriteScopeParameter(routing_board, p_board_handling.settings.autorouteSettings, p_file,
+                                        routing_board.communication.specctra_parser_info.string_quote,
+                                        routing_board.communication.coordinate_transform, p_compat_mode);
 
         p_file.start_scope();
         p_file.write("PCB ");

@@ -153,13 +153,13 @@ public class BatchOptRoute
                 return false;
             }
         }
-        routing_board.generate_snapshot();
+        routing_board.generateSnapshot();
         this.routing_board.remove_items(ripped_connections, false);
         for (int i = 0; i < p_item.net_count(); ++i)
         {
             this.routing_board.combine_traces(p_item.get_net_no(i));
         }
-        int ripup_costs = this.thread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs();
+        int ripup_costs = this.thread.hdlg.getSettings().autorouteSettings.get_start_ripup_costs();
         if (this.use_increased_ripup_costs)
         {
             ripup_costs *= ADDITIONAL_RIPUP_COST_FACTOR_AT_START;

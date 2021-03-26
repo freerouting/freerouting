@@ -120,7 +120,7 @@ public class PinSwapState extends InteractiveState
             hdlg.screen_messages.set_status_message(resources.getString("pin_not_swapped_because_second_pin_is_already_connected"));
             return this.cancel();
         }
-        hdlg.get_routing_board().generate_snapshot();
+        hdlg.get_routing_board().generateSnapshot();
         this.from_pin.swap(this.to_pin);
         for (int i = 0; i < this.from_pin.net_count(); ++i)
         {
@@ -136,12 +136,12 @@ public class PinSwapState extends InteractiveState
     
     public void draw(java.awt.Graphics p_graphics)
     {
-        java.awt.Color highlight_color = hdlg.graphics_context.get_hilight_color();
-        double highligt_color_intensity = hdlg.graphics_context.get_hilight_color_intensity();
-        from_pin.draw(p_graphics, hdlg.graphics_context, highlight_color, 0.5 * highligt_color_intensity);
+        java.awt.Color highlight_color = hdlg.graphicsContext.get_hilight_color();
+        double highligt_color_intensity = hdlg.graphicsContext.get_hilight_color_intensity();
+        from_pin.draw(p_graphics, hdlg.graphicsContext, highlight_color, 0.5 * highligt_color_intensity);
         for (Pin curr_pin: swappable_pins)
         {
-            curr_pin.draw(p_graphics, hdlg.graphics_context, highlight_color, highligt_color_intensity);
+            curr_pin.draw(p_graphics, hdlg.graphicsContext, highlight_color, highligt_color_intensity);
         }
     }
     

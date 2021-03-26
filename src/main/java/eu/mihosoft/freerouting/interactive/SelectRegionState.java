@@ -68,7 +68,7 @@ public class SelectRegionState extends InteractiveState
             return;
         }
         corner2 = current_mouse_position;
-        hdlg.graphics_context.draw_rectangle(corner1, corner2, 1, java.awt.Color.white, p_graphics, 1) ;
+        hdlg.graphicsContext.draw_rectangle(corner1, corner2, 1, java.awt.Color.white, p_graphics, 1) ;
     }
     
     protected FloatPoint corner1 = null;

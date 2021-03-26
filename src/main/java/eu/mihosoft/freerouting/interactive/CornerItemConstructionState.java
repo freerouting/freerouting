@@ -86,7 +86,7 @@ public class CornerItemConstructionState extends InteractiveState
     
     public javax.swing.JPopupMenu get_popup_menu()
     {
-        return hdlg.get_panel().popup_menu_corneritem_construction;
+        return hdlg.get_panel().popupMenuCornerItemConstruction;
     }
     
     /**
@@ -113,7 +113,7 @@ public class CornerItemConstructionState extends InteractiveState
         {
             corners[corners.length - 1] = this.snapped_mouse_position;
         }
-        hdlg.graphics_context.draw(corners, 300, java.awt.Color.white, p_graphics, 0.5);
+        hdlg.graphicsContext.draw(corners, 300, java.awt.Color.white, p_graphics, 0.5);
     }
     
     /**

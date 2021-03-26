@@ -293,7 +293,7 @@ public class Route
                 continue;
             }
             // make the current situation restorable by undo
-            board.generate_snapshot();
+            board.generateSnapshot();
             result = board.forced_via(curr_via_info, this.prev_corner, this.net_no_arr, clearance_class,
                     pen_half_width_arr, max_shove_trace_recursion_depth,
                     0, this.trace_tidy_width, this.pull_tight_accuracy, pull_tight_time_limit);

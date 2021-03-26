@@ -242,7 +242,7 @@ public class CopyItemState extends InteractiveState
                 if (first_time)
                 {
                     // make the current situation restorable by undo
-                    board.generate_snapshot();
+                    board.generateSnapshot();
                     first_time = false;
                 }
                 board.insert_item(curr_item.copy(0));
@@ -292,14 +292,14 @@ public class CopyItemState extends InteractiveState
         while (it.hasNext())
         {
             Item curr_item = it.next();
-            curr_item.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
-            hdlg.graphics_context.get_hilight_color_intensity());
+            curr_item.draw(p_graphics, hdlg.graphicsContext, hdlg.graphicsContext.get_hilight_color(),
+                           hdlg.graphicsContext.get_hilight_color_intensity());
         }
     }
     
     public javax.swing.JPopupMenu get_popup_menu()
     {
-        return hdlg.get_panel().popup_menu_copy;
+        return hdlg.get_panel().popupMenuCopy;
     }
     
     /**

@@ -50,7 +50,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
     
     protected void fill_list()
     {
-        eu.mihosoft.freerouting.board.BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
+        eu.mihosoft.freerouting.board.BasicBoard routing_board = this.board_frame.boardPanel.boardHandling.get_routing_board();
         
         SortedSet<RouteStubInfo> route_stub_info_set = new java.util.TreeSet<RouteStubInfo>();
         
@@ -148,7 +148,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
         {
             selected_items.add(((RouteStubInfo)selected_list_values.get(i)).stub_item);
         }
-        eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
+        eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.boardPanel.boardHandling;
         board_handling.select_items(selected_items);
         board_handling.zoom_selection();
     }
@@ -162,7 +162,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
     {
         public RouteStubInfo(Item p_stub, FloatPoint p_location, int p_layer_no)
         {
-            eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
+            eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.boardPanel.boardHandling;
             this.stub_item = p_stub;
             this.location = board_handling.coordinate_transform.board_to_user(p_location);
             this.layer_no  = p_layer_no;
@@ -181,7 +181,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             {
                 item_string = resources.getString("via");
             }
-            String layer_name = board_frame.board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
+            String layer_name = board_frame.boardPanel.boardHandling.get_routing_board().layer_structure.arr[layer_no].name;
             String result = item_string + " " + resources.getString("stub_net") + " " + this.net.name + " " +
                     resources.getString("at") + " " + this.location.to_string(board_frame.get_locale()) + " " +
                     resources.getString("on_layer") + " " + layer_name;

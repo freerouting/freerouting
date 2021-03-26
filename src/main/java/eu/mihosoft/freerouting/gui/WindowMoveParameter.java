@@ -35,7 +35,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     /** Creates a new instance of WindowMoveParameter */
     public WindowMoveParameter(BoardFrame p_board_frame)
     {
-        this.board_handling = p_board_frame.board_panel.board_handling;
+        this.board_handling = p_board_frame.boardPanel.boardHandling;
         java.util.ResourceBundle resources = 
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowMoveParameter", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));

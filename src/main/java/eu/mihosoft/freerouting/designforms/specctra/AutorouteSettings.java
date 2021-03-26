@@ -281,7 +281,7 @@ public class AutorouteSettings
         p_file.new_line();
         p_file.write("(start_pass_no ");
         {
-            Integer pass_no = p_settings.get_start_pass_no();
+            Integer pass_no = p_settings.getStartPassNo();
             p_file.write(pass_no.toString());
         }
         p_file.write(")");

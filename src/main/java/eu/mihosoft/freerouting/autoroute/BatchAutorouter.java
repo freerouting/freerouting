@@ -61,7 +61,7 @@ public class BatchAutorouter
             still_unrouted_items = router_instance.autoroute_pass(curr_pass_no, false);
             if (still_unrouted_items && !router_instance.is_interrupted)
             {
-                p_thread.hdlg.get_settings().autoroute_settings.increment_pass_no();
+                p_thread.hdlg.getSettings().autorouteSettings.increment_pass_no();
             }
             ++curr_pass_no;
         }
@@ -85,7 +85,7 @@ public class BatchAutorouter
         this.remove_unconnected_vias = p_remove_unconnected_vias;
         if (p_with_preferred_directions)
         {
-            this.trace_cost_arr = this.hdlg.get_settings().autoroute_settings.get_trace_cost_arr();
+            this.trace_cost_arr = this.hdlg.getSettings().autorouteSettings.get_trace_cost_arr();
         }
         else
         {
@@ -93,7 +93,7 @@ public class BatchAutorouter
             this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.routing_board.get_layer_count()];
             for (int i = 0; i < this.trace_cost_arr.length; ++i)
             {
-                double curr_min_cost = this.hdlg.get_settings().autoroute_settings.get_preferred_direction_trace_costs(i);
+                double curr_min_cost = this.hdlg.getSettings().autorouteSettings.get_preferred_direction_trace_costs(i);
                 this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
             }
         }
@@ -128,8 +128,8 @@ public class BatchAutorouter
                 break;
             }
 
-            Integer curr_pass_no = hdlg.get_settings().autoroute_settings.get_start_pass_no();
-            if (curr_pass_no > hdlg.get_settings().autoroute_settings.get_stop_pass_no())
+            Integer curr_pass_no = hdlg.getSettings().autorouteSettings.getStartPassNo();
+            if (curr_pass_no > hdlg.getSettings().autorouteSettings.getStopPassNo())
             {
                 thread.request_stop();
                 break;
@@ -166,7 +166,7 @@ public class BatchAutorouter
             // check if there are still unrouted items
             if (still_unrouted_items && !is_interrupted)
             {
-                hdlg.get_settings().autoroute_settings.increment_pass_no();
+                hdlg.getSettings().autorouteSettings.increment_pass_no();
             }
         }
         if (!(this.remove_unconnected_vias || still_unrouted_items || this.is_interrupted))
@@ -297,7 +297,7 @@ public class BatchAutorouter
     {
         routing_board.start_marking_changed_area();
         routing_board.remove_trace_tails(-1, p_stop_connection_option);
-        routing_board.opt_changed_area(new int[0], null, this.hdlg.get_settings().get_trace_pull_tight_accuracy(),
+        routing_board.opt_changed_area(new int[0], null, this.hdlg.getSettings().get_trace_pull_tight_accuracy(),
                 this.trace_cost_arr, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
     }
 
@@ -315,13 +315,13 @@ public class BatchAutorouter
 
             if (contains_plane)
             {
-                curr_via_costs = hdlg.get_settings().autoroute_settings.get_plane_via_costs();
+                curr_via_costs = hdlg.getSettings().autorouteSettings.get_plane_via_costs();
             }
             else
             {
-                curr_via_costs = hdlg.get_settings().autoroute_settings.get_via_costs();
+                curr_via_costs = hdlg.getSettings().autorouteSettings.get_via_costs();
             }
-            AutorouteControl autoroute_control = new AutorouteControl(this.routing_board, p_route_net_no, hdlg.get_settings(), curr_via_costs, this.trace_cost_arr);
+            AutorouteControl autoroute_control = new AutorouteControl(this.routing_board, p_route_net_no, hdlg.getSettings(), curr_via_costs, this.trace_cost_arr);
             autoroute_control.ripup_allowed = true;
             autoroute_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
             autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;
@@ -367,7 +367,7 @@ public class BatchAutorouter
                     p_ripped_item_list);
             if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED)
             {
-                routing_board.opt_changed_area(new int[0], null, this.hdlg.get_settings().get_trace_pull_tight_accuracy(), autoroute_control.trace_costs, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+                routing_board.opt_changed_area(new int[0], null, this.hdlg.getSettings().get_trace_pull_tight_accuracy(), autoroute_control.trace_costs, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
             }
             // eu.mihosoft.freerouting.tests.Validate.check("Autoroute  ", hdlg.get_routing_board());
             boolean result = autoroute_result == AutorouteEngine.AutorouteResult.ROUTED || autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;

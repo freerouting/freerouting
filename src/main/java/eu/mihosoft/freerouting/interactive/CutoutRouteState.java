@@ -113,7 +113,7 @@ public class CutoutRouteState extends SelectRegionState
             return;
         }
         
-        hdlg.get_routing_board().generate_snapshot();
+        hdlg.get_routing_board().generateSnapshot();
         
         IntPoint p1 = this.corner1.round() ;
         IntPoint p2 = this.corner2.round() ;
@@ -147,8 +147,8 @@ public class CutoutRouteState extends SelectRegionState
         for (PolylineTrace curr_trace : this.trace_list)
         {
             
-            curr_trace.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
-                    hdlg.graphics_context.get_hilight_color_intensity());
+            curr_trace.draw(p_graphics, hdlg.graphicsContext, hdlg.graphicsContext.get_hilight_color(),
+                            hdlg.graphicsContext.get_hilight_color_intensity());
         }
         super.draw(p_graphics);
     }

@@ -130,7 +130,7 @@ public class PopupMenuMove extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.change_placement_side();
+                board_panel.boardHandling.change_placement_side();
             }
         });
         
@@ -142,7 +142,7 @@ public class PopupMenuMove extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                eu.mihosoft.freerouting.interactive.InteractiveState interactive_state = board_panel.board_handling.get_interactive_state();
+                eu.mihosoft.freerouting.interactive.InteractiveState interactive_state = board_panel.boardHandling.get_interactive_state();
                 if (interactive_state instanceof eu.mihosoft.freerouting.interactive.MoveItemState)
                 {
                     ((eu.mihosoft.freerouting.interactive.MoveItemState)interactive_state).reset_rotation();
@@ -158,7 +158,7 @@ public class PopupMenuMove extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.return_from_state();
+                board_panel.boardHandling.return_from_state();
             }
         });
         
@@ -170,7 +170,7 @@ public class PopupMenuMove extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.cancel_state();
+                board_panel.boardHandling.cancel_state();
             }
         });
         
@@ -179,7 +179,7 @@ public class PopupMenuMove extends PopupMenuDisplay
     
     private void turn_45_degree(int p_factor)
     {
-        board_panel.board_handling.turn_45_degree(p_factor);
-        board_panel.move_mouse(board_panel.right_button_click_location);
+        board_panel.boardHandling.turn_45_degree(p_factor);
+        board_panel.moveMouse(board_panel.rightButtonClickLocation);
     }
 }

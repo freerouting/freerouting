@@ -47,9 +47,9 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
         return new AutorouteThread(p_board_handling);
     }
 
-    public static InteractiveActionThread get_batch_autorouter_instance(BoardHandling p_board_handling)
+    public static InteractiveActionThread getBatchAutorouterInstance(BoardHandling boardHandling)
     {
-        return new BatchAutorouterThread(p_board_handling);
+        return new BatchAutorouterThread(boardHandling);
     }
 
     public static InteractiveActionThread get_fanout_instance(BoardHandling p_board_handling)
@@ -182,7 +182,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
             }
             boolean interrupted = false;
             int debug_counter = 0;
-            hdlg.get_panel().board_frame.refresh_windows();
+            hdlg.get_panel().boardFrame.refreshWindows();
             hdlg.paint_immediately = true;
             while (!done)
             {
@@ -225,7 +225,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
             {
                 FRLogger.error("ReadLogfileThread: unable to close input stream", e);
             }
-            hdlg.get_panel().board_frame.refresh_windows();
+            hdlg.get_panel().boardFrame.refreshWindows();
             hdlg.screen_messages.set_write_protected(false);
             String curr_message;
             if (interrupted)
@@ -239,7 +239,7 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
             String end_message = resources.getString("logfile") + " " + curr_message;
             hdlg.screen_messages.set_status_message(end_message);
             hdlg.set_board_read_only(saved_board_read_only);
-            hdlg.get_panel().board_frame.repaint_all();
+            hdlg.get_panel().boardFrame.repaint_all();
         }
         private final java.io.InputStream input_stream;
     }

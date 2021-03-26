@@ -36,7 +36,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     /** Creates a new instance of DisplayMiscWindow */
     public WindowDisplayMisc(BoardFrame p_board_frame)
     {
-        this.panel = p_board_frame.board_panel;
+        this.panel = p_board_frame.boardPanel;
         java.util.ResourceBundle resources = 
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.DisplayMisc", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
@@ -188,11 +188,11 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
      */
     public void refresh()
     {
-        small_cursor_checkbox.setSelected(!panel.is_custom_cross_hair_cursor());
-        big_cursor_checkbox.setSelected(panel.is_custom_cross_hair_cursor());
+        small_cursor_checkbox.setSelected(!panel.isCustomCrossHairCursor());
+        big_cursor_checkbox.setSelected(panel.isCustomCrossHairCursor());
         
         int ninety_degree_rotation =
-                panel.board_handling.graphics_context.coordinate_transform.get_90_degree_rotation();
+                panel.boardHandling.graphicsContext.coordinate_transform.get_90_degree_rotation();
         
         if (ninety_degree_rotation == 0)
         {
@@ -216,17 +216,17 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
             rotation_none_checkbox.setSelected(true);
         }
         
-        boolean is_mirror_left_right = panel.board_handling.graphics_context.coordinate_transform.is_mirror_left_right();
-        boolean is_mirror_top_button = panel.board_handling.graphics_context.coordinate_transform.is_mirror_top_bottom();
+        boolean is_mirror_left_right = panel.boardHandling.graphicsContext.coordinate_transform.is_mirror_left_right();
+        boolean is_mirror_top_button = panel.boardHandling.graphicsContext.coordinate_transform.is_mirror_top_bottom();
         mirror_none_checkbox.setSelected(!(is_mirror_left_right || is_mirror_top_button));
         
         vertical_mirror_checkbox.setSelected(
-                panel.board_handling.graphics_context.coordinate_transform.is_mirror_left_right());
+                panel.boardHandling.graphicsContext.coordinate_transform.is_mirror_left_right());
         horizontal_mirror_checkbox.setSelected(
-                panel.board_handling.graphics_context.coordinate_transform.is_mirror_top_bottom());
+                panel.boardHandling.graphicsContext.coordinate_transform.is_mirror_top_bottom());
         
         int curr_slider_value =
-                (int) Math.round(MAX_SLIDER_VALUE * ( 1 - panel.board_handling.graphics_context.get_auto_layer_dim_factor()));
+                (int) Math.round(MAX_SLIDER_VALUE * ( 1 - panel.boardHandling.graphicsContext.get_auto_layer_dim_factor()));
         auto_layer_dim_slider.setValue(curr_slider_value);
     }
     
@@ -249,7 +249,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            panel.set_custom_crosshair_cursor(false);
+            panel.setCustomCrosshairCursor(false);
         }
     }
     
@@ -257,7 +257,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            panel.set_custom_crosshair_cursor(true);
+            panel.setCustomCrosshairCursor(true);
         }
     }
     
@@ -266,7 +266,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             eu.mihosoft.freerouting.boardgraphics.CoordinateTransform coordinate_transform
-                    = panel.board_handling.graphics_context.coordinate_transform;
+                    = panel.boardHandling.graphicsContext.coordinate_transform;
             coordinate_transform.set_rotation(0);
             panel.repaint();
         }
@@ -277,7 +277,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             eu.mihosoft.freerouting.boardgraphics.CoordinateTransform coordinate_transform
-                    = panel.board_handling.graphics_context.coordinate_transform;
+                    = panel.boardHandling.graphicsContext.coordinate_transform;
             coordinate_transform.set_rotation(0.5 * Math.PI);
             panel.repaint();
         }
@@ -288,7 +288,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             eu.mihosoft.freerouting.boardgraphics.CoordinateTransform coordinate_transform
-                    = panel.board_handling.graphics_context.coordinate_transform;
+                    = panel.boardHandling.graphicsContext.coordinate_transform;
             coordinate_transform.set_rotation(Math.PI);
             panel.repaint();
         }
@@ -299,7 +299,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             eu.mihosoft.freerouting.boardgraphics.CoordinateTransform coordinate_transform
-                    = panel.board_handling.graphics_context.coordinate_transform;
+                    = panel.boardHandling.graphicsContext.coordinate_transform;
             coordinate_transform.set_rotation(1.5 * Math.PI);
             panel.repaint();
         }
@@ -310,17 +310,17 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             eu.mihosoft.freerouting.boardgraphics.CoordinateTransform coordinate_transform
-                    = panel.board_handling.graphics_context.coordinate_transform;
+                    = panel.boardHandling.graphicsContext.coordinate_transform;
             if(!(coordinate_transform.is_mirror_left_right() || coordinate_transform.is_mirror_top_bottom()))
             {
                 return; // mirroring already switched off
             }
             // remember the old viewort center to retain the displayed section of the board.
             eu.mihosoft.freerouting.geometry.planar.FloatPoint old_viewport_center =
-                    coordinate_transform.screen_to_board(panel.get_viewport_center());
+                    coordinate_transform.screen_to_board(panel.getViewportCenter());
             coordinate_transform.set_mirror_left_right(false);
             coordinate_transform.set_mirror_top_bottom(false);
-            panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));
+            panel.setViewportCenter(coordinate_transform.board_to_screen(old_viewport_center));
             panel.repaint();
         }
     }
@@ -331,17 +331,17 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             eu.mihosoft.freerouting.boardgraphics.CoordinateTransform coordinate_transform
-                    = panel.board_handling.graphics_context.coordinate_transform;
+                    = panel.boardHandling.graphicsContext.coordinate_transform;
             if (coordinate_transform.is_mirror_left_right())
             {
                 return; // already mirrored
             }
             // remember the old viewport center to retain the displayed section of the board.
             eu.mihosoft.freerouting.geometry.planar.FloatPoint old_viewport_center =
-                    coordinate_transform.screen_to_board(panel.get_viewport_center());
+                    coordinate_transform.screen_to_board(panel.getViewportCenter());
             coordinate_transform.set_mirror_left_right(true);
             coordinate_transform.set_mirror_top_bottom(false);
-            panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));
+            panel.setViewportCenter(coordinate_transform.board_to_screen(old_viewport_center));
             panel.repaint();
         }
     }
@@ -351,17 +351,17 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             eu.mihosoft.freerouting.boardgraphics.CoordinateTransform coordinate_transform
-                    = panel.board_handling.graphics_context.coordinate_transform;
+                    = panel.boardHandling.graphicsContext.coordinate_transform;
             if (coordinate_transform.is_mirror_top_bottom())
             {
                 return; // already mirrored
             }
             // remember the old viewport center to retain the displayed section of the board.
             eu.mihosoft.freerouting.geometry.planar.FloatPoint old_viewport_center =
-                    coordinate_transform.screen_to_board(panel.get_viewport_center());
+                    coordinate_transform.screen_to_board(panel.getViewportCenter());
             coordinate_transform.set_mirror_top_bottom(true);
             coordinate_transform.set_mirror_left_right(false);
-            panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));
+            panel.setViewportCenter(coordinate_transform.board_to_screen(old_viewport_center));
             panel.repaint();
         }
     }
@@ -371,7 +371,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         public void stateChanged(javax.swing.event.ChangeEvent evt)
         {
             double new_value = 1 - (double) auto_layer_dim_slider.getValue()/(double) MAX_SLIDER_VALUE;
-            panel.board_handling.graphics_context.set_auto_layer_dim_factor(new_value);
+            panel.boardHandling.graphicsContext.set_auto_layer_dim_factor(new_value);
             panel.repaint();
         }
     }

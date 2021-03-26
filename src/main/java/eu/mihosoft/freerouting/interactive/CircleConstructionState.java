@@ -116,7 +116,7 @@ public class CircleConstructionState extends InteractiveState
             {
                 hdlg.get_routing_board().start_notify_observers();
             }
-            board.generate_snapshot();
+            board.generateSnapshot();
             board.insert_obstacle(obstacle_shape, layer, cl_class, FixedState.UNFIXED);
             if (this.observers_activated)
             {
@@ -157,12 +157,12 @@ public class CircleConstructionState extends InteractiveState
             return;
         }
         this.circle_radius = circle_center.distance(current_mouse_position);
-        hdlg.graphics_context.draw_circle(circle_center, circle_radius, 300, java.awt.Color.white, p_graphics, 1);
+        hdlg.graphicsContext.draw_circle(circle_center, circle_radius, 300, java.awt.Color.white, p_graphics, 1);
     }
     
     public javax.swing.JPopupMenu get_popup_menu()
     {
-        return hdlg.get_panel().popup_menu_insert_cancel;
+        return hdlg.get_panel().popupMenuInsertCancel;
     }
     
     public void display_default_message()

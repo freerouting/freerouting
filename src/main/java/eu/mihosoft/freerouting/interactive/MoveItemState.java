@@ -198,7 +198,7 @@ public class MoveItemState extends InteractiveState
             hdlg.get_routing_board().start_notify_observers();
         }
         // make the situation restorable by undo
-        routing_board.generate_snapshot();
+        routing_board.generateSnapshot();
         
         for (Item curr_item : p_item_list)
         {
@@ -308,11 +308,11 @@ public class MoveItemState extends InteractiveState
         return this.return_state;
     }
     
-    public InteractiveState mouse_wheel_moved(int p_rotation)
+    public InteractiveState mouseWheelMoved(int p_rotation)
     {
         if (hdlg.settings.zoom_with_wheel)
         {
-            super.mouse_wheel_moved(p_rotation);
+            super.mouseWheelMoved(p_rotation);
         }
         else
         {
@@ -573,7 +573,7 @@ public class MoveItemState extends InteractiveState
     
     public javax.swing.JPopupMenu get_popup_menu()
     {
-        return hdlg.get_panel().popup_menu_move;
+        return hdlg.get_panel().popupMenuMove;
     }
     
     public String get_help_id()
@@ -589,14 +589,14 @@ public class MoveItemState extends InteractiveState
         }
         for (Item curr_item : this.item_list)
         {
-            curr_item.draw(p_graphics, hdlg.graphics_context);
+            curr_item.draw(p_graphics, hdlg.graphicsContext);
         }
         if (this.clearance_violations != null)
         {
-            java.awt.Color draw_color = hdlg.graphics_context.get_violations_color();
+            java.awt.Color draw_color = hdlg.graphicsContext.get_violations_color();
             for (ClearanceViolation curr_violation : this.clearance_violations)
             {
-                hdlg.graphics_context.fill_area(curr_violation.shape, p_graphics, draw_color, 1);
+                hdlg.graphicsContext.fill_area(curr_violation.shape, p_graphics, draw_color, 1);
             }
         }
     }

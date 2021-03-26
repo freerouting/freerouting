@@ -49,7 +49,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.cancel_state();
+                board_frame.boardPanel.boardHandling.cancel_state();
             }
         });
         
@@ -62,7 +62,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.display_selected_item_info();
+                board_frame.boardPanel.boardHandling.display_selected_item_info();
             }
         });
         
@@ -75,7 +75,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.delete_selected_items();
+                board_frame.boardPanel.boardHandling.delete_selected_items();
             }
         });
         
@@ -89,7 +89,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.cutout_selected_items();
+                board_frame.boardPanel.boardHandling.cutout_selected_items();
             }
         });
         
@@ -102,7 +102,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.fix_selected_items();
+                board_frame.boardPanel.boardHandling.fix_selected_items();
             }
         });
         
@@ -115,7 +115,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.unfix_selected_items();
+                board_frame.boardPanel.boardHandling.unfix_selected_items();
             }
         });
         
@@ -128,7 +128,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.autoroute_selected_items();
+                board_frame.boardPanel.boardHandling.autoroute_selected_items();
             }
         });
         this.add(autoroute_button);
@@ -140,7 +140,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.optimize_selected_items();
+                board_frame.boardPanel.boardHandling.optimize_selected_items();
             }
         });
         
@@ -164,7 +164,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.fanout_selected_items();
+                board_frame.boardPanel.boardHandling.fanout_selected_items();
             }
         });
         this.add(fanout_button);
@@ -183,7 +183,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.extend_selection_to_whole_nets();
+                board_frame.boardPanel.boardHandling.extend_selection_to_whole_nets();
             }
         });
         
@@ -196,7 +196,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.extend_selection_to_whole_connected_sets();
+                board_frame.boardPanel.boardHandling.extend_selection_to_whole_connected_sets();
             }
         });
         
@@ -209,7 +209,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.extend_selection_to_whole_connections();
+                board_frame.boardPanel.boardHandling.extend_selection_to_whole_connections();
             }
         });
         
@@ -222,7 +222,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.extend_selection_to_whole_components();
+                board_frame.boardPanel.boardHandling.extend_selection_to_whole_components();
             }
         });
         
@@ -237,7 +237,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
             {
                 public void actionPerformed(java.awt.event.ActionEvent evt)
                 {
-                    board_frame.board_panel.board_handling.assign_selected_to_new_net();
+                    board_frame.boardPanel.boardHandling.assign_selected_to_new_net();
                 }
             });
             
@@ -250,7 +250,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
             {
                 public void actionPerformed(java.awt.event.ActionEvent evt)
                 {
-                    board_frame.board_panel.board_handling.assign_selected_to_new_group();
+                    board_frame.boardPanel.boardHandling.assign_selected_to_new_group();
                 }
             });
             
@@ -269,7 +269,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.toggle_selected_item_violations();
+                board_frame.boardPanel.boardHandling.toggle_selected_item_violations();
             }
         });
         
@@ -288,7 +288,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.zoom_selection();
+                board_frame.boardPanel.boardHandling.zoom_selection();
                 
             }
         });
@@ -313,7 +313,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_frame.board_panel.board_handling.zoom_region();
+                board_frame.boardPanel.boardHandling.zoom_region();
             }
         });
         
@@ -322,11 +322,11 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
     
     private void assign_clearance_class()
     {
-        if (board_frame.board_panel.board_handling.is_board_read_only())
+        if (board_frame.boardPanel.boardHandling.is_board_read_only())
         {
             return;
         }
-        eu.mihosoft.freerouting.rules.ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().rules.clearance_matrix;
+        eu.mihosoft.freerouting.rules.ClearanceMatrix clearance_matrix = board_frame.boardPanel.boardHandling.get_routing_board().rules.clearance_matrix;
         Object [] class_name_arr = new Object[clearance_matrix.get_class_count()];
         for (int i = 0; i <  class_name_arr.length; ++i)
         {
@@ -344,7 +344,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar
         {
             return;
         }
-        board_frame.board_panel.board_handling.assign_clearance_classs_to_selected_items(class_index);
+        board_frame.boardPanel.boardHandling.assign_clearance_classs_to_selected_items(class_index);
     }
     
     private final BoardFrame board_frame;

@@ -51,7 +51,7 @@ public class WindowPackages extends WindowObjectListWithFilter
      */
     protected void fill_list()
     {
-        Packages packages = this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
+        Packages packages = this.board_frame.boardPanel.boardHandling.get_routing_board().library.packages;
         Package[] sorted_arr = new Package[packages.count()];
         for (int i = 0; i < sorted_arr.length; ++i)
         {
@@ -72,7 +72,7 @@ public class WindowPackages extends WindowObjectListWithFilter
         {
             return;
         }
-        eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+        eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.boardPanel.boardHandling.get_routing_board();
         java.util.Set<eu.mihosoft.freerouting.board.Item> board_instances = new java.util.TreeSet<eu.mihosoft.freerouting.board.Item>();
         java.util.Collection<eu.mihosoft.freerouting.board.Item> board_items = routing_board.get_items();
         for (eu.mihosoft.freerouting.board.Item curr_item : board_items)
@@ -96,7 +96,7 @@ public class WindowPackages extends WindowObjectListWithFilter
                 }
             }
         }
-        board_frame.board_panel.board_handling.select_items(board_instances);
-        board_frame.board_panel.board_handling.zoom_selection();
+        board_frame.boardPanel.boardHandling.select_items(board_instances);
+        board_frame.boardPanel.boardHandling.zoom_selection();
     }
 }

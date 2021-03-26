@@ -36,7 +36,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
     /** Creates a new instance of RouteParameterWindow */
     public WindowRouteParameter(BoardFrame p_board_frame)
     {
-        this.board_handling = p_board_frame.board_panel.board_handling;
+        this.board_handling = p_board_frame.boardPanel.boardHandling;
         this.current_locale = p_board_frame.get_locale();
         this.detail_window = new WindowRouteDetail(p_board_frame);
         this.manual_rule_window = new WindowManualRules(p_board_frame);

@@ -40,8 +40,8 @@ public class AutorouteControl
     /** Creates a new instance of AutorouteControl for the input net */
     public AutorouteControl(RoutingBoard p_board, int p_net_no, eu.mihosoft.freerouting.interactive.Settings p_settings)
     {
-        this(p_board, p_settings, p_settings.autoroute_settings.get_trace_cost_arr());
-        init_net(p_net_no, p_board, p_settings.autoroute_settings.get_via_costs());
+        this(p_board, p_settings, p_settings.autorouteSettings.get_trace_cost_arr());
+        init_net(p_net_no, p_board, p_settings.autorouteSettings.get_via_costs());
     }
 
     /** Creates a new instance of AutorouteControl for the input net */
@@ -59,14 +59,14 @@ public class AutorouteControl
         trace_half_width = new int[layer_count];
         compensated_trace_half_width = new int[layer_count];
         layer_active = new boolean[layer_count];
-        vias_allowed = p_settings.autoroute_settings.get_vias_allowed();
+        vias_allowed = p_settings.autorouteSettings.get_vias_allowed();
         via_radius_arr = new double[layer_count];
         add_via_costs = new ViaCost[layer_count];
 
         for (int i = 0; i < layer_count; ++i)
         {
             add_via_costs[i] = new ViaCost(layer_count);
-            layer_active[i] = p_settings.autoroute_settings.get_layer_active(i);
+            layer_active[i] = p_settings.autorouteSettings.get_layer_active(i);
         }
         is_fanout = false;
         remove_unconnected_vias = true;

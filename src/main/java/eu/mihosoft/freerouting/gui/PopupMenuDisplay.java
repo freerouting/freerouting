@@ -37,7 +37,7 @@ public class PopupMenuDisplay extends javax.swing.JPopupMenu
     /** Creates a new instance of PopupMenuDisplay */
     public PopupMenuDisplay(BoardFrame p_board_frame)
     {
-        this.board_panel = p_board_frame.board_panel;
+        this.board_panel = p_board_frame.boardPanel;
         java.util.ResourceBundle resources = 
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem center_display_item = new javax.swing.JMenuItem();
@@ -46,7 +46,7 @@ public class PopupMenuDisplay extends javax.swing.JPopupMenu
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.center_display(board_panel.right_button_click_location);
+                board_panel.centerDisplay(board_panel.rightButtonClickLocation);
             }
         });
         
@@ -61,7 +61,7 @@ public class PopupMenuDisplay extends javax.swing.JPopupMenu
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.zoom_in(board_panel.right_button_click_location);
+                board_panel.zoomIn(board_panel.rightButtonClickLocation);
             }
         });
         
@@ -73,7 +73,7 @@ public class PopupMenuDisplay extends javax.swing.JPopupMenu
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.zoom_out(board_panel.right_button_click_location);
+                board_panel.zoomOut(board_panel.rightButtonClickLocation);
             }
         });
         

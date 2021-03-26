@@ -62,7 +62,7 @@ public class WindowObjectVisibility extends WindowVisibility
      */
     public void refresh()
     {
-        eu.mihosoft.freerouting.boardgraphics.ColorIntensityTable color_intensity_table = this.get_board_handling().graphics_context.color_intensity_table;
+        eu.mihosoft.freerouting.boardgraphics.ColorIntensityTable color_intensity_table = this.get_board_handling().graphicsContext.color_intensity_table;
         for (int i = 0; i < ObjectNames.values().length; ++i)
         {
             this.set_slider_value(i, color_intensity_table.get_value(i));
@@ -72,6 +72,6 @@ public class WindowObjectVisibility extends WindowVisibility
     protected void set_changed_value(int p_index, double p_value)
     {
         
-        get_board_handling().graphics_context.color_intensity_table.set_value(p_index, p_value);
+        get_board_handling().graphicsContext.color_intensity_table.set_value(p_index, p_value);
     }
 }

@@ -130,7 +130,7 @@ public class WindowVia extends BoardSavableSubWindow
         this.main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
         
         // fill the list
-        BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+        BoardRules board_rules = board_frame.boardPanel.boardHandling.get_routing_board().rules;
         for (ViaRule curr_rule : board_rules.via_rules)
         {
             this.rule_list_model.addElement(curr_rule);
@@ -172,7 +172,7 @@ public class WindowVia extends BoardSavableSubWindow
     {
         // reinsert the elements in the rule list
         this.rule_list_model.removeAllElements();
-        BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+        BoardRules board_rules = board_frame.boardPanel.boardHandling.get_routing_board().rules;
         for (ViaRule curr_rule : board_rules.via_rules)
         {
             this.rule_list_model.addElement(curr_rule);
@@ -228,12 +228,12 @@ public class WindowVia extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             java.util.Collection<WindowObjectInfo.Printable> object_list = new java.util.LinkedList<WindowObjectInfo.Printable>();
-            eu.mihosoft.freerouting.library.BoardLibrary board_library = board_frame.board_panel.board_handling.get_routing_board().library;
+            eu.mihosoft.freerouting.library.BoardLibrary board_library = board_frame.boardPanel.boardHandling.get_routing_board().library;
             for (int i = 0; i < board_library.via_padstack_count(); ++i)
             {
                 object_list.add( board_library.get_via_padstack(i));
             }
-            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.boardPanel.boardHandling.coordinate_transform;
             WindowObjectInfo new_window =
                     WindowObjectInfo.display(resources.getString("available_via_padstacks"), object_list, board_frame, coordinate_transform);
             java.awt.Point loc = getLocation();
@@ -248,7 +248,7 @@ public class WindowVia extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            eu.mihosoft.freerouting.board.BasicBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
+            eu.mihosoft.freerouting.board.BasicBoard pcb = board_frame.boardPanel.boardHandling.get_routing_board();
             if (pcb.layer_structure.arr.length <= 1)
             {
                 return;
@@ -338,7 +338,7 @@ public class WindowVia extends BoardSavableSubWindow
             int from_layer_no =  pcb.layer_structure.get_no(start_layer);
             int to_layer_no = pcb.layer_structure.get_no(end_layer);
             eu.mihosoft.freerouting.geometry.planar.ConvexShape[] padstack_shapes = new eu.mihosoft.freerouting.geometry.planar.ConvexShape[pcb.layer_structure.arr.length];
-            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.boardPanel.boardHandling.coordinate_transform;
             boolean shape_exists = false;
             for (int i = from_layer_no; i <= to_layer_no; ++i)
             {
@@ -374,7 +374,7 @@ public class WindowVia extends BoardSavableSubWindow
             this.setLayout(gridbag);
             java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
             
-            eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+            eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_frame.boardPanel.boardHandling.get_routing_board().layer_structure;
             int from_layer_no =  layer_structure.get_no(p_from_layer);
             int to_layer_no = layer_structure.get_no(p_to_layer);
             int layer_count = to_layer_no - from_layer_no + 1;
@@ -406,7 +406,7 @@ public class WindowVia extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            eu.mihosoft.freerouting.board.BasicBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
+            eu.mihosoft.freerouting.board.BasicBoard pcb = board_frame.boardPanel.boardHandling.get_routing_board();
             eu.mihosoft.freerouting.library.Padstack[] via_padstacks = pcb.library.get_via_padstacks();
             Object selected_value = javax.swing.JOptionPane.showInputDialog(null,
                     resources.getString("choose_padstack_to_remove"), resources.getString("remove_via_padstack"),
@@ -441,12 +441,12 @@ public class WindowVia extends BoardSavableSubWindow
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             java.util.Collection<WindowObjectInfo.Printable> object_list = new java.util.LinkedList<WindowObjectInfo.Printable>();
-            eu.mihosoft.freerouting.rules.ViaInfos via_infos = board_frame.board_panel.board_handling.get_routing_board().rules.via_infos;
+            eu.mihosoft.freerouting.rules.ViaInfos via_infos = board_frame.boardPanel.boardHandling.get_routing_board().rules.via_infos;
             for (int i = 0; i < via_infos.count(); ++i)
             {
                 object_list.add(via_infos.get(i));
             }
-            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.boardPanel.boardHandling.coordinate_transform;
             WindowObjectInfo new_window =
                     WindowObjectInfo.display(resources.getString("available_vias"), object_list, board_frame, coordinate_transform);
             java.awt.Point loc = getLocation();
@@ -479,7 +479,7 @@ public class WindowVia extends BoardSavableSubWindow
             {
                 object_list.add(selected_objects.get(i));
             }
-            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+            eu.mihosoft.freerouting.board.CoordinateTransform coordinate_transform = board_frame.boardPanel.boardHandling.coordinate_transform;
             WindowObjectInfo new_window =
                     WindowObjectInfo.display(resources.getString("selected_rule"), object_list, board_frame, coordinate_transform);
             java.awt.Point loc = getLocation();
@@ -499,7 +499,7 @@ public class WindowVia extends BoardSavableSubWindow
             {
                 return;
             }
-            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.boardPanel.boardHandling.get_routing_board().rules;
             WindowViaRule new_window = new WindowViaRule(selected_object, board_rules.via_infos, board_frame);
             java.awt.Point loc = getLocation();
             java.awt.Point new_window_location =
@@ -524,10 +524,10 @@ public class WindowVia extends BoardSavableSubWindow
                 return;
             }
             ViaRule new_via_rule = new ViaRule(new_name);
-            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.boardPanel.boardHandling.get_routing_board().rules;
             board_rules.via_rules.add(new_via_rule);
             rule_list_model.addElement(new_via_rule);
-            board_frame.refresh_windows();
+            board_frame.refreshWindows();
         }
     }
     
@@ -544,7 +544,7 @@ public class WindowVia extends BoardSavableSubWindow
             String message = resources.getString("remove_via_rule") + " " + selected_rule.name + "?";
             if (WindowMessage.confirm(message))
             {
-                eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+                eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.boardPanel.boardHandling.get_routing_board().rules;
                 board_rules.via_rules.remove(selected_rule);
                 rule_list_model.removeElement(selected_rule);
             }

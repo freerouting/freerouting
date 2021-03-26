@@ -43,11 +43,11 @@ class PopupMenuSelectedItems extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.copy_selected_items(board_panel.right_button_click_location);
+                board_panel.boardHandling.copy_selected_items(board_panel.rightButtonClickLocation);
             }
         });
         
-        if (board_panel.board_handling.get_routing_board().get_test_level() != eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION)
+        if (board_panel.boardHandling.get_routing_board().get_test_level() != eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION)
         {
             this.add(copy_item);
         }
@@ -58,7 +58,7 @@ class PopupMenuSelectedItems extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.move_selected_items(board_panel.right_button_click_location);
+                board_panel.boardHandling.move_selected_items(board_panel.rightButtonClickLocation);
             }
         });
         

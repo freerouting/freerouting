@@ -197,7 +197,7 @@ public class GUIDefaultsFile
                 }
             }
         }
-        this.board_frame.refresh_windows();
+        this.board_frame.refreshWindows();
         return true;
     }
     
@@ -621,13 +621,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_trace_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_trace_color_intensity(intensity);
         java.awt.Color[] curr_colors = read_color_array();
         if (curr_colors.length < 1)
         {
             return false;
         }
-        this.board_handling.graphics_context.item_color_table.set_trace_colors(curr_colors, p_fixed);
+        this.board_handling.graphicsContext.item_color_table.set_trace_colors(curr_colors, p_fixed);
         return true;
     }
     
@@ -638,13 +638,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_via_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_via_color_intensity(intensity);
         java.awt.Color[] curr_colors = read_color_array();
         if (curr_colors.length < 1)
         {
             return false;
         }
-        this.board_handling.graphics_context.item_color_table.set_via_colors(curr_colors, p_fixed);
+        this.board_handling.graphicsContext.item_color_table.set_via_colors(curr_colors, p_fixed);
         return true;
     }
     
@@ -655,13 +655,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_pin_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_pin_color_intensity(intensity);
         java.awt.Color[] curr_colors = read_color_array();
         if (curr_colors.length < 1)
         {
             return false;
         }
-        this.board_handling.graphics_context.item_color_table.set_pin_colors(curr_colors);
+        this.board_handling.graphicsContext.item_color_table.set_pin_colors(curr_colors);
         return true;
     }
     
@@ -672,13 +672,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_conduction_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_conduction_color_intensity(intensity);
         java.awt.Color[] curr_colors = read_color_array();
         if (curr_colors.length < 1)
         {
             return false;
         }
-        this.board_handling.graphics_context.item_color_table.set_conduction_colors(curr_colors);
+        this.board_handling.graphicsContext.item_color_table.set_conduction_colors(curr_colors);
         return true;
     }
     
@@ -689,13 +689,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_obstacle_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_obstacle_color_intensity(intensity);
         java.awt.Color[] curr_colors = read_color_array();
         if (curr_colors.length < 1)
         {
             return false;
         }
-        this.board_handling.graphics_context.item_color_table.set_keepout_colors(curr_colors);
+        this.board_handling.graphicsContext.item_color_table.set_keepout_colors(curr_colors);
         return true;
     }
     
@@ -706,13 +706,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_via_obstacle_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_via_obstacle_color_intensity(intensity);
         java.awt.Color[] curr_colors = read_color_array();
         if (curr_colors.length < 1)
         {
             return false;
         }
-        this.board_handling.graphics_context.item_color_table.set_via_keepout_colors(curr_colors);
+        this.board_handling.graphicsContext.item_color_table.set_via_keepout_colors(curr_colors);
         return true;
     }
     
@@ -723,7 +723,7 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.other_color_table.set_background_color(curr_color);
+        this.board_handling.graphicsContext.other_color_table.set_background_color(curr_color);
         this.board_frame.set_board_background(curr_color);
         Object next_token = this.scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
@@ -741,13 +741,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_hilight_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_hilight_color_intensity(intensity);
         java.awt.Color curr_color = read_color();
         if (curr_color == null)
         {
             return false;
         }
-        this.board_handling.graphics_context.other_color_table.set_hilight_color(curr_color);
+        this.board_handling.graphicsContext.other_color_table.set_hilight_color(curr_color);
         Object next_token = this.scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
@@ -764,13 +764,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_incomplete_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_incomplete_color_intensity(intensity);
         java.awt.Color curr_color = read_color();
         if (curr_color == null)
         {
             return false;
         }
-        this.board_handling.graphics_context.other_color_table.set_incomplete_color(curr_color);
+        this.board_handling.graphicsContext.other_color_table.set_incomplete_color(curr_color);
         Object next_token = this.scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
@@ -787,13 +787,13 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.set_length_matching_area_color_intensity(intensity);
+        this.board_handling.graphicsContext.set_length_matching_area_color_intensity(intensity);
         java.awt.Color curr_color = read_color();
         if (curr_color == null)
         {
             return false;
         }
-        this.board_handling.graphics_context.other_color_table.set_length_matching_area_color(curr_color);
+        this.board_handling.graphicsContext.other_color_table.set_length_matching_area_color(curr_color);
         Object next_token = this.scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
@@ -810,7 +810,7 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.other_color_table.set_violations_color(curr_color);
+        this.board_handling.graphicsContext.other_color_table.set_violations_color(curr_color);
         Object next_token = this.scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
@@ -827,7 +827,7 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.other_color_table.set_outline_color(curr_color);
+        this.board_handling.graphicsContext.other_color_table.set_outline_color(curr_color);
         Object next_token = this.scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
@@ -844,7 +844,7 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        this.board_handling.graphics_context.other_color_table.set_component_color(curr_color, p_front);
+        this.board_handling.graphicsContext.other_color_table.set_component_color(curr_color, p_front);
         Object next_token = this.scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
@@ -925,7 +925,7 @@ public class GUIDefaultsFile
     
     private void write_colors_scope() throws java.io.IOException
     {
-        eu.mihosoft.freerouting.boardgraphics.GraphicsContext graphics_context = this.board_handling.graphics_context;
+        eu.mihosoft.freerouting.boardgraphics.GraphicsContext graphics_context = this.board_handling.graphicsContext;
         out_file.start_scope();
         out_file.write("colors");
         out_file.start_scope();
@@ -1473,7 +1473,7 @@ public class GUIDefaultsFile
             FRLogger.warn("GUIDefaultsFile.read_automatic_layer_dimming_scope: closing bracket expected");
             return false;
         }
-        this.board_handling.graphics_context.set_auto_layer_dim_factor(intensity);
+        this.board_handling.graphicsContext.set_auto_layer_dim_factor(intensity);
         return true;
     }
     
@@ -1482,7 +1482,7 @@ public class GUIDefaultsFile
         out_file.start_scope();
         out_file.write("automatic_layer_dimming ");
         out_file.new_line();
-        Float layer_dimming = (float) this.board_handling.graphics_context.get_auto_layer_dim_factor();
+        Float layer_dimming = (float) this.board_handling.graphicsContext.get_auto_layer_dim_factor();
         out_file.write(layer_dimming.toString());
         out_file.end_scope();
     }

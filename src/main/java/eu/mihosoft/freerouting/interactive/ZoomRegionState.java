@@ -80,8 +80,8 @@ public class ZoomRegionState extends SelectRegionState
         {
             return;
         }
-        Point2D sc_corner1 = hdlg.graphics_context.coordinate_transform.board_to_screen(corner1) ;
-        Point2D sc_corner2 = hdlg.graphics_context.coordinate_transform.board_to_screen(corner2) ;
-        hdlg.get_panel().zoom_frame(sc_corner1, sc_corner2) ;
+        Point2D sc_corner1 = hdlg.graphicsContext.coordinate_transform.board_to_screen(corner1) ;
+        Point2D sc_corner2 = hdlg.graphicsContext.coordinate_transform.board_to_screen(corner2) ;
+        hdlg.get_panel().zoomFrame(sc_corner1, sc_corner2) ;
     }
 }

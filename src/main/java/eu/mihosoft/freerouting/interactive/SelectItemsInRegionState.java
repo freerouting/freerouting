@@ -122,7 +122,7 @@ public class SelectItemsInRegionState extends SelectRegionState
                 Item curr_item = it.next();
                 for (int i = curr_item.first_layer(); i <= curr_item.last_layer(); ++i)
                 {
-                    if (hdlg.graphics_context.get_layer_visibility(i) > 0)
+                    if (hdlg.graphicsContext.get_layer_visibility(i) > 0)
                     {
                         visible_items.add(curr_item);
                         break;

@@ -33,7 +33,7 @@ public class BoardMenuFile extends javax.swing.JMenu
 {
 
     /** Returns a new file menu for the board frame. */
-    public static BoardMenuFile get_instance(BoardFrame p_board_frame, boolean p_session_file_option)
+    public static BoardMenuFile getInstance(BoardFrame p_board_frame, boolean p_session_file_option)
     {
         final BoardMenuFile file_menu = new BoardMenuFile(p_board_frame, p_session_file_option);
         file_menu.setText(file_menu.resources.getString("file"));
@@ -51,7 +51,7 @@ public class BoardMenuFile extends javax.swing.JMenu
                 public void actionPerformed(java.awt.event.ActionEvent evt)
                 {
                     boolean save_ok = file_menu.board_frame.save();
-                    file_menu.board_frame.board_panel.board_handling.close_files();
+                    file_menu.board_frame.boardPanel.boardHandling.close_files();
                     if (save_ok)
                     {
                         file_menu.board_frame.screen_messages.set_status_message(file_menu.resources.getString("save_message"));
@@ -89,14 +89,7 @@ public class BoardMenuFile extends javax.swing.JMenu
         javax.swing.JMenuItem cancel_and_exit_item = new javax.swing.JMenuItem();
         cancel_and_exit_item.setText(file_menu.resources.getString("cancel_and_exit"));
         cancel_and_exit_item.setToolTipText(file_menu.resources.getString("cancel_and_exit_tooltip"));
-        cancel_and_exit_item.addActionListener(new java.awt.event.ActionListener()
-        {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                file_menu.board_frame.dispose();
-            }
-        });
+        cancel_and_exit_item.addActionListener(evt -> file_menu.board_frame.dispose());
 
         file_menu.add(cancel_and_exit_item);
 
@@ -153,13 +146,13 @@ public class BoardMenuFile extends javax.swing.JMenu
         return file_menu;
     }
 
-    public void add_design_dependent_items()
+    public void addDesignDependentItems()
     {
         if (this.session_file_option)
         {
             return;
         }
-        eu.mihosoft.freerouting.board.BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
+        eu.mihosoft.freerouting.board.BasicBoard routing_board = this.board_frame.boardPanel.boardHandling.get_routing_board();
         boolean host_cad_is_eagle = routing_board.communication.host_cad_is_eagle();
 
         javax.swing.JMenuItem write_session_file_item = new javax.swing.JMenuItem();
@@ -240,7 +233,7 @@ public class BoardMenuFile extends javax.swing.JMenu
         {
 
             board_frame.screen_messages.set_status_message(resources.getString("message_9"));
-            board_frame.board_panel.board_handling.start_logfile(filename);
+            board_frame.boardPanel.boardHandling.start_logfile(filename);
         }
     }
 
@@ -301,7 +294,7 @@ public class BoardMenuFile extends javax.swing.JMenu
         }
         else
         {
-            write_ok = GUIDefaultsFile.write(board_frame, board_frame.board_panel.board_handling, output_stream);
+            write_ok = GUIDefaultsFile.write(board_frame, board_frame.boardPanel.boardHandling, output_stream);
         }
         if (write_ok)
         {

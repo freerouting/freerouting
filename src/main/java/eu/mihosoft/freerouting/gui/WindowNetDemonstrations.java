@@ -42,7 +42,7 @@ public class WindowNetDemonstrations extends WindowNetSamples
      * To be edited when the demonstration examples change.
      * For every String in the second column a String has to be added to the resource file WindowNetSamples.
      */
-    protected void fill_list()
+    protected void fill_list() //TODO actualize
     {
         add("sample_45.dsn", "45_degree_logfile", AdditionalAction.READ_LOGFILE);
         add("int_ar.dsn", "drag_component_logfile", AdditionalAction.READ_LOGFILE);

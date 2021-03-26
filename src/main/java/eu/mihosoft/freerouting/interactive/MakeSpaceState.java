@@ -69,7 +69,7 @@ public class MakeSpaceState extends DragState
                 hdlg.get_routing_board().start_notify_observers();
             }
             // make the situation restorable by undo
-            hdlg.get_routing_board().generate_snapshot();
+            hdlg.get_routing_board().generateSnapshot();
             if (activityReplayFile != null)
             {
                 // Delayed till here because otherwise the mouse
@@ -114,7 +114,7 @@ public class MakeSpaceState extends DragState
     {
         if (route != null)
         {
-            route.draw(p_graphics,  hdlg.graphics_context);
+            route.draw(p_graphics,  hdlg.graphicsContext);
         }
     }
     

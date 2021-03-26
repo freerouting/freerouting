@@ -41,7 +41,7 @@ public class BoardHandlingImpl implements IBoardHandling {
     }
 
     @Override
-    public Settings get_settings() {
+    public Settings getSettings() {
         return settings;
     }
 

@@ -4,7 +4,7 @@
  *
  *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
  *   Website www.freerouting.mihosoft.eu
-*
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
+ *   GNU General Public License at <http://www.gnu.org/licenses/>
  *   for more details.
  *
  * BoardMenuBar.java
@@ -23,48 +23,53 @@
 
 package eu.mihosoft.freerouting.gui;
 
+import javax.swing.*;
+
 /**
  * Creates the menu bar of a board frame together with its menu items.
  *
  * @author Alfons Wirtz
  */
-class BoardMenuBar extends javax.swing.JMenuBar
-{
-    
-    /** Creates a new BoardMenuBar together with its menus */
-    static BoardMenuBar get_instance(BoardFrame p_board_frame,
-            boolean p_help_system_used, boolean p_session_file_option)
-    {
-        BoardMenuBar menubar = new BoardMenuBar();
-        menubar.file_menu = BoardMenuFile.get_instance(p_board_frame, p_session_file_option);
-        menubar.add(menubar.file_menu);
-        javax.swing.JMenu display_menu = BoardMenuDisplay.get_instance(p_board_frame);
-        menubar.add(display_menu);
-        javax.swing.JMenu parameter_menu = BoardMenuParameter.get_instance(p_board_frame);
-        menubar.add(parameter_menu);
-        javax.swing.JMenu rules_menu = BoardMenuRules.get_instance(p_board_frame);
-        menubar.add(rules_menu);
-        javax.swing.JMenu info_menu = BoardMenuInfo.get_instance(p_board_frame);
-        menubar.add(info_menu);
-        javax.swing.JMenu other_menu = BoardMenuOther.get_instance(p_board_frame);
-        menubar.add(other_menu);
-        if (p_help_system_used)
-        {
-            javax.swing.JMenu help_menu = new BoardMenuHelp(p_board_frame);
-            menubar.add(help_menu);
-        }
-        else
-        {
-            javax.swing.JMenu help_menu = new BoardMenuHelpReduced(p_board_frame);
-            menubar.add(help_menu);
-        }
-        return menubar;
+class BoardMenuBar extends JMenuBar {
+
+    private final BoardMenuFile fileMenu;
+
+    private BoardMenuBar(final BoardFrame boardFrame, boolean sessionFileOption) {
+        fileMenu = BoardMenuFile.getInstance(boardFrame, sessionFileOption);
+        this.add(fileMenu);
     }
-    
-    void add_design_dependent_items()
-    {
-        this.file_menu.add_design_dependent_items();
+
+    /**
+     * Creates a new BoardMenuBar together with its menus
+     */
+    static BoardMenuBar getInstance(
+            final BoardFrame boardFrame,
+            final boolean helpSystemUsed,
+            final boolean sessionFileOption
+    ) {
+        final BoardMenuBar menuBar = new BoardMenuBar(boardFrame, sessionFileOption);
+        JMenu displayMenu = BoardMenuDisplay.get_instance(boardFrame);
+        menuBar.add(displayMenu);
+        JMenu parameterMenu = BoardMenuParameter.get_instance(boardFrame);
+        menuBar.add(parameterMenu);
+        JMenu rulesMenu = BoardMenuRules.get_instance(boardFrame);
+        menuBar.add(rulesMenu);
+        JMenu infoMenu = BoardMenuInfo.get_instance(boardFrame);
+        menuBar.add(infoMenu);
+        JMenu otherMenu = BoardMenuOther.get_instance(boardFrame);
+        menuBar.add(otherMenu);
+        final JMenu helpMenu;
+        if (helpSystemUsed) {
+            helpMenu = new BoardMenuHelp(boardFrame);
+        } else {
+            helpMenu = new BoardMenuHelpReduced(boardFrame);
+        }
+        menuBar.add(helpMenu);
+        return menuBar;
     }
-    
-    private BoardMenuFile file_menu;
+
+    void addDesignDependentItems() {
+        fileMenu.addDesignDependentItems();
+    }
+
 }

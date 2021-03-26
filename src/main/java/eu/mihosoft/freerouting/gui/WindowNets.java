@@ -63,7 +63,7 @@ public class WindowNets extends WindowObjectListWithFilter
      */
     protected void fill_list()
     {
-        Nets nets = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
+        Nets nets = this.board_frame.boardPanel.boardHandling.get_routing_board().rules.nets;
         Net[] sorted_arr = new Net[nets.max_net_no()];
         for (int i = 0; i < sorted_arr.length; ++i)
         {
@@ -89,7 +89,7 @@ public class WindowNets extends WindowObjectListWithFilter
         {
             selected_net_numbers[i] = ((Net) selected_nets.get(i)).net_number;
         }
-        eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+        eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.boardPanel.boardHandling.get_routing_board();
         java.util.Set<eu.mihosoft.freerouting.board.Item> selected_items = new java.util.TreeSet<eu.mihosoft.freerouting.board.Item>();
         java.util.Collection<eu.mihosoft.freerouting.board.Item> board_items = routing_board.get_items();
         for (eu.mihosoft.freerouting.board.Item curr_item : board_items)
@@ -108,8 +108,8 @@ public class WindowNets extends WindowObjectListWithFilter
                 selected_items.add(curr_item);
             }
         }
-        board_frame.board_panel.board_handling.select_items(selected_items);
-        board_frame.board_panel.board_handling.zoom_selection();
+        board_frame.boardPanel.boardHandling.select_items(selected_items);
+        board_frame.boardPanel.boardHandling.zoom_selection();
     }
     
     private final java.util.ResourceBundle resources;
@@ -123,7 +123,7 @@ public class WindowNets extends WindowObjectListWithFilter
             {
                 return;
             }
-            eu.mihosoft.freerouting.rules.NetClasses net_classes = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
+            eu.mihosoft.freerouting.rules.NetClasses net_classes = board_frame.boardPanel.boardHandling.get_routing_board().rules.net_classes;
             eu.mihosoft.freerouting.rules.NetClass [] class_arr = new eu.mihosoft.freerouting.rules.NetClass [net_classes.count()];
             for(int i = 0; i < class_arr.length; ++i)
             {
@@ -141,7 +141,7 @@ public class WindowNets extends WindowObjectListWithFilter
             {
                 ((Net) selected_nets.get(i)).set_class(selected_class);
             }
-            board_frame.refresh_windows();
+            board_frame.refreshWindows();
         }
     }
     
@@ -154,7 +154,7 @@ public class WindowNets extends WindowObjectListWithFilter
             {
                 return;
             }
-            eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
+            eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.boardPanel.boardHandling;
             int max_net_no = board_handling.get_routing_board().rules.nets.max_net_no();
             for (int i = 1; i <= max_net_no; ++i)
             {
@@ -164,7 +164,7 @@ public class WindowNets extends WindowObjectListWithFilter
             {
                 board_handling.set_incompletes_filter(((Net) selected_nets.get(i)).net_number, false);
             }
-            board_frame.board_panel.repaint();
+            board_frame.boardPanel.repaint();
         }
     }
 }

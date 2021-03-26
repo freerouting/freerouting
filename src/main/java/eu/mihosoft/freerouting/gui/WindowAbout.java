@@ -25,6 +25,8 @@
 package eu.mihosoft.freerouting.gui;
 
 
+import static eu.mihosoft.freerouting.FreeRouting.VERSION_NUMBER_STRING;
+
 /**
  * Displays general information about the freeroute software.
  *
@@ -53,7 +55,7 @@ public class WindowAbout extends BoardSavableSubWindow
         gridbag.setConstraints(description_label, gridbag_constraints);
         window_panel.add(description_label, gridbag_constraints);
         
-        String version_string = resources.getString("version") + " " + MainApplication.VERSION_NUMBER_STRING;
+        String version_string = resources.getString("version") + " " + VERSION_NUMBER_STRING;
         javax.swing.JLabel version_label = new javax.swing.JLabel(version_string);
         gridbag.setConstraints(version_label, gridbag_constraints);
         window_panel.add(version_label, gridbag_constraints);

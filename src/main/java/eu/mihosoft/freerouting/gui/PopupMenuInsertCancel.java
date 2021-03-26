@@ -34,7 +34,7 @@ class PopupMenuInsertCancel extends javax.swing.JPopupMenu
     /** Creates a new instance of CompleteCancelPopupMenu */
     PopupMenuInsertCancel(BoardFrame p_board_frame)
     {
-        this.board_panel = p_board_frame.board_panel;
+        this.board_panel = p_board_frame.boardPanel;
         java.util.ResourceBundle resources = 
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem insert_item = new javax.swing.JMenuItem();
@@ -43,7 +43,7 @@ class PopupMenuInsertCancel extends javax.swing.JPopupMenu
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.return_from_state();
+                board_panel.boardHandling.return_from_state();
             }
         });
         
@@ -55,7 +55,7 @@ class PopupMenuInsertCancel extends javax.swing.JPopupMenu
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.cancel_state();
+                board_panel.boardHandling.cancel_state();
             }
         });
         

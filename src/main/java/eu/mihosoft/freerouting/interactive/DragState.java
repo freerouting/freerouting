@@ -59,7 +59,7 @@ public abstract class DragState extends InteractiveState
         for (int i = 0; i < try_count; ++i)
         {
             if (i == 0 ||  pick_layer != curr_layer &&
-                    (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0)
+                           (p_board_handling.graphicsContext.get_layer_visibility(pick_layer)) > 0)
             {
                 java.util.Collection<Item> found_items =
                         p_board_handling.get_routing_board().pick_items(p_location.round(),

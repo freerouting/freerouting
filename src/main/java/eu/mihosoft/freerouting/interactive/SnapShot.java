@@ -52,9 +52,9 @@ public class SnapShot implements java.io.Serializable
         this.name = p_name;
         this.settings = new Settings(p_board_handling.settings);
         this.interactive_state_no = get_no(p_board_handling.interactive_state);
-        this.graphics_context = new eu.mihosoft.freerouting.boardgraphics.GraphicsContext(p_board_handling.graphics_context);
-        this.viewport_position = new java.awt.Point(p_board_handling.get_panel().get_viewport_position());
-        this.subwindow_filters = p_board_handling.get_panel().board_frame.get_snapshot_subwindow_selections();
+        this.graphics_context = new eu.mihosoft.freerouting.boardgraphics.GraphicsContext(p_board_handling.graphicsContext);
+        this.viewport_position = new java.awt.Point(p_board_handling.get_panel().getViewportPosition());
+        this.subwindow_filters = p_board_handling.get_panel().boardFrame.get_snapshot_subwindow_selections();
     }
     
     public String toString()
@@ -81,12 +81,12 @@ public class SnapShot implements java.io.Serializable
 
         if (snapshot_attributes.object_visibility)
         {
-            p_board_handling.graphics_context.color_intensity_table =
+            p_board_handling.graphicsContext.color_intensity_table =
                     new eu.mihosoft.freerouting.boardgraphics.ColorIntensityTable(this.graphics_context.color_intensity_table);
         }
         if (snapshot_attributes.layer_visibility)
         {
-            p_board_handling.graphics_context.set_layer_visibility_arr(this.graphics_context.copy_layer_visibility_arr());
+            p_board_handling.graphicsContext.set_layer_visibility_arr(this.graphics_context.copy_layer_visibility_arr());
         }
  
         if (snapshot_attributes.interactive_state)
@@ -136,7 +136,7 @@ public class SnapShot implements java.io.Serializable
         }  
         if (snapshot_attributes.info_list_selections)
         {
-            p_board_handling.get_panel().board_frame.set_snapshot_subwindow_selections(this.subwindow_filters);
+            p_board_handling.get_panel().boardFrame.set_snapshot_subwindow_selections(this.subwindow_filters);
         }
     }
     

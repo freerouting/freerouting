@@ -1249,7 +1249,7 @@ public abstract class ActivityReplayFileScope
         
         public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, BoardHandling p_board_handling)
         {
-            p_board_handling.get_routing_board().generate_snapshot();
+            p_board_handling.get_routing_board().generateSnapshot();
             return p_return_state;
         }
     }
@@ -1265,7 +1265,7 @@ public abstract class ActivityReplayFileScope
         {
             FloatPoint curr_location = p_activityReplayFile.read_corner();
             java.awt.geom.Point2D new_center = new java.awt.geom.Point2D.Double(curr_location.x, curr_location.y);
-            p_board_handling.get_panel().center_display(new_center);
+            p_board_handling.get_panel().centerDisplay(new_center);
             return p_return_state;
         }
     }
@@ -1280,9 +1280,9 @@ public abstract class ActivityReplayFileScope
         public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, BoardHandling p_board_handling)
         {
             java.awt.geom.Point2D lower_left =
-                    p_board_handling.graphics_context.coordinate_transform.board_to_screen(p_activityReplayFile.read_corner());
-            java.awt.geom.Point2D upper_right = p_board_handling.graphics_context.coordinate_transform.board_to_screen(p_activityReplayFile.read_corner());
-            p_board_handling.get_panel().zoom_frame(lower_left, upper_right);
+                    p_board_handling.graphicsContext.coordinate_transform.board_to_screen(p_activityReplayFile.read_corner());
+            java.awt.geom.Point2D upper_right = p_board_handling.graphicsContext.coordinate_transform.board_to_screen(p_activityReplayFile.read_corner());
+            p_board_handling.get_panel().zoomFrame(lower_left, upper_right);
             p_board_handling.repaint();
             return p_return_state;
         }

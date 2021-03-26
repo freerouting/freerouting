@@ -29,6 +29,8 @@ import java.util.zip.ZipInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import static eu.mihosoft.freerouting.FreeRouting.WEB_FILE_BASE_NAME;
+
 /**
  * Window with a list for selecting samples in the net.
  *
@@ -100,7 +102,7 @@ public abstract class WindowNetSamples extends BoardSubWindow
      */
     protected static ZipInputStream open_zipped_file(String p_archive_name, String p_file_name)
     {
-        String archive_path_name = MainApplication.WEB_FILE_BASE_NAME + p_archive_name + ".zip";
+        String archive_path_name = WEB_FILE_BASE_NAME + p_archive_name + ".zip";
         URL archive_url = null;
         try
         {
@@ -178,7 +180,7 @@ public abstract class WindowNetSamples extends BoardSubWindow
         {
             return null;
         }
-        DesignFile design_file = DesignFile.get_instance("sharc_routed.dsn", true);
+        DesignFile design_file = DesignFile.getInstance("sharc_routed.dsn");
         BoardFrame new_frame =
                 new BoardFrame(design_file, BoardFrame.Option.WEBSTART, eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION,
                 p_locale, false);
@@ -241,7 +243,7 @@ public abstract class WindowNetSamples extends BoardSubWindow
                 {
                     void perform(BoardFrame p_board_frame, String p_archive_name)
                     {
-                        p_board_frame.board_panel.board_handling.start_batch_autorouter();
+                        p_board_frame.boardPanel.boardHandling.startBatchAutorouter();
                     }
                 },
 

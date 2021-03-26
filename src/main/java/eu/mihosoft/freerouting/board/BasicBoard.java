@@ -1485,12 +1485,12 @@ public class BasicBoard implements java.io.Serializable
     /**
      * Makes the current board situation restorable by undo.
      */
-    public void generate_snapshot()
+    public void generateSnapshot()
     {
         FRLogger.info("Generating snapshot");
 
-        item_list.generate_snapshot();
-        components.generate_snapshot();
+        item_list.generateSnapshot();
+        components.generateSnapshot();
     }
 
     /**

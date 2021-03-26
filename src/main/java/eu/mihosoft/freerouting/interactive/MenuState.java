@@ -49,7 +49,7 @@ public class MenuState extends InteractiveState
     
     public javax.swing.JPopupMenu get_popup_menu()
     {
-        return hdlg.get_panel().popup_menu_main;
+        return hdlg.get_panel().popupMenuMain;
     }
     
     /**
@@ -136,7 +136,7 @@ public class MenuState extends InteractiveState
         else if (p_key_char == 'p')
         {
             hdlg.settings.set_push_enabled(!hdlg.settings.push_enabled);
-            hdlg.get_panel().board_frame.refresh_windows();
+            hdlg.get_panel().boardFrame.refreshWindows();
         }
         else if (p_key_char == 'r')
         {
@@ -224,6 +224,6 @@ public class MenuState extends InteractiveState
     
     public void set_toolbar()
     {
-        hdlg.get_panel().board_frame.set_menu_toolbar();
+        hdlg.get_panel().boardFrame.set_menu_toolbar();
     }
 }

@@ -53,7 +53,7 @@ public class AutorouteSettings implements java.io.Serializable
 
         start_ripup_costs = 100;
         set_start_pass_no(1);
-        set_stop_pass_no(Integer.MAX_VALUE);
+        setStopPassNo(Integer.MAX_VALUE);
         vias_allowed = true;
         with_fanout = false;
         with_autoroute = true;
@@ -111,8 +111,8 @@ public class AutorouteSettings implements java.io.Serializable
     public AutorouteSettings(AutorouteSettings p_settings)
     {
         start_ripup_costs = p_settings.start_ripup_costs;
-        set_start_pass_no(p_settings.start_pass_no);
-        set_stop_pass_no(p_settings.stop_pass_no);
+        set_start_pass_no(p_settings.startPassNo);
+        setStopPassNo(p_settings.stopPassNo);
         via_costs = p_settings.via_costs;
         plane_via_costs = p_settings.plane_via_costs;
         layer_active_arr = new boolean[p_settings.layer_active_arr.length];
@@ -140,29 +140,29 @@ public class AutorouteSettings implements java.io.Serializable
 
     public void set_start_pass_no(int p_value)
     {
-        start_pass_no = Math.max(p_value, 1);
-        start_pass_no = Math.min(start_pass_no, 99999);
+        startPassNo = Math.max(p_value, 1);
+        startPassNo = Math.min(startPassNo, 99999);
     }
 
-    public int get_start_pass_no()
+    public int getStartPassNo()
     {
-        return start_pass_no;
+        return startPassNo;
     }
 
-    public void set_stop_pass_no(int p_value)
+    public void setStopPassNo(int value)
     {
-        stop_pass_no = Math.max(p_value, start_pass_no);
-        stop_pass_no = Math.min(stop_pass_no, 99999);
+        stopPassNo = Math.max(value, startPassNo);
+        stopPassNo = Math.min(stopPassNo, 99999);
     }
 
-    public int get_stop_pass_no()
+    public int getStopPassNo()
     {
-        return stop_pass_no;
+        return stopPassNo;
     }
 
     public void increment_pass_no()
     {
-        ++start_pass_no;
+        ++startPassNo;
     }
 
     public void set_with_fanout(boolean p_value)
@@ -360,8 +360,8 @@ public class AutorouteSettings implements java.io.Serializable
     private int via_costs;
     private int plane_via_costs;
     private int start_ripup_costs;
-    private int start_pass_no;
-    private int stop_pass_no;
+    private int startPassNo;
+    private int stopPassNo;
     private final boolean[] layer_active_arr;
     private final boolean[] preferred_direction_is_horizontal_arr;
     private final double[] preferred_direction_trace_cost_arr;

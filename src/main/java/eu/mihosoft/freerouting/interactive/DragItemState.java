@@ -117,7 +117,7 @@ public class DragItemState extends DragState
                     hdlg.get_routing_board().start_notify_observers();
                 }
                 // make the situation restorable by undo
-                hdlg.get_routing_board().generate_snapshot();
+                hdlg.get_routing_board().generateSnapshot();
                 if (activityReplayFile != null)
                 {
                     // Delayed till here because otherwise the mouse

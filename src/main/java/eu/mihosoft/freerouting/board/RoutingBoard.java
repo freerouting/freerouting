@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutionException;
 
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 import eu.mihosoft.freerouting.datastructures.Stoppable;
@@ -953,7 +952,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
             FRLogger.warn("RoutingBoard.autoroute: net_count > 1 not yet implemented");
         }
         int route_net_no = p_item.get_net_no(0);
-        AutorouteControl ctrl_settings = new AutorouteControl(this, route_net_no, p_settings, p_via_costs, p_settings.autoroute_settings.get_trace_cost_arr());
+        AutorouteControl ctrl_settings = new AutorouteControl(this, route_net_no, p_settings, p_via_costs, p_settings.autorouteSettings.get_trace_cost_arr());
         ctrl_settings.remove_unconnected_vias = false;
         Set<Item> route_start_set = p_item.get_connected_set(route_net_no);
         eu.mihosoft.freerouting.rules.Net route_net = rules.nets.get(route_net_no);

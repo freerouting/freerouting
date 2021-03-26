@@ -79,7 +79,7 @@ public class BatchFanout
         int routed_count = 0;
         int not_routed_count = 0;
         int insert_error_count = 0;
-        int ripup_costs = this.thread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs() * (p_pass_no + 1);
+        int ripup_costs = this.thread.hdlg.getSettings().autorouteSettings.get_start_ripup_costs() * (p_pass_no + 1);
         for (Component curr_component : this.sorted_components)
         {
             this.thread.hdlg.screen_messages.set_batch_fanout_info(p_pass_no + 1, components_to_go);
@@ -89,7 +89,7 @@ public class BatchFanout
                 TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
                 this.routing_board.start_marking_changed_area();
                 AutorouteEngine.AutorouteResult curr_result =
-                        this.routing_board.fanout(curr_pin.board_pin, this.thread.hdlg.get_settings(), ripup_costs, this.thread, time_limit);
+                        this.routing_board.fanout(curr_pin.board_pin, this.thread.hdlg.getSettings(), ripup_costs, this.thread, time_limit);
                 if (curr_result == AutorouteEngine.AutorouteResult.ROUTED)
                 {
                     ++routed_count;

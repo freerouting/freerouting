@@ -117,9 +117,9 @@ public class Components implements java.io.Serializable
     /**
      * Generates a snapshot for the undo algorithm.
      */
-    public void generate_snapshot()
+    public void generateSnapshot()
     {
-        this.undo_list.generate_snapshot();
+        this.undo_list.generateSnapshot();
     }
     
     /**

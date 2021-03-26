@@ -35,7 +35,7 @@ public class PopupMenuCopy extends PopupMenuDisplay
     PopupMenuCopy(BoardFrame p_board_frame)
     {
         super(p_board_frame);
-        eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
+        eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_panel.boardHandling.get_routing_board().layer_structure;
         
         if (layer_structure.arr.length > 0)
         {
@@ -54,7 +54,7 @@ public class PopupMenuCopy extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
+                board_panel.boardHandling.leftButtonClicked(board_panel.rightButtonClickLocation);
             }
         });
         
@@ -66,13 +66,13 @@ public class PopupMenuCopy extends PopupMenuDisplay
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                board_panel.board_handling.return_from_state();
+                board_panel.boardHandling.return_from_state();
             }
         });
         
         this.add(done_item, 1);
         
-        eu.mihosoft.freerouting.board.Layer curr_layer = layer_structure.arr[board_panel.board_handling.settings.get_layer()];
+        eu.mihosoft.freerouting.board.Layer curr_layer = layer_structure.arr[board_panel.boardHandling.settings.get_layer()];
         disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
     }
     

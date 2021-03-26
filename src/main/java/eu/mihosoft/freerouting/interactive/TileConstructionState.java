@@ -114,7 +114,7 @@ public class TileConstructionState extends CornerItemConstructionState
                 {
                     hdlg.get_routing_board().start_notify_observers();
                 }
-                board.generate_snapshot();
+                board.generateSnapshot();
                 board.insert_obstacle(obstacle_shape, layer, cl_class, FixedState.UNFIXED);
                 if (this.observers_activated)
                 {

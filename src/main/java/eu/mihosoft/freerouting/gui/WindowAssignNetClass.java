@@ -65,7 +65,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
     private void add_net_class_combo_box()
     {
         this.net_rule_combo_box = new javax.swing.JComboBox<>();
-        eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+        eu.mihosoft.freerouting.board.RoutingBoard routing_board = board_frame.boardPanel.boardHandling.get_routing_board();
         for(int i = 0; i < routing_board.rules.net_classes.count(); ++i)
         {
             net_rule_combo_box.addItem(routing_board.rules.net_classes.get(i));
@@ -140,7 +140,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
             column_names[0] = resources.getString("net_name");
             column_names[1] = resources.getString("class_name");
             
-            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.boardPanel.boardHandling.get_routing_board().rules;
             data = new Object[board_rules.nets.max_net_no()][];
             for (int i = 0; i < data.length; ++i)
             {
@@ -152,7 +152,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
         /** Calculates the the valus in this table */
         public void set_values()
         {
-            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
+            eu.mihosoft.freerouting.rules.BoardRules board_rules = board_frame.boardPanel.boardHandling.get_routing_board().rules;
             Net[] sorted_arr = new Net[this.getRowCount()];
             for (int i = 0; i < sorted_arr.length; ++i)
             {

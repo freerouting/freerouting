@@ -137,7 +137,7 @@ public class UndoableObjects implements java.io.Serializable
     /**
      * Makes the current state of the list restorable by Undo.
      */
-    public void generate_snapshot()
+    public void generateSnapshot()
     {
         disable_redo();
         Collection<UndoableObjectNode> curr_deleted_objects_list = new LinkedList<UndoableObjectNode>();

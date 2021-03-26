@@ -85,7 +85,7 @@ public class DynamicRouteState extends RouteState
     
     public javax.swing.JPopupMenu get_popup_menu()
     {
-        return hdlg.get_panel().popup_menu_dynamic_route;
+        return hdlg.get_panel().popupMenuDynamicRoute;
     }
     
     public String get_help_id()

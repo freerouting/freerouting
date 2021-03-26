@@ -36,7 +36,7 @@ class PopupMenuChangeLayer extends javax.swing.JMenu
     {
         this.board_frame = p_board_frame;
         
-        eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+        eu.mihosoft.freerouting.board.LayerStructure layer_structure = board_frame.boardPanel.boardHandling.get_routing_board().layer_structure;
         this.item_arr = new LayermenuItem[layer_structure.signal_layer_count()];
         java.util.ResourceBundle resources = 
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.Default", p_board_frame.get_locale());
@@ -90,15 +90,15 @@ class PopupMenuChangeLayer extends javax.swing.JMenu
             {
                 public void actionPerformed(java.awt.event.ActionEvent evt)
                 {
-                    final BoardPanel board_panel = board_frame.board_panel;
-                    if (board_panel.board_handling.change_layer_action(layer_no))
+                    final BoardPanel board_panel = board_frame.boardPanel;
+                    if (board_panel.boardHandling.change_layer_action(layer_no))
                     {
-                        String layer_name = board_panel.board_handling.get_routing_board().layer_structure.arr[layer_no].name;
-                        board_panel.screen_messages.set_status_message(message1 + layer_name);
+                        String layer_name = board_panel.boardHandling.get_routing_board().layer_structure.arr[layer_no].name;
+                        board_panel.screenMessages.set_status_message(message1 + layer_name);
                     }
                     // If change_layer failed the status message is set inside change_layer_action
                     // because the information of the cause of the failing is missing here.
-                    board_panel.move_mouse(board_panel.right_button_click_location);
+                    board_panel.moveMouse(board_panel.rightButtonClickLocation);
                 }
             });
         }

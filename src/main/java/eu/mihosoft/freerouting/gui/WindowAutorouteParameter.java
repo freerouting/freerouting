@@ -4,7 +4,7 @@
  *
  *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
  *   Website www.freerouting.mihosoft.eu
-*
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
+ *   GNU General Public License at <http://www.gnu.org/licenses/>
  *   for more details.
  *
  * WindowAutorouteParameter.java
@@ -23,18 +23,35 @@
  */
 package eu.mihosoft.freerouting.gui;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Window handling parameters of the automatic routing.
  *
  * @author Alfons Wirtz
  */
-public class WindowAutorouteParameter extends BoardSavableSubWindow
-{
+public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
-    /** Creates a new instance of WindowAutorouteParameter */
-    public WindowAutorouteParameter(BoardFrame p_board_frame)
-    {
-        this.board_handling = p_board_frame.board_panel.board_handling;
+    private final eu.mihosoft.freerouting.interactive.BoardHandling board_handling;
+    private final javax.swing.JLabel[] signal_layer_name_arr;
+    private final javax.swing.JCheckBox[] signal_layer_active_arr;
+    private final List<JComboBox<String>> signalLayerComboBoxList;
+    private final javax.swing.JCheckBox vias_allowed;
+    private final javax.swing.JCheckBox fanout_pass_button;
+    private final javax.swing.JCheckBox autoroute_pass_button;
+    private final javax.swing.JCheckBox postroute_pass_button;
+    private final WindowAutorouteDetailParameter detail_window;
+    private final DetailListener detail_listener;
+    private final String horizontal;
+    private final String vertical;
+
+    /**
+     * Creates a new instance of WindowAutorouteParameter
+     */
+    public WindowAutorouteParameter(BoardFrame p_board_frame) {
+        board_handling = p_board_frame.boardPanel.boardHandling;
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.gui.WindowAutorouteParameter", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
@@ -72,9 +89,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         int signal_layer_count = layer_structure.signal_layer_count();
         signal_layer_name_arr = new javax.swing.JLabel[signal_layer_count];
         signal_layer_active_arr = new javax.swing.JCheckBox[signal_layer_count];
-        combo_box_arr = new javax.swing.JComboBox[signal_layer_count];
-        for (int i = 0; i < signal_layer_count; ++i)
-        {
+        signalLayerComboBoxList = new ArrayList<>(signal_layer_count);
+        for (int i = 0; i < signal_layer_count; ++i) {
             signal_layer_name_arr[i] = new javax.swing.JLabel();
             eu.mihosoft.freerouting.board.Layer curr_signal_layer = layer_structure.get_signal_layer(i);
             signal_layer_name_arr[i].setText(curr_signal_layer.name);
@@ -85,13 +101,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
             signal_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
             gridbag.setConstraints(signal_layer_active_arr[i], gridbag_constraints);
             main_panel.add(signal_layer_active_arr[i]);
-            combo_box_arr[i] = new javax.swing.JComboBox<>();
-            combo_box_arr[i].addItem(this.horizontal);
-            combo_box_arr[i].addItem(this.vertical);
-            combo_box_arr[i].addActionListener(new PreferredDirectionListener(i));
+
+            JComboBox<String> jComboBox = new JComboBox<>();
+            jComboBox.addItem(this.horizontal);
+            jComboBox.addItem(this.vertical);
+            jComboBox.addActionListener(new PreferredDirectionListener(i));
+            signalLayerComboBoxList.add(jComboBox);
             gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-            gridbag.setConstraints(combo_box_arr[i], gridbag_constraints);
-            main_panel.add(combo_box_arr[i]);
+            gridbag.setConstraints(jComboBox, gridbag_constraints);
+            main_panel.add(jComboBox);
         }
 
         javax.swing.JLabel separator = new javax.swing.JLabel("----------------------------------------  ");
@@ -166,9 +184,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     /**
      * Recalculates all displayed values
      */
-    public void refresh()
-    {
-        eu.mihosoft.freerouting.interactive.AutorouteSettings settings = this.board_handling.settings.autoroute_settings;
+    public void refresh() {
+        eu.mihosoft.freerouting.interactive.AutorouteSettings settings = this.board_handling.settings.autorouteSettings;
         eu.mihosoft.freerouting.board.LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
 
         this.vias_allowed.setSelected(settings.get_vias_allowed());
@@ -176,141 +193,107 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         this.autoroute_pass_button.setSelected(settings.get_with_autoroute());
         this.postroute_pass_button.setSelected(settings.get_with_postroute());
 
-        for (int i = 0; i < signal_layer_active_arr.length; ++i)
-        {
+        for (int i = 0; i < signal_layer_active_arr.length; ++i) {
             this.signal_layer_active_arr[i].setSelected(settings.get_layer_active(layer_structure.get_layer_no(i)));
         }
 
-        for (int i = 0; i < combo_box_arr.length; ++i)
-        {
-            if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i)))
-            {
-                this.combo_box_arr[i].setSelectedItem(this.horizontal);
-            }
-            else
-            {
-                this.combo_box_arr[i].setSelectedItem(this.vertical);
+        for (int i = 0; i < signalLayerComboBoxList.size(); ++i) {
+            if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i))) {
+                signalLayerComboBoxList.get(i).setSelectedItem(this.horizontal);
+            } else {
+                signalLayerComboBoxList.get(i).setSelectedItem(this.vertical);
             }
         }
         this.detail_window.refresh();
     }
 
-    public void dispose()
-    {
+    public void dispose() {
         detail_window.dispose();
         super.dispose();
     }
 
-    public void parent_iconified()
-    {
+    public void parent_iconified() {
         detail_window.parent_iconified();
         super.parent_iconified();
     }
 
-    public void parent_deiconified()
-    {
+    public void parent_deiconified() {
         detail_window.parent_deiconified();
         super.parent_deiconified();
     }
-    private final eu.mihosoft.freerouting.interactive.BoardHandling board_handling;
-    private final javax.swing.JLabel[] signal_layer_name_arr;
-    private final javax.swing.JCheckBox[] signal_layer_active_arr;
-    private final javax.swing.JComboBox<String>[] combo_box_arr;
-    private final javax.swing.JCheckBox vias_allowed;
-    private final javax.swing.JCheckBox fanout_pass_button;
-    private final javax.swing.JCheckBox autoroute_pass_button;
-    private final javax.swing.JCheckBox postroute_pass_button;
-    private final WindowAutorouteDetailParameter detail_window;
-    private final DetailListener detail_listener;
-    private final String horizontal;
-    private final String vertical;
 
-    private class DetailListener implements java.awt.event.ActionListener
-    {
+    private class DetailListener implements java.awt.event.ActionListener {
 
-        public void actionPerformed(java.awt.event.ActionEvent p_evt)
-        {
-            if (first_time)
-            {
+        public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+            if (first_time) {
                 java.awt.Point location = getLocation();
                 detail_window.setLocation((int) location.getX() + 200, (int) location.getY() + 100);
                 first_time = false;
             }
             detail_window.setVisible(true);
         }
+
         private boolean first_time = true;
     }
 
-    private class LayerActiveListener implements java.awt.event.ActionListener
-    {
+    private class LayerActiveListener implements java.awt.event.ActionListener {
 
-        public LayerActiveListener(int p_layer_no)
-        {
+        public LayerActiveListener(int p_layer_no) {
             signal_layer_no = p_layer_no;
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent p_evt)
-        {
+        public void actionPerformed(java.awt.event.ActionEvent p_evt) {
             int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-            board_handling.settings.autoroute_settings.set_layer_active(curr_layer_no, signal_layer_active_arr[this.signal_layer_no].isSelected());
+            board_handling.settings.autorouteSettings.set_layer_active(curr_layer_no, signal_layer_active_arr[this.signal_layer_no].isSelected());
         }
+
         private final int signal_layer_no;
     }
 
-    private class PreferredDirectionListener implements java.awt.event.ActionListener
-    {
+    private class PreferredDirectionListener implements java.awt.event.ActionListener {
 
-        public PreferredDirectionListener(int p_layer_no)
-        {
+        public PreferredDirectionListener(int p_layer_no) {
             signal_layer_no = p_layer_no;
         }
 
-        public void actionPerformed(java.awt.event.ActionEvent p_evt)
-        {
+        public void actionPerformed(java.awt.event.ActionEvent p_evt) {
             int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-            board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no,
-                    combo_box_arr[signal_layer_no].getSelectedItem() == horizontal);
+            board_handling.settings.autorouteSettings.set_preferred_direction_is_horizontal(curr_layer_no,
+                                                                                             signalLayerComboBoxList.get(signal_layer_no).getSelectedItem() == horizontal);
         }
+
         private final int signal_layer_no;
     }
 
-    private class ViasAllowedListener implements java.awt.event.ActionListener
-    {
+    private class ViasAllowedListener implements java.awt.event.ActionListener {
 
-        public void actionPerformed(java.awt.event.ActionEvent p_evt)
-        {
-            board_handling.settings.autoroute_settings.set_vias_allowed(vias_allowed.isSelected());
+        public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+            board_handling.settings.autorouteSettings.set_vias_allowed(vias_allowed.isSelected());
         }
     }
 
-    private class FanoutListener implements java.awt.event.ActionListener
-    {
+    private class FanoutListener implements java.awt.event.ActionListener {
 
-        public void actionPerformed(java.awt.event.ActionEvent p_evt)
-        {
-            eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autoroute_settings;
+        public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+            eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autorouteSettings;
             autoroute_settings.set_with_fanout(fanout_pass_button.isSelected());
             autoroute_settings.set_start_pass_no(1);
         }
     }
 
-    private class AutorouteListener implements java.awt.event.ActionListener
-    {
+    private class AutorouteListener implements java.awt.event.ActionListener {
 
-        public void actionPerformed(java.awt.event.ActionEvent p_evt)
-        {
-            eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autoroute_settings;
+        public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+            eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autorouteSettings;
             autoroute_settings.set_with_autoroute(autoroute_pass_button.isSelected());
             autoroute_settings.set_start_pass_no(1);
         }
     }
 
-    private class PostrouteListener implements java.awt.event.ActionListener
-    {
+    private class PostrouteListener implements java.awt.event.ActionListener {
 
-        public void actionPerformed(java.awt.event.ActionEvent p_evt)
-        {
-            eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autoroute_settings;
+        public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+            eu.mihosoft.freerouting.interactive.AutorouteSettings autoroute_settings = board_handling.settings.autorouteSettings;
             autoroute_settings.set_with_postroute(postroute_pass_button.isSelected());
             autoroute_settings.set_start_pass_no(1);
         }

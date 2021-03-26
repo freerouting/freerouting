@@ -172,10 +172,10 @@ public class ExpandTestState extends InteractiveState
 
     public void draw(java.awt.Graphics p_graphics)
     {
-        autoroute_engine.draw(p_graphics, hdlg.graphics_context, 0.1);
+        autoroute_engine.draw(p_graphics, hdlg.graphicsContext, 0.1);
         if (this.autoroute_result != null)
         {
-            this.autoroute_result.draw(p_graphics, hdlg.graphics_context);
+            this.autoroute_result.draw(p_graphics, hdlg.graphicsContext);
         }
     }
 
@@ -205,8 +205,8 @@ public class ExpandTestState extends InteractiveState
         this.control_settings = new AutorouteControl(hdlg.get_routing_board(), route_net_no, hdlg.settings);
         // this.control_settings.ripup_allowed = true;
         // this.control_settings.is_fanout = true;
-        this.control_settings.ripup_pass_no = hdlg.settings.autoroute_settings.get_start_pass_no();
-        this.control_settings.ripup_costs = this.control_settings.ripup_pass_no * hdlg.settings.autoroute_settings.get_start_ripup_costs();
+        this.control_settings.ripup_pass_no = hdlg.settings.autorouteSettings.getStartPassNo();
+        this.control_settings.ripup_costs = this.control_settings.ripup_pass_no * hdlg.settings.autorouteSettings.get_start_ripup_costs();
         this.control_settings.vias_allowed = false;
         this.autoroute_engine = new AutorouteEngine(board, this.control_settings.trace_clearance_class_no, false);
         this.autoroute_engine.init_connection(route_net_no, null, null);
@@ -242,7 +242,7 @@ public class ExpandTestState extends InteractiveState
                     this.autoroute_engine.autoroute_search_tree,
                     hdlg.get_routing_board().rules.get_trace_angle_restriction(),
                     ripped_item_list, eu.mihosoft.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT);
-            hdlg.get_routing_board().generate_snapshot();
+            hdlg.get_routing_board().generateSnapshot();
             SortedSet<Item> ripped_connections = new TreeSet<Item>();
             for (Item curr_ripped_item : ripped_item_list)
             {

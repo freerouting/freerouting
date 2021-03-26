@@ -183,7 +183,7 @@ public class HoleConstructionState extends CornerItemConstructionState
                 {
                     hdlg.get_routing_board().start_notify_observers();
                 }
-                hdlg.get_routing_board().generate_snapshot();
+                hdlg.get_routing_board().generateSnapshot();
                 hdlg.get_routing_board().remove_item( item_to_modify);
                 hdlg.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(),
                         item_to_modify.clearance_class_no(), eu.mihosoft.freerouting.board.FixedState.UNFIXED);

@@ -22,5 +22,5 @@ public interface IBoardHandling {
                       PolylineShape[] p_outline_shapes, String p_outline_clearance_class_name,
                       BoardRules p_rules, eu.mihosoft.freerouting.board.Communication p_board_communication, TestLevel p_test_level);
 
-    Settings get_settings();
+    Settings getSettings();
 }

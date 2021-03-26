@@ -192,19 +192,19 @@ public class WindowSnapshot extends BoardSavableSubWindow
         int index = list.getSelectedIndex();
         if (index >= 0 && list_model.getSize() > index)
         {
-            eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
+            eu.mihosoft.freerouting.interactive.BoardHandling board_handling = board_frame.boardPanel.boardHandling;
             eu.mihosoft.freerouting.interactive.SnapShot curr_snapshot = list_model.elementAt(index);
             
             curr_snapshot.go_to(board_handling);
             
             if (curr_snapshot.settings.get_snapshot_attributes().object_colors)
             {
-                board_handling.graphics_context.item_color_table =
+                board_handling.graphicsContext.item_color_table =
                         new eu.mihosoft.freerouting.boardgraphics.ItemColorTableModel(curr_snapshot.graphics_context.item_color_table);
-                board_handling.graphics_context.other_color_table =
+                board_handling.graphicsContext.other_color_table =
                         new eu.mihosoft.freerouting.boardgraphics.OtherColorTableModel(curr_snapshot.graphics_context.other_color_table);
                 
-                board_frame.color_manager.set_table_models(board_handling.graphics_context);
+                board_frame.color_manager.set_table_models(board_handling.graphicsContext);
             }
             
             if (curr_snapshot.settings.get_snapshot_attributes().display_region)
@@ -212,15 +212,15 @@ public class WindowSnapshot extends BoardSavableSubWindow
                 java.awt.Point viewport_position = curr_snapshot.copy_viewport_position();
                 if (viewport_position != null)
                 {
-                    board_handling.graphics_context.coordinate_transform = new eu.mihosoft.freerouting.boardgraphics.CoordinateTransform(curr_snapshot.graphics_context.coordinate_transform);
-                    java.awt.Dimension panel_size = board_handling.graphics_context.get_panel_size();
-                    board_frame.board_panel.setSize(panel_size);
-                    board_frame.board_panel.setPreferredSize(panel_size);
-                    board_frame.board_panel.set_viewport_position(viewport_position);
+                    board_handling.graphicsContext.coordinate_transform = new eu.mihosoft.freerouting.boardgraphics.CoordinateTransform(curr_snapshot.graphics_context.coordinate_transform);
+                    java.awt.Dimension panel_size = board_handling.graphicsContext.get_panel_size();
+                    board_frame.boardPanel.setSize(panel_size);
+                    board_frame.boardPanel.setPreferredSize(panel_size);
+                    board_frame.boardPanel.setViewportPosition(viewport_position);
                 }
             }
             
-            board_frame.refresh_windows();
+            board_frame.refreshWindows();
             board_frame.hilight_selected_button();
             board_frame.setVisible(true);
             board_frame.repaint();
@@ -248,7 +248,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
-            eu.mihosoft.freerouting.interactive.SnapShot new_snapshot = eu.mihosoft.freerouting.interactive.SnapShot.get_instance(name_field.getText(), board_frame.board_panel.board_handling);
+            eu.mihosoft.freerouting.interactive.SnapShot new_snapshot = eu.mihosoft.freerouting.interactive.SnapShot.get_instance(name_field.getText(), board_frame.boardPanel.boardHandling);
             if (new_snapshot != null)
             {
                 ++snapshot_count;

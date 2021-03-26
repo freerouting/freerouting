@@ -161,7 +161,7 @@ public class RouteState extends InteractiveState
         }
         // Switch to stitch mode for nets, which are shove fixed.
         boolean is_stitch_route = p_board_handling.settings.is_stitch_route || curr_net.get_class().is_shove_fixed() || !curr_net.get_class().get_pull_tight();
-        routing_board.generate_snapshot();
+        routing_board.generateSnapshot();
         RouteState new_instance;
         if (is_stitch_route)
         {
@@ -267,7 +267,7 @@ public class RouteState extends InteractiveState
     static private Item pick_routing_item(IntPoint p_location, int p_layer_no, BoardHandling p_hdlg)
     {
 
-        if (p_layer_no == p_hdlg.settings.layer || (p_hdlg.graphics_context.get_layer_visibility(p_layer_no) <= 0))
+        if (p_layer_no == p_hdlg.settings.layer || (p_hdlg.graphicsContext.get_layer_visibility(p_layer_no) <= 0))
         {
             return null;
         }
@@ -495,7 +495,7 @@ public class RouteState extends InteractiveState
                     String layer_name = hdlg.get_routing_board().layer_structure.arr[p_new_layer].name;
                     hdlg.screen_messages.set_status_message(resources.getString("layer_changed_to") + " " + layer_name);
                     // make the current situation restorable by undo
-                    hdlg.get_routing_board().generate_snapshot();
+                    hdlg.get_routing_board().generateSnapshot();
                 }
                 if (activityReplayFile != null)
                 {
@@ -556,7 +556,7 @@ public class RouteState extends InteractiveState
     {
         if (route != null)
         {
-            route.draw(p_graphics, hdlg.graphics_context);
+            route.draw(p_graphics, hdlg.graphicsContext);
         }
     }
 

@@ -34,7 +34,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
     /** Creates a new instance of VisibilityFrame */
     public WindowVisibility(BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr)
     {
-        this.board_panel = p_board_frame.board_panel;
+        this.board_panel = p_board_frame.boardPanel;
         this.setTitle(p_title);
         
         // create main panel
@@ -98,7 +98,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
     
     protected eu.mihosoft.freerouting.interactive.BoardHandling get_board_handling()
     {
-        return board_panel.board_handling;
+        return board_panel.boardHandling;
     }
     
     protected void set_all_minimum()

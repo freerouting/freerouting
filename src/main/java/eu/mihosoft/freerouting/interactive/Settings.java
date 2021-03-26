@@ -59,7 +59,7 @@ public class Settings implements java.io.Serializable
         zoom_with_wheel = true;
         manual_trace_half_width_arr = new int[p_board.get_layer_count()];
         Arrays.fill(manual_trace_half_width_arr, 1000);
-        autoroute_settings = new AutorouteSettings(p_board);
+        autorouteSettings = new AutorouteSettings(p_board);
         item_selection_filter = new ItemSelectionFilter();
         snapshot_attributes = new SnapShot.Attributes();
     }
@@ -89,7 +89,7 @@ public class Settings implements java.io.Serializable
         this.manual_via_rule_index = p_settings.manual_via_rule_index;
         this.manual_trace_half_width_arr = new int [p_settings.manual_trace_half_width_arr.length];
         System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr.length);
-        this.autoroute_settings = new AutorouteSettings(p_settings.autoroute_settings);
+        this.autorouteSettings = new AutorouteSettings(p_settings.autorouteSettings);
         this.item_selection_filter = new ItemSelectionFilter(p_settings.item_selection_filter);
         this.snapshot_attributes = new SnapShot.Attributes(p_settings.snapshot_attributes);
     }
@@ -568,7 +568,7 @@ public class Settings implements java.io.Serializable
     /** The array of manual trace half widths, initially equal to the automatic trace half widths. */
     final int [] manual_trace_half_width_arr;
     
-    public AutorouteSettings autoroute_settings;
+    public AutorouteSettings autorouteSettings;
     
     /** The filter used in interactive selection of board items. */
     ItemSelectionFilter item_selection_filter;
@@ -584,4 +584,8 @@ public class Settings implements java.io.Serializable
      * so that they can be replayed later
      */
     private transient ActivityReplayFile activityReplayFile;
+
+    public AutorouteSettings getAutorouteSettings() {
+        return autorouteSettings;
+    }
 }
