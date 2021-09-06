@@ -14,17 +14,15 @@
  */
 package eu.mihosoft.freerouting.autoroute;
 
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import eu.mihosoft.freerouting.autoroute.BatchOptRoute.ReadSortedRouteItems;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.logger.FRLogger;
@@ -35,31 +33,88 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  */
 public class BatchOptRouteMT extends BatchOptRoute  {
 	private BoardUpdateStrategy board_update_strategy;
+	private ItemSelectionStrategy item_selection_strategy;
 	private ThreadPoolExecutor pool;
-	private RouteResult best_route_result;
+	private ItemRouteResult best_route_result;
 	private OptimizeRouteTask winning_candidate;
 	private int thread_pool_size;
-	private int num_tasks = 0;
 	private int num_tasks_finished = 0;
 	private int update_count = 0;
+	private ArrayList<Integer> item_ids = new ArrayList<Integer>();
+	private HashMap<Integer, ItemRouteResult> result_map = new HashMap<Integer, ItemRouteResult>();
 	private CountDownLatch task_completion_signal = new CountDownLatch(1);
+	private ArrayList<BoardUpdateStrategy> hybrid_list = new ArrayList<BoardUpdateStrategy>();
+	private int hybrid_index = -1;
 	
 	/**
 	 * @param p_thread
 	 */
 	public BatchOptRouteMT(InteractiveActionThread p_thread, int p_thread_pool_size,
-                           BoardUpdateStrategy p_board_update_strategy) {
+                           BoardUpdateStrategy p_board_update_strategy,
+                           ItemSelectionStrategy p_item_selection_strategy,
+                           String p_hrid_ratio) {
 		super(p_thread);
 		
-		this.thread_pool_size = p_thread_pool_size;
-        this.board_update_strategy = p_board_update_strategy;
-		
-		best_route_result = new RouteResult(false);
+		this.thread_pool_size        = p_thread_pool_size;
+        this.board_update_strategy   = p_board_update_strategy;
+        this.item_selection_strategy = p_board_update_strategy == BoardUpdateStrategy.GLOBAL_OPTIMAL ?
+        		                       ItemSelectionStrategy.SEQUENTIAL : p_item_selection_strategy;
+        
+		best_route_result = new ItemRouteResult(-1);
 		winning_candidate = null;
+		
+		if (this.board_update_strategy == BoardUpdateStrategy.HYBRID)
+		{
+			int num_optimal = 1, num_prioritized = 1;
+			
+			if (p_hrid_ratio != null && p_hrid_ratio.indexOf(":") > 0)
+			{
+				String[] ratio = p_hrid_ratio.split(":");
+				
+				try
+				{
+					num_optimal     = Integer.parseInt(ratio[0], 10);
+					num_prioritized = Integer.parseInt(ratio[1], 10);
+				}
+				catch(NumberFormatException e) 
+				{
+					FRLogger.error("Invalid hybrid ratio", e);
+					num_optimal = 1; 	num_prioritized = 1;
+				}
+				
+				for (int i = 0; i < num_optimal; ++i) 
+				{
+					hybrid_list.add(BoardUpdateStrategy.GLOBAL_OPTIMAL);
+				}
+				
+				for (int i = 0; i < num_prioritized; ++i) 
+				{
+					hybrid_list.add(BoardUpdateStrategy.GREEDY);
+				}
+			}
+		}
+		
+		hybrid_index = -1;
 	}
 	
-	public int get_num_tasks()          { return num_tasks;          }
+	public int get_num_tasks()          { return item_ids.size();          }
 	public int get_num_tasks_finished() { return num_tasks_finished; }
+	
+	private BoardUpdateStrategy current_board_update_strategy() 
+	{
+		if (this.board_update_strategy == BoardUpdateStrategy.HYBRID)
+		{
+			return hybrid_list.get(hybrid_index);
+		}
+		
+		return this.board_update_strategy;
+	}
+	
+	private ItemSelectionStrategy current_item_selection_strategy() 
+	{
+		return current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL ?
+                ItemSelectionStrategy.SEQUENTIAL : this.item_selection_strategy;
+	}
 	
 	synchronized void prepare_task_completion_signal() 
 	{
@@ -74,26 +129,20 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 	{
 		++num_tasks_finished;
 		
-		RouteResult r = task.getRouteResult();
+		ItemRouteResult r = task.getRouteResult();
+		
+		result_map.put(r.item_id(), r);
 		
 		boolean won = false;
 		
-		if (r.improved) {	
+		if (r.improved()) {	
 			if (winning_candidate == null) {
 				won = true;
 				winning_candidate = task;
 				best_route_result = r;
 				
 			} else {		
-				if (r.incomplete_count_after < best_route_result.incomplete_count_after  
-					|| (   r.incomplete_count_after == best_route_result.incomplete_count_after
-						&& (r.via_count_after < best_route_result.via_count_after 
-					         || (    r.via_count_after == best_route_result.via_count_after
-						          && r.trace_length_after < best_route_result.trace_length_after
-						        )
-					       )
-					   ) 
-				   ) {
+				if (r.improved_over(best_route_result)) {
 					won = true;
 
 					winning_candidate.clean();
@@ -104,7 +153,7 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 			}
 		}
 		
-		if (won && this.board_update_strategy == BoardUpdateStrategy.GREEDY) { 
+		if (won && current_board_update_strategy() == BoardUpdateStrategy.GREEDY) { 
 			update_master_routing_board(); // new tasks will copy the updated board
 		}
 
@@ -116,18 +165,74 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 	{
     	this.thread.hdlg.update_routing_board(winning_candidate.routing_board);
     	this.routing_board = this.thread.hdlg.get_routing_board(); 
-    	
+
+    	this.min_cumulative_trace_length_before = calc_weighted_trace_length(this.routing_board);
+ 	
         double new_trace_length = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
         this.thread.hdlg.screen_messages.set_post_route_info(this.routing_board.get_vias().size(), new_trace_length);
         
         ++update_count;
 	}
 	
+	private void prepare_next_round_of_route_items() 
+	{       
+        if (this.board_update_strategy == BoardUpdateStrategy.HYBRID)
+        {
+        	hybrid_index = (hybrid_index + 1) % hybrid_list.size();
+        }
+        
+		item_ids.clear();
+		
+        this.sorted_route_items = new ReadSortedRouteItems();
+
+		if (current_item_selection_strategy() == ItemSelectionStrategy.PRIORITIZED && result_map.size() > 0) 
+		{
+			ArrayList<Integer> new_item_ids = new ArrayList<Integer>();
+			PriorityQueue<ItemRouteResult> pq = new PriorityQueue<ItemRouteResult>();
+			
+	        for (Item item = sorted_route_items.next(); item != null; item = sorted_route_items.next()) 
+	        {   
+	        	ItemRouteResult r = result_map.get(item.get_id_no());
+	        	if (r != null)
+	        	{   // use PriorityQueue to sort item according to route result
+	        		pq.add(r);
+	        	}
+	        	else 
+	        	{
+	        		new_item_ids.add(item.get_id_no());
+	        	}
+	        }
+
+	        for (ItemRouteResult r = pq.poll(); r != null; r = pq.poll())
+	        {
+	        	item_ids.add(r.item_id());
+	        } 
+	        
+	        item_ids.addAll(new_item_ids);
+		} 
+		else 
+		{
+	        for (Item item = sorted_route_items.next(); item != null; item = sorted_route_items.next()) 
+	        {   
+	        	item_ids.add(item.get_id_no());
+	        }
+	        
+	        if (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM)
+	        {
+	        	Collections.shuffle(item_ids);
+	        }		
+		}
+		
+        this.sorted_route_items = null;
+    	result_map.clear();
+	}
+	
+	
     @Override
     protected boolean opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
     {
     	long startTime = System.currentTimeMillis();
-    	update_count = 0;
+    	update_count = 0;			num_tasks_finished = 0;
 
 		if (winning_candidate != null) 
 		{
@@ -136,26 +241,17 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 
     	boolean route_improved = false;
         int via_count_before = this.routing_board.get_vias().size();
-        double trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
-        this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before);
+        double user_trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+        this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, user_trace_length_before);
         this.min_cumulative_trace_length_before = calc_weighted_trace_length(routing_board);
+        //double pass_trace_length_before = this.min_cumulative_trace_length_before;
         
-        this.sorted_route_items = new ReadSortedRouteItems();
-
-        // retrieve all items first to allow concurrent item access
-        ArrayList<Item> route_items = new ArrayList<Item>();
-        for (Item item = sorted_route_items.next(); item != null; item = sorted_route_items.next()) 
-        {   
-        	route_items.add(item);
-        }
-        this.sorted_route_items = null;
+        prepare_next_round_of_route_items();
                 
         FRLogger.info("\n=====================================================================================\n");
-        FRLogger.info("Start to run optimization pass " + p_pass_no + " with " + route_items.size() + " items" + " and " + via_count_before + " vias");
-		
-        num_tasks = route_items.size();    num_tasks_finished = 0;
-        
-		best_route_result = new RouteResult(false);
+        FRLogger.info("Start to run optimization pass " + p_pass_no + " with " + item_ids.size() + " items" + " and " + via_count_before + " vias");
+	        
+		best_route_result = new ItemRouteResult(-1);
 		winning_candidate = null;
 		
 		pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(thread_pool_size, 
@@ -169,15 +265,13 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 			         }
 			   );
 		
-		for (int t = 0; t < route_items.size();  ) {
-			//if (p_pass_no == 1 && route_items.get(t).get_id_no() != 95999) { ++t; continue; }  // temp test
-			
+		for (int t = 0; t < item_ids.size();  ) {
 			// each task needs a copy of routing_board, so schedule just enough tasks
 			// to keep workers busy in order not to exhaust JVM memory so that  
 			// it can run on systems without huge amount of RAM
 			if (pool.getActiveCount() < thread_pool_size) {
-				int item_id = route_items.get(t).get_id_no();
-				FRLogger.info("Scheduling #" + t + " of " + num_tasks + " tasks for item No. " + item_id + " ......");
+				int item_id = item_ids.get(t);
+				FRLogger.info("Scheduling #" + t + " of " + item_ids.size() + " tasks for item No. " + item_id + " ......");
 				
 	        	pool.execute(new OptimizeRouteTask(this, item_id, 
 	        			     p_pass_no, p_with_prefered_directions, 
@@ -210,7 +304,7 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 	            if (this.thread.is_stop_requested())
 	            {
 	            	pool.shutdownNow();
-	                return best_route_result.improved;
+	                return best_route_result.improved();
 	            }
 	        }
         } 
@@ -226,10 +320,10 @@ public class BatchOptRouteMT extends BatchOptRoute  {
         
         pool = null;
         
-        route_improved = best_route_result.improved;
+        route_improved = best_route_result.improved();
         
         if (!interrupted && route_improved &&
-        	this.board_update_strategy == BoardUpdateStrategy.GLOBAL_OPTIMAL) 
+        	current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) 
         { 
 			update_master_routing_board(); 
         }
@@ -244,15 +338,23 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 		long minutes = duration / 60000;
 		float sec = (duration % 60000) /1000.0F;
 		
-		FRLogger.info("-------- Finished 1 opt_route_pass on pass " + p_pass_no + 
+		String us = current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL ? 
+			        "Global Optimal" : "Greedy";
+		String is = current_item_selection_strategy() == ItemSelectionStrategy.SEQUENTIAL ?
+				    "Sequential" : (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM ?
+						            "Random" : "Prioritized");
+        double user_trace_length_after = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+        
+		FRLogger.info("-------- Finished pass #" + p_pass_no + 
 				      " in " +  minutes + " minutes " + sec + " s with " +
 				      update_count + " board updates using " + 
-				      thread_pool_size + " threads and " +
-				      (board_update_strategy == BoardUpdateStrategy.GLOBAL_OPTIMAL 
-				       ? "global_optimal" : "greedy") + " strategy");
-        FRLogger.info("interrupted: " + interrupted + ", Improved: " + best_route_result.improved + 
-  		      ", via-: " + (via_count_before - best_route_result.via_count_after) + 
-  		      ", len-: " + (trace_length_before - best_route_result.trace_length_after));
+				      thread_pool_size + " threads and " + us + " strategy & " +
+				      is + " item selection" );
+        FRLogger.info("Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + 
+    		  ", via#: " +  best_route_result.via_count() + 
+      		  ", len: " + user_trace_length_after +
+  		      ", via-: " + (via_count_before - best_route_result.via_count()) + 
+  		      ", len-: " + (user_trace_length_before - user_trace_length_after));
 				
         return route_improved;
     }

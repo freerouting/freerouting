@@ -16,7 +16,6 @@ package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Iterator;
 
-import eu.mihosoft.freerouting.autoroute.BatchOptRoute.RouteResult;
 import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.datastructures.UndoableObjects;
 import eu.mihosoft.freerouting.datastructures.UndoableObjects.UndoableObjectNode;
@@ -32,7 +31,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
 	private Item curr_item;
 	private int pass_no;
 	private boolean with_prefered_directions; 
-	private RouteResult route_result;
+	private ItemRouteResult route_result;
     private BatchOptRouteMT optimizer;
     
 	public OptimizeRouteTask(BatchOptRouteMT p_optimizer, int item_id, 
@@ -89,16 +88,16 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
 				       ") on pass " + pass_no + " with item id: " +
 		              curr_item.get_id_no() + " in " +  minutes + " m " + sec + "s" +
 				      " won: " + winning_candidate + 
-		              " Improved: " + route_result.improved +
+		              " Improved: " + route_result.improved()+
 		              " via-: " + route_result.via_count_reduced() +
 		              (winning_candidate? (" len-: " + route_result.length_reduced()) : "") +
-		              " incomplete(" + route_result.incomplete_count_before +
-		              ", " + route_result.incomplete_count_after + ")");
+		              " incomplete(" + route_result.incomplete_count_before() +
+		              ", " + route_result.incomplete_count() + ")");
 		
 		if (!winning_candidate) { clean(); }
 	}
 	
-	public RouteResult getRouteResult() { return this.route_result; }
+	public ItemRouteResult getRouteResult() { return this.route_result; }
 	
 	public Item getItem() { return curr_item; }
 	

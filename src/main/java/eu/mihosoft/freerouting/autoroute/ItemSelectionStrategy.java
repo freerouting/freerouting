@@ -18,6 +18,6 @@ package eu.mihosoft.freerouting.autoroute;
  * @author Bob Fu
  *
  */
-public enum BoardUpdateStrategy {
-	GREEDY, GLOBAL_OPTIMAL, HYBRID
+public enum ItemSelectionStrategy {
+	SEQUENTIAL, RANDOM, PRIORITIZED
 }

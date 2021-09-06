@@ -54,6 +54,7 @@ import eu.mihosoft.freerouting.board.ItemSelectionFilter;
 
 import eu.mihosoft.freerouting.boardgraphics.GraphicsContext;
 import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
+import eu.mihosoft.freerouting.autoroute.ItemSelectionStrategy;
 import eu.mihosoft.freerouting.board.CoordinateTransform;
 import eu.mihosoft.freerouting.board.Unit;
 import eu.mihosoft.freerouting.board.TestLevel;
@@ -1766,6 +1767,26 @@ public class BoardHandling extends BoardHandlingImpl
     {
     	return board_update_strategy;
     }
+
+    public void set_hybrid_ratio(String p_hybrid_ratio)
+    {
+    	hybrid_ratio = p_hybrid_ratio;
+    }
+    
+    public String get_hybrid_ratio()
+    {
+    	return hybrid_ratio;
+    }
+
+    public void set_item_selection_strategy(ItemSelectionStrategy p_item_selection_strategy)
+    {
+    	item_selection_strategy = p_item_selection_strategy;
+    }
+    
+    public ItemSelectionStrategy get_item_selection_strategy()
+    {
+    	return item_selection_strategy;
+    }
     
     public void set_num_threads(int p_value)
     {
@@ -1780,7 +1801,9 @@ public class BoardHandling extends BoardHandlingImpl
     /** thread pool size */
     private int num_threads;
     private BoardUpdateStrategy board_update_strategy;
-
+    private String hybrid_ratio;
+    private ItemSelectionStrategy item_selection_strategy;
+    
     /** The graphical context for drawing the board. */
     public GraphicsContext graphics_context = null;
     /** For transforming coordinates between the user and the board coordinate space */

@@ -133,7 +133,7 @@ public class BatchOptRoute
             {
                 break;
             }
-            if (opt_route_item(curr_item, p_pass_no, p_with_prefered_directions).improved)
+            if (opt_route_item(curr_item, p_pass_no, p_with_prefered_directions).improved())
             {
                 route_improved = true;
             }
@@ -160,7 +160,8 @@ public class BatchOptRoute
     /**
      * Trie to improve the route by retouting the connections containing p_item.
      */
-    protected RouteResult opt_route_item(Item p_item, int p_pass_no, boolean p_with_prefered_directions)
+    protected ItemRouteResult opt_route_item(Item p_item, int p_pass_no, 
+    		                                 boolean p_with_prefered_directions)
     {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
@@ -198,7 +199,7 @@ public class BatchOptRoute
         {
             if (curr_item.is_user_fixed())
             {
-                return new RouteResult(false);
+                return new ItemRouteResult(p_item.get_id_no());
             }
         }
         
@@ -230,12 +231,14 @@ public class BatchOptRoute
         
         int via_count_after = this.routing_board.get_vias().size();
         double trace_length_after = calc_weighted_trace_length(routing_board);
+        
+        ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), 
+        		via_count_before, via_count_after,
+        		this.min_cumulative_trace_length_before, trace_length_after, 
+        		incomplete_count_before, incomplete_count_after);
         boolean route_improved = !this.thread.is_stop_requested() && 
-        		(incomplete_count_after < incomplete_count_before ||
-                  (incomplete_count_after == incomplete_count_before &&
-                    (via_count_after < via_count_before ||
-                     (via_count_after == via_count_before &&
-                      this.min_cumulative_trace_length_before > trace_length_after))));
+        		                 result.improved();
+        result.update_improved(route_improved);
         
         if (route_improved)
         {
@@ -262,10 +265,7 @@ public class BatchOptRoute
         	if (!this.clone_board) { routing_board.undo(null); }
         }
         
-        return new RouteResult(route_improved, 
-	        		via_count_before, via_count_after,
-	        		this.min_cumulative_trace_length_before, trace_length_after, 
-	        		incomplete_count_before, incomplete_count_after);
+        return result;
     }
 
     static boolean contains_only_unfixed_traces(Collection<Item> p_item_list)
@@ -335,7 +335,7 @@ public class BatchOptRoute
     protected double min_cumulative_trace_length_before = 0;
     protected static int MAX_AUTOROUTE_PASSES = 6;
     protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
-   
+    /*
     protected class RouteResult 
     {
     	public boolean improved;
@@ -363,7 +363,7 @@ public class BatchOptRoute
     	
     	public int via_count_reduced() { return via_count_before - via_count_after; } 
     	public double length_reduced() { return trace_length_before - trace_length_after; } 	
-    }
+    } */
 
     /**
      *  Reads the vias and traces on the board in ascending x order.

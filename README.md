@@ -137,6 +137,10 @@ The following command line arguments are supported by freerouter:
 * -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished
 * -mp [number of passes]: sets the upper limit of the number of passes that will be performed
 * -l [language]: "de" for German, otherwise it's English
+* -mt [number of threads]: sets thread pool size for route optimization
+* -us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. When hybrid is selected, another option "hr" specifies hybrid ratio.
+* -hr [m:n] : sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes, e.g., 1:1. It's only effective when hybrid strategy is selected. 
+* -is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. Prioritied stragegy selects items based on scores calculated in previous round.
 
 A complete command line looks something like this if your are using PowerShell on Windows:
 
@@ -145,3 +149,22 @@ A complete command line looks something like this if your are using PowerShell o
 `
 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
+
+
+Multi-threaded Implementation of Routing Optimization:
+======================================================
+
+When board complexity reached certain level, route optimization in previous version was slow to the the extent that was almost un-usable. This issues was addressed with multi-threading and various updating strategies.
+
+Here is an example that shows the amount of speedup achieved by the initial author of this routing optimization. On a machine with 8 cores, the following options are used: -mt 16 -us greedy -is prioritized. After about 75 passes, the phase of routing optimation was finished after about 30 hours. # of vias was reduced from 566 to 418, and route length was reduced from 12.94 million to 12.07 million. The average CPU usage is around 1,500%, so comparing to previous single thread route optimization, the speedup is roughly 15 times. If previous version was used, this 30-hour (1 1/4 day) task would take about 20 days to finish.
+
+A note about power supply to laptops: it was a surprise to see the laptop battery kept loosing charge when a power supply was connected. With the multi-threaded optimization, the computer will be pushed to its limit, so use an official power supply that comes with the laptop, or use a more powerful power supply. Also be aware of room temperature as the computer will become hotter and might be overheated, especially when the computer is moved to another room because you cannot withstand its unusual fan noise.
+
+One critical task in multi-threaded optimation is to clone objects. In the initial multi-threaded implementation, a quick way to clone objects was used: clone via serialization. When someone gets time, take a look of implementing cloning in offical way.
+
+Besides multi-threading, multiple optimzation strategies were also implemented. Global optimal strategy selects the global optimal update after processing all items in an optimation pass, while greedy strategy adopts an update as soon as it is found to be better than current one, so there will be multiple updates in a greedy optimization pass. Hybrid strategy mixes the above two, and there is an option to select the mixing ratio.
+
+Sequential, random and prioritized item selection strategies are implemented to determine which item to process next during an optimization pass. Each item is ranked during the optimization pass so that it's possible to prioritize items with better scores when selecting items to process in next optimization pass.
+
+Hopefully this multi-threaded routing optimization will make this router practical to route boards of high complexity.
+

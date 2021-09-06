@@ -33,6 +33,7 @@ import eu.mihosoft.freerouting.autoroute.BatchFanout;
 import eu.mihosoft.freerouting.autoroute.BatchOptRoute;
 import eu.mihosoft.freerouting.autoroute.BatchOptRouteMT;
 import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
+import eu.mihosoft.freerouting.autoroute.ItemSelectionStrategy;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
@@ -50,12 +51,13 @@ public class BatchAutorouterThread extends InteractiveActionThread
         AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
         this.batch_autorouter = new BatchAutorouter(this, !autoroute_settings.get_with_fanout(), true, autoroute_settings.get_start_ripup_costs());
 
-        BoardUpdateStrategy strategy = p_board_handling.get_board_update_strategy();
+        BoardUpdateStrategy update_strategy = p_board_handling.get_board_update_strategy();
+        String hybrid_ratio = p_board_handling.get_hybrid_ratio();
+        ItemSelectionStrategy item_selection_strategy = p_board_handling.get_item_selection_strategy();
         int num_threads = p_board_handling.get_num_threads();
         
-        this.batch_opt_route =  new BatchOptRouteMT(this, num_threads, strategy);
-        //this.batch_opt_route =  num_threads > 1 ? new BatchOptRouteMT(this, num_threads)
-        //		                                : new BatchOptRoute(this);
+        this.batch_opt_route =  num_threads > 1 ? new BatchOptRouteMT(this, num_threads, update_strategy, item_selection_strategy, hybrid_ratio)
+        		                                : new BatchOptRoute(this);
     }
 
     protected void thread_action()

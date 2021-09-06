@@ -1,6 +1,7 @@
 package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
+import eu.mihosoft.freerouting.autoroute.ItemSelectionStrategy;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Locale;
@@ -21,6 +22,8 @@ public class StartupOptions {
     int max_passes = 99999;
     int num_threads = 4; // default thread pool size
     BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY; // default  
+    String hybrid_ratio = "1:1";
+    ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
     java.util.Locale current_locale = java.util.Locale.ENGLISH;
 
     private StartupOptions() {
@@ -66,10 +69,24 @@ public class StartupOptions {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                     	num_threads = Integer.decode(p_args[i + 1]);
                     }
-                } else if (p_args[i].startsWith("-os")) {
+                } else if (p_args[i].startsWith("-us")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-                    	board_update_strategy = p_args[i + 1].toLowerCase().contains("global") ?
-                    			BoardUpdateStrategy.GLOBAL_OPTIMAL : BoardUpdateStrategy.GREEDY;
+                    	String op = p_args[i + 1].toLowerCase().trim();
+                    	board_update_strategy = op.equals("global") ?
+                 			  BoardUpdateStrategy.GLOBAL_OPTIMAL 
+                		    : (op.equals("greedy") ? BoardUpdateStrategy.GREEDY
+                			  	                   : BoardUpdateStrategy.HYBRID);
+                    }                    
+                } else if (p_args[i].startsWith("-is")) {
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                    	String op = p_args[i + 1].toLowerCase().trim();
+                    	item_selection_strategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL
+                    			: (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM 
+                    					                   : ItemSelectionStrategy.PRIORITIZED);
+                    }                    
+                } else if (p_args[i].startsWith("-hr")) {  // hybrid ratio
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                    	hybrid_ratio = p_args[i + 1].trim();
                     }                    
                 } else if (p_args[i].startsWith("-l")) {
                     // the locale is provided
@@ -103,10 +120,15 @@ public class StartupOptions {
         return design_input_directory_name;
     }
     
-    public int getMaxPasses()  { return max_passes;  }
-    public int getNumThreads() { return num_threads; }
+    public int getMaxPasses()      { return max_passes;   }
+    public int getNumThreads()     { return num_threads;  }
+    public String getHybridRatio() { return hybrid_ratio; }
     public BoardUpdateStrategy getBoardUpdateStrategy()
     {
     	return board_update_strategy;
+    }
+    public ItemSelectionStrategy getItemSelectionStrategy() 
+    {
+    	return item_selection_strategy;
     }
 }

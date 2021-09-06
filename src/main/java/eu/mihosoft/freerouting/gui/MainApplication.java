@@ -29,6 +29,7 @@ import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.interactive.ThreadActionListener;
 import eu.mihosoft.freerouting.logger.FRLogger;
 import eu.mihosoft.freerouting.autoroute.BoardUpdateStrategy;
+import eu.mihosoft.freerouting.autoroute.ItemSelectionStrategy;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -189,6 +190,8 @@ public class MainApplication extends javax.swing.JFrame
         this.max_passes = startupOptions.getMaxPasses();
         this.num_threads = startupOptions.getNumThreads();
         this.board_update_strategy = startupOptions.getBoardUpdateStrategy();
+        this.hybrid_ratio = startupOptions.getHybridRatio();
+        this.item_selection_strategy = startupOptions.getItemSelectionStrategy();
         this.is_test_version = startupOptions.isTestVersion();
         this.is_webstart = startupOptions.getWebstartOption();
         this.locale = startupOptions.getCurrentLocale();
@@ -317,6 +320,8 @@ public class MainApplication extends javax.swing.JFrame
         new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + this.max_passes - 1);
         new_frame.board_panel.board_handling.set_num_threads(this.num_threads);
         new_frame.board_panel.board_handling.set_board_update_strategy(this.board_update_strategy);
+        new_frame.board_panel.board_handling.set_hybrid_ratio(this.hybrid_ratio);
+        new_frame.board_panel.board_handling.set_item_selection_strategy(this.item_selection_strategy);
         
         message_field.setText(resources.getString("message_4") + " " + design_file.get_name() + " " + resources.getString("message_5"));
         board_frames.add(new_frame);
@@ -420,7 +425,9 @@ public class MainApplication extends javax.swing.JFrame
     private String design_dir_name = null;
     
     private int max_passes;
-    private BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY; 
+    private BoardUpdateStrategy board_update_strategy; 
+    private String hybrid_ratio;
+    private ItemSelectionStrategy item_selection_strategy;
     private int num_threads;  
     // Issue: adding a new field into AutorouteSettings caused exception when loading 
     // an existing design: "Couldn't read design file", "InvalidClassException", incompatible with serialized data
