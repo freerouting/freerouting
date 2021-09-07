@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021  Bob Fu
+ *   Copyright (C) 2021 
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,10 +27,6 @@ import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
-/**
- * @author Bob Fu
- *
- */
 public class BatchOptRouteMT extends BatchOptRoute  {
 	private BoardUpdateStrategy board_update_strategy;
 	private ItemSelectionStrategy item_selection_strategy;
