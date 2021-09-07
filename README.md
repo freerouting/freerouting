@@ -137,10 +137,10 @@ The following command line arguments are supported by freerouter:
 * -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished
 * -mp [number of passes]: sets the upper limit of the number of passes that will be performed
 * -l [language]: "de" for German, otherwise it's English
-* -mt [number of threads]: sets thread pool size for route optimization
-* -us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. When hybrid is selected, another option "hr" specifies hybrid ratio.
-* -hr [m:n] : sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes, e.g., 1:1. It's only effective when hybrid strategy is selected. 
-* -is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. Prioritied stragegy selects items based on scores calculated in previous round.
+* -mt [number of threads]: sets thread pool size for route optimization. The default is 4.
+* -us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option "hr" specifies hybrid ratio.
+* -hr [m:n] : sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected. 
+* -is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. The default is prioritized. Prioritied stragegy selects items based on scores calculated in previous round.
 
 A complete command line looks something like this if your are using PowerShell on Windows:
 
