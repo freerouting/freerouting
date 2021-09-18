@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: joschi/setup-jdk@v1 
+      uses: joschi/setup-jdk@v2 
       with:
           java-version: '11'
           architecture: 'x64'
@@ -35,7 +35,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: joschi/setup-jdk@v1 
+      uses: joschi/setup-jdk@v2 
       with:
           java-version: '11'
           architecture: 'x64'
@@ -57,7 +57,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: joschi/setup-jdk@v1 
+      uses: joschi/setup-jdk@v2 
       with:
           java-version: '11'
           architecture: 'x64'
