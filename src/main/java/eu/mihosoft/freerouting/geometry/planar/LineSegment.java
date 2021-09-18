@@ -780,8 +780,7 @@ public class LineSegment implements java.io.Serializable
 
                     }
                     boolean intersection_already_handeled = false;
-                    for (int i = 0; i <
-                            intersection_count; ++i)
+                    for (int i = 0; i < intersection_count; ++i)
                     {
                         if (is.equals(intersection[i]))
                         {
@@ -789,10 +788,6 @@ public class LineSegment implements java.io.Serializable
                             break;
 
                         }
-
-
-
-
                     }
                     if (!intersection_already_handeled)
                     {
@@ -805,16 +800,14 @@ public class LineSegment implements java.io.Serializable
                         }
                         else
                         {
-                            FRLogger.warn("border_intersections: intersection_count to big!");
+                            FRLogger.warn("border_intersections: intersection_count ("+intersection_count+") is too big!");
                         }
-
                     }
                 }
             }
 
             prev_line = curr_line;
-            curr_line =
-                    next_line;
+            curr_line = next_line;
         }
 
         if (intersection_count == 0)
