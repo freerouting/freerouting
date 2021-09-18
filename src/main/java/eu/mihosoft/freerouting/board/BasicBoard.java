@@ -1487,15 +1487,13 @@ public class BasicBoard implements java.io.Serializable
      */
     public void generate_snapshot()
     {
-        FRLogger.info("Generating snapshot");
-
         item_list.generate_snapshot();
         components.generate_snapshot();
     }
 
     /**
      *  Removes the top snapshot from the undo stack, so that its situation cannot be
-     *  restored any more.
+     *  restored anymore.
      *  Returns false, if no more snapshot could be popped.
      */
     public boolean pop_snapshot()
