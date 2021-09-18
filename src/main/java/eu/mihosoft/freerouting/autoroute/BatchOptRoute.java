@@ -76,7 +76,7 @@ public class BatchOptRoute
     }
 
     /**
-     * Pass to reduce the number of vias an to shorten the trace length a completely routed board.
+     * Tries to reduce the number of vias and the trace length of a completely routed board.
      * Returns true, if the route was improved.
      */
     private boolean opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
@@ -87,10 +87,15 @@ public class BatchOptRoute
         this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before);
         this.sorted_route_items = new ReadSortedRouteItems();
         this.min_cumulative_trace_length_before = calc_weighted_trace_length(routing_board);
+        String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + via_count_before + " vias and " + String.format("%(,.2f", trace_length_before) + " trace length.";
+
+        FRLogger.traceEntry(optimizationPassId);
+
         for (;;)
         {
             if (this.thread.is_stop_requested())
             {
+                FRLogger.traceExit(optimizationPassId);
                 return route_improved;
             }
             Item curr_item = sorted_route_items.next();
@@ -103,12 +108,15 @@ public class BatchOptRoute
                 route_improved = true;
             }
         }
+
         this.sorted_route_items = null;
         if (this.use_increased_ripup_costs && !route_improved)
         {
             this.use_increased_ripup_costs = false;
             route_improved = true; // to keep the optimizer going with lower ripup costs
         }
+
+        FRLogger.traceExit(optimizationPassId);
         return route_improved;
     }
 

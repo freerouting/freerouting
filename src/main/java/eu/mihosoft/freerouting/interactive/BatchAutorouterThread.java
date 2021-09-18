@@ -57,7 +57,6 @@ public class BatchAutorouterThread extends InteractiveActionThread
             hl.autorouterStarted();
 
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
-
         try
         {
             java.util.ResourceBundle resources =
@@ -69,6 +68,10 @@ public class BatchAutorouterThread extends InteractiveActionThread
             {
                 hdlg.get_ratsnest().hide();
             }
+
+            FRLogger.info("Starting autorouting...");
+            FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
+
             String start_message = resources.getString("batch_autorouter") + " " + resources.getString("stop_message");
             hdlg.screen_messages.set_status_message(start_message);
             boolean fanout_first =
@@ -83,6 +86,13 @@ public class BatchAutorouterThread extends InteractiveActionThread
                 batch_autorouter.autoroute_passes();
             }
             hdlg.get_routing_board().finish_autoroute();
+
+            double autoroutingSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
+            FRLogger.info("Autorouting was completed in " + String.format("%(,.0f", autoroutingSecondsToComplete) + " seconds.");
+
+            FRLogger.info("Starting routing optimization...");
+            FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
+
             if (hdlg.get_settings().autoroute_settings.get_with_postroute() && !this.is_stop_requested())
             {
                 String opt_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message");
@@ -118,6 +128,9 @@ public class BatchAutorouterThread extends InteractiveActionThread
                 hdlg.screen_messages.set_status_message(end_message);
             }
 
+            double routeOptimizationSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
+            FRLogger.info("Routing optimization was completed in " + String.format("%(,.0f", routeOptimizationSecondsToComplete) + " seconds.");
+
             hdlg.set_board_read_only(saved_board_read_only);
             hdlg.update_ratsnest();
             if (!ratsnest_hidden_before)
@@ -128,7 +141,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             hdlg.get_panel().board_frame.refresh_windows();
             if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == eu.mihosoft.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE && hdlg.get_routing_board().get_test_level() != eu.mihosoft.freerouting.board.TestLevel.RELEASE_VERSION)
             {
-                eu.mihosoft.freerouting.tests.Validate.multiple_of_45_degree("after eu.mihosoft.freerouting.autoroute: ", hdlg.get_routing_board());
+                eu.mihosoft.freerouting.tests.Validate.multiple_of_45_degree("after autoroute: ", hdlg.get_routing_board());
             }
         } catch (Exception e)
         {
