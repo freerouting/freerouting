@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export ACTIONS_ALLOW_UNSECURE_COMMANDS="true"
 export APP_VERSION=$1
 export APP_TYPE="app-image"
+#export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
 export JPACKAGE_JVM="https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz"
 
 

@@ -1,9 +1,8 @@
 @echo off
 
-SET ACTIONS_ALLOW_UNSECURE_COMMANDS="true"
-SET APP_VERSION=%1
-SET APP_TYPE="msi"
-SET JPACKAGE_JVM="https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14+36/OpenJDK14U-jdk_x86-32_windows_hotspot_14_36.zip"
+SET  APP_VERSION=%1
+SET  APP_TYPE="msi"
+SET  JPACKAGE_JVM="https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14+36/OpenJDK14U-jdk_x86-32_windows_hotspot_14_36.zip"
 
 set DIR="%~dp0\"
 cd %DIR%
