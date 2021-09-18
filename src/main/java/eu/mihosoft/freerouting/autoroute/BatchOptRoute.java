@@ -91,7 +91,7 @@ public class BatchOptRoute
 
         FRLogger.traceEntry(optimizationPassId);
 
-        for (;;)
+        while (true) 
         {
             if (this.thread.is_stop_requested())
             {
