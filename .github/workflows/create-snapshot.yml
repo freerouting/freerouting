@@ -5,7 +5,26 @@ name: create-snapshot
 on: [push, pull_request]
 
 jobs:
+
+  delete-old-snapshot-assets:
+
+    runs-on: [ubuntu-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Delete old SNAPSHOT assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: SNAPSHOT
+          assets: | 
+            SNAPSHOT.zip
+            SNAPSHOT.tar.gz
+            freerouting-SNAPSHOT-*.*   
+
   build-jar:
+  
+    needs: delete-old-snapshot-assets
 
     runs-on: [windows-latest]
 
@@ -27,6 +46,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
 
   build-ubuntu-x64:
+  
+    needs: delete-old-snapshot-assets
 
     runs-on: [ubuntu-latest]
 
@@ -50,6 +71,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
    
   build-windows-x64:
+  
+    needs: delete-old-snapshot-assets
 
     runs-on: [windows-latest]
 
@@ -72,6 +95,8 @@ jobs:
           
 
   build-windows-x86:
+  
+    needs: delete-old-snapshot-assets
 
     runs-on: [windows-latest]
 
@@ -94,6 +119,8 @@ jobs:
           
 
   build-macos-x64:
+  
+    needs: delete-old-snapshot-assets
 
     runs-on: [macos-latest]
 
