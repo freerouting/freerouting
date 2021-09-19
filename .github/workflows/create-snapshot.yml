@@ -5,13 +5,20 @@ name: create-snapshot
 on: [push, pull_request]
 
 jobs:
-  copy-jar:
+  build-jar:
 
     runs-on: [windows-latest]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Copy JAR
+    - name: Set up JDK 11
+      uses: joschi/setup-jdk@v2 
+      with:
+          java-version: '11'
+          architecture: 'x64'
+    - name: Build with Gradle
+      run: .\gradlew.bat dist 
+    - name: Create Distribution   
       run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")   
     - uses: AButler/upload-release-assets@v2.0
       with:
