@@ -1,0 +1,2984 @@
+(pcb "B:\depot\CAD\KiCad\test\Smoothieboard-master\smoothieboard-5driver\smoothieboard-5driver.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "(5.1.9)-1")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Route2
+      (type power)
+      (property
+        (index 1)
+      )
+    )
+    (layer Route15
+      (type signal)
+      (property
+        (index 2)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (boundary
+      (path pcb 0  212222 -52508.3  212436 -52565.6  212637 -52659.1  212818 -52786.1
+            212974 -52942.6  213101 -53124  213195 -53324.7  213252 -53538.5
+            213271 -53759.1  213271 -156248  213275 -156473  213234 -156695
+            213151 -156904  213028 -157093  212871 -157254  212686 -157382
+            212479 -157471  212259 -157518  84731.5 -157518  84512.6 -157470
+            84307.4 -157380  84123.7 -157252  83968.5 -157090  83847.8 -156901
+            83766.2 -156693  83727 -156472  83731.5 -156248  83731.5 -53759.1
+            83750.9 -53538.6  83808.3 -53324.8  83901.9 -53124.3  84028.8 -52943
+            84185.3 -52786.5  84366.6 -52659.5  84567.2 -52565.9  84781 -52508.5
+            85001.5 -52489.1  212001 -52489.1  212222 -52508.3)
+    )
+    (plane AGND (polygon Route2 0  214249 -158877  82677 -159512  82550 -50673  214376 -50673
+            214249 -158877))
+    (via "Via[0-3]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200.1)
+      (clearance 200.1 (type default_smd))
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm"
+      (place JP36 123736 -89319.1 front 270 (PN "JUMPER-2SMD-NC"))
+      (place JP30 119876 -89369.9 front 270 (PN "JUMPER-2SMD-NC"))
+      (place JP31 116231 -89382.6 front 90 (PN "JUMPER-2SMD-NC"))
+    )
+    (component "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm::1"
+      (place JP13 101511 -93764.1 front 0 (PN "JUMPER-2SMD-NC"))
+    )
+    (component ""
+      (place @HOLE0 185458 -55791.1 front 0)
+      (place @HOLE1 86398.5 -55791.1 front 0)
+      (place @HOLE2 92875.5 -148628 front 0)
+      (place @HOLE3 185331 -153708 front 0)
+    )
+    (component "smoothieboard-5driver:LQFP100"
+      (place IC1 136436 -112306 front 315 (PN LPC1769))
+    )
+    (component "smoothieboard-5driver:CRYSTAL_3.2X2.5"
+      (place Q2 131356 -124371 front 90 (PN 12MHz))
+      (place Q3 116624 -113068 front 270 (PN 25MHz))
+    )
+    (component "smoothieboard-5driver:C0603"
+      (place C2 129070 -124498 front 270 (PN 12pF))
+      (place C3 131356 -127292 front 180 (PN 12pF))
+      (place C8 149708 -108814 front 225 (PN .1uF))
+      (place C9 147104 -118974 front 135 (PN .1uF))
+      (place C10 141389 -124244 front 135 (PN .1uF))
+      (place C11 125260 -107734 front 315 (PN .1uF))
+      (place C12 130467 -101384 front 135 (PN .1uF))
+      (place C13 127366 -124489 front 90 (PN .1uF))
+      (place L1 126149 -119545 front 225 (PN INDUCTOR0603))
+      (place C6 128476 -120582 front 315 (PN .1uF))
+      (place C4 102464 -131547 front 0 (PN 18pF))
+      (place C5 102464 -136309 front 0 (PN 18pF))
+      (place C1 105004 -104623 front 90 (PN .1uF))
+      (place C14 142088 -100940 front 225 (PN .1uF))
+      (place C31 150597 -97066.1 front 270 (PN .1uF))
+      (place C19 94780.5 -82842.1 front 180 (PN .1uF))
+      (place C17 94780.5 -84493.1 front 0 (PN .1uF))
+      (place C25 102464 -88366.6 front 180 (PN .1uF))
+      (place C15 95288.5 -86017.1 front 0 (PN .22uF))
+      (place C20 119926 -82461.1 front 180 (PN .1uF))
+      (place C18 119926 -84048.6 front 0 (PN .1uF))
+      (place C28 127864 -82651.6 front 0 (PN .1uF))
+      (place C16 119926 -85636.1 front 0 (PN .22uF))
+      (place C36 144247 -83286.6 front 180 (PN .1uF))
+      (place C34 144247 -84937.6 front 0 (PN .1uF))
+      (place C38 153391 -83159.6 front 0 (PN .1uF))
+      (place C32 144247 -86588.6 front 0 (PN .22uF))
+      (place C37 169583 -81953.1 front 180 (PN .1uF))
+      (place C35 169583 -83604.1 front 0 (PN .1uF))
+      (place C41 178791 -82207.1 front 0 (PN .1uF))
+      (place C33 169583 -85255.1 front 0 (PN .22uF))
+      (place C27 94590 -68935.6 front 135 (PN .1uF))
+      (place C30 120434 -69062.6 front 135 (PN .1uF))
+      (place C40 170771 -68954.2 front 135 (PN .1uF))
+      (place C43 145580 -68745.1 front 135 (PN .1uF))
+      (place C58 118910 -115037 front 270 (PN 12pF))
+      (place C59 114338 -112878 front 270 (PN 12pF))
+      (place C46 111290 -109449 front 270 (PN .1uF))
+      (place C47 108179 -101448 front 270 (PN .1uF))
+      (place C51 120815 -103670 front 0 (PN .1uF))
+      (place C53 109576 -124498 front 270 (PN .1uF))
+      (place C52 109893 -115100 front 90 (PN .1uF))
+      (place C54 106782 -111925 front 0 (PN 18pF))
+      (place C55 107099 -114211 front 0 (PN 18pF))
+      (place C56 107099 -125260 front 0 (PN 18pF))
+      (place C57 107099 -121069 front 0 (PN 18pF))
+      (place C44 114211 -94970.6 front 270 (PN .1uF))
+      (place C65 165641 -111080 front 180 (PN .1uF))
+      (place C62 150786 -139576 front 270 (PN .1uF))
+      (place C66 152905 -136460 front 180 (PN .1uF))
+      (place C68 170091 -89954.1 front 0 (PN .1uF))
+      (place C69 194494 -82209.1 front 180 (PN .1uF))
+      (place C70 194586 -84364.1 front 0 (PN .1uF))
+      (place C71 207264 -84201 front 0 (PN .1uF))
+      (place C72 194564 -86487 front 0 (PN .22uF))
+      (place C73 195561 -69489.1 front 135 (PN .1uF))
+      (place C75 196126 -120117 front 0 (PN .1uF))
+      (place C76 179299 -118847 front 270 (PN .1uF))
+      (place C77 180569 -101702 front 90 (PN .33uF))
+      (place C78 114529 -123609 front 90 (PN .1uF))
+      (place C79 119609 -123609 front 90 (PN .1uF))
+      (place C80 124689 -123609 front 90 (PN .1uF))
+      (place C81 111354 -128054 front 90 (PN .1uF))
+      (place C82 116434 -128054 front 90 (PN .1uF))
+      (place C83 121514 -128054 front 90 (PN .1uF))
+    )
+    (component "smoothieboard-5driver:EIA3216"
+      (place C7 156121 -115989 front 270 (PN 10uF))
+      (place C21 90716.5 -75222.1 front 270 (PN 10uF))
+      (place C22 90589.5 -80810.1 front 270 (PN 10uF))
+      (place C23 90589.5 -86398.1 front 270 (PN 10uF))
+      (place C24 91859.5 -91859.1 front 180 (PN 10uF))
+      (place C45 112243 -114021 front 90 (PN 10uF))
+      (place C50 121323 -105702 front 180 (PN 10uF))
+      (place C48 120879 -114402 front 90 (PN 1uF))
+      (place C64 158979 -115989 front 270 (PN 10uF))
+      (place C61 192507 -147803 front 180 (PN 10uF))
+    )
+    (component "smoothieboard-5driver:R0603"
+      (place R14 122847 -148501 front 180 (PN 10K))
+      (place R8 102464 -134722 front 0 (PN 33R))
+      (place R9 102464 -133134 front 0 (PN 33R))
+      (place R15 122085 -142469 front 270 (PN 10K))
+      (place R5 152128 -120058 front 45 (PN 2.2k))
+      (place R6 154788 -120307 front 90 (PN 2.2k))
+      (place R10 158661 -110655 front 180 (PN 1k))
+      (place R11 158661 -108814 front 180 (PN 1k))
+      (place R12 158661 -106909 front 180 (PN 1k))
+      (place R13 158661 -104940 front 180 (PN 1k))
+      (place R16 115037 -133198 front 0 (PN 10K))
+      (place R17 115037 -134849 front 180 (PN 330R))
+      (place R3 101727 -104705 front 90 (PN 10K))
+      (place R2 104805 -99020.1 front 270 (PN 10K))
+      (place R1 103405 -104705 front 90 (PN 10K))
+      (place R37 149771 -100368 front 0 (PN 100K))
+      (place R26 102400 -86779.1 front 0 (PN 10K))
+      (place R24 102400 -83604.1 front 0 (PN 10K))
+      (place R27 127991 -86525.1 front 0 (PN 10K))
+      (place R28 127927 -84683.6 front 0 (PN 10K))
+      (place R40 153391 -88430.1 front 0 (PN 10K))
+      (place R41 153391 -84937.6 front 0 (PN 10K))
+      (place R43 179031 -85489.1 front 0 (PN 10K))
+      (place R44 178854 -83667.6 front 0 (PN 10K))
+      (place R30 144310 -88493.6 front 0 (PN 33K))
+      (place R22 102400 -85255.1 front 180 (PN NP))
+      (place R23 127927 -88303.1 front 0 (PN NP))
+      (place R38 153391 -86588.6 front 0 (PN NP))
+      (place R39 178918 -87223.6 front 0 (PN NP))
+      (place R35 153200 -91859.1 front 0 (PN 2.2k))
+      (place R36 153200 -93446.6 front 0 (PN 2.2k))
+      (place R25 102400 -89954.1 front 0 (PN 10K))
+      (place R29 127927 -90208.1 front 0 (PN 10K))
+      (place R42 153200 -90144.6 front 0 (PN 10K))
+      (place R45 178918 -89065.1 front 0 (PN 10K))
+      (place R52 120815 -98907.6 front 0 (PN 1.5K))
+      (place R64 116561 -110084 front 180 (PN 1M))
+      (place R63 109766 -109385 front 90 (PN 12.1K))
+      (place R50 106972 -127927 front 180 (PN 330R))
+      (place R62 113195 -109512 front 90 (PN 10K))
+      (place R61 101705 -109342 front 180 (PN 330R))
+      (place R51 120815 -96875.6 front 0 (PN 22R))
+      (place R77 158661 -103099 front 180 (PN 1k))
+      (place R73 168186 -127864 front 180 (PN 22R))
+      (place R75 178727 -127356 front 90 (PN 22R))
+      (place R69 157508 -134224 front 270 (PN 22R))
+      (place R70 135166 -139548 front 0 (PN 22R))
+      (place R78 158534 -101003 front 180 (PN 8.2K))
+      (place R74 161201 -130933 front 0 (PN 10k))
+      (place R76 174155 -127356 front 270 (PN 10k))
+      (place R71 144083 -128237 front 0 (PN 10k))
+      (place R72 135166 -136309 front 0 (PN 10k))
+      (place R65 172758 -147866 front 90 (PN 8.2K))
+      (place R66 181416 -147954 front 90 (PN 8.2K))
+      (place R67 152756 -146152 front 0 (PN 8.2K))
+      (place R68 137389 -144501 front 270 (PN 8.2K))
+      (place R7 102464 -137897 front 180 (PN 1.5K))
+      (place R53 120815 -102019 front 0 (PN 10K))
+      (place R58 120688 -107607 front 0 (PN 22R))
+      (place R59 120688 -109131 front 0 (PN 22R))
+      (place R60 120815 -100495 front 0 (PN 22R))
+      (place R54 106782 -110147 front 180 (PN 49.9R))
+      (place R55 107099 -115989 front 180 (PN 49.9R))
+      (place R56 107099 -123609 front 180 (PN 49.9R))
+      (place R57 107099 -119291 front 180 (PN 49.9R))
+      (place R4 173266 -89954.1 front 180 (PN 100K))
+      (place R18 169699 -97214.1 front 90 (PN 33K))
+      (place R19 207137 -81407 front 0 (PN 10K))
+      (place R20 203073 -84455 front 0 (PN 10K))
+      (place R80 203073 -86614 front 0 (PN NP))
+      (place R81 203111 -88684.1 front 0 (PN 10K))
+      (place R82 195174 -129324 front 0 (PN 22R))
+      (place R83 198349 -129324 front 0 (PN 10k))
+      (place R84 202794 -129959 front 270 (PN 8.2K))
+      (place R85 205969 -146469 front 180 (PN 8.2K))
+      (place R86 207556 -138849 front 0 (PN 10k))
+      (place R87 201206 -122657 front 270 (PN 10k))
+      (place R88 204381 -138849 front 180 (PN 22R))
+      (place R89 192634 -117577 front 0 (PN 10k))
+      (place R90 155804 -139167 front 180 (PN 10k))
+      (place R91 135166 -137897 front 180 (PN 10k))
+      (place R92 112941 -123609 front 270 (PN 5k6))
+      (place R93 111354 -123609 front 270 (PN 1k))
+      (place R94 116434 -123609 front 270 (PN 1k))
+      (place R95 118021 -123609 front 270 (PN 5k6))
+      (place R96 121514 -123609 front 270 (PN 1k))
+      (place R97 123101 -123609 front 270 (PN 5k6))
+      (place R98 114529 -128054 front 90 (PN 1k))
+      (place R99 112941 -128054 front 270 (PN 5k6))
+      (place R100 119609 -128054 front 90 (PN 1k))
+      (place R101 118021 -128054 front 270 (PN 5k6))
+      (place R102 124689 -128054 front 90 (PN 1k))
+      (place R103 123101 -128054 front 270 (PN 5k6))
+    )
+    (component "smoothieboard-5driver:TACTILE_SWITCH_SMD"
+      (place S1 126530 -153010 front 90 (PN TAC_SWITCHSMD))
+      (place S2 123927 -136817 front 90 (PN TAC_SWITCHSMD))
+    )
+    (component "smoothieboard-5driver:CHIP-LED0805"
+      (place LED1 161900 -110655 front 270 (PN "LEDCHIP-LED0805"))
+      (place LED2 161900 -108814 front 270 (PN "LEDCHIP-LED0805"))
+      (place LED3 161900 -106909 front 270 (PN "LEDCHIP-LED0805"))
+      (place LED4 161900 -104940 front 270 (PN "LEDCHIP-LED0805"))
+      (place LED9 161900 -103035 front 270 (PN "LEDCHIP-LED0805"))
+      (place LED10 161900 -100940 front 270 (PN "LEDCHIP-LED0805"))
+      (place LED5 169139 -147104 front 90 (PN "LEDCHIP-LED0805"))
+      (place LED6 178029 -147104 front 90 (PN "LEDCHIP-LED0805"))
+      (place LED7 158852 -146279 front 270 (PN "LEDCHIP-LED0805"))
+      (place LED8 134785 -146152 front 90 (PN "LEDCHIP-LED0805"))
+      (place LED11 202794 -133452 front 180 (PN "LEDCHIP-LED0805"))
+      (place LED12 202476 -146469 front 90 (PN "LEDCHIP-LED0805"))
+    )
+    (component "smoothieboard-5driver:MOLEX-1X6"
+      (place JP5 104168 -145089 front 180 (PN M06POLAR))
+    )
+    (component "smoothieboard-5driver:TACTILE-PTH-LED-12MM"
+      (place S3 113322 -143548 front 270 (PN "SWITCH-MOMENTARY-LEDPTH"))
+    )
+    (component "smoothieboard-5driver:MOLEX-1X3"
+      (place JP26 87287.5 -149771 front 90 (PN M03POLAR))
+      (place JP14 90907 -154026 front 180 (PN M03POLAR))
+      (place JP16 98781 -154026 front 180 (PN M03POLAR))
+      (place JP19 106655 -154026 front 180 (PN M03POLAR))
+      (place JP21 114529 -154026 front 180 (PN M03POLAR))
+      (place JP22 122403 -154026 front 180 (PN M03POLAR))
+    )
+    (component "smoothieboard-5driver:1X04_NO_SILK"
+      (place JP1 158344 -122974 front 180 (PN M041X04_NO_SILK))
+      (place JP10 158344 -125514 front 180 (PN M041X04_NO_SILK))
+      (place JP7 107925 -81000.6 front 270 (PN M041X04_NO_SILK))
+      (place JP9 133007 -80429.1 front 270 (PN M041X04_NO_SILK))
+      (place JP12 159233 -81445.1 front 270 (PN M041X04_NO_SILK))
+      (place JP15 163868 -83286.6 front 270 (PN M041X04_NO_SILK))
+      (place JP29 156121 -111290 front 90 (PN M041X04_NO_SILK))
+      (place JP18 190729 -82334.1 front 270 (PN M041X04_NO_SILK))
+      (place JP8 169139 -108369 front 90 (PN M041X04_NO_SILK))
+      (place JP34 159614 -98209.1 front 0 (PN M041X04_NO_SILK))
+    )
+    (component "smoothieboard-5driver:1X03_NO_SILK"
+      (place JP2 144120 -102273 front 315 (PN M031X03_NO_SILK))
+      (place JP3 149454 -104305 front 135 (PN M031X03_NO_SILK))
+      (place JP4 106591 -95669.1 front 0 (PN M031X03_NO_SILK))
+      (place JP6 111671 -93129.1 front 180 (PN M031X03_NO_SILK))
+    )
+    (component "smoothieboard-5driver:1X03"
+      (place JP25 123990 -146596 front 90 (PN M03PTH))
+      (place JP17 140056 -81191.1 front 270 (PN M03PTH))
+      (place JP20 132372 -132690 front 180 (PN M03PTH))
+    )
+    (component "smoothieboard-5driver:1X02"
+      (place JP24 112306 -142151 front 0 (PN M02PTH))
+      (place JP23 112306 -144691 front 0 (PN M02PTH))
+      (place JP35 90081.5 -70904.1 front 180 (PN M02PTH))
+    )
+    (component "smoothieboard-5driver:ETSSOP24"
+      (place IC2 98844.5 -76365.1 front 0 (PN A5984))
+      (place IC3 124498 -76365.1 front 0 (PN A5984))
+      (place IC5 150089 -76365.1 front 0 (PN A5984))
+      (place IC6 175298 -76365.1 front 0 (PN A5984))
+      (place IC12 199119 -76609.1 front 0 (PN A5984))
+    )
+    (component "smoothieboard-5driver:R2512"
+      (place R31 105829 -65189.1 front 180 (PN 0.05R))
+      (place R32 91224.5 -65316.1 front 0 (PN 0.05R))
+      (place R33 130848 -65189.1 front 180 (PN 0.05R))
+      (place R34 118275 -65125.6 front 0 (PN 0.05R))
+      (place R46 156375 -65125.6 front 180 (PN 0.05R))
+      (place R47 143802 -65189.1 front 0 (PN 0.05R))
+      (place R48 181585 -65125.6 front 180 (PN 0.05R))
+      (place R49 168186 -65252.6 front 0 (PN 0.05R))
+      (place R21 204699 -65189.1 front 180 (PN 0.05R))
+      (place R79 193586 -65189.1 front 0 (PN 0.05R))
+    )
+    (component "smoothieboard-5driver:08P"
+      (place SL1 86525.5 -82715.1 front 270 (PN M08))
+    )
+    (component "smoothieboard-5driver:0603-ARV"
+      (place RN1 97193.5 -91351.1 front 0 (PN 4.7K))
+    )
+    (component "smoothieboard-5driver:TSSOP20"
+      (place IC4 145580 -94462.6 front 180 (PN MCP44X1))
+      (place IC9 173766 -95209.1 front 0 (PN MCP44X1))
+    )
+    (component "smoothieboard-5driver:10X04MTA"
+      (place J1 98844.5 -61125.1 front 0 (PN "MTA04-100"))
+      (place J2 124562 -60871.1 front 0 (PN "MTA04-100"))
+      (place J3 150089 -60680.6 front 0 (PN "MTA04-100"))
+      (place J4 175298 -60490.1 front 0 (PN "MTA04-100"))
+      (place J5 198984 -60744.1 front 0 (PN "MTA04-100"))
+    )
+    (component "smoothieboard-5driver:180G-4"
+      (place X1 98844.5 -56807.1 front 180 (PN "180G-4"))
+      (place X2 124562 -56934.1 front 180 (PN "180G-4"))
+      (place X3 150089 -56870.6 front 180 (PN "180G-4"))
+      (place X4 175298 -56553.1 front 180 (PN "180G-4"))
+      (place X5 198984 -56616.6 front 180 (PN "180G-4"))
+    )
+    (component "smoothieboard-5driver:QFN24_4MM"
+      (place IC8 113957 -103416 front 90 (PN LAN8720))
+    )
+    (component "smoothieboard-5driver:0603"
+      (place FB1 106464 -101448 front 90 (PN FERRITE))
+    )
+    (component "smoothieboard-5driver:C0603K"
+      (place C49 122784 -113767 front 270 (PN 470pF))
+    )
+    (component "smoothieboard-5driver:SOT23-5"
+      (place IC7 116751 -96304.1 front 0 (PN 74LVC1G04))
+    )
+    (component "smoothieboard-5driver:SOT223"
+      (place IC10 164948 -115735 front 270 (PN "LM1117-3.3V"))
+    )
+    (component "smoothieboard-5driver:SMADIODE"
+      (place D2 187046 -95669.1 front 0 (PN MBRA210LT3))
+      (place D1 161900 -124117 front 270 (PN MBRA210LT3))
+      (place D4 186919 -100432 front 0 (PN "B1100-13-F"))
+      (place D6 186601 -105194 front 0 (PN MBRA210LT3))
+      (place D7 166916 -138849 front 180 (PN MBRA210LT3))
+      (place D8 175806 -138849 front 0 (PN MBRA210LT3))
+      (place D9 194856 -140119 front 0 (PN MBRA210LT3))
+    )
+    (component "smoothieboard-5driver:TO220BV"
+      (place Q6 156756 -144564 front 180 (PN AOT240L))
+      (place Q7 131293 -144628 front 180 (PN AOT240L))
+      (place Q5 204064 -144564 front 180 (PN AOT240L))
+    )
+    (component "smoothieboard-5driver:PANASONIC_E"
+      (place C60 141262 -133896 front 270 (PN 100uF))
+      (place C63 186538 -135230 front 180 (PN 100uF))
+      (place C26 111862 -59220.1 front 270 (PN 100uF))
+      (place C29 137262 -58585.1 front 270 (PN 100uF))
+      (place C39 162372 -58885.1 front 270 (PN 100uF))
+      (place C42 184706 -84442.6 front 90 (PN 100uF))
+      (place C74 187656 -72399.1 front 270 (PN 100uF))
+    )
+    (component "smoothieboard-5driver:MOLEX8981"
+      (place POWER1 196317 -113195 front 0 (PN POWER))
+    )
+    (component "smoothieboard-5driver:SOT230P700X160-4N"
+      (place Q8 166916 -133134 front 270 (PN ZXMN4A06))
+      (place Q9 176441 -133198 front 270 (PN ZXMN4A06))
+      (place Q4 197714 -133452 front 0 (PN ZXMN4A06))
+    )
+    (component "smoothieboard-5driver:POWER_JACK_SMD"
+      (place J10 211455 -120904 front 180 (PN POWER_JACKSMD))
+    )
+    (component "smoothieboard-5driver:180G-2"
+      (place X12 202159 -97701.1 front 270 (PN "180G-2"))
+      (place X11 202159 -109385 front 270 (PN "180G-2"))
+      (place X7 169075 -154089 front 180 (PN "180G-2"))
+      (place X8 178016 -154089 front 180 (PN "180G-2"))
+      (place X10 158884 -154089 front 180 (PN "180G-2"))
+      (place X6 192761 -154089 front 0 (PN "180G-2"))
+      (place X9 209779 -132499 front 270 (PN "180G-2"))
+      (place X13 146914 -154089 front 0 (PN "180G-2"))
+      (place X15 135166 -154089 front 0 (PN "180G-2"))
+      (place X16 204064 -154089 front 180 (PN "180G-2"))
+    )
+    (component "smoothieboard-5driver:TO263AB"
+      (place D3 192507 -111798 front 180 (PN "VS-25CTQ045S"))
+    )
+    (component "smoothieboard-5driver:JP1"
+      (place JP28 186284 -142659 front 0 (PN JP1E))
+      (place JP11 140754 -143929 front 270 (PN JP1E))
+      (place JP27 140691 -140754 front 270 (PN JP1E))
+    )
+    (component "smoothieboard-5driver:10X02MTA"
+      (place J8 169202 -150025 front 180 (PN "MTA02-100"))
+      (place J6 178116 -150025 front 0 (PN "MTA02-100"))
+      (place J9 158781 -150025 front 0 (PN "MTA02-100"))
+      (place J7 205651 -132499 front 90 (PN "MTA02-100"))
+      (place J11 135166 -150025 front 180 (PN "MTA02-100"))
+      (place J13 204064 -150025 front 0 (PN "MTA02-100"))
+    )
+    (component "smoothieboard-5driver:MICRO-SD-SOCKET-PP"
+      (place U1 99733.5 -94526.1 front 90 (PN "USD-SOCKETNEW"))
+    )
+    (component "smoothieboard-5driver:HR911105A"
+      (place RJ1 94018.5 -118783 front 180 (PN HR911105A))
+    )
+    (component "smoothieboard-5driver:SOIC8"
+      (place IC14 152692 -133007 front 270 (PN TC4427))
+      (place IC15 196126 -123292 front 90 (PN TC4427))
+    )
+    (component "smoothieboard-5driver:C0805"
+      (place C67 103131 -101089 front 90 (PN 1uF))
+    )
+    (component "smoothieboard-5driver:SOT89"
+      (place IC11 147711 -139659 front 180 (PN 78LF))
+    )
+    (component "smoothieboard-5driver:USB-B-PTH"
+      (place X14 95731.5 -134989 front 0 (PN USBPTH))
+    )
+    (component "smoothieboard-5driver:SJ_3"
+      (place SJ1 99346.5 -148644 back 180 (PN SOLDERJUMPER_2WAYS))
+      (place SJ2 104369 -148692 back 0 (PN SOLDERJUMPER_2WAYS))
+      (place SJ3 154216 -116624 back 180 (PN SOLDERJUMPER_2WAYS))
+    )
+    (component "smoothieboard-5driver:SC74_INFINEON"
+      (place Q1 104231 -140624 front 90 (PN BSL207SP))
+    )
+    (component "smoothieboard-5driver:1715250000"
+      (place U$5 144509 -152489 front 0 (PN 5MMCONN))
+      (place U$6 132731 -152489 front 0 (PN 5MMCONN))
+      (place U$10 161319 -152489 front 180 (PN 5MMCONN))
+      (place U$7 201524 -152489 front 0 (PN 5MMCONN))
+    )
+    (component "smoothieboard-5driver:TO252"
+      (place Q10 187554 -113767 front 0 (PN "SUD50P04-08-GE3"))
+    )
+    (component "smoothieboard-5driver:SMB"
+      (place D5 182474 -120434 front 90 (PN 15v))
+    )
+    (component "smoothieboard-5driver:1X05"
+      (place JP32 122149 -119482 front 180 (PN M05PTH))
+      (place JP33 158344 -128054 front 180 (PN M05PTH))
+    )
+    (component "smoothieboard-5driver:R-78"
+      (place IC13 172631 -110274 front 270 (PN "R-78E-5.0"))
+    )
+    (component "smoothieboard-5driver:OSHW-LOGO-HUGE"
+      (place U$8 162471 -74079.1 front 0 (PN "OSHW-LOGOH"))
+      (place U$9 165964 -66459.1 back 0 (PN "OSHW-LOGOH"))
+      (place U$11 112306 -71539.1 front 0 (PN FR000001))
+      (place U$12 183426 -70904.1 back 0 (PN FR000001))
+    )
+    (component "smoothieboard-5driver:PANASONIC_D"
+      (place C84 173901 -120434 front 0 (PN 100uF))
+    )
+  )
+  (library
+    (image "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm"
+      (outline (path signal 50  1650 -1250  -1650 -1250))
+      (outline (path signal 50  1650 -1250  1650 1250))
+      (outline (path signal 50  -1650 1250  -1650 -1250))
+      (outline (path signal 50  -1650 1250  1650 1250))
+      (outline (path signal 120  -700 1000  700 1000))
+      (outline (path signal 120  1400 300  1400 -300))
+      (outline (path signal 120  700 -1000  -700 -1000))
+      (outline (path signal 120  -1400 -300  -1400 300))
+      (pin Cust[T]Pad_1000x500_1500x_1000_23_um 2 650 0)
+      (pin Cust[T]Pad_1000x500_1500x_1000_23_um 1 -650 0)
+    )
+    (image "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm::1"
+      (outline (path signal 50  1650 -1250  -1650 -1250))
+      (outline (path signal 50  1650 -1250  1650 1250))
+      (outline (path signal 50  -1650 1250  -1650 -1250))
+      (outline (path signal 50  -1650 1250  1650 1250))
+      (outline (path signal 120  -700 1000  700 1000))
+      (outline (path signal 120  1400 300  1400 -300))
+      (outline (path signal 120  700 -1000  -700 -1000))
+      (outline (path signal 120  -1400 -300  -1400 300))
+      (pin Cust[T]Pad_1000x500_1000x_1500_23_um 2 650 0)
+      (pin Cust[T]Pad_1000x500_1000x_1500_23_um 1 -650 0)
+    )
+    (image ""
+      (keepout "" (circle Top 3600))
+      (keepout "" (circle Route2 3600))
+      (keepout "" (circle Route15 3600))
+      (keepout "" (circle Bottom 3600))
+    )
+    (image "smoothieboard-5driver:LQFP100"
+      (outline (path signal 152.4  -6873 6873  6873 6873))
+      (outline (path signal 152.4  6873 6873  6873 -6873))
+      (outline (path signal 152.4  6873 -6873  -6123 -6873))
+      (outline (path signal 152.4  -6123 -6873  -6873 -6123))
+      (outline (path signal 152.4  -6873 -6123  -6873 6873))
+      (outline (path signal 406.4  -9000 9000  9000 9000))
+      (outline (path signal 406.4  9000 9000  9000 -9000))
+      (outline (path signal 406.4  9000 -9000  -9000 -9000))
+      (outline (path signal 406.4  -9000 -9000  -9000 9000))
+      (outline (path signal 152.4  -3500 -4500  -3576.12 -4882.68  -3792.89 -5207.11  -4117.32 -5423.88
+            -4500 -5500  -4882.68 -5423.88  -5207.11 -5207.11  -5423.88 -4882.68
+            -5500 -4500  -5423.88 -4117.32  -5207.11 -3792.89  -4882.68 -3576.12
+            -4500 -3500  -4117.32 -3576.12  -3792.89 -3792.89  -3576.12 -4117.32
+            -3500 -4500))
+      (pin Rect[T]Pad_1500x270_um 100 -7750 -6000)
+      (pin Rect[T]Pad_1500x270_um 99 -7750 -5500)
+      (pin Rect[T]Pad_1500x270_um 98 -7750 -5000)
+      (pin Rect[T]Pad_1500x270_um 97 -7750 -4500)
+      (pin Rect[T]Pad_1500x270_um 96 -7750 -4000)
+      (pin Rect[T]Pad_1500x270_um 95 -7750 -3500)
+      (pin Rect[T]Pad_1500x270_um 94 -7750 -3000)
+      (pin Rect[T]Pad_1500x270_um 93 -7750 -2500)
+      (pin Rect[T]Pad_1500x270_um 92 -7750 -2000)
+      (pin Rect[T]Pad_1500x270_um 91 -7750 -1500)
+      (pin Rect[T]Pad_1500x270_um 90 -7750 -1000)
+      (pin Rect[T]Pad_1500x270_um 89 -7750 -500)
+      (pin Rect[T]Pad_1500x270_um 88 -7750 0)
+      (pin Rect[T]Pad_1500x270_um 87 -7750 500)
+      (pin Rect[T]Pad_1500x270_um 86 -7750 1000)
+      (pin Rect[T]Pad_1500x270_um 85 -7750 1500)
+      (pin Rect[T]Pad_1500x270_um 84 -7750 2000)
+      (pin Rect[T]Pad_1500x270_um 83 -7750 2500)
+      (pin Rect[T]Pad_1500x270_um 82 -7750 3000)
+      (pin Rect[T]Pad_1500x270_um 81 -7750 3500)
+      (pin Rect[T]Pad_1500x270_um 80 -7750 4000)
+      (pin Rect[T]Pad_1500x270_um 79 -7750 4500)
+      (pin Rect[T]Pad_1500x270_um 78 -7750 5000)
+      (pin Rect[T]Pad_1500x270_um 77 -7750 5500)
+      (pin Rect[T]Pad_1500x270_um 76 -7750 6000)
+      (pin Rect[T]Pad_1500x270_um 50 7750 6000)
+      (pin Rect[T]Pad_1500x270_um 49 7750 5500)
+      (pin Rect[T]Pad_1500x270_um 48 7750 5000)
+      (pin Rect[T]Pad_1500x270_um 47 7750 4500)
+      (pin Rect[T]Pad_1500x270_um 46 7750 4000)
+      (pin Rect[T]Pad_1500x270_um 45 7750 3500)
+      (pin Rect[T]Pad_1500x270_um 44 7750 3000)
+      (pin Rect[T]Pad_1500x270_um 43 7750 2500)
+      (pin Rect[T]Pad_1500x270_um 42 7750 2000)
+      (pin Rect[T]Pad_1500x270_um 41 7750 1500)
+      (pin Rect[T]Pad_1500x270_um 40 7750 1000)
+      (pin Rect[T]Pad_1500x270_um 39 7750 500)
+      (pin Rect[T]Pad_1500x270_um 38 7750 0)
+      (pin Rect[T]Pad_1500x270_um 37 7750 -500)
+      (pin Rect[T]Pad_1500x270_um 36 7750 -1000)
+      (pin Rect[T]Pad_1500x270_um 35 7750 -1500)
+      (pin Rect[T]Pad_1500x270_um 34 7750 -2000)
+      (pin Rect[T]Pad_1500x270_um 33 7750 -2500)
+      (pin Rect[T]Pad_1500x270_um 32 7750 -3000)
+      (pin Rect[T]Pad_1500x270_um 31 7750 -3500)
+      (pin Rect[T]Pad_1500x270_um 30 7750 -4000)
+      (pin Rect[T]Pad_1500x270_um 29 7750 -4500)
+      (pin Rect[T]Pad_1500x270_um 28 7750 -5000)
+      (pin Rect[T]Pad_1500x270_um 27 7750 -5500)
+      (pin Rect[T]Pad_1500x270_um 26 7750 -6000)
+      (pin Rect[T]Pad_270x1500_um 25 6000 -7750)
+      (pin Rect[T]Pad_270x1500_um 24 5500 -7750)
+      (pin Rect[T]Pad_270x1500_um 23 5000 -7750)
+      (pin Rect[T]Pad_270x1500_um 22 4500 -7750)
+      (pin Rect[T]Pad_270x1500_um 21 4000 -7750)
+      (pin Rect[T]Pad_270x1500_um 20 3500 -7750)
+      (pin Rect[T]Pad_270x1500_um 19 3000 -7750)
+      (pin Rect[T]Pad_270x1500_um 18 2500 -7750)
+      (pin Rect[T]Pad_270x1500_um 17 2000 -7750)
+      (pin Rect[T]Pad_270x1500_um 16 1500 -7750)
+      (pin Rect[T]Pad_270x1500_um 15 1000 -7750)
+      (pin Rect[T]Pad_270x1500_um 14 500 -7750)
+      (pin Rect[T]Pad_270x1500_um 13 0 -7750)
+      (pin Rect[T]Pad_270x1500_um 12 -500 -7750)
+      (pin Rect[T]Pad_270x1500_um 11 -1000 -7750)
+      (pin Rect[T]Pad_270x1500_um 10 -1500 -7750)
+      (pin Rect[T]Pad_270x1500_um 9 -2000 -7750)
+      (pin Rect[T]Pad_270x1500_um 8 -2500 -7750)
+      (pin Rect[T]Pad_270x1500_um 7 -3000 -7750)
+      (pin Rect[T]Pad_270x1500_um 6 -3500 -7750)
+      (pin Rect[T]Pad_270x1500_um 5 -4000 -7750)
+      (pin Rect[T]Pad_270x1500_um 4 -4500 -7750)
+      (pin Rect[T]Pad_270x1500_um 3 -5000 -7750)
+      (pin Rect[T]Pad_270x1500_um 2 -5500 -7750)
+      (pin Rect[T]Pad_270x1500_um 1 -6000 -7750)
+      (pin Rect[T]Pad_270x1500_um 51 6000 7750)
+      (pin Rect[T]Pad_270x1500_um 52 5500 7750)
+      (pin Rect[T]Pad_270x1500_um 53 5000 7750)
+      (pin Rect[T]Pad_270x1500_um 54 4500 7750)
+      (pin Rect[T]Pad_270x1500_um 55 4000 7750)
+      (pin Rect[T]Pad_270x1500_um 56 3500 7750)
+      (pin Rect[T]Pad_270x1500_um 57 3000 7750)
+      (pin Rect[T]Pad_270x1500_um 58 2500 7750)
+      (pin Rect[T]Pad_270x1500_um 59 2000 7750)
+      (pin Rect[T]Pad_270x1500_um 60 1500 7750)
+      (pin Rect[T]Pad_270x1500_um 61 1000 7750)
+      (pin Rect[T]Pad_270x1500_um 62 500 7750)
+      (pin Rect[T]Pad_270x1500_um 63 0 7750)
+      (pin Rect[T]Pad_270x1500_um 64 -500 7750)
+      (pin Rect[T]Pad_270x1500_um 65 -1000 7750)
+      (pin Rect[T]Pad_270x1500_um 66 -1500 7750)
+      (pin Rect[T]Pad_270x1500_um 67 -2000 7750)
+      (pin Rect[T]Pad_270x1500_um 68 -2500 7750)
+      (pin Rect[T]Pad_270x1500_um 69 -3000 7750)
+      (pin Rect[T]Pad_270x1500_um 70 -3500 7750)
+      (pin Rect[T]Pad_270x1500_um 71 -4000 7750)
+      (pin Rect[T]Pad_270x1500_um 72 -4500 7750)
+      (pin Rect[T]Pad_270x1500_um 73 -5000 7750)
+      (pin Rect[T]Pad_270x1500_um 74 -5500 7750)
+      (pin Rect[T]Pad_270x1500_um 75 -6000 7750)
+    )
+    (image "smoothieboard-5driver:CRYSTAL_3.2X2.5"
+      (outline (path signal 100  -1600 1050  -1600 -1050))
+      (outline (path signal 100  1600 1050  1600 -1050))
+      (outline (path signal 100  -1400 1250  1400 1250))
+      (outline (path signal 100  -1400 -1250  1400 -1250))
+      (outline (path signal 101.6  -1964.5 1604  1964.5 1604))
+      (outline (path signal 101.6  -1964.5 -1604  1964.5 -1604))
+      (outline (path signal 101.6  -1968.5 1587.5  -1968.5 -1587.5))
+      (outline (path signal 101.6  1968.5 1587.5  1968.5 -1587.5))
+      (pin Rect[T]Pad_1400x1200_um GND2 1100 -800)
+      (pin Rect[T]Pad_1400x1200_um 1 -1100 -800)
+      (pin Rect[T]Pad_1400x1200_um 2 1100 800)
+      (pin Rect[T]Pad_1400x1200_um GND1 -1100 800)
+    )
+    (image "smoothieboard-5driver:C0603"
+      (outline (path signal 50.8  -1473 983  1473 983))
+      (outline (path signal 50.8  1473 983  1473 -983))
+      (outline (path signal 50.8  1473 -983  -1473 -983))
+      (outline (path signal 50.8  -1473 -983  -1473 983))
+      (outline (path signal 101.6  -356 432  356 432))
+      (outline (path signal 101.6  -356 -419  356 -419))
+      (pin Rect[T]Pad_1100x1000_um 2 850 0)
+      (pin Rect[T]Pad_1100x1000_um 1 -850 0)
+    )
+    (image "smoothieboard-5driver:EIA3216"
+      (outline (path signal 203.2  -1000 -1200  -2500 -1200))
+      (outline (path signal 203.2  -2500 -1200  -2500 1200))
+      (outline (path signal 203.2  -2500 1200  -1000 1200))
+      (outline (path signal 203.2  1000 -1200  2100 -1200))
+      (outline (path signal 203.2  2100 -1200  2500 -800))
+      (outline (path signal 203.2  2500 -800  2500 800))
+      (outline (path signal 203.2  2500 800  2100 1200))
+      (outline (path signal 203.2  2100 1200  1000 1200))
+      (pin Rect[T]Pad_1600x1400_um (rotate 90) A 1400 0)
+      (pin Rect[T]Pad_1600x1400_um (rotate 90) C -1400 0)
+    )
+    (image "smoothieboard-5driver:R0603"
+      (outline (path signal 152.4  -432 -356  432 -356))
+      (outline (path signal 152.4  432 356  -432 356))
+      (outline (path signal 50.8  -1473 983  1473 983))
+      (outline (path signal 50.8  1473 983  1473 -983))
+      (outline (path signal 50.8  1473 -983  -1473 -983))
+      (outline (path signal 50.8  -1473 -983  -1473 983))
+      (pin Rect[T]Pad_1000x1100_um 2 850 0)
+      (pin Rect[T]Pad_1000x1100_um 1 -850 0)
+    )
+    (image "smoothieboard-5driver:TACTILE_SWITCH_SMD"
+      (outline (path signal 203.2  -1540 -2540  -2540 -1540))
+      (outline (path signal 203.2  -2540 -1240  -2540 1270))
+      (outline (path signal 203.2  -2540 1540  -1540 2540))
+      (outline (path signal 203.2  -1540 2540  1540 2540))
+      (outline (path signal 203.2  1540 2540  2540 1540))
+      (outline (path signal 203.2  2540 1240  2540 -1240))
+      (outline (path signal 203.2  2540 -1540  1540 -2540))
+      (outline (path signal 203.2  1540 -2540  -1540 -2540))
+      (outline (path signal 127  1905 1270  1905 445))
+      (outline (path signal 127  1905 445  2160 -10))
+      (outline (path signal 127  1905 -230  1905 -1115))
+      (outline (path signal 203.2  1270 0  1193.41 -434.366  972.876 -816.34  635 -1099.85
+            220.533 -1250.71  -220.533 -1250.71  -635 -1099.85  -972.876 -816.34
+            -1193.41 -434.366  -1270 0  -1193.41 434.366  -972.876 816.34
+            -635 1099.85  -220.533 1250.71  220.533 1250.71  635 1099.85
+            972.876 816.34  1193.41 434.366  1270 0))
+      (pin Rect[T]Pad_762x1524_um (rotate 90) 4 2540 -1905)
+      (pin Rect[T]Pad_762x1524_um (rotate 90) 3 -2540 -1905)
+      (pin Rect[T]Pad_762x1524_um (rotate 90) 2 2540 1905)
+      (pin Rect[T]Pad_762x1524_um (rotate 90) 1 -2540 1905)
+    )
+    (image "smoothieboard-5driver:CHIP-LED0805"
+      (outline (path signal 101.6  -625 450  -625 -450))
+      (outline (path signal 101.6  625 450  625 -475))
+      (pin Rect[T]Pad_1200x1200_um A 0 -1050)
+      (pin Rect[T]Pad_1200x1200_um C 0 1050)
+    )
+    (image "smoothieboard-5driver:MOLEX-1X6"
+      (outline (path signal 127  -1270 3048  -1270 -2540))
+      (outline (path signal 127  13970 3048  13970 -2540))
+      (outline (path signal 127  13970 3048  -1270 3048))
+      (outline (path signal 127  13970 -2540  12700 -2540))
+      (outline (path signal 127  12700 -2540  0 -2540))
+      (outline (path signal 127  0 -2540  -1270 -2540))
+      (outline (path signal 127  0 -2540  0 -1270))
+      (outline (path signal 127  0 -1270  12700 -1270))
+      (outline (path signal 127  12700 -1270  12700 -2540))
+      (pin Round[A]Pad_1879.6_um 6 12700 0)
+      (pin Round[A]Pad_1879.6_um 5 10160 0)
+      (pin Round[A]Pad_1879.6_um 4 7620 0)
+      (pin Round[A]Pad_1879.6_um 3 5080 0)
+      (pin Round[A]Pad_1879.6_um 2 2540 0)
+      (pin Rect[A]Pad_1879.6x1879.6_um 1 0 0)
+    )
+    (image "smoothieboard-5driver:TACTILE-PTH-LED-12MM"
+      (outline (path signal 203.2  5000 -1300  5000 -700))
+      (outline (path signal 203.2  5000 -700  4500 -200))
+      (outline (path signal 203.2  5000 200  5000 1000))
+      (outline (path signal 203.2  -6000 4000  -6000 4850))
+      (outline (path signal 203.2  -4850 6000  4850 6000))
+      (outline (path signal 203.2  6000 4850  6000 4000))
+      (outline (path signal 203.2  6000 1000  6000 -1000))
+      (outline (path signal 203.2  6000 -4000  6000 -4850))
+      (outline (path signal 203.2  4850 -6000  -4850 -6000))
+      (outline (path signal 203.2  -6000 -4850  -6000 -4000))
+      (outline (path signal 203.2  -6000 -1000  -6000 1000))
+      (outline (path signal 203.2  4850 6000  6000 4850))
+      (outline (path signal 203.2  -6000 4850  -4850 6000))
+      (outline (path signal 203.2  -4850 -6000  -6000 -4850))
+      (outline (path signal 203.2  6000 -4850  4850 -6000))
+      (outline (path signal 203.2  6000 1000  5000 1000))
+      (outline (path signal 203.2  5000 1000  5000 4000))
+      (outline (path signal 203.2  5000 4000  6000 4000))
+      (outline (path signal 203.2  6000 -1000  5000 -1000))
+      (outline (path signal 203.2  5000 -1000  5000 -4000))
+      (outline (path signal 203.2  5000 -4000  6000 -4000))
+      (outline (path signal 127  -635 -635  0 -635))
+      (outline (path signal 127  0 -635  635 -635))
+      (outline (path signal 127  635 -635  0 635))
+      (outline (path signal 127  0 635  -635 -635))
+      (outline (path signal 127  -635 635  0 635))
+      (outline (path signal 127  0 635  635 635))
+      (outline (path signal 127  0 -635  0 -1270))
+      (outline (path signal 127  0 635  0 1270))
+      (outline (path signal 203.2  3500 0  3418.17 -752.397  3176.51 -1469.61  2786.33 -2118.11
+            2265.85 -2667.57  1639.43 -3092.29  936.349 -3372.43  189.486 -3494.87
+            -566.237 -3453.89  -1295.48 -3251.42  -1964.15 -2896.91  -2540.98 -2406.95
+            -2999 -1804.44  -3316.79 -1117.56  -3479.48 -378.417  -3479.48 378.417
+            -3316.79 1117.56  -2999 1804.44  -2540.98 2406.95  -1964.15 2896.91
+            -1295.48 3251.42  -566.237 3453.89  189.486 3494.87  936.349 3372.43
+            1639.43 3092.29  2265.85 2667.57  2786.33 2118.11  3176.51 1469.61
+            3418.17 752.397  3500 0))
+      (outline (path signal 900  -3600 4000  -3676.39 3764.89  -3876.39 3619.58  -4123.61 3619.58
+            -4323.61 3764.89  -4400 4000  -4323.61 4235.11  -4123.61 4380.42
+            -3876.39 4380.42  -3676.39 4235.11  -3600 4000))
+      (outline (path signal 900  4400 4000  4323.61 3764.89  4123.61 3619.58  3876.39 3619.58
+            3676.39 3764.89  3600 4000  3676.39 4235.11  3876.39 4380.42
+            4123.61 4380.42  4323.61 4235.11  4400 4000))
+      (outline (path signal 900  4400 -4000  4323.61 -4235.11  4123.61 -4380.42  3876.39 -4380.42
+            3676.39 -4235.11  3600 -4000  3676.39 -3764.89  3876.39 -3619.58
+            4123.61 -3619.58  4323.61 -3764.89  4400 -4000))
+      (outline (path signal 900  -3600 -4000  -3676.39 -4235.11  -3876.39 -4380.42  -4123.61 -4380.42
+            -4323.61 -4235.11  -4400 -4000  -4323.61 -3764.89  -4123.61 -3619.58
+            -3876.39 -3619.58  -3676.39 -3764.89  -3600 -4000))
+      (pin Round[A]Pad_1308_um C 0 -6750)
+      (pin Round[A]Pad_1308_um A 0 6750)
+      (pin Round[A]Pad_2159_um 4 6250 -2500)
+      (pin Round[A]Pad_2159_um 3 -6250 -2500)
+      (pin Round[A]Pad_2159_um 2 6250 2500)
+      (pin Round[A]Pad_2159_um 1 -6250 2500)
+      (keepout "" (circle Top 1600 0 -4500))
+      (keepout "" (circle Route2 1600 0 -4500))
+      (keepout "" (circle Route15 1600 0 -4500))
+      (keepout "" (circle Bottom 1600 0 -4500))
+      (keepout "" (circle Top 1600 0 4500))
+      (keepout "" (circle Route2 1600 0 4500))
+      (keepout "" (circle Route15 1600 0 4500))
+      (keepout "" (circle Bottom 1600 0 4500))
+    )
+    (image "smoothieboard-5driver:MOLEX-1X3"
+      (outline (path signal 127  -1270 3048  -1270 -2540))
+      (outline (path signal 127  6350 3048  6350 -2540))
+      (outline (path signal 127  6350 3048  -1270 3048))
+      (outline (path signal 127  6350 -2540  5080 -2540))
+      (outline (path signal 127  5080 -2540  0 -2540))
+      (outline (path signal 127  0 -2540  -1270 -2540))
+      (outline (path signal 127  0 -2540  0 -1270))
+      (outline (path signal 127  0 -1270  5080 -1270))
+      (outline (path signal 127  5080 -1270  5080 -2540))
+      (pin Round[A]Pad_1879.6_um 3 5080 0)
+      (pin Round[A]Pad_1879.6_um 2 2540 0)
+      (pin Rect[A]Pad_1879.6x1879.6_um 1 0 0)
+    )
+    (image "smoothieboard-5driver:1X04_NO_SILK"
+      (pin Round[A]Pad_1879.6_um (rotate 90) 4 7620 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 3 5080 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 2 2540 0)
+      (pin Rect[A]Pad_1879.6x1879.6_um (rotate 90) 1 0 0)
+    )
+    (image "smoothieboard-5driver:1X03_NO_SILK"
+      (pin Round[A]Pad_1879.6_um (rotate 90) 3 5080 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 2 2540 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 1 0 0)
+    )
+    (image "smoothieboard-5driver:1X03"
+      (outline (path signal 203.2  3810 635  4445 1270))
+      (outline (path signal 203.2  4445 1270  5715 1270))
+      (outline (path signal 203.2  5715 1270  6350 635))
+      (outline (path signal 203.2  6350 -635  5715 -1270))
+      (outline (path signal 203.2  5715 -1270  4445 -1270))
+      (outline (path signal 203.2  4445 -1270  3810 -635))
+      (outline (path signal 203.2  -635 1270  635 1270))
+      (outline (path signal 203.2  635 1270  1270 635))
+      (outline (path signal 203.2  1270 -635  635 -1270))
+      (outline (path signal 203.2  1270 635  1905 1270))
+      (outline (path signal 203.2  1905 1270  3175 1270))
+      (outline (path signal 203.2  3175 1270  3810 635))
+      (outline (path signal 203.2  3810 -635  3175 -1270))
+      (outline (path signal 203.2  3175 -1270  1905 -1270))
+      (outline (path signal 203.2  1905 -1270  1270 -635))
+      (outline (path signal 203.2  -1270 635  -1270 -635))
+      (outline (path signal 203.2  -635 1270  -1270 635))
+      (outline (path signal 203.2  -1270 -635  -635 -1270))
+      (outline (path signal 203.2  635 -1270  -635 -1270))
+      (outline (path signal 203.2  6350 635  6350 -635))
+      (pin Round[A]Pad_1879.6_um (rotate 90) 3 5080 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 2 2540 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 1 0 0)
+    )
+    (image "smoothieboard-5driver:1X02"
+      (outline (path signal 203.2  -635 1270  635 1270))
+      (outline (path signal 203.2  635 1270  1270 635))
+      (outline (path signal 203.2  1270 -635  635 -1270))
+      (outline (path signal 203.2  1270 635  1905 1270))
+      (outline (path signal 203.2  1905 1270  3175 1270))
+      (outline (path signal 203.2  3175 1270  3810 635))
+      (outline (path signal 203.2  3810 -635  3175 -1270))
+      (outline (path signal 203.2  3175 -1270  1905 -1270))
+      (outline (path signal 203.2  1905 -1270  1270 -635))
+      (outline (path signal 203.2  -1270 635  -1270 -635))
+      (outline (path signal 203.2  -635 1270  -1270 635))
+      (outline (path signal 203.2  -1270 -635  -635 -1270))
+      (outline (path signal 203.2  635 -1270  -635 -1270))
+      (outline (path signal 203.2  3810 635  3810 -635))
+      (pin Round[A]Pad_1879.6_um (rotate 90) 2 2540 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 1 0 0)
+    )
+    (image "smoothieboard-5driver:ETSSOP24"
+      (outline (path signal 100  -3900 -2200  3900 -2200))
+      (outline (path signal 100  3900 -2200  3900 2200))
+      (outline (path signal 100  3900 2200  -3900 2200))
+      (outline (path signal 100  -3900 2200  -3900 -2200))
+      (outline (path signal 223.6  -3213.2 -1600  -3269.1 -1696.82  -3380.9 -1696.82  -3436.8 -1600
+            -3380.9 -1503.18  -3269.1 -1503.18  -3213.2 -1600))
+      (pin Rect[T]Pad_450x1650_um P12 3575 -3050)
+      (pin Rect[T]Pad_450x1650_um P11 2925 -3050)
+      (pin Rect[T]Pad_450x1650_um P10 2275 -3050)
+      (pin Rect[T]Pad_450x1650_um P09 1625 -3050)
+      (pin Rect[T]Pad_450x1650_um P08 975 -3050)
+      (pin Rect[T]Pad_450x1650_um P07 325 -3050)
+      (pin Rect[T]Pad_450x1650_um P06 -325 -3050)
+      (pin Rect[T]Pad_450x1650_um P05 -975 -3050)
+      (pin Rect[T]Pad_450x1650_um P04 -1625 -3050)
+      (pin Rect[T]Pad_450x1650_um P03 -2275 -3050)
+      (pin Rect[T]Pad_450x1650_um P02 -2925 -3050)
+      (pin Rect[T]Pad_450x1650_um P01 -3575 -3050)
+      (pin Rect[T]Pad_450x1650_um P13 3575 3050)
+      (pin Rect[T]Pad_450x1650_um P14 2925 3050)
+      (pin Rect[T]Pad_450x1650_um P15 2275 3050)
+      (pin Rect[T]Pad_450x1650_um P16 1625 3050)
+      (pin Rect[T]Pad_450x1650_um P17 975 3050)
+      (pin Rect[T]Pad_450x1650_um P18 325 3050)
+      (pin Rect[T]Pad_450x1650_um P19 -325 3050)
+      (pin Rect[T]Pad_450x1650_um P20 -975 3050)
+      (pin Rect[T]Pad_450x1650_um P21 -1625 3050)
+      (pin Rect[T]Pad_450x1650_um P22 -2275 3050)
+      (pin Rect[T]Pad_450x1650_um P23 -2925 3050)
+      (pin Rect[T]Pad_450x1650_um P24 -3575 3050)
+      (pin Rect[T]Pad_4320x3000_um EPAD 0 0)
+    )
+    (image "smoothieboard-5driver:R2512"
+      (outline (path signal 152.4  -2362 1473  2387 1473))
+      (outline (path signal 152.4  -2362 -1473  2387 -1473))
+      (pin Rect[T]Pad_1800x3200_um 2 2800 0)
+      (pin Rect[T]Pad_1800x3200_um 1 -2800 0)
+    )
+    (image "smoothieboard-5driver:08P"
+      (outline (path signal 152.4  -8001 1778  -7874 1651))
+      (outline (path signal 152.4  -7874 1651  -7620 1397))
+      (outline (path signal 152.4  -7620 1397  -7366 1651))
+      (outline (path signal 152.4  -7366 1651  -7239 1778))
+      (outline (path signal 152.4  -7874 -2159  -7874 -2286))
+      (outline (path signal 152.4  -7874 -2286  -9906 -2286))
+      (outline (path signal 152.4  -7366 -2159  -7874 -2159))
+      (outline (path signal 152.4  -7366 -2159  -7366 -2286))
+      (outline (path signal 152.4  -9906 2540  -9906 1778))
+      (outline (path signal 152.4  -9906 1778  -9906 -1524))
+      (outline (path signal 152.4  -9906 -1778  -9906 -2286))
+      (outline (path signal 152.4  -9906 -1778  -9525 -1778))
+      (outline (path signal 152.4  -8255 -1778  -8255 -1524))
+      (outline (path signal 152.4  -9525 -1778  -9525 -1524))
+      (outline (path signal 152.4  -9525 -1270  -8255 -1270))
+      (outline (path signal 152.4  -8255 -1524  -8255 -1270))
+      (outline (path signal 152.4  -6985 -1778  -6985 -1524))
+      (outline (path signal 152.4  -6985 -1524  -6985 -1270))
+      (outline (path signal 152.4  -8255 -1524  -7874 -1524))
+      (outline (path signal 152.4  -7874 -1524  -7366 -1524))
+      (outline (path signal 152.4  -7366 -1524  -6985 -1524))
+      (outline (path signal 152.4  -9525 -1524  -9906 -1524))
+      (outline (path signal 152.4  -9525 -1524  -9525 -1270))
+      (outline (path signal 152.4  -9906 -1524  -9906 -1778))
+      (outline (path signal 152.4  -9906 2540  -9144 2540))
+      (outline (path signal 152.4  -9144 2540  -9144 2667))
+      (outline (path signal 152.4  -8636 2540  -8636 2667))
+      (outline (path signal 152.4  -8636 2667  -9144 2667))
+      (outline (path signal 152.4  -6604 2540  -6604 2667))
+      (outline (path signal 152.4  -6096 2540  -6096 2667))
+      (outline (path signal 152.4  -7366 2413  -7366 2540))
+      (outline (path signal 152.4  -7874 2413  -7874 2540))
+      (outline (path signal 152.4  -4826 -2159  -5334 -2159))
+      (outline (path signal 152.4  -4826 -2159  -4826 -2286))
+      (outline (path signal 152.4  -2794 -2286  -4826 -2286))
+      (outline (path signal 152.4  -2794 1778  -2794 -1524))
+      (outline (path signal 152.4  -3175 -1778  -3175 -1524))
+      (outline (path signal 152.4  -4445 -1270  -3175 -1270))
+      (outline (path signal 152.4  -5715 -1778  -5715 -1524))
+      (outline (path signal 152.4  -5715 -1524  -5715 -1270))
+      (outline (path signal 152.4  -4445 -1778  -4445 -1524))
+      (outline (path signal 152.4  -4445 -1524  -4445 -1270))
+      (outline (path signal 152.4  -5715 -1524  -5334 -1524))
+      (outline (path signal 152.4  -5334 -1524  -4826 -1524))
+      (outline (path signal 152.4  -4826 -1524  -4445 -1524))
+      (outline (path signal 152.4  -3175 -1524  -2794 -1524))
+      (outline (path signal 152.4  -3175 -1524  -3175 -1270))
+      (outline (path signal 152.4  -4064 2540  -4064 2667))
+      (outline (path signal 152.4  -3556 2540  -2794 2540))
+      (outline (path signal 152.4  -3556 2540  -3556 2667))
+      (outline (path signal 152.4  -3556 2667  -4064 2667))
+      (outline (path signal 152.4  -4826 2413  -4826 2540))
+      (outline (path signal 152.4  -4826 2540  -4064 2540))
+      (outline (path signal 152.4  -4826 2413  -5334 2413))
+      (outline (path signal 152.4  -5334 2413  -5334 2540))
+      (outline (path signal 152.4  -6096 2540  -5334 2540))
+      (outline (path signal 152.4  -6096 2667  -6604 2667))
+      (outline (path signal 152.4  -7366 2540  -6604 2540))
+      (outline (path signal 152.4  -7874 2413  -7366 2413))
+      (outline (path signal 152.4  -7874 2540  -8636 2540))
+      (outline (path signal 152.4  -8001 1778  -9906 1778))
+      (outline (path signal 152.4  -7239 1778  -5334 1778))
+      (outline (path signal 152.4  -5334 1778  -4826 1778))
+      (outline (path signal 152.4  -7366 1651  -7366 -1524))
+      (outline (path signal 152.4  -7874 1651  -7874 -1524))
+      (outline (path signal 152.4  -5334 1778  -5334 -1524))
+      (outline (path signal 152.4  -4826 1778  -4826 -1524))
+      (outline (path signal 152.4  -6985 -1270  -5715 -1270))
+      (outline (path signal 152.4  -6985 -1778  -8255 -1778))
+      (outline (path signal 152.4  -7366 -2286  -5334 -2286))
+      (outline (path signal 152.4  -5715 -1778  -4445 -1778))
+      (outline (path signal 152.4  -5334 -2159  -5334 -2286))
+      (outline (path signal 152.4  -254 -2159  -254 -2286))
+      (outline (path signal 152.4  -254 -2286  -2286 -2286))
+      (outline (path signal 152.4  254 -2159  -254 -2159))
+      (outline (path signal 152.4  254 -2159  254 -2286))
+      (outline (path signal 152.4  -2286 1778  -2286 -1524))
+      (outline (path signal 152.4  -635 -1778  -635 -1524))
+      (outline (path signal 152.4  -1905 -1778  -1905 -1524))
+      (outline (path signal 152.4  -1905 -1270  -635 -1270))
+      (outline (path signal 152.4  -635 -1524  -635 -1270))
+      (outline (path signal 152.4  635 -1778  635 -1524))
+      (outline (path signal 152.4  635 -1524  635 -1270))
+      (outline (path signal 152.4  -635 -1524  -254 -1524))
+      (outline (path signal 152.4  -254 -1524  254 -1524))
+      (outline (path signal 152.4  254 -1524  635 -1524))
+      (outline (path signal 152.4  -1905 -1524  -2286 -1524))
+      (outline (path signal 152.4  -1905 -1524  -1905 -1270))
+      (outline (path signal 152.4  -2286 2540  -1524 2540))
+      (outline (path signal 152.4  -1524 2540  -1524 2667))
+      (outline (path signal 152.4  -1016 2540  -1016 2667))
+      (outline (path signal 152.4  -1016 2667  -1524 2667))
+      (outline (path signal 152.4  1016 2540  1016 2667))
+      (outline (path signal 152.4  1524 2540  1524 2667))
+      (outline (path signal 152.4  254 2413  254 2540))
+      (outline (path signal 152.4  -254 2413  -254 2540))
+      (outline (path signal 152.4  7620 1397  7874 1651))
+      (outline (path signal 152.4  7874 1651  8001 1778))
+      (outline (path signal 152.4  7874 -2159  7366 -2159))
+      (outline (path signal 152.4  7874 -2159  7874 -2286))
+      (outline (path signal 152.4  9906 -2286  7874 -2286))
+      (outline (path signal 152.4  8001 1778  9906 1778))
+      (outline (path signal 152.4  9906 1778  9906 2540))
+      (outline (path signal 152.4  9906 -1778  9906 -2286))
+      (outline (path signal 152.4  9906 -1778  9525 -1778))
+      (outline (path signal 152.4  9906 1778  9906 -1524))
+      (outline (path signal 152.4  9525 -1778  9525 -1524))
+      (outline (path signal 152.4  8255 -1270  9525 -1270))
+      (outline (path signal 152.4  6985 -1778  6985 -1524))
+      (outline (path signal 152.4  6985 -1524  6985 -1270))
+      (outline (path signal 152.4  8255 -1778  8255 -1524))
+      (outline (path signal 152.4  8255 -1524  8255 -1270))
+      (outline (path signal 152.4  6985 -1524  7366 -1524))
+      (outline (path signal 152.4  7366 -1524  7874 -1524))
+      (outline (path signal 152.4  7874 -1524  8255 -1524))
+      (outline (path signal 152.4  9525 -1524  9906 -1524))
+      (outline (path signal 152.4  9525 -1524  9525 -1270))
+      (outline (path signal 152.4  9906 -1524  9906 -1778))
+      (outline (path signal 152.4  8636 2540  8636 2667))
+      (outline (path signal 152.4  9144 2540  9906 2540))
+      (outline (path signal 152.4  9144 2540  9144 2667))
+      (outline (path signal 152.4  9144 2667  8636 2667))
+      (outline (path signal 152.4  7874 2413  7874 2540))
+      (outline (path signal 152.4  7874 2540  8636 2540))
+      (outline (path signal 152.4  7874 2413  7366 2413))
+      (outline (path signal 152.4  7366 2413  7366 2540))
+      (outline (path signal 152.4  7239 1778  7366 1651))
+      (outline (path signal 152.4  7366 1651  7620 1397))
+      (outline (path signal 152.4  1524 2667  1016 2667))
+      (outline (path signal 152.4  254 2540  1016 2540))
+      (outline (path signal 152.4  -254 2413  254 2413))
+      (outline (path signal 152.4  -254 2540  -1016 2540))
+      (outline (path signal 152.4  -2286 1778  -254 1778))
+      (outline (path signal 152.4  254 1778  254 -1524))
+      (outline (path signal 152.4  -254 1778  -254 -1524))
+      (outline (path signal 152.4  7366 1651  7366 -1524))
+      (outline (path signal 152.4  7874 1651  7874 -1524))
+      (outline (path signal 152.4  635 -1778  -635 -1778))
+      (outline (path signal 152.4  6985 -1778  8255 -1778))
+      (outline (path signal 152.4  7366 -2159  7366 -2286))
+      (outline (path signal 152.4  -4826 1778  -2794 1778))
+      (outline (path signal 152.4  -254 1778  254 1778))
+      (outline (path signal 152.4  -2794 -2159  -2794 -2286))
+      (outline (path signal 152.4  -2286 -2159  -2286 -2286))
+      (outline (path signal 152.4  -2286 -2159  -2794 -2159))
+      (outline (path signal 152.4  -1905 -1778  -3175 -1778))
+      (outline (path signal 152.4  -2286 -1524  -2794 -1524))
+      (outline (path signal 152.4  -2286 1778  -2794 1778))
+      (outline (path signal 152.4  -2286 2413  -2794 2413))
+      (outline (path signal 152.4  -2794 2540  -2794 2413))
+      (outline (path signal 152.4  -2286 2540  -2286 2413))
+      (outline (path signal 152.4  2286 -2159  2286 -2286))
+      (outline (path signal 152.4  2286 -2286  254 -2286))
+      (outline (path signal 152.4  2794 -2159  2286 -2159))
+      (outline (path signal 152.4  2794 -2159  2794 -2286))
+      (outline (path signal 152.4  1905 -1778  1905 -1524))
+      (outline (path signal 152.4  635 -1270  1905 -1270))
+      (outline (path signal 152.4  1905 -1524  1905 -1270))
+      (outline (path signal 152.4  3175 -1778  3175 -1524))
+      (outline (path signal 152.4  3175 -1524  3175 -1270))
+      (outline (path signal 152.4  1905 -1524  2286 -1524))
+      (outline (path signal 152.4  2286 -1524  2794 -1524))
+      (outline (path signal 152.4  2794 -1524  3175 -1524))
+      (outline (path signal 152.4  3556 2540  3556 2667))
+      (outline (path signal 152.4  4064 2540  4064 2667))
+      (outline (path signal 152.4  2794 2413  2794 2540))
+      (outline (path signal 152.4  2286 2413  2286 2540))
+      (outline (path signal 152.4  4064 2667  3556 2667))
+      (outline (path signal 152.4  2794 2540  3556 2540))
+      (outline (path signal 152.4  2286 2413  2794 2413))
+      (outline (path signal 152.4  2286 2540  1524 2540))
+      (outline (path signal 152.4  254 1778  2286 1778))
+      (outline (path signal 152.4  2794 1778  2794 -1524))
+      (outline (path signal 152.4  2286 1778  2286 -1524))
+      (outline (path signal 152.4  3175 -1778  1905 -1778))
+      (outline (path signal 152.4  2286 1778  2794 1778))
+      (outline (path signal 152.4  4826 -2159  4826 -2286))
+      (outline (path signal 152.4  4826 -2286  2794 -2286))
+      (outline (path signal 152.4  5334 -2159  4826 -2159))
+      (outline (path signal 152.4  5334 -2159  5334 -2286))
+      (outline (path signal 152.4  4445 -1778  4445 -1524))
+      (outline (path signal 152.4  3175 -1270  4445 -1270))
+      (outline (path signal 152.4  4445 -1524  4445 -1270))
+      (outline (path signal 152.4  5715 -1778  5715 -1524))
+      (outline (path signal 152.4  5715 -1524  5715 -1270))
+      (outline (path signal 152.4  4445 -1524  4826 -1524))
+      (outline (path signal 152.4  4826 -1524  5334 -1524))
+      (outline (path signal 152.4  5334 -1524  5715 -1524))
+      (outline (path signal 152.4  6096 2540  6096 2667))
+      (outline (path signal 152.4  6604 2540  6604 2667))
+      (outline (path signal 152.4  5334 2413  5334 2540))
+      (outline (path signal 152.4  4826 2413  4826 2540))
+      (outline (path signal 152.4  6604 2667  6096 2667))
+      (outline (path signal 152.4  5334 2540  6096 2540))
+      (outline (path signal 152.4  4826 2413  5334 2413))
+      (outline (path signal 152.4  4826 2540  4064 2540))
+      (outline (path signal 152.4  2794 1778  4826 1778))
+      (outline (path signal 152.4  5334 1778  5334 -1524))
+      (outline (path signal 152.4  4826 1778  4826 -1524))
+      (outline (path signal 152.4  5715 -1778  4445 -1778))
+      (outline (path signal 152.4  4826 1778  5334 1778))
+      (outline (path signal 152.4  6604 2540  7366 2540))
+      (outline (path signal 152.4  5334 1778  7239 1778))
+      (outline (path signal 152.4  5715 -1270  6985 -1270))
+      (outline (path signal 152.4  7366 -2286  5334 -2286))
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 8 8890 0)
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 6 3810 0)
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 7 6350 0)
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 5 1270 0)
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 4 -1270 0)
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 3 -3810 0)
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 2 -6350 0)
+      (pin Oval[A]Pad_2844.8x1422.4_um (rotate 90) 1 -8890 0)
+    )
+    (image "smoothieboard-5driver:0603-ARV"
+      (outline (path signal 101.6  -1550 450  1550 450))
+      (outline (path signal 101.6  1550 450  1550 -450))
+      (outline (path signal 101.6  -1550 -450  -1550 450))
+      (outline (path signal 101.6  1550 -450  -1550 -450))
+      (pin Rect[T]Pad_500x650_um 8 -1200 625)
+      (pin Rect[T]Pad_500x650_um 7 -400 625)
+      (pin Rect[T]Pad_500x650_um 6 400 625)
+      (pin Rect[T]Pad_500x650_um 5 1200 625)
+      (pin Rect[T]Pad_500x650_um 4 1200 -625)
+      (pin Rect[T]Pad_500x650_um 3 400 -625)
+      (pin Rect[T]Pad_500x650_um 2 -400 -625)
+      (pin Rect[T]Pad_500x650_um 1 -1200 -625)
+    )
+    (image "smoothieboard-5driver:TSSOP20"
+      (outline (path signal 152.4  -3164.6 -2282.8  3164.6 -2282.8))
+      (outline (path signal 152.4  3164.6 2282.8  3164.6 -2282.8))
+      (outline (path signal 152.4  3164.6 2282.8  -3164.6 2282.8))
+      (outline (path signal 152.4  -3164.6 -2282.8  -3164.6 2282.8))
+      (outline (path signal 50.8  -2936 -2054.2  2936 -2054.2))
+      (outline (path signal 50.8  2936 2054.2  2936 -2054.2))
+      (outline (path signal 50.8  2936 2054.2  -2936 2054.2))
+      (outline (path signal 50.8  -2936 -2054.2  -2936 2054.2))
+      (outline (path signal 152.4  -1818.4 -1219.2  -1890.98 -1466.38  -2085.67 -1635.08
+            -2340.67 -1671.75  -2575 -1564.73  -2714.28 -1348.01  -2714.28 -1090.39
+            -2575 -873.671  -2340.67 -766.654  -2085.67 -803.316  -1890.98 -972.019
+            -1818.4 -1219.2))
+      (pin Rect[T]Pad_304.8x990.6_um 20 -2925 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 19 -2275 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 18 -1625 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 17 -975 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 16 -325 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 15 325 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 14 975 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 13 1625 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 12 2275 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 11 2925 2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 10 2925 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 9 2275 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 8 1625 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 7 975 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 6 325 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 5 -325 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 4 -975 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 3 -1625 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 2 -2275 -2917.8)
+      (pin Rect[T]Pad_304.8x990.6_um 1 -2925 -2917.8)
+    )
+    (image "smoothieboard-5driver:10X04MTA"
+      (outline (path signal 152.4  -5080 -1270  -5080 1270))
+      (outline (path signal 152.4  5080 1270  -5080 1270))
+      (outline (path signal 152.4  5080 1270  5080 -1270))
+      (outline (path signal 152.4  -5080 -1270  5080 -1270))
+      (outline (path signal 152.4  -5080 1270  -5080 1905))
+      (outline (path signal 152.4  5080 1905  -5080 1905))
+      (outline (path signal 152.4  5080 1905  5080 1270))
+      (pin Oval[A]Pad_3048x1524_um (rotate 270) 1 3810 0)
+      (pin Oval[A]Pad_3048x1524_um (rotate 270) 2 1270 0)
+      (pin Oval[A]Pad_3048x1524_um (rotate 270) 3 -1270 0)
+      (pin Oval[A]Pad_3048x1524_um (rotate 270) 4 -3810 0)
+    )
+    (image "smoothieboard-5driver:180G-4"
+      (outline (path signal 203.2  -7600 3400  7600 3400))
+      (outline (path signal 203.2  7600 3400  7600 -4000))
+      (outline (path signal 203.2  7600 -4000  -7600 -4000))
+      (outline (path signal 203.2  -7600 -4000  -7600 3400))
+      (outline (path signal 203.2  -6125 -3850  -6125 -2975))
+      (outline (path signal 203.2  -6125 -2975  -6475 -2625))
+      (outline (path signal 203.2  -6475 -2625  -7525 -2625))
+      (outline (path signal 203.2  -4375 -3850  -4375 -2975))
+      (outline (path signal 203.2  -4375 -2975  -4025 -2625))
+      (outline (path signal 203.2  -4025 -2625  -2975 -2625))
+      (outline (path signal 203.2  -2975 -2625  -2625 -2975))
+      (outline (path signal 203.2  -2625 -2975  -2625 -3850))
+      (outline (path signal 203.2  -875 -3850  -875 -2975))
+      (outline (path signal 203.2  -875 -2975  -525 -2625))
+      (outline (path signal 203.2  -525 -2625  525 -2625))
+      (outline (path signal 203.2  525 -2625  875 -2975))
+      (outline (path signal 203.2  875 -2975  875 -3850))
+      (outline (path signal 203.2  2625 -3850  2625 -2975))
+      (outline (path signal 203.2  2625 -2975  2975 -2625))
+      (outline (path signal 203.2  2975 -2625  4025 -2625))
+      (outline (path signal 203.2  4025 -2625  4375 -2975))
+      (outline (path signal 203.2  4375 -2975  4375 -3850))
+      (outline (path signal 203.2  6125 -3850  6125 -2975))
+      (outline (path signal 203.2  6125 -2975  6475 -2625))
+      (outline (path signal 203.2  6475 -2625  7525 -2625))
+      (pin Oval[A]Pad_4267.2x2133.6_um (rotate 90) 4 5250 0)
+      (pin Oval[A]Pad_4267.2x2133.6_um (rotate 90) 3 1750 0)
+      (pin Oval[A]Pad_4267.2x2133.6_um (rotate 90) 2 -1750 0)
+      (pin Oval[A]Pad_4267.2x2133.6_um (rotate 90) 1 -5250 0)
+    )
+    (image "smoothieboard-5driver:QFN24_4MM"
+      (outline (path signal 203.2  1650 -2000  2000 -2000))
+      (outline (path signal 203.2  2000 -1650  2000 -2000))
+      (outline (path signal 203.2  -1650 -2000  -2000 -2000))
+      (outline (path signal 203.2  -2000 -2000  -2000 -1650))
+      (outline (path signal 203.2  2000 1650  2000 2000))
+      (outline (path signal 203.2  2000 2000  1650 2000))
+      (outline (path signal 203.2  -1650 2000  -2000 1650))
+      (outline (path signal 127  -2000 2000  -2000 -2000))
+      (outline (path signal 127  -2000 -2000  2000 -2000))
+      (outline (path signal 127  2000 -2000  2000 2000))
+      (outline (path signal 127  2000 2000  -2000 2000))
+      (outline (path signal 254  -2921 1270  -2984.5 1160.02  -3111.5 1160.02  -3175 1270
+            -3111.5 1379.98  -2984.5 1379.98  -2921 1270))
+      (pin Rect[T]Pad_1778x1778_um THERM 0 0)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 270) 24 -1250 2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 270) 23 -750 2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 270) 22 -250 2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 270) 21 250 2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 270) 20 750 2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 270) 19 1250 2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um 18 2000 1250)
+      (pin RoundRect[T]Pad_800x280_70.266_um 17 2000 750)
+      (pin RoundRect[T]Pad_800x280_70.266_um 16 2000 250)
+      (pin RoundRect[T]Pad_800x280_70.266_um 15 2000 -250)
+      (pin RoundRect[T]Pad_800x280_70.266_um 14 2000 -750)
+      (pin RoundRect[T]Pad_800x280_70.266_um 13 2000 -1250)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 90) 12 1250 -2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 90) 11 750 -2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 90) 10 250 -2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 90) 9 -250 -2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 90) 8 -750 -2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 90) 7 -1250 -2000)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 180) 6 -2000 -1250)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 180) 5 -2000 -750)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 180) 4 -2000 -250)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 180) 3 -2000 250)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 180) 2 -2000 750)
+      (pin RoundRect[T]Pad_800x280_70.266_um (rotate 180) 1 -2000 1250)
+    )
+    (image "smoothieboard-5driver:0603"
+      (outline (path signal 50.8  -1473 729  1473 729))
+      (outline (path signal 50.8  1473 729  1473 -729))
+      (outline (path signal 50.8  1473 -729  -1473 -729))
+      (outline (path signal 50.8  -1473 -729  -1473 729))
+      (outline (path signal 101.6  -356 432  356 432))
+      (outline (path signal 101.6  -356 -419  356 -419))
+      (outline (path signal 127  -1600 700  1600 700))
+      (outline (path signal 127  1600 700  1600 -700))
+      (outline (path signal 127  1600 -700  -1600 -700))
+      (outline (path signal 127  -1600 -700  -1600 700))
+      (pin Rect[T]Pad_1100x1000_um 2 850 0)
+      (pin Rect[T]Pad_1100x1000_um 1 -850 0)
+    )
+    (image "smoothieboard-5driver:C0603K"
+      (outline (path signal 101.6  -725 350  725 350))
+      (outline (path signal 101.6  725 -350  -725 -350))
+      (pin Rect[T]Pad_1050x1080_um 2 875 0)
+      (pin Rect[T]Pad_1050x1080_um 1 -875 0)
+    )
+    (image "smoothieboard-5driver:SOT23-5"
+      (outline (path signal 152.4  1422.4 810.4  1422.4 -810.4))
+      (outline (path signal 152.4  1422.4 -810.4  -1422.4 -810.4))
+      (outline (path signal 152.4  -1422.4 -810.4  -1422.4 810.4))
+      (outline (path signal 152.4  -1422.4 810.4  1422.4 810.4))
+      (outline (path signal 127  -1300 800  -1400 800))
+      (outline (path signal 127  -1400 800  -1400 -800))
+      (outline (path signal 127  -1400 -800  -1300 -800))
+      (outline (path signal 127  1300 800  1400 800))
+      (outline (path signal 127  1400 800  1400 -800))
+      (outline (path signal 127  1400 -800  1300 -800))
+      (outline (path signal 127  -600 800  600 800))
+      (outline (path signal 127  -600 -800  -400 -800))
+      (outline (path signal 127  400 -800  600 -800))
+      (pin Rect[T]Pad_550x1200_um 5 -950 1300.1)
+      (pin Rect[T]Pad_550x1200_um 4 950 1300.1)
+      (pin Rect[T]Pad_550x1200_um 3 950 -1300.1)
+      (pin Rect[T]Pad_550x1200_um 2 0 -1300.1)
+      (pin Rect[T]Pad_550x1200_um 1 -950 -1300.1)
+    )
+    (image "smoothieboard-5driver:SOT223"
+      (outline (path signal 203.2  3276.6 1651  3276.6 -1651))
+      (outline (path signal 203.2  3276.6 -1651  -3276.6 -1651))
+      (outline (path signal 203.2  -3276.6 -1651  -3276.6 1651))
+      (outline (path signal 203.2  -3276.6 1651  3276.6 1651))
+      (pin Rect[T]Pad_3600x2200_um 4 0 3099)
+      (pin Rect[T]Pad_1219.2x2235.2_um 3 2311.4 -3098.8)
+      (pin Rect[T]Pad_1219.2x2235.2_um 2 0 -3098.8)
+      (pin Rect[T]Pad_1219.2x2235.2_um 1 -2311.4 -3098.8)
+    )
+    (image "smoothieboard-5driver:SMADIODE"
+      (outline (path signal 203.2  -2150 1300  2150 1300))
+      (outline (path signal 203.2  2150 1300  2150 -1300))
+      (outline (path signal 203.2  2150 -1300  -2150 -1300))
+      (outline (path signal 203.2  -2150 -1300  -2150 1300))
+      (outline (path signal 127  -3789 -1394  -3789 -1146))
+      (outline (path signal 127  -3789 -1146  -3789 1600))
+      (outline (path signal 127  -3789 1600  3816 1600))
+      (outline (path signal 127  3816 1600  3816 1394))
+      (outline (path signal 127  3816 1394  3816 1336.5))
+      (outline (path signal 127  3816 1394  3816 -1600))
+      (outline (path signal 127  3816 -1600  -3789 -1600))
+      (outline (path signal 127  -3789 -1600  -3789 -1146))
+      (outline (path signal 127  254 762  254 -762))
+      (outline (path signal 127  254 -762  -508 0))
+      (outline (path signal 127  -508 0  254 762))
+      (outline (path signal 127  -508 762  -508 0))
+      (outline (path signal 127  -508 0  -508 -762))
+      (pin Rect[T]Pad_2540x2540_um (rotate 180) A 2349.5 0)
+      (pin Rect[T]Pad_2540x2540_um C -2349.5 0)
+    )
+    (image "smoothieboard-5driver:TO220BV"
+      (outline (path signal 152.4  4699 -4318  4953 -4064))
+      (outline (path signal 152.4  4699 -4318  -4699 -4318))
+      (outline (path signal 152.4  -4953 -4064  -4699 -4318))
+      (outline (path signal 152.4  5080 -1143  4953 -4064))
+      (outline (path signal 152.4  -4953 -4064  -5080 -1143))
+      (outline (path signal 254  -4368.8 -3708.4  -4432.3 -3818.39  -4559.3 -3818.39  -4622.8 -3708.4
+            -4559.3 -3598.41  -4432.3 -3598.41  -4368.8 -3708.4))
+      (pin Oval[A]Pad_3048x1524_um (rotate 90) S 2540 -2540)
+      (pin Oval[A]Pad_3048x1524_um (rotate 90) D 0 -2540)
+      (pin Oval[A]Pad_3048x1524_um (rotate 90) G -2540 -2540)
+    )
+    (image "smoothieboard-5driver:PANASONIC_E"
+      (outline (path signal 101.6  -4100 4100  1800 4100))
+      (outline (path signal 101.6  1800 4100  4100 1800))
+      (outline (path signal 101.6  4100 1800  4100 -1800))
+      (outline (path signal 101.6  4100 -1800  1800 -4100))
+      (outline (path signal 101.6  1800 -4100  -4100 -4100))
+      (outline (path signal 101.6  -4100 -4100  -4100 4100))
+      (outline (path signal 203.2  -4100 900  -4100 4100))
+      (outline (path signal 203.2  -4100 4100  1800 4100))
+      (outline (path signal 203.2  1800 4100  4100 1800))
+      (outline (path signal 203.2  4100 1800  4100 900))
+      (outline (path signal 203.2  4100 -900  4100 -1800))
+      (outline (path signal 203.2  4100 -1800  1800 -4100))
+      (outline (path signal 203.2  1800 -4100  -4100 -4100))
+      (outline (path signal 203.2  -4100 -4100  -4100 -900))
+      (outline (path signal 101.6  -2200 3250  -2200 -3250))
+      (outline (path signal 101.6  3950 0  3869.14 -795.129  3629.88 -1557.71  3242.02 -2256.51
+            2721.42 -2862.93  2089.41 -3352.14  1371.86 -3704.12  598.14 -3904.45
+            -200.064 -3944.93  -990.078 -3823.91  -1739.56 -3546.33  -2417.82 -3123.56
+            -2997.09 -2572.92  -3453.67 -1916.94  -3768.85 -1182.48  -3929.73 -399.615
+            -3929.73 399.615  -3768.85 1182.48  -3453.67 1916.94  -2997.09 2572.92
+            -2417.82 3123.56  -1739.56 3546.33  -990.078 3823.91  -200.064 3944.93
+            598.14 3904.45  1371.86 3704.12  2089.41 3352.14  2721.42 2862.93
+            3242.02 2256.51  3629.88 1557.71  3869.14 795.129  3950 0))
+      (pin Rect[T]Pad_3800x1400_um + 3000 0)
+      (pin Rect[T]Pad_3800x1400_um - -3000 0)
+    )
+    (image "smoothieboard-5driver:MOLEX8981"
+      (outline (path signal 406.4  0 -2540  0 22860))
+      (outline (path signal 406.4  0 22860  15240 22860))
+      (outline (path signal 406.4  15240 22860  15240 -2540))
+      (outline (path signal 406.4  15240 -2540  0 -2540))
+      (pin Oval[A]Pad_7000x3500_um P$4 -1270 17780)
+      (pin Oval[A]Pad_7000x3500_um P$3 -1270 12700)
+      (pin Oval[A]Pad_7000x3500_um P$2 -1270 7620)
+      (pin Oval[A]Pad_7000x3500_um P$1 -1270 2540)
+      (keepout "" (circle Top 4000 12700 15240))
+      (keepout "" (circle Route2 4000 12700 15240))
+      (keepout "" (circle Route15 4000 12700 15240))
+      (keepout "" (circle Bottom 4000 12700 15240))
+      (keepout "" (circle Top 4000 12700 5080))
+      (keepout "" (circle Route2 4000 12700 5080))
+      (keepout "" (circle Route15 4000 12700 5080))
+      (keepout "" (circle Bottom 4000 12700 5080))
+      (keepout "" (circle Top 2200 2540 -1270))
+      (keepout "" (circle Route2 2200 2540 -1270))
+      (keepout "" (circle Route15 2200 2540 -1270))
+      (keepout "" (circle Bottom 2200 2540 -1270))
+      (keepout "" (circle Top 2200 2540 21590))
+      (keepout "" (circle Route2 2200 2540 21590))
+      (keepout "" (circle Route15 2200 2540 21590))
+      (keepout "" (circle Bottom 2200 2540 21590))
+    )
+    (image "smoothieboard-5driver:SOT230P700X160-4N"
+      (outline (path signal 127  -1750 -3250  -1750 3250))
+      (outline (path signal 127  -1750 3250  1750 3250))
+      (outline (path signal 127  1750 3250  1750 -3250))
+      (outline (path signal 127  1750 -3250  -1750 -3250))
+      (outline (path signal 127  -1400 -3250  -1400 3250))
+      (outline (path signal 127  -1400 3250  1400 3250))
+      (outline (path signal 127  1400 3250  1400 -3250))
+      (outline (path signal 127  1400 -3250  -1400 -3250))
+      (outline (path signal 100  -4250 -3600  -4250 3600))
+      (outline (path signal 100  -4250 3600  4250 3600))
+      (outline (path signal 100  4250 3600  4250 -3600))
+      (outline (path signal 100  4250 -3600  -4250 -3600))
+      (outline (path signal 250  -2775 3279  -2837.5 3170.75  -2962.5 3170.75  -3025 3279
+            -2962.5 3387.25  -2837.5 3387.25  -2775 3279))
+      (outline (path signal 127  -625 2500  -696.619 2279.58  -884.119 2143.35  -1115.88 2143.35
+            -1303.38 2279.58  -1375 2500  -1303.38 2720.42  -1115.88 2856.65
+            -884.119 2856.65  -696.619 2720.42  -625 2500))
+      (pin Rect[T]Pad_3150x2150_um (rotate 90) 4 2900 0)
+      (pin Rect[T]Pad_950x2150_um (rotate 90) 3 -2900 -2300)
+      (pin Rect[T]Pad_950x2150_um (rotate 90) 2 -2900 0)
+      (pin Rect[T]Pad_950x2150_um (rotate 90) 1 -2900 2300)
+    )
+    (image "smoothieboard-5driver:POWER_JACK_SMD"
+      (outline (path signal 203.2  -5000 4500  -5000 -4500))
+      (outline (path signal 203.2  -5000 4500  -3500 4500))
+      (outline (path signal 203.2  9800 4500  9800 -4500))
+      (outline (path signal 203.2  -3500 -4500  -5000 -4500))
+      (outline (path signal 203.2  -3500 4500  -3500 2500))
+      (outline (path signal 203.2  -3500 2500  -3500 -2500))
+      (outline (path signal 203.2  -3500 -2500  -3500 -4500))
+      (outline (path signal 203.2  -3500 2500  0 2500))
+      (outline (path signal 203.2  0 -2500  -3500 -2500))
+      (outline (path signal 203.2  -3500 4500  -2000 4500))
+      (outline (path signal 203.2  2000 4500  4100 4500))
+      (outline (path signal 203.2  8200 4500  9800 4500))
+      (outline (path signal 203.2  9800 -4500  8100 -4500))
+      (outline (path signal 203.2  4100 -4500  2000 -4500))
+      (outline (path signal 203.2  -2000 -4500  -3500 -4500))
+      (pin Rect[T]Pad_2800x2400_um P$4 6100 -5700)
+      (pin Rect[T]Pad_2800x2400_um VIN1 6100 5700)
+      (pin Rect[T]Pad_2800x2400_um GND 0 -5700)
+      (pin Rect[T]Pad_2800x2400_um VIN0 0 5700)
+      (keepout "" (circle Top 1600 4572 0))
+      (keepout "" (circle Route2 1600 4572 0))
+      (keepout "" (circle Route15 1600 4572 0))
+      (keepout "" (circle Bottom 1600 4572 0))
+      (keepout "" (circle Top 1600))
+      (keepout "" (circle Route2 1600))
+      (keepout "" (circle Route15 1600))
+      (keepout "" (circle Bottom 1600))
+    )
+    (image "smoothieboard-5driver:180G-2"
+      (outline (path signal 203.2  -4100 3400  4100 3400))
+      (outline (path signal 203.2  4100 3400  4100 -4000))
+      (outline (path signal 203.2  4100 -4000  -4100 -4000))
+      (outline (path signal 203.2  -4100 -4000  -4100 3400))
+      (outline (path signal 203.2  -2625 -3850  -2625 -2975))
+      (outline (path signal 203.2  -2625 -2975  -2975 -2625))
+      (outline (path signal 203.2  -2975 -2625  -3850 -2625))
+      (outline (path signal 203.2  -875 -3850  -875 -2975))
+      (outline (path signal 203.2  -875 -2975  -525 -2625))
+      (outline (path signal 203.2  -525 -2625  525 -2625))
+      (outline (path signal 203.2  525 -2625  875 -2975))
+      (outline (path signal 203.2  875 -2975  875 -3850))
+      (outline (path signal 203.2  2625 -3850  2625 -2975))
+      (outline (path signal 203.2  2625 -2975  2975 -2625))
+      (outline (path signal 203.2  2975 -2625  3850 -2625))
+      (pin Oval[A]Pad_4267.2x2133.6_um (rotate 90) 2 1750 0)
+      (pin Oval[A]Pad_4267.2x2133.6_um (rotate 90) 1 -1750 0)
+    )
+    (image "smoothieboard-5driver:TO263AB"
+      (outline (path signal 127  1016 17018  11684 17018))
+      (outline (path signal 127  3302 19304  9398 19304))
+      (outline (path signal 127  1016 7874  1016 17018))
+      (outline (path signal 127  11684 7874  11684 17018))
+      (outline (path signal 127  1016 7874  3302 7874))
+      (outline (path signal 127  3302 7874  4318 7874))
+      (outline (path signal 127  4318 7874  5842 7874))
+      (outline (path signal 127  5842 7874  6858 7874))
+      (outline (path signal 127  6858 7874  8382 7874))
+      (outline (path signal 127  8382 7874  9398 7874))
+      (outline (path signal 127  9398 7874  11684 7874))
+      (outline (path signal 127  1016 17018  3302 19304))
+      (outline (path signal 127  11684 17018  9398 19304))
+      (outline (path signal 127  1524 16510  11176 16510))
+      (outline (path signal 127  11176 16510  11176 8382))
+      (outline (path signal 127  11176 8382  1524 8382))
+      (outline (path signal 127  1524 8382  1524 16510))
+      (outline (path signal 127  3302 6350  3556 6350))
+      (outline (path signal 127  3556 6350  4064 6350))
+      (outline (path signal 127  4064 6350  4318 6350))
+      (outline (path signal 127  3302 6350  3302 7874))
+      (outline (path signal 127  4318 6350  4318 7874))
+      (outline (path signal 127  3556 6350  3556 4572))
+      (outline (path signal 127  3556 4572  4064 4572))
+      (outline (path signal 127  4064 4572  4064 6350))
+      (outline (path signal 127  5842 6350  5842 7874))
+      (outline (path signal 127  6858 6350  6858 7874))
+      (outline (path signal 127  5842 6350  6858 6350))
+      (outline (path signal 127  8382 6350  8382 7874))
+      (outline (path signal 127  9398 6350  9398 7874))
+      (outline (path signal 127  8382 6350  8636 6350))
+      (outline (path signal 127  8636 6350  9144 6350))
+      (outline (path signal 127  9144 6350  9398 6350))
+      (outline (path signal 127  8636 6350  8636 4572))
+      (outline (path signal 127  8636 4572  9144 4572))
+      (outline (path signal 127  9144 4572  9144 6350))
+      (outline (path signal 127  3556 4572  3556 3302))
+      (outline (path signal 127  3556 3302  4064 3302))
+      (outline (path signal 127  4064 3302  4064 4572))
+      (outline (path signal 127  8636 4572  8636 3302))
+      (outline (path signal 127  8636 3302  9144 3302))
+      (outline (path signal 127  9144 3302  9144 4572))
+      (outline (path signal 127  9144 4572  8636 4572))
+      (outline (path signal 127  3556 4572  4064 4572))
+      (pin Rect[T]Pad_10668x8382_um K 6350 12446)
+      (pin Rect[T]Pad_2032x3810_um 2 8890 2540)
+      (pin Rect[T]Pad_2032x3810_um 1 3810 2540)
+    )
+    (image "smoothieboard-5driver:JP1"
+      (outline (path signal 152.4  -1016 0  -1270 254))
+      (outline (path signal 152.4  -1016 0  -1270 -254))
+      (outline (path signal 152.4  1016 0  1270 254))
+      (outline (path signal 152.4  1016 0  1270 -254))
+      (outline (path signal 152.4  1270 -254  1270 -2286))
+      (outline (path signal 152.4  1016 -2540  1270 -2286))
+      (outline (path signal 152.4  1270 2286  1016 2540))
+      (outline (path signal 152.4  1270 2286  1270 254))
+      (outline (path signal 152.4  1016 2540  -1016 2540))
+      (outline (path signal 152.4  -1270 2286  -1016 2540))
+      (outline (path signal 152.4  -1270 2286  -1270 254))
+      (outline (path signal 152.4  -1270 -254  -1270 -2286))
+      (outline (path signal 152.4  -1016 -2540  -1270 -2286))
+      (outline (path signal 152.4  -1016 -2540  1016 -2540))
+      (pin Oval[A]Pad_2844.8x1422.4_um 2 0 1270)
+      (pin Oval[A]Pad_2844.8x1422.4_um 1 0 -1270)
+    )
+    (image "smoothieboard-5driver:10X02MTA"
+      (outline (path signal 152.4  -2540 -1270  -2540 1270))
+      (outline (path signal 152.4  2540 1270  -2540 1270))
+      (outline (path signal 152.4  -2540 -1270  2540 -1270))
+      (outline (path signal 152.4  -2540 1270  -2540 1905))
+      (outline (path signal 152.4  2540 1905  -2540 1905))
+      (outline (path signal 152.4  2540 1270  2540 -1270))
+      (outline (path signal 152.4  2540 1905  2540 1270))
+      (pin Oval[A]Pad_3048x1524_um (rotate 90) 1 1270 0)
+      (pin Oval[A]Pad_3048x1524_um (rotate 90) 2 -1270 0)
+    )
+    (image "smoothieboard-5driver:MICRO-SD-SOCKET-PP"
+      (outline (path signal 203.2  -14000 0  -14000 13200))
+      (outline (path signal 203.2  0 12100  0 0))
+      (outline (path signal 203.2  -11700 15300  -12500 15300))
+      (outline (path signal 203.2  -11000 16000  0 16000))
+      (outline (path signal 203.2  -10000 13600  -1600 13600))
+      (outline (path signal 203.2  -14000 0  -9100 0))
+      (outline (path signal 203.2  -3400 0  -6400 0))
+      (outline (path signal 203.2  0 0  -700 0))
+      (outline (path signal 203.2  0 17600  -11000 17600))
+      (outline (path signal 203.2  0 20700  -11000 20700))
+      (pin Rect[T]Pad_800x1500_um 8 -1240 10700)
+      (pin Rect[T]Pad_800x1500_um 7 -2340 10700)
+      (pin Rect[T]Pad_800x1500_um 6 -3440 10900)
+      (pin Rect[T]Pad_800x1500_um 5 -4540 10700)
+      (pin Rect[T]Pad_800x1500_um 4 -5640 10900)
+      (pin Rect[T]Pad_800x1500_um 3 -6740 10700)
+      (pin Rect[T]Pad_800x1500_um 2 -7840 10300)
+      (pin Rect[T]Pad_800x1500_um 1 -8940 10700)
+      (pin Rect[T]Pad_1400x1900_um GND1 -13600 14550)
+      (pin Rect[T]Pad_1400x1900_um GND3 -450 13550)
+      (pin Rect[T]Pad_1800x1400_um CD1 -2050 400)
+      (pin Rect[T]Pad_1800x1400_um CD2 -7750 400)
+    )
+    (image "smoothieboard-5driver:HR911105A"
+      (outline (path signal 127  10795 8001  10795 -8001))
+      (outline (path signal 127  10795 -8001  -10795 -8001))
+      (outline (path signal 127  -10795 -8001  -10795 8001))
+      (outline (path signal 127  -10795 8001  10795 8001))
+      (pin Round[A]Pad_1524_um (rotate 90) "G-" 4953 -4064)
+      (pin Round[A]Pad_1524_um (rotate 90) G+ 4953 -6604)
+      (pin Round[A]Pad_1524_um (rotate 90) "Y-" 4953 4064)
+      (pin Round[A]Pad_1524_um (rotate 90) Y+ 4953 6604)
+      (pin Round[A]Pad_2159_um (rotate 90) SHIELD0 -2921 8001)
+      (pin Round[A]Pad_2159_um (rotate 90) SHIELD1 -2921 -8001)
+      (pin Round[A]Pad_1524_um (rotate 90) GND -8890 4445)
+      (pin Round[A]Pad_1524_um (rotate 90) NC -6350 3175)
+      (pin Round[A]Pad_1524_um (rotate 90) "RD-" -8890 1905)
+      (pin Round[A]Pad_1524_um (rotate 90) P5 -6350 635)
+      (pin Round[A]Pad_1524_um (rotate 90) P4 -8890 -635)
+      (pin Round[A]Pad_1524_um (rotate 90) RD+ -6350 -1905)
+      (pin Round[A]Pad_1524_um (rotate 90) "TD-" -8890 -3175)
+      (pin Rect[A]Pad_1524x1524_um (rotate 90) TD+ -6350 -4445)
+      (keepout "" (circle Top 3556 0 5715))
+      (keepout "" (circle Route2 3556 0 5715))
+      (keepout "" (circle Route15 3556 0 5715))
+      (keepout "" (circle Bottom 3556 0 5715))
+      (keepout "" (circle Top 3556 0 -5715))
+      (keepout "" (circle Route2 3556 0 -5715))
+      (keepout "" (circle Route15 3556 0 -5715))
+      (keepout "" (circle Bottom 3556 0 -5715))
+    )
+    (image "smoothieboard-5driver:SOIC8"
+      (outline (path signal 203.2  2400 1900  2400 -1400))
+      (outline (path signal 203.2  2400 -1400  2400 -1900))
+      (outline (path signal 203.2  2400 -1900  -2400 -1900))
+      (outline (path signal 203.2  -2400 -1900  -2400 -1400))
+      (outline (path signal 203.2  -2400 -1400  -2400 1900))
+      (outline (path signal 203.2  -2400 1900  2400 1900))
+      (outline (path signal 203.2  2400 -1400  -2400 -1400))
+      (pin Rect[T]Pad_600x2200_um 5 1905 2600)
+      (pin Rect[T]Pad_600x2200_um 6 635 2600)
+      (pin Rect[T]Pad_600x2200_um 8 -1905 2600)
+      (pin Rect[T]Pad_600x2200_um 4 1905 -2600)
+      (pin Rect[T]Pad_600x2200_um 3 635 -2600)
+      (pin Rect[T]Pad_600x2200_um 1 -1905 -2600)
+      (pin Rect[T]Pad_600x2200_um 7 -635 2600)
+      (pin Rect[T]Pad_600x2200_um 2 -635 -2600)
+    )
+    (image "smoothieboard-5driver:C0805"
+      (outline (path signal 50.8  -1973 983  1973 983))
+      (outline (path signal 50.8  1973 -983  -1973 -983))
+      (outline (path signal 50.8  -1973 -983  -1973 983))
+      (outline (path signal 101.6  -381 660  381 660))
+      (outline (path signal 101.6  -356 -660  381 -660))
+      (outline (path signal 50.8  1973 983  1973 -983))
+      (pin Rect[T]Pad_1300x1500_um 2 850 0)
+      (pin Rect[T]Pad_1300x1500_um 1 -850 0)
+    )
+    (image "smoothieboard-5driver:SOT89"
+      (outline (path signal 127  2235 -1245  -2235 -1245))
+      (outline (path signal 127  2235 1219  2235 -1245))
+      (outline (path signal 127  -2235 -1245  -2235 1219))
+      (outline (path signal 127  -2235 1219  2235 1219))
+      (outline (path signal 199.8  -787.4 1574.8  -355.6 2006.6))
+      (outline (path signal 199.8  -355.6 2006.6  355.6 2006.6))
+      (outline (path signal 199.8  355.6 2006.6  787.4 1574.8))
+      (outline (path signal 199.8  787.4 1574.8  787.4 1295.4))
+      (outline (path signal 199.8  787.4 1295.4  -787.4 1295.4))
+      (outline (path signal 199.8  -787.4 1295.4  -787.4 1574.8))
+      (pin RoundRect[T]Pad_2200x3700_1104.19_um 2@1 0 940)
+      (pin Rect[T]Pad_1000x2000_um 2 0 -1727)
+      (pin Rect[T]Pad_1000x1500_um 3 1499 -1981)
+      (pin Rect[T]Pad_1000x1500_um 1 -1499 -1981)
+    )
+    (image "smoothieboard-5driver:USB-B-PTH"
+      (outline (path signal 203.2  -12500 6000  -8600 6000))
+      (outline (path signal 203.2  -8600 6000  -8600 -6000))
+      (outline (path signal 203.2  -8600 -6000  -12500 -6000))
+      (outline (path signal 203.2  -12500 -6000  -12500 6000))
+      (outline (path signal 203.2  -8600 6000  -4800 6000))
+      (outline (path signal 203.2  -8600 -6000  -4800 -6000))
+      (outline (path signal 203.2  -600 -6000  3300 -6000))
+      (outline (path signal 203.2  3300 -6000  3300 6000))
+      (outline (path signal 203.2  3300 6000  -600 6000))
+      (pin Round[A]Pad_3302_um S2 -2717.8 6019.8)
+      (pin Round[A]Pad_3302_um S1 -2717.8 -6019.8)
+      (pin Round[A]Pad_1676.4_um (rotate 270) GND 0 -1250)
+      (pin Round[A]Pad_1676.4_um (rotate 270) D+ 0 1250)
+      (pin Round[A]Pad_1676.4_um (rotate 90) "D-" 1981.2 1250)
+      (pin Round[A]Pad_1676.4_um (rotate 90) VBUS 1981.2 -1250)
+    )
+    (image "smoothieboard-5driver:SJ_3"
+      (outline (path signal 152.4  1270 -1016  -1270 -1016))
+      (outline (path signal 152.4  1524 -762  1524 762))
+      (outline (path signal 152.4  -1524 -762  -1524 762))
+      (outline (path signal 152.4  -1270 1016  1270 1016))
+      (pin Rect[T]Pad_635x1270_um 3 889 0)
+      (pin Rect[T]Pad_635x1270_um 2 0 0)
+      (pin Rect[T]Pad_635x1270_um 1 -889 0)
+    )
+    (image "smoothieboard-5driver:SC74_INFINEON"
+      (outline (path signal 203.2  -1450 700  -1450 -700))
+      (outline (path signal 203.2  -1450 -700  1450 -700))
+      (outline (path signal 203.2  1450 -700  1450 700))
+      (outline (path signal 203.2  1450 700  -1450 700))
+      (outline (path signal 203.2  -850 -350  -900 -436.603  -1000 -436.603  -1050 -350
+            -1000 -263.397  -900 -263.397  -850 -350))
+      (pin Rect[T]Pad_500x500_um 6 -950 1200)
+      (pin Rect[T]Pad_500x500_um 5 0 1200)
+      (pin Rect[T]Pad_500x500_um 4 950 1200)
+      (pin Rect[T]Pad_500x500_um 3 950 -1200)
+      (pin Rect[T]Pad_500x500_um 2 0 -1200)
+      (pin Rect[T]Pad_500x500_um 1 -950 -1200)
+    )
+    (image "smoothieboard-5driver:1715250000"
+      (outline (path signal 127  -3100 -5100  8100 -5100))
+      (outline (path signal 127  8100 -5100  8100 4000))
+      (outline (path signal 127  8100 4000  8100 5100))
+      (outline (path signal 127  8100 5100  6200 5100))
+      (outline (path signal 127  6200 5100  -1100 5100))
+      (outline (path signal 127  -1100 5100  -3100 5100))
+      (outline (path signal 127  -3100 5100  -3100 4000))
+      (outline (path signal 127  -3100 4000  -3100 -5100))
+      (outline (path signal 127  -3100 4000  -1100 4000))
+      (outline (path signal 127  -1100 4000  -1100 5100))
+      (outline (path signal 127  6200 5100  6200 4000))
+      (outline (path signal 127  6200 4000  8100 4000))
+      (pin Oval[A]Pad_4500x2250_um (rotate 90) P$2 5000 0)
+      (pin Oval[A]Pad_4500x2250_um (rotate 90) P$1 0 0)
+    )
+    (image "smoothieboard-5driver:TO252"
+      (outline (path signal 203.2  3276.6 3835.4  3277 -2159))
+      (outline (path signal 203.2  3277 -2159  -3277 -2159))
+      (outline (path signal 203.2  -3277 -2159  -3276.6 3835.4))
+      (outline (path signal 203.2  -3277 3835  3277.4 3834.6))
+      (outline (path signal 50.8  -3973 5983  3973 5983))
+      (outline (path signal 50.8  3973 -5983  -3973 -5983))
+      (outline (path signal 50.8  -3973 -5983  -3973 5983))
+      (outline (path signal 50.8  3973 5983  3973 -5983))
+      (outline (path signal 203.2  -2565.4 3937  -2565.4 4648.2))
+      (outline (path signal 203.2  -2565.4 4648.2  -2108.2 5105.4))
+      (outline (path signal 203.2  -2108.2 5105.4  2108.2 5105.4))
+      (outline (path signal 203.2  2108.2 5105.4  2565.4 4648.2))
+      (outline (path signal 203.2  2565.4 4648.2  2565.4 3937))
+      (outline (path signal 203.2  2565.4 3937  -2565.4 3937))
+      (pin Rect[T]Pad_1000x1600_um 2 2280 -4800)
+      (pin Rect[T]Pad_1000x1600_um 1 -2280 -4800)
+      (pin Rect[T]Pad_5400x6200_um 3 0 2500)
+    )
+    (image "smoothieboard-5driver:SMB"
+      (outline (path signal 101.6  -2260.6 1905  2260.6 1905))
+      (outline (path signal 101.6  -2260.6 -1905  2260.6 -1905))
+      (outline (path signal 101.6  -2260.6 -1905  -2260.6 1905))
+      (outline (path signal 101.6  2260.6 -1905  2260.6 1905))
+      (outline (path signal 203.2  193 1000  -830 0))
+      (outline (path signal 203.2  -830 0  193 -1000))
+      (outline (path signal 203.2  193 -1000  193 1000))
+      (pin Rect[T]Pad_2400x2400_um A 2200 0)
+      (pin Rect[T]Pad_2400x2400_um C -2200 0)
+    )
+    (image "smoothieboard-5driver:1X05"
+      (outline (path signal 203.2  6985 1270  8255 1270))
+      (outline (path signal 203.2  8255 1270  8890 635))
+      (outline (path signal 203.2  8890 -635  8255 -1270))
+      (outline (path signal 203.2  8890 635  9525 1270))
+      (outline (path signal 203.2  9525 1270  10795 1270))
+      (outline (path signal 203.2  10795 1270  11430 635))
+      (outline (path signal 203.2  11430 -635  10795 -1270))
+      (outline (path signal 203.2  10795 -1270  9525 -1270))
+      (outline (path signal 203.2  9525 -1270  8890 -635))
+      (outline (path signal 203.2  3810 635  4445 1270))
+      (outline (path signal 203.2  4445 1270  5715 1270))
+      (outline (path signal 203.2  5715 1270  6350 635))
+      (outline (path signal 203.2  6350 -635  5715 -1270))
+      (outline (path signal 203.2  5715 -1270  4445 -1270))
+      (outline (path signal 203.2  4445 -1270  3810 -635))
+      (outline (path signal 203.2  6985 1270  6350 635))
+      (outline (path signal 203.2  6350 -635  6985 -1270))
+      (outline (path signal 203.2  8255 -1270  6985 -1270))
+      (outline (path signal 203.2  -635 1270  635 1270))
+      (outline (path signal 203.2  635 1270  1270 635))
+      (outline (path signal 203.2  1270 -635  635 -1270))
+      (outline (path signal 203.2  1270 635  1905 1270))
+      (outline (path signal 203.2  1905 1270  3175 1270))
+      (outline (path signal 203.2  3175 1270  3810 635))
+      (outline (path signal 203.2  3810 -635  3175 -1270))
+      (outline (path signal 203.2  3175 -1270  1905 -1270))
+      (outline (path signal 203.2  1905 -1270  1270 -635))
+      (outline (path signal 203.2  -1270 635  -1270 -635))
+      (outline (path signal 203.2  -635 1270  -1270 635))
+      (outline (path signal 203.2  -1270 -635  -635 -1270))
+      (outline (path signal 203.2  635 -1270  -635 -1270))
+      (outline (path signal 203.2  11430 635  11430 -635))
+      (pin Round[A]Pad_1879.6_um (rotate 90) 5 10160 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 4 7620 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 3 5080 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 2 2540 0)
+      (pin Round[A]Pad_1879.6_um (rotate 90) 1 0 0)
+    )
+    (image "smoothieboard-5driver:R-78"
+      (outline (path signal 127  -6096 1143  -5969 8890))
+      (outline (path signal 127  -5715 9144  -5969 8890))
+      (outline (path signal 127  -5715 9144  5715 9144))
+      (outline (path signal 127  5969 8890  5715 9144))
+      (outline (path signal 127  5969 8890  6096 1143))
+      (outline (path signal 127  -4140.2 3708.4  -4214.6 3528.8  -4394.2 3454.4  -4573.81 3528.8
+            -4648.2 3708.4  -4573.81 3888.01  -4394.2 3962.4  -4214.6 3888.01
+            -4140.2 3708.4))
+      (pin Oval[A]Pad_3048x1524_um (rotate 270) 3 2540 2540)
+      (pin Oval[A]Pad_3048x1524_um (rotate 270) 2 0 2540)
+      (pin Oval[A]Pad_3048x1524_um (rotate 270) 1 -2540 2540)
+    )
+    (image "smoothieboard-5driver:OSHW-LOGO-HUGE"
+    )
+    (image "smoothieboard-5driver:PANASONIC_D"
+      (outline (path signal 101.6  -3250 3250  1550 3250))
+      (outline (path signal 101.6  1550 3250  3250 1550))
+      (outline (path signal 101.6  3250 1550  3250 -1550))
+      (outline (path signal 101.6  3250 -1550  1550 -3250))
+      (outline (path signal 101.6  1550 -3250  -3250 -3250))
+      (outline (path signal 101.6  -3250 -3250  -3250 3250))
+      (outline (path signal 101.6  -3250 950  -3250 3250))
+      (outline (path signal 101.6  -3250 3250  1550 3250))
+      (outline (path signal 101.6  1550 3250  3250 1550))
+      (outline (path signal 101.6  3250 1550  3250 950))
+      (outline (path signal 101.6  3250 -950  3250 -1550))
+      (outline (path signal 101.6  3250 -1550  1550 -3250))
+      (outline (path signal 101.6  1550 -3250  -3250 -3250))
+      (outline (path signal 101.6  -3250 -3250  -3250 -950))
+      (outline (path signal 101.6  -2100 2250  -2100 -2200))
+      (outline (path signal 101.6  3100 0  3022.28 -689.815  2793 -1345.04  2423.68 -1932.82
+            1932.82 -2423.68  1345.04 -2793  689.815 -3022.28  0 -3100  -689.815 -3022.28
+            -1345.04 -2793  -1932.82 -2423.68  -2423.68 -1932.82  -2793 -1345.04
+            -3022.28 -689.815  -3100 0  -3022.28 689.815  -2793 1345.04
+            -2423.68 1932.82  -1932.82 2423.68  -1345.04 2793  -689.815 3022.28
+            0 3100  689.815 3022.28  1345.04 2793  1932.82 2423.68  2423.68 1932.82
+            2793 1345.04  3022.28 689.815  3100 0))
+      (pin Rect[T]Pad_3000x1400_um - -2400 0)
+      (pin Rect[T]Pad_3000x1400_um + 2400 0)
+    )
+    (padstack Round[A]Pad_1308_um
+      (shape (circle Top 1308))
+      (shape (circle Route2 1308))
+      (shape (circle Route15 1308))
+      (shape (circle Bottom 1308))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524_um
+      (shape (circle Top 1524))
+      (shape (circle Route2 1524))
+      (shape (circle Route15 1524))
+      (shape (circle Bottom 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1676.4_um
+      (shape (circle Top 1676.4))
+      (shape (circle Route2 1676.4))
+      (shape (circle Route15 1676.4))
+      (shape (circle Bottom 1676.4))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1879.6_um
+      (shape (circle Top 1879.6))
+      (shape (circle Route2 1879.6))
+      (shape (circle Route15 1879.6))
+      (shape (circle Bottom 1879.6))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2159_um
+      (shape (circle Top 2159))
+      (shape (circle Route2 2159))
+      (shape (circle Route15 2159))
+      (shape (circle Bottom 2159))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3302_um
+      (shape (circle Top 3302))
+      (shape (circle Route2 3302))
+      (shape (circle Route15 3302))
+      (shape (circle Bottom 3302))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2844.8x1422.4_um
+      (shape (path Top 1422.4  -711.2 0  711.2 0))
+      (shape (path Route2 1422.4  -711.2 0  711.2 0))
+      (shape (path Route15 1422.4  -711.2 0  711.2 0))
+      (shape (path Bottom 1422.4  -711.2 0  711.2 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_3048x1524_um
+      (shape (path Top 1524  -762 0  762 0))
+      (shape (path Route2 1524  -762 0  762 0))
+      (shape (path Route15 1524  -762 0  762 0))
+      (shape (path Bottom 1524  -762 0  762 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_4267.2x2133.6_um
+      (shape (path Top 2133.6  -1066.8 0  1066.8 0))
+      (shape (path Route2 2133.6  -1066.8 0  1066.8 0))
+      (shape (path Route15 2133.6  -1066.8 0  1066.8 0))
+      (shape (path Bottom 2133.6  -1066.8 0  1066.8 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_4500x2250_um
+      (shape (path Top 2250  -1125 0  1125 0))
+      (shape (path Route2 2250  -1125 0  1125 0))
+      (shape (path Route15 2250  -1125 0  1125 0))
+      (shape (path Bottom 2250  -1125 0  1125 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_7000x3500_um
+      (shape (path Top 3500  -1750 0  1750 0))
+      (shape (path Route2 3500  -1750 0  1750 0))
+      (shape (path Route15 3500  -1750 0  1750 0))
+      (shape (path Bottom 3500  -1750 0  1750 0))
+      (attach off)
+    )
+    (padstack Cust[T]Pad_1000x500_1000x_1500_23_um
+      (shape (polygon Top 0  -500 250  -497.592 299.009  -478.47 395.142  -440.961 485.698
+            -386.505 567.197  -317.197 636.505  -235.698 690.961  -145.142 728.47
+            -49.009 747.592  0 750  500 750  500 -750  0 -750  -49.009 -747.592
+            -145.142 -728.47  -235.698 -690.961  -317.197 -636.505  -386.505 -567.197
+            -440.961 -485.698  -478.47 -395.142  -497.592 -299.009  -500 -250
+            -500 250))
+      (attach off)
+    )
+    (padstack Cust[T]Pad_1000x500_1500x_1000_23_um
+      (shape (polygon Top 0  -500 250  -497.592 299.009  -478.47 395.142  -440.961 485.698
+            -386.505 567.197  -317.197 636.505  -235.698 690.961  -145.142 728.47
+            -49.009 747.592  0 750  500 750  500 -750  0 -750  -49.009 -747.592
+            -145.142 -728.47  -235.698 -690.961  -317.197 -636.505  -386.505 -567.197
+            -440.961 -485.698  -478.47 -395.142  -497.592 -299.009  -500 -250
+            -500 250))
+      (attach off)
+    )
+    (padstack Cust[T]Pad_1000x500_1000x_1500_23_um
+      (shape (polygon Top 0  -500 750  0 750  49.009 747.592  145.142 728.47  235.698 690.961
+            317.197 636.505  386.505 567.197  440.961 485.698  478.47 395.142
+            497.592 299.009  500 250  500 -250  497.592 -299.009  478.47 -395.142
+            440.961 -485.698  386.505 -567.197  317.197 -636.505  235.698 -690.961
+            145.142 -728.47  49.009 -747.592  0 -750  -500 -750  -500 750))
+      (attach off)
+    )
+    (padstack Cust[T]Pad_1000x500_1500x_1000_23_um
+      (shape (polygon Top 0  -500 750  0 750  49.009 747.592  145.142 728.47  235.698 690.961
+            317.197 636.505  386.505 567.197  440.961 485.698  478.47 395.142
+            497.592 299.009  500 250  500 -250  497.592 -299.009  478.47 -395.142
+            440.961 -485.698  386.505 -567.197  317.197 -636.505  235.698 -690.961
+            145.142 -728.47  49.009 -747.592  0 -750  -500 -750  -500 750))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_2200x3700_1104.19_um
+      (shape (polygon Top 0  191.741 1837.41  377.655 1787.6  552.094 1706.25  709.758 1595.86
+            845.857 1459.76  956.254 1302.09  1037.6 1127.65  1087.41 941.74
+            1104.19 750  1104.19 -750  1087.41 -941.74  1037.6 -1127.65
+            956.254 -1302.09  845.857 -1459.76  709.758 -1595.86  552.094 -1706.25
+            377.655 -1787.6  191.741 -1837.41  0.001 -1854.19  -0.001 -1854.19
+            -191.741 -1837.41  -377.655 -1787.6  -552.094 -1706.25  -709.758 -1595.86
+            -845.857 -1459.76  -956.254 -1302.09  -1037.6 -1127.65  -1087.41 -941.74
+            -1104.19 -750  -1104.19 750  -1087.41 941.74  -1037.6 1127.65
+            -956.254 1302.09  -845.857 1459.76  -709.758 1595.86  -552.094 1706.25
+            -377.655 1787.6  -191.741 1837.41  -0.001 1854.19  0.001 1854.19
+            191.741 1837.41))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_800x280_70.266_um
+      (shape (polygon Top 0  342.202 139.199  354.032 136.028  365.133 130.852  375.166 123.827
+            383.827 115.166  390.852 105.133  396.028 94.032  399.199 82.202
+            400.266 70  400.266 -70  399.199 -82.202  396.028 -94.032  390.852 -105.133
+            383.827 -115.166  375.166 -123.827  365.133 -130.852  354.032 -136.028
+            342.202 -139.199  330 -140.266  -330 -140.266  -342.202 -139.199
+            -354.032 -136.028  -365.133 -130.852  -375.166 -123.827  -383.827 -115.166
+            -390.852 -105.133  -396.028 -94.032  -399.199 -82.202  -400.266 -70
+            -400.266 70  -399.199 82.202  -396.028 94.032  -390.852 105.133
+            -383.827 115.166  -375.166 123.827  -365.133 130.852  -354.032 136.028
+            -342.202 139.199  -330 140.266  330 140.266  342.202 139.199))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2032x3810_um
+      (shape (rect Top -1016 -1905 1016 1905))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2400x2400_um
+      (shape (rect Top -1200 -1200 1200 1200))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2540x2540_um
+      (shape (rect Top -1270 -1270 1270 1270))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_270x1500_um
+      (shape (rect Top -135 -750 135 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2800x2400_um
+      (shape (rect Top -1400 -1200 1400 1200))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3000x1400_um
+      (shape (rect Top -1500 -700 1500 700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_304.8x990.6_um
+      (shape (rect Top -152.4 -495.3 152.4 495.3))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3150x2150_um
+      (shape (rect Top -1575 -1075 1575 1075))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3600x2200_um
+      (shape (rect Top -1800 -1100 1800 1100))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3800x1400_um
+      (shape (rect Top -1900 -700 1900 700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_4320x3000_um
+      (shape (rect Top -2160 -1500 2160 1500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_450x1650_um
+      (shape (rect Top -225 -825 225 825))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500x500_um
+      (shape (rect Top -250 -250 250 250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500x650_um
+      (shape (rect Top -250 -325 250 325))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_5400x6200_um
+      (shape (rect Top -2700 -3100 2700 3100))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_550x1200_um
+      (shape (rect Top -275 -600 275 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600x2200_um
+      (shape (rect Top -300 -1100 300 1100))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_635x1270_um
+      (shape (rect Top -317.5 -635 317.5 635))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_762x1524_um
+      (shape (rect Top -381 -762 381 762))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800x1500_um
+      (shape (rect Top -400 -750 400 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_950x2150_um
+      (shape (rect Top -475 -1075 475 1075))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000x2000_um
+      (shape (rect Top -500 -1000 500 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000x1100_um
+      (shape (rect Top -500 -550 500 550))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000x1500_um
+      (shape (rect Top -500 -750 500 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000x1600_um
+      (shape (rect Top -500 -800 500 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1050x1080_um
+      (shape (rect Top -525 -540 525 540))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_10668x8382_um
+      (shape (rect Top -5334 -4191 5334 4191))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100x1000_um
+      (shape (rect Top -550 -500 550 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200x1200_um
+      (shape (rect Top -600 -600 600 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1219.2x2235.2_um
+      (shape (rect Top -609.6 -1117.6 609.6 1117.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300x1500_um
+      (shape (rect Top -650 -750 650 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1400x1200_um
+      (shape (rect Top -700 -600 700 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1400x1900_um
+      (shape (rect Top -700 -950 700 950))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500x270_um
+      (shape (rect Top -750 -135 750 135))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524x1524_um
+      (shape (rect Top -762 -762 762 762))
+      (shape (rect Route2 -762 -762 762 762))
+      (shape (rect Route15 -762 -762 762 762))
+      (shape (rect Bottom -762 -762 762 762))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600x1400_um
+      (shape (rect Top -800 -700 800 700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1778x1778_um
+      (shape (rect Top -889 -889 889 889))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1800x3200_um
+      (shape (rect Top -900 -1600 900 1600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1800x1400_um
+      (shape (rect Top -900 -700 900 700))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1879.6x1879.6_um
+      (shape (rect Top -939.8 -939.8 939.8 939.8))
+      (shape (rect Route2 -939.8 -939.8 939.8 939.8))
+      (shape (rect Route15 -939.8 -939.8 939.8 939.8))
+      (shape (rect Bottom -939.8 -939.8 939.8 939.8))
+      (attach off)
+    )
+    (padstack "Via[0-3]_800:400_um"
+      (shape (circle Top 800))
+      (shape (circle Route2 800))
+      (shape (circle Route15 800))
+      (shape (circle Bottom 800))
+      (attach off)
+    )
+  )
+  (network
+    (net 3.3V
+      (pins JP36-2 JP30-2 JP31-1 IC1-96 IC1-84 IC1-42 IC1-28 IC1-19 IC1-54 IC1-71
+        C8-2 C9-2 C10-2 C11-2 C12-2 C13-2 C7-A L1-2 R14-2 C1-2 R15-2 R16-2 R17-1 R3-2
+        R2-2 R1-2 C14-2 JP1-1 JP2-1 C31-2 R37-2 C25-1 R24-2 C28-1 R28-2 C38-1 R41-2
+        C41-1 R44-2 R30-2 R22-1 R23-2 R38-2 R39-2 IC4-17 R35-2 R36-2 R25-2 R29-2 R42-2
+        R45-2 IC8-9 R52-2 FB1-1 C50-A C51-1 IC7-5 C44-1 IC10-4 IC10-2 C65-1 R77-2
+        JP17-2 U1-4 JP4-1 R53-2 C67-2 SJ1-1 Q1-4 C68-2 R4-2 R18-2 IC9-17 IC9-4 C71-1
+        R20-2 R80-2 R81-2 JP8-1 SJ2-1 SJ3-1)
+    )
+    (net AVCC
+      (pins IC1-12 IC1-10 L1-1 C6-1 RN1-4 RN1-3 RN1-2 RN1-1 JP35-1)
+    )
+    (net ENET_TXD0
+      (pins IC1-95 IC8-17)
+    )
+    (net ENET_TXD1
+      (pins IC1-94 IC8-18)
+    )
+    (net ENET_TX_EN
+      (pins IC1-93 IC8-16)
+    )
+    (net ENET_CRS
+      (pins IC1-92 R60-2)
+    )
+    (net ENET_RXD0
+      (pins IC1-91 R58-2)
+    )
+    (net ENET_RXD1
+      (pins IC1-90 R59-2)
+    )
+    (net ENET_RX_ER
+      (pins IC1-89 IC8-10 R53-1)
+    )
+    (net ENET_REF_CLK
+      (pins IC1-88 R51-2)
+    )
+    (net ENET_MDC
+      (pins IC1-87 IC8-13)
+    )
+    (net ENET_MDIO
+      (pins IC1-86 IC8-12 R52-1)
+    )
+    (net EN1
+      (pins IC1-81 IC2-P23 JP7-1)
+    )
+    (net DIR1
+      (pins IC1-80 IC2-P14 JP7-2)
+    )
+    (net STP1
+      (pins IC1-75 IC2-P11 JP7-3)
+    )
+    (net STP2
+      (pins IC1-74 IC3-P11 JP9-3)
+    )
+    (net STP3
+      (pins IC1-73 IC5-P11 JP12-3)
+    )
+    (net EN4
+      (pins IC1-57 IC6-P23 JP15-1)
+    )
+    (net DIR4
+      (pins IC1-56 IC6-P14 JP15-2)
+    )
+    (net STP4
+      (pins IC1-70 IC6-P11 JP15-3)
+    )
+    (net TH1
+      (pins IC1-9 C21-A SL1-2 RN1-8)
+    )
+    (net TH2
+      (pins IC1-8 C22-A SL1-4 RN1-7)
+    )
+    (net TH3
+      (pins IC1-7 C23-A SL1-6 RN1-6)
+    )
+    (net RSTOUT
+      (pins IC1-14 IC8-15)
+    )
+    (net TH4
+      (pins JP13-1 IC1-6 SL1-8)
+    )
+    (net P2.6
+      (pins IC1-67 R75-2 R76-1 JP33-1)
+    )
+    (net P2.7
+      (pins IC1-66 R72-2 IC14-4 JP33-4)
+    )
+    (net EN2
+      (pins IC1-48 IC3-P23 JP9-1)
+    )
+    (net DIR2
+      (pins IC1-49 IC3-P14 JP9-2)
+    )
+    (net EN3
+      (pins IC1-59 IC5-P23 JP12-1)
+    )
+    (net DIR3
+      (pins IC1-58 IC5-P14 JP12-2)
+    )
+    (net PWM0
+      (pins IC1-69 R73-2 R74-1 JP33-2)
+    )
+    (net PWM1
+      (pins IC1-68 R71-2 IC14-2 JP33-3)
+    )
+    (net POT_SCL
+      (pins IC1-47 IC4-5 R36-1 IC9-5 JP8-4)
+    )
+    (net POT_SDA
+      (pins IC1-46 IC4-6 R35-1 IC9-6 JP8-3)
+    )
+    (net P1_22
+      (pins IC1-36 R82-2 R83-1 JP32-1)
+    )
+    (net P1_23
+      (pins IC1-37 IC15-2 R87-2 JP32-2)
+    )
+    (net VBB
+      (pins IC2-P16 IC2-P21 C17-1 IC3-P16 IC3-P21 C18-1 IC5-P16 IC5-P21 C34-1 IC6-P16
+        IC6-P21 C35-1 C27-1 C30-1 C40-1 C43-1 R78-2 C63-+ D3-K JP28-2 JP11-2 JP27-2
+        JP17-1 C26-+ C29-+ C39-+ C42-+ IC12-P16 IC12-P21 C70-1 C73-1 C74-+ X9-1 J7-1
+        R84-1 R85-1 D4-C Q10-2 D5-C X16-1 J13-1 U$7-P$2 D6-A D9-C)
+    )
+    (net MS2
+      (pins JP30-1 IC2-P06 IC3-P06 IC5-P06 IC6-P06 IC12-P06)
+    )
+    (net MS1
+      (pins JP31-2 IC2-P05 IC3-P05 IC5-P05 IC6-P05 IC12-P05)
+    )
+    (net 5V
+      (pins IC10-3 C64-A D2-C D1-A D1-C X14-VBUS SJ1-3 IC13-3 C76-1 SJ2-3 SJ3-3 C84-+)
+    )
+    (net 12VREG
+      (pins C62-1 C66-1 IC14-6 IC11-1 IC15-6 C75-1)
+    )
+    (net AGND
+      (pins IC1-97 IC1-83 IC1-41 IC1-31 IC1-15 IC1-11 IC1-55 IC1-72 C2-2 C3-2 C8-1
+        C9-1 C10-1 C11-1 C12-1 C13-1 C7-C C6-2 C4-1 C5-1 C1-1 S1-4 S1-3 LED1-C LED2-C
+        LED3-C LED4-C JP5-1 S3-2 JP26-2 JP14-2 JP16-2 JP19-2 JP21-2 JP22-2 S2-4 S2-3
+        C14-1 JP1-2 JP10-4 JP10-3 JP10-2 JP10-1 JP3-3 JP25-2 JP23-2 C21-C C22-C C23-C
+        C31-1 IC2-P13 IC2-P24 IC2-EPAD C25-2 R26-2 C15-1 R31-1 R32-1 IC3-P13 IC3-P24
+        IC3-EPAD C28-2 R27-2 C16-1 R33-1 R34-1 IC5-P13 IC5-P24 IC5-EPAD C38-2 R40-2
+        C32-1 R46-1 R47-1 IC6-P13 IC6-P24 IC6-EPAD C41-2 R43-2 C33-1 R48-1 R49-1 C24-C
+        SL1-7 SL1-5 SL1-3 SL1-1 IC4-18 IC4-16 IC4-13 IC4-8 IC4-7 IC4-4 IC4-3 C27-2
+        C30-2 C40-2 C43-2 IC8-THERM R63-1 C58-2 C59-2 R50-1 R62-1 R61-1 C45-C C46-2
+        C47-2 C50-C C51-2 C48-C C49-2 C53-2 C52-2 C54-2 C55-2 C56-2 C57-2 IC7-3 C44-2
+        IC10-1 C65-2 C64-C LED9-C Q6-S Q7-S C60-- POWER1-P$3 POWER1-P$2 LED10-C Q8-3
+        Q9-3 R74-2 R76-2 R71-1 R72-1 C61-C C63-- J10-VIN0 X12-2 X11-2 X6-2 JP17-3
+        C26-- C29-- C39-- C42-- U1-6 U1-GND1 U1-CD2 JP6-3 RJ1-SHIELD0 RJ1-SHIELD1
+        RJ1-GND C62-2 JP7-4 JP9-4 JP12-4 JP15-4 C66-2 IC14-3 C67-1 IC11-2@1 IC11-2
+        X14-GND U$5-P$2 C68-1 IC9-18 IC9-16 IC9-13 IC9-8 IC9-7 IC9-3 IC12-P13 IC12-P24
+        IC12-EPAD C71-2 R19-2 C72-1 R21-1 R79-1 C73-2 C74-- JP18-4 Q4-3 R83-2 Q5-S
+        R86-2 IC15-3 C75-2 R87-1 D4-A R89-2 JP32-5 JP33-5 IC13-2 C76-2 C77-2 R90-2
+        R91-2 X13-2 JP8-2 C78-2 C79-2 C80-2 C81-2 C82-2 C83-2 JP34-1 JP35-2 C84--)
+    )
+    (net EN5
+      (pins IC1-85 IC12-P23 JP18-1)
+    )
+    (net STP5
+      (pins IC1-65 IC12-P11 JP18-3)
+    )
+    (net DIR5
+      (pins IC1-50 IC12-P14 JP18-2)
+    )
+    (net MS3
+      (pins JP36-1 IC2-P10 IC3-P10 IC5-P10 IC6-P10 IC12-P10)
+    )
+    (net "/smoothieboard-5driver_1/JTAG-RTCK"
+      (pins IC1-100)
+    )
+    (net "/smoothieboard-5driver_1/RX_0"
+      (pins IC1-99 JP5-4)
+    )
+    (net "/smoothieboard-5driver_1/TX_0"
+      (pins IC1-98 JP5-5)
+    )
+    (net "/smoothieboard-5driver_1/PLAY_LED"
+      (pins IC1-82 S3-A JP24-2)
+    )
+    (net "/smoothieboard-5driver_1/SD_CS"
+      (pins IC1-79 R1-1 U1-2 JP4-2)
+    )
+    (net "/smoothieboard-5driver_1/SD_SCK"
+      (pins IC1-78 U1-5 JP4-3)
+    )
+    (net "/smoothieboard-5driver_1/SD_MISO"
+      (pins IC1-77 R2-1 U1-7 JP6-1)
+    )
+    (net "/smoothieboard-5driver_1/SD_MOSI"
+      (pins IC1-76 R3-1 U1-3 JP6-2)
+    )
+    (net "/smoothieboard-5driver_1/Z_MAX"
+      (pins IC1-45 C83-1 R103-2)
+    )
+    (net "/smoothieboard-5driver_1/Z_MIN"
+      (pins IC1-44 C82-1 R101-2)
+    )
+    (net "/smoothieboard-5driver_1/Y_MAX"
+      (pins IC1-43 C81-1 R99-2)
+    )
+    (net "/smoothieboard-5driver_1/Y_MIN"
+      (pins IC1-40 C80-1 R97-2)
+    )
+    (net "/smoothieboard-5driver_1/X_MAX"
+      (pins IC1-39 C79-1 R95-2)
+    )
+    (net "/smoothieboard-5driver_1/X_MIN"
+      (pins IC1-38 C78-1 R92-2)
+    )
+    (net "/smoothieboard-5driver_1/LED4"
+      (pins IC1-35 R13-2 JP29-4)
+    )
+    (net "/smoothieboard-5driver_1/LED3"
+      (pins IC1-34 R12-2 JP29-3)
+    )
+    (net "/smoothieboard-5driver_1/LED2"
+      (pins IC1-33 R11-2 JP29-2)
+    )
+    (net "/smoothieboard-5driver_1/LED1"
+      (pins IC1-32 R10-2 JP29-1)
+    )
+    (net "/smoothieboard-5driver_1/USB_D-"
+      (pins IC1-30 R9-2 C4-2)
+    )
+    (net "/smoothieboard-5driver_1/USB_D+"
+      (pins IC1-29 R8-2 C5-2 R7-1)
+    )
+    (net "/smoothieboard-5driver_1/SD_IRQ"
+      (pins IC1-27 JP20-1)
+    )
+    (net "/smoothieboard-5driver_1/SD_WP"
+      (pins IC1-26 JP20-2)
+    )
+    (net "/smoothieboard-5driver_1/SDA"
+      (pins IC1-25 R6-1 JP1-3)
+    )
+    (net "/smoothieboard-5driver_1/SCL"
+      (pins IC1-24 R5-1 JP1-4)
+    )
+    (net "Net-(C3-Pad1)"
+      (pins IC1-23 Q2-1 C3-1)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins IC1-22 Q2-2 C2-1)
+    )
+    (net "/smoothieboard-5driver_1/P1_30"
+      (pins IC1-21 JP32-4)
+    )
+    (net "/smoothieboard-5driver_1/P1_31"
+      (pins IC1-20 JP32-3)
+    )
+    (net "Net-(IC1-Pad18)"
+      (pins IC1-18)
+    )
+    (net "/smoothieboard-5driver_1/RESET"
+      (pins IC1-17 R14-1 S1-2 S1-1 JP25-1)
+    )
+    (net "Net-(IC1-Pad16)"
+      (pins IC1-16)
+    )
+    (net "Net-(IC1-Pad13)"
+      (pins IC1-13)
+    )
+    (net "/smoothieboard-5driver_1/JTAG-TCK"
+      (pins IC1-5)
+    )
+    (net "/smoothieboard-5driver_1/JTAG-TRST"
+      (pins IC1-4)
+    )
+    (net "/smoothieboard-5driver_1/JTAG-TMS"
+      (pins IC1-3)
+    )
+    (net "/smoothieboard-5driver_1/JTAG-TDI"
+      (pins IC1-2)
+    )
+    (net "/smoothieboard-5driver_1/JTAG-TDO"
+      (pins IC1-1)
+    )
+    (net "/smoothieboard-5driver_1/PLAY"
+      (pins IC1-51 S3-4 R16-1 JP23-1)
+    )
+    (net "/smoothieboard-5driver_1/SD_CD"
+      (pins IC1-52 JP20-3)
+    )
+    (net "/smoothieboard-5driver_1/ISP_BOOT"
+      (pins IC1-53 R15-1 S2-2 S2-1 JP25-3)
+    )
+    (net "/smoothieboard-5driver_1/MOSI1"
+      (pins IC1-60 JP3-2)
+    )
+    (net "/smoothieboard-5driver_1/MISO1"
+      (pins IC1-61 JP3-1)
+    )
+    (net "/smoothieboard-5driver_1/SCK1"
+      (pins IC1-62 JP2-3)
+    )
+    (net "/smoothieboard-5driver_1/SSEL1"
+      (pins IC1-63 JP2-2)
+    )
+    (net "/smoothieboard-5driver_1/P2.9"
+      (pins IC1-64 Q1-3)
+    )
+    (net "Net-(R8-Pad1)"
+      (pins R8-1 X14-D+)
+    )
+    (net "Net-(R9-Pad1)"
+      (pins R9-1 X14-"D-")
+    )
+    (net "Net-(R5-Pad2)"
+      (pins R5-2 R6-2 SJ3-2)
+    )
+    (net "Net-(LED1-PadA)"
+      (pins LED1-A R10-1)
+    )
+    (net "Net-(LED2-PadA)"
+      (pins LED2-A R11-1)
+    )
+    (net "Net-(LED3-PadA)"
+      (pins LED3-A R12-1)
+    )
+    (net "Net-(LED4-PadA)"
+      (pins LED4-A R13-1)
+    )
+    (net "/smoothieboard-5driver_1/RTS"
+      (pins JP5-6)
+    )
+    (net "Net-(JP5-Pad3)"
+      (pins JP5-3 SJ1-2)
+    )
+    (net "/smoothieboard-5driver_1/CTS"
+      (pins JP5-2)
+    )
+    (net "Net-(JP24-Pad1)"
+      (pins S3-C R17-2 JP24-1)
+    )
+    (net "Net-(JP26-Pad3)"
+      (pins JP26-3 R92-1 R93-1)
+    )
+    (net "Net-(JP14-Pad1)"
+      (pins JP26-1 JP14-1 JP16-1 JP19-1 JP21-1 JP22-1 SJ2-2 R93-2 R94-2 R96-2 R98-2
+        R100-2 R102-2)
+    )
+    (net "Net-(JP14-Pad3)"
+      (pins JP14-3 R94-1 R95-1)
+    )
+    (net "Net-(JP16-Pad3)"
+      (pins JP16-3 R96-1 R97-1)
+    )
+    (net "Net-(JP19-Pad3)"
+      (pins JP19-3 R98-1 R99-1)
+    )
+    (net "Net-(JP21-Pad3)"
+      (pins JP21-3 R100-1 R101-1)
+    )
+    (net "Net-(JP22-Pad3)"
+      (pins JP22-3 R102-1 R103-1)
+    )
+    (net "Net-(U1-Pad8)"
+      (pins U1-8)
+    )
+    (net "Net-(U1-Pad1)"
+      (pins U1-1)
+    )
+    (net "Net-(U1-PadGND3)"
+      (pins U1-GND3)
+    )
+    (net "Net-(U1-PadCD1)"
+      (pins U1-CD1)
+    )
+    (net "Net-(Q1-Pad1)"
+      (pins R7-2 Q1-6 Q1-5 Q1-2 Q1-1)
+    )
+    (net "Net-(IC4-Pad15)"
+      (pins R37-1 IC4-15)
+    )
+    (net "/smoothieboard-5driver_2/P0W"
+      (pins IC2-P12 IC4-12)
+    )
+    (net "Net-(IC2-PadP09)"
+      (pins IC2-P09 R24-1)
+    )
+    (net "Net-(IC2-PadP08)"
+      (pins IC2-P08 R26-1 R22-2)
+    )
+    (net "Net-(IC2-PadP07)"
+      (pins IC2-P07 R25-1)
+    )
+    (net "Net-(C15-Pad2)"
+      (pins IC2-P04 C15-2)
+    )
+    (net "Net-(C17-Pad2)"
+      (pins IC2-P03 C17-2)
+    )
+    (net "Net-(C19-Pad1)"
+      (pins IC2-P02 C19-1)
+    )
+    (net "Net-(C19-Pad2)"
+      (pins IC2-P01 C19-2)
+    )
+    (net "Net-(IC2-PadP15)"
+      (pins IC2-P15 J1-1 X1-1)
+    )
+    (net "Net-(IC2-PadP17)"
+      (pins IC2-P17 R31-2)
+    )
+    (net "Net-(IC2-PadP18)"
+      (pins IC2-P18 J1-2 X1-2)
+    )
+    (net "Net-(IC2-PadP19)"
+      (pins IC2-P19 J1-3 X1-3)
+    )
+    (net "Net-(IC2-PadP20)"
+      (pins IC2-P20 R32-2)
+    )
+    (net "Net-(IC2-PadP22)"
+      (pins IC2-P22 J1-4 X1-4)
+    )
+    (net "/smoothieboard-5driver_2/P1W"
+      (pins IC3-P12 IC4-9)
+    )
+    (net "Net-(IC3-PadP09)"
+      (pins IC3-P09 R28-1)
+    )
+    (net "Net-(IC3-PadP08)"
+      (pins IC3-P08 R27-1 R23-1)
+    )
+    (net "Net-(IC3-PadP07)"
+      (pins IC3-P07 R29-1)
+    )
+    (net "Net-(C16-Pad2)"
+      (pins IC3-P04 C16-2)
+    )
+    (net "Net-(C18-Pad2)"
+      (pins IC3-P03 C18-2)
+    )
+    (net "Net-(C20-Pad1)"
+      (pins IC3-P02 C20-1)
+    )
+    (net "Net-(C20-Pad2)"
+      (pins IC3-P01 C20-2)
+    )
+    (net "Net-(IC3-PadP15)"
+      (pins IC3-P15 J2-1 X2-1)
+    )
+    (net "Net-(IC3-PadP17)"
+      (pins IC3-P17 R33-2)
+    )
+    (net "Net-(IC3-PadP18)"
+      (pins IC3-P18 J2-2 X2-2)
+    )
+    (net "Net-(IC3-PadP19)"
+      (pins IC3-P19 J2-3 X2-3)
+    )
+    (net "Net-(IC3-PadP20)"
+      (pins IC3-P20 R34-2)
+    )
+    (net "Net-(IC3-PadP22)"
+      (pins IC3-P22 J2-4 X2-4)
+    )
+    (net "/smoothieboard-5driver_2/P2W"
+      (pins IC5-P12 IC4-19)
+    )
+    (net "Net-(IC5-PadP09)"
+      (pins IC5-P09 R41-1)
+    )
+    (net "Net-(IC5-PadP08)"
+      (pins IC5-P08 R40-1 R38-1)
+    )
+    (net "Net-(IC5-PadP07)"
+      (pins IC5-P07 R42-1)
+    )
+    (net "Net-(C32-Pad2)"
+      (pins IC5-P04 C32-2)
+    )
+    (net "Net-(C34-Pad2)"
+      (pins IC5-P03 C34-2)
+    )
+    (net "Net-(C36-Pad1)"
+      (pins IC5-P02 C36-1)
+    )
+    (net "Net-(C36-Pad2)"
+      (pins IC5-P01 C36-2)
+    )
+    (net "Net-(IC5-PadP15)"
+      (pins IC5-P15 J3-1 X3-1)
+    )
+    (net "Net-(IC5-PadP17)"
+      (pins IC5-P17 R46-2)
+    )
+    (net "Net-(IC5-PadP18)"
+      (pins IC5-P18 J3-2 X3-2)
+    )
+    (net "Net-(IC5-PadP19)"
+      (pins IC5-P19 J3-3 X3-3)
+    )
+    (net "Net-(IC5-PadP20)"
+      (pins IC5-P20 R47-2)
+    )
+    (net "Net-(IC5-PadP22)"
+      (pins IC5-P22 J3-4 X3-4)
+    )
+    (net "/smoothieboard-5driver_2/P3W"
+      (pins IC6-P12 IC4-2)
+    )
+    (net "Net-(IC6-PadP09)"
+      (pins IC6-P09 R44-1)
+    )
+    (net "Net-(IC6-PadP08)"
+      (pins IC6-P08 R43-1 R39-1)
+    )
+    (net "Net-(IC6-PadP07)"
+      (pins IC6-P07 R45-1)
+    )
+    (net "Net-(C33-Pad2)"
+      (pins IC6-P04 C33-2)
+    )
+    (net "Net-(C35-Pad2)"
+      (pins IC6-P03 C35-2)
+    )
+    (net "Net-(C37-Pad1)"
+      (pins IC6-P02 C37-1)
+    )
+    (net "Net-(C37-Pad2)"
+      (pins IC6-P01 C37-2)
+    )
+    (net "Net-(IC6-PadP15)"
+      (pins IC6-P15 J4-1 X4-1)
+    )
+    (net "Net-(IC6-PadP17)"
+      (pins IC6-P17 R48-2)
+    )
+    (net "Net-(IC6-PadP18)"
+      (pins IC6-P18 J4-2 X4-2)
+    )
+    (net "Net-(IC6-PadP19)"
+      (pins IC6-P19 J4-3 X4-3)
+    )
+    (net "Net-(IC6-PadP20)"
+      (pins IC6-P20 R49-2)
+    )
+    (net "Net-(IC6-PadP22)"
+      (pins IC6-P22 J4-4 X4-4)
+    )
+    (net "/smoothieboard-5driver_2/TH4_P"
+      (pins JP13-2 C24-A RN1-5)
+    )
+    (net "Net-(IC4-Pad1)"
+      (pins R30-1 IC4-20 IC4-11 IC4-10 IC4-1)
+    )
+    (net "Net-(IC4-Pad14)"
+      (pins IC4-14)
+    )
+    (net "Net-(IC8-Pad24)"
+      (pins IC8-24 R63-2)
+    )
+    (net "/smoothieboard-5driver_3/RD+"
+      (pins IC8-23 C56-1 RJ1-RD+ R56-2)
+    )
+    (net "/smoothieboard-5driver_3/RD-"
+      (pins IC8-22 C57-1 RJ1-"RD-" R57-2)
+    )
+    (net "/smoothieboard-5driver_3/TD+"
+      (pins IC8-21 C54-1 RJ1-TD+ R54-2)
+    )
+    (net "/smoothieboard-5driver_3/TD-"
+      (pins IC8-20 C55-1 RJ1-"TD-" R55-2)
+    )
+    (net "Net-(C45-PadA)"
+      (pins IC8-19 IC8-1 FB1-2 C45-A C46-1 C47-1 C53-1 C52-1 RJ1-P5 RJ1-P4 R54-1 R55-1
+        R56-1 R57-1)
+    )
+    (net "Net-(IC7-Pad2)"
+      (pins IC8-14 IC7-2)
+    )
+    (net "Net-(IC8-Pad11)"
+      (pins IC8-11 R60-1)
+    )
+    (net "Net-(IC8-Pad8)"
+      (pins IC8-8 R58-1)
+    )
+    (net "Net-(IC8-Pad7)"
+      (pins IC8-7 R59-1)
+    )
+    (net "Net-(C48-PadA)"
+      (pins IC8-6 C48-A C49-1)
+    )
+    (net "Net-(C58-Pad1)"
+      (pins IC8-5 R64-1 Q3-2 C58-1)
+    )
+    (net "Net-(C59-Pad1)"
+      (pins IC8-4 R64-2 Q3-1 C59-1)
+    )
+    (net "/smoothieboard-5driver_3/LED1/REGOFF"
+      (pins IC8-3 RJ1-G+)
+    )
+    (net "/smoothieboard-5driver_3/LED2/NINTSEL"
+      (pins IC8-2 R62-2 RJ1-Y+)
+    )
+    (net "Net-(R50-Pad2)"
+      (pins R50-2 RJ1-"Y-")
+    )
+    (net "Net-(R61-Pad2)"
+      (pins R61-2 RJ1-"G-")
+    )
+    (net "Net-(IC7-Pad4)"
+      (pins IC7-4 R51-1)
+    )
+    (net "Net-(IC7-Pad1)"
+      (pins IC7-1)
+    )
+    (net "/smoothieboard-5driver_3/+5V"
+      (pins D2-A POWER1-P$4 X12-1)
+    )
+    (net "Net-(LED9-PadA)"
+      (pins LED9-A R77-1)
+    )
+    (net "Net-(J9-Pad1)"
+      (pins Q6-D X10-1 J9-1 LED7-C U$10-P$1)
+    )
+    (net "/smoothieboard-5driver_3/PWM1_FET"
+      (pins Q6-G R69-2 R90-1)
+    )
+    (net "Net-(J11-Pad1)"
+      (pins Q7-D LED8-C U$6-P$1 X15-1 J11-1)
+    )
+    (net "/smoothieboard-5driver_3/GPIO_FET"
+      (pins Q7-G R70-2 R91-1)
+    )
+    (net "Net-(Q8-Pad1)"
+      (pins R73-1 Q8-1)
+    )
+    (net "Net-(Q9-Pad1)"
+      (pins R75-1 Q9-1)
+    )
+    (net "Net-(IC14-Pad7)"
+      (pins R69-1 IC14-7)
+    )
+    (net "Net-(IC14-Pad5)"
+      (pins R70-1 IC14-5)
+    )
+    (net "/smoothieboard-5driver_3/MOSFET_DRIVE"
+      (pins C60-+ X10-2 JP11-1 JP27-1 J9-2 R67-1 R68-1 IC11-3 U$5-P$1 U$6-P$2 X13-1
+        X15-2 U$10-P$2 J11-2)
+    )
+    (net "/smoothieboard-5driver_3/VBB_IN"
+      (pins POWER1-P$1 J10-P$4 X11-1 D3-2 D3-1 Q10-3)
+    )
+    (net "Net-(LED10-PadA)"
+      (pins R78-1 LED10-A)
+    )
+    (net "Net-(D7-PadA)"
+      (pins Q8-4 X7-2 J8-1 LED5-C D7-A)
+    )
+    (net "Net-(D8-PadA)"
+      (pins Q9-4 X8-2 J6-2 LED6-C D8-A)
+    )
+    (net "/smoothieboard-5driver_3/SMALL_MOSFET_POWER"
+      (pins C61-A X7-1 X8-1 X6-1 JP28-1 J8-2 J6-1 R65-1 R66-1 D7-C D8-C)
+    )
+    (net "Net-(J10-PadGND)"
+      (pins J10-GND)
+    )
+    (net "Net-(LED5-PadA)"
+      (pins R65-2 LED5-A)
+    )
+    (net "Net-(LED6-PadA)"
+      (pins R66-2 LED6-A)
+    )
+    (net "Net-(LED7-PadA)"
+      (pins R67-2 LED7-A)
+    )
+    (net "Net-(LED8-PadA)"
+      (pins R68-2 LED8-A)
+    )
+    (net "Net-(RJ1-PadNC)"
+      (pins RJ1-NC)
+    )
+    (net "Net-(D5-PadA)"
+      (pins Q10-1 R89-1 D5-A)
+    )
+    (net "Net-(IC9-Pad15)"
+      (pins R4-1 IC9-15)
+    )
+    (net "Net-(IC9-Pad1)"
+      (pins R18-1 IC9-20 IC9-11 IC9-10 IC9-1)
+    )
+    (net "/smoothieboard-5driver_4/THETA_CURRENT"
+      (pins IC9-19 JP34-4)
+    )
+    (net "Net-(IC9-Pad14)"
+      (pins IC9-14)
+    )
+    (net "/smoothieboard-5driver_4/PW5"
+      (pins IC9-12 IC12-P12)
+    )
+    (net "/smoothieboard-5driver_4/ZETA_CURRENT"
+      (pins IC9-9 JP34-2)
+    )
+    (net "/smoothieboard-5driver_4/ETA_CURRENT"
+      (pins IC9-2 JP34-3)
+    )
+    (net "Net-(IC12-PadP09)"
+      (pins IC12-P09 R20-1)
+    )
+    (net "Net-(IC12-PadP08)"
+      (pins IC12-P08 R19-1 R80-1)
+    )
+    (net "Net-(IC12-PadP07)"
+      (pins IC12-P07 R81-1)
+    )
+    (net "Net-(C72-Pad2)"
+      (pins IC12-P04 C72-2)
+    )
+    (net "Net-(C70-Pad2)"
+      (pins IC12-P03 C70-2)
+    )
+    (net "Net-(C69-Pad1)"
+      (pins IC12-P02 C69-1)
+    )
+    (net "Net-(C69-Pad2)"
+      (pins IC12-P01 C69-2)
+    )
+    (net "Net-(IC12-PadP15)"
+      (pins IC12-P15 J5-1 X5-1)
+    )
+    (net "Net-(IC12-PadP17)"
+      (pins IC12-P17 R21-2)
+    )
+    (net "Net-(IC12-PadP18)"
+      (pins IC12-P18 J5-2 X5-2)
+    )
+    (net "Net-(IC12-PadP19)"
+      (pins IC12-P19 J5-3 X5-3)
+    )
+    (net "Net-(IC12-PadP20)"
+      (pins IC12-P20 R79-2)
+    )
+    (net "Net-(IC12-PadP22)"
+      (pins IC12-P22 J5-4 X5-4)
+    )
+    (net "Net-(Q4-Pad1)"
+      (pins R82-1 Q4-1)
+    )
+    (net "Net-(D9-PadA)"
+      (pins Q4-4 X9-2 J7-2 LED11-C D9-A)
+    )
+    (net "Net-(LED11-PadA)"
+      (pins R84-2 LED11-A)
+    )
+    (net "Net-(J13-Pad2)"
+      (pins Q5-D LED12-C X16-2 J13-2 U$7-P$1)
+    )
+    (net "Net-(Q5-PadG)"
+      (pins Q5-G R86-1 R88-1)
+    )
+    (net "Net-(LED12-PadA)"
+      (pins R85-2 LED12-A)
+    )
+    (net "Net-(IC15-Pad7)"
+      (pins IC15-7 R88-2)
+    )
+    (net "/smoothieboard-5driver_4/VBBREG"
+      (pins IC13-1 C77-1 D6-C)
+    )
+    (class kicad_default "" "/smoothieboard-5driver_1/CTS" "/smoothieboard-5driver_1/ISP_BOOT"
+      "/smoothieboard-5driver_1/JTAG-RTCK" "/smoothieboard-5driver_1/JTAG-TCK"
+      "/smoothieboard-5driver_1/JTAG-TDI" "/smoothieboard-5driver_1/JTAG-TDO"
+      "/smoothieboard-5driver_1/JTAG-TMS" "/smoothieboard-5driver_1/JTAG-TRST"
+      "/smoothieboard-5driver_1/LED1" "/smoothieboard-5driver_1/LED2" "/smoothieboard-5driver_1/LED3"
+      "/smoothieboard-5driver_1/LED4" "/smoothieboard-5driver_1/MISO1" "/smoothieboard-5driver_1/MOSI1"
+      "/smoothieboard-5driver_1/P1_30" "/smoothieboard-5driver_1/P1_31" "/smoothieboard-5driver_1/P2.9"
+      "/smoothieboard-5driver_1/PLAY" "/smoothieboard-5driver_1/PLAY_LED"
+      "/smoothieboard-5driver_1/RESET" "/smoothieboard-5driver_1/RTS" "/smoothieboard-5driver_1/RX_0"
+      "/smoothieboard-5driver_1/SCK1" "/smoothieboard-5driver_1/SCL" "/smoothieboard-5driver_1/SDA"
+      "/smoothieboard-5driver_1/SD_CD" "/smoothieboard-5driver_1/SD_CS" "/smoothieboard-5driver_1/SD_IRQ"
+      "/smoothieboard-5driver_1/SD_MISO" "/smoothieboard-5driver_1/SD_MOSI"
+      "/smoothieboard-5driver_1/SD_SCK" "/smoothieboard-5driver_1/SD_WP" "/smoothieboard-5driver_1/SSEL1"
+      "/smoothieboard-5driver_1/TX_0" "/smoothieboard-5driver_1/USB_D+" "/smoothieboard-5driver_1/USB_D-"
+      "/smoothieboard-5driver_1/X_MAX" "/smoothieboard-5driver_1/X_MIN" "/smoothieboard-5driver_1/Y_MAX"
+      "/smoothieboard-5driver_1/Y_MIN" "/smoothieboard-5driver_1/Z_MAX" "/smoothieboard-5driver_1/Z_MIN"
+      "/smoothieboard-5driver_2/P0W" "/smoothieboard-5driver_2/P1W" "/smoothieboard-5driver_2/P2W"
+      "/smoothieboard-5driver_2/P3W" "/smoothieboard-5driver_2/TH4_P" "/smoothieboard-5driver_3/+5V"
+      "/smoothieboard-5driver_3/GPIO_FET" "/smoothieboard-5driver_3/LED1/REGOFF"
+      "/smoothieboard-5driver_3/LED2/NINTSEL" "/smoothieboard-5driver_3/MOSFET_DRIVE"
+      "/smoothieboard-5driver_3/PWM1_FET" "/smoothieboard-5driver_3/RD+" "/smoothieboard-5driver_3/RD-"
+      "/smoothieboard-5driver_3/SMALL_MOSFET_POWER" "/smoothieboard-5driver_3/TD+"
+      "/smoothieboard-5driver_3/TD-" "/smoothieboard-5driver_3/VBB_IN" "/smoothieboard-5driver_4/ETA_CURRENT"
+      "/smoothieboard-5driver_4/PW5" "/smoothieboard-5driver_4/THETA_CURRENT"
+      "/smoothieboard-5driver_4/VBBREG" "/smoothieboard-5driver_4/ZETA_CURRENT"
+      12VREG 3.3V 5V AGND AVCC DIR1 DIR2 DIR3 DIR4 DIR5 EN1 EN2 EN3 EN4 EN5
+      ENET_CRS ENET_MDC ENET_MDIO ENET_REF_CLK ENET_RXD0 ENET_RXD1 ENET_RX_ER
+      ENET_TXD0 ENET_TXD1 ENET_TX_EN MS1 MS2 MS3 "Net-(C15-Pad2)" "Net-(C16-Pad2)"
+      "Net-(C17-Pad2)" "Net-(C18-Pad2)" "Net-(C19-Pad1)" "Net-(C19-Pad2)"
+      "Net-(C2-Pad1)" "Net-(C20-Pad1)" "Net-(C20-Pad2)" "Net-(C3-Pad1)" "Net-(C32-Pad2)"
+      "Net-(C33-Pad2)" "Net-(C34-Pad2)" "Net-(C35-Pad2)" "Net-(C36-Pad1)"
+      "Net-(C36-Pad2)" "Net-(C37-Pad1)" "Net-(C37-Pad2)" "Net-(C45-PadA)"
+      "Net-(C48-PadA)" "Net-(C58-Pad1)" "Net-(C59-Pad1)" "Net-(C69-Pad1)"
+      "Net-(C69-Pad2)" "Net-(C70-Pad2)" "Net-(C72-Pad2)" "Net-(D5-PadA)" "Net-(D7-PadA)"
+      "Net-(D8-PadA)" "Net-(D9-PadA)" "Net-(IC1-Pad13)" "Net-(IC1-Pad16)"
+      "Net-(IC1-Pad18)" "Net-(IC12-PadP07)" "Net-(IC12-PadP08)" "Net-(IC12-PadP09)"
+      "Net-(IC12-PadP15)" "Net-(IC12-PadP17)" "Net-(IC12-PadP18)" "Net-(IC12-PadP19)"
+      "Net-(IC12-PadP20)" "Net-(IC12-PadP22)" "Net-(IC14-Pad5)" "Net-(IC14-Pad7)"
+      "Net-(IC15-Pad7)" "Net-(IC2-PadP07)" "Net-(IC2-PadP08)" "Net-(IC2-PadP09)"
+      "Net-(IC2-PadP15)" "Net-(IC2-PadP17)" "Net-(IC2-PadP18)" "Net-(IC2-PadP19)"
+      "Net-(IC2-PadP20)" "Net-(IC2-PadP22)" "Net-(IC3-PadP07)" "Net-(IC3-PadP08)"
+      "Net-(IC3-PadP09)" "Net-(IC3-PadP15)" "Net-(IC3-PadP17)" "Net-(IC3-PadP18)"
+      "Net-(IC3-PadP19)" "Net-(IC3-PadP20)" "Net-(IC3-PadP22)" "Net-(IC4-Pad1)"
+      "Net-(IC4-Pad14)" "Net-(IC4-Pad15)" "Net-(IC5-PadP07)" "Net-(IC5-PadP08)"
+      "Net-(IC5-PadP09)" "Net-(IC5-PadP15)" "Net-(IC5-PadP17)" "Net-(IC5-PadP18)"
+      "Net-(IC5-PadP19)" "Net-(IC5-PadP20)" "Net-(IC5-PadP22)" "Net-(IC6-PadP07)"
+      "Net-(IC6-PadP08)" "Net-(IC6-PadP09)" "Net-(IC6-PadP15)" "Net-(IC6-PadP17)"
+      "Net-(IC6-PadP18)" "Net-(IC6-PadP19)" "Net-(IC6-PadP20)" "Net-(IC6-PadP22)"
+      "Net-(IC7-Pad1)" "Net-(IC7-Pad2)" "Net-(IC7-Pad4)" "Net-(IC8-Pad11)"
+      "Net-(IC8-Pad24)" "Net-(IC8-Pad7)" "Net-(IC8-Pad8)" "Net-(IC9-Pad1)"
+      "Net-(IC9-Pad14)" "Net-(IC9-Pad15)" "Net-(J10-PadGND)" "Net-(J11-Pad1)"
+      "Net-(J13-Pad2)" "Net-(J9-Pad1)" "Net-(JP14-Pad1)" "Net-(JP14-Pad3)"
+      "Net-(JP16-Pad3)" "Net-(JP19-Pad3)" "Net-(JP21-Pad3)" "Net-(JP22-Pad3)"
+      "Net-(JP24-Pad1)" "Net-(JP26-Pad3)" "Net-(JP5-Pad3)" "Net-(LED1-PadA)"
+      "Net-(LED10-PadA)" "Net-(LED11-PadA)" "Net-(LED12-PadA)" "Net-(LED2-PadA)"
+      "Net-(LED3-PadA)" "Net-(LED4-PadA)" "Net-(LED5-PadA)" "Net-(LED6-PadA)"
+      "Net-(LED7-PadA)" "Net-(LED8-PadA)" "Net-(LED9-PadA)" "Net-(Q1-Pad1)"
+      "Net-(Q4-Pad1)" "Net-(Q5-PadG)" "Net-(Q8-Pad1)" "Net-(Q9-Pad1)" "Net-(R5-Pad2)"
+      "Net-(R50-Pad2)" "Net-(R61-Pad2)" "Net-(R8-Pad1)" "Net-(R9-Pad1)" "Net-(RJ1-PadNC)"
+      "Net-(U1-Pad1)" "Net-(U1-Pad8)" "Net-(U1-PadCD1)" "Net-(U1-PadGND3)"
+      P1_22 P1_23 P2.6 P2.7 POT_SCL POT_SDA PWM0 PWM1 RSTOUT STP1 STP2 STP3
+      STP4 STP5 TH1 TH2 TH3 TH4 VBB
+      (circuit
+        (use_via Via[0-3]_800:400_um)
+      )
+      (rule
+        (width 250)
+        (clearance 200.1)
+      )
+    )
+  )
+  (wiring
+    (via "Via[0-3]_800:400_um"  174879 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  176911 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  173736 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  174879 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  175895 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  175895 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  176911 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  173736 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  149606 -77216 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  151638 -77216 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  148463 -75692 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  149606 -75692 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  150622 -77216 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  150622 -75692 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  151638 -75692 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  148463 -77216 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  124079 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  126111 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  122936 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  124079 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  125095 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  125095 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  126111 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  122936 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  100457 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  99441 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  98425 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  97282 -77089 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  100457 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  99441 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  98425 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  97282 -75565 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  113538 -102997 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  114427 -103886 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  200660 -75946 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  199644 -75946 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  197485 -75946 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  197485 -77470 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  200660 -77470 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  198628 -77470 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  198628 -75946 (net AGND)(type protect))
+    (via "Via[0-3]_800:400_um"  199644 -77470 (net AGND)(type protect))
+  )
+)
