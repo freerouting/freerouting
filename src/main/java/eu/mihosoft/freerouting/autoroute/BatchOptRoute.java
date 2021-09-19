@@ -75,13 +75,9 @@ public class BatchOptRoute
         int curr_pass_no = 0;
         use_increased_ripup_costs = true;
         
-        //int max_passes = this.thread.hdlg.settings.autoroute_settings.get_stop_pass_no() -
-        //		         this.thread.hdlg.settings.autoroute_settings.get_start_pass_no() + 1;
-        int max_passes = this.thread.hdlg.get_max_passes();
-
         long duration, startTime = System.currentTimeMillis();
         
-        while (route_improved && curr_pass_no < max_passes)//while (route_improved)
+        while (route_improved)
         {
         	long passStartTime = System.currentTimeMillis();
         	
@@ -99,7 +95,7 @@ public class BatchOptRoute
             }
             
             duration = System.currentTimeMillis() - passStartTime;
-            FRLogger.info("Finished 1 optimization pass (#" + curr_pass_no + ") in " +  
+            FRLogger.info("Finished one optimization pass (#" + curr_pass_no + ") in " +
                           (duration / 60000) + " minutes " + ((duration % 60000) /1000.0F) + " s");
         }
         

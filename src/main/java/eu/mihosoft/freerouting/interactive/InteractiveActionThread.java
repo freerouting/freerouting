@@ -91,11 +91,22 @@ public abstract class InteractiveActionThread extends Thread implements eu.mihos
         return stop_requested;
     }
 
+    public synchronized void request_stop_auto_router()
+    {
+        stop_auto_router = true;
+    }
+
+    public synchronized boolean is_stop_auto_router_requested()
+    {
+        return stop_auto_router;
+    }
+
     public synchronized void draw(java.awt.Graphics p_graphics)
     {
     // Can be overwritten in derived classes.
     }
     private boolean stop_requested = false;
+    private boolean stop_auto_router = false;
     public final BoardHandling hdlg;
 
     private static class AutorouteThread extends InteractiveActionThread

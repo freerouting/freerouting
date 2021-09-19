@@ -90,7 +90,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             {
                 BatchFanout.fanout_board(this);
             }
-            if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_requested())
+            if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_auto_router_requested())
             {
                 batch_autorouter.autoroute_passes();
             }

@@ -108,6 +108,10 @@ public class MainApplication extends javax.swing.JFrame
             }
 
             new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + startupOptions.max_passes - 1);
+            new_frame.board_panel.board_handling.set_num_threads(startupOptions.num_threads);
+            new_frame.board_panel.board_handling.set_board_update_strategy(startupOptions.board_update_strategy);
+            new_frame.board_panel.board_handling.set_hybrid_ratio(startupOptions.hybrid_ratio);
+            new_frame.board_panel.board_handling.set_item_selection_strategy(startupOptions.item_selection_strategy);
             if (startupOptions.max_passes < 99999)
             {
                 InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();

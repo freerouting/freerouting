@@ -56,7 +56,7 @@ public class BatchAutorouter
         int curr_pass_no = 1;
         while (still_unrouted_items && !router_instance.is_interrupted && curr_pass_no <= p_max_pass_count)
         {
-            if (p_thread.is_stop_requested())
+            if (p_thread.is_stop_auto_router_requested())
             {
                 router_instance.is_interrupted = true;
             }
@@ -125,7 +125,7 @@ public class BatchAutorouter
         boolean still_unrouted_items = true;
         while (still_unrouted_items && !this.is_interrupted)
         {
-            if (thread.is_stop_requested())
+            if (thread.is_stop_auto_router_requested())
             {
                 this.is_interrupted = true;
             }
@@ -133,15 +133,15 @@ public class BatchAutorouter
             String current_board_hash = this.routing_board.get_hash();
             if (already_checked_board_hashes.contains(current_board_hash))
             {
-                FRLogger.warn("This board was already evaluated, so we stop autorouter to avoid the endless loop.");
-                thread.request_stop();
+                FRLogger.warn("This board was already evaluated, so we stop auto-router to avoid the endless loop.");
+                thread.request_stop_auto_router();
                 break;
             }
 
             Integer curr_pass_no = hdlg.get_settings().autoroute_settings.get_start_pass_no();
             if (curr_pass_no > hdlg.get_settings().autoroute_settings.get_stop_pass_no())
             {
-                thread.request_stop();
+                thread.request_stop_auto_router();
                 break;
             }
 
@@ -257,7 +257,7 @@ public class BatchAutorouter
                 }
                 for (int i = 0; i < curr_item.net_count(); ++i)
                 {
-                    if (this.thread.is_stop_requested())
+                    if (this.thread.is_stop_auto_router_requested())
                     {
                         this.is_interrupted = true;
                         break;

@@ -1751,12 +1751,6 @@ public class BoardHandling extends BoardHandlingImpl
         clearance_violations = null;
         board = null;
     }
-      
-    public int get_max_passes() 
-    { 
-    	return settings.autoroute_settings.get_stop_pass_no() -
-    	       settings.autoroute_settings.get_start_pass_no() + 1;
-    }
 
     public void set_board_update_strategy(BoardUpdateStrategy p_board_update_strategy)
     {

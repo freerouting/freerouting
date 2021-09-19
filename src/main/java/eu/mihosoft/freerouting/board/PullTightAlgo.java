@@ -190,7 +190,7 @@ public abstract class PullTightAlgo
     }
 
     /**
-     * Termitates the pull tight algorithm, if the user has made a stop request.
+     * Terminates the pull tight algorithm, if the user has made a stop request.
      */
     protected boolean is_stop_requested()
     {
