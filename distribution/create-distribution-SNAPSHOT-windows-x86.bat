@@ -38,7 +38,4 @@ set JPKG_EXECUTABLE=%JPKG_HOME%\bin\jpackage
 
 %JPKG_EXECUTABLE% --input ..\build\dist\ --name Freerouting --main-jar freerouting-executable.jar --type %APP_TYPE% --runtime-image .jdk14\runtime --app-version 0.0.0 --win-per-user-install --win-menu --win-menu-group Freerouting --license-file ..\LICENSE 
 
-@echo on
-dir
-
 move Freerouting-0.0.0.msi freerouting-%APP_VERSION%-windows-x86.msi
