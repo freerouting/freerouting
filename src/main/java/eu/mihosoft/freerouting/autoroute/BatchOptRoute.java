@@ -74,13 +74,9 @@ public class BatchOptRoute
         boolean route_improved = true;
         int curr_pass_no = 0;
         use_increased_ripup_costs = true;
-        
-        long duration, startTime = System.currentTimeMillis();
-        
+
         while (route_improved)
         {
-        	long passStartTime = System.currentTimeMillis();
-        	
             ++curr_pass_no;
             boolean with_prefered_directions = (curr_pass_no % 2 != 0); // to create more variations
             route_improved = opt_route_pass(curr_pass_no, with_prefered_directions);
@@ -93,15 +89,7 @@ public class BatchOptRoute
             	String suffix = "_op" + curr_pass_no + ".bin";
             	this.thread.hdlg.get_panel().board_frame.save(suffix);
             }
-            
-            duration = System.currentTimeMillis() - passStartTime;
-            FRLogger.info("Finished one optimization pass (#" + curr_pass_no + ") in " +
-                          (duration / 60000) + " minutes " + ((duration % 60000) /1000.0F) + " s");
         }
-        
-        duration = System.currentTimeMillis() - startTime;
-        FRLogger.info("Finished board optimization in " +  (duration / 3600000) + " hours " +
-                      ((duration % 3600000) / 60000) + " minutes " + ((duration % 60000) /1000.0F) + " s");
     }
 
     /**
