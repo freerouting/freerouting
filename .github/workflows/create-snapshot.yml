@@ -106,7 +106,7 @@ jobs:
       uses: joschi/setup-jdk@v2 
       with:
           java-version: '11'
-          architecture: 'x86'
+          architecture: 'x32'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
