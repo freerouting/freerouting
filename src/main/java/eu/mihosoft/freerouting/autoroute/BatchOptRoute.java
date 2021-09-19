@@ -38,9 +38,7 @@ import eu.mihosoft.freerouting.interactive.RatsNest;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * To optimize the vias and traces after the batch autorouter has completed the board.
- * 
- * @author Alfons Wirtz
+ *  Optimizes routes using a single thread on a board that has completed auto-routing.
  */
 public class BatchOptRoute
 {

@@ -27,6 +27,9 @@ import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.interactive.InteractiveActionThread;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
+/**
+ * Optimizes routes using multiple threads on a board that has completed auto-routing.
+ */
 public class BatchOptRouteMT extends BatchOptRoute  {
 	private BoardUpdateStrategy board_update_strategy;
 	private ItemSelectionStrategy item_selection_strategy;
@@ -255,7 +258,7 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 						 Thread t = new Thread(r);
 						 t.setUncaughtExceptionHandler(
 						     (t1, e) -> {
-							      FRLogger.error("Exception in thead pool worker thread: " + t1.toString(),  e);
+							      FRLogger.error("Exception in thread pool worker thread: " + t1.toString(),  e);
 						 });
 						 return t;
 			         }

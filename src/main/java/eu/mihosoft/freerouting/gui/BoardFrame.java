@@ -296,7 +296,7 @@ public class BoardFrame extends javax.swing.JFrame
      * Saves the interactive settings and the design file to disk.
      * Returns false, if the save failed.
      */
-    public boolean save(String surffix)
+    public boolean save(String suffix)
     {
         if (this.design_file == null)
         {
@@ -308,7 +308,7 @@ public class BoardFrame extends javax.swing.JFrame
         try
         {
         	File outFile = this.design_file.get_output_file();
-        	if (surffix == null) 
+        	if (suffix == null)
         	{
         		outFile = this.design_file.get_output_file();
         	}
@@ -316,7 +316,7 @@ public class BoardFrame extends javax.swing.JFrame
         	{
         		String fileName = this.design_file.get_output_file().getPath();
         		int pos = fileName.lastIndexOf(".");
-        		outFile = new File(fileName.substring(0, pos) + surffix);
+        		outFile = new File(fileName.substring(0, pos) + suffix);
         	}
         	
             FRLogger.info("Saving '" + outFile.getPath() + "'...");
