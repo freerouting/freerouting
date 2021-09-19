@@ -96,6 +96,8 @@ jobs:
 
   build-windows-x86:
   
+    if: ${{ false }}
+  
     needs: delete-old-snapshot-assets
 
     runs-on: [windows-latest]
