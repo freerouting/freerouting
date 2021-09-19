@@ -18,8 +18,8 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: SNAPSHOT
         assets: | 
-            SNAPSHOT.zip
-            SNAPSHOT.tar.gz
+            freerouting-SNAPSHOT.zip
+            freerouting-SNAPSHOT.tar.gz
             freerouting-SNAPSHOT-*.*   
 
   build-jar:
