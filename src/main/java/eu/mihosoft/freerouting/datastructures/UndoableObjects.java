@@ -110,10 +110,14 @@ public class UndoableObjects implements java.io.Serializable
         {
             return false;
         }
-        if (object_node.object != p_object)
-        {
-            FRLogger.warn("UndoableObjectList.delete: Object inconsistent");
-            return false;
+        //if (object_node.object != p_object)
+        {   // p_object can be cloned from the object pointed by object_node.object
+        	// Since object_node.object has been retrieved via objects.get(p_object)
+        	// objects.remove(p_object) would certainly remove the object.
+        	// Thus ignore the warning and proceed with the deletion
+        	//
+            //FRLogger.warn("UndoableObjectList.delete: Object inconsistent");
+            //return false;
         }
 
         if (curr_delete_list != null)

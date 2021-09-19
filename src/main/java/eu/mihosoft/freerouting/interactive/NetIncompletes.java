@@ -24,6 +24,7 @@
 package eu.mihosoft.freerouting.interactive;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -229,8 +230,10 @@ public class NetIncompletes
      */
     private NetItem[] calculate_net_items(Collection<Item> p_item_list)
     {
-        NetItem [] result = new NetItem [p_item_list.size()];
-        Collection<Item> handeled_items = new LinkedList<Item>();
+        ArrayList<NetItem> result = new ArrayList<NetItem>();
+    	int input_size = p_item_list.size();
+
+    	Collection<Item> handeled_items = new LinkedList<Item>();
         int curr_index = 0;
         while (!p_item_list.isEmpty())
         {
@@ -242,20 +245,21 @@ public class NetIncompletes
             while (it.hasNext())
             {
                 Item curr_item = it.next();
-                if (curr_index >= result.length)
-                {
-                    FRLogger.warn("NetIncompletes.calculate_net_items: to many items");
-                    return result;
-                }
-                result[curr_index] = new NetItem(curr_item, curr_connected_set);
+                result.add(new NetItem(curr_item, curr_connected_set));
                 ++curr_index;
             }
         }
-        if (curr_index < result.length)
+        
+        if (curr_index > input_size)
         {
-            FRLogger.warn("NetIncompletes.calculate_net_items: to few items");
+            FRLogger.warn("NetIncompletes.calculate_net_items: too many items"); 
         }
-        return result;
+        else if (curr_index < input_size)
+        {
+            FRLogger.warn("NetIncompletes.calculate_net_items: too few items");
+        } 
+        
+        return result.toArray(new NetItem [result.size()]);
     }
     
     /**

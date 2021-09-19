@@ -288,24 +288,40 @@ public class BoardFrame extends javax.swing.JFrame
         return true;
     }
     
+    boolean save() {
+    	return save(null);
+    }
     
     /**
      * Saves the interactive settings and the design file to disk.
      * Returns false, if the save failed.
      */
-    boolean save()
+    public boolean save(String surffix)
     {
         if (this.design_file == null)
         {
             return false;
         }
-        FRLogger.info("Saving '"+design_file.get_output_file().getName()+"'...");
 
         java.io.OutputStream output_stream = null;
         java.io.ObjectOutputStream object_stream = null;
         try
         {
-            output_stream = new java.io.FileOutputStream(this.design_file.get_output_file());
+        	File outFile = this.design_file.get_output_file();
+        	if (surffix == null) 
+        	{
+        		outFile = this.design_file.get_output_file();
+        	}
+        	else
+        	{
+        		String fileName = this.design_file.get_output_file().getPath();
+        		int pos = fileName.lastIndexOf(".");
+        		outFile = new File(fileName.substring(0, pos) + surffix);
+        	}
+        	
+            FRLogger.info("Saving '" + outFile.getPath() + "'...");
+
+            output_stream = new java.io.FileOutputStream(outFile);
             object_stream = new java.io.ObjectOutputStream(output_stream);
         }
         catch (java.io.IOException e)

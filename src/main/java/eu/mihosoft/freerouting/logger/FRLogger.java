@@ -11,6 +11,10 @@ import java.util.HashMap;
 
 public class FRLogger {
     private static Logger logger = LogManager.getLogger(FreeRouting.class);
+    // TODO: Find alternative of eu.FR.class which was reverted.
+    // Original comments: Use a shorter class path, which appears in every line of the log 
+    // It's meaningless since all are the same, occupies space and makes harder 
+    // to read useful info on size-limited screen
 
     private static DecimalFormat performanceFormat = new DecimalFormat("0.00");
 

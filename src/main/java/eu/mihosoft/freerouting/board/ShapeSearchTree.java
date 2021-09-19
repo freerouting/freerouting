@@ -749,11 +749,16 @@ public class ShapeSearchTree extends eu.mihosoft.freerouting.datastructures.MinA
         // Then insersect p_shape with the halfplane defined by the
         // opposite of this line.
         Simplex obstacle_simplex = p_obstacle_shape.to_Simplex();  // otherwise border_lines of lenth 0 for octagons may not be handeled correctly
-        TileShape shape_to_be_contained = p_incomplete_room.get_contained_shape().to_Simplex(); // There may be a performance problem, if a point shape is represented as an octagon
         Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<IncompleteFreeSpaceExpansionRoom>();
         TileShape room_shape = p_incomplete_room.get_shape();
         int layer = p_incomplete_room.get_layer();
-        if (shape_to_be_contained.is_empty())
+        
+        TileShape shape_to_be_contained = p_incomplete_room.get_contained_shape();
+        if (shape_to_be_contained != null) 
+        { 
+        	shape_to_be_contained = shape_to_be_contained.to_Simplex(); // There may be a performance problem, if a point shape is represented as an octagon
+        }
+        if (shape_to_be_contained == null || shape_to_be_contained.is_empty())
         {
             if (this.board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
             {

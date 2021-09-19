@@ -215,7 +215,12 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
 
     public Object clone()
     {
-        return copy(this.get_id_no());
+        Item dup = copy(this.get_id_no());
+        
+        dup.on_the_board = this.on_the_board;
+        //dup.search_trees_info = this.search_trees_info;
+        
+        return dup;
     }
 
     /**
