@@ -78,7 +78,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
                 hdlg.get_ratsnest().hide();
             }
 
-            FRLogger.info("Starting autorouting...");
+            FRLogger.info("Starting auto-routing...");
             FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
             String start_message = resources.getString("batch_autorouter") + " " + resources.getString("stop_message");
@@ -97,7 +97,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             hdlg.get_routing_board().finish_autoroute();
 
             double autoroutingSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
-            FRLogger.info("Autorouting was completed in " + String.format("%(,.0f", autoroutingSecondsToComplete) + " seconds.");
+            FRLogger.info("Auto-routing was completed in " + String.format("%(,.0f", autoroutingSecondsToComplete) + " seconds.");
 
             FRLogger.info("Starting routing optimization...");
             FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");

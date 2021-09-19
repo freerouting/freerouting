@@ -164,14 +164,14 @@ public class BatchOptRoute
     }
     
     /**
-     * Trie to improve the route by retouting the connections containing p_item.
+     * Try to improve the route by re-routing the connections containing p_item.
      */
     protected ItemRouteResult opt_route_item(Item p_item, int p_pass_no, 
     		                                 boolean p_with_prefered_directions)
     {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("eu.mihosoft.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
-        String start_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message") + "        " + resources.getString("pass") + " " + (Integer.valueOf(p_pass_no)).toString() + ": ";
+        String start_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message") + "        " + resources.getString("routeoptimizer_pass") + (Integer.valueOf(p_pass_no)).toString();
         this.thread.hdlg.screen_messages.set_status_message(start_message); // assume overwriting messages is harmless
         
         this.remove_ratsnest();  // looks like caching the ratsnest is not necessary 
