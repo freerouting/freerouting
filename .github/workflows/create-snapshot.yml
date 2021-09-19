@@ -5,7 +5,21 @@ name: create-snapshot
 on: [push, pull_request]
 
 jobs:
-  build-ubuntu:
+  build-jar:
+
+    runs-on: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Copy JAR
+      run: distribution/create-distribution-jar.bat SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")   
+    - uses: AButler/upload-release-assets@v2.0
+      with:
+          files: './distribution/freerouting-SNAPSHOT-*.jar'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}      
+
+  build-ubuntu-x64:
 
     runs-on: [ubuntu-latest]
 
@@ -24,11 +38,11 @@ jobs:
       run: distribution/create-distribution-linux.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")   
     - uses: AButler/upload-release-assets@v2.0
       with:
-          files: './distribution/freerouting-SNAPSHOT-*-executable.jar;./distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
+          files: './distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
    
-  build-windows:
+  build-windows-x64:
 
     runs-on: [windows-latest]
 
@@ -50,7 +64,29 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}   
           
 
-  build-macos:
+  build-windows-x86:
+
+    runs-on: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: joschi/setup-jdk@v2 
+      with:
+          java-version: '11'
+          architecture: 'x86'
+    - name: Build with Gradle
+      run: .\gradlew.bat dist 
+    - name: Create Distribution   
+      run: distribution\create-distribution-SNAPSHOT-windows-x86.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))"   
+    - uses: AButler/upload-release-assets@v2.0
+      with:
+          files: './distribution/freerouting-SNAPSHOT-*-windows-x86.msi'
+          release-tag: SNAPSHOT 
+          repo-token: ${{ secrets.GITHUB_TOKEN }}   
+          
+
+  build-macos-x64:
 
     runs-on: [macos-latest]
 
