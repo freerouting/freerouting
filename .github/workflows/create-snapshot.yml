@@ -52,7 +52,7 @@ jobs:
 
   build-macos:
 
-    runs-on: [macos]
+    runs-on: [macos-latest]
 
     steps:
     - uses: actions/checkout@v2
