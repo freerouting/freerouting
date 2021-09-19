@@ -13,11 +13,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Delete old SNAPSHOT assets
-        uses: mknejp/delete-release-assets@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: SNAPSHOT
-          assets: | 
+      uses: mknejp/delete-release-assets@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: SNAPSHOT
+        assets: | 
             SNAPSHOT.zip
             SNAPSHOT.tar.gz
             freerouting-SNAPSHOT-*.*   
