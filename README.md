@@ -185,12 +185,12 @@ Hopefully this multi-threaded routing optimization will change this router from 
 
 ## Running Freerouting on 32-bit systems
 
-Unfortunately the modern Java distributions have often limited support for 32-bit executable generation support, so it's not trivial at all to have x32 installers that run on 32-bit systems.
+Unfortunately the modern Java distributions have often limited support for 32-bit executable generation, so it's not trivial at all to have x32 installers that run on 32-bit systems.
 Fortunatelly though the platform independent .JAR files can be run, if the matching Java runtime is installed on the 32-bit system you are planning to use.
 
 You will need the following steps to make it work:
 1. Get the current JAR release from our [Releases page](https://github.com/freerouting/freerouting/releases)
-2. Download and install the 32-bit version of the OpenJDK 11
+2. Download and install the 32-bit version of the OpenJDK 11 (LTS)
     * For Windows, select the "x86" architecture from the dropdown
     * For ARM Linux, select the "arm32" architecture from the dropdown
 3. Run the downloaded JAR file using the installed java.exe
