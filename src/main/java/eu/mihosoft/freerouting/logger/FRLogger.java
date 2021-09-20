@@ -11,14 +11,23 @@ import java.util.HashMap;
 
 public class FRLogger {
     private static Logger logger = LogManager.getLogger(FreeRouting.class);
-    // TODO: Find alternative of eu.FR.class which was reverted.
-    // Original comments: Use a shorter class path, which appears in every line of the log 
-    // It's meaningless since all are the same, occupies space and makes harder 
-    // to read useful info on size-limited screen
 
     private static DecimalFormat performanceFormat = new DecimalFormat("0.00");
 
     private static HashMap<Integer, Instant> perfData = new HashMap<Integer, Instant>();
+
+    public static String formatDuration(double totalSeconds)
+    {
+        double seconds = totalSeconds;
+        double minutes = seconds/60.0;
+        double hours = minutes/60.0;
+
+        hours = Math.floor(hours);
+        minutes = Math.floor(minutes % 60.0);
+        seconds = seconds % 60.0;
+
+        return (hours > 0 ? (int)hours + " hour(s) " : "") + (minutes > 0 ? (int)minutes + " minute(s) " : "") + performanceFormat.format(seconds) + " seconds";
+    }
 
     public static void traceEntry(String perfId)
     {
@@ -38,7 +47,8 @@ public class FRLogger {
         if (timeElapsed < 0) {
             timeElapsed = 0;
         }
-        logger.trace("Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)") + "' was performed in " + performanceFormat.format(timeElapsed/1000.0) + " seconds.");
+
+        logger.trace("Method '" + perfId.replace("{}", result != null ? result.toString() : "(null)") + "' was performed in " + FRLogger.formatDuration(timeElapsed/1000.0) + ".");
 
         return timeElapsed/1000.0;
     }
@@ -51,6 +61,11 @@ public class FRLogger {
     public static void warn(String msg)
     {
         logger.warn(msg);
+    }
+
+    public static void debug(String msg)
+    {
+        //logger.debug(msg);
     }
 
     public static void error(String msg, Throwable t)

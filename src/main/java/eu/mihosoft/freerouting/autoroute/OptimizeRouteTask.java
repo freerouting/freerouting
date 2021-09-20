@@ -69,7 +69,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
 	public void run() {
 		long startTime = System.currentTimeMillis();
 		
-		//FRLogger.info("Start to run OptimizeRouteTask on pass " + pass_no + " with item id: " + curr_item.get_id_no() );
+		FRLogger.debug("Start to run OptimizeRouteTask on pass " + pass_no + " with item id: " + curr_item.get_id_no() );
 			
 		route_result = opt_route_item(curr_item, pass_no, with_prefered_directions);
 		
@@ -78,12 +78,12 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
 		long duration = System.currentTimeMillis() - startTime;
 		long minutes = duration / 60000;
 		float sec = (duration % 60000) /1000.0F;
-		
-		FRLogger.info("Finished 1 task (" + optimizer.get_num_tasks_finished() + 
-				       " of " + optimizer.get_num_tasks() + 
+
+		FRLogger.debug("Finished one task (" + optimizer.get_num_tasks_finished() +
+				       " of " + optimizer.get_num_tasks() +
 				       ") on pass " + pass_no + " with item id: " +
 		              curr_item.get_id_no() + " in " +  minutes + " m " + sec + "s" +
-				      " won: " + winning_candidate + 
+				      " won: " + winning_candidate +
 		              " Improved: " + route_result.improved()+
 		              " via-: " + route_result.via_count_reduced() +
 		              (winning_candidate? (" len-: " + route_result.length_reduced()) : "") +

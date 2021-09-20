@@ -133,7 +133,7 @@ public class BatchAutorouter
             String current_board_hash = this.routing_board.get_hash();
             if (already_checked_board_hashes.contains(current_board_hash))
             {
-                FRLogger.warn("This board was already evaluated, so we stop auto-router to avoid the endless loop.");
+                // This board was already evaluated, so we stop auto-router to avoid the endless loop
                 thread.request_stop_auto_router();
                 break;
             }
