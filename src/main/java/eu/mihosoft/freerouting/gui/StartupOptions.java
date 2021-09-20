@@ -65,7 +65,8 @@ public class StartupOptions {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                         max_passes = Integer.decode(p_args[i + 1]);
 
-                        if (max_passes < 1)    { max_passes = 1; }
+                        if (max_passes < 1)     { max_passes = 1; }
+                        if (max_passes > 99998) { max_passes = 99998; }
                     }
                 } else if (p_args[i].startsWith("-mt")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
