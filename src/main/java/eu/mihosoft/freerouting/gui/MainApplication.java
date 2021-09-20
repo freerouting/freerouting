@@ -65,7 +65,7 @@ public class MainApplication extends javax.swing.JFrame
             FRLogger.error(ex.getLocalizedMessage(), ex);
         }
 
-        FRLogger.info("Freerouting v" + Constants.FREEROUTING_VERSION);
+        FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
