@@ -20,7 +20,7 @@ public class StartupOptions {
     String design_rules_filename = null;
     String design_input_directory_name = null;
     int max_passes = 99999;
-    int num_threads = 4; // default thread pool size
+    int num_threads = 32; // default thread pool size
     BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
     String hybrid_ratio = "1:1";
     ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
