@@ -190,7 +190,7 @@ Fortunatelly though the platform independent .JAR files can be run, if the match
 
 You will need the following steps to make it work:
 1. Get the current JAR release from our [Releases page](https://github.com/freerouting/freerouting/releases)
-2. Download and install the 32-bit version of the OpenJDK 11 (LTS)
+2. [Download](https://adoptopenjdk.net/releases.html?variant=openjdk11) and install the 32-bit version of the OpenJDK 11 (LTS)
     * For Windows, select the "x86" architecture from the dropdown
     * For ARM Linux, select the "arm32" architecture from the dropdown
 3. Run the downloaded JAR file using the installed java.exe
