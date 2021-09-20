@@ -68,6 +68,8 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
 	@Override
 	public void run() {
 		long startTime = System.currentTimeMillis();
+
+		if (curr_item == null) return;
 		
 		FRLogger.debug("Start to run OptimizeRouteTask on pass " + pass_no + " with item id: " + curr_item.get_id_no() );
 			
