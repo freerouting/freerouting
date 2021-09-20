@@ -112,7 +112,9 @@ public class MainApplication extends javax.swing.JFrame
             new_frame.board_panel.board_handling.set_board_update_strategy(startupOptions.board_update_strategy);
             new_frame.board_panel.board_handling.set_hybrid_ratio(startupOptions.hybrid_ratio);
             new_frame.board_panel.board_handling.set_item_selection_strategy(startupOptions.item_selection_strategy);
-            if (startupOptions.max_passes < 99999)
+
+            // start the auto-router automatically if both input and output files were passed as a parameter
+            if ((startupOptions.design_input_filename != null) && (startupOptions.design_output_filename != null))
             {
                 InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();
 
