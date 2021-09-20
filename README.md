@@ -1,7 +1,5 @@
 # freerouting
 
-[ ![Download](https://api.bintray.com/packages/miho/Freerouting/freerouting/images/download.svg) ](https://bintray.com/miho/Freerouting/freerouting/_latestVersion)
-
 Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.
 
 It basically does this:
@@ -10,9 +8,9 @@ It basically does this:
 
 ## What has changed?
 
-Freerouting is a fantastic piece of software. But the code hasn't been updated in a while and had some design flaws. Some of them are fixed now. This version of freerouting has been refactored to be fully compatible with JDK11.
+This version of freerouting has been refactored to be fully compatible with JDK11.
 
-[Binary installers for Linux, macOS and Windows can be downloaded here](https://freerouting.mihosoft.eu/).
+[Binary installers for Linux, macOS and Windows can be downloaded here](https://github.com/freerouting/freerouting/releases).
 
 ### New Features
 
@@ -56,11 +54,7 @@ All four .jar files will be generated in the _build\libs_ subfolder. You would t
 
 ## From the original author:
 
-Java Based Printed Circuit Board Routing Software from FreeRouting.net written by Alfons Wirtz.
-
-http://www.freerouting.net/fen/viewtopic.php?f=4&t=255
-
-by alfons © Sat Mar 08, 2014 12:07 pm
+[Java Based Printed Circuit Board Routing Software from FreeRouting.net](http://www.freerouting.net/fen/viewtopic.php?f=4&t=255) written by Alfons Wirtz.
 
 Because I am no more maintaining the Freerouting project since 4 years and future Java versions may block my Freerouting Java Web Start application completely, I finally decided to open the source of the Freerouting project under the GNU public license version 3.
 
@@ -145,14 +139,13 @@ The following command line arguments are supported by freerouter:
 A complete command line looks something like this if your are using PowerShell on Windows:
 
 `
-& "c:\Program Files\Java\jdk-11.0.6\bin\java.exe" -jar freerouting.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+& "java.exe" -jar freerouting.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
 `
 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
 
 
-Multi-threaded Implementation of Routing Optimization:
-======================================================
+## Multi-threaded Implementation of Routing Optimization
 
 After Freerouting completes auto-routing it switches to the next phase, called routing optimization to improve the board even further. When board complexity reached certain level, route optimization in previous version (<= 1.4.4) was slow to the the extent that was almost un-usable. This issues was addressed with multi-threading and various updating strategies.
 
@@ -190,3 +183,16 @@ it's possible to prioritize items with better scores when selecting items to pro
 
 Hopefully this multi-threaded routing optimization will change this router from almost impossible to practical to optimize boards of high complexity.
 
+## Running Freerouting on 32-bit systems
+
+Unfortunately the modern Java distributions have often limited support for 32-bit executable generation support, so it's not trivial at all to have x32 installers that run on 32-bit systems.
+Fortunatelly though the platform independent .JAR files can be run, if the matching Java runtime is installed on the 32-bit system you are planning to use.
+
+You will need the following steps to make it work:
+1. Get the current JAR release from our [Releases page](https://github.com/freerouting/freerouting/releases)
+2. Download and install the 32-bit version of the OpenJDK 11
+    * For Windows, select the "x86" architecture from the dropdown
+    * For ARM Linux, select the "arm32" architecture from the dropdown
+3. Run the downloaded JAR file using the installed java.exe
+    
+    `java.exe -jar freerouting.jar`
