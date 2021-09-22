@@ -811,7 +811,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
                 Point curr_last_corner = new_polyline.last_corner();
                 if (!(curr_last_corner instanceof IntPoint))
                 {
-                    FRLogger.warn("insert_forced_trace_segment: IntPoint expected");
+                    FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: IntPoint expected");
                     return from_corner;
                 }
                 new_corner = curr_last_corner;
@@ -848,7 +848,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
                     p_max_via_recursion_depth, p_max_spring_over_recursion_depth);
             if (!insert_ok)
             {
-                FRLogger.warn("shove trace failed");
+                FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: shove trace failed");
                 return null;
             }
         }
@@ -897,11 +897,11 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
         }
         catch (Exception e)
         {
-            FRLogger.error("Couldn't remove generated circles from the board.", e);
+            FRLogger.error("RoutingBoard.insert_forced_trace_polyline: Couldn't remove generated circles from the board.", e);
         }
 
         // To avoid, that a separate handling for moving backwards in the own trace line
-        // becomes necessesary, pull tight is called here.
+        // becomes necessary, pull tight is called here.
         if (p_tidy_width > 0 && new_trace != null)
         {
             new_trace.pull_tight(pull_tight_algo);
