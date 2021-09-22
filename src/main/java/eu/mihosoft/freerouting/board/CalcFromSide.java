@@ -144,7 +144,7 @@ public class CalcFromSide
         }
         if (front_side_no < 0)
         {
-            FRLogger.warn("CalcFromSide: start corner not found");
+            FRLogger.warn("CalcFromSide: start corner was not found");
             no = -1;
             border_intersection = null;
             return;

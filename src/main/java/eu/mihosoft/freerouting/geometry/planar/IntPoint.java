@@ -43,10 +43,15 @@ public class IntPoint extends Point implements java.io.Serializable
      */
     public IntPoint(int p_x, int p_y)
     {
-        if (Math.abs(p_x) > Limits.CRIT_INT || Math.abs(p_y) > Limits.CRIT_INT)
+        if (Math.abs(p_x) > Limits.CRIT_INT)
         {
-            FRLogger.warn("Warning in IntPoint: p_x or p_y to big");
+            FRLogger.warn("IntPoint: p_x is out of range");
         }
+        if (Math.abs(p_y) > Limits.CRIT_INT)
+        {
+            FRLogger.warn("IntPoint: p_y is out of range");
+        }
+
         x = p_x;
         y = p_y;
     }
