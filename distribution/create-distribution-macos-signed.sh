@@ -48,7 +48,7 @@ $JPKG_EXECUTABLE --input ../build/dist/ \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION --license-file ../LICENSE 
 
-#/usr/bin/codesign --force --sign $APPLE_DEVELOPER_ID --deep Freerouting-$APP_VERSION.app
+/usr/bin/codesign --force --sign $APPLE_DEVELOPER_ID --deep Freerouting-$APP_VERSION.app
 
 #/usr/bin/hdiutil create -srcfolder Freerouting-$APP_VERSION Freerouting-$APP_VERSION.dmg -fs HFS+
 
