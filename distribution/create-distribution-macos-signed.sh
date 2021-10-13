@@ -43,14 +43,17 @@ cd $DIR
 export JPKG_HOME=$(pwd)"/.jdk14/jdk-14.jdk/Contents/Home"
 export JPKG_EXECUTABLE=$JPKG_HOME/bin/jpackage
 
+echo "> creating application image"
 $JPKG_EXECUTABLE --input ../build/dist/ \
  --name Freerouting \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image .jdk14/runtime --app-version $APP_VERSION
 
+echo "> signing the application image"
 /usr/bin/codesign --force --sign $APPLE_DEVELOPER_ID --deep Freerouting-$APP_VERSION.app
 
-#/usr/bin/hdiutil create -srcfolder Freerouting-$APP_VERSION Freerouting-$APP_VERSION.dmg -fs HFS+
+echo "> creating macOS DMG"
+/usr/bin/hdiutil create -srcfolder Freerouting-$APP_VERSION Freerouting-$APP_VERSION.dmg -fs HFS+
 
-#mv Freerouting-$APP_VERSION.dmg freerouting-$APP_VERSION-macos-x64.dmg
+mv Freerouting-$APP_VERSION.dmg freerouting-$APP_VERSION-macos-x64.dmg
 
