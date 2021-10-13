@@ -6,9 +6,6 @@ on: [push]
 
 jobs:
 
-  env:
-    RELEASE_NAME: SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))
-
   delete-old-snapshot-assets:
 
     runs-on: [ubuntu-latest]
@@ -41,7 +38,7 @@ jobs:
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
-      run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")   
+      run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*.jar'
@@ -66,7 +63,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist  
     - name: Create Distribution   
-      run: distribution/create-distribution-linux.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")   
+      run: distribution/create-distribution-linux.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
@@ -89,7 +86,7 @@ jobs:
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))"   
+      run: distribution\create-distribution-SNAPSHOT-windows.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-windows-x64.msi'
@@ -115,7 +112,7 @@ jobs:
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows-x86.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))"
+      run: distribution\create-distribution-SNAPSHOT-windows-x86.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-windows-x86.msi'
@@ -141,7 +138,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist  
     - name: Create Distribution   
-      run: distribution/create-distribution-macos-signed.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")
+      run: distribution/create-distribution-macos-signed.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-macos-x64.dmg'
