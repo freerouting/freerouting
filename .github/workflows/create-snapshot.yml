@@ -6,6 +6,9 @@ on: [push]
 
 jobs:
 
+  env:
+    RELEASE_NAME: SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))
+
   delete-old-snapshot-assets:
 
     runs-on: [ubuntu-latest]
@@ -112,7 +115,7 @@ jobs:
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows-x86.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))"   
+      run: distribution\create-distribution-SNAPSHOT-windows-x86.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyy-MM-dd_HH-mm-ss"))"
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-windows-x86.msi'
@@ -138,7 +141,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist  
     - name: Create Distribution   
-      run: distribution/create-distribution-macos-signed.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S") "${{ secrets.APPLE_DEVELOPER_ID }}"
+      run: distribution/create-distribution-macos-signed.sh SNAPSHOT-$(date +"%Y-%m-%d_%H-%M-%S")
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-macos-x64.dmg'
