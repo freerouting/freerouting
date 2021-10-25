@@ -12,17 +12,6 @@ This version of freerouting has been refactored to be fully compatible with JDK1
 
 [Binary installers for Linux, macOS and Windows can be downloaded here](https://github.com/freerouting/freerouting/releases).
 
-### New Features
-
-- Uses gradle as build system (which is compatible with command line, NetBeans, IntelliJ, Eclipse and more)
-- New code base uses proper package names. That is, freerouting can finally be used as library.
-- Removed local dependencies. Publication via maven central and/or bintray is now possibe.
-- WebStart code has been removed (WebStart is officially deprecated)
-- Several `ClassCastException` bugs in the graphics package have been fixed
-- Swing UI uses native look&feel if possible
-- Prepared Jigsaw module support (still WIP)
-- other minor fixes
-
 ## How to Build It
 
 ### Requirements
