@@ -166,3 +166,9 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerou
 #### Generated Executables
 
 All four .jar files will be generated in the _build\libs_ subfolder. You would typically run the _freerouting-executable.jar_ file.
+
+## Contributing
+
+We ❤️ all our contributors; this project wouldn’t be what it is without you! 
+
+If you want to help out, please consider replying to [issues](https://github.com/freerouting/freerouting/issues), creating new ones, or even send your fixes and improvements as [pull requests](https://github.com/freerouting/freerouting/pulls).
