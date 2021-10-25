@@ -9,15 +9,41 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  build-ubuntu:
-
-    runs-on: ubuntu-latest
+  build-jar:
+  
+    runs-on: [windows-latest]
 
     steps:
     - uses: actions/checkout@v2
-    #- run: curl -O "https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz"
     - name: Set up JDK 11
-      uses: joschi/setup-jdk@v1 
+      uses: joschi/setup-jdk@v2 
+      with:
+          java-version: '11'
+          architecture: 'x64'
+    - name: Build with Gradle
+      run: .\gradlew.bat dist 
+    - name: Get Tag name 
+      uses: olegtarasov/get-tag@v2.1    
+      id: tagName
+      with:
+          tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+          tagRegexGroup: 1   # Optional. Default is 1.
+    - name: Create Distribution   
+      run: distribution\create-distribution-jar.bat ${{ steps.tagName.outputs.tag }}   
+    - uses: AButler/upload-release-assets@v2.0
+      with:
+          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}.jar'
+          release-tag: ${{ steps.tagName.outputs.tag }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}      
+
+  build-ubuntu-x64:
+
+    runs-on: [ubuntu-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: joschi/setup-jdk@v2
       with:
           java-version: '11'
           architecture: 'x64'
@@ -26,38 +52,38 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist  
     - name: Get Tag name 
-      uses: olegtarasov/get-tag@v2    
+      uses: olegtarasov/get-tag@v2.1    
       id: tagName
       with:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1 # Optional. Default is 1.
+          tagRegexGroup: 1   # Optional. Default is 1.
     - name: Create Distribution   
       run: distribution/create-distribution-linux.sh ${{ steps.tagName.outputs.tag }}
     - uses: AButler/upload-release-assets@v2.0
       with:
-          files: 'build/dist/freerouting-${{ steps.tagName.outputs.tag }}-executable.jar;./distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
+          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
           release-tag: v${{ steps.tagName.outputs.tag }}    
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
    
-  build-windows:
+  build-windows-x64:
 
-    runs-on: windows-latest
+    runs-on: [windows-latest]
 
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: joschi/setup-jdk@v1 
+      uses: joschi/setup-jdk@v2
       with:
           java-version: '11'
           architecture: 'x64'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Get Tag name 
-      uses: olegtarasov/get-tag@v2    
+      uses: olegtarasov/get-tag@v2.1
       id: tagName
       with:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1 # Optional. Default is 1.
+          tagRegexGroup: 1   # Optional. Default is 1.
 #    - name: Set App Version
 #      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
     - name: Create Distribution   
@@ -68,14 +94,14 @@ jobs:
           release-tag: v${{ steps.tagName.outputs.tag }}    
           repo-token: ${{ secrets.GITHUB_TOKEN }}   
 
-  build-macos:
+  build-macos-x64:
 
-    runs-on: macos-latest
+    runs-on: [macos-latest]
 
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: joschi/setup-jdk@v1 
+      uses: joschi/setup-jdk@v2
       with:
           java-version: '11'
           architecture: 'x64'
@@ -84,11 +110,11 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist 
     - name: Get Tag name 
-      uses: olegtarasov/get-tag@v2    
+      uses: olegtarasov/get-tag@v2.1
       id: tagName
       with:
           tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1 # Optional. Default is 1.     
+          tagRegexGroup: 1   # Optional. Default is 1.     
     - name: Create Distribution   
       run: distribution/create-distribution-macos.sh ${{ steps.tagName.outputs.tag }}   
     - uses: AButler/upload-release-assets@v2.0
