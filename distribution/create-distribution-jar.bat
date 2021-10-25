@@ -1,4 +1,4 @@
-@echo on
+@echo off
 
 SET  APP_VERSION=%1
 
