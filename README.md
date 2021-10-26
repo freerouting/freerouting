@@ -45,7 +45,7 @@ For more information please use the online help in the board editor. From here y
 
 ### Additional steps for users of KiCad
 
-1) Download the latest freerouting-v1.4.5.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
+1) Download the latest freerouting-1.4.5.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
 2) Start KiCad and open your project in Pcbnew.
 
@@ -80,7 +80,7 @@ The following command line arguments are supported by freerouter:
 A complete command line looks something like this if your are using PowerShell on Windows:
 
 `
-& "java.exe" -jar freerouting-v1.4.5.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+& "java.exe" -jar freerouting-1.4.5.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
 `
 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
@@ -136,7 +136,7 @@ You will need the following steps to make it work:
     * For ARM Linux, select the "arm32" architecture from the dropdown
 3. Run the downloaded JAR file using the installed java.exe
     
-    `java.exe -jar freerouting-v1.4.5.jar`
+    `java.exe -jar freerouting-1.4.5.jar`
 
 ## How to build it from source
 
