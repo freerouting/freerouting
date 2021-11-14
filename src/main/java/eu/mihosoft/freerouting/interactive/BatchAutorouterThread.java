@@ -143,7 +143,8 @@ public class BatchAutorouterThread extends InteractiveActionThread
             int via_count_after = hdlg.get_routing_board().get_vias().size();
             double trace_length_after = hdlg.coordinate_transform.board_to_user(hdlg.get_routing_board().cumulative_trace_length());
 
-            double percentage_improvement = 1.0 - (((via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2);
+
+            double percentage_improvement = (via_count_before != 0 && trace_length_before != 0) ? 1.0 - ((((via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2)) : 0;
 
             double routeOptimizationSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
             FRLogger.info("Routing optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + (percentage_improvement > 0 ? " and it improved the design by ~"+String.format("%(,.2f", percentage_improvement * 100.0)+"%" : "") + ".");
