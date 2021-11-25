@@ -1,4 +1,4 @@
-### **This project needs JAVA volunteers! Contact @andrasfuchs for details!**
+### :point_right: **This project needs JAVA volunteers! Contact @andrasfuchs for details!** :point_left:
 
 # Freerouting
 
