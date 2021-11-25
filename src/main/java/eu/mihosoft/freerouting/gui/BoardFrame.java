@@ -387,12 +387,12 @@ public class BoardFrame extends javax.swing.JFrame
                 curr_component = p_component;
             }
             String help_id = "html_files." + p_help_id;
-            javax.help.CSH.setHelpIDString(curr_component, help_id);
-            if (help_broker==null) {
-                FRLogger.warn("help_broker is null");
-                return;
-            }
-            help_broker.enableHelpKey(curr_component, help_id, help_set);
+//            javax.help.CSH.setHelpIDString(curr_component, help_id);
+//            if (help_broker==null) {
+//                FRLogger.warn("help_broker is null");
+//                return;
+//            }
+//            help_broker.enableHelpKey(curr_component, help_id, help_set);
         }
     }
     
@@ -699,9 +699,7 @@ public class BoardFrame extends javax.swing.JFrame
     final boolean is_web_start;
     
     private final boolean help_system_used;
-    static javax.help.HelpSet help_set = null;
-    static javax.help.HelpBroker help_broker = null;
-    
+
     private final boolean confirm_cancel;
     
     private final java.util.ResourceBundle resources;

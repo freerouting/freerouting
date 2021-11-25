@@ -48,16 +48,8 @@ class BoardMenuBar extends javax.swing.JMenuBar
         menubar.add(info_menu);
         javax.swing.JMenu other_menu = BoardMenuOther.get_instance(p_board_frame);
         menubar.add(other_menu);
-        if (p_help_system_used)
-        {
-            javax.swing.JMenu help_menu = new BoardMenuHelp(p_board_frame);
-            menubar.add(help_menu);
-        }
-        else
-        {
-            javax.swing.JMenu help_menu = new BoardMenuHelpReduced(p_board_frame);
-            menubar.add(help_menu);
-        }
+        javax.swing.JMenu help_menu = new BoardMenuHelpReduced(p_board_frame);
+        menubar.add(help_menu);
         return menubar;
     }
     
