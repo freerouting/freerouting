@@ -145,6 +145,7 @@ You will need the following steps to make it work:
 ### Requirements
 
 - Java >= 11 ([Adoptium Temurin 11 JRE](https://adoptium.net/releases.html?variant=openjdk11&jvmVariant=hotspot))
+- [Gradle 6.2.2](https://gradle.org/releases/)
 - Internet connection (dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 
@@ -164,6 +165,8 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerou
 #### Windows (CMD)
 
     gradlew assemble
+    
+![image](https://user-images.githubusercontent.com/910321/143483981-5f1f8473-098e-4cf2-997b-a34d14346853.png)
     
 #### Generated Executables
 
