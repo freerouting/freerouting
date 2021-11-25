@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-//    id "com.github.hierynomus.license" version "0.13.1"
+    //id "com.github.hierynomus.license" version "0.16.1"
     id 'java'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '2.8.2'
@@ -58,8 +58,8 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.help/javahelp
     implementation group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
 }
 
 
