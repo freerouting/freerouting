@@ -144,7 +144,7 @@ You will need the following steps to make it work:
 
 ### Requirements
 
-- Java >= 11
+- Java >= 11 ([Adoptium Temurin 11 JRE](https://adoptium.net/releases.html?variant=openjdk11&jvmVariant=hotspot))
 - Internet connection (dependencies are downloaded automatically)
 - IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
 
