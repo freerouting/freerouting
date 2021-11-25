@@ -24,7 +24,7 @@ plugins {
 ext.mainClassName = 'eu.mihosoft.freerouting.gui.MainApplication'
 
 wrapper {
-    gradleVersion = '6.2'
+    gradleVersion = '7.3'
 }
 
 sourceCompatibility = '11'
@@ -160,7 +160,7 @@ dist.dependsOn+="assemble"
 task run(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
-    main = mainClassName
+    mainClass = mainClassName
 
     // arguments to pass to the application
     //    args 'appArg1'
