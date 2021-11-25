@@ -75,7 +75,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         int signal_layer_count = layer_structure.signal_layer_count();
         signal_layer_name_arr = new javax.swing.JLabel[signal_layer_count];
         signal_layer_active_arr = new javax.swing.JCheckBox[signal_layer_count];
-        combo_box_arr = new ArrayList<JComboBox<String>>(signal_layer_count).toArray(new JComboBox[0]);
+        combo_box_arr = new javax.swing.JComboBox[signal_layer_count];
         for (int i = 0; i < signal_layer_count; ++i)
         {
             signal_layer_name_arr[i] = new javax.swing.JLabel();
