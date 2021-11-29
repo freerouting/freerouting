@@ -1,14 +1,15 @@
-### :point_right: **This project needs JAVA volunteers! Contact @andrasfuchs for details!** :point_left:
+<p align="center">
+<img src="https://raw.githubusercontent.com/miho/freerouting/master/res/img/freerouting.jpg" alt="Freerouting" title="Freerouting" align="center">
+</p>
+<h1 align="center" size="1">Freerouting</h1>
 
-# Freerouting
+<b>Version</b> <small>1.4.5.1</small>
 
-Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.
-
-It basically does this:
-
-![](https://raw.githubusercontent.com/miho/freerouting/master/res/img/freerouting.jpg)
+> Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.
 
 [Binary installers for Linux, macOS and Windows can be downloaded here](https://github.com/freerouting/freerouting/releases).
+
+### :point_right: **This project needs JAVA volunteers! Contact @andrasfuchs for details!** :point_left:
 
 ## Introduction
 
