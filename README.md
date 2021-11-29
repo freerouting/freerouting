@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/miho/freerouting/master/res/img/freerouting.jpg" alt="Freerouting" title="Freerouting" align="center">
 </p>
 <h1 align="center">Freerouting</h1>
-<h4 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h4>
+<h5 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h5>
 
 <p align="center">
     <a href="https://github.com/freerouting/freerouting/releases"><img src="https://img.shields.io/github/v/release/freerouting/freerouting" alt="Release version" /></a>
