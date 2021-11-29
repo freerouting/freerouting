@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/miho/freerouting/master/res/img/freerouting.jpg" alt="Freerouting" title="Freerouting" align="center">
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/res/logo/freerouting_logo_920x260_v2.png" alt="Freerouting" title="Freerouting" align="center">
 </p>
 <h1 align="center">Freerouting</h1>
 <h5 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h5>
@@ -9,7 +9,7 @@
     <a href="LICENSE"><img src="https://img.shields.io/github/license/freerouting/freerouting" alt="License"/></a>
 </p>
 
-<h3 align="center">:point_right: This project needs JAVA volunteers! Contact @andrasfuchs for details! :point_left:</h3>
+<h3 align="center">:point_right: This project needs JAVA and UI/UX volunteers! Contact @andrasfuchs for details! :point_left:</h3>
 
 <br/>
 <br/>
