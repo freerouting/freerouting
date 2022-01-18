@@ -2,22 +2,22 @@
 // publishing information
 // -----------------------------------------------------------------------------
 ext.publishing.artifactId =  project.name.toLowerCase()
-ext.publishing.groupId    =  'eu.mihosoft.freerouting'
-ext.publishing.versionId  =  '1.4.6-SNAPSHOT'
+ext.publishing.groupId    =  'app.freerouting'
+ext.publishing.versionId  =  '1.5.0-SNAPSHOT'
 
-ext.publishing.developerName         = 'Michael Hoffer'
-ext.publishing.developerAlias        = 'miho'
-ext.publishing.developerEmail        = 'info@michaelhoffer.de'
-ext.publishing.inceptionYear         = '2017'
+ext.publishing.developerName         = 'Andras Fuchs, Michael Hoffer, Andrey Belomutskiy, Alfons Wirtz'
+ext.publishing.developerAlias        = 'freerouting'
+ext.publishing.developerEmail        = 'info@freerouting.app'
+ext.publishing.inceptionYear         = '2004'
 
-ext.publishing.bintray.repo          = 'Freerouting'
-ext.publishing.bintray.userOrg       = 'miho'
+ext.publishing.bintray.repo          = 'freerouting'
+ext.publishing.bintray.userOrg       = 'freerouting'
 ext.publishing.bintray.name          = project.name
 
 ext.publishing.desc                  = 'Advanced PCB Autorouter'
 ext.publishing.license               = 'GPL-3.0'
 ext.publishing.licenseUrl            = 'https://github.com/freerouting/freerouting/blob/master/LICENSE.txt'
-ext.publishing.labels                = ['PCB', 'Autorouter', 'KiCad', 'EAGLE']
+ext.publishing.labels                = ['PCB', 'autorouter', 'KiCad', 'EAGLE', 'router', 'routing', 'routing-engine', 'dsn', 'autoroute', 'auto-router', 'pcb-design', 'specctra']
 ext.publishing.websiteUrl            = 'https://github.com/freerouting/freerouting'
 ext.publishing.issueTrackerUrl       = 'https://github.com/freerouting/freerouting/issues'
 ext.publishing.vcsUrl                = 'https://github.com/freerouting/freerouting.git'

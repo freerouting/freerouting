@@ -5,7 +5,7 @@
   )
   (autoroute_settings
     (fanout off)
-    (eu.mihosoft.freerouting.autoroute on)
+    (autoroute on)
     (postroute on)
     (vias on)
     (via_costs 50)
