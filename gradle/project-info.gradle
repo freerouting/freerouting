@@ -2,13 +2,13 @@
 // publishing information
 // -----------------------------------------------------------------------------
 ext.publishing.artifactId =  project.name.toLowerCase()
-ext.publishing.groupId    =  'eu.mihosoft.freerouting'
-ext.publishing.versionId  =  '1.4.6-SNAPSHOT'
+ext.publishing.groupId    =  'app.freerouting'
+ext.publishing.versionId  =  '1.5.0-SNAPSHOT'
 
 ext.publishing.developerName         = 'Andras Fuchs, Michael Hoffer, Andrey Belomutskiy, Alfons Wirtz'
 ext.publishing.developerAlias        = 'freerouting'
 ext.publishing.developerEmail        = 'info@freerouting.app'
-ext.publishing.inceptionYear         = '2017'
+ext.publishing.inceptionYear         = '2004'
 
 ext.publishing.bintray.repo          = 'freerouting'
 ext.publishing.bintray.userOrg       = 'freerouting'

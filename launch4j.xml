@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>eu.mihosoft.freerouting.gui</headerType>
-  <jar>.\build\libs\FreeRouting.jar</jar>
-  <outfile>FreeRouting.exe</outfile>
+  <headerType>app.freerouting.gui</headerType>
+  <jar>.\build\libs\freerouting.jar</jar>
+  <outfile>freerouting.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>

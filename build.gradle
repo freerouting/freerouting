@@ -21,7 +21,7 @@ plugins {
 //    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
 }
 
-ext.mainClassName = 'eu.mihosoft.freerouting.gui.MainApplication'
+ext.mainClassName = 'app.freerouting.gui.MainApplication'
 
 wrapper {
     gradleVersion = '7.3'
@@ -72,7 +72,7 @@ ext {
 jar {
     manifest {
         attributes(
-          'Automatic-Module-Name': 'eu.mihosoft.freerouting',
+          'Automatic-Module-Name': 'app.freerouting',
           'Built-By': System.properties['user.name'],
           'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
           'Build-Date': project.buildDate,
@@ -98,7 +98,7 @@ task executableJar(type: Jar) {
     manifest {
 
         attributes(
-                'Automatic-Module-Name': 'eu.mihosoft.freerouting',
+                'Automatic-Module-Name': 'app.freerouting',
                 'Built-By': System.properties['user.name'],
                 'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
                 'Build-Date': project.buildDate,
@@ -120,7 +120,7 @@ task writeVersionInfo() {
     doLast {
         def buildInfoCode = new File("${project.buildDir}/generated-src/eu/mihosoft/freerouting/constants/Constants.java")
         buildInfoCode.getParentFile().mkdirs()
-        buildInfoCode.write("package eu.mihosoft.freerouting.constants;\n"
+        buildInfoCode.write("package app.freerouting.constants;\n"
                 + "public class Constants {\n"
                 + "  public static final String FREEROUTING_VERSION = \"${publishing.versionId}\";\n"
                 + "  public static final String FREEROUTING_BUILD_DATE = \"${buildDate}\";\n"
