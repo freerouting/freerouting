@@ -118,7 +118,7 @@ apply from: 'gradle/publishing.gradle'
 // write constants to code
 task writeVersionInfo() {
     doLast {
-        def buildInfoCode = new File("${project.buildDir}/generated-src/eu/mihosoft/freerouting/constants/Constants.java")
+        def buildInfoCode = new File("${project.buildDir}/generated-src/app/freerouting/constants/Constants.java")
         buildInfoCode.getParentFile().mkdirs()
         buildInfoCode.write("package app.freerouting.constants;\n"
                 + "public class Constants {\n"
@@ -130,7 +130,7 @@ task writeVersionInfo() {
 }
 
 // add the 'vmfconstants' src dir to the folders to compile (input to groovyc)
-sourceSets.main.java.srcDirs+=file("${project.buildDir}/generated-src/eu/mihosoft/freerouting/constants/")
+sourceSets.main.java.srcDirs+=file("${project.buildDir}/generated-src/app/freerouting/constants/")
 
 compileJava.dependsOn+="writeVersionInfo"
 
