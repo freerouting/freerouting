@@ -142,21 +142,6 @@ task dist(type: Copy) {
 
 dist.dependsOn+="assemble"
 
-//license {
-//    header = rootProject.file('config/HEADER')
-//    strictCheck = true
-//    ignoreFailures = true
-//    mapping {
-//        java   = 'SLASHSTAR_STYLE'
-//        groovy = 'SLASHSTAR_STYLE'
-//        fxml   = 'XML_STYLE'
-//    }
-//    ext.yearSince1   = '2017'
-//    ext.yearCurrent  = new java.text.SimpleDateFormat("yyyy").format(new Date())
-//    ext.author1 = 'Michael Hoffer <info@michaelhoffer.de>'
-//    exclude '**/*.svg'
-//}
-
 task run(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
