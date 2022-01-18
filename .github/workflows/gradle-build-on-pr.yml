@@ -1,6 +1,6 @@
-name: Run Gradle on PRs
+name: gradle-build-on-pr
 
-on: [push,pull_request]
+on: [pull_request]
 
 jobs:
   gradle:
