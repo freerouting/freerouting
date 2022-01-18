@@ -70,6 +70,26 @@ public class MainApplication extends javax.swing.JFrame
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
 
+        if (startupOptions.show_help_option)
+        {
+            FRLogger.info("" +
+                    "-de [design input file]: loads up a Specctra .dsn file at startup\n" +
+                    "-di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs\n" +
+                    "-dr [design rules file]: reads the rules from a previously saved .rules file\n" +
+                    "-do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished\n" +
+                    "-mp [number of passes]: sets the upper limit of the number of auto-router passes that will be performed\n" +
+                    "-l [language]: \"de\" for German, otherwise it's English\n" +
+                    "-mt [number of threads]: sets thread pool size for route optimization. The default is 32.\n" +
+                    "-us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option \"hr\" specifies hybrid ratio.\n" +
+                    "-hr [m:n]: sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected.\n" +
+                    "-is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. The default is prioritized. Prioritied stragegy selects items based on scores calculated in previous round.\n" +
+                    "-h: shows help" +
+                    "");
+
+            System.exit(0);
+            return;
+        }
+
         if (startupOptions.single_design_option)
         {
             java.util.ResourceBundle resources =
