@@ -2,10 +2,6 @@ package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
 
-/**
- *
- * @author Alfons Wirtz
- */
 public interface CompleteExpansionRoom extends ExpansionRoom
 {
     

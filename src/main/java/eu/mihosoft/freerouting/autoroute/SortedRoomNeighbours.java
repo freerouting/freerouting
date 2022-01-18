@@ -27,14 +27,14 @@ import eu.mihosoft.freerouting.board.TestLevel;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
- * To calculate the neigbour rooms of an expansion room.
+ * To calculate the neighbour rooms of an expansion room.
  * The neighbour rooms will be sorted in counterclock sense around the border of the shape of p_room.
  * Overlapping neighbours containing an item may be stored in an unordered list.
  */
 public class SortedRoomNeighbours
 {
     /**
-     * To calculate the neigbour rooms of an expansion room.
+     * To calculate the neighbour rooms of an expansion room.
      * The neighbour rooms will be sorted in counterclock sense around the border of the shape of p_room.
      * Overlapping neighbours containing an item may be stored in an unordered list.
      */
@@ -657,9 +657,7 @@ public class SortedRoomNeighbours
     
     /**
      * Helper class to sort the doors of an expansion room counterclockwise
-     * arount the border of the room shape.
-     *
-     * @author Alfons Wirtz
+     * around the border of the room shape.
      */
     
     private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour>
