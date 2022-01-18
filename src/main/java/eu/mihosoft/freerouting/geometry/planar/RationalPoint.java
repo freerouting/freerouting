@@ -1,33 +1,10 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * RationalPoint.java
- *
- * Created on 1. Februar 2003, 13:12
- */
-
 package eu.mihosoft.freerouting.geometry.planar;
+
 import java.math.BigInteger;
 
 import eu.mihosoft.freerouting.datastructures.BigIntAux;
 
 /**
- *
  * Implementation of points in the projective plane represented by
  * 3 coordinates x, y, z, which are infinite precision integers.
  * Two projective points (x1, y1, z1) and (x2, y2 z2) are equal,
@@ -40,10 +17,7 @@ import eu.mihosoft.freerouting.datastructures.BigIntAux;
  * addition to the affine plane with rational coordinates the
  * so-called line at infinity, which consist of
  * all projective points (x, y, z) with z = 0.
- *
- * @author Alfons Wirtz
  */
-
 public class RationalPoint extends Point implements java.io.Serializable
 {
     

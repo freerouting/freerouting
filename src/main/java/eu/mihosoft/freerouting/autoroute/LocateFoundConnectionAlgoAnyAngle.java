@@ -1,26 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * LocateFoundConnectionAlgo.java
- *
- * Created on 14. Februar 2004, 07:55
- */
-
 package eu.mihosoft.freerouting.autoroute;
 
 import eu.mihosoft.freerouting.geometry.planar.FloatLine;
@@ -38,16 +15,12 @@ import eu.mihosoft.freerouting.board.Item;
 import eu.mihosoft.freerouting.board.TestLevel;
 import eu.mihosoft.freerouting.logger.FRLogger;
 
-
 /**
  * Calculates from the backtrack list the location of the traces and vias,
  * which realize a connection found by the maze search algorithm.
- *
- * @author Alfons Wirtz
  */
 class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
 {
-    
     /** Creates a new instance of LocateFoundConnectionAlgo */
     protected LocateFoundConnectionAlgoAnyAngle(MazeSearchAlgo.Result p_maze_search_result, AutorouteControl p_ctrl,
             ShapeSearchTree p_search_tree, AngleRestriction p_angle_restriction,

@@ -1,25 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * Via.java
- *
- * Created on 5. Juni 2003, 10:36
- */
 package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
@@ -37,12 +15,9 @@ import eu.mihosoft.freerouting.logger.FRLogger;
  * Class describing the functionality of an electrical Item on the board,
  * which may have a shape on several layer, whose geometry is described by a
  * padstack.
- *
- * @author Alfons Wirtz
  */
 public class Via extends DrillItem implements java.io.Serializable
 {
-
     /** Creates a new instance of Via with the input parameters*/
     public Via(Padstack p_padstack, Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no,
             int p_group_no, FixedState p_fixed_state, boolean p_attach_allowed, BasicBoard p_board)

@@ -1,25 +1,10 @@
-/*
- * This file contains a copy of the method binaryGcd in the class java.math.MutableBigInteger.
- * The reason is, that binaryGcD is not public and we needed to call it from outside the java.math package.
- * There is no aim to violate any copyright.
- * 
- * 
- * BigIntAux.java
- *
- * Created on 5. January 2003, 11:26
- */
-
 package eu.mihosoft.freerouting.datastructures;
 
 import java.math.BigInteger;
 
 /**
- *
  * Auxiliary functions with BigInteger Parameters
-
- * @author Alfons Wirtz
  */
-
 public class BigIntAux
 {
     /**

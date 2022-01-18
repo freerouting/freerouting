@@ -15,9 +15,6 @@ import java.util.Locale;
 
 /**
  * Base implementation for headless mode
- *
- * Andrey Belomutskiy
- * 6/28/2014
  */
 public class BoardHandlingImpl implements IBoardHandling {
     /**

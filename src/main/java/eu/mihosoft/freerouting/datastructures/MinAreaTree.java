@@ -1,26 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * MinAreaTree.java
- *
- * Created on 1. September 2004, 08:29
- */
-
 package eu.mihosoft.freerouting.datastructures;
 
 import java.util.Set;
@@ -32,15 +9,13 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Binary search tree for shapes in the plane.
- * The shapes are stored in the leafs of the tree.
+ * The shapes are stored in the leaves of the tree.
  * The algorithm for storing a new shape is as following.
  * Starting from the root go to the child, so that the increase of the bounding shape of that child
  * is minimal after adding the new shape, until you reach a leaf.
  * The use of ShapeDirections to calculate the bounding shape is for historical reasons (coming from a Kd-Tree).
- * Instead any algorithm to calculate a bounding shape of two input shapes can be used.
+ * Instead, any algorithm to calculate a bounding shape of two input shapes can be used.
  * The algorithm would of course also work for higher dimensions.
- *
- * @author Alfons Wirtz
  */
 public class MinAreaTree extends ShapeTree
 {

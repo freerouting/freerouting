@@ -1,22 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- */
-
 package eu.mihosoft.freerouting.geometry.planar;
 
 import eu.mihosoft.freerouting.logger.FRLogger;
@@ -26,14 +7,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- *
  * A Polygon is a list of points in the plane, where no 2 consecutive
  * points may be equal and no 3 consecutive points collinear.
- *
- * @author Alfons Wirtz#
  */
-
-
 public class Polygon implements java.io.Serializable
 {
     /**

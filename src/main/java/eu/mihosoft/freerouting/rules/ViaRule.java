@@ -1,26 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * ViaRule.java
- *
- * Created on 31. Maerz 2005, 06:44
- */
-
 package eu.mihosoft.freerouting.rules;
 
 import java.util.List;
@@ -29,13 +6,11 @@ import java.util.LinkedList;
 /**
  * Contains an array of vias used for routing.
  * Vias at the beginning of the array are preferred to later vias.
- *
- * @author Alfons Wirtz
  */
 public class ViaRule implements java.io.Serializable, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable
 {
     
-    /** Empty via rule. Must nott be changed. */
+    /** Empty via rule. Must not be changed. */
     public static final ViaRule EMPTY = new ViaRule("empty");
     
     public ViaRule  (String p_name)

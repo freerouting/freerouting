@@ -1,26 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * PlanarDelaunayTriangulation.java
- *
- * Created on 8. Januar 2005, 10:12
- */
-
 package eu.mihosoft.freerouting.datastructures;
 
 import java.util.Collection;
@@ -39,12 +16,10 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 /**
  * Creates a Delaunay triangulation in the plane for the input objects.
  * The objects in the input list must implement the interface PlanarDelaunayTriangulation.Storable,
- * which consists of the the method get_triangulation_corners().
- * The result can be read by the funktion get_edge_lines().
+ * which consists of the method get_triangulation_corners().
+ * The result can be read by the function get_edge_lines().
  * The algorithm is from Chapter 9.3. of the book Computational Geometry, Algorithms and Applications
- * from M. de Berg, M. van Kreveld, M Overmars  and O Schwarzkopf.
- *
- * @author Alfons Wirtz
+ * from M. de Berg, M. van Kreveld, M Overmars and O Schwarzkopf.
  */
 public class PlanarDelaunayTriangulation
 {

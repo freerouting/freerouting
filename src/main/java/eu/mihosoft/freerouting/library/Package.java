@@ -1,26 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * Package.java
- *
- * Created on 27. Mai 2004, 06:53
- */
-
 package eu.mihosoft.freerouting.library;
 
 import eu.mihosoft.freerouting.geometry.planar.Vector;
@@ -30,10 +7,8 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  * Component package templates describing the padstacks and
- * relative locations of the packege pins,
+ * relative locations of the package pins,
  * and optional other stuff like an outline package keepouts.
- *
- * @author Alfons Wirtz
  */
 public class Package implements Comparable<Package>, eu.mihosoft.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {

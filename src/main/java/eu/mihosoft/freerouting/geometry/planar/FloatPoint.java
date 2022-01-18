@@ -1,41 +1,13 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * FloatPoint.java
- *
- * Created on 2. Februar 2003, 09:14
- */
-
 package eu.mihosoft.freerouting.geometry.planar;
 
 import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *
- * Implements a point in the plane as a touple of double's.
- * Because arithmetic calculations with double's are in general not
+ * Implements a point in the plane as a tuple of double's.
+ * Because arithmetic calculations with doubles are in general not
  * exact, FloatPoint is not derived from the abstract class Point.
- *
- *
- * @author Alfons Wirtz
  */
-
-
 public class FloatPoint implements java.io.Serializable
 {
     

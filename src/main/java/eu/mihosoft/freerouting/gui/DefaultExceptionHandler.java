@@ -7,10 +7,6 @@ import java.awt.*;
 
 import static javax.swing.JOptionPane.OK_OPTION;
 
-/**
- * Andrey Belomutskiy
- * 6/28/2014
- */
 public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread t, Throwable e) {
         handleException(e);

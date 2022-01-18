@@ -1,27 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * ObstacleExpansionRoom.java
- *
- * Created on 17. April 2006, 06:45
- *
- */
-
 package eu.mihosoft.freerouting.autoroute;
 
 import java.util.List;
@@ -37,8 +13,6 @@ import eu.mihosoft.freerouting.board.Item;
 
 /**
  * Expansion Room used for pushing and ripping obstacles in the autoroute algorithm.
- *
- * @author Alfons Wirtz
  */
 public class ObstacleExpansionRoom implements CompleteExpansionRoom
 {

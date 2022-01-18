@@ -1,34 +1,9 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * Area.java
- *
- * Created on 22. June 2003, 10:16
- */
-
 package eu.mihosoft.freerouting.geometry.planar;
 
 /**
  * An Area is a not necessarily simply connected Shape, which means,
  * that it may contain holes.
  * The border and the holes of an Area are of class Shape.
- *
- * @author Alfons Wirtz
  */
 public interface Area
 {

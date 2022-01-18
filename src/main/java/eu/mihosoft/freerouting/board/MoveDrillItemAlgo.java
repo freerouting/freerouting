@@ -1,27 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * ShoveViaAlgo.java
- *
- * Created on 12. Dezember 2005, 06:48
- *
- */
-
 package eu.mihosoft.freerouting.board;
 
 import java.util.Collection;
@@ -37,19 +13,15 @@ import eu.mihosoft.freerouting.geometry.planar.Point;
 import eu.mihosoft.freerouting.geometry.planar.Vector;
 import eu.mihosoft.freerouting.geometry.planar.FloatPoint;
 
-
 /**
- *
  * Contains internal auxiliary functions of class RoutingBoard
  * for shoving vias and pins
- *
- * @author Alfons Wirtz
  */
 public class MoveDrillItemAlgo
 {
-    
+
     /**
-     * checks, if p_drill_item can be translated by p_vector by shoving obstacle
+     * Checks, if p_drill_item can be translated by p_vector by shoving obstacle
      * traces and vias aside, so that no clearance violations occur.
      */
     public static boolean check(DrillItem p_drill_item, Vector p_vector, int p_max_recursion_depth,

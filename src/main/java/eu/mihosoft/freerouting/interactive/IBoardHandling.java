@@ -7,10 +7,6 @@ import eu.mihosoft.freerouting.geometry.planar.IntBox;
 import eu.mihosoft.freerouting.geometry.planar.PolylineShape;
 import eu.mihosoft.freerouting.rules.BoardRules;
 
-/**
- * Andrey Belomutskiy
- * 6/28/2014
- */
 public interface IBoardHandling {
     java.util.Locale get_locale();
 

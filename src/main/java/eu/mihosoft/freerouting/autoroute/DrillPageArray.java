@@ -1,27 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * DrillPageArray.java
- *
- * Created on 26. Maerz 2006, 06:54
- *
- */
-
 package eu.mihosoft.freerouting.autoroute;
 
 import java.util.Collection;
@@ -35,8 +11,6 @@ import eu.mihosoft.freerouting.board.RoutingBoard;
 /**
  * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm.
  * The pages are rectangles of about equal width and height covering covering the bounding box of the board area.
- *
- * @author Alfons Wirtz
  */
 public class DrillPageArray
 {

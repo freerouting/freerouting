@@ -1,26 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * DesignFile.java
- *
- * Created on 25. Oktober 2006, 07:48
- *
- */
 package eu.mihosoft.freerouting.gui;
 
 import eu.mihosoft.freerouting.datastructures.FileFilter;
@@ -29,12 +6,9 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 /**
  *  File functionality with security restrictions used, when the application is opened with Java Webstart
- *
- * @author Alfons Wirtz
  */
 public class DesignFile
 {
-
     public static final String[] all_file_extensions = {"bin", "dsn"};
     public static final String[] text_file_extensions = {"dsn"};
     public static final String binary_file_extension = "bin";

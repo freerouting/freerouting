@@ -1,26 +1,3 @@
-/*
- *   Copyright (C) 2014  Alfons Wirtz
- *   website www.freerouting.net
- *
- *   Copyright (C) 2017 Michael Hoffer <info@michaelhoffer.de>
- *   Website www.freerouting.mihosoft.eu
-*
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License at <http://www.gnu.org/licenses/> 
- *   for more details.
- *
- * PolylineShape.java
- *
- * Created on 16. November 2002, 09:34
- */
-
 package eu.mihosoft.freerouting.geometry.planar;
 
 import eu.mihosoft.freerouting.logger.FRLogger;
@@ -32,18 +9,16 @@ import java.util.LinkedList;
 /**
  * Abstract class with functions for shapes, whose borders consist
  * ob straight lines.
- *
- * @author Alfons Wirtz
  */
 public abstract class PolylineShape implements Shape, java.io.Serializable
 {
     /**
-     * returns true, if the the shape has no infinite part at this corner
+     * returns true, if the shape has no infinite part at this corner
      */
     public abstract boolean corner_is_bounded(int p_no);
     
     /**
-     * Returns the number of border lines of the shape
+     * Returns the number of borderlines of the shape
      */
     public abstract int border_line_count();
     
@@ -51,7 +26,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
      * Returns the p_no-th corner of this shape for
      * p_no between 0 and border_line_count() - 1.
      * The corners are sorted starting with the smallest y-coordinate
-     * in counterclock sense arount the shape.
+     * in counterclock sense around the shape.
      * If there are several corners with the smallest y-coordinate,
      * the corner with the smallest x-coordinate comes first.
      * Consecutive corners may be equal.

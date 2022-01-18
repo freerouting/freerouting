@@ -6,10 +6,6 @@ import eu.mihosoft.freerouting.logger.FRLogger;
 
 import java.util.Locale;
 
-/**
- * Andrey Belomutskiy
- * 6/28/2014
- */
 public class StartupOptions {
     boolean single_design_option = false;
     boolean test_version_option = false;
