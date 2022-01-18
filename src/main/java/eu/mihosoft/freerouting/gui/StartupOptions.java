@@ -13,6 +13,7 @@ import java.util.Locale;
 public class StartupOptions {
     boolean single_design_option = false;
     boolean test_version_option = false;
+    boolean show_help_option = false;
     boolean session_file_option = false;
     boolean webstart_option = false;
     String design_input_filename = null;
@@ -105,6 +106,8 @@ public class StartupOptions {
                     webstart_option = true;
                 } else if (p_args[i].startsWith("-test")) {
                     test_version_option = true;
+                } else if (p_args[i].startsWith("-h")) {
+                    show_help_option = true;
                 }
             }
             catch (Exception e)
