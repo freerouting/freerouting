@@ -4,6 +4,7 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.logger.FRLogger;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 public class StartupOptions {
@@ -21,9 +22,15 @@ public class StartupOptions {
     BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
     String hybrid_ratio = "1:1";
     ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
-    java.util.Locale current_locale = java.util.Locale.ENGLISH;
+    String[] supported_languages = { "en", "de", "zh" };
+    java.util.Locale current_locale = java.util.Locale.getDefault();
 
     private StartupOptions() {
+        if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals))
+        {
+            // the fallback language is English
+            current_locale = Locale.ENGLISH;
+        }
     }
 
     public Locale getCurrentLocale() {
@@ -93,8 +100,10 @@ public class StartupOptions {
                     }                    
                 } else if (p_args[i].startsWith("-l")) {
                     // the locale is provided
-                    if (p_args.length > i + 1 && p_args[i + 1].startsWith("d")) {
+                    if (p_args.length > i + 1 && p_args[i + 1].startsWith("de")) {
                         current_locale = java.util.Locale.GERMAN;
+                    } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh")) {
+                        current_locale = Locale.SIMPLIFIED_CHINESE;
                     }
                 } else if (p_args[i].startsWith("-s")) {
                     session_file_option = true;
