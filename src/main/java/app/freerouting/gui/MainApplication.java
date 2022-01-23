@@ -54,7 +54,7 @@ public class MainApplication extends javax.swing.JFrame
                     "-dr [design rules file]: reads the rules from a previously saved .rules file\n" +
                     "-do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished\n" +
                     "-mp [number of passes]: sets the upper limit of the number of auto-router passes that will be performed\n" +
-                    "-l [language]: \"de\" for German, otherwise it's English\n" +
+                    "-l [language]: \"de\" for German, \"zh\" for Simplified Chinese, otherwise it's English\n" +
                     "-mt [number of threads]: sets thread pool size for route optimization. The default is 32.\n" +
                     "-us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option \"hr\" specifies hybrid ratio.\n" +
                     "-hr [m:n]: sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected.\n" +
