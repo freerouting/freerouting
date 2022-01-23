@@ -52,28 +52,16 @@ public class MainApplication extends javax.swing.JFrame {
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
 
-        if (startupOptions.show_help_option) {
-            FRLogger.info("" +
-                    "-de [design input file]: loads up a Specctra .dsn file at startup\n" +
-                    "-di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs\n" +
-                    "-dr [design rules file]: reads the rules from a previously saved .rules file\n" +
-                    "-do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished\n" +
-                    "-mp [number of passes]: sets the upper limit of the number of auto-router passes that will be performed\n" +
-                    "-l [language]: \"de\" for German, otherwise it's English\n" +
-                    "-mt [number of threads]: sets thread pool size for route optimization. The default is 32.\n" +
-                    "-us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option \"hr\" specifies hybrid ratio.\n" +
-                    "-hr [m:n]: sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected.\n" +
-                    "-is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. The default is prioritized. Prioritied stragegy selects items based on scores calculated in previous round.\n" +
-                    "-h: shows help" +
-                    "");
-
+        java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", startupOptions.current_locale);
+        if (startupOptions.show_help_option)
+        {
+            FRLogger.info(resources.getString("command_line_help"));
             System.exit(0);
             return;
         }
 
-        if (startupOptions.single_design_option) {
-            java.util.ResourceBundle resources =
-                    java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", startupOptions.current_locale);
+        if (startupOptions.single_design_option)
+        {
             BoardFrame.Option board_option;
             if (startupOptions.session_file_option) {
                 board_option = BoardFrame.Option.SESSION_FILE;
@@ -191,8 +179,7 @@ public class MainApplication extends javax.swing.JFrame {
         this.is_test_version = startupOptions.isTestVersion();
         this.is_webstart = startupOptions.getWebstartOption();
         this.locale = startupOptions.getCurrentLocale();
-        this.resources =
-                java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
+        this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
         main_panel = new javax.swing.JPanel();
         getContentPane().add(main_panel);
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
@@ -207,7 +194,7 @@ public class MainApplication extends javax.swing.JFrame {
         open_board_button = new javax.swing.JButton();
         restore_defaults_button = new javax.swing.JButton();
         message_field = new javax.swing.JTextField();
-        message_field.setText("Neither '-de <design file>' nor '-di <design directory>' are specified.");
+        message_field.setText(resources.getString("command_line_missing_input"));
         this.window_net_demonstrations = new WindowNetDemonstrations(locale);
         java.awt.Point location = getLocation();
         this.window_net_demonstrations.setLocation((int) location.getX() + 50, (int) location.getY() + 50);
