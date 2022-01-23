@@ -13,20 +13,19 @@ import javax.swing.UnsupportedLookAndFeelException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.time.Instant;
+import java.util.Locale;
 
 /**
- *
  * Main application for creating frames with new or existing board designs.
- *
  */
-public class MainApplication extends javax.swing.JFrame
-{
+public class MainApplication extends javax.swing.JFrame {
     /**
      * Main function of the Application
+     *
      * @param args
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         FRLogger.traceEntry("MainApplication.main()");
 
         try {
@@ -42,12 +41,18 @@ public class MainApplication extends javax.swing.JFrame
         }
 
         FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
+        FRLogger.debug(" version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
+        FRLogger.debug(" command line arguments: '" + String.join(" ", args) + "'");
+        FRLogger.debug(" architecture: " + System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version"));
+        FRLogger.debug(" java: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
+        FRLogger.debug(" language: " + Locale.getDefault().getLanguage() + "," + Locale.getDefault());
+        FRLogger.debug(" hardware: " + Runtime.getRuntime().availableProcessors() + " CPU cores," + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB RAM");
+        FRLogger.debug(" UTC time: " + Instant.now().toString());
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
 
-        if (startupOptions.show_help_option)
-        {
+        if (startupOptions.show_help_option) {
             FRLogger.info("" +
                     "-de [design input file]: loads up a Specctra .dsn file at startup\n" +
                     "-di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs\n" +
@@ -66,25 +71,20 @@ public class MainApplication extends javax.swing.JFrame
             return;
         }
 
-        if (startupOptions.single_design_option)
-        {
+        if (startupOptions.single_design_option) {
             java.util.ResourceBundle resources =
                     java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", startupOptions.current_locale);
             BoardFrame.Option board_option;
-            if (startupOptions.session_file_option)
-            {
+            if (startupOptions.session_file_option) {
                 board_option = BoardFrame.Option.SESSION_FILE;
-            }
-            else
-            {
+            } else {
                 board_option = BoardFrame.Option.SINGLE_FRAME;
             }
 
-            FRLogger.info("Opening '"+startupOptions.design_input_filename+"'...");
+            FRLogger.info("Opening '" + startupOptions.design_input_filename + "'...");
             DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename, false);
-            if (design_file == null)
-            {
-                FRLogger.warn(resources.getString("message_6") + " " +  startupOptions.design_input_filename + " " + resources.getString("message_7"));
+            if (design_file == null) {
+                FRLogger.warn(resources.getString("message_6") + " " + startupOptions.design_input_filename + " " + resources.getString("message_7"));
                 return;
             }
             String message = resources.getString("loading_design") + " "
@@ -92,12 +92,11 @@ public class MainApplication extends javax.swing.JFrame
             WindowMessage welcome_window = WindowMessage.show(message);
             final BoardFrame new_frame =
                     create_board_frame(design_file, null, board_option,
-                            startupOptions.test_version_option, 
+                            startupOptions.test_version_option,
                             startupOptions.current_locale,
                             startupOptions.design_rules_filename);
             welcome_window.dispose();
-            if (new_frame == null)
-            {
+            if (new_frame == null) {
                 FRLogger.warn("Couldn't create window frame");
                 System.exit(1);
                 return;
@@ -110,8 +109,7 @@ public class MainApplication extends javax.swing.JFrame
             new_frame.board_panel.board_handling.set_item_selection_strategy(startupOptions.item_selection_strategy);
 
             // start the auto-router automatically if both input and output files were passed as a parameter
-            if ((startupOptions.design_input_filename != null) && (startupOptions.design_output_filename != null))
-            {
+            if ((startupOptions.design_input_filename != null) && (startupOptions.design_output_filename != null)) {
                 InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();
 
                 thread.addListener(new ThreadActionListener() {
@@ -164,17 +162,13 @@ public class MainApplication extends javax.swing.JFrame
                 });
             }
 
-            new_frame.addWindowListener(new java.awt.event.WindowAdapter()
-            {
+            new_frame.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
-                public void windowClosed(java.awt.event.WindowEvent evt)
-                {
+                public void windowClosed(java.awt.event.WindowEvent evt) {
                     Runtime.getRuntime().exit(0);
                 }
             });
-        }
-        else
-        {
+        } else {
             new MainApplication(startupOptions).setVisible(true);
         }
 
@@ -184,10 +178,10 @@ public class MainApplication extends javax.swing.JFrame
     /**
      * Creates new form MainApplication
      * It takes the directory of the board designs as optional argument.
+     *
      * @param startupOptions
      */
-    public MainApplication(StartupOptions startupOptions)
-    {
+    public MainApplication(StartupOptions startupOptions) {
         this.design_dir_name = startupOptions.getDesignDir();
         this.max_passes = startupOptions.getMaxPasses();
         this.num_threads = startupOptions.getNumThreads();
@@ -223,11 +217,9 @@ public class MainApplication extends javax.swing.JFrame
         setTitle(resources.getString("title") + " " + VERSION_NUMBER_STRING);
         boolean add_buttons = true;
 
-        if (startupOptions.getWebstartOption())
-        {
+        if (startupOptions.getWebstartOption()) {
 
-            if (add_buttons)
-            {
+            if (add_buttons) {
                 demonstration_button.setText(resources.getString("router_demonstrations"));
                 demonstration_button.setToolTipText(resources.getString("router_demonstrations_tooltip"));
                 demonstration_button.addActionListener((java.awt.event.ActionEvent evt) -> {
@@ -255,18 +247,15 @@ public class MainApplication extends javax.swing.JFrame
         });
 
         gridbag.setConstraints(open_board_button, gridbag_constraints);
-        if (add_buttons)
-        {
+        if (add_buttons) {
             main_panel.add(open_board_button, gridbag_constraints);
         }
 
-        if (startupOptions.getWebstartOption() && add_buttons)
-        {
+        if (startupOptions.getWebstartOption() && add_buttons) {
             restore_defaults_button.setText(resources.getString("restore_defaults"));
             restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
             restore_defaults_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-                if (is_webstart)
-                {
+                if (is_webstart) {
                     restore_defaults_action(evt);
                 }
             });
@@ -282,29 +271,26 @@ public class MainApplication extends javax.swing.JFrame
 
         this.addWindowListener(new WindowStateListener());
         pack();
-        setSize(620,300);
+        setSize(620, 300);
     }
 
-    /** opens a board design from a binary file or a specctra dsn file. */
-    private void open_board_design_action(java.awt.event.ActionEvent evt)
-    {
+    /**
+     * opens a board design from a binary file or a specctra dsn file.
+     */
+    private void open_board_design_action(java.awt.event.ActionEvent evt) {
         DesignFile design_file = DesignFile.open_dialog(this.design_dir_name);
 
-        if (design_file == null)
-        {
+        if (design_file == null) {
             message_field.setText(resources.getString("message_3"));
             return;
         }
 
-        FRLogger.info("Opening '"+design_file.get_name()+"'...");
+        FRLogger.info("Opening '" + design_file.get_name() + "'...");
 
         BoardFrame.Option option;
-        if (this.is_webstart)
-        {
+        if (this.is_webstart) {
             option = BoardFrame.Option.WEBSTART;
-        }
-        else
-        {
+        } else {
             option = BoardFrame.Option.FROM_START_MENU;
         }
         String message = resources.getString("loading_design") + " " + design_file.get_name();
@@ -314,31 +300,32 @@ public class MainApplication extends javax.swing.JFrame
         BoardFrame new_frame =
                 create_board_frame(design_file, message_field, option, this.is_test_version, this.locale, null);
         welcome_window.dispose();
-        if (new_frame == null)
-        {
+        if (new_frame == null) {
             return;
         }
-        
+
         new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + this.max_passes - 1);
         new_frame.board_panel.board_handling.set_num_threads(this.num_threads);
         new_frame.board_panel.board_handling.set_board_update_strategy(this.board_update_strategy);
         new_frame.board_panel.board_handling.set_hybrid_ratio(this.hybrid_ratio);
         new_frame.board_panel.board_handling.set_item_selection_strategy(this.item_selection_strategy);
-        
+
         message_field.setText(resources.getString("message_4") + " " + design_file.get_name() + " " + resources.getString("message_5"));
         board_frames.add(new_frame);
         new_frame.addWindowListener(new BoardFrameWindowListener(new_frame));
     }
 
-    /** Exit the Application */
-    private void exitForm(java.awt.event.WindowEvent evt)
-    {
+    /**
+     * Exit the Application
+     */
+    private void exitForm(java.awt.event.WindowEvent evt) {
         System.exit(0);
     }
 
-    /** deletes the setting stored by the user if the application is run by Java Web Start */
-    private void restore_defaults_action(java.awt.event.ActionEvent evt)
-    {
+    /**
+     * deletes the setting stored by the user if the application is run by Java Web Start
+     */
+    private void restore_defaults_action(java.awt.event.ActionEvent evt) {
         // webstart is gone, nothing to do
         // TODO maybe add alternative
     }
@@ -348,39 +335,31 @@ public class MainApplication extends javax.swing.JFrame
      * Returns null, if an error occurred.
      */
     static private BoardFrame create_board_frame(DesignFile p_design_file, javax.swing.JTextField p_message_field,
-            BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale, String p_design_rules_file)
-    {
+                                                 BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale, String p_design_rules_file) {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
 
         java.io.InputStream input_stream = p_design_file.get_input_stream();
-        if (input_stream == null)
-        {
-            if (p_message_field != null)
-            {
+        if (input_stream == null) {
+            if (p_message_field != null) {
                 p_message_field.setText(resources.getString("message_8") + " " + p_design_file.get_name());
             }
             return null;
         }
 
         TestLevel test_level;
-        if (p_is_test_version)
-        {
+        if (p_is_test_version) {
             test_level = DEBUG_LEVEL;
-        }
-        else
-        {
+        } else {
             test_level = TestLevel.RELEASE_VERSION;
         }
         BoardFrame new_frame = new BoardFrame(p_design_file, p_option, test_level, p_locale, !p_is_test_version);
         boolean read_ok = new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
-        if (!read_ok)
-        {
+        if (!read_ok) {
             return null;
         }
         new_frame.menubar.add_design_dependent_items();
-        if (p_design_file.is_created_from_text_file())
-        {
+        if (p_design_file.is_created_from_text_file()) {
             // Read the file  with the saved rules, if it is existing.
 
             String file_name = p_design_file.get_name();
@@ -406,6 +385,7 @@ public class MainApplication extends javax.swing.JFrame
         }
         return new_frame;
     }
+
     private final java.util.ResourceBundle resources;
     private final javax.swing.JButton demonstration_button;
     private final javax.swing.JButton sample_board_button;
@@ -421,88 +401,78 @@ public class MainApplication extends javax.swing.JFrame
      * A Frame with sample board designs in the net.
      */
     private final WindowNetSamples window_net_sample_designs;
-    /** The list of open board frames */
-    private final java.util.Collection<BoardFrame> board_frames 
+    /**
+     * The list of open board frames
+     */
+    private final java.util.Collection<BoardFrame> board_frames
             = new java.util.LinkedList<>();
     private String design_dir_name = null;
-    
+
     private int max_passes;
-    private BoardUpdateStrategy board_update_strategy; 
+    private BoardUpdateStrategy board_update_strategy;
     private String hybrid_ratio;
     private ItemSelectionStrategy item_selection_strategy;
-    private int num_threads;  
+    private int num_threads;
     // Issue: adding a new field into AutorouteSettings caused exception when loading 
     // an existing design: "Couldn't read design file", "InvalidClassException", incompatible with serialized data
     // so choose to pass this parameter through BoardHandling 
-    
+
     private final boolean is_test_version;
     private final boolean is_webstart;
     private final java.util.Locale locale;
     private static final TestLevel DEBUG_LEVEL = TestLevel.CRITICAL_DEBUGGING_OUTPUT;
 
-    private class BoardFrameWindowListener extends java.awt.event.WindowAdapter
-    {
+    private class BoardFrameWindowListener extends java.awt.event.WindowAdapter {
 
-        public BoardFrameWindowListener(BoardFrame p_board_frame)
-        {
+        public BoardFrameWindowListener(BoardFrame p_board_frame) {
             this.board_frame = p_board_frame;
         }
 
         @Override
-        public void windowClosed(java.awt.event.WindowEvent evt)
-        {
-            if (board_frame != null)
-            {
+        public void windowClosed(java.awt.event.WindowEvent evt) {
+            if (board_frame != null) {
                 // remove this board_frame from the list of board frames
                 board_frame.dispose();
                 board_frames.remove(board_frame);
                 board_frame = null;
             }
         }
+
         private BoardFrame board_frame;
     }
 
-    private class WindowStateListener extends java.awt.event.WindowAdapter
-    {
+    private class WindowStateListener extends java.awt.event.WindowAdapter {
 
         @Override
-        public void windowClosing(java.awt.event.WindowEvent evt)
-        {
+        public void windowClosing(java.awt.event.WindowEvent evt) {
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             boolean exit_program = true;
-            if (!is_test_version && board_frames.size() > 0)
-            {
+            if (!is_test_version && board_frames.size() > 0) {
                 int option = javax.swing.JOptionPane.showConfirmDialog(null,
                         resources.getString("confirm_cancel"),
                         null, javax.swing.JOptionPane.YES_NO_OPTION);
-                if (option == javax.swing.JOptionPane.NO_OPTION)
-                {
+                if (option == javax.swing.JOptionPane.NO_OPTION) {
                     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
                     exit_program = false;
                 }
             }
-            if (exit_program)
-            {
+            if (exit_program) {
                 exitForm(evt);
             }
         }
 
         @Override
-        public void windowIconified(java.awt.event.WindowEvent evt)
-        {
+        public void windowIconified(java.awt.event.WindowEvent evt) {
             window_net_sample_designs.parent_iconified();
         }
 
         @Override
-        public void windowDeiconified(java.awt.event.WindowEvent evt)
-        {
+        public void windowDeiconified(java.awt.event.WindowEvent evt) {
             window_net_sample_designs.parent_deiconified();
         }
     }
+
     static final String WEB_FILE_BASE_NAME = "http://www.freerouting.app";
 
-    static final String VERSION_NUMBER_STRING = 
-        "v" + Constants.FREEROUTING_VERSION
-            + " (build-date: "
-            + Constants.FREEROUTING_BUILD_DATE +")";
+    static final String VERSION_NUMBER_STRING = "v" + Constants.FREEROUTING_VERSION + " (build-date: " + Constants.FREEROUTING_BUILD_DATE + ")";
 }
