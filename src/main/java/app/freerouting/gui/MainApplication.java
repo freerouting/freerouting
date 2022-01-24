@@ -8,11 +8,15 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 
+import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.time.Instant;
 import java.util.Locale;
 
@@ -180,6 +184,15 @@ public class MainApplication extends javax.swing.JFrame {
         this.is_webstart = startupOptions.getWebstartOption();
         this.locale = startupOptions.getCurrentLocale();
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
+
+        try {
+            URL resource = this.getClass().getResource("/freerouting_icon_256x256_v2.png");
+            BufferedImage image = ImageIO.read(resource);
+            this.setIconImage(image);
+        } catch (IOException e) {
+            FRLogger.error("Couldn't load icon file 'freerouting_icon_256x256_v2.ico'.", e);
+        }
+
         main_panel = new javax.swing.JPanel();
         getContentPane().add(main_panel);
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
