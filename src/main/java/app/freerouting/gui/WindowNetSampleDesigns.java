@@ -38,6 +38,6 @@ public class WindowNetSampleDesigns extends WindowNetSamples
         String design_name = list_model.elementAt(index).design_name;
         String[] name_parts = design_name.split("\\.");
         String archive_name = name_parts[0];
-        open_design(archive_name, design_name, this.locale);
+        open_design(archive_name, design_name, this.locale, false);
     }
 }

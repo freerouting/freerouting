@@ -47,7 +47,7 @@ public class BatchOptRoute
     /**
      * Optimize the route on the board.
      */
-    public void optimize_board()
+    public void optimize_board(boolean save_intermediate_stages)
     {
         if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION)
         {
@@ -63,11 +63,11 @@ public class BatchOptRoute
             boolean with_prefered_directions = (curr_pass_no % 2 != 0); // to create more variations
             route_improved = opt_route_pass(curr_pass_no, with_prefered_directions);
                      
-            if (route_improved)
+            if ((route_improved) && (save_intermediate_stages))
             {	// Save intermediate optimization results:
             	// 1. To save the result in case the program is terminated unexpectedly,
             	//    e.g., Windows OS update automatically reboots machine
-            	// 2. To provide a way to check intermediate results for a long running optimization
+            	// 2. To provide a way to check intermediate results for a long-running optimization
             	String suffix = "_op" + curr_pass_no + ".bin";
             	this.thread.hdlg.get_panel().board_frame.save(suffix);
             }

@@ -18,6 +18,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class BatchAutorouterThread extends InteractiveActionThread
 {
+    boolean save_intermediate_stages = false;
 
     /** Creates a new instance of BatchAutorouterThread */
     protected BatchAutorouterThread(BoardHandling p_board_handling)
@@ -30,6 +31,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
         String hybrid_ratio = p_board_handling.get_hybrid_ratio();
         ItemSelectionStrategy item_selection_strategy = p_board_handling.get_item_selection_strategy();
         int num_threads = p_board_handling.get_num_threads();
+        save_intermediate_stages = p_board_handling.save_intermediate_stages;
         
         this.batch_opt_route =  num_threads > 1 ? new BatchOptRouteMT(this, num_threads, update_strategy, item_selection_strategy, hybrid_ratio)
         		                                : new BatchOptRoute(this);
@@ -84,7 +86,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             {
                 String opt_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message");
                 hdlg.screen_messages.set_status_message(opt_message);
-                this.batch_opt_route.optimize_board();
+                this.batch_opt_route.optimize_board(this.save_intermediate_stages);
                 String curr_message;
                 if (this.is_stop_requested())
                 {

@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * Base implementation for headless mode
  */
-public class BoardHandlingImpl implements IBoardHandling {
+public class BoardHandlingHeadless implements IBoardHandling {
     /**
      * The file used for logging interactive action,
      * so that they can be replayed later
@@ -26,10 +26,17 @@ public class BoardHandlingImpl implements IBoardHandling {
     public Settings settings = null;
     /** The board database used in this interactive handling. */
     protected RoutingBoard board = null;
-    
+
     private byte[] serializedBoard = null;
 
-    public BoardHandlingImpl() {
+    protected java.util.Locale locale;
+
+    protected boolean save_intermediate_stages;
+
+
+    public BoardHandlingHeadless(java.util.Locale p_locale, boolean p_save_intermediate_stages) {
+        this.locale = p_locale;
+        this.save_intermediate_stages = p_save_intermediate_stages;
     }
 
     /**
@@ -140,6 +147,6 @@ public class BoardHandlingImpl implements IBoardHandling {
 
     @Override
     public Locale get_locale() {
-        return java.util.Locale.ENGLISH;
+        return this.locale;
     }
 }

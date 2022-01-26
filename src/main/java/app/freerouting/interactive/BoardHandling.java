@@ -43,15 +43,15 @@ import app.freerouting.designforms.specctra.DsnFile;
  * Central connection class between the graphical user interface and
  * the board database.
  */
-public class BoardHandling extends BoardHandlingImpl
+public class BoardHandling extends BoardHandlingHeadless
 {
 
     /**
      * Creates a new BoardHandling
      */
-    public BoardHandling(BoardPanel p_panel, java.util.Locale p_locale)
+    public BoardHandling(BoardPanel p_panel, java.util.Locale p_locale, boolean p_save_intermediate_stages)
     {
-        this.locale = p_locale;
+        super(p_locale, p_save_intermediate_stages);
         this.panel = p_panel;
         this.screen_messages = p_panel.screen_messages;
         this.set_interactive_state(SelectMenuState.get_instance(this, activityReplayFile));
@@ -1804,5 +1804,4 @@ public class BoardHandling extends BoardHandlingImpl
      */
     boolean paint_immediately = false;
     private final java.util.ResourceBundle resources;
-    private final java.util.Locale locale;
 }

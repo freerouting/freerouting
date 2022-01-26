@@ -24,6 +24,7 @@ public class StartupOptions {
     ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
     String[] supported_languages = { "en", "de", "zh" };
     java.util.Locale current_locale = java.util.Locale.getDefault();
+    boolean save_intermediate_stages = false;
 
     private StartupOptions() {
         if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals))
@@ -107,6 +108,8 @@ public class StartupOptions {
                     }
                 } else if (p_args[i].startsWith("-s")) {
                     session_file_option = true;
+                } else if (p_args[i].startsWith("-im")) {
+                    save_intermediate_stages = true;
                 } else if (p_args[i].startsWith("-w")) {
                     webstart_option = true;
                 } else if (p_args[i].startsWith("-test")) {
