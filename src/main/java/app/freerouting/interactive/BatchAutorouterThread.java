@@ -76,7 +76,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             double autoroutingSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
             FRLogger.info("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete) + ".");
 
-            FRLogger.info("Starting routing optimization...");
+            FRLogger.info("Starting route optimization...");
             FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
 
             int via_count_before = hdlg.get_routing_board().get_vias().size();
@@ -124,7 +124,7 @@ public class BatchAutorouterThread extends InteractiveActionThread
             double percentage_improvement = (via_count_before != 0 && trace_length_before != 0) ? 1.0 - ((((via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2)) : 0;
 
             double routeOptimizationSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
-            FRLogger.info("Routing optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + (percentage_improvement > 0 ? " and it improved the design by ~"+String.format("%(,.2f", percentage_improvement * 100.0)+"%" : "") + ".");
+            FRLogger.info("Route optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + (percentage_improvement > 0 ? " and it improved the design by ~"+String.format("%(,.2f", percentage_improvement * 100.0)+"%" : "") + ".");
 
             hdlg.set_board_read_only(saved_board_read_only);
             hdlg.update_ratsnest();
