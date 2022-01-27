@@ -110,16 +110,16 @@ it's possible to prioritize items with better scores when selecting items to pro
 
 Test runs on a 12-core system using freerouting v1.5.0:
 
-| Settings                           | Auto-routing time | Route optimization time | Route optimization improvement |
-|------------------------------------|------------------:|------------------------:|:------------------------------:|
-| -mt 0                              |     18.00 seconds |                    N/A  |                            N/A |
-| -mt 1 -us greedy -is prioritized   |     18.50 seconds |              55 minutes |                         51.02% |
-| -mt 11 -us greedy -is prioritized  |     19.95 seconds |              13 minutes |                         50.85% |
-| -mt 11 -us greedy -is sequential   |     19.31 seconds |              20 minutes |                         50.32% |
-| -mt 11 -us greedy -is random       |     18.68 seconds |              14 minutes |                            N/A |
-| -mt 11 -us global -is prioritized  |     18.99 seconds |              93 minutes |                         50.84% |
-| -mt 11 -us hybrid -hr 1:1          |     18.40 seconds |              33 minutes |                         51.08% |
-| -mt 11 -us hybrid -hr 1:3          |     18.48 seconds |              31 minutes |                         50.98% |
+| Settings                           | Auto-routing time | Route optimization time | Route opt. improvement |
+|------------------------------------|------------------:|------------------------:|:----------------------:|
+| -mt 0                              |     18.00 seconds |                    N/A  |                    N/A |
+| -mt 1 -us greedy -is prioritized   |     18.50 seconds |              55 minutes |                 51.02% |
+| -mt 11 -us greedy -is prioritized  |     19.95 seconds |              13 minutes |                 50.85% |
+| -mt 11 -us greedy -is sequential   |     19.31 seconds |              20 minutes |                 50.32% |
+| -mt 11 -us greedy -is random       |     18.68 seconds |              14 minutes |                    N/A |
+| -mt 11 -us global -is prioritized  |     18.99 seconds |              93 minutes |                 50.84% |
+| -mt 11 -us hybrid -hr 1:1          |     18.40 seconds |              33 minutes |                 51.08% |
+| -mt 11 -us hybrid -hr 1:3          |     18.48 seconds |              31 minutes |                 50.98% |
 
 | File                         | Settings  | Auto-routing time | Route optimization time | Route optimization improvement |
 |------------------------------|-----------|------------------:|------------------------:|-------------------------------:|
