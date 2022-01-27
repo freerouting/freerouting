@@ -36,7 +36,7 @@ public class WindowNetDemonstrations extends WindowNetSamples
         SampleDesignListElement selected_element = list_model.elementAt(index);
         String[] name_parts = selected_element.design_name.split("\\.");
         String archive_name = name_parts[0];
-        BoardFrame new_frame = open_design(archive_name, selected_element.design_name, this.locale, false);
+        BoardFrame new_frame = open_design(archive_name, selected_element.design_name, this.locale, false, 0);
         if (new_frame != null)
         {
             selected_element.additional_action.perform(new_frame, archive_name);

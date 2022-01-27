@@ -27,7 +27,7 @@ public class BoardFrame extends javax.swing.JFrame
      * Creates a new board frame with the input design file embedded into a host cad software.
      */
     public static BoardFrame get_embedded_instance(String p_design_file_path_name,
-            BoardObservers p_observers, IdNoGenerator p_id_no_generator, java.util.Locale p_locale, boolean p_save_intermediate_stages)
+            BoardObservers p_observers, IdNoGenerator p_id_no_generator, java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
         final DesignFile design_file = DesignFile.get_instance(p_design_file_path_name, false);
         if (design_file == null)
@@ -36,7 +36,7 @@ public class BoardFrame extends javax.swing.JFrame
             return null;
         }
         BoardFrame board_frame = new BoardFrame(design_file, BoardFrame.Option.SINGLE_FRAME,
-                TestLevel.RELEASE_VERSION, p_observers, p_id_no_generator, p_locale, false, p_save_intermediate_stages);
+                TestLevel.RELEASE_VERSION, p_observers, p_id_no_generator, p_locale, false, p_save_intermediate_stages, p_optimization_improvement_threshold);
         
         
         if (board_frame == null)
@@ -68,11 +68,11 @@ public class BoardFrame extends javax.swing.JFrame
      * Also the warning output depends on p_test_level.
      */
     public BoardFrame(DesignFile p_design, Option p_option, TestLevel p_test_level,
-            java.util.Locale p_locale, boolean p_confirm_cancel, boolean p_save_intermediate_stages)
+            java.util.Locale p_locale, boolean p_confirm_cancel, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
         this(p_design, p_option, p_test_level,
                 new app.freerouting.board.BoardObserverAdaptor(), new app.freerouting.board.ItemIdNoGenerator(),
-                p_locale, p_confirm_cancel, p_save_intermediate_stages);
+                p_locale, p_confirm_cancel, p_save_intermediate_stages, p_optimization_improvement_threshold);
     }
     
     /**
@@ -81,7 +81,8 @@ public class BoardFrame extends javax.swing.JFrame
      * if the frame is embedded into a host system,
      */
     BoardFrame(DesignFile p_design, Option p_option, TestLevel p_test_level, BoardObservers p_observers,
-               app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator, java.util.Locale p_locale, boolean p_confirm_cancel, boolean p_save_intermediate_stages)
+               app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator,
+               java.util.Locale p_locale, boolean p_confirm_cancel, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
         this.design_file = p_design;
         this.is_web_start = (p_option == Option.WEBSTART);
@@ -127,7 +128,7 @@ public class BoardFrame extends javax.swing.JFrame
         this.scroll_pane.setVerifyInputWhenFocusTarget(false);
         this.add(scroll_pane, java.awt.BorderLayout.CENTER);
         
-        this.board_panel = new BoardPanel(screen_messages, this, this.is_web_start, p_locale, p_save_intermediate_stages);
+        this.board_panel = new BoardPanel(screen_messages, this, this.is_web_start, p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
         this.scroll_pane.setViewportView(board_panel);
         
         this.setTitle(resources.getString("title"));

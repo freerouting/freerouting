@@ -145,7 +145,7 @@ public abstract class WindowNetSamples extends BoardSubWindow
     /**
      * Opens a sample design on the website.
      */
-    protected static BoardFrame open_design(String p_archive_name, String p_design_name, java.util.Locale p_locale, boolean p_save_intermediate_stages)
+    protected static BoardFrame open_design(String p_archive_name, String p_design_name, java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
         ZipInputStream zip_input_stream = open_zipped_file(p_archive_name, p_design_name);
         if (zip_input_stream == null)
@@ -154,7 +154,7 @@ public abstract class WindowNetSamples extends BoardSubWindow
         }
         DesignFile design_file = DesignFile.get_instance("sharc_routed.dsn", true);
         BoardFrame new_frame =
-                new BoardFrame(design_file, BoardFrame.Option.WEBSTART, app.freerouting.board.TestLevel.RELEASE_VERSION, p_locale, false, p_save_intermediate_stages);
+                new BoardFrame(design_file, BoardFrame.Option.WEBSTART, app.freerouting.board.TestLevel.RELEASE_VERSION, p_locale, false, p_save_intermediate_stages, p_optimization_improvement_threshold);
         boolean read_ok = new_frame.read(zip_input_stream, true, null);
         if (!read_ok)
         {

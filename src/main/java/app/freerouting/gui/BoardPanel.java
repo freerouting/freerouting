@@ -25,7 +25,7 @@ public class BoardPanel extends javax.swing.JPanel
     
     /** Creates a new BoardPanel in an Application */
     public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame,
-            boolean p_is_web_application, java.util.Locale p_locale, boolean p_save_intermediate_stages)
+            boolean p_is_web_application, java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
         screen_messages = p_screen_messages;
         if (!p_is_web_application)
@@ -42,10 +42,10 @@ public class BoardPanel extends javax.swing.JPanel
         }
         board_frame = p_board_frame;
         this.scroll_pane = board_frame.scroll_pane;
-        default_init(p_locale, p_save_intermediate_stages);
+        default_init(p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
     }
     
-    private void default_init(java.util.Locale p_locale, boolean p_save_intermediate_stages)
+    private void default_init(java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
         setLayout(new java.awt.BorderLayout());
         
@@ -94,7 +94,7 @@ public class BoardPanel extends javax.swing.JPanel
                 board_handling.mouse_wheel_moved(evt.getWheelRotation());
             }
         });
-        board_handling = new BoardHandling(this, p_locale, p_save_intermediate_stages);
+        board_handling = new BoardHandling(this, p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
         setAutoscrolls(true);
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
     }

@@ -49,9 +49,9 @@ public class BoardHandling extends BoardHandlingHeadless
     /**
      * Creates a new BoardHandling
      */
-    public BoardHandling(BoardPanel p_panel, java.util.Locale p_locale, boolean p_save_intermediate_stages)
+    public BoardHandling(BoardPanel p_panel, java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
-        super(p_locale, p_save_intermediate_stages);
+        super(p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
         this.panel = p_panel;
         this.screen_messages = p_panel.screen_messages;
         this.set_interactive_state(SelectMenuState.get_instance(this, activityReplayFile));

@@ -25,6 +25,7 @@ public class StartupOptions {
     String[] supported_languages = { "en", "de", "zh" };
     java.util.Locale current_locale = java.util.Locale.getDefault();
     boolean save_intermediate_stages = false;
+    float optimization_improvement_threshold = 0.0025f;
 
     private StartupOptions() {
         if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals))
@@ -77,8 +78,14 @@ public class StartupOptions {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                     	num_threads = Integer.decode(p_args[i + 1]);
                     	
-                    	if (num_threads < 1)    { num_threads = 1; }
+                    	if (num_threads <= 0)   { num_threads = 0; }
                     	if (num_threads > 1024) { num_threads = 1024; }
+                    }
+                } else if (p_args[i].startsWith("-oit")) {
+                    if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+                        optimization_improvement_threshold = Float.parseFloat(p_args[i + 1]) / 100;
+
+                        if (optimization_improvement_threshold <= 0)   { optimization_improvement_threshold = 0; }
                     }
                 } else if (p_args[i].startsWith("-us")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {

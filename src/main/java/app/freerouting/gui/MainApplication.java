@@ -87,7 +87,8 @@ public class MainApplication extends javax.swing.JFrame {
                             startupOptions.test_version_option,
                             startupOptions.current_locale,
                             startupOptions.design_rules_filename,
-                            startupOptions.save_intermediate_stages);
+                            startupOptions.save_intermediate_stages,
+                            startupOptions.optimization_improvement_threshold);
             welcome_window.dispose();
             if (new_frame == null) {
                 FRLogger.warn("Couldn't create window frame");
@@ -185,6 +186,7 @@ public class MainApplication extends javax.swing.JFrame {
         this.is_webstart = startupOptions.getWebstartOption();
         this.locale = startupOptions.getCurrentLocale();
         this.save_intermediate_stages = startupOptions.save_intermediate_stages;
+        this.optimization_improvement_threshold = startupOptions.optimization_improvement_threshold;
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
 
         try {
@@ -300,7 +302,7 @@ public class MainApplication extends javax.swing.JFrame {
         WindowMessage welcome_window = WindowMessage.show(message);
         welcome_window.setTitle(message);
         BoardFrame new_frame =
-                create_board_frame(design_file, message_field, option, this.is_test_version, this.locale, null, this.save_intermediate_stages);
+                create_board_frame(design_file, message_field, option, this.is_test_version, this.locale, null, this.save_intermediate_stages, this.optimization_improvement_threshold);
         welcome_window.dispose();
         if (new_frame == null) {
             return;
@@ -337,7 +339,8 @@ public class MainApplication extends javax.swing.JFrame {
      * Returns null, if an error occurred.
      */
     static private BoardFrame create_board_frame(DesignFile p_design_file, javax.swing.JTextField p_message_field,
-                                                 BoardFrame.Option p_option, boolean p_is_test_version, java.util.Locale p_locale, String p_design_rules_file, boolean p_save_intermediate_stages) {
+                                                 BoardFrame.Option p_option, boolean p_is_test_version,
+                                                 java.util.Locale p_locale, String p_design_rules_file, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold) {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
 
@@ -355,7 +358,7 @@ public class MainApplication extends javax.swing.JFrame {
         } else {
             test_level = TestLevel.RELEASE_VERSION;
         }
-        BoardFrame new_frame = new BoardFrame(p_design_file, p_option, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages);
+        BoardFrame new_frame = new BoardFrame(p_design_file, p_option, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages, p_optimization_improvement_threshold);
         boolean read_ok = new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
         if (!read_ok) {
             return null;
@@ -423,6 +426,7 @@ public class MainApplication extends javax.swing.JFrame {
     private final boolean is_webstart;
     private final java.util.Locale locale;
     private final boolean save_intermediate_stages;
+    private final float optimization_improvement_threshold;
     private static final TestLevel DEBUG_LEVEL = TestLevel.CRITICAL_DEBUGGING_OUTPUT;
 
     private class BoardFrameWindowListener extends java.awt.event.WindowAdapter {

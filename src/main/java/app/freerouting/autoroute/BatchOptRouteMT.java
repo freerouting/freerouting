@@ -214,17 +214,18 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 	
 	
     @Override
-    protected boolean opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
+    protected float opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
     {
     	long startTime = System.currentTimeMillis();
-    	update_count = 0;			num_tasks_finished = 0;
+    	update_count = 0;
+		num_tasks_finished = 0;
 
 		if (winning_candidate != null) 
 		{
 			winning_candidate.clean();    winning_candidate = null;
 		}
 
-    	boolean route_improved = false;
+    	float route_improved = 0.0f;
         int via_count_before = this.routing_board.get_vias().size();
         double user_trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
         this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, user_trace_length_before);
@@ -288,7 +289,7 @@ public class BatchOptRouteMT extends BatchOptRoute  {
 	            if (this.thread.is_stop_requested())
 	            {
 	            	pool.shutdownNow();
-	                return best_route_result.improved();
+	                return best_route_result.improvement_percentage();
 	            }
 	        }
         } 
@@ -304,18 +305,18 @@ public class BatchOptRouteMT extends BatchOptRoute  {
         
         pool = null;
         
-        route_improved = best_route_result.improved();
+        route_improved = best_route_result.improvement_percentage();
         
-        if (!interrupted && route_improved &&
+        if (!interrupted && best_route_result.improved() &&
         	current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) 
         { 
 			update_master_routing_board(); 
         }
         
-        if (this.use_increased_ripup_costs && !route_improved)
+        if (this.use_increased_ripup_costs && !best_route_result.improved())
         {
             this.use_increased_ripup_costs = false;
-            route_improved = true; // to keep the optimizer going with lower ripup costs
+            route_improved = -1; // to keep the optimizer going with lower ripup costs
         }
     
 		long duration = System.currentTimeMillis() - startTime;

@@ -47,23 +47,23 @@ public class BatchOptRoute
     /**
      * Optimize the route on the board.
      */
-    public void optimize_board(boolean save_intermediate_stages)
+    public void optimize_board(boolean save_intermediate_stages, float optimization_improvement_threshold)
     {
         if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION)
         {
             FRLogger.warn("Before optimize: Via count: " + routing_board.get_vias().size() + ", trace length: " + Math.round(routing_board.cumulative_trace_length()));
         }
-        boolean route_improved = true;
+        double route_improved = -1;
         int curr_pass_no = 0;
         use_increased_ripup_costs = true;
 
-        while (route_improved)
+        while ((route_improved > optimization_improvement_threshold) || (route_improved < 0))
         {
             ++curr_pass_no;
-            boolean with_prefered_directions = (curr_pass_no % 2 != 0); // to create more variations
-            route_improved = opt_route_pass(curr_pass_no, with_prefered_directions);
+            boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
+            route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
                      
-            if ((route_improved) && (save_intermediate_stages))
+            if ((route_improved > optimization_improvement_threshold) && (save_intermediate_stages))
             {	// Save intermediate optimization results:
             	// 1. To save the result in case the program is terminated unexpectedly,
             	//    e.g., Windows OS update automatically reboots machine
@@ -76,11 +76,11 @@ public class BatchOptRoute
 
     /**
      * Tries to reduce the number of vias and the trace length of a completely routed board.
-     * Returns true, if the route was improved.
+     * Returns the amount of improvements were made in percentage (expressed between 0.0 and 1.0). -1 if the routing must go on no matter how much it improved.
      */
-    protected boolean opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
+    protected float opt_route_pass(int p_pass_no, boolean p_with_prefered_directions)
     {
-        boolean route_improved = false;
+        float route_improved = 0.0f;
         int via_count_before = this.routing_board.get_vias().size();
         double trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
         this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before);
@@ -104,15 +104,18 @@ public class BatchOptRoute
             }
             if (opt_route_item(curr_item, p_pass_no, p_with_prefered_directions).improved())
             {
-                route_improved = true;
+                int via_count_after = this.routing_board.get_vias().size();
+                double trace_length_after = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+
+                route_improved = (float)((via_count_before != 0 && trace_length_before != 0) ? 1.0 - ((((via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2)) : 0);
             }
         }
 
         this.sorted_route_items = null;
-        if (this.use_increased_ripup_costs && !route_improved)
+        if (this.use_increased_ripup_costs && (route_improved == 0))
         {
             this.use_increased_ripup_costs = false;
-            route_improved = true; // to keep the optimizer going with lower ripup costs
+            route_improved = -1; // to keep the optimizer going with lower ripup costs
         }
 
         FRLogger.traceExit(optimizationPassId);

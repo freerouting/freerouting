@@ -32,11 +32,13 @@ public class BoardHandlingHeadless implements IBoardHandling {
     protected java.util.Locale locale;
 
     protected boolean save_intermediate_stages;
+    protected float optimization_improvement_threshold;
 
 
-    public BoardHandlingHeadless(java.util.Locale p_locale, boolean p_save_intermediate_stages) {
+    public BoardHandlingHeadless(java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold) {
         this.locale = p_locale;
         this.save_intermediate_stages = p_save_intermediate_stages;
+        this.optimization_improvement_threshold = p_optimization_improvement_threshold;
     }
 
     /**
