@@ -128,7 +128,7 @@ Test runs on a 12-core system using freerouting v1.5.0:
 | Mars-64-revE.dsn             | -oit 0.25 |     26.27 seconds |              29 seconds |                         51.03% |
 | smoothieboard.dsn            | -oit 0.25 |    488.25 seconds |              60 seconds |                            N/A |
 
-All parameters defaults are set according to these test results, so you don't need to change them unless you have a special need.
+All parameter defaults are set according to these test results, so you don't need to change them unless you have a special need.
 
 
 ## Running Freerouting on 32-bit systems
