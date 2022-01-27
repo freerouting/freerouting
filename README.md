@@ -53,7 +53,7 @@ For more information please use the online help in the board editor. From here y
 
 ### Additional steps for users of KiCad
 
-1) Download the latest freerouting-1.4.5.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
+1) Download the latest freerouting-1.5.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
 2) Start KiCad and open your project in Pcbnew.
 
@@ -74,22 +74,24 @@ Freerouter was designed as a GUI program, but it also can function as a command 
 
 The following command line arguments are supported by freerouter:
 
-* -de [design input file]: loads up a Specctra .dsn file at startup 
-* -di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs
-* -dr [design rules file]: reads the rules from a previously saved .rules file
-* -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished
-* -mp [number of passes]: sets the upper limit of the number of auto-router passes that will be performed
-* -l [language]: "de" for German, "zh" for Simplified Chinese, otherwise it's English
-* -mt [number of threads]: sets thread pool size for route optimization. The default is one less than the number of logical processors in the system.
+* -de [design input file]: loads up a Specctra .dsn file at startup.
+* -di [design input directory]: if the GUI is used, this sets the default folder for the open design dialogs.
+* -dr [design rules file]: reads the rules from a previously saved .rules file.
+* -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished.
+* -mp [number of passes]: sets the upper limit of the number of auto-router passes that will be performed.
+* -l [language]: "de" for German, "zh" for Simplified Chinese, otherwise it's English.
+* -mt [number of threads]: sets thread pool size for route optimization. The default is one less than the number of logical processors in the system. Set it to 0 to disable route optimization.
+* -oit [percentage]: stops the route optimizer if the improvement drops below a certain percentage threshold per pass. Default is 0.1%, and 0% means to continue improving until there are no more route options to test.
 * -us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option "hr" specifies hybrid ratio.
 * -hr [m:n]: sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected. 
 * -is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. The default is prioritized. Prioritied stragegy selects items based on scores calculated in previous round.
-* -h: shows help
+* -im: saves intermediate steps in version-specific binary format. This allows to user to resume the interrupted optimization from the last checkpoint. Turned off by default.
+* -h: shows help.
 
 A complete command line looks something like this if your are using PowerShell on Windows:
 
 `
-& "java.exe" -jar freerouting-1.4.5.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+& "java.exe" -jar freerouting-1.5.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
 `
 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
@@ -97,32 +99,7 @@ This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters 
 
 ## Multi-threaded Implementation of Routing Optimization
 
-After Freerouting completes auto-routing it switches to the next phase, called routing optimization to improve the board even further. When board complexity reached certain level, route optimization in previous version (<= 1.4.4) was slow to the the extent that was almost un-usable. This issues was addressed with multi-threading and various updating strategies.
-
-Here is an example that shows the amount of speedup achieved by the initial author of this routing optimization on a board of high complexity. On a machine with 8 cores, the following options are used: 
-java -Xmx16g -mt 16 -us greedy -is prioritized. After about 75 passes, the phase of routing optimation was finished after about 30 hours. # of vias was reduced from 566 to 418, and route length was 
-reduced from 12.94 million to 12.07 million. The average CPU usage is around 1,500%, so comparing to previous single thread route optimization, the CPU load was roughly increased to 15 times. If previous 
-version was used, this 30-hour (1 1/4 day) task might take about 20 days to finish.
-
-Here is an example with a PCB board of median complexity. The smoothieboard in tests directory was modified from open source [Smoothieboard V1.1](https://github.com/Smoothieware/Smoothieboard) via the 
-following actions: deleting all traces and vias, setting one inner layer to ground plane, routing all incompleted connections in Freerouting v1.4.4 and saving the board in bin format. It turned out 
-that strictly speaking, performance of optimization phase of Freerouting v1.4.4 could not be compared to that of the initial version of the multi-threaded implementation because they did not reach the 
-same result. On the same machine described above, with -Xmx24g option, it took Freerouting v1.4.4 about 229 minutes to reach its final optimization result: # of via was reduced from 173 to 144, and trace 
-length was reduced from 7,169,298 to 6,977,539. It took Freerouting v1.4.4 109 minutes to finish the pass with via count reduced to 144. BTW, there seems to be a bug in Freerouting v1.4.4 as it did not 
-stop after reaching the same # of vias and trace length for 7 times. 
-With options: -Xmx24g -mt 16 -us greedy -is prioritized, the multi-threaded optimization took about 6 minutes 28 seconds to reduce # of via to 144 with different trace length. By comparing the time to 
-reach the minimal via count obtainable with Freerouting v1.4.4 for the first time, we can get an estimation of speedup. For this particular board, the speedup of the combination of multi-threading and 
-various strategy optimization is approximately 16.8 (i.e., 109 / 6.467) times, which crossed the ceiling of 16 times, the limit if only changing from single threading to multi-threading on the 8-core machine. 
-Comparing total runtime is not meaningful as the optimized version reached far better optimization result in terms of # of reduced vias. After reducing # of vias from initial 173 to 144, 
-the optimized version was able to continue to optimize the board. The optimized version further reduced # of vias to 129 and trace length to 6,933,191. Thus the optimized version reduced slightly 
-more than 1.5 times of the amount of vias which were reduced by Freerouting v1.4.4.    
- 
-A note about power supply to laptops: it was a surprise to see the laptop battery kept loosing charge when a power supply was connected. With the multi-threaded optimization, the computer will be pushed 
-to its limit, so use an official power supply that comes with the laptop, or use a more powerful power supply. Also be aware of room temperature as the computer will become hotter and might be overheated, 
-especially when the computer is moved to another room because you cannot withstand its unusual fan noise.
-
-One critical task in multi-threaded optimation is to clone objects. In the initial multi-threaded implementation, a quick way to clone objects was used: clone via serialization. When someone gets time, 
-take a look of implementing cloning in offical way.
+After Freerouting completes auto-routing it switches to the next phase, called route optimization to improve the board even further. Multi-threading reduces the time it will take to do this second step.
 
 Besides multi-threading, multiple optimzation strategies were also implemented. Global optimal strategy selects the global optimal update after processing all items in an optimation pass, while greedy 
 strategy adopts an update as soon as it is found to be better than current one, so there will be multiple updates in a greedy optimization pass. Hybrid strategy mixes the above two, and there is an 
@@ -131,7 +108,30 @@ option to select the mixing ratio.
 Sequential, random and prioritized item selection strategies are implemented to determine which item to process next during an optimization pass. Each item is ranked during the optimization pass so that 
 it's possible to prioritize items with better scores when selecting items to process in next optimization pass.
 
-Hopefully this multi-threaded routing optimization will change this router from almost impossible to practical to optimize boards of high complexity.
+Test runs on a 12-core system using freerouting v1.5.0:
+
+| File                               | Settings                                  | Auto-routing time | Route optimization time | Route optimization improvement |
+|------------------------------------|-------------------------------------------|-------------------|-------------------------|--------------------------------|
+| zMRETestFixture.dsn                | -mt 0                                     |     18.00 seconds |                    N/A  |                            N/A |
+| zMRETestFixture.dsn                | -mt 1 -us greedy -is prioritized          |                   |                         |                                |
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is prioritized         |     19.95 seconds |   13 minutes 17 seconds |                         50.85% |
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is sequential          |     19.31 seconds |   20 minutes  1 second  |                         50.32% |
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is random              |     18.68 seconds | x 13 minutes 48 seconds |                         51.04% |
+| zMRETestFixture.dsn                | -mt 11 -us global -is prioritized         |     18.99 seconds |   92 minutes 43 seconds |                         50.84% |
+| zMRETestFixture.dsn                | -mt 11 -us hybrid -hr 1:1 -is prioritized |     18.40 seconds |   33 minutes  2 seconds |                         51.08% |
+| zMRETestFixture.dsn                | -mt 11 -us hybrid -hr 1:3 -is prioritized |     18.48 seconds |   30 minutes 35 seconds |                         50.98% |
+
+x - exited with an exception
+
+| File                               | Settings                                    | Auto-routing time | Route optimization time | Route optimization improvement |
+|------------------------------------|---------------------------------------------|-------------------|-------------------------|--------------------------------|
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is prioritized           |     19.95 seconds |             797 seconds |                         50.85% |
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is prioritized -oit 0.25 |     18.18 seconds |              49 seconds |                         50.23% |
+| Mars-64-revE-rot00.dsn             | -mt 11 -us greedy -is prioritized -oit 0.25 |     26.27 seconds |              29 seconds |                         51.03% |
+| smoothieboard.dsn                  | -mt 11 -us greedy -is prioritized -oit 0.25 |    488.25 seconds |              60 seconds |                            N/A |
+
+All parameters defaults are set according to these test results, so you don't need to change them unless you have a special need.
+
 
 ## Running Freerouting on 32-bit systems
 
@@ -145,7 +145,7 @@ You will need the following steps to make it work:
     * For ARM Linux, select the "arm32" architecture from the dropdown
 3. Run the downloaded JAR file using the installed java.exe
     
-    `java.exe -jar freerouting-1.4.5.jar`
+    `java.exe -jar freerouting-1.5.0.jar`
 
 ## How to build it from source
 
