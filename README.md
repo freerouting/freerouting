@@ -110,16 +110,16 @@ it's possible to prioritize items with better scores when selecting items to pro
 
 Test runs on a 12-core system using freerouting v1.5.0:
 
-| File                               | Settings                                  | Auto-routing time | Route optimization time | Route optimization improvement |
-|------------------------------------|-------------------------------------------|------------------:|------------------------:|:------------------------------:|
-| zMRETestFixture.dsn                | -mt 0                                     |     18.00 seconds |                    N/A  |                            N/A |
-| zMRETestFixture.dsn                | -mt 1 -us greedy -is prioritized          |     18.50 seconds |  54 minutes  59 seconds |                         51.02% |
-| zMRETestFixture.dsn                | -mt 11 -us greedy -is prioritized         |     19.95 seconds |  13 minutes  17 seconds |                         50.85% |
-| zMRETestFixture.dsn                | -mt 11 -us greedy -is sequential          |     19.31 seconds |  20 minutes   2 seconds |                         50.32% |
-| zMRETestFixture.dsn                | -mt 11 -us greedy -is random              |     18.68 seconds |  13 minutes  48 seconds |                            N/A |
-| zMRETestFixture.dsn                | -mt 11 -us global -is prioritized         |     18.99 seconds |  92 minutes  43 seconds |                         50.84% |
-| zMRETestFixture.dsn                | -mt 11 -us hybrid -hr 1:1 -is prioritized |     18.40 seconds |  33 minutes   2 seconds |                         51.08% |
-| zMRETestFixture.dsn                | -mt 11 -us hybrid -hr 1:3 -is prioritized |     18.48 seconds |  30 minutes  35 seconds |                         50.98% |
+| File                               | Settings                                  | Auto-routing time |   Route optimization time    | Route optimization improvement |
+|------------------------------------|-------------------------------------------|------------------:|-----------------------------:|:------------------------------:|
+| zMRETestFixture.dsn                | -mt 0                                     |     18.00 seconds |                         N/A  |                            N/A |
+| zMRETestFixture.dsn                | -mt 1 -us greedy -is prioritized          |     18.50 seconds |  54 minutes<br/>  59 seconds |                         51.02% |
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is prioritized         |     19.95 seconds |  13 minutes<br/>  17 seconds |                         50.85% |
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is sequential          |     19.31 seconds |  20 minutes<br/>   2 seconds |                         50.32% |
+| zMRETestFixture.dsn                | -mt 11 -us greedy -is random              |     18.68 seconds |  13 minutes<br/>  48 seconds |                            N/A |
+| zMRETestFixture.dsn                | -mt 11 -us global -is prioritized         |     18.99 seconds |  92 minutes<br/>  43 seconds |                         50.84% |
+| zMRETestFixture.dsn                | -mt 11 -us hybrid -hr 1:1 -is prioritized |     18.40 seconds |  33 minutes<br/>   2 seconds |                         51.08% |
+| zMRETestFixture.dsn                | -mt 11 -us hybrid -hr 1:3 -is prioritized |     18.48 seconds |  30 minutes<br/>  35 seconds |                         50.98% |
 
 | File                               | Settings                                    | Auto-routing time | Route optimization time | Route optimization improvement |
 |------------------------------------|---------------------------------------------|------------------:|------------------------:|-------------------------------:|
