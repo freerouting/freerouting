@@ -97,7 +97,7 @@ A complete command line looks something like this if your are using PowerShell o
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
 
 
-## Multi-threaded Implementation of Routing Optimization
+## Multi-threaded implementation of route optimization
 
 After Freerouting completes auto-routing it switches to the next phase, called route optimization to improve the board even further. Multi-threading reduces the time it will take to do this second step.
 
@@ -110,23 +110,23 @@ it's possible to prioritize items with better scores when selecting items to pro
 
 Test runs on a 12-core system using freerouting v1.5.0:
 
-| Settings                                  | Auto-routing time | Route optimization time | Route optimization improvement |
-|-------------------------------------------|------------------:|------------------------:|:------------------------------:|
-| -mt 0                                     |     18.00 seconds |                    N/A  |                            N/A |
-| -mt 1 -us greedy -is prioritized          |     18.50 seconds |              55 minutes |                         51.02% |
-| -mt 11 -us greedy -is prioritized         |     19.95 seconds |              13 minutes |                         50.85% |
-| -mt 11 -us greedy -is sequential          |     19.31 seconds |              20 minutes |                         50.32% |
-| -mt 11 -us greedy -is random              |     18.68 seconds |              14 minutes |                            N/A |
-| -mt 11 -us global -is prioritized         |     18.99 seconds |              93 minutes |                         50.84% |
-| -mt 11 -us hybrid -hr 1:1 -is prioritized |     18.40 seconds |              33 minutes |                         51.08% |
-| -mt 11 -us hybrid -hr 1:3 -is prioritized |     18.48 seconds |              31 minutes |                         50.98% |
+| Settings                           | Auto-routing time | Route optimization time | Route optimization improvement |
+|------------------------------------|------------------:|------------------------:|:------------------------------:|
+| -mt 0                              |     18.00 seconds |                    N/A  |                            N/A |
+| -mt 1 -us greedy -is prioritized   |     18.50 seconds |              55 minutes |                         51.02% |
+| -mt 11 -us greedy -is prioritized  |     19.95 seconds |              13 minutes |                         50.85% |
+| -mt 11 -us greedy -is sequential   |     19.31 seconds |              20 minutes |                         50.32% |
+| -mt 11 -us greedy -is random       |     18.68 seconds |              14 minutes |                            N/A |
+| -mt 11 -us global -is prioritized  |     18.99 seconds |              93 minutes |                         50.84% |
+| -mt 11 -us hybrid -hr 1:1          |     18.40 seconds |              33 minutes |                         51.08% |
+| -mt 11 -us hybrid -hr 1:3          |     18.48 seconds |              31 minutes |                         50.98% |
 
-| File                               | Settings  | Auto-routing time | Route optimization time | Route optimization improvement |
-|------------------------------------|-----------|------------------:|------------------------:|-------------------------------:|
-| zMRETestFixture.dsn                |           |     19.95 seconds |             797 seconds |                         50.85% |
-| zMRETestFixture.dsn                | -oit 0.25 |     18.18 seconds |              49 seconds |                         50.23% |
-| Mars-64-revE-rot00.dsn             | -oit 0.25 |     26.27 seconds |              29 seconds |                         51.03% |
-| smoothieboard.dsn                  | -oit 0.25 |    488.25 seconds |              60 seconds |                            N/A |
+| File                         | Settings  | Auto-routing time | Route optimization time | Route optimization improvement |
+|------------------------------|-----------|------------------:|------------------------:|-------------------------------:|
+| zMRETestFixture.dsn          |           |     19.95 seconds |             797 seconds |                         50.85% |
+| zMRETestFixture.dsn          | -oit 0.25 |     18.18 seconds |              49 seconds |                         50.23% |
+| Mars-64-revE.dsn             | -oit 0.25 |     26.27 seconds |              29 seconds |                         51.03% |
+| smoothieboard.dsn            | -oit 0.25 |    488.25 seconds |              60 seconds |                            N/A |
 
 All parameters defaults are set according to these test results, so you don't need to change them unless you have a special need.
 
