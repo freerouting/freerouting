@@ -15,7 +15,7 @@ plugins {
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '2.15.1'
     id 'com.jfrog.bintray' version '1.8.5'
-    id 'com.github.ben-manes.versions' version '0.41.0'
+    id 'com.github.ben-manes.versions' version '0.42.0'
 
     // jigsaw:
 //    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
