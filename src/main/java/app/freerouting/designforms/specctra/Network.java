@@ -106,6 +106,49 @@ public class Network extends ScopeKeyword
                 }
             }
         }
+
+        // Add any vias defined in the Netclasses to the list of vias to be instantiated
+        for (NetClass n : classes)
+        {
+                if (p_par.via_padstack_names != null) {
+                        p_par.via_padstack_names.addAll(n.use_via);
+                } else {
+                        p_par.via_padstack_names = n.use_via;
+                }
+        }
+
+        app.freerouting.board.RoutingBoard board = p_par.board_handling.get_routing_board();
+
+        // Set the via padstacks after network parsing, so that named vias from both structure and network DSN sections are properly instantiated .
+        if (p_par.via_padstack_names != null)
+        {
+            app.freerouting.library.Padstack[] via_padstacks = new app.freerouting.library.Padstack[p_par.via_padstack_names.size()];
+            Iterator<String> it = p_par.via_padstack_names.iterator();
+            int found_padstack_count = 0;
+            for (int i = 0; i < via_padstacks.length; ++i)
+            {
+                String curr_padstack_name = it.next();
+                app.freerouting.library.Padstack curr_padstack = board.library.padstacks.get(curr_padstack_name);
+                if (curr_padstack != null)
+                {
+                    via_padstacks[found_padstack_count] = curr_padstack;
+                    ++found_padstack_count;
+                }
+                else
+                {
+                    FRLogger.warn("Library.read_scope: via padstack with name '" + curr_padstack_name + " not found");
+                }
+            }
+            if (found_padstack_count != via_padstacks.length)
+            {
+                // Some via padstacks were not found in the padstacks scope of the dsn-file.
+                app.freerouting.library.Padstack[] corrected_padstacks = new app.freerouting.library.Padstack[found_padstack_count];
+                System.arraycopy(via_padstacks, 0, corrected_padstacks, 0, found_padstack_count);
+                via_padstacks = corrected_padstacks;
+            }
+            board.library.set_via_padstacks(via_padstacks);
+        }
+        
         insert_via_infos(via_infos, p_par.board_handling.get_routing_board(), p_par.via_at_smd_allowed);
         insert_via_rules(via_rules, p_par.board_handling.get_routing_board());
         insert_net_classes(classes, p_par);
