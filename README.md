@@ -105,6 +105,21 @@ Using freerouting from within pcb-rnd
 7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
 
 
+Using headless/GUI-less freerouting from within pcb-rnd
+
+1) Download the latest freerouting_cli from the svn [repo](http://repo.hu/projects/freerouting_cli/cli.html)
+
+2) cd freerouting_cli/trunk and run make, followed by sudo make install
+
+3) Start pcb-rnd and load your layout
+
+4) Open the external autorouter window with (Connect / Automatic Routing / External autorouter...)
+
+5) Select the freerouting_cli tab, and push the "Route" button.
+
+7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
+
+
 ## Using the command line arguments
 
 Freerouter was designed as a GUI program, but it also can function as a command line tool. Typically you would have an input file (e.g. Specctra DSN) that you exported from you EDA (e.g. KiCad). If this file has unconnected routes, you would want to wire those with autorouter, and save the result in a format that you can then import back into your EDA.
