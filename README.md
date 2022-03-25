@@ -107,7 +107,7 @@ Using freerouting from within pcb-rnd
 
 Using headless/GUI-less freerouting from within pcb-rnd
 
-1) Download the latest freerouting_cli from the svn [repo](http://repo.hu/projects/freerouting_cli/cli.html)
+1) Download the latest freerouting_cli from the svn [repo](http://repo.hu/projects/freerouting_cli/)
 
 2) cd freerouting_cli/trunk and run make, followed by sudo make install
 
