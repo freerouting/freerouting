@@ -94,7 +94,7 @@ Using freerouting from within pcb-rnd
 
 2) Unzip it and rename the top directory freerouting-1.5.0-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
 
-3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / arextern / freerouting_net...); the location of the executable can be customised.
+3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
 
 4) Load your layout
 
@@ -103,7 +103,6 @@ Using freerouting from within pcb-rnd
 6) Select the freerouting.net tab, and push the "Route" button.
 
 7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
-
 
 
 ## Using the command line arguments
