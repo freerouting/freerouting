@@ -69,7 +69,7 @@ For more information please use the online help in the board editor. From here y
 
 
 
-### Additional steps for users of pcb-rnd
+### Additional steps for users of pcb-rnd [pcb-rnd](https://www.repo.hu/projects/pcb-rnd)
 
 Using the standalone freerouting application
 
@@ -103,22 +103,6 @@ Using freerouting from within pcb-rnd
 6) Select the freerouting.net tab, and push the "Route" button.
 
 7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
-
-
-Using headless/GUI-less freerouting from within pcb-rnd
-
-1) Download the latest freerouting_cli from the svn [repo](http://repo.hu/projects/freerouting_cli/)
-
-2) cd freerouting_cli/trunk and run make, followed by sudo make install
-
-3) Start pcb-rnd and load your layout
-
-4) Open the external autorouter window with (Connect / Automatic Routing / External autorouter...)
-
-5) Select the freerouting_cli tab, and push the "Route" button.
-
-7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
-
 
 ## Using the command line arguments
 
