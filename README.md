@@ -69,7 +69,7 @@ For more information please use the online help in the board editor. From here y
 
 
 
-### Additional steps for users of [pcb-rnd](https://www.repo.hu/projects/pcb-rnd)
+### Additional steps for users of [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
 
 Using the standalone freerouting application
 
