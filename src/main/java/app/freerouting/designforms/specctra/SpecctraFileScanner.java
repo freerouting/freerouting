@@ -1,4 +1,6 @@
 package app.freerouting.designforms.specctra;
+import app.freerouting.logger.FRLogger;
+
 @SuppressWarnings("all")
 
 /**
@@ -1401,7 +1403,9 @@ class SpecctraFileScanner implements Scanner {
           }
         case 230: break;
         case 2: 
-          { throw new Error("Illegal character '"+yytext()+"' was found at position " + zzCurrentPos);
+          { string.append("X");
+            FRLogger.warn("Illegal character '" + yytext() + "' found at position "
+                           + zzCurrentPos + " replaced with 'X'.");
           }
         case 231: break;
         case 95: 

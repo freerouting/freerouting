@@ -77,36 +77,6 @@ public class Library extends ScopeKeyword
             }
         }
         
-        // Set the via padstacks.
-        if (p_par.via_padstack_names != null)
-        {
-            app.freerouting.library.Padstack[] via_padstacks = new app.freerouting.library.Padstack[p_par.via_padstack_names.size()];
-            Iterator<String> it = p_par.via_padstack_names.iterator();
-            int found_padstack_count = 0;
-            for (int i = 0; i < via_padstacks.length; ++i)
-            {
-                String curr_padstack_name = it.next();
-                app.freerouting.library.Padstack curr_padstack = board.library.padstacks.get(curr_padstack_name);
-                if (curr_padstack != null)
-                {
-                    via_padstacks[found_padstack_count] = curr_padstack;
-                    ++found_padstack_count;
-                }
-                else
-                {
-                    FRLogger.warn("Library.read_scope: via padstack with name '" + curr_padstack_name + " not found");
-                }
-            }
-            if (found_padstack_count != via_padstacks.length)
-            {
-                // Some via padstacks were not found in the padstacks scope of the dsn-file.
-                app.freerouting.library.Padstack[] corrected_padstacks = new app.freerouting.library.Padstack[found_padstack_count];
-                System.arraycopy(via_padstacks, 0, corrected_padstacks, 0, found_padstack_count);
-                via_padstacks = corrected_padstacks;
-            }
-            board.library.set_via_padstacks(via_padstacks);
-        }
-        
         // Create the library packages on the board
         board.library.packages = new app.freerouting.library.Packages(board.library.padstacks);
         Iterator<Package> it = package_list.iterator();

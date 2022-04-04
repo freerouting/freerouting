@@ -68,6 +68,42 @@ For more information please use the online help in the board editor. From here y
 6) Go back to KiCad's Pcbnew and import the results (File / Import Specctra Session...).
 
 
+
+### Additional steps for users of [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
+
+Using the standalone freerouting application
+
+1) Download the latest freerouting-1.5.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases) page
+
+2) Start pcb-rnd and load your layout.
+
+3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
+
+4) Start the router by running the freerouting-executable.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+
+5) Do the routing.
+
+5) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
+
+6) Go back to pcb-rnd and import the results (File / Import autorouted dsn/ses file...). Track widths and clearances during autorouting are based on the currently selected route style during DSN export.
+
+
+Using freerouting from within pcb-rnd
+
+1) Download the latest freerouting-1.5.0-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
+
+2) Unzip it and rename the top directory freerouting-1.5.0-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
+
+3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
+
+4) Load your layout
+
+5) Open the external autorouter window with (Connect / Automatic Routing / External autorouter...)
+
+6) Select the freerouting.net tab, and push the "Route" button.
+
+7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
+
 ## Using the command line arguments
 
 Freerouter was designed as a GUI program, but it also can function as a command line tool. Typically you would have an input file (e.g. Specctra DSN) that you exported from you EDA (e.g. KiCad). If this file has unconnected routes, you would want to wire those with autorouter, and save the result in a format that you can then import back into your EDA.
