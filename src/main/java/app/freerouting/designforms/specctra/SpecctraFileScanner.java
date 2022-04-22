@@ -714,6 +714,38 @@ class SpecctraFileScanner implements Scanner {
   }
 
 
+  static long illegalCharCounter = 0;
+
+  private static String cyr2lat(char ch) {
+		if (ch>127) {
+			return new String("illegalCharacterDetectedHereAndReplaced" + Long.toString(illegalCharCounter++));
+		} else {
+			return String.valueOf(ch);
+		}
+	}
+
+
+	public static String cyr2latStr(String s) {
+		String sb = new String();
+		for (char ch : s.toCharArray()) {
+			String ssb = "";
+			ssb += ch;
+			ssb = cyr2lat(ssb.toCharArray()[0]);
+            sb += ssb;
+		}
+		return sb;
+	}
+
+  private char[] changeNonASCIICharacters(char[] inbuff){
+    //System.out.println(new String(inbuff));
+    String s = new String(inbuff);
+    //System.out.println(s);
+    s = cyr2latStr(s);
+    //System.out.println(s);
+    return s.toCharArray();
+  }
+
+
   /**
    * Refills the input buffer.
    *
@@ -746,8 +778,13 @@ class SpecctraFileScanner implements Scanner {
     }
 
     /* finally: fill the buffer with new input */
+
     int numRead = zzReader.read(zzBuffer, zzEndRead,
                                             zzBuffer.length-zzEndRead);
+
+    int beforeCheakMassSize = zzBuffer.length;
+    zzBuffer=changeNonASCIICharacters(zzBuffer);
+    numRead+=zzBuffer.length-beforeCheakMassSize;//Array size correction
 
     if (numRead < 0) {
       return true;
@@ -756,6 +793,7 @@ class SpecctraFileScanner implements Scanner {
       zzEndRead+= numRead;
       return false;
     }
+
   }
 
     
@@ -884,6 +922,10 @@ class SpecctraFileScanner implements Scanner {
     zzMarkedPos -= number;
   }
 
+  /**
+  *the number of the last illegal character encountered
+  */
+  private static long illegalSymbolNumber=0;
 
   /**
    * Resumes scanning until the next regular expression is matched,
@@ -1403,9 +1445,11 @@ class SpecctraFileScanner implements Scanner {
           }
         case 230: break;
         case 2: 
-          { string.append("X");
+          {
+            string.append("X");
             FRLogger.warn("Illegal character '" + yytext() + "' found at position "
                            + zzCurrentPos + " replaced with 'X'.");
+            break;
           }
         case 231: break;
         case 95: 
