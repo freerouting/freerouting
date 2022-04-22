@@ -1,5 +1,6 @@
 package app.freerouting.designforms.specctra;
 import app.freerouting.logger.FRLogger;
+import java.util.Vector;
 
 @SuppressWarnings("all")
 
@@ -716,9 +717,20 @@ class SpecctraFileScanner implements Scanner {
 
   static long illegalCharCounter = 0;
 
+
+    static Vector<String> symbVector = new Vector<>();
+    static Vector<String> symbSubsVector = new Vector<>();
+
   private static String cyr2lat(char ch) {
-		if (ch>127) {
-			return new String("illegalCharacterDetectedHereAndReplaced" + Long.toString(illegalCharCounter++));
+		if (ch > 127) {
+			if (symbVector.contains(String.valueOf(ch))) {
+				return symbSubsVector.elementAt(symbVector.indexOf(String.valueOf(ch)));
+			} else {
+				String sub = "ilCh" + Long.toString(illegalCharCounter++);
+				symbVector.add(String.valueOf(ch));
+				symbSubsVector.add(sub);
+				return sub;
+			}
 		} else {
 			return String.valueOf(ch);
 		}
@@ -730,18 +742,15 @@ class SpecctraFileScanner implements Scanner {
 		for (char ch : s.toCharArray()) {
 			String ssb = "";
 			ssb += ch;
-			ssb = cyr2lat(ssb.toCharArray()[0]);
-            sb += ssb;
+            ssb = cyr2lat(ch);
+			sb += ssb;
 		}
 		return sb;
 	}
 
   private char[] changeNonASCIICharacters(char[] inbuff){
-    //System.out.println(new String(inbuff));
     String s = new String(inbuff);
-    //System.out.println(s);
     s = cyr2latStr(s);
-    //System.out.println(s);
     return s.toCharArray();
   }
 
