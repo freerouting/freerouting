@@ -922,10 +922,6 @@ class SpecctraFileScanner implements Scanner {
     zzMarkedPos -= number;
   }
 
-  /**
-  *the number of the last illegal character encountered
-  */
-  private static long illegalSymbolNumber=0;
 
   /**
    * Resumes scanning until the next regular expression is matched,
