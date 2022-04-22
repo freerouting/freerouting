@@ -726,7 +726,7 @@ class SpecctraFileScanner implements Scanner {
 			if (symbVector.contains(String.valueOf(ch))) {
 				return symbSubsVector.elementAt(symbVector.indexOf(String.valueOf(ch)));
 			} else {
-				String sub = "ilCh" + Long.toString(illegalCharCounter++);
+				String sub = "illegalCharacterNumber" + Long.toString(illegalCharCounter++);
 				symbVector.add(String.valueOf(ch));
 				symbSubsVector.add(sub);
 				return sub;
