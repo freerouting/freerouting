@@ -33,11 +33,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: joschi/setup-jdk@v2 
+    - name: Set up JDK
+      uses: actions/setup-java@v3 
       with:
-          java-version: '11'
-          architecture: 'x64'
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
@@ -81,11 +81,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: joschi/setup-jdk@v2 
+    - name: Set up JDK
+      uses: actions/setup-java@v3 
       with:
-          java-version: '11'
-          architecture: 'x64'
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
@@ -107,11 +107,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: joschi/setup-jdk@v2 
+    - name: Set up JDK
+      uses: actions/setup-java@v3 
       with:
-          java-version: '11'
-          architecture: 'x32'
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
