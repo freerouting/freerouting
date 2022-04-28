@@ -1,9 +1,7 @@
-@echo off
-
 SET APP_VERSION=%1
 SET APP_TYPE="msi"
-SET JPACKAGE_JVM="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.2+8/OpenJDK17U-jdk_x64_windows_hotspot_17.0.2_8.zip"
-SET JPACKAGE_HOME=.jdk\jdk-17.0.2+8
+SET JPACKAGE_JVM="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3+7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.3_7.zip"
+SET JPACKAGE_HOME=.jdk\jdk-17.0.3+7
 
 set DIR="%~dp0\"
 cd %DIR%
@@ -38,8 +36,8 @@ if exist ".jdk\" (
 cd %DIR%
 
 echo "> creating installer .msi"
-"%JPACKAGE_HOME%\bin\jpackage.exe" --input "..\build\libs" --main-jar "freerouting-executable.jar" --name "Freerouting" --type %APP_TYPE% --runtime-image "%JPACKAGE_HOME%\runtime" --app-version %APP_VERSION% --win-per-user-install --win-menu --win-menu-group Freerouting --license-file "..\LICENSE"
+"%JPACKAGE_HOME%\bin\jpackage.exe" --input "..\build\libs" --main-jar "freerouting-executable.jar" --name "freerouting" --type %APP_TYPE% --runtime-image "%JPACKAGE_HOME%\runtime" --app-version %APP_VERSION% --win-per-user-install --win-menu --win-menu-group freerouting --license-file "..\LICENSE"
 
-move Freerouting-%APP_VERSION%.msi freerouting-%APP_VERSION%-windows-x64.msi
+move freerouting-%APP_VERSION%.msi freerouting-%APP_VERSION%-windows-x64.msi
 
 :exit
