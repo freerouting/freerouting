@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="filename">logs/freerouter.log</Property>
+        <Property name="filename">logs/freerouting.log</Property>
     </Properties>
     <ThresholdFilter level="trace"/>
 
