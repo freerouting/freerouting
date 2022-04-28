@@ -90,7 +90,7 @@ jobs:
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"   
+      run: distribution\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-windows-x64.msi'
