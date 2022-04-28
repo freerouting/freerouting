@@ -27,8 +27,8 @@ wrapper {
     gradleVersion = '7.3'
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 gradle.projectsEvaluated {
