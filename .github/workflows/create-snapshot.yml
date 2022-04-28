@@ -67,7 +67,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew dist  
     - name: Create Distribution   
-      run: distribution/create-distribution-linux.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
+      run: distribution/create-distribution-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
     - uses: AButler/upload-release-assets@v2.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
