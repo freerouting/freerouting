@@ -38,7 +38,7 @@ if exist ".jdk\" (
 cd %DIR%
 
 echo "> creating installer .msi"
-"%JPACKAGE_HOME%\bin\jpackage.exe" --input "..\build\libs" --main-jar "freerouting-executable.jar" --name "Freerouting" --type %APP_TYPE% --runtime-image "%JPACKAGE_HOME%\runtime" --app-version %APP_VERSION% --win-per-user-install --win-menu --win-menu-group Freerouting --license-file "..\LICENSE"
+"%JPACKAGE_HOME%\bin\jpackage.exe" --input "..\build\libs" --main-jar "freerouting-executable.jar" --name "Freerouting" --type %APP_TYPE% --runtime-image "%JPACKAGE_HOME%\runtime" --app-version 0.0.0 --win-per-user-install --win-menu --win-menu-group Freerouting --license-file "..\LICENSE"
 
 move freerouting-0.0.0.msi freerouting-%APP_VERSION%-windows-x86.msi
 
