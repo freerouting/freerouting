@@ -18,6 +18,7 @@ jobs:
     - name: Delete old SNAPSHOT assets
       uses: mknejp/delete-release-assets@v1
       with:
+        fail-if-no-assets: false
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: SNAPSHOT
         assets: | 
