@@ -20,8 +20,9 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Build with Gradle
-      run: .\gradlew.bat dist 
+      run: .\gradlew.bat dist --no-daemon
     - name: Get Tag name 
       uses: olegtarasov/get-tag@v2.1
       id: tagName
@@ -47,10 +48,11 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist  
+      run: ./gradlew dist
     - name: Get Tag name 
       uses: olegtarasov/get-tag@v2.1    
       id: tagName
@@ -76,8 +78,9 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Build with Gradle
-      run: .\gradlew.bat dist 
+      run: .\gradlew.bat dist --no-daemon
     - name: Get Tag name 
       uses: olegtarasov/get-tag@v2.1
       id: tagName
@@ -105,10 +108,11 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist 
+      run: ./gradlew dist
     - name: Get Tag name 
       uses: olegtarasov/get-tag@v2.1
       id: tagName
