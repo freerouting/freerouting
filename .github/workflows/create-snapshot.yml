@@ -39,6 +39,7 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
@@ -62,6 +63,7 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
@@ -87,6 +89,7 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
@@ -111,6 +114,7 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist 
     - name: Create Distribution   
@@ -135,6 +139,7 @@ jobs:
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
