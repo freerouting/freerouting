@@ -100,34 +100,6 @@ jobs:
           release-tag: SNAPSHOT 
           repo-token: ${{ secrets.GITHUB_TOKEN }}   
           
-
-  build-windows-x86:
-
-    if: ${{ false }}
-  
-    needs: delete-old-snapshot-assets
-
-    runs-on: [windows-latest]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v3 
-      with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
-          cache: 'gradle'
-    - name: Build with Gradle
-      run: .\gradlew.bat dist 
-    - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows-x86.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
-    - uses: AButler/upload-release-assets@v2.0
-      with:
-          files: './distribution/freerouting-SNAPSHOT-*-windows-x86.msi'
-          release-tag: SNAPSHOT 
-          repo-token: ${{ secrets.GITHUB_TOKEN }}   
-          
-
   build-macos-x64:
   
     needs: delete-old-snapshot-assets
