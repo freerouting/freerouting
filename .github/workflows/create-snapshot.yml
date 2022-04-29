@@ -41,7 +41,7 @@ jobs:
           java-version: '17'
           cache: 'gradle'
     - name: Build with Gradle
-      run: .\gradlew.bat dist 
+      run: .\gradlew.bat dist --no-daemon
     - name: Create Distribution   
       run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
     - uses: AButler/upload-release-assets@v2.0
@@ -67,7 +67,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist  
+      run: ./gradlew dist
     - name: Create Distribution   
       run: distribution/create-distribution-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
     - uses: AButler/upload-release-assets@v2.0
@@ -91,7 +91,7 @@ jobs:
           java-version: '17'
           cache: 'gradle'
     - name: Build with Gradle
-      run: .\gradlew.bat dist 
+      run: .\gradlew.bat dist --no-daemon
     - name: Create Distribution   
       run: distribution\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"   
     - uses: AButler/upload-release-assets@v2.0
@@ -117,7 +117,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew dist  
+      run: ./gradlew dist
     - name: Create Distribution   
       run: distribution/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
     - uses: AButler/upload-release-assets@v2.0
