@@ -26,7 +26,6 @@ $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
 		--vm=server \
 		--compress=2 \
 		--output $JAVA_HOME/runtime
-fi
 
 echo "> Creating the package"
 $JAVA_HOME/bin/jpackage --input ../build/dist/ \
