@@ -6,7 +6,7 @@ SET APP_TYPE="msi"
 echo "> JAVA_HOME="%JAVA_HOME%
 
 set DIR="%~dp0\"
-echo "> Project directory="%DIR%
+echo "> Distribution directory="%DIR%
 cd %DIR%
 
 echo "> Building the Java runtime"
