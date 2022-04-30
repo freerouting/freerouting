@@ -9,6 +9,16 @@ public interface Scanner
      * Reads the next token from the input file.
      */
     Object next_token() throws java.io.IOException;
+
+    /**
+     * Reads the next token as a string from the input file.
+     */
+    String next_string();
+
+    /**
+     * Reads the next token as a double from the input file.
+     */
+    public Double next_double();
     
     /**
      * Starts a new state.

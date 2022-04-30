@@ -227,13 +227,10 @@ public class Component extends ScopeKeyword
                     new java.util.TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
             java.util.Map <String, ComponentPlacement.ItemClearanceInfo> place_keepout_infos =
                     new java.util.TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
-            Object next_token = p_scanner.next_token();
-            if (!(next_token instanceof String))
-            {
-                FRLogger.warn("Component.read_place_scope: String expected");
-                return null;
-            }
-            String name = (String) next_token;
+
+            String name = (String) p_scanner.next_string();
+
+            Object next_token = null;
             double[] location = new double[2];
             for (int i = 0; i < 2; ++i)
             {
@@ -254,10 +251,11 @@ public class Component extends ScopeKeyword
                 }
                 else
                 {
-                    FRLogger.warn("Component.read_place_scope: number  expected");
+                    FRLogger.warn("Component.read_place_scope: Double was expected as the second and third parameter of the component/place command.");
                     return null;
                 }
             }
+
             next_token = p_scanner.next_token();
             boolean is_front = true;
             if (next_token == BACK)

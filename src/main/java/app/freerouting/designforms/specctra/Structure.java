@@ -547,15 +547,11 @@ class Structure extends ScopeKeyword
         {
             boolean layer_ok = true;
             boolean is_signal = true;
-            Object next_token = p_scanner.next_token();
-            if (!(next_token instanceof String))
-            {
-                FRLogger.warn("Structure.read_layer_scope: String expected");
-                return false;
-            }
+
+            String layer_string = p_scanner.next_string();
+
             Collection<String> net_names = new LinkedList<String>();
-            String layer_string = (String) next_token;
-            next_token = p_scanner.next_token();
+            Object next_token = p_scanner.next_token();
             while (next_token != Keyword.CLOSED_BRACKET)
             {
                 if (next_token != Keyword.OPEN_BRACKET)

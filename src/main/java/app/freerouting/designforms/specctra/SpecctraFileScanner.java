@@ -1,6 +1,10 @@
 package app.freerouting.designforms.specctra;
 import app.freerouting.logger.FRLogger;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 @SuppressWarnings("all")
 
 /**
@@ -10,6 +14,8 @@ import app.freerouting.logger.FRLogger;
  * <tt>C:/Users/Public/Documents/router/sources/designformats/specctra/SpecctraFileDescription.flex</tt>
  */
 class SpecctraFileScanner implements Scanner {
+
+  public static NumberFormat nf;
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -672,7 +678,7 @@ class SpecctraFileScanner implements Scanner {
   private boolean zzAtEOF;
 
   /* user code: */
-  StringBuffer string = new StringBuffer();
+  StringBuffer stringBuffer = new StringBuffer();
 
 
   /**
@@ -1191,7 +1197,7 @@ class SpecctraFileScanner implements Scanner {
           }
         case 177: break;
         case 7: 
-          { string.setLength(0); yybegin(STRING2);
+          { stringBuffer.setLength(0); yybegin(STRING2);
           }
         case 178: break;
         case 84: 
@@ -1211,7 +1217,9 @@ class SpecctraFileScanner implements Scanner {
           }
         case 182: break;
         case 6: 
-          { string.setLength(0); yybegin(STRING1);
+          {
+            // we are at the beginning of a text string that is surrounded by double quotes
+            stringBuffer.setLength(0); yybegin(STRING1);
           }
         case 183: break;
         case 99: 
@@ -1295,11 +1303,13 @@ class SpecctraFileScanner implements Scanner {
           }
         case 203: break;
         case 12: 
-          { string.append('\\');
+          { stringBuffer.append('\\');
           }
         case 204: break;
         case 15: 
-          { return Double.valueOf(yytext());
+          {
+            // we need to parse the text value as double
+            return Double.valueOf(yytext());
           }
         case 205: break;
         case 42: 
@@ -1355,7 +1365,7 @@ class SpecctraFileScanner implements Scanner {
           }
         case 218: break;
         case 11: 
-          { yybegin(YYINITIAL); return string.toString();
+          { yybegin(YYINITIAL); return stringBuffer.toString();
           }
         case 219: break;
         case 19: 
@@ -1399,13 +1409,16 @@ class SpecctraFileScanner implements Scanner {
           }
         case 229: break;
         case 10: 
-          { string.append( yytext() );
+          {
+            // we are at the end of a text string that is surrounded by double quotes
+            stringBuffer.append( yytext() );
           }
         case 230: break;
         case 2: 
-          { string.append("X");
-            FRLogger.warn("Illegal character '" + yytext() + "' found at position "
-                           + zzCurrentPos + " replaced with 'X'.");
+          {
+            FRLogger.warn("Non-ansi character '" + yytext() + "' found at position "
+                           + zzCurrentPos + " just after '" + stringBuffer + "'.");
+            break;
           }
         case 231: break;
         case 95: 
@@ -1456,5 +1469,41 @@ class SpecctraFileScanner implements Scanner {
     }
   }
 
+  public String next_string() {
+    stringBuffer.setLength(0);
+    int i = 0;
 
+    // let's ignore the trailing spaces
+    while ((zzBuffer[zzMarkedPos + i] == 32) || (zzBuffer[zzMarkedPos + i] == 8)) {
+      i++;
+    }
+
+    // read the actual string until we have a space/tab/new line
+    while ((zzBuffer[zzMarkedPos + i] != 32) && (zzBuffer[zzMarkedPos + i] != 10) && (zzBuffer[zzMarkedPos + i] != 13) && (zzBuffer[zzMarkedPos + i] != 8)) {
+      if ((zzBuffer[zzMarkedPos + i] != 40) && (zzBuffer[zzMarkedPos + i] != 41)) {
+        stringBuffer.append(zzBuffer[zzMarkedPos + i]);
+      }
+      i++;
+    }
+
+    zzStartRead += i - 1;
+    zzCurrentPos += i - 1;
+    zzMarkedPos += i;
+    zzLexicalState = YYINITIAL;
+
+    return stringBuffer.toString();
+  }
+
+  public Double next_double() {
+    String s = next_string();
+
+    if (nf == null){
+      nf = NumberFormat.getInstance(Locale.US);
+    }
+    try {
+      return nf.parse(s).doubleValue();
+    } catch (ParseException e) {
+      return null;
+    }
+  }
 }

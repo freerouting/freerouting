@@ -76,44 +76,59 @@ public abstract class Shape
     }
 
     /**
+     * Gets the layer with a certain name from the layer structure
+     * @param p_layer_structure Layer structure to scan
+     * @param layer_name Name of the layer to scan for
+     * @return Layer object with the defined name
+     */
+    private static Layer get_layer(LayerStructure p_layer_structure, String layer_name)
+    {
+        Layer layer = null;
+
+        if (layer_name.equals(Keyword.PCB_SCOPE.get_name()))
+        {
+            layer = Layer.PCB;
+        }
+        else if (layer_name.equals(Keyword.SIGNAL.get_name()))
+        {
+            layer = Layer.SIGNAL;
+        }
+        else
+        {
+            if (p_layer_structure == null)
+            {
+                FRLogger.warn("Shape.read_circle_scope: p_layer_structure != null expected");
+                return null;
+            }
+
+            int layer_no = p_layer_structure.get_no(layer_name);
+            if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
+            {
+                FRLogger.warn("Shape.read_circle_scope: layer with name '" + layer_name + "' not found in layer structure.");
+                return null;
+            }
+            else
+            {
+                layer = p_layer_structure.arr[layer_no];
+            }
+        }
+
+        return layer;
+    }
+
+
+    /**
      * Reads an object of type PolylinePath from the dsn-file.
      */
     public static PolylinePath read_polyline_path_scope(Scanner p_scanner, LayerStructure p_layer_structure)
     {
         try
         {
-            Layer layer = null;
-            Object next_token = p_scanner.next_token();
-            if (next_token == Keyword.PCB_SCOPE)
-            {
-                layer = Layer.PCB;
-            }
-            else if (next_token == Keyword.SIGNAL)
-            {
-                layer = Layer.SIGNAL;
-            }
-            else
-            {
-                if (p_layer_structure == null)
-                {
-                    FRLogger.warn("PolylinePath.read_scope: only layer types pcb or signal expected");
-                    return null;
-                }
-                if (!(next_token instanceof String))
-                {
-                    FRLogger.warn("PolylinePath.read_scope: layer name string expected");
-                    return null;
-                }
-                int layer_no = p_layer_structure.get_no((String) next_token);
-                if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
-                {
-                    FRLogger.warn("Shape.read_polyline_path_scope: layer name '" + next_token + "' not found in layer structure ");
-                    return null;
-                }
-                layer = p_layer_structure.arr[layer_no];
-            }
-            Collection<Object> corner_list = new LinkedList<Object>();
+            String layer_name = p_scanner.next_string();
+            Layer layer = get_layer(p_layer_structure, layer_name);
 
+            Object next_token;
+            Collection<Object> corner_list = new LinkedList<Object>();
             // read the width and the corners of the path
             for (;;)
             {
@@ -283,41 +298,16 @@ public abstract class Shape
     {
         try
         {
-            Layer rect_layer = null;
-            double[] rect_coor = new double[4];
+            String layer_name = p_scanner.next_string();
+            Layer rect_layer = get_layer(p_layer_structure, layer_name);
+            if (rect_layer == null)
+            {
+                rect_layer = get_layer(p_layer_structure, Keyword.SIGNAL.get_name());
+            }
 
-            Object next_token = p_scanner.next_token();
-            if (next_token == Keyword.PCB_SCOPE)
-            {
-                rect_layer = Layer.PCB;
-            }
-            else if (next_token == Keyword.SIGNAL)
-            {
-                rect_layer = Layer.SIGNAL;
-            }
-            else if (p_layer_structure != null)
-            {
-                if (!(next_token instanceof String))
-                {
-                    FRLogger.warn("Shape.read_rectangle_scope: layer name string expected");
-                    return null;
-                }
-                String layer_name = (String) next_token;
-                int layer_no = p_layer_structure.get_no(layer_name);
-                if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
-                {
-                    FRLogger.warn("Shape.read_rectangle_scope: layer name " + layer_name + " not found in layer structure ");
-                }
-                else
-                {
-                    rect_layer = p_layer_structure.arr[layer_no];
-                }
-            }
-            else
-            {
-                rect_layer = Layer.SIGNAL;
-            }
-            // fill the the rectangle
+            Object next_token;
+            double[] rect_coor = new double[4];
+            // fill the rectangle
             for (int i = 0; i < 4; ++i)
             {
                 next_token = p_scanner.next_token();
@@ -465,43 +455,12 @@ public abstract class Shape
     {
         try
         {
-            Layer circle_layer = null;
-            boolean layer_ok = true;
-            double[] circle_coor = new double[3];
+            String layer_name = p_scanner.next_string();
+            Layer circle_layer = get_layer(p_layer_structure, layer_name);
 
-            Object next_token = p_scanner.next_token();
-            if (next_token == Keyword.PCB_SCOPE)
-            {
-                circle_layer = Layer.PCB;
-            }
-            else if (next_token == Keyword.SIGNAL)
-            {
-                circle_layer = Layer.SIGNAL;
-            }
-            else
-            {
-                if (p_layer_structure == null)
-                {
-                    FRLogger.warn("Shape.read_circle_scope: p_layer_structure != null expected");
-                    return null;
-                }
-                if (!(next_token instanceof String))
-                {
-                    FRLogger.warn("Shape.read_circle_scope: string for layer_name expected");
-                    return null;
-                }
-                int layer_no = p_layer_structure.get_no((String) next_token);
-                if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
-                {
-                    FRLogger.warn("Shape.read_circle_scope: layer with name '" + next_token + "' not found in layer stracture ");
-                    layer_ok = false;
-                }
-                else
-                {
-                    circle_layer = p_layer_structure.arr[layer_no];
-                }
-            }
-            // fill the the the coordinates
+            // fill the coordinates
+            Object next_token;
+            double[] circle_coor = new double[3];
             int curr_index = 0;
             for (;;)
             {
@@ -530,7 +489,8 @@ public abstract class Shape
                 }
                 ++curr_index;
             }
-            if (!layer_ok)
+
+            if (circle_layer == null)
             {
                 return null;
             }
@@ -550,42 +510,11 @@ public abstract class Shape
     {
         try
         {
-            Layer layer = null;
-            boolean layer_ok = true;
-            Object next_token = p_scanner.next_token();
-            if (next_token == Keyword.PCB_SCOPE)
-            {
-                layer = Layer.PCB;
-            }
-            else if (next_token == Keyword.SIGNAL)
-            {
-                layer = Layer.SIGNAL;
-            }
-            else
-            {
-                if (p_layer_structure == null)
-                {
-                    FRLogger.warn("Shape.read_polygon_path_scope: only layer types pcb or signal expected");
-                    return null;
-                }
-                if (!(next_token instanceof String))
-                {
-                    FRLogger.warn("Path.read_scope: layer name string expected");
-                    return null;
-                }
-                int layer_no = p_layer_structure.get_no((String) next_token);
-                if (layer_no < 0 || layer_no >= p_layer_structure.arr.length)
-                {
-                    FRLogger.warn("Shape.read_polygon_path_scope: layer with name '" + next_token + "' not found in layer structure ");
-                    layer_ok = false;
-                }
-                else
-                {
-                    layer = p_layer_structure.arr[layer_no];
-                }
-            }
-            Collection<Object> corner_list = new LinkedList<Object>();
+            String layer_name = p_scanner.next_string();
+            Layer layer = get_layer(p_layer_structure, layer_name);
 
+            Object next_token;
+            Collection<Object> corner_list = new LinkedList<Object>();
             // read the width and the corners of the path
             for (;;)
             {
@@ -607,7 +536,7 @@ public abstract class Shape
                 FRLogger.warn("Shape.read_polygon_path_scope: to few numbers in scope");
                 return null;
             }
-            if (!layer_ok)
+            if (layer == null)
             {
                 return null;
             }

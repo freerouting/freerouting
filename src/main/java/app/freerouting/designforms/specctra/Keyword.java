@@ -9,7 +9,7 @@ public class Keyword
     /**
      * The only instances of the internal classes:
      *
-     * ScopeKeywords  with an inividual read_scope method are defined in an extra class,
+     * ScopeKeywords with an individual read_scope method are defined in an extra class,
      */
     public static final Keyword ABSOLUTE = new Keyword("absolute");
     public static final Keyword ACTIVE = new Keyword("active");
