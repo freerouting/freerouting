@@ -1,0 +1,222 @@
+(pcb "/media/bond12/Home/Для обработки данных/testProjectFromFreeroutingBugTest/testProjectFromFreeroutingBugTest.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "6.0.4-6f826c9f35~116~ubuntu21.10.1")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  173200 -119800  117100 -119800  117100 -76700  173200 -76700
+            173200 -119800)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200.1)
+      (clearance 200.1 (type default_smd))
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Package_DIP:DIP-16_W7.62mm_SMDSocket_SmallPads"
+      (place Микросхема2 156100.000000 -100600.000000 front 0.000000 (PN 4020))
+    )
+    (component "Package_DIP:DIP-8_W7.62mm"
+      (place Микросхема1 130800.000000 -91300.000000 front 0.000000 (PN Привет))
+    )
+  )
+  (library
+    (image "Package_DIP:DIP-16_W7.62mm_SMDSocket_SmallPads"
+      (outline (path signal 120  2650 10220  1000 10220))
+      (outline (path signal 120  -1000 10220  -2650 10220))
+      (outline (path signal 120  -5140 -10280  5140 -10280))
+      (outline (path signal 120  -5140 10280  -5140 -10280))
+      (outline (path signal 120  2650 -10220  2650 10220))
+      (outline (path signal 120  5140 -10280  5140 10280))
+      (outline (path signal 120  -2650 -10220  2650 -10220))
+      (outline (path signal 120  -2650 10220  -2650 -10220))
+      (outline (path signal 120  5140 10280  -5140 10280))
+      (outline (path signal 0  1042.43 10262.4  1060 10220  1041.95 10025.2  988.421 9837.08
+            901.23 9661.98  783.349 9505.88  638.793 9374.1  472.483 9271.13
+            290.083 9200.47  97.804 9164.52  -97.804 9164.52  -290.083 9200.47
+            -472.483 9271.13  -638.793 9374.1  -783.349 9505.88  -901.23 9661.98
+            -988.421 9837.08  -1041.95 10025.2  -1060 10220  -1042.43 10262.4
+            -1000 10280  -957.574 10262.4  -940 10220  -921.938 10036.6
+            -868.447 9860.28  -781.581 9697.76  -664.68 9555.32  -522.236 9438.42
+            -359.722 9351.55  -183.385 9298.06  0 9280  183.385 9298.06
+            359.722 9351.55  522.236 9438.42  664.68 9555.32  781.581 9697.76
+            868.447 9860.28  921.938 10036.6  940 10220  957.574 10262.4
+            1000 10280))
+      (outline (path signal 50  5350 10500  -5350 10500))
+      (outline (path signal 50  5350 -10500  5350 10500))
+      (outline (path signal 50  -5350 -10500  5350 -10500))
+      (outline (path signal 50  -5350 10500  -5350 -10500))
+      (outline (path signal 100  3175 -10160  -3175 -10160))
+      (outline (path signal 100  -2175 10160  3175 10160))
+      (outline (path signal 100  -5080 10220  -5080 -10220))
+      (outline (path signal 100  -5080 -10220  5080 -10220))
+      (outline (path signal 100  -3175 -10160  -3175 9160))
+      (outline (path signal 100  5080 10220  -5080 10220))
+      (outline (path signal 100  -3175 9160  -2175 10160))
+      (outline (path signal 100  3175 10160  3175 -10160))
+      (outline (path signal 100  5080 -10220  5080 10220))
+      (pin Rect[T]Pad_1600x1600_um 1 -3810 8890)
+      (pin Rect[T]Pad_1600x1600_um 2 -3810 6350)
+      (pin Rect[T]Pad_1600x1600_um 3 -3810 3810)
+      (pin Rect[T]Pad_1600x1600_um 4 -3810 1270)
+      (pin Rect[T]Pad_1600x1600_um 5 -3810 -1270)
+      (pin Rect[T]Pad_1600x1600_um 6 -3810 -3810)
+      (pin Rect[T]Pad_1600x1600_um 7 -3810 -6350)
+      (pin Rect[T]Pad_1600x1600_um 8 -3810 -8890)
+      (pin Rect[T]Pad_1600x1600_um 9 3810 -8890)
+      (pin Rect[T]Pad_1600x1600_um 10 3810 -6350)
+      (pin Rect[T]Pad_1600x1600_um 11 3810 -3810)
+      (pin Rect[T]Pad_1600x1600_um 12 3810 -1270)
+      (pin Rect[T]Pad_1600x1600_um 13 3810 1270)
+      (pin Rect[T]Pad_1600x1600_um 14 3810 3810)
+      (pin Rect[T]Pad_1600x1600_um 15 3810 6350)
+      (pin Rect[T]Pad_1600x1600_um 16 3810 8890)
+    )
+    (image "Package_DIP:DIP-8_W7.62mm"
+      (outline (path signal 120  1160 1330  1160 -8950))
+      (outline (path signal 120  6460 1330  4810 1330))
+      (outline (path signal 120  1160 -8950  6460 -8950))
+      (outline (path signal 120  2810 1330  1160 1330))
+      (outline (path signal 120  6460 -8950  6460 1330))
+      (outline (path signal 0  4852.43 1372.43  4870 1330  4851.95 1135.23  4798.42 947.084
+            4711.23 771.982  4593.35 615.883  4448.79 484.102  4282.48 381.127
+            4100.08 310.465  3907.8 274.522  3712.2 274.522  3519.92 310.465
+            3337.52 381.127  3171.21 484.102  3026.65 615.883  2908.77 771.982
+            2821.58 947.084  2768.05 1135.23  2750 1330  2767.57 1372.43
+            2810 1390  2852.43 1372.43  2870 1330  2888.06 1146.62  2941.55 970.278
+            3028.42 807.764  3145.32 665.32  3287.76 548.419  3450.28 461.553
+            3626.61 408.062  3810 390  3993.39 408.062  4169.72 461.553
+            4332.24 548.419  4474.68 665.32  4591.58 807.764  4678.45 970.278
+            4731.94 1146.62  4750 1330  4767.57 1372.43  4810 1390))
+      (outline (path signal 50  -1100 1550  -1100 -9150))
+      (outline (path signal 50  8700 1550  -1100 1550))
+      (outline (path signal 50  -1100 -9150  8700 -9150))
+      (outline (path signal 50  8700 -9150  8700 1550))
+      (outline (path signal 100  635 -8890  635 270))
+      (outline (path signal 100  6985 -8890  635 -8890))
+      (outline (path signal 100  635 270  1635 1270))
+      (outline (path signal 100  1635 1270  6985 1270))
+      (outline (path signal 100  6985 1270  6985 -8890))
+      (pin Rect[A]Pad_1600x1600_um 1 0 0)
+      (pin Oval[A]Pad_1600x1600_um 2 0 -2540)
+      (pin Oval[A]Pad_1600x1600_um 3 0 -5080)
+      (pin Oval[A]Pad_1600x1600_um 4 0 -7620)
+      (pin Oval[A]Pad_1600x1600_um 5 7620 -7620)
+      (pin Oval[A]Pad_1600x1600_um 6 7620 -5080)
+      (pin Oval[A]Pad_1600x1600_um 7 7620 -2540)
+      (pin Oval[A]Pad_1600x1600_um 8 7620 0)
+    )
+    (padstack Oval[A]Pad_1600x1600_um
+      (shape (path F.Cu 1600  0 0  0 0))
+      (shape (path B.Cu 1600  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600x1600_um
+      (shape (rect F.Cu -800 -800 800 800))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1600x1600_um
+      (shape (rect F.Cu -800 -800 800 800))
+      (shape (rect B.Cu -800 -800 800 800))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net "unconnected-(Микросхема1-Pad3)"
+      (pins Микросхема1-3)
+    )
+    (net "unconnected-(Микросхема1-Pad4)"
+      (pins Микросхема1-4)
+    )
+    (net "unconnected-(Микросхема1-Pad5)"
+      (pins Микросхема1-5)
+    )
+    (net "unconnected-(Микросхема1-Pad6)"
+      (pins Микросхема1-6)
+    )
+    (net /цепь1
+      (pins Микросхема2-16 Микросхема1-7)
+    )
+    (net /цепь2
+      (pins Микросхема2-9 Микросхема1-8)
+    )
+    (net "unconnected-(Микросхема2-Pad1)"
+      (pins Микросхема2-1)
+    )
+    (net "unconnected-(Микросхема2-Pad2)"
+      (pins Микросхема2-2)
+    )
+    (net "unconnected-(Микросхема2-Pad3)"
+      (pins Микросхема2-3)
+    )
+    (net "unconnected-(Микросхема2-Pad4)"
+      (pins Микросхема2-4)
+    )
+    (net "unconnected-(Микросхема2-Pad5)"
+      (pins Микросхема2-5)
+    )
+    (net "unconnected-(Микросхема2-Pad6)"
+      (pins Микросхема2-6)
+    )
+    (net "unconnected-(Микросхема2-Pad7)"
+      (pins Микросхема2-7)
+    )
+    (net "unconnected-(Микросхема2-Pad8)"
+      (pins Микросхема2-8)
+    )
+    (net "unconnected-(Микросхема2-Pad12)"
+      (pins Микросхема2-12)
+    )
+    (net "unconnected-(Микросхема2-Pad13)"
+      (pins Микросхема2-13)
+    )
+    (net "unconnected-(Микросхема2-Pad14)"
+      (pins Микросхема2-14)
+    )
+    (net "unconnected-(Микросхема2-Pad15)"
+      (pins Микросхема2-15)
+    )
+    (net /цеп
+      (pins Микросхема2-10 Микросхема1-1)
+    )
+    (net /рус
+      (pins Микросхема2-11 Микросхема1-2)
+    )
+    (class kicad_default
+      (circuit
+        (use_via Via[0-1]_800:400_um)
+      )
+      (rule
+        (width 250)
+        (clearance 200.1)
+      )
+    )
+  )
+  (wiring
+  )
+)
