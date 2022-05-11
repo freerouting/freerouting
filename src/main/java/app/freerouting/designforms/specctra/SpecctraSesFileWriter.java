@@ -17,10 +17,10 @@ import app.freerouting.logger.FRLogger;
 /**
  * Methods to handle a Specctra session file.
  */
-public class SessionFile
+public class SpecctraSesFileWriter
 {
     /**
-     * Creates a Specctra session file to update the host system from the RoutingBooard
+     * Creates a Specctra session file to update the host system from the RoutingBoard
      */
     public static boolean write( BasicBoard p_board, java.io.OutputStream p_output_stream,  String p_design_name)
     {
@@ -80,7 +80,7 @@ public class SessionFile
         p_file.end_scope();
     }
     
-    public static void write_placement(BasicBoard p_board, IdentifierType p_identifier_type,
+    private static void write_placement(BasicBoard p_board, IdentifierType p_identifier_type,
             CoordinateTransform p_coordinate_transform, IndentFileWriter p_file) throws java.io.IOException
     {
         p_file.start_scope();
@@ -97,7 +97,7 @@ public class SessionFile
     /**
      * Writes all components with the package p_package to the session file.
      */
-    public static void write_components(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
+    private static void write_components(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file, app.freerouting.library.Package p_package) throws java.io.IOException
     {
         Collection<app.freerouting.board.Item> board_items =  p_board.get_items();
@@ -138,8 +138,8 @@ public class SessionFile
             p_file.end_scope();
         }
     }
-    
-    public static void write_component(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
+
+    private static void write_component(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file, app.freerouting.board.Component p_component) throws java.io.IOException
     {
         p_file.new_line();
@@ -169,8 +169,8 @@ public class SessionFile
         }
         p_file.write(")");
     }
-    
-    public static void write_was_is(BasicBoard p_board, IdentifierType p_identifier_type,
+
+    private static void write_was_is(BasicBoard p_board, IdentifierType p_identifier_type,
             IndentFileWriter p_file) throws java.io.IOException
     {
         p_file.start_scope();
@@ -292,8 +292,6 @@ public class SessionFile
         }
         p_file.end_scope();
     }
-    
-    
     
     private static void write_network(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file) throws java.io.IOException
@@ -420,7 +418,7 @@ public class SessionFile
         p_file.end_scope();
     }
     
-    static private void write_fixed_state(IndentFileWriter p_file, app.freerouting.board.FixedState p_fixed_state) throws java.io.IOException
+    private static void write_fixed_state(IndentFileWriter p_file, app.freerouting.board.FixedState p_fixed_state) throws java.io.IOException
     {
         if (p_fixed_state.ordinal() <= app.freerouting.board.FixedState.SHOVE_FIXED.ordinal())
         {

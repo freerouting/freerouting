@@ -143,9 +143,9 @@ public class BoardMenuFile extends javax.swing.JMenu
         write_session_file_item.setToolTipText(resources.getString("session_file_tooltip"));
         write_session_file_item.addActionListener(new java.awt.event.ActionListener()
         {
-
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
+                // The user selected the .SES file export function from the File menu
                 board_frame.design_file.write_specctra_session_file(board_frame);
             }
         });

@@ -30,7 +30,7 @@ public class DsnFile
     public static ReadResult read(java.io.InputStream p_input_stream, app.freerouting.interactive.IBoardHandling p_board_handling,
                                   app.freerouting.board.BoardObservers p_observers, app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator, TestLevel p_test_level)
     {
-        Scanner scanner = new SpecctraFileScanner(p_input_stream);
+        Scanner scanner = new SpecctraDsnFileReader(p_input_stream);
         Object curr_token = null;
         for (int i = 0; i < 3; ++i)
         {
@@ -51,7 +51,7 @@ public class DsnFile
             else if (i == 1)
             {
                 keyword_ok = (curr_token == Keyword.PCB_SCOPE);
-                scanner.yybegin(SpecctraFileScanner.NAME); // to overread the name of the pcb for i = 2
+                scanner.yybegin(SpecctraDsnFileReader.NAME); // to overread the name of the pcb for i = 2
             }
             if (!keyword_ok)
             {
@@ -356,7 +356,7 @@ public class DsnFile
     {
         try
         {
-            p_scanner.yybegin(SpecctraFileScanner.NAME);
+            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
@@ -385,7 +385,7 @@ public class DsnFile
         {
             for (;;)
             {
-                p_scanner.yybegin(SpecctraFileScanner.NAME);
+                p_scanner.yybegin(SpecctraDsnFileReader.NAME);
                 Object next_token = p_scanner.next_token();
                 if (next_token == Keyword.CLOSED_BRACKET)
                 {

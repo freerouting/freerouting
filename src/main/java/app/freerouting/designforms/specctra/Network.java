@@ -533,7 +533,7 @@ public class Network extends ScopeKeyword
     {
         try
         {
-            p_scanner.yybegin(SpecctraFileScanner.NAME);
+            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
@@ -541,7 +541,7 @@ public class Network extends ScopeKeyword
                 return null;
             }
             String name = (String) next_token;
-            p_scanner.yybegin(SpecctraFileScanner.NAME);
+            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
             next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
@@ -561,7 +561,7 @@ public class Network extends ScopeKeyword
                 }
                 p_board.library.add_via_padstack(via_padstack);
             }
-            p_scanner.yybegin(SpecctraFileScanner.NAME);
+            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
             next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
@@ -606,7 +606,7 @@ public class Network extends ScopeKeyword
             Collection<String> result = new LinkedList<String>();
             for (;;)
             {
-                p_scanner.yybegin(SpecctraFileScanner.NAME);
+                p_scanner.yybegin(SpecctraDsnFileReader.NAME);
                 Object next_token = p_scanner.next_token();
                 if (next_token == Keyword.CLOSED_BRACKET)
                 {

@@ -17,7 +17,7 @@ public class NetClass
         try
         {
             // read the class name
-            p_scanner.yybegin(SpecctraFileScanner.NAME);
+            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {
@@ -30,7 +30,7 @@ public class NetClass
             // read the nets belonging to the class
             for (;;)
             {
-                p_scanner.yybegin(SpecctraFileScanner.NAME);
+                p_scanner.yybegin(SpecctraDsnFileReader.NAME);
                 next_token = p_scanner.next_token();
                 if (next_token == Keyword.OPEN_BRACKET)
                 {

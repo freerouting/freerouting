@@ -351,7 +351,7 @@ public class Component extends ScopeKeyword
     
     private static  ComponentPlacement.ItemClearanceInfo read_item_clearance_info(Scanner p_scanner) throws java.io.IOException
     {
-        p_scanner.yybegin(SpecctraFileScanner.NAME);
+        p_scanner.yybegin(SpecctraDsnFileReader.NAME);
         Object next_token = p_scanner.next_token();
         if (!(next_token instanceof String))
         {

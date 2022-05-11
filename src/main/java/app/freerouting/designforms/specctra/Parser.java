@@ -129,7 +129,7 @@ public class Parser extends ScopeKeyword
         try
         {
             String[] result = new String[2];
-            p_par.scanner.yybegin(SpecctraFileScanner.NAME);
+            p_par.scanner.yybegin(SpecctraDsnFileReader.NAME);
             Object next_token = p_par.scanner.next_token();
             if (!(next_token instanceof String))
             {
@@ -137,7 +137,7 @@ public class Parser extends ScopeKeyword
                 return null;
             }
             result[0] = (String) next_token;
-            p_par.scanner.yybegin(SpecctraFileScanner.NAME);
+            p_par.scanner.yybegin(SpecctraDsnFileReader.NAME);
             next_token = p_par.scanner.next_token();
             if (!(next_token instanceof String))
             {

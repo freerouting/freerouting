@@ -19,7 +19,7 @@ public class ScopeKeyword extends Keyword
         int open_bracked_count = 1;
         while (open_bracked_count > 0)
         {
-            p_scanner.yybegin(SpecctraFileScanner.NAME);
+            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
             Object curr_token = null;
             try
             {

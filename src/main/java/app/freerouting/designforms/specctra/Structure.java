@@ -594,7 +594,7 @@ class Structure extends ScopeKeyword
                 {
                     for (;;)
                     {
-                        p_scanner.yybegin(SpecctraFileScanner.NAME);
+                        p_scanner.yybegin(SpecctraDsnFileReader.NAME);
                         next_token = p_scanner.next_token();
                         if (next_token == Keyword.CLOSED_BRACKET)
                         {

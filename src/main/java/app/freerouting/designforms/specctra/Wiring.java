@@ -746,7 +746,7 @@ class Wiring extends ScopeKeyword
         try
         {
             int subnet_number = 0;
-            p_scanner.yybegin(SpecctraFileScanner.NAME);
+            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
             Object next_token = p_scanner.next_token();
             if (!(next_token instanceof String))
             {

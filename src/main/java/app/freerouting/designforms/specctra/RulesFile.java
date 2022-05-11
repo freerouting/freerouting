@@ -42,7 +42,7 @@ public class RulesFile
             app.freerouting.interactive.BoardHandling p_board_handling)
     {
         BasicBoard routing_board = p_board_handling.get_routing_board();
-        Scanner scanner =  new SpecctraFileScanner(p_input_stream);
+        Scanner scanner =  new SpecctraDsnFileReader(p_input_stream);
         try
         {
             Object curr_token = scanner.next_token();
@@ -63,7 +63,7 @@ public class RulesFile
                 FRLogger.warn("RulesFile.read: keyword pcb expected");
                 return false;
             }
-            scanner.yybegin(SpecctraFileScanner.NAME);
+            scanner.yybegin(SpecctraDsnFileReader.NAME);
             curr_token = scanner.next_token();
             if (!(curr_token instanceof String) || !curr_token.equals(p_design_name))
             {

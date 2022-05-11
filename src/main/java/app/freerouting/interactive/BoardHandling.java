@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Set;
 
-import app.freerouting.designforms.specctra.SessionFile;
+import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.designforms.specctra.SessionToEagle;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -1085,7 +1085,7 @@ public class BoardHandling extends BoardHandlingHeadless
     }
 
     /**
-     * Writes a session file ins the Specctra ses-format.
+     * Writes a .SES session file in the Specctra ses-format.
      */
     public boolean export_specctra_session_file(String p_design_name, OutputStream p_output_stream)
     {
@@ -1093,7 +1093,7 @@ public class BoardHandling extends BoardHandlingHeadless
         {
             return false;
         }
-        return SessionFile.write(this.get_routing_board(), p_output_stream, p_design_name);
+        return SpecctraSesFileWriter.write(this.get_routing_board(), p_output_stream, p_design_name);
     }
 
     /**

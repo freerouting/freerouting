@@ -75,7 +75,7 @@ public abstract class Rule
             Collection<Rule> rule_list = new LinkedList<Rule>();
             for (;;)
             {
-                p_scanner.yybegin(SpecctraFileScanner.LAYER_NAME);
+                p_scanner.yybegin(SpecctraDsnFileReader.LAYER_NAME);
                 Object next_token = p_scanner.next_token();
                 if (next_token == Keyword.OPEN_BRACKET)
                 {
@@ -289,7 +289,7 @@ public abstract class Rule
                 }
                 for (;;)
                 {
-                    p_scanner.yybegin(SpecctraFileScanner.IGNORE_QUOTE);
+                    p_scanner.yybegin(SpecctraDsnFileReader.IGNORE_QUOTE);
                     next_token = p_scanner.next_token();
                     if (next_token == Keyword.CLOSED_BRACKET)
                     {
