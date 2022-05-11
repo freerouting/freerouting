@@ -14,7 +14,7 @@
 <br/>
 <br/>
 
-[Installers for Windows, macOS and Linux can be downloaded here.](https://github.com/freerouting/freerouting/releases)
+[Installers for Windows and Linux can be downloaded here.](https://github.com/freerouting/freerouting/releases)
 
 ## Introduction
 
