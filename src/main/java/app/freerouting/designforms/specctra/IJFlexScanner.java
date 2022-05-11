@@ -14,6 +14,7 @@ public interface IJFlexScanner
      * Reads the next token as a string from the input file.
      */
     String next_string();
+    String next_string(boolean ignoreNewline);
 
     /**
      * Reads the next token as a double from the input file.

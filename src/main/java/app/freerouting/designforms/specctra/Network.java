@@ -406,7 +406,7 @@ public class Network extends ScopeKeyword
                     }
                     else if (next_token == Keyword.LAYER_RULE)
                     {
-                        FRLogger.warn("Netwark.read_net_scope: layer_rule not yet implemented");
+                        FRLogger.warn("Network.read_net_scope: layer_rule not yet implemented");
                         skip_scope(p_scanner);
                     }
                     else
@@ -514,7 +514,7 @@ public class Network extends ScopeKeyword
     private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list)
     {
         for (;;) {
-            String next_string = p_scanner.next_string();
+            String next_string = p_scanner.next_string(true);
             if (next_string == "") {
                 break;
             }
@@ -524,6 +524,26 @@ public class Network extends ScopeKeyword
             String pin_name = parts[1];
             Net.Pin curr_entry = new Net.Pin(component_name, pin_name);
             p_pin_list.add(curr_entry);
+        }
+
+        Object next_token;
+        try
+        {
+            next_token = p_scanner.next_token();
+        } catch (java.io.IOException e)
+        {
+            FRLogger.error("Network.read_net_pins: IO error scanning file", e);
+            return false;
+        }
+        if (next_token == null)
+        {
+            FRLogger.warn("Network.read_net_pins: unexpected end of file");
+            return false;
+        }
+        if (next_token != CLOSED_BRACKET)
+        {
+            // not end of scope
+            FRLogger.warn("Network.read_net_pins: expected closed bracket is missing");
         }
 
         return true;

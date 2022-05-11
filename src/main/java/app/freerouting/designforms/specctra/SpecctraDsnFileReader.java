@@ -3,6 +3,8 @@ import app.freerouting.logger.FRLogger;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 @SuppressWarnings("all")
@@ -1469,27 +1471,62 @@ class SpecctraDsnFileReader implements IJFlexScanner {
     }
   }
 
+  private Character[] stringSkipTrailing = { 8, 32 };
+  private Character[] stringSkipTrailingNewLines = { 8, 10, 13, 32 };
+  private Character[] stringStopAt = { 8, 10, 13, 32, 40, 41 };
+  private Character[] stringStopAtQuotes = { 10, 13, 34 };
+
   public String next_string() {
+    return next_string(false);
+  }
+
+  public String next_string(boolean ignoreNewline) {
     stringBuffer.setLength(0);
     int i = 0;
 
-    // let's ignore the trailing spaces
-    while ((zzBuffer[zzMarkedPos + i] == 32) || (zzBuffer[zzMarkedPos + i] == 8)) {
+    List<Character> skipTrailing = null;
+
+    if (ignoreNewline) {
+      // let's ignore the leading spaces, tabs and new lines
+      skipTrailing = Arrays.asList(stringSkipTrailingNewLines);
+    } else
+    {
+      // let's ignore the leading spaces, tabs
+      skipTrailing = Arrays.asList(stringSkipTrailing);
+    }
+
+    while ((zzMarkedPos + i < zzBuffer.length) && (skipTrailing.contains(zzBuffer[zzMarkedPos + i]))) {
       i++;
+    }
+
+    boolean skipLastChar = false;
+    List<Character> stopAt = null;
+    if (zzBuffer[zzMarkedPos + i] == 34) {
+      stopAt = Arrays.asList(stringStopAtQuotes);
+      i++;
+      skipLastChar = true;
+    } else
+    {
+      stopAt = Arrays.asList(stringStopAt);
     }
 
     // read the actual string until we have a space/tab/new line
-    while ((zzMarkedPos + i < zzBuffer.length) && (zzBuffer[zzMarkedPos + i] != 32) && (zzBuffer[zzMarkedPos + i] != 10) && (zzBuffer[zzMarkedPos + i] != 13) && (zzBuffer[zzMarkedPos + i] != 8)) {
-      if ((zzBuffer[zzMarkedPos + i] != 40) && (zzBuffer[zzMarkedPos + i] != 41)) {
-        stringBuffer.append(zzBuffer[zzMarkedPos + i]);
-      }
+    while ((zzMarkedPos + i < zzBuffer.length) && (!stopAt.contains(zzBuffer[zzMarkedPos + i]))) {
+      stringBuffer.append(zzBuffer[zzMarkedPos + i]);
       i++;
     }
 
-    zzStartRead += i - 1;
-    zzCurrentPos += i - 1;
-    zzMarkedPos += i;
-    zzLexicalState = YYINITIAL;
+    if (skipLastChar)
+    {
+      i++;
+    }
+
+    if (i > 0) {
+      zzStartRead += i - 1;
+      zzCurrentPos += i - 1;
+      zzMarkedPos += i;
+      zzLexicalState = YYINITIAL;
+    }
 
     return stringBuffer.toString();
   }

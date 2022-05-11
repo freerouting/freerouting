@@ -22,10 +22,10 @@ public class DsnFile
     }
 
     /**
-     * Creates a routing board from a Specctra dns file.
+     * Creates a routing board from a Specctra DSN file.
      * The parameters p_item_observers and p_item_id_no_generator are used,
      * in case the board is embedded into a host system.
-     * Returns false, if an error occured.
+     * Returns false, if an error occurred.
      */
     public static ReadResult read(java.io.InputStream p_input_stream, app.freerouting.interactive.IBoardHandling p_board_handling,
                                   app.freerouting.board.BoardObservers p_observers, app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator, TestLevel p_test_level)

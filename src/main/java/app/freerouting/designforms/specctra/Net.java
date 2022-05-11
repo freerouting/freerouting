@@ -136,5 +136,10 @@ public class Net
         
         public final String component_name;
         public final String pin_name;
+
+        @Override
+        public String toString() {
+            return "Pin{" + component_name + '-' + pin_name + '}';
+        }
     }
 }
