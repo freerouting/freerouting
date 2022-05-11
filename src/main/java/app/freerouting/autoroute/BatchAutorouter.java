@@ -103,6 +103,9 @@ public class BatchAutorouter
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", hdlg.get_locale());
         boolean still_unrouted_items = true;
+        int diffBetweenBoardsCheckSizeDefault = 20;
+        int diffBetweenBoardsCheckSize = diffBetweenBoardsCheckSizeDefault;
+
         while (still_unrouted_items && !this.is_interrupted)
         {
             if (thread.is_stop_auto_router_requested())
@@ -138,7 +141,7 @@ public class BatchAutorouter
             int newTraceDifferences = this.routing_board.diff_traces(boardBefore);
             diffBetweenBoards.add(newTraceDifferences);
 
-            if (diffBetweenBoards.size() > 20) {
+            if (diffBetweenBoards.size() > diffBetweenBoardsCheckSize) {
                 diffBetweenBoards.removeFirst();
 
                 OptionalDouble average = diffBetweenBoards
@@ -148,7 +151,17 @@ public class BatchAutorouter
 
                 if (average.getAsDouble() < 20.0)
                 {
-                    FRLogger.warn("There were only " + average.getAsDouble() + " changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.");
+                    FRLogger.warn("There were only " + average.getAsDouble() + " changes in the last " + diffBetweenBoardsCheckSize + " passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.");
+                    diffBetweenBoardsCheckSize += diffBetweenBoardsCheckSizeDefault;
+
+                    if (diffBetweenBoardsCheckSize > 200)
+                    {
+                        FRLogger.warn("There was so little change during the recent passes that autorouter will be stopped now.");
+                        this.is_interrupted = true;
+                    }
+                } else
+                {
+                    diffBetweenBoardsCheckSize = diffBetweenBoardsCheckSizeDefault;
                 }
             }
             FRLogger.traceExit("BatchAutorouter.autoroute_pass #"+curr_pass_no+" on board '"+current_board_hash+"' making {} changes", newTraceDifferences);
