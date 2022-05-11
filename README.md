@@ -36,11 +36,11 @@ After pushing the Drag button you get into the state for changing the location o
 
 For more information please use the online help in the board editor. From here you can download also a printable version of the online help.
 
-### Additional steps for users of CadSoft-Eagle
+### Additional steps for users of [Autodesk EAGLE](https://www.autodesk.com/products/eagle/overview)
 
-1) Download the latest Eagle2freerouter ulp file
+1) Download the latest [Eagle2freerouter ulp file](http://eagle.autodesk.com/eagle/ulp?utf8=%E2%9C%93&q%5Btitle_or_author_or_description_cont%5D=freerouting&button=)
 
-2) Start Eagle and open in the control panel of Eagle for example the design my_design.brd.
+2) Start EAGLE and open in the control panel of Eagle for example the design my_design.brd.
 
 3) Choose in the Files pulldown-menu of Eagle the item "execute ULP" and select the Eagle2freerouter ulp file. A file with name my_design.dsn is generated.
 
@@ -51,7 +51,7 @@ For more information please use the online help in the board editor. From here y
 6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
 
 
-### Additional steps for users of KiCad
+### Additional steps for users of [KiCad](https://www.kicad.org/)
 
 1) Download the latest freerouting-1.5.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
@@ -167,17 +167,17 @@ Test runs on a 12-core system using freerouting v1.5.0:
 All parameter defaults are set according to these test results, so you don't need to change them unless you have a special need.
 
 
-## Running Freerouting on 32-bit systems
+## Running Freerouting using Java JRE
 
-Unfortunately the modern Java distributions have often limited support for 32-bit executable generation, so it's not trivial at all to have x32 installers that run on 32-bit systems.
-Fortunatelly though the platform independent .JAR files can be run, if the matching Java runtime is installed on the 32-bit system you are planning to use.
+There are only installers for Windows x64 and Linux x64. Fortunatelly though the platform independent .JAR files can be run on the other systems, if the matching Java runtime is installed.
 
 You will need the following steps to make it work:
 1. Get the current JAR release from our [Releases page](https://github.com/freerouting/freerouting/releases)
-2. [Download](https://adoptium.net/releases.html?variant=openjdk11&jvmVariant=hotspot) and install the 32-bit version of the Adoptium Temurin 11 (LTS)
-    * For Windows, select the "x86" architecture from the dropdown
-    * For ARM Linux, select the "arm32" architecture from the dropdown
-3. Run the downloaded JAR file using the installed java.exe
+2. Install [Java JRE](https://adoptium.net/temurin/releases/)
+    * Select your operating system and architecture
+    * Select `JRE` as package type
+    * Select `17` as version
+4. Run the downloaded JAR file using the installed java.exe
     
     `java.exe -jar freerouting-1.5.0.jar`
 
@@ -185,10 +185,10 @@ You will need the following steps to make it work:
 
 ### Requirements
 
-- Java >= 11 ([Adoptium Temurin 11 JRE](https://adoptium.net/releases.html?variant=openjdk11&jvmVariant=hotspot))
+- Java >= 17 ([Adoptium Temurin 17 JRE](https://adoptium.net/temurin/releases/))
 - [Gradle 6.x](https://gradle.org/releases/)
 - Internet connection (dependencies are downloaded automatically)
-- IDE: [Gradle](http://www.gradle.org/) Plugin (not necessary for command line usage)
+- For IDE integration: Gradle extension (not necessary for command line usage)
 
 ### IDE
 
