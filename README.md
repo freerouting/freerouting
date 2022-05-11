@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/res/social_preview/freerouting_social_preview_1280x960_v2.png" alt="Freerouting" title="Freerouting" align="center">
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/design/social_preview/freerouting_social_preview_1280x960_v2.png" alt="Freerouting" title="Freerouting" align="center">
 </p>
 <h1 align="center">Freerouting</h1>
 <h5 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h5>
