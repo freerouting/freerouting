@@ -21,7 +21,7 @@ class SpecctraDsnFileReader implements IJFlexScanner {
   public static final int YYEOF = -1;
 
   /** initial size of the lookahead buffer */
-  private static final int ZZ_BUFFERSIZE = 16384;
+  private static final int ZZ_BUFFERSIZE = 512 * 1024;
 
   /** lexical states */
   public static final int COMPONENT_NAME = 5;
@@ -1479,7 +1479,7 @@ class SpecctraDsnFileReader implements IJFlexScanner {
     }
 
     // read the actual string until we have a space/tab/new line
-    while ((zzBuffer[zzMarkedPos + i] != 32) && (zzBuffer[zzMarkedPos + i] != 10) && (zzBuffer[zzMarkedPos + i] != 13) && (zzBuffer[zzMarkedPos + i] != 8)) {
+    while ((zzMarkedPos + i < zzBuffer.length) && (zzBuffer[zzMarkedPos + i] != 32) && (zzBuffer[zzMarkedPos + i] != 10) && (zzBuffer[zzMarkedPos + i] != 13) && (zzBuffer[zzMarkedPos + i] != 8)) {
       if ((zzBuffer[zzMarkedPos + i] != 40) && (zzBuffer[zzMarkedPos + i] != 41)) {
         stringBuffer.append(zzBuffer[zzMarkedPos + i]);
       }
