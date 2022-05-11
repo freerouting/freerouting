@@ -71,7 +71,7 @@ For more information please use the online help in the board editor. From here y
 
 ### Additional steps for users of [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
 
-Using the standalone freerouting application
+#### Using the standalone freerouting application
 
 1) Download the latest freerouting-1.5.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
@@ -88,7 +88,7 @@ Using the standalone freerouting application
 6) Go back to pcb-rnd and import the results (File / Import autorouted dsn/ses file...). Track widths and clearances during autorouting are based on the currently selected route style during DSN export.
 
 
-Using freerouting from within pcb-rnd
+#### Using freerouting from within pcb-rnd
 
 1) Download the latest freerouting-1.5.0-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
