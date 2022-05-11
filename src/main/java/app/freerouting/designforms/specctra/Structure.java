@@ -485,7 +485,7 @@ class Structure extends ScopeKeyword
         p_par.file.end_scope();
     }
 
-    private static boolean read_boundary_scope(Scanner p_scanner, BoardConstructionInfo p_board_construction_info)
+    private static boolean read_boundary_scope(IJFlexScanner p_scanner, BoardConstructionInfo p_board_construction_info)
     {
         Shape curr_shape = Shape.read_scope(p_scanner, null);
         // overread the closing bracket.
@@ -541,7 +541,7 @@ class Structure extends ScopeKeyword
         return true;
     }
 
-    static boolean read_layer_scope(Scanner p_scanner, BoardConstructionInfo p_board_construction_info, String p_string_quote)
+    static boolean read_layer_scope(IJFlexScanner p_scanner, BoardConstructionInfo p_board_construction_info, String p_string_quote)
     {
         try
         {
@@ -632,7 +632,7 @@ class Structure extends ScopeKeyword
 
     }
 
-    static Collection<String> read_via_padstacks(Scanner p_scanner)
+    static Collection<String> read_via_padstacks(IJFlexScanner p_scanner)
     {
         try
         {
@@ -718,7 +718,7 @@ class Structure extends ScopeKeyword
         return true;
     }
 
-    static app.freerouting.board.AngleRestriction read_snap_angle(Scanner p_scanner)
+    static app.freerouting.board.AngleRestriction read_snap_angle(IJFlexScanner p_scanner)
     {
         try
         {

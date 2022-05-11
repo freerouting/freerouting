@@ -18,7 +18,7 @@ public class SessionToEagle extends javax.swing.JFrame
         
         // create a scanner for reading the session_file.
         
-        Scanner scanner = new SpecctraDsnFileReader(p_session);
+        IJFlexScanner scanner = new SpecctraDsnFileReader(p_session);
         
         // create a file_writer for the eagle script file.
         java.io.OutputStreamWriter file_writer = new java.io.OutputStreamWriter(p_output_stream);
@@ -52,7 +52,7 @@ public class SessionToEagle extends javax.swing.JFrame
         return result;
     }
     
-    SessionToEagle(Scanner p_scanner, java.io.OutputStreamWriter p_out_file, app.freerouting.board.BasicBoard p_board,
+    SessionToEagle(IJFlexScanner p_scanner, java.io.OutputStreamWriter p_out_file, app.freerouting.board.BasicBoard p_board,
                    app.freerouting.board.Unit p_unit, double p_session_file_scale_dominator, double p_board_scale_factor)
     {
         scanner = p_scanner;
@@ -684,7 +684,7 @@ public class SessionToEagle extends javax.swing.JFrame
     
     
     /** The function for scanning the session file */
-    private final Scanner scanner;
+    private final IJFlexScanner scanner;
     
     /** The generated Eagle script file. */
     private final java.io.OutputStreamWriter out_file;

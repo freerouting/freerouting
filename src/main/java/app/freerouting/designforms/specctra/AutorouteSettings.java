@@ -7,7 +7,7 @@ import app.freerouting.logger.FRLogger;
 public class AutorouteSettings
 {
 
-    static app.freerouting.interactive.AutorouteSettings read_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    static app.freerouting.interactive.AutorouteSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         app.freerouting.interactive.AutorouteSettings result = new app.freerouting.interactive.AutorouteSettings(p_layer_structure.arr.length);
         boolean with_fanout = false;
@@ -89,8 +89,8 @@ public class AutorouteSettings
         return result;
     }
 
-    static app.freerouting.interactive.AutorouteSettings read_layer_rule(Scanner p_scanner, LayerStructure p_layer_structure,
-                                                                                 app.freerouting.interactive.AutorouteSettings p_settings)
+    static app.freerouting.interactive.AutorouteSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure,
+                                                                         app.freerouting.interactive.AutorouteSettings p_settings)
     {
         p_scanner.yybegin(SpecctraDsnFileReader.NAME);
         Object next_token;

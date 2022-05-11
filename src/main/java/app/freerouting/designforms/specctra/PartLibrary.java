@@ -135,7 +135,7 @@ public class PartLibrary  extends ScopeKeyword
      * Reads the component list of a logical part mapping.
      * Returns null, if an error occured.
      */
-    private LogicalPartMapping read_logical_part_mapping(Scanner p_scanner)
+    private LogicalPartMapping read_logical_part_mapping(IJFlexScanner p_scanner)
     {
         try
         {
@@ -189,7 +189,7 @@ public class PartLibrary  extends ScopeKeyword
         }
     }
     
-    private LogicalPart read_logical_part(Scanner p_scanner)
+    private LogicalPart read_logical_part(IJFlexScanner p_scanner)
     {
         java.util.Collection<PartPin> part_pins = new java.util.LinkedList<PartPin>();
         Object next_token = null;
@@ -255,7 +255,7 @@ public class PartLibrary  extends ScopeKeyword
         return new LogicalPart(part_name, part_pins);
     }
     
-    private PartPin read_part_pin(Scanner p_scanner)
+    private PartPin read_part_pin(IJFlexScanner p_scanner)
     {
         try
         {

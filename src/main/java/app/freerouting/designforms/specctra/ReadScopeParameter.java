@@ -10,7 +10,7 @@ public class ReadScopeParameter
 {
     
     /** Creates a new instance of ReadScopeParameter */
-    ReadScopeParameter(Scanner p_scanner, app.freerouting.interactive.IBoardHandling p_board_handling,
+    ReadScopeParameter(IJFlexScanner p_scanner, app.freerouting.interactive.IBoardHandling p_board_handling,
                        app.freerouting.board.BoardObservers p_observers,
                        app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator, app.freerouting.board.TestLevel p_test_level)
     {
@@ -21,7 +21,7 @@ public class ReadScopeParameter
         test_level = p_test_level;
     }
     
-    final Scanner scanner;
+    final IJFlexScanner scanner;
     final app.freerouting.interactive.IBoardHandling board_handling;
     final NetList netlist = new NetList();
     

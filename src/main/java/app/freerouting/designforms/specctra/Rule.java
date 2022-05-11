@@ -13,7 +13,7 @@ public abstract class Rule
     /**
      * Returns a collection of objects of class Rule.
      */
-    public static Collection<Rule> read_scope( Scanner p_scanner)
+    public static Collection<Rule> read_scope( IJFlexScanner p_scanner)
     {
         Collection<Rule> result = new LinkedList<Rule>();
         Object next_token = null;
@@ -67,7 +67,7 @@ public abstract class Rule
     /**
      * Reads a LayerRule from dsn-file.
      */
-    public static LayerRule read_layer_rule_scope( Scanner p_scanner)
+    public static LayerRule read_layer_rule_scope( IJFlexScanner p_scanner)
     {
         try
         {
@@ -113,7 +113,7 @@ public abstract class Rule
         }
     }
     
-    public static WidthRule read_width_rule(Scanner p_scanner)
+    public static WidthRule read_width_rule(IJFlexScanner p_scanner)
     {
         try
         {
@@ -253,7 +253,7 @@ public abstract class Rule
         }
     }
     
-    public static ClearanceRule read_clearance_rule(Scanner p_scanner)
+    public static ClearanceRule read_clearance_rule(IJFlexScanner p_scanner)
     {
         try
         {

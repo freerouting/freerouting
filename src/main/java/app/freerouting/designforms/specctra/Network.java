@@ -326,8 +326,8 @@ public class Network extends ScopeKeyword
         p_par.file.end_scope();
     }
 
-    private boolean read_net_scope(Scanner p_scanner, NetList p_net_list, RoutingBoard p_board,
-            CoordinateTransform p_coordinate_transform, LayerStructure p_layer_structure, java.util.Locale p_locale)
+    private boolean read_net_scope(IJFlexScanner p_scanner, NetList p_net_list, RoutingBoard p_board,
+                                   CoordinateTransform p_coordinate_transform, LayerStructure p_layer_structure, java.util.Locale p_locale)
     {
         // read the net name
         String net_name = p_scanner.next_string();
@@ -511,7 +511,7 @@ public class Network extends ScopeKeyword
         return result;
     }
 
-    private static boolean read_net_pins(Scanner p_scanner, Collection<Net.Pin> p_pin_list)
+    private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list)
     {
         for (;;) {
             String next_string = p_scanner.next_string();
@@ -529,7 +529,7 @@ public class Network extends ScopeKeyword
         return true;
     }
 
-    static app.freerouting.rules.ViaInfo read_via_info(Scanner p_scanner, app.freerouting.board.BasicBoard p_board)
+    static app.freerouting.rules.ViaInfo read_via_info(IJFlexScanner p_scanner, app.freerouting.board.BasicBoard p_board)
     {
         try
         {
@@ -599,7 +599,7 @@ public class Network extends ScopeKeyword
         }
     }
 
-    static Collection<String> read_via_rule(Scanner p_scanner, app.freerouting.board.BasicBoard p_board)
+    static Collection<String> read_via_rule(IJFlexScanner p_scanner, app.freerouting.board.BasicBoard p_board)
     {
         try
         {

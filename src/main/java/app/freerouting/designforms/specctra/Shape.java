@@ -30,7 +30,7 @@ public abstract class Shape
      * Reads shape scope from a Specctra dsn file.
      * If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no induvidual layers.
      */
-    public static Shape read_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static Shape read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         Shape result = null;
         try
@@ -120,7 +120,7 @@ public abstract class Shape
     /**
      * Reads an object of type PolylinePath from the dsn-file.
      */
-    public static PolylinePath read_polyline_path_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static PolylinePath read_polyline_path_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         try
         {
@@ -193,7 +193,7 @@ public abstract class Shape
      * The first shape in the shape_list of the result is the border of the area.
      * The other shapes in the shape_list are holes (windows).
      */
-    public static ReadAreaScopeResult read_area_scope(Scanner p_scanner,
+    public static ReadAreaScopeResult read_area_scope(IJFlexScanner p_scanner,
                                                       LayerStructure p_layer_structure, boolean p_skip_window_scopes)
     {
         Collection<Shape> shape_list = new LinkedList<Shape>();
@@ -294,7 +294,7 @@ public abstract class Shape
      * Reads a rectangle scope from a Specctra dsn file.
      * If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no induvidual layers.
      */
-    public static Rectangle read_rectangle_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static Rectangle read_rectangle_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         try
         {
@@ -350,7 +350,7 @@ public abstract class Shape
      * Reads a closed polygon scope from a Specctra dsn file.
      * If p_layer_structure == null, only Layer.PCB and Layer.Signal are expected, no induvidual layers.
      */
-    public static Polygon read_polygon_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static Polygon read_polygon_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         try
         {
@@ -451,7 +451,7 @@ public abstract class Shape
     /**
      * Reads a circle scope from a Specctra dsn file.
      */
-    public static Circle read_circle_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static Circle read_circle_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         try
         {
@@ -506,7 +506,7 @@ public abstract class Shape
     /**
      * Reads an object of type Path from the dsn-file.
      */
-    public static PolygonPath read_polygon_path_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static PolygonPath read_polygon_path_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         try
         {

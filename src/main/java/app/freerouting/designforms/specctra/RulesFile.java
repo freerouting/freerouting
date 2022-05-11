@@ -42,7 +42,7 @@ public class RulesFile
             app.freerouting.interactive.BoardHandling p_board_handling)
     {
         BasicBoard routing_board = p_board_handling.get_routing_board();
-        Scanner scanner =  new SpecctraDsnFileReader(p_input_stream);
+        IJFlexScanner scanner =  new SpecctraDsnFileReader(p_input_stream);
         try
         {
             Object curr_token = scanner.next_token();
@@ -218,7 +218,7 @@ public class RulesFile
         }
     }
     
-    private static boolean add_layer_rules(Scanner p_scanner, BasicBoard  p_board)
+    private static boolean add_layer_rules(IJFlexScanner p_scanner, BasicBoard  p_board)
     {
         try
         {
@@ -257,7 +257,7 @@ public class RulesFile
             return false;
         }
     }
-    private static boolean read_via_info(Scanner p_scanner, BasicBoard p_board)
+    private static boolean read_via_info(IJFlexScanner p_scanner, BasicBoard p_board)
     {
         app.freerouting.rules.ViaInfo curr_via_info = Network.read_via_info(p_scanner, p_board);
         if (curr_via_info == null)
@@ -274,7 +274,7 @@ public class RulesFile
         return true;
     }
     
-    private static boolean read_via_rule(Scanner p_scanner, BasicBoard p_board)
+    private static boolean read_via_rule(IJFlexScanner p_scanner, BasicBoard p_board)
     {
         java.util.Collection<String> via_rule = Network.read_via_rule(p_scanner, p_board);
         if (via_rule == null)
@@ -285,7 +285,7 @@ public class RulesFile
         return true;
     }
     
-    private static boolean read_net_class(Scanner p_scanner, LayerStructure p_layer_structure, BasicBoard p_board)
+    private static boolean read_net_class(IJFlexScanner p_scanner, LayerStructure p_layer_structure, BasicBoard p_board)
     {
         NetClass curr_class = NetClass.read_scope(p_scanner);
         if (curr_class == null)

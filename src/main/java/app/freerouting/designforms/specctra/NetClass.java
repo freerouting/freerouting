@@ -11,7 +11,7 @@ import java.util.LinkedList;
 public class NetClass
 {
     
-    public static NetClass read_scope(Scanner p_scanner)
+    public static NetClass read_scope(IJFlexScanner p_scanner)
     {
         
         try
@@ -133,7 +133,7 @@ public class NetClass
         }
     }
     
-    public static ClassClass read_class_class_scope(Scanner p_scanner)
+    public static ClassClass read_class_class_scope(IJFlexScanner p_scanner)
     {
         try
         {

@@ -705,7 +705,7 @@ class Wiring extends ScopeKeyword
         return false;
     }
     
-    static app.freerouting.board.FixedState calc_fixed(Scanner p_scanner)
+    static app.freerouting.board.FixedState calc_fixed(IJFlexScanner p_scanner)
     {
         try
         {
@@ -741,7 +741,7 @@ class Wiring extends ScopeKeyword
     /**
      * Reads a net_id. The  subnet_number of the net_id will be 0, if no subneet_number was found.
      */
-    private static Net.Id read_net_id(Scanner p_scanner)
+    private static Net.Id read_net_id(IJFlexScanner p_scanner)
     {
         try
         {

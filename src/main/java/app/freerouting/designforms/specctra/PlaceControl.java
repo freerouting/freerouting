@@ -59,7 +59,7 @@ public class PlaceControl extends ScopeKeyword
     /**
      * Returns true, if rotate_first is read, else false.
      */
-    static boolean read_flip_style_rotate_first(Scanner p_scanner)
+    static boolean read_flip_style_rotate_first(IJFlexScanner p_scanner)
     {
         try
         {

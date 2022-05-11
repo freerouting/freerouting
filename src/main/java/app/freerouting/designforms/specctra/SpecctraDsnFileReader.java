@@ -13,7 +13,7 @@ import java.util.Locale;
  * on 16.10.2008 09:27 from the specification file
  * <tt>SpecctraFileDescription.flex</tt>
  */
-class SpecctraDsnFileReader implements Scanner {
+class SpecctraDsnFileReader implements IJFlexScanner {
 
   public static NumberFormat nf;
 

@@ -222,8 +222,8 @@ public class Library extends ScopeKeyword
         p_par.file.end_scope();
     }
     
-    static boolean  read_padstack_scope(Scanner p_scanner, LayerStructure p_layer_structure,
-            CoordinateTransform p_coordinate_transform, app.freerouting.library.Padstacks p_board_padstacks)
+    static boolean  read_padstack_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure,
+                                        CoordinateTransform p_coordinate_transform, app.freerouting.library.Padstacks p_board_padstacks)
     {
         String padstack_name = null;
         boolean is_drilllable = true;

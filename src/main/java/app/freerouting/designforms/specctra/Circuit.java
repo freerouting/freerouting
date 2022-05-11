@@ -8,7 +8,7 @@ public class Circuit
      * Currently only the length matching rule is read from a circuit scope.
      * If the scope does not contain a length matching rule, nulll is returned.
      */
-    public static ReadScopeResult read_scope( Scanner p_scanner)
+    public static ReadScopeResult read_scope( IJFlexScanner p_scanner)
     {
         Object next_token = null;
         double min_trace_length = 0;
@@ -65,7 +65,7 @@ public class Circuit
         return new ReadScopeResult(max_trace_length, min_trace_length, use_via, use_layer);
     }
     
-    static LengthMatchingRule read_length_scope( Scanner p_scanner)
+    static LengthMatchingRule read_length_scope( IJFlexScanner p_scanner)
     {
         LengthMatchingRule result = null;
         double[] length_arr = new double[2];

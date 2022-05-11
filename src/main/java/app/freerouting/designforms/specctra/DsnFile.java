@@ -30,7 +30,7 @@ public class DsnFile
     public static ReadResult read(java.io.InputStream p_input_stream, app.freerouting.interactive.IBoardHandling p_board_handling,
                                   app.freerouting.board.BoardObservers p_observers, app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator, TestLevel p_test_level)
     {
-        Scanner scanner = new SpecctraDsnFileReader(p_input_stream);
+        IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
         Object curr_token = null;
         for (int i = 0; i < 3; ++i)
         {
@@ -264,7 +264,7 @@ public class DsnFile
         p_file.end_scope();
     }
 
-    static boolean read_on_off_scope(Scanner p_scanner)
+    static boolean read_on_off_scope(IJFlexScanner p_scanner)
     {
         try
         {
@@ -288,7 +288,7 @@ public class DsnFile
         }
     }
 
-    static int read_integer_scope(Scanner p_scanner)
+    static int read_integer_scope(IJFlexScanner p_scanner)
     {
         try
         {
@@ -318,7 +318,7 @@ public class DsnFile
         }
     }
 
-    static double read_float_scope(Scanner p_scanner)
+    static double read_float_scope(IJFlexScanner p_scanner)
     {
         try
         {
@@ -352,7 +352,7 @@ public class DsnFile
         }
     }
 
-    public static String read_string_scope(Scanner p_scanner)
+    public static String read_string_scope(IJFlexScanner p_scanner)
     {
         try
         {
@@ -378,7 +378,7 @@ public class DsnFile
         }
     }
 
-    public static java.util.Collection<String> read_string_list_scope(Scanner p_scanner)
+    public static java.util.Collection<String> read_string_list_scope(IJFlexScanner p_scanner)
     {
         java.util.Collection<String> result = new java.util.LinkedList<String>();
         try

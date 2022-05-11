@@ -223,7 +223,7 @@ public class Parser extends ScopeKeyword
         p_file.end_scope();
     }
 
-    private static String read_quote_char(Scanner p_scanner)
+    private static String read_quote_char(IJFlexScanner p_scanner)
     {
         try
         {

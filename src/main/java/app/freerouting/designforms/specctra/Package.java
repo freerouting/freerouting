@@ -26,7 +26,7 @@ public class Package
         is_front = p_is_front;
     }
     
-    public static Package read_scope(Scanner p_scanner, LayerStructure p_layer_structure)
+    public static Package read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         try
         {
@@ -243,7 +243,7 @@ public class Package
     }
     
     /** Reads the information of a single pin in a package. */
-    private static PinInfo read_pin_info(Scanner p_scanner)
+    private static PinInfo read_pin_info(IJFlexScanner p_scanner)
     {
         try
         {
@@ -354,7 +354,7 @@ public class Package
         }
     }
     
-    private static double read_rotation(Scanner p_scanner)
+    private static double read_rotation(IJFlexScanner p_scanner)
     {
         double result = 0;
         try
@@ -431,7 +431,7 @@ public class Package
         }
     }
     
-    private static boolean read_placement_side(Scanner p_scanner) throws java.io.IOException
+    private static boolean read_placement_side(IJFlexScanner p_scanner) throws java.io.IOException
     {
         Object next_token = p_scanner.next_token();
         boolean result = (next_token != Keyword.BACK);

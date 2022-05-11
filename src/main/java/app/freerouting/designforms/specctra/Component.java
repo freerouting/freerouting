@@ -40,7 +40,7 @@ public class Component extends ScopeKeyword
     /**
      * Used also when reading a session file.
      */
-    public static ComponentPlacement read_scope(Scanner p_scanner) throws java.io.IOException
+    public static ComponentPlacement read_scope(IJFlexScanner p_scanner) throws java.io.IOException
     {
         Object next_token = p_scanner.next_token();
         if (!(next_token instanceof String))
@@ -215,7 +215,7 @@ public class Component extends ScopeKeyword
     
     
     
-    private static ComponentPlacement.ComponentLocation read_place_scope(Scanner p_scanner)
+    private static ComponentPlacement.ComponentLocation read_place_scope(IJFlexScanner p_scanner)
     {
         try
         {
@@ -349,7 +349,7 @@ public class Component extends ScopeKeyword
         }
     }
     
-    private static  ComponentPlacement.ItemClearanceInfo read_item_clearance_info(Scanner p_scanner) throws java.io.IOException
+    private static  ComponentPlacement.ItemClearanceInfo read_item_clearance_info(IJFlexScanner p_scanner) throws java.io.IOException
     {
         p_scanner.yybegin(SpecctraDsnFileReader.NAME);
         Object next_token = p_scanner.next_token();
@@ -387,7 +387,7 @@ public class Component extends ScopeKeyword
         return new ComponentPlacement.ItemClearanceInfo(name, cl_class_name);
     }
     
-    private static boolean read_lock_type(Scanner p_scanner) throws java.io.IOException
+    private static boolean read_lock_type(IJFlexScanner p_scanner) throws java.io.IOException
     {
         boolean result = false;
         for (;;)
