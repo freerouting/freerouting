@@ -57,7 +57,7 @@ public class BatchOptRoute
         int curr_pass_no = 0;
         use_increased_ripup_costs = true;
 
-        while ((route_improved > optimization_improvement_threshold) || (route_improved < 0))
+        while ((route_improved >= optimization_improvement_threshold) || (route_improved < 0))
         {
             ++curr_pass_no;
             boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
