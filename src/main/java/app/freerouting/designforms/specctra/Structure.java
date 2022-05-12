@@ -504,6 +504,10 @@ class Structure extends ScopeKeyword
                     if (next_token == Keyword.CLEARANCE_CLASS)
                     {
                         p_board_construction_info.outline_clearance_class_name = DsnFile.read_string_scope(p_scanner);
+                    } else
+                    {
+                        FRLogger.error("There are multiple shapes defined in the boundary section of the DSN file. This scenario is not currently supported. If you have more than one board outlines defined, try to merge them into one.", null);
+                        return false;
                     }
                 }
                 prev_token = next_token;
