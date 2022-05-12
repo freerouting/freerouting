@@ -84,7 +84,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
                 if (hdlg.get_settings().autoroute_settings.get_with_postroute() && !this.is_stop_requested()) {
                     String opt_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message");
                     hdlg.screen_messages.set_status_message(opt_message);
-                    this.batch_opt_route.optimize_board(this.save_intermediate_stages, this.optimization_improvement_threshold);
+                    this.batch_opt_route.optimize_board(this.save_intermediate_stages, this.optimization_improvement_threshold, this);
                     String curr_message;
                     if (this.is_stop_requested()) {
                         curr_message = resources.getString("interrupted");

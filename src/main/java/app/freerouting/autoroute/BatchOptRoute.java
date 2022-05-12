@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Function;
 
 import app.freerouting.datastructures.UndoableObjects;
 
@@ -47,7 +48,7 @@ public class BatchOptRoute
     /**
      * Optimize the route on the board.
      */
-    public void optimize_board(boolean save_intermediate_stages, float optimization_improvement_threshold)
+    public void optimize_board(boolean save_intermediate_stages, float optimization_improvement_threshold, InteractiveActionThread isStopRequested)
     {
         if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION)
         {
@@ -57,7 +58,7 @@ public class BatchOptRoute
         int curr_pass_no = 0;
         use_increased_ripup_costs = true;
 
-        while ((route_improved >= optimization_improvement_threshold) || (route_improved < 0))
+        while (((route_improved >= optimization_improvement_threshold) || (route_improved < 0)) && (!isStopRequested.is_stop_requested()))
         {
             ++curr_pass_no;
             boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
