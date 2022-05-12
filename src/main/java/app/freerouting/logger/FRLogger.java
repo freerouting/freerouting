@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class FRLogger {
     private static Logger logger = LogManager.getLogger(Freerouting.class);
 
-    private static DecimalFormat performanceFormat = new DecimalFormat("0.00");
+    public static DecimalFormat DefaultFloatFormat = new DecimalFormat("0.00");
 
     private static HashMap<Integer, Instant> perfData = new HashMap<Integer, Instant>();
 
@@ -26,7 +26,7 @@ public class FRLogger {
         minutes = Math.floor(minutes % 60.0);
         seconds = seconds % 60.0;
 
-        return (hours > 0 ? (int)hours + " hour(s) " : "") + (minutes > 0 ? (int)minutes + " minute(s) " : "") + performanceFormat.format(seconds) + " seconds";
+        return (hours > 0 ? (int)hours + " hour(s) " : "") + (minutes > 0 ? (int)minutes + " minute(s) " : "") + DefaultFloatFormat.format(seconds) + " seconds";
     }
 
     public static void traceEntry(String perfId)
