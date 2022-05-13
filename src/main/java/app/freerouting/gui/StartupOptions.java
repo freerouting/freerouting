@@ -25,7 +25,7 @@ public class StartupOptions {
     String[] supported_languages = { "en", "de", "zh" };
     java.util.Locale current_locale = java.util.Locale.getDefault();
     boolean save_intermediate_stages = false;
-    float optimization_improvement_threshold = 0.0025f;
+    float optimization_improvement_threshold = 0.0001f;
 
     private StartupOptions() {
         if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals))
