@@ -334,7 +334,7 @@
     "Via[0-1]_1541.8:1186.18_um-MIN_EXTERN_241A" "Via[0-1]_1541.8:1186.18_um" "MIN_EXTERN_241A"
   )
   (via_rule
-    "default" "Via[0-1]_600:300_um"
+    default "Via[0-1]_600:300_um"
   )
   (via_rule
     "kicad_default" "Via[0-1]_600:300_um-kicad_default"
@@ -355,7 +355,7 @@
     "5A EXTERNAL 1oz" "Via[0-1]_1541.78:1186.18_um-5A EXTERNAL 1oz"
   )
   (via_rule
-    "CUSTOM" "Via[0-1]_600:300_um-CUSTOM"
+    CUSTOM "Via[0-1]_600:300_um-CUSTOM"
   )
   (via_rule
     "CUSTOM 0.6" "Via[0-1]_1000:400_um-CUSTOM 0.6"
@@ -368,7 +368,7 @@
   )
   (class default
     (clearance_class default)
-    (via_rule "default")
+    (via_rule default)
     (rule
       (width 400.0)
     )
@@ -441,7 +441,7 @@
     "Net-(JP46-Pad2)" "Net-(JP47-Pad2)" "Net-(JP48-Pad2)" "Net-(JP49-Pad2)" /2X "Net-(JP50-Pad2)" "Net-(JP51-Pad2)" "Net-(JP52-Pad2)"
     "/ALT_WARN_UNUSED" "/MAIN_RELAY_CONTROL_UNUSED" "/AT3_UNUSED" "/ALTERNATOR_UNUSED" "/VVT_UNUSED"
     (clearance_class "kicad_default")
-    (via_rule "kicad_default")
+    (via_rule kicad_default)
     (rule
       (width 400.0)
     )
@@ -455,7 +455,7 @@
     "Net-(R10-Pad1)" /2Q /VBAT "/AV3_UNUSED" "/J808_PC10" "/J805_PC11" /2E /2H
     /2K /2N "/J807_PA15" "/J803_PB8" "/J806_PB9" "/J810_PC12"
     (clearance_class "1A EXTERNAL 1oz")
-    (via_rule "1A EXTERNAL 1oz")
+    (via_rule 1A EXTERNAL 1oz)
     (rule
       (width 304.8)
     )
@@ -465,7 +465,7 @@
   )
   (class "2.5A EXTERNAL"
     (clearance_class "2.5A EXTERNAL")
-    (via_rule "2.5A EXTERNAL")
+    (via_rule 2.5A EXTERNAL)
     (rule
       (width 1066.8)
     )
@@ -475,7 +475,7 @@
   )
   (class "3,5A EXT HIGH VOLTAGE"
     (clearance_class "3,5A EXT HIGH VOLTAGE")
-    (via_rule "3,5A EXT HIGH VOLTAGE")
+    (via_rule 3,5A EXT HIGH VOLTAGE)
     (rule
       (width 1676.4)
     )
@@ -486,7 +486,7 @@
   (class "3.5A EXTERNAL 1oz"
     +12V
     (clearance_class "3.5A EXTERNAL 1oz")
-    (via_rule "3.5A EXTERNAL 1oz")
+    (via_rule 3.5A EXTERNAL 1oz)
     (rule
       (width 1651.0)
     )
@@ -496,7 +496,7 @@
   )
   (class "5A EXTERNAL 1oz"
     (clearance_class "5A EXTERNAL 1oz")
-    (via_rule "5A EXTERNAL 1oz")
+    (via_rule 5A EXTERNAL 1oz)
     (rule
       (width 2667.0)
     )
@@ -506,7 +506,7 @@
   )
   (class CUSTOM
     (clearance_class CUSTOM)
-    (via_rule "CUSTOM")
+    (via_rule CUSTOM)
     (rule
       (width 250.0)
     )
@@ -516,7 +516,7 @@
   )
   (class "CUSTOM 0.6"
     (clearance_class "CUSTOM 0.6")
-    (via_rule "CUSTOM 0.6")
+    (via_rule CUSTOM 0.6)
     (rule
       (width 600.0)
     )
@@ -526,7 +526,7 @@
   )
   (class "MIN_EXTERN_188A"
     (clearance_class "MIN_EXTERN_188A")
-    (via_rule "MIN_EXTERN_188A")
+    (via_rule MIN_EXTERN_188A)
     (rule
       (width 203.2)
     )
@@ -536,7 +536,7 @@
   )
   (class "MIN_EXTERN_241A"
     (clearance_class "MIN_EXTERN_241A")
-    (via_rule "MIN_EXTERN_241A")
+    (via_rule MIN_EXTERN_241A)
     (rule
       (width 216.0)
     )
