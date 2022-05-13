@@ -201,7 +201,7 @@ public class AutorouteSettings
             p_file.write("off)");
         }
         p_file.new_line();
-        p_file.write("(app.freerouting.autoroute ");
+        p_file.write("(autoroute ");
         if (p_settings.get_with_autoroute())
         {
             p_file.write("on)");
