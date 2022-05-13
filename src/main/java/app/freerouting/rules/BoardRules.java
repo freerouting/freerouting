@@ -208,8 +208,8 @@ public class BoardRules implements java.io.Serializable
     }
     
     /**
-     * Appends a new net class initialized with default data and returns that  class.
-     * If a class with p_name exists, this class is returned withoout appending a new class.
+     * Appends a new net class initialized with default data and returns that class.
+     * If a class with p_name exists, this class is returned without appending a new class.
      */
     public NetClass append_net_class(String p_name)
     {

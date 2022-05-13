@@ -383,48 +383,6 @@ public class DesignFile
     }
 
     /**
-     * Returns the name of the created script file or null, if the write failed.
-     * Put into a separate function to avoid undefines in the offline version.
-     */
-    private String webstart_update_eagle(BoardFrame p_board_frame,
-            String p_outfile_name, java.io.InputStream p_input_stream)
-    {
-//        java.io.ByteArrayOutputStream output_stream = new java.io.ByteArrayOutputStream();
-//        if (!p_board_frame.board_panel.board_handling.export_eagle_session_file(p_input_stream, output_stream))
-//        {
-//            return null;
-//        }
-//        java.io.InputStream input_stream = new java.io.ByteArrayInputStream(output_stream.toByteArray());
-//        javax.jnlp.FileContents script_file_contents =
-//                WebStart.save_dialog(this.get_parent(), null, input_stream, p_outfile_name);
-//
-//        if (script_file_contents == null)
-//        {
-//            return null;
-//        }
-//        String new_script_file_name;
-//        try
-//        {
-//            new_script_file_name = script_file_contents.getName();
-//        } catch (Exception e)
-//        {
-//            return null;
-//        }
-//
-//        if (!new_script_file_name.endsWith(".scr"))
-//        {
-//            final java.util.ResourceBundle resources =
-//                    java.util.ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
-//            String curr_message = resources.getString("message_22") + "\n" + resources.getString("message_21");
-//            WindowMessage.ok(curr_message);
-//        }
-//
-//        return new_script_file_name;
-
-        return null;
-    }
-
-    /**
      * Gets the binary file for saving or null, if the design file is not available
      * because the application is run with Java Web Start.
      */

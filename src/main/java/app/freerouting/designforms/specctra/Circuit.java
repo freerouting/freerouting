@@ -2,6 +2,8 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
 
+import java.util.Arrays;
+
 public class Circuit
 {
     /**
@@ -54,7 +56,7 @@ public class Circuit
                 }
                 else if (next_token == Keyword.USE_LAYER)
                 {
-                    use_layer.addAll(DsnFile.read_string_list_scope(p_scanner));
+                    use_layer.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
                 }
                 else
                 {

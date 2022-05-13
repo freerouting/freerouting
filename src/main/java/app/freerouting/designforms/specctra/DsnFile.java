@@ -357,14 +357,8 @@ public class DsnFile
         try
         {
             p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+            String result = p_scanner.next_string();
             Object next_token = p_scanner.next_token();
-            if (!(next_token instanceof String))
-            {
-                FRLogger.warn("DsnFile:read_string_scope: String expected");
-                return null;
-            }
-            String result = (String) next_token;
-            next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
                 FRLogger.warn("DsnFile.read_string_scope: closing bracket expected");
@@ -378,32 +372,15 @@ public class DsnFile
         }
     }
 
-    public static java.util.Collection<String> read_string_list_scope(IJFlexScanner p_scanner)
+    public static String[] read_string_list_scope(IJFlexScanner p_scanner)
     {
-        java.util.Collection<String> result = new java.util.LinkedList<String>();
-        try
-        {
-            for (;;)
-            {
-                p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-                Object next_token = p_scanner.next_token();
-                if (next_token == Keyword.CLOSED_BRACKET)
-                {
-                    break;
-                }
-                if (!(next_token instanceof String))
-                {
-                    FRLogger.warn("DsnFileread_string_list_scope: string expected");
-                    return null;
-                }
-                result.add((String) next_token);
-            }
+        String[] result = p_scanner.next_string_list();
+
+        if (!p_scanner.next_closing_bracket()) {
+            return null;
         }
-        catch (java.io.IOException e)
-        {
-            FRLogger.error("DsnFile.read_string_list_scope: IO error scanning file", e);
-        }
+
         return result;
     }
-    static final String CLASS_CLEARANCE_SEPARATOR = "-";
+    static final char CLASS_CLEARANCE_SEPARATOR = '-';
 }

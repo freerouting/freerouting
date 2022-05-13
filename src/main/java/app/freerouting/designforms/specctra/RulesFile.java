@@ -129,7 +129,6 @@ public class RulesFile
                 }
                 else if (next_token == Keyword.SNAP_ANGLE)
                 {
-                    
                     app.freerouting.board.AngleRestriction snap_angle = Structure.read_snap_angle(scanner);
                     if (snap_angle != null)
                     {
@@ -183,7 +182,7 @@ public class RulesFile
         p_par.file.end_scope();
     }
     
-    private static void add_rules(java.util.Collection<Rule>  p_rules, BasicBoard p_board, String p_layer_name)
+    private static void add_rules(java.util.Collection<Rule> p_rules, BasicBoard p_board, String p_layer_name)
     {
         int layer_no = -1;
         if (p_layer_name != null)

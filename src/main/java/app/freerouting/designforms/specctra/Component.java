@@ -228,7 +228,7 @@ public class Component extends ScopeKeyword
             java.util.Map <String, ComponentPlacement.ItemClearanceInfo> place_keepout_infos =
                     new java.util.TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
 
-            String name = (String) p_scanner.next_string();
+            String name = p_scanner.next_string();
 
             Object next_token = null;
             double[] location = new double[2];

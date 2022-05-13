@@ -2,6 +2,7 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -18,13 +19,9 @@ public class NetClass
         {
             // read the class name
             p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-            Object next_token = p_scanner.next_token();
-            if (!(next_token instanceof String))
-            {
-                FRLogger.warn("NetClass.read_scope: String expected");
-                return null;
-            }
-            String class_name = (String) next_token;
+            String class_name = p_scanner.next_string();
+
+            Object next_token = null;
             Collection<String> net_list = new LinkedList<String>();
             boolean rules_missing = false;
             // read the nets belonging to the class
@@ -158,7 +155,7 @@ public class NetClass
                 {
                     if (next_token == Keyword.CLASSES)
                     {
-                        classes.addAll(DsnFile.read_string_list_scope(p_scanner));
+                        classes.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
                     }
                     else if (next_token == Keyword.RULE)
                     {

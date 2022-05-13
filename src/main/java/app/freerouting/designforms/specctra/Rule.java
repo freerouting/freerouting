@@ -4,6 +4,7 @@ import app.freerouting.logger.FRLogger;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class for reading and writing rule scopes from dsn-files.
@@ -13,47 +14,52 @@ public abstract class Rule
     /**
      * Returns a collection of objects of class Rule.
      */
-    public static Collection<Rule> read_scope( IJFlexScanner p_scanner)
+    public static Collection<Rule> read_scope(IJFlexScanner p_scanner)
     {
         Collection<Rule> result = new LinkedList<Rule>();
-        Object next_token = null;
+        Object current_token = null;
         for (;;)
         {
-            Object prev_token = next_token;
+            Object prev_token = current_token;
             try
             {
-                next_token = p_scanner.next_token();
+                current_token = p_scanner.next_token();
             }
             catch (java.io.IOException e)
             {
                 FRLogger.error("Rule.read_scope: IO error scanning file", e);
                 return null;
             }
-            if (next_token == null)
+            if (current_token == null)
             {
                 FRLogger.warn("Rule.read_scope: unexpected end of file");
                 return null;
             }
-            if (next_token == Keyword.CLOSED_BRACKET)
+            if (current_token == Keyword.CLOSED_BRACKET)
             {
                 // end of scope
                 break;
             }
+
             if (prev_token == Keyword.OPEN_BRACKET)
             {
+                // every rule starts with a "("
                 Rule curr_rule = null;
-                if (next_token == Keyword.WIDTH)
+                if (current_token == Keyword.WIDTH)
                 {
+                    // this is a "(width" rule
                     curr_rule = read_width_rule(p_scanner);
                 }
-                else if (next_token == Keyword.CLEARANCE)
+                else if (current_token == Keyword.CLEARANCE)
                 {
+                    // this is a "(clear" rule
                     curr_rule = read_clearance_rule(p_scanner);
                 }
                 else
                 {
                     ScopeKeyword.skip_scope(p_scanner);
                 }
+
                 if (curr_rule != null)
                 {
                     result.add(curr_rule);
@@ -115,36 +121,14 @@ public abstract class Rule
     
     public static WidthRule read_width_rule(IJFlexScanner p_scanner)
     {
-        try
+        double value = p_scanner.next_double();
+
+        if (!p_scanner.next_closing_bracket())
         {
-            double value;
-            Object next_token = p_scanner.next_token();
-            if (next_token instanceof Double)
-            {
-                value = ((Double) next_token).doubleValue();
-            }
-            else if (next_token instanceof Integer)
-            {
-                value = ((Integer) next_token).intValue();
-            }
-            else
-            {
-                FRLogger.warn("Rule.read_width_rule: number expected");
-                return null;
-            }
-            next_token = p_scanner.next_token();
-            if (next_token != Keyword.CLOSED_BRACKET)
-            {
-                FRLogger.warn("Rule.read_width_rule: closing bracket expected");
-                return null;
-            }
-            return new WidthRule(value);
-        }
-        catch (java.io.IOException e)
-        {
-            FRLogger.error("Rule.read_width_rule: IO error scanning file", e);
             return null;
         }
+
+        return new WidthRule(value);
     }
     
     public static void write_scope(app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par) throws java.io.IOException
@@ -247,7 +231,7 @@ public abstract class Rule
             p_par.file.write((Double.valueOf(curr_clearance)).toString());
             p_par.file.write(" (type ");
             p_par.identifier_type.write(cl_matrix.get_name(p_cl_class), p_par.file);
-            p_par.file.write("_");
+            p_par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
             p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
             p_par.file.write("))");
         }
@@ -257,25 +241,13 @@ public abstract class Rule
     {
         try
         {
-            double value;
-            Object next_token = p_scanner.next_token();
-            if (next_token instanceof Double)
-            {
-                value = ((Double) next_token).doubleValue();
-            }
-            else if (next_token instanceof Integer)
-            {
-                value = ((Integer) next_token).intValue();
-            }
-            else
-            {
-                FRLogger.warn("Rule.read_clearance_rule: number expected");
-                return null;
-            }
+            double value = p_scanner.next_double();
+
             Collection<String> class_pairs = new LinkedList<String> ();
-            next_token = p_scanner.next_token();
+            Object next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET)
             {
+                // look for "(type"
                 if (next_token != Keyword.OPEN_BRACKET)
                 {
                     FRLogger.warn("Rule.read_clearance_rule: ( expected");
@@ -287,28 +259,24 @@ public abstract class Rule
                     FRLogger.warn("Rule.read_clearance_rule: type expected");
                     return null;
                 }
-                for (;;)
+
+                class_pairs.addAll(List.of(p_scanner.next_string_list(DsnFile.CLASS_CLEARANCE_SEPARATOR)));
+
+                // check the closing ")" of "(type"
+                if (!p_scanner.next_closing_bracket())
                 {
-                    p_scanner.yybegin(SpecctraDsnFileReader.IGNORE_QUOTE);
-                    next_token = p_scanner.next_token();
-                    if (next_token == Keyword.CLOSED_BRACKET)
-                    {
-                        break;
-                    }
-                    if (!(next_token instanceof String))
-                    {
-                        FRLogger.warn("Rule.read_clearance_rule: string expected");
-                        return null;
-                    }
-                    class_pairs.add((String)next_token);
+                    FRLogger.warn("Rule.read_clearance_rule: closing bracket expected");
+                    return null;
                 }
-                next_token = p_scanner.next_token();
-                if (next_token != Keyword.CLOSED_BRACKET)
+
+                // check the closing ")" of "(clear"
+                if (!p_scanner.next_closing_bracket())
                 {
                     FRLogger.warn("Rule.read_clearance_rule: closing bracket expected");
                     return null;
                 }
             }
+
             return new ClearanceRule(value, class_pairs);
         }
         catch (java.io.IOException e)

@@ -3,6 +3,7 @@ import app.freerouting.logger.FRLogger;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -1477,37 +1478,41 @@ class SpecctraDsnFileReader implements IJFlexScanner {
   private Character[] stringStopAtQuotes = { 10, 13, 34 };
 
   public String next_string() {
-    return next_string(false);
+    return next_string(false, ' ');
   }
-
   public String next_string(boolean ignoreNewline) {
+    return next_string(ignoreNewline, ' ');
+  }
+  public String next_string(boolean ignoreNewline, char leading) {
     stringBuffer.setLength(0);
     int i = 0;
 
-    List<Character> skipTrailing = null;
+    List<Character> skipLeading = null;
 
     if (ignoreNewline) {
       // let's ignore the leading spaces, tabs and new lines
-      skipTrailing = Arrays.asList(stringSkipTrailingNewLines);
+      skipLeading = new ArrayList<>(Arrays.asList(stringSkipTrailingNewLines));
     } else
     {
       // let's ignore the leading spaces, tabs
-      skipTrailing = Arrays.asList(stringSkipTrailing);
+      skipLeading = new ArrayList<>(Arrays.asList(stringSkipTrailing));
     }
+    skipLeading.add(new Character(leading));
 
-    while ((zzMarkedPos + i < zzBuffer.length) && (skipTrailing.contains(zzBuffer[zzMarkedPos + i]))) {
+    while ((zzMarkedPos + i < zzBuffer.length) && (skipLeading.contains(zzBuffer[zzMarkedPos + i]))) {
       i++;
     }
 
     boolean skipLastChar = false;
     List<Character> stopAt = null;
     if (zzBuffer[zzMarkedPos + i] == 34) {
-      stopAt = Arrays.asList(stringStopAtQuotes);
+      stopAt = new ArrayList<>(Arrays.asList(stringStopAtQuotes));
       i++;
       skipLastChar = true;
     } else
     {
-      stopAt = Arrays.asList(stringStopAt);
+      stopAt = new ArrayList<>(Arrays.asList(stringStopAt));
+      stopAt.add(new Character(leading));
     }
 
     // read the actual string until we have a space/tab/new line
@@ -1526,11 +1531,38 @@ class SpecctraDsnFileReader implements IJFlexScanner {
       zzCurrentPos += i - 1;
       zzMarkedPos += i;
       zzLexicalState = YYINITIAL;
+
+      if ((zzBuffer[zzMarkedPos - 1] == 40) || (zzBuffer[zzMarkedPos - 1] == 41))
+      {
+        // if the string ended with brackets, we need to step back one character, because we need that bracket as the next token
+        zzStartRead--;
+        zzCurrentPos--;
+        zzMarkedPos--;
+      }
     }
 
     return stringBuffer.toString();
   }
 
+  public String[] next_string_list()
+  {
+    return next_string_list(' ');
+  }
+  public String[] next_string_list(char separator)
+  {
+    java.util.Collection<String> result = new java.util.LinkedList<String>();
+
+    for (;;) {
+      String next_string = next_string(true, separator);
+      if (next_string == "") {
+        break;
+      }
+
+      result.add(next_string);
+    }
+
+    return result.toArray(new String[result.size()]);
+  }
   public Double next_double() {
     String s = next_string();
 
@@ -1542,5 +1574,31 @@ class SpecctraDsnFileReader implements IJFlexScanner {
     } catch (ParseException e) {
       return null;
     }
+  }
+
+  public Boolean next_closing_bracket()
+  {
+    Object next_token;
+    try
+    {
+      next_token = next_token();
+    } catch (java.io.IOException e)
+    {
+      FRLogger.error("Network.read_net_pins: IO error scanning file", e);
+      return false;
+    }
+    if (next_token == null)
+    {
+      FRLogger.warn("Network.read_net_pins: unexpected end of file");
+      return false;
+    }
+    if (next_token != Keyword.CLOSED_BRACKET)
+    {
+      // not end of scope
+      FRLogger.warn("Network.read_net_pins: expected closed bracket is missing");
+      return false;
+    }
+
+    return true;
   }
 }

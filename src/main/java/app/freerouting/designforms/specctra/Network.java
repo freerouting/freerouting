@@ -254,7 +254,7 @@ public class Network extends ScopeKeyword
         // write the via rule
         p_par.file.new_line();
         p_par.file.write("(via_rule ");
-        p_par.file.write(p_net_class.get_via_rule().name);
+        p_par.identifier_type.write(p_net_class.get_via_rule().name, p_par.file);
         p_par.file.write(")");
 
         // write the rules, if they are different from the default rule.
@@ -807,7 +807,7 @@ public class Network extends ScopeKeyword
             }
         }
 
-        // read  the trace width  and clearance rules.
+        // read the trace width and clearance rules.
 
         boolean clearance_rule_found = false;
 
@@ -1101,7 +1101,7 @@ public class Network extends ScopeKeyword
             // class not yet existing, create a new class
             p_clearance_matrix.append_class(class_name);
             class_no = p_clearance_matrix.get_no(class_name);
-            // set the clearance values of the new class to the maximum of curr_clearance and the
+            // set the clearance values of the new class to the maximum of curr_clearance and
             // the existing values.
             for (int i = 1; i < p_clearance_matrix.get_class_count(); ++i)
             {
@@ -1183,7 +1183,7 @@ public class Network extends ScopeKeyword
             FRLogger.warn("Network.get_clearance_class: clearance class not found");
             return result;
         }
-        // initalise the clearance values of p_new_class_name from p_net_class_name
+        // initialize the clearance values of p_new_class_name from p_net_class_name
         for (int i = 1; i < p_clearance_matrix.get_class_count(); ++i)
         {
 
