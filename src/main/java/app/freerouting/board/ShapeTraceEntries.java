@@ -360,7 +360,7 @@ public class ShapeTraceEntries
                     while (it.hasNext())
                     {
                         Item contact_item = it.next();
-                        if (!contact_item.is_route())
+                        if (!contact_item.is_routable())
                         {
                             this.found_obstacle = contact_item;
                             return false;

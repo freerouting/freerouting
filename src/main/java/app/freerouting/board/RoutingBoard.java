@@ -279,7 +279,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
                 continue;
             }
             Item curr_obstacle = (Item) curr_obstacle_entry.object;
-            if (p_only_not_shovable_obstacles && curr_obstacle.is_route() && !curr_obstacle.is_shove_fixed())
+            if (p_only_not_shovable_obstacles && curr_obstacle.is_routable() && !curr_obstacle.is_shove_fixed())
             {
                 continue;
             }
@@ -1116,7 +1116,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable
         Collection<Item> board_items = this.get_items();
         for (Item curr_item : board_items)
         {
-            if (!curr_item.is_route())
+            if (!curr_item.is_routable())
             {
                 continue;
             }

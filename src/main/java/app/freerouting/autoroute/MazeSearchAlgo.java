@@ -1030,7 +1030,7 @@ public class MazeSearchAlgo
      */
     private int check_ripup(MazeListElement p_list_element, Item p_obstacle_item, boolean p_door_is_small)
     {
-        if (!p_obstacle_item.is_route())
+        if (!p_obstacle_item.is_routable())
         {
             return -1;
         }
@@ -1409,7 +1409,7 @@ public class MazeSearchAlgo
             return false;
         }
         Item curr_item = ((ObstacleExpansionRoom) from_room).get_item();
-        if (!curr_item.is_route())
+        if (!curr_item.is_routable())
         {
             return false;
         }

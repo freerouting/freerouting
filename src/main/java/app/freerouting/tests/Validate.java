@@ -300,7 +300,7 @@ public class Validate
         while (it.hasNext())
         {
             Item curr_item = it.next();
-            if(curr_item.is_route())
+            if(curr_item.is_routable())
             {
                 Collection<Item> contact_list = curr_item.get_normal_contacts();
                 if (contact_list.size() == 0)

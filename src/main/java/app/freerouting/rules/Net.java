@@ -68,7 +68,7 @@ public class Net implements Comparable<Net>, app.freerouting.board.ObjectInfoPan
             }
             if (curr_item instanceof app.freerouting.board.Connectable)
             {
-                if (curr_item.contains_net(this.net_number) && !curr_item.is_route())
+                if (curr_item.contains_net(this.net_number) && !curr_item.is_routable())
                 {
                     result.add(curr_item);
                 }

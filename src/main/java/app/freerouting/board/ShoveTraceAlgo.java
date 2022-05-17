@@ -570,7 +570,7 @@ public class ShoveTraceAlgo
                 else
                 {
                     // a unfixed via can be pushed aside eventually
-                    is_obstacle = !curr_item.is_route();
+                    is_obstacle = !curr_item.is_routable();
                 }
 
                 if (is_obstacle)

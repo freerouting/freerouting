@@ -192,7 +192,7 @@ public class BatchAutorouter
         try
         {
             Collection<Item> autoroute_item_list = new java.util.LinkedList<Item>();
-            Set<Item> handeled_items = new TreeSet<Item>();
+            Set<Item> handled_items = new TreeSet<Item>();
             Iterator<UndoableObjects.UndoableObjectNode> it = routing_board.item_list.start_read_object();
             for (;;)
             {
@@ -204,9 +204,9 @@ public class BatchAutorouter
                 if (curr_ob instanceof Connectable && curr_ob instanceof Item)
                 {
                     Item curr_item = (Item) curr_ob;
-                    if (!curr_item.is_route())
+                    if (!curr_item.is_routable())
                     {
-                        if (!handeled_items.contains(curr_item))
+                        if (!handled_items.contains(curr_item))
                         {
                             for (int i = 0; i < curr_item.net_count(); ++i)
                             {
@@ -216,11 +216,11 @@ public class BatchAutorouter
                                 {
                                     if (curr_connected_item.net_count() <= 1)
                                     {
-                                        handeled_items.add(curr_connected_item);
+                                        handled_items.add(curr_connected_item);
                                     }
                                 }
                                 int net_item_count = routing_board.connectable_item_count(curr_net_no);
-                                if (connected_set.size() < net_item_count)
+                                if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets()))
                                 {
                                     autoroute_item_list.add(curr_item);
                                 }

@@ -86,7 +86,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
         this.main_panel.add(center_panel, java.awt.BorderLayout.CENTER);
         this.pack();
 
-        // Dispose all subwindows because they may be no longer uptodate.
+        // Dispose all subwindows because they may be no longer up-to-date.
         java.util.Iterator<javax.swing.JFrame> it = this.subwindows.iterator();
         while (it.hasNext())
         {
@@ -375,7 +375,6 @@ public class WindowNetClasses extends BoardSavableSubWindow
 
     private class NetClassTable extends javax.swing.JTable
     {
-
         public NetClassTable(NetClassTableModel p_table_model)
         {
             super(p_table_model);
@@ -395,7 +394,6 @@ public class WindowNetClasses extends BoardSavableSubWindow
         {
             return new javax.swing.table.JTableHeader(columnModel)
             {
-
                 public String getToolTipText(java.awt.event.MouseEvent e)
                 {
                     java.awt.Point p = e.getPoint();
@@ -425,7 +423,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
             set_values();
         }
 
-        /** Calculates the the valus in this table */
+        /** Calculates the values in this table */
         public void set_values()
         {
             app.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
@@ -458,6 +456,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
                     max_trace_length = -1;
                 }
                 this.data[i][ColumnName.MAX_TRACE_LENGTH.ordinal()] = (float) max_trace_length;
+                this.data[i][ColumnName.IGNORED_BY_AUTOROUTER.ordinal()] = curr_net_class.is_ignored_by_autorouter;
                 this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
                         board_rules.clearance_matrix.get_name(curr_net_class.get_trace_clearance_class());
                 ComboBoxLayer.Layer combo_layer = layer_combo_box.get_selected_layer();
@@ -478,7 +477,6 @@ public class WindowNetClasses extends BoardSavableSubWindow
                 if (curr_net_class.trace_width_is_layer_dependent())
                 {
                     trace_width = (float) -1;
-
                 }
                 else
                 {
@@ -668,6 +666,15 @@ public class WindowNetClasses extends BoardSavableSubWindow
                 net_rule.set_maximum_trace_length(max_trace_length);
                 board_frame.board_panel.board_handling.recalculate_length_violations();
             }
+            else if (p_col == ColumnName.IGNORED_BY_AUTOROUTER.ordinal())
+            {
+                if (!(p_value instanceof Boolean))
+                {
+                    return;
+                }
+                boolean value = (Boolean) p_value;
+                net_rule.is_ignored_by_autorouter = value;
+            }
             else if (p_col == ColumnName.CLEARANCE_CLASS.ordinal())
             {
                 if (!(p_value instanceof String))
@@ -784,7 +791,6 @@ public class WindowNetClasses extends BoardSavableSubWindow
 
     private enum ColumnName
     {
-
-        NAME, VIA_RULE, CLEARANCE_CLASS, TRACE_WIDTH, ON_LAYER, SHOVE_FIXED, CYCLES_WITH_AREAS, MIN_TRACE_LENGTH, MAX_TRACE_LENGTH
+        NAME, VIA_RULE, CLEARANCE_CLASS, TRACE_WIDTH, ON_LAYER, SHOVE_FIXED, CYCLES_WITH_AREAS, MIN_TRACE_LENGTH, MAX_TRACE_LENGTH, IGNORED_BY_AUTOROUTER
     }
 }

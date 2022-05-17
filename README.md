@@ -125,6 +125,7 @@ The following command line arguments are supported by freerouter:
 * -us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option "hr" specifies hybrid ratio.
 * -hr [m:n]: sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected. 
 * -is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. The default is prioritized. Prioritied stragegy selects items based on scores calculated in previous round.
+* -inc [net class names, separated by commas]: auto-router ignores the listed net classes, eg. `-inc GND,VCC` will not try to wire components that are either in the "GND" or in the "VCC" net class.
 * -im: saves intermediate steps in version-specific binary format. This allows to user to resume the interrupted optimization from the last checkpoint. Turned off by default.
 * -h: shows help.
 

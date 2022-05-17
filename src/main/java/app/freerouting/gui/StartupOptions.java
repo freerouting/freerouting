@@ -28,6 +28,8 @@ public class StartupOptions {
     // this value is equivalent to the setting of "-oit 0.001"
     float optimization_improvement_threshold = 0.00001f;
 
+    String[] ignore_net_classes_by_autorouter = new String[0];
+
     private StartupOptions() {
         if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals))
         {
@@ -124,6 +126,9 @@ public class StartupOptions {
                     test_version_option = true;
                 } else if (p_args[i].startsWith("-h")) {
                     show_help_option = true;
+                } else if (p_args[i].startsWith("-inc")) {
+                    // ignore net class(es)
+                    ignore_net_classes_by_autorouter = p_args[i + 1].split(",");
                 }
             }
             catch (Exception e)

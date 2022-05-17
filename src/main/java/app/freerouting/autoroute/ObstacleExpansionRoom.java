@@ -78,7 +78,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
         {
             return false;
         }
-        if (!(this.item.is_route() && p_other.item.is_route()))
+        if (!(this.item.is_routable() && p_other.item.is_routable()))
         {
             return false;
         }

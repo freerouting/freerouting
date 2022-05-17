@@ -9,7 +9,7 @@ public class NetClass implements java.io.Serializable, app.freerouting.board.Obj
 {
 
     /** Creates a new instance of NetClass */
-    public NetClass(String p_name, app.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
+    public NetClass(String p_name, app.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, boolean p_is_ignored_by_autorouter)
     {
         this.name = p_name;
         this.board_layer_structure = p_layer_structure;
@@ -20,7 +20,7 @@ public class NetClass implements java.io.Serializable, app.freerouting.board.Obj
         {
             this.active_routing_layer_arr[i] = p_layer_structure.arr[i].is_signal;
         }
-
+        this.is_ignored_by_autorouter = p_is_ignored_by_autorouter;
     }
 
     public String toString()
@@ -349,7 +349,9 @@ public class NetClass implements java.io.Serializable, app.freerouting.board.Obj
     private final app.freerouting.board.LayerStructure board_layer_structure;
     /**
      * The clearance classes of the item types, if this net class comes from a class in a Speccctra dsn-file
-     * Should evtl be moved to NetClass and used only when reading a dsn-file.
+     * Should eventually be moved to NetClass and used only when reading a dsn-file.
      */
     public DefaultItemClearanceClasses default_item_clearance_classes = new DefaultItemClearanceClasses();
+
+    public boolean is_ignored_by_autorouter = false;
 }

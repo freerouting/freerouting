@@ -72,9 +72,9 @@ public class Via extends DrillItem implements java.io.Serializable
         padstack = p_padstack;
     }
 
-    public boolean is_route()
+    public boolean is_routable()
     {
-        return !is_user_fixed() && this.net_count() > 0;
+        return !is_user_fixed() && (this.net_count() > 0);
     }
 
     public boolean is_obstacle(Item p_other)

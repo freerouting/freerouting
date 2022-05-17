@@ -21,7 +21,7 @@ public class Connection
      */
     public static Connection get(Item p_item)
     {
-        if (!p_item.is_route())
+        if (!p_item.is_routable())
         {
             return null;
         }
@@ -65,7 +65,7 @@ public class Connection
             // until the next fork or nonroute item.
             for (;;)
             {
-                if(!curr_item.is_route() || fork_found)
+                if(!curr_item.is_routable() || fork_found)
                 {
                     // connection ends
                     if (start_point == null)

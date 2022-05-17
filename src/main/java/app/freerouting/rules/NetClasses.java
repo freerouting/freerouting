@@ -40,9 +40,9 @@ public class NetClasses implements java.io.Serializable
     /**
      * Appends a new empty class with name p_name to the class array
      */
-    NetClass append(String p_name, app.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
+    NetClass append(String p_name, app.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, boolean p_is_ignored_by_autorouter)
     {
-        NetClass new_class = new NetClass(p_name, p_layer_structure, p_clearance_matrix);
+        NetClass new_class = new NetClass(p_name, p_layer_structure, p_clearance_matrix, p_is_ignored_by_autorouter);
         class_arr.add(new_class);
         return new_class;
     }
@@ -66,7 +66,7 @@ public class NetClasses implements java.io.Serializable
                 break;
             }
         }
-        return append(new_name, p_layer_structure, p_clearance_matrix);
+        return append(new_name, p_layer_structure, p_clearance_matrix, false);
     }
     
     /**

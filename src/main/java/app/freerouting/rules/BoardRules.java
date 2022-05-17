@@ -134,7 +134,7 @@ public class BoardRules implements java.io.Serializable
      */
     public NetClass get_new_net_class(String p_name)
     {
-        NetClass result = this.net_classes.append(p_name, this.layer_structure, this.clearance_matrix);
+        NetClass result = this.net_classes.append(p_name, this.layer_structure, this.clearance_matrix, false);
         result.set_trace_clearance_class(this.get_default_net_class().get_trace_clearance_class());
         result.set_via_rule(this.get_default_via_rule());
         result.set_trace_half_width(this.get_default_net_class().get_trace_half_width(0));
@@ -188,7 +188,7 @@ public class BoardRules implements java.io.Serializable
     public void create_default_net_class()
     {
         // add the default net rule
-        NetClass default_net_class = this.net_classes.append("default", this.layer_structure, this.clearance_matrix);
+        NetClass default_net_class = this.net_classes.append("default", this.layer_structure, this.clearance_matrix, false);
         int default_trace_half_width = 1500;
         default_net_class.set_trace_half_width(default_trace_half_width);
         default_net_class.set_trace_clearance_class(1);
@@ -218,7 +218,7 @@ public class BoardRules implements java.io.Serializable
         {
             return found_class;
         }
-        NetClass new_class = this.net_classes.append(p_name, this.layer_structure, this.clearance_matrix);
+        NetClass new_class = this.net_classes.append(p_name, this.layer_structure, this.clearance_matrix, false);
         NetClass default_class = this.net_classes.get(0);
         new_class.default_item_clearance_classes = new DefaultItemClearanceClasses(default_class.default_item_clearance_classes);
         new_class.set_via_rule(default_class.get_via_rule());

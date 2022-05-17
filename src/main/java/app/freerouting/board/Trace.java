@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- *
  * Class describing functionality required for traces in the plane.
  */
 public abstract class Trace extends Item implements Connectable, java.io.Serializable
@@ -134,9 +133,9 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         return result;
     }
     
-    public boolean is_route()
+    public boolean is_routable()
     {
-        return !is_user_fixed() && this.net_count() > 0;
+        return !is_user_fixed() && (this.net_count() > 0);
     }
     
     /**
@@ -519,8 +518,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
      * Returns true if the geometry of the trace was changed.
      */
     public abstract boolean pull_tight(PullTightAlgo p_pull_tight_algo);
-    
-    
+
     private final int half_width ; // half width of the trace pen
     private int layer ; // board layer of the trace
 }

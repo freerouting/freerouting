@@ -17,15 +17,17 @@ public class ComboBoxLayer extends javax.swing.JComboBox<ComboBoxLayer.Layer>
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
         int signal_layer_count = p_layer_structure.signal_layer_count();
         int item_count = signal_layer_count + 1;
+
         boolean add_inner_layer_item = signal_layer_count > 2;
         if (add_inner_layer_item)
         {
             ++item_count;
         }
+
         this.layer_arr = new Layer [item_count];
         this.layer_arr[0] = new Layer(resources.getString("all"), ALL_LAYER_INDEX);
         int curr_layer_no = 0;
-        if (add_inner_layer_item )
+        if (add_inner_layer_item)
         {
             this.layer_arr[1] = new Layer(resources.getString("inner"), INNER_LAYER_INDEX);
             ++curr_layer_no;
@@ -70,8 +72,8 @@ public class ComboBoxLayer extends javax.swing.JComboBox<ComboBoxLayer.Layer>
         final int index;
     }
     
-    /** The layer index, when all layers are selected. */
+    /** The custom layer index in the combobox, when all layers are selected. */
     public final static int ALL_LAYER_INDEX = -1;
-    /** The layer index, when all inner layers ar selected. */
+    /** The custom layer index in the combobox, when all inner layers are selected. */
     public final static int INNER_LAYER_INDEX = -2;
 }

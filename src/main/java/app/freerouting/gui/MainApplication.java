@@ -7,6 +7,7 @@ import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.rules.NetClasses;
 
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
@@ -88,7 +89,8 @@ public class MainApplication extends javax.swing.JFrame {
                             startupOptions.current_locale,
                             startupOptions.design_rules_filename,
                             startupOptions.save_intermediate_stages,
-                            startupOptions.optimization_improvement_threshold);
+                            startupOptions.optimization_improvement_threshold,
+                            startupOptions.ignore_net_classes_by_autorouter);
             welcome_window.dispose();
             if (new_frame == null) {
                 FRLogger.warn("Couldn't create window frame");
@@ -187,6 +189,7 @@ public class MainApplication extends javax.swing.JFrame {
         this.locale = startupOptions.getCurrentLocale();
         this.save_intermediate_stages = startupOptions.save_intermediate_stages;
         this.optimization_improvement_threshold = startupOptions.optimization_improvement_threshold;
+        this.ignore_net_classes_by_autorouter = startupOptions.ignore_net_classes_by_autorouter;
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
 
         try {
@@ -302,7 +305,13 @@ public class MainApplication extends javax.swing.JFrame {
         WindowMessage welcome_window = WindowMessage.show(message);
         welcome_window.setTitle(message);
         BoardFrame new_frame =
-                create_board_frame(design_file, message_field, option, this.is_test_version, this.locale, null, this.save_intermediate_stages, this.optimization_improvement_threshold);
+                create_board_frame(design_file, message_field, option,
+                        this.is_test_version,
+                        this.locale,
+                        null,
+                        this.save_intermediate_stages,
+                        this.optimization_improvement_threshold,
+                        this.ignore_net_classes_by_autorouter);
         welcome_window.dispose();
         if (new_frame == null) {
             return;
@@ -340,7 +349,8 @@ public class MainApplication extends javax.swing.JFrame {
      */
     static private BoardFrame create_board_frame(DesignFile p_design_file, javax.swing.JTextField p_message_field,
                                                  BoardFrame.Option p_option, boolean p_is_test_version,
-                                                 java.util.Locale p_locale, String p_design_rules_file, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold) {
+                                                 java.util.Locale p_locale, String p_design_rules_file, boolean p_save_intermediate_stages,
+                                                 float p_optimization_improvement_threshold, String[] p_ignore_net_classes_by_autorouter) {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
 
@@ -383,9 +393,25 @@ public class MainApplication extends javax.swing.JFrame {
                 rules_file_name = p_design_rules_file;
             }
 
+            // load the .rules file
             DesignFile.read_rules_file(design_name, parent_folder_name, rules_file_name,
                     new_frame.board_panel.board_handling, p_option == BoardFrame.Option.WEBSTART,
                     confirm_import_rules_message);
+
+            // ignore net classes if they were defined by a command line argument
+            for(String net_class_name : p_ignore_net_classes_by_autorouter)
+            {
+                NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
+
+                for(int i=0; i<netClasses.count(); i++)
+                {
+                    if (netClasses.get(i).get_name().compareToIgnoreCase(net_class_name) == 0)
+                    {
+                        netClasses.get(i).is_ignored_by_autorouter = true;
+                    }
+                }
+            }
+
             new_frame.refresh_windows();
         }
         return new_frame;
@@ -427,6 +453,7 @@ public class MainApplication extends javax.swing.JFrame {
     private final java.util.Locale locale;
     private final boolean save_intermediate_stages;
     private final float optimization_improvement_threshold;
+    private final String[] ignore_net_classes_by_autorouter;
     private static final TestLevel DEBUG_LEVEL = TestLevel.CRITICAL_DEBUGGING_OUTPUT;
 
     private class BoardFrameWindowListener extends java.awt.event.WindowAdapter {

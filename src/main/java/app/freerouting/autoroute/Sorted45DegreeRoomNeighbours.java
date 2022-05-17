@@ -111,7 +111,7 @@ public class Sorted45DegreeRoomNeighbours
                 {
                     // only Obstacle expansion roos may have a 2-dim overlap
                     Item curr_item = (Item) curr_object;
-                    if (curr_item.is_route())
+                    if (curr_item.is_routable())
                     {
                         ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
                         ObstacleExpansionRoom curr_overlap_room = 
@@ -138,7 +138,7 @@ public class Sorted45DegreeRoomNeighbours
                 else if (curr_object instanceof Item)
                 {
                     Item curr_item = (Item) curr_object;
-                    if (curr_item.is_route())
+                    if (curr_item.is_routable())
                     {
                         // expand the item for ripup and pushing purposes
                         ItemAutorouteInfo item_info = curr_item.get_autoroute_info();

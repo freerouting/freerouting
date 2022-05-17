@@ -14,6 +14,7 @@ import java.awt.Graphics;
 import java.io.Serializable;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
@@ -695,7 +696,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     {
         Set<Item> contacts = this.get_normal_contacts();
         Set<Item> result = new TreeSet<Item>();
-        if (this.is_route())
+        if (this.is_routable())
         {
             result.add(this);
         }
@@ -726,7 +727,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
             // until the next fork or nonroute item.
             for (;;)
             {
-                if (!curr_item.is_route())
+                if (!curr_item.is_routable())
                 {
                     // connection ends
                     break;
@@ -885,7 +886,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * Returns true, if it is not allowed to change this item except evtl. shoving the item
+     * Returns true, if it is not allowed to change this item except shoving the item
      */
     public boolean is_user_fixed()
     {
@@ -955,9 +956,9 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * returns true, if this item is an unfixed trace or via
+     * returns true, if this item is an unfixed trace or via, so it can be routed by auto-router
      */
-    public boolean is_route()
+    public boolean is_routable()
     {
         return false;
     }
@@ -1423,6 +1424,25 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         }
         return false;
     }
+
+    /**
+     * Checks if the item has a net that must be ignored by the auto-router
+     * @return true, if this item has at least one net that must be ignored
+     */
+    public boolean has_ignored_nets()
+    {
+        for (int net_no : this.net_no_arr)
+        {
+            Net net = this.board.rules.nets.get(net_no);
+            if (net.get_class().is_ignored_by_autorouter)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * the index in the clearance matrix describing the required spacing
      * to other items
