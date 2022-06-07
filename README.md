@@ -57,7 +57,7 @@ For more information please use the online help in the board editor.
 
 ### Additional steps for users of [KiCad](https://www.kicad.org/)
 
-1) Download the latest freerouting-1.5.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
+1) Download the latest `freerouting-1.6.0.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
 2) Start KiCad and open your project in Pcbnew.
 
@@ -77,13 +77,13 @@ For more information please use the online help in the board editor.
 
 #### Using the standalone freerouting application
 
-1) Download the latest freerouting-1.5.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest `freerouting-1.6.0.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
 2) Start pcb-rnd and load your layout.
 
 3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
 
-4) Start the router by running the freerouting-executable.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+4) Start the router by running the `freerouting-executable.jar` file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
 
 5) Do the routing.
 
@@ -94,9 +94,9 @@ For more information please use the online help in the board editor.
 
 #### Using freerouting from within pcb-rnd
 
-1) Download the latest freerouting-1.5.0-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest freerouting-1.6.0-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
-2) Unzip it and rename the top directory freerouting-1.5.0-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
+2) Unzip it and rename the top directory freerouting-1.6.0-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
 
 3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
 
@@ -123,7 +123,7 @@ The following command line arguments are supported by freerouter:
 * -mt [number of threads]: sets thread pool size for route optimization. The default is one less than the number of logical processors in the system. Set it to 0 to disable route optimization.
 * -oit [percentage]: stops the route optimizer if the improvement drops below a certain percentage threshold per pass. Default is 0.1%, and `-oit 0` means to continue improving until it is interrupted by the user or it runs out of options to test.
 * -us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option "hr" specifies hybrid ratio.
-* -hr [m:n]: sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected. 
+* -hr [m:n]: sets hybrid ratio in the format of #_global_optiomal_passes:#_prioritized_passes. The default is 1:1. It's only effective when hybrid strategy is selected.
 * -is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. The default is prioritized. Prioritied stragegy selects items based on scores calculated in previous round.
 * -inc [net class names, separated by commas]: auto-router ignores the listed net classes, eg. `-inc GND,VCC` will not try to wire components that are either in the "GND" or in the "VCC" net class.
 * -im: saves intermediate steps in version-specific binary format. This allows to user to resume the interrupted optimization from the last checkpoint. Turned off by default.
@@ -131,25 +131,25 @@ The following command line arguments are supported by freerouter:
 
 A complete command line looks something like this if your are using PowerShell on Windows:
 
-`
-& "java.exe" -jar freerouting-1.5.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
-`
+```powershell
+java.exe -jar freerouting-1.6.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+```
 
-This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file. 
+This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file.
 
 
 ## Multi-threaded implementation of route optimization
 
 After Freerouting completes auto-routing it switches to the next phase, called route optimization to improve the board even further. Multi-threading reduces the time it will take to do this second step.
 
-Besides multi-threading, multiple optimzation strategies were also implemented. Global optimal strategy selects the global optimal update after processing all items in an optimation pass, while greedy 
-strategy adopts an update as soon as it is found to be better than current one, so there will be multiple updates in a greedy optimization pass. Hybrid strategy mixes the above two, and there is an 
+Besides multi-threading, multiple optimzation strategies were also implemented. Global optimal strategy selects the global optimal update after processing all items in an optimation pass, while greedy
+strategy adopts an update as soon as it is found to be better than current one, so there will be multiple updates in a greedy optimization pass. Hybrid strategy mixes the above two, and there is an
 option to select the mixing ratio.
 
-Sequential, random and prioritized item selection strategies are implemented to determine which item to process next during an optimization pass. Each item is ranked during the optimization pass so that 
+Sequential, random and prioritized item selection strategies are implemented to determine which item to process next during an optimization pass. Each item is ranked during the optimization pass so that
 it's possible to prioritize items with better scores when selecting items to process in next optimization pass.
 
-Test runs on a 12-core system using freerouting v1.5.0:
+Test runs on a 12-core system using freerouting v1.6.0:
 
 | Settings                           | Auto-routing time | Route optimization time | Route opt. improvement |
 |------------------------------------|------------------:|------------------------:|:----------------------:|
@@ -183,8 +183,10 @@ You will need the following steps to make it work:
     * Select `JRE` as package type
     * Select `17` as version
 4. Run the downloaded JAR file using the installed java.exe
-    
-    `java.exe -jar freerouting-1.5.0.jar`
+
+```powershell
+java.exe -jar freerouting-1.6.0.jar
+```
 
 ## How to build it from source
 
@@ -206,20 +208,24 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerou
 
 #### Bash (Linux/OS X/Cygwin/other Unix-like shell)
 
-    bash gradlew assemble
-    
+``` bash
+./gradlew assemble
+```
+
 #### Windows (CMD)
 
-    gradlew assemble
-    
+```powershell
+gradlew assemble
+```
+
 ![image](https://user-images.githubusercontent.com/910321/143483981-5f1f8473-098e-4cf2-997b-a34d14346853.png)
-    
+
 #### Generated Executables
 
-All four .jar files will be generated in the _build\libs_ subfolder. You would typically run the _freerouting-executable.jar_ file.
+All four .jar files will be generated in the `build`\`libs` subfolder. You would typically run the `freerouting-executable.jar` file.
 
 ## Contributing
 
-We ❤️ all our contributors; this project wouldn’t be what it is without you! 
+We ❤️ all our contributors; this project wouldn’t be what it is without you!
 
 If you want to help out, please consider replying to [issues](https://github.com/freerouting/freerouting/issues), creating new ones, or even send your fixes and improvements as [pull requests](https://github.com/freerouting/freerouting/pulls).
