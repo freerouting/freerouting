@@ -33,7 +33,7 @@ jobs:
       run: distribution\create-distribution-jar.bat ${{ steps.tagName.outputs.tag }}   
     - uses: AButler/upload-release-assets@v2.0
       with:
-          files: '.\distribution\freerouting-${{ steps.tagName.outputs.tag }}.jar'
+          files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}.jar'
           release-tag: ${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
 
