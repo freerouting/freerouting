@@ -222,7 +222,7 @@ gradlew assemble
 
 #### Generated Executables
 
-All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-executable.jar` file.
+All four .jar files will be generated in the `build`\`libs` subfolder. You would typically run the `freerouting-executable.jar` file.
 
 ## Contributing
 
