@@ -57,7 +57,7 @@ For more information please use the online help in the board editor.
 
 ### Additional steps for users of [KiCad](https://www.kicad.org/)
 
-1) Download the latest freerouting-1.6.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases)
+1) Download the latest `freerouting-1.6.0.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
 2) Start KiCad and open your project in Pcbnew.
 
@@ -77,13 +77,13 @@ For more information please use the online help in the board editor.
 
 #### Using the standalone freerouting application
 
-1) Download the latest freerouting-1.6.0.jar file from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest `freerouting-1.6.0.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
 2) Start pcb-rnd and load your layout.
 
 3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
 
-4) Start the router by running the freerouting-executable.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+4) Start the router by running the `freerouting-executable.jar` file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
 
 5) Do the routing.
 
