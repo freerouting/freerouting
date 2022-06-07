@@ -209,7 +209,7 @@ Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerou
 #### Bash (Linux/OS X/Cygwin/other Unix-like shell)
 
 ``` bash
-bash gradlew assemble
+./gradlew assemble
 ```
 
 #### Windows (CMD)
