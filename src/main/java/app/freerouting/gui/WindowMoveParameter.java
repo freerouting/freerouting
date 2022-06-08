@@ -56,7 +56,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow
         vertical_grid_field.addKeyListener(new VerticalGridFieldKeyListener());
         vertical_grid_field.addFocusListener(new VerticalGridFieldFocusListener());
         
-        javax.swing.JLabel separator = new javax.swing.JLabel("  -----------------------------------------------  ");
+        javax.swing.JLabel separator = new javax.swing.JLabel("  –––––––––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         

@@ -57,7 +57,7 @@ public class WindowVia extends BoardSavableSubWindow
         remove_padstack_button.addActionListener(new RemovePadstackListener());
         padstack_button_panel.add(remove_padstack_button);
         
-        javax.swing.JLabel separator_label = new javax.swing.JLabel("---------------------------------------------------------");
+        javax.swing.JLabel separator_label = new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
         separator_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,0,10,0));
         gridbag.setConstraints(separator_label, gridbag_constraints);
         north_panel.add(separator_label, gridbag_constraints);
@@ -82,7 +82,7 @@ public class WindowVia extends BoardSavableSubWindow
         edit_vias_button.addActionListener(new EditViasListener());
         via_button_panel.add(edit_vias_button);
         
-        separator_label = new javax.swing.JLabel("---------------------------------------------------------");
+        separator_label = new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
         separator_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,0,10,0));
         gridbag.setConstraints(separator_label, gridbag_constraints);
         north_panel.add(separator_label, gridbag_constraints);

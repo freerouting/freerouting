@@ -54,7 +54,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow
         gridbag.setConstraints(off_button, gridbag_constraints);
         main_panel.add(off_button, gridbag_constraints);
 
-        javax.swing.JLabel separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        javax.swing.JLabel separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
 
@@ -72,7 +72,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow
         gridbag.setConstraints(accuracy_slider, gridbag_constraints);
         main_panel.add(accuracy_slider);
 
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
 

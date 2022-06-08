@@ -54,7 +54,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
         main_panel.add(display_region_check_box, gridbag_constraints);
         this.display_region_check_box.addActionListener(new DisplayRegionListener());
         
-        javax.swing.JLabel separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        javax.swing.JLabel separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -66,7 +66,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
         main_panel.add(interactive_state_check_box, gridbag_constraints);
         this.interactive_state_check_box.addActionListener(new InteractiveStateListener());
         
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -94,7 +94,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
         main_panel.add(current_layer_check_box, gridbag_constraints);
         this.current_layer_check_box.addActionListener(new CurrentLayerListener());
         
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -135,7 +135,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
         main_panel.add(pull_tight_region_check_box, gridbag_constraints);
         this.pull_tight_region_check_box.addActionListener(new PullTightRegionListener());
         
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -146,7 +146,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
         main_panel.add(component_grid_check_box, gridbag_constraints);
         this.component_grid_check_box.addActionListener(new ComponentGridListener());
         
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         

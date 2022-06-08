@@ -56,7 +56,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         cursor_button_group.add(small_cursor_checkbox);
         cursor_button_group.add(big_cursor_checkbox);
         
-        javax.swing.JLabel separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        javax.swing.JLabel separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -98,7 +98,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         rotation_180_degree_checkbox.addActionListener(new Rotation180Listener());
         rotation_270_degree_checkbox.addActionListener(new Rotation270Listener());
         
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -135,7 +135,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
         mirroring_button_group.add(vertical_mirror_checkbox);
         mirroring_button_group.add(horizontal_mirror_checkbox);
         
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         

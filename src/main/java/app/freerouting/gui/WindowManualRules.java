@@ -47,7 +47,7 @@ public class WindowManualRules extends BoardSavableSubWindow
         main_panel.add(this.clearance_combo_box);
         this.clearance_combo_box.addActionListener(new ClearanceComboBoxListener());
 
-        javax.swing.JLabel separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        javax.swing.JLabel separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);

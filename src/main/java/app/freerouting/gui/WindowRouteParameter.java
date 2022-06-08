@@ -65,9 +65,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow
         gridbag.setConstraints(snap_angle_45_button, gridbag_constraints);
         main_panel.add(snap_angle_45_button, gridbag_constraints);
         gridbag.setConstraints(snap_angle_none_button, gridbag_constraints);
-        main_panel.add(snap_angle_none_button, gridbag_constraints);
-        
-        javax.swing.JLabel separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        main_panel.add(snap_angle_none_button, gridbag_constraints);        
+        javax.swing.JLabel separator = new javax.swing.JLabel("   –––––––––––––––––––––––––––––––––––––––  ");
+
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -95,9 +95,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow
         gridbag.setConstraints(dynamic_button, gridbag_constraints);
         main_panel.add(dynamic_button, gridbag_constraints);
         gridbag.setConstraints(stitch_button, gridbag_constraints);
-        main_panel.add(stitch_button, gridbag_constraints);
-        
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        main_panel.add(stitch_button, gridbag_constraints);        
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -126,9 +126,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow
         gridbag.setConstraints(automatic_button, gridbag_constraints);
         main_panel.add(automatic_button, gridbag_constraints);
         gridbag.setConstraints(manual_button, gridbag_constraints);
-        main_panel.add(manual_button, gridbag_constraints);
-        
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        main_panel.add(manual_button, gridbag_constraints);        
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -180,9 +179,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow
         this.neckdown_check_box.setToolTipText(resources.getString("automatic_neckdown_tooltip"));
         main_panel.add(neckdown_check_box, gridbag_constraints);
         
-        // add labels and text field for restricting pin exit directions
-        
-        separator = new javax.swing.JLabel("  ----------------------------------------  ");
+        // add labels and text field for restricting pin exit directions        
+        separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -208,7 +206,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
         edge_to_turn_dist_field.addFocusListener(new EdgeToTurnDistFieldFocusListener());
         
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        separator = new javax.swing.JLabel("----------------------------------------  ");
+        separator = new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
@@ -234,7 +232,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
         gridbag.setConstraints(region_slider, gridbag_constraints);
         main_panel.add(region_slider);
         
-        separator = new javax.swing.JLabel("----------------------------------------  ");
+        separator = new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––  ");
         gridbag.setConstraints(separator, gridbag_constraints);
         main_panel.add(separator, gridbag_constraints);
         
