@@ -28,7 +28,7 @@ class BoardToolbar extends javax.swing.JPanel
         this.drag_button = new javax.swing.JToggleButton();
         final javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         
-        left_toolbar.setMaximumSize(new java.awt.Dimension(1200, 23));
+        left_toolbar.setMaximumSize(new java.awt.Dimension(1200, 30));
         toolbar_button_group.add(select_button);
         select_button.setSelected(true);
         select_button.setText(resources.getString("select_button"));
@@ -203,15 +203,15 @@ class BoardToolbar extends javax.swing.JPanel
         
         right_toolbar.setAutoscrolls(true);
         unit_label.setText(resources.getString("unit_button"));
-        unit_label.setMaximumSize(new java.awt.Dimension(30, 21));
-        unit_label.setPreferredSize(new java.awt.Dimension(30, 21));
+        unit_label.setMaximumSize(new java.awt.Dimension(100, 30));
+        unit_label.setPreferredSize(new java.awt.Dimension(65, 30));
         right_toolbar.add(unit_label);
         
         unit_factor_field.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         unit_factor_field.setValue(1);
-        unit_factor_field.setMaximumSize(new java.awt.Dimension(100, 18));
-        unit_factor_field.setMinimumSize(new java.awt.Dimension(40, 18));
-        unit_factor_field.setPreferredSize(new java.awt.Dimension(80, 18));
+        unit_factor_field.setMaximumSize(new java.awt.Dimension(10, 30));
+        unit_factor_field.setMinimumSize(new java.awt.Dimension(20, 30));
+        unit_factor_field.setPreferredSize(new java.awt.Dimension(40, 30));
         unit_factor_field.addKeyListener(new java.awt.event.KeyAdapter()
         {
             public void keyTyped(java.awt.event.KeyEvent evt)
@@ -241,10 +241,10 @@ class BoardToolbar extends javax.swing.JPanel
         unit_combo_box.setModel(new DefaultComboBoxModel<>(Unit.values()));
         unit_combo_box.setFocusTraversalPolicyProvider(true);
         unit_combo_box.setInheritsPopupMenu(true);
-        unit_combo_box.setMaximumSize(new java.awt.Dimension(60, 18));
-        unit_combo_box.setMinimumSize(new java.awt.Dimension(60, 18));
+        unit_combo_box.setMaximumSize(new java.awt.Dimension(80, 30));
+        unit_combo_box.setMinimumSize(new java.awt.Dimension(80, 30));
         unit_combo_box.setOpaque(false);
-        unit_combo_box.setPreferredSize(new java.awt.Dimension(60, 18));
+        unit_combo_box.setPreferredSize(new java.awt.Dimension(80, 30));
         unit_combo_box.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
