@@ -33,13 +33,13 @@ public class HoleConstructionState extends CornerItemConstructionState
         }
         return  new_instance;
     }
-    
+
     /** Creates a new instance of HoleConstructionState */
     private  HoleConstructionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
-    
+
     /**
      * Looks for an obstacle area to modify
      * Returns false, if it cannot find one.
@@ -79,7 +79,7 @@ public class HoleConstructionState extends CornerItemConstructionState
         this.add_corner(p_location);
         return true;
     }
-    
+
     /**
      * Adds a corner to the polygon of the the hole under construction.
      */
@@ -96,7 +96,7 @@ public class HoleConstructionState extends CornerItemConstructionState
         }
         return this;
     }
-    
+
     /**
      * adds the just constructed hole to the item under modification,
      * if that is possible without clearance violations
@@ -145,7 +145,7 @@ public class HoleConstructionState extends CornerItemConstructionState
             }
             new_holes[new_holes.length - 1] = new PolygonShape(new_hole_corners);
             PolylineArea new_obs_area = new PolylineArea(new_border, new_holes);
-            
+
             if (new_obs_area.split_to_convex() == null)
             {
                 // shape is invalid, maybe it has selfintersections
@@ -183,11 +183,11 @@ public class HoleConstructionState extends CornerItemConstructionState
         }
         return this.return_state;
     }
-    
+
     public void display_default_message()
     {
         hdlg.screen_messages.set_status_message(resources.getString("adding_hole_to_obstacle_area"));
     }
-    
+
     private ObstacleArea item_to_modify = null;
 }

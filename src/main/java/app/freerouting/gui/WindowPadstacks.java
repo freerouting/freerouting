@@ -12,17 +12,17 @@ import java.util.List;
  */
 public class WindowPadstacks extends WindowObjectListWithFilter
 {
-    
+
     /** Creates a new instance of PadstacksWindow */
     public WindowPadstacks(BoardFrame p_board_frame)
     {
         super(p_board_frame);
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
         this.setTitle(resources.getString("padstacks"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LibraryPadstacks");
     }
-    
+
     /**
      * Fills the list with the library padstacks.
      */
@@ -41,7 +41,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
         }
         this.list.setVisibleRowCount(Math.min(padstacks.count(), DEFAULT_TABLE_SIZE));
     }
-    
+
     protected void select_instances()
     {
         List<Object> selected_padstacks = list.getSelectedValuesList();

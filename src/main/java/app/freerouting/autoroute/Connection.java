@@ -14,7 +14,7 @@ import app.freerouting.board.Trace;
  */
 public class Connection
 {
-    
+
     /**
      * Gets the connection this item belongs to. A connection ends at the next fork or terminal item.
      * Returns null, if p_item is not a route item, or if it is a via belonging to more than 1 connection.
@@ -33,12 +33,12 @@ public class Connection
         Set<Item> contacts = p_item.get_normal_contacts();
         Set<Item> connection_items = new TreeSet<Item>();
         connection_items.add(p_item);
-        
+
         Point start_point = null;
         int start_layer = 0;
         Point end_point = null;
         int end_layer = 0;
-        
+
         for (Item curr_item : contacts)
         {
             Point prev_contact_point = p_item.normal_contact_point(curr_item);
@@ -103,7 +103,7 @@ public class Connection
                         }
                         if (prev_contact_layer != tmp_contact_layer ||
                                 !prev_contact_point.equals(tmp_contact_point))
-                        {                                                      
+                        {
                             next_contact_point = tmp_contact_point;
                             next_contact_layer = tmp_contact_layer;
                             if (next_contact != null)
@@ -132,7 +132,7 @@ public class Connection
         }
         return result;
     }
-    
+
     /**
      * Creates a new instance of Connection
      */
@@ -144,7 +144,7 @@ public class Connection
         end_layer = p_end_layer;
         item_list = p_item_list;
     }
-    
+
     /**
      * Returns the cumulative length of the traces in this  connection.
      */
@@ -160,8 +160,8 @@ public class Connection
         }
         return result;
     }
-    
-    
+
+
     /**
      * Returns an estimation of the actual length of the connection divided by the minimal possible length.
      */
@@ -172,12 +172,12 @@ public class Connection
             return Integer.MAX_VALUE;
         }
         double min_trace_length = start_point.to_float().distance(end_point.to_float());
-        double detour = (this.trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD) + 
+        double detour = (this.trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD) +
                 DETOUR_ITEM_COST * (item_list.size() - 1);
         return detour;
     }
-    
-    
+
+
     /**
      * If the connection ens in empty space, start_point or end_point may be null.
      */
@@ -186,7 +186,7 @@ public class Connection
     public final Point end_point;
     public final int end_layer;
     public final Set<Item> item_list;
-    
+
     private static final double DETOUR_ADD = 100;
     private static final double DETOUR_ITEM_COST = 0.1;
 }

@@ -10,17 +10,17 @@ import java.util.List;
  */
 public class WindowPackages extends WindowObjectListWithFilter
 {
-    
+
     /** Creates a new instance of PackagesWindow */
     public WindowPackages(BoardFrame p_board_frame)
     {
         super(p_board_frame);
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
         this.setTitle(resources.getString("packages"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LibraryPackages");
     }
-    
+
     /**
      * Fills the list with the library packages.
      */
@@ -39,7 +39,7 @@ public class WindowPackages extends WindowObjectListWithFilter
         }
         this.list.setVisibleRowCount(Math.min(packages.count(), DEFAULT_TABLE_SIZE));
     }
-    
+
     protected void select_instances()
     {
         List<Object> selected_packages = list.getSelectedValuesList();

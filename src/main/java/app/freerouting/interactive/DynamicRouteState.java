@@ -7,19 +7,19 @@ import app.freerouting.geometry.planar.FloatPoint;
  */
 public class DynamicRouteState extends RouteState
 {
-    
+
     /** Creates a new instance of DynamicRouteState */
     protected DynamicRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
-    
+
     public InteractiveState mouse_moved()
     {
         super.mouse_moved();
         return add_corner(hdlg.get_current_mouse_position());
     }
-    
+
     /**
      * ends routing
      */
@@ -40,7 +40,7 @@ public class DynamicRouteState extends RouteState
         }
         return this.return_state;
     }
-    
+
     /**
      * Action to be taken when a key is pressed (Shortcut).
      */
@@ -57,12 +57,12 @@ public class DynamicRouteState extends RouteState
         }
         return curr_return_state;
     }
-    
+
     public javax.swing.JPopupMenu get_popup_menu()
     {
         return hdlg.get_panel().popup_menu_dynamic_route;
     }
-    
+
     public String get_help_id()
     {
         return "RouteState_DynamicRouteState";

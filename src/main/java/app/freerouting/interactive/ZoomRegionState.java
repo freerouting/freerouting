@@ -16,7 +16,7 @@ public class ZoomRegionState extends SelectRegionState
     {
         return get_instance(null, p_parent_state, p_board_handling, p_activityReplayFile);
     }
-    
+
     /**
      * Returns a new instance of this class with first point p_location.
      */
@@ -27,7 +27,7 @@ public class ZoomRegionState extends SelectRegionState
         new_instance.hdlg.screen_messages.set_status_message(new_instance.resources.getString("drag_left_mouse_button_to_create_region_to_display"));
         return new_instance;
     }
-    
+
     /** Creates a new instance of ZoomRegionState */
     public ZoomRegionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
@@ -37,7 +37,7 @@ public class ZoomRegionState extends SelectRegionState
             activityReplayFile.start_scope(ActivityReplayFileScope.ZOOM_FRAME);
         }
     }
-    
+
     public InteractiveState complete()
     {
         corner2 = hdlg.get_current_mouse_position();
@@ -48,7 +48,7 @@ public class ZoomRegionState extends SelectRegionState
         }
         return this.return_state;
     }
-    
+
     private void zoom_region()
     {
         if (corner1 == null || corner2 == null)

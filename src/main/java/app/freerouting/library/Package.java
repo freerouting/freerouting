@@ -12,7 +12,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class Package implements Comparable<Package>, app.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
-    
+
     /**
      * Creates a new instance of Package.
      * p_package_list is the list of packages containing this package.
@@ -30,7 +30,7 @@ public class Package implements Comparable<Package>, app.freerouting.board.Objec
         is_front = p_is_front;
         package_list = p_package_list;
     }
-    
+
     /**
      * Compares 2 packages by name.
      * Useful for example to display packages in alphabetic order.
@@ -39,7 +39,7 @@ public class Package implements Comparable<Package>, app.freerouting.board.Objec
     {
         return this.name.compareToIgnoreCase(p_other.name);
     }
-    
+
     /**
      * Returns the pin with the input number from this package.
      */
@@ -52,7 +52,7 @@ public class Package implements Comparable<Package>, app.freerouting.board.Objec
         }
         return pin_arr[p_no];
     }
-    
+
     /**
      * Returns the pin number of the pin with the input name from this package, or -1, if no such pin exists
      * Pin numbers are from 0 to pin_count - 1.
@@ -68,7 +68,7 @@ public class Package implements Comparable<Package>, app.freerouting.board.Objec
         }
         return -1;
     }
-    
+
     /**
      * Returns the pin count of this package.
      */
@@ -76,15 +76,15 @@ public class Package implements Comparable<Package>, app.freerouting.board.Objec
     {
         return pin_arr.length;
     }
-    
+
     public String toString()
     {
         return this.name;
     }
-    
+
     public void print_info(app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("package") + " ");
         p_window.append_bold(this.name);
@@ -105,30 +105,30 @@ public class Package implements Comparable<Package>, app.freerouting.board.Objec
         }
         p_window.newline();
     }
-    
+
     /** The name of the package. */
     public final String name;
-    
+
     /** Internallly generated package number. */
     public final int no;
-    
+
     /** The array of pins of this padstack. */
     private final Pin [] pin_arr;
-    
+
     /** The outline of the component, which may be null. */
     public final Shape[] outline;
-    
+
     public final Keepout[] keepout_arr;
-    
+
     public final Keepout[] via_keepout_arr;
-    
+
     public final Keepout[] place_keepout_arr;
-    
+
     /** If false, the package is placed on the back side of the board */
     public final boolean is_front;
-    
+
     private final Packages package_list;
-    
+
     /**
      * Describes a pin padstack of a package.
      */
@@ -145,20 +145,20 @@ public class Package implements Comparable<Package>, app.freerouting.board.Objec
             relative_location = p_relative_location;
             rotation_in_degree =  p_rotation_in_degree;
         }
-        
+
         /** The name of the pin. */
         public final String name;
-        
+
         /** The number of the padstack mask of the pin. */
         public final int padstack_no;
-        
+
         /** The location of the pin relative to its package. */
         public final Vector relative_location;
-        
+
         /** the rotation of the pin padstack */
         public final double rotation_in_degree;
     }
-    
+
     /** Deescribes a named keepout belonging to a package, */
     public static class Keepout implements java.io.Serializable
     {

@@ -129,7 +129,7 @@ public class Nets implements java.io.Serializable
     }
 
 
-    
+
     /** The maximum legal net number for nets. */
     public static final int max_legal_net_no = 9999999;
     /** auxiliary net number for internal use */

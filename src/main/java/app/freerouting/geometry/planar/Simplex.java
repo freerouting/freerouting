@@ -12,12 +12,12 @@ import java.util.LinkedList;
  */
 public class Simplex extends TileShape implements java.io.Serializable
 {
-    
+
     /**
      * Standard implementation for an empty Simplex.
      */
     public static final Simplex EMPTY = new Simplex(new Line [0]);
-    
+
     /**
      * creates a Simplex as intersection of the halfplanes defined
      * by an array of directed lines
@@ -36,7 +36,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         Simplex result = curr_simplex.remove_redundant_lines();
         return result;
     }
-    
+
     /**
      * Return true, if this simplex is empty
      */
@@ -44,7 +44,7 @@ public class Simplex extends TileShape implements java.io.Serializable
     {
         return (arr.length == 0);
     }
-    
+
     /**
      * Converts the physical instance of this shape to a simpler physical instance, if possible.
      * (For example a Simplex to an IntOctagon).
@@ -66,7 +66,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns true,  if the determinant of the direction of index
      * p_no -1 and the direction of index p_no is {@literal >} 0
@@ -105,8 +105,8 @@ public class Simplex extends TileShape implements java.io.Serializable
         IntVector curr_dir = (IntVector)arr[no].direction().get_vector();
         return (prev_dir.determinant(curr_dir) > 0);
     }
-    
-    
+
+
     /**
      * Returns true, if the shape of this simplex is contained in a
      * sufficiently large box
@@ -130,7 +130,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return true;
     }
-    
+
     /**
      * Returns the number of edge lines defining this simplex
      */
@@ -138,7 +138,7 @@ public class Simplex extends TileShape implements java.io.Serializable
     {
         return arr.length;
     }
-    
+
     /**
      * Returns the intersection of the p_no -1-th with the p_no-th line of this simplex.
      * If the simplex is not bounded at this corner, the
@@ -182,7 +182,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return precalculated_corners [no];
     }
-    
+
     /**
      * Returns an approximation of the intersection of the p_no -1-th with the
      * p_no-th line of this simplex by a FloatPoint.
@@ -231,7 +231,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return precalculated_float_corners [no];
     }
-    
+
     public FloatPoint[] corner_approx_arr()
     {
         if (precalculated_float_corners == null)
@@ -258,7 +258,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return precalculated_float_corners;
     }
-    
+
     /**
      * returns the p_no-th edge line of this simplex.
      * The edge lines are sorted in ascending direction.
@@ -287,7 +287,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return arr[no];
     }
-    
+
     /**
      * Returns the dimension of this simplex.
      * The result may be 2, 1, 0, or -1 (if the simplex is empty).
@@ -351,7 +351,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return 2;
     }
-    
+
     public double max_width()
     {
         if (!this.is_bounded())
@@ -361,11 +361,11 @@ public class Simplex extends TileShape implements java.io.Serializable
         double max_distance = Integer.MIN_VALUE;
         double max_distance_2 = Integer.MIN_VALUE;
         FloatPoint   gravity_point = this.centre_of_gravity();
-        
+
         for (int i = 0; i < border_line_count(); ++i)
         {
             double curr_distance = Math.abs(arr[i].signed_distance(gravity_point));
-            
+
             if (curr_distance > max_distance)
             {
                 max_distance_2 = max_distance;
@@ -378,7 +378,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return max_distance + max_distance_2;
     }
-    
+
     public double min_width()
     {
         if (!this.is_bounded())
@@ -388,11 +388,11 @@ public class Simplex extends TileShape implements java.io.Serializable
         double min_distance = Integer.MAX_VALUE;
         double min_distance_2 = Integer.MAX_VALUE;
         FloatPoint   gravity_point = this.centre_of_gravity();
-        
+
         for (int i = 0; i < border_line_count(); ++i)
         {
             double curr_distance = Math.abs(arr[i].signed_distance(gravity_point));
-            
+
             if (curr_distance < min_distance)
             {
                 min_distance_2 = min_distance;
@@ -405,8 +405,8 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return min_distance + min_distance_2;
     }
-    
-    
+
+
     /**
      * checks if this simplex can be converted into an IntBox
      */
@@ -431,7 +431,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return true;
     }
-    
+
     /**
      * checks if this simplex can be converted into an IntOctagon
      */
@@ -456,7 +456,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return true;
     }
-    
+
     /**
      * Converts this IntSimplex to an IntOctagon.
      * Returns null, if that is not possible, because not all lines
@@ -475,9 +475,9 @@ public class Simplex extends TileShape implements java.io.Serializable
         {
             return IntOctagon.EMPTY;
         }
-        
+
         // initialise to biggest octagon values
-        
+
         int rx = Limits.CRIT_INT;
         int uy = Limits.CRIT_INT;
         int lrx = Limits.CRIT_INT;
@@ -547,7 +547,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         IntOctagon result = new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
         return result.normalize();
     }
-    
+
     /**
      * Returns the simplex, which results from translating
      * the lines of this simplex by p_vector
@@ -565,8 +565,8 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return new Simplex(new_arr);
     }
-    
-    
+
+
     /**
      * Returns the smallest box with int coordinates containing
      * all corners of this simplex.
@@ -599,7 +599,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return precalculated_bounding_box;
     }
-    
+
     /**
      * Calculates a bounding octagon of the Simplex.
      * Returns null, if the Simplex is not bounded.
@@ -623,11 +623,11 @@ public class Simplex extends TileShape implements java.io.Serializable
                 ly = Math.min(ly, curr.y);
                 rx = Math.max(rx, curr.x);
                 uy = Math.max(uy, curr.y);
-                
+
                 double tmp = curr.x - curr.y;
                 ulx = Math.min(ulx, tmp);
                 lrx = Math.max(lrx, tmp);
-                
+
                 tmp = curr.x + curr.y;
                 llx = Math.min(llx, tmp);
                 urx = Math.max(urx, tmp);
@@ -648,18 +648,18 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return precalculated_bounding_octagon;
     }
-    
+
     public Simplex bounding_tile()
     {
         return this;
     }
-    
+
     public RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs)
     {
         return p_dirs.bounds(this);
     }
-    
-    
+
+
     /**
      * Returns the simplex offseted by p_with.
      * If p_width {@literal >} 0, the offset is to the outer, else to the inner.
@@ -682,7 +682,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return offset_simplex;
     }
-    
+
     /**
      * Returns this simplex enlarged by p_offset.
      * The result simplex is intersected with the
@@ -703,9 +703,9 @@ public class Simplex extends TileShape implements java.io.Serializable
         IntOctagon offset_oct = bounding_oct.offset(p_offset);
         return offset_simplex.intersection(offset_oct.to_Simplex());
     }
-    
-    
-    
+
+
+
     /**
      * Returns the number of the rightmost corner seen from p_from_point
      * No other point of this simplex may be to the right
@@ -727,7 +727,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns the intersection of p_box with this simplex
      */
@@ -735,7 +735,7 @@ public class Simplex extends TileShape implements java.io.Serializable
     {
         return intersection(p_box.to_Simplex());
     }
-    
+
     /**
      * Returns the intersection of this simplex and p_other
      */
@@ -752,7 +752,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         Simplex result = new Simplex( new_arr);
         return result.remove_redundant_lines();
     }
-    
+
     /**
      * Returns the intersection of this simplex and the shape p_other
      */
@@ -762,18 +762,18 @@ public class Simplex extends TileShape implements java.io.Serializable
         return result;
     }
 
-    
+
     public boolean intersects(Shape p_other)
     {
         return p_other.intersects(this);
     }
-    
+
     public boolean intersects(Simplex p_other)
     {
         ConvexShape is = intersection(p_other);
         return !is.is_empty();
     }
-    
+
     /**
      * if p_line is a borderline of this simplex the number of that
      * edge is returned, otherwise -1
@@ -789,7 +789,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return -1;
     }
-    
+
     /**
      * Enlarges the simplex by removing the edge line with index p_no.
      * The result simplex may get unbounded.
@@ -805,7 +805,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         System.arraycopy(this.arr, p_no + 1, new_arr, p_no, new_arr.length - p_no);
         return new Simplex(new_arr);
     }
-    
+
     /**
      * Constructs a Simplex from the directed lines in p_line_arr.
      * The simplex will not be normalized.
@@ -815,23 +815,23 @@ public class Simplex extends TileShape implements java.io.Serializable
     {
         arr = p_line_arr;
     }
-    
+
     public Simplex to_Simplex()
     {
         return this;
     }
-    
-    
+
+
     Simplex intersection(IntOctagon p_other)
     {
         return intersection(p_other.to_Simplex());
     }
-    
+
     public TileShape[] cutout(TileShape p_shape)
     {
         return p_shape.cutout_from(this);
     }
-    
+
     /**
      * cuts this simplex out of p_outer_simplex.
      * Divides the resulting shape into simplices along the minimal
@@ -872,7 +872,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         Line first_division_line = division_line_arr[0][0];
         IntDirection first_direction = (IntDirection)first_division_line.direction();
         Collection<Simplex> result_list = new LinkedList<Simplex>();
-        
+
         for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no)
         {
             Line next_division_line;
@@ -894,7 +894,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                 {
                     IntDirection prev_dir = (IntDirection)prev_division_line.direction();
                     if (curr_dir.determinant(prev_dir) > 0)
-                        
+
                     {
                         // the previous division line may intersect
                         //  curr_division_lines[0] inside p_divide_simplex
@@ -954,7 +954,7 @@ public class Simplex extends TileShape implements java.io.Serializable
             {
                 IntDirection prev_dir = (IntDirection)prev_division_line.direction();
                 if (last_curr_dir.determinant(prev_dir) > 0)
-                    
+
                 {
                     // the previous division line may intersect
                     //  the last current division line inside p_divide_simplex
@@ -1025,17 +1025,17 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return result;
     }
-    
+
     Simplex[] cutout_from(IntOctagon p_oct)
     {
         return cutout_from(p_oct.to_Simplex());
     }
-    
+
     Simplex[] cutout_from(IntBox p_box)
     {
         return cutout_from(p_box.to_Simplex());
     }
-    
+
     /**
      * Removes lines, which are redundant in the definition of the
      * shape of this simplex.
@@ -1058,11 +1058,11 @@ public class Simplex extends TileShape implements java.io.Serializable
                 ++new_length;
             }
         }
-        
+
         Side [] intersection_sides = new Side [new_length];
         // precalculated array , on which side of this line the previous and the
         // next line do intersect
-        
+
         boolean try_again = new_length > 2;
         int index_of_last_removed_line = new_length;
         while(try_again)
@@ -1084,7 +1084,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                     next_ind = ind + 1;
                 }
                 next_line = line_arr[next_ind];
-                
+
                 boolean remove_line = false;
                 IntDirection prev_dir = (IntDirection) prev_line.direction();
                 IntDirection next_dir = (IntDirection) next_line.direction();
@@ -1107,7 +1107,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                     else
                         // direction of next_line is smaller than direction of prev_line
                     {
-                        
+
                         if (intersection_sides[ind] == Side.ON_THE_LEFT)
                         {
                             IntDirection curr_dir = (IntDirection) curr_line.direction();
@@ -1145,7 +1145,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                         line_arr [i] = line_arr [i + 1];
                         intersection_sides[i] = intersection_sides [i + 1];
                     }
-                    
+
                     if (new_length < 3)
                     {
                         try_again = false;
@@ -1182,7 +1182,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                 }
             }
         }
-        
+
         if (new_length == 2)
         {
             if (line_arr[0].is_parallel(line_arr[1]))
@@ -1219,22 +1219,22 @@ public class Simplex extends TileShape implements java.io.Serializable
         System.arraycopy(line_arr, 0, result, 0, new_length);
         return new Simplex(result);
     }
-    
+
     public boolean intersects(IntBox p_box)
     {
         return intersects(p_box.to_Simplex());
     }
-    
+
     public boolean intersects(IntOctagon p_octagon)
     {
         return intersects(p_octagon.to_Simplex());
     }
-    
+
     public boolean intersects(Circle p_circle)
     {
         return p_circle.intersects(this);
     }
-    
+
     /**
      * For each corner of this inner simplex 1 or 2 perpendicular
      * projections onto lines of the outer simplex are constructed,
@@ -1261,7 +1261,7 @@ public class Simplex extends TileShape implements java.io.Serializable
         boolean   is_exact =
                 Math.abs(inner_corner.x - intersection.x) < c_tolerance
                 && Math.abs(inner_corner.y - intersection.y) < c_tolerance;
-        
+
         if (!is_exact)
         {
             // it is assumed, that the corners of the original inner simplex are
@@ -1278,14 +1278,14 @@ public class Simplex extends TileShape implements java.io.Serializable
         IntDirection prev_inner_dir = (IntDirection) prev_inner_line.direction().opposite();
         IntDirection next_inner_dir = (IntDirection) curr_inner_line.direction();
         int outer_line_no = 0;
-        
-        
+
+
         // search the first outer line, so that
         // the perpendicular projection of the inner corner onto this
         // line is visible from inner_corner to the left of prev_inner_line.
-        
+
         double min_distance = Integer.MAX_VALUE;
-        
+
         for (int ind = 0; ind < p_outer_simplex.arr.length; ++ind)
         {
             Line outer_line = p_outer_simplex.arr[outer_line_no];
@@ -1305,7 +1305,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                         curr_projection_dir.determinant(next_inner_dir) < 0;
                 // may occor at a sharp angle
                 IntDirection curr_second_projection_dir = curr_projection_dir;
-                
+
                 if (second_division_necessary)
                 {
                     // search the first projection_dir between curr_projection_dir
@@ -1325,7 +1325,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                         curr_second_projection_dir =
                                 (IntDirection)inner_corner.perpendicular_direction(
                                 p_outer_simplex.arr[tmp_outer_line_no]);
-                        
+
                         if (curr_second_projection_dir == Direction.NULL)
                             // inner corner is on outer_line
                         {
@@ -1342,7 +1342,7 @@ public class Simplex extends TileShape implements java.io.Serializable
                             curr_distance = Integer.MAX_VALUE;
                             break;
                         }
-                        
+
                         second_projection_visible =
                                 curr_second_projection_dir.determinant(next_inner_dir) >= 0;
                     }
@@ -1363,7 +1363,7 @@ public class Simplex extends TileShape implements java.io.Serializable
             else
             {
                 ++outer_line_no;
-                
+
             }
         }
         if (min_distance == Integer.MAX_VALUE)
@@ -1385,9 +1385,9 @@ public class Simplex extends TileShape implements java.io.Serializable
         }
         return result;
     }
-    
+
     private final Line[] arr;
-    
+
     /**
      * the following fields are for storing precalculated data
      */
@@ -1395,5 +1395,5 @@ public class Simplex extends TileShape implements java.io.Serializable
     transient private FloatPoint[] precalculated_float_corners = null;
     transient private IntBox precalculated_bounding_box = null;
     transient private IntOctagon precalculated_bounding_octagon = null;
-    
+
 }

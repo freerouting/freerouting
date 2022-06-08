@@ -49,7 +49,7 @@ public class BoardHandlingHeadless implements IBoardHandling {
     {
         return this.board;
     }
-    
+
     public synchronized void update_routing_board(RoutingBoard routing_board) {
     	this.board = routing_board;
     	serializedBoard = null;
@@ -59,31 +59,31 @@ public class BoardHandlingHeadless implements IBoardHandling {
     {
         ObjectOutputStream oos = null;
         ObjectInputStream ois = null;
-        
+
         try
         {
            if (serializedBoard == null) // cache the board byte array
            {
-	           ByteArrayOutputStream bos =  new ByteArrayOutputStream(); 
-	           oos = new ObjectOutputStream(bos); 
-	           	           
+	           ByteArrayOutputStream bos =  new ByteArrayOutputStream();
+	           oos = new ObjectOutputStream(bos);
+
 	           oos.writeObject(this.board);   // serialize this.board
-	           oos.flush(); 
-	           
+	           oos.flush();
+
 	           serializedBoard = bos.toByteArray();
            }
-           
-           ByteArrayInputStream bin = new ByteArrayInputStream(serializedBoard); 
-           ois = new ObjectInputStream(bin);   
 
-           RoutingBoard board_copy =  (RoutingBoard)ois.readObject(); 
-           
+           ByteArrayInputStream bin = new ByteArrayInputStream(serializedBoard);
+           ois = new ObjectInputStream(bin);
+
+           RoutingBoard board_copy =  (RoutingBoard)ois.readObject();
+
            board_copy.set_test_level(this.board.get_test_level());  //test_level is transient
-           
+
            //board_copy.clear_autoroute_database();
            board_copy.clear_all_item_temporary_autoroute_data();
-           board_copy.finish_autoroute(); 
-           
+           board_copy.finish_autoroute();
+
            return board_copy;
         }
         catch(Exception e)
@@ -93,7 +93,7 @@ public class BoardHandlingHeadless implements IBoardHandling {
         }
         finally
         {
-        	try 
+        	try
         	{
 	           if (oos != null) oos.close();
 	           if (ois != null) ois.close();

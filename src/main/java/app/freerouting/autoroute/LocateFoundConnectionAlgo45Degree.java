@@ -20,7 +20,7 @@ import app.freerouting.logger.FRLogger;
 
 public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
 {
-    
+
     /**
      * Creates a new instance of LocateFoundConnectionAlgo45Degree
      */
@@ -30,39 +30,39 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     {
         super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_test_level);
     }
-    
+
     protected Collection<FloatPoint> calculate_next_trace_corners()
     {
         Collection<FloatPoint> result =  new LinkedList<FloatPoint>();
-        
+
         if (this.current_to_door_index > this.current_target_door_index)
         {
             return result;
         }
-        
+
         BacktrackElement curr_from_info = this.backtrack_array[this.current_to_door_index - 1];
-        
+
         if (curr_from_info.next_room == null)
         {
             FRLogger.warn("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: next_room is null");
             return result;
         }
-        
+
         TileShape room_shape = curr_from_info.next_room.get_shape();
-        
+
         int trace_halfwidth = this.ctrl.compensated_trace_half_width[this.current_trace_layer];
         int trace_halfwidth_add = trace_halfwidth + AutorouteEngine.TRACE_WIDTH_TOLERANCE; // add some tolerance for free space expansion rooms.
         int shrink_offset;
         if (curr_from_info.next_room instanceof ObstacleExpansionRoom)
         {
-            
+
             shrink_offset = trace_halfwidth;
         }
         else
         {
             shrink_offset = trace_halfwidth_add;
         }
-        
+
         TileShape shrinked_room_shape = (TileShape) room_shape.offset(-shrink_offset);
         if (!shrinked_room_shape.is_empty())
         {
@@ -80,7 +80,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         {
             shrinked_room_shape = room_shape;
         }
-        
+
         if (this.current_to_door_index == this.current_target_door_index)
         {
             FloatPoint nearest_point = this.current_target_shape.nearest_point_approx(this.current_from_point);
@@ -95,7 +95,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
             ++this.current_to_door_index;
             return result;
         }
-        
+
         BacktrackElement curr_to_info = this.backtrack_array[this.current_to_door_index];
         if (!(curr_to_info.door instanceof ExpansionDoor))
         {
@@ -103,14 +103,14 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
             return result;
         }
         ExpansionDoor curr_to_door = (ExpansionDoor) curr_to_info.door;
-        
-        
+
+
         FloatPoint nearest_to_door_point;
         if (curr_to_door.dimension == 2)
         {
             // May not happen in free angle routing mode because then corners are cut off.
             TileShape to_door_shape = curr_to_door.get_shape();
-            
+
             TileShape shrinked_to_door_shape = (TileShape) to_door_shape.shrink(shrink_offset);
             nearest_to_door_point = shrinked_to_door_shape.nearest_point_approx(this.current_from_point);
             nearest_to_door_point = round_to_integer(nearest_to_door_point);
@@ -125,7 +125,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
             }
             FloatLine curr_line_section = line_sections[curr_to_info.section_no_of_door];
             nearest_to_door_point =  curr_line_section.nearest_segment_point(this.current_from_point);
-            
+
             boolean nearest_to_door_point_ok = true;
             if (curr_to_info.next_room != null)
             {
@@ -153,12 +153,12 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         ++this.current_to_door_index;
         return result;
     }
-    
+
     private static FloatPoint round_to_integer(FloatPoint p_point)
     {
         return p_point.round().to_float();
     }
-    
+
     /**
      * Calculates, if the next 45-degree angle should be horizontal first when coming fromm
      * p_from_point on p_from_door.
@@ -172,7 +172,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         {
             return from_door_box.height() >= from_door_box.width();
         }
-        
+
         FloatLine door_line_segment = door_shape.diagonal_corner_segment();
         FloatPoint left_corner;
         FloatPoint right_corner;
@@ -218,7 +218,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
                 {
                     result = Math.abs(dx) < Math.abs(dy);
                 }
-                
+
             }
             else
             {
@@ -235,7 +235,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         }
         return result;
     }
-    
+
     /**
      * Calculates, if the 45-degree angle to the next door shape should be horizontal first when coming fromm
      * p_from_point.
@@ -294,7 +294,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
                 {
                     result = Math.abs(dx) > Math.abs(dy);
                 }
-                
+
             }
             else
             {
@@ -311,5 +311,5 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
         }
         return result;
     }
-    
+
 }

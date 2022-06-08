@@ -7,25 +7,25 @@ import app.freerouting.geometry.planar.FloatPoint;
  */
 public class StitchRouteState extends RouteState
 {
-    
+
     /** Creates a new instance of StichRouteState */
     protected StitchRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         super(p_parent_state, p_board_handling, p_activityReplayFile);
     }
-    
+
     public InteractiveState left_button_clicked(FloatPoint p_location)
     {
         return add_corner(p_location);
     }
-    
+
     public InteractiveState add_corner(FloatPoint p_location)
     {
         // make the current situation restorable by undo
         hdlg.get_routing_board().generate_snapshot();
         return super.add_corner(p_location);
     }
-    
+
     public InteractiveState mouse_moved()
     {
         super.mouse_moved();
@@ -33,17 +33,17 @@ public class StitchRouteState extends RouteState
         hdlg.repaint();
         return this;
     }
-    
+
     public javax.swing.JPopupMenu get_popup_menu()
     {
         return hdlg.get_panel().popup_menu_stitch_route;
     }
-    
+
     public String get_help_id()
     {
         return "RouteState_StitchingRouteState";
     }
-    
+
     public void draw(java.awt.Graphics p_graphics)
     {
         super.draw(p_graphics);

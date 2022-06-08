@@ -10,7 +10,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class FloatLine
 {
-    
+
     /**
      * Creates a line from two FloatPoints.
      */
@@ -23,7 +23,7 @@ public class FloatLine
         a = p_a;
         b = p_b;
     }
-    
+
     /**
      * Returns the FloatLine with swapped end points.
      */
@@ -31,7 +31,7 @@ public class FloatLine
     {
         return new FloatLine(this.b, this.a);
     }
-    
+
     public FloatLine adjust_direction(FloatLine p_other)
     {
         if (this.b.side_of(this.a, p_other.a )== p_other.b.side_of(this.a, p_other.a ))
@@ -40,7 +40,7 @@ public class FloatLine
         }
         return this.opposite();
     }
-    
+
     /**
      * Calculates the intersection of this line with p_other.
      * Returns null, if the lines are parallel.
@@ -64,7 +64,7 @@ public class FloatLine
         is_y = (d2y * det_1 - d1y * det_2) / det;
         return new FloatPoint(is_x, is_y);
     }
-    
+
     /**
      * translates the line perpendicular at about p_dist.
      * If p_dist {@literal >} 0, the line will be translated to the left, else to the right
@@ -92,7 +92,7 @@ public class FloatLine
         FloatPoint new_b = new FloatPoint(new_a.x + dx, new_a.y + dy);
         return new FloatLine(new_a, new_b);
     }
-    
+
     /**
      * Returns the signed distance of this line from p_point.
      * The result will be positive, if the line is on the left of p_point,
@@ -109,33 +109,33 @@ public class FloatLine
         double length = Math.sqrt(dx * dx + dy * dy);
         return det / length;
     }
-    
+
     /**
      * Returns an approximation of the perpensicular projection
      * of p_point onto this line.
      */
     public FloatPoint perpendicular_projection(FloatPoint p_point)
     {
-        
+
         double dx = b.x - a.x;
         double dy = b.y - a.y;
         if (dx == 0 && dy == 0)
         {
             return this.a;
         }
-        
+
         double dxdx = dx * dx;
         double dydy = dy * dy;
         double dxdy = dx * dy;
         double denominator = dxdx + dydy;
         double  det = a.x * b.y - b.x * a.y;
-        
+
         double x = (p_point.x * dxdx + p_point.y * dxdy + det * dy) / denominator;
         double y = (p_point.x * dxdy + p_point.y * dydy - det * dx) / denominator;
-        
+
         return new FloatPoint(x, y);
     }
-    
+
     /**
      * Returns the distance of p_point to the nearest point of this line
      * betweem this.a and this.b.
@@ -154,7 +154,7 @@ public class FloatLine
         }
         return result;
     }
-    
+
     /**
      * Returns the perpendicular projection of p_line_segment onto this oriented line segment,
      * Returns null, if the projection is empty.
@@ -197,7 +197,7 @@ public class FloatLine
         }
         return new FloatLine(projected_a, projected_b);
     }
-    
+
     /**
      * Returns the projection of p_line_segment onto this oriented line segment
      * by moving p_line_segment perpendicular into the direction of this  line segmant
@@ -228,9 +228,9 @@ public class FloatLine
         {
             projected_a = this.a;
         }
-        
+
         FloatPoint projected_b;
-        
+
         if (p_line_segment.b.scalar_product(p_line_segment.a, this.b) < 0)
         {
             FloatLine curr_perpendicular_line =
@@ -247,7 +247,7 @@ public class FloatLine
         }
         return new FloatLine(projected_a, projected_b);
     }
-    
+
     /**
      * Shrinks this line on both sides by p_value.
      * The result will contain at least the gravity point of the line.
@@ -267,7 +267,7 @@ public class FloatLine
         FloatPoint new_b = new FloatPoint(a.x + (dx * new_length) / length, a.y + (dy * new_length) / length);
         return new FloatLine(new_a, new_b);
     }
-    
+
     /**
      * Calculates the nearest point on this line to p_from_point between
      * this.a and this.b.
@@ -291,7 +291,7 @@ public class FloatLine
         }
         return result;
     }
-    
+
     /**
      * Divides this line segment into p_count line segments of nearly equal length.
      * and at most p_max_section_length.
@@ -333,7 +333,7 @@ public class FloatLine
         }
         return result;
     }
-    
+
     public final FloatPoint a;
     public final FloatPoint b;
 }

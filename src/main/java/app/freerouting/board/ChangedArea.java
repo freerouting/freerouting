@@ -43,7 +43,7 @@ class ChangedArea
         curr.llx = Math.min(curr.llx, tmp);
         curr.urx = Math.max(curr.urx, tmp);
     }
-    
+
      /**
      * enlarges the octagon on p_layer, so that it contains p_shape
      */
@@ -114,7 +114,7 @@ class ChangedArea
         double lrx;
         double llx;
         double urx;
-        
+
         void set_empty()
         {
             lx = Integer.MAX_VALUE;

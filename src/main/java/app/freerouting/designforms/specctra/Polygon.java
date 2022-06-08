@@ -19,7 +19,7 @@ public class Polygon extends Shape
         super(p_layer);
         coor = p_coor;
     }
-    
+
     public app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform)
     {
         IntPoint [] corner_arr = new IntPoint[coor.length / 2];
@@ -32,7 +32,7 @@ public class Polygon extends Shape
         }
         return new app.freerouting.geometry.planar.PolygonShape(corner_arr);
     }
-    
+
     public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
     {
         if (coor.length < 2)
@@ -48,7 +48,7 @@ public class Polygon extends Shape
         }
         return new app.freerouting.geometry.planar.PolygonShape(corner_arr);
     }
-    
+
     public Rectangle bounding_box()
     {
         double[]  bounds = new double[4];
@@ -73,7 +73,7 @@ public class Polygon extends Shape
         }
         return new Rectangle(layer, bounds);
     }
-    
+
     /**
      * Writes this polygon as a scope to an output dsn-file.
      */
@@ -94,7 +94,7 @@ public class Polygon extends Shape
         }
         p_file.end_scope();
     }
-    
+
     public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type) throws java.io.IOException
     {
         p_file.start_scope();
@@ -114,6 +114,6 @@ public class Polygon extends Shape
         }
         p_file.end_scope();
     }
-    
+
     public final double [] coor;
 }

@@ -18,14 +18,14 @@ public class InteractiveState
         this.resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
     }
-    
+
     /**
      * default draw function to be overwritten in derived classes
      */
     public void draw(Graphics p_graphics)
     {
     }
-    
+
     /**
      * Default function to be overwritten in derived classes.
      * Returns the return_state of this state, if the state is left
@@ -35,7 +35,7 @@ public class InteractiveState
     {
         return this;
     }
-    
+
     /*
      * Actions to be taken when a mouse button is released.
      * Default function to be overwritten in derived classes.
@@ -46,7 +46,7 @@ public class InteractiveState
     {
         return this;
     }
-    
+
     /**
      * Actions to be taken, when the location of the mouse pointer changes.
      * Default function to be overwritten in derived classes.
@@ -60,7 +60,7 @@ public class InteractiveState
         hdlg.screen_messages.set_mouse_position(mouse_position);
         return this;
     }
-    
+
     /**
      * Actions to be taken when the mouse moves with a button pressed down.
      * Default function to be overwritten in derived classes.
@@ -71,7 +71,7 @@ public class InteractiveState
     {
         return this;
     }
-    
+
     /**
      * Actions to be taken when the left mouse button is pressed down.
      * Default function to be overwritten in derived classes.
@@ -82,7 +82,7 @@ public class InteractiveState
     {
         return this;
     }
-    
+
     /**
      * Action to be taken, when the mouse wheel was turned..
      */
@@ -93,7 +93,7 @@ public class InteractiveState
         hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
         return this;
     }
-    
+
     /**
      * Default actions when a key shortcut is pressed.
      * Overwritten in derived classes for other key shortcut actions.
@@ -161,7 +161,7 @@ public class InteractiveState
         }
         return result;
     }
-    
+
     /**
      * Action to be taken, when this state is completed and exited.
      * Default function to be overwritten in derived classes.
@@ -175,7 +175,7 @@ public class InteractiveState
         }
         return this.return_state;
     }
-    
+
     /**
      * Actions to be taken, when this state gets cancelled.
      * Default function to be overwritten in derived classes.
@@ -189,7 +189,7 @@ public class InteractiveState
         }
         return this.return_state;
     }
-    
+
     /**
      * Action to be taken, when the current layer is changed.
      * returns false, if the layer could not be changed,
@@ -200,7 +200,7 @@ public class InteractiveState
         hdlg.set_layer(p_new_layer);
         return true;
     }
-    
+
     /**
      * Used when reading the next point from a logfile.
      * Default function to be overwritten in derived classes.
@@ -209,14 +209,14 @@ public class InteractiveState
     {
         return this;
     }
-    
+
     /**
      * The default message displayed, when this state is active.
      */
     public void display_default_message()
     {
     }
-    
+
     /**
      * Gets the identifier for displaying help for the user about this state.
      */
@@ -224,8 +224,8 @@ public class InteractiveState
     {
         return "MenuState";
     }
-    
-    
+
+
     /**
      * Returns the popup menu from board_panel, which is used in this interactive state.
      * Default function to be overwritten in derived classes.
@@ -240,16 +240,16 @@ public class InteractiveState
     public void set_toolbar()
     {
     }
-    
+
     /** board setting access handler for the derived classes */
     protected final BoardHandling hdlg;
-    
+
     /** The intended state after this state is finished */
     protected InteractiveState return_state;
-    
+
     /** if logfile != null, the interactive actions are stored in a logfile */
     protected final ActivityReplayFile activityReplayFile;
-    
+
     /** Contains the files  with the language dependent messages */
     protected final java.util.ResourceBundle resources;
 }

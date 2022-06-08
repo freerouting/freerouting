@@ -14,7 +14,7 @@ import app.freerouting.board.PolylineTrace;
 
 public class CutoutRouteState extends SelectRegionState
 {
-    
+
     /**
      * Returns a new instance of this class.
      */
@@ -23,7 +23,7 @@ public class CutoutRouteState extends SelectRegionState
     {
         return get_instance(p_item_list,  null, p_parent_state, p_board_handling, p_activityReplayFile);
     }
-    
+
     /**
      * Returns a new instance of this class.
      */
@@ -33,7 +33,7 @@ public class CutoutRouteState extends SelectRegionState
         p_board_handling.display_layer_messsage();
         // filter items, whichh cannnot be cutout
         Collection<PolylineTrace> item_list = new LinkedList<PolylineTrace>();
-        
+
         for (Item curr_item : p_item_list)
         {
             if (!curr_item.is_user_fixed() && curr_item instanceof PolylineTrace)
@@ -41,7 +41,7 @@ public class CutoutRouteState extends SelectRegionState
                 item_list.add((PolylineTrace) curr_item);
             }
         }
-        
+
         CutoutRouteState new_instance =  new CutoutRouteState(item_list, p_parent_state, p_board_handling, p_activityReplayFile);
         new_instance.corner1 = p_location;
         if (p_location != null && new_instance.activityReplayFile != null)
@@ -51,7 +51,7 @@ public class CutoutRouteState extends SelectRegionState
         new_instance.hdlg.screen_messages.set_status_message(new_instance.resources.getString("drag_left_mouse_button_to_select_cutout_rectangle"));
         return new_instance;
     }
-    
+
     /** Creates a new instance of CutoutRouteState */
     private CutoutRouteState(Collection<PolylineTrace> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
@@ -62,7 +62,7 @@ public class CutoutRouteState extends SelectRegionState
         }
         this.trace_list = p_item_list;
     }
-    
+
     public InteractiveState complete()
     {
         hdlg.screen_messages.set_status_message("");
@@ -74,7 +74,7 @@ public class CutoutRouteState extends SelectRegionState
         this.cutout_route();
         return this.return_state;
     }
-    
+
     /**
      * Selects all items in the rectangle defined by corner1 and corner2.
      */
@@ -84,16 +84,16 @@ public class CutoutRouteState extends SelectRegionState
         {
             return;
         }
-        
+
         hdlg.get_routing_board().generate_snapshot();
-        
+
         IntPoint p1 = this.corner1.round() ;
         IntPoint p2 = this.corner2.round() ;
-        
+
         IntBox cut_box = new IntBox(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y)) ;
-        
+
         Set<Integer> changed_nets = new TreeSet<Integer>();
-        
+
         for (PolylineTrace curr_trace : this.trace_list)
         {
             app.freerouting.board.ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
@@ -102,28 +102,28 @@ public class CutoutRouteState extends SelectRegionState
                 changed_nets.add(curr_trace.get_net_no(i));
             }
         }
-        
+
         for (Integer changed_net : changed_nets)
         {
             hdlg.update_ratsnest(changed_net);
         }
     }
-    
+
     public void draw(java.awt.Graphics p_graphics)
     {
         if (trace_list == null)
         {
             return;
         }
-        
+
         for (PolylineTrace curr_trace : this.trace_list)
         {
-            
+
             curr_trace.draw(p_graphics, hdlg.graphics_context, hdlg.graphics_context.get_hilight_color(),
                     hdlg.graphics_context.get_hilight_color_intensity());
         }
         super.draw(p_graphics);
     }
-    
+
     private final Collection<PolylineTrace> trace_list;
 }

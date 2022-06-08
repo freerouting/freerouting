@@ -12,7 +12,7 @@ public class Layer
     public static final Layer PCB = new Layer("pcb", -1, false);
     /** the signal layers */
     public static final Layer SIGNAL = new Layer("signal", -1, true);
-    
+
     /**
      * Creates a new instance of Layer.
      * p_no is the physical layer number starting with 0 at the component side
@@ -28,7 +28,7 @@ public class Layer
         is_signal = p_is_signal;
         net_names = p_net_names;
     }
-    
+
     /**
      * Creates a new instance of Layer.
      * p_no is the physical layer number starting with 0 at the component side
@@ -43,7 +43,7 @@ public class Layer
         is_signal = p_is_signal;
         net_names = new LinkedList<String>();
     }
-    
+
     /**
      * Writes a layer scope in the stucture scope.
      */

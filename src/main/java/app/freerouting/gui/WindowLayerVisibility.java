@@ -9,7 +9,7 @@ public class WindowLayerVisibility extends WindowVisibility
     public static WindowLayerVisibility get_instance(BoardFrame p_board_frame)
     {
         BoardPanel board_panel = p_board_frame.board_panel;
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
         String title = resources.getString("layer_visibility");
         String header_message = resources.getString("layer_visibility_header");
@@ -27,19 +27,19 @@ public class WindowLayerVisibility extends WindowVisibility
         p_board_frame.set_context_sensitive_help(result, "WindowDisplay_LayerVisibility");
         return result;
     }
-    
+
     /** Creates a new instance of LayerVisibilityFrame */
     private WindowLayerVisibility(BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr)
     {
-        
+
         super(p_board_frame, p_title, p_header_message, p_message_arr);
     }
-    
+
     protected void set_changed_value(int p_index, double p_value)
     {
         get_board_handling().set_layer_visibility(p_index, p_value);
     }
-    
+
     protected void set_all_minimum()
     {
         int layer_count = this.get_board_handling().graphics_context.layer_count();
@@ -52,7 +52,7 @@ public class WindowLayerVisibility extends WindowVisibility
             }
         }
     }
-    
+
     /**
      * Refreshs the displayed values in this window.
      */

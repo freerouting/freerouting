@@ -449,9 +449,9 @@ public class MainApplication extends javax.swing.JFrame {
     private String hybrid_ratio;
     private ItemSelectionStrategy item_selection_strategy;
     private int num_threads;
-    // Issue: adding a new field into AutorouteSettings caused exception when loading 
+    // Issue: adding a new field into AutorouteSettings caused exception when loading
     // an existing design: "Couldn't read design file", "InvalidClassException", incompatible with serialized data
-    // so choose to pass this parameter through BoardHandling 
+    // so choose to pass this parameter through BoardHandling
 
     private final boolean is_test_version;
     private final boolean is_webstart;

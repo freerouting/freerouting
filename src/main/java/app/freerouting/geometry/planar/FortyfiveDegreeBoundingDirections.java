@@ -38,12 +38,12 @@ public class FortyfiveDegreeBoundingDirections implements ShapeBoundingDirection
     {
         return p_simplex.bounding_octagon();
     }
-    
+
     public RegularTileShape bounds (Circle p_circle)
     {
         return p_circle.bounding_octagon();
     }
-    
+
     public RegularTileShape bounds (PolygonShape p_polygon)
     {
         return p_polygon.bounding_octagon();

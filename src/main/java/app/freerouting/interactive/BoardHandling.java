@@ -1731,7 +1731,7 @@ public class BoardHandling extends BoardHandlingHeadless
     {
     	board_update_strategy = p_board_update_strategy;
     }
-    
+
     public BoardUpdateStrategy get_board_update_strategy()
     {
     	return board_update_strategy;
@@ -1741,7 +1741,7 @@ public class BoardHandling extends BoardHandlingHeadless
     {
     	hybrid_ratio = p_hybrid_ratio;
     }
-    
+
     public String get_hybrid_ratio()
     {
     	return hybrid_ratio;
@@ -1751,12 +1751,12 @@ public class BoardHandling extends BoardHandlingHeadless
     {
     	item_selection_strategy = p_item_selection_strategy;
     }
-    
+
     public ItemSelectionStrategy get_item_selection_strategy()
     {
     	return item_selection_strategy;
     }
-    
+
     public void set_num_threads(int p_value)
     {
     	num_threads = p_value;
@@ -1766,13 +1766,13 @@ public class BoardHandling extends BoardHandlingHeadless
     {
         return num_threads;
     }
-    
+
     /** thread pool size */
     private int num_threads;
     private BoardUpdateStrategy board_update_strategy;
     private String hybrid_ratio;
     private ItemSelectionStrategy item_selection_strategy;
-    
+
     /** The graphical context for drawing the board. */
     public GraphicsContext graphics_context = null;
     /** For transforming coordinates between the user and the board coordinate space */

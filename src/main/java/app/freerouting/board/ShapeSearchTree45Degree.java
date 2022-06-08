@@ -220,7 +220,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
         // opposite of this line.
 
         Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<IncompleteFreeSpaceExpansionRoom>();
-        
+
         TileShape contained_shape = p_incomplete_room.get_contained_shape();
         if (contained_shape == null || contained_shape.is_empty())
         {

@@ -12,7 +12,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class CoordinateTransform implements java.io.Serializable
 {
-    
+
     /**
      * Creates a new instance of CoordinateTransform.
      * The base point of the dsn coordinate system will be translated to zero in the board
@@ -24,7 +24,7 @@ public class CoordinateTransform implements java.io.Serializable
         base_x = p_base_x;
         base_y = p_base_y;
     }
-    
+
     /**
      * Scale a value from the board to the dsn coordinate system
      */
@@ -32,7 +32,7 @@ public class CoordinateTransform implements java.io.Serializable
     {
         return p_val / scale_factor;
     }
-    
+
     /**
      * Scale a value from the dsn to the board coordinate system
      */
@@ -40,7 +40,7 @@ public class CoordinateTransform implements java.io.Serializable
     {
         return p_val * scale_factor;
     }
-    
+
     /**
      * Transforms a geometry.planar.FloatPoint to a tuple of doubles
      * in the dsn coordinate system.
@@ -52,7 +52,7 @@ public class CoordinateTransform implements java.io.Serializable
         result [1] = board_to_dsn(p_point.y) + base_y;
         return result;
     }
-    
+
     /**
      * Transforms a geometry.planar.FloatPoint to a tuple of doubles
      * in the dsn coordinate system in relative (vector) coordinates.
@@ -64,7 +64,7 @@ public class CoordinateTransform implements java.io.Serializable
         result [1] = board_to_dsn(p_point.y);
         return result;
     }
-    
+
     /**
      * Transforms an array of n geometry.planar.FloatPoints to
      * an array of 2*n  doubles in the dsn coordinate system.
@@ -79,7 +79,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Transforms an array of n geometry.planar.Lines to
      * an array of 4*n  doubles in the dsn coordinate system.
@@ -98,7 +98,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Transforms an array of n geometry.planar.FloatPoints to
      * an array of 2*n  doubles in the dsn coordinate system in relative (vector) coordinates.
@@ -113,7 +113,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Transforms a geometry.planar.Vector to a tuple of doubles
      * in the dsn coordinate system.
@@ -126,7 +126,7 @@ public class CoordinateTransform implements java.io.Serializable
         result [1] = board_to_dsn(v.y);
         return result;
     }
-    
+
     /**
      * Transforms a dsn tuple to a geometry.planar.FloatPoint
      */
@@ -136,7 +136,7 @@ public class CoordinateTransform implements java.io.Serializable
         double y = dsn_to_board(p_tuple[1] - base_y);
         return new FloatPoint(x, y);
     }
-    
+
     /**
      * Transforms a dsn tuple to a geometry.planar.FloatPoint in relative (vector) coordinates.
      */
@@ -146,7 +146,7 @@ public class CoordinateTransform implements java.io.Serializable
         double y = dsn_to_board(p_tuple[1]);
         return new FloatPoint(x, y);
     }
-    
+
     /**
      * Transforms a geometry.planar.Intbox to the coordinates of a Rectangle.
      */
@@ -159,7 +159,7 @@ public class CoordinateTransform implements java.io.Serializable
         result[3] = p_box.ur.y / scale_factor + base_y;
         return result;
     }
-    
+
     /**
      * Transforms a geometry.planar.Intbox to a Rectangle in relative (vector) coordinates.
      */
@@ -172,7 +172,7 @@ public class CoordinateTransform implements java.io.Serializable
         result[3] = p_box.ur.y / scale_factor;
         return result;
     }
-    
+
     /**
      * Transforms a board shape to a dsn shape.
      */
@@ -203,7 +203,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Transforms the relative (vector) coordinates of a geometry.planar.Shape to a specctra dsn shape.
      */
@@ -234,7 +234,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return result;
     }
-    
+
     private final double scale_factor;
     private final double base_x;
     private final double base_y;

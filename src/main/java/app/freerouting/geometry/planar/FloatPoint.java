@@ -10,9 +10,9 @@ import app.freerouting.logger.FRLogger;
  */
 public class FloatPoint implements java.io.Serializable
 {
-    
+
     public static final FloatPoint ZERO = new FloatPoint(0,0);
-    
+
     /**
      * creates an instance of class FloatPoint from two double's,
      */
@@ -21,13 +21,13 @@ public class FloatPoint implements java.io.Serializable
         x = p_x;
         y = p_y;
     }
-    
+
     public FloatPoint(IntPoint p_pt)
     {
         x = p_pt.x ;
         y = p_pt.y ;
     }
-    
+
     /**
      * returns the square of the distance from this point to the zero point
      */
@@ -35,7 +35,7 @@ public class FloatPoint implements java.io.Serializable
     {
         return x * x + y * y;
     }
-    
+
     /**
      * returns the distance from this point to the zero point
      */
@@ -43,7 +43,7 @@ public class FloatPoint implements java.io.Serializable
     {
         return Math.sqrt(size_square());
     }
-    
+
     /**
      * returns the square of the distance from this Point to the Point p_other
      */
@@ -53,7 +53,7 @@ public class FloatPoint implements java.io.Serializable
         double dy = p_other.y - y;
         return dx * dx + dy * dy;
     }
-    
+
     /**
      * returns the distance from this point to the point p_other
      */
@@ -61,7 +61,7 @@ public class FloatPoint implements java.io.Serializable
     {
         return Math.sqrt(distance_square(p_other));
     }
-    
+
     /**
      * Computes the weighted distance to p_other.
      */
@@ -74,7 +74,7 @@ public class FloatPoint implements java.io.Serializable
         double result = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
         return result;
     }
-    
+
     /**
      * rounds the coordinates from an object of class Point_double to
      * an object of class IntPoint
@@ -83,7 +83,7 @@ public class FloatPoint implements java.io.Serializable
     {
         return new IntPoint((int)Math.round(x), (int)Math.round(y));
     }
-    
+
     /**
      * Rounds this point, so that if this point is on the right side
      * of any directed line with direction p_dir, the result
@@ -93,7 +93,7 @@ public class FloatPoint implements java.io.Serializable
     {
         FloatPoint dir = p_dir.get_vector().to_float();
         int rounded_x;
-        
+
         if (dir.y > 0)
         {
             rounded_x = (int) Math.ceil(x);
@@ -106,9 +106,9 @@ public class FloatPoint implements java.io.Serializable
         {
             rounded_x = (int) Math.round(x);
         }
-        
+
         int rounded_y;
-        
+
         if (dir.x > 0)
         {
             rounded_y = (int) Math.floor(y);
@@ -123,7 +123,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return new IntPoint(rounded_x, rounded_y);
     }
-    
+
     /**
      * Round this Point so the x coordinate of the result will be a multiple of p_horizontal_grid
      * and the y coordinate a multiple of p_vertical_grid.
@@ -150,7 +150,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return new IntPoint((int) rounded_x, (int) rounded_y );
     }
-    
+
     /**
      * Rounds this point, so that if this point is on the left side
      * of any directed line with direction p_dir, the result
@@ -160,7 +160,7 @@ public class FloatPoint implements java.io.Serializable
     {
         FloatPoint dir = p_dir.get_vector().to_float();
         int rounded_x;
-        
+
         if (dir.y > 0)
         {
             rounded_x = (int) Math.floor(x);
@@ -173,9 +173,9 @@ public class FloatPoint implements java.io.Serializable
         {
             rounded_x = (int) Math.round(x);
         }
-        
+
         int rounded_y;
-        
+
         if (dir.x > 0)
         {
             rounded_y = (int) Math.ceil(y);
@@ -190,7 +190,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return new IntPoint(rounded_x, rounded_y);
     }
-    
+
     /**
      * Adds the coordinates of this FloatPoint and p_other.
      */
@@ -198,7 +198,7 @@ public class FloatPoint implements java.io.Serializable
     {
         return new FloatPoint(this.x + p_other.x, this.y + p_other.y);
     }
-    
+
     /**
      * Substracts the coordinates of p_other from this FloatPoint.
      */
@@ -206,7 +206,7 @@ public class FloatPoint implements java.io.Serializable
     {
         return new FloatPoint(this.x - p_other.x, this.y - p_other.y);
     }
-    
+
     /**
      * Returns an approximation of the perpendicular projection
      * of this point onto p_line
@@ -216,7 +216,7 @@ public class FloatPoint implements java.io.Serializable
         FloatLine line = new FloatLine(p_line.a.to_float(), p_line.b.to_float());
         return line.perpendicular_projection(this);
     }
-    
+
     /**
      * Calculates the scalar prodct of (p_1 - this). with (p_2 - this).
      */
@@ -233,7 +233,7 @@ public class FloatPoint implements java.io.Serializable
         double  dy_2 = p_2.y - this.y;
         return (dx_1 * dx_2 + dy_1 * dy_2);
     }
-    
+
     /**
      * Approximates a FloatPoint on the line from zero to this point
      * with distance p_new_length from zero.
@@ -250,7 +250,7 @@ public class FloatPoint implements java.io.Serializable
         double new_y = (y * p_new_size) / length;
         return new FloatPoint(new_x, new_y);
     }
-    
+
     /**
      * Approximates a FloatPoint on the line from this point to p_to_point
      * with distance p_new_length from this point.
@@ -269,7 +269,7 @@ public class FloatPoint implements java.io.Serializable
         double new_y = this.y + (dy * p_new_length) / length;
         return new FloatPoint(new_x, new_y);
     }
-    
+
     /**
      * Returns the middle point between this point and p_to_point.
      */
@@ -283,7 +283,7 @@ public class FloatPoint implements java.io.Serializable
         double middle_y = 0.5 * (this.y + p_to_point.y);
         return new FloatPoint(middle_x, middle_y);
     }
-    
+
     /**
      * The function returns
      * Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2;
@@ -299,7 +299,7 @@ public class FloatPoint implements java.io.Serializable
         double determinant = d21_x * d01_y - d21_y * d01_x;
         return Side.of(determinant);
     }
-    
+
     /**
      *  Rotates this FloatPoints by p_angle ( in radian ) around the p_pole.
      */
@@ -317,7 +317,7 @@ public class FloatPoint implements java.io.Serializable
         double new_dy = dx * sin_angle + dy * cos_angle;
         return new FloatPoint(p_pole.x + new_dx, p_pole.y + new_dy);
     }
-    
+
     /**
      * Turns this FloatPoint by p_factor times 90 degree around ZERO.
      */
@@ -358,7 +358,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return new FloatPoint(new_x, new_y);
     }
-    
+
     /**
      * Turns this FloatPoint by p_factor times 90 degree around p_pole.
      */
@@ -403,7 +403,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return (this.y >= min_y - p_tolerance && this.y <= max_y + p_tolerance);
     }
-    
+
     /**
      * Creates the smallest IntBox containing this point.
      */
@@ -413,7 +413,7 @@ public class FloatPoint implements java.io.Serializable
         IntPoint upper_right = new IntPoint((int)Math.ceil(this.x),(int)Math.ceil(this.y));
         return new IntBox(lower_left, upper_right);
     }
-    
+
     /**
      * Calculates the touching points of the tangents from this point to a circle
      * around p_to_point with radius p_distance.
@@ -430,13 +430,13 @@ public class FloatPoint implements java.io.Serializable
     {
         // turn the situation 90 degree if the x difference is smaller
         // than the y difference for better numerical stability
-        
+
         double dx = Math.abs(this.x - p_to_point.x);
         double dy = Math.abs(this.y - p_to_point.y);
         boolean situation_turned = (dy > dx);
         FloatPoint pole;
         FloatPoint circle_center;
-        
+
         if (situation_turned)
         {
             // turn the situation by 90 degree
@@ -448,7 +448,7 @@ public class FloatPoint implements java.io.Serializable
             pole = this;
             circle_center = p_to_point;
         }
-        
+
         dx = pole.x - circle_center.x;
         dy = pole.y - circle_center.y;
         double dx_square = dx * dx;
@@ -456,25 +456,25 @@ public class FloatPoint implements java.io.Serializable
         double dist_square = dx_square + dy_square;
         double radius_square = p_distance * p_distance;
         double discriminant = radius_square * dy_square - (radius_square - dx_square) * dist_square;
-        
+
         if (discriminant <= 0)
         {
             // pole is inside the circle.
             return new FloatPoint[0];
         }
         double square_root = Math.sqrt(discriminant);
-        
+
         FloatPoint[] result = new FloatPoint[2];
-        
+
         double     a1 = radius_square * dy;
         double     dy1 = (a1 + p_distance * square_root) / dist_square;
         double     dy2 = (a1 - p_distance * square_root) / dist_square;
-        
+
         double first_point_y = dy1 + circle_center.y;
         double first_point_x = (radius_square - dy * dy1) / dx + circle_center.x;
         double second_point_y = dy2 + circle_center.y;
         double second_point_x = (radius_square - dy * dy2) / dx + circle_center.x;
-        
+
         if (situation_turned)
         {
             // turn the result by 270 degree
@@ -488,7 +488,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Calculates the left tangential point of the line from this point
      * to a circle around p_to_point with radius p_distance.
@@ -516,7 +516,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Calculates the right tangential point of the line from this point
      * to a circle around p_to_point with radius p_distance.
@@ -544,7 +544,7 @@ public class FloatPoint implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Calculates the center of the circle through this point, p_1 and p_2
      * by calculating the intersection of the two lines perpendicular to and passing through
@@ -560,7 +560,7 @@ public class FloatPoint implements java.io.Serializable
         double y_center = (0.5 * (this.x + p_1.x) - x_center)/slope_1 + 0.5 * (this.y + p_1.y);
         return new FloatPoint(x_center, y_center);
     }
-    
+
     /**
      * Returns true, if this point is contained in the circle through p_1, p_2 and p_3.
      */
@@ -570,19 +570,19 @@ public class FloatPoint implements java.io.Serializable
         double radius_square = center.distance_square(p_1);
         return (this.distance_square(center) < radius_square - 1); // - 1 is a tolerance for numerical stability.
     }
-    
+
     public String to_string(java.util.Locale p_locale)
     {
         java.text.NumberFormat nf =  java.text.NumberFormat.getInstance(p_locale);
         nf.setMaximumFractionDigits(4);
         return (" (" + nf.format(x) + " , " + nf.format(y) + ") ");
     }
-    
+
     public String toString()
     {
         return to_string(java.util.Locale.ENGLISH);
     }
-    
+
     /**
      * Calculates the smallest IntOctagon containing all the input points
      */
@@ -617,12 +617,12 @@ public class FloatPoint implements java.io.Serializable
                 (int)Math.floor(llx), (int)Math.ceil(urx));
         return surrounding_octagon;
     }
-    
+
     /**
      * the x coordinate of this point
      */
     public final double x;
-    
+
     /**
      * the y coordinate of this point
      */

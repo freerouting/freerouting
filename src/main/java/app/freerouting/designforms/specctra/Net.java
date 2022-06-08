@@ -14,13 +14,13 @@ import app.freerouting.logger.FRLogger;
  */
 public class Net
 {
-    
+
     /** Creates a new instance of Net */
     public Net(Id p_net_id)
     {
         id = p_net_id;
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par, app.freerouting.rules.Net p_net, Collection<app.freerouting.board.Pin> p_pin_list) throws java.io.IOException
     {
         p_par.file.start_scope();
@@ -40,7 +40,7 @@ public class Net
         p_par.file.end_scope();
         p_par.file.end_scope();
     }
-    
+
     public static void write_net_id(app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type) throws java.io.IOException
     {
         p_file.write("net ");
@@ -49,7 +49,7 @@ public class Net
         Integer subnet_number = p_net.subnet_number;
         p_file.write(subnet_number.toString());
     }
-    
+
     public static void write_pin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin) throws java.io.IOException
     {
         app.freerouting.board.Component curr_component = p_par.board.components.get(p_pin.get_component_no());
@@ -68,9 +68,9 @@ public class Net
         p_par.identifier_type.write(curr_component.name, p_par.file);
         p_par.file.write("-");
         p_par.identifier_type.write(lib_pin.name, p_par.file);
-        
+
     }
-    
+
     public void set_pins(Collection<Pin> p_pin_list)
     {
         pin_list = new TreeSet<Pin>();
@@ -79,17 +79,17 @@ public class Net
             pin_list.add(curr_pin);
         }
     }
-    
+
     public Set<Pin> get_pins()
     {
         return pin_list;
     }
-    
+
     public final Id id;
-    
+
     /** List of elements of type Pin. */
     private Set<Pin> pin_list = null;
-    
+
     public static class Id implements Comparable<Id>
     {
         public Id(String p_name, int p_subnet_number)
@@ -97,7 +97,7 @@ public class Net
             name = p_name;
             subnet_number = p_subnet_number;
         }
-        
+
         public int compareTo(Id p_other)
         {
             int result = this.name.compareTo(p_other.name);
@@ -107,12 +107,12 @@ public class Net
             }
             return result;
         }
-        
+
         public final String name;
         public final int subnet_number;
     }
-    
-    
+
+
     /**
      * Sorted tuple of component name and pin name.
      */
@@ -123,7 +123,7 @@ public class Net
             component_name = p_component_name;
             pin_name = p_pin_name;
         }
-        
+
         public int compareTo(Pin p_other)
         {
             int result = this.component_name.compareTo(p_other.component_name);
@@ -133,7 +133,7 @@ public class Net
             }
             return result;
         }
-        
+
         public final String component_name;
         public final String pin_name;
 

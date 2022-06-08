@@ -22,13 +22,13 @@ import java.util.Collection;
  */
 public class ForcedPadAlgo
 {
-    
+
     /** Creates a new instance of ForcedPadAlgo */
     public ForcedPadAlgo(RoutingBoard p_board)
     {
         board = p_board;
     }
-    
+
     /**
      * Checks, if possible obstacle traces can be shoved aside, so that a
      * pad with the input parameters can be inserted without clearance violations.
@@ -50,7 +50,7 @@ public class ForcedPadAlgo
         ShapeTraceEntries shape_entries =
                 new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, board);
         Collection<Item> obstacles = search_tree.overlapping_items_with_clearance(p_pad_shape, p_layer, new int[0], p_cl_type);
-        
+
         if (p_ignore_items != null)
         {
             obstacles.removeAll(p_ignore_items);
@@ -61,9 +61,9 @@ public class ForcedPadAlgo
             this.board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
             return CheckDrillResult.NOT_DRILLABLE;
         }
-        
+
         // check, if the obstacle vias can be shoved
-        
+
         for (Via curr_shove_via : shape_entries.shove_via_list)
         {
             if (p_max_via_recursion_depth <= 0)
@@ -73,7 +73,7 @@ public class ForcedPadAlgo
             }
             IntPoint [] new_via_center =
                     MoveDrillItemAlgo.try_shove_via_points(p_pad_shape, p_layer, curr_shove_via, p_cl_type, false, board);
-            
+
             if (new_via_center.length <= 0)
             {
                 this.board.set_shove_failing_obstacle(curr_shove_via);
@@ -153,7 +153,7 @@ public class ForcedPadAlgo
         }
         return result;
     }
-    
+
     /**
      * Shoves aside traces, so that a pad with the input parameters can be
      * inserted without clearance violations. Returns false, if the shove
@@ -281,8 +281,8 @@ public class ForcedPadAlgo
         }
         return true;
     }
-    
-    
+
+
     /**
      * Looks for a side of p_shape, so that a trace line from the shape center
      * to the nearest point on this side does not conflict with any obstacles.
@@ -295,7 +295,7 @@ public class ForcedPadAlgo
         {
             TileShape check_shape =
                     calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
-            
+
             if(board.check_trace_shape(check_shape, p_layer, empty_arr, p_cl_class, null))
             {
                 return new CalcFromSide(i, null);
@@ -313,7 +313,7 @@ public class ForcedPadAlgo
         }
         return CalcFromSide.NOT_CALCULATED;
     }
-    
+
     private static  TileShape calc_check_chape_for_from_side(TileShape p_shape,
             Point p_shape_center, Line p_border_line)
     {
@@ -328,7 +328,7 @@ public class ForcedPadAlgo
         Polyline check_line = new Polyline(line_arr);
         return check_line.offset_shape(1, 0);
     }
-    
+
     /**
      * Checks, if p_line is in frone of p_pad_shape when shoving from p_from_side
      */
@@ -348,9 +348,9 @@ public class ForcedPadAlgo
         }
         IntPoint line_a = (IntPoint) p_line.a;
         IntPoint line_b = (IntPoint) p_line.b;
-        
+
         double diag_width = p_width * Math.sqrt(2);
-        
+
         boolean result;
         switch (p_from_side)
         {
@@ -399,7 +399,7 @@ public class ForcedPadAlgo
                             Math.min(line_a.y, line_b.y) >= pad_octagon.uy + p_width &&
                             Math.min(line_a.x - line_a.y, line_b.x - line_b.y)
                             <= pad_octagon.ulx - diag_width;
-                    
+
                 }
                 break;
             case 3:
@@ -485,12 +485,12 @@ public class ForcedPadAlgo
                 result = true;
             }
         }
-        
+
         return result;
     }
-    
+
     private final RoutingBoard board;
-    
+
     public enum CheckDrillResult
     {
         DRILLABLE, DRILLABLE_WITH_ATTACH_SMD, NOT_DRILLABLE

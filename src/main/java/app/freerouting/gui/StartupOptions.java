@@ -80,7 +80,7 @@ public class StartupOptions {
                 } else if (p_args[i].startsWith("-mt")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                     	num_threads = Integer.decode(p_args[i + 1]);
-                    	
+
                     	if (num_threads <= 0)   { num_threads = 0; }
                     	if (num_threads > 1024) { num_threads = 1024; }
                     }
@@ -94,21 +94,21 @@ public class StartupOptions {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                     	String op = p_args[i + 1].toLowerCase().trim();
                     	board_update_strategy = op.equals("global") ?
-                 			  BoardUpdateStrategy.GLOBAL_OPTIMAL 
+                 			  BoardUpdateStrategy.GLOBAL_OPTIMAL
                 		    : (op.equals("hybrid") ? BoardUpdateStrategy.HYBRID
                 			  	                   : BoardUpdateStrategy.GREEDY);
-                    }                    
+                    }
                 } else if (p_args[i].startsWith("-is")) {
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                     	String op = p_args[i + 1].toLowerCase().trim();
                     	item_selection_strategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL
-                    			: (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM 
+                    			: (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM
                     					                   : ItemSelectionStrategy.PRIORITIZED);
-                    }                    
+                    }
                 } else if (p_args[i].startsWith("-hr")) {  // hybrid ratio
                     if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
                     	hybrid_ratio = p_args[i + 1].trim();
-                    }                    
+                    }
                 } else if (p_args[i].startsWith("-l")) {
                     // the locale is provided
                     if (p_args.length > i + 1 && p_args[i + 1].startsWith("de")) {
@@ -149,7 +149,7 @@ public class StartupOptions {
     public String getDesignDir() {
         return design_input_directory_name;
     }
-    
+
     public int getMaxPasses()      { return max_passes;   }
     public int getNumThreads()     { return num_threads;  }
     public String getHybridRatio() { return hybrid_ratio; }
@@ -157,7 +157,7 @@ public class StartupOptions {
     {
     	return board_update_strategy;
     }
-    public ItemSelectionStrategy getItemSelectionStrategy() 
+    public ItemSelectionStrategy getItemSelectionStrategy()
     {
     	return item_selection_strategy;
     }

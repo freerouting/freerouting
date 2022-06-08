@@ -30,7 +30,7 @@ public abstract class DragState extends InteractiveState
         int curr_layer = p_board_handling.settings.layer;
         int pick_layer = curr_layer;
         boolean item_found = false;
-        
+
         for (int i = 0; i < try_count; ++i)
         {
             if (i == 0 ||  pick_layer != curr_layer &&
@@ -85,17 +85,17 @@ public abstract class DragState extends InteractiveState
         }
         return result;
     }
-    
+
     /** Creates a new instance of DragState */
     protected DragState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         super(p_parent_state, p_board_handling, p_activityReplayFile);
         previous_location = p_location;
     }
-    
+
     public abstract InteractiveState move_to(FloatPoint p_to_location);
-    
-    
+
+
     public InteractiveState mouse_dragged(FloatPoint p_point)
     {
         InteractiveState result = this.move_to(p_point);
@@ -118,19 +118,19 @@ public abstract class DragState extends InteractiveState
         }
         return result;
     }
-    
+
     public InteractiveState complete()
     {
         return this.button_released();
     }
-    
-    
+
+
     public InteractiveState process_logfile_point(FloatPoint p_point)
     {
         return move_to(p_point);
     }
-    
-    
+
+
     protected FloatPoint previous_location;
     protected boolean something_dragged = false;
     protected boolean observers_activated = false;

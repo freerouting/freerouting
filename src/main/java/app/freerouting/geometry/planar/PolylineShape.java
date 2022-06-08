@@ -16,12 +16,12 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
      * returns true, if the shape has no infinite part at this corner
      */
     public abstract boolean corner_is_bounded(int p_no);
-    
+
     /**
      * Returns the number of borderlines of the shape
      */
     public abstract int border_line_count();
-    
+
     /**
      * Returns the p_no-th corner of this shape for
      * p_no between 0 and border_line_count() - 1.
@@ -32,34 +32,34 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
      * Consecutive corners may be equal.
      */
     public abstract Point corner(int p_no);
-    
+
     /**
      * Turns this shape by p_factor times 90 degree around p_pole.
      */
     public abstract PolylineShape turn_90_degree(int p_factor, IntPoint p_pole);
-    
+
     /**
      * Rotates this shape around p_pole by p_angle.
      * The result may be not exact.
      */
     public abstract PolylineShape rotate_approx(double p_angle, FloatPoint p_pole);
-    
+
     /**
      * Mirrors this shape at the horizontal line through p_pole.
      */
     public abstract PolylineShape mirror_horizontal(IntPoint p_pole);
-    
-    
+
+
     /**
      * Mirrors this shape at the vertical line through p_pole.
      */
     public abstract PolylineShape mirror_vertical(IntPoint p_pole);
-    
+
     /**
      * Returns the affine translation of the area by p_vector
      */
     public abstract PolylineShape translate_by(Vector p_vector);
-    
+
     /**
      * Return all unbounded cornersw of this shape.
      */
@@ -82,7 +82,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns an approximation of the p_no-th corner of this shape
      * for p_no between 0 and border_line_count() - 1.
@@ -93,8 +93,8 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
     {
         return corner(p_no).to_float();
     }
-    
-    
+
+
     /**
      * Returns an approximation of the all corners of this shape.
      * If the shape is not bounded at a corner, the
@@ -110,7 +110,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * If p_point is equal to a corner of this shape, the number
      * of that corner is returned; -1 otherwise.
@@ -126,7 +126,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return -1;
     }
-    
+
     /**
      * Returns the cumulative border line length of the shape.
      * If the shape is unbounded, Integer.MAX_VALUE is returned.
@@ -148,7 +148,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns the arithmetic middle of the corners of this shape
      */
@@ -167,7 +167,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         y /= corner_count;
         return new FloatPoint(x, y);
     }
-    
+
     /**
      * checks, if this shape is completely contained in p_box.
      */
@@ -175,7 +175,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
     {
         return p_box.contains(bounding_box());
     }
-    
+
     /**
      * Returns the index of the corner of the shape, so that all
      * other points of the shape are to the right of the line
@@ -197,7 +197,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns the index of the corner of the shape, so that all
      * other points of the shape are to the left of the line
@@ -219,7 +219,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns a FloatLine result, so that result.a is an approximation of
      * the left most corner of this shape when viewed from p_from_point,
@@ -249,12 +249,12 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return new FloatLine(left_most_corner, right_most_corner);
     }
-    
+
     /**
      * Returns the p_no-th border line of this shape.
      */
     public abstract Line border_line(int p_no);
-    
+
     /**
      * Returns the previos border line or corner number of this shape.
      */
@@ -271,7 +271,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns the next border line or corner number of this shape.
      */
@@ -288,18 +288,18 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     public PolylineShape get_border()
     {
         return this;
     }
-    
+
     public Shape[] get_holes()
     {
         return new Shape[0];
     }
-    
-    
+
+
     /**
      * Checks, if this shape and p_line have a common point.
      */
@@ -319,7 +319,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return false;
     }
-    
+
     /**
      * Calculates the left most corner of this shape, when looked at from p_from_point.
      */
@@ -341,7 +341,7 @@ public abstract class PolylineShape implements Shape, java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Calculates the left most corner of this shape, when looked at from p_from_point.
      */

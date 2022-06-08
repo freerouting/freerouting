@@ -4,13 +4,13 @@ import app.freerouting.logger.FRLogger;
 
 public class PartLibrary  extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of PartLibrary */
     public PartLibrary()
     {
         super("part_library");
     }
-    
+
     public boolean read_scope(ReadScopeParameter p_par)
     {
         Object next_token = null;
@@ -64,7 +64,7 @@ public class PartLibrary  extends ScopeKeyword
         }
         return true;
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException
     {
         app.freerouting.library.LogicalParts logical_parts = p_par.board.library.logical_parts;
@@ -74,9 +74,9 @@ public class PartLibrary  extends ScopeKeyword
         }
         p_par.file.start_scope();
         p_par.file.write("part_library");
-        
+
         // write the logical part mappings
-        
+
         for (int i = 1; i <=  logical_parts.count(); ++i)
         {
             app.freerouting.library.LogicalPart curr_part =  logical_parts.get(i);
@@ -97,13 +97,13 @@ public class PartLibrary  extends ScopeKeyword
             p_par.file.write(")");
             p_par.file.end_scope();
         }
-        
+
         // write the logical parts.
-        
+
         for (int i = 1; i <=  logical_parts.count(); ++i)
         {
             app.freerouting.library.LogicalPart curr_part =  logical_parts.get(i);
-            
+
             p_par.file.start_scope();
             p_par.file.write("logical_part ");
             p_par.identifier_type.write(curr_part.name, p_par.file);
@@ -130,7 +130,7 @@ public class PartLibrary  extends ScopeKeyword
         }
         p_par.file.end_scope();
     }
-    
+
     /**
      * Reads the component list of a logical part mapping.
      * Returns null, if an error occured.
@@ -188,7 +188,7 @@ public class PartLibrary  extends ScopeKeyword
             return null;
         }
     }
-    
+
     private LogicalPart read_logical_part(IJFlexScanner p_scanner)
     {
         java.util.Collection<PartPin> part_pins = new java.util.LinkedList<PartPin>();
@@ -254,7 +254,7 @@ public class PartLibrary  extends ScopeKeyword
         }
         return new LogicalPart(part_name, part_pins);
     }
-    
+
     private PartPin read_part_pin(IJFlexScanner p_scanner)
     {
         try
@@ -320,7 +320,7 @@ public class PartLibrary  extends ScopeKeyword
             return null;
         }
     }
-    
+
     public static class LogicalPartMapping
     {
         private LogicalPartMapping(String p_name, java.util.SortedSet<String> p_components)
@@ -330,11 +330,11 @@ public class PartLibrary  extends ScopeKeyword
         }
         /** The name of the maopping. */
         public final String name;
-        
+
         /** The conponents belonging to the mapping. */
         public final java.util.SortedSet<String> components;
     }
-    
+
     public static class PartPin
     {
         private PartPin(String p_pin_name, String p_gate_name, int p_gate_swap_code,
@@ -346,14 +346,14 @@ public class PartLibrary  extends ScopeKeyword
             gate_pin_name = p_gate_pin_name;
             gate_pin_swap_code = p_gate_pin_swap_code;
         }
-        
+
         public final String pin_name;
         public final String gate_name;
         public final int gate_swap_code;
         public final String gate_pin_name;
         public final int gate_pin_swap_code;
     }
-    
+
     public static class LogicalPart
     {
         private LogicalPart(String p_name, java.util.Collection<PartPin> p_part_pins)
@@ -363,7 +363,7 @@ public class PartLibrary  extends ScopeKeyword
         }
         /** The name of the maopping. */
         public final String name;
-        
+
         /** The pins of this logical part */
         public final java.util.Collection<PartPin> part_pins;
     }

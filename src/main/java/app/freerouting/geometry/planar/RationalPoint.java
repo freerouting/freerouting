@@ -20,7 +20,7 @@ import app.freerouting.datastructures.BigIntAux;
  */
 public class RationalPoint extends Point implements java.io.Serializable
 {
-    
+
     /**
      * approximates the coordinates of this point by float coordinates
      */
@@ -39,10 +39,10 @@ public class RationalPoint extends Point implements java.io.Serializable
             xd /= zd;
             yd /= zd;
         }
-        
+
         return new FloatPoint( xd, yd);
     }
-    
+
     /**
      * returns true, if this RationalPoint is equal to p_ob
      */
@@ -67,15 +67,15 @@ public class RationalPoint extends Point implements java.io.Serializable
             return false;
         }
         det = BigIntAux.determinant(y, other.y, z, other.z);
-        
+
         return (det.signum() == 0);
     }
-    
+
     public boolean is_infinite()
     {
         return z.signum() == 0;
     }
-    
+
     public IntBox surrounding_box()
     {
         FloatPoint fp = to_float();
@@ -85,7 +85,7 @@ public class RationalPoint extends Point implements java.io.Serializable
         int ury = (int) Math.ceil(fp.y);
         return new IntBox(llx, lly, urx, ury);
     }
-    
+
     public IntOctagon surrounding_octagon()
     {
         FloatPoint fp = to_float();
@@ -93,17 +93,17 @@ public class RationalPoint extends Point implements java.io.Serializable
         int ly = (int) Math.floor(fp.y);
         int rx = (int) Math.ceil(fp.x);
         int uy = (int) Math.ceil(fp.y);
-        
+
         double tmp = fp.x - fp.y;
         int ulx = (int) Math.floor(tmp);
         int lrx = (int) Math.ceil(tmp);
-        
+
         tmp = fp.x + fp.y;
         int llx = (int) Math.floor(tmp);
         int urx = (int) Math.ceil(tmp);
         return new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
     }
-    
+
     public boolean is_contained_in(IntBox p_box)
     {
         BigInteger tmp = BigInteger.valueOf(p_box.ll.x).multiply(z);
@@ -124,7 +124,7 @@ public class RationalPoint extends Point implements java.io.Serializable
         tmp = BigInteger.valueOf(p_box.ur.y).multiply(z);
         return y.compareTo(tmp) <= 0;
     }
-    
+
     /**
      * returns the translation of this point by p_vector
      */
@@ -136,20 +136,20 @@ public class RationalPoint extends Point implements java.io.Serializable
         }
         return p_vector.add_to(this) ;
     }
-    
+
     Point translate_by(IntVector p_vector)
     {
         RationalVector vector = new RationalVector(p_vector);
         return  translate_by(vector);
     }
-    
+
     Point translate_by(RationalVector p_vector)
     {
         BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
-        
+
         BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_vector.x;
         v2[1] = p_vector.y;
@@ -157,7 +157,7 @@ public class RationalPoint extends Point implements java.io.Serializable
         BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
         return new RationalPoint(result[0], result[1], result[2]);
     }
-    
+
     /**
      * returns the difference vector of this point and p_other
      */
@@ -166,20 +166,20 @@ public class RationalPoint extends Point implements java.io.Serializable
         Vector tmp =  p_other.difference_by(this);
         return tmp.negate();
     }
-    
+
     Vector difference_by(IntPoint p_other)
     {
         RationalPoint other = new RationalPoint(p_other);
         return difference_by(other);
     }
-    
+
     Vector difference_by(RationalPoint p_other)
     {
         BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
-        
+
         BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_other.x.negate();
         v2[1] = p_other.y.negate();
@@ -187,7 +187,7 @@ public class RationalPoint extends Point implements java.io.Serializable
         BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
         return new RationalVector(result[0], result[1], result[2]);
     }
-    
+
     /**
      * The function returns
      *         Side.ON_THE_LEFT, if this Point is on the left
@@ -202,12 +202,12 @@ public class RationalPoint extends Point implements java.io.Serializable
         Vector v2 = p_2.difference_by(p_1);
         return v1.side_of(v2);
     }
-    
+
     public Side side_of(Line p_line)
     {
         return side_of(p_line.a, p_line.b);
     }
-    
+
     public Point perpendicular_projection(Line p_line)
     {
         // this function is at the moment only implemented for lines
@@ -220,21 +220,21 @@ public class RationalPoint extends Point implements java.io.Serializable
         BigInteger denominator = vxvx.add(vyvy);
         BigInteger det =
                 BigInteger.valueOf(((IntPoint)p_line.a).determinant((IntPoint)p_line.b));
-        
+
         BigInteger tmp1 = vxvx.multiply(x);
         BigInteger tmp2 = vxvy.multiply(y);
         tmp1 = tmp1.add(tmp2);
         tmp2 = det.multiply(BigInteger.valueOf(v.y));
         tmp2 = tmp2.multiply(z);
         BigInteger proj_x = tmp1.add(tmp2);
-        
+
         tmp1 = vxvy.multiply(x);
         tmp2 = vyvy.multiply(y);
         tmp1 = tmp1.add(tmp2);
         tmp2 = det.multiply(BigInteger.valueOf(v.x));
         tmp2 = tmp2.multiply(z);
         BigInteger proj_y = tmp1.add(tmp2);
-        
+
         int signum = denominator.signum();
         if (signum != 0)
         {
@@ -259,45 +259,45 @@ public class RationalPoint extends Point implements java.io.Serializable
         }
         return new RationalPoint(proj_x, proj_y, denominator);
     }
-    
+
     public int compare_x(Point p_other)
     {
         return -p_other.compare_x(this);
     }
-    
-    
+
+
     public int compare_y(Point p_other)
     {
         return -p_other.compare_y(this);
     }
-    
+
     int compare_x(RationalPoint p_other)
     {
         BigInteger tmp1 = this.x.multiply(p_other.z);
         BigInteger tmp2 = p_other.x.multiply(this.z);
         return tmp1.compareTo(tmp2);
     }
-    
+
     int compare_y(RationalPoint p_other)
     {
         BigInteger tmp1 = this.y.multiply(p_other.z);
         BigInteger tmp2 = p_other.y.multiply(this.z);
         return tmp1.compareTo(tmp2);
     }
-    
+
     int compare_x(IntPoint p_other)
     {
         BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(p_other.x));
         return this.x.compareTo(tmp1);
     }
-    
+
     int compare_y(IntPoint p_other)
     {
         BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(p_other.y));
         return this.y.compareTo(tmp1);
-        
+
     }
-    
+
     /**
      *  creates a RetionalPoint from 3 BigIntegers p_x, p_y and p_z.
      *  They represent the 2-dimensinal point with the
@@ -315,7 +315,7 @@ public class RationalPoint extends Point implements java.io.Serializable
                     ("RationalPoint: p_z is expected to be >= 0");
         }
     }
-    
+
     /**
      * creates a RetionalPoint from an IntPoint
      */
@@ -325,12 +325,12 @@ public class RationalPoint extends Point implements java.io.Serializable
         y = BigInteger.valueOf(p_point.y);
         z = BigInteger.ONE;
     }
-    
-    
-    
+
+
+
     final BigInteger x;
     final BigInteger y;
     final BigInteger z;
-    
-    
+
+
 }

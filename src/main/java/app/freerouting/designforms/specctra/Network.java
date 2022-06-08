@@ -148,7 +148,7 @@ public class Network extends ScopeKeyword
             }
             board.library.set_via_padstacks(via_padstacks);
         }
-        
+
         insert_via_infos(via_infos, p_par.board_handling.get_routing_board(), p_par.via_at_smd_allowed);
         insert_via_rules(via_rules, p_par.board_handling.get_routing_board());
         insert_net_classes(classes, p_par);

@@ -726,10 +726,10 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree
         Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<IncompleteFreeSpaceExpansionRoom>();
         TileShape room_shape = p_incomplete_room.get_shape();
         int layer = p_incomplete_room.get_layer();
-        
+
         TileShape shape_to_be_contained = p_incomplete_room.get_contained_shape();
-        if (shape_to_be_contained != null) 
-        { 
+        if (shape_to_be_contained != null)
+        {
         	shape_to_be_contained = shape_to_be_contained.to_Simplex(); // There may be a performance problem, if a point shape is represented as an octagon
         }
         if (shape_to_be_contained == null || shape_to_be_contained.is_empty())

@@ -38,11 +38,11 @@ public class ForcedViaAlgo
             return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
         }
         ConvexShape via_shape =  new Circle((IntPoint) p_location, (int) Math.ceil(p_via_radius));
-        
+
         double check_radius =
                 p_via_radius + 0.5 * p_board.clearance_value(p_cl_class, p_cl_class, p_layer)
                 + p_board.get_min_trace_half_width();
-        
+
         TileShape tile_shape;
         boolean is_90_degree;
         if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
@@ -55,18 +55,18 @@ public class ForcedViaAlgo
             tile_shape = via_shape.bounding_octagon();
             is_90_degree = false;
         }
-        
+
         CalcFromSide from_side = calculate_from_side(p_location.to_float(), tile_shape, p_room_shape.to_Simplex(), check_radius, is_90_degree);
         if (from_side == null)
         {
             return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
         }
-        
+
         ForcedPadAlgo.CheckDrillResult result = forced_pad_algo.check_forced_pad(tile_shape, from_side, p_layer, p_net_no_arr,
                 p_cl_class, p_attach_smd_allowed, null, p_max_recursion_depth, p_max_via_recursion_depth, false, null);
         return result;
     }
-    
+
     /**
      * Checks, if a Via is possible with the input parameter after evtl. shoving aside obstacle traces.
      */
@@ -106,7 +106,7 @@ public class ForcedViaAlgo
         }
         return true;
     }
-    
+
     /**
      * Shoves aside traces, so that a via with the input parameters can be
      * inserted without clearance violations. If the shove failed, the database may be damaged, so that an undo
@@ -181,7 +181,7 @@ public class ForcedViaAlgo
                 FixedState.UNFIXED, p_via_info.attach_smd_allowed());
         return true;
     }
-    
+
     static private CalcFromSide calculate_from_side(FloatPoint p_via_location, TileShape p_via_shape, Simplex p_room_shape, double p_dist, boolean is_90_degree)
     {
         IntBox via_box = p_via_shape.bounding_box();
@@ -267,7 +267,7 @@ public class ForcedViaAlgo
             }
             if (p_room_shape.contains(check_point))
             {
-                
+
                 int from_side_no = 2 * i + 1;
                 FloatPoint curr_border_point = new FloatPoint(border_x, border_y);
                 return new CalcFromSide(from_side_no, curr_border_point);

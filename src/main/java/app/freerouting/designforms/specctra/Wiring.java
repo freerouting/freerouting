@@ -31,13 +31,13 @@ import app.freerouting.logger.FRLogger;
  */
 class Wiring extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of Wiring */
     public Wiring()
     {
         super("wiring");
     }
-    
+
     public boolean read_scope(ReadScopeParameter p_par)
     {
         Object next_token = null;
@@ -97,7 +97,7 @@ class Wiring extends ScopeKeyword
         }
         return true;
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException
     {
         p_par.file.start_scope();
@@ -137,7 +137,7 @@ class Wiring extends ScopeKeyword
         }
         p_par.file.end_scope();
     }
-    
+
     private static void write_via_scope(WriteScopeParameter p_par, Via p_via) throws java.io.IOException
     {
         app.freerouting.library.Padstack via_padstack = p_via.get_padstack();
@@ -172,7 +172,7 @@ class Wiring extends ScopeKeyword
         write_fixed_state(p_par.file, p_via.get_fixed_state());
         p_par.file.end_scope();
     }
-    
+
     private static void write_wire_scope(WriteScopeParameter p_par, Trace p_wire) throws java.io.IOException
     {
         if (!(p_wire instanceof PolylineTrace))
@@ -197,7 +197,7 @@ class Wiring extends ScopeKeyword
         }
         p_par.file.start_scope();
         p_par.file.write("wire");
-        
+
         if(p_par.compat_mode)
         {
             Point[] corner_arr = curr_wire.polyline().corner_arr();
@@ -222,7 +222,7 @@ class Wiring extends ScopeKeyword
         write_fixed_state(p_par.file, curr_wire.get_fixed_state());
         p_par.file.end_scope();
     }
-    
+
     private static void write_conduction_area_scope(WriteScopeParameter p_par, app.freerouting.board.ConductionArea  p_conduction_area) throws java.io.IOException
     {
         int net_count = p_conduction_area.net_count();
@@ -265,7 +265,7 @@ class Wiring extends ScopeKeyword
                 p_par.file, p_par.identifier_type);
         p_par.file.end_scope();
     }
-    
+
     static private void write_net(app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type) throws java.io.IOException
     {
         p_file.new_line();
@@ -273,7 +273,7 @@ class Wiring extends ScopeKeyword
         Net.write_net_id(p_net, p_file, p_identifier_type);
         p_file.write(")");
     }
-    
+
     static private void write_fixed_state(IndentFileWriter p_file, FixedState p_fixed_state) throws java.io.IOException
     {
         if (p_fixed_state == FixedState.UNFIXED)
@@ -295,7 +295,7 @@ class Wiring extends ScopeKeyword
             p_file.write("protect)");
         }
     }
-    
+
     private Item read_wire_scope(ReadScopeParameter p_par)
     {
         Net.Id net_id = null;
@@ -339,17 +339,17 @@ class Wiring extends ScopeKeyword
                 }
                 else if (next_token == RECTANGLE)
                 {
-                    
+
                     border_shape = Shape.read_rectangle_scope(p_par.scanner, p_par.layer_structure);
                 }
                 else if (next_token == POLYGON)
                 {
-                    
+
                     border_shape = Shape.read_polygon_scope(p_par.scanner, p_par.layer_structure);
                 }
                 else if (next_token == CIRCLE)
                 {
-                    
+
                     border_shape = Shape.read_circle_scope(p_par.scanner, p_par.layer_structure);
                 }
                 else if (next_token == WINDOW)
@@ -396,7 +396,7 @@ class Wiring extends ScopeKeyword
             return null;
         }
         RoutingBoard board = p_par.board_handling.get_routing_board();
-        
+
         app.freerouting.rules.NetClass net_class = board.rules.get_default_net_class();
         Collection<app.freerouting.rules.Net> found_nets = get_subnets(net_id, board.rules);
         int[] net_no_arr = new int[found_nets.size()];
@@ -437,9 +437,9 @@ class Wiring extends ScopeKeyword
             }
             return null;
         }
-        
+
         IntBox bounding_box = board.get_bounding_box();
-        
+
         Item result = null;
         if (border_shape != null)
         {
@@ -520,7 +520,7 @@ class Wiring extends ScopeKeyword
         }
         return result;
     }
-    
+
     /**
      * Maybe trace of type turret without net in Mentor design.
      * Try to assig the net by calculating the overlaps.
@@ -548,7 +548,7 @@ class Wiring extends ScopeKeyword
             p_item.assign_net_no(corrected_net_no);
         }
     }
-    
+
     private static Collection<app.freerouting.rules.Net> get_subnets(Net.Id p_net_id, app.freerouting.rules.BoardRules p_rules)
     {
         Collection<app.freerouting.rules.Net> found_nets = new LinkedList<app.freerouting.rules.Net>();
@@ -569,7 +569,7 @@ class Wiring extends ScopeKeyword
         }
         return found_nets;
     }
-    
+
     private boolean read_via_scope(ReadScopeParameter p_par)
     {
         try
@@ -685,7 +685,7 @@ class Wiring extends ScopeKeyword
             return false;
         }
     }
-    
+
     private static boolean via_exists(IntPoint p_location, app.freerouting.library.Padstack p_padstack,
             int[] p_net_no_arr, app.freerouting.board.BasicBoard p_board)
     {
@@ -704,7 +704,7 @@ class Wiring extends ScopeKeyword
         }
         return false;
     }
-    
+
     static app.freerouting.board.FixedState calc_fixed(IJFlexScanner p_scanner)
     {
         try
@@ -737,7 +737,7 @@ class Wiring extends ScopeKeyword
             return app.freerouting.board.FixedState.UNFIXED;
         }
     }
-    
+
     /**
      * Reads a net_id. The  subnet_number of the net_id will be 0, if no subneet_number was found.
      */

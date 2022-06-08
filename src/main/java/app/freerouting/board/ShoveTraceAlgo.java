@@ -550,7 +550,7 @@ public class ShoveTraceAlgo
                         is_obstacle = true;
                         if (curr_item instanceof PolylineTrace)
                         {
-                            // check for a shove fixed trace exit stub, which has to be be ignored at a tie pin.  
+                            // check for a shove fixed trace exit stub, which has to be be ignored at a tie pin.
                             Collection<Item> curr_contacts = curr_item.get_normal_contacts();
                             for (Item curr_contact : curr_contacts)
                             {

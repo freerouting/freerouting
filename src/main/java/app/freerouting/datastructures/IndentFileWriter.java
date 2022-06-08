@@ -7,13 +7,13 @@ import app.freerouting.logger.FRLogger;
  */
 public class IndentFileWriter extends java.io.OutputStreamWriter
 {
-    
+
     /** Creates a new instance of IndentFileWriter */
     public IndentFileWriter(java.io.OutputStream p_stream)
     {
         super(p_stream);
     }
-    
+
     /**
      * Begins a new scope.
      */
@@ -30,7 +30,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter
         }
         ++current_indent_level;
     }
-    
+
     /**
      * Closes the latest open scope.
      */
@@ -47,7 +47,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter
             FRLogger.error("IndentFileWriter.end_scope: unable to write to file", e);
         }
     }
-    
+
     /**
      * Starts a new line inside a scope.
      */
@@ -66,9 +66,9 @@ public class IndentFileWriter extends java.io.OutputStreamWriter
             FRLogger.error("IndentFileWriter.new_line: unable to write to file", e);
         }
     }
-    
+
     private int current_indent_level = 0;
-    
+
     private static final String INDENT_STRING = "  ";
     private static final String BEGIN_SCOPE = "(";
     private static final String END_SCOPE = ")";

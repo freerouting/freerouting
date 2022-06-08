@@ -17,7 +17,7 @@ public class CoordinateTransform implements java.io.Serializable
         this.screen_bounds = p_panel_bounds;
         this.design_box = p_design_box;
         this.rotation_pole = p_design_box.centre_of_gravity();
-        
+
         int min_ll = Math.min(p_design_box.ll.x, p_design_box.ll.y);
         int max_ur = Math.max(p_design_box.ur.x, p_design_box.ur.y);
         if (Math.max(Math.abs(min_ll), Math.abs(max_ur)) <= 0.3 * Limits.CRIT_INT)
@@ -31,15 +31,15 @@ public class CoordinateTransform implements java.io.Serializable
             // no offset because of danger of integer overflow
             design_box_with_offset = p_design_box;
         }
-        
+
         double x_scale_factor = screen_bounds.getWidth()/design_box_with_offset.width();
         double y_scale_factor = screen_bounds.getHeight()/design_box_with_offset.height();
-        
+
         scale_factor = Math.min(x_scale_factor, y_scale_factor) ;
         display_x_offset = scale_factor * design_box_with_offset.ll.x;
         display_y_offset = scale_factor * design_box_with_offset.ll.y ;
     }
-    
+
     /** Copy constructor */
     public CoordinateTransform(CoordinateTransform p_coordinate_transform)
     {
@@ -54,7 +54,7 @@ public class CoordinateTransform implements java.io.Serializable
         this.mirror_top_bottom = p_coordinate_transform.mirror_top_bottom;
         this.rotation = p_coordinate_transform.rotation;
     }
-    
+
     /**
      * scale a value from the board to the screen coordinate system
      */
@@ -62,7 +62,7 @@ public class CoordinateTransform implements java.io.Serializable
     {
         return p_val * scale_factor ;
     }
-    
+
     /**
      * scale a value the screen to the board coordinate system
      */
@@ -70,15 +70,15 @@ public class CoordinateTransform implements java.io.Serializable
     {
         return p_val / scale_factor;
     }
-    
-    
+
+
     /**
      * transform a geometry.planar.FloatPoint to a java.awt.geom.Point2D
      */
     public Point2D board_to_screen(FloatPoint p_point)
     {
         FloatPoint rotated_point = p_point.rotate(this.rotation, this.rotation_pole);
-        
+
         double x, y;
         if (this.mirror_left_right)
         {
@@ -98,7 +98,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return new Point2D.Double(x, y);
     }
-    
+
     /**
      * Transform a java.awt.geom.Point2D to a geometry.planar.FloatPoint
      */
@@ -124,7 +124,7 @@ public class CoordinateTransform implements java.io.Serializable
         FloatPoint result = new FloatPoint(x, y);
         return result.rotate(-this.rotation, this.rotation_pole);
     }
-    
+
     /**
      * Transforms an angle in radian on the board to an angle on the screen.
      */
@@ -149,7 +149,7 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Transform a geometry.planar.IntBox to a java.awt.Rectangle
      * If the internal rotation is not a multiple of Pi/2, a bounding rectangle of the
@@ -168,7 +168,7 @@ public class CoordinateTransform implements java.io.Serializable
                 (int) Math.ceil(dx), (int) Math.ceil(dy));
         return result;
     }
-    
+
     /**
      * Transform a java.awt.Rectangle to a geometry.planar.IntBox
      * If the internal rotation is not a multiple of Pi/2, a bounding box of the
@@ -185,7 +185,7 @@ public class CoordinateTransform implements java.io.Serializable
         int ury = (int) Math.ceil(Math.max(corner_1.y, corner_2.y));
         return new IntBox(llx, lly, urx, ury);
     }
-    
+
     /**
      * If p_value is true, the left side and the right side of the board will be swapped.
      */
@@ -193,7 +193,7 @@ public class CoordinateTransform implements java.io.Serializable
     {
         mirror_left_right = p_value;
     }
-    
+
     /**
      * Returns, if the left side and the right side of the board are swapped.
      */
@@ -201,7 +201,7 @@ public class CoordinateTransform implements java.io.Serializable
     {
         return mirror_left_right;
     }
-    
+
     /**
      * If p_value is true, the top side and the botton side of the board will be swapped.
      */
@@ -211,7 +211,7 @@ public class CoordinateTransform implements java.io.Serializable
         // will be opposite to the input value of this function.
         mirror_top_bottom = !p_value;
     }
-    
+
     /**
      * Returns, if the top side and the botton side of the board are swapped.
      */
@@ -221,7 +221,7 @@ public class CoordinateTransform implements java.io.Serializable
         // is opposite to the result of this function.
         return !mirror_top_bottom;
     }
-    
+
     /**
      * Sets the rotation of the displayed board to p_value.
      */
@@ -229,7 +229,7 @@ public class CoordinateTransform implements java.io.Serializable
     {
         rotation = p_value;
     }
-    
+
     /**
      * Returns the rotation of the displayed board.
      */
@@ -237,7 +237,7 @@ public class CoordinateTransform implements java.io.Serializable
     {
         return rotation;
     }
-    
+
     /**
      * Returns the internal rotation snapped to the nearest multiple of 90 degree.
      * The result will be 0, 1, 2 or 3.
@@ -255,25 +255,25 @@ public class CoordinateTransform implements java.io.Serializable
         }
         return multiple;
     }
-    
+
     final IntBox design_box;
     final IntBox design_box_with_offset ;
     final Dimension screen_bounds ;
     private final double scale_factor ;
     private final double display_x_offset;
     private final double display_y_offset;
-    
+
     /**
      * Left side and right side of the board are swapped.
      */
     private boolean mirror_left_right = false;
-    
+
     /**
      * Top side and bottom  side of the board are swapped.
      */
     private boolean mirror_top_bottom = true;
-    
+
     private double rotation = 0;
-    
+
     private FloatPoint rotation_pole;
 }

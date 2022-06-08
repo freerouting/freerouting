@@ -9,7 +9,7 @@ import app.freerouting.board.Item;
 
 public class WindowRouteStubs extends WindowObjectListWithFilter
 {
-    
+
     /** Creates a new instance of WindowRouteStubs */
     public WindowRouteStubs(BoardFrame p_board_frame)
     {
@@ -19,13 +19,13 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
         this.list_empty_message.setText(resources.getString("no_route_stubs_found"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_RouteStubs");
     }
-    
+
     protected void fill_list()
     {
         app.freerouting.board.BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
-        
+
         SortedSet<RouteStubInfo> route_stub_info_set = new java.util.TreeSet<RouteStubInfo>();
-        
+
         Collection<Item> board_items = routing_board.get_items();
         for (Item curr_item : board_items)
         {
@@ -37,7 +37,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             {
                 continue;
             }
-            
+
             FloatPoint stub_location;
             int stub_layer;
             if (curr_item instanceof app.freerouting.board.Via)
@@ -100,14 +100,14 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             RouteStubInfo curr_route_stub_info = new RouteStubInfo(curr_item, stub_location, stub_layer);
             route_stub_info_set.add(curr_route_stub_info);
         }
-        
+
         for (RouteStubInfo curr_info : route_stub_info_set)
         {
             this.add_to_list(curr_info);
         }
         this.list.setVisibleRowCount(Math.min(route_stub_info_set.size(), DEFAULT_TABLE_SIZE));
     }
-    
+
     protected void select_instances()
     {
         List<Object> selected_list_values = list.getSelectedValuesList();
@@ -124,9 +124,9 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
         board_handling.select_items(selected_items);
         board_handling.zoom_selection();
     }
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     /**
      * Describes information of a route stub in the list.
      */
@@ -141,7 +141,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             int net_no = p_stub.get_net_no(0);
             this.net = board_handling.get_routing_board().rules.nets.get(net_no);
         }
-        
+
         public String toString()
         {
             String item_string;
@@ -159,7 +159,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
                     resources.getString("on_layer") + " " + layer_name;
             return result;
         }
-        
+
         public int compareTo(RouteStubInfo p_other)
         {
             int result = this.net.name.compareTo(p_other.net.name);
@@ -177,7 +177,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             }
             return result;
         }
-        
+
         private final Item stub_item;
         private final app.freerouting.rules.Net net;
         private final FloatPoint location;

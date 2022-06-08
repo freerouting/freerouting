@@ -9,14 +9,14 @@ import app.freerouting.datastructures.IdentifierType;
  */
 public class WriteScopeParameter
 {
-    
-    /** 
-     * Creates a new instance of WriteScopeParameter. 
+
+    /**
+     * Creates a new instance of WriteScopeParameter.
      * If p_compat_mode is true, only standard speecctra dsb scopes are written, so that any
      * host system with an specctra interface can read them.
      */
     WriteScopeParameter(BasicBoard p_board, app.freerouting.interactive.AutorouteSettings p_autoroute_settings,
-            IndentFileWriter p_file, String p_string_quote, CoordinateTransform p_coordinate_transform, 
+            IndentFileWriter p_file, String p_string_quote, CoordinateTransform p_coordinate_transform,
             boolean p_compat_mode)
     {
         board = p_board;
@@ -27,7 +27,7 @@ public class WriteScopeParameter
         String[] reserved_chars = {"(", ")", " ", ";", "-", "_"};
         identifier_type = new IdentifierType(reserved_chars, p_string_quote);
     }
-    
+
     final BasicBoard board;
     final app.freerouting.interactive.AutorouteSettings autoroute_settings;
     final IndentFileWriter file;

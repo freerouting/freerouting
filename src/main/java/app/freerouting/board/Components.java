@@ -25,7 +25,7 @@ public class Components implements java.io.Serializable
     public Component add(String p_name, Point p_location, double p_rotation_in_degree,
             boolean p_on_front, Package p_package_front, Package p_package_back, boolean p_position_fixed)
     {
-        
+
         Component new_component =
                 new Component(p_name, p_location, p_rotation_in_degree, p_on_front, p_package_front,
                 p_package_back, component_arr.size() + 1, p_position_fixed);
@@ -33,7 +33,7 @@ public class Components implements java.io.Serializable
         undo_list.insert(new_component);
         return new_component;
     }
-    
+
     /**
      * Adds a component to this object.
      * The items of the component have to be inserted separately into the board.
@@ -45,7 +45,7 @@ public class Components implements java.io.Serializable
         String component_name = "Component#" + (Integer.valueOf(component_arr.size() + 1)).toString();
         return add(component_name, p_location, p_rotation, p_on_front, p_package, p_package, false);
     }
-    
+
     /**
      * Returns the component with the input name or null,
      * if no such component exists.
@@ -63,7 +63,7 @@ public class Components implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Returns the component with the input component number or null,
      * if no such component exists.
@@ -78,7 +78,7 @@ public class Components implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns the number of components on the board.
      */
@@ -86,7 +86,7 @@ public class Components implements java.io.Serializable
     {
         return component_arr.size();
     }
-    
+
     /**
      * Generates a snapshot for the undo algorithm.
      */
@@ -94,7 +94,7 @@ public class Components implements java.io.Serializable
     {
         this.undo_list.generate_snapshot();
     }
-    
+
     /**
      * Restores the sitiation at the previous snapshot.
      * Returns false, if no more undo is possible.
@@ -108,7 +108,7 @@ public class Components implements java.io.Serializable
         restore_component_arr_from_undo_list(p_observers);
         return true;
     }
-    
+
     /**
      * Restores the sitiation before the last undo.
      * Returns false, if no more redo is possible.
@@ -122,7 +122,7 @@ public class Components implements java.io.Serializable
         restore_component_arr_from_undo_list(p_observers);
         return true;
     }
-    
+
     /*
      * Restore the components in component_arr from the undo list.
      */
@@ -140,7 +140,7 @@ public class Components implements java.io.Serializable
             p_observers.notify_moved(curr_component);
         }
     }
-    
+
     /**
      * Moves the component with number p_component_no.
      * Works contrary to Component.translate_by with the undo algorithm of the board.
@@ -151,7 +151,7 @@ public class Components implements java.io.Serializable
         this.undo_list.save_for_undo(curr_component);
         curr_component.translate_by(p_vector);
     }
-    
+
     /**
      * Turns the component with number p_component_no  by p_factor times 90 degree around p_pole.
      * Works contrary to Component.turn_90_degree with the undo algorithm of the board.
@@ -162,7 +162,7 @@ public class Components implements java.io.Serializable
         this.undo_list.save_for_undo(curr_component);
         curr_component.turn_90_degree(p_factor, p_pole);
     }
-    
+
        /**
      * Rotates the component with number p_component_no  by p_rotation_in_degree around p_pole.
      * Works contrary to Component.rotate with the undo algorithm of the board.
@@ -173,7 +173,7 @@ public class Components implements java.io.Serializable
         this.undo_list.save_for_undo(curr_component);
         curr_component.rotate(p_rotation_in_degree, p_pole, flip_style_rotate_first);
     }
-    
+
     /**
      * Changes the placement side of the component the component with number p_component_no and
      * mirrors it  at the vertical line through p_pole.
@@ -185,7 +185,7 @@ public class Components implements java.io.Serializable
         this.undo_list.save_for_undo(curr_component);
         curr_component.change_side(p_pole);
     }
-    
+
     /**
      * If true, components on the back side are rotated before mirroring,
      * else they are mirrored before rotating.
@@ -194,7 +194,7 @@ public class Components implements java.io.Serializable
     {
         flip_style_rotate_first = p_value;
     }
-    
+
     /**
      * If true, components on the back side are rotated before mirroring,
      * else they are mirrored before rotating.
@@ -203,11 +203,11 @@ public class Components implements java.io.Serializable
     {
         return flip_style_rotate_first;
     }
-    
+
     private final UndoableObjects undo_list = new UndoableObjects();
-    
+
     private Vector<Component> component_arr = new Vector<Component>();
-    
+
     /**
      * If true, components on the back side are rotated before mirroring,
      * else they are mirrored before rotating.

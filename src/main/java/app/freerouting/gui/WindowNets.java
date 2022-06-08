@@ -7,29 +7,29 @@ import java.util.List;
 
 public class WindowNets extends WindowObjectListWithFilter
 {
-    
+
     /** Creates a new instance of NetsWindow */
     public WindowNets(BoardFrame p_board_frame)
     {
         super(p_board_frame);
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowNets", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
-        
+
         javax.swing.JPanel curr_button_panel =  new javax.swing.JPanel();
         this.south_panel.add(curr_button_panel, java.awt.BorderLayout.NORTH);
-        
+
         final javax.swing.JButton  assign_class_button = new javax.swing.JButton(resources.getString("assign_class"));
         curr_button_panel.add(assign_class_button);
         assign_class_button.setToolTipText(resources.getString("assign_class_tooltip"));
         assign_class_button.addActionListener(new AssignClassListener());
-        
+
         final javax.swing.JButton  filter_incompletes_button = new javax.swing.JButton(resources.getString("filter_incompletes"));
         curr_button_panel.add(filter_incompletes_button);
         filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
         filter_incompletes_button.addActionListener(new FilterIncompletesListener());
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_Nets");
     }
-    
+
     /**
      * Fills the list with the nets in the net list.
      */
@@ -48,7 +48,7 @@ public class WindowNets extends WindowObjectListWithFilter
         }
         this.list.setVisibleRowCount(Math.min(sorted_arr.length, DEFAULT_TABLE_SIZE));
     }
-    
+
     protected void select_instances()
     {
         List<Object> selected_nets = list.getSelectedValuesList();
@@ -83,9 +83,9 @@ public class WindowNets extends WindowObjectListWithFilter
         board_frame.board_panel.board_handling.select_items(selected_items);
         board_frame.board_panel.board_handling.zoom_selection();
     }
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     private class AssignClassListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -101,8 +101,8 @@ public class WindowNets extends WindowObjectListWithFilter
             {
                 class_arr[i] = net_classes.get(i);
             }
-            Object selected_value = javax.swing.JOptionPane.showInputDialog(null, resources.getString("message_1"), 
-                    resources.getString("message_2"), javax.swing.JOptionPane.INFORMATION_MESSAGE, 
+            Object selected_value = javax.swing.JOptionPane.showInputDialog(null, resources.getString("message_1"),
+                    resources.getString("message_2"), javax.swing.JOptionPane.INFORMATION_MESSAGE,
                     null, class_arr, class_arr[0]);
             if (!(selected_value instanceof app.freerouting.rules.NetClass))
             {
@@ -116,7 +116,7 @@ public class WindowNets extends WindowObjectListWithFilter
             board_frame.refresh_windows();
         }
     }
-    
+
     private class FilterIncompletesListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)

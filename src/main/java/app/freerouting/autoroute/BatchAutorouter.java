@@ -27,10 +27,10 @@ public class BatchAutorouter
      *  if the board is not completed.
      */
     public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread,
-            int p_max_pass_count, int p_ripup_costs, boolean p_with_prefered_directions, 
+            int p_max_pass_count, int p_ripup_costs, boolean p_with_prefered_directions,
             RoutingBoard updated_routing_board)
     {
-        BatchAutorouter router_instance = new BatchAutorouter(p_thread, true, 
+        BatchAutorouter router_instance = new BatchAutorouter(p_thread, true,
         	  p_with_prefered_directions, p_ripup_costs, updated_routing_board);
         boolean still_unrouted_items = true;
         int curr_pass_no = 1;
@@ -58,19 +58,19 @@ public class BatchAutorouter
     /**
      * Creates a new batch autorouter.
      */
-    public BatchAutorouter(InteractiveActionThread p_thread, boolean p_remove_unconnected_vias, 
+    public BatchAutorouter(InteractiveActionThread p_thread, boolean p_remove_unconnected_vias,
     		boolean p_with_preferred_directions, int p_start_ripup_costs)
     {
     	this(p_thread, p_remove_unconnected_vias, p_with_preferred_directions,
              p_start_ripup_costs, null);
     }
-    
+
     public BatchAutorouter(InteractiveActionThread p_thread, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions,
             int p_start_ripup_costs, RoutingBoard updated_routing_board)
     {
         this.thread = p_thread;
         this.hdlg = p_thread.hdlg;
-        this.routing_board = updated_routing_board != null ? 
+        this.routing_board = updated_routing_board != null ?
         		             updated_routing_board : this.hdlg.get_routing_board();
         this.remove_unconnected_vias = p_remove_unconnected_vias;
         if (p_with_preferred_directions)
@@ -430,7 +430,7 @@ public class BatchAutorouter
     }
     private final InteractiveActionThread thread;
     private final BoardHandling hdlg;
-    private final RoutingBoard routing_board; 
+    private final RoutingBoard routing_board;
     private boolean is_interrupted = false;
     private final boolean remove_unconnected_vias;
     private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;

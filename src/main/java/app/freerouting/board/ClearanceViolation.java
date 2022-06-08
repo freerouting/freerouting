@@ -7,7 +7,7 @@ import app.freerouting.geometry.planar.ConvexShape;
  */
 public class ClearanceViolation implements ObjectInfoPanel.Printable
 {
-    
+
     /** Creates a new instance of ClearanceViolation */
     public ClearanceViolation(Item p_first_item, Item p_second_item, ConvexShape p_shape, int p_layer)
     {
@@ -16,10 +16,10 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable
         shape = p_shape;
         layer = p_layer;
     }
-    
+
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("clearance_violation_2"));
         p_window.append(" " + resources.getString("at") + " ");
@@ -35,7 +35,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable
         p_window.indent();
         second_item.print_info(p_window, p_locale);
     }
-    
+
     /** The first item of the clearance violation */
     public final Item first_item;
     /** The second item of the clearance violation */

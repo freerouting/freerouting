@@ -13,7 +13,7 @@ import app.freerouting.logger.FRLogger;
  */
 public abstract class ShapeTree
 {
-    
+
     /** Creates a new instance of ShapeTree */
     public ShapeTree(ShapeBoundingDirections p_directions)
     {
@@ -21,8 +21,8 @@ public abstract class ShapeTree
         root = null ;
         leaf_count = 0;
     }
-    
-    
+
+
     /**
      * Inserts all shapes of p_obj into the tree
      */
@@ -40,7 +40,7 @@ public abstract class ShapeTree
         }
         p_obj.set_search_tree_entries(leaf_arr, this);
     }
-    
+
     /**
      * Insert a shape - creates a new node with a bounding shape
      */
@@ -51,7 +51,7 @@ public abstract class ShapeTree
         {
             return null;
         }
-        
+
         RegularTileShape  bounding_shape = object_shape.bounding_shape(bounding_directions) ;
         if (  bounding_shape == null )
         {
@@ -63,8 +63,8 @@ public abstract class ShapeTree
         this.insert(new_leaf);
         return new_leaf;
     }
-    
-    
+
+
     /** Inserts the leaves of this tree into an array. */
     public Leaf[] to_array()
     {
@@ -83,7 +83,7 @@ public abstract class ShapeTree
                 curr_node = ((InnerNode) curr_node).first_child;
             }
             result[curr_index] = (Leaf) curr_node;
-            
+
             ++curr_index;
             // go up until parent.second_child != curr_node, which means we came from first_child
             InnerNode curr_parent = curr_node.parent;
@@ -100,13 +100,13 @@ public abstract class ShapeTree
         }
         return result;
     }
-    
+
     abstract void insert(Leaf p_leaf);
-    
+
     abstract void remove_leaf(Leaf p_leaf);
-    
-    
-    
+
+
+
     /**
      * removes all entries of p_obj in the tree.
      */
@@ -121,14 +121,14 @@ public abstract class ShapeTree
             remove_leaf(p_entries[i]);
         }
     }
-    
+
     /** Returns the number of entries stored in the tree. */
     public int size()
     {
         return leaf_count;
     }
-    
-    
+
+
     /** Outputs some statistic information about the tree. */
     public void statistics(String p_message)
     {
@@ -151,20 +151,20 @@ public abstract class ShapeTree
                 + " Maximum depth: " + maximum_depth + " "
                 + p_message);
     }
-    
-    
+
+
     /**
      * the fixed directions for calculating bounding RegularTileShapes
      * of shapes  to store in this tree.
      */
     final protected ShapeBoundingDirections bounding_directions ;
-    
+
     /** Root node - initially null */
     protected TreeNode root ;
-    
+
     /** The number of entries stored in the tree */
     protected int leaf_count;
-    
+
     /**
      * Interface, which must be implemented by objects to be stored
      * in a ShapeTree.
@@ -175,12 +175,12 @@ public abstract class ShapeTree
          * Number of shapes of an object to store in p_shape_tree
          */
         int tree_shape_count(ShapeTree p_shape_tree) ;
-        
+
         /**
          * Get the Shape of this object with index p_index stored in the ShapeTree with index identification number p_tree_id_no
          */
         TileShape get_tree_shape(ShapeTree p_tree, int p_index) ;
-        
+
         /**
          * Stores the entries in the ShapeTrees of this object for
          * better performance while for example deleting tree entries.
@@ -188,7 +188,7 @@ public abstract class ShapeTree
          */
         void set_search_tree_entries(Leaf [] p_entries, ShapeTree p_tree);
     }
-    
+
     /**
      * Information of a single object stored in a tree
      */
@@ -202,7 +202,7 @@ public abstract class ShapeTree
         public final ShapeTree.Storable object;
         public final int shape_index_in_object;
     }
-    
+
     //////////////////////////////////////////////////////////
     /** Common functionality of inner nodes and leaf nodes. */
     protected static class TreeNode
@@ -210,7 +210,7 @@ public abstract class ShapeTree
         public RegularTileShape bounding_shape ;
         InnerNode parent;
     }
-    
+
     //////////////////////////////////////////////////////////
     /**
      * Desscription of an inner node of the tree,
@@ -225,11 +225,11 @@ public abstract class ShapeTree
             first_child = null ;
             second_child = null ;
         }
-        
+
         public TreeNode first_child ;
         public TreeNode second_child ;
     }
-    
+
     //////////////////////////////////////////////////////////
     /**
      * Description of a leaf of the Tree, where the geometric
@@ -244,7 +244,7 @@ public abstract class ShapeTree
             object = p_object ;
             shape_index_in_object = p_index ;
         }
-        
+
         public int compareTo(Leaf p_other)
         {
             int result = this.object.compareTo(p_other.object);
@@ -254,7 +254,7 @@ public abstract class ShapeTree
             }
             return result;
         }
-        
+
         /** Returns the number of nodes between this leaf and the croot of the tree. */
         public int distance_to_root()
         {
@@ -267,10 +267,10 @@ public abstract class ShapeTree
             }
             return result;
         }
-        
+
         /** Actual object stored */
         public ShapeTree.Storable object ;
-        
+
         /** index of the shape in the object */
         public int shape_index_in_object;
     }

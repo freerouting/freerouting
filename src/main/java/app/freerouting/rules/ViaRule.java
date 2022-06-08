@@ -9,20 +9,20 @@ import java.util.LinkedList;
  */
 public class ViaRule implements java.io.Serializable, app.freerouting.board.ObjectInfoPanel.Printable
 {
-    
+
     /** Empty via rule. Must not be changed. */
     public static final ViaRule EMPTY = new ViaRule("empty");
-    
+
     public ViaRule  (String p_name)
     {
         name = p_name;
     }
-    
+
     public void append_via(ViaInfo p_via)
     {
         list.add(p_via);
     }
-    
+
     /**
      * Removes p_via from the rule.
      * Returns false, if p_via was not contained in the rule.
@@ -31,23 +31,23 @@ public class ViaRule implements java.io.Serializable, app.freerouting.board.Obje
     {
         return list.remove(p_via);
     }
-    
+
     public int via_count()
     {
         return list.size();
     }
-    
+
     public ViaInfo get_via(int p_index)
     {
         assert  p_index >= 0 && p_index < list.size();
         return list.get(p_index);
     }
-    
+
     public String toString()
     {
         return this.name;
     }
-    
+
     /**
      * Returns true, if p_via_info is contained in the via list of this rule.
      */
@@ -62,7 +62,7 @@ public class ViaRule implements java.io.Serializable, app.freerouting.board.Obje
         }
         return false;
     }
-    
+
     /**
      * Returns true, if this rule contains a via with padstack p_padstack
      */
@@ -77,7 +77,7 @@ public class ViaRule implements java.io.Serializable, app.freerouting.board.Obje
         }
         return false;
     }
-    
+
     /**
      * Searchs a via in this rule with first layer = p_from_layer and last layer = p_to_layer.
      * Returns null, if no such via exists.
@@ -93,7 +93,7 @@ public class ViaRule implements java.io.Serializable, app.freerouting.board.Obje
         }
         return null;
     }
-    
+
     /**
      * Swaps the locations of p_1 and p_2 in the rule.
      * Returns false, if p_1 or p_2 were not found in the list.
@@ -114,7 +114,7 @@ public class ViaRule implements java.io.Serializable, app.freerouting.board.Obje
         this.list.set(index_2, p_1);
         return true;
     }
-    
+
     public void print_info(app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
@@ -144,7 +144,7 @@ public class ViaRule implements java.io.Serializable, app.freerouting.board.Obje
             counter = (counter + 1) % max_vias_per_row;
         }
     }
-    
+
     public final String name;
     private List<ViaInfo> list = new LinkedList<ViaInfo>();
 }

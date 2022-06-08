@@ -30,7 +30,7 @@ public class Validate
             return true;
         }
         boolean result = true;
-        
+
         IntOctagon surr_oct = p_board.bounding_box.to_IntOctagon();
         int layer_count = p_board.get_layer_count();
         if (last_violation_count == null)
@@ -92,7 +92,7 @@ public class Validate
                     {
                         continue;
                     }
-                    
+
                     int curr_net_no = 0;
                     if (curr_ob instanceof PolylineTrace)
                     {
@@ -111,11 +111,11 @@ public class Validate
             {
                 last_violation_count[layer] = clearance_violation_count;
             }
-            
+
         }
         return result;
     }
-    
+
     static public boolean check(String p_s, BasicBoard p_board, Polyline p_polyline,
             int p_layer, int p_half_width, int[] p_net_no_arr, int p_cl_type)
     {
@@ -140,7 +140,7 @@ public class Validate
         }
         return true;
     }
-    
+
     /**
      * check, that all traces on p_board are orthogonal
      */
@@ -162,7 +162,7 @@ public class Validate
             }
         }
     }
-    
+
     /**
      * check, that all traces on p_board are multiples of 45 degree
      */
@@ -189,7 +189,7 @@ public class Validate
             System.out.println(" traces not 45 degree");
         }
     }
-    
+
     static public boolean corners_on_grid(String p_s, Polyline p_polyline)
     {
         for (int i = 0; i < p_polyline.corner_count(); ++i)
@@ -203,7 +203,7 @@ public class Validate
         }
         return true;
     }
-    
+
     static public int stub_count(String p_s, BasicBoard p_board, int p_net_no)
     {
         if (first_time)
@@ -240,7 +240,7 @@ public class Validate
         }
         return result;
     }
-    
+
     static public boolean has_cycles(String p_s, BasicBoard p_board)
     {
         boolean result = false;
@@ -290,7 +290,7 @@ public class Validate
         }
         return false;
     }
-    
+
     /**
      * checks, if there are unconnected traces ore vias on the board
      */
@@ -313,7 +313,7 @@ public class Validate
         }
         return false;
     }
-    
+
     static private int [] last_violation_count = null;
     static private boolean first_time = true;
     static private int prev_stub_count = 0;

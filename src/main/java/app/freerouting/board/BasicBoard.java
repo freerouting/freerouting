@@ -111,7 +111,7 @@ public class BasicBoard implements java.io.Serializable
     {
         return deserialize(this.serialize(false));
     }
-    
+
     public String get_hash()
     {
         try

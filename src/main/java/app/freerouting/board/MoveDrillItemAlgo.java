@@ -28,7 +28,7 @@ public class MoveDrillItemAlgo
             int p_max_via_recursion_depth, Collection<Item> p_ignore_items,
             RoutingBoard p_board, TimeLimit p_time_limit)
     {
-        
+
         if (p_time_limit != null && p_time_limit.limit_exceeded())
         {
             return false;
@@ -37,7 +37,7 @@ public class MoveDrillItemAlgo
         {
             return false;
         }
-        
+
         // Check, that p_drillitem is only connected to traces.
         Collection<Item> contact_list = p_drill_item.get_normal_contacts();
         for (Item curr_contact : contact_list)
@@ -93,7 +93,7 @@ public class MoveDrillItemAlgo
         }
         return true;
     }
-    
+
     /**
      * Translates p_drill_item by p_vector by shoving obstacle
      * traces and vias aside, so that no clearance violations occur.
@@ -155,7 +155,7 @@ public class MoveDrillItemAlgo
         p_drill_item.move_by(p_vector);
         return true;
     }
-    
+
     /**
      * Shoves vias out of p_obstacle_shape. Returns false, if the database is damaged, so that an undo is necessary afterwards.
      */
@@ -169,7 +169,7 @@ public class MoveDrillItemAlgo
                 new ShapeTraceEntries(p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, p_board);
         Collection<Item> obstacles =
                 search_tree.overlapping_items_with_clearance(p_obstacle_shape, p_layer, new int[0], p_cl_type);
-        
+
         if (!shape_entries.store_items(obstacles, false, p_copper_sharing_allowed))
         {
             return true;
@@ -212,7 +212,7 @@ public class MoveDrillItemAlgo
                     }
                     rel_coor = try_via_centers[i].difference_by(curr_via_center);
                     // No time limit here because the item database is already changed.
-                    boolean shove_ok = check(curr_via, rel_coor, p_max_recursion_depth, 
+                    boolean shove_ok = check(curr_via, rel_coor, p_max_recursion_depth,
                             p_max_via_recursion_depth - 1, ignore_items, p_board, null);
                     if (shove_ok)
                     {
@@ -232,7 +232,7 @@ public class MoveDrillItemAlgo
         }
         return true;
     }
-    
+
     /**
      * Calculates possible new location for a via to shove outside p_obstacle_shape.
      * if p_extended_check is true, more than 1 possible new locations are calculated.
@@ -269,10 +269,10 @@ public class MoveDrillItemAlgo
                 shove_distance += 0.5 * clearance_value;
             }
         }
-        
+
         // The additional constant 2 is an empirical value for the tolerance in case of diagonal shoving.
         shove_distance  += 2;
-        
+
         IntPoint curr_via_center = (IntPoint) p_via.get_center();
         IntPoint [] try_via_centers;
         int try_count = 1;
@@ -292,7 +292,7 @@ public class MoveDrillItemAlgo
             {
                 try_count = 4;
             }
-            
+
             try_via_centers = curr_offset_octagon.nearest_border_projections(curr_via_center, try_count);
         }
         else

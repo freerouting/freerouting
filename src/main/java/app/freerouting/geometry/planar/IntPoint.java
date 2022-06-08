@@ -10,7 +10,7 @@ import java.math.BigInteger;
  */
 public class IntPoint extends Point implements java.io.Serializable
 {
-    
+
     /**
      * create an  IntPoint from two integer coordinates
      */
@@ -28,7 +28,7 @@ public class IntPoint extends Point implements java.io.Serializable
         x = p_x;
         y = p_y;
     }
-    
+
     /**
      * Returns true, if this IntPoint is equal to p_ob
      */
@@ -49,31 +49,31 @@ public class IntPoint extends Point implements java.io.Serializable
         IntPoint other = (IntPoint)p_ob ;
         return ( x == other.x && y == other.y ) ;
     }
-    
+
     public boolean is_infinite()
     {
         return false;
     }
-    
+
     public IntBox surrounding_box()
     {
         return new IntBox(this, this);
     }
-    
+
     public IntOctagon surrounding_octagon()
     {
         int tmp_1 = x - y;
         int tmp_2 = x + y;
-        
+
         return new IntOctagon(x, y, x, y, tmp_1, tmp_1, tmp_2, tmp_2);
     }
-    
+
     public boolean is_contained_in(IntBox p_box)
     {
         return x >= p_box.ll.x && y >= p_box.ll.y
                 && x <= p_box.ur.x && y <= p_box.ur.y;
     }
-    
+
     /**
      * returns the translation of this point by p_vector
      */
@@ -85,18 +85,18 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return p_vector.add_to(this) ;
     }
-    
+
     Point translate_by( IntVector p_vector )
     {
         return ( new IntPoint( x + p_vector.x, y + p_vector.y ) ) ;
     }
-    
+
     Point translate_by( RationalVector p_vector )
     {
         return p_vector.add_to(this);
     }
-    
-    
+
+
     /**
      * returns the difference vector of this point and p_other
      */
@@ -105,25 +105,25 @@ public class IntPoint extends Point implements java.io.Serializable
         Vector tmp =  p_other.difference_by(this);
         return tmp.negate();
     }
-    
+
     Vector difference_by(RationalPoint p_other)
     {
         Vector tmp = p_other.difference_by(this);
         return tmp.negate();
     }
-    
+
     IntVector difference_by(IntPoint p_other)
     {
         return new IntVector(x - p_other.x, y - p_other.y);
     }
-    
+
     public Side side_of(Line p_line)
     {
         Vector v1 = difference_by(p_line.a);
         Vector v2 = p_line.b.difference_by(p_line.a);
         return v1.side_of(v2);
     }
-    
+
     /**
      * converts this point to a FloatPoint.
      */
@@ -131,7 +131,7 @@ public class IntPoint extends Point implements java.io.Serializable
     {
         return new FloatPoint(x, y);
     }
-    
+
     /**
      * returns the determinant of the vectors (x, y) and (p_other.x, p_other.y)
      */
@@ -139,8 +139,8 @@ public class IntPoint extends Point implements java.io.Serializable
     {
         return  (long)x * p_other.y - (long)y * p_other.x;
     }
-    
-    
+
+
     public Point perpendicular_projection(Line p_line)
     {
         // this function is at the moment only implemented for lines
@@ -155,19 +155,19 @@ public class IntPoint extends Point implements java.io.Serializable
                 BigInteger.valueOf(((IntPoint)p_line.a).determinant((IntPoint)p_line.b));
         BigInteger point_x = BigInteger.valueOf(x);
         BigInteger point_y = BigInteger.valueOf(y);
-        
+
         BigInteger tmp1 = vxvx.multiply(point_x);
         BigInteger tmp2 = vxvy.multiply(point_y);
         tmp1 = tmp1.add(tmp2);
         tmp2 = det.multiply(BigInteger.valueOf(v.y));
         BigInteger proj_x = tmp1.add(tmp2);
-        
+
         tmp1 = vxvy.multiply(point_x);
         tmp2 = vyvy.multiply(point_y);
         tmp1 = tmp1.add(tmp2);
         tmp2 = det.multiply(BigInteger.valueOf(v.x));
         BigInteger proj_y = tmp1.subtract(tmp2);
-        
+
         int signum = denominator.signum();
         if (signum != 0)
         {
@@ -187,7 +187,7 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return new RationalPoint(proj_x, proj_y, denominator);
     }
-    
+
     /**
      * Returns the signed area of the parallelogramm spanned by the vectors
      * p_2 - p_1 and this - p_1
@@ -198,7 +198,7 @@ public class IntPoint extends Point implements java.io.Serializable
         IntVector d01 = this.difference_by(p_1);
         return d21.determinant(d01) ;
     }
-    
+
     /**
      * calculates the square of the distance between this point and p_to_point
      */
@@ -208,7 +208,7 @@ public class IntPoint extends Point implements java.io.Serializable
         double dy = p_to_point.y - this.y;
         return dx * dx + dy * dy;
     }
-    
+
     /**
      * calculates the distance between this point and p_to_point
      */
@@ -216,7 +216,7 @@ public class IntPoint extends Point implements java.io.Serializable
     {
         return Math.sqrt(distance_square(p_to_point));
     }
-    
+
     /**
      * Calculates the nearest point to this point on the horizontal or
      * vertical line through p_other (Snaps this point to on ortogonal line
@@ -239,7 +239,7 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Calculates the nearest point to this point on an orthogonal or
      * diagonal line through p_other (Snaps this point to on 45 degree line
@@ -289,7 +289,7 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Calculates a corner point p so that the lines through this point and p and from
      * p to p_to_point are multiples of 45 degree, and that the angle at p will be
@@ -303,9 +303,9 @@ public class IntPoint extends Point implements java.io.Serializable
         int dx = p_to_point.x - this.x;
         int dy = p_to_point.y - this.y;
         IntPoint result;
-        
+
         // handle the 8 sections between the 45 degree lines
-        
+
         if (dy > 0 && dy < dx)
         {
             if (p_left_turn)
@@ -401,7 +401,7 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Calculates a corner point p so that the lines through this point and p and from
      * p to p_to_point are hprizontal or vertical, and that the angle at p will be
@@ -414,9 +414,9 @@ public class IntPoint extends Point implements java.io.Serializable
         int dx = p_to_point.x - this.x;
         int dy = p_to_point.y - this.y;
         IntPoint result;
-        
+
         // handle the 4 quadrants
-        
+
         if (dx > 0 && dy > 0 || dx < 0 && dy < 0)
         {
             if (p_left_turn)
@@ -446,18 +446,18 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return result;
     }
-    
+
     public int compare_x(Point p_other)
     {
         return -p_other.compare_x(this);
     }
-    
+
     public int compare_y(Point p_other)
     {
         return -p_other.compare_y(this);
     }
-    
-    
+
+
     int compare_x(IntPoint p_other)
     {
         int result;
@@ -475,7 +475,7 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return result;
     }
-    
+
     int compare_y(IntPoint p_other)
     {
         int result;
@@ -493,22 +493,22 @@ public class IntPoint extends Point implements java.io.Serializable
         }
         return result;
     }
-    
+
     int compare_x(RationalPoint p_other)
     {
         return -p_other.compare_x(this);
     }
-    
+
     int compare_y(RationalPoint p_other)
     {
         return -p_other.compare_y(this);
     }
-    
+
     /**
      * the x coordinate of this point
      */
     public final int x;
-    
+
     /**
      * the y coordinate of this point
      */

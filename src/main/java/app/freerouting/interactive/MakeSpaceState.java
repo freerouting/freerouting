@@ -11,7 +11,7 @@ import app.freerouting.board.BasicBoard;
  */
 public class MakeSpaceState extends DragState
 {
-    
+
     /** Creates a new instance of MakeSpaceState */
     public MakeSpaceState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
@@ -32,7 +32,7 @@ public class MakeSpaceState extends DragState
                 hdlg.settings.trace_pull_tight_accuracy, null, null, hdlg.get_routing_board(),
                 false, false, false, hdlg.settings.hilight_routing_obstacle);
     }
-    
+
     public InteractiveState move_to(FloatPoint p_to_location)
     {
         if (!something_dragged)
@@ -55,7 +55,7 @@ public class MakeSpaceState extends DragState
             something_dragged = true;
         }
         route.next_corner(p_to_location);
-        
+
         Point route_end = route.get_last_corner();
         if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NONE &&
                 !route_end.equals(p_to_location.round()))
@@ -66,7 +66,7 @@ public class MakeSpaceState extends DragState
         hdlg.repaint();
         return this;
     }
-    
+
     public InteractiveState button_released()
     {
         int delete_net_no = app.freerouting.rules.Nets.hidden_net_no;
@@ -84,7 +84,7 @@ public class MakeSpaceState extends DragState
         hdlg.show_ratsnest();
         return this.return_state;
     }
-    
+
     public void draw(java.awt.Graphics p_graphics)
     {
         if (route != null)
@@ -92,6 +92,6 @@ public class MakeSpaceState extends DragState
             route.draw(p_graphics,  hdlg.graphics_context);
         }
     }
-    
+
     private Route route;
 }

@@ -8,7 +8,7 @@ import app.freerouting.geometry.planar.FloatLine;
  */
 public class MazeListElement implements Comparable<MazeListElement>
 {
-    
+
     /** Creates a new instance of ExpansionInfo */
     public MazeListElement(ExpandableObject p_door, int p_section_no_of_door,
             ExpandableObject p_backtrack_door, int p_section_no_of_backtrack_door,
@@ -28,7 +28,7 @@ public class MazeListElement implements Comparable<MazeListElement>
         adjustment = p_adjustment;
         already_checked = p_already_checked;
     }
-    
+
     public int compareTo(MazeListElement p_other)
     {
         double compare_value = (this.sorting_value - p_other.sorting_value);
@@ -45,40 +45,40 @@ public class MazeListElement implements Comparable<MazeListElement>
         }
         return result;
     }
-    
+
     /** The door or drill belonging to this MazeListElement */
     final ExpandableObject door;
-    
+
     /** The section number of the door (or the layer of the drill) */
     final int section_no_of_door;
-    
+
     /** The door, from which this door was expanded */
     final ExpandableObject backtrack_door;
-    
+
     /** The section number of the backtrack door */
     final int section_no_of_backtrack_door;
-    
+
     /** The wheighted distance to the start of the expansion */
     final double expansion_value;
-    
+
     /**
      * The expansion value plus the shortest distance to a destination.
      * The list is sorted in ascending order by this value.
      */
     final double sorting_value;
-    
+
     /** The the next room, which will be expanded from this maze search element */
     final CompleteExpansionRoom next_room;
-    
+
     /**
      * Point of the region of the expansion door,
      * which has the shortest distance to the backtrack door.
      */
     final FloatLine shape_entry;
-    
+
     final boolean room_ripped;
-    
+
     final MazeSearchElement.Adjustment adjustment;
-    
+
     final boolean already_checked;
 }

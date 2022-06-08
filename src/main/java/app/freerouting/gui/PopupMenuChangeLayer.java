@@ -5,17 +5,17 @@ package app.freerouting.gui;
  */
 class PopupMenuChangeLayer extends javax.swing.JMenu
 {
-    
+
     /** Creates a new instance of ChangeLayerMenu */
     PopupMenuChangeLayer(BoardFrame p_board_frame)
     {
         this.board_frame = p_board_frame;
-        
+
         app.freerouting.board.LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
         this.item_arr = new LayermenuItem[layer_structure.signal_layer_count()];
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
-        
+
         this.setText(resources.getString("change_layer"));
         this.setToolTipText(resources.getString("change_layer_tooltip"));
         int curr_signal_layer_no = 0;
@@ -30,7 +30,7 @@ class PopupMenuChangeLayer extends javax.swing.JMenu
             }
         }
     }
-    
+
     /**
      * Disables the item with index p_no and enables all other items.
      */
@@ -48,16 +48,16 @@ class PopupMenuChangeLayer extends javax.swing.JMenu
             }
         }
     }
-    
+
     private final BoardFrame board_frame;
-    
+
     private final LayermenuItem [] item_arr;
-    
+
     private class LayermenuItem extends javax.swing.JMenuItem
     {
         LayermenuItem(int p_layer_no)
         {
-            java.util.ResourceBundle resources = 
+            java.util.ResourceBundle resources =
                     java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", board_frame.get_locale());
             message1 = resources.getString("layer_changed_to") + " ";
             layer_no = p_layer_no;
@@ -77,7 +77,7 @@ class PopupMenuChangeLayer extends javax.swing.JMenu
                 }
             });
         }
-        
+
         private final int layer_no;
         private final String message1;
     }

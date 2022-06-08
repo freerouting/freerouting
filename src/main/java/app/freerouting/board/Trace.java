@@ -16,7 +16,7 @@ import java.util.TreeSet;
  */
 public abstract class Trace extends Item implements Connectable, java.io.Serializable
 {
-    
+
     Trace(int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_type,
             int p_id_no, int p_group_no, FixedState p_fixed_state, BasicBoard p_board)
     {
@@ -29,47 +29,47 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         layer = p_layer;
     }
-    
+
     /**
      * returns the first corner of the trace
      */
     public abstract Point first_corner();
-    
+
     /**
      * returns the last corner of the trace
      */
     public abstract Point last_corner();
-    
+
     public int first_layer()
     {
         return this.layer;
     }
-    
+
     public int last_layer()
     {
         return this.layer;
     }
-    
+
     public int get_layer()
     {
         return this.layer;
     }
-    
+
     public void set_layer(int p_layer)
     {
         this.layer = p_layer;
     }
-    
+
     public int get_half_width()
     {
         return half_width;
     }
-    
+
     /**
      * Returns the length of this trace.
      */
     public abstract double get_length();
-    
+
     /**
      * Returns the half with enlarged by the clearance compensation value for the tree
      * with id number p_ttree_id_no
@@ -80,7 +80,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         int result = this.half_width + p_search_tree.clearance_compensation_value(clearance_class_no(), this.layer);
         return result;
     }
-    
+
     public boolean is_obstacle(Item p_other)
     {
         if (p_other == this || p_other instanceof ViaObstacleArea || p_other instanceof ComponentObstacleArea)
@@ -93,7 +93,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return !p_other.shares_net(this);
     }
-    
+
     /**
      * Get a list of all items with a connection point on the layer
      * of this trace equal to its first corner.
@@ -102,7 +102,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     {
         return get_normal_contacts(first_corner(), false);
     }
-    
+
     /**
      * Get a list of all items with a connection point on the layer
      * of this trace equal to its last corner.
@@ -111,12 +111,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     {
         return get_normal_contacts(last_corner(), false);
     }
-    
+
     public Point normal_contact_point(Item p_other)
     {
         return p_other.normal_contact_point(this);
     }
-    
+
     public Set<Item> get_normal_contacts()
     {
         Set<Item> result = new TreeSet<Item>();
@@ -132,12 +132,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return result;
     }
-    
+
     public boolean is_routable()
     {
         return !is_user_fixed() && (this.net_count() > 0);
     }
-    
+
     /**
      * Returns true, if this trace is not contacted at its first or at its last point.
      */
@@ -151,23 +151,23 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         contact_list = this.get_end_contacts();
         return (contact_list.size() == 0);
     }
-    
-    
+
+
     public java.awt.Color[] get_draw_colors(app.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_trace_colors(this.is_user_fixed());
     }
-    
+
     public int get_draw_priority()
     {
         return app.freerouting.boardgraphics.Drawable.MAX_DRAW_PRIORITY;
     }
-    
+
     public double get_draw_intensity(app.freerouting.boardgraphics.GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_trace_color_intensity();
     }
-    
+
     /**
      * Get a list of all items having a connection point at p_point
      * on the layer of this trace.
@@ -221,12 +221,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return result;
     }
-    
+
     Point normal_contact_point(DrillItem p_drill_item)
     {
         return p_drill_item.normal_contact_point(this);
     }
-    
+
     Point normal_contact_point(Trace p_other)
     {
         if (this.layer != p_other.layer)
@@ -256,12 +256,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return result;
     }
-    
+
     public boolean is_drillable(int p_net_no)
     {
         return this.contains_net(p_net_no);
     }
-    
+
     /**
      * looks, if this trace is connectet to the same object
      * at its start and its end point
@@ -280,7 +280,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return false;
     }
-    
+
     /**
      * Returns true, if it is not allowed to change the location of this item by the push algorithm.
      */
@@ -290,7 +290,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         {
             return true;
         }
-        
+
         // check, if the trace  belongs to a net, which is not shovable.
         app.freerouting.rules.Nets nets = this.board.rules.nets;
         for (int curr_net_no : this.net_no_arr)
@@ -305,7 +305,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return false;
     }
-    
+
     /**
      * returns the endpoint of this trace with the shortest distance
      * to p_from_point
@@ -328,7 +328,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return result;
     }
-    
+
     /**
      * Checks, if this trace can be reached by other items via more than one path
      */
@@ -367,12 +367,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return false;
     }
-    
+
     public int shape_layer(int p_index)
     {
         return layer;
     }
-    
+
     public Point[] get_ratsnest_corners()
     {
         // Use only uncontacted enpoints of the trace.
@@ -410,8 +410,8 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return result;
     }
-    
-    
+
+
     /**
      * checks, that the connection restrictions to the contact pins
      * are satisfied. If p_at_start, the start of this trace is checked,
@@ -419,7 +419,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
      * the connection is checked and the connection is not ok.
      */
     public abstract  boolean check_connection_to_pin(boolean p_at_start);
-    
+
     public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
     {
         if (!this.is_selected_by_fixed_filter(p_filter))
@@ -428,8 +428,8 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.TRACES);
     }
-    
-    
+
+
     /**
      * Looks up touching pins at the first corner and the last corner of the trace.
      * Used to avoid acid traps.
@@ -458,7 +458,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return result;
     }
-    
+
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
@@ -477,11 +477,11 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         this.print_connectable_item_info(p_window, p_locale);
         p_window.newline();
     }
-    
+
     public boolean validate()
     {
         boolean result = super.validate();
-        
+
         if (this.first_corner().equals(this.last_corner()))
         {
             FRLogger.warn("Trace.validate: first and last corner are equal");
@@ -489,14 +489,14 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
         }
         return result;
     }
-    
-    
+
+
     /**
      * looks, if this trace can be combined with other traces .
      * Returns true, if somthing has been combined.
      */
     abstract boolean combine();
-    
+
     /**
      * Looks up traces intersecting with this trace and splits them at the intersection points.
      * In case of an overlaps, the traces are split at their first and their last common point.
@@ -505,14 +505,14 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
      * If p_clip_shape != null, the split may be resticted to p_clip_shape.
      */
     public abstract Collection<PolylineTrace> split(IntOctagon p_clip_shape);
-    
+
     /**
      * Splits this trace into two at p_point.
-     * Returns the 2 pieces of the splitted trace, or null if nothing was splitted because for example 
+     * Returns the 2 pieces of the splitted trace, or null if nothing was splitted because for example
      * p_point is not located on this trace.
      */
     public abstract Trace[] split(Point p_point);
-    
+
     /**
      * Tries to make this trace shorter according to its rules.
      * Returns true if the geometry of the trace was changed.

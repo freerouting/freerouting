@@ -8,7 +8,7 @@ import app.freerouting.designforms.specctra.CoordinateTransform;
  */
 public class Communication implements java.io.Serializable
 {
-    
+
     /** Creates a new instance of BoardCommunication */
     public Communication(Unit p_unit, int p_resolution,
             SpecctraParserInfo p_specctra_parser_info, CoordinateTransform p_coordinate_transform,
@@ -21,26 +21,26 @@ public class Communication implements java.io.Serializable
         id_no_generator = p_id_no_generator;
         observers = p_observers;
     }
-    
+
     /** Creates a new instance of BoardCommunication */
     public Communication()
     {
-        this(Unit.MIL, 1, new SpecctraParserInfo("\"", null, null, null, null, false), 
+        this(Unit.MIL, 1, new SpecctraParserInfo("\"", null, null, null, null, false),
                 new CoordinateTransform(1, 0, 0), new app.freerouting.board.ItemIdNoGenerator(), new BoardObserverAdaptor());
     }
-    
+
     public boolean host_cad_is_eagle()
     {
-        return specctra_parser_info != null && specctra_parser_info.host_cad != null 
+        return specctra_parser_info != null && specctra_parser_info.host_cad != null
                 && specctra_parser_info.host_cad.equalsIgnoreCase("CadSoft");
     }
-    
+
     public boolean host_cad_exists()
     {
         return specctra_parser_info != null && specctra_parser_info.host_cad != null;
     }
-    
-        
+
+
     /**
      *  Returns the resolution scaled to the input unit
      */
@@ -48,7 +48,7 @@ public class Communication implements java.io.Serializable
     {
         return Unit.scale(this.resolution, p_unit, this.unit);
     }
-    
+
     private void readObject(java.io.ObjectInputStream p_stream)
     throws java.io.IOException, java.lang.ClassNotFoundException
     {
@@ -56,25 +56,25 @@ public class Communication implements java.io.Serializable
         observers = new BoardObserverAdaptor();
     }
 
-    
+
     /** For coordinate tramsforms to a Specctra dsn file for example. */
     public final CoordinateTransform coordinate_transform;
-    
+
     /** mil, inch or mm */
     public final Unit unit;
-    
+
     /**
      * The resolution (1 / unit_factor) of the coordinate system,
      * which is imported from the host system.
      */
     public final int resolution;
-    
+
     public final SpecctraParserInfo specctra_parser_info;
-    
+
     public final IdNoGenerator id_no_generator;
-    
+
     transient public BoardObservers observers;
-    
+
     /**
      * Information from the parser scope in a Specctra-dsn-file.
      * The fields are optional and may be null.
@@ -82,7 +82,7 @@ public class Communication implements java.io.Serializable
     public static class SpecctraParserInfo implements java.io.Serializable
     {
         public SpecctraParserInfo(String p_string_quote, String p_host_cad,
-                String p_host_version, java.util.Collection<String[] > p_constants, 
+                String p_host_version, java.util.Collection<String[] > p_constants,
                 WriteResolution p_write_resolution,
                 boolean p_dsn_file_generated_by_host)
         {
@@ -93,21 +93,21 @@ public class Communication implements java.io.Serializable
             write_resolution = p_write_resolution;
             dsn_file_generated_by_host = p_dsn_file_generated_by_host;
         }
-        
+
         /** Character for quoting strings in a dsn-File. */
         public final String string_quote;
-        
+
         public final String host_cad;
-        
+
         public final String host_version;
-        
+
         public final java.util.Collection<String[]> constants;
-        
+
         public final WriteResolution write_resolution;
-        
+
         public final boolean dsn_file_generated_by_host;
-        
-        
+
+
         public static class WriteResolution implements java.io.Serializable
         {
             public WriteResolution(String p_char_name, int p_positive_int)

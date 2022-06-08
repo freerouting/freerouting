@@ -23,7 +23,7 @@ import app.freerouting.boardgraphics.GraphicsContext;
  */
 public class RatsNest
 {
-    
+
     /** Creates a new instance of RatsNest */
     public RatsNest(BasicBoard p_board, java.util.Locale p_locale)
     {
@@ -59,7 +59,7 @@ public class RatsNest
             is_filtered[i] = false;
         }
     }
-    
+
     /**
      * Recalculates the incomplete connections for the input net
      */
@@ -71,7 +71,7 @@ public class RatsNest
             net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board, locale);
         }
     }
-    
+
     /**
      * Recalculates the incomplete connections for the input net with the input item list.
      */
@@ -84,7 +84,7 @@ public class RatsNest
             net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board, locale);
         }
     }
-    
+
     public int incomplete_count()
     {
         int result = 0;
@@ -94,7 +94,7 @@ public class RatsNest
         }
         return result;
     }
-    
+
     public int incomplete_count(int p_net_no)
     {
         if (p_net_no <= 0 || p_net_no > net_incompletes.length)
@@ -103,7 +103,7 @@ public class RatsNest
         }
         return net_incompletes[p_net_no - 1].count();
     }
-    
+
     public int length_violation_count()
     {
         int result = 0;
@@ -116,7 +116,7 @@ public class RatsNest
         }
         return result;
     }
-    
+
     /**
      *  Returns the length of the violation of the length restriction of the net with number p_net_no,
      *  {@literal >} 0, if the cumulative trace length is to big,
@@ -131,7 +131,7 @@ public class RatsNest
         }
         return net_incompletes[p_net_no - 1].get_length_violation();
     }
-    
+
     /**
      * Returns all airlines of the ratsnest.
      */
@@ -150,17 +150,17 @@ public class RatsNest
         }
         return result;
     }
-    
+
     public void hide()
     {
         hidden = true;
     }
-    
+
     public void show()
     {
         hidden = false;
     }
-    
+
     /**
      * Recalculate the length matching violations.
      * Return false, if the length violations have not changed.
@@ -177,7 +177,7 @@ public class RatsNest
         }
         return result;
     }
-    
+
     /**
      * Used for  example to hide the incompletes during interactive routing.
      */
@@ -185,8 +185,8 @@ public class RatsNest
     {
         return hidden;
     }
-    
-    
+
+
     /**
      * Sets the visibility filter for the incompletes of the input net.
      */
@@ -198,11 +198,11 @@ public class RatsNest
         }
         is_filtered[p_net_no - 1] = p_value;
     }
-    
+
     public void draw(Graphics p_graphics, GraphicsContext p_graphics_context)
     {
         boolean draw_length_violations_only = this.hidden;
-        
+
         for (int i = 0; i < net_incompletes.length; ++i)
         {
             if (!is_filtered[i])
@@ -210,19 +210,19 @@ public class RatsNest
                 net_incompletes[i].draw(p_graphics, p_graphics_context, draw_length_violations_only);
             }
         }
-        
+
     }
     private final NetIncompletes [] net_incompletes;
     private final boolean[] is_filtered;
     public boolean hidden = false;
     private final java.util.Locale locale;
-    
+
     /**
      * Describes a single incomplete connection of the ratsnest.
      */
     public static class AirLine implements Comparable<AirLine>, app.freerouting.board.ObjectInfoPanel.Printable
     {
-        AirLine(Net p_net, Item p_from_item, FloatPoint p_from_corner, Item p_to_item, 
+        AirLine(Net p_net, Item p_from_item, FloatPoint p_from_corner, Item p_to_item,
                 FloatPoint p_to_corner, java.util.Locale p_locale)
         {
             net = p_net;
@@ -232,19 +232,19 @@ public class RatsNest
             to_corner =  p_to_corner;
             this.locale = p_locale;
         }
-        
+
         public int compareTo(AirLine p_other)
         {
             return this.net.name.compareTo(p_other.net.name);
         }
-        
+
         public String toString()
         {
-            
+
             String result = this.net.name + ": " + item_info(from_item) + " - " + item_info(to_item);
             return result;
         }
-        
+
         private String item_info(Item p_item)
         {
             java.util.ResourceBundle resources =
@@ -273,7 +273,7 @@ public class RatsNest
             }
             return result;
         }
-        
+
         public void print_info(app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
         {
             java.util.ResourceBundle resources =
@@ -287,7 +287,7 @@ public class RatsNest
             p_window.append(to_corner);
             p_window.newline();
         }
-        
+
         public final Net net;
         public final Item from_item;
         public final FloatPoint from_corner;

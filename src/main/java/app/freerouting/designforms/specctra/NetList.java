@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class NetList
 {
-    
+
     /**
      * Returns true, if the netlist contains a net with the input name.
      */
@@ -20,7 +20,7 @@ public class NetList
     {
         return nets.containsKey(p_net_id);
     }
-    
+
     /**
      * Adds a new net mit the input name to the net list.
      * Returns null, if a net with p_name already exists in the net list.
@@ -40,7 +40,7 @@ public class NetList
         }
         return result;
     }
-    
+
     /**
      * Returns the net with the input name, or null,
      * if the netlist does not contain a net with the input name.
@@ -50,7 +50,7 @@ public class NetList
         Net value = nets.get(p_net_id);
         return value;
     }
-    
+
     /**
      * Returns all nets in this net list containing the input pin.
      */
@@ -71,8 +71,8 @@ public class NetList
         }
         return result;
     }
-    
+
     /** The entries of this map are of type Net, the keys are the net_ids. */
     private final Map<Net.Id, Net> nets = new TreeMap<Net.Id, Net>();
-    
+
 }

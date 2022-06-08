@@ -13,21 +13,21 @@ import java.awt.geom.Line2D;
 
 public abstract class Cursor
 {
-    
+
     public static Cursor get_45_degree_cross_hair_cursor()
     {
         return new FortyfiveDegreeCrossHairCursor();
     }
-    
+
     public abstract void draw(Graphics p_graphics);
-    
+
     public void set_location(Point2D p_location)
     {
         this.x_coor = p_location.getX();
         this.y_coor = p_location.getY();
         location_initialized = true;
     }
-    
+
     protected static void init_graphics(Graphics2D p_graphics)
     {
         BasicStroke bs = new BasicStroke(0, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
@@ -36,26 +36,26 @@ public abstract class Cursor
         p_graphics.setColor(Color.WHITE);
         p_graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
     }
-    
+
     double x_coor;
     double y_coor;
-    
+
     boolean location_initialized = false;
-    
+
     private static final double MAX_COOR = 1000;
-    
+
     private static Line2D VERTICAL_LINE = new Line2D.Double(0, -MAX_COOR, 0, MAX_COOR);
     private static Line2D HORIZONTAL_LINE = new Line2D.Double(-MAX_COOR, 0, MAX_COOR, 0);
     private static Line2D RIGHT_DIAGONAL_LINE = new Line2D.Double(-MAX_COOR, -MAX_COOR, MAX_COOR, MAX_COOR);
     private static Line2D LEFT_DIAGONAL_LINE = new Line2D.Double(-MAX_COOR, MAX_COOR, MAX_COOR, -MAX_COOR);
-    
-    
+
+
     private static class FortyfiveDegreeCrossHairCursor extends Cursor
     {
-        
+
         public void draw(Graphics p_graphics)
         {
-            
+
             if (!location_initialized)
             {
                 return;
@@ -71,5 +71,5 @@ public abstract class Cursor
             g2.draw(draw_path);
         }
     }
-    
+
 }

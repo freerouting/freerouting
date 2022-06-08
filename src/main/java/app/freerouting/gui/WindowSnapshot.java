@@ -7,7 +7,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class WindowSnapshot extends BoardSavableSubWindow
 {
-    
+
     /** Creates a new instance of SnapshotFrame */
     public WindowSnapshot(BoardFrame p_board_frame)
     {
@@ -15,22 +15,22 @@ public class WindowSnapshot extends BoardSavableSubWindow
         this.settings_window = new WindowSnapshotSettings(p_board_frame);
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowSnapshot", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
-        
+
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
-        
+
         // create main panel
         final javax.swing.JPanel main_panel = new javax.swing.JPanel();
         getContentPane().add(main_panel);
         main_panel.setLayout(new java.awt.BorderLayout());
-        
-        
+
+
         // create goto button
         javax.swing.JButton goto_button = new javax.swing.JButton(resources.getString("goto_snapshot"));
         goto_button.setToolTipText(resources.getString("goto_tooltip"));
         GotoListener goto_listener = new GotoListener();
         goto_button.addActionListener(goto_listener);
         main_panel.add(goto_button, java.awt.BorderLayout.NORTH);
-        
+
         // create snapshot list
         this.list = new javax.swing.JList<>(this.list_model);
         this.list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -46,12 +46,12 @@ public class WindowSnapshot extends BoardSavableSubWindow
                 }
             }
         });
-        
-        
+
+
         javax.swing.JScrollPane list_scroll_pane = new javax.swing.JScrollPane(this.list);
         list_scroll_pane.setPreferredSize(new java.awt.Dimension(200, 100));
         main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
-        
+
         // create the south panel
         final javax.swing.JPanel south_panel = new javax.swing.JPanel();
         main_panel.add(south_panel, java.awt.BorderLayout.SOUTH);
@@ -59,35 +59,35 @@ public class WindowSnapshot extends BoardSavableSubWindow
         south_panel.setLayout(gridbag);
         java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        
+
         // create panel to add a new snapshot
         final javax.swing.JPanel add_panel = new javax.swing.JPanel();
         gridbag.setConstraints(add_panel, gridbag_constraints);
         add_panel.setLayout(new java.awt.BorderLayout());
         south_panel.add(add_panel);
-        
+
         javax.swing.JButton add_button = new javax.swing.JButton(resources.getString("create"));
         AddListener add_listener = new AddListener();
         add_button.addActionListener(add_listener);
         add_panel.add(add_button, java.awt.BorderLayout.WEST);
-        
+
         this.name_field = new javax.swing.JTextField(10);
         name_field.setText(resources.getString("snapshot") + " 1");
         add_panel.add(name_field, java.awt.BorderLayout.EAST);
-        
+
         // create delete buttons
         javax.swing.JButton delete_button = new javax.swing.JButton(resources.getString("remove"));
         DeleteListener delete_listener = new DeleteListener();
         delete_button.addActionListener(delete_listener);
         gridbag.setConstraints(delete_button, gridbag_constraints);
         south_panel.add(delete_button);
-        
+
         javax.swing.JButton delete_all_button = new javax.swing.JButton(resources.getString("remove_all"));
         DeleteAllListener delete_all_listener = new DeleteAllListener();
         delete_all_button.addActionListener(delete_all_listener);
         gridbag.setConstraints(delete_all_button, gridbag_constraints);
         south_panel.add(delete_all_button);
-        
+
         // create button for the snapshot settings
         javax.swing.JButton settings_button = new javax.swing.JButton(resources.getString("settings"));
         settings_button.setToolTipText(resources.getString("settings_tooltip"));
@@ -95,30 +95,30 @@ public class WindowSnapshot extends BoardSavableSubWindow
         settings_button.addActionListener(settings_listener);
         gridbag.setConstraints(delete_all_button, gridbag_constraints);
         south_panel.add(settings_button);
-        
+
         p_board_frame.set_context_sensitive_help(this, "WindowSnapshots");
-        
+
         this.pack();
     }
-    
+
     public void dispose()
     {
         settings_window.dispose();
         super.dispose();
     }
-    
+
     public void parent_iconified()
     {
         settings_window.parent_iconified();
         super.parent_iconified();
     }
-    
+
     public void parent_deiconified()
     {
         settings_window.parent_deiconified();
         super.parent_deiconified();
     }
-    
+
     /**
      * Reads the data of this frame from disk.
      * Returns false, if the reading failed.
@@ -144,7 +144,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             return false;
         }
     }
-    
+
     /**
      * Saves this frame to disk.
      */
@@ -161,7 +161,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
         }
         this.settings_window.save(p_object_stream);
     }
-    
+
     void goto_selected()
     {
         int index = list.getSelectedIndex();
@@ -169,19 +169,19 @@ public class WindowSnapshot extends BoardSavableSubWindow
         {
             app.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
             app.freerouting.interactive.SnapShot curr_snapshot = list_model.elementAt(index);
-            
+
             curr_snapshot.go_to(board_handling);
-            
+
             if (curr_snapshot.settings.get_snapshot_attributes().object_colors)
             {
                 board_handling.graphics_context.item_color_table =
                         new app.freerouting.boardgraphics.ItemColorTableModel(curr_snapshot.graphics_context.item_color_table);
                 board_handling.graphics_context.other_color_table =
                         new app.freerouting.boardgraphics.OtherColorTableModel(curr_snapshot.graphics_context.other_color_table);
-                
+
                 board_frame.color_manager.set_table_models(board_handling.graphics_context);
             }
-            
+
             if (curr_snapshot.settings.get_snapshot_attributes().display_region)
             {
                 java.awt.Point viewport_position = curr_snapshot.copy_viewport_position();
@@ -194,14 +194,14 @@ public class WindowSnapshot extends BoardSavableSubWindow
                     board_frame.board_panel.set_viewport_position(viewport_position);
                 }
             }
-            
+
             board_frame.refresh_windows();
             board_frame.hilight_selected_button();
             board_frame.setVisible(true);
             board_frame.repaint();
         }
     }
-    
+
     /**
      * Refreshs the displayed values in this window.
      */
@@ -209,16 +209,16 @@ public class WindowSnapshot extends BoardSavableSubWindow
     {
         this.settings_window.refresh();
     }
-    
+
     private final BoardFrame board_frame;
-    
+
     private javax.swing.DefaultListModel<app.freerouting.interactive.SnapShot> list_model = new javax.swing.DefaultListModel<app.freerouting.interactive.SnapShot>();
     private final javax.swing.JList<app.freerouting.interactive.SnapShot> list;
     private final javax.swing.JTextField name_field;
     final WindowSnapshotSettings settings_window;
     private int snapshot_count = 0;
     private final java.util.ResourceBundle resources;
-    
+
     private class AddListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -233,7 +233,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             }
         }
     }
-    
+
     /**
      * Selects the item, which is previous to the current selected item in the list.
      * The current selected item is then no more selected.
@@ -251,7 +251,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
         }
         this.list.setSelectedIndex(selected_index - 1);
     }
-    
+
     /**
      * Selects the item, which is next to the current selected item in the list.
      * The current selected item is then no more selected.
@@ -267,10 +267,10 @@ public class WindowSnapshot extends BoardSavableSubWindow
         {
             return;
         }
-        
+
         this.list.setSelectedIndex(selected_index + 1);
     }
-    
+
     private class DeleteListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -282,7 +282,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             }
         }
     }
-    
+
     private class DeleteAllListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -290,7 +290,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             list_model.removeAllElements();
         }
     }
-    
+
     private class GotoListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -298,7 +298,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
             goto_selected();
         }
     }
-    
+
     private class SettingsListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -313,7 +313,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
         }
         boolean first_time = true;
     }
-    
+
     /**
      * Type for attributes of this class, which are saved to an Objectstream.
      */
@@ -325,9 +325,9 @@ public class WindowSnapshot extends BoardSavableSubWindow
             snapshot_count = p_snapshot_count;
             location = p_location;
             is_visible = p_is_visible;
-            
+
         }
-        
+
         public final javax.swing.DefaultListModel<app.freerouting.interactive.SnapShot> list_model;
         public final int snapshot_count;
         public final java.awt.Point location;

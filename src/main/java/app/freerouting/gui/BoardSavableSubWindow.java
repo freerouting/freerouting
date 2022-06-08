@@ -7,7 +7,7 @@ import app.freerouting.logger.FRLogger;
  */
 public abstract class BoardSavableSubWindow extends BoardSubWindow
 {
-    
+
     /**
      * Reads the data of this frame from disc.
      * Returns false, if the reading failed.
@@ -27,14 +27,14 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow
             return false;
         }
     }
-    
+
     /**
      * Saves this frame to disk.
      */
     public void save(java.io.ObjectOutputStream p_object_stream)
     {
         SavedAttributes saved_attributes = new SavedAttributes(this.getBounds(), this.isVisible());
-        
+
         try
         {
             p_object_stream.writeObject(saved_attributes);
@@ -44,16 +44,16 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow
             FRLogger.error("BoardSubWindow.save: save failed", e);
         }
     }
-    
-    /** 
+
+    /**
      * Refreshs the displayed values in this window.
      * To be overwritten in derived classes.
      */
     public void refresh()
     {
-        
+
     }
-    
+
     /**
      * Type for attributes of this class, which are saved to an Objectstream.
      */
@@ -64,7 +64,7 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow
             bounds = p_bounds;
             is_visible = p_is_visible;
         }
-        
+
         public final java.awt.Rectangle bounds;
         public final boolean is_visible;
     }

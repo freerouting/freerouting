@@ -28,7 +28,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
     {
         super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list, p_test_level);
     }
-    
+
     /**
      * Calculates a list with the next  point  of the trace under construction.
      * If the trace is completed, the result list will be empty.
@@ -46,11 +46,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
             }
             return result;
         }
-        
+
         double trace_halfwidth_exact = this.ctrl.compensated_trace_half_width[this.current_trace_layer];
         double trace_halfwidth_max = trace_halfwidth_exact + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
         double trace_halfwidth_middle = trace_halfwidth_exact + c_tolerance;
-        
+
         BacktrackElement curr_to_info = this.backtrack_array[this.current_to_door_index];
         FloatPoint door_left_corner = calc_door_left_corner(curr_to_info);
         FloatPoint door_right_corner = calc_door_right_corner(curr_to_info);
@@ -76,11 +76,11 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
                 return result;
             }
         }
-        
+
         // Calculate the visibility range for a trace line from current_from_point
         // through the interval from left_most_visible_point to right_most_visible_point,
         // by advancing the door index as far as possible, so that still somthing is visible.
-        
+
         boolean end_of_trace = false;
         FloatPoint left_tangent_point = null;
         FloatPoint right_tangent_point = null;
@@ -89,9 +89,9 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         int right_ind = new_door_ind;
         int curr_door_ind =  this.current_to_door_index + 1;
         FloatPoint result_corner = null;
-        
+
         // construct a maximum lenght straight line through the doors
-        
+
         for (;;)
         {
             left_tangent_point = this.current_from_point.right_tangential_point(door_left_corner, trace_halfwidth_max);
@@ -117,7 +117,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
             {
                 // The gap between  left_most_visible_point and right_most_visible_point ist to small
                 // for a trace with the current half width.
-                
+
                 double left_corner_distance = door_left_corner.distance(this.current_from_point);
                 double right_corner_distance = door_right_corner.distance(this.current_from_point);
                 if ( left_corner_distance <= right_corner_distance)
@@ -178,7 +178,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
                     result_corner = right_turn_next_corner(this.current_from_point, trace_halfwidth_max, door_right_corner, next_left_corner);
                     break;
                 }
-                
+
                 if (next_right_corner.side_of(this.current_from_point, door_left_corner) == Side.ON_THE_LEFT)
                 {
                     // bend to the left
@@ -227,7 +227,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
             }
             ++curr_door_ind;
         }
-        
+
         if (end_of_trace)
         {
             FloatPoint nearest_point = this.current_target_shape.nearest_point(this.current_from_point.round()).to_float();
@@ -261,10 +261,10 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
             new_door_ind = this.current_target_door_index;
         }
-        
+
         // Check clearance violation with the previous door shapes
         // and correct them in this case.
-        
+
         FloatLine check_line = new FloatLine(this.current_from_point, result_corner);
         int check_from_door_index = Math.max( this.current_to_door_index - 5 , this.current_from_door_index + 1);
         FloatPoint corrected_result = null;
@@ -307,7 +307,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
             result_corner = corrected_result;
             new_door_ind = Math.max(corrected_door_ind, this.current_to_door_index);
         }
-        
+
         this.current_to_door_index = new_door_ind;
         if(result_corner != null && result_corner != this.current_from_point)
         {
@@ -315,8 +315,8 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         }
         return result;
     }
-    
-    
+
+
     /**
      * Calculates the left most corner of the shape of p_to_info.door
      * seen from the center of the common room with the previous door.
@@ -329,7 +329,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         int left_most_corner_no = curr_to_door_shape.index_of_left_most_corner(pole);
         return curr_to_door_shape.corner_approx(left_most_corner_no);
     }
-    
+
     /**
      * Calculates the right most corner of the shape of p_to_info.door
      * seen from the center of the common room with the previous door.
@@ -342,7 +342,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         int right_most_corner_no = curr_to_door_shape.index_of_right_most_corner(pole);
         return curr_to_door_shape.corner_approx(right_most_corner_no);
     }
-    
+
     /**
      * Calculates as first line the left side tangent from p_from_corner to
      * the circle with center p_to_corner and radius p_dist.
@@ -376,7 +376,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         second_line = second_line.translate(p_dist);
         return first_line.intersection(second_line);
     }
-    
+
     /**
      * Calculates as first line the right side tangent from p_from_corner to
      * the circle with center p_to_corner and radius p_dist.
@@ -410,7 +410,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         second_line = second_line.translate(-p_dist);
         return first_line.intersection(second_line);
     }
-    
+
     /**
      * Calculates the right tangential line from p_from_point and the
      * left tangential line from p_to_point to the circle
@@ -441,7 +441,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         FloatLine second_line = new FloatLine(p_to_point, curr_tangential_point);
         return first_line.intersection(second_line);
     }
-    
+
     /**
      * Calculates the left tangential line from p_from_point and the
      * right tangential line from p_to_point to the circle
@@ -472,7 +472,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         FloatLine second_line = new FloatLine(p_to_point, curr_tangential_point);
         return first_line.intersection(second_line);
     }
-    
+
     static private final double c_tolerance = 1.0;
-    
+
 }

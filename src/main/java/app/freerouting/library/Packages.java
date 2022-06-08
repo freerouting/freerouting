@@ -20,7 +20,7 @@ public class Packages implements java.io.Serializable
     {
         this.padstack_list = p_padstack_list;
     }
-    
+
     /**
      * Returns the package with the input name and the input side or null,
      * if no such package exists.
@@ -43,7 +43,7 @@ public class Packages implements java.io.Serializable
         }
         return other_side_package;
     }
-    
+
     /**
      * Returns the package with index p_package_no.
      * Packages numbers are from 1 to package count.
@@ -57,7 +57,7 @@ public class Packages implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns the count of packages in this object.
      */
@@ -65,12 +65,12 @@ public class Packages implements java.io.Serializable
     {
         return package_arr.size();
     }
-    
+
     /**
      * Appends a new package with the input data to this object.
      */
     public Package add(String p_name, Package.Pin [] p_pin_arr, Shape[] p_outline,
-            Package.Keepout [] p_keepout_arr, Package.Keepout [] p_via_keepout_arr, 
+            Package.Keepout [] p_keepout_arr, Package.Keepout [] p_via_keepout_arr,
             Package.Keepout [] p_place_keepout_arr, boolean p_is_front)
     {
         Package new_package = new Package(p_name, package_arr.size() + 1, p_pin_arr, p_outline,
@@ -78,7 +78,7 @@ public class Packages implements java.io.Serializable
         package_arr.add(new_package);
         return new_package;
     }
-    
+
     /**
      * Appends a new package with pins p_pin_arr to this object.
      * The package name is generated internally.
@@ -86,13 +86,13 @@ public class Packages implements java.io.Serializable
     public Package add(Package.Pin [] p_pin_arr)
     {
         String package_name = "Package#" + (Integer.valueOf(package_arr.size() + 1)).toString();
-        
+
         return add(package_name, p_pin_arr, null, new Package.Keepout [0], new Package.Keepout [0],
                 new Package.Keepout [0], true);
     }
-    
+
     /** The array of packages in this object */
     private Vector<Package> package_arr = new Vector<Package>();
-    
+
     final Padstacks padstack_list;
 }

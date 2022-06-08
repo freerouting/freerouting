@@ -8,7 +8,7 @@ import java.util.Vector;
  */
 public class BoardLibrary implements java.io.Serializable
 {
-    
+
     /** Creates a new instance of BoardLibrary */
     public BoardLibrary(Padstacks p_padstacks, Packages p_packages)
     {
@@ -16,24 +16,24 @@ public class BoardLibrary implements java.io.Serializable
         packages = p_packages;
         logical_parts = new LogicalParts();
     }
-    
+
     /** Creates a new instance of BoardLibrary */
     public BoardLibrary()
     {
-        
+
     }
-    
+
     /** Sets the subset of padstacks from this.padstacks, which can be used in routing for inserting vias. */
     public void set_via_padstacks(Padstack[] p_padstacks)
     {
-        
+
         this.via_padstacks =  new Vector<Padstack>();
         for (int i = 0; i < p_padstacks.length; ++i)
         {
-          this.via_padstacks.add(p_padstacks[i]);  
+          this.via_padstacks.add(p_padstacks[i]);
         }
     }
-    
+
     /** The count of padstacks from this.padstacks, which can be used in routing */
     public int via_padstack_count()
     {
@@ -43,7 +43,7 @@ public class BoardLibrary implements java.io.Serializable
         }
         return this.via_padstacks.size();
     }
-    
+
     /** Gets the via padstack for routing with index p_no */
     public Padstack get_via_padstack(int p_no)
     {
@@ -53,7 +53,7 @@ public class BoardLibrary implements java.io.Serializable
         }
         return this.via_padstacks.get(p_no);
     }
-    
+
     /** Gets the via padstack with name p_name, or null, if no such padstack exists. */
     public Padstack get_via_padstack(String p_name)
     {
@@ -70,7 +70,7 @@ public class BoardLibrary implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Returns the via padstacks, which can be used for routing.
      */
@@ -87,23 +87,23 @@ public class BoardLibrary implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Appends p_padstack to the list of via padstacks.
      * Returns false, if the list  contains already a  padstack  with p_padstack.name.
      */
     public boolean add_via_padstack(Padstack p_padstack)
     {
-       if (get_via_padstack(p_padstack.name) != null) 
+       if (get_via_padstack(p_padstack.name) != null)
        {
            return false;
        }
-       this.via_padstacks.add(p_padstack);  
+       this.via_padstacks.add(p_padstack);
        return true;
     }
-    
-    /** 
-     * Removes p_padstack from the via padstack list. 
+
+    /**
+     * Removes p_padstack from the via padstack list.
      * Returns false, if p_padstack was not found in the list.
      * If the padstack is no more used on the board, it will also be removed from the board padstacks.
      */
@@ -112,8 +112,8 @@ public class BoardLibrary implements java.io.Serializable
         boolean result = via_padstacks.remove(p_padstack);
         return result;
     }
-    
-        
+
+
     /**
      * Gets the via padstack mirrored to the back side of the board.
      * Returns null, if no such via padstack exists.
@@ -136,7 +136,7 @@ public class BoardLibrary implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Looks, if the input padstack is used on p_board in a Package or in drill.
      */
@@ -171,12 +171,12 @@ public class BoardLibrary implements java.io.Serializable
         }
         return false;
     }
-    
+
     public Padstacks padstacks = null;
     public Packages packages = null;
     /** Contains information for gate swap and pin swap in the Specctra-dsn format. */
     public LogicalParts logical_parts = new LogicalParts();
-    
+
     /** The subset of padstacks in the board library, which can be used in routing for inserting vias. */
     private List<Padstack> via_padstacks = null;
 }

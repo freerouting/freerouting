@@ -19,7 +19,7 @@ import app.freerouting.logger.FRLogger;
 
 public class SortedOrthogonalRoomNeighbours
 {
-    
+
     public static CompleteExpansionRoom calculate(ExpansionRoom p_room, AutorouteEngine p_autoroute_engine)
     {
         int net_no = p_autoroute_engine.get_net_no();
@@ -29,7 +29,7 @@ public class SortedOrthogonalRoomNeighbours
         {
             return null;
         }
-        
+
         // Check, that each side of the romm shape has at least one touching neighbour.
         // Otherwise improve the room shape by enlarging.
         boolean edge_removed = room_neighbours.try_remove_edge(net_no, p_autoroute_engine.autoroute_search_tree);
@@ -39,10 +39,10 @@ public class SortedOrthogonalRoomNeighbours
             p_autoroute_engine.remove_all_doors(result);
             return calculate(p_room, p_autoroute_engine);
         }
-        
+
         // Now calculate the new incomplete rooms together with the doors
         // between this room and the sorted neighbours.
-        
+
         if (room_neighbours.sorted_neighbours.isEmpty())
         {
             if (result instanceof ObstacleExpansionRoom)
@@ -56,7 +56,7 @@ public class SortedOrthogonalRoomNeighbours
         }
         return result;
     }
-    
+
     private static void calculate_incomplete_rooms_with_empty_neighbours(ObstacleExpansionRoom p_room, AutorouteEngine p_autoroute_engine)
     {
         TileShape room_shape = p_room.get_shape();
@@ -98,7 +98,7 @@ public class SortedOrthogonalRoomNeighbours
             new_room.add_door(new_door);
         }
     }
-    
+
     /**
      * Calculates all touching neighbours of p_room and sorts them in
      * counterclock sense around the boundary  of the room shape.
@@ -164,11 +164,11 @@ public class SortedOrthogonalRoomNeighbours
                     if (curr_item.is_routable())
                     {
                         ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
-                        ObstacleExpansionRoom curr_overlap_room = 
+                        ObstacleExpansionRoom curr_overlap_room =
                                 item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
                         ((ObstacleExpansionRoom) completed_room).create_overlap_door(curr_overlap_room);
                     }
-                    
+
                 }
                 continue;
             }
@@ -194,7 +194,7 @@ public class SortedOrthogonalRoomNeighbours
                     {
                         // expand the item for ripup and pushing purposes
                         ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
-                        neighbour_room = 
+                        neighbour_room =
                                 item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
                     }
                 }
@@ -211,17 +211,17 @@ public class SortedOrthogonalRoomNeighbours
         }
         return result;
     }
-    
+
     private void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine)
     {
         IntBox board_bounds = p_autoroute_engine.board.bounding_box;
         SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.last();
         Iterator<SortedRoomNeighbour> it = this.sorted_neighbours.iterator();
-        
+
         while (it.hasNext())
         {
             SortedRoomNeighbour next_neighbour = it.next();
-            
+
             if (!next_neighbour.intersection.intersects(prev_neighbour.intersection))
             {
                 // create a door to a new incomplete expansion room between
@@ -371,7 +371,7 @@ public class SortedOrthogonalRoomNeighbours
             prev_neighbour = next_neighbour;
         }
     }
-    
+
     private void insert_incomplete_room(AutorouteEngine p_autoroute_engine, int p_ll_x, int p_ll_y, int p_ur_x, int p_ur_y)
     {
         IntBox new_incomplete_room_shape = new IntBox(p_ll_x, p_ll_y, p_ur_x, p_ur_y);
@@ -392,7 +392,7 @@ public class SortedOrthogonalRoomNeighbours
             }
         }
     }
-    
+
     /** Creates a new instance of SortedOrthogonalRoomNeighbours */
     private SortedOrthogonalRoomNeighbours(ExpansionRoom p_from_room, CompleteExpansionRoom p_completed_room)
     {
@@ -407,7 +407,7 @@ public class SortedOrthogonalRoomNeighbours
             edge_interiour_touches_obstacle[i] = false;
         }
     }
-    
+
     /**
      * Check, that each side of the romm shape has at least one touching neighbour.
      * Otherwise the room shape will be improved the by enlarging.
@@ -427,7 +427,7 @@ public class SortedOrthogonalRoomNeighbours
         }
         IntBox  room_box = (IntBox) curr_incomplete_room.get_shape();
         double room_area = room_box.area();
-        
+
         int remove_edge_no = -1;
         for (int i = 0; i < 4; ++i)
         {
@@ -437,7 +437,7 @@ public class SortedOrthogonalRoomNeighbours
                 break;
             }
         }
-        
+
         if (remove_edge_no >= 0)
         {
             // Touching neighbour missing at the edge side with index remove_edge_no
@@ -488,7 +488,7 @@ public class SortedOrthogonalRoomNeighbours
         }
         return false;
     }
-    
+
     private static IntBox remove_border_line( IntBox p_room_box, int p_remove_edge_no)
     {
         IntBox result;
@@ -515,33 +515,33 @@ public class SortedOrthogonalRoomNeighbours
         }
         return result;
     }
-    
+
     private void add_sorted_neighbour(IntBox p_neighbour_shape, IntBox p_intersection)
     {
         SortedRoomNeighbour new_neighbour = new SortedRoomNeighbour(p_neighbour_shape, p_intersection);
         sorted_neighbours.add(new_neighbour);
     }
-    
+
     public final CompleteExpansionRoom completed_room;
     public final SortedSet<SortedRoomNeighbour> sorted_neighbours;
     private final ExpansionRoom from_room;
     private final boolean is_obstacle_expansion_room;
     private final IntBox room_shape;
-    
+
     private final boolean[] edge_interiour_touches_obstacle;
-    
+
     /**
      * Helper class to sort the doors of an expansion room counterclockwise
      * arount the border of the room shape.
      */
-    
+
     private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour>
     {
         public SortedRoomNeighbour(IntBox p_neighbour_shape, IntBox p_intersection)
         {
             shape = p_neighbour_shape;
             intersection = p_intersection;
-            
+
             if( p_intersection.ll.y == room_shape.ll.y
                     && p_intersection.ur.x > room_shape.ll.x && p_intersection.ll.x < room_shape.ur.x)
             {
@@ -562,7 +562,7 @@ public class SortedOrthogonalRoomNeighbours
             {
                 edge_interiour_touches_obstacle[3] = true;
             }
-            
+
             if (p_intersection.ll.y == room_shape.ll.y && p_intersection.ll.x > room_shape.ll.x)
             {
                 this.first_touching_side = 0;
@@ -584,7 +584,7 @@ public class SortedOrthogonalRoomNeighbours
                 FRLogger.warn("SortedRoomNeighbour: case not expected");
                 this.first_touching_side = -1;
             }
-            
+
             if (p_intersection.ll.x == room_shape.ll.x && p_intersection.ll.y > room_shape.ll.y)
             {
                 this.last_touching_side = 3;
@@ -607,7 +607,7 @@ public class SortedOrthogonalRoomNeighbours
                 this.last_touching_side = -1;
             }
         }
-        
+
         /**
          * Compare function for or sorting the neighbours in counterclock sense
          * around the border of the room shape in ascending order.
@@ -622,12 +622,12 @@ public class SortedOrthogonalRoomNeighbours
             {
                 return -1;
             }
-            
+
             // now the first touch of this and p_other is at the same side
             IntBox is1 = this.intersection;
             IntBox is2 = p_other.intersection;
             int cmp_value;
-            
+
             if (first_touching_side == 0)
             {
                 cmp_value = is1.ll.x - is2.ll.x;
@@ -663,7 +663,7 @@ public class SortedOrthogonalRoomNeighbours
                 {
                     return -1;
                 }
-                
+
                 // now the last touch of this and p_other is at the same side
                 if (last_touching_side == 0)
                 {
@@ -689,16 +689,16 @@ public class SortedOrthogonalRoomNeighbours
             }
             return cmp_value;
         }
-        
+
         /** The shape of the neighbour room */
         public final IntBox shape;
-        
+
         /** The intersection of tnis ExpansionRoom shape with the neighbour_shape */
         public final IntBox intersection;
-        
+
         /** The first side of the room shape, where the neighbour_shape touches */
         public final int first_touching_side;
-        
+
         /** The last side of the room shape, where the neighbour_shape touches */
         public final int last_touching_side;
     }

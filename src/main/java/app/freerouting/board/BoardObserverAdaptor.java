@@ -10,33 +10,33 @@ public class BoardObserverAdaptor implements BoardObservers
      */
     public void notify_deleted(Item p_item)
     {
-        
+
     }
-    
+
     /**
      * Notify the observers, that they can syncronize the changes on p_object.
      */
     public void notify_changed(Item p_item)
     {
-        
+
     }
-    
+
     /**
      * Enable the observers to syncronize the new created item.
      */
     public void notify_new(Item p_item)
     {
-        
+
     }
-    
+
     /**
      * Enable the observers to syncronize the moved component.
      */
     public void notify_moved(Component p_component)
     {
-        
+
     }
-    
+
     /**
      * activate the observers
      */
@@ -44,7 +44,7 @@ public class BoardObserverAdaptor implements BoardObservers
     {
         active = true;
     }
-    
+
     /**
      * Deactivate the observers.
      **/
@@ -52,7 +52,7 @@ public class BoardObserverAdaptor implements BoardObservers
     {
         active = false;
     }
-    
+
     /**
      * Returns, if the observer is activated.
      */
@@ -60,7 +60,7 @@ public class BoardObserverAdaptor implements BoardObservers
     {
         return active;
     }
-    
+
     private boolean active = false;
-    
+
 }

@@ -22,14 +22,14 @@ import app.freerouting.logger.FRLogger;
  */
 public abstract class DrillItem extends Item implements Connectable, java.io.Serializable
 {
-    
+
     public DrillItem( Point p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no,
             int p_group_no, FixedState p_fixed_state, BasicBoard p_board)
     {
         super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
         this.center = p_center;
     }
-    
+
     /**
      * Works only for symmettric DrillItems
      */
@@ -41,8 +41,8 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         this.clear_derived_data();
     }
-    
-    
+
+
     public void turn_90_degree(int p_factor, IntPoint p_pole)
     {
         if (center != null)
@@ -51,7 +51,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         this.clear_derived_data();
     }
-    
+
     public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole)
     {
         if (center != null)
@@ -61,7 +61,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         this.clear_derived_data();
     }
-    
+
     public void change_placement_side(IntPoint p_pole)
     {
         if (center != null)
@@ -70,7 +70,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         this.clear_derived_data();
     }
-    
+
     public void move_by(Vector p_vector)
     {
         Point old_center = this.get_center();
@@ -90,7 +90,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
             }
         }
         super.move_by(p_vector);
-        
+
         // Insert a Trace from the old center to the new center, on all layers, where
         // this DrillItem was connected to a Trace.
         Collection<Point> connect_point_list = new java.util.LinkedList<Point>();
@@ -128,7 +128,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
                     this.net_no_arr, curr_trace_info.clearance_type, FixedState.UNFIXED);
         }
     }
-    
+
     public int shape_layer(int p_index)
     {
         int index = Math.max( p_index, 0);
@@ -137,13 +137,13 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         index = Math.min(index, to_layer - from_layer);
         return from_layer + index;
     }
-    
+
     public boolean is_on_layer(int p_layer)
     {
         return p_layer >=  first_layer() && p_layer <= last_layer();
     }
-    
-    
+
+
     public int first_layer()
     {
         if (this.precalculated_first_layer < 0)
@@ -160,7 +160,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return this.precalculated_first_layer;
     }
-    
+
     public int last_layer()
     {
         if (this.precalculated_last_layer < 0)
@@ -177,9 +177,9 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return this.precalculated_last_layer;
     }
-    
+
     public abstract Shape get_shape(int p_index);
-    
+
     public IntBox bounding_box()
     {
         IntBox result = IntBox.EMPTY;
@@ -193,7 +193,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return result;
     }
-    
+
     public int tile_shape_count()
     {
         Padstack padstack = get_padstack();
@@ -201,12 +201,12 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         int to_layer = padstack.to_layer();
         return to_layer - from_layer + 1;
     }
-    
+
     protected TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
     {
         return p_search_tree.calculate_tree_shapes(this);
     }
-    
+
     /**
      * Returns the smallest distance from the center to the border of
      * the shape on any layer.
@@ -225,24 +225,24 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return result;
     }
-    
-    
+
+
     /** Returns the center point of this DrillItem. */
     public Point get_center()
     {
         return center;
     }
-    
+
     protected void set_center(Point p_center)
     {
         center = p_center;
     }
-    
+
     /**
      * Returns the padstack of this drillitem.
      */
     public abstract Padstack get_padstack();
-    
+
     public TileShape get_tree_shape_on_layer(ShapeSearchTree p_tree, int p_layer)
     {
         int from_layer = first_layer();
@@ -254,7 +254,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return get_tree_shape(p_tree, p_layer - from_layer);
     }
-    
+
     public TileShape get_tile_shape_on_layer(int p_layer)
     {
         int from_layer = first_layer();
@@ -266,7 +266,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return get_tile_shape(p_layer - from_layer);
     }
-    
+
     public Shape get_shape_on_layer(int p_layer)
     {
         int from_layer = first_layer();
@@ -278,7 +278,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return get_shape(p_layer - from_layer);
     }
-    
+
     public Set<Item> get_normal_contacts()
     {
         Point drill_center = this.get_center();
@@ -325,12 +325,12 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return result;
     }
-    
+
     public Point normal_contact_point(Item p_other)
     {
         return p_other.normal_contact_point(this);
     }
-    
+
     Point normal_contact_point(DrillItem p_other)
     {
         if (this.shares_layer(p_other) && this.get_center().equals(p_other.get_center()))
@@ -339,7 +339,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return null;
     }
-    
+
     Point normal_contact_point(Trace p_trace)
     {
         if (!this.shares_layer(p_trace))
@@ -353,25 +353,25 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return null;
     }
-    
+
     public Point[] get_ratsnest_corners()
     {
         Point[] result = new Point[1];
         result[0] = this.get_center();
         return result;
     }
-    
+
     public TileShape get_trace_connection_shape(ShapeSearchTree p_search_tree, int p_index)
     {
         return TileShape.get_instance(this.get_center());
     }
-    
+
     /** False, if this drillitem is places on the back side of the board */
     public boolean is_placed_on_front()
     {
         return true;
     }
-    
+
     /**
      * Return the mininal width of the shapes of this DrillItem on all signal layers.
      */
@@ -400,19 +400,19 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         }
         return this.precalculated_min_width;
     }
-    
+
     public void clear_derived_data()
     {
           super.clear_derived_data();
           this.precalculated_first_layer = -1;
           this.precalculated_last_layer = -1;
     }
-    
+
     public int get_draw_priority()
     {
         return app.freerouting.boardgraphics.Drawable.MIDDLE_DRAW_PRIORITY;
     }
-    
+
     public void draw(java.awt.Graphics p_g, app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
             java.awt.Color[] p_color_arr, double p_intensity)
     {
@@ -428,7 +428,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         {
             visibility_factor += p_graphics_context.get_layer_visibility(i);
         }
-        
+
         if (visibility_factor < 0.001)
         {
             return;
@@ -446,28 +446,28 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
             p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
         }
     }
-    
+
     /** The center point of the drillitem */
     private Point center;
-    
+
     /**
      * Contains the precalculated mininal width of the shapes of this DrillItem on all layers.
      * If {@literal <} 0, the value is not yet calculated
      */
     private double precalculated_min_width = -1;
-    
+
     /**
      * Contains the precalculated first layer, where this DrillItem contains a pad shape.
      * If {@literal <} 0, the value is not yet calculated
      */
     private int precalculated_first_layer = -1;
-    
+
     /**
      * Contains the precalculated last layer, where this DrillItem contains a pad shape.
      * If {@literal <} 0, the value is not yet calculated
      */
     private int precalculated_last_layer = -1;
-    
+
     /**
      * Auxiliary class used in the method move_by
      */
@@ -479,7 +479,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
             half_width = p_half_width;
             clearance_type = p_clearance_type;
         }
-        
+
         /**
          * Implements the comparable interface.
          */
@@ -487,7 +487,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
         {
             return p_other.layer - this.layer;
         }
-        
+
         int layer;
         int half_width;
         int clearance_type;

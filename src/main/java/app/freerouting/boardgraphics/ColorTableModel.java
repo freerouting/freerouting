@@ -13,7 +13,7 @@ public abstract class ColorTableModel extends AbstractTableModel
         this.data = new Object[p_row_count] [];
         this.locale = p_locale;
     }
-    
+
     protected ColorTableModel(java.io.ObjectInputStream p_stream)
             throws java.io.IOException, java.lang.ClassNotFoundException
     {
@@ -48,14 +48,14 @@ public abstract class ColorTableModel extends AbstractTableModel
         return getValueAt(0, p_c).getClass();
     }
 
-    
+
     protected void write_object(java.io.ObjectOutputStream p_stream)
             throws java.io.IOException
     {
         p_stream.writeObject(this.data);
         p_stream.writeObject(this.locale);
     }
-    
+
     protected final Object[][] data;
     protected final java.util.Locale locale;
 }

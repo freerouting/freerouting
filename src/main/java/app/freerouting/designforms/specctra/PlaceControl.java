@@ -7,13 +7,13 @@ import app.freerouting.logger.FRLogger;
  */
 public class PlaceControl extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of PlaceControl */
     public PlaceControl()
     {
         super("place_control");
     }
-    
+
     /** Reads the flip_style */
     public boolean read_scope(ReadScopeParameter p_par)
     {
@@ -48,14 +48,14 @@ public class PlaceControl extends ScopeKeyword
                     flip_style_rotate_first = read_flip_style_rotate_first(p_par.scanner);
                 }
             }
-        }   
+        }
         if (flip_style_rotate_first)
         {
             p_par.board_handling.get_routing_board().components.set_flip_style_rotate_first(true);
         }
         return true;
     }
-    
+
     /**
      * Returns true, if rotate_first is read, else false.
      */
@@ -86,5 +86,5 @@ public class PlaceControl extends ScopeKeyword
             return false;
         }
     }
-    
+
 }

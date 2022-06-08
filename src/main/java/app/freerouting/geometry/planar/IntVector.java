@@ -8,7 +8,7 @@ import app.freerouting.datastructures.Signum;
  */
 public class IntVector extends Vector implements java.io.Serializable
 {
-    
+
     /**
      * creates an  IntVector from two integer coordinates
      */
@@ -18,7 +18,7 @@ public class IntVector extends Vector implements java.io.Serializable
         x = p_x;
         y = p_y;
     }
-    
+
     /**
      * returns true, if this IntVector is equal to p_ob
      */
@@ -39,7 +39,7 @@ public class IntVector extends Vector implements java.io.Serializable
         IntVector other = (IntVector)p_ob ;
         return ( x == other.x && y == other.y ) ;
     }
-    
+
     /**
      * returns true, if both coordinates of this vector are 0
      */
@@ -47,7 +47,7 @@ public class IntVector extends Vector implements java.io.Serializable
     {
         return x == 0 && y == 0;
     }
-    
+
     /**
      * returns the Vector such that this plus this.minus() is zero
      */
@@ -55,17 +55,17 @@ public class IntVector extends Vector implements java.io.Serializable
     {
         return new IntVector(-x, -y);
     }
-    
+
     public boolean is_orthogonal()
     {
         return ( x == 0 || y == 0 ) ;
     }
-    
+
     public boolean is_diagonal()
     {
         return ( Math.abs(x) == Math.abs(y) ) ;
     }
-    
+
     /**
      * Calculates the determinant of the matrix consisting of this
      * Vector and p_other.
@@ -74,7 +74,7 @@ public class IntVector extends Vector implements java.io.Serializable
     {
         return (long)x * p_other.y - (long)y * p_other.x;
     }
-    
+
     public Vector turn_90_degree(int p_factor)
     {
         int n = p_factor;
@@ -112,18 +112,18 @@ public class IntVector extends Vector implements java.io.Serializable
         }
         return new IntVector(new_x, new_y) ;
     }
-    
-    
+
+
     public Vector mirror_at_y_axis()
     {
         return new IntVector(-this.x, this.y);
     }
-    
+
     public Vector mirror_at_x_axis()
     {
         return new IntVector(this.x, -this.y);
     }
-    
+
     /**
      * adds p_other to this vector
      */
@@ -131,17 +131,17 @@ public class IntVector extends Vector implements java.io.Serializable
     {
         return p_other.add(this);
     }
-    
+
     final Vector add( IntVector p_other)
     {
         return new IntVector(x + p_other.x, y + p_other.y);
     }
-    
+
     final Vector add( RationalVector p_other)
     {
         return p_other.add(this);
     }
-    
+
     /**
      * returns the Point, which results from adding this vector to p_point
      */
@@ -149,14 +149,14 @@ public class IntVector extends Vector implements java.io.Serializable
     {
         return new IntPoint(p_point.x + x, p_point.y + y);
     }
-    
+
     final Point add_to(RationalPoint p_point)
     {
         return p_point.translate_by(this);
     }
-    
-    
-    
+
+
+
     /**
      * Let L be the line from the Zero Vector to p_other.
      * The function returns
@@ -169,19 +169,19 @@ public class IntVector extends Vector implements java.io.Serializable
         Side tmp = p_other.side_of(this);
         return tmp.negate();
     }
-    
+
     Side side_of(IntVector p_other)
     {
         double determinant = (double) p_other.x * y - (double) p_other.y * x;
         return Side.of(determinant);
     }
-    
+
     Side side_of(RationalVector p_other)
     {
         Side tmp = p_other.side_of(this);
         return tmp.negate();
     }
-    
+
     /**
      * The function returns
      *   Signum.POSITIVE, if the scalar product of this vector and p_other {@literal >} 0,
@@ -192,14 +192,14 @@ public class IntVector extends Vector implements java.io.Serializable
     {
         return p_other.projection(this);
     }
-    
+
     public double scalar_product(Vector p_other)
     {
         return p_other.scalar_product(this);
     }
-    
-    
-    
+
+
+
     /**
      * converts this vector to a PointFloat.
      */
@@ -207,18 +207,18 @@ public class IntVector extends Vector implements java.io.Serializable
     {
         return new FloatPoint(x, y);
     }
-    
+
     public Vector change_length_approx(double p_length)
     {
         FloatPoint new_point = this.to_float().change_size(p_length);
         return new_point.round().difference_by(Point.ZERO);
     }
-    
+
     Direction to_normalized_direction()
     {
         int dx = x;
         int dy = y;
-        
+
         int gcd = BigIntAux.binaryGcd(Math.abs(dx), Math.abs(dy));
         if (gcd > 1)
         {
@@ -227,8 +227,8 @@ public class IntVector extends Vector implements java.io.Serializable
         }
         return new IntDirection(dx, dy);
     }
-    
-    
+
+
     /**
      * The function returns
      *   Signum.POSITIVE, if the scalar product of this vector and p_other > 0,
@@ -240,29 +240,29 @@ public class IntVector extends Vector implements java.io.Serializable
         double tmp = (double) x * p_other.x + (double) y * p_other.y;
         return Signum.of(tmp);
     }
-    
+
     double scalar_product(IntVector p_other)
     {
         return (double) x * p_other.x + (double) y * p_other.y;
     }
-    
+
     double scalar_product(RationalVector p_other)
     {
         return p_other.scalar_product(this);
     }
-    
-    
+
+
     Signum projection(RationalVector p_other)
     {
         return p_other.projection(this);
     }
-    
-    
+
+
     /**
      * the x coordinate of this vector
      */
     public final int x;
-    
+
     /**
      * the y coordinate of this vector
      */

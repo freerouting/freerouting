@@ -87,8 +87,8 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
             }
             new_instance.append(cumulative_trace_length);
         }
-        
-        
+
+
         new_instance.pack();
         java.awt.Dimension size = new_instance.getSize();
         // make the window smaller, if its heicht gets bigger than MAX_WINDOW_HEIGHT
@@ -100,7 +100,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         new_instance.setLocation(p_location);
         new_instance.setVisible(true);
     }
-    
+
     /**
      * Displays a new ObjectInfoWindow with information about the objects in p_object_list.
      * p_coordinate_transform is for transforming board to user coordinates,
@@ -112,7 +112,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         WindowObjectInfo new_window = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
         new_window.setTitle(p_title);
         if (p_object_list.isEmpty())
-        {        
+        {
             new_window.append(new_window.resources.getString("list_empty"));
         }
         for (Printable curr_object : p_object_list)
@@ -130,38 +130,38 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         new_window.setVisible(true);
         return new_window;
     }
-    
+
     /** Creates a new instance of ItemInfoWindow */
     private WindowObjectInfo(BoardFrame p_board_frame, app.freerouting.board.CoordinateTransform p_coordinate_transform)
     {
         super(p_board_frame);
-        this.resources = 
+        this.resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowObjectInfo", p_board_frame.get_locale());
         this.coordinate_transform = p_coordinate_transform;
-        
+
         // create the text pane
         this.text_pane = new javax.swing.JTextPane();
         this.text_pane.setEditable(false);
         this.number_format =  java.text.NumberFormat.getInstance(p_board_frame.get_locale());
         this.number_format.setMaximumFractionDigits(4);
-        
-        
+
+
         // set document and text styles
         javax.swing.text.StyledDocument document = this.text_pane.getStyledDocument();
-        
-        
+
+
         javax.swing.text.Style default_style =
                 javax.swing.text.StyleContext.getDefaultStyleContext().getStyle(javax.swing.text.StyleContext.DEFAULT_STYLE);
-        
-        
+
+
         // add bold style to the document
         javax.swing.text.Style bold_style = document.addStyle("bold", default_style);
         javax.swing.text.StyleConstants.setBold(bold_style, true);
-        
+
         // Create a scoll_pane arount the text_pane and insert it into this window.
         javax.swing.JScrollPane scroll_pane = new javax.swing.JScrollPane(this.text_pane);
         this.add(scroll_pane);
-        
+
         // Dispose this window and all subwindows when closing the window.
         this.addWindowListener(new java.awt.event.WindowAdapter()
         {
@@ -171,15 +171,15 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
             }
         });
     }
-    
-    
+
+
     /**
      * Appends p_string to the text pane.
      * Returns false, if that was not possible.
      */
     private boolean append(String p_string, String p_style)
     {
-        
+
         javax.swing.text.StyledDocument document = text_pane.getStyledDocument();
         try
         {
@@ -192,7 +192,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         }
         return true;
     }
-    
+
     /**
      * Appends p_string to the text pane.
      * Returns false, if that was not possible.
@@ -201,7 +201,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
     {
         return append(p_string, "normal");
     }
-    
+
     /**
      * Appends p_string in bold styleto the text pane.
      * Returns false, if that was not possible.
@@ -210,7 +210,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
     {
         return append(p_string, "bold");
     }
-    
+
     /**
      * Appends p_value to the text pane after
      * transforming it to the user coordinate sytem.
@@ -221,7 +221,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         Float value = (float) this.coordinate_transform.board_to_user(p_value);
         return append(number_format.format(value));
     }
-    
+
     /**
      * Appends p_value to the text pane without
      * transforming it to the user coordinate sytem.
@@ -232,7 +232,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         Float value = (float) p_value;
         return append(number_format.format(value));
     }
-    
+
     /**
      * Appends p_point to the text pane
      * after transforming to the user coordinate sytem.
@@ -243,7 +243,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         app.freerouting.geometry.planar.FloatPoint transformed_point = this.coordinate_transform.board_to_user(p_point);
         return append(transformed_point.to_string(board_frame.get_locale()));
     }
-    
+
     /**
      * Appends p_shape to the text pane
      * after transforming to the user coordinate sytem.
@@ -258,7 +258,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         }
         return append(transformed_shape.toString());
     }
-    
+
     /**
      * Begins a new line in the text pane.
      */
@@ -266,7 +266,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
     {
         return append("\n");
     }
-    
+
     /**
      * Appends a fixed number of spaces to the text pane.
      */
@@ -274,7 +274,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
     {
         return append("       ");
     }
-    
+
     /**
      * Appends a button for creating a new ObjectInfoWindow with the information
      * of p_object to the text pane. Returns false, if that was not possible.
@@ -285,7 +285,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         object_list.add(p_object);
         return append_objects(p_button_name, p_window_title, object_list);
     }
-    
+
     /**
      * Appends a button for creating a new ObjectInfoWindow with the information
      * of p_items to the text pane. Returns false, if that was not possible.
@@ -296,7 +296,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         object_list.addAll(p_items);
         return append_objects(p_button_name, p_window_title, object_list);
     }
-    
+
     /**
      * Appends a button for creating a new ObjectInfoWindow with the information
      * of p_objects to the text pane. Returns false, if that was not possible.
@@ -313,9 +313,9 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         button.setAlignmentY(0.75f);
         // Display the button name in blue.
         button.setForeground(java.awt.Color.blue);
-        
+
         button.addActionListener(new InfoButtonListener(p_window_title, p_objects));
-        
+
         // Add style for inserting the button  to the document.
         javax.swing.text.StyledDocument document = this.text_pane.getStyledDocument();
         javax.swing.text.Style default_style =
@@ -323,7 +323,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         javax.swing.text.Style button_style = document.addStyle(p_button_name, default_style);
         javax.swing.text.StyleConstants.setAlignment(button_style, javax.swing.text.StyleConstants.ALIGN_CENTER);
         javax.swing.text.StyleConstants.setComponent(button_style, button);
-        
+
         // Add the button to the document.
         try
         {
@@ -336,7 +336,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         }
         return true;
     }
-    
+
     public void dispose()
     {
         for (WindowObjectInfo curr_subwindow : this.subwindows)
@@ -348,23 +348,23 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
         }
         super.dispose();
     }
-    
+
     private final javax.swing.JTextPane text_pane;
     private final app.freerouting.board.CoordinateTransform coordinate_transform;
-    
+
     private final java.util.ResourceBundle resources;
     private final java.text.NumberFormat number_format;
-    
+
     /**
      * The new created windows by pushing buttons inside this window.
      * Used when closing this window to close also all subwindows.
      */
     private Collection<WindowObjectInfo> subwindows = new java.util.LinkedList<WindowObjectInfo>();
-    
+
     private static final int MAX_WINDOW_HEIGHT = 500;
     private static final int SCROLLBAR_ADD = 30;
-    
-    
+
+
     private class InfoButtonListener implements java.awt.event.ActionListener
     {
         public InfoButtonListener(String p_title, java.util.Collection<Printable> p_objects)
@@ -372,24 +372,24 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements app.fre
             this.title = p_title;
             this.objects = p_objects;
         }
-        
+
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
         {
             WindowObjectInfo new_window = display(this.title, this.objects, board_frame, coordinate_transform);
-            
+
             java.awt.Point loc = getLocation();
             java.awt.Point new_window_location =
                     new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
             new_window.setLocation(new_window_location);
             subwindows.add(new_window);
         }
-        
+
         /** The title of this window */
         private final String title;
-        
+
         /** The objects, for which information is displayed in tne new window */
         private final Collection<Printable> objects;
-        
+
         private static final int WINDOW_OFFSET = 30;
     }
 }

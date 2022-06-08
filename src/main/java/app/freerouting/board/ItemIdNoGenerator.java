@@ -7,14 +7,14 @@ import app.freerouting.logger.FRLogger;
  */
 public class ItemIdNoGenerator implements app.freerouting.datastructures.IdNoGenerator, java.io.Serializable
 {
-    
+
     /**
      * Creates a new ItemIdNoGenerator
      */
     public ItemIdNoGenerator()
     {
     }
-    
+
     /**
      * Create a new unique identification number.
      * Use eventually the id_no generater from the host system
@@ -29,7 +29,7 @@ public class ItemIdNoGenerator implements app.freerouting.datastructures.IdNoGen
         ++last_generated_id_no;
         return last_generated_id_no;
     }
-    
+
     /**
      * Return the maximum generated id number so far.
      */
@@ -37,7 +37,7 @@ public class ItemIdNoGenerator implements app.freerouting.datastructures.IdNoGen
     {
         return last_generated_id_no;
     }
-    
+
     private int last_generated_id_no = 0;
     static final private int c_max_id_no = Integer.MAX_VALUE / 2;
 }

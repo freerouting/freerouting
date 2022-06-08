@@ -21,7 +21,7 @@ import app.freerouting.logger.FRLogger;
 
 public class Sorted45DegreeRoomNeighbours
 {
-    
+
     public static CompleteExpansionRoom calculate(ExpansionRoom p_room, AutorouteEngine p_autoroute_engine)
     {
         int net_no = p_autoroute_engine.get_net_no();
@@ -31,7 +31,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             return null;
         }
-        
+
         // Check, that each side of the romm shape has at least one touching neighbour.
         // Otherwise improve the room shape by enlarging.
         boolean edge_removed = room_neighbours.try_remove_edge_line(net_no, p_autoroute_engine.autoroute_search_tree);
@@ -41,10 +41,10 @@ public class Sorted45DegreeRoomNeighbours
             p_autoroute_engine.remove_all_doors(result);
             return calculate(p_room, p_autoroute_engine);
         }
-        
+
         // Now calculate the new incomplete rooms together with the doors
         // between this room and the sorted neighbours.
-        
+
         if (room_neighbours.sorted_neighbours.isEmpty())
         {
             if (result instanceof ObstacleExpansionRoom)
@@ -58,7 +58,7 @@ public class Sorted45DegreeRoomNeighbours
         }
         return result;
     }
-    
+
     /**
      * Calculates all touching neighbours of p_room and sorts them in
      * counterclock sense around the boundary  of the room shape.
@@ -66,7 +66,7 @@ public class Sorted45DegreeRoomNeighbours
     private static Sorted45DegreeRoomNeighbours calculate_neighbours(ExpansionRoom p_room, int p_net_no,
             ShapeSearchTree p_autoroute_search_tree, int p_room_id_no)
     {
-        TileShape room_shape = p_room.get_shape();        
+        TileShape room_shape = p_room.get_shape();
         CompleteExpansionRoom completed_room;
         if (p_room instanceof IncompleteFreeSpaceExpansionRoom)
         {
@@ -114,7 +114,7 @@ public class Sorted45DegreeRoomNeighbours
                     if (curr_item.is_routable())
                     {
                         ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
-                        ObstacleExpansionRoom curr_overlap_room = 
+                        ObstacleExpansionRoom curr_overlap_room =
                                 item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
                         ((ObstacleExpansionRoom) completed_room).create_overlap_door(curr_overlap_room);
                     }
@@ -142,7 +142,7 @@ public class Sorted45DegreeRoomNeighbours
                     {
                         // expand the item for ripup and pushing purposes
                         ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
-                        neighbour_room = 
+                        neighbour_room =
                                 item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
                     }
                 }
@@ -159,8 +159,8 @@ public class Sorted45DegreeRoomNeighbours
         }
         return result;
     }
-    
-    
+
+
     /** Creates a new instance of Sorted45DegreeRoomNeighbours */
     private Sorted45DegreeRoomNeighbours(ExpansionRoom p_from_room, CompleteExpansionRoom p_completed_room)
     {
@@ -168,14 +168,14 @@ public class Sorted45DegreeRoomNeighbours
         completed_room = p_completed_room;
         room_shape = p_completed_room.get_shape().bounding_octagon();
         sorted_neighbours = new TreeSet<SortedRoomNeighbour>();
-        
+
         edge_interiour_touches_obstacle = new boolean[8];
         for (int i = 0; i < 8; ++i)
         {
             edge_interiour_touches_obstacle[i] = false;
         }
     }
-    
+
     private void add_sorted_neighbour(IntOctagon p_neighbour_shape, IntOctagon p_intersection)
     {
         SortedRoomNeighbour new_neighbour = new SortedRoomNeighbour(p_neighbour_shape, p_intersection);
@@ -184,7 +184,7 @@ public class Sorted45DegreeRoomNeighbours
             sorted_neighbours.add(new_neighbour);
         }
     }
-    
+
     /**
      * Calculates an incomplete room for each edge side from p_from_side_no to p_to_side_no.
      */
@@ -258,7 +258,7 @@ public class Sorted45DegreeRoomNeighbours
             curr_side_no = next_side_no;
         }
     }
-    
+
     private static IntOctagon remove_not_touching_border_lines( IntOctagon p_room_oct,
             boolean[] p_edge_interiour_touches_obstacle)
     {
@@ -271,7 +271,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             lx = -Limits.CRIT_INT;
         }
-        
+
         int ly;
         if (p_edge_interiour_touches_obstacle[0])
         {
@@ -281,7 +281,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             ly = -Limits.CRIT_INT;
         }
-        
+
         int rx;
         if (p_edge_interiour_touches_obstacle[2])
         {
@@ -291,8 +291,8 @@ public class Sorted45DegreeRoomNeighbours
         {
             rx = Limits.CRIT_INT;
         }
-        
-        
+
+
         int uy;
         if (p_edge_interiour_touches_obstacle[4])
         {
@@ -302,7 +302,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             uy = Limits.CRIT_INT;
         }
-        
+
         int ulx;
         if (p_edge_interiour_touches_obstacle[5])
         {
@@ -312,7 +312,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             ulx = -Limits.CRIT_INT;
         }
-        
+
         int lrx;
         if (p_edge_interiour_touches_obstacle[1])
         {
@@ -322,7 +322,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             lrx = Limits.CRIT_INT;
         }
-        
+
         int llx;
         if (p_edge_interiour_touches_obstacle[7])
         {
@@ -332,7 +332,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             llx = -Limits.CRIT_INT;
         }
-        
+
         int urx;
         if (p_edge_interiour_touches_obstacle[3])
         {
@@ -342,7 +342,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             urx = Limits.CRIT_INT;
         }
-        
+
         IntOctagon result = new IntOctagon( lx, ly, rx, uy, ulx, lrx, llx, urx);
         return result.normalize();
     }
@@ -365,7 +365,7 @@ public class Sorted45DegreeRoomNeighbours
         }
         IntOctagon  room_oct = (IntOctagon) curr_incomplete_room.get_shape();
         double room_area = room_oct.area();
-        
+
         boolean try_remove_edge_lines = false;
         for (int i = 0; i < 8; ++i)
         {
@@ -380,14 +380,14 @@ public class Sorted45DegreeRoomNeighbours
                 }
             }
         }
-        
+
         if (try_remove_edge_lines)
         {
             // Touching neighbour missing at the edge side with index remove_edge_no
             // Remove the edge line and restart the algorithm.
-            
+
             IntOctagon enlarged_oct = remove_not_touching_border_lines( room_oct, this.edge_interiour_touches_obstacle);
-            
+
             Collection<ExpansionDoor> door_list = this.completed_room.get_doors();
             TileShape ignore_shape = null;
             SearchTreeObject ignore_object = null;
@@ -433,7 +433,7 @@ public class Sorted45DegreeRoomNeighbours
         }
         return false;
     }
-    
+
     /**
      * Inserts a new incomplete room with an octagon shape.
      */
@@ -459,7 +459,7 @@ public class Sorted45DegreeRoomNeighbours
             }
         }
     }
-    
+
     private void calculate_new_incomplete_rooms_for_obstacle_expansion_room(SortedRoomNeighbour p_prev_neighbour,
             SortedRoomNeighbour p_next_neighbour, AutorouteEngine p_autoroute_engine)
     {
@@ -471,9 +471,9 @@ public class Sorted45DegreeRoomNeighbours
             return;
         }
         IntOctagon board_bounding_oct  = p_autoroute_engine.board.bounding_box.bounding_octagon();
-        
+
         // insert the new incomplete room from p_prev_neighbour to the next corner of the room shape.
-        
+
         int lx = board_bounding_oct.lx;
         int ly = board_bounding_oct.ly;
         int rx = board_bounding_oct.rx;
@@ -523,9 +523,9 @@ public class Sorted45DegreeRoomNeighbours
             uy = p_prev_neighbour.intersection.ly;
         }
         insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
-        
+
         // insert the new incomplete room from p_prev_neighbour to the next corner of the room shape.
-        
+
         lx = board_bounding_oct.lx;
         ly = board_bounding_oct.ly;
         rx = board_bounding_oct.rx;
@@ -534,7 +534,7 @@ public class Sorted45DegreeRoomNeighbours
         lrx = board_bounding_oct.lrx;
         llx = board_bounding_oct.llx;
         urx = board_bounding_oct.urx;
-        
+
         if (to_side_no == 0)
         {
             uy = this.room_shape.ly;
@@ -576,7 +576,7 @@ public class Sorted45DegreeRoomNeighbours
             rx = p_next_neighbour.intersection.lx;
         }
         insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
-        
+
         // Insert the new incomplete rooms on the intermediate free sides of the obstacle expansion room.
         int curr_from_side_no = (from_side_no + 1) % 8;
         if (curr_from_side_no == to_side_no)
@@ -587,7 +587,7 @@ public class Sorted45DegreeRoomNeighbours
         this.calculate_edge_incomplete_rooms_of_obstacle_expansion_room(curr_from_side_no,
                 curr_to_side_no, p_autoroute_engine);
     }
-    
+
     private void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine)
     {
         IntOctagon board_bounding_oct  = p_autoroute_engine.board.bounding_box.bounding_octagon();
@@ -599,13 +599,13 @@ public class Sorted45DegreeRoomNeighbours
             return;
         }
         Iterator<SortedRoomNeighbour> it = this.sorted_neighbours.iterator();
-        
+
         while (it.hasNext())
         {
             SortedRoomNeighbour next_neighbour = it.next();
-            
+
             boolean insert_incomplete_room;
-            
+
             if (this.completed_room instanceof ObstacleExpansionRoom && this.sorted_neighbours.size() == 2)
             {
                 // check, if this site is touching or open.
@@ -634,14 +634,14 @@ public class Sorted45DegreeRoomNeighbours
                 // the 2 neigbours do not touch
                 insert_incomplete_room  = !next_neighbour.intersection.intersects(prev_neighbour.intersection);
             }
-            
-            
+
+
             if (insert_incomplete_room)
             {
                 // create a door to a new incomplete expansion room between
                 // the last corner of the previous neighbour and the first corner of the
                 // current neighbour
-                
+
                 if (this.from_room instanceof ObstacleExpansionRoom &&
                         next_neighbour.first_touching_side != prev_neighbour.last_touching_side)
                 {
@@ -657,7 +657,7 @@ public class Sorted45DegreeRoomNeighbours
                     int lrx = board_bounding_oct.lrx;
                     int llx = board_bounding_oct.llx;
                     int urx = board_bounding_oct.urx;
-                    
+
                     if (next_neighbour.first_touching_side == 0)
                     {
                         if (prev_neighbour.intersection.llx < next_neighbour.intersection.llx)
@@ -836,22 +836,22 @@ public class Sorted45DegreeRoomNeighbours
             prev_neighbour = next_neighbour;
         }
     }
-    
+
     public final CompleteExpansionRoom completed_room;
     public final SortedSet<SortedRoomNeighbour> sorted_neighbours;
     private final ExpansionRoom from_room;
     private final IntOctagon room_shape;
-    
+
     private final boolean[] edge_interiour_touches_obstacle;
-    
+
     /**
      * Helper class to sort the doors of an expansion room counterclockwise
      * arount the border of the room shape.
      */
-    
+
     private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour>
     {
-        
+
         /**
          * Creates a new instance of SortedRoomNeighbour and calculates the first and last
          * touching sides with the room shape.
@@ -862,7 +862,7 @@ public class Sorted45DegreeRoomNeighbours
         {
             shape = p_neighbour_shape;
             intersection = p_intersection;
-            
+
             if (intersection.ly == room_shape.ly && intersection.llx > room_shape.llx)
             {
                 this.first_touching_side = 0;
@@ -902,7 +902,7 @@ public class Sorted45DegreeRoomNeighbours
                 this.last_touching_side = -1;
                 return;
             }
-            
+
             if (intersection.llx == room_shape.llx && intersection.ly > room_shape.ly)
             {
                 this.last_touching_side = 7;
@@ -941,7 +941,7 @@ public class Sorted45DegreeRoomNeighbours
                 this.last_touching_side = -1;
                 return;
             }
-            
+
             int next_side_no = this.first_touching_side;
             for (;;)
             {
@@ -973,10 +973,10 @@ public class Sorted45DegreeRoomNeighbours
                 {
                     break;
                 }
-                
+
             }
         }
-        
+
         /**
          * Compare function for or sorting the neighbours in counterclock sense
          * around the border of the room shape in ascending order.
@@ -991,12 +991,12 @@ public class Sorted45DegreeRoomNeighbours
             {
                 return -1;
             }
-            
+
             // now the first touch of this and p_other is at the same side
             IntOctagon is1 = this.intersection;
             IntOctagon is2 = p_other.intersection;
             int cmp_value;
-            
+
             if (first_touching_side == 0)
             {
                 cmp_value = is1.corner(0).x - is2.corner(0).x;
@@ -1034,7 +1034,7 @@ public class Sorted45DegreeRoomNeighbours
                 FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
                 return 0;
             }
-            
+
             if (cmp_value == 0)
             {
                 // The first touching points of this neighbour and p_other with the room shape are equal.
@@ -1087,13 +1087,13 @@ public class Sorted45DegreeRoomNeighbours
         }
         /** The shape of the neighbour room */
         public final IntOctagon shape;
-        
+
         /** The intersection of tnis ExpansionRoom shape with the neighbour_shape */
         public final IntOctagon intersection;
-        
+
         /** The first side of the room shape, where the neighbour_shape touches */
         public final int first_touching_side;
-        
+
         /** The last side of the room shape, where the neighbour_shape touches */
         public final int last_touching_side;
     }

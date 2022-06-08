@@ -89,6 +89,6 @@ public class LayerStructure
         }
         return false;
     }
-    
+
     public final Layer[] arr;
 }

@@ -10,24 +10,24 @@ import app.freerouting.rules.BoardRules;
  */
 public class WindowEditVias extends BoardSavableSubWindow
 {
-    
+
     /** Creates a new instance of ViaTablePanel */
     public WindowEditVias(BoardFrame p_board_frame)
     {
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowEditVias", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
-        
+
         this.board_frame = p_board_frame;
-        
+
         this.main_panel = new javax.swing.JPanel();
         this.main_panel.setLayout(new java.awt.BorderLayout());
-        
+
         this.cl_class_combo_box = new javax.swing.JComboBox<>();
         this.padstack_combo_box = new javax.swing.JComboBox<>();
         add_combobox_items();
-        
+
         add_table();
-        
+
         javax.swing.JPanel via_info_button_panel = new javax.swing.JPanel();
         via_info_button_panel.setLayout(new java.awt.FlowLayout());
         this.main_panel.add(via_info_button_panel,java.awt.BorderLayout.SOUTH);
@@ -39,13 +39,13 @@ public class WindowEditVias extends BoardSavableSubWindow
         remove_via_button.setToolTipText(resources.getString("remove_tooltip"));
         remove_via_button.addActionListener(new RemoveViaListener());
         via_info_button_panel.add(remove_via_button);
-        
+
         p_board_frame.set_context_sensitive_help(this, "WindowVia_EditVia");
-        
+
         this.add(main_panel);
         this.pack();
     }
-    
+
     /**
      * Recalculates all values displayed in the parent window
      */
@@ -56,7 +56,7 @@ public class WindowEditVias extends BoardSavableSubWindow
         this.add_combobox_items();
         this.table_model.set_values();
     }
-    
+
     private void add_table()
     {
         this.table_model = new ViaTableModel();
@@ -67,12 +67,12 @@ public class WindowEditVias extends BoardSavableSubWindow
         this.table.setPreferredScrollableViewportSize(new java.awt.Dimension(table_width, table_height));
         this.table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         this.main_panel.add(scroll_pane, java.awt.BorderLayout.CENTER);
-        
+
         this.table.getColumnModel().getColumn(ColumnName.CLEARANCE_CLASS.ordinal()).setCellEditor(new javax.swing.DefaultCellEditor(cl_class_combo_box));
-        
+
         this.table.getColumnModel().getColumn(ColumnName.PADSTACK.ordinal()).setCellEditor(new javax.swing.DefaultCellEditor(padstack_combo_box));
     }
-    
+
     private void add_combobox_items()
     {
         app.freerouting.board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
@@ -85,7 +85,7 @@ public class WindowEditVias extends BoardSavableSubWindow
             padstack_combo_box.addItem(routing_board.library.get_via_padstack(i).name);
         }
     }
-    
+
     /**
      * Adjusts the displayed window with the via table after the size of the table has been changed.
      */
@@ -98,23 +98,23 @@ public class WindowEditVias extends BoardSavableSubWindow
         this.pack();
         this.board_frame.refresh_windows();
     }
-    
+
     private final BoardFrame board_frame;
-    
+
     private final javax.swing.JPanel main_panel;
-    
+
     private javax.swing.JScrollPane scroll_pane;
     private javax.swing.JTable table;
     private ViaTableModel table_model;
-    
+
     private final javax.swing.JComboBox<String> cl_class_combo_box;
     private final javax.swing.JComboBox<String> padstack_combo_box;
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     private static final int TEXTFIELD_HEIGHT = 16;
     private static final int TEXTFIELD_WIDTH = 100;
-    
+
     private class AddViaListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -141,7 +141,7 @@ public class WindowEditVias extends BoardSavableSubWindow
             adjust_table();
         }
     }
-    
+
     private class RemoveViaListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -182,7 +182,7 @@ public class WindowEditVias extends BoardSavableSubWindow
             }
         }
     }
-    
+
     /**
      * Table model of the via table.
      */
@@ -191,7 +191,7 @@ public class WindowEditVias extends BoardSavableSubWindow
         public ViaTableModel()
         {
             column_names = new String[ColumnName.values().length];
-            
+
             for (int i = 0; i < column_names.length; ++i)
             {
                column_names[i] =  resources.getString((ColumnName.values()[i]).toString());
@@ -204,7 +204,7 @@ public class WindowEditVias extends BoardSavableSubWindow
             }
             set_values();
         }
-        
+
         /** Calculates the the valus in this table */
         public void set_values()
         {
@@ -218,27 +218,27 @@ public class WindowEditVias extends BoardSavableSubWindow
                 this.data[i] [ColumnName.ATTACH_SMD.ordinal()] = curr_via.attach_smd_allowed();
             }
         }
-        
+
         public String getColumnName(int p_col)
         {
             return column_names[p_col];
         }
-        
+
         public int getRowCount()
         {
             return data.length;
         }
-        
+
         public int getColumnCount()
         {
             return column_names.length;
         }
-        
+
         public Object getValueAt(int p_row, int p_col)
         {
             return data[p_row][p_col];
         }
-        
+
         public void setValueAt(Object p_value, int p_row, int p_col)
         {
             app.freerouting.board.RoutingBoard routing_board =  board_frame.board_panel.board_handling.get_routing_board();
@@ -255,7 +255,7 @@ public class WindowEditVias extends BoardSavableSubWindow
                 FRLogger.warn("ViaVindow.setValueAt: via_info not found");
                 return;
             }
-            
+
             if (p_col == ColumnName.NAME.ordinal())
             {
                 if (!(p_value instanceof String))
@@ -315,21 +315,21 @@ public class WindowEditVias extends BoardSavableSubWindow
             this.data[p_row][p_col] = p_value;
             fireTableCellUpdated(p_row, p_col);
         }
-        
+
         public boolean isCellEditable(int p_row, int p_col)
         {
             return true;
         }
-        
+
         public Class<?> getColumnClass(int p_col)
         {
             return getValueAt(0, p_col).getClass();
         }
-        
+
         private Object[][] data = null;
         private String[] column_names = null;
     }
-    
+
     private enum ColumnName
     {
         NAME, PADSTACK, CLEARANCE_CLASS, ATTACH_SMD

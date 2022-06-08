@@ -10,7 +10,7 @@ import app.freerouting.logger.FRLogger;
 
 public class WindowUnconnectedRoute extends WindowObjectListWithFilter
 {
-    
+
     /** Creates a new instance of WindowUnconnectedRoute */
     public WindowUnconnectedRoute(BoardFrame p_board_frame)
     {
@@ -20,15 +20,15 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
         this.list_empty_message.setText(resources.getString("no_unconnected_route_found"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_UnconnectedRoute");
     }
-    
+
     protected void fill_list()
     {
         app.freerouting.board.BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
-        
+
         Set<Item> handled_items = new java.util.TreeSet<Item>();
-        
+
         SortedSet<UnconnectedRouteInfo> unconnected_route_info_set = new java.util.TreeSet<UnconnectedRouteInfo>();
-        
+
         Collection<Item> board_items = routing_board.get_items();
         for (Item curr_item : board_items)
         {
@@ -69,14 +69,14 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
                 }
             }
         }
-        
+
         for (UnconnectedRouteInfo curr_info : unconnected_route_info_set)
         {
             this.add_to_list(curr_info);
         }
         this.list.setVisibleRowCount(Math.min(unconnected_route_info_set.size(), DEFAULT_TABLE_SIZE));
     }
-    
+
     protected void select_instances()
     {
         List<Object> selected_list_values = list.getSelectedValuesList();
@@ -93,10 +93,10 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
         board_handling.select_items(selected_items);
         board_handling.zoom_selection();
     }
-    
+
     private final java.util.ResourceBundle resources;
     private int max_unconnected_route_info_id_no = 0;
-    
+
     /**
      * Describes information of a connected set of unconnected  traces and vias.
      */
@@ -124,17 +124,17 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
             this.trace_count = curr_trace_count;
             this.via_count = curr_via_count;
         }
-        
+
         public String toString()
         {
-            
-            String result = resources.getString("net") + " " + this.net.name + ": " 
+
+            String result = resources.getString("net") + " " + this.net.name + ": "
                     + resources.getString("trace_count") + " " + this.trace_count.toString() + ", "
                     + resources.getString("via_count") + " " + this.via_count.toString();
-  
+
             return result;
         }
-        
+
         public int compareTo(UnconnectedRouteInfo p_other)
         {
             int result = this.net.name.compareTo(p_other.net.name);
@@ -144,7 +144,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
             }
             return result;
         }
-        
+
         private final app.freerouting.rules.Net net;
         private final Collection<Item> item_list;
         private final int id_no;

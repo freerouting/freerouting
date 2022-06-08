@@ -10,79 +10,79 @@ import app.freerouting.rules.ViaInfos;
  */
 public class WindowViaRule extends javax.swing.JFrame
 {
-    
+
     /** Creates a new instance of ViaRuleWindow */
     public WindowViaRule(ViaRule p_via_rule, ViaInfos p_via_list, BoardFrame p_board_frame)
     {
         this.via_rule = p_via_rule;
         this.via_list = p_via_list;
-        
+
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowViaRule", p_board_frame.get_locale());
         this.setTitle(resources.getString("title")  + " " + p_via_rule.name);
-        
+
         this.main_panel = new javax.swing.JPanel();
         main_panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20,20,20,20));
         main_panel.setLayout(new java.awt.BorderLayout());
-        
+
         this.rule_list_model = new javax.swing.DefaultListModel<>();
         this.rule_list = new javax.swing.JList<>(this.rule_list_model);
-        
+
         this.rule_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         this.rule_list.setVisibleRowCount(10);
         javax.swing.JScrollPane list_scroll_pane = new javax.swing.JScrollPane(this.rule_list);
         list_scroll_pane.setPreferredSize(new java.awt.Dimension(200, 100));
         this.main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
-        
+
         // fill the list
         for (int i = 0; i < p_via_rule.via_count(); ++i)
         {
             this.rule_list_model.addElement(p_via_rule.get_via(i));
         }
-        
+
         // Add a panel with buttons for editing the via list.
-        
+
         javax.swing.JPanel button_panel = new javax.swing.JPanel();
         this.main_panel.add(button_panel,java.awt.BorderLayout.SOUTH);
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
         button_panel.setLayout(gridbag);
         java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-        
+
         final javax.swing.JButton  add_button = new javax.swing.JButton(resources.getString("append"));
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
         gridbag.setConstraints(add_button, gridbag_constraints);
         add_button.setToolTipText(resources.getString("append_tooltip"));
         add_button.addActionListener(new AppendListener());
         button_panel.add(add_button);
-        
+
         final javax.swing.JButton  delete_button = new javax.swing.JButton(resources.getString("remove"));
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridbag.setConstraints(delete_button, gridbag_constraints);
         delete_button.setToolTipText(resources.getString("remove_tooltip"));
         delete_button.addActionListener(new DeleteListener());
         button_panel.add(delete_button);
-        
+
         final javax.swing.JButton  move_up_button = new javax.swing.JButton(resources.getString("move_up"));
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
         gridbag.setConstraints(move_up_button, gridbag_constraints);
         move_up_button.setToolTipText(resources.getString("move_up_tooltip"));
         move_up_button.addActionListener(new MoveUpListener());
         button_panel.add(move_up_button);
-        
+
         final javax.swing.JButton  move_down_button = new javax.swing.JButton(resources.getString("move_down"));
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridbag.setConstraints(move_down_button, gridbag_constraints);
         move_down_button.setToolTipText(resources.getString("move_down_tooltip"));
         move_down_button.addActionListener(new MoveDownListener());
         button_panel.add(move_down_button);
-        
+
         p_board_frame.set_context_sensitive_help(this, "WindowVia_EditViaRule");
-        
+
         this.add(main_panel);
         this.pack();
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
         this.setVisible(true);
     }
-    
+
     /**
      * Swaps the position of the vias with index p_1 and p_2.
      */
@@ -98,20 +98,20 @@ public class WindowViaRule extends javax.swing.JFrame
         this.rule_list_model.set(p_2, via_1);
         this.via_rule.swap(via_1, via_2);
     }
-    
-    
+
+
     private final ViaRule via_rule;
-    
+
     /** the list of possible vias in a rule */
     private final ViaInfos via_list;
-    
+
     private final javax.swing.JPanel main_panel;
-    
+
     private final javax.swing.JList<ViaInfo> rule_list;
     private final javax.swing.DefaultListModel<ViaInfo> rule_list_model;
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     private class AppendListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -148,7 +148,7 @@ public class WindowViaRule extends javax.swing.JFrame
             }
         }
     }
-    
+
     private class DeleteListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -166,7 +166,7 @@ public class WindowViaRule extends javax.swing.JFrame
             }
         }
     }
-    
+
     private class MoveUpListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -180,7 +180,7 @@ public class WindowViaRule extends javax.swing.JFrame
             rule_list.setSelectedIndex(selected_index - 1);
         }
     }
-    
+
     private class MoveDownListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)

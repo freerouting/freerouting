@@ -61,7 +61,7 @@ public class SpecctraSesFileWriter
         }
         return true;
     }
-    
+
     private static void write_session_scope(BasicBoard p_board, IdentifierType p_identifier_type,
             IndentFileWriter p_file, String p_session_name, String p_design_name) throws java.io.IOException
     {
@@ -79,21 +79,21 @@ public class SpecctraSesFileWriter
         write_routes(p_board, p_identifier_type, coordinate_transform, p_file);
         p_file.end_scope();
     }
-    
+
     private static void write_placement(BasicBoard p_board, IdentifierType p_identifier_type,
             CoordinateTransform p_coordinate_transform, IndentFileWriter p_file) throws java.io.IOException
     {
         p_file.start_scope();
         p_file.write("placement");
         Resolution.write_scope(p_file, p_board.communication);
-        
+
         for (int i = 1; i <= p_board.library.packages.count(); ++i)
         {
             write_components(p_board, p_identifier_type, p_coordinate_transform, p_file, p_board.library.packages.get(i));
         }
         p_file.end_scope();
     }
-    
+
     /**
      * Writes all components with the package p_package to the session file.
      */
@@ -213,7 +213,7 @@ public class SpecctraSesFileWriter
         }
         p_file.end_scope();
     }
-    
+
     private static void write_routes(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file) throws java.io.IOException
     {
@@ -225,7 +225,7 @@ public class SpecctraSesFileWriter
         write_network(p_board, p_identifier_type, p_coordinate_transform, p_file);
         p_file.end_scope();
     }
-    
+
     private static void write_library(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file) throws java.io.IOException
     {
@@ -237,7 +237,7 @@ public class SpecctraSesFileWriter
         }
         p_file.end_scope();
     }
-    
+
     private static void write_padstack(app.freerouting.library.Padstack p_padstack, BasicBoard p_board, IdentifierType p_identifier_type,
                                        CoordinateTransform p_coordinate_transform, IndentFileWriter p_file)
             throws java.io.IOException
@@ -266,7 +266,7 @@ public class SpecctraSesFileWriter
             FRLogger.warn("SessionFile.write_padstack: padstack shape not found");
             return;
         }
-        
+
         p_file.start_scope();
         p_file.write("padstack ");
         p_identifier_type.write(p_padstack.name, p_file);
@@ -292,7 +292,7 @@ public class SpecctraSesFileWriter
         }
         p_file.end_scope();
     }
-    
+
     private static void write_network(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file) throws java.io.IOException
     {
@@ -304,7 +304,7 @@ public class SpecctraSesFileWriter
         }
         p_file.end_scope();
     }
-    
+
     private static void write_net(int p_net_no, BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file) throws java.io.IOException
     {
@@ -356,7 +356,7 @@ public class SpecctraSesFileWriter
             p_file.end_scope();
         }
     }
-    
+
     private static void write_wire(PolylineTrace p_wire, BasicBoard p_board, IdentifierType p_identifier_type,
             CoordinateTransform p_coordinate_transform, IndentFileWriter p_file) throws java.io.IOException
     {
@@ -382,7 +382,7 @@ public class SpecctraSesFileWriter
                 coors[corner_index] = curr_coors[1];
                 ++corner_index;
                 prev_coors = curr_coors;
-                
+
             }
         }
         if (corner_index < coors.length)
@@ -398,7 +398,7 @@ public class SpecctraSesFileWriter
         write_fixed_state(p_file, p_wire.get_fixed_state());
         p_file.end_scope();
     }
-    
+
     private static void write_via(Via p_via, BasicBoard p_board, IdentifierType p_identifier_type,
             CoordinateTransform p_coordinate_transform, IndentFileWriter p_file) throws java.io.IOException
     {
@@ -417,7 +417,7 @@ public class SpecctraSesFileWriter
         write_fixed_state(p_file, p_via.get_fixed_state());
         p_file.end_scope();
     }
-    
+
     private static void write_fixed_state(IndentFileWriter p_file, app.freerouting.board.FixedState p_fixed_state) throws java.io.IOException
     {
         if (p_fixed_state.ordinal() <= app.freerouting.board.FixedState.SHOVE_FIXED.ordinal())
@@ -435,7 +435,7 @@ public class SpecctraSesFileWriter
             p_file.write("protect)");
         }
     }
-    
+
     private static void write_path(String p_layer_name, int p_width, int[] p_coors, IdentifierType p_identifier_type,
             IndentFileWriter p_file)
             throws java.io.IOException
@@ -455,7 +455,7 @@ public class SpecctraSesFileWriter
         }
         p_file.end_scope();
     }
-    
+
     private static void write_conduction_area( ConductionArea p_conduction_area, BasicBoard p_board,
             IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform,
             IndentFileWriter p_file) throws java.io.IOException

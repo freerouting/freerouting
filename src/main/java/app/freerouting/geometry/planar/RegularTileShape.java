@@ -7,7 +7,7 @@ package app.freerouting.geometry.planar;
  */
 public abstract class RegularTileShape extends TileShape
 {
-    
+
     /**
      * Compares the edgelines of index p_edge_no of this regular TileShape
      * and p_other.
@@ -17,18 +17,18 @@ public abstract class RegularTileShape extends TileShape
      * of p_other.
      */
      public abstract Side compare(RegularTileShape p_other, int p_edge_no);
-     
+
      /**
       * calculates the smallest RegularTileShape
       * containing this shape and p_other.
       */
      public abstract RegularTileShape union(RegularTileShape p_other);
-     
+
      /**
       * returns true, if p_other is completely contained in this shape
       */
      public abstract boolean contains (RegularTileShape p_other);
-     
+
     /**
      * Auxiliary function to implement the same function with parameter
      * type RegularTileShape.

@@ -11,7 +11,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class RulesFile
 {
-    
+
     public static void write(app.freerouting.interactive.BoardHandling p_board_handling, java.io.OutputStream p_output_stream, String p_design_name)
     {
         IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
@@ -37,8 +37,8 @@ public class RulesFile
             FRLogger.error("unable to close rules file", e);
         }
     }
-    
-    public static boolean read(java.io.InputStream p_input_stream, String p_design_name, 
+
+    public static boolean read(java.io.InputStream p_input_stream, String p_design_name,
             app.freerouting.interactive.BoardHandling p_board_handling)
     {
         BasicBoard routing_board = p_board_handling.get_routing_board();
@@ -156,14 +156,14 @@ public class RulesFile
         }
         return true;
     }
-    
+
     private static void write_rules( WriteScopeParameter p_par, String p_design_name) throws java.io.IOException
     {
         p_par.file.start_scope();
         p_par.file.write("rules PCB ");
         p_par.file.write(p_design_name);
         Structure.write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
-        AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, 
+        AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings,
                 p_par.board.layer_structure, p_par.identifier_type);
         // write the default rule using 0 as default layer.
         Rule.write_default_rule(p_par, 0);
@@ -181,7 +181,7 @@ public class RulesFile
         Network.write_net_classes(p_par);
         p_par.file.end_scope();
     }
-    
+
     private static void add_rules(java.util.Collection<Rule> p_rules, BasicBoard p_board, String p_layer_name)
     {
         int layer_no = -1;
@@ -216,7 +216,7 @@ public class RulesFile
             }
         }
     }
-    
+
     private static boolean add_layer_rules(IJFlexScanner p_scanner, BasicBoard  p_board)
     {
         try
@@ -272,7 +272,7 @@ public class RulesFile
         p_board.rules.via_infos.add(curr_via_info);
         return true;
     }
-    
+
     private static boolean read_via_rule(IJFlexScanner p_scanner, BasicBoard p_board)
     {
         java.util.Collection<String> via_rule = Network.read_via_rule(p_scanner, p_board);
@@ -283,7 +283,7 @@ public class RulesFile
         Network.add_via_rule(via_rule, p_board);
         return true;
     }
-    
+
     private static boolean read_net_class(IJFlexScanner p_scanner, LayerStructure p_layer_structure, BasicBoard p_board)
     {
         NetClass curr_class = NetClass.read_scope(p_scanner);

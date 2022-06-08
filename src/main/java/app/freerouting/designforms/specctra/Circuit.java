@@ -66,7 +66,7 @@ public class Circuit
         }
         return new ReadScopeResult(max_trace_length, min_trace_length, use_via, use_layer);
     }
-    
+
     static LengthMatchingRule read_length_scope( IJFlexScanner p_scanner)
     {
         LengthMatchingRule result = null;
@@ -127,7 +127,7 @@ public class Circuit
         }
         return result;
     }
-    
+
     /** A max_length of -1 indicates, tha no maximum length  is defined. */
     public static class ReadScopeResult
     {
@@ -138,13 +138,13 @@ public class Circuit
             use_via = p_use_via;
             use_layer = p_use_layer;
         }
-        
+
         public final double max_length;
         public final double min_length;
         public final java.util.Collection<String> use_via;
         public final java.util.Collection<String> use_layer;
     }
-    
+
     /** A max_length of -1 indicates, tha no maximum length  is defined. */
     private static class  LengthMatchingRule
     {
@@ -153,7 +153,7 @@ public class Circuit
             max_length = p_max_length;
             min_length = p_min_length;
         }
-        
+
         public final double max_length;
         public final double min_length;
     }

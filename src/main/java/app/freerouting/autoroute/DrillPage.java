@@ -17,7 +17,7 @@ import app.freerouting.board.Item;
 
 class DrillPage implements ExpandableObject
 {
-    
+
     /** Creates a new instance of DrillPage */
     public DrillPage(IntBox p_shape, RoutingBoard p_board)
     {
@@ -29,7 +29,7 @@ class DrillPage implements ExpandableObject
            maze_search_info_arr[i] = new MazeSearchElement();
         }
     }
-    
+
     /**
      * Returns the drills on this page.
      * If p_atttach_smd, drilling to smd pins is allowed.
@@ -66,7 +66,7 @@ class DrillPage implements ExpandableObject
                 }
                 TileShape curr_obstacle_shape =
                         curr_item.get_tree_shape(search_tree, curr_entry.shape_index_in_object);
-                if (!prev_obstacle_shape.contains(curr_obstacle_shape)) 
+                if (!prev_obstacle_shape.contains(curr_obstacle_shape))
                 {
                     // Checked to avoid multiple cutout for example for vias with the same shape on all layers.
                     TileShape curr_cutout_shape = curr_obstacle_shape.intersection(this.shape);
@@ -85,7 +85,7 @@ class DrillPage implements ExpandableObject
             }
             PolylineArea shape_with_holes = new PolylineArea(this.shape, holes);
             TileShape [] drill_shapes = shape_with_holes.split_to_convex(p_autoroute_engine.stoppable_thread);
-            
+
             // Use the center points of these drill shapes to try making a via.
             int drill_first_layer = 0;
             int drill_last_layer = this.board.get_layer_count() - 1;
@@ -117,27 +117,27 @@ class DrillPage implements ExpandableObject
         }
         return this.drills;
     }
-    
+
     public TileShape get_shape()
     {
         return this.shape;
     }
-    
+
     public int get_dimension()
     {
         return 2;
     }
-    
+
     public int maze_search_element_count()
     {
         return this.maze_search_info_arr.length;
     }
-    
+
     public MazeSearchElement get_maze_search_element (int p_no)
     {
         return this.maze_search_info_arr[p_no];
     }
-    
+
     /**
      * Resets all drills of this page for autorouting the next connection.
      */
@@ -155,7 +155,7 @@ class DrillPage implements ExpandableObject
             curr_info.reset();
         }
     }
-    
+
     /**
      * Invalidates the drills of this page so that they are recalculated at the next call of get_drills().
      */
@@ -163,7 +163,7 @@ class DrillPage implements ExpandableObject
     {
         this.drills = null;
     }
-    
+
     /*
      * Test draw of the drills on this page.
      */
@@ -179,12 +179,12 @@ class DrillPage implements ExpandableObject
             curr_drill.draw(p_graphics, p_graphics_context, p_intensity);
         }
     }
-    
+
     public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room)
     {
         return null;
     }
-    
+
     /**
      * Looks if p_drill_shape contains the center of a drillable Pin on p_layer.
      * Returns null, if no such Pin was found.
@@ -206,17 +206,17 @@ class DrillPage implements ExpandableObject
         }
         return result;
     }
-    
+
     private final MazeSearchElement[] maze_search_info_arr;
-    
+
     /** The shape of the page */
     final IntBox shape;
-    
+
     /** The list of expansion drills on this page. Null, if not yet calculated. */
     private Collection<ExpansionDrill> drills = null;
-    
+
     private final RoutingBoard board;
-    
+
     /** The number of the net, for which the drills are calculated */
     private int net_no = -1;
 }

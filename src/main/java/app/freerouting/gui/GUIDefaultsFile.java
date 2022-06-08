@@ -29,7 +29,7 @@ public class GUIDefaultsFile
         SHOVE_ENABLED, STITCHING, TRACES, UNFIXED, VIA_KEEPOUT, VISIBLE, VIA_RULES, VIA_SNAP_TO_SMD_CENTER,
         VIAS, VIOLATIONS, VIOLATIONS_INFO, WINDOWS
     }
-    
+
     /**
      * Writes the GUI setting of p_board_frame as default to p_file.
      * Returns false, if an error occured.
@@ -41,9 +41,9 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        
+
         IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
-        
+
         GUIDefaultsFile result = new GUIDefaultsFile(p_board_frame, p_board_handling, null, output_file);
         try
         {
@@ -54,7 +54,7 @@ public class GUIDefaultsFile
             FRLogger.warn("unable to write defaults file");
             return false;
         }
-        
+
         try
         {
             output_file.close();
@@ -66,7 +66,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     /**
      * Reads the GUI setting of p_board_frame from file.
      * Returns false, if an error occured while reading the file.
@@ -92,7 +92,7 @@ public class GUIDefaultsFile
         }
         return result;
     }
-    
+
     private GUIDefaultsFile(BoardFrame p_board_frame, app.freerouting.interactive.BoardHandling p_board_handling,
                             GUIDefaultsScanner p_scanner, IndentFileWriter p_output_file)
     {
@@ -101,7 +101,7 @@ public class GUIDefaultsFile
         scanner = p_scanner;
         out_file = p_output_file;
     }
-    
+
     private void write_defaults_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -111,11 +111,11 @@ public class GUIDefaultsFile
         write_parameter_scope();
         out_file.end_scope();
     }
-    
+
     private boolean read_defaults_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
-        
+
         if (next_token != Keyword.OPEN_BRACKET)
         {
             return false;
@@ -125,7 +125,7 @@ public class GUIDefaultsFile
         {
             return false;
         }
-        
+
         // read the direct subscopes of the gui_defaults scope
         for (;;)
         {
@@ -141,7 +141,7 @@ public class GUIDefaultsFile
                 // end of scope
                 break;
             }
-            
+
             if (prev_token == Keyword.OPEN_BRACKET)
             {
                 if (next_token == Keyword.COLORS)
@@ -175,7 +175,7 @@ public class GUIDefaultsFile
         this.board_frame.refresh_windows();
         return true;
     }
-    
+
     private boolean read_windows_scope() throws java.io.IOException
     {
         // read the direct subscopes of the windows scope
@@ -194,7 +194,7 @@ public class GUIDefaultsFile
                 // end of scope
                 break;
             }
-            
+
             if (prev_token == Keyword.OPEN_BRACKET)
             {
                 if (!(next_token instanceof Keyword))
@@ -204,14 +204,14 @@ public class GUIDefaultsFile
                 }
                 if (!read_frame_scope((Keyword) next_token))
                 {
-                    
+
                     return false;
                 }
             }
         }
         return true;
     }
-    
+
     private void write_windows_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -240,7 +240,7 @@ public class GUIDefaultsFile
         write_frame_scope(this.board_frame.clearance_violations_window, "violations_info");
         out_file.end_scope();
     }
-    
+
     private boolean read_frame_scope(Keyword p_frame) throws java.io.IOException
     {
         boolean is_visible;
@@ -391,7 +391,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private java.awt.Rectangle read_rectangle() throws java.io.IOException
     {
         int[] coor = new int [4];
@@ -407,7 +407,7 @@ public class GUIDefaultsFile
         }
         return new java.awt.Rectangle(coor[0],coor[1],coor[2],coor[3]);
     }
-    
+
     private void write_frame_scope(javax.swing.JFrame p_frame, String p_frame_name)
     throws java.io.IOException
     {
@@ -425,7 +425,7 @@ public class GUIDefaultsFile
         write_bounds(p_frame.getBounds());
         out_file.end_scope();
     }
-    
+
     private void write_bounds(java.awt.Rectangle p_bounds) throws java.io.IOException
     {
         out_file.start_scope();
@@ -444,7 +444,7 @@ public class GUIDefaultsFile
         out_file.write(height.toString());
         out_file.end_scope();
     }
-    
+
     private boolean read_colors_scope() throws java.io.IOException
     {
         // read the direct subscopes of the colors scope
@@ -463,10 +463,10 @@ public class GUIDefaultsFile
                 // end of scope
                 break;
             }
-            
+
             if (prev_token == Keyword.OPEN_BRACKET)
             {
-                
+
                 if (next_token == Keyword.BACKGROUND)
                 {
                     if (!read_background_color())
@@ -588,7 +588,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private boolean read_trace_colors(boolean p_fixed) throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -605,7 +605,7 @@ public class GUIDefaultsFile
         this.board_handling.graphics_context.item_color_table.set_trace_colors(curr_colors, p_fixed);
         return true;
     }
-    
+
     private boolean read_via_colors(boolean p_fixed) throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -622,7 +622,7 @@ public class GUIDefaultsFile
         this.board_handling.graphics_context.item_color_table.set_via_colors(curr_colors, p_fixed);
         return true;
     }
-    
+
     private boolean read_pin_colors() throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -639,7 +639,7 @@ public class GUIDefaultsFile
         this.board_handling.graphics_context.item_color_table.set_pin_colors(curr_colors);
         return true;
     }
-    
+
     private boolean read_conduction_colors() throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -656,7 +656,7 @@ public class GUIDefaultsFile
         this.board_handling.graphics_context.item_color_table.set_conduction_colors(curr_colors);
         return true;
     }
-    
+
     private boolean read_keepout_colors() throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -673,7 +673,7 @@ public class GUIDefaultsFile
         this.board_handling.graphics_context.item_color_table.set_keepout_colors(curr_colors);
         return true;
     }
-    
+
     private boolean read_via_keepout_colors() throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -690,7 +690,7 @@ public class GUIDefaultsFile
         this.board_handling.graphics_context.item_color_table.set_via_keepout_colors(curr_colors);
         return true;
     }
-    
+
     private boolean read_background_color() throws java.io.IOException
     {
         java.awt.Color curr_color = read_color();
@@ -708,7 +708,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private boolean read_hilight_color() throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -731,7 +731,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private boolean read_incompletes_color() throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -754,7 +754,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private boolean read_length_matching_color() throws java.io.IOException
     {
         double intensity = read_color_intensity();
@@ -777,7 +777,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private boolean read_violations_color() throws java.io.IOException
     {
         java.awt.Color curr_color = read_color();
@@ -794,7 +794,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private boolean read_outline_color() throws java.io.IOException
     {
         java.awt.Color curr_color = read_color();
@@ -811,7 +811,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private boolean read_component_color(boolean p_front) throws java.io.IOException
     {
         java.awt.Color curr_color = read_color();
@@ -828,8 +828,8 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
-    
+
+
     private double read_color_intensity() throws java.io.IOException
     {
         double result;
@@ -849,7 +849,7 @@ public class GUIDefaultsFile
         }
         return result;
     }
-    
+
     /**
      * reads a java.awt.Color from the defaults file.
      * Returns null, if no valid color was found.
@@ -872,7 +872,7 @@ public class GUIDefaultsFile
         }
         return new java.awt.Color(rgb_color_arr[0], rgb_color_arr[1],rgb_color_arr[2]);
     }
-    
+
     /**
      * reads a n array java.awt.Color from the defaults file.
      * Returns null, if no valid colors were found.
@@ -897,7 +897,7 @@ public class GUIDefaultsFile
         }
         return result;
     }
-    
+
     private void write_colors_scope() throws java.io.IOException
     {
         app.freerouting.boardgraphics.GraphicsContext graphics_context = this.board_handling.graphics_context;
@@ -980,14 +980,14 @@ public class GUIDefaultsFile
         out_file.end_scope();
         out_file.end_scope();
     }
-    
+
     private void write_color_intensity(double p_value)throws java.io.IOException
     {
         out_file.write(" ");
         Float value = (float) p_value;
         out_file.write(value.toString());
     }
-    
+
     private void write_color_scope(java.awt.Color p_color) throws java.io.IOException
     {
         out_file.new_line();
@@ -1000,7 +1000,7 @@ public class GUIDefaultsFile
         Integer blue = p_color.getBlue();
         out_file.write(blue.toString());
     }
-    
+
     private void write_color(java.awt.Color[] p_colors) throws java.io.IOException
     {
         for (int i = 0; i < p_colors.length; ++i)
@@ -1008,7 +1008,7 @@ public class GUIDefaultsFile
             write_color_scope(p_colors[i]);
         }
     }
-    
+
     private boolean read_parameter_scope() throws java.io.IOException
     {
         // read the subscopes of the parameter scope
@@ -1027,10 +1027,10 @@ public class GUIDefaultsFile
                 // end of scope
                 break;
             }
-            
+
             if (prev_token == Keyword.OPEN_BRACKET)
             {
-                
+
                 if (next_token == Keyword.SELECTION_LAYERS)
                 {
                     if (!read_selection_layer_scope())
@@ -1131,7 +1131,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     private void write_parameter_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1151,7 +1151,7 @@ public class GUIDefaultsFile
         write_deselected_snapshot_attributes();
         out_file.end_scope();
     }
-    
+
     private boolean read_selection_layer_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1178,7 +1178,7 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_select_on_all_visible_layers(select_on_all_layers);
         return true;
     }
-    
+
     private boolean read_shove_enabled_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1205,7 +1205,7 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_push_enabled(shove_enabled);
         return true;
     }
-    
+
     private boolean read_drag_components_enabled_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1232,7 +1232,7 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_drag_components_enabled(drag_components_enabled);
         return true;
     }
-    
+
     private boolean read_ignore_conduction_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1259,7 +1259,7 @@ public class GUIDefaultsFile
         this.board_handling.set_ignore_conduction(ignore_conduction);
         return true;
     }
-    
+
     private void write_shove_enabled_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1275,7 +1275,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private void write_drag_components_enabled_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1291,7 +1291,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private void write_ignore_conduction_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1307,7 +1307,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private void write_selection_layer_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1323,7 +1323,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private boolean read_route_mode_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1350,7 +1350,7 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_stitch_route(is_stitch_mode);
         return true;
     }
-    
+
     private void write_route_mode_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1366,7 +1366,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private boolean read_pull_tight_region_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1385,7 +1385,7 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_current_pull_tight_region_width(pull_tight_region);
         return true;
     }
-    
+
     private void write_pull_tight_region_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1395,7 +1395,7 @@ public class GUIDefaultsFile
         out_file.write(pull_tight_region.toString());
         out_file.end_scope();
     }
-    
+
     private boolean read_pull_tight_accuracy_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1414,7 +1414,7 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_current_pull_tight_accuracy(pull_tight_accuracy);
         return true;
     }
-    
+
     private void write_pull_tight_accuracy_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1424,7 +1424,7 @@ public class GUIDefaultsFile
         out_file.write(pull_tight_accuracy.toString());
         out_file.end_scope();
     }
-    
+
     private boolean read_automatic_layer_dimming_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1451,7 +1451,7 @@ public class GUIDefaultsFile
         this.board_handling.graphics_context.set_auto_layer_dim_factor(intensity);
         return true;
     }
-    
+
     private void write_automatic_layer_dimming_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1461,7 +1461,7 @@ public class GUIDefaultsFile
         out_file.write(layer_dimming.toString());
         out_file.end_scope();
     }
-    
+
     private boolean read_hilight_routing_obstacle_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1488,8 +1488,8 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_hilight_routing_obstacle(hilight_obstacle);
         return true;
     }
-    
-    
+
+
     private void write_hilight_routing_obstacle_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1505,7 +1505,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private boolean read_clearance_compensation_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1532,7 +1532,7 @@ public class GUIDefaultsFile
         this.board_handling.set_clearance_compensation(clearance_compensation);
         return true;
     }
-    
+
     private void write_clearance_compensation_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1548,7 +1548,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private boolean read_via_snap_to_smd_center_scope() throws java.io.IOException
     {
         Object next_token = this.scanner.next_token();
@@ -1575,7 +1575,7 @@ public class GUIDefaultsFile
         this.board_handling.settings.set_via_snap_to_smd_center(snap);
         return true;
     }
-    
+
     private void write_via_snap_to_smd_center_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1591,7 +1591,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private boolean read_selectable_item_scope() throws java.io.IOException
     {
         ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
@@ -1643,8 +1643,8 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
-    
+
+
     private void write_selectable_item_scope() throws java.io.IOException
     {
         out_file.start_scope();
@@ -1663,7 +1663,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private void write_deselected_snapshot_attributes() throws java.io.IOException
     {
         app.freerouting.interactive.SnapShot.Attributes attributes = this.board_handling.settings.get_snapshot_attributes();
@@ -1741,7 +1741,7 @@ public class GUIDefaultsFile
         }
         out_file.end_scope();
     }
-    
+
     private boolean read_deselected_snapshot_attributes() throws java.io.IOException
     {
         app.freerouting.interactive.SnapShot.Attributes attributes = this.board_handling.settings.get_snapshot_attributes();
@@ -1816,7 +1816,7 @@ public class GUIDefaultsFile
         }
         return true;
     }
-    
+
     /**
      * Skips the current scope.
      * Returns false, if no legal scope was found.
@@ -1852,7 +1852,7 @@ public class GUIDefaultsFile
         FRLogger.warn("GUIDefaultsFile.skip_spope: unknown scope skipped");
         return true;
     }
-    
+
     private final BoardFrame board_frame;
     private final app.freerouting.interactive.BoardHandling board_handling;
     /** Used, when reading a defaults file, null otherwise. */

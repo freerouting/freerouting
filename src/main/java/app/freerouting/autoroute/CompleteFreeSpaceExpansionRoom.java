@@ -20,7 +20,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom implements CompleteExpansionRoom, SearchTreeObject
 {
-    
+
     /**
      * Creates a new instance of CompleteFreeSpaceExpansionRoom
      */
@@ -30,12 +30,12 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
         target_doors = new LinkedList<TargetItemExpansionDoor>();
         id_no = p_id_no;
     }
-    
+
     public void set_search_tree_entries(ShapeTree.Leaf [] p_entries, ShapeTree p_tree)
     {
         tree_entries = p_entries;
     }
-    
+
     public int compareTo(Object p_other)
     {
         int result;
@@ -49,7 +49,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
         }
         return result;
     }
-    
+
     /**
      * Removes the tree entries of this roomm from p_shape_tree.
      */
@@ -57,32 +57,32 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     {
         p_shape_tree.remove(this.tree_entries);
     }
-    
+
     public int tree_shape_count(ShapeTree p_shape_tree)
     {
         return 1;
     }
-    
+
     public TileShape get_tree_shape(ShapeTree p_shape_tree, int p_index)
     {
         return this.get_shape();
     }
-    
+
     public int shape_layer(int p_index)
     {
         return this.get_layer();
     }
-    
+
     public boolean is_obstacle(int p_net_no)
     {
         return true;
     }
-    
+
     public boolean is_trace_obstacle(int p_net_no)
     {
         return true;
     }
-    
+
     /**
      * Will be called, when the room overlaps with net dependent objects.
      */
@@ -90,7 +90,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     {
         this.room_is_net_dependent = true;
     }
-    
+
     /**
      * Returns, if the room overlaps with net dependent objects.
      * In this case it cannot be retained, when the net number changes in autorouting.
@@ -99,7 +99,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     {
         return this.room_is_net_dependent;
     }
-    
+
     /**
      * Returns the list doors to target items of this room
      */
@@ -107,7 +107,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     {
         return this.target_doors;
     }
-    
+
     /**
      * Adds p_door to the list of target doors of this room.
      */
@@ -115,7 +115,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
     {
         this.target_doors.add(p_door);
     }
-    
+
     public boolean remove_door(ExpandableObject p_door)
     {
         boolean result;
@@ -129,19 +129,19 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
         }
         return result;
     }
-    
+
     public SearchTreeObject get_object()
     {
         return this;
     }
-    
+
     /**
      * Calculates the doors to the start and destination items of the autoroute algorithm.
      */
     public  void calculate_target_doors(ShapeTree.TreeEntry p_own_net_object, int p_net_no, ShapeSearchTree p_autoroute_search_tree)
     {
         this.set_net_dependent();
-        
+
         if (p_own_net_object.object instanceof Connectable)
         {
             Connectable curr_object = (Connectable) p_own_net_object.object;
@@ -160,7 +160,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
             }
         }
     }
-    
+
     /**
      * Draws the shape of this room.
      */
@@ -171,7 +171,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
         p_graphics_context.fill_area(this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);
         p_graphics_context.draw_boundary(this.get_shape(), 0, draw_color, p_graphics, layer_visibility);
     }
-    
+
     /**
      * Check, if this FreeSpaceExpansionRoom is valid.
      */
@@ -211,7 +211,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
         }
         return result;
     }
-    
+
     /**
      * Removes all doors and target doors from this room.
      */
@@ -220,7 +220,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
         super.clear_doors();
         this.target_doors = new LinkedList<TargetItemExpansionDoor>();
     }
-    
+
     public void reset_doors()
     {
         super.reset_doors();
@@ -229,17 +229,17 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
             curr_door.reset();
         }
     }
-    
-    
+
+
     /** The array of entries in the SearchTree.  Consists of just one element */
     private ShapeTree.Leaf [] tree_entries = null;
-    
+
     //** identification number for implementong the Comparable interfacw */
     private final int id_no;
-    
+
     /** The list of doors to items of the own net */
     private Collection<TargetItemExpansionDoor> target_doors;
-    
+
     private boolean room_is_net_dependent = false;
 }
 

@@ -53,7 +53,7 @@ class CalcShapeAndFromSide
                 {
                     curr_shape = tmp_shape.to_Simplex();
                     cut_off_at_start = true;
-                    
+
                 }
             }
             int from_side_no = -1;
@@ -77,13 +77,13 @@ class CalcShapeAndFromSide
         }
         if (curr_from_side == null && !p_in_shove_check )
         {
-           // In p_in_shove_check, using this calculation may produce an undesired stack_level > 1 in ShapeTraceEntries.       
-           curr_from_side = new CalcFromSide(p_trace.polyline(), p_index, curr_shape);    
+           // In p_in_shove_check, using this calculation may produce an undesired stack_level > 1 in ShapeTraceEntries.
+           curr_from_side = new CalcFromSide(p_trace.polyline(), p_index, curr_shape);
         }
         this.shape = curr_shape;
         this.from_side = curr_from_side;
     }
-    
+
     private static Line calc_cutline_at_end(int p_index, PolylineTrace p_trace)
     {
         Polyline trace_lines = p_trace.polyline();
@@ -92,7 +92,7 @@ class CalcShapeAndFromSide
                 trace_lines.corner_approx(trace_lines.arr.length - 2).distance(trace_lines.corner_approx(p_index + 1))
                 < p_trace.get_compensated_half_width(search_tree))
         {
-            
+
             Line curr_line = trace_lines.arr[trace_lines.arr.length - 1];
             FloatPoint is = trace_lines.corner_approx(trace_lines.arr.length - 3);
             Line cut_line;
@@ -108,7 +108,7 @@ class CalcShapeAndFromSide
         }
         return null;
     }
-    
+
     private static Line calc_cutline_at_start(int p_index, PolylineTrace p_trace)
     {
         Polyline trace_lines = p_trace.polyline();
@@ -132,8 +132,8 @@ class CalcShapeAndFromSide
         }
         return null;
     }
-    
-    
+
+
     final TileShape shape;
     final CalcFromSide from_side;
 }

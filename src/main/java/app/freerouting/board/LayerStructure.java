@@ -5,13 +5,13 @@ package app.freerouting.board;
  */
 public class LayerStructure implements java.io.Serializable
 {
-    
+
     /** Creates a new instance of LayerStructure */
     public LayerStructure(Layer [] p_layer_arr)
     {
         arr = p_layer_arr;
     }
-    
+
     /**
      * Returns the index of the layer with the name p_name in the array arr,
      * -1, if  arr contains no layer with name p_name.
@@ -27,7 +27,7 @@ public class LayerStructure implements java.io.Serializable
         }
         return -1;
     }
-    
+
     /**
      * Returns the index of p_layer  in the array arr,
      * or -1, if  arr does not contain p_layer.
@@ -43,7 +43,7 @@ public class LayerStructure implements java.io.Serializable
         }
         return -1;
     }
-    
+
     /**
      * Returns the count of signal layers of this layer_structure.
      */
@@ -59,7 +59,7 @@ public class LayerStructure implements java.io.Serializable
         }
         return found_signal_layers;
     }
-    
+
     /**
      * Gets the p_no-th signal layer of this layer structure.
      */
@@ -79,7 +79,7 @@ public class LayerStructure implements java.io.Serializable
         }
         return arr[arr.length - 1];
     }
-    
+
     /**
      * Returns the count of signal layers with a smaller number than p_layer
      */
@@ -99,7 +99,7 @@ public class LayerStructure implements java.io.Serializable
         }
         return -1;
     }
-    
+
     /**
      * Gets the layer number of the p_signal_layer_no-th signal layer in this layer structure
      */
@@ -108,6 +108,6 @@ public class LayerStructure implements java.io.Serializable
             Layer curr_signal_layer = get_signal_layer(p_signal_layer_no);
             return get_no(curr_signal_layer);
     }
-    
+
     public final Layer [] arr;
 }

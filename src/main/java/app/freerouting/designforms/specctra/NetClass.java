@@ -11,10 +11,10 @@ import java.util.LinkedList;
  */
 public class NetClass
 {
-    
+
     public static NetClass read_scope(IJFlexScanner p_scanner)
     {
-        
+
         try
         {
             // read the class name
@@ -129,7 +129,7 @@ public class NetClass
             return null;
         }
     }
-    
+
     public static ClassClass read_class_class_scope(IJFlexScanner p_scanner)
     {
         try
@@ -176,11 +176,11 @@ public class NetClass
             return null;
         }
     }
-    
+
     /** Creates a new instance of NetClass */
     public NetClass(String p_name, String p_trace_clearance_class, Collection<String> p_net_list,
             Collection<Rule> p_rules, Collection<Rule.LayerRule> p_layer_rules, Collection<String> p_use_via,
-            Collection<String> p_use_layer, String p_via_rule, boolean p_shove_fixed, boolean p_pull_tight, 
+            Collection<String> p_use_layer, String p_via_rule, boolean p_shove_fixed, boolean p_pull_tight,
             double  p_min_trace_length, double p_max_trace_length)
     {
         name = p_name;
@@ -196,7 +196,7 @@ public class NetClass
         min_trace_length = p_min_trace_length;
         max_trace_length = p_max_trace_length;
     }
-    
+
     public final String name;
     public final String trace_clearance_class;
     public final Collection<String> net_list;
@@ -209,7 +209,7 @@ public class NetClass
     public final boolean pull_tight;
     public final double min_trace_length;
     public final double max_trace_length;
-    
+
     public static class ClassClass
     {
         public ClassClass( Collection<String> p_class_names, Collection<Rule> p_rules,

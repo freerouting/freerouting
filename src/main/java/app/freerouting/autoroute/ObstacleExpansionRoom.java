@@ -16,7 +16,7 @@ import app.freerouting.board.Item;
  */
 public class ObstacleExpansionRoom implements CompleteExpansionRoom
 {
-    
+
     /** Creates a new instance of ObstacleExpansionRoom */
     ObstacleExpansionRoom(Item p_item, int p_index_in_item, ShapeSearchTree p_shape_tree)
     {
@@ -25,22 +25,22 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
         this.shape = p_item.get_tree_shape(p_shape_tree, p_index_in_item);
         this.doors = new java.util.LinkedList<ExpansionDoor>();
     }
-    
+
     public int get_index_in_item()
     {
         return this.index_in_item;
     }
-    
+
     public int get_layer()
     {
         return this.item.shape_layer(this.index_in_item);
     }
-    
+
     public TileShape get_shape()
     {
         return this.shape;
     }
-    
+
     /**
      * Checks, if this room has already a 1-dimensional door to p_other
      */
@@ -58,7 +58,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
         }
         return false;
     }
-    
+
     /**
      * Adds a door to the door list of this room.
      */
@@ -66,7 +66,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
     {
         this.doors.add(p_door);
     }
-    
+
     /**
      * Creates a 2-dim door with the other obstacle room, if that is useful for the autoroute algorithm.
      * It is assumed that this room and p_other have a 2-dimensional overlap.
@@ -103,7 +103,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
         p_other.add_door(new_door);
         return true;
     }
-    
+
     /**
      * Returns the list of doors of this room to neighbour expansion rooms
      */
@@ -111,7 +111,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
     {
         return this.doors;
     }
-    
+
     /**
      * Removes all doors from this room.
      */
@@ -119,7 +119,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
     {
         this.doors = new java.util.LinkedList<ExpansionDoor>();
     }
-    
+
     public void reset_doors()
     {
         for (ExpandableObject curr_door : this.doors)
@@ -127,27 +127,27 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
             curr_door.reset();
         }
     }
-    
+
     public Collection<TargetItemExpansionDoor> get_target_doors()
     {
         return new java.util.LinkedList<TargetItemExpansionDoor>();
     }
-    
+
     public Item get_item()
     {
         return this.item;
     }
-    
+
     public SearchTreeObject get_object()
     {
         return this.item;
     }
-    
+
     public boolean remove_door(ExpandableObject p_door)
     {
         return this.doors.remove(p_door);
     }
-    
+
     /**
      * Returns, if all doors to the neighbour rooms are calculated.
      */
@@ -155,13 +155,13 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
     {
         return this.doors_calculated;
     }
-    
+
     void set_doors_calculated(boolean p_value)
     {
         this.doors_calculated = p_value;
     }
-    
-    
+
+
     /**
      * Draws the shape of this room.
      */
@@ -172,13 +172,13 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
         p_graphics_context.fill_area(this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);
         p_graphics_context.draw_boundary(this.get_shape(), 0, draw_color, p_graphics, layer_visibility);
     }
-    
+
     private final Item item;
     private final int index_in_item;
     private final TileShape shape;
-    
+
     /** The list of doors to neighbour expansion rooms */
     private List<ExpansionDoor> doors;
-    
+
     private boolean doors_calculated = false;
 }

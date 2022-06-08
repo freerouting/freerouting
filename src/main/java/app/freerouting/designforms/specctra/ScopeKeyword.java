@@ -9,7 +9,7 @@ public class ScopeKeyword extends Keyword
     {
         super(p_name);
     }
-    
+
     /**
      * Scips the current scope while reading a dsn file.
      * Returns false, if no legal scope was found.
@@ -45,7 +45,7 @@ public class ScopeKeyword extends Keyword
         }
         return true;
     }
-    
+
     /**
      * Reads the next scope of this keyword from dsn file.
      */
@@ -74,7 +74,7 @@ public class ScopeKeyword extends Keyword
                 // end of scope
                 break;
             }
-            
+
             if (prev_token == OPEN_BRACKET)
             {
                 ScopeKeyword next_scope;
@@ -86,14 +86,14 @@ public class ScopeKeyword extends Keyword
                     {
                         return false;
                     }
-                    
+
                 }
                 else
                 {
                     // skip unknown scope
                     skip_scope(p_par.scanner);
                 }
-                
+
             }
         }
         return true;

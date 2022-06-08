@@ -22,7 +22,7 @@ public class ActivityReplayFile
         this.scanner = new ActivityReplayFileScanner(p_input_stream);
         return true;
     }
-    
+
     /**
      * Reads the next corner from the ActivityReplayFile.
      * Return null, if no valid corner is found.
@@ -51,7 +51,7 @@ public class ActivityReplayFile
         }
         return new FloatPoint(x, y);
     }
-    
+
     /**
      * closes the ActivityReplayFile after writing
      */
@@ -70,7 +70,7 @@ public class ActivityReplayFile
         }
         this.write_enabled = false;
     }
-    
+
     /**
      * opens a ActivityReplayFile for writing
      */
@@ -88,7 +88,7 @@ public class ActivityReplayFile
         write_enabled = true;
         return true;
     }
-    
+
     /**
      * Marks the beginning of a new item in the output stream
      */
@@ -107,7 +107,7 @@ public class ActivityReplayFile
             }
         }
     }
-    
+
     /**
      * Marks the beginning of a new scope in the output stream
      * Writes also an integer value.
@@ -117,7 +117,7 @@ public class ActivityReplayFile
         start_scope(p_scope);
         add_int(p_int_value);
     }
-    
+
     /**
      * Marks the beginning of a new scope in the output stream
      * Writes also 1, if p_boolean_value is true, or 0, if p_boolean_value is false;
@@ -136,7 +136,7 @@ public class ActivityReplayFile
         }
         add_int(int_value);
     }
-    
+
     /**
      * Marks the beginning of a new item in the output stream
      * Writes also the start corner.
@@ -146,9 +146,9 @@ public class ActivityReplayFile
         start_scope(p_scope);
         add_corner(p_start_corner);
     }
-    
-    
-    
+
+
+
     /**
      * Reads the next scope identifier  from the ActivityReplayFile.
      * Returns null if no more item scope was found.
@@ -169,13 +169,13 @@ public class ActivityReplayFile
         ActivityReplayFileScope result = ActivityReplayFileScope.get_scope((String) curr_ob);
         return result;
     }
-    
+
     /**
      * adds an int to the ActivityReplayFile
      */
     public void add_int(int p_int)
     {
-        
+
         if (write_enabled)
         {
             try
@@ -189,7 +189,7 @@ public class ActivityReplayFile
             }
         }
     }
-    
+
     /**
      * Reads the next int from the ActivityReplayFile.
      * Returns -1, if no valid integer was found.
@@ -205,7 +205,7 @@ public class ActivityReplayFile
         }
         return (((Integer) curr_ob).intValue());
     }
-    
+
     /**
      * adds a FloatPoint to the ActivityReplayFile
      */
@@ -231,7 +231,7 @@ public class ActivityReplayFile
             }
         }
     }
-    
+
     private Object next_token()
     {
         if (this.pending_token != null)
@@ -251,7 +251,7 @@ public class ActivityReplayFile
             return null;
         }
     }
-    
+
     private ActivityReplayFileScanner scanner = null;
     private FileWriter file_writer = null;
     private boolean write_enabled = false;

@@ -24,16 +24,16 @@ public class RationalVector extends Vector implements java.io.Serializable
             x = p_x;
             y = p_y;
             z = p_z;
-            
+
         }
         else
         {
             x = p_x.negate();
             y = p_y.negate();
             z = p_z.negate();
-        }        
+        }
     }
-    
+
     /**
      * creates a RetionalVector from an IntVector
      */
@@ -43,7 +43,7 @@ public class RationalVector extends Vector implements java.io.Serializable
         y = BigInteger.valueOf(p_vector.y);
         z = BigInteger.ONE;
     }
-    
+
     /**
      * returns true, if the x and y coordinates of this vector are 0
      */
@@ -51,7 +51,7 @@ public class RationalVector extends Vector implements java.io.Serializable
     {
         return x.signum() == 0 && y.signum() == 0;
     }
-    
+
     /**
      * returns true, if this RationalVector is equal to p_ob
      */
@@ -76,10 +76,10 @@ public class RationalVector extends Vector implements java.io.Serializable
             return false;
         }
         det = BigIntAux.determinant(y, other.y, z, other.z);
-        
+
         return (det.signum() == 0);
     }
-    
+
     /**
      * returns the Vector such that this plus this.minus() is zero
      */
@@ -87,7 +87,7 @@ public class RationalVector extends Vector implements java.io.Serializable
     {
         return new RationalVector(x.negate(), y.negate(), z);
     }
-    
+
     /**
      * adds p_other to this vector
      */
@@ -95,7 +95,7 @@ public class RationalVector extends Vector implements java.io.Serializable
     {
         return p_other.add(this);
     }
-    
+
     /**
      * Let L be the line from the Zero Vector to p_other.
      * The function returns
@@ -108,18 +108,18 @@ public class RationalVector extends Vector implements java.io.Serializable
         Side tmp = p_other.side_of(this);
         return tmp.negate();
     }
-    
+
     public boolean is_orthogonal()
     {
         return (x.signum() == 0 || y.signum() == 0);
     }
-    
+
     public boolean is_diagonal()
     {
         return x.abs().equals(y.abs());
     }
-    
-    
+
+
     /**
      * The function returns
      *   Signum.POSITIVE, if the scalar product of this vector and p_other {@literal >} 0,
@@ -130,7 +130,7 @@ public class RationalVector extends Vector implements java.io.Serializable
     {
         return p_other.projection(this);
     }
-    
+
     /**
      * calculates  the scalar product of this vector and p_other
      */
@@ -138,7 +138,7 @@ public class RationalVector extends Vector implements java.io.Serializable
     {
         return p_other.scalar_product(this);
     }
-    
+
     /**
      * approximates the coordinates of this vector by float coordinates
      */
@@ -149,13 +149,13 @@ public class RationalVector extends Vector implements java.io.Serializable
         double zd = z.doubleValue();
         return new FloatPoint( xd / zd, yd / zd);
     }
-    
+
     public Vector change_length_approx(double p_lenght)
     {
         FRLogger.warn("RationalVector: change_length_approx not yet implemented");
         return this;
     }
-    
+
     public Vector turn_90_degree(int p_factor)
     {
         int n = p_factor;
@@ -192,17 +192,17 @@ public class RationalVector extends Vector implements java.io.Serializable
         }
         return new RationalVector(new_x, new_y, this.z);
     }
-    
+
     public Vector mirror_at_y_axis()
     {
         return new RationalVector(this.x.negate(), this.y, this.z);
     }
-    
+
     public Vector mirror_at_x_axis()
     {
         return new RationalVector(this.x, this.y.negate(), this.z);
     }
-    
+
     Direction to_normalized_direction()
     {
         BigInteger dx = x;
@@ -217,26 +217,26 @@ public class RationalVector extends Vector implements java.io.Serializable
         }
         return new BigIntDirection(dx, dy);
     }
-    
+
     double scalar_product(IntVector p_other)
     {
         Vector other = new RationalVector(p_other);
         return other.scalar_product(this);
     }
-    
+
     double scalar_product(RationalVector p_other)
     {
         FloatPoint v1 = to_float();
         FloatPoint v2 = p_other.to_float();
         return v1.x * v2.x + v1.y * v2.y;
     }
-    
+
     Signum projection(IntVector p_other)
     {
         Vector other = new RationalVector(p_other);
         return other.projection(this);
     }
-    
+
     Signum projection(RationalVector p_other)
     {
         BigInteger tmp1 = x.multiply(p_other.x);
@@ -245,20 +245,20 @@ public class RationalVector extends Vector implements java.io.Serializable
         int result = tmp3.signum();
         return Signum.of(result);
     }
-    
+
     final Vector add(IntVector p_other)
     {
         RationalVector other = new RationalVector(p_other);
         return add(other);
     }
-    
+
     final Vector add(RationalVector p_other)
     {
         BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
-        
+
         BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_other.x;
         v2[1] = p_other.y;
@@ -266,7 +266,7 @@ public class RationalVector extends Vector implements java.io.Serializable
         BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
         return new RationalVector(result[0], result[1], result[2]);
     }
-    
+
     Point add_to(IntPoint p_point)
     {
         BigInteger new_x = z.multiply(BigInteger.valueOf(p_point.x));
@@ -275,29 +275,29 @@ public class RationalVector extends Vector implements java.io.Serializable
         new_y = new_y.add(y);
         return new RationalPoint(new_x, new_y, z);
     }
-    
+
     Point add_to(RationalPoint p_point)
     {
         BigInteger[] v1 = new BigInteger[3];
         v1[0] = x;
         v1[1] = y;
         v1[2] = z;
-        
+
         BigInteger[] v2 = new BigInteger[3];
         v2[0] = p_point.x;
         v2[1] = p_point.y;
         v2[2] = p_point.z;
-        
+
         BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
         return new RationalPoint(result[0], result[1], result[2]);
     }
-    
+
     Side side_of(IntVector p_other)
     {
         RationalVector other = new RationalVector(p_other);
         return side_of(other);
     }
-    
+
     Side side_of(RationalVector p_other)
     {
         BigInteger tmp_1 = y.multiply(p_other.x);
@@ -306,8 +306,8 @@ public class RationalVector extends Vector implements java.io.Serializable
         int signum = determinant.signum();
         return Side.of(signum);
     }
-    
-    
+
+
     public final BigInteger x;
     public final BigInteger y;
     public final BigInteger z;

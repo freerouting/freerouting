@@ -17,7 +17,7 @@ public class LogicalParts implements java.io.Serializable
         part_arr.add(new_part);
         return new_part;
     }
-    
+
     /**
      * Returns the logical part with the input name or null, if no such package exists.
      */
@@ -32,7 +32,7 @@ public class LogicalParts implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Returns the logical part with index p_part_no. Part numbers are from 1 to part count.
      */
@@ -45,7 +45,7 @@ public class LogicalParts implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Returns the count of logical parts.
      */
@@ -53,7 +53,7 @@ public class LogicalParts implements java.io.Serializable
     {
         return part_arr.size();
     }
-    
+
     /** The array of logical parts */
     private Vector<LogicalPart> part_arr = new Vector<LogicalPart>();
 }

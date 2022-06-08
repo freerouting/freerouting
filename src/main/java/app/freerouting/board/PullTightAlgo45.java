@@ -350,7 +350,7 @@ class PullTightAlgo45 extends PullTightAlgo
 
     /**
      *  Smoothens with a short axis parrallel line to remove a non integer corner
-     *  of two intersecting diagonal lines. 
+     *  of two intersecting diagonal lines.
      *  Returns null, if that is not possible.
      */
     private Line smoothen_non_integer_corner(Line[] p_line_arr, int p_no)
@@ -424,7 +424,7 @@ class PullTightAlgo45 extends PullTightAlgo
         {
             return null;
         }
-        
+
         Point line_a = new IntPoint(new_x, new_y);
         result = new Line(line_a, new_line_dir);
         return result;

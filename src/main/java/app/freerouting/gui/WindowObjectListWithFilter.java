@@ -8,24 +8,24 @@ import app.freerouting.logger.FRLogger;
  */
 public abstract class WindowObjectListWithFilter extends WindowObjectList
 {
-    
+
     /** Creates a new instance of ObjectListWindowWithFilter */
     public WindowObjectListWithFilter(BoardFrame p_board_frame)
     {
         super(p_board_frame);
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowObjectList", p_board_frame.get_locale());
         javax.swing.JPanel input_panel = new javax.swing.JPanel();
         this.south_panel.add(input_panel, java.awt.BorderLayout.SOUTH);
-        
+
         javax.swing.JLabel filter_label = new javax.swing.JLabel(resources.getString("filter"));
         input_panel.add(filter_label, java.awt.BorderLayout.WEST);
-        
+
         this.filter_string = new javax.swing.JTextField(10);
         this.filter_string.setText("");
         input_panel.add(filter_string, java.awt.BorderLayout.EAST);
     }
-    
+
     /**
      * Adds p_object to the list only if its name matches the filter.
      */
@@ -46,7 +46,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
             super.add_to_list(p_object);
         }
     }
-    
+
     /**
      * Returns the filter text string of this window.
      */
@@ -63,7 +63,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
         }
         return new SnapshotInfo(filter_string.getText(), selected_indices);
     }
-    
+
     public void set_snapshot_info(SnapshotInfo p_snapshot_info)
     {
         if (!p_snapshot_info.filter.equals(this.filter_string.getText()))
@@ -76,7 +76,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
             this.list.setSelectedIndices(p_snapshot_info.selected_indices);
         }
     }
-    
+
     /**
      * Saves also the filter string to disk.
      */
@@ -92,7 +92,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
         }
         super.save(p_object_stream);
     }
-    
+
     public boolean read(java.io.ObjectInputStream p_object_stream)
     {
         try
@@ -106,9 +106,9 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
         }
         return super.read(p_object_stream);
     }
-    
+
     private final javax.swing.JTextField filter_string;
-    
+
     /**
      * Information to be stored in a SnapShot.
      */
