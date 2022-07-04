@@ -13,7 +13,7 @@ plugins {
     //id "com.github.hierynomus.license" version "0.16.1"
     id 'java'
     id 'maven-publish'
-    id 'net.nemerosa.versioning' version '2.15.1'
+    id 'net.nemerosa.versioning' version '3.0.0'
     id 'com.jfrog.bintray' version '1.8.5'
     id 'com.github.ben-manes.versions' version '0.42.0'
 
