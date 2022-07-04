@@ -7,7 +7,7 @@ import java.awt.Color;
  */
 public class OtherColorTableModel extends ColorTableModel implements java.io.Serializable
 {
-    
+
     public OtherColorTableModel(java.util.Locale p_locale)
     {
         super(1, p_locale);
@@ -22,13 +22,13 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
         curr_row[ColumnNames.COMPONENT_BACK.ordinal()] = Color.red;
         curr_row[ColumnNames.LENGTH_MATCHING_AREA.ordinal()] = Color.green;
     }
-    
+
     public OtherColorTableModel(java.io.ObjectInputStream p_stream)
             throws java.io.IOException, java.lang.ClassNotFoundException
     {
         super(p_stream);
     }
-    
+
     /**
      * Copy construcror.
      */
@@ -41,50 +41,50 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
             System.arraycopy(p_item_color_model.data[i], 0, this.data[i], 0, this.data[i].length);
         }
     }
-    
-    
+
+
     public int getColumnCount()
     {
         return ColumnNames.values().length;
     }
-    
+
     public String getColumnName(int p_col)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.boardgraphics.ColorTableModel", this.locale);
         return resources.getString(ColumnNames.values()[p_col].toString());
     }
-    
+
     public boolean isCellEditable(int p_row, int p_col)
     {
         return true;
     }
-    
+
     public Color get_background_color()
     {
         return (Color)(data[0][ColumnNames.BACKGROUND.ordinal()]);
     }
-    
+
     public Color get_hilight_color()
     {
         return (Color) (data[0][ColumnNames.HIGHLIGHT.ordinal()]);
     }
-    
+
     public Color get_incomplete_color()
     {
         return (Color) (data[0][ColumnNames.INCOMPLETES.ordinal()]);
     }
-    
+
     public Color get_outline_color()
     {
         return (Color) (data[0][ColumnNames.OUTLINE.ordinal()]);
     }
-    
+
     public Color get_violations_color()
     {
         return (Color) (data[0][ColumnNames.VIOLATIONS.ordinal()]);
     }
-    
+
     public Color get_component_color(boolean p_front)
     {
         Color result;
@@ -98,37 +98,37 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
         }
         return result;
     }
-    
+
     public Color get_length_matching_area_color()
     {
         return (Color) (data[0][ColumnNames.LENGTH_MATCHING_AREA.ordinal()]);
     }
-    
+
     public void set_background_color(Color p_color)
     {
         data[0][ColumnNames.BACKGROUND.ordinal()] = p_color;
     }
-    
+
     public void set_hilight_color(Color p_color)
     {
         data[0][ColumnNames.HIGHLIGHT.ordinal()] = p_color;
     }
-    
+
     public void set_incomplete_color(Color p_color)
     {
         data[0][ColumnNames.INCOMPLETES.ordinal()] = p_color;
     }
-    
+
     public void set_violations_color(Color p_color)
     {
         data[0][ColumnNames.VIOLATIONS.ordinal()] = p_color;
     }
-    
+
     public void set_outline_color(Color p_color)
     {
         data[0][ColumnNames.OUTLINE.ordinal()] = p_color;
     }
-    
+
     public void set_component_color(Color p_color, boolean p_front)
     {
         if (p_front)
@@ -140,12 +140,12 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
             data[0][ColumnNames.COMPONENT_BACK.ordinal()] = p_color;
         }
     }
-    
+
     public void set_length_matching_area_color(Color p_color)
     {
         data[0][ColumnNames.LENGTH_MATCHING_AREA.ordinal()] = p_color;
     }
-    
+
     private enum ColumnNames
     {
         BACKGROUND, HIGHLIGHT, INCOMPLETES, VIOLATIONS, OUTLINE, COMPONENT_FRONT, COMPONENT_BACK, LENGTH_MATCHING_AREA

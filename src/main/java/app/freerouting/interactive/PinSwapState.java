@@ -27,8 +27,8 @@ public class PinSwapState extends InteractiveState
         this.from_pin = p_pin_to_swap;
         this.swappable_pins = p_pin_to_swap.get_swappable_pins();
     }
-    
-    
+
+
     public InteractiveState left_button_clicked(FloatPoint p_location)
     {
         ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
@@ -44,7 +44,7 @@ public class PinSwapState extends InteractiveState
             hdlg.screen_messages.set_status_message(resources.getString("picked_pin_expected"));
             return this.cancel();
         }
-        
+
         this.to_pin = (Pin) to_item;
         if (!swappable_pins.contains(this.to_pin))
         {
@@ -52,7 +52,7 @@ public class PinSwapState extends InteractiveState
         }
         return complete();
     }
-    
+
     public InteractiveState complete()
     {
         if (this.from_pin == null || this.to_pin == null)
@@ -106,7 +106,7 @@ public class PinSwapState extends InteractiveState
         hdlg.screen_messages.set_status_message(resources.getString("pin_swap_completed"));
         return this.return_state;
     }
-    
+
     public void draw(java.awt.Graphics p_graphics)
     {
         java.awt.Color highlight_color = hdlg.graphics_context.get_hilight_color();
@@ -117,7 +117,7 @@ public class PinSwapState extends InteractiveState
             curr_pin.draw(p_graphics, hdlg.graphics_context, highlight_color, highligt_color_intensity);
         }
     }
-    
+
     private final Pin from_pin;
     private Pin to_pin = null;
     private java.util.Set<Pin> swappable_pins;

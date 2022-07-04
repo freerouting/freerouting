@@ -64,12 +64,12 @@ public abstract class Rule
                 {
                     result.add(curr_rule);
                 }
-                
+
             }
         }
         return result;
     }
-    
+
     /**
      * Reads a LayerRule from dsn-file.
      */
@@ -118,7 +118,7 @@ public abstract class Rule
             return null;
         }
     }
-    
+
     public static WidthRule read_width_rule(IJFlexScanner p_scanner)
     {
         double value = p_scanner.next_double();
@@ -130,12 +130,12 @@ public abstract class Rule
 
         return new WidthRule(value);
     }
-    
+
     public static void write_scope(app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par) throws java.io.IOException
     {
         p_par.file.start_scope();
         p_par.file.write("rule");
-        
+
         // write the trace width
         int default_trace_half_width = p_net_class.get_trace_half_width(0);
         double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(default_trace_half_width);
@@ -152,20 +152,20 @@ public abstract class Rule
             }
         }
     }
-    
+
     private static void write_layer_rule(app.freerouting.rules.NetClass p_net_class, int p_layer_no, WriteScopeParameter p_par) throws java.io.IOException
     {
         p_par.file.start_scope();
         p_par.file.write("layer_rule ");
-        
+
         app.freerouting.board.Layer curr_board_layer = p_par.board.layer_structure.arr[p_layer_no];
-        
+
         p_par.file.write(curr_board_layer.name);
         p_par.file.start_scope();
         p_par.file.write("rule ");
-        
+
         int curr_trace_half_width = p_net_class.get_trace_half_width(p_layer_no);
-        
+
         // write the trace width
         double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(curr_trace_half_width);
         p_par.file.new_line();
@@ -175,7 +175,7 @@ public abstract class Rule
         p_par.file.end_scope();
         p_par.file.end_scope();
     }
-    
+
     /**
      * Writes the default rule as a scope to an output dsn-file.
      */
@@ -210,7 +210,7 @@ public abstract class Rule
         }
         p_par.file.end_scope();
     }
-    
+
     /**
      * Write the clearance rules, which are different from the default clearance.
      */
@@ -236,7 +236,7 @@ public abstract class Rule
             p_par.file.write("))");
         }
     }
-    
+
     public static ClearanceRule read_clearance_rule(IJFlexScanner p_scanner)
     {
         try
@@ -284,9 +284,9 @@ public abstract class Rule
             FRLogger.error("Rule.read_clearance_rule: IO error scanning file", e);
             return null;
         }
-        
+
     }
-    
+
     static public void write_item_clearance_class( String p_name, app.freerouting.datastructures.IndentFileWriter p_file,
             app.freerouting.datastructures.IdentifierType p_identifier_type) throws java.io.IOException
     {
@@ -295,7 +295,7 @@ public abstract class Rule
         p_identifier_type.write(p_name, p_file);
         p_file.write(")");
     }
-    
+
     public static class WidthRule extends Rule
     {
         public WidthRule(double p_value)
@@ -304,7 +304,7 @@ public abstract class Rule
         }
         final double value;
     }
-    
+
     public static class ClearanceRule extends Rule
     {
         public ClearanceRule(double p_value, Collection<String> p_class_pairs)
@@ -315,7 +315,7 @@ public abstract class Rule
         final double value;
         final Collection<String> clearance_class_pairs;
     }
-    
+
     public static class LayerRule
     {
         LayerRule(Collection<String> p_layer_names, Collection<Rule> p_rules)

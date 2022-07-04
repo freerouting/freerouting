@@ -12,7 +12,7 @@ import java.util.List;
  */
 public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
 {
-    
+
     /**
      * Creates a new instance of FreeSpaceExpansionRoom.
      * The shape is normally unbounded at construction time of this room.
@@ -26,7 +26,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
         layer = p_layer;
         doors = new LinkedList<ExpansionDoor>();
     }
-    
+
     /**
      * Adds p_door to the list of doors of this room.
      */
@@ -34,7 +34,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
     {
         this.doors.add(p_door);
     }
-    
+
     /**
      * Returns the list of doors of this room to neighbour expansion rooms
      */
@@ -42,7 +42,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
     {
         return this.doors;
     }
-    
+
     /**
      * Removes all doors from this room.
      */
@@ -50,7 +50,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
     {
         this.doors = new LinkedList<ExpansionDoor>();
     }
-    
+
     public void reset_doors()
     {
         for (ExpandableObject curr_door : this.doors)
@@ -58,12 +58,12 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
             curr_door.reset();
         }
     }
-    
+
     public boolean remove_door(ExpandableObject p_door)
     {
         return this.doors.remove(p_door);
     }
-    
+
     /**
      * Gets the shape of this room
      */
@@ -71,7 +71,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
     {
         return this.shape;
     }
-    
+
     /**
      * sets the shape of this room
      */
@@ -79,12 +79,12 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
     {
         this.shape = p_shape;
     }
-    
+
     public int get_layer()
     {
         return this.layer;
     }
-    
+
     /**
      * Checks, if this room has already a door to p_other
      */
@@ -105,13 +105,13 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom
         }
         return false;
     }
-    
+
     /** The layer of this room */
     private final int layer;
-    
+
     /** The shape of this room */
     private TileShape shape;
-    
+
     /** The list of doors to neighbour expansion rooms */
     private List<ExpansionDoor> doors;
 }

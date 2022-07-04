@@ -18,7 +18,7 @@ public class IdentifierType
         reserved_chars = p_reserved_chars;
         string_quote = p_string_quote;
     }
-    
+
     /**
      * Writes p_name after putting it into quotes, if it contains reserved characters or blanks.
      */
@@ -40,7 +40,7 @@ public class IdentifierType
             FRLogger.warn("IdentifierType.write: unable to write to file");
         }
     }
-    
+
     /**
      * Looks, if p_string does not contain reserved characters or blanks.
      */
@@ -60,7 +60,7 @@ public class IdentifierType
         }
         return true;
     }
-    
+
     /**
      * Puts p_sting into quotes.
      */

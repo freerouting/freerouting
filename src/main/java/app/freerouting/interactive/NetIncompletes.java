@@ -25,21 +25,21 @@ import app.freerouting.boardgraphics.GraphicsContext;
  */
 public class NetIncompletes
 {
-    
+
     /** Creates a new instance of NetIncompletes */
     public NetIncompletes(int p_net_no, Collection<Item> p_net_items, BasicBoard p_board, java.util.Locale p_locale)
     {
         this.draw_marker_radius = p_board.rules.get_min_trace_half_width() * 2;
         this.incompletes = new LinkedList<RatsNest.AirLine>();
         this.net = p_board.rules.nets.get(p_net_no);
-        
+
         // Create an array of Item-connected_set pairs.
         NetItem [] net_items = calculate_net_items(p_net_items);
         if (net_items.length <= 1)
         {
             return;
         }
-        
+
         // create a Delauny Triangulation for the net_items
         Collection<PlanarDelaunayTriangulation.Storable> triangulation_objects =
                 new LinkedList<PlanarDelaunayTriangulation.Storable>();
@@ -48,18 +48,18 @@ public class NetIncompletes
             triangulation_objects.add(curr_object);
         }
         PlanarDelaunayTriangulation triangulation = new PlanarDelaunayTriangulation(triangulation_objects);
-        
+
         // sort the result edges of the triangulation by length in ascending order.
         Collection<PlanarDelaunayTriangulation.ResultEdge> triangulation_lines = triangulation.get_edge_lines();
         SortedSet<Edge> sorted_edges = new TreeSet<Edge>();
-        
+
         for (PlanarDelaunayTriangulation.ResultEdge curr_line : triangulation_lines)
         {
             Edge new_edge = new Edge((NetItem) curr_line.start_object, curr_line.start_point.to_float(),
                     (NetItem) curr_line.end_object, curr_line.end_point.to_float());
             sorted_edges.add(new_edge);
         }
-        
+
         // Create the Airlines. Skip edges, whose from_item and to_item are already in the same connected set
         // or whose connected sets have already an airline.
         Net curr_net = p_board.rules.nets.get(p_net_no);
@@ -71,14 +71,14 @@ public class NetIncompletes
             {
                 continue; // airline exists already
             }
-            this.incompletes.add(new RatsNest.AirLine(curr_net, curr_edge.from_item.item, 
+            this.incompletes.add(new RatsNest.AirLine(curr_net, curr_edge.from_item.item,
                     curr_edge.from_corner, curr_edge.to_item.item, curr_edge.to_corner, p_locale));
             join_connected_sets(net_items, curr_edge.from_item.connected_set, curr_edge.to_item.connected_set);
         }
         calc_length_violation();
     }
-    
-    
+
+
     /**
      * Returns the number of incompletes of this net.
      */
@@ -86,7 +86,7 @@ public class NetIncompletes
     {
         return incompletes.size();
     }
-    
+
     /**
      * Recalculates the length violations.
      * Return false, if the lenght violation has not changed.
@@ -115,18 +115,18 @@ public class NetIncompletes
         boolean result = Math.abs(new_violation - old_violation) > 0.1;
         return result;
     }
-    
+
     /**
      *  Returns the length of the violation of the length restriction of the net,
      *  > 0, if the cumulative trace length is to big,
      *  < 0, if the trace length is to smalll,
-     *  0, if the thace length is ok or the net has no length restrictions 
+     *  0, if the thace length is ok or the net has no length restrictions
      */
     double  get_length_violation()
     {
         return this.length_violation;
     }
-    
+
     public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, boolean p_length_violations_only)
     {
         if (!p_length_violations_only)
@@ -164,7 +164,7 @@ public class NetIncompletes
             draw_length_violation_marker(curr_pin.get_center().to_float(), this.length_violation, p_graphics, p_graphics_context);
         }
     }
-    
+
     static void draw_layer_change_marker(FloatPoint p_location, double p_radius, Graphics p_graphics, GraphicsContext p_graphics_context)
     {
         final int draw_width = 1;
@@ -178,7 +178,7 @@ public class NetIncompletes
         draw_points[1] = new FloatPoint(p_location.x - p_radius, p_location.y + p_radius);
         p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
     }
-    
+
     static void draw_length_violation_marker  (FloatPoint p_location, double p_diameter, Graphics p_graphics, GraphicsContext p_graphics_context)
     {
         final int draw_width = 1;
@@ -198,7 +198,7 @@ public class NetIncompletes
             p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
         }
     }
-    
+
     /**
      * Calculates an array of Item-connected_set pairs for the items of this net.
      * Pairs belonging to the same connected set are located next to each other.
@@ -224,19 +224,19 @@ public class NetIncompletes
                 ++curr_index;
             }
         }
-        
+
         if (curr_index > input_size)
         {
-            FRLogger.warn("NetIncompletes.calculate_net_items: too many items"); 
+            FRLogger.warn("NetIncompletes.calculate_net_items: too many items");
         }
         else if (curr_index < input_size)
         {
             FRLogger.warn("NetIncompletes.calculate_net_items: too few items");
-        } 
-        
+        }
+
         return result.toArray(new NetItem [result.size()]);
     }
-    
+
     /**
      * Joins p_from_connected_set to p_to_connected_set and updates the connected sets of the items in p_net_items.
      */
@@ -252,21 +252,21 @@ public class NetIncompletes
             }
         }
     }
-    
+
     /** Collection of elements of class AirLine. */
     final Collection<RatsNest.AirLine> incompletes;
-    
+
     /**
      * The length of the violation of the length restriction of the net,
      *  > 0, if the cumulative trace length is to big,
      *  < 0, if the trace length is to smalll,
-     *  0, if the thace length is ok or the net has no length restrictions 
+     *  0, if the thace length is ok or the net has no length restrictions
      */
     private double length_violation = 0;
-    
+
     private final Net net;
     private final double draw_marker_radius;
-    
+
     private static class Edge implements Comparable<Edge>
     {
         private Edge(NetItem p_from_item, FloatPoint p_from_corner, NetItem p_to_item, FloatPoint p_to_corner)
@@ -277,13 +277,13 @@ public class NetIncompletes
             to_corner =  p_to_corner;
             length_square = p_to_corner.distance_square(p_from_corner);
         }
-        
+
         public final NetItem from_item;
         public final FloatPoint from_corner;
         public final NetItem to_item;
         public final FloatPoint to_corner;
         public final double length_square;
-        
+
         public int compareTo(Edge p_other)
         {
             double result = this.length_square - p_other.length_square;
@@ -307,7 +307,7 @@ public class NetIncompletes
             return app.freerouting.datastructures.Signum.as_int(result);
         }
     }
-    
+
     private static class NetItem implements PlanarDelaunayTriangulation.Storable
     {
         NetItem(Item p_item, Collection<Item> p_connected_set)
@@ -315,14 +315,14 @@ public class NetIncompletes
             item = p_item;
             connected_set = p_connected_set;
         }
-        
+
         public Point[] get_triangulation_corners()
         {
             return this.item.get_ratsnest_corners();
         }
-        
+
         final Item item;
         Collection<Item> connected_set;
-        
+
     }
 }

@@ -162,7 +162,7 @@ public class Via extends DrillItem implements java.io.Serializable
         this.precalculated_shapes = null;
         this.autoroute_drill_info = null;
     }
-    
+
     public void clear_autoroute_info()
     {
         super.clear_autoroute_info();

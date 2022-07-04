@@ -196,10 +196,10 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     public Object clone()
     {
         Item dup = copy(this.get_id_no());
-        
+
         dup.on_the_board = this.on_the_board;
         //dup.search_trees_info = this.search_trees_info;
-        
+
         return dup;
     }
 
@@ -680,7 +680,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * Returns all traces and vias from this item until the next fork or terminal item. 
+     * Returns all traces and vias from this item until the next fork or terminal item.
      */
     public Set<Item> get_connection_items()
     {
@@ -688,7 +688,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     /**
-     * Returns all traces and vias from this item until the next fork or terminal item. 
+     * Returns all traces and vias from this item until the next fork or terminal item.
      * If p_stop_option == StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout via,
      * If p_stop_option == StopConnectionOption.VIA, the algorithm will stop at any via.
      */

@@ -2,7 +2,7 @@ package app.freerouting.rules;
 
 public class DefaultItemClearanceClasses implements java.io.Serializable
 {
-    
+
     /** Creates a new instance of DefaultItemClearancesClasses */
     public DefaultItemClearanceClasses()
     {
@@ -11,7 +11,7 @@ public class DefaultItemClearanceClasses implements java.io.Serializable
             arr[i] = 1;
         }
     }
-    
+
     public DefaultItemClearanceClasses(DefaultItemClearanceClasses p_classes)
     {
         for (int i = 1; i < ItemClass.values().length; ++i)
@@ -19,7 +19,7 @@ public class DefaultItemClearanceClasses implements java.io.Serializable
             arr[i] = p_classes.arr[i];
         }
     }
-    
+
     /**
      *  Used in the function get_default_clearance_class to get the
      *  default claearance classes for item classes.
@@ -28,7 +28,7 @@ public class DefaultItemClearanceClasses implements java.io.Serializable
     {
         NONE, TRACE, VIA, PIN, SMD, AREA
     }
-    
+
     /**
      * Returns the number of the default clearance class for the input item class.
      */
@@ -36,7 +36,7 @@ public class DefaultItemClearanceClasses implements java.io.Serializable
     {
         return this.arr[p_item_class.ordinal()];
     }
-    
+
     /**
      * Sets the index of the default clearance class of the input item class
      * in the clearance matrix to p_index.
@@ -45,7 +45,7 @@ public class DefaultItemClearanceClasses implements java.io.Serializable
     {
         this.arr[p_item_class.ordinal()] = p_index;
     }
-    
+
     /**
      * Sets the indices of all default item clearance classes to p_index.
      */
@@ -56,6 +56,6 @@ public class DefaultItemClearanceClasses implements java.io.Serializable
             arr[i] = p_index;
         }
     }
-    
+
     private final int[] arr = new int[ItemClass.values().length];
 }

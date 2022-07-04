@@ -17,7 +17,7 @@ public class Padstacks implements java.io.Serializable
         board_layer_structure = p_layer_structure;
         padstack_arr = new Vector<Padstack>();
     }
-    
+
     /**
      * Returns the padstack with the input name or null,
      * if no such padstack exists.
@@ -35,7 +35,7 @@ public class Padstacks implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Returns the count of Padstacks in this object.
      */
@@ -43,7 +43,7 @@ public class Padstacks implements java.io.Serializable
     {
         return padstack_arr.size();
     }
-    
+
     /**
      * Returns the padstack with index p_padstack_no for 1 {@literal <}= p_padstack_no {@literal <}= padstack_count
      */
@@ -62,7 +62,7 @@ public class Padstacks implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Appends a new padstack with the input shapes to this padstacks.
      * p_shapes is an array of dimension board layer_count.
@@ -76,7 +76,7 @@ public class Padstacks implements java.io.Serializable
         padstack_arr.add(new_padstack);
         return new_padstack;
     }
-    
+
     /**
      * Appends a new padstack with the input shapes to this padstacks.
      * p_shapes is an array of dimension board layer_count.
@@ -87,7 +87,7 @@ public class Padstacks implements java.io.Serializable
         String new_name = "padstack#" + (Integer.valueOf(padstack_arr.size() + 1).toString());
         return add(new_name, p_shapes, false, false);
     }
-    
+
     /**
      * Appends a new padstack withe the input shape from p_from_layer to p_to_layer
      * and null on the other layers.
@@ -104,10 +104,10 @@ public class Padstacks implements java.io.Serializable
         }
         return add(shape_arr);
     }
-    
+
     /** The array of Padstacks in this object */
     private Vector<Padstack> padstack_arr;
-    
+
     /** The layer structure of each padstack. */
     public final app.freerouting.board.LayerStructure board_layer_structure;
 }

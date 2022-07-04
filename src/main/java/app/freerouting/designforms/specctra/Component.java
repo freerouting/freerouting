@@ -8,13 +8,13 @@ import app.freerouting.logger.FRLogger;
  */
 public class Component extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of Component */
     public Component()
     {
         super("component");
     }
-    
+
     /**
      * Overwrites the function read_scope in ScopeKeyword
      */
@@ -36,7 +36,7 @@ public class Component extends ScopeKeyword
         }
         return true;
     }
-    
+
     /**
      * Used also when reading a session file.
      */
@@ -67,7 +67,7 @@ public class Component extends ScopeKeyword
         }
         return component_placement;
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par, app.freerouting.board.Component p_component)
     throws java.io.IOException
     {
@@ -107,7 +107,7 @@ public class Component extends ScopeKeyword
         write_keepout_infos(p_par, p_component);
         p_par.file.end_scope();
     }
-    
+
     private static void write_pin_info(WriteScopeParameter p_par, app.freerouting.board.Component p_component, int p_pin_no)
     throws java.io.IOException
     {
@@ -140,7 +140,7 @@ public class Component extends ScopeKeyword
         p_par.identifier_type.write(cl_class_name, p_par.file);
         p_par.file.write("))");
     }
-    
+
     private static void write_keepout_infos(WriteScopeParameter p_par, app.freerouting.board.Component p_component)
     throws java.io.IOException
     {
@@ -190,7 +190,7 @@ public class Component extends ScopeKeyword
             }
         }
     }
-    
+
     private static app.freerouting.board.ObstacleArea get_keepout(app.freerouting.board.BasicBoard p_board, int p_component_no, String p_name)
     {
         java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
@@ -212,9 +212,9 @@ public class Component extends ScopeKeyword
         }
         return null;
     }
-    
-    
-    
+
+
+
     private static ComponentPlacement.ComponentLocation read_place_scope(IJFlexScanner p_scanner)
     {
         try
@@ -348,7 +348,7 @@ public class Component extends ScopeKeyword
             return null;
         }
     }
-    
+
     private static  ComponentPlacement.ItemClearanceInfo read_item_clearance_info(IJFlexScanner p_scanner) throws java.io.IOException
     {
         p_scanner.yybegin(SpecctraDsnFileReader.NAME);
@@ -386,7 +386,7 @@ public class Component extends ScopeKeyword
         }
         return new ComponentPlacement.ItemClearanceInfo(name, cl_class_name);
     }
-    
+
     private static boolean read_lock_type(IJFlexScanner p_scanner) throws java.io.IOException
     {
         boolean result = false;

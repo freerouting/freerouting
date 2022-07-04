@@ -11,31 +11,31 @@ public class IntDirection extends Direction implements java.io.Serializable
     {
         return ( x == 0 || y == 0 ) ;
     }
-    
+
     public boolean is_diagonal()
     {
         return ( Math.abs(x) == Math.abs(y) ) ;
     }
-    
+
     public Vector get_vector()
     {
         return new IntVector(x,y);
     }
-    
+
     IntDirection(int p_x, int p_y)
     {
         x = p_x;
         y = p_y;
     }
-    
+
     IntDirection(IntVector p_vector)
     {
         x = p_vector.x;
         y = p_vector.y;
     }
-    
-    
-    
+
+
+
     int compareTo( IntDirection p_other )
     {
         if (y > 0)
@@ -81,19 +81,19 @@ public class IntDirection extends Direction implements java.io.Serializable
             }
             return 0;
         }
-        
+
         // now this direction and p_other are located in the same
         // open horizontal half plane
-        
+
         double determinant = (double) p_other.x * y - (double) p_other.y * x;
         return Signum.as_int(determinant);
     }
-    
+
     public Direction opposite()
     {
         return new IntDirection(-x, -y);
     }
-    
+
     public Direction turn_45_degree(int p_factor)
     {
         int n = p_factor % 8 ;
@@ -139,8 +139,8 @@ public class IntDirection extends Direction implements java.io.Serializable
         }
         return new IntDirection(new_x, new_y) ;
     }
-    
-    
+
+
     /**
      * Implements the Comparable interface.
      * Returns 1, if this direction has a strict bigger angle with
@@ -153,17 +153,17 @@ public class IntDirection extends Direction implements java.io.Serializable
     {
         return -p_other_direction.compareTo(this);
     }
-    
+
     int compareTo(BigIntDirection p_other)
     {
         return -(p_other.compareTo(this));
     }
-    
+
     final double determinant(IntDirection p_other)
     {
         return (double)x * p_other.y - (double)y * p_other.x;
-    }    
-        
+    }
+
     public final int x;
     public final int y;
 }

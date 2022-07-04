@@ -19,7 +19,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class MinAreaTree extends ShapeTree
 {
-    
+
     /**
      * Constructor with a fixed set of directions defining the keys and and
      * the surrounding shapes
@@ -28,7 +28,7 @@ public class MinAreaTree extends ShapeTree
     {
         super(p_directions);
     }
-    
+
     /**
      * Calculates the objects in this tree, which overlap with p_shape
      */
@@ -64,27 +64,27 @@ public class MinAreaTree extends ShapeTree
         }
         return found_overlaps ;
     }
-    
-    
+
+
     void insert(Leaf p_leaf)
     {
         ++this.leaf_count;
-        
+
         // Tree is empty - just insert the new leaf
         if ( root == null )
         {
             root = p_leaf ;
             return;
         }
-        
+
         // Non-empty tree - do a recursive location for leaf replacement
         Leaf leaf_to_replace = position_locate(root, p_leaf) ;
-        
+
         // Construct a new node - whenever a leaf is added so is a new node
         RegularTileShape new_bounds = p_leaf.bounding_shape.union(leaf_to_replace.bounding_shape) ;
         InnerNode curr_parent = leaf_to_replace.parent;
         InnerNode new_node = new InnerNode(new_bounds, curr_parent) ;
-        
+
         if ( leaf_to_replace.parent!= null )
         {
             // Replace the pointer from the parent to the leaf with our new node
@@ -100,37 +100,37 @@ public class MinAreaTree extends ShapeTree
         // Update the parent pointers of the old leaf and new leaf to point to new node
         leaf_to_replace.parent = new_node ;
         p_leaf.parent = new_node ;
-        
+
         // Insert the children in any order.
         new_node.first_child = leaf_to_replace ;
         new_node.second_child = p_leaf ;
-        
+
         if (root == leaf_to_replace)
         {
             root = new_node;
         }
     }
-    
+
     private Leaf position_locate(TreeNode p_curr_node, Leaf p_leaf_to_insert)
     {
         TreeNode curr_node = p_curr_node;
-        
+
         while (!(curr_node instanceof Leaf))
         {
             InnerNode curr_inner_node = (InnerNode) curr_node;
             curr_inner_node.bounding_shape = p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape) ;
-            
+
             // Choose the the child, so that the area increase of that child after taking the union
             // with the shape of p_leaf_to_insert is minimal.
-            
+
             RegularTileShape first_child_shape = curr_inner_node.first_child.bounding_shape;
             RegularTileShape union_with_first_child_shape = p_leaf_to_insert.bounding_shape.union(first_child_shape);
             double first_area_increase = union_with_first_child_shape.area()- first_child_shape.area();
-            
+
             RegularTileShape second_child_shape = curr_inner_node.second_child.bounding_shape;
             RegularTileShape union_with_second_child_shape = p_leaf_to_insert.bounding_shape.union(second_child_shape);
             double second_area_increase =  union_with_second_child_shape.area()  - second_child_shape.area();
-            
+
             if (first_area_increase <= second_area_increase)
             {
                 curr_node = curr_inner_node.first_child ;
@@ -142,7 +142,7 @@ public class MinAreaTree extends ShapeTree
         }
         return (Leaf) curr_node;
     }
-    
+
     /**
      * removes an entry from this tree
      */
@@ -206,7 +206,7 @@ public class MinAreaTree extends ShapeTree
         parent.first_child = null;
         parent.second_child = null;
         parent.bounding_shape = null;
-        
+
         // recalculate the bounding shapes of the ancestors
         // as long as it gets smaller after removing p_leaf
         InnerNode node_to_recalculate = grand_parent;
@@ -218,13 +218,13 @@ public class MinAreaTree extends ShapeTree
             {
                 // the new bounds are not smaller, no further recalculate nessesary
                 break;
-                
+
             }
             node_to_recalculate.bounding_shape = new_bounds;
             node_to_recalculate =  node_to_recalculate.parent;
         }
     }
-    
+
     protected ArrayStack<TreeNode> node_stack = new ArrayStack<TreeNode> (10000);
 }
 

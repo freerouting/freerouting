@@ -15,7 +15,7 @@ public class ItemSelectionFilter implements java.io.Serializable
     {
         TRACES, VIAS, PINS, CONDUCTION, KEEPOUT, VIA_KEEPOUT, COMPONENT_KEEPOUT, BOARD_OUTLINE, FIXED, UNFIXED
     }
-    
+
     /**
      * Creates a new filter with all item types selected.
      */
@@ -29,7 +29,7 @@ public class ItemSelectionFilter implements java.io.Serializable
         this.values[SelectableChoices.CONDUCTION.ordinal()] = false;
         this.values[SelectableChoices.BOARD_OUTLINE.ordinal()] = false;
     }
-    
+
     /**
      * Creates a new filter with only p_item_type selected.
      */
@@ -41,7 +41,7 @@ public class ItemSelectionFilter implements java.io.Serializable
         values[SelectableChoices.FIXED.ordinal()] = true;
         values[SelectableChoices.UNFIXED.ordinal()] = true;
     }
-    
+
     /**
      * Creates a new filter with only p_item_types selected.
      */
@@ -56,7 +56,7 @@ public class ItemSelectionFilter implements java.io.Serializable
         values[SelectableChoices.FIXED.ordinal()] = true;
         values[SelectableChoices.UNFIXED.ordinal()] = true;
     }
-    
+
     /**
      * Copy constructor
      */
@@ -68,7 +68,7 @@ public class ItemSelectionFilter implements java.io.Serializable
             this.values[i] = p_item_selection_filter.values[i];
         }
     }
-    
+
     /**
      * Selects or deselects an item type
      */
@@ -76,7 +76,7 @@ public class ItemSelectionFilter implements java.io.Serializable
     {
         values[p_choice.ordinal()] = p_value;
     }
-    
+
     /**
      * Selects all item types.
      */
@@ -84,7 +84,7 @@ public class ItemSelectionFilter implements java.io.Serializable
     {
         java.util.Arrays.fill(values, true);
     }
-    
+
     /**
      * Deselects all item types.
      */
@@ -92,7 +92,7 @@ public class ItemSelectionFilter implements java.io.Serializable
     {
         java.util.Arrays.fill(values, false);
     }
-    
+
     /**
      * Filters a collection of items with this filter.
      */
@@ -108,7 +108,7 @@ public class ItemSelectionFilter implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Looks, if the input item type is selected.
      */
@@ -116,7 +116,7 @@ public class ItemSelectionFilter implements java.io.Serializable
     {
         return values[p_choice.ordinal()];
     }
-    
+
     /** the filter array of the item types */
     private final boolean[] values;
 }

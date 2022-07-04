@@ -22,7 +22,7 @@ public class SearchTreeManager
         compensated_search_trees.add(default_tree);
         this.clearance_compensation_used = false;
     }
-    
+
     /**
      * Inserts the tree shapes of p_item into all active search trees.
      */
@@ -34,7 +34,7 @@ public class SearchTreeManager
         }
         p_item.set_on_the_board(true);
     }
-    
+
     /**
      * Removes all entries of an item from the search trees.
      */
@@ -46,7 +46,7 @@ public class SearchTreeManager
         }
         for (ShapeSearchTree curr_tree : compensated_search_trees)
         {
-            
+
             ShapeTree.Leaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
             {
                 if (curr_tree_entries != null)
@@ -58,7 +58,7 @@ public class SearchTreeManager
         p_item.clear_search_tree_entries();
         p_item.set_on_the_board(false);
     }
-    
+
     /**
      * Returns the default tree used in interactive routing.
      */
@@ -66,13 +66,13 @@ public class SearchTreeManager
     {
         return default_tree;
     }
-    
+
     boolean validate_entries(Item p_item)
     {
         boolean result = true;
         for (ShapeSearchTree curr_tree : compensated_search_trees)
         {
-            
+
             if (!curr_tree.validate_entries(p_item))
             {
                 result = false;
@@ -80,7 +80,7 @@ public class SearchTreeManager
         }
         return result;
     }
-    
+
     /**
      * Returns, if clearance compensation is used for the default tree.
      * This is normally the case, if there exist only the clearance classes null and default
@@ -90,7 +90,7 @@ public class SearchTreeManager
     {
         return this.clearance_compensation_used;
     }
-    
+
     /**
      * Sets the usage of clearance compensation to true or false.
      */
@@ -100,7 +100,7 @@ public class SearchTreeManager
         {
             return;
         }
-        
+
         this.clearance_compensation_used = p_value;
         remove_all_board_items();
         this.compensated_search_trees.clear();
@@ -117,7 +117,7 @@ public class SearchTreeManager
         this.compensated_search_trees.add(default_tree);
         insert_all_board_items();
     }
-    
+
     /**
      * Actions to be done, when a value in the clearance matrix is changed interactively.
      */
@@ -139,7 +139,7 @@ public class SearchTreeManager
             insert_all_board_items();
         }
     }
-    
+
     /**
      * Actions to be done, when a new clearance class is removed interactively.
      */
@@ -160,7 +160,7 @@ public class SearchTreeManager
             }
         }
     }
-    
+
     /**
      * Returns the tree compensated for the clearance class with number p_clearance_vlass_no.
      * Initialized the tree, if it is not yet allocated.
@@ -202,7 +202,7 @@ public class SearchTreeManager
         }
         return curr_autoroute_tree;
     }
-    
+
     /**
      * Clears all compensated trees used in the autoroute algorithm apart from the default tree.
      */
@@ -218,14 +218,14 @@ public class SearchTreeManager
             }
         }
     }
-    
+
     /** Reinsert all items into the search trees */
     void reinsert_tree_items()
     {
         remove_all_board_items();
         insert_all_board_items();
     }
-    
+
     private void remove_all_board_items()
     {
         if (this.board == null)
@@ -244,7 +244,7 @@ public class SearchTreeManager
             this.remove(curr_item);
         }
     }
-    
+
     private void insert_all_board_items()
     {
         if (this.board == null)
@@ -264,13 +264,13 @@ public class SearchTreeManager
             this.insert(curr_item);
         }
     }
-    
+
     //********************************************************************************
-    
+
     // The following functions are used internally for perfomance improvement.
-    
+
     //********************************************************************************
-    
+
     /**
      * Merges the tree entries from p_from_trace in front of p_to_trace.
      * Special implementation for combine trace for performance reasons.
@@ -283,7 +283,7 @@ public class SearchTreeManager
             curr_tree.merge_entries_in_front(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
         }
     }
-    
+
     /**
      * Merges the tree entries from p_from_trace to the end of p_to_trace.
      * Special implementation for combine trace for performance reasons.
@@ -296,7 +296,7 @@ public class SearchTreeManager
             curr_tree.merge_entries_at_end(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
         }
     }
-    
+
     /**
      * Changes the tree entries from p_keep_at_start_count + 1
      * to new_shape_count - 1 - keep_at_end_count to p_changed_entries.
@@ -310,7 +310,7 @@ public class SearchTreeManager
             curr_tree.change_entries(p_obj, p_new_polyline, p_keep_at_start_count, p_keep_at_end_count);
         }
     }
-    
+
     /**
      * Trannsfers tree entries from p_from_trace to p_start and p_end_piece
      * after a moddle piece was cut out.
@@ -320,16 +320,16 @@ public class SearchTreeManager
     {
         for (ShapeSearchTree curr_tree : compensated_search_trees)
         {
-            
+
             curr_tree.reuse_entries_after_cutout(p_from_trace, p_start_piece, p_end_piece);
         }
     }
-    
+
     private final Collection<ShapeSearchTree> compensated_search_trees;
-    
+
     private ShapeSearchTree default_tree;
-    
+
     private final BasicBoard board;
-    
+
     private boolean clearance_compensation_used;
 }

@@ -45,14 +45,15 @@ public class MainApplication extends javax.swing.JFrame {
             FRLogger.error(ex.getLocalizedMessage(), ex);
         }
 
-        FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
-        FRLogger.debug(" version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
-        FRLogger.debug(" command line arguments: '" + String.join(" ", args) + "'");
-        FRLogger.debug(" architecture: " + System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version"));
-        FRLogger.debug(" java: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
-        FRLogger.debug(" language: " + Locale.getDefault().getLanguage() + "," + Locale.getDefault());
-        FRLogger.debug(" hardware: " + Runtime.getRuntime().availableProcessors() + " CPU cores," + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB RAM");
-        FRLogger.debug(" UTC time: " + Instant.now().toString());
+        FRLogger.info("\nFreerouting " + VERSION_NUMBER_STRING + "\n\n");
+
+        FRLogger.debug(" Version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
+        FRLogger.debug(" Command line arguments: '" + String.join(" ", args) + "'");
+        FRLogger.debug(" Architecture: " + System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version"));
+        FRLogger.debug(" Java: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
+        FRLogger.debug(" Language: " + Locale.getDefault().getLanguage() + "," + Locale.getDefault());
+        FRLogger.debug(" Hardware: " + Runtime.getRuntime().availableProcessors() + " CPU cores," + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB RAM");
+        FRLogger.debug(" UTC Time: " + Instant.now().toString());
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         StartupOptions startupOptions = StartupOptions.parse(args);
@@ -60,7 +61,7 @@ public class MainApplication extends javax.swing.JFrame {
         java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", startupOptions.current_locale);
         if (startupOptions.show_help_option)
         {
-            FRLogger.info(resources.getString("command_line_help"));
+            System.out.print(resources.getString("command_line_help"));
             System.exit(0);
             return;
         }
@@ -213,6 +214,7 @@ public class MainApplication extends javax.swing.JFrame {
         sample_board_button = new javax.swing.JButton();
         open_board_button = new javax.swing.JButton();
         restore_defaults_button = new javax.swing.JButton();
+
         message_field = new javax.swing.JTextField();
         message_field.setText(resources.getString("command_line_missing_input"));
         this.window_net_demonstrations = new WindowNetDemonstrations(locale);
@@ -271,14 +273,18 @@ public class MainApplication extends javax.swing.JFrame {
             main_panel.add(restore_defaults_button, gridbag_constraints);
         }
 
-        message_field.setPreferredSize(new java.awt.Dimension(400, 20));
+        int window_width = 620;
+        int window_height = 300;
+
+        message_field.setPreferredSize(new java.awt.Dimension(window_width - 40, 100));
         message_field.setRequestFocusEnabled(false);
         gridbag.setConstraints(message_field, gridbag_constraints);
         main_panel.add(message_field, gridbag_constraints);
 
         this.addWindowListener(new WindowStateListener());
         pack();
-        setSize(620, 300);
+        setSize(window_width, window_height);
+        setResizable(false);
     }
 
     /**
@@ -444,9 +450,9 @@ public class MainApplication extends javax.swing.JFrame {
     private String hybrid_ratio;
     private ItemSelectionStrategy item_selection_strategy;
     private int num_threads;
-    // Issue: adding a new field into AutorouteSettings caused exception when loading 
+    // Issue: adding a new field into AutorouteSettings caused exception when loading
     // an existing design: "Couldn't read design file", "InvalidClassException", incompatible with serialized data
-    // so choose to pass this parameter through BoardHandling 
+    // so choose to pass this parameter through BoardHandling
 
     private final boolean is_test_version;
     private final boolean is_webstart;

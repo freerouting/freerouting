@@ -5,12 +5,12 @@ package app.freerouting.gui;
  */
 class PupupMenuCornerItemConstruction extends javax.swing.JPopupMenu
 {
-    
+
     /** Creates a new instance of CornerItemConstructionPopupMenu */
     PupupMenuCornerItemConstruction(BoardFrame p_board_frame)
     {
         this.board_panel = p_board_frame.board_panel;
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
         javax.swing.JMenuItem add_corner_item = new javax.swing.JMenuItem();
         add_corner_item.setText(resources.getString("add_corner"));
@@ -24,9 +24,9 @@ class PupupMenuCornerItemConstruction extends javax.swing.JPopupMenu
                 board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
             }
         });
-        
+
         this.add(add_corner_item);
-        
+
         javax.swing.JMenuItem close_item = new javax.swing.JMenuItem();
         close_item.setText(resources.getString("close"));
         close_item.addActionListener(new java.awt.event.ActionListener()
@@ -36,9 +36,9 @@ class PupupMenuCornerItemConstruction extends javax.swing.JPopupMenu
                 board_panel.board_handling.return_from_state();
             }
         });
-        
+
         this.add(close_item);
-        
+
         javax.swing.JMenuItem cancel_item = new javax.swing.JMenuItem();
         cancel_item.setText(resources.getString("cancel"));
         cancel_item.addActionListener(new java.awt.event.ActionListener()
@@ -48,9 +48,9 @@ class PupupMenuCornerItemConstruction extends javax.swing.JPopupMenu
                 board_panel.board_handling.cancel_state();
             }
         });
-        
+
         this.add(cancel_item);
     }
-    
+
     private final BoardPanel board_panel;
 }

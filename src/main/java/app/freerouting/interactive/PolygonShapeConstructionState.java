@@ -21,7 +21,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
     {
         return new PolygonShapeConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
     }
-    
+
     /** Creates a new instance of PolygonShapeConstructionState */
     private PolygonShapeConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
@@ -32,7 +32,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
         }
         this.add_corner(p_location);
     }
-    
+
     /**
      * Inserts the polygon shape item into the board, if possible
      * and returns to the main state
@@ -93,10 +93,10 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
         }
         return this.return_state;
     }
-    
+
     public void display_default_message()
     {
         hdlg.screen_messages.set_status_message(resources.getString("creating_polygonshape"));
     }
-    
+
 }

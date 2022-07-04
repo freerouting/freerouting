@@ -14,7 +14,7 @@ import java.util.LinkedList;
  */
 public class PolygonShape extends PolylineShape
 {
-    
+
     /** Creates a new instance of PolygonShape */
     public PolygonShape(Polygon p_polygon)
     {
@@ -26,7 +26,7 @@ public class PolygonShape extends PolylineShape
         }
         Point [] curr_corners = curr_polygon.corner_array();
         int last_corner_no = curr_corners.length - 1;
-        
+
         if (last_corner_no > 0)
         {
             if (curr_corners[0].equals(curr_corners[last_corner_no]))
@@ -35,9 +35,9 @@ public class PolygonShape extends PolylineShape
                 --last_corner_no;
             }
         }
-        
+
         boolean last_point_collinear = false;
-        
+
         if (last_corner_no >= 2)
         {
             last_point_collinear =
@@ -49,17 +49,17 @@ public class PolygonShape extends PolylineShape
             // skip last point
             --last_corner_no;
         }
-        
+
         int first_corner_no = 0;
         boolean first_point_collinear = false;
-        
+
         if (last_corner_no - first_corner_no >= 2)
         {
             first_point_collinear =
                     curr_corners[0].side_of(curr_corners[1], curr_corners[last_corner_no])
                     == Side.COLLINEAR;
         }
-        
+
         if (first_point_collinear)
         {
             // skip first point
@@ -93,14 +93,14 @@ public class PolygonShape extends PolylineShape
         }
         corners = result;
     }
-    
-    
+
+
     public PolygonShape(Point[] p_corner_arr)
     {
         this(new Polygon(p_corner_arr));
     }
-    
-    
+
+
     public Point corner(int p_no)
     {
         if (p_no < 0 || p_no >= corners.length)
@@ -110,22 +110,22 @@ public class PolygonShape extends PolylineShape
         }
         return corners[p_no];
     }
-    
+
     public int border_line_count()
     {
         return corners.length;
     }
-    
+
     public boolean corner_is_bounded(int p_no)
     {
         return true;
     }
-    
+
     public boolean intersects(Shape p_shape)
     {
         return p_shape.intersects(this);
     }
-    
+
     public boolean intersects(Circle p_circle)
     {
         TileShape[] convex_pieces = split_to_convex();
@@ -136,7 +136,7 @@ public class PolygonShape extends PolylineShape
         }
         return false;
     }
-    
+
     public boolean intersects(Simplex p_simplex)
     {
         TileShape[] convex_pieces = split_to_convex();
@@ -147,7 +147,7 @@ public class PolygonShape extends PolylineShape
         }
         return false;
     }
-    
+
     public boolean intersects(IntOctagon p_oct)
     {
         TileShape[] convex_pieces = split_to_convex();
@@ -158,7 +158,7 @@ public class PolygonShape extends PolylineShape
         }
         return false;
     }
-    
+
     public boolean intersects(IntBox p_box)
     {
         TileShape[] convex_pieces = split_to_convex();
@@ -169,13 +169,13 @@ public class PolygonShape extends PolylineShape
         }
         return false;
     }
-    
+
     public Polyline[] cutout(Polyline p_polyline)
     {
         FRLogger.warn("PolygonShape.cutout not yet implemented");
         return null;
     }
-    
+
     public PolygonShape enlarge(double p_offset)
     {
         if (p_offset == 0)
@@ -185,18 +185,18 @@ public class PolygonShape extends PolylineShape
         FRLogger.warn("PolygonShape.enlarge not yet implemented");
         return null;
     }
-    
+
     public double border_distance(FloatPoint p_point)
     {
         FRLogger.warn("PolygonShape.border_distance not yet implemented");
         return 0;
     }
-    
+
     public double smallest_radius()
     {
         return border_distance(centre_of_gravity());
     }
-    
+
     public boolean contains(FloatPoint p_point)
     {
         TileShape[] convex_pieces = split_to_convex();
@@ -207,7 +207,7 @@ public class PolygonShape extends PolylineShape
         }
         return false;
     }
-    
+
     public boolean contains_inside(Point p_point)
     {
         if (contains_on_border(p_point))
@@ -216,7 +216,7 @@ public class PolygonShape extends PolylineShape
         }
         return !is_outside(p_point);
     }
-    
+
     public boolean is_outside(Point p_point)
     {
         TileShape[] convex_pieces = split_to_convex();
@@ -227,18 +227,18 @@ public class PolygonShape extends PolylineShape
         }
         return true;
     }
-    
+
     public boolean contains(Point p_point)
     {
         return !is_outside(p_point);
     }
-    
+
     public boolean contains_on_border(Point p_point)
     {
         //FRLogger.warn("PolygonShape.contains_on_edge not yet implemented");
         return false;
     }
-    
+
     public double distance(FloatPoint p_point)
     {
         FRLogger.warn("PolygonShape.distance not yet implemented");
@@ -257,12 +257,12 @@ public class PolygonShape extends PolylineShape
         }
         return new PolygonShape(new_corners);
     }
-    
+
     public RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs)
     {
         return p_dirs.bounds(this);
     }
-    
+
     public IntBox bounding_box()
     {
         if (precalculated_bounding_box == null)
@@ -304,11 +304,11 @@ public class PolygonShape extends PolylineShape
                 ly = Math.min(ly, curr.y);
                 rx = Math.max(rx, curr.x);
                 uy = Math.max(uy, curr.y);
-                
+
                 double tmp = curr.x - curr.y;
                 ulx = Math.min(ulx, tmp);
                 lrx = Math.max(lrx, tmp);
-                
+
                 tmp = curr.x + curr.y;
                 llx = Math.min(llx, tmp);
                 urx = Math.max(urx, tmp);
@@ -321,7 +321,7 @@ public class PolygonShape extends PolylineShape
         }
         return precalculated_bounding_octagon;
     }
-    
+
     /**
      * Checks, if every line segment between 2 points of the shape is contained
      * completely in the shape.
@@ -333,7 +333,7 @@ public class PolygonShape extends PolylineShape
         Point prev_point = corners[corners.length - 1];
         Point curr_point = corners[0];
         Point next_point = corners[1];
-        
+
         for (int ind = 0; ind < corners.length; ++ind)
         {
             if (next_point.side_of(prev_point, curr_point) == Side.ON_THE_RIGHT)
@@ -346,13 +346,13 @@ public class PolygonShape extends PolylineShape
                 next_point = corners[ind + 2];
         }
         // check, if the sum of the interior angles is at most 2 * pi
-        
+
         Line first_line = new Line(corners[corners.length - 1], corners[0]);
         Line curr_line = new Line(corners[0], corners[1]);
         IntDirection first_direction = (IntDirection)first_line.direction();
         IntDirection curr_direction = (IntDirection)curr_line.direction();
         double last_det = first_direction.determinant(curr_direction);
-        
+
         for (int ind2 = 2; ind2 < corners.length; ++ind2)
         {
             curr_line = new Line(curr_line.b, corners[ind2]);
@@ -362,10 +362,10 @@ public class PolygonShape extends PolylineShape
                 return false;
             last_det = curr_det;
         }
-        
+
         return true;
     }
-    
+
     public PolygonShape convex_hull()
     {
         if (corners.length <= 2)
@@ -403,7 +403,7 @@ public class PolygonShape extends PolylineShape
         }
         return this;
     }
-    
+
     public TileShape bounding_tile()
     {
         PolygonShape hull = convex_hull();
@@ -416,10 +416,10 @@ public class PolygonShape extends PolylineShape
                 new Line(hull.corners[hull.corners.length - 1], hull.corners[0]);
         return TileShape.get_instance(bounding_lines);
     }
-    
+
     public double area()
     {
-        
+
         if (dimension() <= 2)
         {
             return 0;
@@ -427,7 +427,7 @@ public class PolygonShape extends PolylineShape
         // calculate half of the absolute value of
         // x0 (y1 - yn-1) + x1 (y2 - y0) + x2 (y3 - y1) + ...+ xn-1( y0 - yn-2)
         // where xi, yi are the coordinates of the i-th corner of this polygon.
-        
+
         double result = 0;
         FloatPoint prev_corner = corners[corners.length - 2].to_float();
         FloatPoint curr_corner = corners[corners.length - 1].to_float();
@@ -441,7 +441,7 @@ public class PolygonShape extends PolylineShape
         result = 0.5 * Math.abs(result);
         return result;
     }
-    
+
     public int dimension()
     {
         if (corners.length == 0)
@@ -452,17 +452,17 @@ public class PolygonShape extends PolylineShape
             return 1;
         return 2;
     }
-    
+
     public boolean is_bounded()
     {
         return true;
     }
-    
+
     public boolean is_empty()
     {
         return corners.length == 0;
     }
-    
+
     public Line border_line(int p_no)
     {
         if (p_no < 0 || p_no >= corners.length)
@@ -481,7 +481,7 @@ public class PolygonShape extends PolylineShape
         }
         return new Line(corners[p_no], next_corner);
     }
-    
+
     public FloatPoint nearest_point_approx(FloatPoint p_from_point)
     {
         double min_dist = Double.MAX_VALUE;
@@ -499,7 +499,7 @@ public class PolygonShape extends PolylineShape
         }
         return result;
     }
-    
+
     public PolygonShape turn_90_degree(int p_factor, IntPoint p_pole)
     {
         Point[] new_corners = new Point[corners.length];
@@ -509,7 +509,7 @@ public class PolygonShape extends PolylineShape
         }
         return new PolygonShape(new_corners);
     }
-    
+
     public PolygonShape rotate_approx(double p_angle, FloatPoint p_pole)
     {
         if (p_angle == 0)
@@ -523,7 +523,7 @@ public class PolygonShape extends PolylineShape
         }
         return new PolygonShape(new_corners);
     }
-    
+
     public PolygonShape mirror_vertical(IntPoint p_pole)
     {
         Point[] new_corners = new Point[corners.length];
@@ -533,7 +533,7 @@ public class PolygonShape extends PolylineShape
         }
         return new PolygonShape(new_corners);
     }
-    
+
     public PolygonShape mirror_horizontal(IntPoint p_pole)
     {
         Point[] new_corners = new Point[corners.length];
@@ -543,7 +543,7 @@ public class PolygonShape extends PolylineShape
         }
         return new PolygonShape(new_corners);
     }
-    
+
     /**
      * Splits this polygon shape into convex pieces.
      * The result is not exact, because rounded intersections of lines are
@@ -573,7 +573,7 @@ public class PolygonShape extends PolylineShape
         }
         return this.precalculated_convex_pieces;
     }
-    
+
     /**
      * Crivate recursive part of split_to_convex.
      * Returns a collection of polygon shape pieces.
@@ -588,9 +588,9 @@ public class PolygonShape extends PolylineShape
             prev_corner = corners[start_corner_no - 1];
         else
             prev_corner = corners[corners.length - 1];
-        
+
         Point next_corner = null;
-        
+
         // search for the next concave corner from here
         int concave_corner_no = -1;
         for (int i = 0; i < corners.length; ++i)
@@ -622,16 +622,16 @@ public class PolygonShape extends PolylineShape
             // projection not found, maybe polygon has selfintersections
             return null;
         }
-        
+
         // construct the result pieces from p_polygon and the division point
         int corner_count = d.corner_no_after_projection - concave_corner_no;
-        
+
         if (corner_count < 0)
             corner_count += corners.length;
         ++corner_count;
         Point[] first_arr = new Point[corner_count];
         int corner_ind = concave_corner_no;
-        
+
         for (int i = 0; i < corner_count - 1; ++i)
         {
             first_arr[i] = corners[corner_ind];
@@ -639,7 +639,7 @@ public class PolygonShape extends PolylineShape
         }
         first_arr[corner_count - 1] = d.projection.round();
         PolygonShape first_piece = new PolygonShape(first_arr);
-        
+
         corner_count = concave_corner_no - d.corner_no_after_projection;
         if (corner_count < 0)
             corner_count += corners.length;
@@ -663,10 +663,10 @@ public class PolygonShape extends PolylineShape
         result.addAll(c2);
         return result;
     }
-    
-    
+
+
     public final Point[] corners;
-    
+
     /**
      * the following fields are for storing precalculated data
      */
@@ -675,7 +675,7 @@ public class PolygonShape extends PolylineShape
     transient private TileShape[] precalculated_convex_pieces = null;
     static private int seed = 99;
     static private java.util.Random random_generator = new java.util.Random(seed);
-    
+
     private class DivisionPoint
     {
         /** At a concave corner  of the closed polygon, a minimal axis parallel
@@ -685,47 +685,47 @@ public class PolygonShape extends PolylineShape
         {
             FloatPoint concave_corner = corners[p_concave_corner_no].to_float();
             FloatPoint before_concave_corner;
-            
+
             if (p_concave_corner_no != 0)
                 before_concave_corner =  corners[p_concave_corner_no - 1].to_float();
             else
                 before_concave_corner = corners[corners.length - 1].to_float();
-            
+
             FloatPoint after_concave_corner;
-            
+
             if (p_concave_corner_no == corners.length - 1)
                 after_concave_corner = corners[0].to_float();
             else
                 after_concave_corner = corners [p_concave_corner_no + 1].to_float();
-            
+
             boolean search_right = before_concave_corner.y > concave_corner.y ||
                     concave_corner.y > after_concave_corner.y;
-            
+
             boolean search_left = before_concave_corner.y < concave_corner.y ||
                     concave_corner.y < after_concave_corner.y;
-            
+
             boolean search_up = before_concave_corner.x < concave_corner.x ||
                     concave_corner.x < after_concave_corner.x;
-            
+
             boolean search_down = before_concave_corner.x > concave_corner.x ||
                     concave_corner.x > after_concave_corner.x;
-            
+
             double min_projection_dist = Integer.MAX_VALUE;
             FloatPoint min_projection = null;
             int corner_no_after_min_projection = 0;
-            
+
             int corner_no_after_curr_projection = (p_concave_corner_no + 2) % corners.length;
-            
+
             Point corner_before_curr_projection;
             if (corner_no_after_curr_projection != 0)
                 corner_before_curr_projection = corners[corner_no_after_curr_projection - 1];
             else
                 corner_before_curr_projection = corners[corners.length - 1];
             FloatPoint corner_before_projection_approx = corner_before_curr_projection.to_float();
-            
+
             double curr_dist;
             int loop_end = corners.length - 2;
-            
+
             for (int i = 0; i < loop_end; ++i)
             {
                 Point corner_after_curr_projection = corners[corner_no_after_curr_projection];
@@ -735,7 +735,7 @@ public class PolygonShape extends PolylineShape
                 {
                     double min_y;
                     double max_y;
-                    
+
                     if (corner_after_projection_approx.y > corner_before_projection_approx.y)
                     {
                         min_y = corner_before_projection_approx.y;
@@ -746,7 +746,7 @@ public class PolygonShape extends PolylineShape
                         min_y = corner_after_projection_approx.y;
                         max_y = corner_before_projection_approx.y;
                     }
-                    
+
                     if (concave_corner.y >= min_y && concave_corner.y <= max_y)
                     {
                         Line curr_line =
@@ -768,7 +768,7 @@ public class PolygonShape extends PolylineShape
                         }
                     }
                 }
-                
+
                 if (corner_before_projection_approx.x != corner_after_projection_approx.x)
                     // try a vertical division
                 {
@@ -796,7 +796,7 @@ public class PolygonShape extends PolylineShape
                                 concave_corner.x >= corner_after_projection_approx.x
                                 || search_down && y_intersect < concave_corner.y
                                 && concave_corner.x <= corner_after_projection_approx.x);
-                        
+
                         if (projection_ok)
                         {
                             min_projection_dist = curr_dist;
@@ -820,11 +820,11 @@ public class PolygonShape extends PolylineShape
             {
                 FRLogger.warn("PolygonShape.DivisionPoint: projection not found");
             }
-            
+
             projection = min_projection;
             corner_no_after_projection = corner_no_after_min_projection;
         }
-        
+
         final int corner_no_after_projection;
         final FloatPoint projection;
     }

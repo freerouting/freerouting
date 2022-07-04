@@ -22,7 +22,7 @@ public class ItemAutorouteInfo
     {
         return start_info;
     }
-    
+
     /**
      * Sets, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
      * Only used, if the item belongs to the net, which will be currently routed.
@@ -31,7 +31,7 @@ public class ItemAutorouteInfo
     {
         start_info = p_value;
     }
-    
+
     /**
      *  Returns the precalculated connection of this item
      *  or null, if it is not yet precalculated.
@@ -40,7 +40,7 @@ public class ItemAutorouteInfo
     {
         return this.precalculated_connnection;
     }
-    
+
     /**
      *  Sets the precalculated connnection of this item.
      */
@@ -48,7 +48,7 @@ public class ItemAutorouteInfo
     {
         this.precalculated_connnection = p_connection;
     }
-    
+
     /**
      * Gets the ExpansionRoom of of index p_index.
      * Creates it, if it is not yet existing.
@@ -70,7 +70,7 @@ public class ItemAutorouteInfo
         }
         return expansion_room_arr[p_index];
     }
-    
+
     /**
      * Resets  the expansion rooms for autorouting the next connnection.
      */
@@ -87,7 +87,7 @@ public class ItemAutorouteInfo
             }
         }
     }
-    
+
     /**
      * Draws the shapes of the expansion rooms of this info for testing purposes.
      */
@@ -105,17 +105,17 @@ public class ItemAutorouteInfo
             }
         }
     }
-    
+
     /**
      * Defines, if this item belongs to the start or destination set of
      * the maze search algorithm
      */
     private boolean start_info;
-    
+
     private final Item item;
-    
+
     private Connection precalculated_connnection = null;
-    
+
     /**
      * ExpansionRoom for pushing or ripping the this object for each tree shape.
      */

@@ -21,7 +21,7 @@ public class ViaInfos implements java.io.Serializable, app.freerouting.board.Obj
         this.list.add(p_via_info);
         return true;
     }
-    
+
     /**
      * Returns the number of different vias, which can be used for routing.
      */
@@ -29,7 +29,7 @@ public class ViaInfos implements java.io.Serializable, app.freerouting.board.Obj
     {
         return this.list.size();
     }
-    
+
     /**
      * Returns the p_no-th via af the via types, which can be used for routing.
      */
@@ -38,7 +38,7 @@ public class ViaInfos implements java.io.Serializable, app.freerouting.board.Obj
         assert p_no >= 0 && p_no < this.list.size();
         return this.list.get(p_no);
     }
-    
+
     /**
      * Returns the via info with name p_name, or null, if no such via exists.
      */
@@ -53,7 +53,7 @@ public class ViaInfos implements java.io.Serializable, app.freerouting.board.Obj
         }
         return null;
     }
-    
+
     /**
      * Returns true, if a via info with name p_name is already wyisting in the list.
      */
@@ -68,7 +68,7 @@ public class ViaInfos implements java.io.Serializable, app.freerouting.board.Obj
         }
         return false;
     }
-    
+
     /**
      * Removes p_via_info from this list.
      * Returns false, if p_via_info was not contained in the list.
@@ -77,10 +77,10 @@ public class ViaInfos implements java.io.Serializable, app.freerouting.board.Obj
     {
         return this.list.remove(p_via_info);
     }
-    
+
     public void print_info(app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("vias") + ": ");
         int counter = 0;

@@ -27,7 +27,7 @@ public class ColorIntensityTable implements java.io.Serializable
         arr[ObjectNames.INCOMPLETES.ordinal()] = 1;
         arr[ObjectNames.LENGTH_MATCHING_AREAS.ordinal()] = 0.1;
     }
-    
+
     /**
      * Copy constructor.
      */
@@ -39,7 +39,7 @@ public class ColorIntensityTable implements java.io.Serializable
             this.arr[i] = p_color_intesity_table.arr[i];
         }
     }
-    
+
     public double get_value(int p_no)
     {
         if (p_no < 0 || p_no >= ObjectNames.values().length)
@@ -49,7 +49,7 @@ public class ColorIntensityTable implements java.io.Serializable
         }
         return arr[p_no];
     }
-    
+
     public void set_value(int p_no, double p_value)
     {
         if (p_no < 0 || p_no >= ObjectNames.values().length)
@@ -59,12 +59,12 @@ public class ColorIntensityTable implements java.io.Serializable
         }
         arr [p_no] = p_value;
     }
-    
+
     private final double [] arr;
-    
-    public enum ObjectNames 
+
+    public enum ObjectNames
     {
-        TRACES, VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS, COMPONENT_OUTLINES, 
+        TRACES, VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS, COMPONENT_OUTLINES,
         HILIGHT, INCOMPLETES, LENGTH_MATCHING_AREAS
     }
 }

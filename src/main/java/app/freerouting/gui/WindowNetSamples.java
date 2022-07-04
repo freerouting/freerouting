@@ -10,29 +10,29 @@ import java.net.URLConnection;
  */
 public abstract class WindowNetSamples extends BoardSubWindow
 {
-    
+
     /** Creates a new instance of WindowNetSampleDesigns */
     public WindowNetSamples(java.util.Locale p_locale, String p_title, String p_button_name, int p_row_count)
     {
         this.locale = p_locale;
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowNetSamples", p_locale);
         this.setTitle(resources.getString(p_title));
-        
+
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
-        
+
         // create main panel
         final javax.swing.JPanel main_panel = new javax.swing.JPanel();
         this.add(main_panel);
         main_panel.setLayout(new java.awt.BorderLayout());
         javax.swing.border.Border panel_border = javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10);
         main_panel.setBorder(panel_border);
-        
-        
+
+
         // create open button
         javax.swing.JButton open_button = new javax.swing.JButton(resources.getString(p_button_name));
         open_button.addActionListener(new OpenListener());
         main_panel.add(open_button, java.awt.BorderLayout.SOUTH);
-        
+
         // create list with the sample designs
         this.list = new javax.swing.JList<>(this.list_model);
         fill_list();
@@ -49,24 +49,24 @@ public abstract class WindowNetSamples extends BoardSubWindow
                 }
             }
         });
-        
+
         javax.swing.JScrollPane list_scroll_pane = new javax.swing.JScrollPane(this.list);
         list_scroll_pane.setPreferredSize(new java.awt.Dimension(200, 20 * p_row_count));
         main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
         this.pack();
     }
-    
-    
+
+
     /**
      * Fill the list with the examples.
      */
     protected abstract void fill_list();
-    
+
     /**
      * Action to be perfomed. when the button is pushed after selecting an item in the list.
      */
     protected abstract void button_pushed();
-    
+
     /**
      * Opens a zipped archive from an URL in the net.
      * Returns a zipped input stream, who is positioned at the start of p_file_name,
@@ -140,8 +140,8 @@ public abstract class WindowNetSamples extends BoardSubWindow
         }
         return zip_input_stream;
     }
-    
-    
+
+
     /**
      * Opens a sample design on the website.
      */
@@ -163,13 +163,13 @@ public abstract class WindowNetSamples extends BoardSubWindow
         new_frame.setVisible(true);
         return new_frame;
     }
-    
+
     protected final java.util.ResourceBundle resources;
     protected final java.util.Locale locale;
-    
+
     protected javax.swing.DefaultListModel<SampleDesignListElement> list_model = new javax.swing.DefaultListModel<>();
     protected final javax.swing.JList<SampleDesignListElement> list;
-    
+
     private class OpenListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)

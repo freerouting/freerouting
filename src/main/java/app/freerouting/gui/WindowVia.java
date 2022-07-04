@@ -12,137 +12,137 @@ import java.util.List;
  */
 public class WindowVia extends BoardSavableSubWindow
 {
-    
+
     /** Creates a new instance of ViaWindow */
     public WindowVia(BoardFrame p_board_frame)
     {
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowVia", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
-        
+
         this.board_frame = p_board_frame;
-        
+
         this.main_panel = new javax.swing.JPanel();
         main_panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20,20,20,20));
         main_panel.setLayout(new java.awt.BorderLayout());
-        
+
         javax.swing.JPanel north_panel = new javax.swing.JPanel();
         main_panel.add(north_panel, java.awt.BorderLayout.NORTH);
         java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
         north_panel.setLayout(gridbag);
         java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        
+
         javax.swing.JLabel available_via_padstack_label = new javax.swing.JLabel(resources.getString("available_via_padstacks"));
         available_via_padstack_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,0,10,10));
         gridbag.setConstraints(available_via_padstack_label, gridbag_constraints);
         north_panel.add(available_via_padstack_label, gridbag_constraints);
-        
+
         javax.swing.JPanel padstack_button_panel = new javax.swing.JPanel();
         padstack_button_panel.setLayout(new java.awt.FlowLayout());
         gridbag.setConstraints(padstack_button_panel, gridbag_constraints);
         north_panel.add(padstack_button_panel, gridbag_constraints);
-        
+
         final javax.swing.JButton  show_padstack_button = new javax.swing.JButton(resources.getString("info"));
         show_padstack_button.setToolTipText(resources.getString("info_tooltip"));
         show_padstack_button.addActionListener(new ShowPadstacksListener());
         padstack_button_panel.add(show_padstack_button);
-        
+
         final javax.swing.JButton  add_padstack_button = new javax.swing.JButton(resources.getString("create"));
         add_padstack_button.setToolTipText(resources.getString("create_tooltip"));
         add_padstack_button.addActionListener(new AddPadstackListener());
         padstack_button_panel.add(add_padstack_button);
-        
+
         final javax.swing.JButton  remove_padstack_button = new javax.swing.JButton(resources.getString("remove"));
         remove_padstack_button.setToolTipText(resources.getString("remove_tooltip"));
         remove_padstack_button.addActionListener(new RemovePadstackListener());
         padstack_button_panel.add(remove_padstack_button);
-        
-        javax.swing.JLabel separator_label = new javax.swing.JLabel("---------------------------------------------------------");
+
+        javax.swing.JLabel separator_label = new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
         separator_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,0,10,0));
         gridbag.setConstraints(separator_label, gridbag_constraints);
         north_panel.add(separator_label, gridbag_constraints);
-        
+
         javax.swing.JLabel available_vias_label = new javax.swing.JLabel(resources.getString("available_vias"));
         available_vias_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,0,10,10));
         gridbag.setConstraints(available_vias_label, gridbag_constraints);
         north_panel.add(available_vias_label, gridbag_constraints);
-        
+
         javax.swing.JPanel via_button_panel = new javax.swing.JPanel();
         via_button_panel.setLayout(new java.awt.FlowLayout());
         gridbag.setConstraints(via_button_panel, gridbag_constraints);
         north_panel.add(via_button_panel, gridbag_constraints);
-        
+
         final javax.swing.JButton  show_vias_button = new javax.swing.JButton(resources.getString("info"));
         show_vias_button.setToolTipText(resources.getString("info_tooltip_2"));
         show_vias_button.addActionListener(new ShowViasListener());
         via_button_panel.add(show_vias_button);
-        
+
         final javax.swing.JButton  edit_vias_button = new javax.swing.JButton(resources.getString("edit"));
         edit_vias_button.setToolTipText(resources.getString("edit_tooltip"));
         edit_vias_button.addActionListener(new EditViasListener());
         via_button_panel.add(edit_vias_button);
-        
-        separator_label = new javax.swing.JLabel("---------------------------------------------------------");
+
+        separator_label = new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
         separator_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,0,10,0));
         gridbag.setConstraints(separator_label, gridbag_constraints);
         north_panel.add(separator_label, gridbag_constraints);
-        
+
         javax.swing.JLabel via_rule_list_name = new javax.swing.JLabel(resources.getString("via_rules"));
         via_rule_list_name.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,0,10,10));
         gridbag.setConstraints(via_rule_list_name, gridbag_constraints);
         north_panel.add(via_rule_list_name, gridbag_constraints);
         north_panel.add(via_rule_list_name, gridbag_constraints);
-        
-        
+
+
         this.rule_list_model = new javax.swing.DefaultListModel<ViaRule>();
         this.rule_list = new javax.swing.JList<ViaRule>(this.rule_list_model);
-        
+
         this.rule_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         this.rule_list.setSelectedIndex(0);
         this.rule_list.setVisibleRowCount(5);
         javax.swing.JScrollPane list_scroll_pane = new javax.swing.JScrollPane(this.rule_list);
         list_scroll_pane.setPreferredSize(new java.awt.Dimension(200, 100));
         this.main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
-        
+
         // fill the list
         BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
         for (ViaRule curr_rule : board_rules.via_rules)
         {
             this.rule_list_model.addElement(curr_rule);
         }
-        
+
         // Add buttons to edit the via rules.
         javax.swing.JPanel via_rule_button_panel = new javax.swing.JPanel();
         via_rule_button_panel.setLayout(new java.awt.FlowLayout());
         this.add(via_rule_button_panel,java.awt.BorderLayout.SOUTH);
-        
+
         final javax.swing.JButton  show_rule_button = new javax.swing.JButton(resources.getString("info"));
         show_rule_button.setToolTipText(resources.getString("info_tooltip_3"));
         show_rule_button.addActionListener(new ShowViaRuleListener());
         via_rule_button_panel.add(show_rule_button);
-                       
+
         final javax.swing.JButton  add_rule_button = new javax.swing.JButton(resources.getString("create"));
         add_rule_button.setToolTipText(resources.getString("create_tooltip_2"));
         add_rule_button.addActionListener(new AddViaRuleListener());
         via_rule_button_panel.add(add_rule_button);
-               
+
         final javax.swing.JButton  edit_rule_button = new javax.swing.JButton(resources.getString("edit"));
         edit_rule_button.setToolTipText(resources.getString("edit_tooltip_2"));
         edit_rule_button.addActionListener(new EditViaRuleListener());
-        via_rule_button_panel.add(edit_rule_button);       
-        
+        via_rule_button_panel.add(edit_rule_button);
+
         final javax.swing.JButton  remove_rule_button = new javax.swing.JButton(resources.getString("remove"));
         remove_rule_button.setToolTipText(resources.getString("remove_tooltip_2"));
         remove_rule_button.addActionListener(new RemoveViaRuleListener());
         via_rule_button_panel.add(remove_rule_button);
-        
+
         p_board_frame.set_context_sensitive_help(this, "WindowVia");
-        
+
         this.add(main_panel);
         this.pack();
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
     }
-    
+
     public void refresh()
     {
         // reinsert the elements in the rule list
@@ -152,7 +152,7 @@ public class WindowVia extends BoardSavableSubWindow
         {
             this.rule_list_model.addElement(curr_rule);
         }
-        
+
         // Dispose all subwindows because they may be no longer uptodate.
         java.util.Iterator<javax.swing.JFrame> it = this.subwindows.iterator();
         while (it.hasNext())
@@ -160,13 +160,13 @@ public class WindowVia extends BoardSavableSubWindow
             javax.swing.JFrame curr_subwindow = it.next();
             if (curr_subwindow != null)
             {
-                
+
                 curr_subwindow.dispose();
             }
             it.remove();
         }
     }
-    
+
     public void dispose()
     {
         for (javax.swing.JFrame curr_subwindow : this.subwindows)
@@ -182,22 +182,22 @@ public class WindowVia extends BoardSavableSubWindow
         }
         super.dispose();
     }
-    
+
     private final BoardFrame board_frame;
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     private final javax.swing.JList<ViaRule> rule_list;
     private final javax.swing.DefaultListModel<ViaRule> rule_list_model;
-    
+
     private final javax.swing.JPanel main_panel;
-    
+
     /** The subwindows with information about selected object*/
     private final java.util.Collection<javax.swing.JFrame> subwindows = new java.util.LinkedList<javax.swing.JFrame>();
-    
-    
+
+
     private static final int WINDOW_OFFSET = 30;
-    
+
     private class ShowPadstacksListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -218,7 +218,7 @@ public class WindowVia extends BoardSavableSubWindow
             subwindows.add(new_window);
         }
     }
-    
+
     private class AddPadstackListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -287,9 +287,9 @@ public class WindowVia extends BoardSavableSubWindow
                 end_layer = (Layer)selected_value;
             }
             Double default_radius = 100.0;
-            
+
             // ask for the default radius
-            
+
             javax.swing.JPanel default_radius_input_panel = new javax.swing.JPanel();
             default_radius_input_panel.add(new javax.swing.JLabel(resources.getString("message_3")));
             java.text.NumberFormat number_format = java.text.NumberFormat.getInstance(board_frame.get_locale());
@@ -304,9 +304,9 @@ public class WindowVia extends BoardSavableSubWindow
             {
                 default_radius = ((Number)input_value).doubleValue();
             }
-                       
+
             // input panel  to make the default radius layer-depemdent
-            
+
             PadstackInputPanel padstack_input_panel = new PadstackInputPanel(start_layer, end_layer, default_radius);
             javax.swing.JOptionPane.showMessageDialog(board_frame, padstack_input_panel,
                     resources.getString("adjust_circles"), javax.swing.JOptionPane.PLAIN_MESSAGE);
@@ -338,8 +338,8 @@ public class WindowVia extends BoardSavableSubWindow
             pcb.library.add_via_padstack(new_padstack);
         }
     }
-    
-    
+
+
     /** Internal class used in AddPadstackListener */
     private class PadstackInputPanel extends javax.swing.JPanel
     {
@@ -348,7 +348,7 @@ public class WindowVia extends BoardSavableSubWindow
             java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
             this.setLayout(gridbag);
             java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-            
+
             app.freerouting.board.LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
             int from_layer_no =  layer_structure.get_no(p_from_layer);
             int to_layer_no = layer_structure.get_no(p_to_layer);
@@ -372,11 +372,11 @@ public class WindowVia extends BoardSavableSubWindow
                 this.add(circle_radius[i], gridbag_constraints);
             }
         }
-        
+
         private final javax.swing.JLabel [] layer_names;
         private final javax.swing.JFormattedTextField [] circle_radius;
     }
-    
+
     private class RemovePadstackListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -410,7 +410,7 @@ public class WindowVia extends BoardSavableSubWindow
             pcb.library.remove_via_padstack(selected_padstack, pcb);
         }
     }
-    
+
     private class ShowViasListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -431,7 +431,7 @@ public class WindowVia extends BoardSavableSubWindow
             subwindows.add(new_window);
         }
     }
-    
+
     private class EditViasListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -439,7 +439,7 @@ public class WindowVia extends BoardSavableSubWindow
             board_frame.edit_vias_window.setVisible(true);
         }
     }
-    
+
     private class ShowViaRuleListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -464,7 +464,7 @@ public class WindowVia extends BoardSavableSubWindow
             subwindows.add(new_window);
         }
     }
-    
+
     private class EditViaRuleListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -483,7 +483,7 @@ public class WindowVia extends BoardSavableSubWindow
             subwindows.add(new_window);
         }
     }
-    
+
     private class AddViaRuleListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)
@@ -505,7 +505,7 @@ public class WindowVia extends BoardSavableSubWindow
             board_frame.refresh_windows();
         }
     }
-    
+
     private class RemoveViaRuleListener implements java.awt.event.ActionListener
     {
         public void actionPerformed(java.awt.event.ActionEvent p_evt)

@@ -7,13 +7,13 @@ import app.freerouting.logger.FRLogger;
  */
 public class Plane extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of Plane */
     public Plane()
     {
         super("plane");
     }
-    
+
     public boolean read_scope(ReadScopeParameter p_par)
     {
         // read the net name
@@ -42,7 +42,7 @@ public class Plane extends ScopeKeyword
         p_par.plane_list.add(plane_info);
         return true;
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par, app.freerouting.board.ConductionArea p_conduction) throws java.io.IOException
     {
         int net_count = p_conduction.net_count();

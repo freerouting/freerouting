@@ -16,13 +16,13 @@ import java.util.LinkedList;
  */
 public class Library extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of Library */
     public Library()
     {
         super("library");
     }
-    
+
     public boolean read_scope(ReadScopeParameter p_par)
     {
         app.freerouting.board.RoutingBoard board = p_par.board_handling.get_routing_board();
@@ -76,7 +76,7 @@ public class Library extends ScopeKeyword
                 }
             }
         }
-        
+
         // Create the library packages on the board
         board.library.packages = new app.freerouting.library.Packages(board.library.padstacks);
         Iterator<Package> it = package_list.iterator();
@@ -99,7 +99,7 @@ public class Library extends ScopeKeyword
                 pin_arr[i] = new app.freerouting.library.Package.Pin(pin_info.pin_name, board_padstack.no, rel_coor, pin_info.rotation);
             }
             app.freerouting.geometry.planar.Shape[] outline_arr = new app.freerouting.geometry.planar.Shape[curr_package.outline.size()];
-            
+
             Iterator<Shape> it3 = curr_package.outline.iterator();
             for (int i = 0; i < outline_arr.length; ++i)
             {
@@ -148,7 +148,7 @@ public class Library extends ScopeKeyword
         }
         return true;
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException
     {
         p_par.file.start_scope();
@@ -163,7 +163,7 @@ public class Library extends ScopeKeyword
         }
         p_par.file.end_scope();
     }
-    
+
     public static void write_padstack_scope(WriteScopeParameter p_par, app.freerouting.library.Padstack p_padstack) throws java.io.IOException
     {
         // search the layer range of the padstack
@@ -190,7 +190,7 @@ public class Library extends ScopeKeyword
             FRLogger.warn("Library.write_padstack_scope: padstack shape not found");
             return;
         }
-        
+
         p_par.file.start_scope();
         p_par.file.write("padstack ");
         p_par.identifier_type.write(p_padstack.name, p_par.file);
@@ -221,7 +221,7 @@ public class Library extends ScopeKeyword
         }
         p_par.file.end_scope();
     }
-    
+
     static boolean  read_padstack_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure,
                                         CoordinateTransform p_coordinate_transform, app.freerouting.library.Padstacks p_board_padstacks)
     {
@@ -241,7 +241,7 @@ public class Library extends ScopeKeyword
                 FRLogger.warn("Library.read_padstack_scope: unexpected padstack identifier");
                 return false;
             }
-            
+
             while (next_token != Keyword.CLOSED_BRACKET)
             {
                 Object prev_token = next_token;
@@ -281,7 +281,7 @@ public class Library extends ScopeKeyword
                         ScopeKeyword.skip_scope(p_scanner);
                     }
                 }
-                
+
             }
         }
         catch (java.io.IOException e)
@@ -341,7 +341,7 @@ public class Library extends ScopeKeyword
                     }
                 }
             }
-            
+
             if (pad_shape.layer == Layer.PCB || pad_shape.layer == Layer.SIGNAL)
             {
                 Arrays.fill(padstack_shapes, padstack_shape);
@@ -360,7 +360,7 @@ public class Library extends ScopeKeyword
         p_board_padstacks.add(padstack_name, padstack_shapes, is_drilllable, placed_absolute);
         return true;
     }
-    
+
     private void generate_missing_keepout_names(String p_keepout_type, Collection<Shape.ReadAreaScopeResult> p_keepout_list)
     {
         boolean all_names_existing = true;

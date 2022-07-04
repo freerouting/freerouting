@@ -27,7 +27,7 @@ public class OrthogonalBoundingDirections implements ShapeBoundingDirections
     {
         return p_box;
     }
-        
+
     public RegularTileShape bounds (IntOctagon p_oct)
     {
         return p_oct.bounding_box();
@@ -37,12 +37,12 @@ public class OrthogonalBoundingDirections implements ShapeBoundingDirections
     {
         return p_simplex.bounding_box();
     }
-    
+
     public RegularTileShape bounds (Circle p_circle)
     {
         return p_circle.bounding_box();
     }
-    
+
     public RegularTileShape bounds (PolygonShape p_polygon)
     {
         return p_polygon.bounding_box();

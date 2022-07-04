@@ -11,7 +11,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class Padstack implements Comparable<Padstack>, app.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable
 {
-    
+
     /**
      * Creates a new Padstack with shape p_shapes[i] on layer i (0 <= i < p_shapes.length).
      * p_is_drilllable indicates, if vias of the own net are allowed to overlap with this padstack
@@ -28,7 +28,7 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
         placed_absolute = p_placed_absolute;
         padstack_list = p_padstack_list;
     }
-    
+
     /**
      * Compares 2 padstacks by name.
      * Useful for example to display padstacks in alphabetic order.
@@ -37,7 +37,7 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
     {
         return this.name.compareToIgnoreCase(p_other.name);
     }
-    
+
     /**
      * Gets the shape of this padstack on layer p_layer
      */
@@ -50,7 +50,7 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
         }
         return shapes[p_layer];
     }
-    
+
     /**
      * Returns the first layer of this padstack with a shape != null.
      */
@@ -63,7 +63,7 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
         }
         return result;
     }
-    
+
     /**
      * Returns the last layer of this padstack with a shape != null.
      */
@@ -76,18 +76,18 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
         }
         return result;
     }
-    
+
     /** Returns the layer ciount of the board of this padstack. */
     public int board_layer_count()
     {
         return shapes.length;
     }
-    
+
     public String toString()
     {
         return this.name;
     }
-    
+
     /**
      * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer.
      * If the length of the pad is smaller than p_factor times the height of the pad,
@@ -110,14 +110,14 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
             return result;
         }
         IntBox curr_box = curr_shape.bounding_box();
- 
+
         boolean all_dirs = false;
-        if (Math.max(curr_box.width(), curr_box.height()) < 
+        if (Math.max(curr_box.width(), curr_box.height()) <
                 p_factor * Math.min(curr_box.width(), curr_box.height()))
         {
             all_dirs = true;
         }
-        
+
         if (all_dirs || curr_box.width() >= curr_box.height())
         {
             result.add(Direction.RIGHT);
@@ -130,10 +130,10 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
         }
         return result;
     }
-    
+
     public void print_info(app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
         p_window.append_bold(resources.getString("padstack") + " ");
         p_window.append_bold(this.name);
@@ -150,20 +150,20 @@ public class Padstack implements Comparable<Padstack>, app.freerouting.board.Obj
         }
         p_window.newline();
     }
-    
+
     private final ConvexShape [] shapes;
     public final String name;
     public final int no;
-    
+
     /** true, if vias of the own net are allowed to overlap with this padstack*/
     public final boolean attach_allowed;
-    
+
     /**
      * If false, the layers of the padstack are mirrored, if it is placed on the back side.
      * The default is false.
      */
     public final boolean placed_absolute;
-    
+
     /** Pointer to the pacdstack list containing this padstack */
     private final Padstacks padstack_list;
 }

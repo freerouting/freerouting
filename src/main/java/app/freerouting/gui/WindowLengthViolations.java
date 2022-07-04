@@ -10,7 +10,7 @@ import java.util.List;
 
 public class WindowLengthViolations  extends WindowObjectListWithFilter
 {
-    
+
     /** Creates a new instance of WindowLengthViolations */
     public WindowLengthViolations(BoardFrame p_board_frame)
     {
@@ -20,7 +20,7 @@ public class WindowLengthViolations  extends WindowObjectListWithFilter
         this.list_empty_message.setText(resources.getString("list_empty"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LengthViolations");
     }
-    
+
     protected void fill_list()
     {
         RatsNest ratsnest = this.board_frame.board_panel.board_handling.get_ratsnest();
@@ -35,14 +35,14 @@ public class WindowLengthViolations  extends WindowObjectListWithFilter
                 length_violations.add(curr_length_violation);
             }
         }
-        
+
         for (LengthViolation curr_violation : length_violations)
         {
             this.add_to_list(curr_violation);
         }
         this.list.setVisibleRowCount(Math.min(length_violations.size(), DEFAULT_TABLE_SIZE));
     }
-    
+
     protected void select_instances()
     {
         List<Object> selected_violations = list.getSelectedValuesList();
@@ -54,15 +54,15 @@ public class WindowLengthViolations  extends WindowObjectListWithFilter
         for (int i = 0; i < selected_violations.size(); ++i)
         {
             LengthViolation curr_violation = ((LengthViolation) selected_violations.get(i));
-            selected_items.addAll(curr_violation.net.get_items());            
+            selected_items.addAll(curr_violation.net.get_items());
         }
         app.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
         board_handling.select_items(selected_items);
         board_handling.zoom_selection();
     }
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     private class LengthViolation implements Comparable<LengthViolation>
     {
         LengthViolation(Net p_net, double p_violation_length)
@@ -70,12 +70,12 @@ public class WindowLengthViolations  extends WindowObjectListWithFilter
             net = p_net;
             violation_length = p_violation_length;
         }
-        
+
         public int compareTo(LengthViolation p_other)
         {
             return this.net.name.compareToIgnoreCase(p_other.net.name);
         }
-        
+
         public String toString()
         {
             app.freerouting.board.CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
@@ -93,11 +93,11 @@ public class WindowLengthViolations  extends WindowObjectListWithFilter
                 allowed_string = " " + resources.getString("minimum_allowed") + " ";
             }
             Float length = (float) coordinate_transform.board_to_user(this.net.get_trace_length());
-            String result = resources.getString("net") + " " + this.net.name + resources.getString("trace_length") 
+            String result = resources.getString("net") + " " + this.net.name + resources.getString("trace_length")
             + " " + length.toString() + allowed_string + allowed_length;
             return result;
         }
-        
+
         final Net net;
         final double violation_length;
     }

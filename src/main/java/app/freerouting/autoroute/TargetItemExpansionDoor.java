@@ -64,7 +64,7 @@ public class TargetItemExpansionDoor implements ExpandableObject
     {
         maze_search_info.reset();
     }
-    
+
     public final Item item;
     public final int tree_entry_no;
     public final CompleteExpansionRoom room;

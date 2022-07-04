@@ -1135,7 +1135,7 @@ public class MazeSearchAlgo
 
     /**
      *  Return the addditional cost factor for ripping the trace, if it is connected to a fanout via
-     *  or 1, if no fanout via was found. 
+     *  or 1, if no fanout via was found.
      */
     private static double calc_fanout_via_ripup_cost_factor(app.freerouting.board.Trace p_trace)
     {

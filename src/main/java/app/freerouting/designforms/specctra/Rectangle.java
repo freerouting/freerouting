@@ -20,12 +20,12 @@ public class Rectangle extends Shape
         super(p_layer);
         coor = p_coor;
     }
-    
+
     public Rectangle bounding_box()
     {
         return this;
     }
-    
+
     /**
      *  Creates the smallest rectangle containing this rectangle and p_other
      */
@@ -38,7 +38,7 @@ public class Rectangle extends Shape
              result_coor[3] = Math.max(this.coor[3], p_other.coor[3]);
              return new Rectangle(this.layer, result_coor);
     }
-    
+
     public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
     {
         int[] box_coor = new int[4];
@@ -46,7 +46,7 @@ public class Rectangle extends Shape
         {
             box_coor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(this.coor[i]));
         }
-        
+
         IntBox result;
         if (box_coor[1] <= box_coor[3])
         {
@@ -60,7 +60,7 @@ public class Rectangle extends Shape
         }
         return result;
     }
-    
+
     public app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform)
     {
         double [] curr_point = new double [2];
@@ -72,7 +72,7 @@ public class Rectangle extends Shape
         FloatPoint upper_right= p_coordinate_transform.dsn_to_board(curr_point);
         return new IntBox(lower_left.round(), upper_right.round());
     }
-    
+
     /**
      * Writes this rectangle as a scope to an output dsn-file.
      */
@@ -88,7 +88,7 @@ public class Rectangle extends Shape
         }
         p_file.write(")");
     }
-    
+
     public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier) throws java.io.IOException
     {
         p_file.new_line();
@@ -102,6 +102,6 @@ public class Rectangle extends Shape
         }
         p_file.write(")");
     }
-    
+
     public final double [] coor;
 }

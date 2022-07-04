@@ -711,7 +711,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable
 
     /**
      * Splits this trace into two at p_point.
-     * Returns the 2 pieces of the splitted trace, or null if nothing was splitted because for example 
+     * Returns the 2 pieces of the splitted trace, or null if nothing was splitted because for example
      * p_point is not located on a line segment of the p_polyline of this trace.
      */
     public Trace[] split(Point p_point)

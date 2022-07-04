@@ -12,7 +12,7 @@ import app.freerouting.logger.FRLogger;
 public class CalcFromSide
 {
     public static final CalcFromSide NOT_CALCULATED = new CalcFromSide(-1, null);
-    
+
     /**
      * calculates the number of the edge line of p_shape  where p_polyline
      * enters. Used in the push trace algorithm to determine the shove direction.
@@ -62,7 +62,7 @@ public class CalcFromSide
         this.no = fromside_no;
         this.border_intersection = intersection;
     }
-    
+
     /**
      * Calculates the nearest border side of p_shape to p_from_point.
      * Used in the shove_drill_item  algorithm to determine the shove direction.
@@ -77,7 +77,7 @@ public class CalcFromSide
         }
         this.border_intersection = border_projection.to_float();
     }
-    
+
     /**
      * Calculates the Side of p_shape at the start of p_line_segment.
      * If p_shove_to_the_left, the from_side_no is decremented by 2, else it is increased by 2.
@@ -91,7 +91,7 @@ public class CalcFromSide
         FloatPoint first_corner = p_shape.corner_approx(0);
         Side prev_side = check_line.side_of(first_corner);
         int front_side_no = -1;
-        
+
         for (int i = 1; i <= border_line_count; ++i)
         {
             FloatPoint next_corner;
@@ -125,7 +125,7 @@ public class CalcFromSide
         if (p_shove_to_the_left)
         {
             this.no = (front_side_no + 2) % border_line_count;
-            
+
         }
         else
         {
@@ -135,9 +135,9 @@ public class CalcFromSide
         FloatPoint next_corner = p_shape.corner_approx((this.no + 1) % border_line_count);
         this.border_intersection = prev_corner.middle_point(next_corner);
     }
-    
-    
-    
+
+
+
     /**
      * Values already calculated. Just create an instance from them.
      */
@@ -146,7 +146,7 @@ public class CalcFromSide
         no = p_no;
         border_intersection = p_border_intersection;
     }
-    
+
     final int no;
     final FloatPoint border_intersection;
 }

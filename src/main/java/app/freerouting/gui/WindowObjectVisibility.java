@@ -10,7 +10,7 @@ public class WindowObjectVisibility extends WindowVisibility
     /** Returns a new instance of ItemVisibilityFrame */
     public static WindowObjectVisibility get_instance(BoardFrame p_board_frame)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowObjectVisibility", p_board_frame.get_locale());
         String title = resources.getString("title");
         String header_message = resources.getString("header_message");
@@ -24,14 +24,14 @@ public class WindowObjectVisibility extends WindowVisibility
         result.refresh();
         return result;
     }
-    
+
     /** Creates a new instance of ItemVisibilityFrame */
     private WindowObjectVisibility(BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr)
     {
-        
+
         super(p_board_frame, p_title, p_header_message, p_message_arr);
     }
-    
+
     /**
      * Refreshs the displayed values in this window.
      */
@@ -43,10 +43,10 @@ public class WindowObjectVisibility extends WindowVisibility
             this.set_slider_value(i, color_intensity_table.get_value(i));
         }
     }
-    
+
     protected void set_changed_value(int p_index, double p_value)
     {
-        
+
         get_board_handling().graphics_context.color_intensity_table.set_value(p_index, p_value);
     }
 }

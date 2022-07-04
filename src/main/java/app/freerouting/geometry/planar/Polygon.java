@@ -97,8 +97,8 @@ public class Polygon implements java.io.Serializable
         }
         return result;
     }
-    
-    /** 
+
+    /**
      * Reverts the order of the corners of this polygon.
      */
     public Polygon revert_corners()

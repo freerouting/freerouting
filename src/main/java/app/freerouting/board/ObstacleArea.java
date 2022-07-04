@@ -33,7 +33,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         this.side_changed = p_side_changed;
         this.name = p_name;
     }
-    
+
     /**
      * Creates a new relative_area item without net.
      * p_name is null, if the ObstacleArea does not belong to a component.
@@ -43,14 +43,14 @@ public class ObstacleArea extends Item implements java.io.Serializable
     {
         this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, new int[0], p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
     }
-    
+
     public Item copy(int p_id_no)
     {
         int [] copied_net_nos = new int[net_no_arr.length];
         System.arraycopy(net_no_arr, 0, copied_net_nos, 0, net_no_arr.length);
         return new ObstacleArea(relative_area, layer, translation, rotation_in_degree, side_changed, copied_net_nos, clearance_class_no(), p_id_no, get_component_no(), name, get_fixed_state(), board);
     }
-    
+
     public Area get_area()
     {
         if (this.precalculated_absolute_area == null)
@@ -76,7 +76,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
                 {
                     turned_area = turned_area.rotate_approx(Math.toRadians(rotation), FloatPoint.ZERO);
                 }
-                
+
             }
             if (this.side_changed && this.board.components.get_flip_style_rotate_first())
             {
@@ -86,37 +86,37 @@ public class ObstacleArea extends Item implements java.io.Serializable
         }
         return this.precalculated_absolute_area;
     }
-    
+
     protected Area get_relative_area()
     {
         return this.relative_area;
     }
-    
+
     public boolean is_on_layer(int p_layer)
     {
         return layer == p_layer;
     }
-    
+
     public int first_layer()
     {
         return this.layer;
     }
-    
+
     public int last_layer()
     {
         return this.layer;
     }
-    
+
     public int get_layer()
     {
         return this.layer;
     }
-    
+
     public IntBox bounding_box()
     {
         return this.get_area().bounding_box();
     }
-    
+
     public boolean is_obstacle(Item p_other)
     {
         if (p_other.shares_net(this))
@@ -125,12 +125,12 @@ public class ObstacleArea extends Item implements java.io.Serializable
         }
         return p_other instanceof Trace || p_other instanceof Via;
     }
-    
+
     protected TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
     {
         return p_search_tree.calculate_tree_shapes(this);
     }
-    
+
     public int tile_shape_count()
     {
         TileShape[] tile_shapes = this.split_to_convex();
@@ -141,7 +141,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         }
         return tile_shapes.length;
     }
-    
+
     public TileShape get_tile_shape(int p_no)
     {
         TileShape[] tile_shapes = this.split_to_convex();
@@ -152,13 +152,13 @@ public class ObstacleArea extends Item implements java.io.Serializable
         }
         return tile_shapes[p_no];
     }
-    
+
     public void translate_by(Vector p_vector)
     {
         this.translation = this.translation.add(p_vector);
         this.clear_derived_data();
     }
-    
+
     public void turn_90_degree(int p_factor, IntPoint p_pole)
     {
         this.rotation_in_degree += p_factor * 90;
@@ -174,7 +174,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         this.translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(Point.ZERO);
         this.clear_derived_data();
     }
-    
+
     public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole)
     {
         double turn_angle = p_angle_in_degree;
@@ -195,7 +195,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         this.translation = new_translation.round().difference_by(Point.ZERO);
         this.clear_derived_data();
     }
-    
+
     public void change_placement_side(IntPoint p_pole)
     {
         this.side_changed = !this.side_changed;
@@ -207,7 +207,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         this.translation = rel_location.mirror_vertical(p_pole).difference_by(Point.ZERO);
         this.clear_derived_data();
     }
-    
+
     public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
     {
         if (!this.is_selected_by_fixed_filter(p_filter))
@@ -216,22 +216,22 @@ public class ObstacleArea extends Item implements java.io.Serializable
         }
         return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
     }
-    
+
     public Color[] get_draw_colors(GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_obstacle_colors();
     }
-    
+
     public double get_draw_intensity(GraphicsContext p_graphics_context)
     {
         return p_graphics_context.get_obstacle_color_intensity();
     }
-    
+
     public int get_draw_priority()
     {
         return app.freerouting.boardgraphics.Drawable.MIN_DRAW_PRIORITY;
     }
-    
+
     public void draw(java.awt.Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity)
     {
         if (p_graphics_context == null || p_intensity <= 0)
@@ -250,27 +250,27 @@ public class ObstacleArea extends Item implements java.io.Serializable
             }
         }
     }
-    
+
     public int shape_layer(int p_index)
     {
         return layer;
     }
-    
+
     protected Vector get_translation()
     {
         return translation;
     }
-    
+
     protected double get_rotation_in_degree()
     {
         return rotation_in_degree;
     }
-    
+
     protected boolean get_side_changed()
     {
         return side_changed;
     }
-    
+
     public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
     {
         java.util.ResourceBundle resources =
@@ -287,7 +287,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         this.print_item_info(p_window, p_locale);
         p_window.newline();
     }
-    
+
     /**
      * Used in the implementation of print_info for this class and derived classes.
      */
@@ -316,7 +316,7 @@ public class ObstacleArea extends Item implements java.io.Serializable
         p_window.append(" " + resources.getString("on_layer") + " ");
         p_window.append(this.board.layer_structure.arr[this.get_layer()].name);
     }
-    
+
     TileShape[] split_to_convex()
     {
         if (this.relative_area == null)
@@ -326,14 +326,14 @@ public class ObstacleArea extends Item implements java.io.Serializable
         }
         return this.get_area().split_to_convex();
     }
-    
+
     public void clear_derived_data()
     {
         super.clear_derived_data();
         this.precalculated_absolute_area = null;
     }
-    
-    
+
+
     public boolean write(java.io.ObjectOutputStream p_stream)
     {
         try
@@ -346,27 +346,27 @@ public class ObstacleArea extends Item implements java.io.Serializable
         }
         return true;
     }
-    
+
     /**
      * The name of this ObstacleArea, which is null, if the ObstacleArea doos not belong to a component.
      */
     public final String name;
-    
+
     /**
      * the layer of this relative_area
      */
     private int layer;
-    
+
     private Area relative_area;
-    
+
     private transient Area precalculated_absolute_area = null;
-    
+
     private Vector translation;
-    
+
     private double rotation_in_degree;
-    
+
     private boolean side_changed;
-    
+
     /** For debugging the  division into tree shapes */
     private static final boolean display_tree_shapes = false;
 }

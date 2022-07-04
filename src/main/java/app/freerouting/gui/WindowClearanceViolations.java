@@ -9,7 +9,7 @@ import java.util.List;
 
 public class WindowClearanceViolations extends WindowObjectListWithFilter
 {
-    
+
     /** Creates a new instance of IncompletesWindow */
     public WindowClearanceViolations(BoardFrame p_board_frame)
     {
@@ -19,12 +19,12 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
         this.list_empty_message.setText(resources.getString("list_empty_message"));
         p_board_frame.set_context_sensitive_help(this, "WindowObjectList_ClearanceViolations");
     }
-    
-    
+
+
     protected void fill_list()
     {
         app.freerouting.interactive.BoardHandling board_handling = this.board_frame.board_panel.board_handling;
-        
+
         ClearanceViolations clearance_violations =
                 new ClearanceViolations(board_handling.get_routing_board().get_items());
         java.util.SortedSet<ViolationInfo> sorted_set = new java.util.TreeSet<ViolationInfo>();
@@ -38,7 +38,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
         }
         this.list.setVisibleRowCount(Math.min(sorted_set.size(), DEFAULT_TABLE_SIZE));
     }
-    
+
     protected void select_instances()
     {
         List<Object> selected_violations = list.getSelectedValuesList();
@@ -52,14 +52,14 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
             ClearanceViolation curr_violation = ((ViolationInfo) selected_violations.get(i)).violation;
             selected_items.add(curr_violation.first_item);
             selected_items.add(curr_violation.second_item);
-            
+
         }
         app.freerouting.interactive.BoardHandling board_handling = board_frame.board_panel.board_handling;
         board_handling.select_items(selected_items);
         board_handling.toggle_selected_item_violations();
         board_handling.zoom_selection();
     }
-    
+
     private String item_info(app.freerouting.board.Item p_item)
     {
         String result;
@@ -101,9 +101,9 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
         }
         return result;
     }
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     private class ViolationInfo implements Comparable<ViolationInfo>, WindowObjectInfo.Printable
     {
         public ViolationInfo(ClearanceViolation p_violation)
@@ -112,7 +112,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
             FloatPoint board_location = p_violation.shape.centre_of_gravity();
             this.location = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(board_location);
         }
-        
+
         public String toString()
         {
             app.freerouting.board.LayerStructure layer_structure =  board_frame.board_panel.board_handling.get_routing_board().layer_structure;
@@ -121,12 +121,12 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
                     + resources.getString("on_layer") + " " + layer_structure.arr[violation.layer].name;
             return result;
         }
-        
+
         public void print_info(app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
         {
             this.violation.print_info(p_window, p_locale);
         }
-        
+
         public int compareTo(ViolationInfo p_other)
         {
             if (this.location.x > p_other.location.x)
@@ -147,7 +147,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
             }
             return this.violation.layer - p_other.violation.layer;
         }
-        
+
         public final ClearanceViolation violation;
         public final FloatPoint location;
     }

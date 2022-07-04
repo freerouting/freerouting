@@ -14,19 +14,19 @@ import app.freerouting.logger.FRLogger;
  */
 public class MenuState extends InteractiveState
 {
-    
+
     /** Creates a new instance of MenuState */
     MenuState(BoardHandling p_board_handle, ActivityReplayFile p_activityReplayFile)
     {
         super(null, p_board_handle, p_activityReplayFile);
         this.return_state = this;
     }
-    
+
     public javax.swing.JPopupMenu get_popup_menu()
     {
         return hdlg.get_panel().popup_menu_main;
     }
-    
+
     /**
      * Selects items at p_location.
      * Returns a new instance of SelectedItemState with the selected items,
@@ -54,7 +54,7 @@ public class MenuState extends InteractiveState
         hdlg.repaint();
         return result;
     }
-    
+
     public InteractiveState swap_pin(FloatPoint p_location)
     {
         ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
@@ -78,7 +78,7 @@ public class MenuState extends InteractiveState
         hdlg.repaint();
         return result;
     }
-    
+
     /**
      * Action to be taken when a key shortcut is pressed.
      */
@@ -172,7 +172,7 @@ public class MenuState extends InteractiveState
             {
                 hdlg.set_current_layer(current_layer_no);
             }
-            
+
         }
         else
         {
@@ -180,7 +180,7 @@ public class MenuState extends InteractiveState
         }
         return curr_return_state;
     }
-    
+
     /**
      * Do nothing on complete.
      */
@@ -188,7 +188,7 @@ public class MenuState extends InteractiveState
     {
         return this;
     }
-    
+
     /**
      * Do nothing on cancel.
      */
@@ -196,7 +196,7 @@ public class MenuState extends InteractiveState
     {
         return this;
     }
-    
+
     public void set_toolbar()
     {
         hdlg.get_panel().board_frame.set_menu_toolbar();

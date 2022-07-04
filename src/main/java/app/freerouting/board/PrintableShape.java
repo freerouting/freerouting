@@ -11,14 +11,14 @@ public abstract class PrintableShape
     {
         this.locale = p_locale;
     }
-    
+
     /**
      * Returns text information about the PrintableShape.
      */
     public abstract String toString();
-    
+
     protected final java.util.Locale locale;
-    
+
     static class Circle extends PrintableShape
     {
         /**
@@ -30,10 +30,10 @@ public abstract class PrintableShape
             center = p_center;
             radius = p_radius;
         }
-        
+
         public String toString()
         {
-            java.util.ResourceBundle resources = 
+            java.util.ResourceBundle resources =
                     java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
             String result = resources.getString("circle") + ": ";
             if (center.x != 0 || center.y != 0)
@@ -47,11 +47,11 @@ public abstract class PrintableShape
             result += radius_string;
             return result;
         }
-        
+
         public final FloatPoint center;
         public final double radius;
     }
-    
+
     /**
      * Creates a Polygon from the input coordinates.
      */
@@ -63,22 +63,22 @@ public abstract class PrintableShape
             lower_left = p_lower_left;
             upper_right = p_upper_right;
         }
-        
+
         public String toString()
         {
-            java.util.ResourceBundle resources = 
+            java.util.ResourceBundle resources =
                     java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
             String result = resources.getString("rectangle") + ": " + resources.getString("lower_left") + " = "
                     + lower_left.to_string(this.locale) + ", " + resources.getString("upper_right") + " = "
                     + upper_right.to_string(this.locale) ;
             return result;
         }
-        
+
         public final FloatPoint lower_left;
         public final FloatPoint upper_right;
     }
-    
-    
+
+
     static class Polygon extends PrintableShape
     {
         public Polygon(FloatPoint[] p_corners, java.util.Locale p_locale)
@@ -86,10 +86,10 @@ public abstract class PrintableShape
             super(p_locale);
             corner_arr = p_corners;
         }
-        
+
         public String toString()
         {
-            java.util.ResourceBundle resources = 
+            java.util.ResourceBundle resources =
                     java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
             String result = resources.getString("polygon") + ": ";
             for (int i = 0; i < corner_arr.length; ++i)
@@ -102,7 +102,7 @@ public abstract class PrintableShape
             }
             return result;
         }
-        
+
         public final FloatPoint[] corner_arr;
     }
 }

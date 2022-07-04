@@ -15,37 +15,37 @@ public class BigIntDirection extends Direction implements java.io.Serializable
     {
         return (x.signum() == 0 || y.signum() == 0);
     }
-    
+
     public boolean is_diagonal()
     {
         return x.abs().equals(y.abs());
     }
-    
+
     public Vector get_vector()
     {
         return new RationalVector(x, y, BigInteger.ONE);
     }
-    
+
     public Direction turn_45_degree(int p_factor)
     {
         FRLogger.warn("BigIntDirection: turn_45_degree not yet implemented");
         return this;
     }
-    
+
     public Direction opposite()
     {
         return new BigIntDirection(x.negate(), y.negate());
     }
-    
+
     final BigInteger x;
     final BigInteger y;
-    
+
     BigIntDirection(BigInteger p_x, BigInteger p_y)
     {
         x = p_x;
         y = p_y;
     }
-    
+
     /**
      * creates a BigIntDirection from an IntDirection
      */
@@ -54,7 +54,7 @@ public class BigIntDirection extends Direction implements java.io.Serializable
         x = BigInteger.valueOf(p_dir.x);
         y = BigInteger.valueOf(p_dir.y);
     }
-    
+
     /**
      * Implements the Comparable interface.
      * Returns 1, if this direction has a strict bigger angle with
@@ -67,13 +67,13 @@ public class BigIntDirection extends Direction implements java.io.Serializable
     {
         return -p_other_direction.compareTo(this);
     }
-    
+
     int compareTo(IntDirection p_other)
     {
         BigIntDirection other = new BigIntDirection(p_other);
         return compareTo(other);
     }
-    
+
     int compareTo(BigIntDirection p_other)
     {
         int x1 = x.signum();
@@ -123,10 +123,10 @@ public class BigIntDirection extends Direction implements java.io.Serializable
             }
             return 0;
         }
-        
+
         // now this direction and p_other are located in the same
         // open horizontal half plane
-        
+
         BigInteger tmp_1 = y.multiply(p_other.x);
         BigInteger tmp_2 = x.multiply(p_other.y);
         BigInteger determinant = tmp_1.subtract(tmp_2);

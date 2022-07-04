@@ -19,7 +19,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class OptViaAlgo
 {
-    
+
     /**
      * Optimizes the location of a via connected to at most 2 traces
      * according to the trace costs on the layers of the connected traces
@@ -94,9 +94,9 @@ public class OptViaAlgo
         int second_layer = second_trace.get_layer();
         Point first_trace_from_corner;
         Point second_trace_from_corner;
-        
+
         // calculate first_trace_from_corner and second_trace_from_corner
-        
+
         if (first_trace.first_corner().equals(via_center))
         {
             first_trace_from_corner = first_trace.polyline().corner(1);
@@ -111,7 +111,7 @@ public class OptViaAlgo
             FRLogger.warn("OptViaAlgo.opt_via_location: incorrect first contact");
             return false;
         }
-        
+
         if (second_trace.first_corner().equals(via_center))
         {
             second_trace_from_corner = second_trace.polyline().corner(1);
@@ -126,7 +126,7 @@ public class OptViaAlgo
             FRLogger.warn("OptViaAlgo.opt_via_location: incorrect second contact");
             return false;
         }
-        
+
         ExpansionCostFactor first_layer_trace_costs;
         ExpansionCostFactor second_layer_trace_costs;
         if (p_trace_cost_arr != null)
@@ -139,7 +139,7 @@ public class OptViaAlgo
             first_layer_trace_costs = new ExpansionCostFactor(1, 1);
             second_layer_trace_costs = first_layer_trace_costs;
         }
-        
+
         Point new_location =
                 reposition_via(p_board, p_via,
                 first_trace.get_half_width(), first_trace.clearance_class_no(), first_trace.get_layer(),
@@ -177,7 +177,7 @@ public class OptViaAlgo
         }
         return true;
     }
-    
+
     /**
      * Optimisations for vias with only 1 connected Trace (Plane or Fanout Vias).
      */
@@ -260,10 +260,10 @@ public class OptViaAlgo
                 trace_layer, trace_cl_class_no);
         if (new_via_location == null && trace_polyline.corner_count() >= 3)
         {
-            
+
             // try to project the via to the previous line
             Point   prev_corner;
-            
+
             if (at_first_corner)
             {
                 prev_corner = trace_polyline.corner(2);
@@ -300,7 +300,7 @@ public class OptViaAlgo
                             new_via_location = projection;
                         }
                     }
-                    
+
                 }
             }
         }
@@ -345,22 +345,22 @@ public class OptViaAlgo
         }
         return true;
     }
-    
+
     /**
      * Tries to move the via into the direction of p_to_location as far as possible
      * Return the new location of the via, or null, if no move was possible.
      */
     private static Point reposition_via(RoutingBoard p_board, Via p_via,
             IntPoint p_to_location, int p_trace_half_width, int p_trace_layer, int p_trace_cl_class)
-            
+
     {
         Point   from_location = p_via.get_center();
-        
+
         if (from_location.equals(p_to_location))
         {
             return null;
         }
-        
+
         double ok_length = p_board.check_trace_segment(from_location, p_to_location, p_trace_layer, p_via.net_no_arr,
                 p_trace_half_width, p_trace_cl_class, false);
         if (ok_length <= 0)
@@ -382,25 +382,25 @@ public class OptViaAlgo
         Vector delta = new_to_location.difference_by(from_location);
         boolean check_ok =
                 MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null);
-        
+
         if (check_ok)
         {
             return new_to_location;
         }
-        
+
         final double c_min_length = 0.3 * p_trace_half_width + 1;
-        
+
         ok_length = Math.min(ok_length, float_from_location.distance(float_to_location));
-        
+
         double curr_length = ok_length / 2;
-        
+
         ok_length = 0;
         Point result = null;
-        
+
         while (curr_length >= c_min_length)
         {
             Point check_point = float_from_location.change_length(float_to_location, ok_length + curr_length).round();
-            
+
             delta = check_point.difference_by(from_location);
             if (MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null))
             {
@@ -411,14 +411,14 @@ public class OptViaAlgo
         }
         return result;
     }
-    
+
     private static boolean reposition_via(RoutingBoard p_board, Via p_via,
             IntPoint p_to_location, int p_trace_half_width_1, int p_trace_layer_1, int p_trace_cl_class_1,
             IntPoint p_connect_location, int p_trace_half_width_2, int p_trace_layer_2, int p_trace_cl_class_2)
-            
+
     {
         Point   from_location = p_via.get_center();
-        
+
         if (from_location.equals(p_to_location))
         {
             if (p_board.get_test_level() == TestLevel.ALL_DEBUGGING_OUTPUT)
@@ -427,9 +427,9 @@ public class OptViaAlgo
             }
             return false;
         }
-        
+
         Vector delta = p_to_location.difference_by(from_location);
-        
+
         if ( p_board.rules.get_trace_angle_restriction() == AngleRestriction.NONE && delta.length_approx() <= 1.5)
         {
             // PullTightAlgoAnyAngle.reduce_corners mmay not be able to remove the new generated overlap
@@ -437,27 +437,27 @@ public class OptViaAlgo
             // That would result in an endless loop with removing the generated acute angle in reposition_via.
             return false;
         }
-        
+
         int[] net_no_arr = p_via.net_no_arr;
-        
+
         double ok_length = p_board.check_trace_segment(from_location, p_to_location, p_trace_layer_1, net_no_arr,
                 p_trace_half_width_1, p_trace_cl_class_1, false);
-        
+
         if (ok_length < Integer.MAX_VALUE)
         {
             return false;
         }
-        
+
         ok_length = p_board.check_trace_segment(p_to_location, p_connect_location, p_trace_layer_2, net_no_arr,
                 p_trace_half_width_2, p_trace_cl_class_2, false);
-        
+
         if (ok_length < Integer.MAX_VALUE)
         {
             return false;
         }
         return MoveDrillItemAlgo.check(p_via, delta, 0, 0, null, p_board, null);
     }
-    
+
     /**
      * Tries to reposition the via to a better location according to the
      * trace costs. Returns null, if no better location was found.
@@ -469,11 +469,11 @@ public class OptViaAlgo
             ExpansionCostFactor p_second_trace_costs, Point p_second_trace_from_corner)
     {
         Point   via_location = p_via.get_center();
-        
+
         Vector first_delta = p_first_trace_from_corner.difference_by(via_location);
         Vector second_delta = p_second_trace_from_corner.difference_by(via_location);
         double scalar_product = first_delta.scalar_product(second_delta);
-        
+
         FloatPoint float_via_location = via_location.to_float();
         FloatPoint float_first_trace_from_corner = p_first_trace_from_corner.to_float();
         FloatPoint float_second_trace_from_corner = p_second_trace_from_corner.to_float();
@@ -481,9 +481,9 @@ public class OptViaAlgo
         double second_trace_from_corner_distance = float_via_location.distance(float_second_trace_from_corner);
         IntPoint rounded_first_trace_from_corner = float_first_trace_from_corner.round();
         IntPoint rounded_second_trace_from_corner = float_second_trace_from_corner.round();
-        
+
         // handle case of overlapping lines first
-        
+
         if (via_location.side_of(p_first_trace_from_corner, p_second_trace_from_corner) == Side.COLLINEAR
                 && scalar_product > 0)
         {
@@ -496,14 +496,14 @@ public class OptViaAlgo
                     p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
         }
         Point result = null;
-        
+
         double curr_weighted_distance_1 =
                 float_via_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal,
                 p_first_trace_costs.vertical);
         double curr_weighted_distance_2 =
                 float_via_location.weighted_distance(float_first_trace_from_corner, p_second_trace_costs.horizontal,
                 p_second_trace_costs.vertical);
-        
+
         if (curr_weighted_distance_1 > curr_weighted_distance_2)
         {
             // try to move the via in direction of p_first_trace_from_corner
@@ -514,14 +514,14 @@ public class OptViaAlgo
                 return result;
             }
         }
-        
+
         curr_weighted_distance_1 =
                 float_via_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal,
                 p_second_trace_costs.vertical);
         curr_weighted_distance_2 =
                 float_via_location.weighted_distance(float_second_trace_from_corner, p_first_trace_costs.horizontal,
                 p_first_trace_costs.vertical);
-        
+
         if (curr_weighted_distance_1 > curr_weighted_distance_2)
         {
             // try to move the via in direction of p_second_trace_from_corner
@@ -563,7 +563,7 @@ public class OptViaAlgo
             curr_weighted_distance_2 =
                     float_to_point_1.weighted_distance(float_to_point_2, p_second_trace_costs.horizontal,
                     p_second_trace_costs.vertical);
-            
+
             if (curr_weighted_distance_1 > curr_weighted_distance_2)
             {
                 // try moving the via first into the direction of to_point_1
@@ -591,13 +591,13 @@ public class OptViaAlgo
                 return result;
             }
         }
-        
+
         // try decomposition in axisparallel parts
-        
+
         if (!first_delta.is_orthogonal())
         {
             FloatPoint float_check_location = new FloatPoint(float_via_location.x, float_first_trace_from_corner.y);
-            
+
             curr_weighted_distance_1 =
                     float_via_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal,
                     p_first_trace_costs.vertical);
@@ -607,7 +607,7 @@ public class OptViaAlgo
             double curr_weighted_distance_3 =
                     float_check_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal,
                     p_first_trace_costs.vertical);
-            
+
             if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
                 IntPoint check_location = float_check_location.round();
@@ -620,16 +620,16 @@ public class OptViaAlgo
                     return check_location;
                 }
             }
-            
+
             float_check_location = new FloatPoint(float_first_trace_from_corner.x, float_via_location.y);
-            
+
             curr_weighted_distance_2 =
                     float_via_location.weighted_distance(float_check_location, p_second_trace_costs.horizontal,
                     p_second_trace_costs.vertical);
             curr_weighted_distance_3 =
                     float_check_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal,
                     p_first_trace_costs.vertical);
-            
+
             if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
                 IntPoint check_location = float_check_location.round();
@@ -643,11 +643,11 @@ public class OptViaAlgo
                 }
             }
         }
-        
+
         if (!second_delta.is_orthogonal())
         {
             FloatPoint float_check_location = new FloatPoint(float_via_location.x, float_second_trace_from_corner.y);
-            
+
             curr_weighted_distance_1 =
                     float_via_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal,
                     p_second_trace_costs.vertical);
@@ -657,7 +657,7 @@ public class OptViaAlgo
             double curr_weighted_distance_3 =
                     float_check_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal,
                     p_second_trace_costs.vertical);
-            
+
             if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
                 IntPoint check_location = float_check_location.round();
@@ -670,16 +670,16 @@ public class OptViaAlgo
                     return check_location;
                 }
             }
-            
+
             float_check_location = new FloatPoint(float_second_trace_from_corner.x, float_via_location.y);
-            
+
             curr_weighted_distance_2 =
                     float_via_location.weighted_distance(float_check_location, p_first_trace_costs.horizontal,
                     p_first_trace_costs.vertical);
             curr_weighted_distance_3 =
                     float_check_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal,
                     p_second_trace_costs.vertical);
-            
+
             if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
                 IntPoint check_location = float_check_location.round();

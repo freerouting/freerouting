@@ -29,21 +29,21 @@ public class BatchOptRoute
     /**
      *  To optimize the route on the board after the autoroute task is finished.
      */
-    public BatchOptRoute(InteractiveActionThread p_thread) 
+    public BatchOptRoute(InteractiveActionThread p_thread)
     {
     	this(p_thread, false);
     }
-    
+
     public BatchOptRoute(InteractiveActionThread p_thread, boolean p_clone_board)
     {
         this.thread = p_thread;
         this.clone_board = p_clone_board;
-       
+
         this.routing_board = p_clone_board ? p_thread.hdlg.deep_copy_routing_board()
-        		                           : p_thread.hdlg.get_routing_board();       
+        		                           : p_thread.hdlg.get_routing_board();
         this.sorted_route_items = null;
     }
-    
+
 
     /**
      * Optimize the route on the board.
@@ -63,7 +63,7 @@ public class BatchOptRoute
             ++curr_pass_no;
             boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
             route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
-                     
+
             if ((route_improved > optimization_improvement_threshold) && (save_intermediate_stages))
             {	// Save intermediate optimization results:
             	// 1. To save the result in case the program is terminated unexpectedly,
@@ -91,7 +91,7 @@ public class BatchOptRoute
 
         FRLogger.traceEntry(optimizationPassId);
 
-        while (true) 
+        while (true)
         {
             if (this.thread.is_stop_requested())
             {
@@ -127,33 +127,33 @@ public class BatchOptRoute
     {
     	this.thread.hdlg.remove_ratsnest();
     }
-    
+
     protected RatsNest get_ratsnest()
     {
     	return this.thread.hdlg.get_ratsnest();
     }
-    
+
     /**
      * Try to improve the route by re-routing the connections containing p_item.
      */
-    protected ItemRouteResult opt_route_item(Item p_item, int p_pass_no, 
+    protected ItemRouteResult opt_route_item(Item p_item, int p_pass_no,
     		                                 boolean p_with_prefered_directions)
     {
         java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
         String start_message = resources.getString("batch_optimizer") + " " + resources.getString("stop_message") + "        " + resources.getString("routeoptimizer_pass") + (Integer.valueOf(p_pass_no)).toString();
         this.thread.hdlg.screen_messages.set_status_message(start_message); // assume overwriting messages is harmless
-        
-        this.remove_ratsnest();  // looks like caching the ratsnest is not necessary 
-                                 // as a new instance is needed every time, i.e., remove/get ratsnest are called in pair  	
+
+        this.remove_ratsnest();  // looks like caching the ratsnest is not necessary
+                                 // as a new instance is needed every time, i.e., remove/get ratsnest are called in pair
         int incomplete_count_before = this.get_ratsnest().incomplete_count();
-        
+
         int via_count_before = this.routing_board.get_vias().size();
         Set<Item> ripped_items = new java.util.TreeSet<Item>();
         ripped_items.add(p_item);
         if (p_item instanceof Trace)
         {
-            // add also the fork items, especially because not all fork items may be 
+            // add also the fork items, especially because not all fork items may be
             // returned by ReadSortedRouteItems because of matching end points.
             Trace curr_trace = (Trace) p_item;
             Set<Item> curr_contact_list = curr_trace.get_start_contacts();
@@ -178,10 +178,10 @@ public class BatchOptRoute
                 return new ItemRouteResult(p_item.get_id_no());
             }
         }
-        
-        if (!this.clone_board) { routing_board.generate_snapshot(); }  
+
+        if (!this.clone_board) { routing_board.generate_snapshot(); }
         // no need to undo for cloned board which is either promoted to master or discarded
-        
+
         this.routing_board.remove_items(ripped_connections, false);
         for (int i = 0; i < p_item.net_count(); ++i)
         {
@@ -198,28 +198,28 @@ public class BatchOptRoute
             ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
         }
 
-        BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, 
+        BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread,
         		MAX_AUTOROUTE_PASSES, ripup_costs, p_with_prefered_directions,
                 this.clone_board ? this.routing_board : null);
-        
-        this.remove_ratsnest();      
+
+        this.remove_ratsnest();
         int incomplete_count_after = this.get_ratsnest().incomplete_count();
-        
+
         int via_count_after = this.routing_board.get_vias().size();
         double trace_length_after = calc_weighted_trace_length(routing_board);
-        
-        ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), 
+
+        ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(),
         		via_count_before, via_count_after,
-        		this.min_cumulative_trace_length_before, trace_length_after, 
+        		this.min_cumulative_trace_length_before, trace_length_after,
         		incomplete_count_before, incomplete_count_after);
-        boolean route_improved = !this.thread.is_stop_requested() && 
+        boolean route_improved = !this.thread.is_stop_requested() &&
         		                 result.improved();
         result.update_improved(route_improved);
-        
+
         if (route_improved)
         {
             if (incomplete_count_after < incomplete_count_before ||
-                 (incomplete_count_after == incomplete_count_before && 
+                 (incomplete_count_after == incomplete_count_before &&
                   via_count_after < via_count_before))
             {
                 this.min_cumulative_trace_length_before = trace_length_after;
@@ -230,9 +230,9 @@ public class BatchOptRoute
                 // Catch unexpected increase of cumulative trace length somewhere for examole by removing acid trapsw.
                 this.min_cumulative_trace_length_before = Math.min(this.min_cumulative_trace_length_before, trace_length_after);
             }
-            
+
             if (!this.clone_board) { routing_board.pop_snapshot(); }
-            
+
             double new_trace_length = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
             this.thread.hdlg.screen_messages.set_post_route_info(via_count_after, new_trace_length);
         }
@@ -240,7 +240,7 @@ public class BatchOptRoute
         {
         	if (!this.clone_board) { routing_board.undo(null); }
         }
-        
+
         return result;
     }
 
@@ -302,7 +302,7 @@ public class BatchOptRoute
         }
         return sorted_route_items.get_current_position();
     }
-    
+
     protected boolean clone_board = false;
     protected final InteractiveActionThread thread;
     protected RoutingBoard routing_board;
@@ -312,21 +312,21 @@ public class BatchOptRoute
     protected static int MAX_AUTOROUTE_PASSES = 6;
     protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
     /*
-    protected class RouteResult 
+    protected class RouteResult
     {
     	public boolean improved;
         int via_count_before, via_count_after;
         double trace_length_before, trace_length_after;
     	int incomplete_count_before, incomplete_count_after;
-     	
+
     	public RouteResult(boolean p_improved) {
     		this(p_improved, 0, 0, 0, 0, 0, 0);
     	}
-    	
-    	public RouteResult(boolean p_improved, 
-    			    int p_via_count_before, int p_via_count_after, 
-    			    double p_trace_length_before, double p_trace_length_after, 
-    			    int p_incomplete_count_before, int p_incomplete_count_after) 
+
+    	public RouteResult(boolean p_improved,
+    			    int p_via_count_before, int p_via_count_after,
+    			    double p_trace_length_before, double p_trace_length_after,
+    			    int p_incomplete_count_before, int p_incomplete_count_after)
     	{
     		improved                = p_improved;
     		via_count_before        = p_via_count_before;
@@ -335,10 +335,10 @@ public class BatchOptRoute
     		trace_length_after      = p_trace_length_after;
     		incomplete_count_before = p_incomplete_count_before;
     		incomplete_count_after  = p_incomplete_count_after;
-    	} 
-    	
-    	public int via_count_reduced() { return via_count_before - via_count_after; } 
-    	public double length_reduced() { return trace_length_before - trace_length_after; } 	
+    	}
+
+    	public int via_count_reduced() { return via_count_before - via_count_after; }
+    	public double length_reduced() { return trace_length_before - trace_length_after; }
     } */
 
     /**

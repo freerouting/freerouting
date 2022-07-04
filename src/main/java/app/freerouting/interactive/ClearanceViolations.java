@@ -17,7 +17,7 @@ import app.freerouting.board.ClearanceViolation;
  */
 public class ClearanceViolations
 {
-    
+
     /** Creates a new instance of ClearanceViolations */
     public ClearanceViolations(Collection<Item> p_item_list)
     {
@@ -29,7 +29,7 @@ public class ClearanceViolations
             this.list.addAll(curr_item.clearance_violations());
         }
     }
-    
+
     public void draw(Graphics p_graphics, GraphicsContext p_graphics_context)
     {
          java.awt.Color draw_color = p_graphics_context.get_violations_color();
@@ -42,11 +42,11 @@ public class ClearanceViolations
              // draw a circle around the violation.
              double draw_radius = curr_violation.first_item.board.rules.get_min_trace_half_width() * 5;
              p_graphics_context.draw_circle(curr_violation.shape.centre_of_gravity(), draw_radius,  0.1 * draw_radius, draw_color,
-             p_graphics, intensity);           
+             p_graphics, intensity);
          }
     }
-    
-   
+
+
     /** The list of clearance violations. */
     public final Collection<ClearanceViolation> list;
 }

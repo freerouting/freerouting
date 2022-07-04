@@ -7,11 +7,11 @@ import java.awt.Color;
  */
 public class ItemColorTableModel extends ColorTableModel implements java.io.Serializable
 {
-    
+
     public ItemColorTableModel(app.freerouting.board.LayerStructure p_layer_structure, java.util.Locale p_locale)
     {
         super(p_layer_structure.arr.length, p_locale);
-  
+
         int row_count = p_layer_structure.arr.length;
         final int item_type_count = ColumnNames.values().length - 1;
         int signal_layer_no = 0;
@@ -88,13 +88,13 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
             }
         }
     }
-    
+
     public ItemColorTableModel(java.io.ObjectInputStream p_stream)
             throws java.io.IOException, java.lang.ClassNotFoundException
     {
         super(p_stream);
     }
-    
+
     /**
      * Copy construcror.
      */
@@ -107,30 +107,30 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
             System.arraycopy(p_item_color_model.data[i], 0, this.data[i], 0, this.data[i].length);
         }
     }
-    
+
     public int getColumnCount()
     {
         return ColumnNames.values().length;
     }
-    
+
     public int getRowCount()
     {
         return data.length;
     }
-    
+
     public String getColumnName(int p_col)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.boardgraphics.ColorTableModel", this.locale);
         return resources.getString(ColumnNames.values()[p_col].toString());
     }
-    
+
     public void setValueAt(Object p_value, int p_row, int p_col)
     {
         super.setValueAt(p_value, p_row, p_col);
         this.item_colors_precalculated = false;
     }
-    
+
     /**
      * Don't need to implement this method unless your table's
      * editable.
@@ -141,7 +141,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         //no matter where the cell appears onscreen.
         return p_col >= 1;
     }
-    
+
     Color[] get_trace_colors(boolean p_fixed)
     {
         if (!item_colors_precalculated)
@@ -159,7 +159,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         return result;
     }
-    
+
     Color[] get_via_colors(boolean p_fixed)
     {
         if (!item_colors_precalculated)
@@ -177,7 +177,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         return result;
     }
-    
+
     Color[] get_pin_colors()
     {
         if (!item_colors_precalculated)
@@ -186,7 +186,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         return precalculated_item_colors[ColumnNames.PINS.ordinal() - 1];
     }
-    
+
     Color[] get_conduction_colors()
     {
         if (!item_colors_precalculated)
@@ -195,7 +195,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         return precalculated_item_colors[ColumnNames.CONDUCTION_AREAS.ordinal() - 1];
     }
-    
+
     Color[] get_obstacle_colors()
     {
         if (!item_colors_precalculated)
@@ -204,7 +204,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         return precalculated_item_colors[ColumnNames.KEEPOUTS.ordinal() - 1];
     }
-    
+
     Color[] get_via_obstacle_colors()
     {
         if (!item_colors_precalculated)
@@ -213,7 +213,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         return precalculated_item_colors[ColumnNames.VIA_KEEPOUTS.ordinal() - 1];
     }
-    
+
     Color[] get_place_obstacle_colors()
     {
         if (!item_colors_precalculated)
@@ -222,8 +222,8 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         return precalculated_item_colors[ColumnNames.PLACE_KEEPOUTS.ordinal() - 1];
     }
-    
-    
+
+
     public void set_trace_colors(Color[] p_color_arr, boolean p_fixed)
     {
         if (p_fixed)
@@ -235,7 +235,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
             set_colors(ColumnNames.TRACES.ordinal(), p_color_arr);
         }
     }
-    
+
     public void set_via_colors(Color[] p_color_arr, boolean p_fixed)
     {
         if (p_fixed)
@@ -247,34 +247,34 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
             set_colors(ColumnNames.VIAS.ordinal(), p_color_arr);
         }
     }
-    
+
     public void set_pin_colors(Color[] p_color_arr)
     {
         set_colors(ColumnNames.PINS.ordinal(), p_color_arr);
     }
-    
+
     public void set_conduction_colors(Color[] p_color_arr)
     {
         set_colors(ColumnNames.CONDUCTION_AREAS.ordinal(), p_color_arr);
     }
-    
+
     public void set_keepout_colors(Color[] p_color_arr)
     {
         set_colors(ColumnNames.KEEPOUTS.ordinal(), p_color_arr);
     }
-    
+
     public void set_via_keepout_colors(Color[] p_color_arr)
     {
         set_colors(ColumnNames.VIA_KEEPOUTS.ordinal(), p_color_arr);
     }
-    
+
     public void set_place_keepout_colors(Color[] p_color_arr)
     {
         set_colors(ColumnNames.PLACE_KEEPOUTS.ordinal(), p_color_arr);
     }
-    
-    
-    
+
+
+
     private void set_colors(int p_item_type, Color[] p_color_arr)
     {
         for (int layer = 0; layer < this.data.length - 1; ++layer)
@@ -285,8 +285,8 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         data[this.data.length - 1][p_item_type] = p_color_arr[p_color_arr.length - 1];
         this.item_colors_precalculated = false;
     }
-    
-    
+
+
     private void precalulate_item_colors()
     {
         precalculated_item_colors = new Color[ColumnNames.values().length - 1][];
@@ -301,11 +301,11 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
         }
         this.item_colors_precalculated = true;
     }
-    
+
     private transient boolean item_colors_precalculated = false;
-    
+
     private transient Color[][] precalculated_item_colors = null;
-    
+
     private enum ColumnNames
     {
         LAYER, TRACES, FIXED_TRACES, VIAS, FIXED_VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS

@@ -22,7 +22,7 @@ import javax.swing.event.TableModelListener;
  */
 public class BoardPanel extends javax.swing.JPanel
 {
-    
+
     /** Creates a new BoardPanel in an Application */
     public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame,
             boolean p_is_web_application, java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
@@ -44,11 +44,11 @@ public class BoardPanel extends javax.swing.JPanel
         this.scroll_pane = board_frame.scroll_pane;
         default_init(p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
     }
-    
+
     private void default_init(java.util.Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
     {
         setLayout(new java.awt.BorderLayout());
-        
+
         setBackground(new java.awt.Color(0, 0, 0));
         setMaximumSize(new java.awt.Dimension(30000, 20000));
         setMinimumSize(new java.awt.Dimension(90, 60));
@@ -98,7 +98,7 @@ public class BoardPanel extends javax.swing.JPanel
         setAutoscrolls(true);
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
     }
-    
+
     void create_popup_menus()
     {
         popup_menu_main = new PopupMenuMain(this.board_frame);
@@ -110,8 +110,8 @@ public class BoardPanel extends javax.swing.JPanel
         popup_menu_copy = new PopupMenuCopy(this.board_frame);
         popup_menu_move = new PopupMenuMove(this.board_frame);
     }
-    
-    
+
+
     public void zoom_with_mouse_wheel(java.awt.geom.Point2D p_point, int p_wheel_rotation)
     {
         if (this.middle_drag_position != null || p_wheel_rotation == 0)
@@ -122,7 +122,7 @@ public class BoardPanel extends javax.swing.JPanel
         zoom_factor = Math.max(zoom_factor, 0.5);
         zoom(zoom_factor, p_point);
     }
-    
+
     private void mouse_pressed_action(java.awt.event.MouseEvent evt)
     {
         if (evt.getButton() == 1)
@@ -133,9 +133,9 @@ public class BoardPanel extends javax.swing.JPanel
         {
             middle_drag_position = new java.awt.Point(evt.getPoint()) ;
         }
-        
+
     }
-    
+
     private void mouse_dragged_action(java.awt.event.MouseEvent evt)
     {
         if (middle_drag_position != null)
@@ -148,7 +148,7 @@ public class BoardPanel extends javax.swing.JPanel
             scroll_near_border(evt);
         }
     }
-    
+
     private void mouse_moved_action(java.awt.event.MouseEvent p_evt)
     {
         this.requestFocusInWindow(); // to enable keyboard aliases
@@ -162,7 +162,7 @@ public class BoardPanel extends javax.swing.JPanel
             this.repaint();
         }
     }
-    
+
     private void mouse_clicked_action(java.awt.event.MouseEvent evt)
     {
         if (evt.getButton() == 1)
@@ -192,7 +192,7 @@ public class BoardPanel extends javax.swing.JPanel
             right_button_click_location = evt.getPoint();
         }
     }
-    
+
     /**
      * overwrites the paintComponent method to draw the routing board
      */
@@ -208,7 +208,7 @@ public class BoardPanel extends javax.swing.JPanel
             this.custom_cursor.draw(p_g);
         }
     }
-    
+
     /**
      * Returns the position of the viewport
      */
@@ -217,7 +217,7 @@ public class BoardPanel extends javax.swing.JPanel
         JViewport viewport =  scroll_pane.getViewport();
         return viewport.getViewPosition();
     }
-    
+
     /**
      * Sets the position of the viewport
      */
@@ -226,7 +226,7 @@ public class BoardPanel extends javax.swing.JPanel
         JViewport viewport =  scroll_pane.getViewport();
         viewport.setViewPosition(p_position);
     }
-    
+
     /**
      * zooms in at p_position
      */
@@ -234,7 +234,7 @@ public class BoardPanel extends javax.swing.JPanel
     {
         zoom(c_zoom_factor, p_position);
     }
-    
+
     /**
      * zooms out at p_position
      */
@@ -243,7 +243,7 @@ public class BoardPanel extends javax.swing.JPanel
         double zoom_factor = 1/c_zoom_factor;
         zoom(zoom_factor, p_position);
     }
-    
+
     /**
      * zooms to frame
      */
@@ -251,21 +251,21 @@ public class BoardPanel extends javax.swing.JPanel
     {
         double width_of_zoom_frame = Math.abs(p_position1.getX() - p_position2.getX()) ;
         double height_of_zoom_frame = Math.abs(p_position1.getY() - p_position2.getY()) ;
-        
+
         double center_x = Math.min(p_position1.getX(), p_position2.getX()) + (width_of_zoom_frame/2) ;
         double center_y = Math.min(p_position1.getY(), p_position2.getY()) + (height_of_zoom_frame/2) ;
-        
+
         Point2D center_point = new Point2D.Double(center_x, center_y) ;
-        
+
         java.awt.Rectangle display_rect = get_viewport_bounds();
-        
+
         double width_factor = display_rect.getWidth() / width_of_zoom_frame ;
         double height_factor = display_rect.getHeight() / height_of_zoom_frame ;
-        
+
         java.awt.geom.Point2D changed_location = zoom(Math.min(width_factor, height_factor), center_point) ;
         set_viewport_center(changed_location);
     }
-    
+
     public void center_display(Point2D p_new_center)
     {
         java.awt.Point delta = set_viewport_center(p_new_center);
@@ -278,16 +278,16 @@ public class BoardPanel extends javax.swing.JPanel
         app.freerouting.geometry.planar.FloatPoint curr_corner = new app.freerouting.geometry.planar.FloatPoint(p_new_center.getX(), p_new_center.getY());
         this.board_handling.activityReplayFile.add_corner(curr_corner);
     }
-    
-    
+
+
     public java.awt.geom.Point2D get_viewport_center()
     {
         java.awt.Point pos = get_viewport_position();
         java.awt.Rectangle display_rect = get_viewport_bounds();
         return new java.awt.geom.Point2D.Double(pos.getX() + display_rect.getCenterX(), pos.getY() + display_rect.getCenterY());
     }
-    
-    
+
+
     /**
      * zooms the content of the board by p_factor
      * Returns the change of the cursor location
@@ -297,7 +297,7 @@ public class BoardPanel extends javax.swing.JPanel
         final int max_panel_size = 10000000;
         Dimension old_size = this.getSize();
         java.awt.geom.Point2D old_center = get_viewport_center();
-        
+
         if (p_factor > 1 && Math.max(old_size.getWidth(), old_size.getHeight()) >= max_panel_size)
         {
             return p_location; // to prevent an sun.dc.pr.PRException, which I do not know, how to handle; maybe a bug in Java.
@@ -309,7 +309,7 @@ public class BoardPanel extends javax.swing.JPanel
         setPreferredSize(new_size);
         setSize(new_size);
         revalidate();
-        
+
         java.awt.geom.Point2D new_cursor = new java.awt.geom.Point2D.Double(p_location.getX()* p_factor, p_location.getY()* p_factor);
         double dx = new_cursor.getX() - p_location.getX();
         double dy = new_cursor.getY() - p_location.getY();
@@ -319,7 +319,7 @@ public class BoardPanel extends javax.swing.JPanel
         java.awt.geom.Point2D adjusted_new_cursor = new java.awt.geom.Point2D.Double(new_cursor.getX() + adjustment_vector.getX() + 0.5, new_cursor.getY() + adjustment_vector.getY() + 0.5);
         return adjusted_new_cursor;
     }
-    
+
     /**
      * Returns the viewport bounds of the scroll pane
      */
@@ -327,7 +327,7 @@ public class BoardPanel extends javax.swing.JPanel
     {
         return scroll_pane.getViewportBorderBounds();
     }
-    
+
     /**
      * Sets the viewport center to p_point.
      * Adjust the result, if p_point is near the border of the viewport.
@@ -349,7 +349,7 @@ public class BoardPanel extends javax.swing.JPanel
                 new java.awt.Point((int)(adjusted_x_corner - x_corner), (int)(adjusted_y_corner - y_corner));
         return adjustment_vector;
     }
-    
+
     /**
      * Selects the p_signal_layer_no-th layer in the select_parameter_window.
      */
@@ -363,14 +363,14 @@ public class BoardPanel extends javax.swing.JPanel
             this.popup_menu_copy.disable_layer_item(p_signal_layer_no);
         }
     }
-    
+
     void init_colors()
     {
         board_handling.graphics_context.item_color_table.addTableModelListener(new ColorTableListener());
         board_handling.graphics_context.other_color_table.addTableModelListener(new ColorTableListener());
         setBackground(board_handling.graphics_context.get_background_color());
     }
-    
+
     private void scroll_near_border(java.awt.event.MouseEvent p_evt)
     {
         final int border_dist = 50;
@@ -378,28 +378,28 @@ public class BoardPanel extends javax.swing.JPanel
                 new java.awt.Rectangle(p_evt.getX() - border_dist, p_evt.getY() - border_dist, 2 * border_dist, 2 * border_dist);
         ((JPanel)p_evt.getSource()).scrollRectToVisible(r);
     }
-    
+
     private void scroll_middle_mouse(java.awt.event.MouseEvent p_evt)
     {
         double delta_x = middle_drag_position.x - p_evt.getX();
         double delta_y = middle_drag_position.y  - p_evt.getY();
-        
+
         java.awt.Point view_position = get_viewport_position();
-        
+
         double x = (view_position.x + delta_x) ;
         double y = (view_position.y + delta_y) ;
-        
+
         Dimension panel_size = this.getSize();
         x = Math.min(x, panel_size.getWidth() - this.get_viewport_bounds().getWidth());
         y = Math.min(y, panel_size.getHeight() - this.get_viewport_bounds().getHeight());
-        
+
         x = Math.max(x, 0);
         y = Math.max(y, 0);
-        
+
         java.awt.Point p = new java.awt.Point((int) x, (int) y) ;
         set_viewport_position(p) ;
     }
-    
+
     public void move_mouse(Point2D p_location)
     {
         if (robot == null)
@@ -412,7 +412,7 @@ public class BoardPanel extends javax.swing.JPanel
         int y = (int) Math.round(absolute_panel_location.getY() - view_position.getY() +  p_location.getY() + 1);
         robot.mouseMove(x, y);
     }
-    
+
     /**
      * If p_value is true, the custom crosshair cursor will be used in display.
      * Otherwise the standard Cursor will be used.
@@ -431,7 +431,7 @@ public class BoardPanel extends javax.swing.JPanel
         board_frame.refresh_windows();
         repaint();
     }
-    
+
     /**
      * If the result is true, the custom crosshair cursor will be used in display.
      * Otherwise the standard Cursor will be used.
@@ -441,7 +441,7 @@ public class BoardPanel extends javax.swing.JPanel
     {
         return this.custom_cursor != null;
     }
-    
+
     public javax.swing.JPopupMenu popup_menu_insert_cancel;
     public PopupMenuCopy popup_menu_copy;
     public PopupMenuMove popup_menu_move;
@@ -450,26 +450,26 @@ public class BoardPanel extends javax.swing.JPanel
     public PopupMenuDynamicRoute popup_menu_dynamic_route;
     public PopupMenuStitchRoute popup_menu_stitch_route;
     public javax.swing.JPopupMenu popup_menu_select;
-    
+
     public final ScreenMessages screen_messages;
-    
+
     public final BoardFrame board_frame;
-    
+
     BoardHandling board_handling = null;
-    
+
     private final JScrollPane scroll_pane;
     Point2D right_button_click_location = null;
     private static final double c_zoom_factor = 2.0;
     private java.awt.Robot robot;
     private java.awt.Point middle_drag_position = null ;
-    
+
     /**
      * Defines the appearance of the custom custom_cursor in the board panel.
      * Null, if the standard custom_cursor is used.
      */
     private Cursor custom_cursor = null;
-    
-    
+
+
     private class ColorTableListener implements TableModelListener
     {
         public void tableChanged(TableModelEvent p_event)

@@ -11,14 +11,14 @@ import app.freerouting.datastructures.IdentifierType;
  */
 public class PolygonPath extends Path
 {
-    
+
     /** Creates a new instance of PolygonPath */
     public PolygonPath(Layer p_layer, double p_width, double[] p_coordinate_arr)
     {
         super(p_layer, p_width, p_coordinate_arr);
     }
-    
-    
+
+
     /**
      * Writes this path as a scope to an output dsn-file.
      */
@@ -39,7 +39,7 @@ public class PolygonPath extends Path
         }
         p_file.end_scope();
     }
-    
+
     public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type) throws java.io.IOException
     {
         p_file.start_scope();
@@ -59,7 +59,7 @@ public class PolygonPath extends Path
         }
         p_file.end_scope();
     }
-    
+
     public app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform)
     {
         FloatPoint [] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
@@ -88,7 +88,7 @@ public class PolygonPath extends Path
         }
         return result;
     }
-    
+
     public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
     {
         FloatPoint [] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
@@ -117,7 +117,7 @@ public class PolygonPath extends Path
         }
         return result;
     }
-    
+
     public Rectangle bounding_box()
     {
         double offset = this.width/2;

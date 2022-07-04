@@ -5,13 +5,13 @@ package app.freerouting.gui;
  */
 public class WindowNetDemonstrations extends WindowNetSamples
 {
-    
+
     /** Creates a new instance of WindowNetDemonstration */
     public WindowNetDemonstrations(java.util.Locale p_locale)
     {
         super(p_locale, "router_demonstrations", "replay_example", 7);
     }
-    
+
     /**
      * To be edited when the demonstration examples change.
      * For every String in the second column a String has to be added to the resource file WindowNetSamples.
@@ -25,7 +25,7 @@ public class WindowNetDemonstrations extends WindowNetSamples
         add("at14_empty.dsn", "autorouter_example_2", AdditionalAction.AUTOROUTE);
         add("sharp_empty.dsn", "autorouter_example_3", AdditionalAction.AUTOROUTE);
     }
-    
+
     protected void button_pushed()
     {
         int index = list.getSelectedIndex();

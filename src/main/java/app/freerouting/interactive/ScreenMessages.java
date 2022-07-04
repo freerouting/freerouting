@@ -7,7 +7,7 @@ import javax.swing.JLabel;
  */
 public class ScreenMessages
 {
-    
+
     /** Creates a new instance of ScreenMessageFields */
     public ScreenMessages(JLabel p_status_field, JLabel p_add_field,
             JLabel p_layer_field, JLabel p_mouse_position, java.util.Locale p_locale)
@@ -21,11 +21,11 @@ public class ScreenMessages
         layer_field = p_layer_field;
         mouse_position = p_mouse_position;
         add_field.setText(empty_string);
-        
+
         this.number_format =  java.text.NumberFormat.getInstance(p_locale);
         this.number_format.setMaximumFractionDigits(4);
     }
-    
+
     /**
      * Sets the message in the status field.
      */
@@ -36,7 +36,7 @@ public class ScreenMessages
             status_field.setText(p_message);
         }
     }
-    
+
     /**
      * Sets the displayed layer number on the screen.
      */
@@ -47,7 +47,7 @@ public class ScreenMessages
             layer_field.setText(active_layer_string + p_layer_name);
         }
     }
-    
+
     public void set_interactive_autoroute_info(int p_found, int p_not_found, int p_items_to_go)
     {
         Integer found = p_found;
@@ -69,23 +69,23 @@ public class ScreenMessages
         layer_field.setText(resources.getString("ripped") + " " + ripped.toString() + ", "
                 + resources.getString("failed") + " " + failed.toString());
     }
-    
+
     public void set_batch_fanout_info(int p_pass_no, int p_components_to_go)
     {
         Integer components_to_go = p_components_to_go;
         Integer pass_no = Integer.valueOf(p_pass_no);
         add_field.setText(resources.getString("fanout_pass") + " " +  pass_no.toString() + ": ");
-        layer_field.setText(resources.getString("still") + " " 
+        layer_field.setText(resources.getString("still") + " "
                 + components_to_go.toString() + " " + resources.getString("components"));
     }
-    
+
     public void set_post_route_info( int p_via_count, double p_trace_length)
     {
         Integer via_count = p_via_count;
         add_field.setText(resources.getString("via_count") + " " + via_count.toString());
         layer_field.setText(resources.getString("trace_length") + " " + this.number_format.format(p_trace_length));
     }
-    
+
     /**
      * Sets the displayed layer of the nearest target item
      * in interactive routing.
@@ -98,7 +98,7 @@ public class ScreenMessages
             prev_target_layer_name = p_layer_name;
         }
     }
-    
+
     public void set_mouse_position(app.freerouting.geometry.planar.FloatPoint p_pos)
     {
         if (p_pos == null || this.mouse_position == null || this.write_protected)
@@ -107,7 +107,7 @@ public class ScreenMessages
         }
         this.mouse_position.setText(p_pos.to_string(this.locale));
     }
-    
+
     /**
      * Clears the additional field, which is among others used to
      * display the layer of the nearest target item.
@@ -120,7 +120,7 @@ public class ScreenMessages
             prev_target_layer_name = empty_string;
         }
     }
-    
+
     /**
      * Clears the status field and the additional field.
      */
@@ -133,7 +133,7 @@ public class ScreenMessages
             layer_field.setText(empty_string);
         }
     }
-    
+
     /**
      * As long as write_protected is set to true, the set functions in this class will do nothing.
      */
@@ -141,20 +141,20 @@ public class ScreenMessages
     {
         write_protected = p_value;
     }
-    
+
     private final java.util.ResourceBundle resources;
     private final java.util.Locale locale;
     private final String active_layer_string;
     private final String target_layer_string;
     static private final String empty_string = "            ";
-    
+
     private JLabel add_field;
     private JLabel status_field;
     private JLabel layer_field;
     private JLabel mouse_position;
     private String prev_target_layer_name = empty_string;
     private boolean write_protected = false;
-    
+
     /** The number format for displaying the trace lengtht */
     private final java.text.NumberFormat number_format;
 }

@@ -9,7 +9,7 @@ import javax.swing.*;
  */
 public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.ClearanceClass>
 {
-    
+
     /** Creates a new instance of ClearanceComboBox */
     public ComboBoxClearance(ClearanceMatrix p_clearance_matrix)
     {
@@ -21,7 +21,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
         this.setModel(new DefaultComboBoxModel<>(this.class_arr));
         this.setSelectedIndex(1);
     }
-    
+
     /**
      * Adjusts this combo box to p_new_clearance_matrix.
      */
@@ -36,7 +36,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
         this.setModel(new javax.swing.DefaultComboBoxModel<>(this.class_arr));
         this.setSelectedIndex(Math.min(old_index, this.class_arr.length - 1));
     }
-    
+
     /**
      * Returns the index of the selected clearance class in the clearance matrix.
      */
@@ -44,7 +44,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
     {
         return ((ClearanceClass)this.getSelectedItem()).index;
     }
-    
+
     /**
      * Returns the number of clearance classes in this combo box.
      */
@@ -52,9 +52,9 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
     {
         return this.class_arr.length;
     }
-    
+
     private ClearanceClass[] class_arr;
-    
+
     /**
      * Contains the name of a clearance class and its index in the clearance matrix.
      */
@@ -65,12 +65,12 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
             this.name = p_name;
             this.index = p_index;
         }
-        
+
         public String toString()
         {
             return name;
         }
-        
+
         public final String name;
         public final int index;
     }

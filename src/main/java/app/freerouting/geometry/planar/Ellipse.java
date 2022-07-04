@@ -6,7 +6,7 @@ package app.freerouting.geometry.planar;
  */
 public class Ellipse implements java.io.Serializable
 {
-    
+
     /** Creates a new instance of Ellipse */
     public Ellipse(FloatPoint p_center, double p_rotation, double p_radius_1, double p_radius_2)
     {
@@ -34,9 +34,9 @@ public class Ellipse implements java.io.Serializable
         }
         this.rotation = curr_rotation;
     }
-    
+
     public final FloatPoint center;
-    
+
     /** Rotation of the ellipse in radian normed to 0 {@literal <}= rotation {@literal <} pi */
     public final double rotation;
     public final double bigger_radius;

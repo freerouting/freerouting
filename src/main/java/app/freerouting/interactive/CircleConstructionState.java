@@ -26,7 +26,7 @@ public class CircleConstructionState extends InteractiveState
         p_board_handling.remove_ratsnest(); // inserting a circle may change the connectivity.
         return new CircleConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
     }
-    
+
     /** Creates a new instance of CircleConstructionState */
     private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
@@ -37,7 +37,7 @@ public class CircleConstructionState extends InteractiveState
             activityReplayFile.start_scope(ActivityReplayFileScope.CREATING_CIRCLE, p_location);
         }
     }
-    
+
     public InteractiveState left_button_clicked(FloatPoint p_location)
     {
         if (activityReplayFile != null)
@@ -46,14 +46,14 @@ public class CircleConstructionState extends InteractiveState
         }
         return this.complete();
     }
-    
+
     public InteractiveState mouse_moved()
     {
         super.mouse_moved();
         hdlg.repaint();
         return this;
     }
-    
+
     /**
      * completes the circle construction state
      */
@@ -69,7 +69,7 @@ public class CircleConstructionState extends InteractiveState
         ConvexShape obstacle_shape = null;
         if (construction_succeeded)
         {
-            
+
             obstacle_shape = new Circle(center, radius);
             if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
             {
@@ -84,7 +84,7 @@ public class CircleConstructionState extends InteractiveState
         if (construction_succeeded)
         {
             hdlg.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
-            
+
             // insert the new shape as keepout
             this.observers_activated = !hdlg.get_routing_board().observers_active();
             if (this.observers_activated)
@@ -110,7 +110,7 @@ public class CircleConstructionState extends InteractiveState
         hdlg.repaint();
         return this.return_state;
     }
-    
+
     /**
      * Used when reading the next point from a logfile.
      * Calls complete, because only 1 additional point is stored in the logfile.
@@ -120,7 +120,7 @@ public class CircleConstructionState extends InteractiveState
         this.circle_radius = circle_center.distance(p_point);
         return this;
     }
-    
+
     /**
      * draws the graphic construction aid for the circle
      */
@@ -134,19 +134,19 @@ public class CircleConstructionState extends InteractiveState
         this.circle_radius = circle_center.distance(current_mouse_position);
         hdlg.graphics_context.draw_circle(circle_center, circle_radius, 300, java.awt.Color.white, p_graphics, 1);
     }
-    
+
     public javax.swing.JPopupMenu get_popup_menu()
     {
         return hdlg.get_panel().popup_menu_insert_cancel;
     }
-    
+
     public void display_default_message()
     {
         hdlg.screen_messages.set_status_message(resources.getString("creating_circle"));
     }
-    
+
     private final FloatPoint circle_center;
     private double circle_radius = 0;
-    
+
     private boolean observers_activated = false;
 }

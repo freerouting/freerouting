@@ -100,7 +100,7 @@ public class BatchFanout
         }
         return routed_count;
     }
-    
+
     private final InteractiveActionThread thread;
     private final RoutingBoard routing_board;
 

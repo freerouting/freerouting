@@ -5,13 +5,13 @@ package app.freerouting.designforms.specctra;
  */
 public class Placement extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of Placemet */
     public Placement()
     {
         super("placement");
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException
     {
         p_par.file.start_scope();

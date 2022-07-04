@@ -5,7 +5,7 @@ package app.freerouting.gui;
  */
 class BoardMenuBar extends javax.swing.JMenuBar
 {
-    
+
     /** Creates a new BoardMenuBar together with its menus */
     static BoardMenuBar get_instance(BoardFrame p_board_frame,
             boolean p_help_system_used, boolean p_session_file_option)
@@ -27,11 +27,11 @@ class BoardMenuBar extends javax.swing.JMenuBar
         menubar.add(help_menu);
         return menubar;
     }
-    
+
     void add_design_dependent_items()
     {
         this.file_menu.add_design_dependent_items();
     }
-    
+
     private BoardMenuFile file_menu;
 }

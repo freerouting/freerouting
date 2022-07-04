@@ -9,61 +9,61 @@ import java.util.List;
  */
 public abstract class WindowObjectList extends BoardSavableSubWindow
 {
-    
+
     /** Creates a new instance of ObjectListWindow */
     public WindowObjectList(BoardFrame p_board_frame)
     {
         this.board_frame = p_board_frame;
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowObjectList", p_board_frame.get_locale());
-        
+
         // create main panel
         this.main_panel = new javax.swing.JPanel();
         main_panel.setLayout(new java.awt.BorderLayout());
         this.add(main_panel);
-        
-        
+
+
         // create a panel for adding buttons
         this.south_panel = new javax.swing.JPanel();
         south_panel.setLayout(new java.awt.BorderLayout());
         main_panel.add(south_panel, java.awt.BorderLayout.SOUTH);
-        
-        
+
+
         javax.swing.JPanel button_panel =  new javax.swing.JPanel();
         button_panel.setLayout(new java.awt.BorderLayout());
         this.south_panel.add(button_panel, java.awt.BorderLayout.CENTER);
-        
+
         javax.swing.JPanel north_button_panel =  new javax.swing.JPanel();
         button_panel.add(north_button_panel, java.awt.BorderLayout.NORTH);
-        
+
         javax.swing.JButton show_button = new javax.swing.JButton(resources.getString("info"));
         show_button.setToolTipText(resources.getString("info_tooltip"));
         ShowListener show_listener = new ShowListener();
         show_button.addActionListener(show_listener);
         north_button_panel.add(show_button);
-        
+
         javax.swing.JButton instance_button = new javax.swing.JButton(resources.getString("select"));
         instance_button.setToolTipText(resources.getString("select_tooltip"));
         SelectListener instance_listener = new SelectListener();
         instance_button.addActionListener(instance_listener);
         north_button_panel.add(instance_button);
-        
+
         javax.swing.JPanel south_button_panel =  new javax.swing.JPanel();
         button_panel.add(south_button_panel, java.awt.BorderLayout.SOUTH);
-        
+
         javax.swing.JButton invert_button = new javax.swing.JButton(resources.getString("invert"));
         invert_button.setToolTipText(resources.getString("invert_tooltip"));
         invert_button.addActionListener(new InvertListener());
         south_button_panel.add(invert_button);
-        
+
         javax.swing.JButton recalculate_button = new javax.swing.JButton(resources.getString("recalculate"));
         recalculate_button.setToolTipText(resources.getString("recalculate_tooltip"));
         RecalculateListener recalculate_listener = new RecalculateListener();
         recalculate_button.addActionListener(recalculate_listener);
         south_button_panel.add(recalculate_button);
-        
+
         this.list_empty_message = new javax.swing.JLabel(resources.getString("list_empty"));
         this.list_empty_message.setBorder(javax.swing.BorderFactory.createEmptyBorder(10,10,10,10));
-        
+
         // Dispose this window and all subwindows when closing the window.
         this.addWindowListener(new java.awt.event.WindowAdapter()
         {
@@ -73,7 +73,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
             }
         });
     }
-    
+
     public void setVisible(boolean p_value)
     {
         if (p_value == true)
@@ -82,7 +82,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         super.setVisible(p_value);
     }
-    
+
     protected void recalculate()
     {
         if (this.list_scroll_pane != null)
@@ -105,7 +105,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
             main_panel.add(list_empty_message, java.awt.BorderLayout.CENTER);
         }
         this.pack();
-        
+
         this.list.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
@@ -117,7 +117,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
             }
         });
     }
-    
+
     public void dispose()
     {
         for (WindowObjectInfo curr_subwindow : this.subwindows)
@@ -129,39 +129,39 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         super.dispose();
     }
-    
+
     protected void add_to_list(Object p_object)
     {
         this.list_model.addElement(p_object);
     }
-    
+
     /**
      * Fills the list with the objects to display.
      */
     abstract protected void fill_list();
-    
+
     abstract protected void select_instances();
-    
+
     protected final BoardFrame board_frame;
-    
+
     private final javax.swing.JPanel main_panel;
-    
+
     private javax.swing.JScrollPane list_scroll_pane = null;
     protected javax.swing.JLabel list_empty_message;
-    
+
     private javax.swing.DefaultListModel<Object> list_model = null;
     protected javax.swing.JList<Object> list;
-    
+
     protected final javax.swing.JPanel south_panel;
-    
+
     /** The subwindows with information about selected object*/
     protected final java.util.Collection<WindowObjectInfo> subwindows = new java.util.LinkedList<WindowObjectInfo>();
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     protected static final int DEFAULT_TABLE_SIZE = 20;
-    
-    
+
+
     /** Listens to the button for showing the selected padstacks */
     private class ShowListener implements java.awt.event.ActionListener
     {
@@ -186,10 +186,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
             new_window.setLocation(new_window_location);
             subwindows.add(new_window);
         }
-        
+
         private static final int WINDOW_OFFSET = 30;
     }
-    
+
     /** Listens to the button for showing the selected incompletes*/
     private class SelectListener implements java.awt.event.ActionListener
     {
@@ -198,7 +198,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
             select_instances();
         }
     }
-    
+
     /** Listens to the button for inverting the selection*/
     private class InvertListener implements java.awt.event.ActionListener
     {
@@ -221,7 +221,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
             list.setSelectedIndices(new_selected_indices);
         }
     }
-    
+
     /**
      * Saves also the filter string to disk.
      */
@@ -246,7 +246,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         super.save(p_object_stream);
     }
-    
+
     public boolean read(java.io.ObjectInputStream p_object_stream)
     {
         int [] saved_selected_indices = null;
@@ -266,7 +266,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         }
         return result;
     }
-    
+
     /** Listens to the button for recalculating the content of the window*/
     private class RecalculateListener implements java.awt.event.ActionListener
     {

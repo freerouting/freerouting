@@ -10,14 +10,14 @@ import app.freerouting.geometry.planar.TileShape;
 
 class PullTightAlgo90 extends PullTightAlgo
 {
-    
+
     /** Creates a new instance of PullTight90 */
     public PullTightAlgo90(RoutingBoard p_board, int[] p_only_net_no_arr, Stoppable p_stoppable_thread, int p_time_limit,
             Point p_keep_point, int p_keep_point_layer)
     {
         super(p_board, p_only_net_no_arr, p_stoppable_thread, p_time_limit, p_keep_point, p_keep_point_layer);
     }
-    
+
     Polyline pull_tight(Polyline p_polyline)
     {
         Polyline new_result = avoid_acid_traps(p_polyline);
@@ -35,7 +35,7 @@ class PullTightAlgo90 extends PullTightAlgo
         }
         return new_result;
     }
-    
+
     /**
      * Tries to skip the second corner of p_polyline.
      * Return p_polyline, if nothing was changed.
@@ -77,7 +77,7 @@ class PullTightAlgo90 extends PullTightAlgo
         }
          return new Polyline(new_lines);
     }
-    
+
     /**
      * Tries to reduce the amount of corners of p_polyline.
      * Return p_polyline, if nothing was changed.
@@ -170,18 +170,18 @@ class PullTightAlgo90 extends PullTightAlgo
                 new_lines [new_line_index ] = p_polyline.arr[ p_polyline.arr.length - i];
             }
         }
-        
+
         Line [] cleaned_new_lines = new Line [new_line_index + 1];
         System.arraycopy(new_lines, 0, cleaned_new_lines, 0, cleaned_new_lines.length);
         Polyline result = new Polyline(cleaned_new_lines);
         return result;
     }
-    
+
     Polyline smoothen_start_corner_at_trace(PolylineTrace p_trace)
     {
         return null;
     }
-    
+
     Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace)
     {
         return null;

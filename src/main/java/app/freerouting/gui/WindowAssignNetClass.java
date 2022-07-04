@@ -6,18 +6,18 @@ import app.freerouting.rules.NetClass;
 
 public class WindowAssignNetClass extends BoardSavableSubWindow
 {
-    
+
     /** Creates a new instance of AssignNetRulesWindow */
     public WindowAssignNetClass(BoardFrame p_board_frame)
     {
         this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.WindowAssignNetClass", p_board_frame.get_locale());
         this.setTitle(resources.getString("title"));
-        
+
         this.board_frame = p_board_frame;
-        
+
         this.main_panel = new javax.swing.JPanel();
         this.main_panel.setLayout(new java.awt.BorderLayout());
-        
+
         this.table_model = new AssignRuleTableModel();
         this.table = new  AssignRuleTable(this.table_model);
         this.table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -27,13 +27,13 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
         this.table.setPreferredScrollableViewportSize(new java.awt.Dimension(table_width, table_height));
         this.main_panel.add(scroll_pane, java.awt.BorderLayout.CENTER);
         add_net_class_combo_box();
-        
+
         p_board_frame.set_context_sensitive_help(this, "WindowNetClasses_AssignNetClass");
-        
+
         this.add(main_panel);
         this.pack();
     }
-    
+
     private void add_net_class_combo_box()
     {
         this.net_rule_combo_box = new javax.swing.JComboBox<>();
@@ -44,7 +44,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
         }
         this.table.getColumnModel().getColumn(1).setCellEditor(new javax.swing.DefaultCellEditor(net_rule_combo_box));
     }
-    
+
     public void refresh()
     {
         // Reinsert the net class column.
@@ -52,27 +52,27 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
         {
             table_model.setValueAt(((Net)table_model.getValueAt(i, 0)).get_class(), i, 1);
         }
-        
+
         // Reinsert the net rule combobox because a rule may have  been added or deleted.
         add_net_class_combo_box();
     }
-    
-    
+
+
     private final BoardFrame board_frame;
-    
+
     private final javax.swing.JPanel main_panel;
-    
+
     private javax.swing.JScrollPane scroll_pane;
     private AssignRuleTable table;
     private AssignRuleTableModel table_model;
-    
+
     private javax.swing.JComboBox<NetClass> net_rule_combo_box;
-    
+
     private final java.util.ResourceBundle resources;
-    
+
     private static final int TEXTFIELD_HEIGHT = 16;
     private static final int TEXTFIELD_WIDTH = 100;
-    
+
     private class AssignRuleTable extends javax.swing.JTable
     {
         public AssignRuleTable(AssignRuleTableModel p_table_model)
@@ -93,13 +93,13 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
                 }
             };
         }
-        
+
         private final String[] column_tool_tips =
         {
             resources.getString("net_name_tooltip"), resources.getString("class_name_tooltip")
         };
     }
-    
+
     /**
      * Table model of the net rule table.
      */
@@ -108,10 +108,10 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
         public AssignRuleTableModel()
         {
             column_names = new String[2];
-            
+
             column_names[0] = resources.getString("net_name");
             column_names[1] = resources.getString("class_name");
-            
+
             app.freerouting.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
             data = new Object[board_rules.nets.max_net_no()][];
             for (int i = 0; i < data.length; ++i)
@@ -120,7 +120,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
             }
             set_values();
         }
-        
+
         /** Calculates the the valus in this table */
         public void set_values()
         {
@@ -137,33 +137,33 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
                 this.data[i][1] = sorted_arr[i].get_class();
             }
         }
-        
-        
+
+
         public String getColumnName(int p_col)
         {
             return column_names[p_col];
         }
-        
+
         public int getRowCount()
         {
             return data.length;
         }
-        
+
         public int getColumnCount()
         {
             return column_names.length;
         }
-        
+
         public Object getValueAt(int p_row, int p_col)
         {
             return data[p_row][p_col];
         }
-        
+
         public boolean isCellEditable(int p_row, int p_col)
         {
             return p_col > 0;
         }
-        
+
         public void setValueAt(Object p_value, int p_row, int p_col)
         {
             if (p_col != 1 || !(p_value instanceof NetClass))
@@ -179,11 +179,11 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
             Net curr_net = (Net) first_row_object;
             NetClass curr_net_rule = (NetClass)p_value;
             curr_net.set_class(curr_net_rule);
-            
+
             this.data[p_row][p_col] = p_value;
             fireTableCellUpdated(p_row, p_col);
         }
-        
+
         private Object[][] data = null;
         private String[] column_names = null;
     }

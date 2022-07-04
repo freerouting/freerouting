@@ -27,7 +27,7 @@ public class FileFilter extends javax.swing.filechooser.FileFilter
         }
         return message;
     }
-    
+
     public boolean accept(java.io.File p_file)
     {
         if (p_file.isDirectory())
@@ -50,7 +50,7 @@ public class FileFilter extends javax.swing.filechooser.FileFilter
         }
         return false;
     }
-    
+
     private final String []  extensions;
 }
 

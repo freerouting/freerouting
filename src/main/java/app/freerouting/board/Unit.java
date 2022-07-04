@@ -19,7 +19,7 @@ public enum Unit implements java.io.Serializable
             return "inch";
         }
     },
-    
+
     MM
     {
         public String toString()
@@ -27,7 +27,7 @@ public enum Unit implements java.io.Serializable
             return "mm";
         }
     },
-    
+
     UM
     {
         public String toString()
@@ -35,7 +35,7 @@ public enum Unit implements java.io.Serializable
             return "um";
         }
     };
-    
+
     /** Scales p_value from p_from_unit to p_to_unit */
     public static double scale(double p_value, Unit p_from_unit, Unit p_to_unit)
     {
@@ -106,7 +106,7 @@ public enum Unit implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Return the unit corresponding to the input string,
      * or null, if the input string is different from mil, inch and mm.
@@ -136,6 +136,6 @@ public enum Unit implements java.io.Serializable
         }
         return result;
     }
-    
+
     public static final double INCH_TO_MM = 25.4;
 }

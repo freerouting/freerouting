@@ -12,7 +12,7 @@ public class NetClasses implements java.io.Serializable
     {
         return class_arr.size();
     }
-    
+
     /**
      * Returns the net class with index p_index.
      */
@@ -21,7 +21,7 @@ public class NetClasses implements java.io.Serializable
         assert p_index >= 0 && p_index <=  class_arr.size() - 1;
         return class_arr.get(p_index);
     }
-    
+
     /**
      * Returns the net class with name p_name, or null, if no such class exists.
      */
@@ -36,7 +36,7 @@ public class NetClasses implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Appends a new empty class with name p_name to the class array
      */
@@ -46,13 +46,13 @@ public class NetClasses implements java.io.Serializable
         class_arr.add(new_class);
         return new_class;
     }
-    
+
     /**
      * Appends a new empty class to the class array. A name for the class is created internally
      */
     NetClass append(app.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, java.util.Locale p_locale)
     {
-        java.util.ResourceBundle resources = 
+        java.util.ResourceBundle resources =
                 java.util.ResourceBundle.getBundle("app.freerouting.rules.Default", p_locale);
         String name_front = resources.getString("class");
         String new_name = null;
@@ -68,7 +68,7 @@ public class NetClasses implements java.io.Serializable
         }
         return append(new_name, p_layer_structure, p_clearance_matrix, false);
     }
-    
+
     /**
      * Looks, if the list contains a net class with trace half widths all equal to p_trace_half_width,
      * trace clearance class equal to p_trace_clearance_class and via rule equal to p_cia_rule.
@@ -97,7 +97,7 @@ public class NetClasses implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Looks, if the list contains a net class with trace half width[i] all equal to p_trace_half_width_arr[i]
      * for 0 {@literal <}= i {@literal <} layer_count, trace clearance class equal to p_trace_clearance_class
@@ -127,7 +127,7 @@ public class NetClasses implements java.io.Serializable
         }
         return null;
     }
-    
+
     /**
      * Removes p_net_class from this list.
      * Returns false, if p_net_class was not contained in the list.
@@ -136,6 +136,6 @@ public class NetClasses implements java.io.Serializable
     {
         return this.class_arr.remove(p_net_class);
     }
-    
+
     private final java.util.Vector<NetClass> class_arr = new java.util.Vector<NetClass>();
 }

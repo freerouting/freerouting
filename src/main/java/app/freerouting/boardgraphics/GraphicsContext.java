@@ -96,7 +96,7 @@ public class GraphicsContext implements java.io.Serializable
         coordinate_transform.set_mirror_top_bottom(top_bottom_swapped);
         coordinate_transform.set_rotation(rotation);
     }
-    
+
     /**
      * draws a polygon with corners p_points
      */
@@ -136,7 +136,7 @@ public class GraphicsContext implements java.io.Serializable
             Point2D p1 = coordinate_transform.board_to_screen(p_points[i]) ;
             Point2D p2 = coordinate_transform.board_to_screen(p_points[i+1]) ;
             Line2D line = new Line2D.Double(p1, p2) ;
-            
+
             if (show_line_segments)
             {
                 g2.draw(line);
@@ -568,32 +568,32 @@ public class GraphicsContext implements java.io.Serializable
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.HILIGHT.ordinal());
     }
-    
+
     public double get_incomplete_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.INCOMPLETES.ordinal());
     }
-    
+
     public double get_length_matching_area_color_intensity()
     {
         return color_intensity_table.get_value(ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal());
     }
-    
+
     public void set_trace_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.TRACES.ordinal(), p_value);
     }
-    
+
     public void set_via_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.VIAS.ordinal(), p_value);
     }
-    
+
     public void set_pin_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.PINS.ordinal(), p_value);
     }
-    
+
     public void set_conduction_color_intensity(double p_value)
     {
         color_intensity_table.set_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), p_value);

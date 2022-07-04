@@ -166,7 +166,7 @@ public class Net implements Comparable<Net>, app.freerouting.board.ObjectInfoPan
         contains_plane = p_value;
     }
 
-    /** 
+    /**
      * Indicates, if this net contains a power plane.
      * Used by the autorouter for setting the via costs to the cheap plane via costs.
      * May also be true, if a layer covered with a conduction_area of this net is

@@ -17,20 +17,20 @@ import app.freerouting.board.MoveComponent;
  */
 public class DragItemState extends DragState
 {
-    
+
     /** Creates a new instance of MoveItemState */
     protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
     {
         super(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
         item_to_move = p_item_to_move;
     }
-    
-    
+
+
     public void display_default_message()
     {
         hdlg.screen_messages.set_status_message(resources.getString("dragging_item"));
     }
-    
+
     /**
      * Moves the items of the group to p_to_location.
      * Return this.return_state, if an error eccured  while moving,
@@ -80,7 +80,7 @@ public class DragItemState extends DragState
                 }
             }
         }
-        
+
         if (shove_ok)
         {
             if (!this.something_dragged)
@@ -113,7 +113,7 @@ public class DragItemState extends DragState
         this.previous_location = p_to_location;//(IntPoint)this.curr_location.translate_by(rel_coor);
         return this;
     }
-    
+
     public InteractiveState button_released()
     {
         if (this.observers_activated)
@@ -161,6 +161,6 @@ public class DragItemState extends DragState
         hdlg.screen_messages.set_status_message("");
         return this.return_state;
     }
-    
+
     private Item item_to_move = null;
 }

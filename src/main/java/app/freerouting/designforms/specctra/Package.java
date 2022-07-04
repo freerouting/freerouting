@@ -12,7 +12,7 @@ import app.freerouting.logger.FRLogger;
  */
 public class Package
 {
-    
+
     /** Creates a new instance of Package */
     public Package(String p_name, PinInfo[] p_pin_info_arr, Collection<Shape> p_outline, Collection<Shape.ReadAreaScopeResult> p_keepouts,
             Collection<Shape.ReadAreaScopeResult> p_via_keepouts, Collection<Shape.ReadAreaScopeResult> p_place_keepouts, boolean p_is_front)
@@ -25,7 +25,7 @@ public class Package
         place_keepouts = p_place_keepouts;
         is_front = p_is_front;
     }
-    
+
     public static Package read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
     {
         try
@@ -47,7 +47,7 @@ public class Package
             {
                 Object prev_token = next_token;
                 next_token = p_scanner.next_token();
-                
+
                 if (next_token == null)
                 {
                     FRLogger.warn("Package.read_scope: unexpected end of file");
@@ -132,7 +132,7 @@ public class Package
             return null;
         }
     }
-    
+
     public static void write_scope(WriteScopeParameter p_par, app.freerouting.library.Package p_package) throws java.io.IOException
     {
         p_par.file.start_scope();
@@ -194,7 +194,7 @@ public class Package
         }
         p_par.file.end_scope();
     }
-    
+
     private static void write_package_keepout(app.freerouting.library.Package.Keepout p_keepout, WriteScopeParameter p_par,
                                               boolean p_is_via_keepout) throws java.io.IOException
     {
@@ -241,7 +241,7 @@ public class Package
         }
         p_par.file.end_scope();
     }
-    
+
     /** Reads the information of a single pin in a package. */
     private static PinInfo read_pin_info(IJFlexScanner p_scanner)
     {
@@ -265,7 +265,7 @@ public class Package
                 return null;
             }
             double rotation = 0;
-            
+
             p_scanner.yybegin(SpecctraDsnFileReader.NAME); // to be able to handle pin names starting with a digit.
             next_token = p_scanner.next_token();
             if (next_token == Keyword.OPEN_BRACKET)
@@ -298,7 +298,7 @@ public class Package
                 FRLogger.warn("Package.read_pin_info: String or Integer expected");
                 return null;
             }
-            
+
             double []  pin_coor = new double [2];
             for (int i = 0; i < 2; ++i)
             {
@@ -322,7 +322,7 @@ public class Package
             {
                 Object prev_token = next_token;
                 next_token = p_scanner.next_token();
-                
+
                 if (next_token == null)
                 {
                     FRLogger.warn("Package.read_pin_info: unexpected end of file");
@@ -353,7 +353,7 @@ public class Package
             return null;
         }
     }
-    
+
     private static double read_rotation(IJFlexScanner p_scanner)
     {
         double result = 0;
@@ -385,7 +385,7 @@ public class Package
         }
         return result;
     }
-    
+
     /**
      * Writes the placements of p_package to a Specctra dsn-file.
      */
@@ -430,12 +430,12 @@ public class Package
             p_par.file.end_scope();
         }
     }
-    
+
     private static boolean read_placement_side(IJFlexScanner p_scanner) throws java.io.IOException
     {
         Object next_token = p_scanner.next_token();
         boolean result = (next_token != Keyword.BACK);
-        
+
         next_token = p_scanner.next_token();
         if (next_token != Keyword.CLOSED_BRACKET)
         {
@@ -443,8 +443,8 @@ public class Package
         }
         return result;
     }
-    
-    
+
+
     public final String name;
     /** List of objects of type PinInfo. */
     public final PinInfo[]  pin_info_arr;
@@ -458,8 +458,8 @@ public class Package
     public final Collection<Shape.ReadAreaScopeResult> place_keepouts;
     /** If false, the package is placed on the back side of the board */
     public final boolean is_front;
-    
-    
+
+
     /** Describes the Iinformation of a pin in a package. */
     static public class PinInfo
     {

@@ -85,7 +85,7 @@ public class DsnFile
     }
 
     /**
-     * Sets contains_plane to true for nets with a conduction_area covering a 
+     * Sets contains_plane to true for nets with a conduction_area covering a
      * large part of a signal layer, if that layer does not contain any traces
      * This is useful in case the layer type was not set correctly to plane in the dsn-file.
      * Returns true, if something was changed.

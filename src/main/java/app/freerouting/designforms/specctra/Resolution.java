@@ -7,13 +7,13 @@ import app.freerouting.logger.FRLogger;
  */
 public class Resolution extends ScopeKeyword
 {
-    
+
     /** Creates a new instance of Resolution */
     public Resolution()
     {
         super("resolution");
     }
-    
+
     public boolean read_scope(ReadScopeParameter p_par)
     {
         try
@@ -54,7 +54,7 @@ public class Resolution extends ScopeKeyword
             return false;
         }
     }
-    
+
     public static void write_scope(app.freerouting.datastructures.IndentFileWriter p_file, app.freerouting.board.Communication p_board_communication)  throws java.io.IOException
     {
         p_file.new_line();
@@ -64,5 +64,5 @@ public class Resolution extends ScopeKeyword
         p_file.write((Integer.valueOf(p_board_communication.resolution)).toString());
         p_file.write(")");
     }
-    
+
 }

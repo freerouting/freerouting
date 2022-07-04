@@ -20,7 +20,7 @@ public class SnapShot implements java.io.Serializable
         }
         return new SnapShot(p_name, p_board_handling);
     }
-    
+
     /** Creates a SnapShot of the display region and the interactive settings */
     private SnapShot(String p_name, BoardHandling p_board_handling)
     {
@@ -31,13 +31,13 @@ public class SnapShot implements java.io.Serializable
         this.viewport_position = new java.awt.Point(p_board_handling.get_panel().get_viewport_position());
         this.subwindow_filters = p_board_handling.get_panel().board_frame.get_snapshot_subwindow_selections();
     }
-    
+
     public String toString()
     {
         return this.name;
     }
-    
-    
+
+
     public java.awt.Point copy_viewport_position()
     {
         if (this.viewport_position == null)
@@ -46,7 +46,7 @@ public class SnapShot implements java.io.Serializable
         }
         return new java.awt.Point(this.viewport_position);
     }
-    
+
     /**
      * Goes to this snapshot in interactive board editing.
      */
@@ -63,7 +63,7 @@ public class SnapShot implements java.io.Serializable
         {
             p_board_handling.graphics_context.set_layer_visibility_arr(this.graphics_context.copy_layer_visibility_arr());
         }
- 
+
         if (snapshot_attributes.interactive_state)
         {
             p_board_handling.set_interactive_state(this.get_interactive_state(p_board_handling, p_board_handling.activityReplayFile));
@@ -108,13 +108,13 @@ public class SnapShot implements java.io.Serializable
         {
             p_board_handling.settings.horizontal_component_grid = this.settings.horizontal_component_grid;
             p_board_handling.settings.vertical_component_grid = this.settings.vertical_component_grid;
-        }  
+        }
         if (snapshot_attributes.info_list_selections)
         {
             p_board_handling.get_panel().board_frame.set_snapshot_subwindow_selections(this.subwindow_filters);
         }
     }
-    
+
     /**
      * Returns a new InterativeState from the data of this instance.
      */
@@ -135,7 +135,7 @@ public class SnapShot implements java.io.Serializable
         }
         return result;
     }
-    
+
     /**
      * Create a number for writing an interactive state to disk.
      * Only MenuStates are saved. The default is SelectState.
@@ -157,14 +157,14 @@ public class SnapShot implements java.io.Serializable
         }
         return result;
     }
-    
+
     private final String name;
     public final Settings settings;
     private final int interactive_state_no;
     public final app.freerouting.boardgraphics.GraphicsContext graphics_context;
     private final java.awt.Point viewport_position;
     public final BoardFrame.SubwindowSelections subwindow_filters;
-    
+
     /**
      * Defines the data of the snapshot selected for restoring.
      */
@@ -188,7 +188,7 @@ public class SnapShot implements java.io.Serializable
             component_grid = true;
             info_list_selections = true;
         }
-        
+
         /** Copy constructor */
         Attributes(Attributes p_attributes)
         {
@@ -208,7 +208,7 @@ public class SnapShot implements java.io.Serializable
             component_grid = p_attributes.component_grid;
             info_list_selections = p_attributes.info_list_selections;
         }
-        
+
         public boolean object_colors;
         public boolean object_visibility;
         public boolean layer_visibility;

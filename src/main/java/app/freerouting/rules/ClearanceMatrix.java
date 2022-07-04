@@ -21,7 +21,7 @@ public class ClearanceMatrix implements java.io.Serializable
         result.set_default_value(p_default_value);
         return result;
     }
-    
+
     /**
      * Creates a new instance for p_class_count clearance classes on
      * p_layer_count layers.
@@ -38,7 +38,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         this.max_value_on_layer = new int[layer_structure.arr.length];
     }
-    
+
     /**
      * Returns the number of the clearance class with the input name,
      * or -1, if no such clearance class exists.
@@ -54,7 +54,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return -1;
     }
-    
+
     /**
      * Gets the name of the clearance class with the input number.
      */
@@ -67,7 +67,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return row[p_cl_class].name;
     }
-    
+
     /**
      * Sets the value of all clearance classes with number {@literal >}= 1
      * to p_value on all layers.
@@ -79,7 +79,7 @@ public class ClearanceMatrix implements java.io.Serializable
             set_default_value(i, p_value);
         }
     }
-    
+
     /**
      * Sets the value of all clearance classes with number {@literal >}= 1
      * to p_value on p_layer.
@@ -90,12 +90,12 @@ public class ClearanceMatrix implements java.io.Serializable
         {
             for (int j = 1; j < class_count; ++j)
             {
-                
+
                 set_value(i, j, p_layer,  p_value);
             }
         }
     }
-    
+
     /**
      * Sets the value of an entry in the clearance matrix to p_value
      * on all layers.
@@ -107,7 +107,7 @@ public class ClearanceMatrix implements java.io.Serializable
             set_value(p_i, p_j, layer, p_value);
         }
     }
-    
+
     /**
      * Sets the value of an entry in the clearance matrix to p_value
      * on all inner layers.
@@ -119,7 +119,7 @@ public class ClearanceMatrix implements java.io.Serializable
             set_value(p_i, p_j, layer, p_value);
         }
     }
-    
+
     /**
      * Sets the value of an entry in the clearance matrix to p_value.
      */
@@ -134,7 +134,7 @@ public class ClearanceMatrix implements java.io.Serializable
         curr_row.max_value[p_layer] = Math.max(curr_row.max_value[p_layer], p_value);
         this.max_value_on_layer[p_layer] = Math.max(this.max_value_on_layer[p_layer], p_value);
     }
-    
+
     /**
      * Cets the required spacing of clearance classes with index p_i and p_j
      * on p_layer. This value will be always an even integer.
@@ -148,7 +148,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return row[p_j].column[p_i].layer[p_layer];
     }
-    
+
     /**
      * Returns the maximal required spacing of clearance class with
      * index p_i to all other clearance classes on layer p_layer.
@@ -161,14 +161,14 @@ public class ClearanceMatrix implements java.io.Serializable
         layer = Math.min(layer, layer_structure.arr.length - 1);
         return row[i].max_value[layer];
     }
-    
+
     public int max_value(int p_layer)
     {
         int layer = Math.max(p_layer, 0);
         layer = Math.min(layer, layer_structure.arr.length - 1);
         return this.max_value_on_layer[layer];
     }
-    
+
     /**
      * Returns true, if the values of the clearance matrix
      * in the p_i-th column and the p_j-th row are not equal on all layers.
@@ -185,7 +185,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return false;
     }
-    
+
     /**
      * Returns true, if the values of the clearance matrix
      * in the p_i-th column and the p_j-th row are not equal on all inner layers.
@@ -206,7 +206,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return false;
     }
-    
+
     /**
      * Returns the row with index p_no
      */
@@ -219,12 +219,12 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return this.row[p_no];
     }
-    
+
     public int get_class_count()
     {
         return this.class_count;
     }
-    
+
     /**
      * Return the layer count of this clearance matrix;#
      */
@@ -232,7 +232,7 @@ public class ClearanceMatrix implements java.io.Serializable
     {
         return layer_structure.arr.length;
     }
-    
+
     /**
      * Return the clearance compensation value of p_clearance_class_no on layer p_layer.
      */
@@ -240,7 +240,7 @@ public class ClearanceMatrix implements java.io.Serializable
     {
         return (this.value(p_clearance_class_no,  p_clearance_class_no, p_layer) + 1)/ 2;
     }
-    
+
     /**
      * Appends a new clearance class to the clearence matrix and
      * initializes it with the values of the default class.
@@ -254,9 +254,9 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         int old_class_count = this.class_count;
         ++this.class_count;
-        
+
         Row [] new_row = new Row [this.class_count];
-        
+
         // append a matrix entry to each old row
         for (int i = 0; i < old_class_count; ++i)
         {
@@ -268,18 +268,18 @@ public class ClearanceMatrix implements java.io.Serializable
             {
                 curr_new_row.column[j] = curr_old_row.column[j];
             }
-            
+
             curr_new_row.column[old_class_count] = new MatrixEntry();
         }
-        
+
         // append the new row
-        
+
         new_row [old_class_count] = new Row(p_class_name);
-        
+
         this.row = new_row;
-        
+
         // Set the new matrix elements to default values.
-        
+
         for (int i = 0; i < old_class_count; ++i)
         {
             for (int j = 0; j < this.layer_structure.arr.length; ++j)
@@ -289,7 +289,7 @@ public class ClearanceMatrix implements java.io.Serializable
                 this.set_value(i, old_class_count, j, default_value);
             }
         }
-        
+
         for (int j = 0; j < this.layer_structure.arr.length; ++j)
         {
             int default_value = this.value(1, 1, j);
@@ -297,7 +297,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return true;
     }
-    
+
     /**
      * Removes the class with index p_index from the clearance matrix.
      */
@@ -305,9 +305,9 @@ public class ClearanceMatrix implements java.io.Serializable
     {
         int old_class_count = this.class_count;
         --this.class_count;
-        
+
         Row [] new_row = new Row [this.class_count];
-        
+
         // remove the  matrix entry with inded p_index in to each old row
         int new_row_index = 0;
         for (int i = 0; i < old_class_count; ++i)
@@ -319,7 +319,7 @@ public class ClearanceMatrix implements java.io.Serializable
             Row curr_old_row = this.row[i];
             new_row[new_row_index] = new Row(curr_old_row.name);
             Row curr_new_row = new_row[new_row_index];
-            
+
             int new_column_index = 0;
             for (int j = 0; j < old_class_count; ++j)
             {
@@ -334,7 +334,7 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         this.row = new_row;
     }
-    
+
     /**
      * Returns true, if all clearance values of the class with index p_1 are equal to
      * the clearance values of index p_2.
@@ -360,17 +360,17 @@ public class ClearanceMatrix implements java.io.Serializable
         }
         return true;
     }
-    
+
     /**
      * count of clearance classes
      */
     private int class_count;
-    
+
     private final app.freerouting.board.LayerStructure layer_structure;
     private Row [] row; // vector of class_count rows of the clearance matrix
     private int [] max_value_on_layer; //  maximum clearance value for each layer
-    
-    
+
+
     /**
      * contains a row of entries of the clearance matrix
      */
@@ -386,10 +386,10 @@ public class ClearanceMatrix implements java.io.Serializable
             }
             max_value = new int[layer_structure.arr.length];
         }
-        
+
         public void print_info(app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale)
         {
-            java.util.ResourceBundle resources = 
+            java.util.ResourceBundle resources =
                     java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
             p_window.append_bold(resources.getString("spacing_from_clearance_class") + " ");
             p_window.append_bold(this.name);
@@ -420,13 +420,13 @@ public class ClearanceMatrix implements java.io.Serializable
                 }
             }
         }
-        
+
         final String name;
-        
+
         int [] max_value;
         final MatrixEntry [] column;
     }
-    
+
     /**
      * a single entry of the clearance matrix
      */
@@ -440,7 +440,7 @@ public class ClearanceMatrix implements java.io.Serializable
                 layer[i] = 0;
             }
         }
-        
+
         /**
          * Returns thrue of all clearances values of this and p_other are equal.
          */
@@ -455,7 +455,7 @@ public class ClearanceMatrix implements java.io.Serializable
             }
             return true;
         }
-        
+
         /**
          * Return true, if not all layer values are equal.
          */

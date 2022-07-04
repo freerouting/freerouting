@@ -15,7 +15,7 @@ import app.freerouting.datastructures.Signum;
 public abstract class  Direction implements Comparable<Direction>, java.io.Serializable
 {
     public static final IntDirection NULL = new IntDirection(0,0);
-    
+
     /**
      * the direction to the east
      */
@@ -48,7 +48,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
      * the direction to the southeast
      */
     public static final IntDirection DOWN45  = new IntDirection(1, -1);
-    
+
     /**
      * creates a Direction from the input Vector
      */
@@ -56,7 +56,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
     {
         return p_vector.to_normalized_direction();
     }
-    
+
     /**
      * Calculates the direction from p_from to p_to.
      * If p_from and p_to are equal, null is returned.
@@ -69,7 +69,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
         }
         return get_instance(p_to.difference_by( p_from ));
     }
-    
+
     /**
      * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
      */
@@ -80,22 +80,22 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
         int y = (int)Math.round(Math.sin(p_angle) * scale_factor);
         return get_instance(new IntVector(x, y));
     }
-    
+
     /**
      * return any Vector pointing into this direction
      */
     public abstract Vector get_vector();
-    
+
     /**
      * returns true, if the direction is horizontal or vertical
      */
     public abstract boolean is_orthogonal();
-    
+
     /**
      * returns true, if the direction is diagonal
      */
     public abstract boolean is_diagonal();
-    
+
     /**
      * returns true, if the direction is orthogonal or diagonal
      */
@@ -103,17 +103,17 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
     {
         return ( is_orthogonal() || is_diagonal() ) ;
     }
-    
+
     /**
      * turns the direction by p_factor times 45 degree
      */
     public abstract Direction turn_45_degree(int p_factor);
-    
+
     /**
      * returns the opposite direction of this direction
      */
     public abstract Direction opposite();
-    
+
     /**
      * Returns true, if p_ob is a Direction and
      * this Direction and p_ob point into the same direction
@@ -128,7 +128,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
         {
             return false;
         }
-        
+
         if (this.side_of(p_other) != Side.COLLINEAR)
         {
             return false;
@@ -138,7 +138,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
         Vector  other_vector = p_other.get_vector() ;
         return this_vector.projection(other_vector) == Signum.POSITIVE;
     }
-    
+
     /**
      * Let L be the line from the Zero Vector to p_other.get_vector().
      * The function returns
@@ -150,7 +150,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
     {
         return this.get_vector().side_of(p_other.get_vector());
     }
-    
+
     /**
      * The function returns
      *   Signum.POSITIVE, if the scalar product of of a vector representing
@@ -162,7 +162,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
     {
         return this.get_vector().projection(p_other.get_vector());
     }
-    
+
     /**
      * calculates an approximation of the direction in the middle of
      * this direction and p_other
@@ -180,8 +180,8 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
                 (int)Math.round(y * scale_factor));
         return Direction.get_instance(vm);
     }
-    
-    
+
+
     /**
      * Returns 1, if the angle between p_1 and this direction is bigger
      * the angle between p_2 and this direction,
@@ -214,7 +214,7 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
         }
         return result;
     }
-    
+
     /**
      * Returns an approximation of the signed angle corresponding to this dierection.
      */
@@ -222,11 +222,11 @@ public abstract class  Direction implements Comparable<Direction>, java.io.Seria
     {
         return this.get_vector().angle_approx();
     }
-    
+
     // auxiliary functions needed because the virtual function mechanism
     // does not work in parameter position
-    
+
     abstract int compareTo(IntDirection p_other);
     abstract int compareTo(BigIntDirection p_other);
-    
+
 }
