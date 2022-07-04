@@ -45,8 +45,7 @@ public class MainApplication extends javax.swing.JFrame {
             FRLogger.error(ex.getLocalizedMessage(), ex);
         }
 
-        FRLogger.info("\nFreerouting " + VERSION_NUMBER_STRING + "\n\n");
-
+        FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
         FRLogger.debug(" Version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
         FRLogger.debug(" Command line arguments: '" + String.join(" ", args) + "'");
         FRLogger.debug(" Architecture: " + System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version"));
