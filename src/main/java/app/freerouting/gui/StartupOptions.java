@@ -111,8 +111,10 @@ public class StartupOptions {
                     }
                 } else if (p_args[i].startsWith("-l")) {
                     // the locale is provided
-                    if (p_args.length > i + 1 && p_args[i + 1].startsWith("de")) {
-                        current_locale = java.util.Locale.GERMAN;
+                    if (p_args.length > i + 1 && p_args[i + 1].startsWith("en")) {
+                        current_locale = Locale.ENGLISH;
+                    } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("de")) {
+                        current_locale = Locale.GERMAN;
                     } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh")) {
                         current_locale = Locale.SIMPLIFIED_CHINESE;
                     }

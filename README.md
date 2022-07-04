@@ -119,7 +119,7 @@ The following command line arguments are supported by freerouter:
 * -dr [design rules file]: reads the rules from a previously saved .rules file.
 * -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (.scr) when the routing is finished.
 * -mp [number of passes]: sets the upper limit of the number of auto-router passes that will be performed.
-* -l [language]: "de" for German, "zh" for Simplified Chinese, otherwise it's English.
+* -l [language]: "en" for English, "de" for German, "zh" for Simplified Chinese, otherwise it's the system default. English is set by default for unsupported languages.
 * -mt [number of threads]: sets thread pool size for route optimization. The default is one less than the number of logical processors in the system. Set it to 0 to disable route optimization.
 * -oit [percentage]: stops the route optimizer if the improvement drops below a certain percentage threshold per pass. Default is 0.1%, and `-oit 0` means to continue improving until it is interrupted by the user or it runs out of options to test.
 * -us [greedy | global | hybrid]: sets board updating strategy for route optimization: greedy, global optimal or hybrid. The default is greedy. When hybrid is selected, another option "hr" specifies hybrid ratio.
