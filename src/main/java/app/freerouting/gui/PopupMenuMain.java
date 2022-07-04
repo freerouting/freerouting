@@ -1,121 +1,111 @@
 package app.freerouting.gui;
 
-/**
- * Popup Menu used in the interactive select state.
- */
-class PopupMenuMain extends PopupMenuDisplay
-{
+/** Popup Menu used in the interactive select state. */
+class PopupMenuMain extends PopupMenuDisplay {
 
-    /** Creates a new instance of MainPopupMenu */
-    PopupMenuMain(BoardFrame p_board_frame)
-    {
-        super(p_board_frame) ;
-        java.util.ResourceBundle resources =
-                java.util.ResourceBundle.getBundle("app.freerouting.gui.PopupMenuMain", p_board_frame.get_locale());
+  /** Creates a new instance of MainPopupMenu */
+  PopupMenuMain(BoardFrame p_board_frame) {
+    super(p_board_frame);
+    java.util.ResourceBundle resources =
+        java.util.ResourceBundle.getBundle(
+            "app.freerouting.gui.PopupMenuMain", p_board_frame.get_locale());
 
-        // add the item for selecting items
+    // add the item for selecting items
 
-        javax.swing.JMenuItem select_item_item = new javax.swing.JMenuItem();
-        select_item_item.setText(resources.getString("select_item"));
-        select_item_item.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                board_panel.board_handling.select_items(board_panel.right_button_click_location);
-            }
+    javax.swing.JMenuItem select_item_item = new javax.swing.JMenuItem();
+    select_item_item.setText(resources.getString("select_item"));
+    select_item_item.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            board_panel.board_handling.select_items(board_panel.right_button_click_location);
+          }
         });
 
-        this.add(select_item_item, 0);
+    this.add(select_item_item, 0);
 
-        // Insert the start route item.
+    // Insert the start route item.
 
-        javax.swing.JMenuItem start_route_item = new javax.swing.JMenuItem();
-        start_route_item.setText(resources.getString("start_route"));
-        start_route_item.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                board_panel.board_handling.start_route(board_panel.right_button_click_location);
-            }
+    javax.swing.JMenuItem start_route_item = new javax.swing.JMenuItem();
+    start_route_item.setText(resources.getString("start_route"));
+    start_route_item.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            board_panel.board_handling.start_route(board_panel.right_button_click_location);
+          }
         });
 
-        this.add(start_route_item, 1);
+    this.add(start_route_item, 1);
 
-        // Insert the create_obstacle_menu.
+    // Insert the create_obstacle_menu.
 
-        javax.swing.JMenu create_obstacle_menu = new javax.swing.JMenu();
+    javax.swing.JMenu create_obstacle_menu = new javax.swing.JMenu();
 
-        create_obstacle_menu.setText(resources.getString("create_keepout"));
+    create_obstacle_menu.setText(resources.getString("create_keepout"));
 
-        javax.swing.JMenuItem create_tile_item = new javax.swing.JMenuItem();
-        create_tile_item.setText(resources.getString("tile"));
-        create_tile_item.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                board_panel.board_handling.start_tile(board_panel.right_button_click_location);
-            }
+    javax.swing.JMenuItem create_tile_item = new javax.swing.JMenuItem();
+    create_tile_item.setText(resources.getString("tile"));
+    create_tile_item.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            board_panel.board_handling.start_tile(board_panel.right_button_click_location);
+          }
         });
 
-        if (board_panel.board_handling.get_routing_board().get_test_level() != app.freerouting.board.TestLevel.RELEASE_VERSION)
-        {
-            create_obstacle_menu.add(create_tile_item);
-        }
-
-        javax.swing.JMenuItem create_circle_item = new javax.swing.JMenuItem();
-        create_circle_item.setText(resources.getString("circle"));
-        create_circle_item.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                board_panel.board_handling.start_circle(board_panel.right_button_click_location);
-            }
-        });
-
-        create_obstacle_menu.add(create_circle_item);
-
-        javax.swing.JMenuItem create_polygon_item = new javax.swing.JMenuItem();
-        create_polygon_item.setText(resources.getString("polygon"));
-        create_polygon_item.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                board_panel.board_handling.start_polygonshape_item( board_panel.right_button_click_location);
-            }
-        });
-
-        create_obstacle_menu.add(create_polygon_item);
-
-        javax.swing.JMenuItem add_hole_item = new javax.swing.JMenuItem();
-        add_hole_item.setText(resources.getString("hole"));
-        add_hole_item.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                board_panel.board_handling.start_adding_hole(board_panel.right_button_click_location);
-            }
-        });
-
-        create_obstacle_menu.add(add_hole_item);
-
-        this.add(create_obstacle_menu, 2);
-
-        // Insert the pin swap item.
-
-        if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0)
-        {
-            // the board contains swappable gates or pins
-            javax.swing.JMenuItem swap_pin_item = new javax.swing.JMenuItem();
-            swap_pin_item.setText(resources.getString("swap_pin"));
-            swap_pin_item.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent evt)
-                {
-                    board_panel.board_handling.swap_pin(board_panel.right_button_click_location);
-                }
-            });
-
-            this.add(swap_pin_item, 3);
-        }
+    if (board_panel.board_handling.get_routing_board().get_test_level()
+        != app.freerouting.board.TestLevel.RELEASE_VERSION) {
+      create_obstacle_menu.add(create_tile_item);
     }
+
+    javax.swing.JMenuItem create_circle_item = new javax.swing.JMenuItem();
+    create_circle_item.setText(resources.getString("circle"));
+    create_circle_item.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            board_panel.board_handling.start_circle(board_panel.right_button_click_location);
+          }
+        });
+
+    create_obstacle_menu.add(create_circle_item);
+
+    javax.swing.JMenuItem create_polygon_item = new javax.swing.JMenuItem();
+    create_polygon_item.setText(resources.getString("polygon"));
+    create_polygon_item.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            board_panel.board_handling.start_polygonshape_item(
+                board_panel.right_button_click_location);
+          }
+        });
+
+    create_obstacle_menu.add(create_polygon_item);
+
+    javax.swing.JMenuItem add_hole_item = new javax.swing.JMenuItem();
+    add_hole_item.setText(resources.getString("hole"));
+    add_hole_item.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            board_panel.board_handling.start_adding_hole(board_panel.right_button_click_location);
+          }
+        });
+
+    create_obstacle_menu.add(add_hole_item);
+
+    this.add(create_obstacle_menu, 2);
+
+    // Insert the pin swap item.
+
+    if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0) {
+      // the board contains swappable gates or pins
+      javax.swing.JMenuItem swap_pin_item = new javax.swing.JMenuItem();
+      swap_pin_item.setText(resources.getString("swap_pin"));
+      swap_pin_item.addActionListener(
+          new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+              board_panel.board_handling.swap_pin(board_panel.right_button_click_location);
+            }
+          });
+
+      this.add(swap_pin_item, 3);
+    }
+  }
 }
