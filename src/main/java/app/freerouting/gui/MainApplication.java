@@ -45,7 +45,7 @@ public class MainApplication extends javax.swing.JFrame {
             FRLogger.error(ex.getLocalizedMessage(), ex);
         }
 
-        System.out.print("\nFreerouting " + VERSION_NUMBER_STRING + "\n\n");
+        FRLogger.info("\nFreerouting " + VERSION_NUMBER_STRING + "\n\n");
 
         FRLogger.debug(" Version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
         FRLogger.debug(" Command line arguments: '" + String.join(" ", args) + "'");
@@ -214,6 +214,7 @@ public class MainApplication extends javax.swing.JFrame {
         sample_board_button = new javax.swing.JButton();
         open_board_button = new javax.swing.JButton();
         restore_defaults_button = new javax.swing.JButton();
+
         message_field = new javax.swing.JTextField();
         message_field.setText(resources.getString("command_line_missing_input"));
         this.window_net_demonstrations = new WindowNetDemonstrations(locale);
