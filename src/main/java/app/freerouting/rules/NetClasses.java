@@ -43,7 +43,7 @@ public class NetClasses implements java.io.Serializable {
       ClearanceMatrix p_clearance_matrix,
       java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.rules.Default", p_locale);
+        java.util.ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
     String name_front = resources.getString("class");
     String new_name = null;
     Integer index = 0;

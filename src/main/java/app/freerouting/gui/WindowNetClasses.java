@@ -386,7 +386,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     private final String[] column_tool_tips;
     public NetClassTable(NetClassTableModel p_table_model) {
       super(p_table_model);
-      column_tool_tips = new String[9];
+      column_tool_tips = new String[10];
       column_tool_tips[0] = null;
       column_tool_tips[1] = resources.getString("column_tool_tip_1");
       column_tool_tips[2] = resources.getString("column_tool_tip_2");
@@ -396,6 +396,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       column_tool_tips[6] = resources.getString("column_tool_tip_6");
       column_tool_tips[7] = resources.getString("column_tool_tip_7");
       column_tool_tips[8] = resources.getString("column_tool_tip_8");
+      column_tool_tips[9] = resources.getString("column_tool_tip_9");
     }
 
     // Implement table header tool tips.
