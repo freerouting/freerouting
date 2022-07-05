@@ -573,7 +573,7 @@ public class BoardFrame extends javax.swing.JFrame {
     this.board_panel.setBackground(p_color);
   }
 
-  /** Refreshs all displayed coordinates after the user unit has changed. */
+  /** Refreshes all displayed coordinates after the user unit has changed. */
   public void refresh_windows() {
     for (int i = 0; i < this.permanent_subwindows.length; ++i) {
       if (permanent_subwindows[i] != null) {
@@ -582,7 +582,7 @@ public class BoardFrame extends javax.swing.JFrame {
     }
   }
 
-  /** Sets the selected button in the menu button button group */
+  /** Sets the selected button in the menu button group */
   public void hilight_selected_button() {
     this.toolbar_panel.hilight_selected_button();
   }
