@@ -2,6 +2,7 @@ package app.freerouting.datastructures;
 
 import app.freerouting.logger.FRLogger;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 /** Describes legal identifiers together with the character used for string quotes. */
 public class IdentifierType {
@@ -27,8 +28,35 @@ public class IdentifierType {
     }
 
     try {
+
+      // if the name contains our quote character, we must remove it
+      if (p_name.contains(string_quote))
+      {
+        p_name = p_name.replace(string_quote, "");
+      }
+
+      boolean need_quotes = false;
+      // if the name contains a reserved character, we must put it into quotes
+      for (String reserved_char : reserved_chars) {
+        if (p_name.contains(reserved_char)) {
+          need_quotes = true;
+        }
+      }
+
+      // if the name contains a non-ASCII character, we must put it into quotes
+      for (byte ch : p_name.getBytes(StandardCharsets.UTF_8)) {
+        if (ch >= 128) {
+          need_quotes = true;
+        }
+      }
+
+      if (need_quotes)
+      {
+        p_name = quote(p_name);
+      }
+
       // always put quotes around the identifiers even if they don't have illegal characters
-      p_file.write(quote(p_name));
+      p_file.write(p_name);
     } catch (java.io.IOException e) {
       FRLogger.warn("IdentifierType.write: unable to write to file");
     }
