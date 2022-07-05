@@ -68,6 +68,9 @@ public class BoardHandling extends BoardHandlingHeadless {
   /** The current position of the mouse pointer. */
   private FloatPoint current_mouse_position = null;
 
+  private static long last_repainted_time = 0;
+  private static long repaint_interval = 1000;
+
   /** Creates a new BoardHandling */
   public BoardHandling(
       BoardPanel p_panel,
@@ -515,7 +518,11 @@ public class BoardHandling extends BoardHandlingHeadless {
       final Rectangle MAX_RECTAMGLE = new Rectangle(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
       panel.paintImmediately(MAX_RECTAMGLE);
     } else {
-      panel.repaint();
+      if (last_repainted_time < System.currentTimeMillis() - repaint_interval) {
+        last_repainted_time = System.currentTimeMillis();
+
+        panel.repaint();
+        }
     }
   }
 

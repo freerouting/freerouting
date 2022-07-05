@@ -36,8 +36,6 @@ public class BatchAutorouter {
   private boolean is_interrupted = false;
   /** Used to draw the airline of the current routed incomplete. */
   private FloatLine air_line = null;
-  private long last_repainted_time = 0;
-  private long repaint_interval = 1000;
 
   /** Creates a new batch autorouter. */
   public BatchAutorouter(
@@ -280,11 +278,7 @@ public class BatchAutorouter {
           SortedSet<Item> ripped_item_list = new TreeSet<Item>();
           if (autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no)) {
             ++routed;
-
-            if (last_repainted_time < System.currentTimeMillis() - repaint_interval) {
-              last_repainted_time = System.currentTimeMillis();
-              hdlg.repaint();
-            }
+            hdlg.repaint();
           } else {
             ++not_found;
           }
