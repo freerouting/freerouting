@@ -45,7 +45,7 @@ public class IdentifierType {
 
       // if the name contains a non-ASCII character, we must put it into quotes
       for (byte ch : p_name.getBytes(StandardCharsets.UTF_8)) {
-        if (ch >= 128) {
+        if (ch <= 0) {
           need_quotes = true;
         }
       }
