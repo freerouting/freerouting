@@ -103,16 +103,18 @@ public class ClearanceMatrix implements java.io.Serializable {
   public void set_value(int p_i, int p_j, int p_layer, int p_value) {
     Row curr_row = row[p_j];
     MatrixEntry curr_entry = curr_row.column[p_i];
-    // assure, that the clearance value is even
+
+    // assure, that the clearance value is even, and round it down, if it is odd
     int value = Math.max(p_value, 0);
-    value += value % 2;
+    value -= value % 2;
+
     curr_entry.layer[p_layer] = value;
     curr_row.max_value[p_layer] = Math.max(curr_row.max_value[p_layer], p_value);
     this.max_value_on_layer[p_layer] = Math.max(this.max_value_on_layer[p_layer], p_value);
   }
 
   /**
-   * Cets the required spacing of clearance classes with index p_i and p_j on p_layer. This value
+   * Gets the required spacing of clearance classes with index p_i and p_j on p_layer. This value
    * will be always an even integer.
    */
   public int value(int p_i, int p_j, int p_layer) {
