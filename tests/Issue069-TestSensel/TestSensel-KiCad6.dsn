@@ -1,0 +1,132 @@
+(pcb "C:\Work\freerouting\tests\Issue069-TestSensel\TestSensel-KiCad6.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "(6.0.5)")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  129000 -65000  117000 -65000  117000 -48000  129000 -48000
+            129000 -65000)
+    )
+    (via "Via[0-1]_700:300_um")
+    (rule
+      (width 254)
+      (clearance 152.5)
+      (clearance 152.5 (type default_smd))
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component Resistor_SMD:R_0603_1608Metric
+      (place R2 118973.580000 -50688.600000 front 0.000000 (PN R_Small_US))
+      (place R1 127200.000000 -50700.000000 front 180.000000 (PN R_Small_US))
+    )
+    (component MyLibs:PCB_Fork_10mils_5mmx5mm
+      (place J4 123500.000000 -59500.000000 front 0.000000 (PN Conn_01x02_Male))
+      (place J2 117500.000000 -59500.000000 front 0.000000 (PN Conn_01x02_Male))
+      (place J1 117500.000000 -53500.000000 front 0.000000 (PN Conn_01x02_Male))
+      (place J3 123500.000000 -53500.000000 front 0.000000 (PN Conn_01x02_Male))
+    )
+  )
+  (library
+    (image Resistor_SMD:R_0603_1608Metric
+      (outline (path signal 50  1480 -730  -1480 -730))
+      (outline (path signal 50  1480 730  1480 -730))
+      (outline (path signal 50  -1480 730  1480 730))
+      (outline (path signal 50  -1480 -730  -1480 730))
+      (outline (path signal 120  -162.779 -510  162.779 -510))
+      (outline (path signal 120  -162.779 510  162.779 510))
+      (outline (path signal 100  800 -400  -800 -400))
+      (outline (path signal 100  800 400  800 -400))
+      (outline (path signal 100  -800 400  800 400))
+      (outline (path signal 100  -800 -400  -800 400))
+      (pin RoundRect[T]Pad_875x950_219.582_um_0.000000_0 2 787.5 0)
+      (pin RoundRect[T]Pad_875x950_219.582_um_0.000000_0 1 -787.5 0)
+    )
+    (image MyLibs:PCB_Fork_10mils_5mmx5mm
+      (pin Cust[T]Pad_240x240_4514x_4524_21_um_9C78GC4C7C6656D631C9GBB6E733G070 1 4875 -4875)
+      (pin Cust[T]Pad_240x240_5024x_4994_25_um_0C882E438FGG93F6378FE1E64C9FED5B 2 125 -125)
+    )
+    (padstack Cust[T]Pad_240x240_5024x_4994_25_um_0C882E438FGG93F6378FE1E64C9FED5B
+      (shape (polygon F.Cu 0  -122 -5  -116.77 31.07  -110.473 47.868  -103.923 60  -77.984 91.138
+            -63.611 101.872  -60 103.923  -12.894 120.733  5 122  4775 122
+            4811.07 116.77  4871.14 77.984  4900.73 12.894  4390.73 -4727.11
+            4380.47 -4797.87  4333.61 -4851.87  4265 -4872  5 -4872  -31.07 -4866.77
+            -47.868 -4860.47  -91.138 -4827.98  -101.872 -4813.61  -120.733 -4762.89
+            -122 -4745  -122 -5))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_875x950_219.582_um_0.000000_0
+      (shape (polygon F.Cu 0  -438.332 256.25  -421.617 340.28  -374.018 411.518  -302.78 459.117
+            -218.75 475.832  218.75 475.832  302.78 459.117  374.018 411.518
+            421.617 340.28  438.332 256.25  438.332 -256.25  421.617 -340.28
+            374.018 -411.518  302.78 -459.117  218.75 -475.832  -218.75 -475.832
+            -302.78 -459.117  -374.018 -411.518  -421.617 -340.28  -438.332 -256.25
+            -438.332 256.25))
+      (attach off)
+    )
+    (padstack Cust[T]Pad_240x240_4514x_4524_21_um_9C78GC4C7C6656D631C9GBB6E733G070
+      (shape (polygon F.Cu 0  -4390.73 4257.11  -4380.47 4327.87  -4333.61 4381.87  -4265 4402
+            -15 4402  21.07 4396.77  47.868 4390.47  101.872 4343.61  122 4275
+            122 5  116.77 -31.07  103.923 -60  77.984 -91.138  60 -103.923
+            12.894 -120.733  0 -120  -4235 351  -4271.07 356.23  -4331.14 395.016
+            -4360.73 460.106  -4390.73 4257.11))
+      (attach off)
+    )
+    (padstack "Via[0-1]_700:300_um"
+      (shape (circle F.Cu 700))
+      (shape (circle B.Cu 700))
+      (attach off)
+    )
+  )
+  (network
+    (net /Col_2
+      (pins R1-1 J4-2 J3-2)
+    )
+    (net /Row_1
+      (pins R2-2 J1-1 J3-1)
+    )
+    (net /Col_1
+      (pins R1-2 J2-2 J1-2)
+    )
+    (net /Row_2
+      (pins R2-1 J4-1 J2-1)
+    )
+    (class kicad_default /Col_1 /Col_2 /Row_1 /Row_2
+      (circuit
+        (use_via Via[0-1]_700:300_um)
+      )
+      (rule
+        (width 254)
+        (clearance 152.5)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 254  123630 -53629.9  123630 -59629.2)(net /Col_2)(type route))
+    (wire (path F.Cu 254  122367 -58877.5  122744 -58500)(net /Row_1)(type route))
+    (wire (path F.Cu 254  122367 -58367.2  122367 -58877.5)(net /Row_1)(type route))
+    (wire (path F.Cu 254  122744 -58500  123000 -58500  123000 -53500)(net /Row_1)(type route))
+    (wire (path F.Cu 254  117630 -53629.9  117630 -59629.2)(net /Col_1)(type route))
+    (wire (path F.Cu 254  122623 -64369.8  122850 -64143)(net /Row_2)(type route))
+    (wire (path F.Cu 254  122372 -64369.8  122623 -64369.8)(net /Row_2)(type route))
+    (via "Via[0-1]_700:300_um"  122367 -58877.5 (net /Row_1)(type route))
+    (via "Via[0-1]_700:300_um"  122850 -64143 (net /Row_2)(type route))
+  )
+)

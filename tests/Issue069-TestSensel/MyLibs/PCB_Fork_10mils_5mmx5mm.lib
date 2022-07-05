@@ -1,0 +1,64 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Connector_AudioJack2_Ground
+#
+DEF Connector_AudioJack2_Ground J 0 20 Y Y 1 F N
+F0 "J" 0 350 50 H V C CNN
+F1 "Connector_AudioJack2_Ground" 0 250 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Jack*
+$ENDFPLIST
+DRAW
+S -100 -100 -150 0 0 1 10 F
+S 100 150 -100 -100 0 1 10 f
+P 4 0 1 10 0 0 25 -25 50 0 100 0 N
+P 5 0 1 10 100 100 -25 100 -25 0 -50 -25 -75 0 N
+X ~ G 0 -200 100 U 50 50 1 1 P
+X ~ S 200 100 100 L 50 50 1 1 P
+X ~ T 200 0 100 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# Connector_Conn_01x03_Male
+#
+DEF Connector_Conn_01x03_Male J 0 40 Y N 1 F N
+F0 "J" 0 200 50 H V C CNN
+F1 "Connector_Conn_01x03_Male" 0 -200 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+$FPLIST
+ Connector*:*_1x??_*
+$ENDFPLIST
+DRAW
+S 34 -95 0 -105 1 1 6 F
+S 34 5 0 -5 1 1 6 F
+S 34 105 0 95 1 1 6 F
+P 2 1 1 6 50 -100 34 -100 N
+P 2 1 1 6 50 0 34 0 N
+P 2 1 1 6 50 100 34 100 N
+X Pin_1 1 200 100 150 L 50 50 1 1 P
+X Pin_2 2 200 0 150 L 50 50 1 1 P
+X Pin_3 3 200 -100 150 L 50 50 1 1 P
+ENDDRAW
+ENDDEF
+#
+# Sensel
+#
+DEF Sensel S 0 41 Y Y 1 F N
+F0 "S" 0 -150 50 H V C CNN
+F1 "Sensel" 0 200 50 H V C CNN
+F2 "" 0 -150 50 H I C CNN
+F3 "" 0 -150 50 H I C CNN
+$FPLIST
+ PCB_Fork
+$ENDFPLIST
+DRAW
+X ~ 1 -50 -50 100 L 50 50 1 1 B
+X ~ 2 -50 50 100 L 50 50 1 1 B
+ENDDRAW
+ENDDEF
+#
+#End Library
