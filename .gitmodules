@@ -1,3 +1,0 @@
-[submodule "integrations/KiCad/kicad_freerouting-plugin"]
-	path = integrations/KiCad/kicad_freerouting-plugin
-	url = https://github.com/nikitalita/kicad_freerouting-plugin
