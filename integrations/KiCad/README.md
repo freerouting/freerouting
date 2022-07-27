@@ -35,4 +35,4 @@ FreeRouting round trip invocation:
 
 ![image](https://user-images.githubusercontent.com/910321/181245125-cbf652bf-428a-4648-b455-5ebba78be920.png)
 
-4. Exit the Freerouting app and let the plugin load the routed design
+4. Wait until the Freerouting app exits and the plugin loads your routed design
