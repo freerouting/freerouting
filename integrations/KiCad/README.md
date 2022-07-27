@@ -1,12 +1,5 @@
 # KiCad Freerouting Plugin
 
-## Synopsis
-
-FreeRouting round trip invocation:
-* export board.dsn file from pcbnew
-* auto route by invoking FreeRouting.jar
-* import generated board.ses file into pcbnew
-
 ## Installation
 
 1. Open KiCad
