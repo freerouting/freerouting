@@ -6,6 +6,8 @@
 
 <p align="center">
     <a href="https://github.com/freerouting/freerouting/releases"><img src="https://img.shields.io/github/v/release/freerouting/freerouting" alt="Release version" /></a>
+    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v1.6.2/total" alt="Downloads"/>
+    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/total" alt="Downloads"/>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/freerouting/freerouting" alt="License"/></a>
 </p>
 
