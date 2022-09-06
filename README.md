@@ -184,11 +184,13 @@ You will need the following steps to make it work:
     * Select your operating system and architecture
     * Select `JRE` as package type
     * Select `17` as version
-4. Run the downloaded JAR file using the installed java.exe
+4. Run the downloaded JAR file using the installed java
 
 ```powershell
-java.exe -jar freerouting-1.6.0.jar
+java -jar freerouting-1.6.2.jar
 ```
+
+(macOS: please note that you can't start Freerouting from the Mac Finder, you must you the Mac Terminal instead!)
 
 ## How to build it from source
 
