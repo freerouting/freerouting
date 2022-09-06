@@ -44,7 +44,7 @@ For more information please use the online help in the board editor.
 
 ### Additional steps for users of [Autodesk EAGLE](https://www.autodesk.com/products/eagle/overview)
 
-1) Download the latest [Eagle2freerouter ulp file](http://eagle.autodesk.com/eagle/ulp?utf8=%E2%9C%93&q%5Btitle_or_author_or_description_cont%5D=freerouting&button=)
+1) Download the latest [eagle2freerouter ulp file](https://github.com/freerouting/freerouting/tree/master/integrations/Eagle)
 
 2) Start EAGLE and open in the control panel of Eagle for example the design my_design.brd.
 
@@ -59,7 +59,7 @@ For more information please use the online help in the board editor.
 
 ### Additional steps for users of [KiCad](https://www.kicad.org/)
 
-1) Download the latest `freerouting-1.6.0.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases)
+1) Download the latest `freerouting-1.6.2.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
 2) Start KiCad and open your project in Pcbnew.
 
@@ -79,7 +79,7 @@ For more information please use the online help in the board editor.
 
 #### Using the standalone freerouting application
 
-1) Download the latest `freerouting-1.6.0.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest `freerouting-1.6.2.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
 2) Start pcb-rnd and load your layout.
 
@@ -96,9 +96,9 @@ For more information please use the online help in the board editor.
 
 #### Using freerouting from within pcb-rnd
 
-1) Download the latest freerouting-1.6.0-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest freerouting-1.6.2-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
-2) Unzip it and rename the top directory freerouting-1.6.0-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
+2) Unzip it and rename the top directory freerouting-1.6.2-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
 
 3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
 
@@ -134,7 +134,7 @@ The following command line arguments are supported by freerouter:
 A complete command line looks something like this if your are using PowerShell on Windows:
 
 ```powershell
-java.exe -jar freerouting-1.6.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+java.exe -jar freerouting-1.6.2.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
 ```
 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file.
@@ -151,7 +151,7 @@ option to select the mixing ratio.
 Sequential, random and prioritized item selection strategies are implemented to determine which item to process next during an optimization pass. Each item is ranked during the optimization pass so that
 it's possible to prioritize items with better scores when selecting items to process in next optimization pass.
 
-Test runs on a 12-core system using freerouting v1.6.0:
+Test runs on a 12-core system using freerouting v1.6.2:
 
 | Settings                           | Auto-routing time | Route optimization time | Route opt. improvement |
 |------------------------------------|------------------:|------------------------:|:----------------------:|
