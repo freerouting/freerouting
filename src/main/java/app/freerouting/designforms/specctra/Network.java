@@ -194,18 +194,21 @@ public class Network extends ScopeKeyword {
   }
 
   private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list) {
-    //splits on hyphens and spaces to retrieve all COMP-PIN pairings in a single array
-    String[] component_pin_pairs = p_scanner.next_string_list('-');
-    
-    //component names and pin names are specified in pairs, an odd number in the above result is always an error
-    if(component_pin_pairs.length % 2 != 0) {
-      FRLogger.warn("Network.read_net_pins: invalid pin reference in 'pins' list.");
-      return false;
-    }
-	
-    for(int i = 0; i < component_pin_pairs.length-1; i+=2) {
-      String component_name = component_pin_pairs[i];
-      String pin_name = component_pin_pairs[i+1];
+    for (; ; ) {
+      String next_string = p_scanner.next_string(true);
+      if (next_string == "") {
+        break;
+      }
+
+      String[] parts = next_string.split("-");
+      String component_name = parts[0];
+      String pin_name = "";
+      if (parts.length > 1) {
+        pin_name = parts[1];
+      } else {
+        pin_name = "-";
+      }
+
       Net.Pin curr_entry = new Net.Pin(component_name, pin_name);
       p_pin_list.add(curr_entry);
     }
