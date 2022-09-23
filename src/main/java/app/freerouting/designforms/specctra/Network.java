@@ -194,26 +194,23 @@ public class Network extends ScopeKeyword {
   }
 
   private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list) {
-    for (; ; ) {
-      String next_string = p_scanner.next_string(true);
-      if (next_string == "") {
-        break;
+    Object next_token;
+    String component_name, pin_name;
+    while((component_name = ((SpecctraDsnFileReader)p_scanner).next_string(true, '-')) != "") {
+      
+      try {
+        p_scanner.yybegin(SpecctraDsnFileReader.SPEC_CHAR);
+        next_token = p_scanner.next_token(); // overread the hyphen
+      } catch (java.io.IOException e) {
+        FRLogger.error("Network.read_net_pins: IO error while scanning file", e);
+        return false;
       }
 
-      String[] parts = next_string.split("-");
-      String component_name = parts[0];
-      String pin_name = "";
-      if (parts.length > 1) {
-        pin_name = parts[1];
-      } else {
-        pin_name = "-";
-      }
-
+      pin_name = p_scanner.next_string(true);
       Net.Pin curr_entry = new Net.Pin(component_name, pin_name);
       p_pin_list.add(curr_entry);
     }
 
-    Object next_token;
     try {
       next_token = p_scanner.next_token();
     } catch (java.io.IOException e) {
