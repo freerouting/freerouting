@@ -102,7 +102,7 @@ class FreeRoutingPlugin(pcbnew.ActionPlugin):
         #self.module_command = [self.java_path, "-jar", self.module_path, "-de", self.module_input, "-s"]
         
         # Run freerouting with -do
-        self.module_command = [self.java_path, "-jar", self.module_path, "-de", self.module_input, "-do", self.module_output]
+        self.module_command = [self.java_path, "-jar", self.module_path, "-dl", "-de", self.module_input, "-do", self.module_output]
                        
 
     # export board.dsn file from pcbnew
