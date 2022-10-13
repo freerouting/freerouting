@@ -110,10 +110,10 @@
       (pins "J2(--)"-"GND" "J3"-"GND" "J1 + - ( )"-"GND")
     )
     (net "VBUS"
-      (pins "J3 -+"-"VBUS #22")
+      (pins "J3 -+"-"_VBUS #22")
     )
     (net "VCC"
-      (pins "J2__"-"VBUS" "J1"-"_VBUS")
+      (pins J2-VBUS "J1"-VBUS)
     )
   )
   (wiring
