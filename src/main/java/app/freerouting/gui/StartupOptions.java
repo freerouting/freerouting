@@ -21,7 +21,7 @@ public class StartupOptions {
   BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
   String hybrid_ratio = "1:1";
   ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
-  String[] supported_languages = {"en", "de", "zh"};
+  String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   java.util.Locale current_locale = java.util.Locale.getDefault();
   boolean save_intermediate_stages = false;
   // this value is equivalent to the setting of "-oit 0.001"
@@ -130,6 +130,30 @@ public class StartupOptions {
             current_locale = Locale.GERMAN;
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh")) {
             current_locale = Locale.SIMPLIFIED_CHINESE;
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("hi")) {
+            //current_locale = Locale.HINDI;
+            current_locale = new Locale("hi", "IN");
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("es")) {
+            //current_locale = Locale.SPANISH;
+            current_locale = new Locale("es", "ES");
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("fr")) {
+            current_locale = Locale.FRENCH;
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ar")) {
+            //current_locale = Locale.ARABIC;
+            current_locale = new Locale("ar", "EG");
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("bn")) {
+            //current_locale = Locale.BENGALI;
+            current_locale = new Locale("bn", "BD");
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ru")) {
+            //current_locale = Locale.RUSSIAN;
+            current_locale = new Locale("ru", "RU");
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("pt")) {
+            //current_locale = Locale.PORTUGUESE;
+            current_locale = new Locale("pt", "PT");
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ja")) {
+            current_locale = Locale.JAPANESE;
+          } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ko")) {
+            current_locale = Locale.KOREAN;
           }
         } else if (p_args[i].startsWith("-s")) {
           session_file_option = true;
