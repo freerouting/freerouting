@@ -1,0 +1,121 @@
+(PCB "untitled.brd"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad CadSoft)
+    (host_version "Eagle V 9.5 - Using eagle2freerouting.ulp, version 2022-09-01, on 9/20/2022 9:56 PM")
+    (case_sensitive off)
+    (via_rotate_first on)
+  )
+  (resolution mil 2540)
+  (unit mil)
+  (structure
+    (layer "1#Top" (type signal))
+    (layer "16#Bottom" (type signal))
+    (boundary
+      (rect pcb 0.000000 0.000000 837.007874 1649.606299))
+    (boundary
+      (path signal 0 0.000000 0.000000 837.007874 0.000000 837.007874 1649.606299 0.000000 1649.606299  0.000000 0.000000)
+      (clearance_class boundary)
+    )
+    (via
+      "Round1$13.779528"
+    )
+    (control
+      (via_at_smd on)
+    )
+    (rule (width 16.000000)(clearance 12.000000))
+    (rule (clearance 10.000000 (type default_boundary)))
+    (rule (clearance 6.000000 (type wire_via)))
+    (rule (clearance 6.000000 (type pin_pin)))
+    (rule (clearance 6.000000 (type pin_via)))
+    (rule (clearance 6.000000 (type via_via)))
+    (rule (clearance 6.000000 (type smd_pin)))
+    (rule (clearance 6.000000 (type smd_via)))
+    (rule (clearance 6.000000 (type smd_smd)))
+    (rule (clearance 10.000000 (type area_wire)))
+    (rule (clearance 10.000000 (type area_via)))
+  )
+  (placement
+    (place_control (flip_style rotate_first))
+    (component "USB-A-S-NOSILK-FEMALE$SparkFun-Connectors"
+      (place "J1" 400.000000 50.000000 Front 90.000000)
+    )
+    (component "USB-MINIB$SparkFun-Connectors"
+      (place "J2" 385.000000 805.000000 Front 180.000000)
+    )
+    (component "USB-MINIB$SparkFun-Connectors"
+      (place "J3" 400.000000 1400.000000 Front 270.000000)
+    )
+  )
+  (library
+    (image "USB-A-S-NOSILK-FEMALE$SparkFun-Connectors"
+      (pin "SMD_1" "D+" 265.826772 -39.370079)
+      (pin "SMD_1" "D-" 265.826772 39.370079)
+      (pin "SMD_1" "GND" 265.826772 -137.795276)
+      (pin "Round1" "SHLD1" 100.000000 -258.500000)
+      (pin "Round1" "SHLD2" 100.000000 258.500000)
+      (pin "SMD_1" "VBUS" 265.826772 137.795276)
+    )
+    (image "USB-MINIB$SparkFun-Connectors"
+      (keepout (circ signal 115.433071 0.000000 86.614173))
+      (clearance_class boundary)
+      (keepout (circ signal 115.433071 0.000000 -86.614173))
+      (clearance_class boundary)
+      (pin "SMD_2" "D+" 98.425197 0.000000)
+      (pin "SMD_2" "D-" 98.425197 31.496063)
+      (pin "SMD_2" "GND" 98.425197 -62.992126)
+      (pin "SMD_2" "ID" 98.425197 -31.496063)
+      (pin "SMD_3" "S1" -118.110236 177.165354)
+      (pin "SMD_3" "S2" 98.425197 177.165354)
+      (pin "SMD_3" "S3" -118.110236 -177.165354)
+      (pin "SMD_3" "S4" 98.425197 -177.165354)
+      (pin "SMD_2" "VBUS" 98.425197 62.992126)
+    )
+    (padstack "ViaDefault$13.779528"
+      (shape (circle signal 29.779528 0 0))
+      (attach off)
+    )
+    (padstack "Round1$13.779528"
+      (shape (circle "1#Top" 29.779528 0 0))
+      (shape (circle "16#Bottom" 29.779528 0 0))
+      (attach off)
+    )
+    (padstack "SMD_1"
+      (shape (polygon "1#Top" 0 59.055118 17.716535 -59.055118 17.716535 -59.055118 -17.716535 59.055118 -17.716535))
+      (attach off)
+    )
+    (padstack "SMD_2"
+      (shape (polygon "1#Top" 0 49.212598 9.842520 -49.212598 9.842520 -49.212598 -9.842520 49.212598 -9.842520))
+      (attach off)
+    )
+    (padstack "SMD_3"
+      (shape (polygon "1#Top" 0 49.212598 39.370079 -49.212598 39.370079 -49.212598 -39.370079 49.212598 -39.370079))
+      (attach off)
+    )
+    (padstack "Round1"
+      (shape (circle "1#Top" 131.000000 0 0))
+      (shape (circle "16#Bottom" 131.000000 0 0))
+      (attach off)
+    )
+  )
+  (network
+    (net "D+"
+      (pins "J3"-"D+" "J1"-"D+")
+    )
+    (net "D-"
+      (pins "J3"-"D-" "J1"-"D-")
+    )
+    (net "N$5"
+      (pins "J2"-"GND" "J3"-"GND" "J1"-"GND")
+    )
+    (net "VBUS"
+      (pins "J3"-"VBUS")
+    )
+    (net "VCC"
+      (pins "J2"-"VBUS" "J1"-"VBUS")
+    )
+  )
+  (wiring
+  )
+)
