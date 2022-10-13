@@ -129,6 +129,7 @@ The following command line arguments are supported by freerouter:
 * -is [sequential | random | prioritized]: sets item selection strategy for route optimization: sequential, random, prioritized. The default is prioritized. Prioritied stragegy selects items based on scores calculated in previous round.
 * -inc [net class names, separated by commas]: auto-router ignores the listed net classes, eg. `-inc GND,VCC` will not try to wire components that are either in the "GND" or in the "VCC" net class.
 * -im: saves intermediate steps in version-specific binary format. This allows to user to resume the interrupted optimization from the last checkpoint. Turned off by default.
+* -dl: disable logging.
 * -h: shows help.
 
 A complete command line looks something like this if your are using PowerShell on Windows:

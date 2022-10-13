@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
@@ -187,6 +188,12 @@ public class MainApplication extends javax.swing.JFrame {
    * @param args
    */
   public static void main(String[] args) {
+    // we have a special case if logging must be disabled before the general command line arguments are parsed
+    if (args.length > 0 && Arrays.stream(args).anyMatch("-dl"::equals)) {
+      // disable logging
+      FRLogger.disableLogging();
+    }
+
     FRLogger.traceEntry("MainApplication.main()");
 
     try {

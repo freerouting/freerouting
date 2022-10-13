@@ -26,8 +26,8 @@ public class StartupOptions {
   boolean save_intermediate_stages = false;
   // this value is equivalent to the setting of "-oit 0.001"
   float optimization_improvement_threshold = 0.00001f;
-
   String[] ignore_net_classes_by_autorouter = new String[0];
+  boolean disable_logging_option = false;
 
   private StartupOptions() {
     if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals)) {
@@ -139,6 +139,8 @@ public class StartupOptions {
           webstart_option = true;
         } else if (p_args[i].startsWith("-test")) {
           test_version_option = true;
+        } else if (p_args[i].startsWith("-dl")) {
+          disable_logging_option = true;
         } else if (p_args[i].startsWith("-h")) {
           show_help_option = true;
         } else if (p_args[i].startsWith("-inc")) {
