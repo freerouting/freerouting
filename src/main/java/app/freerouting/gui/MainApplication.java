@@ -221,7 +221,7 @@ public class MainApplication extends javax.swing.JFrame {
             + System.getProperty("os.version"));
     FRLogger.debug(
         " Java: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
-    FRLogger.debug(" Language: " + Locale.getDefault().getLanguage() + "," + Locale.getDefault());
+    FRLogger.debug(" System Language: " + Locale.getDefault().getLanguage() + "," + Locale.getDefault());
     FRLogger.debug(
         " Hardware: "
             + Runtime.getRuntime().availableProcessors()
@@ -232,6 +232,8 @@ public class MainApplication extends javax.swing.JFrame {
 
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
     StartupOptions startupOptions = StartupOptions.parse(args);
+
+    FRLogger.debug(" GUI Language: " + startupOptions.current_locale);
 
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle(
