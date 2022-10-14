@@ -75,16 +75,22 @@ For more information please use the online help in the board editor.
 ### Additional steps for users of [Target 3001!](https://ibfriedrich.com/)
 
 1) Freerouting is accesible directly from the GUI menu in Actions / Automatisms and assistants / Autorouter / Freerouting autorouter...
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step1_OpenFreeroutingDialogWindow.png" alt="Open Freerouting dialog window" title="Open Freerouting dialog window" align="center">
 
 2) There you can select the signals (=nets) to be routed
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step2_SignalSelection.png" alt="If no special signal is selected, all signals are affected" title="If no special signal is selected, all signals are affected" align="center">
 
 3) Next you can influence the algorithm
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step3_InstallFreeroutingAndJava.png" alt="Most users have to install FreeRouting once, some will also have to install Java first" title="Most users have to install FreeRouting once, some will also have to install Java first" align="center">
 
 4) They will get the Freerouting installer from https://github.com/freerouting/freerouting/releases/
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step4_SelectLayers.png" alt="Select layers and their functions" title="Select layers and their functions" align="center">
 
 5) Normally the user does not have to change the settings and can click directly on the [Start] button. So then it is a one-click solution. After the creation of the session file SES, Target automatically asks, if the results shall be used
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step5_AcceptSES.png" alt="Accept results from SES file" title="Accept results from SES file" align="center">
 
 6) The tracks and vias are imported immediately into the TARGET project file
+<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step6_ResultsImported.png" alt="Results are imported" title="Results are imported" align="center">
 
 ### Additional steps for users of [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
 
