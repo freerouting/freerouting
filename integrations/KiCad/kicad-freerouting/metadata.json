@@ -18,7 +18,7 @@
       "email": "info@freerouting.app"
     }
   },
-  "license": "CC-BY-SA-4.0",
+  "license": "GPL-3.0",
   "resources": {
     "Github": "https://github.com/freerouting/freerouting/tree/master/integrations/KiCad"
   },
@@ -27,9 +27,9 @@
       "version": "1.6.2",
       "status": "stable",
       "kicad_version": "6.0",
-	  "download_sha256": "9a63f15a99f0a164ed96a7b4250a7bef3702a64941b89b9a8228fa4e22478100",
-      "download_size": 4095720,
-      "download_url": "https://github.com/freerouting/freerouting/tree/master/integrations/KiCad/kicad-freerouting-1.6.2.zip",
+	  "download_sha256": "a72f4e5b5cedfee3ecea474315e6fc94e11fcb5480dc77a944dfe67fb2e96367",
+      "download_size": 4095649,
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.6.2.zip",
       "install_size": 4528436
     }
   ]
