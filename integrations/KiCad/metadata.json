@@ -27,7 +27,7 @@
       "version": "1.6.2",
       "status": "stable",
       "kicad_version": "6.0",
-	  "download_sha256": "a72f4e5b5cedfee3ecea474315e6fc94e11fcb5480dc77a944dfe67fb2e96367",
+      "download_sha256": "a72f4e5b5cedfee3ecea474315e6fc94e11fcb5480dc77a944dfe67fb2e96367",
       "download_size": 4095649,
       "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.6.2.zip",
       "install_size": 4526306
@@ -36,7 +36,7 @@
       "version": "1.6.5",
       "status": "stable",
       "kicad_version": "6.0",
-	  "download_sha256": "22007367a3099485083e353da18f7124233caa142b6d8c37278457ea955c9e33",
+      "download_sha256": "22007367a3099485083e353da18f7124233caa142b6d8c37278457ea955c9e33",
       "download_size": 4301606,
       "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.6.5.zip",
       "install_size": 4793970
