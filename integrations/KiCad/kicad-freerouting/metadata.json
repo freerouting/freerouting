@@ -2,7 +2,7 @@
   "$schema": "https://go.kicad.org/pcm/schemas/v1",
   "name": "Freerouting",
   "description": "Freerouting KiCad integration",
-  "description_full": "This is the official KiCad integration for Freerouting, an advanced autorouter.\n",
+  "description_full": "This is the official KiCad integration for Freerouting, an advanced autorouter.\nIt needs Java JRE 17 or newer to run. You can download it from https://adoptium.net/temurin/releases/.\n",
   "identifier": "app.freerouting.kicad-plugin",
   "type": "plugin",
   "author": {
@@ -30,6 +30,15 @@
 	  "download_sha256": "a72f4e5b5cedfee3ecea474315e6fc94e11fcb5480dc77a944dfe67fb2e96367",
       "download_size": 4095649,
       "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.6.2.zip",
+      "install_size": 4526306
+    },
+	{
+      "version": "1.6.5",
+      "status": "stable",
+      "kicad_version": "6.0",
+	  "download_sha256": "a72f4e5b5cedfee3ecea474315e6fc94e11fcb5480dc77a944dfe67fb2e96367",
+      "download_size": 4095649,
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.6.5.zip",
       "install_size": 4526306
     }
   ]
