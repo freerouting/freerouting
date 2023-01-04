@@ -2,7 +2,7 @@
   "$schema": "https://go.kicad.org/pcm/schemas/v1",
   "name": "Freerouting",
   "description": "Freerouting KiCad integration",
-  "description_full": "This is the official KiCad integration for Freerouting, an advanced autorouter.\nIt needs Java JRE 17, download it from www.adoptium.net/temurin/releases.\n",
+  "description_full": "This is the official KiCad integration for Freerouting, an advanced autorouter.\nIt needs Java JRE 17, download it from https://adoptium.net/temurin/releases .\n",
   "identifier": "app.freerouting.kicad-plugin",
   "type": "plugin",
   "author": {
