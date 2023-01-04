@@ -44,13 +44,13 @@ For more information please use the online help in the board editor.
 
 ### Additional steps for users of [KiCad](https://www.kicad.org/)
 
-1) Download the latest `freerouting-1.6.2.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases)
+1) Download the latest `freerouting-1.6.5.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases)
 
 2) Start KiCad and open your project in Pcbnew.
 
 3) Export the PCB into Specctra DSN (File / Export... / Specctra DSN).
 
-4) Start the router by running the freerouting-executable.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+4) Start the router by running the freerouting-1.6.5.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
 
 5) Do the routing.
 
@@ -96,13 +96,13 @@ For more information please use the online help in the board editor.
 
 #### Using the standalone freerouting application
 
-1) Download the latest `freerouting-1.6.2.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest `freerouting-1.6.5.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
 2) Start pcb-rnd and load your layout.
 
 3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
 
-4) Start the router by running the `freerouting-executable.jar` file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+4) Start the router by running the `freerouting-1.6.5.jar` file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
 
 5) Do the routing.
 
@@ -152,7 +152,7 @@ The following command line arguments are supported by freerouter:
 A complete command line looks something like this if your are using PowerShell on Windows:
 
 ```powershell
-java.exe -jar freerouting-1.6.2.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+java.exe -jar freerouting-1.6.5.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
 ```
 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file.
@@ -205,7 +205,7 @@ You will need the following steps to make it work:
 4. Run the downloaded JAR file using the installed java
 
 ```powershell
-java -jar freerouting-1.6.2.jar
+java -jar freerouting-1.6.5.jar
 ```
 
 (macOS: please note that you can't start Freerouting from the Mac Finder, you must you the Mac Terminal instead!)
