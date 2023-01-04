@@ -7,6 +7,7 @@
 <p align="center">
     <a href="https://github.com/freerouting/freerouting/releases"><img src="https://img.shields.io/github/v/release/freerouting/freerouting" alt="Release version" /></a>
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v1.6.2/total" alt="Downloads"/>
+    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v1.6.5/total" alt="Downloads"/>
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/total" alt="Downloads"/>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/freerouting/freerouting" alt="License"/></a>
 </p>
@@ -113,9 +114,9 @@ For more information please use the online help in the board editor.
 
 #### Using freerouting from within pcb-rnd
 
-1) Download the latest freerouting-1.6.2-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
+1) Download the latest freerouting-1.6.5-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
 
-2) Unzip it and rename the top directory freerouting-1.6.2-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
+2) Unzip it and rename the top directory freerouting-1.6.5-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
 
 3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
 
