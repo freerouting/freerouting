@@ -119,7 +119,25 @@ class FreeRoutingPlugin(pcbnew.ActionPlugin):
 
     # auto route by invoking FreeRouting.jar
     def RunRouter(self):
+        javaVersion = get_java_version()
+        javaMajorVersion = int(javaVersion.split(".")[0])
 
+        if javaMajorVersion == 0:
+            wx_show_error("""
+			Java JRE version 17 or higher is required, but you have no Java installed.
+            You can download it from https://adoptium.net/temurin/releases.
+            KiCad must be restarted after you installed Java.
+			""")
+            return False
+
+        if javaMajorVersion < 17:
+            wx_show_error("""
+			Java JRE version 17 or higher is required, but you have Java version {0} installed.
+            You can download a newer one from https://adoptium.net/temurin/releases.
+            KiCad must be restarted after you updated Java.
+			""".format(javaVersion))
+            return False
+   
         dialog = ProcessDialog(None, """
         Complete or Terminate Freerouting:
         * to complete, close Java window
@@ -231,6 +249,17 @@ def wx_show_error(text):
     dialog = wx.MessageDialog(None, message=message, caption=wx_caption, style=style)
     dialog.ShowModal()
     dialog.Destroy()
+
+
+# check the installed java version
+def get_java_version():
+    javaPath = 'java'
+    try:
+	    javaInfo = subprocess.check_output(javaPath + ' -version', shell=True, stderr=subprocess.STDOUT)
+	    javaVersion = re.search(r'"[0-9\._]*"', javaInfo.decode().split("\r")[0]).group().replace('"', '')
+	    return javaVersion
+    except:
+        return "0.0.0.0"
 
 
 # prompt user to cancel pending action; allow to cancel programmatically
