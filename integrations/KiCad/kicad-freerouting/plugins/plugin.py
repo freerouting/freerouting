@@ -15,12 +15,12 @@ def search_n_strip(s):
     return s
 
 #
-# FreeRouting round trip invocation:
+# Freerouting round trip invocation:
 # * export board.dsn file from pcbnew
-# * auto route by invoking FreeRouting.jar
+# * auto route by invoking freerouting.jar
 # * import generated board.ses file into pcbnew
 #
-class FreeRoutingPlugin(pcbnew.ActionPlugin):
+class FreeroutingPlugin(pcbnew.ActionPlugin):
 
     # init in place of constructor
     def defaults(self):
@@ -117,7 +117,7 @@ class FreeRoutingPlugin(pcbnew.ActionPlugin):
         else:
             return True
 
-    # auto route by invoking FreeRouting.jar
+    # auto route by invoking freerouting.jar
     def RunRouter(self):
         javaVersion = get_java_version()
         javaMajorVersion = int(javaVersion.split(".")[0])
@@ -374,4 +374,4 @@ class ProcessThread(threading.Thread):
 
 
 # register plugin with kicad backend
-FreeRoutingPlugin().register()
+FreeroutingPlugin().register()
