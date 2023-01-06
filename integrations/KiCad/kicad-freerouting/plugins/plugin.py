@@ -121,7 +121,7 @@ class FreeRoutingPlugin(pcbnew.ActionPlugin):
     def RunRouter(self):
 
         dialog = ProcessDialog(None, """
-        Complete or Terminate FreeRouting:
+        Complete or Terminate Freerouting:
         * to complete, close Java window
         * to terminate, press Terminate here
         """)
