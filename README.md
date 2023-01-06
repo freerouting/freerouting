@@ -247,6 +247,36 @@ gradlew assemble
 
 All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-executable.jar` file.
 
+#### Creating a new release
+
+Creating a release takes about half an hour if everything goes according to the plan. Usually it doesn't, so free up ~3 hours for this.
+
+Let's suppose that the new version is `2.3.4`. You need to complete these steps:
+
+* Change `ext.publishing.versionId` in `project-info.gradle` to `2.3.4`
+* Push it to GitHub
+* Check if it was built successfully on GitHub Actions
+* Create a new draft release
+* Run `gradlew.bat assemble` -> this will generate the files in `\build\libs\freerouting*.jar`
+* Rename to `freerouting-executable.jar` to `freerouting-2.3.4.jar` and add it to the release draft
+* Update the `integrations\KiCad`
+	* Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
+	* Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
+	* Update `\integrations\KiCad\kicad-freerouting\metadata.json`
+	* Create a ZIP file from the `kicad-freerouting` folder
+	* Copy this `kicad-freerouting.zip` file to `kicad-freerouting-2.3.4.zip`
+	* Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to get hash and file sizes
+	* Update `\integrations\KiCad\metadata.json` with these values
+	* Delete previous fork at https://gitlab.com/freeroutingapp/metadata
+	* Fork https://gitlab.com/kicad/addons/metadata again
+	* Create a new branch, named `freerouting-2.3.4`
+	* Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json with the new one
+	* Create a megre request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
+* Update README
+* Publish the release
+* Check if Windows and Linux installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions)
+* Change `ext.publishing.versionId` in `project-info.gradle` again to `2.3.5-SNAPSHOT`
+
 ## Contributing
 
 We ❤️ all our contributors; this project wouldn’t be what it is without you!
