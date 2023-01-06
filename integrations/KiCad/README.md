@@ -2,19 +2,21 @@
 
 ## Installation
 
-1. Open KiCad
+1. Open KiCad 6.0 or newer
 
-2. Start PCB Editor
+2. Start Tools / Plugin and Content Manager (Ctrl+M)
 
-![image](https://user-images.githubusercontent.com/910321/181243949-b8a18c2a-6801-4cca-8043-148f1c693414.png)
+![image](https://user-images.githubusercontent.com/910321/210979489-9856712b-f5c8-497e-9bfa-3f869dae85bc.png)
 
-3. Go to Tools, External Plugins, Open Plugin Directory
+3. Search for the Freerouting plugin
 
-![image](https://user-images.githubusercontent.com/910321/181244181-2cb3461e-a820-4505-86dd-1fb7111bbb4f.png)
+![image](https://user-images.githubusercontent.com/910321/210980390-8bfdaeed-ea17-4e3f-b998-b5e52c04b2c0.png)
 
-4. You will have `$HOME/.kicad_plugins` on Linux, `%userprofile%\Documents\KiCad\6.0\scripting\plugins` on Windows opened by default
+4. Click on the Install button
 
-5. Copy [the `kicad-freerouting` directory](https://github.com/freerouting/freerouting/tree/master/integrations/KiCad) into this KiCad plugins directory
+![image](https://user-images.githubusercontent.com/910321/210980590-0e006f1c-dfb9-4fd1-994c-8e6e0b4cb56a.png)
+
+5. Done!
 
 ## Operation
 
@@ -24,8 +26,12 @@
 
 ![image](https://user-images.githubusercontent.com/910321/181244962-ccf3c688-d364-470b-bfca-03dd049919b1.png)
 
-3. Start Freerouting
+3. Start Freerouting from the Tools / External Plugins menu
 
 ![image](https://user-images.githubusercontent.com/910321/181245125-cbf652bf-428a-4648-b455-5ebba78be920.png)
 
 4. Wait until the Freerouting app exits and the plugin loads your routed design
+
+![image](https://user-images.githubusercontent.com/910321/210981925-d32fb974-e3e6-4e65-832e-ed033ef3b3db.png)
+
+5. Enjoy!
