@@ -29,7 +29,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         self.category = "PCB auto routing"
         self.description = "Freerouting for PCB auto routing"
         self.show_toolbar_button = True
-        self.icon_file_name = os.path.join(self.here_path, 'icon.png')
+        self.icon_file_name = os.path.join(self.here_path, 'icon_24x24.png')
         
         # Controls KiCAD session file imports (works only in KiCAD nigthly or 6)
         self.SPECCTRA=True
