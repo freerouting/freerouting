@@ -27,7 +27,7 @@ Altough the software can be used for manual routing in 90 degree, 45 degree and 
 
 ### Getting started
 
-If you use [KiCad](#additional-steps-for-users-of-kicad), [Autodesk EAGLE](https://github.com/freerouting/freerouting/README.md#additional-steps-for-users-of-autodesk-eagle) or [Target3001!](https://github.com/freerouting/freerouting/README.md#additional-steps-for-users-of-target-3001) or [pcb-rnd](https://github.com/freerouting/freerouting/README.md#additional-steps-for-users-of-pcb-rnd), click on them here for their integrations, otherwise you can run Freerouting as a standalone application:
+If you use [KiCad](#additional-steps-for-users-of-kicad), [Autodesk EAGLE](#additional-steps-for-users-of-autodesk-eagle), [Target3001!](#additional-steps-for-users-of-target-3001) or [pcb-rnd](#additional-steps-for-users-of-pcb-rnd), click on them here for their integrations, otherwise you can run Freerouting as a standalone application:
 
 1) After launching freerouting.jar, a window appears promting you to select your exported .DSN design file.
 ![image](https://user-images.githubusercontent.com/910321/167868226-f046da72-357d-44f6-ba0d-ee27d34725c1.png)
