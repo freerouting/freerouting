@@ -256,7 +256,7 @@ def get_java_version():
     javaPath = 'java'
     try:
 	    javaInfo = subprocess.check_output(javaPath + ' -version', shell=True, stderr=subprocess.STDOUT)
-	    javaVersion = re.search(r'"[0-9\._]*"', javaInfo.decode().split("\r")[0]).group().replace('"', '')
+	    javaVersion = re.search(r'([0-9\._]+)', javaInfo.decode().splitlines()[0]).group(1).replace('"', '')
 	    return javaVersion
     except:
         return "0.0.0.0"
