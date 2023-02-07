@@ -479,7 +479,7 @@ public class PolygonShape extends PolylineShape {
     return this.precalculated_convex_pieces;
   }
 
-  /** Crivate recursive part of split_to_convex. Returns a collection of polygon shape pieces. */
+  /** Private recursive part of split_to_convex. Returns a collection of polygon shape pieces. */
   private Collection<PolygonShape> split_to_convex_recu() {
     // start with a hashed corner and search the first concave corner
     int start_corner_no = random_generator.nextInt(corners.length);
