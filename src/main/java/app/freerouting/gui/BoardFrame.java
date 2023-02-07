@@ -10,7 +10,7 @@ import app.freerouting.logger.FRLogger;
 import java.io.File;
 
 /** Graphical frame of for interactive editing of a routing board. */
-public class BoardFrame extends javax.swing.JFrame {
+public class BoardFrame extends WindowBase {
   /** The windows above stored in an array */
   static final int SUBWINDOW_COUNT = 24;
   static final String[] log_file_extensions = {"log"};
@@ -110,6 +110,8 @@ public class BoardFrame extends javax.swing.JFrame {
       boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
+    super(800, 150);
+
     this.design_file = p_design;
     this.is_web_start = (p_option == Option.WEBSTART);
     this.test_level = p_test_level;

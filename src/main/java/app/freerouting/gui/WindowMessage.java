@@ -1,10 +1,12 @@
 package app.freerouting.gui;
 
 /** Startup window visible when the program is loading. */
-public class WindowMessage extends javax.swing.JFrame {
+public class WindowMessage extends WindowBase {
 
   /** Creates a new instance of WindowMessage */
   private WindowMessage(String[] p_message_arr) {
+    super(300, 100);
+
     final javax.swing.JPanel main_panel = new javax.swing.JPanel();
     final java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
     main_panel.setLayout(gridbag);

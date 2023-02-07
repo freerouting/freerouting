@@ -6,7 +6,7 @@ import app.freerouting.rules.ViaInfos;
 import app.freerouting.rules.ViaRule;
 
 /** Window for editing a single via rule. */
-public class WindowViaRule extends javax.swing.JFrame {
+public class WindowViaRule extends WindowBase {
 
   private final ViaRule via_rule;
   /** the list of possible vias in a rule */
@@ -17,6 +17,8 @@ public class WindowViaRule extends javax.swing.JFrame {
   private final java.util.ResourceBundle resources;
   /** Creates a new instance of ViaRuleWindow */
   public WindowViaRule(ViaRule p_via_rule, ViaInfos p_via_list, BoardFrame p_board_frame) {
+    super(300, 150);
+
     this.via_rule = p_via_rule;
     this.via_list = p_via_list;
 

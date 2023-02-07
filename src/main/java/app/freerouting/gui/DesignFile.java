@@ -53,6 +53,7 @@ public class DesignFile {
 
     javax.swing.JFileChooser file_chooser = new javax.swing.JFileChooser(p_design_dir_name);
     FileFilter file_filter = new FileFilter(all_file_extensions);
+    file_chooser.setMinimumSize(new java.awt.Dimension(500, 250));
     file_chooser.setFileFilter(file_filter);
     file_chooser.showOpenDialog(null);
     java.io.File curr_design_file = file_chooser.getSelectedFile();
@@ -165,6 +166,7 @@ public class DesignFile {
         design_dir_name = this.output_file.getParent();
       }
       this.file_chooser = new javax.swing.JFileChooser(design_dir_name);
+      this.file_chooser.setMinimumSize(new java.awt.Dimension(500, 250));
       FileFilter file_filter = new FileFilter(all_file_extensions);
       this.file_chooser.setFileFilter(file_filter);
     }

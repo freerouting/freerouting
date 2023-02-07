@@ -22,7 +22,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /** Main application for creating frames with new or existing board designs. */
-public class MainApplication extends javax.swing.JFrame {
+public class MainApplication extends WindowBase {
   static final String WEB_FILE_BASE_NAME = "http://www.freerouting.app";
   static final String VERSION_NUMBER_STRING =
       "v"
@@ -67,6 +67,8 @@ public class MainApplication extends javax.swing.JFrame {
    * @param startupOptions
    */
   public MainApplication(StartupOptions startupOptions) {
+    super(600, 300);
+
     this.design_dir_name = startupOptions.getDesignDir();
     this.max_passes = startupOptions.getMaxPasses();
     this.num_threads = startupOptions.getNumThreads();
@@ -81,14 +83,6 @@ public class MainApplication extends javax.swing.JFrame {
     this.ignore_net_classes_by_autorouter = startupOptions.ignore_net_classes_by_autorouter;
     this.resources =
         java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
-
-    try {
-      URL resource = this.getClass().getResource("/freerouting_icon_256x256_v2.png");
-      BufferedImage image = ImageIO.read(resource);
-      this.setIconImage(image);
-    } catch (IOException e) {
-      FRLogger.error("Couldn't load icon file 'freerouting_icon_256x256_v2.ico'.", e);
-    }
 
     main_panel = new javax.swing.JPanel();
     getContentPane().add(main_panel);

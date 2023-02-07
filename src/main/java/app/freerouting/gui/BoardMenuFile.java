@@ -1,6 +1,9 @@
 package app.freerouting.gui;
 
 import app.freerouting.logger.FRLogger;
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 /** Creates the file menu of a board frame. */
 public class BoardMenuFile extends javax.swing.JMenu {
@@ -193,6 +196,7 @@ public class BoardMenuFile extends javax.swing.JMenu {
   private void write_logfile_action() {
     javax.swing.JFileChooser file_chooser = new javax.swing.JFileChooser();
     java.io.File logfile_dir = board_frame.design_file.get_parent_file();
+    file_chooser.setMinimumSize(new java.awt.Dimension(500, 250));
     file_chooser.setCurrentDirectory(logfile_dir);
     file_chooser.setFileFilter(BoardFrame.logfile_filter);
     file_chooser.showOpenDialog(this);
@@ -209,9 +213,11 @@ public class BoardMenuFile extends javax.swing.JMenu {
   private void read_logfile_action() {
     javax.swing.JFileChooser file_chooser = new javax.swing.JFileChooser();
     java.io.File logfile_dir = board_frame.design_file.get_parent_file();
+    file_chooser.setMinimumSize(new java.awt.Dimension(500, 250));
     file_chooser.setCurrentDirectory(logfile_dir);
     file_chooser.setFileFilter(BoardFrame.logfile_filter);
     file_chooser.showOpenDialog(this);
+
     java.io.File filename = file_chooser.getSelectedFile();
     if (filename == null) {
       board_frame.screen_messages.set_status_message(resources.getString("message_10"));
