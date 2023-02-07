@@ -196,7 +196,7 @@ public class Network extends ScopeKeyword {
   private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list) {
     Object next_token;
     String component_name, pin_name;
-    while((component_name = ((SpecctraDsnFileReader)p_scanner).next_string(true, '-')) != "") {
+    while((component_name = ((SpecctraDsnFileReader)p_scanner).next_string(true, '-')).length() > 0) {
       
       try {
         p_scanner.yybegin(SpecctraDsnFileReader.SPEC_CHAR);

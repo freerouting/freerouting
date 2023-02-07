@@ -1741,7 +1741,7 @@ class SpecctraDsnFileReader implements IJFlexScanner {
 
     for (; ; ) {
       String next_string = next_string(true, separator);
-      if (next_string == "") {
+      if (next_string.length() == 0) {
         break;
       }
 
