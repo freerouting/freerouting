@@ -26,7 +26,10 @@ This software can be used together with all host PCB design software systems con
 Altough the software can be used for manual routing in 90 degree, 45 degree and free angle modes, it's main focus is on autorouting.
 
 ### Getting started
-1) After launching freerouting, a window appears promting you to select your exported .DSN design file.
+
+If you use [KiCad](#additional-steps-for-users-of-kicad), [Autodesk EAGLE](#additional-steps-for-users-of-autodesk-eagle), [Target3001!](#additional-steps-for-users-of-target-3001) or [pcb-rnd](#additional-steps-for-users-of-pcb-rnd), click on them here for their integrations, otherwise you can run Freerouting as a standalone application:
+
+1) After launching freerouting.jar, a window appears promting you to select your exported .DSN design file.
 ![image](https://user-images.githubusercontent.com/910321/167868226-f046da72-357d-44f6-ba0d-ee27d34725c1.png)
 
 2) After opening a design you can start the autorouter with the button in the toolbar on top of the board window.
@@ -45,19 +48,33 @@ For more information please use the online help in the board editor.
 
 ### Additional steps for users of [KiCad](https://www.kicad.org/)
 
-1) Download the latest `freerouting-1.6.5.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases)
+1. Open KiCad 6.0 or newer
 
-2) Start KiCad and open your project in Pcbnew.
+2. Start Tools / Plugin and Content Manager (Ctrl+M)
 
-3) Export the PCB into Specctra DSN (File / Export... / Specctra DSN).
+![image](https://user-images.githubusercontent.com/910321/210979489-9856712b-f5c8-497e-9bfa-3f869dae85bc.png)
 
-4) Start the router by running the freerouting-1.6.5.jar file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+3. Search for the Freerouting plugin
 
-5) Do the routing.
+![image](https://user-images.githubusercontent.com/910321/210980390-8bfdaeed-ea17-4e3f-b998-b5e52c04b2c0.png)
 
-6) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
+4. Click on the Install button
 
-7) Go back to KiCad's Pcbnew and import the results (File / Import Specctra Session...).
+![image](https://user-images.githubusercontent.com/910321/210980590-0e006f1c-dfb9-4fd1-994c-8e6e0b4cb56a.png)
+
+5. Open you PCB design in PCB Editor
+
+6. (Optional) Remove routed tracks and via from the design
+
+![image](https://user-images.githubusercontent.com/910321/181244962-ccf3c688-d364-470b-bfca-03dd049919b1.png)
+
+7. Start Freerouting from the Tools / External Plugins menu
+
+![image](https://user-images.githubusercontent.com/910321/181245125-cbf652bf-428a-4648-b455-5ebba78be920.png)
+
+8. Wait until the Freerouting app exits and the plugin loads your routed design
+
+![image](https://user-images.githubusercontent.com/910321/210981925-d32fb974-e3e6-4e65-832e-ed033ef3b3db.png)
 
 ### Additional steps for users of [Autodesk EAGLE](https://www.autodesk.com/products/eagle/overview)
 
