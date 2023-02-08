@@ -18,7 +18,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
       BatchOptRouteMT p_optimizer,
       int item_id,
       int p_pass_no,
-      boolean p_with_prefered_directions,
+      boolean p_with_preferred_directions,
       double p_min_cumulative_trace_length) {
     super(p_optimizer.thread, true);
 
@@ -28,7 +28,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
     // curr_item.board = this.routing_board;
 
     pass_no = p_pass_no;
-    with_prefered_directions = p_with_prefered_directions;
+    with_prefered_directions = p_with_preferred_directions;
     this.min_cumulative_trace_length_before = p_min_cumulative_trace_length;
   }
 
@@ -58,11 +58,12 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
 
     if (curr_item == null) return;
 
-    FRLogger.debug(
-        "Start to run OptimizeRouteTask on pass "
-            + pass_no
-            + " with item id: "
-            + curr_item.get_id_no());
+//    FRLogger.debug(
+//        "Start to run OptimizeRouteTask on pass "
+//            + pass_no
+//            + " for item #"
+//            + curr_item.get_id_no()
+//            + ".");
 
     route_result = opt_route_item(curr_item, pass_no, with_prefered_directions);
 
@@ -73,31 +74,28 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
     float sec = (duration % 60000) / 1000.0F;
 
     FRLogger.debug(
-        "Finished one task ("
+        "Finished   task #"
             + optimizer.get_num_tasks_finished()
             + " of "
             + optimizer.get_num_tasks()
-            + ") on pass "
-            + pass_no
-            + " with item id: "
+            + " for item #"
             + curr_item.get_id_no()
+            + " on pass "
+            + pass_no
             + " in "
             + minutes
             + " m "
             + sec
-            + "s"
-            + " won: "
+            + "s."
+            + " Best so far: "
             + winning_candidate
-            + " Improved: "
+            + ", improved: "
             + route_result.improved()
-            + " via-: "
+            + ", via reduction: "
             + route_result.via_count_reduced()
-            + (winning_candidate ? (" len-: " + route_result.length_reduced()) : "")
-            + " incomplete("
-            + route_result.incomplete_count_before()
-            + ", "
-            + route_result.incomplete_count()
-            + ")");
+            + (winning_candidate ? (", length reduction: " + (int)route_result.length_reduced()) : "")
+            + ", incomplete trace reduction: "
+            + (route_result.incomplete_count_before() - route_result.incomplete_count()));
 
     if (!winning_candidate) {
       clean();

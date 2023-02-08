@@ -252,20 +252,19 @@ public class BatchOptRouteMT extends BatchOptRoute {
                   return t;
                 });
 
-    for (int t = 0; t < item_ids.size(); ) {
+    for (int t = 0; t < item_ids.size(); t++) {
       // each task needs a copy of routing_board, so schedule just enough tasks
       // to keep workers busy in order not to exhaust JVM memory so that
       // it can run on systems without huge amount of RAM
-      if (pool.getActiveCount() < thread_pool_size) {
         int item_id = item_ids.get(t);
         FRLogger.debug(
-            "Scheduling #"
-                + t
+            "Scheduling task #"
+                + (t+1)
                 + " of "
                 + item_ids.size()
-                + " tasks for item No. "
+                + " for item #"
                 + item_id
-                + " ......");
+                + ".");
 
         pool.execute(
             new OptimizeRouteTask(
@@ -274,33 +273,24 @@ public class BatchOptRouteMT extends BatchOptRoute {
                 p_pass_no,
                 p_with_prefered_directions,
                 this.min_cumulative_trace_length_before));
-        ++t;
-
-      } else {
-        // we are at full capacity, wait for a task to finish
-        try {
-          prepare_task_completion_signal();
-          task_completion_signal.await(1, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-          FRLogger.error("Wait failed", e);
-        }
-      }
     }
 
-    boolean interrupted = false;
+    FRLogger.debug("All items are queued for execution, waiting for the tasks to finish.");
     pool.shutdown();
 
-    FRLogger.debug("Closed task queue of thread pool, not accepting new tasks");
+    boolean interrupted = false;
 
     try {
-      while (!pool.awaitTermination(1, TimeUnit.MINUTES)) {
+      int i = 0;
+      while (!pool.awaitTermination(1, TimeUnit.SECONDS)) {
         FRLogger.debug(
-            "After 1 round of wait, CompletedTaskCount: "
-                + pool.getCompletedTaskCount()
-                + ", ActiveCount: "
+            "Running route optimizer on "
                 + pool.getActiveCount()
-                + ", TaskCount: "
-                + pool.getTaskCount());
+                + " thread(s). Completed "
+                + pool.getCompletedTaskCount()
+                + " of "
+                + pool.getTaskCount()
+                + " tasks.");
 
         if (this.thread.is_stop_requested()) {
           pool.shutdownNow();
@@ -356,28 +346,29 @@ public class BatchOptRouteMT extends BatchOptRoute {
             + minutes
             + " minutes "
             + sec
-            + " s with "
+            + " seconds with "
             + update_count
             + " board updates using "
             + thread_pool_size
-            + " threads and "
+            + " thread(s) with '"
             + us
-            + " strategy & "
+            + "' strategy and '"
             + is
-            + " item selection");
+            + "' item selection strategy.");
     FRLogger.debug(
-        "Improved: "
+        "Route optimizer pass summary - Improved: "
             + best_route_result.improved()
             + ", interrupted: "
             + interrupted
-            + ", via#: "
+            + ", via count: "
             + best_route_result.via_count()
-            + ", len: "
-            + user_trace_length_after
-            + ", via-: "
+            + ", trace length: "
+            + (int)user_trace_length_after
+            + ", via count delta: "
             + (via_count_before - best_route_result.via_count())
-            + ", len-: "
-            + (user_trace_length_before - user_trace_length_after));
+            + ", trace length delta: "
+            + (int)(user_trace_length_before - user_trace_length_after)
+            + ".");
 
     FRLogger.traceExit(optimizationPassId);
 
