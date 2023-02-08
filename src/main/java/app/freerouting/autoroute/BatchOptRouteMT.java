@@ -277,10 +277,10 @@ public class BatchOptRouteMT extends BatchOptRoute {
         ++t;
 
       } else {
+        // we are at full capacity, wait for a task to finish
         try {
-          // TimeUnit.SECONDS.sleep(3);
           prepare_task_completion_signal();
-          task_completion_signal.await(3, TimeUnit.MINUTES);
+          task_completion_signal.await(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
           FRLogger.error("Wait failed", e);
         }
