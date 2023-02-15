@@ -255,11 +255,15 @@ def wx_show_error(text):
 def get_java_version():
     javaPath = 'java'
     try:
-	    javaInfo = subprocess.check_output(javaPath + ' -version', shell=True, stderr=subprocess.STDOUT)
-	    javaVersion = re.search(r'([0-9\._]+)', javaInfo.decode().splitlines()[0]).group(1).replace('"', '')
-	    return javaVersion
+        javaInfo = subprocess.check_output(javaPath + ' -version', shell=True, stderr=subprocess.STDOUT)
+        javaVersions = [re.search(r'([0-9\._]+)', v).group(1).replace('"', '') for v in javaInfo.decode().splitlines()]
+
+        for v in javaVersions:
+            if v.split(".")[0].isdigit():
+                return v
     except:
-        return "0.0.0.0"
+        pass
+    return "0.0.0.0"
 
 
 # prompt user to cancel pending action; allow to cancel programmatically
