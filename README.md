@@ -285,6 +285,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 	* Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to get hash and file sizes
 	* Update `\integrations\KiCad\metadata.json` with these values
 	* Delete previous fork at https://gitlab.com/freeroutingapp/metadata
+(Settings / General / Delete this project)
 	* Fork https://gitlab.com/kicad/addons/metadata again
 	* Create a new branch, named `freerouting-2.3.4`
 	* Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json with the new one
