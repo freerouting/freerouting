@@ -78,7 +78,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         self.bFirstLine = True
         self.bEatNextLine = False
         fw = open(self.module_input, "w")
-	fr = open(self.temp_input , "r", encoding="utf-8")
+	    fr = open(self.temp_input , "r", encoding="utf-8")
         for l in fr:
             if self.bFirstLine:
                 fw.writelines('(pcb ' + self.module_input + '\n')
