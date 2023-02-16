@@ -78,7 +78,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         self.bFirstLine = True
         self.bEatNextLine = False
         fw = open(self.module_input, "w")
-	    fr = open(self.temp_input , "r", encoding="utf-8")
+        fr = open(self.temp_input , "r", encoding="utf-8")
         for l in fr:
             if self.bFirstLine:
                 fw.writelines('(pcb ' + self.module_input + '\n')
@@ -119,23 +119,23 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
     # auto route by invoking freerouting.jar
     def RunRouter(self):
-        javaVersion = get_java_version()
+        javaVersion = get_java_version(self.java_path)
         javaMajorVersion = int(javaVersion.split(".")[0])
 
         if javaMajorVersion == 0:
             wx_show_error("""
-			Java JRE version 17 or higher is required, but you have no Java installed.
+            Java JRE version 17 or higher is required, but you have no Java installed.
             You can download it from https://adoptium.net/temurin/releases.
             KiCad must be restarted after you installed Java.
-			""")
+            """)
             return False
 
         if javaMajorVersion < 17:
             wx_show_error("""
-			Java JRE version 17 or higher is required, but you have Java version {0} installed.
+            Java JRE version 17 or higher is required, but you have Java version {0} installed.
             You can download a newer one from https://adoptium.net/temurin/releases.
             KiCad must be restarted after you updated Java.
-			""".format(javaVersion))
+            """.format(javaVersion))
             return False
    
         dialog = ProcessDialog(None, """
@@ -252,8 +252,7 @@ def wx_show_error(text):
 
 
 # check the installed java version
-def get_java_version():
-    javaPath = 'java'
+def get_java_version(javaPath):
     try:
         javaInfo = subprocess.check_output(javaPath + ' -version', shell=True, stderr=subprocess.STDOUT)
         javaVersions = [re.search(r'([0-9\._]+)', v).group(1).replace('"', '') for v in javaInfo.decode().splitlines()]
