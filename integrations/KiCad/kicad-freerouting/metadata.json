@@ -27,7 +27,7 @@
       "version": "1.7.1",
       "status": "stable",
       "kicad_version": "6.0",
-      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.7.0.zip"
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.7.1.zip"
     }
   ]
 }
