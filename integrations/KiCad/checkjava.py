@@ -11,3 +11,4 @@ def get_java_version():
     for v in javaVersions:
         if v.split(".")[0].isdigit():
             print(v)
+            return
