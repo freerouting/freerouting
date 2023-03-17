@@ -28,7 +28,7 @@ class SpecctraDsnFileReader implements IJFlexScanner {
   public static final int STRING1 = 1;
   public static final int NAME = 3;
   /** initial size of the lookahead buffer */
-  private static final int ZZ_BUFFERSIZE = 512 * 1024;
+  private static final int ZZ_BUFFERSIZE = 4 * 1024 * 1024;
   /** Translates characters to character classes */
   private static final String ZZ_CMAP_PACKED =
       "\11\0\1\3\1\2\1\0\1\3\1\1\21\0\1\16\1\3\1\16"
