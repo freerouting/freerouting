@@ -86,6 +86,12 @@ public class BoardLibrary implements java.io.Serializable {
     if (get_via_padstack(p_padstack.name) != null) {
       return false;
     }
+
+    if (this.via_padstacks == null)
+    {
+      this.via_padstacks = new Vector<Padstack>();
+    }
+
     this.via_padstacks.add(p_padstack);
     return true;
   }
