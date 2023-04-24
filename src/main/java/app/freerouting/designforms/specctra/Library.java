@@ -167,7 +167,9 @@ public class Library extends ScopeKeyword {
       app.freerouting.geometry.planar.ConvexShape padstack_shape = convex_shape;
       if (padstack_shape != null) {
         if (padstack_shape.dimension() < 2) {
-          FRLogger.warn("Library.read_padstack_scope: shape is not an area ");
+          FRLogger.warn("Library.read_padstack_scope: the shape of padstack '"
+              + padstack_name
+              + "' is not an area. We will enlarge it as a workaround, but it may result unintended consequences.");
           // enlarge the shape a little bit, so that it is an area
           padstack_shape = padstack_shape.offset(1);
           if (padstack_shape.dimension() < 2) {
