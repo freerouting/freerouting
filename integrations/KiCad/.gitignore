@@ -157,3 +157,7 @@ dmypy.json
 *.tar.gz
 *.tar.bz
 *.tar.bz2
+
+/jdk-*
+jre_*.zip
+jre_*.tar.gz

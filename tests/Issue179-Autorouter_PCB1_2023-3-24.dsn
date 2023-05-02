@@ -1,0 +1,503 @@
+(PCB ''
+  (resolution mil 1000)
+  (structure
+    (boundary(path signal 0 0 135.5 0 0 223.5 0 223.5 135.5 0 135.5 )
+    )
+    (via via0
+    )
+    (grid via   0.25)
+    (grid wire   0.25)
+    (grid place   0.25)
+    (rule(clear 0.41))
+    (rule(clear 0.41 (type default_smd)))
+    (rule(clear 0.41 (type smd_smd)))
+    (rule(width 1.01))
+    (layer 1
+      (type signal)
+    )
+    (layer 2
+      (type signal)
+    )
+  )
+
+  (placement
+    (component u1
+      (place u1 0 0 front 0
+      )
+    )
+  )
+  (library
+    (image u1
+      (pin p38e5 38e5 102.73 24.12)
+      (pin p38e5 38e6 102.73 29.12)
+      (pin p38e5 38e7 102.73 34.12)
+      (pin p38e5 38e8 102.73 39.12)
+      (pin p38e5 38e9 102.73 44.12)
+      (pin p38e5 38e10 102.73 49.12)
+      (pin p38e5 38e11 102.73 54.12)
+      (pin p38e5 38e12 81.2 24.12)
+      (pin p38e5 38e13 81.2 29.12)
+      (pin p38e5 38e14 81.2 34.12)
+      (pin p38e5 38e15 81.2 39.12)
+      (pin p38e5 38e16 81.2 44.12)
+      (pin p38e5 38e17 81.2 49.12)
+      (pin p38e5 38e18 81.2 54.12)
+      (pin p55e5 55e5 164.1 36.91)
+      (pin p55e5 55e6 164.1 31.91)
+      (pin p55e5 55e7 164.1 26.91)
+      (pin p55e5 55e8 164.1 21.91)
+      (pin p55e5 55e9 164.1 16.91)
+      (pin p55e5 55e10 164.1 11.91)
+      (pin p55e5 55e11 164.1 6.91)
+      (pin p55e5 55e12 185.91 36.91)
+      (pin p55e5 55e13 185.91 31.91)
+      (pin p55e5 55e14 185.91 26.91)
+      (pin p55e5 55e15 185.91 21.91)
+      (pin p55e5 55e16 185.91 16.91)
+      (pin p55e5 55e17 185.91 11.91)
+      (pin p55e5 55e18 185.91 6.91)
+      (pin p61e5 61e5 122.43 39.24)
+      (pin p61e5 61e6 122.43 34.24)
+      (pin p61e5 61e7 122.43 29.24)
+      (pin p61e5 61e8 122.43 24.24)
+      (pin p61e5 61e9 144.26 39.24)
+      (pin p61e5 61e10 144.26 34.24)
+      (pin p61e5 61e11 144.26 29.24)
+      (pin p61e5 61e12 144.26 24.24)
+      (pin p63e5 63e5 42.54 104.13)
+      (pin p63e5 63e6 42.54 114.13)
+      (pin p63e5 63e7 7.5 114.13)
+      (pin p63e5 63e8 7.5 104.13)
+      (pin p71e17 71e17 9.38 81.98)
+      (pin p71e17 71e18 9.38 42.61)
+      (pin p71e17 71e19 49.54 42.61)
+      (pin p71e17 71e20 49.54 81.98)
+      (pin p71e17 71e21 59.38 62.3)
+      (pin p73e6 73e6 136.78 57.02)
+      (pin p73e6 73e7 144.26 57.02)
+      (pin p73e6 73e8 140.52 64.9)
+      (pin p77e5 77e5 102.12 73.06)
+      (pin p77e5 77e6 102.12 78.06)
+      (pin p77e5 77e7 102.12 83.06)
+      (pin p77e5 77e8 102.12 88.06)
+      (pin p77e5 77e9 81 73.06)
+      (pin p77e5 77e10 81 78.06)
+      (pin p77e5 77e11 81 83.06)
+      (pin p77e5 77e12 81 88.06)
+      (pin p1e6 1e6 186.83 54.17)
+      (pin p1e6 1e7 186.83 61.65)
+      (pin p1e6 1e8 178.95 57.91)
+      (pin p47e7 47e7 120.7 56.75)
+      (pin p47e7 47e8 120.7 62.68)
+      (pin p49e7 49e7 142.42 87.35)
+      (pin p49e7 49e8 142.42 81.84)
+      (pin p51e7 51e7 162.96 114.27)
+      (pin p51e7 51e8 157.03 114.27)
+      (pin p53e7 53e7 159.1 81.46)
+      (pin p53e7 53e8 165.03 81.46)
+      (pin p51e7 56e7 165.03 97.86)
+      (pin p51e7 56e8 159.1 97.86)
+      (pin p51e7 60e7 187.14 94.12)
+      (pin p51e7 60e8 181.21 94.12)
+      (pin p64e7 64e7 79.63 110.32)
+      (pin p64e7 64e8 79.63 104.39)
+      (pin p64e7 68e7 96.03 110.32)
+      (pin p64e7 68e8 96.03 104.39)
+      (pin p51e7 72e7 41.11 25.58)
+      (pin p51e7 72e8 35.17 25.58)
+      (pin p51e7 76e7 13.61 8.68)
+      (pin p51e7 76e8 7.67 8.68)
+      (pin p64e7 80e7 58.76 106.36)
+      (pin p64e7 80e8 58.76 100.43)
+      (pin p53e7 83e7 119.78 81.46)
+      (pin p53e7 83e8 125.72 81.46)
+      (pin p53e7 85e7 134.93 114.27)
+      (pin p53e7 85e8 140.86 114.27)
+      (pin p87e7 87e7 72 12.08)
+      (pin p87e7 87e8 66.48 12.08)
+      (pin p87e7 89e7 137.76 12)
+      (pin p87e7 89e8 132.24 12)
+      (pin p64e7 91e7 162.39 60.32)
+      (pin p64e7 91e8 162.39 54.39)
+      (pin p53e7 93e7 119.78 97.86)
+      (pin p53e7 93e8 125.72 97.86)
+      (pin p51e7 95e7 187.14 77.72)
+      (pin p51e7 95e8 181.21 77.72)
+      (pin p97e7 97e7 86.03 11.6)
+      (pin p97e7 97e8 91.54 11.6)
+      (pin p87e7 99e7 118.32 114.66)
+      (pin p87e7 99e8 112.81 114.66)
+      (pin p101e7 101e7 49.79 7.5)
+      (pin p101e7 101e8 49.79 13.01)
+      (pin p49e7 103e7 204.42 14.01)
+      (pin p49e7 103e8 204.42 8.5)
+      (pin p97e7 105e7 132.24 5)
+      (pin p97e7 105e8 137.76 5)
+      (pin p49e7 107e7 203.85 60.39)
+      (pin p49e7 107e8 203.85 54.88)
+      (pin p87e7 109e7 13.57 15.08)
+      (pin p87e7 109e8 8.06 15.08)
+      (pin p7 7 137.76 8.5)
+    )
+
+    (padstack via0
+      (shape(circle 1 2.4))
+      (shape(circle 2 2.4))
+    )
+
+    (padstack p38e5
+      (shape(polygon 1 0.01 -2.7 -1.17 -2.98 -1.14 -3.25 -1.04 -3.48 -0.88 -3.67 -0.67 -3.8 -0.42 -3.86 -0.14 -3.86 0.14 -3.8 0.42 -3.67 0.67 -3.48 0.88 -3.25 1.04 -2.98 1.14 -2.7 1.17 -2.7 1.17 2.7 1.17 2.7 1.17 2.98 1.14 3.25 1.04 3.48 0.88 3.67 0.67 3.8 0.42 3.86 0.14 3.86 -0.14 3.8 -0.42 3.67 -0.67 3.48 -0.88 3.25 -1.04 2.98 -1.14 2.7 -1.17 2.7 -1.17 -2.7 -1.17))
+    )
+    (padstack p55e5
+      (shape(polygon 1 0.01 -2.88 -1.13 -3.17 -1.09 -3.45 -0.98 -3.68 -0.8 -3.86 -0.56 -3.97 -0.29 -4.01 0 -3.97 0.29 -3.86 0.56 -3.68 0.8 -3.45 0.98 -3.17 1.09 -2.88 1.13 -2.88 1.13 2.88 1.13 2.88 1.13 3.17 1.09 3.45 0.98 3.68 0.8 3.86 0.56 3.97 0.29 4.01 0 3.97 -0.29 3.86 -0.56 3.68 -0.8 3.45 -0.98 3.17 -1.09 2.88 -1.13 2.88 -1.13 -2.88 -1.13))
+    )
+    (padstack p61e5
+      (shape(polygon 1 0.01 -2.87 -1.16 -3.17 -1.12 -3.45 -1 -3.69 -0.82 -3.87 -0.58 -3.99 -0.3 -4.03 0 -3.99 0.3 -3.87 0.58 -3.69 0.82 -3.45 1 -3.17 1.12 -2.87 1.16 -2.87 1.16 2.87 1.16 2.87 1.16 3.17 1.12 3.45 1 3.69 0.82 3.87 0.58 3.99 0.3 4.03 0 3.99 -0.3 3.87 -0.58 3.69 -0.82 3.45 -1 3.17 -1.12 2.87 -1.16 2.87 -1.16 -2.87 -1.16))
+    )
+    (padstack p63e5
+      (shape(polygon 1 0.01 5.12 -2.8 5.12 2.8 5.12 2.8 -5.12 2.8 -5.12 2.8 -5.12 -2.8 -5.12 -2.8 5.12 -2.8))
+    )
+    (padstack p71e17
+      (shape(circle 1 9.84 0 0))
+      (shape(circle 2 9.84 0 0))
+    )
+    (padstack p73e6
+      (shape(polygon 1 0.01 1.38 2.46 -1.38 2.46 -1.38 2.46 -1.38 -2.46 -1.38 -2.46 1.38 -2.46 1.38 -2.46 1.38 2.46))
+    )
+    (padstack p77e5
+      (shape(polygon 1 0.01 2.43 1.24 2.73 1.2 3.01 1.1 3.25 0.93 3.45 0.7 3.59 0.44 3.66 0.15 3.66 -0.15 3.59 -0.44 3.45 -0.7 3.25 -0.93 3.01 -1.1 2.73 -1.2 2.43 -1.24 2.43 -1.24 -2.43 -1.24 -2.43 -1.24 -2.73 -1.2 -3.01 -1.1 -3.25 -0.93 -3.45 -0.7 -3.59 -0.44 -3.66 -0.15 -3.66 0.15 -3.59 0.44 -3.45 0.7 -3.25 0.93 -3.01 1.1 -2.73 1.2 -2.43 1.24 -2.43 1.24 2.43 1.24))
+    )
+    (padstack p1e6
+      (shape(polygon 1 0.01 -2.46 1.38 -2.46 -1.38 -2.46 -1.38 2.46 -1.38 2.46 -1.38 2.46 1.38 2.46 1.38 -2.46 1.38))
+    )
+    (padstack p47e7
+      (shape(polygon 1 0.01 1.7 1.59 -1.7 1.59 -1.7 1.59 -1.7 -1.59 -1.7 -1.59 1.7 -1.59 1.7 -1.59 1.7 1.59))
+    )
+    (padstack p49e7
+      (shape(polygon 1 0.01 -1.77 -1.57 1.77 -1.57 1.77 -1.57 1.77 1.57 1.77 1.57 -1.77 1.57 -1.77 1.57 -1.77 -1.57))
+    )
+    (padstack p51e7
+      (shape(polygon 1 0.01 -1.59 1.7 -1.59 -1.7 -1.59 -1.7 1.59 -1.7 1.59 -1.7 1.59 1.7 1.59 1.7 -1.59 1.7))
+    )
+    (padstack p53e7
+      (shape(polygon 1 0.01 1.59 -1.7 1.59 1.7 1.59 1.7 -1.59 1.7 -1.59 1.7 -1.59 -1.7 -1.59 -1.7 1.59 -1.7))
+    )
+    (padstack p64e7
+      (shape(polygon 1 0.01 -1.7 -1.59 1.7 -1.59 1.7 -1.59 1.7 1.59 1.7 1.59 -1.7 1.59 -1.7 1.59 -1.7 -1.59))
+    )
+    (padstack p87e7
+      (shape(polygon 1 0.01 -1.57 1.77 -1.57 -1.77 -1.57 -1.77 1.57 -1.77 1.57 -1.77 1.57 1.77 1.57 1.77 -1.57 1.77))
+    )
+    (padstack p97e7
+      (shape(polygon 1 0.01 1.57 -1.77 1.57 1.77 1.57 1.77 -1.57 1.77 -1.57 1.77 -1.57 -1.77 -1.57 -1.77 1.57 -1.77))
+    )
+    (padstack p101e7
+      (shape(polygon 1 0.01 1.77 1.57 -1.77 1.57 -1.77 1.57 -1.77 -1.57 -1.77 -1.57 1.77 -1.57 1.77 -1.57 1.77 1.57))
+    )
+    (padstack p7
+      (shape(polygon 1 0.01 0 -3.5 0 3.5))
+    )
+  )
+  (network
+    (net GND
+      (pins u1-38e12 u1-55e11 u1-61e5 u1-63e6 u1-63e8 u1-71e19 u1-77e8 u1-47e8 u1-49e8 u1-51e8 u1-68e8 u1-76e8 u1-80e7 u1-87e7 u1-89e7 u1-95e8 u1-97e7 u1-99e7 u1-101e8 u1-103e8 u1-105e8 u1-107e8 u1-109e8 u1-7)
+    )
+    (net $1N14077
+      (pins u1-63e5 u1-93e8 u1-101e7 u1-103e7 u1-105e7 u1-107e7 u1-109e7)
+    )
+    (net $1N3035
+      (pins u1-77e11 u1-72e8 u1-76e7)
+    )
+    (net $1N1215
+      (pins u1-38e18 u1-77e5)
+    )
+    (net $1N1496
+      (pins u1-38e17 u1-77e10)
+    )
+    (net $1N14056
+      (pins u1-38e16 u1-55e5 u1-55e8 u1-1e6)
+    )
+    (net $1N13979
+      (pins u1-38e13)
+    )
+    (net $1N13824
+      (pins u1-38e11 u1-55e12 u1-61e9 u1-71e20 u1-73e8 u1-77e9 u1-1e8 u1-49e7 u1-51e7 u1-53e8 u1-64e7 u1-72e7 u1-85e8 u1-91e7)
+    )
+    (net $1N1925
+      (pins u1-55e6 u1-55e7)
+    )
+    (net $1N1933
+      (pins u1-55e9 u1-55e10)
+    )
+    (net $1N14595
+      (pins u1-61e6 u1-63e7 u1-85e7 u1-87e8 u1-97e8 u1-99e8)
+    )
+    (net $1N11447
+      (pins u1-61e7 u1-73e6)
+    )
+    (net $1N10884
+      (pins u1-61e12 u1-89e8)
+    )
+    (net $1N13493
+      (pins u1-71e21)
+    )
+    (net $1N12681
+      (pins u1-71e17)
+    )
+    (net $1N12619
+      (pins u1-73e7 u1-91e8)
+    )
+    (net $1N771
+      (pins u1-77e6 u1-64e8 u1-68e7)
+    )
+    (net $1N822
+      (pins u1-77e7 u1-47e7)
+    )
+    (net $1N3047
+      (pins u1-77e12 u1-80e8)
+    )
+    (net $1N14372
+      (pins u1-1e7 u1-83e7 u1-95e7)
+    )
+    (net $1N515
+      (pins u1-53e7 u1-56e8)
+    )
+    (net $1N518
+      (pins u1-56e7 u1-60e8)
+    )
+    (net +12V
+      (pins u1-60e7)
+    )
+    (net $1N13741
+      (pins u1-83e8 u1-93e7)
+    )
+    (class  
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N822 $1N822
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class GND GND
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N515 $1N515
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N518 $1N518
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class +12V +12V
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N771 $1N771
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N3035 $1N3035
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N3047 $1N3047
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N1496 $1N1496
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N1215 $1N1215
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N1925 $1N1925
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N1933 $1N1933
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N11447 $1N11447
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N10884 $1N10884
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N12681 $1N12681
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N12619 $1N12619
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N13741 $1N13741
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N13493 $1N13493
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N13824 $1N13824
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N13979 $1N13979
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N14056 $1N14056
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N14077 $1N14077
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N14372 $1N14372
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+    (class $1N14595 $1N14595
+      (circuit 
+        (use_via via0)
+      )
+      (rule 
+        (width 1)
+        (clearance 0.4)
+      )
+    )
+  )
+
+  (wiring
+  )
+)

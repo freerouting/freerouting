@@ -1,0 +1,11 @@
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-F_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-In1_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-In2_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-B_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-F_Silkscreen.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-F_Mask.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-B_Mask.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-Edge_Cuts.gbr'.
+Plotted to 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-F_Courtyard.gbr'.
+Created Gerber job file 'D:\Dad\Documents\Junk\Kicad_Projects_Junk\Trial\Test_Gerber\Test\Gerbers\Test-job.gbrjob'.
+Info: Done.

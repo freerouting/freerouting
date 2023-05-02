@@ -94,6 +94,8 @@ public class Package {
                 Shape.read_area_scope(p_scanner, p_layer_structure, false);
             if (keepout_area != null) {
               keepouts.add(keepout_area);
+            } else {
+              FRLogger.error("Package.read_scope: could not read keepout area of package '"+package_name+"'", null);
             }
           } else if (next_token == Keyword.VIA_KEEPOUT) {
             Shape.ReadAreaScopeResult keepout_area =

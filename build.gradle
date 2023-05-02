@@ -13,7 +13,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '3.0.0'
-    id 'com.github.ben-manes.versions' version '0.45.0'
+    id 'com.github.ben-manes.versions' version '0.46.0'
 }
 
 ext.mainClassName = 'app.freerouting.gui.MainApplication'
@@ -54,7 +54,7 @@ dependencies {
     implementation group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.20.0'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.20.0'
 }
 
 
