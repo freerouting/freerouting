@@ -31,21 +31,21 @@ public class FRLogger {
 
   public static void traceEntry(String perfId) {
     if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);;
+    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     perfData.put(perfId.hashCode(), java.time.Instant.now());
   }
 
   public static double traceExit(String perfId) {
     if (!enabled) return 0.0;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);;
+    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     return traceExit(perfId, null);
   }
 
   public static double traceExit(String perfId, Object result) {
     if (!enabled) return 0.0;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);;
+    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     long timeElapsed =
         Duration.between(perfData.get(perfId.hashCode()), java.time.Instant.now()).toMillis();
@@ -67,14 +67,14 @@ public class FRLogger {
 
   public static void info(String msg) {
     if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);;
+    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     logger.info(msg);
   }
 
   public static void warn(String msg) {
     if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);;
+    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     logger.warn(msg);
 
@@ -82,14 +82,15 @@ public class FRLogger {
 
   public static void debug(String msg) {
     if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);;
+    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     logger.debug(msg);
   }
 
   public static void error(String msg, Throwable t) {
     if (!enabled) return;
-    if (logger == null) logger = LogManager.getLogger(Freerouting.class);;
+    if (logger == null) logger = LogManager.getLogger(Freerouting.class);
+
 
     if (t == null) {
       logger.error(msg);
