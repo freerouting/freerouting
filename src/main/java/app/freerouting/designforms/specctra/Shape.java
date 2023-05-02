@@ -164,6 +164,7 @@ public abstract class Shape {
     }
     Shape curr_shape = Shape.read_scope(p_scanner, p_layer_structure);
     if (curr_shape == null) {
+      FRLogger.warn("Shape.read_area_scope: could not read shape");
       result_ok = false;
     }
     shape_list.add(curr_shape);
@@ -346,6 +347,11 @@ public abstract class Shape {
     try {
       String layer_name = p_scanner.next_string();
       Layer circle_layer = get_layer(p_layer_structure, layer_name);
+
+      if (circle_layer == null) {
+        FRLogger.warn(
+            "Circle.read_circle_scope: layer with name '"+layer_name+"' not found in layer structure");
+      }
 
       // fill the coordinates
       Object next_token;
