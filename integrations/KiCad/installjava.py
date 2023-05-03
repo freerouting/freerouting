@@ -25,6 +25,15 @@ def detect_os_architecture():
 
     return os_name, architecture
 
+def download_progress_hook(count, block_size, total_size):
+    percent = int(count * block_size * 100 / total_size)
+    sys.stdout.write(f"\rDownloading: {percent}%")
+    sys.stdout.flush()
+
+def download_with_progress_bar(url, output_path):
+    urllib.request.urlretrieve(url, output_path, reporthook=download_progress_hook)
+
+
 def install_java_jre_17():
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
@@ -52,7 +61,8 @@ def install_java_jre_17():
     else:
         jre_url = urllib.parse.quote(jre_url, safe=":/?=")
         print("Downloading Java JRE from " + jre_url)
-        urllib.request.urlretrieve(jre_url, file_name)
+        download_with_progress_bar(jre_url, file_name)
+        print()
 
     # Unzip the downloaded file
     print("Extracting the downloaded file...")
