@@ -9,7 +9,7 @@
   (unit um)
   (structure
     (layer F.Cu
-      (type signal)
+      (type jumper)
       (property
         (index 0)
       )
@@ -265,6 +265,8 @@
       (pin Oval[A]Pad_800x1400_um S1@1 -4130 3110)
       (pin Oval[A]Pad_800x1400_um S1@2 -4490 -2840)
       (pin Oval[A]Pad_800x1400_um S1@3 4130 3110)
+      (keepout "" (circle F.Cu 650 -3600 4360))
+      (keepout "" (circle B.Cu 650 -3600 4360))
     )
     (image Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder::1
       (outline (path signal 120  -254.724 522.5  254.724 522.5))

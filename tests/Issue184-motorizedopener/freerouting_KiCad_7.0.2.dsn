@@ -3,13 +3,13 @@
     (string_quote ")
     (space_in_quoted_tokens on)
     (host_cad "KiCad's Pcbnew")
-    (host_version "(6.0.5)")
+    (host_version "7.0.2")
   )
   (resolution um 10)
   (unit um)
   (structure
     (layer F.Cu
-      (type signal)
+      (type jumper)
       (property
         (index 0)
       )
@@ -265,6 +265,8 @@
       (pin Oval[A]Pad_800x1400_um S1@1 -4130 3110)
       (pin Oval[A]Pad_800x1400_um S1@2 -4490 -2840)
       (pin Oval[A]Pad_800x1400_um S1@3 4130 3110)
+      (keepout "" (circle F.Cu 500650 -3600 4360))
+      (keepout "" (circle B.Cu 500650 -3600 4360))
     )
     (image Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder::1
       (outline (path signal 120  -254.724 522.5  254.724 522.5))
@@ -674,19 +676,19 @@
       (outline (path signal 100  -3015 -2115  3015 -2115))
       (outline (path signal 100  5700 -2350  5700 2350))
       (outline (path signal 100  -5700 2350  -5700 -2350))
-      (outline (path signal 0  5009.64 534.461  4922.81 790.241  4803.34 1032.5  4653.27 1257.09
-            4475.18 1460.18  4272.09 1638.28  4047.5 1788.34  3805.24 1907.81
-            3549.46 1994.64  3284.54 2047.33  3015 2065  2745.46 2047.33
-            2480.54 1994.64  2224.76 1907.81  1982.5 1788.34  1757.91 1638.28
-            1554.82 1460.18  1376.72 1257.09  1226.66 1032.5  1107.19 790.241
-            1020.36 534.461  967.666 269.537  950 0  935.355 -35.355  900 -50
-            864.645 -35.355  850 0  868.522 282.589  923.771 560.343  1014.8 828.51
-            1140.06 1082.5  1297.39 1317.97  1484.11 1530.89  1697.03 1717.61
-            1932.5 1874.94  2186.49 2000.2  2454.66 2091.23  2732.41 2146.48
-            3015 2165  3297.59 2146.48  3575.34 2091.23  3843.51 2000.2
-            4097.5 1874.94  4332.97 1717.61  4545.89 1530.89  4732.61 1317.97
-            4889.94 1082.5  5015.2 828.51  5106.23 560.343  5161.48 282.589
-            5180 0  5165.35 -35.355  5130 -50  5094.65 -35.355  5080 0  5062.33 269.537))
+      (outline (path signal 0  3297.59 2146.48  3575.34 2091.23  3843.51 2000.2  4097.5 1874.94
+            4332.97 1717.61  4545.89 1530.89  4732.61 1317.97  4889.94 1082.5
+            5015.2 828.51  5106.23 560.343  5161.48 282.589  5180 0  5165.35 -35.355
+            5130 -50  5094.65 -35.355  5080 0  5062.33 269.537  5009.64 534.461
+            4922.81 790.241  4803.34 1032.5  4653.27 1257.09  4475.18 1460.18
+            4272.09 1638.28  4047.5 1788.34  3805.24 1907.81  3549.46 1994.64
+            3284.54 2047.33  3015 2065  2745.46 2047.33  2480.54 1994.64
+            2224.76 1907.81  1982.5 1788.34  1757.91 1638.28  1554.82 1460.18
+            1376.72 1257.09  1226.66 1032.5  1107.19 790.241  1020.36 534.461
+            967.666 269.537  950 0  935.355 -35.355  900 -50  864.645 -35.355
+            850 0  868.522 282.589  923.771 560.343  1014.8 828.51  1140.06 1082.5
+            1297.39 1317.97  1484.11 1530.89  1697.03 1717.61  1932.5 1874.94
+            2186.49 2000.2  2454.66 2091.23  2732.41 2146.48  3015 2165))
       (outline (path signal 0  -864.645 35.355  -850 0  -868.522 -282.589  -923.771 -560.343
             -1014.8 -828.51  -1140.06 -1082.5  -1297.39 -1317.97  -1484.11 -1530.89
             -1697.03 -1717.61  -1932.5 -1874.94  -2186.49 -2000.2  -2454.66 -2091.23
@@ -1724,7 +1726,25 @@
     (net "unconnected-(U5-Pad2)"
       (pins U5-2)
     )
-    (class kicad_default
+    (class kicad_default "" +1V1 +3V3 GND "Net-(C1-Pad1)" "Net-(C12-Pad1)"
+      "Net-(C15-Pad2)" "Net-(C16-Pad2)" "Net-(C2-Pad1)" "Net-(C2-Pad2)" "Net-(C5-Pad1)"
+      "Net-(J2-Pad1)" "Net-(J2-Pad2)" "Net-(J2-Pad3)" "Net-(J2-Pad4)" "Net-(J3-Pad3)"
+      "Net-(J3-Pad4)" "Net-(J4-Pad2)" "Net-(J4-Pad4)" "Net-(J4-Pad5)" "Net-(J4-Pad6)"
+      "Net-(J4-Pad7)" "Net-(JP1-Pad2)" "Net-(R10-Pad2)" "Net-(R11-Pad1)" "Net-(R12-Pad1)"
+      "Net-(R13-Pad1)" "Net-(R5-Pad2)" "Net-(R6-Pad2)" "Net-(R7-Pad1)" "Net-(R9-Pad2)"
+      "Net-(U4-Pad2)" "Net-(U4-Pad3)" "Net-(U4-Pad5)" "Net-(U4-Pad6)" "Net-(U4-Pad7)"
+      "PWR-INT_N" "PWR-SCL" "PWR-SDA" "USB-D+" "USB-D-" VBUS cc1 cc2 tmc_DIAG
+      tmc_DIR tmc_ENN tmc_INDEX tmc_STEP tmc_UART "unconnected-(J1-PadA10)"
+      "unconnected-(J1-PadA11)" "unconnected-(J1-PadA2)" "unconnected-(J1-PadA3)"
+      "unconnected-(J1-PadA8)" "unconnected-(J1-PadB10)" "unconnected-(J1-PadB11)"
+      "unconnected-(J1-PadB2)" "unconnected-(J1-PadB3)" "unconnected-(J1-PadB8)"
+      "unconnected-(J4-Pad8)" "unconnected-(U1-Pad25)" "unconnected-(U1-Pad7)"
+      "unconnected-(U5-Pad2)" "unconnected-(U5-Pad24)" "unconnected-(U5-Pad25)"
+      "unconnected-(U5-Pad26)" "unconnected-(U5-Pad3)" "unconnected-(U5-Pad32)"
+      "unconnected-(U5-Pad34)" "unconnected-(U5-Pad35)" "unconnected-(U5-Pad36)"
+      "unconnected-(U5-Pad37)" "unconnected-(U5-Pad4)" "unconnected-(U5-Pad40)"
+      "unconnected-(U5-Pad41)" "unconnected-(U5-Pad5)" "unconnected-(U5-Pad6)"
+      "unconnected-(U5-Pad7)"
       (circuit
         (use_via Via[0-1]_800:400_um)
       )
