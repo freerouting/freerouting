@@ -32,6 +32,6 @@ $JAVA_HOME/bin/jpackage --input ../build/dist/ \
  --name freerouting \
  --main-jar freerouting-executable.jar \
  --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION --license-file ../LICENSE \
- --icon ../design/icon/freerouting_icon_256x256_v3.ico
+ --icon ../design/icon/freerouting_icon_256x256_v3.icns
 
 mv freerouting-$APP_VERSION.dmg freerouting-$APP_VERSION-macos-x64.dmg
