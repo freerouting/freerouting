@@ -286,9 +286,9 @@ class Structure extends ScopeKeyword {
             is_signal = false;
           } else if (next_token != Keyword.SIGNAL) {
             if (next_token instanceof String) {
-              FRLogger.warn("Structure.read_layer_scope: unknown layer type '" + next_token + "'");
+              FRLogger.error("Structure.read_layer_scope: the layer '" + layer_string + "' has an unknown layer type '" + next_token + "'", null);
             } else {
-              FRLogger.warn("Structure.read_layer_scope: unknown layer type");
+              FRLogger.warn("Structure.read_layer_scope: the layer '" + layer_string + "' has an unknown layer type");
             }
             layer_ok = false;
           }
