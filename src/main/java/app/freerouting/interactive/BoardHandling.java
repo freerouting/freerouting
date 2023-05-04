@@ -22,6 +22,7 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.logger.LogEntries;
 import app.freerouting.rules.BoardRules;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -32,6 +33,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /** Central connection class between the graphical user interface and the board database. */
 public class BoardHandling extends BoardHandlingHeadless {
@@ -40,6 +43,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   public final ScreenMessages screen_messages;
   /** The graphical panel used for displaying the board. */
   private final BoardPanel panel;
+
   private final java.util.ResourceBundle resources;
   /** The graphical context for drawing the board. */
   public GraphicsContext graphics_context = null;
@@ -51,6 +55,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   boolean paint_immediately = false;
   /** thread pool size */
   private int num_threads;
+
   private BoardUpdateStrategy board_update_strategy;
   private String hybrid_ratio;
   private ItemSelectionStrategy item_selection_strategy;
@@ -368,9 +373,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     String curr_message;
     if (length_violation_count == 0) {
       curr_message =
-          incomplete_count
-              + " "
-              + resources.getString("incomplete_connections_to_route");
+          incomplete_count + " " + resources.getString("incomplete_connections_to_route");
     } else {
       curr_message =
           incomplete_count
@@ -522,7 +525,7 @@ public class BoardHandling extends BoardHandlingHeadless {
         last_repainted_time = System.currentTimeMillis();
 
         panel.repaint();
-        }
+      }
     }
   }
 
@@ -814,8 +817,12 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (p_design == null) {
       return DsnFile.ReadResult.ERROR;
     }
+
+    LogEntries logEntries = FRLogger.getLogEntries();
+
     DsnFile.ReadResult read_result;
     try {
+      logEntries.clear();
       read_result = DsnFile.read(p_design, this, p_observers, p_item_id_no_generator, p_test_level);
     } catch (Exception e) {
       read_result = DsnFile.ReadResult.ERROR;
@@ -830,6 +837,19 @@ public class BoardHandling extends BoardHandlingHeadless {
         }
       }
     }
+
+    if ((logEntries.getWarningCount() > 0) || (logEntries.getErrorCount() > 0)) {
+      // Show a dialog box with the latest log entries
+      JTextArea textArea = new JTextArea(logEntries.getAsString());
+
+      if (logEntries.getErrorCount() > 0) {
+        JOptionPane.showMessageDialog(null, textArea, "DSN file reader - Freerouting", JOptionPane.ERROR_MESSAGE);
+      } else {
+        JOptionPane.showMessageDialog(null, textArea, "DSN file reader - Freerouting", JOptionPane.WARNING_MESSAGE);
+      }
+    }
+    logEntries.clear();
+
     try {
       p_design.close();
     } catch (java.io.IOException e) {
