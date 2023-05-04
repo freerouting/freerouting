@@ -8,16 +8,18 @@ import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.NetClasses;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Locale;
-import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -60,6 +62,7 @@ public class MainApplication extends WindowBase {
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
+  public static int ModelDialogTimeout = 20;
   /**
    * Creates new form MainApplication It takes the directory of the board designs as optional
    * argument.
@@ -293,63 +296,98 @@ public class MainApplication extends WindowBase {
       // parameter
       if ((startupOptions.design_input_filename != null)
           && (startupOptions.design_output_filename != null)) {
-        InteractiveActionThread thread =
-            new_frame.board_panel.board_handling.start_batch_autorouter();
 
-        thread.addListener(
-            new ThreadActionListener() {
-              @Override
-              public void autorouterStarted() {}
+        // Add a model dialog with timeout to confirm the autorouter start with the default settings
+        String errorMessage = "Autorouter is about to start\n\nPlease note that default settings will be used unless you cancel the process now and change those settings.\nYou can restart the auto-routing process by clicking on the 'Autorouter' button later.";
+        JTextArea textArea = new JTextArea(errorMessage);
+        JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE);
+        JDialog dialog = optionPane.createDialog("Autorouter confirmation - Freerouting");
+        JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
+        cancelButton.setText("Cancel (20)");
+        cancelButton.addActionListener(e -> {
+          ModelDialogTimeout = -1;
+          dialog.dispose();
+        });
 
-              @Override
-              public void autorouterAborted() {
-                ExportBoardToFile(startupOptions.design_output_filename);
-              }
-
-              @Override
-              public void autorouterFinished() {
-                ExportBoardToFile(startupOptions.design_output_filename);
-              }
-
-              private void ExportBoardToFile(String filename) {
-                if ((filename != null)
-                    && ((filename.toLowerCase().endsWith(".dsn"))
-                        || (filename.toLowerCase().endsWith(".ses"))
-                        || (filename.toLowerCase().endsWith(".scr")))) {
-
-                  FRLogger.info("Saving '" + filename + "'...");
-                  try {
-                    String filename_only = new File(filename).getName();
-                    String design_name = filename_only.substring(0, filename_only.length() - 4);
-
-                    java.io.OutputStream output_stream = new java.io.FileOutputStream(filename);
-
-                    if (filename.toLowerCase().endsWith(".dsn")) {
-                      new_frame.board_panel.board_handling.export_to_dsn_file(
-                          output_stream, design_name, false);
-                    } else if (filename.toLowerCase().endsWith(".ses")) {
-                      new_frame.board_panel.board_handling.export_specctra_session_file(
-                          design_name, output_stream);
-                    } else if (filename.toLowerCase().endsWith(".scr")) {
-                      java.io.ByteArrayOutputStream session_output_stream =
-                          new ByteArrayOutputStream();
-                      new_frame.board_panel.board_handling.export_specctra_session_file(
-                          filename, session_output_stream);
-                      java.io.InputStream input_stream =
-                          new ByteArrayInputStream(session_output_stream.toByteArray());
-                      new_frame.board_panel.board_handling.export_eagle_session_file(
-                          input_stream, output_stream);
-                    }
-
-                    Runtime.getRuntime().exit(0);
-                  } catch (Exception e) {
-                    FRLogger.error("Couldn't export board to file", e);
-                  }
-                } else {
-                  FRLogger.warn("Couldn't export board to '" + filename + "'.");
-                }
+        MainApplication.ModelDialogTimeout = 20;
+        Timer timer = new Timer(1000, null);
+        timer.addActionListener(
+            e -> {
+              ModelDialogTimeout--;
+              if (ModelDialogTimeout > 0) {
+                // dialog.setTitle("Error (closing in " + timeout + " seconds)");
+                cancelButton.setText("Cancel (" + ModelDialogTimeout + ")");
+              } else {
+                timer.stop();
+                dialog.dispose();
               }
             });
+        timer.start();
+
+        dialog.setVisible(true);
+
+        if (ModelDialogTimeout >= 0)
+        {
+
+          // Start the autorouter
+          InteractiveActionThread thread =
+              new_frame.board_panel.board_handling.start_batch_autorouter();
+
+          thread.addListener(
+              new ThreadActionListener() {
+                @Override
+                public void autorouterStarted() {}
+
+                @Override
+                public void autorouterAborted() {
+                  ExportBoardToFile(startupOptions.design_output_filename);
+                }
+
+                @Override
+                public void autorouterFinished() {
+                  ExportBoardToFile(startupOptions.design_output_filename);
+                }
+
+                private void ExportBoardToFile(String filename) {
+                  if ((filename != null)
+                      && ((filename.toLowerCase().endsWith(".dsn"))
+                          || (filename.toLowerCase().endsWith(".ses"))
+                          || (filename.toLowerCase().endsWith(".scr")))) {
+
+                    FRLogger.info("Saving '" + filename + "'...");
+                    try {
+                      String filename_only = new File(filename).getName();
+                      String design_name = filename_only.substring(0, filename_only.length() - 4);
+
+                      java.io.OutputStream output_stream = new java.io.FileOutputStream(filename);
+
+                      if (filename.toLowerCase().endsWith(".dsn")) {
+                        new_frame.board_panel.board_handling.export_to_dsn_file(
+                            output_stream, design_name, false);
+                      } else if (filename.toLowerCase().endsWith(".ses")) {
+                        new_frame.board_panel.board_handling.export_specctra_session_file(
+                            design_name, output_stream);
+                      } else if (filename.toLowerCase().endsWith(".scr")) {
+                        java.io.ByteArrayOutputStream session_output_stream =
+                            new ByteArrayOutputStream();
+                        new_frame.board_panel.board_handling.export_specctra_session_file(
+                            filename, session_output_stream);
+                        java.io.InputStream input_stream =
+                            new ByteArrayInputStream(session_output_stream.toByteArray());
+                        new_frame.board_panel.board_handling.export_eagle_session_file(
+                            input_stream, output_stream);
+                      }
+
+                      Runtime.getRuntime().exit(0);
+                    } catch (Exception e) {
+                      FRLogger.error("Couldn't export board to file", e);
+                    }
+                  } else {
+                    FRLogger.warn("Couldn't export board to '" + filename + "'.");
+                  }
+                }
+              });
+        }
       }
 
       new_frame.addWindowListener(

@@ -861,7 +861,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   /**
    * Writes the currently edited board design to a text file in the Specctra dsn format. If
    * p_compat_mode is true, only standard specctra dsn scopes are written, so that any host system
-   * with an specctra interface can read them.
+   * with a specctra interface can read them.
    */
   public boolean export_to_dsn_file(
       OutputStream p_output_stream, String p_design_name, boolean p_compat_mode) {
@@ -871,7 +871,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     return DsnFile.write(this, p_output_stream, p_design_name, p_compat_mode);
   }
 
-  /** Writes a session file ins the Eaglea scr format. */
+  /** Writes a session file ins the Eagle SCR format. */
   public boolean export_eagle_session_file(
       java.io.InputStream p_input_stream, OutputStream p_output_stream) {
     if (board_is_read_only) {
