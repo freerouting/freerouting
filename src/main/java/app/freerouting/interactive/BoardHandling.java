@@ -128,7 +128,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     this.current_mouse_position = p_point;
   }
 
-  /** * Tells the router, if conduction areas should be ignored.. */
+  /** * Tells the router, if conduction areas should be ignored. */
   public void set_ignore_conduction(boolean p_value) {
     if (board_is_read_only) {
       return;
@@ -786,7 +786,7 @@ public class BoardHandling extends BoardHandlingHeadless {
 
   /**
    * Reads an existing board design from the input stream. Returns false, if the input stream does
-   * not contains a legal board design.
+   * not contain a legal board design.
    */
   public boolean read_design(java.io.ObjectInputStream p_design, TestLevel p_test_level) {
     try {
@@ -843,9 +843,9 @@ public class BoardHandling extends BoardHandlingHeadless {
       JTextArea textArea = new JTextArea(logEntries.getAsString());
 
       if (logEntries.getErrorCount() > 0) {
-        JOptionPane.showMessageDialog(null, textArea, "DSN file reader - Freerouting", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, textArea, resources.getString("dsn_reader_modal_title"), JOptionPane.ERROR_MESSAGE);
       } else {
-        JOptionPane.showMessageDialog(null, textArea, "DSN file reader - Freerouting", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, textArea, resources.getString("dsn_reader_modal_title"), JOptionPane.WARNING_MESSAGE);
       }
     }
     logEntries.clear();
@@ -1156,7 +1156,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     return this.interactive_action_thread;
   }
 
-  /** Selects also all items belonging to a net of a currently selecte item. */
+  /** Selects also all items belonging to a net of a currently selected item. */
   public void extend_selection_to_whole_nets() {
     if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
       return;
@@ -1164,7 +1164,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     set_interactive_state(((SelectedItemState) interactive_state).extent_to_whole_nets());
   }
 
-  /** Selects also all items belonging to a component of a currently selecte item. */
+  /** Selects also all items belonging to a component of a currently selected item. */
   public void extend_selection_to_whole_components() {
     if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
       return;
@@ -1172,7 +1172,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     set_interactive_state(((SelectedItemState) interactive_state).extent_to_whole_components());
   }
 
-  /** Selects also all items belonging to a connected set of a currently selecte item. */
+  /** Selects also all items belonging to a connected set of a currently selected item. */
   public void extend_selection_to_whole_connected_sets() {
     if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
       return;
@@ -1180,7 +1180,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     set_interactive_state(((SelectedItemState) interactive_state).extent_to_whole_connected_sets());
   }
 
-  /** Selects also all items belonging to a connection of a currently selecte item. */
+  /** Selects also all items belonging to a connection of a currently selected item. */
   public void extend_selection_to_whole_connections() {
     if (board_is_read_only || !(interactive_state instanceof SelectedItemState)) {
       return;

@@ -298,12 +298,12 @@ public class MainApplication extends WindowBase {
           && (startupOptions.design_output_filename != null)) {
 
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
-        String errorMessage = "Autorouter is about to start\n\nPlease note that default settings will be used unless you cancel the process now and change those settings.\nYou can restart the auto-routing process by clicking on the 'Autorouter' button later.";
+        String errorMessage = resources.getString("auto_start_routing_message");
         JTextArea textArea = new JTextArea(errorMessage);
         JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE);
-        JDialog dialog = optionPane.createDialog("Autorouter confirmation - Freerouting");
+        JDialog dialog = optionPane.createDialog(resources.getString("auto_start_routing_title"));
         JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
-        cancelButton.setText("Cancel (20)");
+        cancelButton.setText(resources.getString("auto_start_routing_button") + "(20)");
         cancelButton.addActionListener(e -> {
           ModelDialogTimeout = -1;
           dialog.dispose();
@@ -316,7 +316,7 @@ public class MainApplication extends WindowBase {
               ModelDialogTimeout--;
               if (ModelDialogTimeout > 0) {
                 // dialog.setTitle("Error (closing in " + timeout + " seconds)");
-                cancelButton.setText("Cancel (" + ModelDialogTimeout + ")");
+                cancelButton.setText(resources.getString("auto_start_routing_button") + "(" + ModelDialogTimeout + ")");
               } else {
                 timer.stop();
                 dialog.dispose();
