@@ -33,7 +33,8 @@ echo "> Creating the package"
 $JAVA_HOME/bin/jpackage --input ../build/dist/ \
  --name freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION
+ --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION \
+ --icon ../design/icon/freerouting_icon_256x256_v3.ico
 
 echo "> Composing the distribution file"
 mv freerouting freerouting-$APP_VERSION-linux-x64

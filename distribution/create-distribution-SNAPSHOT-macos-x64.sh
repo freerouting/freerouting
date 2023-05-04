@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export APP_VERSION=$1
+export APP_VERSION=1.0.0
 export APP_TYPE="dmg"
 
 echo "> JAVA_HOME="$JAVA_HOME
@@ -31,7 +31,7 @@ echo "> Creating the package"
 $JAVA_HOME/bin/jpackage --input ../build/dist/ \
  --name freerouting \
  --main-jar freerouting-executable.jar \
- --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version 1.0.0 --license-file ../LICENSE 
+ --type $APP_TYPE --runtime-image $JAVA_HOME/runtime --app-version $APP_VERSION --license-file ../LICENSE \
+ --icon ../design/icon/freerouting_icon_256x256_v3.ico
 
-mv freerouting-1.0.0.dmg freerouting-$APP_VERSION-macos-x64.dmg
-
+mv freerouting-$APP_VERSION.dmg freerouting-$APP_VERSION-macos-x64.dmg

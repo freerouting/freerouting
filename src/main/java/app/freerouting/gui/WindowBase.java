@@ -10,11 +10,11 @@ public class WindowBase extends javax.swing.JFrame {
   WindowBase(int minWidth, int minHeight) {
     super();
     try {
-      URL resource = this.getClass().getResource("/freerouting_icon_256x256_v2.png");
+      URL resource = this.getClass().getResource("/freerouting_icon_256x256_v3.png");
       BufferedImage image = ImageIO.read(resource);
       this.setIconImage(image);
     } catch (IOException e) {
-      FRLogger.error("Couldn't load icon file 'freerouting_icon_256x256_v2.png'.", e);
+      FRLogger.error("Couldn't load icon file 'freerouting_icon_256x256_v3.png'.", e);
     }
     this.setMinimumSize(new java.awt.Dimension(minWidth, minHeight));
   }
