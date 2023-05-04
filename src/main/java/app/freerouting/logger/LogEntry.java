@@ -34,6 +34,6 @@ public class LogEntry {
   }
 
   public String toString() {
-    return this.type.toString().toUpperCase() + " " + this.message;
+    return String.format("%-7s", this.type.toString().toUpperCase()) + " " + this.message;
   }
 }
