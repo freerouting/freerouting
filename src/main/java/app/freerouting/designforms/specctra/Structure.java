@@ -16,6 +16,7 @@ import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Objects;
 
 /** Class for reading and writing structure scopes from dsn-files. */
 class Structure extends ScopeKeyword {
@@ -284,7 +285,7 @@ class Structure extends ScopeKeyword {
           next_token = p_scanner.next_token();
           if (next_token == Keyword.POWER) {
             is_signal = false;
-          } else if (next_token != Keyword.SIGNAL) {
+          } else if ((next_token != Keyword.SIGNAL) && (!Objects.equals(next_token.toString(),Keyword.JUMPER.get_name()))) {
             if (next_token instanceof String) {
               FRLogger.error("Structure.read_layer_scope: the layer '" + layer_string + "' has an unknown layer type '" + next_token + "'", null);
             } else {

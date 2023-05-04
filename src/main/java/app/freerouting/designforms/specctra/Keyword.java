@@ -40,6 +40,7 @@ public class Keyword {
   public static final Keyword HOST_CAD = new Keyword("host_cad");
   public static final Keyword HOST_VERSION = new Keyword("host_version");
   public static final Keyword IMAGE = new Keyword("image");
+  public static final Keyword JUMPER = new Keyword("jumper");
   public static final Keyword KEEPOUT = new Keyword("keepout");
   public static final Keyword LAYER = new Keyword("layer");
   public static final Keyword LAYER_RULE = new Keyword("layer_rule");
