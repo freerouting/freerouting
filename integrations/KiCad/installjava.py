@@ -8,22 +8,26 @@ import urllib.parse
 jre_version = "17.0.7+7"
 
 def detect_os_architecture():
-    os_name = platform.system()
-    architecture = platform.machine()
-    
-    if (os_name == "Windows"):
-        os_name = "windows"
-        
-    if (os_name == "posix"):
-        if (platform.system() == 'Darwin'):
-            os_name = "mac"
-        else:
-            os_name = "linux"
-    
-    if (architecture == "AMD64"):
+    os_name = platform.system().lower()
+    architecture = platform.machine().lower()
+              
+    # Windows 64-bit
+    if (architecture == "amd64"):
         architecture = "x64"
 
-    return os_name.lower(), architecture.lower()
+    # Windows 32-bit
+    if (architecture == "i386"):
+        architecture = "x86-32"
+
+    # Linux 64-bit
+    if (architecture == "x86_64"):
+        architecture = "x64"
+        
+    # macOS 64-bit
+    if (os_name == "darwin"):
+        os_name = "mac"        
+
+    return os_name, architecture
 
 def download_progress_hook(count, block_size, total_size):
     percent = int(count * block_size * 100 / total_size)
