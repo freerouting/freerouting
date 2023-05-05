@@ -40,20 +40,26 @@ def download_with_progress_bar(url, output_path):
 
 
 def install_java_jre_17():
-    # Add the extracted JRE to the system's PATH variable
-    jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
-    jre_path = os.path.abspath(jre_folder)
-    java_exe_path = os.path.join(jre_path, "bin", "java.exe")
-    
-    if (os.path.exists(java_exe_path)):
-        print(f"You already have a downloaded JRE, we are going to use that.")
-        return java_exe_path
-
     # Get platform information and the appropriate URL
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
     print(f"Architecture: {architecture}")
     
+    
+    # Build the Java executable full path
+    jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
+    jre_path = os.path.abspath(jre_folder)    
+    if (os_name == "windows"):
+        java_exe_path = os.path.join(jre_path, "bin", "java.exe")
+    else:
+        java_exe_path = os.path.join(jre_path, "bin", "java")
+    
+    # Don't do anything if we already have the neccessary Java executable
+    if (os.path.exists(java_exe_path)):
+        print(f"You already have a downloaded JRE, we are going to use that.")
+        return java_exe_path
+    
+    # Build the URL to the JRE archive
     jre_url = "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-"+jre_version+"/OpenJDK17U-jre_"+architecture+"_"+os_name+"_hotspot_"+jre_version.replace("+", "_")
     
     if (os_name == "windows"):
