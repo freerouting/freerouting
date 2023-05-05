@@ -29,6 +29,7 @@ def detect_os_architecture():
 
     return os_name, architecture
 
+
 def download_progress_hook(count, block_size, total_size):
     percent = int(count * block_size * 100 / total_size)
     sys.stdout.write(f"\rDownloading: {percent}%")
@@ -62,12 +63,12 @@ def install_java_jre_17():
         
     if (os_name == "linux"):
         # Download JRE 17 for Linux
-        jre_url = jre_url + ".tag.gz"
+        jre_url = jre_url + ".tar.gz"
         file_name = "jre_17.tar.gz"
     
     if (os_name == "mac"):
         # Download JRE 17 for Mac
-        jre_url = jre_url + ".tag.gz"        
+        jre_url = jre_url + ".tar.gz"
         file_name = "jre_17.tar.gz"
 
     if os.path.exists(file_name):
