@@ -35,6 +35,16 @@ def download_with_progress_bar(url, output_path):
 
 
 def install_java_jre_17():
+    # Add the extracted JRE to the system's PATH variable
+    jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
+    jre_path = os.path.abspath(jre_folder)
+    java_exe_path = os.path.join(jre_path, "bin", "java.exe")
+    
+    if (os.path.exists(java_exe_path)):
+        print(f"You already have a downloaded JRE, we are going to use that.")
+        return java_exe_path
+
+    # Get platform information and the appropriate URL
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
     print(f"Architecture: {architecture}")
@@ -70,20 +80,17 @@ def install_java_jre_17():
     os.system(unzip_command)
 
     # Remove the downloaded zip file
-    #os.remove(file_name)
+    os.remove(file_name)
 
-    # Add the extracted JRE to the system's PATH variable
-    jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
-    jre_path = os.path.abspath(jre_folder)
-    java_exe_path = os.path.join(jre_path, "bin", "java.exe")
+    return java_exe_path
 
     # Verify the installation
-    java_version_command = f"{java_exe_path} -version"
-    result = subprocess.check_output(java_version_command, shell=True, stderr=subprocess.STDOUT)
-    print("Installed Java version:", result)
+    #java_version_command = f"{java_exe_path} -version"
+    #result = subprocess.check_output(java_version_command, shell=True, stderr=subprocess.STDOUT)
+    #print("Installed Java version:", result)
 
 if __name__ == "__main__":
     if (os.name != 'posix') or (os.geteuid() == 0):  # Check if script is running as administrator/root
-        install_java_jre_17()
+        print(install_java_jre_17())
     else:
         print("This script needs to be run as administrator to install Java JRE 17.")
