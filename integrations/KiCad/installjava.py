@@ -23,7 +23,7 @@ def detect_os_architecture():
     if (architecture == "AMD64"):
         architecture = "x64"
 
-    return os_name, architecture
+    return os_name.lower(), architecture.lower()
 
 def download_progress_hook(count, block_size, total_size):
     percent = int(count * block_size * 100 / total_size)
