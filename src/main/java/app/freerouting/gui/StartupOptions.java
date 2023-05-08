@@ -24,7 +24,7 @@ public class StartupOptions {
   ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
   String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   java.util.Locale current_locale = java.util.Locale.getDefault();
-  boolean save_intermediate_stages = false;
+  boolean save_intermediate_stages = true;
   // this value is equivalent to the setting of "-oit 0.001"
   float optimization_improvement_threshold = 0.00001f;
   String[] ignore_net_classes_by_autorouter = new String[0];
@@ -159,7 +159,7 @@ public class StartupOptions {
         } else if (p_args[i].startsWith("-s")) {
           session_file_option = true;
         } else if (p_args[i].startsWith("-im")) {
-          save_intermediate_stages = true;
+          save_intermediate_stages = false;
         } else if (p_args[i].startsWith("-w")) {
           webstart_option = true;
         } else if (p_args[i].startsWith("-test")) {
