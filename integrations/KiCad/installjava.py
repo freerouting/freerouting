@@ -4,6 +4,7 @@ import sys
 import subprocess
 import urllib.request
 import urllib.parse
+import tempfile
 
 jre_version = "17.0.7+7"
 
@@ -48,7 +49,8 @@ def install_java_jre_17():
     
     # Build the Java executable full path
     jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
-    jre_path = os.path.abspath(jre_folder)    
+    jre_folder = os.path.join(tempfile.gettempdir(), jre_folder)
+    jre_path = os.path.abspath(jre_folder)
     if (os_name == "windows"):
         java_exe_path = os.path.join(jre_path, "bin", "java.exe")
     else:
@@ -77,17 +79,19 @@ def install_java_jre_17():
         jre_url = jre_url + ".tar.gz"
         file_name = "jre_17.tar.gz"
 
+    file_name = os.path.join(tempfile.gettempdir(), file_name)
+
     if os.path.exists(file_name):
         print("We already have the Java JRE archive.")
     else:
         jre_url = urllib.parse.quote(jre_url, safe=":/?=")
-        print("Downloading Java JRE from " + jre_url)
+        print("Downloading Java JRE from " + jre_url + " to " + file_name)
         download_with_progress_bar(jre_url, file_name)
         print()
 
     # Unzip the downloaded file
     print("Extracting the downloaded file...")
-    unzip_command = f"tar -xf {file_name}"
+    unzip_command = f"tar -xf {file_name} -C {tempfile.gettempdir()}"
     os.system(unzip_command)
 
     # Remove the downloaded zip file
