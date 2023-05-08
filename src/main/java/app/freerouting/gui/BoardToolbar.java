@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.Unit;
+import app.freerouting.interactive.InteractiveActionThread;
 import javax.swing.DefaultComboBoxModel;
 
 /** Implements the toolbar panel of the board frame. */
@@ -86,7 +87,12 @@ class BoardToolbar extends javax.swing.JPanel {
     autoroute_button.addActionListener(
         new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
-            board_frame.board_panel.board_handling.start_batch_autorouter();
+            InteractiveActionThread thread = board_frame.board_panel.board_handling.start_batch_autorouter();
+
+            if (board_frame.board_panel.board_handling.autorouter_listener != null) {
+              // Add the autorouter listener to save the design file when the autorouter is running
+              thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
+            }
           }
         });
 

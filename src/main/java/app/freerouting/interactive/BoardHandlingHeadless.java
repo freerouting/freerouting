@@ -26,6 +26,8 @@ public class BoardHandlingHeadless implements IBoardHandling {
   protected boolean save_intermediate_stages;
   protected float optimization_improvement_threshold;
   private byte[] serializedBoard = null;
+  /** The listener for the autorouter thread */
+  public ThreadActionListener autorouter_listener = null;
 
   public BoardHandlingHeadless(
       java.util.Locale p_locale,

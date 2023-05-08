@@ -292,8 +292,65 @@ public class MainApplication extends WindowBase {
       new_frame.board_panel.board_handling.set_item_selection_strategy(
           startupOptions.item_selection_strategy);
 
-      // start the auto-router automatically if both input and output files were passed as a
-      // parameter
+      if (startupOptions.design_output_filename != null)
+      {
+        // we need to set up a listener to save the design file when the autorouter is running
+        new_frame.board_panel.board_handling.autorouter_listener = new ThreadActionListener() {
+          @Override
+          public void autorouterStarted() {}
+
+          @Override
+          public void autorouterAborted() {
+            ExportBoardToFile(startupOptions.design_output_filename);
+          }
+
+          @Override
+          public void autorouterFinished() {
+            ExportBoardToFile(startupOptions.design_output_filename);
+          }
+
+          private void ExportBoardToFile(String filename) {
+            if ((filename != null)
+                && ((filename.toLowerCase().endsWith(".dsn"))
+                || (filename.toLowerCase().endsWith(".ses"))
+                || (filename.toLowerCase().endsWith(".scr")))) {
+
+              FRLogger.info("Saving '" + filename + "'...");
+              try {
+                String filename_only = new File(filename).getName();
+                String design_name = filename_only.substring(0, filename_only.length() - 4);
+
+                java.io.OutputStream output_stream = new java.io.FileOutputStream(filename);
+
+                if (filename.toLowerCase().endsWith(".dsn")) {
+                  new_frame.board_panel.board_handling.export_to_dsn_file(
+                      output_stream, design_name, false);
+                } else if (filename.toLowerCase().endsWith(".ses")) {
+                  new_frame.board_panel.board_handling.export_specctra_session_file(
+                      design_name, output_stream);
+                } else if (filename.toLowerCase().endsWith(".scr")) {
+                  java.io.ByteArrayOutputStream session_output_stream =
+                      new ByteArrayOutputStream();
+                  new_frame.board_panel.board_handling.export_specctra_session_file(
+                      filename, session_output_stream);
+                  java.io.InputStream input_stream =
+                      new ByteArrayInputStream(session_output_stream.toByteArray());
+                  new_frame.board_panel.board_handling.export_eagle_session_file(
+                      input_stream, output_stream);
+                }
+
+                Runtime.getRuntime().exit(0);
+              } catch (Exception e) {
+                FRLogger.error("Couldn't export board to file", e);
+              }
+            } else {
+              FRLogger.warn("Couldn't export board to '" + filename + "'.");
+            }
+          }
+        };
+      }
+
+      // start the auto-router automatically if both input and output files were passed as a parameter
       if ((startupOptions.design_input_filename != null)
           && (startupOptions.design_output_filename != null)) {
 
@@ -328,65 +385,14 @@ public class MainApplication extends WindowBase {
 
         if (ModelDialogTimeout >= 0)
         {
-
           // Start the autorouter
           InteractiveActionThread thread =
               new_frame.board_panel.board_handling.start_batch_autorouter();
 
-          thread.addListener(
-              new ThreadActionListener() {
-                @Override
-                public void autorouterStarted() {}
-
-                @Override
-                public void autorouterAborted() {
-                  ExportBoardToFile(startupOptions.design_output_filename);
-                }
-
-                @Override
-                public void autorouterFinished() {
-                  ExportBoardToFile(startupOptions.design_output_filename);
-                }
-
-                private void ExportBoardToFile(String filename) {
-                  if ((filename != null)
-                      && ((filename.toLowerCase().endsWith(".dsn"))
-                          || (filename.toLowerCase().endsWith(".ses"))
-                          || (filename.toLowerCase().endsWith(".scr")))) {
-
-                    FRLogger.info("Saving '" + filename + "'...");
-                    try {
-                      String filename_only = new File(filename).getName();
-                      String design_name = filename_only.substring(0, filename_only.length() - 4);
-
-                      java.io.OutputStream output_stream = new java.io.FileOutputStream(filename);
-
-                      if (filename.toLowerCase().endsWith(".dsn")) {
-                        new_frame.board_panel.board_handling.export_to_dsn_file(
-                            output_stream, design_name, false);
-                      } else if (filename.toLowerCase().endsWith(".ses")) {
-                        new_frame.board_panel.board_handling.export_specctra_session_file(
-                            design_name, output_stream);
-                      } else if (filename.toLowerCase().endsWith(".scr")) {
-                        java.io.ByteArrayOutputStream session_output_stream =
-                            new ByteArrayOutputStream();
-                        new_frame.board_panel.board_handling.export_specctra_session_file(
-                            filename, session_output_stream);
-                        java.io.InputStream input_stream =
-                            new ByteArrayInputStream(session_output_stream.toByteArray());
-                        new_frame.board_panel.board_handling.export_eagle_session_file(
-                            input_stream, output_stream);
-                      }
-
-                      Runtime.getRuntime().exit(0);
-                    } catch (Exception e) {
-                      FRLogger.error("Couldn't export board to file", e);
-                    }
-                  } else {
-                    FRLogger.warn("Couldn't export board to '" + filename + "'.");
-                  }
-                }
-              });
+          if (new_frame.board_panel.board_handling.autorouter_listener != null) {
+            // Add the autorouter listener to save the design file when the autorouter is running
+            thread.addListener(new_frame.board_panel.board_handling.autorouter_listener);
+          }
         }
       }
 
