@@ -12,6 +12,7 @@ import configparser
 import re
 import urllib.request
 import urllib.parse
+import tempfile
 
 jre_version = "17.0.7+7"
 
@@ -40,6 +41,7 @@ def detect_os_architecture():
 def get_local_java_executable_path(os_name):
     # Build the Java executable full path
     jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
+    jre_folder = os.path.join(tempfile.gettempdir(), jre_folder)
     jre_path = os.path.abspath(jre_folder)    
     if (os_name == "windows"):
         java_exe_path = os.path.join(jre_path, "bin", "java.exe")
@@ -72,6 +74,11 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         
         # Controls KiCAD session file imports (works only in KiCAD nigthly or 6)
         self.SPECCTRA=True
+
+    # setup execution context
+    def update_module_command(self):
+        # Run freerouting with logging disabled (-dl) and input (-de) and output (-do) file definition
+        self.module_command = [self.java_path, "-jar", self.module_path, "-dl", "-de", self.module_input, "-do", self.module_output]
 
     # setup execution context
     def prepare(self):
@@ -141,9 +148,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 fw.writelines(search_n_strip(l))
         fr.close()
         fw.close()
-                
-        # Run freerouting with logging disabled (-dl) and input (-de) and output (-do) file definition
-        self.module_command = [self.java_path, "-jar", self.module_path, "-dl", "-de", self.module_input, "-do", self.module_output]
+                        
+        self.update_module_command()
                        
 
     # export board.dsn file from pcbnew
@@ -172,6 +178,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             javaInstallNow = wx_show_warning("""
             Java JRE version 17 or higher is required, but you have no Java installed or you have no access to it because you used Flatpak to install KiCad.
             Would you like to install it now?
+            (This can take up to a few minutes.)
             """)
             if (javaInstallNow != wx.ID_YES):
                 return False            
@@ -180,6 +187,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 javaInstallNow = wx_show_warning("""
                 Java JRE version 17 or higher is required, but you have Java version {0} installed.
                 Would you like to install a newer one now?
+                (This can take up to a few minutes.)
                 """.format(javaVersion))
                 if (javaInstallNow != wx.ID_YES):
                     return False
@@ -206,6 +214,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         def on_complete():
             wx_safe_invoke(dialog.terminate)
 
+        self.update_module_command()
         invoker = ProcessThread(self.module_command, on_complete)
 
         dialog.Show()  # dialog first
@@ -333,8 +342,8 @@ def get_java_version(javaPath):
 
 def download_progress_hook(count, block_size, total_size):
     percent = int(count * block_size * 100 / total_size)
-    sys.stdout.write(f"\rDownloading: {percent}%")
-    sys.stdout.flush()
+    #sys.stdout.write(f"\rDownloading: {percent}%")
+    #sys.stdout.flush()
 
 def download_with_progress_bar(url, output_path):
     urllib.request.urlretrieve(url, output_path, reporthook=download_progress_hook)
@@ -370,6 +379,8 @@ def install_java_jre_17():
         jre_url = jre_url + ".tar.gz"
         file_name = "jre_17.tar.gz"
 
+    file_name = os.path.join(tempfile.gettempdir(), file_name)
+
     if os.path.exists(file_name):
         print("We already have the Java JRE archive.")
     else:
@@ -380,7 +391,7 @@ def install_java_jre_17():
 
     # Unzip the downloaded file
     print("Extracting the downloaded file...")
-    unzip_command = f"tar -xf {file_name}"
+    unzip_command = f"tar -xf {file_name} -C {tempfile.gettempdir()}"
     os.system(unzip_command)
 
     # Remove the downloaded zip file
