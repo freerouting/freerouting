@@ -12,15 +12,13 @@ public class DesignFile {
   public static final String[] all_file_extensions = {"bin", "dsn"};
   public static final String[] text_file_extensions = {"dsn"};
   public static final String binary_file_extension = "bin";
-  private static final String RULES_FILE_EXTENSION = ".rules";
+  private static final String RULES_FILE_EXTENSION = "rules";
   private final java.io.File input_file;
-  /** Used, if the application is run without Java Web Start. */
   private java.io.File output_file;
   private javax.swing.JFileChooser file_chooser;
 
   /**
-   * Creates a new instance of DesignFile. If p_is_webstart, the application was opened with Java
-   * Web Start.
+   * Creates a new instance of DesignFile.
    */
   private DesignFile(java.io.File p_design_file, javax.swing.JFileChooser p_file_chooser) {
     this.file_chooser = p_file_chooser;
@@ -36,7 +34,7 @@ public class DesignFile {
     }
   }
 
-  public static DesignFile get_instance(String p_design_file_name, boolean p_is_webstart) {
+  public static DesignFile get_instance(String p_design_file_name) {
     if (p_design_file_name == null) {
       return null;
     }
@@ -45,8 +43,7 @@ public class DesignFile {
   }
 
   /**
-   * Shows a file chooser for opening a design file. If p_is_webstart there are security
-   * restrictions because the application was opened with java web start.
+   * Shows a file chooser for opening a design file.
    */
   public static DesignFile open_dialog(String p_design_dir_name) {
     DesignFile result;
@@ -70,7 +67,6 @@ public class DesignFile {
       String p_parent_name,
       String rules_file_name,
       app.freerouting.interactive.BoardHandling p_board_handling,
-      boolean p_is_web_start,
       String p_confirm_message) {
 
     boolean result = true;
@@ -101,24 +97,6 @@ public class DesignFile {
       }
     }
     return result;
-  }
-
-  private static DesignFile webstart_open_dialog(String p_design_dir_name) {
-    //        try
-    //        {
-    //            javax.jnlp.FileOpenService file_open_service =
-    //                    (javax.jnlp.FileOpenService)
-    // javax.jnlp.ServiceManager.lookup("javax.jnlp.FileOpenService");
-    //            javax.jnlp.FileContents file_contents =
-    //                    file_open_service.openFileDialog(p_design_dir_name,
-    // DesignFile.text_file_extensions);
-    //            return new DesignFile(true, file_contents, null, null);
-    //        } catch (Exception e)
-    //        {
-    //            return null;
-    //        }
-
-    return null;
   }
 
   /** Gets an InputStream from the file. Returns null, if the algorithm failed. */
@@ -266,7 +244,7 @@ public class DesignFile {
   /** Saves the board rule to file, so that they can be reused later on. */
   private boolean write_rules_file(
       String p_design_name, app.freerouting.interactive.BoardHandling p_board_handling) {
-    String rules_file_name = p_design_name + RULES_FILE_EXTENSION;
+    String rules_file_name = p_design_name + "." + RULES_FILE_EXTENSION;
     java.io.OutputStream output_stream;
 
     FRLogger.info("Saving '" + rules_file_name + "'...");
@@ -332,62 +310,6 @@ public class DesignFile {
     }
   }
 
-  /**
-   * Returns the name of the created session file or null, if the write failed. Put into a separate
-   * function to avoid undefines in the offline version.
-   */
-  private String secure_write_session_file(BoardFrame p_board_frame) {
-    //        java.io.ByteArrayOutputStream output_stream = new java.io.ByteArrayOutputStream();
-    //        String file_name = this.get_name();
-    //        if (file_name == null)
-    //        {
-    //            return null;
-    //        }
-    //        String session_file_name = file_name.replace(".dsn", ".ses");
-    //
-    //        if (!p_board_frame.board_panel.board_handling.export_specctra_session_file(file_name,
-    // output_stream))
-    //        {
-    //            return null;
-    //        }
-    //
-    //        java.io.InputStream input_stream = new
-    // java.io.ByteArrayInputStream(output_stream.toByteArray());
-    //
-    //        javax.jnlp.FileContents session_file_contents =
-    //                WebStart.save_dialog(this.get_parent(), null, input_stream,
-    // session_file_name);
-    //
-    //        if (session_file_contents == null)
-    //        {
-    //            return null;
-    //        }
-    //        String new_session_file_name;
-    //        try
-    //        {
-    //            new_session_file_name = session_file_contents.getName();
-    //        } catch (Exception e)
-    //        {
-    //            return null;
-    //        }
-    //        if (!new_session_file_name.equalsIgnoreCase(session_file_name))
-    //        {
-    //            final java.util.ResourceBundle resources =
-    //                    java.util.ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile",
-    // p_board_frame.get_locale());
-    //            String curr_message = resources.getString("message_20") + " " + session_file_name
-    // + "\n" + resources.getString("message_21");
-    //            WindowMessage.ok(curr_message);
-    //        }
-    //        return new_session_file_name;
-
-    return null;
-  }
-
-  /**
-   * Gets the binary file for saving or null, if the design file is not available because the
-   * application is run with Java Web Start.
-   */
   public java.io.File get_output_file() {
     return this.output_file;
   }

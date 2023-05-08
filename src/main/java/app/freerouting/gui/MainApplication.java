@@ -47,7 +47,6 @@ public class MainApplication extends WindowBase {
   /** The list of open board frames */
   private final java.util.Collection<BoardFrame> board_frames = new java.util.LinkedList<>();
   private final boolean is_test_version;
-  private final boolean is_webstart;
   private final java.util.Locale locale;
   private final boolean save_intermediate_stages;
   private final float optimization_improvement_threshold;
@@ -79,7 +78,6 @@ public class MainApplication extends WindowBase {
     this.hybrid_ratio = startupOptions.getHybridRatio();
     this.item_selection_strategy = startupOptions.getItemSelectionStrategy();
     this.is_test_version = startupOptions.isTestVersion();
-    this.is_webstart = startupOptions.getWebstartOption();
     this.locale = startupOptions.getCurrentLocale();
     this.save_intermediate_stages = startupOptions.save_intermediate_stages;
     this.optimization_improvement_threshold = startupOptions.optimization_improvement_threshold;
@@ -154,13 +152,7 @@ public class MainApplication extends WindowBase {
     if (startupOptions.getWebstartOption() && add_buttons) {
       restore_defaults_button.setText(resources.getString("restore_defaults"));
       restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
-      restore_defaults_button.addActionListener(
-          (java.awt.event.ActionEvent evt) -> {
-            if (is_webstart) {
-              restore_defaults_action(evt);
-            }
-          });
-
+      restore_defaults_button.addActionListener((java.awt.event.ActionEvent evt) -> {});
       gridbag.setConstraints(restore_defaults_button, gridbag_constraints);
       main_panel.add(restore_defaults_button, gridbag_constraints);
     }
@@ -250,7 +242,7 @@ public class MainApplication extends WindowBase {
       }
 
       FRLogger.info("Opening '" + startupOptions.design_input_filename + "'...");
-      DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename, false);
+      DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename);
       if (design_file == null) {
         FRLogger.warn(
             resources.getString("message_6")
@@ -481,7 +473,6 @@ public class MainApplication extends WindowBase {
           parent_folder_name,
           rules_file_name,
           new_frame.board_panel.board_handling,
-          p_option == BoardFrame.Option.WEBSTART,
           confirm_import_rules_message);
 
       // ignore net classes if they were defined by a command line argument
@@ -513,11 +504,7 @@ public class MainApplication extends WindowBase {
     FRLogger.info("Opening '" + design_file.get_name() + "'...");
 
     BoardFrame.Option option;
-    if (this.is_webstart) {
-      option = BoardFrame.Option.WEBSTART;
-    } else {
-      option = BoardFrame.Option.FROM_START_MENU;
-    }
+    option = BoardFrame.Option.FROM_START_MENU;
     String message = resources.getString("loading_design") + " " + design_file.get_name();
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
@@ -560,12 +547,6 @@ public class MainApplication extends WindowBase {
   /** Exit the Application */
   private void exitForm(java.awt.event.WindowEvent evt) {
     System.exit(0);
-  }
-
-  /** deletes the setting stored by the user if the application is run by Java Web Start */
-  private void restore_defaults_action(java.awt.event.ActionEvent evt) {
-    // webstart is gone, nothing to do
-    // TODO maybe add alternative
   }
 
   private class BoardFrameWindowListener extends java.awt.event.WindowAdapter {

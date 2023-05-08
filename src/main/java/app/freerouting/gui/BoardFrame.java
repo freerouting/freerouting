@@ -24,8 +24,6 @@ public class BoardFrame extends WindowBase {
   /** The panel with the graphical representation of the board. */
   final BoardPanel board_panel;
   final ScreenMessages screen_messages;
-  /** true, if the frame is created by an application running under Java Web Start */
-  final boolean is_web_start;
   /** The panel with the toolbars */
   private final BoardToolbar toolbar_panel;
   /** The toolbar used in the selected item state. */
@@ -113,7 +111,6 @@ public class BoardFrame extends WindowBase {
     super(800, 150);
 
     this.design_file = p_design;
-    this.is_web_start = (p_option == Option.WEBSTART);
     this.test_level = p_test_level;
 
     this.confirm_cancel = p_confirm_cancel;
@@ -161,7 +158,6 @@ public class BoardFrame extends WindowBase {
         new BoardPanel(
             screen_messages,
             this,
-            this.is_web_start,
             p_locale,
             p_save_intermediate_stages,
             p_optimization_improvement_threshold);
@@ -181,7 +177,7 @@ public class BoardFrame extends WindowBase {
       java.util.Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
-    final DesignFile design_file = DesignFile.get_instance(p_design_file_path_name, false);
+    final DesignFile design_file = DesignFile.get_instance(p_design_file_path_name);
     if (design_file == null) {
       WindowMessage.show("designfile not found");
       return null;
