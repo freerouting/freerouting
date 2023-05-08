@@ -1,4 +1,6 @@
 import os
+import platform
+import sys
 import wx
 import wx.aui
 import time
@@ -8,11 +10,48 @@ import threading
 import subprocess
 import configparser
 import re
+import urllib.request
+import urllib.parse
+
+jre_version = "17.0.7+7"
+
+def detect_os_architecture():
+    os_name = platform.system().lower()
+    architecture = platform.machine().lower()
+              
+    # Windows 64-bit
+    if (architecture == "amd64"):
+        architecture = "x64"
+
+    # Windows 32-bit
+    if (architecture == "i386"):
+        architecture = "x86-32"
+
+    # Linux 64-bit
+    if (architecture == "x86_64"):
+        architecture = "x64"
+        
+    # macOS 64-bit
+    if (os_name == "darwin"):
+        os_name = "mac"        
+
+    return os_name, architecture
+
+def get_local_java_executable_path(os_name):
+    # Build the Java executable full path
+    jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
+    jre_path = os.path.abspath(jre_folder)    
+    if (os_name == "windows"):
+        java_exe_path = os.path.join(jre_path, "bin", "java.exe")
+    else:
+        java_exe_path = os.path.join(jre_path, "bin", "java")
+    return java_exe_path
 
 # Remove java offending characters
 def search_n_strip(s):
     s = re.sub('[Ωµ]', '', s)
     return s
+
 
 #
 # Freerouting round trip invocation:
@@ -46,7 +85,12 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         config_path = os.path.join(self.here_path, 'plugin.ini')
         config.read(config_path)
 
+        os_name, architecture = detect_os_architecture()
+
         self.java_path = config['java']['path']
+        local_java_exe_path = get_local_java_executable_path(os_name)
+        if (os.path.exists(local_java_exe_path)):
+            self.java_path = local_java_exe_path
 
         self.module_file = config['artifact']['location']
         self.module_path = os.path.join(self.here_path, self.module_file)
@@ -122,20 +166,35 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         javaVersion = get_java_version(self.java_path)
         javaMajorVersion = int(javaVersion.split(".")[0])
 
-        if javaMajorVersion == 0:
-            wx_show_error("""
-            Java JRE version 17 or higher is required, but you have no Java installed.
-            You can download it from https://adoptium.net/temurin/releases.
-            KiCad must be restarted after you installed Java.
-            """)
-            return False
+        javaInstallNow = wx.ID_NO
 
+        if (javaMajorVersion == 0):
+            javaInstallNow = wx_show_warning("""
+            Java JRE version 17 or higher is required, but you have no Java installed or you have no access to it because you used Flatpak to install KiCad.
+            Would you like to install it now?
+            """)
+            if (javaInstallNow != wx.ID_YES):
+                return False            
+        else:
+            if (javaMajorVersion < 17):
+                javaInstallNow = wx_show_warning("""
+                Java JRE version 17 or higher is required, but you have Java version {0} installed.
+                Would you like to install a newer one now?
+                """.format(javaVersion))
+                if (javaInstallNow != wx.ID_YES):
+                    return False
+            
+        if (javaInstallNow == wx.ID_YES):
+            self.java_path = install_java_jre_17()
+            
+        javaVersion = get_java_version(self.java_path)
+        javaMajorVersion = int(javaVersion.split(".")[0])            
+        
         if javaMajorVersion < 17:
             wx_show_error("""
-            Java JRE version 17 or higher is required, but you have Java version {0} installed.
-            You can download a newer one from https://adoptium.net/temurin/releases.
-            KiCad must be restarted after you updated Java.
-            """.format(javaVersion))
+            Java JRE installation failed, so we can't run Freerouting at the moment.
+            You can download the latest Java JRE from https://adoptium.net/temurin/releases and install it manually. KiCad must be restarted after the installation.
+            """)
             return False
    
         dialog = ProcessDialog(None, """
@@ -242,6 +301,13 @@ def has_pcbnew_api():
 wx_caption = "KiCad Freerouting Plugin"
 
 
+# display warning text with a question to the user
+def wx_show_warning(text):
+    message = textwrap.dedent(text)
+    style = wx.YES_NO | wx.ICON_WARNING
+    dialog = wx.MessageDialog(None, message=message, caption=wx_caption, style=style)
+    return dialog.ShowModal()
+
 # display error text to the user
 def wx_show_error(text):
     message = textwrap.dedent(text)
@@ -263,6 +329,64 @@ def get_java_version(javaPath):
     except:
         pass
     return "0.0.0.0"
+    
+
+def download_progress_hook(count, block_size, total_size):
+    percent = int(count * block_size * 100 / total_size)
+    sys.stdout.write(f"\rDownloading: {percent}%")
+    sys.stdout.flush()
+
+def download_with_progress_bar(url, output_path):
+    urllib.request.urlretrieve(url, output_path, reporthook=download_progress_hook)
+
+def install_java_jre_17():
+    # Get platform information and the appropriate URL
+    os_name, architecture = detect_os_architecture()
+    print(f"Operating System: {os_name}")
+    print(f"Architecture: {architecture}")
+    
+    java_exe_path = get_local_java_executable_path(os_name)
+    
+    # Don't do anything if we already have the neccessary Java executable
+    if (os.path.exists(java_exe_path)):
+        print(f"You already have a downloaded JRE, we are going to use that.")
+        return java_exe_path
+    
+    # Build the URL to the JRE archive
+    jre_url = "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-"+jre_version+"/OpenJDK17U-jre_"+architecture+"_"+os_name+"_hotspot_"+jre_version.replace("+", "_")
+    
+    if (os_name == "windows"):
+        # Download JRE 17 for Windows
+        jre_url = jre_url + ".zip"
+        file_name = "jre_17.zip"
+        
+    if (os_name == "linux"):
+        # Download JRE 17 for Linux
+        jre_url = jre_url + ".tar.gz"
+        file_name = "jre_17.tar.gz"
+    
+    if (os_name == "mac"):
+        # Download JRE 17 for Mac
+        jre_url = jre_url + ".tar.gz"
+        file_name = "jre_17.tar.gz"
+
+    if os.path.exists(file_name):
+        print("We already have the Java JRE archive.")
+    else:
+        jre_url = urllib.parse.quote(jre_url, safe=":/?=")
+        print("Downloading Java JRE from " + jre_url)
+        download_with_progress_bar(jre_url, file_name)
+        print()
+
+    # Unzip the downloaded file
+    print("Extracting the downloaded file...")
+    unzip_command = f"tar -xf {file_name}"
+    os.system(unzip_command)
+
+    # Remove the downloaded zip file
+    os.remove(file_name)
+
+    return java_exe_path    
 
 
 # prompt user to cancel pending action; allow to cancel programmatically
