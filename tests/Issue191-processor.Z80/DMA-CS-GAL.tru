@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<truthTable>
+  <variables>
+    <variable name="~DMAxADDR"/>
+    <variable name="CPUxA0"/>
+    <variable name="CPUxA1"/>
+    <variable name="~CPUxWAIT"/>
+    <variable name="~BUSRQ"/>
+    <variable name="~CPUxBUSACK"/>
+    <variable name="~DMAxINTxPULSE1"/>
+    <variable name="~DMAxINTxPULSE2"/>
+    <variable name="~CSxIO"/>
+    <variable name="CPUxA3"/>
+  </variables>
+  <results>
+    <result>
+      <name>~FPxLATCH</name>
+      <values class="BoolTableEx">
+        <e>10111111</e>
+        <vars>
+          <variable name="~DMAxADDR"/>
+          <variable name="CPUxA0"/>
+          <variable name="CPUxA1"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+        </bitsToRemove>
+        <bitRemoveCount>7</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~CExDMAxRDY</name>
+      <values class="BoolTableEx">
+        <e>11101111</e>
+        <vars>
+          <variable name="~DMAxADDR"/>
+          <variable name="CPUxA0"/>
+          <variable name="CPUxA1"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+        </bitsToRemove>
+        <bitRemoveCount>7</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~DMAxCS1</name>
+      <values class="BoolTableEx">
+        <e>0101110101111111011111110111111101111111011111110111111101111111</e>
+        <vars>
+          <variable name="~DMAxADDR"/>
+          <variable name="CPUxA0"/>
+          <variable name="CPUxA1"/>
+          <variable name="~CPUxWAIT"/>
+          <variable name="~BUSRQ"/>
+          <variable name="~CPUxBUSACK"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+        </bitsToRemove>
+        <bitRemoveCount>4</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~DMAxCS2</name>
+      <values class="BoolTableEx">
+        <e>0111111101111111010111010111111101111111011111110111111101111111</e>
+        <vars>
+          <variable name="~DMAxADDR"/>
+          <variable name="CPUxA0"/>
+          <variable name="CPUxA1"/>
+          <variable name="~CPUxWAIT"/>
+          <variable name="~BUSRQ"/>
+          <variable name="~CPUxBUSACK"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+        </bitsToRemove>
+        <bitRemoveCount>4</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~BUSxEN</name>
+      <values class="BoolTableEx">
+        <e>1010101010101010101010101010101010101010101010101010101010101010</e>
+        <vars>
+          <variable name="~DMAxADDR"/>
+          <variable name="CPUxA0"/>
+          <variable name="CPUxA1"/>
+          <variable name="~CPUxWAIT"/>
+          <variable name="~BUSRQ"/>
+          <variable name="~CPUxBUSACK"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+        </bitsToRemove>
+        <bitRemoveCount>4</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>DATAxXFER</name>
+      <values class="BoolTableEx">
+        <e>0001111111111111</e>
+        <vars>
+          <variable name="~BUSRQ"/>
+          <variable name="~CPUxBUSACK"/>
+          <variable name="~DMAxINTxPULSE1"/>
+          <variable name="~DMAxINTxPULSE2"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>6</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>IOxSEL</name>
+      <values class="BoolTableEx">
+        <e>1110</e>
+        <vars>
+          <variable name="~DMAxADDR"/>
+          <variable name="~CSxIO"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~CSxMAP</name>
+      <values class="BoolTableEx">
+        <e>0111</e>
+        <vars>
+          <variable name="~CSxIO"/>
+          <variable name="CPUxA3"/>
+        </vars>
+        <bitsToRemove>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~CSxUART</name>
+      <values class="BoolTableEx">
+        <e>1011</e>
+        <vars>
+          <variable name="~CSxIO"/>
+          <variable name="CPUxA3"/>
+        </vars>
+        <bitsToRemove>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+  </results>
+</truthTable>

@@ -1,0 +1,38 @@
+Name     CPU-DATA-DIR-GAL.tru ;
+PartNo   00 ;
+Date     03.04.2023 ;
+Revision 01 ;
+Designer Andrew ;
+Company  unknown ;
+Assembly None ;
+Location unknown ;
+Device   g22v10 ;
+
+ar = 'b'0 ;
+sp = 'b'0 ;
+
+/* inputs */
+PIN 6 = DMAxIEI1;
+PIN 8 = DMAxIEO2;
+PIN 9 = FPxLATCH;
+PIN 7 = IM2xINT;
+PIN 3 = IOxSEL;
+PIN 5 = bIORQ;
+PIN 4 = bM1;
+PIN 2 = bRD;
+PIN 10 = bWR;
+
+/* outputs */
+PIN 23 = DATAxDIR;
+PIN 22 = IM2xEN;
+PIN 21 = FPxLATCHxRD;
+PIN 20 = FPxLATCHxWR;
+PIN 19 = IM2xIEO;
+
+/* combinatorial logic */
+DATAxDIR = (IOxSEL & bIORQ) # (IOxSEL & bM1) # (IOxSEL & !DMAxIEI1) # (!DMAxIEI1 & bRD) # (bIORQ & bRD) 
+     # (bM1 & bRD);
+FPxLATCHxRD = FPxLATCH # bRD;
+FPxLATCHxWR = !FPxLATCH & !bWR;
+IM2xEN = !DMAxIEO2 # IM2xINT # bIORQ # bM1;
+IM2xIEO = !DMAxIEO2 # IM2xINT;

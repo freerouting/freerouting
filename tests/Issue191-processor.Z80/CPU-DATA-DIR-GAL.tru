@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<truthTable>
+  <variables>
+    <variable name="IOxSEL"/>
+    <variable name="~bRD"/>
+    <variable name="~DMAxIEI1"/>
+    <variable name="~bM1"/>
+    <variable name="~bIORQ"/>
+    <variable name="~IM2xINT"/>
+    <variable name="~DMAxIEO2"/>
+    <variable name="~FPxLATCH"/>
+    <variable name="~bWR"/>
+  </variables>
+  <results>
+    <result>
+      <name>DATAxDIR</name>
+      <values class="BoolTableEx">
+        <e>00000000111101111111011111110111</e>
+        <vars>
+          <variable name="IOxSEL"/>
+          <variable name="~bRD"/>
+          <variable name="~DMAxIEI1"/>
+          <variable name="~bM1"/>
+          <variable name="~bIORQ"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+        </bitsToRemove>
+        <bitRemoveCount>4</bitRemoveCount>
+        <size>512</size>
+      </values>
+    </result>
+    <result>
+      <name>~IM2xEN</name>
+      <values class="BoolTableEx">
+        <e>1011111111111111</e>
+        <vars>
+          <variable name="~bM1"/>
+          <variable name="~bIORQ"/>
+          <variable name="~IM2xINT"/>
+          <variable name="~DMAxIEO2"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+        </bitsToRemove>
+        <bitRemoveCount>5</bitRemoveCount>
+        <size>512</size>
+      </values>
+    </result>
+    <result>
+      <name>~FPxLATCHxRD</name>
+      <values class="BoolTableEx">
+        <e>0111</e>
+        <vars>
+          <variable name="~bRD"/>
+          <variable name="~FPxLATCH"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>8</int>
+        </bitsToRemove>
+        <bitRemoveCount>7</bitRemoveCount>
+        <size>512</size>
+      </values>
+    </result>
+    <result>
+      <name>FPxLATCHxWR</name>
+      <values class="BoolTableEx">
+        <e>1000</e>
+        <vars>
+          <variable name="~FPxLATCH"/>
+          <variable name="~bWR"/>
+        </vars>
+        <bitsToRemove>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+        </bitsToRemove>
+        <bitRemoveCount>7</bitRemoveCount>
+        <size>512</size>
+      </values>
+    </result>
+    <result>
+      <name>~IM2xIEO</name>
+      <values class="BoolTableEx">
+        <e>1011</e>
+        <vars>
+          <variable name="~IM2xINT"/>
+          <variable name="~DMAxIEO2"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+        </bitsToRemove>
+        <bitRemoveCount>7</bitRemoveCount>
+        <size>512</size>
+      </values>
+    </result>
+  </results>
+</truthTable>

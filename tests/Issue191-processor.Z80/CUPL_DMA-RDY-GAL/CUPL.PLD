@@ -1,0 +1,42 @@
+Name     DMA-RDY-GAL.tru ;
+PartNo   00 ;
+Date     23.03.2023 ;
+Revision 01 ;
+Designer Andrew ;
+Company  unknown ;
+Assembly None ;
+Location unknown ;
+Device   g22v10 ;
+
+ar = 'b'0 ;
+sp = 'b'0 ;
+
+/* inputs */
+PIN 7 = CExDMAxRDY;
+PIN 9 = CPUxRESET;
+PIN 6 = CPUxWR;
+PIN 11 = DMAxBAO2;
+PIN 2 = DREQ0;
+PIN 4 = DREQ1;
+PIN 3 = RDYxQ0;
+PIN 5 = RDYxQ1;
+PIN 8 = USRxRESET1;
+PIN 10 = USRxRESET2;
+
+/* outputs */
+PIN 23 = DMAxRDY1;
+PIN 22 = DMAxRDY2;
+PIN 20 = DMAxRESET1;
+PIN 19 = DMAxRESET2;
+PIN 21 = DMAxRDYxWR;
+PIN 18 = BUSACK;
+PIN 17 = RESET;
+
+/* combinatorial logic */
+BUSACK = !DMAxBAO2;
+DMAxRDY1 = RDYxQ0 # !DREQ0;
+DMAxRDY2 = RDYxQ1 # !DREQ1;
+DMAxRDYxWR = CExDMAxRDY # CPUxWR;
+DMAxRESET1 = CPUxRESET & USRxRESET1;
+DMAxRESET2 = CPUxRESET & USRxRESET2;
+RESET = !CPUxRESET;

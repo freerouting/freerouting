@@ -1,0 +1,30 @@
+%SIGNAL
+PIN   8 =  CPUxIORQ 
+PIN   6 =  CPUxMREQ 
+PIN   7 =  CPUxRD 
+PIN   9 =  CPUxRFSH 
+PIN  19 =  MR 
+PIN  18 =  READY 
+PIN   3 =  WSxIORD 
+PIN   5 =  WSxIOWR 
+PIN   2 =  WSxMEMRD 
+PIN   4 =  WSxMEMWR 
+%END
+
+%FIELD
+%END
+
+%EQUATION
+MR =>
+    !CPUxIORQ
+  # !CPUxMREQ
+
+READY =>
+    CPUxMREQ & !CPUxRD & WSxIORD
+  # CPUxMREQ & CPUxRD & WSxIOWR
+  # !CPUxMREQ & !CPUxRD & WSxMEMRD
+  # !CPUxMREQ & CPUxRD & WSxMEMWR
+  # CPUxIORQ & CPUxMREQ
+  # !CPUxRFSH
+
+%END

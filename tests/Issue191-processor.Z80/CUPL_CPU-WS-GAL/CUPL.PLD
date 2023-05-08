@@ -1,0 +1,28 @@
+Name     CPU-WS-GAL.dig ;
+PartNo   00 ;
+Date     11.03.2023 ;
+Revision 01 ;
+Designer Andrew ;
+Company  unknown ;
+Assembly None ;
+Location unknown ;
+Device   g16v8a ;
+
+/* inputs */
+PIN 8 = CPUxIORQ;
+PIN 6 = CPUxMREQ;
+PIN 7 = CPUxRD;
+PIN 9 = CPUxRFSH;
+PIN 3 = WSxIORD;
+PIN 5 = WSxIOWR;
+PIN 2 = WSxMEMRD;
+PIN 4 = WSxMEMWR;
+
+/* outputs */
+PIN 19 = MR;
+PIN 18 = READY;
+
+/* combinatorial logic */
+MR = !CPUxIORQ # !CPUxMREQ;
+READY = (WSxIORD & CPUxMREQ & !CPUxRD) # (WSxIOWR & CPUxMREQ & CPUxRD) # (WSxMEMRD & !CPUxMREQ & !CPUxRD) 
+     # (WSxMEMWR & !CPUxMREQ & CPUxRD) # (CPUxIORQ & CPUxMREQ) # !CPUxRFSH;

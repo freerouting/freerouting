@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name Package_LCC-new)(type KiCad)(uri ${KIPRJMOD}/Package_LCC-new.pretty)(options "")(descr "")(disabled))
+)

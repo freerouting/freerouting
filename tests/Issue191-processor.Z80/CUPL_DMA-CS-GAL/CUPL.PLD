@@ -1,0 +1,46 @@
+Name     DMA-CS-GAL.tru ;
+PartNo   00 ;
+Date     23.04.2023 ;
+Revision 01 ;
+Designer Andrew ;
+Company  unknown ;
+Assembly None ;
+Location unknown ;
+Device   g22v10 ;
+
+ar = 'b'0 ;
+sp = 'b'0 ;
+
+/* inputs */
+PIN 7 = BUSRQ;
+PIN 3 = CPUxA0;
+PIN 4 = CPUxA1;
+PIN 11 = CPUxA3;
+PIN 5 = CPUxBUSACK;
+PIN 6 = CPUxWAIT;
+PIN 10 = CSxIO;
+PIN 2 = DMAxADDR;
+PIN 8 = DMAxINTxPULSE1;
+PIN 9 = DMAxINTxPULSE2;
+
+/* outputs */
+PIN 23 = FPxLATCH;
+PIN 22 = CExDMAxRDY;
+PIN 21 = DMAxCS1;
+PIN 20 = DMAxCS2;
+PIN 19 = BUSxEN;
+PIN 18 = DATAxXFER;
+PIN 17 = IOxSEL;
+PIN 16 = CSxMAP;
+PIN 15 = CSxUART;
+
+/* combinatorial logic */
+BUSxEN = !CPUxBUSACK;
+CExDMAxRDY = !CPUxA0 # !CPUxA1 # DMAxADDR;
+CSxMAP = CPUxA3 # CSxIO;
+CSxUART = !CPUxA3 # CSxIO;
+DATAxXFER = BUSRQ # CPUxBUSACK # (DMAxINTxPULSE1 & DMAxINTxPULSE2);
+DMAxCS1 = (CPUxA0 & BUSRQ) # (CPUxA1 & BUSRQ) # (!BUSRQ & CPUxWAIT) # (BUSRQ & DMAxADDR) # CPUxBUSACK;
+DMAxCS2 = (!CPUxA0 & BUSRQ) # (CPUxA1 & BUSRQ) # (!BUSRQ & CPUxWAIT) # (BUSRQ & DMAxADDR) # CPUxBUSACK;
+FPxLATCH = CPUxA0 # !CPUxA1 # DMAxADDR;
+IOxSEL = !CSxIO # !DMAxADDR;

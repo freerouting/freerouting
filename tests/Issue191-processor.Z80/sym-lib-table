@@ -1,0 +1,6 @@
+(sym_lib_table
+  (lib (name "Zilog_Z80_Peripherals")(type "KiCad")(uri "${KIPRJMOD}/Zilog_Z80_Peripherals.kicad_sym")(options "")(descr ""))
+  (lib (name "TL16C550CFN")(type "KiCad")(uri "${KIPRJMOD}/TL16C550CFN.kicad_sym")(options "")(descr ""))
+  (lib (name "gal22v10")(type "KiCad")(uri "${KIPRJMOD}/gal22v10.kicad_sym")(options "")(descr ""))
+  (lib (name "Zilog_z80")(type "KiCad")(uri "${KIPRJMOD}/Zilog_z80.kicad_sym")(options "")(descr ""))
+)

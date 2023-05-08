@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<truthTable>
+  <variables>
+    <variable name="~DREQ0"/>
+    <variable name="~DREQ1"/>
+    <variable name="~CPUxWR"/>
+    <variable name="~CExDMAxRDY"/>
+    <variable name="RDYxQ0"/>
+    <variable name="RDYxQ1"/>
+    <variable name="~USRxRESET1"/>
+    <variable name="~USRxRESET2"/>
+    <variable name="~CPUxRESET"/>
+    <variable name="~DMAxBAO2"/>
+  </variables>
+  <results>
+    <result>
+      <name>DMAxRDY1</name>
+      <values class="BoolTableEx">
+        <e>1101</e>
+        <vars>
+          <variable name="~DREQ0"/>
+          <variable name="RDYxQ0"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>DMAxRDY2</name>
+      <values class="BoolTableEx">
+        <e>1101</e>
+        <vars>
+          <variable name="~DREQ1"/>
+          <variable name="RDYxQ1"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~DMAxRESET1</name>
+      <values class="BoolTableEx">
+        <e>0001</e>
+        <vars>
+          <variable name="~USRxRESET1"/>
+          <variable name="~CPUxRESET"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>2</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~DMAxRESET2</name>
+      <values class="BoolTableEx">
+        <e>0001</e>
+        <vars>
+          <variable name="~USRxRESET2"/>
+          <variable name="~CPUxRESET"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~DMAxRDYxWR</name>
+      <values class="BoolTableEx">
+        <e>0111</e>
+        <vars>
+          <variable name="~CPUxWR"/>
+          <variable name="~CExDMAxRDY"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>8</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>BUSACK</name>
+      <values class="BoolTableEx">
+        <e>10</e>
+        <vars>
+          <variable name="~DMAxBAO2"/>
+        </vars>
+        <bitsToRemove>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>9</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>RESET</name>
+      <values class="BoolTableEx">
+        <e>10</e>
+        <vars>
+          <variable name="~CPUxRESET"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>9</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+  </results>
+</truthTable>

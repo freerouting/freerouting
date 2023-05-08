@@ -1,0 +1,68 @@
+EQN2JED - Boolean Equations to JEDEC file assembler (Version V024)
+Copyright (c) National Semiconductor Corporation 1990,1991
+
+Document file for E:\WINDOWS\Plocha\OPAL\datagear.eqn
+Device: 16V8
+
+$LABELS 20 A5 NC1 A4 A3 A2 A1 A0 M1 IORQ GND WAIT BUSRQ DMACS BUSAK NC2 LED
+ JP1 A7 A6 VCC
+
+
+Pin   Label               Type
+---   -----               ----
+1     A5                  pos,com input
+2     NC1                 unused
+3     A4                  pos,com input
+4     A3                  pos,com input
+5     A2                  pos,com input
+6     A1                  pos,com input
+7     A0                  pos,com input
+8     M1                  pos,com input
+9     IORQ                pos,com input
+10    GND                 ground pin
+11    WAIT                pos,com input
+12    BUSRQ               pos,com input
+13    DMACS               neg,com output
+14    BUSAK               pos,com input
+15    NC2                 unused
+16    LED                 neg,com output
+17    JP1                 pos,com input
+18    A7                  pos,com input
+19    A6                  pos,com input
+
+EQN2JED - Boolean Equations to JEDEC file assembler (Version V024)
+Copyright (c) National Semiconductor Corporation 1990,1991
+
+Device Utilization:
+
+No of dedicated inputs used               : 10/10 (100.0%)
+No of feedbacks used as dedicated inputs  :  4/6  (66.7%)
+No of dedicated outputs used              :  2/2  (100.0%)
+
+		------------------------------------------
+		Pin   Label                 Terms Usage
+		------------------------------------------
+		16    LED                   3/8   (37.5%)
+		13    DMACS                 3/8   (37.5%)
+		------------------------------------------
+		Total                       6/64  (9.4%)
+		------------------------------------------
+
+EQN2JED - Boolean Equations to JEDEC file assembler (Version V024)
+Copyright (c) National Semiconductor Corporation 1990,1991
+
+                            Chip diagram (DIP)
+
+                             ._____    _____.
+                             |     \__/     |
+                          A5 |  1        20 | VCC
+                         NC1 |  2        19 | A6
+                          A4 |  3        18 | A7
+                          A3 |  4        17 | JP1
+                          A2 |  5        16 | LED
+                          A1 |  6        15 | NC2
+                          A0 |  7        14 | BUSAK
+                          M1 |  8        13 | DMACS
+                        IORQ |  9        12 | BUSRQ
+                         GND | 10        11 | WAIT
+                             |______________|

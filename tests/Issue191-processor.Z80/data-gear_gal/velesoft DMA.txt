@@ -1,0 +1,15 @@
+DATA-GEAR is DMA interface for 8-bit computers with Z80CPU. 
+
+Original schematic is DMA part of interface MB02+. DATA-GEAR is connected to socket for Z80CPU, there's no need any hardware modifications in your computer.  
+
+DMA chip use dirrect access to memory or port. 
+
+Transfer of linear data block (max. 64kB) memory to memory / memory to port / port to memory / port to port. 
+
+For computers with max. CPU speed 4MHz is used Z80DMA chip, but for faster computers (SAM COUPE=6MHz, ZS SCORPION TURBO=7MHz ...) is need use DMA chip at 6-8MHz. 
+
+DMA chip is programmed via port 11(#0B) = MB02 compatible. 
+
+On board is jumper JP1 for change programming port to 107(#6B).  If JP1 is connect, then port 107(#6B) is used.
+
+Max. speed of data transfer on ZX128+ is 17.3 kB(17727 bytes) / frame = 865.6 kB(886350 bytes) / second

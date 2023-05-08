@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<truthTable>
+  <variables>
+    <variable name="~CPUxWR"/>
+    <variable name="CPU-A2"/>
+    <variable name="~CSxMAP"/>
+    <variable name="CPU-A14"/>
+    <variable name="mA14"/>
+    <variable name="CPU-A15"/>
+    <variable name="mA15"/>
+    <variable name="~CPUxIORQ"/>
+    <variable name="CPU-A1"/>
+    <variable name="~INTxI2C"/>
+  </variables>
+  <results>
+    <result>
+      <name>~PAGExWR</name>
+      <values class="BoolTableEx">
+        <e>01111111</e>
+        <vars>
+          <variable name="~CPUxWR"/>
+          <variable name="CPU-A2"/>
+          <variable name="~CSxMAP"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+        </bitsToRemove>
+        <bitRemoveCount>7</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~PGENxWR</name>
+      <values class="BoolTableEx">
+        <e>1111011111111111</e>
+        <vars>
+          <variable name="~CPUxWR"/>
+          <variable name="CPU-A2"/>
+          <variable name="~CSxMAP"/>
+          <variable name="CPU-A1"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+        </bitsToRemove>
+        <bitRemoveCount>6</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>SEL-A14</name>
+      <values class="BoolTableEx">
+        <e>00000000010101011010101011111111</e>
+        <vars>
+          <variable name="CPU-A14"/>
+          <variable name="mA14"/>
+          <variable name="CPU-A15"/>
+          <variable name="mA15"/>
+          <variable name="~CPUxIORQ"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>5</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>SEL-A15</name>
+      <values class="BoolTableEx">
+        <e>00011011000110110001101100011011</e>
+        <vars>
+          <variable name="CPU-A14"/>
+          <variable name="mA14"/>
+          <variable name="CPU-A15"/>
+          <variable name="mA15"/>
+          <variable name="~CPUxIORQ"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>1</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>5</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~CSxI2C</name>
+      <values class="BoolTableEx">
+        <e>1111101111111111</e>
+        <vars>
+          <variable name="~CPUxWR"/>
+          <variable name="CPU-A2"/>
+          <variable name="~CSxMAP"/>
+          <variable name="CPU-A1"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+        </bitsToRemove>
+        <bitRemoveCount>6</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>INT-I2C</name>
+      <values class="BoolTableEx">
+        <e>10</e>
+        <vars>
+          <variable name="~INTxI2C"/>
+        </vars>
+        <bitsToRemove>
+          <int>1</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+          <int>7</int>
+          <int>8</int>
+          <int>9</int>
+        </bitsToRemove>
+        <bitRemoveCount>9</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+    <result>
+      <name>~CSxI2CxWR</name>
+      <values class="BoolTableEx">
+        <e>1111101111111111</e>
+        <vars>
+          <variable name="~CPUxWR"/>
+          <variable name="CPU-A2"/>
+          <variable name="~CSxMAP"/>
+          <variable name="CPU-A1"/>
+        </vars>
+        <bitsToRemove>
+          <int>0</int>
+          <int>2</int>
+          <int>3</int>
+          <int>4</int>
+          <int>5</int>
+          <int>6</int>
+        </bitsToRemove>
+        <bitRemoveCount>6</bitRemoveCount>
+        <size>1024</size>
+      </values>
+    </result>
+  </results>
+</truthTable>
