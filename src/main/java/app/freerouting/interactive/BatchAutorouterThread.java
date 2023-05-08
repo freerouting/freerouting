@@ -15,8 +15,8 @@ import app.freerouting.logger.FRLogger;
 public class BatchAutorouterThread extends InteractiveActionThread {
   private final BatchAutorouter batch_autorouter;
   private final BatchOptRoute batch_opt_route;
-  boolean save_intermediate_stages = false;
-  float optimization_improvement_threshold = 0.0f;
+  boolean save_intermediate_stages;
+  float optimization_improvement_threshold;
 
   /** Creates a new instance of BatchAutorouterThread */
   protected BatchAutorouterThread(BoardHandling p_board_handling) {
@@ -155,6 +155,11 @@ public class BatchAutorouterThread extends InteractiveActionThread {
                         + "%"
                     : "")
                 + ".");
+
+        if (!this.is_stop_requested())
+        {
+          hdlg.get_panel().board_frame.delete_intermediate_stage_file();
+        }
       }
 
       hdlg.set_board_read_only(saved_board_read_only);

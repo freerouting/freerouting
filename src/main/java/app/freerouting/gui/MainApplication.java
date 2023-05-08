@@ -12,6 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 import javax.swing.JButton;
@@ -342,6 +344,18 @@ public class MainApplication extends WindowBase {
         };
       }
 
+      if (new_frame.is_intermediate_stage_file_available())
+      {
+        LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = modification_time.format(formatter);
+
+        if (WindowMessage.confirm("There is a snapshot file with the modification time of '"+formattedDateTime+"' available.\nWould you like to load it?"))
+        {
+          new_frame.load_intermediate_stage_file();
+        }
+      }
+
       // start the auto-router automatically if both input and output files were passed as a parameter
       if ((startupOptions.design_input_filename != null)
           && (startupOptions.design_output_filename != null)) {
@@ -533,6 +547,18 @@ public class MainApplication extends WindowBase {
     new_frame.board_panel.board_handling.set_board_update_strategy(this.board_update_strategy);
     new_frame.board_panel.board_handling.set_hybrid_ratio(this.hybrid_ratio);
     new_frame.board_panel.board_handling.set_item_selection_strategy(this.item_selection_strategy);
+
+    if (new_frame.is_intermediate_stage_file_available())
+    {
+      LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      String formattedDateTime = modification_time.format(formatter);
+
+      if (WindowMessage.confirm("There is a snapshot file with the modification time of '"+formattedDateTime+"' available.\nWould you like to load it?"))
+      {
+        new_frame.load_intermediate_stage_file();
+      }
+    }
 
     message_field.setText(
         resources.getString("message_4")

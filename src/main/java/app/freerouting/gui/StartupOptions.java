@@ -5,6 +5,7 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.logger.FRLogger;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 
 public class StartupOptions {
   boolean single_design_option = false;
@@ -159,7 +160,10 @@ public class StartupOptions {
         } else if (p_args[i].startsWith("-s")) {
           session_file_option = true;
         } else if (p_args[i].startsWith("-im")) {
-          save_intermediate_stages = false;
+          save_intermediate_stages = true;
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+            save_intermediate_stages = !(Objects.equals(p_args[i + 1],"0"));
+          }
         } else if (p_args[i].startsWith("-w")) {
           webstart_option = true;
         } else if (p_args[i].startsWith("-test")) {

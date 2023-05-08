@@ -8,6 +8,9 @@ import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 import java.io.File;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /** Graphical frame of for interactive editing of a routing board. */
 public class BoardFrame extends WindowBase {
@@ -332,13 +335,45 @@ public class BoardFrame extends WindowBase {
   }
 
   boolean save() {
-    return save(null);
+    return save(this.design_file.get_output_file());
+  }
+
+  public boolean load_intermediate_stage_file() {
+    try {
+      java.io.FileInputStream input_stream = new java.io.FileInputStream(this.design_file.get_snapshot_file());
+      return this.read(input_stream, false, null);
+    } catch (java.io.IOException e) {
+      screen_messages.set_status_message(resources.getString("error_2"));
+      return false;
+    } catch (Exception e) {
+      screen_messages.set_status_message(resources.getString("error_3"));
+      return false;
+    }
+  }
+
+
+  public boolean save_intermediate_stage_file() {
+    return save(this.design_file.get_snapshot_file());
+  }
+
+  public boolean delete_intermediate_stage_file() {
+    return this.design_file.get_snapshot_file().delete();
+  }
+
+  public boolean is_intermediate_stage_file_available() {
+    return (this.design_file.get_snapshot_file().exists() && this.design_file.get_snapshot_file().canRead());
+  }
+
+  public LocalDateTime get_intermediate_stage_file_modification_time() {
+    long lastModified = this.design_file.get_snapshot_file().lastModified();
+    return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
   }
 
   /**
-   * Saves the interactive settings and the design file to disk. Returns false, if the save failed.
+   * Saves the interactive settings and the design file to disk as a binary file.
+   * Returns false, if the save failed.
    */
-  public boolean save(String suffix) {
+  private boolean save(File output_file) {
     if (this.design_file == null) {
       return false;
     }
@@ -346,30 +381,25 @@ public class BoardFrame extends WindowBase {
     java.io.OutputStream output_stream = null;
     java.io.ObjectOutputStream object_stream = null;
     try {
-      File outFile = this.design_file.get_output_file();
-      if (suffix == null) {
-        outFile = this.design_file.get_output_file();
-      } else {
-        String fileName = this.design_file.get_output_file().getPath();
-        int pos = fileName.lastIndexOf(".");
-        outFile = new File(fileName.substring(0, pos) + suffix);
-      }
+      FRLogger.info("Saving '" + output_file.getPath() + "'...");
 
-      FRLogger.info("Saving '" + outFile.getPath() + "'...");
-
-      output_stream = new java.io.FileOutputStream(outFile);
+      output_stream = new java.io.FileOutputStream(output_file);
       object_stream = new java.io.ObjectOutputStream(output_stream);
     } catch (java.io.IOException e) {
       screen_messages.set_status_message(resources.getString("error_2"));
       return false;
-    } catch (java.security.AccessControlException e) {
+    } catch (Exception e) {
       screen_messages.set_status_message(resources.getString("error_3"));
       return false;
     }
+
+    // (1) Save the board as binary file
     boolean save_ok = board_panel.board_handling.save_design_file(object_stream);
     if (!save_ok) {
       return false;
     }
+
+    // (2) Save the GUI settings as binary file
     try {
       object_stream.writeObject(board_panel.get_viewport_position());
       object_stream.writeObject(this.getLocation());
@@ -378,9 +408,13 @@ public class BoardFrame extends WindowBase {
       screen_messages.set_status_message(resources.getString("error_4"));
       return false;
     }
+
+    // (3) Save the permanent subwindows as binary file
     for (int i = 0; i < this.permanent_subwindows.length; ++i) {
       this.permanent_subwindows[i].save(object_stream);
     }
+
+    // (4) Flush the binary file
     try {
       object_stream.flush();
       output_stream.close();

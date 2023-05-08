@@ -110,19 +110,19 @@ public class BatchOptRoute {
       route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
 
       if ((route_improved > optimization_improvement_threshold)
-          && (save_intermediate_stages)) { // Save intermediate optimization results:
+          && (save_intermediate_stages)) {
+        // Save intermediate optimization results:
         // 1. To save the result in case the program is terminated unexpectedly,
         //    e.g., Windows OS update automatically reboots machine
         // 2. To provide a way to check intermediate results for a long-running optimization
-        String suffix = "_op" + curr_pass_no + ".bin";
-        this.thread.hdlg.get_panel().board_frame.save(suffix);
+        this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
       }
     }
   }
 
   /**
    * Tries to reduce the number of vias and the trace length of a completely routed board. Returns
-   * the amount of improvements were made in percentage (expressed between 0.0 and 1.0). -1 if the
+   * the amount of improvements is made in percentage (expressed between 0.0 and 1.0). -1 if the
    * routing must go on no matter how much it improved.
    */
   protected float opt_route_pass(int p_pass_no, boolean p_with_prefered_directions) {

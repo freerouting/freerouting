@@ -12,13 +12,13 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
   }
 
   public String getDescription() {
-    String message = "files with the extensions";
+    String message = "Files with the extensions";
     for (int i = 0; i < extensions.length; ++i) {
       message += " ." + extensions[i];
       if (i == extensions.length - 2) {
-        message += " or ";
+        message += " or";
       } else if (i < extensions.length - 2) {
-        message += ", ";
+        message += ",";
       }
     }
     return message;

@@ -3,17 +3,21 @@ package app.freerouting.gui;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.logger.FRLogger;
+import java.io.File;import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.zip.CRC32;
 
 /**
  * File functionality with security restrictions used, when the application is opened with Java
  * Webstart
  */
 public class DesignFile {
-  public static final String[] all_file_extensions = {"bin", "dsn"};
-  public static final String[] text_file_extensions = {"dsn"};
-  public static final String binary_file_extension = "bin";
+  public static final String[] all_file_extensions = {"frb", "dsn"};
+  public static final String text_file_extension = "dsn";
+  public static final String binary_file_extension = "frb";
   private static final String RULES_FILE_EXTENSION = "rules";
   private final java.io.File input_file;
+  private final java.io.File intermediate_snapshot_file;
   private java.io.File output_file;
   private javax.swing.JFileChooser file_chooser;
 
@@ -24,13 +28,53 @@ public class DesignFile {
     this.file_chooser = p_file_chooser;
     this.input_file = p_design_file;
     this.output_file = p_design_file;
+
     if (p_design_file != null) {
       String file_name = p_design_file.getName();
       String[] name_parts = file_name.split("\\.");
-      if (name_parts[name_parts.length - 1].compareToIgnoreCase(binary_file_extension) != 0) {
-        String binfile_name = name_parts[0] + "." + binary_file_extension;
-        this.output_file = new java.io.File(p_design_file.getParent(), binfile_name);
+
+      // Check if the file has an extension
+      String extension = "";
+      if (name_parts.length > 1)
+      {
+        extension = name_parts[name_parts.length - 1];
+        file_name = file_name.substring(0, file_name.length() - extension.length() - 1);
       }
+
+      // Set the binary output file name
+      if (extension.compareToIgnoreCase(binary_file_extension) != 0) {
+        String binary_output_file_name = file_name + "." + binary_file_extension;
+        this.output_file = new java.io.File(p_design_file.getParent(), binary_output_file_name);
+      }
+
+      // Set the intermediate snapshot file name
+
+      // Calculate the CRC32 checksum of the input file
+      long crc32_checksum = 0;
+      try (FileInputStream inputStream = new FileInputStream(this.input_file.getAbsoluteFile())) {
+        CRC32 crc = new CRC32();
+        int cnt;
+        while ((cnt = inputStream.read()) != -1) {
+          crc.update(cnt);
+        }
+        crc32_checksum = crc.getValue();
+      } catch (IOException e) {
+        crc32_checksum = 0;
+      }
+
+      // We have a valid checksum, we can generate the intermediate snapshot file
+      if (crc32_checksum != 0)
+      {
+        String temp_folder_path = System.getProperty("java.io.tmpdir");
+
+        String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32_checksum) + "." + DesignFile.binary_file_extension;
+        this.intermediate_snapshot_file = new java.io.File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
+      } else
+      {
+        this.intermediate_snapshot_file = null;
+      }
+    } else {
+      this.intermediate_snapshot_file = null;
     }
   }
 
@@ -160,12 +204,14 @@ public class DesignFile {
     String[] new_name_parts = new_file_name.split("\\.");
     String found_file_extension = new_name_parts[new_name_parts.length - 1];
     if (found_file_extension.compareToIgnoreCase(binary_file_extension) == 0) {
+      // Save as binary file
       p_board_frame.screen_messages.set_status_message(
           resources.getString("message_2") + " " + new_file.getName());
       this.output_file = new_file;
       p_board_frame.save();
     } else {
-      if (found_file_extension.compareToIgnoreCase("dsn") != 0) {
+      // Save as text file
+      if (found_file_extension.compareToIgnoreCase(text_file_extension) != 0) {
         p_board_frame.screen_messages.set_status_message(resources.getString("message_3"));
         return;
       }
@@ -316,6 +362,10 @@ public class DesignFile {
 
   public java.io.File get_input_file() {
     return this.input_file;
+  }
+
+  public java.io.File get_snapshot_file() {
+    return this.intermediate_snapshot_file;
   }
 
   public String get_parent() {

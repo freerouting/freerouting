@@ -203,6 +203,8 @@ public class BatchAutorouter {
               + "' making {} changes",
           newTraceDifferences);
 
+      this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
+
       // check if there are still unrouted items
       if (still_unrouted_items && !is_interrupted) {
         hdlg.get_settings().autoroute_settings.increment_pass_no();
