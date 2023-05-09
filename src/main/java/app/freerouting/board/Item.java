@@ -352,6 +352,7 @@ public abstract class Item
         }
 
         if (is_obstacle) {
+          // Get the two shapes the clearance is calculated between
           TileShape shape_1 = curr_tile_shape;
           TileShape shape_2 =
               curr_item.get_tree_shape(default_tree, curr_entry.shape_index_in_object);
@@ -359,25 +360,51 @@ public abstract class Item
             FRLogger.warn("Item.clearance_violations: unexpected  null shape");
             continue;
           }
+
+          // Calculate the expected minimum clearance between these two shapes
+          double minimum_clearance = board.rules.clearance_matrix.value(
+              curr_item.clearance_class, this.clearance_class, shape_layer(i));
+
+          double actual_clearance = 0;
+
+          TileShape enlarged_shape_1 = (TileShape) shape_1.enlarge(0);
+          TileShape enlarged_shape_2 = (TileShape) shape_2.enlarge(0);
+
           if (!this.board.search_tree_manager.is_clearance_compensation_used()) {
-            double cl_offset =
-                0.5
-                    * board.rules.clearance_matrix.value(
-                        curr_item.clearance_class, this.clearance_class, shape_layer(i));
-            shape_1 = (TileShape) shape_1.enlarge(cl_offset);
-            shape_2 = (TileShape) shape_2.enlarge(cl_offset);
+            double cl_offset = 0.5 * minimum_clearance;
+            enlarged_shape_1 = (TileShape) shape_1.enlarge(cl_offset);
+            enlarged_shape_2 = (TileShape) shape_2.enlarge(cl_offset);
+
+            actual_clearance = calculate_clearance_between_two_shapes(shape_1, shape_2, minimum_clearance);
           }
 
-          TileShape intersection = shape_1.intersection(shape_2);
+          TileShape intersection = enlarged_shape_1.intersection(enlarged_shape_2);
           if (intersection.dimension() == 2) {
             ClearanceViolation curr_violation =
-                new ClearanceViolation(this, curr_item, intersection, shape_layer(i));
+                new ClearanceViolation(this, curr_item, intersection, shape_layer(i), minimum_clearance, actual_clearance);
             result.add(curr_violation);
           }
         }
       }
     }
     return result;
+  }
+
+  private double calculate_clearance_between_two_shapes(TileShape shape_1, TileShape shape_2, double minimum_clearance)
+  {
+    for (double clearance = minimum_clearance; clearance > 0; clearance--) {
+      double cl_offset = 0.5 * clearance;
+      TileShape enlarged_shape_1 = (TileShape) shape_1.enlarge(cl_offset);
+      TileShape enlarged_shape_2 = (TileShape) shape_2.enlarge(cl_offset);
+
+      TileShape intersection = enlarged_shape_1.intersection(enlarged_shape_2);
+      if (intersection.dimension() != 2)
+      {
+        return clearance;
+      }
+    }
+
+    return 0;
   }
 
   /**

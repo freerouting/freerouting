@@ -49,17 +49,17 @@ public interface Shape extends Area {
   double smallest_radius();
 
   /**
-   * Returns the offset shape of this shape by offseting the boundary by p_distance to the outside.
-   * The result instsnce may be of a different class than this instance. (For example an enlarged
+   * Returns the offset shape of this shape by offsetting the boundary by p_distance to the outside.
+   * The result instance may be of a different class than this instance. (For example an enlarged
    * IntBox is an IntOctagon).
    */
   Shape enlarge(double p_offset);
 
-  /** checks, if the this shape and p_other have an nonempty intersection. */
+  /** Checks, if  this shape and p_other have a nonempty intersection. */
   boolean intersects(Shape p_other);
 
   /**
-   * Cuts out the parts of p_polyline in the interiour of this shape and returns a list of the
+   * Cuts out the parts of p_polyline in the interior of this shape and returns a list of the
    * remaining pieces of p_polyline. Pieces completely contained in the border of this shape are not
    * returned.
    */

@@ -9,7 +9,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
 
   private final java.util.ResourceBundle resources;
 
-  /** Creates a new instance of IncompletesWindow */
+  /** Creates a new instance of clearance violations window */
   public WindowClearanceViolations(BoardFrame p_board_frame) {
     super(p_board_frame);
     this.resources =
@@ -82,20 +82,25 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
   private class ViolationInfo implements Comparable<ViolationInfo>, WindowObjectInfo.Printable {
     public final ClearanceViolation violation;
     public final FloatPoint location;
+    public final double delta;
 
     public ViolationInfo(ClearanceViolation p_violation) {
       this.violation = p_violation;
       FloatPoint board_location = p_violation.shape.centre_of_gravity();
       this.location =
           board_frame.board_panel.board_handling.coordinate_transform.board_to_user(board_location);
+      this.delta = (p_violation.expected_clearance - p_violation.actual_clearance) / 10000.0;
     }
 
     public String toString() {
       app.freerouting.board.LayerStructure layer_structure =
           board_frame.board_panel.board_handling.get_routing_board().layer_structure;
       String result =
-          item_info(violation.first_item)
-              + " - "
+          "There is a "
+              + String.format("%.4f", delta)
+              + " mm clearance violation between "
+              + item_info(violation.first_item)
+              + " and "
               + item_info(violation.second_item)
               + " "
               + resources.getString("at")
@@ -104,7 +109,8 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
               + " "
               + resources.getString("on_layer")
               + " "
-              + layer_structure.arr[violation.layer].name;
+              + layer_structure.arr[violation.layer].name
+              + ".";
       return result;
     }
 

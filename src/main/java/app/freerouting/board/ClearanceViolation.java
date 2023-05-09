@@ -13,13 +13,17 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
   public final ConvexShape shape;
   /** The layer of the clearance violation */
   public final int layer;
+  public final double expected_clearance;
+  public final double actual_clearance;
+
   /** Creates a new instance of ClearanceViolation */
-  public ClearanceViolation(
-      Item p_first_item, Item p_second_item, ConvexShape p_shape, int p_layer) {
+  public ClearanceViolation(Item p_first_item, Item p_second_item, ConvexShape p_shape, int p_layer, double p_expected_clearance, double p_actual_clearance) {
     first_item = p_first_item;
     second_item = p_second_item;
     shape = p_shape;
     layer = p_layer;
+    expected_clearance = p_expected_clearance;
+    actual_clearance = p_actual_clearance;
   }
 
   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
@@ -38,5 +42,8 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     first_item.print_info(p_window, p_locale);
     p_window.indent();
     second_item.print_info(p_window, p_locale);
+    p_window.newline();
+    p_window.indent();
+    p_window.append(" The expected clearance between the two would be " + (this.expected_clearance / 10000.0) + " mm, but the actual is  "+ (this.actual_clearance / 10000.0) + " mm.");
   }
 }
