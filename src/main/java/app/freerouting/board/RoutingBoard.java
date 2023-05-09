@@ -33,7 +33,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
   /** the area marked for optimizing the route */
   transient ChangedArea changed_area;
-  /** Contains the database for the autorouzte algorithm. */
+  /** Contains the database for the auto-route algorithm. */
   private transient AutorouteEngine autoroute_engine = null;
   private transient Item shove_failing_obstacle = null;
   private transient int shove_failing_layer = -1;
@@ -61,7 +61,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
         p_test_level);
   }
 
-  /** Maintains the autorouter database after p_item is inserted, changed, or deleted. */
+  /** Maintains the auto-router database after p_item is inserted, changed, or deleted. */
   public void additional_update_after_change(Item p_item) {
     if (p_item == null) {
       return;
@@ -88,7 +88,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * Removes the items in p_item_list and pulls the nearby rubbertraces tight. Returns false, if
+   * Removes the items in p_item_list and pulls the nearby rubber traces tight. Returns false, if
    * some items could not be removed, because they were fixed.
    */
   public boolean remove_items_and_pull_tight(
@@ -171,7 +171,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    * Optimizes the route in the internally marked area. If p_net_no {@literal >} 0, only traces with
    * net number p_net_no are optimized. If p_clip_shape != null the optimizing is restricted to
    * p_clip_shape. p_trace_cost_arr is used for optimizing vias and may be null. If
-   * p_stoppable_thread != null, the agorithm can be requested to be stopped. If p_time_limit
+   * p_stoppable_thread != null, the algorithm can be requested to be stopped. If p_time_limit
    * {@literal >} 0; the algorithm will be stopped after p_time_limit Milliseconds.
    */
   public void opt_changed_area(
@@ -196,7 +196,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    * Optimizes the route in the internally marked area. If p_net_no {@literal >} 0, only traces with
    * net number p_net_no are optimized. If p_clip_shape != null the optimizing is restricted to
    * p_clip_shape. p_trace_cost_arr is used for optimizing vias and may be null. If
-   * p_stoppable_thread != null, the agorithm can be requested to be stopped. If p_time_limit
+   * p_stoppable_thread != null, the algorithm can be requested to be stopped. If p_time_limit
    * {@literal >} 0; the algorithm will be stopped after p_time_limit Milliseconds. If p_keep_point
    * != null, traces on layer p_keep_point_layer containing p_keep_point will also contain this
    * point after optimizing.
@@ -404,7 +404,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   /**
    * Translates p_drill_item by p_vector and shoves obstacle traces aside. Returns false, if that
    * was not possible without creating clearance violations. In this case the database may be
-   * damaged, so that an undo becomes necessesary.
+   * damaged, so that an undo becomes necessary.
    */
   public boolean move_drill_item(
       DrillItem p_drill_item,
@@ -460,8 +460,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * Checks, if there is an item near by sharing a net with p_net_no_arr, from where a routing can
-   * start, or where the routig can connect to. If p_from_item != null, items, which are connected
+   * Checks, if there is an item nearby sharing a net with p_net_no_arr, from where a routing can
+   * start, or where the routing can connect to. If p_from_item != null, items, which are connected
    * to p_from_item, are ignored. Returns null, if no item is found, If p_layer {@literal <} 0, the
    * layer is ignored
    */
@@ -528,7 +528,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   /**
    * Shoves aside traces, so that a via with the input parameters can be inserted without clearance
    * violations. If the shove failed, the database may be damaged, so that an undo becomes
-   * necessesary. Returns false, if the forced via failed.
+   * necessary. Returns false, if the forced via failed.
    */
   public boolean forced_via(
       ViaInfo p_via_info,
@@ -581,7 +581,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    * Tries to insert a trace line with the input parameters from p_from_corner to p_to_corner while
    * shoving aside obstacle traces and vias. Returns the last point between p_from_corner and
    * p_to_corner, to which the shove succeeded. Returns null, if the check was inaccurate and an
-   * error accured while inserting, so that the database may be damaged and an undo necessary.
+   * error occurred while inserting, so that the database may be damaged and an undo necessary.
    * p_search_tree is the shape search tree used in the algorithm.
    */
   public Point insert_forced_trace_segment(
@@ -677,7 +677,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   /**
    * Tries to insert a trace polyline with the input parameters from while shoving aside obstacle
    * traces and vias. Returns the last corner on the polyline, to which the shove succeeded. Returns
-   * null, if the check was inaccurate and an error accured while inserting, so that the database
+   * null, if the check was inaccurate and an error occurred while inserting, so that the database
    * may be damaged and an undo necessary.
    */
   public Point insert_forced_trace_polyline(
@@ -932,8 +932,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * Initialises the autoroute database for routing a connection. If p_retain_autoroute_database,
-   * the autoroute database is retained and maintained after the algorithm for performance reasons.
+   * Initialises the auto-route database for routing a connection. If p_retain_autoroute_database,
+   * the auto-route database is retained and maintained after the algorithm for performance reasons.
    */
   public AutorouteEngine init_autoroute(
       int p_net_no,
@@ -952,7 +952,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
     return this.autoroute_engine;
   }
 
-  /** Clears the autoroute database in case it was retained. */
+  /** Clears the auto-route database in case it was retained. */
   public void finish_autoroute() {
     if (this.autoroute_engine != null) {
       this.autoroute_engine.clear();
@@ -1350,7 +1350,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * Returns, if the autoroute database is maintained outside the outoroute algorithm while changing
+   * Returns, if the auto-route database is maintained outside the outo-route algorithm while changing
    * items on rhe board.
    */
   boolean is_maintaining_autoroute_database() {
@@ -1358,7 +1358,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * Sets, if the autoroute database has to be maintained outside the outoroute algorithm while
+   * Sets, if the auto-route database has to be maintained outside the auto-route algorithm while
    * changing items on rhe board.
    */
   void set_maintaining_autoroute_database(boolean p_value) {

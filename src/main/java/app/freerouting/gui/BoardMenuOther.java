@@ -30,6 +30,24 @@ public class BoardMenuOther extends javax.swing.JMenu {
 
     other_menu.add(snapshots);
 
+
+//    javax.swing.JMenuItem delete_all_tracks = new javax.swing.JMenuItem();
+//    snapshots.setText(other_menu.resources.getString("delete_all_tracks_and_vias"));
+//    snapshots.setToolTipText(other_menu.resources.getString("delete_all_tracks_and_vias_tooltip"));
+//    delete_all_tracks.addActionListener(
+//        new java.awt.event.ActionListener() {
+//          public void actionPerformed(java.awt.event.ActionEvent evt) {
+//            // delete all tracks and vias
+//            other_menu.board_frame.board_panel.board_handling.get_routing_board().delete_all_tracks_and_vias();
+//            // reset autorouter
+//            other_menu.board_frame.board_panel.board_handling.get_routing_board().clear_all_item_temporary_autoroute_data();
+//            // redraw the board
+//            other_menu.board_frame.board_panel.board_handling.repaint();
+//          }
+//        });
+//
+//    other_menu.add(delete_all_tracks);
+
     return other_menu;
   }
 }
