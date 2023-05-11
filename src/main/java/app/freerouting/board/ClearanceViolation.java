@@ -44,6 +44,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     second_item.print_info(p_window, p_locale);
     p_window.newline();
     p_window.indent();
-    p_window.append(" The expected clearance between the two would be " + (this.expected_clearance / 10000.0) + " mm, but the actual is  "+ (this.actual_clearance / 10000.0) + " mm.");
+    String clearance_violation_info_expected_clearance = String.format(resources.getString("clearance_violation_info_expected_clearance"), (this.expected_clearance / 10000.0), (this.actual_clearance / 10000.0));
+    p_window.append(clearance_violation_info_expected_clearance);
   }
 }

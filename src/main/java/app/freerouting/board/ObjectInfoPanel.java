@@ -5,29 +5,29 @@ public interface ObjectInfoPanel {
   /** Appends p_string to the window. Returns false, if that was not possible. */
   boolean append(String p_string);
 
-  /** Appends p_string in bold styleto the window. Returns false, if that was not possible. */
+  /** Appends p_string in bold style to the window. Returns false, if that was not possible. */
   boolean append_bold(String p_string);
 
   /**
-   * Appends p_value to the window after transforming it to the user coordinate sytem. Returns
+   * Appends p_value to the window after transforming it to the user coordinate system. Returns
    * false, if that was not possible.
    */
   boolean append(double p_value);
 
   /**
-   * Appends p_value to the window without transforming it to the user coordinate sytem. Returns
+   * Appends p_value to the window without transforming it to the user coordinate system. Returns
    * false, if that was not possible.
    */
   boolean append_without_transforming(double p_value);
 
   /**
-   * Appends p_point to the window after transforming to the user coordinate sytem. Returns false,
+   * Appends p_point to the window after transforming to the user coordinate system. Returns false,
    * if that was not possible.
    */
   boolean append(app.freerouting.geometry.planar.FloatPoint p_point);
 
   /**
-   * Appends p_shape to the window after transforming to the user coordinate sytem. Returns false,
+   * Appends p_shape to the window after transforming to the user coordinate system. Returns false,
    * if that was not possible.
    */
   boolean append(app.freerouting.geometry.planar.Shape p_shape, java.util.Locale p_locale);

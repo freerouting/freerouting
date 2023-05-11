@@ -348,9 +348,9 @@ public class MainApplication extends WindowBase {
       {
         LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = modification_time.format(formatter);
+        String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"), modification_time.format(formatter));
 
-        if (WindowMessage.confirm("There is a snapshot file with the modification time of '"+formattedDateTime+"' available.\nWould you like to load it?"))
+        if (WindowMessage.confirm(load_snapshot_confirmation))
         {
           new_frame.load_intermediate_stage_file();
         }
@@ -363,23 +363,35 @@ public class MainApplication extends WindowBase {
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
         String errorMessage = resources.getString("auto_start_routing_message");
         JTextArea textArea = new JTextArea(errorMessage);
-        JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE);
+        JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
         JDialog dialog = optionPane.createDialog(resources.getString("auto_start_routing_title"));
+
+        // Set the default button to "Start now"
+        JButton startButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[1];
+        startButton.setText(resources.getString("auto_start_routing_startnow_button"));
+        startButton.addActionListener(e -> {
+          ModelDialogTimeout = 0;
+          dialog.dispose();
+        });
+
+        // Set the cancel button to "Cancel (20)"
         JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
-        cancelButton.setText(resources.getString("auto_start_routing_button") + "(20)");
+        cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(20)");
         cancelButton.addActionListener(e -> {
           ModelDialogTimeout = -1;
           dialog.dispose();
         });
 
+        dialog.pack();
+
+        // Set the timeout to 20 seconds
         MainApplication.ModelDialogTimeout = 20;
         Timer timer = new Timer(1000, null);
         timer.addActionListener(
             e -> {
               ModelDialogTimeout--;
               if (ModelDialogTimeout > 0) {
-                // dialog.setTitle("Error (closing in " + timeout + " seconds)");
-                cancelButton.setText(resources.getString("auto_start_routing_button") + "(" + ModelDialogTimeout + ")");
+                cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(" + ModelDialogTimeout + ")");
               } else {
                 timer.stop();
                 dialog.dispose();
@@ -389,6 +401,7 @@ public class MainApplication extends WindowBase {
 
         dialog.setVisible(true);
 
+        // Start the autorouter if the user didn't cancel the dialog
         if (ModelDialogTimeout >= 0)
         {
           // Start the autorouter
@@ -552,9 +565,9 @@ public class MainApplication extends WindowBase {
     {
       LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      String formattedDateTime = modification_time.format(formatter);
+      String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"), modification_time.format(formatter));
 
-      if (WindowMessage.confirm("There is a snapshot file with the modification time of '"+formattedDateTime+"' available.\nWould you like to load it?"))
+      if (WindowMessage.confirm(load_snapshot_confirmation))
       {
         new_frame.load_intermediate_stage_file();
       }

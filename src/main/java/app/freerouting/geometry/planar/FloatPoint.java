@@ -485,7 +485,7 @@ public class FloatPoint implements java.io.Serializable {
   public String to_string(java.util.Locale p_locale) {
     java.text.NumberFormat nf = java.text.NumberFormat.getInstance(p_locale);
     nf.setMaximumFractionDigits(4);
-    return (" (" + nf.format(x) + " , " + nf.format(y) + ") ");
+    return ("(" + nf.format(x) + " , " + nf.format(y) + ")");
   }
 
   public String toString() {

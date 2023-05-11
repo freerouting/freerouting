@@ -95,23 +95,16 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     public String toString() {
       app.freerouting.board.LayerStructure layer_structure =
           board_frame.board_panel.board_handling.get_routing_board().layer_structure;
-      String result =
-          "There is a "
-              + String.format("%.4f", delta)
-              + " mm clearance violation between "
-              + item_info(violation.first_item)
-              + " and "
-              + item_info(violation.second_item)
-              + " "
-              + resources.getString("at")
-              + " "
-              + location.to_string(board_frame.get_locale())
-              + " "
-              + resources.getString("on_layer")
-              + " "
-              + layer_structure.arr[violation.layer].name
-              + ".";
-      return result;
+
+      String clearance_violation_message_template = resources.getString("clearance_violation_message_template");
+      return String.format(
+          clearance_violation_message_template,
+          delta,
+          item_info(violation.first_item),
+          item_info(violation.second_item),
+          location.to_string(board_frame.get_locale()),
+          layer_structure.arr[violation.layer].name
+      );
     }
 
     public void print_info(
