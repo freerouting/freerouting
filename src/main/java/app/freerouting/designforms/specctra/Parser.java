@@ -117,7 +117,7 @@ public class Parser extends ScopeKeyword {
     }
     if (!p_reduced) {
       p_file.new_line();
-      p_file.write("(generated_by_freeroute)");
+      p_file.write("(generated_by_freerouting)");
     }
     p_file.end_scope();
   }
@@ -179,7 +179,7 @@ public class Parser extends ScopeKeyword {
           }
         } else if (next_token == WRITE_RESOLUTION) {
           p_par.write_resolution = read_write_solution(p_par);
-        } else if (next_token == GENERATED_BY_FREEROUTE) {
+        } else if (next_token == GENERATED_BY_FREEROUTING) {
           p_par.dsn_file_generated_by_host = false;
           // skip the closing bracket
           skip_scope(p_par.scanner);

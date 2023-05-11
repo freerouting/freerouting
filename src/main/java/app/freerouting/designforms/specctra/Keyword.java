@@ -35,7 +35,7 @@ public class Keyword {
   public static final Keyword FORTYFIVE_DEGREE = new Keyword("fortyfive_degree");
   public static final Keyword FROMTO = new Keyword("fromto");
   public static final Keyword FRONT = new Keyword("front");
-  public static final Keyword GENERATED_BY_FREEROUTE = new Keyword("generated_by_freeroute");
+  public static final Keyword GENERATED_BY_FREEROUTING = new Keyword("generated_by_freerouting");
   public static final Keyword HORIZONTAL = new Keyword("horizontal");
   public static final Keyword HOST_CAD = new Keyword("host_cad");
   public static final Keyword HOST_VERSION = new Keyword("host_version");

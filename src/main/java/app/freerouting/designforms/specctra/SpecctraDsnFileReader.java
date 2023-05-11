@@ -1386,7 +1386,7 @@ class SpecctraDsnFileReader implements IJFlexScanner {
           break;
         case 118:
           {
-            return Keyword.GENERATED_BY_FREEROUTE;
+            return Keyword.GENERATED_BY_FREEROUTING;
           }
         case 199:
           break;
