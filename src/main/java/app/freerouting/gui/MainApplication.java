@@ -367,7 +367,7 @@ public class MainApplication extends WindowBase {
         JDialog dialog = optionPane.createDialog(resources.getString("auto_start_routing_title"));
 
         // Set the default button to "Start now"
-        JButton startButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[1];
+        JButton startButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
         startButton.setText(resources.getString("auto_start_routing_startnow_button"));
         startButton.addActionListener(e -> {
           ModelDialogTimeout = 0;
@@ -375,7 +375,7 @@ public class MainApplication extends WindowBase {
         });
 
         // Set the cancel button to "Cancel (20)"
-        JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
+        JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[1];
         cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(20)");
         cancelButton.addActionListener(e -> {
           ModelDialogTimeout = -1;
