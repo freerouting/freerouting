@@ -16,14 +16,21 @@ public class IndentFileWriter extends java.io.OutputStreamWriter {
   }
 
   /** Begins a new scope. */
-  public void start_scope() {
-    new_line();
+  public void start_scope(boolean newLine) {
+    if (newLine) {
+      new_line();
+    }
+
     try {
       write(BEGIN_SCOPE);
     } catch (java.io.IOException e) {
       FRLogger.error("IndentFileWriter.start_scope: unable to write to file", e);
     }
     ++current_indent_level;
+  }
+
+  public void start_scope() {
+    start_scope(true);
   }
 
   /** Closes the latest open scope. */

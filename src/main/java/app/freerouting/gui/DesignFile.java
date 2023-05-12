@@ -221,6 +221,7 @@ public class DesignFile {
       } catch (Exception e) {
         output_stream = null;
       }
+      design_name = new_file.toString();
       if (p_board_frame.board_panel.board_handling.export_to_dsn_file(
           output_stream, design_name, false)) {
         p_board_frame.screen_messages.set_status_message(

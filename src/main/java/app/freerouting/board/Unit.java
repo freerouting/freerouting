@@ -1,6 +1,6 @@
 package app.freerouting.board;
 
-/** Enum for the userunits inch, mil or millimeter. */
+/** Enum for the user units inch, mil or millimeter. */
 public enum Unit implements java.io.Serializable {
   MIL {
     public String toString() {

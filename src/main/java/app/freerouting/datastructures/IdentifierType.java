@@ -28,7 +28,6 @@ public class IdentifierType {
     }
 
     try {
-
       // if the name contains our quote character, we must remove it
       if (p_name.contains(string_quote))
       {
