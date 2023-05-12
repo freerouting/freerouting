@@ -722,8 +722,8 @@ public class Route {
     }
     FloatPoint pin_center = start_pin.get_center().to_float();
     double curr_clearance =
-        this.board.rules.clearance_matrix.value(
-            this.clearance_class, start_pin.clearance_class_no(), this.layer);
+        this.board.rules.clearance_matrix.get_value(
+            this.clearance_class, start_pin.clearance_class_no(), this.layer, true);
     double pin_neck_down_distance =
         2 * (0.5 * start_pin.get_max_width(this.layer) + curr_clearance);
     if (pin_center.distance(this.prev_corner.to_float()) >= pin_neck_down_distance) {
@@ -778,8 +778,8 @@ public class Route {
     }
     FloatPoint pin_center = target_pin.get_center().to_float();
     double curr_clearance =
-        this.board.rules.clearance_matrix.value(
-            this.clearance_class, target_pin.clearance_class_no(), this.layer);
+        this.board.rules.clearance_matrix.get_value(
+            this.clearance_class, target_pin.clearance_class_no(), this.layer, true);
     double pin_neck_down_distance =
         2 * (0.5 * target_pin.get_max_width(this.layer) + curr_clearance);
     if (pin_center.distance(p_from_corner.to_float()) >= pin_neck_down_distance) {

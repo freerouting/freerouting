@@ -12,6 +12,7 @@ public class ClearanceMatrix implements java.io.Serializable {
   private int class_count;
   private Row[] row; // vector of class_count rows of the clearance matrix
   private final int[] max_value_on_layer; //  maximum clearance value for each layer
+  private final int clearance_safety_margin = 32;
 
   /**
    * Creates a new instance for p_class_count clearance classes on p_layer_count layers. p_names is
@@ -79,7 +80,6 @@ public class ClearanceMatrix implements java.io.Serializable {
   public void set_default_value(int p_layer, int p_value) {
     for (int i = 1; i < class_count; ++i) {
       for (int j = 1; j < class_count; ++j) {
-
         set_value(i, j, p_layer, p_value);
       }
     }
@@ -104,9 +104,10 @@ public class ClearanceMatrix implements java.io.Serializable {
     Row curr_row = row[p_j];
     MatrixEntry curr_entry = curr_row.column[p_i];
 
-    // assure, that the clearance value is even, and round it down, if it is odd
+    // assure, that the clearance value is positive and even, and round it up, if it is odd
+    // NOTE: why does it need to be even?
     int value = Math.max(p_value, 0);
-    value -= value % 2;
+    value += value % 2;
 
     curr_entry.layer[p_layer] = value;
     curr_row.max_value[p_layer] = Math.max(curr_row.max_value[p_layer], p_value);
@@ -117,7 +118,7 @@ public class ClearanceMatrix implements java.io.Serializable {
    * Gets the required spacing of clearance classes with index p_i and p_j on p_layer. This value
    * will be always an even integer.
    */
-  public int value(int p_i, int p_j, int p_layer) {
+  public int get_value(int p_i, int p_j, int p_layer, boolean p_add_safety_margin) {
     if (p_i < 0
         || p_i >= class_count
         || p_j < 0
@@ -126,7 +127,10 @@ public class ClearanceMatrix implements java.io.Serializable {
         || p_layer >= layer_structure.arr.length) {
       return 0;
     }
-    return row[p_j].column[p_i].layer[p_layer];
+
+    int value_from_the_matrix = row[p_j].column[p_i].layer[p_layer];
+
+    return p_add_safety_margin ? value_from_the_matrix + clearance_safety_margin : value_from_the_matrix;
   }
 
   /**
@@ -196,9 +200,9 @@ public class ClearanceMatrix implements java.io.Serializable {
     return layer_structure.arr.length;
   }
 
-  /** Return the clearance compensation value of p_clearance_class_no on layer p_layer. */
+  /** Returns the clearance compensation value of p_clearance_class_no on layer p_layer. */
   public int clearance_compensation_value(int p_clearance_class_no, int p_layer) {
-    return (this.value(p_clearance_class_no, p_clearance_class_no, p_layer) + 1) / 2;
+    return (this.get_value(p_clearance_class_no, p_clearance_class_no, p_layer, false) + 1) / 2;
   }
 
   /**
@@ -237,14 +241,14 @@ public class ClearanceMatrix implements java.io.Serializable {
 
     for (int i = 0; i < old_class_count; ++i) {
       for (int j = 0; j < this.layer_structure.arr.length; ++j) {
-        int default_value = this.value(1, i, j);
+        int default_value = this.get_value(1, i, j, false);
         this.set_value(old_class_count, i, j, default_value);
         this.set_value(i, old_class_count, j, default_value);
       }
     }
 
     for (int j = 0; j < this.layer_structure.arr.length; ++j) {
-      int default_value = this.value(1, 1, j);
+      int default_value = this.get_value(1, 1, j, false);
       this.set_value(old_class_count, old_class_count, j, default_value);
     }
     return true;
@@ -257,7 +261,7 @@ public class ClearanceMatrix implements java.io.Serializable {
 
     Row[] new_row = new Row[this.class_count];
 
-    // remove the  matrix entry with inded p_index in to each old row
+    // remove the  matrix entry with index p_index in to each old row
     int new_row_index = 0;
     for (int i = 0; i < old_class_count; ++i) {
       if (i == p_index) {

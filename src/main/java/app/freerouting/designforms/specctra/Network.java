@@ -736,7 +736,7 @@ public class Network extends ScopeKeyword {
       // the existing values.
       for (int i = 1; i < p_clearance_matrix.get_class_count(); ++i) {
         for (int j = 0; j < p_clearance_matrix.get_layer_count(); ++j) {
-          int curr_value = Math.max(p_clearance_matrix.value(class_no, i, j), curr_clearance);
+          int curr_value = Math.max(p_clearance_matrix.get_value(class_no, i, j, false), curr_clearance);
           p_clearance_matrix.set_value(class_no, i, j, curr_value);
           p_clearance_matrix.set_value(i, class_no, j, curr_value);
         }
@@ -804,7 +804,7 @@ public class Network extends ScopeKeyword {
     for (int i = 1; i < p_clearance_matrix.get_class_count(); ++i) {
 
       for (int j = 0; j < p_clearance_matrix.get_layer_count(); ++j) {
-        int curr_value = p_clearance_matrix.value(net_class_no, i, j);
+        int curr_value = p_clearance_matrix.get_value(net_class_no, i, j, false);
         p_clearance_matrix.set_value(result, i, j, curr_value);
         p_clearance_matrix.set_value(i, result, j, curr_value);
       }

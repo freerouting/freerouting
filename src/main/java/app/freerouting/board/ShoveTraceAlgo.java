@@ -122,7 +122,7 @@ public class ShoveTraceAlgo {
         double curr_ok_lenght = projection - via_radius - p_trace_half_width;
         if (!search_tree.is_clearance_compensation_used()) {
           curr_ok_lenght -=
-              cl_matrix.value(p_cl_type, curr_shove_via.clearance_class_no(), p_layer);
+              cl_matrix.get_value(p_cl_type, curr_shove_via.clearance_class_no(), p_layer, true);
         }
         if (curr_ok_lenght <= 0) {
           return 0;
@@ -185,7 +185,8 @@ public class ShoveTraceAlgo {
                       curr_substitute_trace.clearance_class_no(), p_layer);
             } else {
               curr_ok_length -=
-                  cl_matrix.value(p_cl_type, curr_substitute_trace.clearance_class_no(), p_layer);
+                  cl_matrix.get_value(
+                      p_cl_type, curr_substitute_trace.clearance_class_no(), p_layer, true);
             }
             if (curr_ok_length <= 0) {
               return 0;

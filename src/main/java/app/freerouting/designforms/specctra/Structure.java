@@ -709,7 +709,7 @@ class Structure extends ScopeKeyword {
     }
     for (int i = 1; i < p_cl_matrix.get_class_count(); ++i) {
       for (int j = i; j < p_cl_matrix.get_class_count(); ++j) {
-        if (p_cl_matrix.value(i, j, p_layer_1) != p_cl_matrix.value(i, j, p_layer_2)) {
+        if (p_cl_matrix.get_value(i, j, p_layer_1, false) != p_cl_matrix.get_value(i, j, p_layer_2, false)) {
           return false;
         }
       }

@@ -229,8 +229,8 @@ public class InsertFoundConnectionAlgo {
     }
     FloatPoint pin_center = p_pin.get_center().to_float();
     double curr_clearance =
-        this.board.rules.clearance_matrix.value(
-            ctrl.trace_clearance_class_no, p_pin.clearance_class_no(), p_layer);
+        this.board.rules.clearance_matrix.get_value(
+            ctrl.trace_clearance_class_no, p_pin.clearance_class_no(), p_layer, true);
     double pin_neck_down_distance = 2 * (0.5 * p_pin.get_max_width(p_layer) + curr_clearance);
     if (pin_center.distance(p_to_corner.to_float()) >= pin_neck_down_distance) {
       return null;

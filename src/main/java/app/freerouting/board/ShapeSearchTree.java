@@ -68,8 +68,8 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       return 0;
     }
     int result =
-        board.rules.clearance_matrix.value(
-                p_clearance_class_no, this.compensated_clearance_class_no, p_layer)
+        board.rules.clearance_matrix.get_value(
+                p_clearance_class_no, this.compensated_clearance_class_no, p_layer, false)
             - board.rules.clearance_matrix.clearance_compensation_value(
                 this.compensated_clearance_class_no, p_layer);
     return Math.max(result, 0);
@@ -408,10 +408,10 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
 
   /**
    * Looks up all entries in the search tree, so that inserting an item with shape p_shape, net
-   * number p_net_no, clearance type p_cl_type and layer p_layer whould produce a clearance
+   * number p_net_no, clearance type p_cl_type and layer p_layer would produce a clearance
    * violation, and puts them into the set p_obstacle_entries. The elements in p_obstacle_entries
    * are of type TreeEntry. if p_layer < 0, the layer is ignored. Used only internally, because the
-   * clearance compensation is not taken iinnto account.
+   * clearance compensation is not taken into account.
    */
   void overlapping_tree_entries_with_clearance(
       ConvexShape p_shape,
@@ -456,7 +456,8 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
         }
       }
       if (!ignore_item) {
-        int curr_clearance = cl_matrix.value(p_cl_type, curr_item.clearance_class_no(), p_layer);
+        int curr_clearance =
+            cl_matrix.get_value(p_cl_type, curr_item.clearance_class_no(), p_layer, true);
         EntrySortedByClearance sorted_ob = new EntrySortedByClearance(curr_leaf, curr_clearance);
         sorted_items.add(sorted_ob);
       }

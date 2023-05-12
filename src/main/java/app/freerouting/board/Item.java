@@ -362,8 +362,9 @@ public abstract class Item
           }
 
           // Calculate the expected minimum clearance between these two shapes
-          double minimum_clearance = board.rules.clearance_matrix.value(
-              curr_item.clearance_class, this.clearance_class, shape_layer(i));
+          double minimum_clearance =
+              board.rules.clearance_matrix.get_value(
+                  curr_item.clearance_class, this.clearance_class, shape_layer(i), false);
 
           double actual_clearance = 0;
 

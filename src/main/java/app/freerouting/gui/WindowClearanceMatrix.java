@@ -445,7 +445,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
               Float curr_table_value =
                   (float)
                       board_handling.coordinate_transform.board_to_user(
-                          clearance_matrix.value(i, j, 0));
+                          clearance_matrix.get_value(i, j, 0, false));
               this.data[i][j + 1] = curr_table_value;
             }
           } else if (p_layer == ComboBoxLayer.INNER_LAYER_INDEX) {
@@ -457,14 +457,14 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
               Float curr_table_value =
                   (float)
                       board_handling.coordinate_transform.board_to_user(
-                          clearance_matrix.value(i, j, 1));
+                          clearance_matrix.get_value(i, j, 1, false));
               this.data[i][j + 1] = curr_table_value;
             }
           } else {
             Float curr_table_value =
                 (float)
                     board_handling.coordinate_transform.board_to_user(
-                        clearance_matrix.value(i, j, p_layer));
+                        clearance_matrix.get_value(i, j, p_layer, false));
             this.data[i][j + 1] = curr_table_value;
           }
         }

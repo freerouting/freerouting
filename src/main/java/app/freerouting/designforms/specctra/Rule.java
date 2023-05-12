@@ -158,17 +158,17 @@ public abstract class Rule {
     // write the default clearance rule
     int default_cl_no = app.freerouting.rules.BoardRules.default_clearance_class();
     int default_board_clearance =
-        p_par.board.rules.clearance_matrix.value(default_cl_no, default_cl_no, p_layer);
+        p_par.board.rules.clearance_matrix.get_value(default_cl_no, default_cl_no, p_layer, false);
     double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
     p_par.file.new_line();
-    p_par.file.write("(clear ");
+    p_par.file.write("(clearance ");
     p_par.file.write((Double.valueOf(default_clearance)).toString());
     p_par.file.write(")");
     // write the Smd_to_turn_gap
     Double smd_to_turn_dist =
         p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
     p_par.file.new_line();
-    p_par.file.write("(clear ");
+    p_par.file.write("(clearance ");
     p_par.file.write(smd_to_turn_dist.toString());
     p_par.file.write(" (type smd_to_turn_gap))");
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
@@ -188,13 +188,13 @@ public abstract class Rule {
       throws java.io.IOException {
     app.freerouting.rules.ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     for (int i = p_cl_class; i < p_max_cl_class; ++i) {
-      int curr_board_clearance = cl_matrix.value(p_cl_class, i, p_layer);
+      int curr_board_clearance = cl_matrix.get_value(p_cl_class, i, p_layer, false);
       if (curr_board_clearance == p_default_clearance) {
         continue;
       }
       double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
       p_par.file.new_line();
-      p_par.file.write("(clear ");
+      p_par.file.write("(clearance ");
       p_par.file.write((Double.valueOf(curr_clearance)).toString());
       p_par.file.write(" (type ");
       p_par.identifier_type.write(cl_matrix.get_name(p_cl_class), p_par.file);
