@@ -12,6 +12,7 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import java.awt.Color;
@@ -48,6 +49,7 @@ public abstract class Item
   private boolean on_the_board = false;
   /** Temporary data used in the autoroute algorithm. */
   private transient app.freerouting.autoroute.ItemAutorouteInfo autoroute_info = null;
+  public double smallest_clearance;
 
   Item(
       int[] p_net_no_arr,
@@ -357,7 +359,7 @@ public abstract class Item
           TileShape shape_2 =
               curr_item.get_tree_shape(default_tree, curr_entry.shape_index_in_object);
           if (shape_1 == null || shape_2 == null) {
-            FRLogger.warn("Item.clearance_violations: unexpected  null shape");
+            FRLogger.warn("Item.clearance_violations: unexpected null shape");
             continue;
           }
 
@@ -376,7 +378,11 @@ public abstract class Item
             enlarged_shape_1 = (TileShape) shape_1.enlarge(cl_offset);
             enlarged_shape_2 = (TileShape) shape_2.enlarge(cl_offset);
 
-            actual_clearance = calculate_clearance_between_two_shapes(shape_1, shape_2, minimum_clearance);
+            actual_clearance = calculate_clearance_between_two_shapes(shape_1, shape_2, minimum_clearance + ClearanceMatrix.clearance_safety_margin);
+            if ((smallest_clearance == 0) || (actual_clearance < smallest_clearance))
+            {
+              smallest_clearance = actual_clearance;
+            }
           }
 
           TileShape intersection = enlarged_shape_1.intersection(enlarged_shape_2);

@@ -380,11 +380,11 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("trace"));
-    p_window.append(" " + resources.getString("from"));
+    p_window.append(" " + resources.getString("from") + " ");
     p_window.append(this.first_corner().to_float());
-    p_window.append(resources.getString("to"));
+    p_window.append(" " + resources.getString("to") + " ");
     p_window.append(this.last_corner().to_float());
-    p_window.append(resources.getString("on_layer") + " ");
+    p_window.append(" " + resources.getString("on_layer") + " ");
     p_window.append(this.board.layer_structure.arr[this.layer].name);
     p_window.append(", " + resources.getString("width") + " ");
     p_window.append(2 * this.half_width);

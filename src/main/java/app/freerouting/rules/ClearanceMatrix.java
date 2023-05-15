@@ -12,7 +12,7 @@ public class ClearanceMatrix implements java.io.Serializable {
   private int class_count;
   private Row[] row; // vector of class_count rows of the clearance matrix
   private final int[] max_value_on_layer; //  maximum clearance value for each layer
-  private final int clearance_safety_margin = 32;
+  public static final int clearance_safety_margin = 16;
 
   /**
    * Creates a new instance for p_class_count clearance classes on p_layer_count layers. p_names is
@@ -119,6 +119,7 @@ public class ClearanceMatrix implements java.io.Serializable {
    * will be always an even integer.
    */
   public int get_value(int p_i, int p_j, int p_layer, boolean p_add_safety_margin) {
+
     if (p_i < 0
         || p_i >= class_count
         || p_j < 0

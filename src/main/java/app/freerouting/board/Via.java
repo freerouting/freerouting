@@ -205,7 +205,7 @@ public class Via extends DrillItem implements java.io.Serializable {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via"));
-    p_window.append(" " + resources.getString("at"));
+    p_window.append(" " + resources.getString("at") + " ");
     p_window.append(this.get_center().to_float());
     p_window.append(", " + resources.getString("padstack"));
     p_window.append(padstack.name, resources.getString("padstack_info"), padstack);

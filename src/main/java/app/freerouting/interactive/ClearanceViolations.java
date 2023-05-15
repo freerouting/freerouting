@@ -4,24 +4,37 @@ import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.Item;
 import app.freerouting.boardgraphics.GraphicsContext;
 import java.awt.Graphics;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /** To display the clearance violations between items on the screen. */
 public class ClearanceViolations {
 
   /** The list of clearance violations. */
-  public final Collection<ClearanceViolation> list;
+  public final LinkedList<ClearanceViolation> list;
+
+  /** The smallest clearance between items. */
+  public double global_smallest_clearance = Double.MAX_VALUE;
 
   /** Creates a new instance of ClearanceViolations */
   public ClearanceViolations(Collection<Item> p_item_list) {
-    this.list = new LinkedList<ClearanceViolation>();
+
+    this.list = new LinkedList<>();
     Iterator<Item> it = p_item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
       this.list.addAll(curr_item.clearance_violations());
+      if ((curr_item.smallest_clearance > 0) && (curr_item.smallest_clearance < global_smallest_clearance)) {
+        global_smallest_clearance = curr_item.smallest_clearance;
+      }
     }
+
+    this.list.sort((o1, o2) -> -Double.compare(o1.expected_clearance - o1.actual_clearance, o2.expected_clearance - o2.actual_clearance));
   }
 
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {

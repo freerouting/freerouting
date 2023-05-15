@@ -1191,7 +1191,7 @@ public class BasicBoard implements java.io.Serializable {
     if (rules == null || rules.clearance_matrix == null) {
       return 0;
     }
-    return rules.clearance_matrix.get_value(p_class_1, p_class_2, p_layer, false);
+    return rules.clearance_matrix.get_value(p_class_1, p_class_2, p_layer, true);
   }
 
   /** returns the biggest half width of all traces on the board. */

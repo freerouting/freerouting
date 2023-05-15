@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.ClearanceViolations;
+import app.freerouting.logger.FRLogger;
 import java.util.List;
 
 public class WindowClearanceViolations extends WindowObjectListWithFilter {
@@ -34,6 +35,13 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       this.add_to_list(curr_violation);
     }
     this.list.setVisibleRowCount(Math.min(sorted_set.size(), DEFAULT_TABLE_SIZE));
+
+    if (clearance_violations.global_smallest_clearance != Double.MAX_VALUE) {
+      FRLogger.info(
+          String.format(
+              "The smallest clearance on the board is %.4f mm.",
+              clearance_violations.global_smallest_clearance / 10000.0));
+    }
   }
 
   protected void select_instances() {
@@ -59,10 +67,12 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     String result;
     if (p_item instanceof app.freerouting.board.Pin) {
       result = resources.getString("pin");
-    } else if (p_item instanceof app.freerouting.board.Via) {
-      result = resources.getString("via");
-    } else if (p_item instanceof app.freerouting.board.Trace) {
-      result = resources.getString("trace");
+    } else if (p_item instanceof app.freerouting.board.Via via) {
+      app.freerouting.rules.Net curr_net = p_item.board.rules.nets.get(via.get_net_no(0));
+      result = resources.getString("via") + " [" + curr_net.name + "]";
+    } else if (p_item instanceof app.freerouting.board.Trace trace) {
+      app.freerouting.rules.Net curr_net = p_item.board.rules.nets.get(trace.get_net_no(0));
+      result = resources.getString("trace") + " [" + curr_net.name + "]";
     } else if (p_item instanceof app.freerouting.board.ConductionArea) {
       result = resources.getString("conduction_area");
     } else if (p_item instanceof app.freerouting.board.ObstacleArea) {
@@ -113,19 +123,19 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     }
 
     public int compareTo(ViolationInfo p_other) {
-      if (this.location.x > p_other.location.x) {
-        return 1;
-      }
-      if (this.location.x < p_other.location.x) {
+      if (this.delta > p_other.delta) {
         return -1;
+      } else if (this.delta < p_other.delta) {
+        return +1;
       }
-      if (this.location.y > p_other.location.y) {
-        return 1;
-      }
-      if (this.location.y < p_other.location.y) {
+
+      if (this.violation.layer < p_other.violation.layer) {
         return -1;
+      } else if (this.violation.layer > p_other.violation.layer) {
+        return +1;
       }
-      return this.violation.layer - p_other.violation.layer;
+
+      return 0;
     }
   }
 }

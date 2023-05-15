@@ -12,6 +12,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   /** The subwindows with information about selected object */
   protected final java.util.Collection<WindowObjectInfo> subwindows =
       new java.util.LinkedList<WindowObjectInfo>();
+
   private final javax.swing.JPanel main_panel;
   private final java.util.ResourceBundle resources;
   protected javax.swing.JLabel list_empty_message;
