@@ -29,6 +29,85 @@ class Structure extends ScopeKeyword {
   public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException {
     p_par.file.start_scope();
     p_par.file.write("structure");
+
+    // write the layer structure
+    write_layers(p_par);
+
+    // write the boundaries
+    write_boundaries(p_par);
+
+    // write the keepouts
+    write_keepouts(p_par);
+
+    // write the routing vias
+    write_via_padstacks(p_par.board.library, p_par.file, p_par.identifier_type);
+
+    // write the rules
+    write_default_rules(p_par);
+
+    // write the snap angles
+    write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
+
+    // write the control scope
+    write_control_scope(p_par.board.rules, p_par.file);
+
+    // write the autoroute settings
+    AutorouteSettings.write_scope(
+        p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
+
+    // write the conduction areas
+    write_conduction_areas(p_par);
+
+    p_par.file.end_scope();
+  }
+
+  static private void write_conduction_areas(WriteScopeParameter p_par) throws java.io.IOException {
+    Storable curr_ob = null;
+    Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
+    for (; ; ) {
+      curr_ob = p_par.board.item_list.read_object(it);
+      if (curr_ob == null) {
+        break;
+      }
+      if (!(curr_ob instanceof app.freerouting.board.ConductionArea)) {
+        continue;
+      }
+      app.freerouting.board.ConductionArea curr_area =
+          (app.freerouting.board.ConductionArea) curr_ob;
+      if (p_par.board.layer_structure.arr[curr_area.get_layer()].is_signal) {
+        // These conduction areas are written in the wiring scope.
+        continue;
+      }
+      Plane.write_scope(p_par, (app.freerouting.board.ConductionArea) curr_ob);
+    }
+  }
+
+  static private void write_keepouts(WriteScopeParameter p_par) throws java.io.IOException {
+    Storable curr_ob = null;
+    Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
+    for (; ; ) {
+      curr_ob = p_par.board.item_list.read_object(it);
+      if (curr_ob == null) {
+        break;
+      }
+      if (!(curr_ob instanceof app.freerouting.board.ObstacleArea)) {
+        continue;
+      }
+      app.freerouting.board.ObstacleArea curr_keepout =
+          (app.freerouting.board.ObstacleArea) curr_ob;
+      if (curr_keepout.get_component_no() != 0) {
+        // keepouts belonging to a component are not written individually.
+        continue;
+      }
+      if (curr_keepout instanceof app.freerouting.board.ConductionArea) {
+        // conduction area will be written later.
+        continue;
+      }
+      write_keepout_scope(p_par, curr_keepout);
+    }
+  }
+
+  static private void write_boundaries(WriteScopeParameter p_par) throws java.io.IOException {
     // write the bounding box
     p_par.file.start_scope();
     p_par.file.write("boundary");
@@ -64,77 +143,21 @@ class Structure extends ScopeKeyword {
       outline_shape.write_scope(p_par.file, p_par.identifier_type);
       p_par.file.end_scope();
     }
+  }
 
-    write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
-
-    // write the routing vias
-    write_via_padstacks(p_par.board.library, p_par.file, p_par.identifier_type);
-
-    // write the control scope
-    write_control_scope(p_par.board.rules, p_par.file);
-
-    write_default_rules(p_par);
-
-    // write the autoroute settings
-    AutorouteSettings.write_scope(
-        p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
-
-    // write the keepouts
-    it = p_par.board.item_list.start_read_object();
-    for (; ; ) {
-      curr_ob = p_par.board.item_list.read_object(it);
-      if (curr_ob == null) {
-        break;
-      }
-      if (!(curr_ob instanceof app.freerouting.board.ObstacleArea)) {
-        continue;
-      }
-      app.freerouting.board.ObstacleArea curr_keepout =
-          (app.freerouting.board.ObstacleArea) curr_ob;
-      if (curr_keepout.get_component_no() != 0) {
-        // keepouts belonging to a component are not written individually.
-        continue;
-      }
-      if (curr_keepout instanceof app.freerouting.board.ConductionArea) {
-        // conduction area will be written later.
-        continue;
-      }
-      write_keepout_scope(p_par, curr_keepout);
+  static void write_layers(WriteScopeParameter p_par) throws java.io.IOException {
+    for (int i = 0; i < p_par.board.layer_structure.arr.length; ++i) {
+      boolean write_layer_rule =
+          p_par.board.rules.get_default_net_class().get_trace_half_width(i)
+              != p_par.board.rules.get_default_net_class().get_trace_half_width(0)
+              || !clearance_equals(p_par.board.rules.clearance_matrix, i, 0);
+      Layer.write_scope(p_par, i, write_layer_rule);
     }
-
-    // write the conduction areas
-    it = p_par.board.item_list.start_read_object();
-    for (; ; ) {
-      curr_ob = p_par.board.item_list.read_object(it);
-      if (curr_ob == null) {
-        break;
-      }
-      if (!(curr_ob instanceof app.freerouting.board.ConductionArea)) {
-        continue;
-      }
-      app.freerouting.board.ConductionArea curr_area =
-          (app.freerouting.board.ConductionArea) curr_ob;
-      if (p_par.board.layer_structure.arr[curr_area.get_layer()].is_signal) {
-        // These conduction areas are written in the wiring scope.
-        continue;
-      }
-      Plane.write_scope(p_par, (app.freerouting.board.ConductionArea) curr_ob);
-    }
-    p_par.file.end_scope();
   }
 
   static void write_default_rules(WriteScopeParameter p_par) throws java.io.IOException {
     // write the default rule using 0 as default layer.
     Rule.write_default_rule(p_par, 0);
-
-    // write the layer structure
-    for (int i = 0; i < p_par.board.layer_structure.arr.length; ++i) {
-      boolean write_layer_rule =
-          p_par.board.rules.get_default_net_class().get_trace_half_width(i)
-                  != p_par.board.rules.get_default_net_class().get_trace_half_width(0)
-              || !clearance_equals(p_par.board.rules.clearance_matrix, i, 0);
-      Layer.write_scope(p_par, i, write_layer_rule);
-    }
   }
 
   private static void write_via_padstacks(
