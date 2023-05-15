@@ -58,7 +58,7 @@ public class SpecctraSesFileWriter {
         p_board.communication.coordinate_transform.dsn_to_board(1)
             / p_board.communication.resolution;
     CoordinateTransform coordinate_transform = new CoordinateTransform(scale_factor, 0, 0);
-    p_file.start_scope();
+    p_file.start_scope(false);
     p_file.write("session ");
     p_identifier_type.write(p_session_name, p_file);
     p_file.new_line();

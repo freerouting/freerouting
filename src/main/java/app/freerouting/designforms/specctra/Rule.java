@@ -4,6 +4,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /** Class for reading and writing rule scopes from dsn-files. */
 public abstract class Rule {
@@ -161,44 +162,77 @@ public abstract class Rule {
         p_par.board.rules.clearance_matrix.get_value(default_cl_no, default_cl_no, p_layer, false);
     double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
     p_par.file.new_line();
+    // write the default clearance
     p_par.file.write("(clearance ");
     p_par.file.write((Double.valueOf(default_clearance)).toString());
     p_par.file.write(")");
-    // write the Smd_to_turn_gap
+    // write the smd_to_turn_gap
     Double smd_to_turn_dist =
         p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
     p_par.file.new_line();
     p_par.file.write("(clearance ");
     p_par.file.write(smd_to_turn_dist.toString());
     p_par.file.write(" (type smd_to_turn_gap))");
-    int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
-    for (int i = 1; i <= cl_count; ++i) {
-      write_clearance_rules(p_par, p_layer, i, cl_count, default_board_clearance);
-    }
+
+    // write the named clearance rules from the clearance matrix
+    write_named_clearance_rules(p_par, p_layer);
+    //write_non_default_clearance_rules(p_par, p_layer, default_board_clearance);
+
     p_par.file.end_scope();
   }
 
   /** Write the clearance rules, which are different from the default clearance. */
-  private static void write_clearance_rules(
+  private static void write_non_default_clearance_rules(
       WriteScopeParameter p_par,
       int p_layer,
-      int p_cl_class,
-      int p_max_cl_class,
       int p_default_clearance)
       throws java.io.IOException {
+
     app.freerouting.rules.ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
-    for (int i = p_cl_class; i < p_max_cl_class; ++i) {
-      int curr_board_clearance = cl_matrix.get_value(p_cl_class, i, p_layer, false);
-      if (curr_board_clearance == p_default_clearance) {
+    int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
+
+    for (int i = 1; i <= cl_count; ++i) {
+      for (int j = i; j < cl_count; ++j) {
+        int curr_board_clearance = cl_matrix.get_value(i, j, p_layer, false);
+
+        if (curr_board_clearance == p_default_clearance) {
+          continue;
+        }
+
+        double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
+        p_par.file.new_line();
+        p_par.file.write("(clearance ");
+        p_par.file.write((Double.valueOf(curr_clearance)).toString());
+        p_par.file.write(" (type ");
+        p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
+        p_par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
+        p_par.identifier_type.write(cl_matrix.get_name(j), p_par.file);
+        p_par.file.write("))");
+      }
+    }
+  }
+
+  /** Write the clearance rules for the named classes in the clearance matrix. */
+  private static void write_named_clearance_rules(
+      WriteScopeParameter p_par,
+      int p_layer)
+      throws java.io.IOException {
+
+    app.freerouting.rules.ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
+    int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
+
+    for (int i = 1; i < cl_count; ++i) {
+      if (Objects.equals(cl_matrix.get_name(i), "default")) {
         continue;
       }
+
+      int curr_board_clearance = cl_matrix.get_value(i, i, p_layer, false);
       double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
+
       p_par.file.new_line();
       p_par.file.write("(clearance ");
       p_par.file.write((Double.valueOf(curr_clearance)).toString());
       p_par.file.write(" (type ");
-      p_par.identifier_type.write(cl_matrix.get_name(p_cl_class), p_par.file);
-      p_par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
       p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
       p_par.file.write("))");
     }

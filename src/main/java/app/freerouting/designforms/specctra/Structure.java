@@ -36,9 +36,6 @@ class Structure extends ScopeKeyword {
     // write the boundaries
     write_boundaries(p_par);
 
-    // write the keepouts
-    write_keepouts(p_par);
-
     // write the routing vias
     write_via_padstacks(p_par.board.library, p_par.file, p_par.identifier_type);
 
@@ -51,12 +48,15 @@ class Structure extends ScopeKeyword {
     // write the control scope
     write_control_scope(p_par.board.rules, p_par.file);
 
-    // write the autoroute settings
+    // write the auto-route settings
     AutorouteSettings.write_scope(
         p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
 
     // write the conduction areas
     write_conduction_areas(p_par);
+
+    // write the keepouts
+    write_keepouts(p_par);
 
     p_par.file.end_scope();
   }
@@ -231,11 +231,18 @@ class Structure extends ScopeKeyword {
       Shape dsn_hole = p_par.coordinate_transform.board_to_dsn(holes[i], keepout_layer);
       dsn_hole.write_hole_scope(p_par.file, p_par.identifier_type);
     }
+    // write clearance class if it's defined for this keepout area.
     if (p_keepout.clearance_class_no() > 0) {
-      Rule.write_item_clearance_class(
-          p_par.board.rules.clearance_matrix.get_name(p_keepout.clearance_class_no()),
-          p_par.file,
-          p_par.identifier_type);
+      // skip it if it's the default clearance class.
+      String clearance_name = p_par.board.rules.clearance_matrix.get_name(p_keepout.clearance_class_no());
+
+      if (!clearance_name.equals("default"))
+      {
+        Rule.write_item_clearance_class(
+            clearance_name,
+            p_par.file,
+            p_par.identifier_type);
+      }
     }
     p_par.file.end_scope();
   }
