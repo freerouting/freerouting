@@ -66,6 +66,7 @@ public class BoardFrame extends WindowBase {
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   java.util.Collection<BoardTemporarySubWindow> temporary_subwindows =
       new java.util.LinkedList<BoardTemporarySubWindow>();
+  private LocalDateTime intermediate_stage_file_last_saved_at = null;
   DesignFile design_file = null;
   private final java.util.Locale locale;
   /**
@@ -353,6 +354,12 @@ public class BoardFrame extends WindowBase {
 
 
   public boolean save_intermediate_stage_file() {
+    if ((intermediate_stage_file_last_saved_at != null) && (intermediate_stage_file_last_saved_at.plusSeconds(30).isAfter(LocalDateTime.now())))
+    {
+      return false;
+    }
+
+    intermediate_stage_file_last_saved_at = LocalDateTime.now();
     return save(this.design_file.get_snapshot_file());
   }
 
