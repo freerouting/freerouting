@@ -366,9 +366,9 @@ public class InsertFoundConnectionAlgo {
   }
 
   /**
-   * Searchs the cheapest via masks containing p_from_layer and p_to_layer, so that a forced via is
+   * Searches the cheapest via masks containing p_from_layer and p_to_layer, so that a forced via is
    * possible at p_location with this mask and inserts the via. Returns false, if no suitable via
-   * mmask was found or if the algorithm failed.
+   * mask was found or if the algorithm failed.
    */
   private boolean insert_via(Point p_location, int p_from_layer, int p_to_layer) {
     if (p_from_layer == p_to_layer) {

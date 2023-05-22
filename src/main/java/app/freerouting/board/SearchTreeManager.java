@@ -128,7 +128,7 @@ public class SearchTreeManager {
   }
 
   /**
-   * Returns the tree compensated for the clearance class with number p_clearance_vlass_no.
+   * Returns the tree compensated for the clearance class with number p_clearance_class_no.
    * Initialized the tree, if it is not yet allocated.
    */
   public ShapeSearchTree get_autoroute_tree(int p_clearance_class_no) {
