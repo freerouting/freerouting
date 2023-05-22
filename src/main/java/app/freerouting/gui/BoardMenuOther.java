@@ -1,5 +1,7 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.RoutingBoard;
+
 public class BoardMenuOther extends javax.swing.JMenu {
   private final BoardFrame board_frame;
   private final java.util.ResourceBundle resources;
@@ -38,10 +40,17 @@ public class BoardMenuOther extends javax.swing.JMenu {
     delete_all_tracks.addActionListener(
         new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
+            RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
             // delete all tracks and vias
-            other_menu.board_frame.board_panel.board_handling.get_routing_board().delete_all_tracks_and_vias();
-            // reset auto-router
-            other_menu.board_frame.board_panel.board_handling.get_routing_board().clear_all_item_temporary_autoroute_data();
+            board.delete_all_tracks_and_vias();
+            // update the board
+            other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
+            // create a deep copy of the routing board
+            board = other_menu.board_frame.board_panel.board_handling.deep_copy_routing_board();
+            // update the board again
+            other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
+            // create ratsnest
+            other_menu.board_frame.board_panel.board_handling.create_ratsnest();
             // redraw the board
             other_menu.board_frame.board_panel.board_handling.repaint();
           }

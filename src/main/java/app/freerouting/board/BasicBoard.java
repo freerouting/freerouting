@@ -1516,11 +1516,11 @@ public void delete_all_tracks_and_vias() {
     if (curr_item == null) {
       break;
     }
-    if ((curr_item instanceof Trace) && (!((Trace) curr_item).is_user_fixed())) {
+    if (curr_item instanceof Trace) {
       // delete the trace
       item_list.delete(curr_item);
     }
-    if ((curr_item instanceof Via) && (!((Via) curr_item).is_user_fixed())) {
+    if (curr_item instanceof Via) {
       // delete the via
       item_list.delete(curr_item);
     }

@@ -53,7 +53,7 @@ public class AutorouteEngine {
   private int expansion_room_instance_count = 0;
 
   /**
-   * Creates a new instance of BoardAoutorouteEngine If p_maintain_database, the autorouter database
+   * Creates a new instance of BoardAutorouteEngine If p_maintain_database, the autorouter database
    * is maintained after a connection is completed for performance reasons.
    */
   public AutorouteEngine(
