@@ -38,7 +38,8 @@ public class ScreenMessages {
     add_field.setText(empty_string);
 
     this.number_format = java.text.NumberFormat.getInstance(p_locale);
-    this.number_format.setMaximumFractionDigits(4);
+    this.number_format.setMinimumFractionDigits(2);
+    this.number_format.setMaximumFractionDigits(2);
   }
 
   /** Sets the message in the status field. */
@@ -111,7 +112,7 @@ public class ScreenMessages {
     Integer via_count = p_via_count;
     add_field.setText(resources.getString("via_count") + " " + via_count);
     layer_field.setText(
-        resources.getString("trace_length") + " " + this.number_format.format(p_trace_length));
+        resources.getString("trace_length") + " " + this.number_format.format(p_trace_length / 1000.0) + " mm");
   }
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */
