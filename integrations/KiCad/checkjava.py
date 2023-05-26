@@ -12,3 +12,6 @@ def get_java_version():
         if v.split(".")[0].isdigit():
             print(v)
             return
+
+if __name__ == '__main__':
+    get_java_version()
