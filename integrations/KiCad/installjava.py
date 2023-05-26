@@ -78,7 +78,7 @@ def install_java_jre_17():
 
     # Don't do anything if we already have the necessary Java executable
     java_found_exes = sorted(
-        glob.glob(java_exe_path),
+        filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)),
         # Find the latest JRE
         reverse=True,
         key=lambda p: re.search(r"jdk-17\.(\d+)\.(\d+)\+(\d+)-jre", p).groups()
