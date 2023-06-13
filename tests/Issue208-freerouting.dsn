@@ -1,0 +1,1588 @@
+(pcb C:\Projects\CNC\PCBDesign\GenericBoard\v1.0\freerouting.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "7.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  157000 -90000  20000 -90000  20000 -34000  157000 -34000
+            157000 -90000)
+    )
+    (plane GND (polygon F.Cu 0  228445 -226119  228571 -10996.8  15494 -10718.8  16790.8 -226000
+            228445 -226119))
+    (plane GND (polygon B.Cu 0  228445 -226119  228571 -10996.8  15494 -10718.8  16790.8 -226000
+            228445 -226119))
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 127)
+      (clearance 127.1)
+      (clearance 127.1 (type default_smd))
+      (clearance 31.75 (type smd_smd))
+    )
+  )
+  (placement
+    (component "SnapEDA:TE_1-2199119-5"
+      (place J6 144096.800000 -83581.800000 front 0.000000 (PN "1-2199119-5"))
+      (place J10 99635.800000 -40221.400000 front 180.000000 (PN "1-2199119-5"))
+      (place J8 54492.800000 -40301.200000 front 180.000000 (PN "1-2199119-5"))
+      (place J11 122258.800000 -40231.000000 front 180.000000 (PN "1-2199119-5"))
+      (place J7 31834.800000 -40408.800000 front 180.000000 (PN "1-2199119-5"))
+      (place J13 144797.000000 -40268.600000 front 180.000000 (PN "1-2199119-5"))
+      (place J3 76327.000000 -83616.800000 front 0.000000 (PN "1-2199119-5"))
+      (place J2 53804.800000 -83590.000000 front 0.000000 (PN "1-2199119-5"))
+      (place J5 121361.200000 -83642.200000 front 0.000000 (PN "1-2199119-5"))
+      (place J4 98780.600000 -83591.400000 front 0.000000 (PN "1-2199119-5"))
+      (place J1 31191.200000 -83638.600000 front 0.000000 (PN "1-2199119-5"))
+      (place J9 76945.200000 -40281.800000 front 180.000000 (PN "1-2199119-5"))
+    )
+    (component MountingHole:MountingHole_3.2mm_M3_Pad_Via
+      (place H3 146384.900000 -65358.900000 front 0.000000 (PN MountingHole_Pad))
+    )
+  )
+  (library
+    (image "SnapEDA:TE_1-2199119-5"
+      (outline (path signal 127  -10950 1000  -10950 -4000))
+      (outline (path signal 127  -10950 -4000  -9500 -4000))
+      (outline (path signal 127  9500 -4000  10950 -4000))
+      (outline (path signal 127  10950 -900  10950 1000))
+      (outline (path signal 127  10950 -4000  10950 -2100))
+      (outline (path signal 200  -9125 5075  -9140.88 5020.94  -9183.46 4984.04  -9239.23 4976.02
+            -9290.49 4999.43  -9320.95 5046.83  -9320.95 5103.17  -9290.49 5150.57
+            -9239.23 5173.98  -9183.46 5165.96  -9140.88 5129.06  -9125 5075))
+      (outline (path signal 50  -11200 4800  11200 4800))
+      (outline (path signal 50  -11200 -4800  -11200 4800))
+      (outline (path signal 50  11200 4800  11200 -4800))
+      (outline (path signal 50  11200 -4800  -11200 -4800))
+      (outline (path signal 127  -10950 3750  10950 3750))
+      (outline (path signal 127  -10950 -4000  -10950 3750))
+      (outline (path signal 127  10950 3750  10950 -4000))
+      (outline (path signal 127  10950 -4000  -10950 -4000))
+      (outline (path signal 200  -9150 4115  -9165.88 4060.94  -9208.46 4024.04  -9264.23 4016.02
+            -9315.49 4039.43  -9345.95 4086.83  -9345.95 4143.17  -9315.49 4190.57
+            -9264.23 4213.98  -9208.46 4205.96  -9165.88 4169.06  -9150 4115))
+      (pin Rect[T]Pad_300x1550_um 1 -9250 3775)
+      (pin Rect[T]Pad_300x1550_um 2 -9000 -3775)
+      (pin Rect[T]Pad_300x1550_um 3 -8750 3775)
+      (pin Rect[T]Pad_300x1550_um 4 -8500 -3775)
+      (pin Rect[T]Pad_300x1550_um 5 -8250 3775)
+      (pin Rect[T]Pad_300x1550_um 6 -8000 -3775)
+      (pin Rect[T]Pad_300x1550_um 7 -7750 3775)
+      (pin Rect[T]Pad_300x1550_um 8 -7500 -3775)
+      (pin Rect[T]Pad_300x1550_um 9 -7250 3775)
+      (pin Rect[T]Pad_300x1550_um 10 -7000 -3775)
+      (pin Rect[T]Pad_300x1550_um 11 -6750 3775)
+      (pin Rect[T]Pad_300x1550_um 12 -6500 -3775)
+      (pin Rect[T]Pad_300x1550_um 13 -6250 3775)
+      (pin Rect[T]Pad_300x1550_um 14 -6000 -3775)
+      (pin Rect[T]Pad_300x1550_um 15 -5750 3775)
+      (pin Rect[T]Pad_300x1550_um 16 -5500 -3775)
+      (pin Rect[T]Pad_300x1550_um 17 -5250 3775)
+      (pin Rect[T]Pad_300x1550_um 18 -5000 -3775)
+      (pin Rect[T]Pad_300x1550_um 19 -4750 3775)
+      (pin Rect[T]Pad_300x1550_um 20 -4500 -3775)
+      (pin Rect[T]Pad_300x1550_um 21 -4250 3775)
+      (pin Rect[T]Pad_300x1550_um 22 -4000 -3775)
+      (pin Rect[T]Pad_300x1550_um 23 -3750 3775)
+      (pin Rect[T]Pad_300x1550_um 24 -3500 -3775)
+      (pin Rect[T]Pad_300x1550_um 25 -3250 3775)
+      (pin Rect[T]Pad_300x1550_um 26 -3000 -3775)
+      (pin Rect[T]Pad_300x1550_um 27 -2750 3775)
+      (pin Rect[T]Pad_300x1550_um 28 -2500 -3775)
+      (pin Rect[T]Pad_300x1550_um 29 -2250 3775)
+      (pin Rect[T]Pad_300x1550_um 30 -2000 -3775)
+      (pin Rect[T]Pad_300x1550_um 31 -1750 3775)
+      (pin Rect[T]Pad_300x1550_um 32 -1500 -3775)
+      (pin Rect[T]Pad_300x1550_um 33 -1250 3775)
+      (pin Rect[T]Pad_300x1550_um 34 -1000 -3775)
+      (pin Rect[T]Pad_300x1550_um 35 -750 3775)
+      (pin Rect[T]Pad_300x1550_um 36 -500 -3775)
+      (pin Rect[T]Pad_300x1550_um 37 -250 3775)
+      (pin Rect[T]Pad_300x1550_um 38 0 -3775)
+      (pin Rect[T]Pad_300x1550_um 39 250 3775)
+      (pin Rect[T]Pad_300x1550_um 40 500 -3775)
+      (pin Rect[T]Pad_300x1550_um 41 750 3775)
+      (pin Rect[T]Pad_300x1550_um 42 1000 -3775)
+      (pin Rect[T]Pad_300x1550_um 43 1250 3775)
+      (pin Rect[T]Pad_300x1550_um 44 1500 -3775)
+      (pin Rect[T]Pad_300x1550_um 45 1750 3775)
+      (pin Rect[T]Pad_300x1550_um 46 2000 -3775)
+      (pin Rect[T]Pad_300x1550_um 47 2250 3775)
+      (pin Rect[T]Pad_300x1550_um 48 2500 -3775)
+      (pin Rect[T]Pad_300x1550_um 49 2750 3775)
+      (pin Rect[T]Pad_300x1550_um 50 3000 -3775)
+      (pin Rect[T]Pad_300x1550_um 51 3250 3775)
+      (pin Rect[T]Pad_300x1550_um 52 3500 -3775)
+      (pin Rect[T]Pad_300x1550_um 53 3750 3775)
+      (pin Rect[T]Pad_300x1550_um 54 4000 -3775)
+      (pin Rect[T]Pad_300x1550_um 55 4250 3775)
+      (pin Rect[T]Pad_300x1550_um 56 4500 -3775)
+      (pin Rect[T]Pad_300x1550_um 57 4750 3775)
+      (pin Rect[T]Pad_300x1550_um 58 5000 -3775)
+      (pin Rect[T]Pad_300x1550_um 67 7250 3775)
+      (pin Rect[T]Pad_300x1550_um 68 7500 -3775)
+      (pin Rect[T]Pad_300x1550_um 69 7750 3775)
+      (pin Rect[T]Pad_300x1550_um 70 8000 -3775)
+      (pin Rect[T]Pad_300x1550_um 71 8250 3775)
+      (pin Rect[T]Pad_300x1550_um 72 8500 -3775)
+      (pin Rect[T]Pad_300x1550_um 73 8750 3775)
+      (pin Rect[T]Pad_300x1550_um 74 9000 -3775)
+      (pin Rect[T]Pad_300x1550_um 75 9250 3775)
+      (pin Rect[T]Pad_1200x2750_um SH1 -10350 3000)
+      (pin Rect[T]Pad_1200x2750_um SH2 10350 3000)
+      (keepout "" (circle F.Cu 501100 -10000 -1500))
+      (keepout "" (circle B.Cu 501100 -10000 -1500))
+      (keepout "" (circle F.Cu 501600 10000 -1500))
+      (keepout "" (circle B.Cu 501600 10000 -1500))
+    )
+    (image MountingHole:MountingHole_3.2mm_M3_Pad_Via
+      (outline (path signal 150  3200 0  3180.58 -352.026  3122.55 -699.779  3026.61 -1039.04
+            2893.94 -1365.68  2726.14 -1675.75  2525.25 -1965.48  2293.7 -2231.35
+            2034.32 -2470.13  1750.23 -2678.93  1444.91 -2855.21  1122.04 -2996.84
+            785.554 -3102.08  439.531 -3169.67  88.174 -3198.78  -264.254 -3189.07
+            -613.474 -3140.64  -955.247 -3054.1  -1285.42 -2930.47  -1600 -2771.28
+            -1895.15 -2578.45  -2167.3 -2354.32  -2413.14 -2101.61  -2629.69 -1823.39
+            -2814.32 -1523.03  -2964.78 -1204.19  -3079.26 -870.731  -3156.36 -526.703
+            -3195.14 -176.281  -3195.14 176.281  -3156.36 526.703  -3079.26 870.731
+            -2964.78 1204.19  -2814.32 1523.03  -2629.69 1823.39  -2413.14 2101.61
+            -2167.3 2354.32  -1895.15 2578.45  -1600 2771.28  -1285.42 2930.47
+            -955.247 3054.1  -613.474 3140.64  -264.254 3189.07  88.174 3198.78
+            439.531 3169.67  785.554 3102.08  1122.04 2996.84  1444.91 2855.21
+            1750.23 2678.93  2034.32 2470.13  2293.7 2231.35  2525.25 1965.48
+            2726.14 1675.75  2893.94 1365.68  3026.61 1039.04  3122.55 699.779
+            3180.58 352.026  3200 0))
+      (outline (path signal 50  3450 0  3430.45 -366.713  3372.04 -729.27  3275.42 -1083.57
+            3141.69 -1425.58  2972.36 -1751.45  2769.36 -2057.47  2534.97 -2340.18
+            2271.86 -2596.37  1983.02 -2823.14  1671.7 -3017.93  1341.44 -3178.53
+            995.987 -3303.11  639.246 -3390.26  275.262 -3439  -91.841 -3448.78
+            -457.903 -3419.48  -818.777 -3351.43  -1170.37 -3245.42  -1508.71 -3102.63
+            -1829.95 -2924.68  -2130.46 -2713.6  -2406.83 -2471.78  -2655.93 -2201.94
+            -2874.93 -1907.16  -3061.36 -1590.77  -3213.11 -1256.35  -3328.45 -907.704
+            -3406.08 -548.769  -3445.11 -183.617  -3445.11 183.617  -3406.08 548.769
+            -3328.45 907.704  -3213.11 1256.35  -3061.36 1590.77  -2874.93 1907.16
+            -2655.93 2201.94  -2406.83 2471.78  -2130.46 2713.6  -1829.95 2924.68
+            -1508.71 3102.63  -1170.37 3245.42  -818.777 3351.43  -457.903 3419.48
+            -91.841 3448.78  275.262 3439  639.246 3390.26  995.987 3303.11
+            1341.44 3178.53  1671.7 3017.93  1983.02 2823.14  2271.86 2596.37
+            2534.97 2340.18  2769.36 2057.47  2972.36 1751.45  3141.69 1425.58
+            3275.42 1083.57  3372.04 729.27  3430.45 366.713  3450 0))
+      (pin Round[A]Pad_800_um 1 -2400 0)
+      (pin Round[A]Pad_800_um 1@1 -1697.06 1697.06)
+      (pin Round[A]Pad_800_um 1@2 -1697.06 -1697.06)
+      (pin Round[A]Pad_800_um 1@3 0 2400)
+      (pin Round[A]Pad_6400_um 1@4 0 0)
+      (pin Round[A]Pad_800_um 1@5 0 -2400)
+      (pin Round[A]Pad_800_um 1@6 1697.06 1697.06)
+      (pin Round[A]Pad_800_um 1@7 1697.06 -1697.06)
+      (pin Round[A]Pad_800_um 1@8 2400 0)
+    )
+    (padstack Round[A]Pad_6400_um
+      (shape (circle F.Cu 6400))
+      (shape (circle B.Cu 6400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_800_um
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_300x1550_um
+      (shape (rect F.Cu -150 -775 150 775))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200x2750_um
+      (shape (rect F.Cu -600 -1375 600 1375))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins J6-72 J6-SH1 J6-SH2 J10-72 J10-SH1 J10-SH2 J8-72 J8-SH1 J8-SH2 J11-72
+        J11-SH1 J11-SH2 J7-72 J7-SH1 J7-SH2 J13-72 J13-SH1 J13-SH2 J3-72 J3-SH1 J3-SH2
+        J2-72 J2-SH1 J2-SH2 J5-72 J5-SH1 J5-SH2 J4-72 J4-SH1 J4-SH2 H3-1 H3-1@1 H3-1@2
+        H3-1@3 H3-1@4 H3-1@5 H3-1@6 H3-1@7 H3-1@8 J1-72 J1-SH1 J1-SH2 J9-72 J9-SH1
+        J9-SH2)
+    )
+    (net +5V
+      (pins J6-70 J10-70 J8-70 J11-70 J7-70 J13-70 J3-70 J2-70 J5-70 J4-70 J1-70 J9-70)
+    )
+    (net IO13
+      (pins J1-8)
+    )
+    (net IO4
+      (pins J1-18)
+    )
+    (net IO5
+      (pins J1-20)
+    )
+    (net IO6
+      (pins J1-22)
+    )
+    (net IO7
+      (pins J1-24)
+    )
+    (net IO15
+      (pins J1-26)
+    )
+    (net IO16
+      (pins J1-28)
+    )
+    (net IO9
+      (pins J1-2)
+    )
+    (net IO10
+      (pins J1-4)
+    )
+    (net IO11
+      (pins J1-6)
+    )
+    (net IO21
+      (pins J1-12)
+    )
+    (net IO36
+      (pins J1-56)
+    )
+    (net IO37
+      (pins J1-54)
+    )
+    (net IO38
+      (pins J1-52)
+    )
+    (net IO42
+      (pins J1-44)
+    )
+    (net IO39
+      (pins J1-50)
+    )
+    (net +3.3V
+      (pins J6-74 J10-74 J8-74 J11-74 J7-74 J13-74 J3-74 J2-74 J5-74 J4-74 J1-74 J9-74)
+    )
+    (net IO40
+      (pins J1-48)
+    )
+    (net IO41
+      (pins J1-46)
+    )
+    (net "Net-(J7-P1)"
+      (pins J8-2 J7-1)
+    )
+    (net "Net-(J7-P3)"
+      (pins J8-4 J7-3)
+    )
+    (net "Net-(J7-P5)"
+      (pins J8-6 J7-5)
+    )
+    (net "Net-(J7-P7)"
+      (pins J8-8 J7-7)
+    )
+    (net IO8
+      (pins J1-34)
+    )
+    (net IO18
+      (pins J1-32)
+    )
+    (net IO17
+      (pins J1-30)
+    )
+    (net IO14
+      (pins J1-10)
+    )
+    (net IO47
+      (pins J1-14)
+    )
+    (net IO43
+      (pins J1-40)
+    )
+    (net IO2
+      (pins J1-38)
+    )
+    (net IO1
+      (pins J1-36)
+    )
+    (net "Net-(J7-P9)"
+      (pins J8-10 J7-9)
+    )
+    (net "Net-(J7-P11)"
+      (pins J8-12 J7-11)
+    )
+    (net "Net-(J7-P13)"
+      (pins J8-14 J7-13)
+    )
+    (net "Net-(J7-P15)"
+      (pins J8-16 J7-15)
+    )
+    (net "Net-(J7-P17)"
+      (pins J8-18 J7-17)
+    )
+    (net "Net-(J7-P19)"
+      (pins J8-20 J7-19)
+    )
+    (net "Net-(J7-P21)"
+      (pins J8-22 J7-21)
+    )
+    (net "Net-(J7-P23)"
+      (pins J8-24 J7-23)
+    )
+    (net "Net-(J7-P25)"
+      (pins J8-26 J7-25)
+    )
+    (net "Net-(J7-P27)"
+      (pins J8-28 J7-27)
+    )
+    (net "Net-(J7-P29)"
+      (pins J8-30 J7-29)
+    )
+    (net "Net-(J7-P31)"
+      (pins J8-32 J7-31)
+    )
+    (net "Net-(J7-P33)"
+      (pins J8-34 J7-33)
+    )
+    (net "Net-(J7-P35)"
+      (pins J8-36 J7-35)
+    )
+    (net "Net-(J7-P37)"
+      (pins J8-38 J7-37)
+    )
+    (net "Net-(J7-P39)"
+      (pins J8-40 J7-39)
+    )
+    (net "Net-(J7-P41)"
+      (pins J8-42 J7-41)
+    )
+    (net "Net-(J7-P43)"
+      (pins J8-44 J7-43)
+    )
+    (net "Net-(J7-P45)"
+      (pins J8-46 J7-45)
+    )
+    (net "Net-(J7-P47)"
+      (pins J8-48 J7-47)
+    )
+    (net "Net-(J7-P49)"
+      (pins J8-50 J7-49)
+    )
+    (net "Net-(J7-P51)"
+      (pins J8-52 J7-51)
+    )
+    (net "Net-(J7-P53)"
+      (pins J8-54 J7-53)
+    )
+    (net "Net-(J7-P55)"
+      (pins J8-56 J7-55)
+    )
+    (net "Net-(J7-P57)"
+      (pins J8-58 J7-57)
+    )
+    (net O1
+      (pins J7-2)
+    )
+    (net O2
+      (pins J7-4)
+    )
+    (net O3
+      (pins J7-6)
+    )
+    (net "Net-(J1-P1)"
+      (pins J2-2 J1-1)
+    )
+    (net "Net-(J1-P3)"
+      (pins J2-4 J1-3)
+    )
+    (net "Net-(J1-P5)"
+      (pins J2-6 J1-5)
+    )
+    (net "Net-(J1-P7)"
+      (pins J2-8 J1-7)
+    )
+    (net "Net-(J1-P9)"
+      (pins J2-10 J1-9)
+    )
+    (net "Net-(J1-P11)"
+      (pins J2-12 J1-11)
+    )
+    (net "Net-(J1-P13)"
+      (pins J2-14 J1-13)
+    )
+    (net "Net-(J1-P15)"
+      (pins J2-16 J1-15)
+    )
+    (net "Net-(J1-P17)"
+      (pins J2-18 J1-17)
+    )
+    (net "Net-(J1-P19)"
+      (pins J2-20 J1-19)
+    )
+    (net "Net-(J1-P21)"
+      (pins J2-22 J1-21)
+    )
+    (net "Net-(J1-P23)"
+      (pins J2-24 J1-23)
+    )
+    (net "Net-(J1-P25)"
+      (pins J2-26 J1-25)
+    )
+    (net "Net-(J1-P27)"
+      (pins J2-28 J1-27)
+    )
+    (net "Net-(J1-P29)"
+      (pins J2-30 J1-29)
+    )
+    (net "Net-(J1-P31)"
+      (pins J2-32 J1-31)
+    )
+    (net "Net-(J1-P33)"
+      (pins J2-34 J1-33)
+    )
+    (net "Net-(J1-P35)"
+      (pins J2-36 J1-35)
+    )
+    (net "Net-(J1-P37)"
+      (pins J2-38 J1-37)
+    )
+    (net "Net-(J1-P39)"
+      (pins J2-40 J1-39)
+    )
+    (net "Net-(J1-P41)"
+      (pins J2-42 J1-41)
+    )
+    (net "Net-(J1-P43)"
+      (pins J2-44 J1-43)
+    )
+    (net "Net-(J1-P45)"
+      (pins J2-46 J1-45)
+    )
+    (net "Net-(J1-P47)"
+      (pins J2-48 J1-47)
+    )
+    (net "Net-(J1-P49)"
+      (pins J2-50 J1-49)
+    )
+    (net "Net-(J1-P51)"
+      (pins J2-52 J1-51)
+    )
+    (net "Net-(J1-P53)"
+      (pins J2-54 J1-53)
+    )
+    (net "Net-(J1-P55)"
+      (pins J2-56 J1-55)
+    )
+    (net "Net-(J1-P57)"
+      (pins J2-58 J1-57)
+    )
+    (net ID2
+      (pins J6-67 J10-67 J8-67 J11-67 J7-67 J13-67 J3-67 J2-67 J5-67 J4-67 J1-67 J9-67)
+    )
+    (net ID3
+      (pins J6-69 J10-69 J8-69 J11-69 J7-69 J13-69 J3-69 J2-69 J5-69 J4-69 J1-69 J9-69)
+    )
+    (net ID4
+      (pins J6-71 J10-71 J8-71 J11-71 J7-71 J13-71 J3-71 J2-71 J5-71 J4-71 J1-71 J9-71)
+    )
+    (net ID5
+      (pins J6-73 J10-73 J8-73 J11-73 J7-73 J13-73 J3-73 J2-73 J5-73 J4-73 J1-73 J9-73)
+    )
+    (net ID6
+      (pins J6-75 J10-75 J8-75 J11-75 J7-75 J13-75 J3-75 J2-75 J5-75 J4-75 J1-75 J9-75)
+    )
+    (net ID1
+      (pins J6-68 J10-68 J8-68 J11-68 J7-68 J13-68 J3-68 J2-68 J5-68 J4-68 J1-68 J9-68)
+    )
+    (net "Net-(J2-P1)"
+      (pins J3-2 J2-1)
+    )
+    (net "Net-(J2-P3)"
+      (pins J3-4 J2-3)
+    )
+    (net "Net-(J2-P5)"
+      (pins J3-6 J2-5)
+    )
+    (net "Net-(J2-P7)"
+      (pins J3-8 J2-7)
+    )
+    (net "Net-(J2-P9)"
+      (pins J3-10 J2-9)
+    )
+    (net "Net-(J2-P11)"
+      (pins J3-12 J2-11)
+    )
+    (net "Net-(J2-P13)"
+      (pins J3-14 J2-13)
+    )
+    (net "Net-(J2-P15)"
+      (pins J3-16 J2-15)
+    )
+    (net "Net-(J2-P17)"
+      (pins J3-18 J2-17)
+    )
+    (net "Net-(J2-P19)"
+      (pins J3-20 J2-19)
+    )
+    (net "Net-(J2-P21)"
+      (pins J3-22 J2-21)
+    )
+    (net "Net-(J2-P23)"
+      (pins J3-24 J2-23)
+    )
+    (net "Net-(J2-P25)"
+      (pins J3-26 J2-25)
+    )
+    (net "Net-(J2-P27)"
+      (pins J3-28 J2-27)
+    )
+    (net "Net-(J2-P29)"
+      (pins J3-30 J2-29)
+    )
+    (net "Net-(J2-P31)"
+      (pins J3-32 J2-31)
+    )
+    (net "Net-(J2-P33)"
+      (pins J3-34 J2-33)
+    )
+    (net "Net-(J2-P35)"
+      (pins J3-36 J2-35)
+    )
+    (net "Net-(J2-P37)"
+      (pins J3-38 J2-37)
+    )
+    (net "Net-(J2-P39)"
+      (pins J3-40 J2-39)
+    )
+    (net "Net-(J2-P41)"
+      (pins J3-42 J2-41)
+    )
+    (net "Net-(J2-P43)"
+      (pins J3-44 J2-43)
+    )
+    (net "Net-(J2-P45)"
+      (pins J3-46 J2-45)
+    )
+    (net "Net-(J2-P47)"
+      (pins J3-48 J2-47)
+    )
+    (net "Net-(J2-P49)"
+      (pins J3-50 J2-49)
+    )
+    (net "Net-(J2-P51)"
+      (pins J3-52 J2-51)
+    )
+    (net "Net-(J2-P53)"
+      (pins J3-54 J2-53)
+    )
+    (net "Net-(J2-P55)"
+      (pins J3-56 J2-55)
+    )
+    (net "Net-(J2-P57)"
+      (pins J3-58 J2-57)
+    )
+    (net "Net-(J3-P1)"
+      (pins J3-1 J4-2)
+    )
+    (net "Net-(J3-P3)"
+      (pins J3-3 J4-4)
+    )
+    (net "Net-(J3-P5)"
+      (pins J3-5 J4-6)
+    )
+    (net "Net-(J3-P7)"
+      (pins J3-7 J4-8)
+    )
+    (net "Net-(J3-P9)"
+      (pins J3-9 J4-10)
+    )
+    (net "Net-(J3-P11)"
+      (pins J3-11 J4-12)
+    )
+    (net "Net-(J3-P13)"
+      (pins J3-13 J4-14)
+    )
+    (net "Net-(J3-P15)"
+      (pins J3-15 J4-16)
+    )
+    (net "Net-(J3-P17)"
+      (pins J3-17 J4-18)
+    )
+    (net "Net-(J3-P19)"
+      (pins J3-19 J4-20)
+    )
+    (net "Net-(J3-P21)"
+      (pins J3-21 J4-22)
+    )
+    (net "Net-(J3-P23)"
+      (pins J3-23 J4-24)
+    )
+    (net "Net-(J3-P25)"
+      (pins J3-25 J4-26)
+    )
+    (net "Net-(J3-P27)"
+      (pins J3-27 J4-28)
+    )
+    (net "Net-(J3-P29)"
+      (pins J3-29 J4-30)
+    )
+    (net "Net-(J3-P31)"
+      (pins J3-31 J4-32)
+    )
+    (net "Net-(J3-P33)"
+      (pins J3-33 J4-34)
+    )
+    (net "Net-(J3-P35)"
+      (pins J3-35 J4-36)
+    )
+    (net "Net-(J3-P37)"
+      (pins J3-37 J4-38)
+    )
+    (net "Net-(J3-P39)"
+      (pins J3-39 J4-40)
+    )
+    (net "Net-(J3-P41)"
+      (pins J3-41 J4-42)
+    )
+    (net "Net-(J3-P43)"
+      (pins J3-43 J4-44)
+    )
+    (net "Net-(J3-P45)"
+      (pins J3-45 J4-46)
+    )
+    (net "Net-(J3-P47)"
+      (pins J3-47 J4-48)
+    )
+    (net "Net-(J3-P49)"
+      (pins J3-49 J4-50)
+    )
+    (net "Net-(J3-P51)"
+      (pins J3-51 J4-52)
+    )
+    (net "Net-(J3-P53)"
+      (pins J3-53 J4-54)
+    )
+    (net "Net-(J3-P55)"
+      (pins J3-55 J4-56)
+    )
+    (net "Net-(J3-P57)"
+      (pins J3-57 J4-58)
+    )
+    (net "Net-(J4-P1)"
+      (pins J5-2 J4-1)
+    )
+    (net "Net-(J4-P3)"
+      (pins J5-4 J4-3)
+    )
+    (net "Net-(J4-P5)"
+      (pins J5-6 J4-5)
+    )
+    (net "Net-(J4-P7)"
+      (pins J5-8 J4-7)
+    )
+    (net "Net-(J4-P9)"
+      (pins J5-10 J4-9)
+    )
+    (net "Net-(J4-P11)"
+      (pins J5-12 J4-11)
+    )
+    (net "Net-(J4-P13)"
+      (pins J5-14 J4-13)
+    )
+    (net "Net-(J4-P15)"
+      (pins J5-16 J4-15)
+    )
+    (net "Net-(J4-P17)"
+      (pins J5-18 J4-17)
+    )
+    (net "Net-(J4-P19)"
+      (pins J5-20 J4-19)
+    )
+    (net "Net-(J4-P21)"
+      (pins J5-22 J4-21)
+    )
+    (net "Net-(J4-P23)"
+      (pins J5-24 J4-23)
+    )
+    (net "Net-(J4-P25)"
+      (pins J5-26 J4-25)
+    )
+    (net "Net-(J4-P27)"
+      (pins J5-28 J4-27)
+    )
+    (net "Net-(J4-P29)"
+      (pins J5-30 J4-29)
+    )
+    (net "Net-(J4-P31)"
+      (pins J5-32 J4-31)
+    )
+    (net "Net-(J4-P33)"
+      (pins J5-34 J4-33)
+    )
+    (net "Net-(J4-P35)"
+      (pins J5-36 J4-35)
+    )
+    (net "Net-(J4-P37)"
+      (pins J5-38 J4-37)
+    )
+    (net "Net-(J4-P39)"
+      (pins J5-40 J4-39)
+    )
+    (net "Net-(J4-P41)"
+      (pins J5-42 J4-41)
+    )
+    (net "Net-(J4-P43)"
+      (pins J5-44 J4-43)
+    )
+    (net "Net-(J4-P45)"
+      (pins J5-46 J4-45)
+    )
+    (net "Net-(J4-P47)"
+      (pins J5-48 J4-47)
+    )
+    (net "Net-(J4-P49)"
+      (pins J5-50 J4-49)
+    )
+    (net "Net-(J4-P51)"
+      (pins J5-52 J4-51)
+    )
+    (net "Net-(J4-P53)"
+      (pins J5-54 J4-53)
+    )
+    (net "Net-(J4-P55)"
+      (pins J5-56 J4-55)
+    )
+    (net "Net-(J4-P57)"
+      (pins J5-58 J4-57)
+    )
+    (net "Net-(J5-P1)"
+      (pins J6-2 J5-1)
+    )
+    (net "Net-(J5-P3)"
+      (pins J6-4 J5-3)
+    )
+    (net "Net-(J5-P5)"
+      (pins J6-6 J5-5)
+    )
+    (net "Net-(J5-P7)"
+      (pins J6-8 J5-7)
+    )
+    (net "Net-(J5-P9)"
+      (pins J6-10 J5-9)
+    )
+    (net "Net-(J5-P11)"
+      (pins J6-12 J5-11)
+    )
+    (net "Net-(J5-P13)"
+      (pins J6-14 J5-13)
+    )
+    (net "Net-(J5-P15)"
+      (pins J6-16 J5-15)
+    )
+    (net "Net-(J5-P17)"
+      (pins J6-18 J5-17)
+    )
+    (net "Net-(J5-P19)"
+      (pins J6-20 J5-19)
+    )
+    (net "Net-(J5-P21)"
+      (pins J6-22 J5-21)
+    )
+    (net "Net-(J5-P23)"
+      (pins J6-24 J5-23)
+    )
+    (net "Net-(J5-P25)"
+      (pins J6-26 J5-25)
+    )
+    (net "Net-(J5-P27)"
+      (pins J6-28 J5-27)
+    )
+    (net "Net-(J5-P29)"
+      (pins J6-30 J5-29)
+    )
+    (net "Net-(J5-P31)"
+      (pins J6-32 J5-31)
+    )
+    (net "Net-(J5-P33)"
+      (pins J6-34 J5-33)
+    )
+    (net "Net-(J5-P35)"
+      (pins J6-36 J5-35)
+    )
+    (net "Net-(J5-P37)"
+      (pins J6-38 J5-37)
+    )
+    (net "Net-(J5-P39)"
+      (pins J6-40 J5-39)
+    )
+    (net "Net-(J5-P41)"
+      (pins J6-42 J5-41)
+    )
+    (net "Net-(J5-P43)"
+      (pins J6-44 J5-43)
+    )
+    (net "Net-(J5-P45)"
+      (pins J6-46 J5-45)
+    )
+    (net "Net-(J5-P47)"
+      (pins J6-48 J5-47)
+    )
+    (net "Net-(J5-P49)"
+      (pins J6-50 J5-49)
+    )
+    (net "Net-(J5-P51)"
+      (pins J6-52 J5-51)
+    )
+    (net "Net-(J5-P53)"
+      (pins J6-54 J5-53)
+    )
+    (net "Net-(J5-P55)"
+      (pins J6-56 J5-55)
+    )
+    (net "Net-(J5-P57)"
+      (pins J6-58 J5-57)
+    )
+    (net "unconnected-(J6-P1-Pad1)"
+      (pins J6-1)
+    )
+    (net "unconnected-(J6-P3-Pad3)"
+      (pins J6-3)
+    )
+    (net "unconnected-(J6-P5-Pad5)"
+      (pins J6-5)
+    )
+    (net "unconnected-(J6-P7-Pad7)"
+      (pins J6-7)
+    )
+    (net "unconnected-(J6-P9-Pad9)"
+      (pins J6-9)
+    )
+    (net "unconnected-(J6-P11-Pad11)"
+      (pins J6-11)
+    )
+    (net "unconnected-(J6-P13-Pad13)"
+      (pins J6-13)
+    )
+    (net "unconnected-(J6-P15-Pad15)"
+      (pins J6-15)
+    )
+    (net "unconnected-(J6-P17-Pad17)"
+      (pins J6-17)
+    )
+    (net "unconnected-(J6-P19-Pad19)"
+      (pins J6-19)
+    )
+    (net "unconnected-(J6-P21-Pad21)"
+      (pins J6-21)
+    )
+    (net "unconnected-(J6-P23-Pad23)"
+      (pins J6-23)
+    )
+    (net "unconnected-(J6-P25-Pad25)"
+      (pins J6-25)
+    )
+    (net "unconnected-(J6-P27-Pad27)"
+      (pins J6-27)
+    )
+    (net "unconnected-(J6-P29-Pad29)"
+      (pins J6-29)
+    )
+    (net "unconnected-(J6-P31-Pad31)"
+      (pins J6-31)
+    )
+    (net "unconnected-(J6-P33-Pad33)"
+      (pins J6-33)
+    )
+    (net "unconnected-(J6-P35-Pad35)"
+      (pins J6-35)
+    )
+    (net "unconnected-(J6-P37-Pad37)"
+      (pins J6-37)
+    )
+    (net "unconnected-(J6-P39-Pad39)"
+      (pins J6-39)
+    )
+    (net "unconnected-(J6-P41-Pad41)"
+      (pins J6-41)
+    )
+    (net "unconnected-(J6-P43-Pad43)"
+      (pins J6-43)
+    )
+    (net "unconnected-(J6-P45-Pad45)"
+      (pins J6-45)
+    )
+    (net "unconnected-(J6-P47-Pad47)"
+      (pins J6-47)
+    )
+    (net "unconnected-(J6-P49-Pad49)"
+      (pins J6-49)
+    )
+    (net "unconnected-(J6-P51-Pad51)"
+      (pins J6-51)
+    )
+    (net "unconnected-(J6-P53-Pad53)"
+      (pins J6-53)
+    )
+    (net "unconnected-(J6-P55-Pad55)"
+      (pins J6-55)
+    )
+    (net "unconnected-(J6-P57-Pad57)"
+      (pins J6-57)
+    )
+    (net IO44
+      (pins J1-42)
+    )
+    (net IO35
+      (pins J1-58)
+    )
+    (net IO48
+      (pins J1-16)
+    )
+    (net O4
+      (pins J7-8)
+    )
+    (net O5
+      (pins J7-10)
+    )
+    (net O6
+      (pins J7-12)
+    )
+    (net O7
+      (pins J7-14)
+    )
+    (net O8
+      (pins J7-16)
+    )
+    (net O9
+      (pins J7-18)
+    )
+    (net O10
+      (pins J7-20)
+    )
+    (net O11
+      (pins J7-22)
+    )
+    (net O12
+      (pins J7-24)
+    )
+    (net O13
+      (pins J7-26)
+    )
+    (net O14
+      (pins J7-28)
+    )
+    (net O15
+      (pins J7-30)
+    )
+    (net O16
+      (pins J7-32)
+    )
+    (net O17
+      (pins J7-34)
+    )
+    (net O18
+      (pins J7-36)
+    )
+    (net O19
+      (pins J7-38)
+    )
+    (net O20
+      (pins J7-40)
+    )
+    (net O21
+      (pins J7-42)
+    )
+    (net O22
+      (pins J7-44)
+    )
+    (net O23
+      (pins J7-46)
+    )
+    (net O24
+      (pins J7-48)
+    )
+    (net O25
+      (pins J7-50)
+    )
+    (net O26
+      (pins J7-52)
+    )
+    (net O27
+      (pins J7-54)
+    )
+    (net O28
+      (pins J7-56)
+    )
+    (net O29
+      (pins J7-58)
+    )
+    (net "Net-(J8-P1)"
+      (pins J8-1 J9-2)
+    )
+    (net "Net-(J8-P3)"
+      (pins J8-3 J9-4)
+    )
+    (net "Net-(J8-P5)"
+      (pins J8-5 J9-6)
+    )
+    (net "Net-(J8-P7)"
+      (pins J8-7 J9-8)
+    )
+    (net "Net-(J8-P9)"
+      (pins J8-9 J9-10)
+    )
+    (net "Net-(J8-P11)"
+      (pins J8-11 J9-12)
+    )
+    (net "Net-(J8-P13)"
+      (pins J8-13 J9-14)
+    )
+    (net "Net-(J8-P15)"
+      (pins J8-15 J9-16)
+    )
+    (net "Net-(J8-P17)"
+      (pins J8-17 J9-18)
+    )
+    (net "Net-(J8-P19)"
+      (pins J8-19 J9-20)
+    )
+    (net "Net-(J8-P21)"
+      (pins J8-21 J9-22)
+    )
+    (net "Net-(J8-P23)"
+      (pins J8-23 J9-24)
+    )
+    (net "Net-(J8-P25)"
+      (pins J8-25 J9-26)
+    )
+    (net "Net-(J8-P27)"
+      (pins J8-27 J9-28)
+    )
+    (net "Net-(J8-P29)"
+      (pins J8-29 J9-30)
+    )
+    (net "Net-(J8-P31)"
+      (pins J8-31 J9-32)
+    )
+    (net "Net-(J8-P33)"
+      (pins J8-33 J9-34)
+    )
+    (net "Net-(J8-P35)"
+      (pins J8-35 J9-36)
+    )
+    (net "Net-(J8-P37)"
+      (pins J8-37 J9-38)
+    )
+    (net "Net-(J8-P39)"
+      (pins J8-39 J9-40)
+    )
+    (net "Net-(J8-P41)"
+      (pins J8-41 J9-42)
+    )
+    (net "Net-(J8-P43)"
+      (pins J8-43 J9-44)
+    )
+    (net "Net-(J8-P45)"
+      (pins J8-45 J9-46)
+    )
+    (net "Net-(J8-P47)"
+      (pins J8-47 J9-48)
+    )
+    (net "Net-(J8-P49)"
+      (pins J8-49 J9-50)
+    )
+    (net "Net-(J8-P51)"
+      (pins J8-51 J9-52)
+    )
+    (net "Net-(J8-P53)"
+      (pins J8-53 J9-54)
+    )
+    (net "Net-(J8-P55)"
+      (pins J8-55 J9-56)
+    )
+    (net "Net-(J8-P57)"
+      (pins J8-57 J9-58)
+    )
+    (net "Net-(J10-P2)"
+      (pins J10-2 J9-1)
+    )
+    (net "Net-(J10-P4)"
+      (pins J10-4 J9-3)
+    )
+    (net "Net-(J10-P6)"
+      (pins J10-6 J9-5)
+    )
+    (net "Net-(J10-P8)"
+      (pins J10-8 J9-7)
+    )
+    (net "Net-(J10-P10)"
+      (pins J10-10 J9-9)
+    )
+    (net "Net-(J10-P12)"
+      (pins J10-12 J9-11)
+    )
+    (net "Net-(J10-P14)"
+      (pins J10-14 J9-13)
+    )
+    (net "Net-(J10-P16)"
+      (pins J10-16 J9-15)
+    )
+    (net "Net-(J10-P18)"
+      (pins J10-18 J9-17)
+    )
+    (net "Net-(J10-P20)"
+      (pins J10-20 J9-19)
+    )
+    (net "Net-(J10-P22)"
+      (pins J10-22 J9-21)
+    )
+    (net "Net-(J10-P24)"
+      (pins J10-24 J9-23)
+    )
+    (net "Net-(J10-P26)"
+      (pins J10-26 J9-25)
+    )
+    (net "Net-(J10-P28)"
+      (pins J10-28 J9-27)
+    )
+    (net "Net-(J10-P30)"
+      (pins J10-30 J9-29)
+    )
+    (net "Net-(J10-P32)"
+      (pins J10-32 J9-31)
+    )
+    (net "Net-(J10-P34)"
+      (pins J10-34 J9-33)
+    )
+    (net "Net-(J10-P36)"
+      (pins J10-36 J9-35)
+    )
+    (net "Net-(J10-P38)"
+      (pins J10-38 J9-37)
+    )
+    (net "Net-(J10-P40)"
+      (pins J10-40 J9-39)
+    )
+    (net "Net-(J10-P42)"
+      (pins J10-42 J9-41)
+    )
+    (net "Net-(J10-P44)"
+      (pins J10-44 J9-43)
+    )
+    (net "Net-(J10-P46)"
+      (pins J10-46 J9-45)
+    )
+    (net "Net-(J10-P48)"
+      (pins J10-48 J9-47)
+    )
+    (net "Net-(J10-P50)"
+      (pins J10-50 J9-49)
+    )
+    (net "Net-(J10-P52)"
+      (pins J10-52 J9-51)
+    )
+    (net "Net-(J10-P54)"
+      (pins J10-54 J9-53)
+    )
+    (net "Net-(J10-P56)"
+      (pins J10-56 J9-55)
+    )
+    (net "Net-(J10-P58)"
+      (pins J10-58 J9-57)
+    )
+    (net "Net-(J10-P1)"
+      (pins J10-1 J11-2)
+    )
+    (net "Net-(J10-P3)"
+      (pins J10-3 J11-4)
+    )
+    (net "Net-(J10-P5)"
+      (pins J10-5 J11-6)
+    )
+    (net "Net-(J10-P7)"
+      (pins J10-7 J11-8)
+    )
+    (net "Net-(J10-P9)"
+      (pins J10-9 J11-10)
+    )
+    (net "Net-(J10-P11)"
+      (pins J10-11 J11-12)
+    )
+    (net "Net-(J10-P13)"
+      (pins J10-13 J11-14)
+    )
+    (net "Net-(J10-P15)"
+      (pins J10-15 J11-16)
+    )
+    (net "Net-(J10-P17)"
+      (pins J10-17 J11-18)
+    )
+    (net "Net-(J10-P19)"
+      (pins J10-19 J11-20)
+    )
+    (net "Net-(J10-P21)"
+      (pins J10-21 J11-22)
+    )
+    (net "Net-(J10-P23)"
+      (pins J10-23 J11-24)
+    )
+    (net "Net-(J10-P25)"
+      (pins J10-25 J11-26)
+    )
+    (net "Net-(J10-P27)"
+      (pins J10-27 J11-28)
+    )
+    (net "Net-(J10-P29)"
+      (pins J10-29 J11-30)
+    )
+    (net "Net-(J10-P31)"
+      (pins J10-31 J11-32)
+    )
+    (net "Net-(J10-P33)"
+      (pins J10-33 J11-34)
+    )
+    (net "Net-(J10-P35)"
+      (pins J10-35 J11-36)
+    )
+    (net "Net-(J10-P37)"
+      (pins J10-37 J11-38)
+    )
+    (net "Net-(J10-P39)"
+      (pins J10-39 J11-40)
+    )
+    (net "Net-(J10-P41)"
+      (pins J10-41 J11-42)
+    )
+    (net "Net-(J10-P43)"
+      (pins J10-43 J11-44)
+    )
+    (net "Net-(J10-P45)"
+      (pins J10-45 J11-46)
+    )
+    (net "Net-(J10-P47)"
+      (pins J10-47 J11-48)
+    )
+    (net "Net-(J10-P49)"
+      (pins J10-49 J11-50)
+    )
+    (net "Net-(J10-P51)"
+      (pins J10-51 J11-52)
+    )
+    (net "Net-(J10-P53)"
+      (pins J10-53 J11-54)
+    )
+    (net "Net-(J10-P55)"
+      (pins J10-55 J11-56)
+    )
+    (net "Net-(J10-P57)"
+      (pins J10-57 J11-58)
+    )
+    (net "Net-(J11-P1)"
+      (pins J11-1 J13-2)
+    )
+    (net "Net-(J11-P3)"
+      (pins J11-3 J13-4)
+    )
+    (net "Net-(J11-P5)"
+      (pins J11-5 J13-6)
+    )
+    (net "Net-(J11-P7)"
+      (pins J11-7 J13-8)
+    )
+    (net "Net-(J11-P9)"
+      (pins J11-9 J13-10)
+    )
+    (net "Net-(J11-P11)"
+      (pins J11-11 J13-12)
+    )
+    (net "Net-(J11-P13)"
+      (pins J11-13 J13-14)
+    )
+    (net "Net-(J11-P15)"
+      (pins J11-15 J13-16)
+    )
+    (net "Net-(J11-P17)"
+      (pins J11-17 J13-18)
+    )
+    (net "Net-(J11-P19)"
+      (pins J11-19 J13-20)
+    )
+    (net "Net-(J11-P21)"
+      (pins J11-21 J13-22)
+    )
+    (net "Net-(J11-P23)"
+      (pins J11-23 J13-24)
+    )
+    (net "Net-(J11-P25)"
+      (pins J11-25 J13-26)
+    )
+    (net "Net-(J11-P27)"
+      (pins J11-27 J13-28)
+    )
+    (net "Net-(J11-P29)"
+      (pins J11-29 J13-30)
+    )
+    (net "Net-(J11-P31)"
+      (pins J11-31 J13-32)
+    )
+    (net "Net-(J11-P33)"
+      (pins J11-33 J13-34)
+    )
+    (net "Net-(J11-P35)"
+      (pins J11-35 J13-36)
+    )
+    (net "Net-(J11-P37)"
+      (pins J11-37 J13-38)
+    )
+    (net "Net-(J11-P39)"
+      (pins J11-39 J13-40)
+    )
+    (net "Net-(J11-P41)"
+      (pins J11-41 J13-42)
+    )
+    (net "Net-(J11-P43)"
+      (pins J11-43 J13-44)
+    )
+    (net "Net-(J11-P45)"
+      (pins J11-45 J13-46)
+    )
+    (net "Net-(J11-P47)"
+      (pins J11-47 J13-48)
+    )
+    (net "Net-(J11-P49)"
+      (pins J11-49 J13-50)
+    )
+    (net "Net-(J11-P51)"
+      (pins J11-51 J13-52)
+    )
+    (net "Net-(J11-P53)"
+      (pins J11-53 J13-54)
+    )
+    (net "Net-(J11-P55)"
+      (pins J11-55 J13-56)
+    )
+    (net "Net-(J11-P57)"
+      (pins J11-57 J13-58)
+    )
+    (net "unconnected-(J13-P1-Pad1)"
+      (pins J13-1)
+    )
+    (net "unconnected-(J13-P3-Pad3)"
+      (pins J13-3)
+    )
+    (net "unconnected-(J13-P5-Pad5)"
+      (pins J13-5)
+    )
+    (net "unconnected-(J13-P7-Pad7)"
+      (pins J13-7)
+    )
+    (net "unconnected-(J13-P9-Pad9)"
+      (pins J13-9)
+    )
+    (net "unconnected-(J13-P11-Pad11)"
+      (pins J13-11)
+    )
+    (net "unconnected-(J13-P13-Pad13)"
+      (pins J13-13)
+    )
+    (net "unconnected-(J13-P15-Pad15)"
+      (pins J13-15)
+    )
+    (net "unconnected-(J13-P17-Pad17)"
+      (pins J13-17)
+    )
+    (net "unconnected-(J13-P19-Pad19)"
+      (pins J13-19)
+    )
+    (net "unconnected-(J13-P21-Pad21)"
+      (pins J13-21)
+    )
+    (net "unconnected-(J13-P23-Pad23)"
+      (pins J13-23)
+    )
+    (net "unconnected-(J13-P25-Pad25)"
+      (pins J13-25)
+    )
+    (net "unconnected-(J13-P27-Pad27)"
+      (pins J13-27)
+    )
+    (net "unconnected-(J13-P29-Pad29)"
+      (pins J13-29)
+    )
+    (net "unconnected-(J13-P31-Pad31)"
+      (pins J13-31)
+    )
+    (net "unconnected-(J13-P33-Pad33)"
+      (pins J13-33)
+    )
+    (net "unconnected-(J13-P35-Pad35)"
+      (pins J13-35)
+    )
+    (net "unconnected-(J13-P37-Pad37)"
+      (pins J13-37)
+    )
+    (net "unconnected-(J13-P39-Pad39)"
+      (pins J13-39)
+    )
+    (net "unconnected-(J13-P41-Pad41)"
+      (pins J13-41)
+    )
+    (net "unconnected-(J13-P43-Pad43)"
+      (pins J13-43)
+    )
+    (net "unconnected-(J13-P45-Pad45)"
+      (pins J13-45)
+    )
+    (net "unconnected-(J13-P47-Pad47)"
+      (pins J13-47)
+    )
+    (net "unconnected-(J13-P49-Pad49)"
+      (pins J13-49)
+    )
+    (net "unconnected-(J13-P51-Pad51)"
+      (pins J13-51)
+    )
+    (net "unconnected-(J13-P53-Pad53)"
+      (pins J13-53)
+    )
+    (net "unconnected-(J13-P55-Pad55)"
+      (pins J13-55)
+    )
+    (net "unconnected-(J13-P57-Pad57)"
+      (pins J13-57)
+    )
+    (class kicad_default "" +3.3V +5V /I2SO/I2S_OUT /I2SO1/I2S_OUT /I2SO2/I2S_OUT
+      /I2SO3/I2S_OUT /USB/USB_CC1 /USB/USB_CC2 D+ "D-" EN GND I2S_BCK I2S_DATA
+      I2S_OE I2S_WS ID1 ID2 ID3 ID4 ID5 ID6 IO0 IO1 IO10 IO11 IO12 IO13 IO14
+      IO15 IO16 IO17 IO18 IO2 IO21 IO3 IO35 IO36 IO37 IO38 IO39 IO4 IO40 IO41
+      IO42 IO43 IO44 IO45 IO46 IO47 IO48 IO5 IO6 IO7 IO8 IO9 IO_LED "Net-(D1-DIN)"
+      "Net-(D3-K)" "Net-(D4-K)" "Net-(J1-P1)" "Net-(J1-P11)" "Net-(J1-P13)"
+      "Net-(J1-P15)" "Net-(J1-P17)" "Net-(J1-P19)" "Net-(J1-P21)" "Net-(J1-P23)"
+      "Net-(J1-P25)" "Net-(J1-P27)" "Net-(J1-P29)" "Net-(J1-P3)" "Net-(J1-P31)"
+      "Net-(J1-P33)" "Net-(J1-P35)" "Net-(J1-P37)" "Net-(J1-P39)" "Net-(J1-P41)"
+      "Net-(J1-P43)" "Net-(J1-P45)" "Net-(J1-P47)" "Net-(J1-P49)" "Net-(J1-P5)"
+      "Net-(J1-P51)" "Net-(J1-P53)" "Net-(J1-P55)" "Net-(J1-P57)" "Net-(J1-P7)"
+      "Net-(J1-P9)" "Net-(J10-P1)" "Net-(J10-P10)" "Net-(J10-P11)" "Net-(J10-P12)"
+      "Net-(J10-P13)" "Net-(J10-P14)" "Net-(J10-P15)" "Net-(J10-P16)" "Net-(J10-P17)"
+      "Net-(J10-P18)" "Net-(J10-P19)" "Net-(J10-P2)" "Net-(J10-P20)" "Net-(J10-P21)"
+      "Net-(J10-P22)" "Net-(J10-P23)" "Net-(J10-P24)" "Net-(J10-P25)" "Net-(J10-P26)"
+      "Net-(J10-P27)" "Net-(J10-P28)" "Net-(J10-P29)" "Net-(J10-P3)" "Net-(J10-P30)"
+      "Net-(J10-P31)" "Net-(J10-P32)" "Net-(J10-P33)" "Net-(J10-P34)" "Net-(J10-P35)"
+      "Net-(J10-P36)" "Net-(J10-P37)" "Net-(J10-P38)" "Net-(J10-P39)" "Net-(J10-P4)"
+      "Net-(J10-P40)" "Net-(J10-P41)" "Net-(J10-P42)" "Net-(J10-P43)" "Net-(J10-P44)"
+      "Net-(J10-P45)" "Net-(J10-P46)" "Net-(J10-P47)" "Net-(J10-P48)" "Net-(J10-P49)"
+      "Net-(J10-P5)" "Net-(J10-P50)" "Net-(J10-P51)" "Net-(J10-P52)" "Net-(J10-P53)"
+      "Net-(J10-P54)" "Net-(J10-P55)" "Net-(J10-P56)" "Net-(J10-P57)" "Net-(J10-P58)"
+      "Net-(J10-P6)" "Net-(J10-P7)" "Net-(J10-P8)" "Net-(J10-P9)" "Net-(J11-P1)"
+      "Net-(J11-P11)" "Net-(J11-P13)" "Net-(J11-P15)" "Net-(J11-P17)" "Net-(J11-P19)"
+      "Net-(J11-P21)" "Net-(J11-P23)" "Net-(J11-P25)" "Net-(J11-P27)" "Net-(J11-P29)"
+      "Net-(J11-P3)" "Net-(J11-P31)" "Net-(J11-P33)" "Net-(J11-P35)" "Net-(J11-P37)"
+      "Net-(J11-P39)" "Net-(J11-P41)" "Net-(J11-P43)" "Net-(J11-P45)" "Net-(J11-P47)"
+      "Net-(J11-P49)" "Net-(J11-P5)" "Net-(J11-P51)" "Net-(J11-P53)" "Net-(J11-P55)"
+      "Net-(J11-P57)" "Net-(J11-P7)" "Net-(J11-P9)" "Net-(J2-P1)" "Net-(J2-P11)"
+      "Net-(J2-P13)" "Net-(J2-P15)" "Net-(J2-P17)" "Net-(J2-P19)" "Net-(J2-P21)"
+      "Net-(J2-P23)" "Net-(J2-P25)" "Net-(J2-P27)" "Net-(J2-P29)" "Net-(J2-P3)"
+      "Net-(J2-P31)" "Net-(J2-P33)" "Net-(J2-P35)" "Net-(J2-P37)" "Net-(J2-P39)"
+      "Net-(J2-P41)" "Net-(J2-P43)" "Net-(J2-P45)" "Net-(J2-P47)" "Net-(J2-P49)"
+      "Net-(J2-P5)" "Net-(J2-P51)" "Net-(J2-P53)" "Net-(J2-P55)" "Net-(J2-P57)"
+      "Net-(J2-P7)" "Net-(J2-P9)" "Net-(J3-P1)" "Net-(J3-P11)" "Net-(J3-P13)"
+      "Net-(J3-P15)" "Net-(J3-P17)" "Net-(J3-P19)" "Net-(J3-P21)" "Net-(J3-P23)"
+      "Net-(J3-P25)" "Net-(J3-P27)" "Net-(J3-P29)" "Net-(J3-P3)" "Net-(J3-P31)"
+      "Net-(J3-P33)" "Net-(J3-P35)" "Net-(J3-P37)" "Net-(J3-P39)" "Net-(J3-P41)"
+      "Net-(J3-P43)" "Net-(J3-P45)" "Net-(J3-P47)" "Net-(J3-P49)" "Net-(J3-P5)"
+      "Net-(J3-P51)" "Net-(J3-P53)" "Net-(J3-P55)" "Net-(J3-P57)" "Net-(J3-P7)"
+      "Net-(J3-P9)" "Net-(J4-P1)" "Net-(J4-P11)" "Net-(J4-P13)" "Net-(J4-P15)"
+      "Net-(J4-P17)" "Net-(J4-P19)" "Net-(J4-P21)" "Net-(J4-P23)" "Net-(J4-P25)"
+      "Net-(J4-P27)" "Net-(J4-P29)" "Net-(J4-P3)" "Net-(J4-P31)" "Net-(J4-P33)"
+      "Net-(J4-P35)" "Net-(J4-P37)" "Net-(J4-P39)" "Net-(J4-P41)" "Net-(J4-P43)"
+      "Net-(J4-P45)" "Net-(J4-P47)" "Net-(J4-P49)" "Net-(J4-P5)" "Net-(J4-P51)"
+      "Net-(J4-P53)" "Net-(J4-P55)" "Net-(J4-P57)" "Net-(J4-P7)" "Net-(J4-P9)"
+      "Net-(J5-P1)" "Net-(J5-P11)" "Net-(J5-P13)" "Net-(J5-P15)" "Net-(J5-P17)"
+      "Net-(J5-P19)" "Net-(J5-P21)" "Net-(J5-P23)" "Net-(J5-P25)" "Net-(J5-P27)"
+      "Net-(J5-P29)" "Net-(J5-P3)" "Net-(J5-P31)" "Net-(J5-P33)" "Net-(J5-P35)"
+      "Net-(J5-P37)" "Net-(J5-P39)" "Net-(J5-P41)" "Net-(J5-P43)" "Net-(J5-P45)"
+      "Net-(J5-P47)" "Net-(J5-P49)" "Net-(J5-P5)" "Net-(J5-P51)" "Net-(J5-P53)"
+      "Net-(J5-P55)" "Net-(J5-P57)" "Net-(J5-P7)" "Net-(J5-P9)" "Net-(J7-P1)"
+      "Net-(J7-P11)" "Net-(J7-P13)" "Net-(J7-P15)" "Net-(J7-P17)" "Net-(J7-P19)"
+      "Net-(J7-P21)" "Net-(J7-P23)" "Net-(J7-P25)" "Net-(J7-P27)" "Net-(J7-P29)"
+      "Net-(J7-P3)" "Net-(J7-P31)" "Net-(J7-P33)" "Net-(J7-P35)" "Net-(J7-P37)"
+      "Net-(J7-P39)" "Net-(J7-P41)" "Net-(J7-P43)" "Net-(J7-P45)" "Net-(J7-P47)"
+      "Net-(J7-P49)" "Net-(J7-P5)" "Net-(J7-P51)" "Net-(J7-P53)" "Net-(J7-P55)"
+      "Net-(J7-P57)" "Net-(J7-P7)" "Net-(J7-P9)" "Net-(J8-P1)" "Net-(J8-P11)"
+      "Net-(J8-P13)" "Net-(J8-P15)" "Net-(J8-P17)" "Net-(J8-P19)" "Net-(J8-P21)"
+      "Net-(J8-P23)" "Net-(J8-P25)" "Net-(J8-P27)" "Net-(J8-P29)" "Net-(J8-P3)"
+      "Net-(J8-P31)" "Net-(J8-P33)" "Net-(J8-P35)" "Net-(J8-P37)" "Net-(J8-P39)"
+      "Net-(J8-P41)" "Net-(J8-P43)" "Net-(J8-P45)" "Net-(J8-P47)" "Net-(J8-P49)"
+      "Net-(J8-P5)" "Net-(J8-P51)" "Net-(J8-P53)" "Net-(J8-P55)" "Net-(J8-P57)"
+      "Net-(J8-P7)" "Net-(J8-P9)" "Net-(Q1-B)" "Net-(Q2-B)" "Net-(U15-V3)"
+      "Net-(U6-BOOT)" "Net-(U6-VSENSE)" O1 O10 O11 O12 O13 O14 O15 O16 O17
+      O18 O19 O2 O20 O21 O22 O23 O24 O25 O26 O27 O28 O29 O3 O30 O31 O32 O4
+      O5 O6 O7 O8 O9 PD+ "PD-" PDF+ "PDF-" PDTR PRTS PRXDtoTXD0 PTXDtoRXD0
+      PVBus SCL SDA "unconnected-(D1-DOUT-Pad2)" "unconnected-(J12-SBU1-PadA8)"
+      "unconnected-(J12-SBU2-PadB8)" "unconnected-(J13-P1-Pad1)" "unconnected-(J13-P11-Pad11)"
+      "unconnected-(J13-P13-Pad13)" "unconnected-(J13-P15-Pad15)" "unconnected-(J13-P17-Pad17)"
+      "unconnected-(J13-P19-Pad19)" "unconnected-(J13-P21-Pad21)" "unconnected-(J13-P23-Pad23)"
+      "unconnected-(J13-P25-Pad25)" "unconnected-(J13-P27-Pad27)" "unconnected-(J13-P29-Pad29)"
+      "unconnected-(J13-P3-Pad3)" "unconnected-(J13-P31-Pad31)" "unconnected-(J13-P33-Pad33)"
+      "unconnected-(J13-P35-Pad35)" "unconnected-(J13-P37-Pad37)" "unconnected-(J13-P39-Pad39)"
+      "unconnected-(J13-P41-Pad41)" "unconnected-(J13-P43-Pad43)" "unconnected-(J13-P45-Pad45)"
+      "unconnected-(J13-P47-Pad47)" "unconnected-(J13-P49-Pad49)" "unconnected-(J13-P5-Pad5)"
+      "unconnected-(J13-P51-Pad51)" "unconnected-(J13-P53-Pad53)" "unconnected-(J13-P55-Pad55)"
+      "unconnected-(J13-P57-Pad57)" "unconnected-(J13-P7-Pad7)" "unconnected-(J13-P9-Pad9)"
+      "unconnected-(J6-P1-Pad1)" "unconnected-(J6-P11-Pad11)" "unconnected-(J6-P13-Pad13)"
+      "unconnected-(J6-P15-Pad15)" "unconnected-(J6-P17-Pad17)" "unconnected-(J6-P19-Pad19)"
+      "unconnected-(J6-P21-Pad21)" "unconnected-(J6-P23-Pad23)" "unconnected-(J6-P25-Pad25)"
+      "unconnected-(J6-P27-Pad27)" "unconnected-(J6-P29-Pad29)" "unconnected-(J6-P3-Pad3)"
+      "unconnected-(J6-P31-Pad31)" "unconnected-(J6-P33-Pad33)" "unconnected-(J6-P35-Pad35)"
+      "unconnected-(J6-P37-Pad37)" "unconnected-(J6-P39-Pad39)" "unconnected-(J6-P41-Pad41)"
+      "unconnected-(J6-P43-Pad43)" "unconnected-(J6-P45-Pad45)" "unconnected-(J6-P47-Pad47)"
+      "unconnected-(J6-P49-Pad49)" "unconnected-(J6-P5-Pad5)" "unconnected-(J6-P51-Pad51)"
+      "unconnected-(J6-P53-Pad53)" "unconnected-(J6-P55-Pad55)" "unconnected-(J6-P57-Pad57)"
+      "unconnected-(J6-P7-Pad7)" "unconnected-(J6-P9-Pad9)" "unconnected-(U15-NC-Pad7)"
+      "unconnected-(U15-NC-Pad8)" "unconnected-(U15-R232-Pad15)" "unconnected-(U15-~{CTS}-Pad9)"
+      "unconnected-(U15-~{DCD}-Pad12)" "unconnected-(U15-~{DSR}-Pad10)" "unconnected-(U15-~{RI}-Pad11)"
+      "unconnected-(U6-EN-Pad5)" "unconnected-(U6-NC-Pad2)" "unconnected-(U6-NC-Pad3)"
+      (circuit
+        (use_via Via[0-1]_685.8:330.2_um)
+      )
+      (rule
+        (width 127)
+        (clearance 127.1)
+      )
+    )
+    (class BusVolt
+      (circuit
+        (use_via Via[0-1]_685.8:330.2_um)
+      )
+      (rule
+        (width 254)
+        (clearance 127.1)
+      )
+    )
+    (class VeelVolt +36V
+      (circuit
+        (use_via Via[0-1]_685.8:330.2_um)
+      )
+      (rule
+        (width 504)
+        (clearance 254.1)
+      )
+    )
+  )
+  (wiring
+  )
+)
