@@ -8,6 +8,9 @@ import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.NetClasses;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -19,8 +22,6 @@ import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -63,7 +64,6 @@ public class MainApplication extends WindowBase {
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
-  public static int ModelDialogTimeout = 20;
   /**
    * Creates new form MainApplication It takes the directory of the board designs as optional
    * argument.
@@ -361,49 +361,51 @@ public class MainApplication extends WindowBase {
           && (startupOptions.design_output_filename != null)) {
 
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
-        String errorMessage = resources.getString("auto_start_routing_message");
-        JTextArea textArea = new JTextArea(errorMessage);
-        JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
-        JDialog dialog = optionPane.createDialog(resources.getString("auto_start_routing_title"));
+        final int AUTOSTART_TIMEOUT = 20;
+        final String START_NOW_TEXT = resources.getString("auto_start_routing_startnow_button");
+        JButton startNowButton = new JButton(START_NOW_TEXT + '(' + AUTOSTART_TIMEOUT + ')');
 
-        // Set the default button to "Start now"
-        JButton startButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
-        startButton.setText(resources.getString("auto_start_routing_startnow_button"));
-        startButton.addActionListener(e -> {
-          ModelDialogTimeout = 0;
-          dialog.dispose();
+        final String CANCEL_TEXT = resources.getString("auto_start_routing_cancel_button");
+        Object[] options = {startNowButton, CANCEL_TEXT};
+
+        final String AUTOSTART_MSG = resources.getString("auto_start_routing_message");
+        JOptionPane optionPane = new JOptionPane(
+            AUTOSTART_MSG,
+            JOptionPane.WARNING_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION,
+            null,
+            options,
+            options[0]
+        );
+
+        startNowButton.addActionListener(event -> optionPane.setValue(options[0]));
+
+        final String AUTOSTART_TITLE = resources.getString("auto_start_routing_title");
+        JDialog autostartDialog = optionPane.createDialog(AUTOSTART_TITLE);
+
+        // Update startNowButton text every second
+        Timer autostartTimer = new Timer(1000, new ActionListener() {
+          private int secondsLeft = AUTOSTART_TIMEOUT;
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            if (--secondsLeft > 0) {
+              startNowButton.setText(START_NOW_TEXT + '(' + secondsLeft + ')');
+            } else {
+              optionPane.setValue(options[0]);
+            }
+          }
         });
 
-        // Set the cancel button to "Cancel (20)"
-        JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[1];
-        cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(20)");
-        cancelButton.addActionListener(e -> {
-          ModelDialogTimeout = -1;
-          dialog.dispose();
-        });
+        autostartTimer.start();
+        autostartDialog.setVisible(true); // blocks execution
 
-        dialog.pack();
+        autostartDialog.dispose();
+        autostartTimer.stop();
 
-        // Set the timeout to 20 seconds
-        MainApplication.ModelDialogTimeout = 20;
-        Timer timer = new Timer(1000, null);
-        timer.addActionListener(
-            e -> {
-              ModelDialogTimeout--;
-              if (ModelDialogTimeout > 0) {
-                cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(" + ModelDialogTimeout + ")");
-              } else {
-                timer.stop();
-                dialog.dispose();
-              }
-            });
-        timer.start();
-
-        dialog.setVisible(true);
-
+        Object choice = optionPane.getValue();
         // Start the autorouter if the user didn't cancel the dialog
-        if (ModelDialogTimeout >= 0)
-        {
+        if (choice == options[0]) {
           // Start the autorouter
           InteractiveActionThread thread =
               new_frame.board_panel.board_handling.start_batch_autorouter();
