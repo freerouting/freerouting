@@ -229,16 +229,12 @@ public class Package {
     try {
       // Read the padstack name.
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-      String padstack_name;
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof String) {
-        padstack_name = (String) next_token;
-      } else if (next_token instanceof Integer) {
-        padstack_name = ((Integer) next_token).toString();
-      } else {
+      if (!(next_token instanceof String) && !(next_token instanceof Integer)) {
         FRLogger.warn("Package.read_pin_info: String or Integer expected");
         return null;
       }
+      String padstack_name = next_token.toString();
       double rotation = 0;
 
       p_scanner.yybegin(
@@ -256,15 +252,11 @@ public class Package {
         next_token = p_scanner.next_token();
       }
       // Read the pin name.
-      String pin_name;
-      if (next_token instanceof String) {
-        pin_name = (String) next_token;
-      } else if (next_token instanceof Integer) {
-        pin_name = ((Integer) next_token).toString();
-      } else {
+      if (!(next_token instanceof String) && !(next_token instanceof Integer)) {
         FRLogger.warn("Package.read_pin_info: String or Integer expected");
         return null;
       }
+      String pin_name = next_token.toString();
 
       double[] pin_coor = new double[2];
       for (int i = 0; i < 2; ++i) {

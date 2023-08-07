@@ -41,53 +41,52 @@ public class DesignFile {
     this.input_file = p_design_file;
     this.output_file = p_design_file;
 
-    if (p_design_file != null) {
-      String file_name = p_design_file.getName();
-      String[] name_parts = file_name.split("\\.");
-
-      // Check if the file has an extension
-      String extension = "";
-      if (name_parts.length > 1)
-      {
-        extension = name_parts[name_parts.length - 1];
-        file_name = file_name.substring(0, file_name.length() - extension.length() - 1);
-      }
-
-      // Set the binary output file name
-      if (extension.compareToIgnoreCase(binary_file_extension) != 0) {
-        String binary_output_file_name = file_name + "." + binary_file_extension;
-        this.output_file = new File(p_design_file.getParent(), binary_output_file_name);
-      }
-
-      // Set the intermediate snapshot file name
-
-      // Calculate the CRC32 checksum of the input file
-      long crc32_checksum;
-      try (FileInputStream inputStream = new FileInputStream(this.input_file.getAbsoluteFile())) {
-        CRC32 crc = new CRC32();
-        int cnt;
-        while ((cnt = inputStream.read()) != -1) {
-          crc.update(cnt);
-        }
-        crc32_checksum = crc.getValue();
-      } catch (IOException e) {
-        crc32_checksum = 0;
-      }
-
-      // We have a valid checksum, we can generate the intermediate snapshot file
-      if (crc32_checksum != 0)
-      {
-        String temp_folder_path = System.getProperty("java.io.tmpdir");
-
-        String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32_checksum) + "." + DesignFile.binary_file_extension;
-        this.intermediate_snapshot_file = new File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
-      } else
-      {
-        this.intermediate_snapshot_file = null;
-      }
-    } else {
+    if (p_design_file == null) {
       this.intermediate_snapshot_file = null;
+      return;
     }
+
+    String file_name = p_design_file.getName();
+    String[] name_parts = file_name.split("\\.");
+
+    // Check if the file has an extension
+    String extension = "";
+    if (name_parts.length > 1)
+    {
+      extension = name_parts[name_parts.length - 1];
+      file_name = file_name.substring(0, file_name.length() - extension.length() - 1);
+    }
+
+    // Set the binary output file name
+    if (extension.compareToIgnoreCase(binary_file_extension) != 0) {
+      String binary_output_file_name = file_name + "." + binary_file_extension;
+      this.output_file = new File(p_design_file.getParent(), binary_output_file_name);
+    }
+
+    // Set the intermediate snapshot file name
+
+    // Calculate the CRC32 checksum of the input file
+    long crc32_checksum;
+    try (FileInputStream inputStream = new FileInputStream(this.input_file.getAbsoluteFile())) {
+      CRC32 crc = new CRC32();
+      int cnt;
+      while ((cnt = inputStream.read()) != -1) {
+        crc.update(cnt);
+      }
+      crc32_checksum = crc.getValue();
+    } catch (IOException e) {
+      crc32_checksum = 0;
+    }
+
+    // We have a valid checksum, we can generate the intermediate snapshot file
+    if (crc32_checksum == 0) {
+      this.intermediate_snapshot_file = null;
+      return;
+    }
+
+    String temp_folder_path = System.getProperty("java.io.tmpdir");
+    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32_checksum) + "." + DesignFile.binary_file_extension;
+    this.intermediate_snapshot_file = new File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
   }
 
   public static DesignFile get_instance(String p_design_file_name) {
@@ -125,59 +124,44 @@ public class DesignFile {
       BoardHandling p_board_handling,
       String p_confirm_message) {
 
-    boolean result;
     boolean dsn_file_generated_by_host =
         p_board_handling.get_routing_board()
             .communication
             .specctra_parser_info
             .dsn_file_generated_by_host;
 
-    {
-      try {
-        File rules_file = new File(p_parent_name, rules_file_name);
-        FRLogger.info("Opening '" + rules_file_name + "'...");
-        InputStream input_stream = new FileInputStream(rules_file);
-        if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
-          result = RulesFile.read(input_stream, p_design_name, p_board_handling);
-        } else {
-          result = false;
-        }
-      } catch (FileNotFoundException e) {
-        FRLogger.error("File '" + rules_file_name + "' was not found.", null);
-        result = false;
+    try {
+      File rules_file = new File(p_parent_name, rules_file_name);
+      FRLogger.info("Opening '" + rules_file_name + "'...");
+      InputStream input_stream = new FileInputStream(rules_file);
+      if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
+        return RulesFile.read(input_stream, p_design_name, p_board_handling);
       }
+    } catch (FileNotFoundException e) {
+      FRLogger.error("File '" + rules_file_name + "' was not found.", null);
     }
-    return result;
+    return false;
   }
 
   /** Gets an InputStream from the file. Returns null, if the algorithm failed. */
   public InputStream get_input_stream() {
-    InputStream result;
-
     if (this.input_file == null) {
       return null;
     }
     try {
-      result = new FileInputStream(this.input_file);
+      return new FileInputStream(this.input_file);
     } catch (Exception e) {
       FRLogger.error(e.getLocalizedMessage(), e);
-      result = null;
     }
-
-    return result;
+    return null;
   }
 
   /** Gets the file name as a String. Returns null on failure. */
   public String get_name() {
-
-    String result;
-
     if (this.input_file != null) {
-      result = this.input_file.getName();
-    } else {
-      result = null;
+      return this.input_file.getName();
     }
-    return result;
+    return null;
   }
 
   public void save_as_dialog(Component p_parent, BoardFrame p_board_frame) {
@@ -258,35 +242,34 @@ public class DesignFile {
     String[] file_name_parts = design_file_name.split("\\.", 2);
     String design_name = file_name_parts[0];
 
-    {
-      String output_file_name = design_name + ".ses";
-      FRLogger.info("Saving '" + output_file_name + "'...");
-      File curr_output_file = new File(get_parent(), output_file_name);
-      OutputStream output_stream;
-      try {
-        output_stream = new FileOutputStream(curr_output_file);
-      } catch (Exception e) {
-        output_stream = null;
-      }
-
-      if (p_board_frame.board_panel.board_handling.export_specctra_session_file(
-          design_file_name, output_stream)) {
-        p_board_frame.screen_messages.set_status_message(
-            resources.getString("message_11")
-                + " "
-                + output_file_name
-                + " "
-                + resources.getString("message_12"));
-      } else {
-        p_board_frame.screen_messages.set_status_message(
-            resources.getString("message_13")
-                + " "
-                + output_file_name
-                + " "
-                + resources.getString("message_7"));
-        return false;
-      }
+    String output_file_name = design_name + ".ses";
+    FRLogger.info("Saving '" + output_file_name + "'...");
+    File curr_output_file = new File(get_parent(), output_file_name);
+    OutputStream output_stream;
+    try {
+      output_stream = new FileOutputStream(curr_output_file);
+    } catch (Exception e) {
+      output_stream = null;
     }
+
+    if (!p_board_frame.board_panel.board_handling.export_specctra_session_file(
+        design_file_name, output_stream)) {
+      p_board_frame.screen_messages.set_status_message(
+          resources.getString("message_13")
+              + " "
+              + output_file_name
+              + " "
+              + resources.getString("message_7"));
+      return false;
+    }
+
+    p_board_frame.screen_messages.set_status_message(
+        resources.getString("message_11")
+            + " "
+            + output_file_name
+            + " "
+            + resources.getString("message_12"));
+
     if (WindowMessage.confirm(resources.getString("confirm"))) {
       return write_rules_file(design_name, p_board_frame.board_panel.board_handling);
     }

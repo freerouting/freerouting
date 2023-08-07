@@ -298,22 +298,23 @@ public class AutorouteEngine {
     Collection<ExpansionDoor> room_doors = p_room.get_doors();
     for (ExpansionDoor curr_door : room_doors) {
       ExpansionRoom curr_neighbour = curr_door.other_room(p_room);
-      if (curr_neighbour != null) {
-        curr_neighbour.remove_door(curr_door);
-        TileShape neighbour_shape = curr_neighbour.get_shape();
-        TileShape intersection = room_shape.intersection(neighbour_shape);
-        if (intersection.dimension() == 1) {
-          // add a new incomplete room to curr_neighbour.
-          int[] touching_sides = room_shape.touching_sides(neighbour_shape);
-          Line[] line_arr = new Line[1];
-          line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
-          Simplex new_incomplete_room_shape = Simplex.get_instance(line_arr);
-          IncompleteFreeSpaceExpansionRoom new_incomplete_room =
-              add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
-          ExpansionDoor new_door = new ExpansionDoor(curr_neighbour, new_incomplete_room, 1);
-          curr_neighbour.add_door(new_door);
-          new_incomplete_room.add_door(new_door);
-        }
+      if (curr_neighbour == null) {
+        continue;
+      }
+      curr_neighbour.remove_door(curr_door);
+      TileShape neighbour_shape = curr_neighbour.get_shape();
+      TileShape intersection = room_shape.intersection(neighbour_shape);
+      if (intersection.dimension() == 1) {
+        // add a new incomplete room to curr_neighbour.
+        int[] touching_sides = room_shape.touching_sides(neighbour_shape);
+        Line[] line_arr = new Line[1];
+        line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
+        Simplex new_incomplete_room_shape = Simplex.get_instance(line_arr);
+        IncompleteFreeSpaceExpansionRoom new_incomplete_room =
+            add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
+        ExpansionDoor new_door = new ExpansionDoor(curr_neighbour, new_incomplete_room, 1);
+        curr_neighbour.add_door(new_door);
+        new_incomplete_room.add_door(new_door);
       }
     }
     this.remove_all_doors(p_room);
@@ -394,18 +395,15 @@ public class AutorouteEngine {
       IncompleteFreeSpaceExpansionRoom p_room) {
     CompleteFreeSpaceExpansionRoom completed_room =
         (CompleteFreeSpaceExpansionRoom) calculate_doors(p_room);
-    CompleteFreeSpaceExpansionRoom result;
-    if (completed_room != null && completed_room.get_shape().dimension() == 2) {
-      if (complete_expansion_rooms == null) {
-        complete_expansion_rooms = new LinkedList<>();
-      }
-      complete_expansion_rooms.add(completed_room);
-      this.autoroute_search_tree.insert(completed_room);
-      result = completed_room;
-    } else {
-      result = null;
+    if (completed_room == null || completed_room.get_shape().dimension() != 2) {
+      return null;
     }
-    return result;
+    if (complete_expansion_rooms == null) {
+      complete_expansion_rooms = new LinkedList<>();
+    }
+    complete_expansion_rooms.add(completed_room);
+    this.autoroute_search_tree.insert(completed_room);
+    return completed_room;
   }
 
   /**
@@ -438,17 +436,18 @@ public class AutorouteEngine {
       // cast to ExpansionRoom becaus ExpansionDoor.other_room works differently with
       // parameter type CompleteExpansionRoom.
       ExpansionRoom neighbour_room = curr_door.other_room((ExpansionRoom) p_room);
-      if (neighbour_room != null) {
-        if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom) {
-          this.complete_expansion_room((IncompleteFreeSpaceExpansionRoom) neighbour_room);
-          // restart reading because the doors have changed
-          it = p_room.get_doors().iterator();
-        } else if (neighbour_room instanceof ObstacleExpansionRoom) {
-          ObstacleExpansionRoom obstacle_neighbour_room = (ObstacleExpansionRoom) neighbour_room;
-          if (!obstacle_neighbour_room.all_doors_calculated()) {
-            this.calculate_doors(obstacle_neighbour_room);
-            obstacle_neighbour_room.set_doors_calculated(true);
-          }
+      if (neighbour_room == null) {
+        continue;
+      }
+      if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom) {
+        this.complete_expansion_room((IncompleteFreeSpaceExpansionRoom) neighbour_room);
+        // restart reading because the doors have changed
+        it = p_room.get_doors().iterator();
+      } else if (neighbour_room instanceof ObstacleExpansionRoom) {
+        ObstacleExpansionRoom obstacle_neighbour_room = (ObstacleExpansionRoom) neighbour_room;
+        if (!obstacle_neighbour_room.all_doors_calculated()) {
+          this.calculate_doors(obstacle_neighbour_room);
+          obstacle_neighbour_room.set_doors_calculated(true);
         }
       }
     }
@@ -469,11 +468,12 @@ public class AutorouteEngine {
     while (it.hasNext()) {
       ExpansionDoor curr_door = it.next();
       ExpansionRoom other_room = curr_door.other_room(p_room);
-      if (other_room != null) {
-        other_room.remove_door(curr_door);
-        if (other_room instanceof IncompleteFreeSpaceExpansionRoom) {
-          this.remove_incomplete_expansion_room((IncompleteFreeSpaceExpansionRoom) other_room);
-        }
+      if (other_room == null) {
+        continue;
+      }
+      other_room.remove_door(curr_door);
+      if (other_room instanceof IncompleteFreeSpaceExpansionRoom) {
+        this.remove_incomplete_expansion_room((IncompleteFreeSpaceExpansionRoom) other_room);
       }
     }
     p_room.clear_doors();

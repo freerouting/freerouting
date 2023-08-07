@@ -319,41 +319,45 @@ public class MainApplication extends WindowBase {
           }
 
           private void ExportBoardToFile(String filename) {
-            if ((filename != null)
-                && ((filename.toLowerCase().endsWith(".dsn"))
-                || (filename.toLowerCase().endsWith(".ses"))
-                || (filename.toLowerCase().endsWith(".scr")))) {
+            if (filename == null) {
+              FRLogger.warn("Couldn't export board, filename not specified");
+              return;
+            }
 
-              FRLogger.info("Saving '" + filename + "'...");
-              try {
-                String filename_only = new File(filename).getName();
-                String design_name = filename_only.substring(0, filename_only.length() - 4);
+            if (!(filename.toLowerCase().endsWith(".dsn") ||
+                  filename.toLowerCase().endsWith(".ses") ||
+                  filename.toLowerCase().endsWith(".scr"))) {
+              FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
+              return;
+            }
 
-                OutputStream output_stream = new FileOutputStream(filename);
+            FRLogger.info("Saving '" + filename + "'...");
+            try {
+              String filename_only = new File(filename).getName();
+              String design_name = filename_only.substring(0, filename_only.length() - 4);
 
-                if (filename.toLowerCase().endsWith(".dsn")) {
-                  new_frame.board_panel.board_handling.export_to_dsn_file(
-                      output_stream, design_name, false);
-                } else if (filename.toLowerCase().endsWith(".ses")) {
-                  new_frame.board_panel.board_handling.export_specctra_session_file(
-                      design_name, output_stream);
-                } else if (filename.toLowerCase().endsWith(".scr")) {
-                  ByteArrayOutputStream session_output_stream =
-                      new ByteArrayOutputStream();
-                  new_frame.board_panel.board_handling.export_specctra_session_file(
-                      filename, session_output_stream);
-                  InputStream input_stream =
-                      new ByteArrayInputStream(session_output_stream.toByteArray());
-                  new_frame.board_panel.board_handling.export_eagle_session_file(
-                      input_stream, output_stream);
-                }
+              OutputStream output_stream = new FileOutputStream(filename);
 
-                Runtime.getRuntime().exit(0);
-              } catch (Exception e) {
-                FRLogger.error("Couldn't export board to file", e);
+              if (filename.toLowerCase().endsWith(".dsn")) {
+                new_frame.board_panel.board_handling.export_to_dsn_file(
+                    output_stream, design_name, false);
+              } else if (filename.toLowerCase().endsWith(".ses")) {
+                new_frame.board_panel.board_handling.export_specctra_session_file(
+                    design_name, output_stream);
+              } else if (filename.toLowerCase().endsWith(".scr")) {
+                ByteArrayOutputStream session_output_stream =
+                    new ByteArrayOutputStream();
+                new_frame.board_panel.board_handling.export_specctra_session_file(
+                    filename, session_output_stream);
+                InputStream input_stream =
+                    new ByteArrayInputStream(session_output_stream.toByteArray());
+                new_frame.board_panel.board_handling.export_eagle_session_file(
+                    input_stream, output_stream);
               }
-            } else {
-              FRLogger.warn("Couldn't export board to '" + filename + "'.");
+
+              Runtime.getRuntime().exit(0);
+            } catch (Exception e) {
+              FRLogger.error("Couldn't export board to file", e);
             }
           }
         };

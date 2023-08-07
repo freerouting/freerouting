@@ -502,12 +502,13 @@ public class ShapeSearchTree extends MinAreaTree {
       overlapping_tree_entries_with_clearance(
           p_shape, p_layer, p_ignore_net_nos, p_cl_type, tree_entries);
     }
-    if (p_obstacles != null) {
-      Iterator<TreeEntry> it = tree_entries.iterator();
-      while (it.hasNext()) {
-        TreeEntry curr_entry = it.next();
-        p_obstacles.add((SearchTreeObject) curr_entry.object);
-      }
+    if (p_obstacles == null) {
+      return;
+    }
+    Iterator<TreeEntry> it = tree_entries.iterator();
+    while (it.hasNext()) {
+      TreeEntry curr_entry = it.next();
+      p_obstacles.add((SearchTreeObject) curr_entry.object);
     }
   }
 
