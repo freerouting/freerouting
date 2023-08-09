@@ -16,6 +16,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     select_item_item.setText(resources.getString("select_item"));
     select_item_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.select_items(board_panel.right_button_click_location);
           }
@@ -29,6 +30,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     start_route_item.setText(resources.getString("start_route"));
     start_route_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.start_route(board_panel.right_button_click_location);
           }
@@ -46,6 +48,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     create_tile_item.setText(resources.getString("tile"));
     create_tile_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.start_tile(board_panel.right_button_click_location);
           }
@@ -60,6 +63,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     create_circle_item.setText(resources.getString("circle"));
     create_circle_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.start_circle(board_panel.right_button_click_location);
           }
@@ -71,6 +75,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     create_polygon_item.setText(resources.getString("polygon"));
     create_polygon_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.start_polygonshape_item(
                 board_panel.right_button_click_location);
@@ -83,6 +88,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     add_hole_item.setText(resources.getString("hole"));
     add_hole_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.start_adding_hole(board_panel.right_button_click_location);
           }
@@ -100,6 +106,7 @@ class PopupMenuMain extends PopupMenuDisplay {
       swap_pin_item.setText(resources.getString("swap_pin"));
       swap_pin_item.addActionListener(
           new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
               board_panel.board_handling.swap_pin(board_panel.right_button_click_location);
             }

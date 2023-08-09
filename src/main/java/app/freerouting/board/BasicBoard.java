@@ -142,6 +142,7 @@ public class BasicBoard implements java.io.Serializable {
     return null;
   }
 
+  @Override
   public BasicBoard clone() {
     return deserialize(this.serialize(false));
   }

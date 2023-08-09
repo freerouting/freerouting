@@ -17,18 +17,22 @@ public class IntDirection extends Direction implements java.io.Serializable {
     y = p_vector.y;
   }
 
+  @Override
   public boolean is_orthogonal() {
     return (x == 0 || y == 0);
   }
 
+  @Override
   public boolean is_diagonal() {
     return (Math.abs(x) == Math.abs(y));
   }
 
+  @Override
   public Vector get_vector() {
     return new IntVector(x, y);
   }
 
+  @Override
   int compareTo(IntDirection p_other) {
     if (y > 0) {
       if (p_other.y < 0) {
@@ -69,10 +73,12 @@ public class IntDirection extends Direction implements java.io.Serializable {
     return Signum.as_int(determinant);
   }
 
+  @Override
   public Direction opposite() {
     return new IntDirection(-x, -y);
   }
 
+  @Override
   public Direction turn_45_degree(int p_factor) {
     int n = p_factor % 8;
     int new_x;
@@ -123,10 +129,12 @@ public class IntDirection extends Direction implements java.io.Serializable {
    * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
    * Direction.
    */
+  @Override
   public int compareTo(Direction p_other_direction) {
     return -p_other_direction.compareTo(this);
   }
 
+  @Override
   int compareTo(BigIntDirection p_other) {
     return -(p_other.compareTo(this));
   }

@@ -19,6 +19,7 @@ public class Rectangle extends Shape {
     coor = p_coor;
   }
 
+  @Override
   public Rectangle bounding_box() {
     return this;
   }
@@ -33,6 +34,7 @@ public class Rectangle extends Shape {
     return new Rectangle(this.layer, result_coor);
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
     int[] box_coor = new int[4];
@@ -51,6 +53,7 @@ public class Rectangle extends Shape {
     return result;
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board(
       CoordinateTransform p_coordinate_transform) {
     double[] curr_point = new double[2];
@@ -64,6 +67,7 @@ public class Rectangle extends Shape {
   }
 
   /** Writes this rectangle as a scope to an output dsn-file. */
+  @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier)
       throws java.io.IOException {
     p_file.new_line();
@@ -76,6 +80,7 @@ public class Rectangle extends Shape {
     p_file.write(")");
   }
 
+  @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
       throws java.io.IOException {
     p_file.new_line();

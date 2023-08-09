@@ -26,6 +26,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     actual_clearance = p_actual_clearance;
   }
 
+  @Override
   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);

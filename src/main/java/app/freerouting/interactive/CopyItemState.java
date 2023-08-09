@@ -100,6 +100,7 @@ public class CopyItemState extends InteractiveState {
     return new_padstack;
   }
 
+  @Override
   public InteractiveState mouse_moved() {
     super.mouse_moved();
     change_position(hdlg.get_current_mouse_position());
@@ -122,6 +123,7 @@ public class CopyItemState extends InteractiveState {
   }
 
   /** Changes the first layer of the items in the copy list to p_new_layer. */
+  @Override
   public boolean change_layer_action(int p_new_layer) {
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.CHANGE_LAYER, p_new_layer);
@@ -252,17 +254,20 @@ public class CopyItemState extends InteractiveState {
     hdlg.repaint();
   }
 
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     insert();
     return this;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_location) {
     change_position(p_location);
     insert();
     return this;
   }
 
+  @Override
   public void draw(java.awt.Graphics p_graphics) {
     if (item_list == null) {
       return;
@@ -278,6 +283,7 @@ public class CopyItemState extends InteractiveState {
     }
   }
 
+  @Override
   public javax.swing.JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_copy;
   }

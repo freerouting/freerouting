@@ -498,6 +498,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Actions to be taken when this frame vanishes. */
+  @Override
   public void dispose() {
     for (int i = 0; i < this.permanent_subwindows.length; ++i) {
       if (this.permanent_subwindows[i] != null) {
@@ -699,6 +700,7 @@ public class BoardFrame extends WindowBase {
   }
 
   private class WindowStateListener extends java.awt.event.WindowAdapter {
+    @Override
     public void windowClosing(java.awt.event.WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       if (confirm_cancel) {
@@ -714,6 +716,7 @@ public class BoardFrame extends WindowBase {
       }
     }
 
+    @Override
     public void windowIconified(java.awt.event.WindowEvent evt) {
       for (int i = 0; i < permanent_subwindows.length; ++i) {
         permanent_subwindows[i].parent_iconified();
@@ -725,6 +728,7 @@ public class BoardFrame extends WindowBase {
       }
     }
 
+    @Override
     public void windowDeiconified(java.awt.event.WindowEvent evt) {
       for (int i = 0; i < permanent_subwindows.length; ++i) {
         if (permanent_subwindows[i] != null) {

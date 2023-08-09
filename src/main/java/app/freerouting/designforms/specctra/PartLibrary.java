@@ -68,6 +68,7 @@ public class PartLibrary extends ScopeKeyword {
     p_par.file.end_scope();
   }
 
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     Object next_token = null;
     for (; ; ) {

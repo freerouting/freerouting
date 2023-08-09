@@ -17,6 +17,7 @@ public class Layer implements java.io.Serializable {
     is_signal = p_is_signal;
   }
 
+  @Override
   public String toString() {
     return name;
   }

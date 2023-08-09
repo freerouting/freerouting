@@ -33,6 +33,7 @@ public class LogicalPart
     return part_pin_arr[p_no];
   }
 
+  @Override
   public void print_info(
       app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
@@ -97,6 +98,7 @@ public class LogicalPart
       gate_pin_swap_code = p_gate_pin_swap_code;
     }
 
+    @Override
     public int compareTo(PartPin p_other) {
       return this.pin_no - p_other.pin_no;
     }

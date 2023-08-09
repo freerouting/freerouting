@@ -27,6 +27,7 @@ public class DragItemState extends DragState {
     item_to_move = p_item_to_move;
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("dragging_item"));
   }
@@ -35,6 +36,7 @@ public class DragItemState extends DragState {
    * Moves the items of the group to p_to_location. Return this.return_state, if an error eccured
    * while moving, so that an undo may be necessary.
    */
+  @Override
   public InteractiveState move_to(FloatPoint p_to_location) {
     IntPoint to_location = p_to_location.round();
     IntPoint from_location = this.previous_location.round();
@@ -101,6 +103,7 @@ public class DragItemState extends DragState {
     return this;
   }
 
+  @Override
   public InteractiveState button_released() {
     if (this.observers_activated) {
       hdlg.get_routing_board().end_notify_observers();

@@ -19,20 +19,24 @@ public class SelectMenuState extends MenuState {
     return new_state;
   }
 
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     InteractiveState result = select_items(p_location);
     return result;
   }
 
+  @Override
   public InteractiveState mouse_dragged(FloatPoint p_point) {
     return SelectItemsInRegionState.get_instance(
         hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("in_select_menu"));
   }
 
+  @Override
   public String get_help_id() {
     return "MenuState_SelectMenuState";
   }

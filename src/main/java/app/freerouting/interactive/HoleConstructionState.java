@@ -76,6 +76,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
   }
 
   /** Adds a corner to the polygon of the the hole under construction. */
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_next_corner) {
     if (item_to_modify == null) {
       return this.return_state;
@@ -91,6 +92,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
    * adds the just constructed hole to the item under modification, if that is possible without
    * clearance violations
    */
+  @Override
   public InteractiveState complete() {
     if (item_to_modify == null) {
       return this.return_state;
@@ -159,6 +161,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
     return this.return_state;
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("adding_hole_to_obstacle_area"));
   }

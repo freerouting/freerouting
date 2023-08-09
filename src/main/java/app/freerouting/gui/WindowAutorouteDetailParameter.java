@@ -204,6 +204,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
   }
 
   /** Recalculates all displayed values */
+  @Override
   public void refresh() {
     app.freerouting.interactive.AutorouteSettings settings =
         this.board_handling.settings.autoroute_settings;
@@ -234,6 +235,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
   private class ViaCostFieldKeyListener extends java.awt.event.KeyAdapter {
 
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_via_costs();
@@ -261,6 +263,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
   private class ViaCostFieldFocusListener implements java.awt.event.FocusListener {
 
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!via_cost_input_completed) {
         via_cost_input_completed = true;
@@ -268,11 +271,13 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 
   private class PlaneViaCostFieldKeyListener extends java.awt.event.KeyAdapter {
 
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_plane_via_costs();
@@ -300,6 +305,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
   private class PlaneViaCostFieldFocusListener implements java.awt.event.FocusListener {
 
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!plane_via_cost_input_completed) {
         plane_via_cost_input_completed = true;
@@ -307,11 +313,13 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 
   private class StartRipupCostFieldKeyListener extends java.awt.event.KeyAdapter {
 
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_start_ripup_costs();
@@ -336,6 +344,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
   private class StartRipupCostFieldFocusListener implements java.awt.event.FocusListener {
 
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!start_ripup_cost_input_completed) {
         start_ripup_cost_input_completed = true;
@@ -343,11 +352,13 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 
   private class StartPassFieldKeyListener extends java.awt.event.KeyAdapter {
 
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_start_pass_no();
@@ -372,17 +383,20 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
   private class StartPassFieldFocusListener implements java.awt.event.FocusListener {
 
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!start_ripup_cost_input_completed) {
         refresh();
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 
   private class SpeedListener implements java.awt.event.ActionListener {
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       boolean old_is_slow = board_handling.get_routing_board().rules.get_slow_autoroute_algorithm();
       boolean new_is_slow = speed_combo_box.getSelectedItem() == speed_slow;
@@ -401,6 +415,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       this.signal_layer_no = p_layer_no;
     }
 
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no =
@@ -437,6 +452,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       this.signal_layer_no = p_layer_no;
     }
 
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
         start_ripup_cost_input_completed = true;
@@ -444,6 +460,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 
@@ -455,6 +472,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       this.signal_layer_no = p_layer_no;
     }
 
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no =
@@ -492,6 +510,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       this.signal_layer_no = p_layer_no;
     }
 
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!against_preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
         start_ripup_cost_input_completed = true;
@@ -499,6 +518,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 }

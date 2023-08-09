@@ -187,10 +187,12 @@ public class RatsNest {
       this.locale = p_locale;
     }
 
+    @Override
     public int compareTo(AirLine p_other) {
       return this.net.name.compareTo(p_other.net.name);
     }
 
+    @Override
     public String toString() {
 
       String result = this.net.name + ": " + item_info(from_item) + " - " + item_info(to_item);
@@ -216,6 +218,7 @@ public class RatsNest {
       return result;
     }
 
+    @Override
     public void print_info(
         app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
       java.util.ResourceBundle resources =

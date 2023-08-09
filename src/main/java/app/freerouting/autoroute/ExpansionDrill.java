@@ -79,26 +79,32 @@ public class ExpansionDrill implements ExpandableObject {
     return true;
   }
 
+  @Override
   public TileShape get_shape() {
     return this.shape;
   }
 
+  @Override
   public int get_dimension() {
     return 2;
   }
 
+  @Override
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     return null;
   }
 
+  @Override
   public int maze_search_element_count() {
     return this.maze_search_info_arr.length;
   }
 
+  @Override
   public MazeSearchElement get_maze_search_element(int p_no) {
     return this.maze_search_info_arr[p_no];
   }
 
+  @Override
   public void reset() {
     for (MazeSearchElement curr_info : maze_search_info_arr) {
       curr_info.reset();

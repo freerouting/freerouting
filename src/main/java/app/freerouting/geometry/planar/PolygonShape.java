@@ -91,6 +91,7 @@ public class PolygonShape extends PolylineShape {
     this(new Polygon(p_corner_arr));
   }
 
+  @Override
   public Point corner(int p_no) {
     if (p_no < 0 || p_no >= corners.length) {
       FRLogger.warn("PolygonShape.corner: p_no out of range");
@@ -99,18 +100,22 @@ public class PolygonShape extends PolylineShape {
     return corners[p_no];
   }
 
+  @Override
   public int border_line_count() {
     return corners.length;
   }
 
+  @Override
   public boolean corner_is_bounded(int p_no) {
     return true;
   }
 
+  @Override
   public boolean intersects(Shape p_shape) {
     return p_shape.intersects(this);
   }
 
+  @Override
   public boolean intersects(Circle p_circle) {
     TileShape[] convex_pieces = split_to_convex();
     for (int i = 0; i < convex_pieces.length; ++i) {
@@ -119,6 +124,7 @@ public class PolygonShape extends PolylineShape {
     return false;
   }
 
+  @Override
   public boolean intersects(Simplex p_simplex) {
     TileShape[] convex_pieces = split_to_convex();
     for (int i = 0; i < convex_pieces.length; ++i) {
@@ -127,6 +133,7 @@ public class PolygonShape extends PolylineShape {
     return false;
   }
 
+  @Override
   public boolean intersects(IntOctagon p_oct) {
     TileShape[] convex_pieces = split_to_convex();
     for (int i = 0; i < convex_pieces.length; ++i) {
@@ -135,6 +142,7 @@ public class PolygonShape extends PolylineShape {
     return false;
   }
 
+  @Override
   public boolean intersects(IntBox p_box) {
     TileShape[] convex_pieces = split_to_convex();
     for (int i = 0; i < convex_pieces.length; ++i) {
@@ -143,11 +151,13 @@ public class PolygonShape extends PolylineShape {
     return false;
   }
 
+  @Override
   public Polyline[] cutout(Polyline p_polyline) {
     FRLogger.warn("PolygonShape.cutout not yet implemented");
     return null;
   }
 
+  @Override
   public PolygonShape enlarge(double p_offset) {
     if (p_offset == 0) {
       return this;
@@ -156,15 +166,18 @@ public class PolygonShape extends PolylineShape {
     return null;
   }
 
+  @Override
   public double border_distance(FloatPoint p_point) {
     FRLogger.warn("PolygonShape.border_distance not yet implemented");
     return 0;
   }
 
+  @Override
   public double smallest_radius() {
     return border_distance(centre_of_gravity());
   }
 
+  @Override
   public boolean contains(FloatPoint p_point) {
     TileShape[] convex_pieces = split_to_convex();
     for (int i = 0; i < convex_pieces.length; ++i) {
@@ -173,6 +186,7 @@ public class PolygonShape extends PolylineShape {
     return false;
   }
 
+  @Override
   public boolean contains_inside(Point p_point) {
     if (contains_on_border(p_point)) {
       return false;
@@ -180,6 +194,7 @@ public class PolygonShape extends PolylineShape {
     return !is_outside(p_point);
   }
 
+  @Override
   public boolean is_outside(Point p_point) {
     TileShape[] convex_pieces = split_to_convex();
     for (int i = 0; i < convex_pieces.length; ++i) {
@@ -188,20 +203,24 @@ public class PolygonShape extends PolylineShape {
     return true;
   }
 
+  @Override
   public boolean contains(Point p_point) {
     return !is_outside(p_point);
   }
 
+  @Override
   public boolean contains_on_border(Point p_point) {
     // FRLogger.warn("PolygonShape.contains_on_edge not yet implemented");
     return false;
   }
 
+  @Override
   public double distance(FloatPoint p_point) {
     FRLogger.warn("PolygonShape.distance not yet implemented");
     return 0;
   }
 
+  @Override
   public PolygonShape translate_by(Vector p_vector) {
     if (p_vector.equals(Vector.ZERO)) {
       return this;
@@ -213,10 +232,12 @@ public class PolygonShape extends PolylineShape {
     return new PolygonShape(new_corners);
   }
 
+  @Override
   public RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs) {
     return p_dirs.bounds(this);
   }
 
+  @Override
   public IntBox bounding_box() {
     if (precalculated_bounding_box == null) {
       double llx = Integer.MAX_VALUE;
@@ -237,6 +258,7 @@ public class PolygonShape extends PolylineShape {
     return precalculated_bounding_box;
   }
 
+  @Override
   public IntOctagon bounding_octagon() {
     if (precalculated_bounding_octagon == null) {
       double lx = Integer.MAX_VALUE;
@@ -341,6 +363,7 @@ public class PolygonShape extends PolylineShape {
     return this;
   }
 
+  @Override
   public TileShape bounding_tile() {
     PolygonShape hull = convex_hull();
     Line[] bounding_lines = new Line[hull.corners.length];
@@ -352,6 +375,7 @@ public class PolygonShape extends PolylineShape {
     return TileShape.get_instance(bounding_lines);
   }
 
+  @Override
   public double area() {
 
     if (dimension() <= 2) {
@@ -374,6 +398,7 @@ public class PolygonShape extends PolylineShape {
     return result;
   }
 
+  @Override
   public int dimension() {
     if (corners.length == 0) return -1;
     if (corners.length == 1) return 0;
@@ -381,14 +406,17 @@ public class PolygonShape extends PolylineShape {
     return 2;
   }
 
+  @Override
   public boolean is_bounded() {
     return true;
   }
 
+  @Override
   public boolean is_empty() {
     return corners.length == 0;
   }
 
+  @Override
   public Line border_line(int p_no) {
     if (p_no < 0 || p_no >= corners.length) {
       FRLogger.warn("PolygonShape.edge_line: p_no out of range");
@@ -403,6 +431,7 @@ public class PolygonShape extends PolylineShape {
     return new Line(corners[p_no], next_corner);
   }
 
+  @Override
   public FloatPoint nearest_point_approx(FloatPoint p_from_point) {
     double min_dist = Double.MAX_VALUE;
     FloatPoint result = null;
@@ -418,6 +447,7 @@ public class PolygonShape extends PolylineShape {
     return result;
   }
 
+  @Override
   public PolygonShape turn_90_degree(int p_factor, IntPoint p_pole) {
     Point[] new_corners = new Point[corners.length];
     for (int i = 0; i < corners.length; ++i) {
@@ -426,6 +456,7 @@ public class PolygonShape extends PolylineShape {
     return new PolygonShape(new_corners);
   }
 
+  @Override
   public PolygonShape rotate_approx(double p_angle, FloatPoint p_pole) {
     if (p_angle == 0) {
       return this;
@@ -437,6 +468,7 @@ public class PolygonShape extends PolylineShape {
     return new PolygonShape(new_corners);
   }
 
+  @Override
   public PolygonShape mirror_vertical(IntPoint p_pole) {
     Point[] new_corners = new Point[corners.length];
     for (int i = 0; i < corners.length; ++i) {
@@ -445,6 +477,7 @@ public class PolygonShape extends PolylineShape {
     return new PolygonShape(new_corners);
   }
 
+  @Override
   public PolygonShape mirror_horizontal(IntPoint p_pole) {
     Point[] new_corners = new Point[corners.length];
     for (int i = 0; i < corners.length; ++i) {
@@ -458,6 +491,7 @@ public class PolygonShape extends PolylineShape {
    * intersections of lines are used in the result pieces. It can be made exact, if Polylines are
    * returned instead of Polygons, so that no intersection points are needed in the result.
    */
+  @Override
   public TileShape[] split_to_convex() {
     if (this.precalculated_convex_pieces == null)
     // not yet precalculated

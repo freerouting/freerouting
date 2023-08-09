@@ -69,6 +69,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return rel_location;
   }
 
+  @Override
   public Point get_center() {
     Point pin_center = super.get_center();
     if (pin_center == null) {
@@ -99,6 +100,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return pin_center;
   }
 
+  @Override
   public Padstack get_padstack() {
     Component component = board.components.get(get_component_no());
     if (component == null) {
@@ -109,6 +111,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return board.library.padstacks.get(padstack_no);
   }
 
+  @Override
   public Item copy(int p_id_no) {
     int[] curr_net_no_arr = new int[this.net_count()];
     for (int i = 0; i < curr_net_no_arr.length; ++i) {
@@ -139,6 +142,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return pin_no;
   }
 
+  @Override
   public Shape get_shape(int p_index) {
     Padstack padstack = get_padstack();
     if (this.precalculated_shapes == null) {
@@ -332,6 +336,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return (this.first_layer() == this.last_layer());
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other == this || p_other instanceof ObstacleArea) {
       return false;
@@ -345,21 +350,25 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return !this.drill_allowed() || !(p_other instanceof Via) || !((Via) p_other).attach_allowed;
   }
 
+  @Override
   public void turn_90_degree(int p_factor, IntPoint p_pole) {
     this.set_center(null);
     clear_derived_data();
   }
 
+  @Override
   public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole) {
     this.set_center(null);
     this.clear_derived_data();
   }
 
+  @Override
   public void change_placement_side(IntPoint p_pole) {
     this.set_center(null);
     this.clear_derived_data();
   }
 
+  @Override
   public void clear_derived_data() {
     super.clear_derived_data();
     this.precalculated_shapes = null;
@@ -403,6 +412,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -410,6 +420,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.PINS);
   }
 
+  @Override
   public java.awt.Color[] get_draw_colors(
       app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
     java.awt.Color[] result;
@@ -422,6 +433,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public double get_draw_intensity(
       app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
     return p_graphics_context.get_pin_color_intensity();
@@ -460,6 +472,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return changed_to;
   }
 
+  @Override
   public boolean write(java.io.ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
@@ -470,6 +483,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
   }
 
   /** False, if this drillitem is places on the back side of the board */
+  @Override
   public boolean is_placed_on_front() {
     boolean result = true;
     Component component = board.components.get(this.get_component_no());
@@ -520,6 +534,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return padstack_bounding_box.max_width();
   }
 
+  @Override
   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);

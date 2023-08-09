@@ -399,6 +399,7 @@ public class PlanarDelaunayTriangulation {
       id_no = new_edge_id_no();
     }
 
+    @Override
     public int compareTo(Edge p_other) {
       return (this.id_no - p_other.id_no);
     }

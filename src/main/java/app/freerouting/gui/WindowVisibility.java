@@ -99,6 +99,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
   // private classes
 
   private class MinAllButtonListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       set_all_minimum();
       board_panel.repaint();
@@ -106,6 +107,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
   }
 
   private class MaxAllButtonListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       set_all_maximum();
       board_panel.repaint();
@@ -120,6 +122,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
       slider_no = p_slider_no;
     }
 
+    @Override
     public void stateChanged(javax.swing.event.ChangeEvent evt) {
       int new_visibility = slider_arr[slider_no].getValue();
       set_changed_value(slider_no, ((double) new_visibility) / ((double) MAX_SLIDER_VALUE));

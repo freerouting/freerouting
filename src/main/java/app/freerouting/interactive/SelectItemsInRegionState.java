@@ -48,6 +48,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
     return new_instance;
   }
 
+  @Override
   public InteractiveState complete() {
     if (!hdlg.is_board_read_only()) {
       hdlg.screen_messages.set_status_message("");

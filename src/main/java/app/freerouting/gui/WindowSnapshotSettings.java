@@ -186,6 +186,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   /** Recalculates all displayed values */
+  @Override
   public void refresh() {
     app.freerouting.interactive.SnapShot.Attributes attributes =
         this.board_handling.settings.get_snapshot_attributes();
@@ -207,6 +208,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class ObjectColorListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().object_colors =
           object_color_check_box.isSelected();
@@ -214,6 +216,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class ObjectVisibilityListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().object_visibility =
           object_visibility_check_box.isSelected();
@@ -221,6 +224,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class LayerVisibilityListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().layer_visibility =
           layer_visibility_check_box.isSelected();
@@ -228,6 +232,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class DisplayRegionListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().display_region =
           display_region_check_box.isSelected();
@@ -235,6 +240,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class InteractiveStateListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().interactive_state =
           interactive_state_check_box.isSelected();
@@ -242,6 +248,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class SelectionLayersListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().selection_layers =
           selection_layers_check_box.isSelected();
@@ -249,6 +256,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class SelectableItemsListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().selectable_items =
           selectable_items_check_box.isSelected();
@@ -256,6 +264,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class CurrentLayerListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().current_layer =
           current_layer_check_box.isSelected();
@@ -263,6 +272,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class RuleSelectionListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().rule_selection =
           rule_selection_check_box.isSelected();
@@ -270,6 +280,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class ManualRuleSettingsListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().manual_rule_settings =
           manual_rule_settings_check_box.isSelected();
@@ -277,6 +288,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class PushAndShoveEnabledListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().push_and_shove_enabled =
           push_and_shove_enabled_check_box.isSelected();
@@ -284,6 +296,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class DragComponentsEnabledListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().drag_components_enabled =
           drag_components_enabled_check_box.isSelected();
@@ -291,6 +304,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class PullTightRegionListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().pull_tight_region =
           pull_tight_region_check_box.isSelected();
@@ -298,6 +312,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class ComponentGridListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().component_grid =
           component_grid_check_box.isSelected();
@@ -305,6 +320,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   }
 
   private class InfoListFilterListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.get_snapshot_attributes().info_list_selections =
           info_list_filter_check_box.isSelected();

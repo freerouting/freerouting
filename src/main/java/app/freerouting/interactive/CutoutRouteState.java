@@ -64,6 +64,7 @@ public class CutoutRouteState extends SelectRegionState {
     return new_instance;
   }
 
+  @Override
   public InteractiveState complete() {
     hdlg.screen_messages.set_status_message("");
     corner2 = hdlg.get_current_mouse_position();
@@ -103,6 +104,7 @@ public class CutoutRouteState extends SelectRegionState {
     }
   }
 
+  @Override
   public void draw(java.awt.Graphics p_graphics) {
     if (trace_list == null) {
       return;

@@ -61,6 +61,7 @@ public class ViaInfos
     return this.list.remove(p_via_info);
   }
 
+  @Override
   public void print_info(
       app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =

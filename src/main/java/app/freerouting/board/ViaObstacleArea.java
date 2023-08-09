@@ -62,6 +62,7 @@ public class ViaObstacleArea extends ObstacleArea {
         p_board);
   }
 
+  @Override
   public Item copy(int p_id_no) {
     int[] copied_net_nos = new int[net_no_arr.length];
     System.arraycopy(net_no_arr, 0, copied_net_nos, 0, net_no_arr.length);
@@ -80,6 +81,7 @@ public class ViaObstacleArea extends ObstacleArea {
         board);
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other.shares_net(this)) {
       return false;
@@ -87,10 +89,12 @@ public class ViaObstacleArea extends ObstacleArea {
     return p_other instanceof Via;
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return false;
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -98,6 +102,7 @@ public class ViaObstacleArea extends ObstacleArea {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT);
   }
 
+  @Override
   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
@@ -108,11 +113,13 @@ public class ViaObstacleArea extends ObstacleArea {
     p_window.newline();
   }
 
+  @Override
   public java.awt.Color[] get_draw_colors(
       app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
     return p_graphics_context.get_via_obstacle_colors();
   }
 
+  @Override
   public double get_draw_intensity(
       app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
     return p_graphics_context.get_via_obstacle_color_intensity();

@@ -29,6 +29,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
    * p_room.get_contained_shape(). The result room is not yet complete, because its doors are not
    * yet calculated.
    */
+  @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(
       IncompleteFreeSpaceExpansionRoom p_room,
       int p_net_no,
@@ -248,6 +249,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     return result;
   }
 
+  @Override
   TileShape[] calculate_tree_shapes(DrillItem p_drill_item) {
     if (this.board == null) {
       return new TileShape[0];
@@ -273,6 +275,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     return result;
   }
 
+  @Override
   TileShape[] calculate_tree_shapes(ObstacleArea p_obstacle_area) {
     TileShape[] result = super.calculate_tree_shapes(p_obstacle_area);
     for (int i = 0; i < result.length; ++i) {
@@ -281,6 +284,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     return result;
   }
 
+  @Override
   TileShape[] calculate_tree_shapes(BoardOutline p_outline) {
     TileShape[] result = super.calculate_tree_shapes(p_outline);
     for (int i = 0; i < result.length; ++i) {
@@ -290,11 +294,13 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
   }
 
   /** Used for creating the shapes of a polyline_trace for this tree. */
+  @Override
   TileShape offset_shape(Polyline p_polyline, int p_half_width, int p_no) {
     return p_polyline.offset_box(p_half_width, p_no);
   }
 
   /** Used for creating the shapes of a polyline_trace for this tree. */
+  @Override
   public TileShape[] offset_shapes(
       Polyline p_polyline, int p_half_width, int p_from_no, int p_to_no) {
     int from_no = Math.max(p_from_no, 0);

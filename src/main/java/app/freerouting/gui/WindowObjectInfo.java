@@ -54,6 +54,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     // Dispose this window and all subwindows when closing the window.
     this.addWindowListener(
         new java.awt.event.WindowAdapter() {
+          @Override
           public void windowClosing(java.awt.event.WindowEvent evt) {
             dispose();
           }
@@ -178,11 +179,13 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   }
 
   /** Appends p_string to the text pane. Returns false, if that was not possible. */
+  @Override
   public boolean append(String p_string) {
     return append(p_string, "normal");
   }
 
   /** Appends p_string in bold styleto the text pane. Returns false, if that was not possible. */
+  @Override
   public boolean append_bold(String p_string) {
     return append(p_string, "bold");
   }
@@ -191,6 +194,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * Appends p_value to the text pane after transforming it to the user coordinate sytem. Returns
    * false, if that was not possible.
    */
+  @Override
   public boolean append(double p_value) {
     Float value = (float) this.coordinate_transform.board_to_user(p_value);
     return append(number_format.format(value));
@@ -200,6 +204,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * Appends p_value to the text pane without transforming it to the user coordinate sytem. Returns
    * false, if that was not possible.
    */
+  @Override
   public boolean append_without_transforming(double p_value) {
     Float value = (float) p_value;
     return append(number_format.format(value));
@@ -209,6 +214,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * Appends p_point to the text pane after transforming to the user coordinate sytem. Returns
    * false, if that was not possible.
    */
+  @Override
   public boolean append(app.freerouting.geometry.planar.FloatPoint p_point) {
     app.freerouting.geometry.planar.FloatPoint transformed_point =
         this.coordinate_transform.board_to_user(p_point);
@@ -219,6 +225,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * Appends p_shape to the text pane after transforming to the user coordinate sytem. Returns
    * false, if that was not possible.
    */
+  @Override
   public boolean append(app.freerouting.geometry.planar.Shape p_shape, java.util.Locale p_locale) {
     app.freerouting.board.PrintableShape transformed_shape =
         this.coordinate_transform.board_to_user(p_shape, p_locale);
@@ -229,11 +236,13 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   }
 
   /** Begins a new line in the text pane. */
+  @Override
   public boolean newline() {
     return append("\n");
   }
 
   /** Appends a fixed number of spaces to the text pane. */
+  @Override
   public boolean indent() {
     return append("       ");
   }
@@ -242,6 +251,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * Appends a button for creating a new ObjectInfoWindow with the information of p_object to the
    * text pane. Returns false, if that was not possible.
    */
+  @Override
   public boolean append(
       String p_button_name, String p_window_title, WindowObjectInfo.Printable p_object) {
     java.util.Collection<WindowObjectInfo.Printable> object_list =
@@ -254,6 +264,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * Appends a button for creating a new ObjectInfoWindow with the information of p_items to the
    * text pane. Returns false, if that was not possible.
    */
+  @Override
   public boolean append_items(
       String p_button_name,
       String p_window_title,
@@ -268,6 +279,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * Appends a button for creating a new ObjectInfoWindow with the information of p_objects to the
    * text pane. Returns false, if that was not possible.
    */
+  @Override
   public boolean append_objects(
       String p_button_name,
       String p_window_title,
@@ -304,6 +316,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     return true;
   }
 
+  @Override
   public void dispose() {
     for (WindowObjectInfo curr_subwindow : this.subwindows) {
       if (curr_subwindow != null) {
@@ -325,6 +338,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
       this.objects = p_objects;
     }
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       WindowObjectInfo new_window =
           display(this.title, this.objects, board_frame, coordinate_transform);

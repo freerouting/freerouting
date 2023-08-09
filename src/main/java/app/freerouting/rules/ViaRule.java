@@ -37,6 +37,7 @@ public class ViaRule
     return list.get(p_index);
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
@@ -93,6 +94,7 @@ public class ViaRule
     return true;
   }
 
+  @Override
   public void print_info(
       app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =

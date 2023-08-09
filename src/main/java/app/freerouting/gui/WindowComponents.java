@@ -18,6 +18,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
   }
 
   /** Fills the list with the board components. */
+  @Override
   protected void fill_list() {
     Components components =
         this.board_frame.board_panel.board_handling.get_routing_board().components;
@@ -32,6 +33,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
     this.list.setVisibleRowCount(Math.min(components.count(), DEFAULT_TABLE_SIZE));
   }
 
+  @Override
   protected void select_instances() {
     List<Object> selected_components = list.getSelectedValuesList();
     if (selected_components.size() <= 0) {

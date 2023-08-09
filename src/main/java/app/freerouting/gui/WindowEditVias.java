@@ -57,6 +57,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
   }
 
   /** Recalculates all values displayed in the parent window */
+  @Override
   public void refresh() {
     this.padstack_combo_box.removeAllItems();
     this.cl_class_combo_box.removeAllItems();
@@ -117,6 +118,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
   }
 
   private class AddViaListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       app.freerouting.board.RoutingBoard routing_board =
           board_frame.board_panel.board_handling.get_routing_board();
@@ -147,6 +149,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
   }
 
   private class RemoveViaListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       if (table_model.getRowCount() <= 1) {
         board_frame.screen_messages.set_status_message(resources.getString("message_1"));
@@ -217,22 +220,27 @@ public class WindowEditVias extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public String getColumnName(int p_col) {
       return column_names[p_col];
     }
 
+    @Override
     public int getRowCount() {
       return data.length;
     }
 
+    @Override
     public int getColumnCount() {
       return column_names.length;
     }
 
+    @Override
     public Object getValueAt(int p_row, int p_col) {
       return data[p_row][p_col];
     }
 
+    @Override
     public void setValueAt(Object p_value, int p_row, int p_col) {
       app.freerouting.board.RoutingBoard routing_board =
           board_frame.board_panel.board_handling.get_routing_board();
@@ -295,10 +303,12 @@ public class WindowEditVias extends BoardSavableSubWindow {
       fireTableCellUpdated(p_row, p_col);
     }
 
+    @Override
     public boolean isCellEditable(int p_row, int p_col) {
       return true;
     }
 
+    @Override
     public Class<?> getColumnClass(int p_col) {
       return getValueAt(0, p_col).getClass();
     }

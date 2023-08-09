@@ -32,6 +32,7 @@ class PullTightAlgo45 extends PullTightAlgo {
         p_keep_point_layer);
   }
 
+  @Override
   Polyline pull_tight(Polyline p_polyline) {
     Polyline new_result = avoid_acid_traps(p_polyline);
     Polyline prev_result = null;
@@ -459,6 +460,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     return result;
   }
 
+  @Override
   Polyline smoothen_start_corner_at_trace(PolylineTrace p_trace) {
     boolean acute_angle = false;
     boolean bend = false;
@@ -571,6 +573,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     return null;
   }
 
+  @Override
   Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace) {
     boolean acute_angle = false;
     boolean bend = false;

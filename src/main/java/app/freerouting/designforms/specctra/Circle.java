@@ -26,6 +26,7 @@ public class Circle extends Shape {
     coor[2] = p_center_y;
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board(
       CoordinateTransform p_coordinate_transform) {
     double[] location = new double[2];
@@ -36,6 +37,7 @@ public class Circle extends Shape {
     return new app.freerouting.geometry.planar.Circle(center, radius);
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
     int[] new_coor = new int[3];
@@ -47,6 +49,7 @@ public class Circle extends Shape {
         new IntPoint(new_coor[1], new_coor[2]), new_coor[0]);
   }
 
+  @Override
   public Rectangle bounding_box() {
     double[] bounds = new double[4];
     bounds[0] = coor[1] - coor[0];
@@ -56,6 +59,7 @@ public class Circle extends Shape {
     return new Rectangle(layer, bounds);
   }
 
+  @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
       throws java.io.IOException {
     p_file.new_line();
@@ -68,6 +72,7 @@ public class Circle extends Shape {
     p_file.write(")");
   }
 
+  @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
       throws java.io.IOException {
     p_file.new_line();

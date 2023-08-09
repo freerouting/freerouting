@@ -60,6 +60,7 @@ public class MazeListElement implements Comparable<MazeListElement> {
     already_checked = p_already_checked;
   }
 
+  @Override
   public int compareTo(MazeListElement p_other) {
     double compare_value = (this.sorting_value - p_other.sorting_value);
     // make shure, that the result cannot be 0, so that no element in the set is

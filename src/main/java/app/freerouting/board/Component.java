@@ -144,6 +144,7 @@ public class Component
   /**
    * Compares 2 components by name. Useful for example to display components in alphabetic order.
    */
+  @Override
   public int compareTo(Object p_other) {
     if (p_other instanceof Component) {
       return this.name.compareToIgnoreCase(((Component) p_other).name);
@@ -152,6 +153,7 @@ public class Component
   }
 
   /** Creates a copy of this component. */
+  @Override
   public Component clone() {
     Component result =
         new Component(
@@ -167,6 +169,7 @@ public class Component
     return result;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
@@ -181,6 +184,7 @@ public class Component
     this.logical_part = p_logical_part;
   }
 
+  @Override
   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);

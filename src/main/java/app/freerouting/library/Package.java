@@ -55,6 +55,7 @@ public class Package
   }
 
   /** Compares 2 packages by name. Useful for example to display packages in alphabetic order. */
+  @Override
   public int compareTo(Package p_other) {
     return this.name.compareToIgnoreCase(p_other.name);
   }
@@ -86,10 +87,12 @@ public class Package
     return pin_arr.length;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
 
+  @Override
   public void print_info(
       app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =

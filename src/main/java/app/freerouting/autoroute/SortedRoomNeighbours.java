@@ -649,6 +649,7 @@ public class SortedRoomNeighbours {
      * Compare function for or sorting the neighbours in counterclock sense around the border of the
      * room shape in ascending order.
      */
+    @Override
     public int compareTo(SortedRoomNeighbour p_other) {
       int compare_value = this.touching_side_no_of_room - p_other.touching_side_no_of_room;
       if (compare_value != 0) {

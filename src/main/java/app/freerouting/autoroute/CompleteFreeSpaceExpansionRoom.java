@@ -33,10 +33,12 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     id_no = p_id_no;
   }
 
+  @Override
   public void set_search_tree_entries(ShapeTree.Leaf[] p_entries, ShapeTree p_tree) {
     tree_entries = p_entries;
   }
 
+  @Override
   public int compareTo(Object p_other) {
     int result;
     if (p_other instanceof FreeSpaceExpansionRoom) {
@@ -52,22 +54,27 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     p_shape_tree.remove(this.tree_entries);
   }
 
+  @Override
   public int tree_shape_count(ShapeTree p_shape_tree) {
     return 1;
   }
 
+  @Override
   public TileShape get_tree_shape(ShapeTree p_shape_tree, int p_index) {
     return this.get_shape();
   }
 
+  @Override
   public int shape_layer(int p_index) {
     return this.get_layer();
   }
 
+  @Override
   public boolean is_obstacle(int p_net_no) {
     return true;
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return true;
   }
@@ -86,6 +93,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   /** Returns the list doors to target items of this room */
+  @Override
   public Collection<TargetItemExpansionDoor> get_target_doors() {
     return this.target_doors;
   }
@@ -95,6 +103,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     this.target_doors.add(p_door);
   }
 
+  @Override
   public boolean remove_door(ExpandableObject p_door) {
     boolean result;
     if (p_door instanceof TargetItemExpansionDoor) {
@@ -105,6 +114,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     return result;
   }
 
+  @Override
   public SearchTreeObject get_object() {
     return this;
   }
@@ -132,6 +142,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   /** Draws the shape of this room. */
+  @Override
   public void draw(
       java.awt.Graphics p_graphics,
       app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
@@ -177,11 +188,13 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   /** Removes all doors and target doors from this room. */
+  @Override
   public void clear_doors() {
     super.clear_doors();
     this.target_doors = new LinkedList<TargetItemExpansionDoor>();
   }
 
+  @Override
   public void reset_doors() {
     super.reset_doors();
     for (ExpandableObject curr_door : this.target_doors) {

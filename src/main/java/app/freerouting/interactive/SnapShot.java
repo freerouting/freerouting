@@ -52,6 +52,7 @@ public class SnapShot implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }

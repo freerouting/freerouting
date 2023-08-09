@@ -1041,6 +1041,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       entry_id_no = last_generated_id_no;
     }
 
+    @Override
     public int compareTo(EntrySortedByClearance p_other) {
       if (clearance != p_other.clearance) {
         return Signum.as_int(clearance - p_other.clearance);

@@ -76,12 +76,14 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     // Dispose this window and all subwindows when closing the window.
     this.addWindowListener(
         new java.awt.event.WindowAdapter() {
+          @Override
           public void windowClosing(java.awt.event.WindowEvent evt) {
             dispose();
           }
         });
   }
 
+  @Override
   public void setVisible(boolean p_value) {
     if (p_value == true) {
       recalculate();
@@ -109,6 +111,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
     this.list.addMouseListener(
         new java.awt.event.MouseAdapter() {
+          @Override
           public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (evt.getClickCount() > 1) {
               select_instances();
@@ -117,6 +120,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
         });
   }
 
+  @Override
   public void dispose() {
     for (WindowObjectInfo curr_subwindow : this.subwindows) {
       if (curr_subwindow != null) {
@@ -136,6 +140,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   protected abstract void select_instances();
 
   /** Saves also the filter string to disk. */
+  @Override
   public void save(java.io.ObjectOutputStream p_object_stream) {
     int[] selected_indices;
     if (this.list != null) {
@@ -151,6 +156,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     super.save(p_object_stream);
   }
 
+  @Override
   public boolean read(java.io.ObjectInputStream p_object_stream) {
     int[] saved_selected_indices = null;
     try {
@@ -170,6 +176,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private class ShowListener implements java.awt.event.ActionListener {
     private static final int WINDOW_OFFSET = 30;
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       List<Object> selected_objects = list.getSelectedValuesList();
       if (selected_objects.size() <= 0) {
@@ -196,6 +203,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   /** Listens to the button for showing the selected incompletes */
   private class SelectListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       select_instances();
     }
@@ -203,6 +211,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   /** Listens to the button for inverting the selection */
   private class InvertListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       if (list_model == null) {
         return;
@@ -221,6 +230,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   /** Listens to the button for recalculating the content of the window */
   private class RecalculateListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       recalculate();
     }

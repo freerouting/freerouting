@@ -22,6 +22,7 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     return null;
   }
 
+  @Override
   public void uncaughtException(Thread t, Throwable e) {
     handleException(e);
   }

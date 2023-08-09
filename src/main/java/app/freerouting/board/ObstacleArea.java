@@ -87,6 +87,7 @@ public class ObstacleArea extends Item implements java.io.Serializable {
         p_board);
   }
 
+  @Override
   public Item copy(int p_id_no) {
     int[] copied_net_nos = new int[net_no_arr.length];
     System.arraycopy(net_no_arr, 0, copied_net_nos, 0, net_no_arr.length);
@@ -135,14 +136,17 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return this.relative_area;
   }
 
+  @Override
   public boolean is_on_layer(int p_layer) {
     return layer == p_layer;
   }
 
+  @Override
   public int first_layer() {
     return this.layer;
   }
 
+  @Override
   public int last_layer() {
     return this.layer;
   }
@@ -151,10 +155,12 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return this.layer;
   }
 
+  @Override
   public IntBox bounding_box() {
     return this.get_area().bounding_box();
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other.shares_net(this)) {
       return false;
@@ -162,10 +168,12 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return p_other instanceof Trace || p_other instanceof Via;
   }
 
+  @Override
   protected TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree) {
     return p_search_tree.calculate_tree_shapes(this);
   }
 
+  @Override
   public int tile_shape_count() {
     TileShape[] tile_shapes = this.split_to_convex();
     if (tile_shapes == null) {
@@ -175,6 +183,7 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return tile_shapes.length;
   }
 
+  @Override
   public TileShape get_tile_shape(int p_no) {
     TileShape[] tile_shapes = this.split_to_convex();
     if (tile_shapes == null || p_no < 0 || p_no >= tile_shapes.length) {
@@ -184,11 +193,13 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return tile_shapes[p_no];
   }
 
+  @Override
   public void translate_by(Vector p_vector) {
     this.translation = this.translation.add(p_vector);
     this.clear_derived_data();
   }
 
+  @Override
   public void turn_90_degree(int p_factor, IntPoint p_pole) {
     this.rotation_in_degree += p_factor * 90;
     while (this.rotation_in_degree >= 360) {
@@ -202,6 +213,7 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     this.clear_derived_data();
   }
 
+  @Override
   public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole) {
     double turn_angle = p_angle_in_degree;
     if (this.side_changed && this.board.components.get_flip_style_rotate_first()) {
@@ -220,6 +232,7 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     this.clear_derived_data();
   }
 
+  @Override
   public void change_placement_side(IntPoint p_pole) {
     this.side_changed = !this.side_changed;
     if (this.board != null) {
@@ -230,6 +243,7 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     this.clear_derived_data();
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -237,18 +251,22 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.KEEPOUT);
   }
 
+  @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
     return p_graphics_context.get_obstacle_colors();
   }
 
+  @Override
   public double get_draw_intensity(GraphicsContext p_graphics_context) {
     return p_graphics_context.get_obstacle_color_intensity();
   }
 
+  @Override
   public int get_draw_priority() {
     return app.freerouting.boardgraphics.Drawable.MIN_DRAW_PRIORITY;
   }
 
+  @Override
   public void draw(
       java.awt.Graphics p_g,
       GraphicsContext p_graphics_context,
@@ -269,6 +287,7 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     }
   }
 
+  @Override
   public int shape_layer(int p_index) {
     return layer;
   }
@@ -285,6 +304,7 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return side_changed;
   }
 
+  @Override
   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
@@ -331,11 +351,13 @@ public class ObstacleArea extends Item implements java.io.Serializable {
     return this.get_area().split_to_convex();
   }
 
+  @Override
   public void clear_derived_data() {
     super.clear_derived_data();
     this.precalculated_absolute_area = null;
   }
 
+  @Override
   public boolean write(java.io.ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);

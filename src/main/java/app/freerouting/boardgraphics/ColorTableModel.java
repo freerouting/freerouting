@@ -19,14 +19,17 @@ public abstract class ColorTableModel extends AbstractTableModel {
     this.locale = (java.util.Locale) p_stream.readObject();
   }
 
+  @Override
   public int getRowCount() {
     return data.length;
   }
 
+  @Override
   public Object getValueAt(int p_row, int p_col) {
     return data[p_row][p_col];
   }
 
+  @Override
   public void setValueAt(Object p_value, int p_row, int p_col) {
     data[p_row][p_col] = p_value;
     fireTableCellUpdated(p_row, p_col);
@@ -37,6 +40,7 @@ public abstract class ColorTableModel extends AbstractTableModel {
    * implement this method, then the last column would contain text ("true"/"false"), rather than a
    * check box.
    */
+  @Override
   public Class<?> getColumnClass(int p_c) {
     return getValueAt(0, p_c).getClass();
   }

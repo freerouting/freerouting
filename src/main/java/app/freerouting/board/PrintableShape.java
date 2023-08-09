@@ -13,6 +13,7 @@ public abstract class PrintableShape {
   }
 
   /** Returns text information about the PrintableShape. */
+  @Override
   public abstract String toString();
 
   static class Circle extends PrintableShape {
@@ -26,6 +27,7 @@ public abstract class PrintableShape {
       radius = p_radius;
     }
 
+    @Override
     public String toString() {
       java.util.ResourceBundle resources =
           java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
@@ -53,6 +55,7 @@ public abstract class PrintableShape {
       upper_right = p_upper_right;
     }
 
+    @Override
     public String toString() {
       java.util.ResourceBundle resources =
           java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
@@ -78,6 +81,7 @@ public abstract class PrintableShape {
       corner_arr = p_corners;
     }
 
+    @Override
     public String toString() {
       java.util.ResourceBundle resources =
           java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);

@@ -32,10 +32,12 @@ public class TargetItemExpansionDoor implements ExpandableObject {
     maze_search_info = new MazeSearchElement();
   }
 
+  @Override
   public TileShape get_shape() {
     return this.shape;
   }
 
+  @Override
   public int get_dimension() {
     return 2;
   }
@@ -45,18 +47,22 @@ public class TargetItemExpansionDoor implements ExpandableObject {
     return !item_info.is_start_info();
   }
 
+  @Override
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     return null;
   }
 
+  @Override
   public MazeSearchElement get_maze_search_element(int p_no) {
     return maze_search_info;
   }
 
+  @Override
   public int maze_search_element_count() {
     return 1;
   }
 
+  @Override
   public void reset() {
     maze_search_info.reset();
   }

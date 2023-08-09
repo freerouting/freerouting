@@ -100,6 +100,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
   }
 
   /** Recalculates the values in the trace width fields. */
+  @Override
   public void refresh() {
     app.freerouting.board.RoutingBoard routing_board = board_handling.get_routing_board();
     javax.swing.ComboBoxModel<app.freerouting.rules.ViaRule> new_model =
@@ -172,6 +173,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
   private class LayerComboBoxListener implements java.awt.event.ActionListener {
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent evt) {
       ComboBoxLayer.Layer new_selected_layer = layer_combo_box.get_selected_layer();
       set_selected_layer(new_selected_layer);
@@ -180,6 +182,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
   private class ClearanceComboBoxListener implements java.awt.event.ActionListener {
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent evt) {
       int new_index = clearance_combo_box.get_selected_class_index();
       board_handling.settings.set_manual_trace_clearance_class(new_index);
@@ -188,6 +191,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
   private class ViaRuleComboBoxListener implements java.awt.event.ActionListener {
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent evt) {
       int new_index = via_rule_combo_box.getSelectedIndex();
       board_handling.settings.set_manual_via_rule_index(new_index);
@@ -196,6 +200,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
   private class TraceWidthFieldKeyListener extends java.awt.event.KeyAdapter {
 
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
@@ -220,6 +225,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
   private class TraceWidthFieldFocusListener implements java.awt.event.FocusListener {
 
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
@@ -228,6 +234,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 }

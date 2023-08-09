@@ -37,11 +37,13 @@ public class Net
     net_class = p_net_list.get_board().rules.get_default_net_class();
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
 
   /** Compares 2 nets by name. Useful for example to display nets in alphabetic order. */
+  @Override
   public int compareTo(Net p_other) {
     return this.name.compareToIgnoreCase(p_other.name);
   }
@@ -153,6 +155,7 @@ public class Net
     return contains_plane;
   }
 
+  @Override
   public void print_info(
       app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
     Integer via_count = this.get_via_count();

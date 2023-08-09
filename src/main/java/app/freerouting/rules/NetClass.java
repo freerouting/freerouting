@@ -44,6 +44,7 @@ public class NetClass
     this.is_ignored_by_autorouter = p_is_ignored_by_autorouter;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
@@ -198,6 +199,7 @@ public class NetClass
     }
   }
 
+  @Override
   public void print_info(
       app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =

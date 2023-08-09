@@ -16,6 +16,7 @@ public class ItemIdNoGenerator
    * Create a new unique identification number. Use eventually the id_no generater from the host
    * system for syncronisation
    */
+  @Override
   public int new_no() {
     if (last_generated_id_no >= c_max_id_no) {
       FRLogger.warn(
@@ -26,6 +27,7 @@ public class ItemIdNoGenerator
   }
 
   /** Return the maximum generated id number so far. */
+  @Override
   public int max_generated_no() {
     return last_generated_id_no;
   }

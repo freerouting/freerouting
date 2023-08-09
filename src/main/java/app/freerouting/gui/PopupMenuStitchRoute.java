@@ -23,6 +23,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     insert_item.setText(resources.getString("insert"));
     insert_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
           }
@@ -34,6 +35,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     done_item.setText(resources.getString("done"));
     done_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.return_from_state();
           }
@@ -45,6 +47,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     cancel_item.setText(resources.getString("cancel"));
     cancel_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.cancel_state();
           }

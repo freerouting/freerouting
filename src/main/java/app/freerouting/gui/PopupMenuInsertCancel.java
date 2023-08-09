@@ -15,6 +15,7 @@ class PopupMenuInsertCancel extends javax.swing.JPopupMenu {
     insert_item.setText(resources.getString("insert"));
     insert_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.return_from_state();
           }
@@ -26,6 +27,7 @@ class PopupMenuInsertCancel extends javax.swing.JPopupMenu {
     cancel_item.setText(resources.getString("cancel"));
     cancel_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.cancel_state();
           }

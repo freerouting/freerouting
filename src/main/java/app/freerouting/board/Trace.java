@@ -40,10 +40,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
   /** returns the last corner of the trace */
   public abstract Point last_corner();
 
+  @Override
   public int first_layer() {
     return this.layer;
   }
 
+  @Override
   public int last_layer() {
     return this.layer;
   }
@@ -74,6 +76,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other == this
         || p_other instanceof ViaObstacleArea
@@ -102,10 +105,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return get_normal_contacts(last_corner(), false);
   }
 
+  @Override
   public Point normal_contact_point(Item p_other) {
     return p_other.normal_contact_point(this);
   }
 
+  @Override
   public Set<Item> get_normal_contacts() {
     Set<Item> result = new TreeSet<Item>();
     Point start_corner = this.first_corner();
@@ -119,11 +124,13 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   public boolean is_routable() {
     return !is_user_fixed() && (this.net_count() > 0);
   }
 
   /** Returns true, if this trace is not contacted at its first or at its last point. */
+  @Override
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_start_contacts();
     if (contact_list.size() == 0) {
@@ -133,15 +140,18 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return (contact_list.size() == 0);
   }
 
+  @Override
   public java.awt.Color[] get_draw_colors(
       app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
     return p_graphics_context.get_trace_colors(this.is_user_fixed());
   }
 
+  @Override
   public int get_draw_priority() {
     return app.freerouting.boardgraphics.Drawable.MAX_DRAW_PRIORITY;
   }
 
+  @Override
   public double get_draw_intensity(
       app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
     return p_graphics_context.get_trace_color_intensity();
@@ -190,10 +200,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   Point normal_contact_point(DrillItem p_drill_item) {
     return p_drill_item.normal_contact_point(this);
   }
 
+  @Override
   Point normal_contact_point(Trace p_other) {
     if (this.layer != p_other.layer) {
       return null;
@@ -218,11 +230,13 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   public boolean is_drillable(int p_net_no) {
     return this.contains_net(p_net_no);
   }
 
   /** looks, if this trace is connectet to the same object at its start and its end point */
+  @Override
   public boolean is_overlap() {
     Set<Item> start_contacts = this.get_start_contacts();
     Set<Item> end_contacts = this.get_end_contacts();
@@ -238,6 +252,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
   /**
    * Returns true, if it is not allowed to change the location of this item by the push algorithm.
    */
+  @Override
   public boolean is_shove_fixed() {
     if (super.is_shove_fixed()) {
       return true;
@@ -301,10 +316,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return false;
   }
 
+  @Override
   public int shape_layer(int p_index) {
     return layer;
   }
 
+  @Override
   public Point[] get_ratsnest_corners() {
     // Use only uncontacted enpoints of the trace.
     // Otherwise the allocated memory in the calculation of the incompletes might become very big.
@@ -343,6 +360,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
    */
   public abstract boolean check_connection_to_pin(boolean p_at_start);
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -376,6 +394,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
@@ -394,6 +413,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     p_window.newline();
   }
 
+  @Override
   public boolean validate() {
     boolean result = super.validate();
 

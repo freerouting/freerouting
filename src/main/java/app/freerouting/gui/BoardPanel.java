@@ -70,30 +70,36 @@ public class BoardPanel extends javax.swing.JPanel {
     setPreferredSize(new java.awt.Dimension(1200, 900));
     addMouseMotionListener(
         new java.awt.event.MouseMotionAdapter() {
+          @Override
           public void mouseDragged(java.awt.event.MouseEvent evt) {
             mouse_dragged_action(evt);
           }
 
+          @Override
           public void mouseMoved(java.awt.event.MouseEvent evt) {
             mouse_moved_action(evt);
           }
         });
     addKeyListener(
         new java.awt.event.KeyAdapter() {
+          @Override
           public void keyTyped(java.awt.event.KeyEvent evt) {
             board_handling.key_typed_action(evt.getKeyChar());
           }
         });
     addMouseListener(
         new java.awt.event.MouseAdapter() {
+          @Override
           public void mouseClicked(java.awt.event.MouseEvent evt) {
             mouse_clicked_action(evt);
           }
 
+          @Override
           public void mousePressed(java.awt.event.MouseEvent evt) {
             mouse_pressed_action(evt);
           }
 
+          @Override
           public void mouseReleased(java.awt.event.MouseEvent evt) {
             board_handling.button_released();
             middle_drag_position = null;
@@ -101,6 +107,7 @@ public class BoardPanel extends javax.swing.JPanel {
         });
     addMouseWheelListener(
         new java.awt.event.MouseWheelListener() {
+          @Override
           public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
             board_handling.mouse_wheel_moved(evt.getWheelRotation());
           }
@@ -184,6 +191,7 @@ public class BoardPanel extends javax.swing.JPanel {
   }
 
   /** overwrites the paintComponent method to draw the routing board */
+  @Override
   public void paintComponent(Graphics p_g) {
     super.paintComponent(p_g);
     if (board_handling != null) {
@@ -408,6 +416,7 @@ public class BoardPanel extends javax.swing.JPanel {
   }
 
   private class ColorTableListener implements TableModelListener {
+    @Override
     public void tableChanged(TableModelEvent p_event) {
       // redisplay board because some colors have changed.
       setBackground(board_handling.graphics_context.get_background_color());

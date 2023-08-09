@@ -488,6 +488,7 @@ public class FloatPoint implements java.io.Serializable {
     return ("(" + nf.format(x) + " , " + nf.format(y) + ")");
   }
 
+  @Override
   public String toString() {
     return to_string(java.util.Locale.ENGLISH);
   }

@@ -8,6 +8,7 @@ public class WindowNetSampleDesigns extends WindowNetSamples {
     super(p_locale, "sample_designs", "open_sample_design", 11);
   }
 
+  @Override
   protected void fill_list() {
     this.add("hexapod_empty.dsn");
     this.add("hexapod_autorouted.dsn");
@@ -23,6 +24,7 @@ public class WindowNetSampleDesigns extends WindowNetSamples {
     this.add("single_layer_handrouted.dsn");
   }
 
+  @Override
   protected void button_pushed() {
     int index = list.getSelectedIndex();
     if (index < 0 || index >= list_model.getSize()) {

@@ -21,6 +21,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LengthViolations");
   }
 
+  @Override
   protected void fill_list() {
     RatsNest ratsnest = this.board_frame.board_panel.board_handling.get_ratsnest();
     Nets net_list = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
@@ -41,6 +42,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     this.list.setVisibleRowCount(Math.min(length_violations.size(), DEFAULT_TABLE_SIZE));
   }
 
+  @Override
   protected void select_instances() {
     List<Object> selected_violations = list.getSelectedValuesList();
     if (selected_violations.size() <= 0) {
@@ -67,10 +69,12 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
       violation_length = p_violation_length;
     }
 
+    @Override
     public int compareTo(LengthViolation p_other) {
       return this.net.name.compareToIgnoreCase(p_other.net.name);
     }
 
+    @Override
     public String toString() {
       app.freerouting.board.CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;

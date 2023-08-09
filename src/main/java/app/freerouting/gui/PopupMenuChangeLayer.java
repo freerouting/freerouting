@@ -48,6 +48,7 @@ class PopupMenuChangeLayer extends javax.swing.JMenu {
       layer_no = p_layer_no;
       addActionListener(
           new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
               final BoardPanel board_panel = board_frame.board_panel;
               if (board_panel.board_handling.change_layer_action(layer_no)) {

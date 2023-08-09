@@ -40,6 +40,7 @@ public class TileConstructionState extends CornerItemConstructionState {
   }
 
   /** adds a corner to the tile under construction */
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     super.left_button_clicked(p_location);
     remove_concave_corners();
@@ -47,10 +48,12 @@ public class TileConstructionState extends CornerItemConstructionState {
     return this;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_point) {
     return left_button_clicked(p_point);
   }
 
+  @Override
   public InteractiveState complete() {
     remove_concave_corners_at_close();
     int corner_count = corner_list.size();
@@ -188,6 +191,7 @@ public class TileConstructionState extends CornerItemConstructionState {
     }
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("creatig_tile"));
   }

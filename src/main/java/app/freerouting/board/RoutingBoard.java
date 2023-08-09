@@ -62,6 +62,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /** Maintains the auto-router database after p_item is inserted, changed, or deleted. */
+  @Override
   public void additional_update_after_change(Item p_item) {
     if (p_item == null) {
       return;

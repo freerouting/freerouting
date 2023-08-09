@@ -97,6 +97,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     return result;
   }
 
+  @Override
   protected Collection<FloatPoint> calculate_next_trace_corners() {
     Collection<FloatPoint> result = new LinkedList<FloatPoint>();
 

@@ -19,14 +19,17 @@ public class RouteMenuState extends MenuState {
     return new_state;
   }
 
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     return RouteState.get_instance(p_location, this, hdlg, activityReplayFile);
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(" in route menu");
   }
 
+  @Override
   public String get_help_id() {
     return "MenuState_RouteMenuState";
   }

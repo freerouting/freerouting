@@ -70,6 +70,7 @@ public class ExpansionDoor implements ExpandableObject {
    * Returns the other room of this door, or null, if p_roon is neither equal to this.first_room nor
    * to this.second_room, or if the other room is not a CompleteExpansionRoom.
    */
+  @Override
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     ExpansionRoom result;
     if (p_room == first_room) {
@@ -85,10 +86,12 @@ public class ExpansionDoor implements ExpandableObject {
     return (CompleteExpansionRoom) result;
   }
 
+  @Override
   public int maze_search_element_count() {
     return this.section_arr.length;
   }
 
+  @Override
   public MazeSearchElement get_maze_search_element(int p_no) {
     return this.section_arr[p_no];
   }
@@ -165,6 +168,7 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /** Resets this ExpandableObject for autorouting the next connection. */
+  @Override
   public void reset() {
     if (section_arr != null) {
       for (MazeSearchElement curr_section : section_arr) {

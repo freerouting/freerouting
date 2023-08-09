@@ -24,6 +24,7 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     insert_item.setText(resources.getString("insert"));
     insert_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
           }
@@ -35,6 +36,7 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     done_item.setText(resources.getString("done"));
     done_item.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_panel.board_handling.return_from_state();
           }

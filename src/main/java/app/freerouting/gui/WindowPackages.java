@@ -18,6 +18,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
   }
 
   /** Fills the list with the library packages. */
+  @Override
   protected void fill_list() {
     Packages packages =
         this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
@@ -32,6 +33,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
     this.list.setVisibleRowCount(Math.min(packages.count(), DEFAULT_TABLE_SIZE));
   }
 
+  @Override
   protected void select_instances() {
     List<Object> selected_packages = list.getSelectedValuesList();
     if (selected_packages.size() <= 0) {

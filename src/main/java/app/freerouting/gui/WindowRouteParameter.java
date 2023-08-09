@@ -291,6 +291,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.setResizable(false);
   }
 
+  @Override
   public void dispose() {
     detail_window.dispose();
     manual_rule_window.dispose();
@@ -298,6 +299,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   /** Reads the data of this frame from disk. Returns false, if the reading failed. */
+  @Override
   public boolean read(java.io.ObjectInputStream p_object_stream) {
 
     boolean read_ok = super.read(p_object_stream);
@@ -319,6 +321,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   /** Saves this frame to disk. */
+  @Override
   public void save(java.io.ObjectOutputStream p_object_stream) {
     super.save(p_object_stream);
     manual_rule_window.save(p_object_stream);
@@ -326,6 +329,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   /** Recalculates all displayed values */
+  @Override
   public void refresh() {
     app.freerouting.board.AngleRestriction snap_angle =
         this.board_handling.get_routing_board().rules.get_trace_angle_restriction();
@@ -384,12 +388,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
+  @Override
   public void parent_iconified() {
     manual_rule_window.parent_iconified();
     detail_window.parent_iconified();
     super.parent_iconified();
   }
 
+  @Override
   public void parent_deiconified() {
     manual_rule_window.parent_deiconified();
     detail_window.parent_deiconified();
@@ -412,6 +418,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class SnapAngle90Listener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       if (board_handling.get_routing_board().rules.get_trace_angle_restriction()
           == app.freerouting.board.AngleRestriction.NINETY_DEGREE) {
@@ -443,6 +450,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class SnapAngle45Listener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       if (board_handling.get_routing_board().rules.get_trace_angle_restriction()
           == app.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE) {
@@ -477,18 +485,21 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class SnapAngleNoneListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.set_current_snap_angle(app.freerouting.board.AngleRestriction.NONE);
     }
   }
 
   private class DynamicRouteListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.set_stitch_route(false);
     }
   }
 
   private class StitchRouteListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.set_stitch_route(true);
     }
@@ -497,6 +508,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class DetailListener implements java.awt.event.ActionListener {
     private boolean first_time = true;
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       if (first_time) {
         java.awt.Point location = getLocation();
@@ -508,6 +520,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class AutomaticTraceWidthListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       manual_rule_window.setVisible(false);
       board_handling.settings.set_manual_tracewidth_selection(false);
@@ -517,6 +530,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private class ManualTraceWidthListener implements java.awt.event.ActionListener {
     boolean first_time = true;
 
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       if (first_time) {
         java.awt.Point location = getLocation();
@@ -529,6 +543,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class ShoveListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.set_push_enabled(shove_check_box.isSelected());
       refresh();
@@ -536,6 +551,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class ViaSnapToSMDCenterListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.set_via_snap_to_smd_center(
           via_snap_to_smd_center_check_box.isSelected());
@@ -543,12 +559,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class IgnoreConductionListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.set_ignore_conduction(ignore_conduction_check_box.isSelected());
     }
   }
 
   private class HilightObstacleListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.set_hilight_routing_obstacle(
           hilight_routing_obstacle_check_box.isSelected());
@@ -556,6 +574,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class DragComponentListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.set_drag_components_enabled(drag_component_check_box.isSelected());
       refresh();
@@ -563,12 +582,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class NeckDownListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       board_handling.settings.set_automatic_neckdown(neckdown_check_box.isSelected());
     }
   }
 
   private class RestrictPinExitDirectionsListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       if (restrict_pin_exit_directions_check_box.isSelected()) {
         app.freerouting.rules.BoardRules board_rules = board_handling.get_routing_board().rules;
@@ -584,6 +605,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class EdgeToTurnDistFieldKeyListener extends java.awt.event.KeyAdapter {
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
@@ -602,6 +624,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class EdgeToTurnDistFieldFocusListener implements java.awt.event.FocusListener {
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
@@ -613,10 +636,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 
   private class RegionWidthFieldKeyListener extends java.awt.event.KeyAdapter {
+    @Override
     public void keyTyped(java.awt.event.KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
@@ -633,6 +658,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   private class RegionWidthFieldFocusListener implements java.awt.event.FocusListener {
+    @Override
     public void focusLost(java.awt.event.FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
@@ -641,10 +667,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
     }
 
+    @Override
     public void focusGained(java.awt.event.FocusEvent p_evt) {}
   }
 
   private class SliderChangeListener implements javax.swing.event.ChangeListener {
+    @Override
     public void stateChanged(javax.swing.event.ChangeEvent evt) {
       set_pull_tight_region_width(region_slider.getValue());
     }

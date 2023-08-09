@@ -23,6 +23,7 @@ public class BoardMenuDisplay extends javax.swing.JMenu {
     itemvisibility.setToolTipText(display_menu.resources.getString("object_visibility_tooltip"));
     itemvisibility.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             display_menu.board_frame.object_visibility_window.setVisible(true);
           }
@@ -35,6 +36,7 @@ public class BoardMenuDisplay extends javax.swing.JMenu {
     layervisibility.setToolTipText(display_menu.resources.getString("layer_visibility_tooltip"));
     layervisibility.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             display_menu.board_frame.layer_visibility_window.setVisible(true);
           }
@@ -47,6 +49,7 @@ public class BoardMenuDisplay extends javax.swing.JMenu {
     colors.setToolTipText(display_menu.resources.getString("colors_tooltip"));
     colors.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             display_menu.board_frame.color_manager.setVisible(true);
           }
@@ -58,6 +61,7 @@ public class BoardMenuDisplay extends javax.swing.JMenu {
     miscellaneous.setText(display_menu.resources.getString("miscellaneous"));
     miscellaneous.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             display_menu.board_frame.display_misc_window.setVisible(true);
           }

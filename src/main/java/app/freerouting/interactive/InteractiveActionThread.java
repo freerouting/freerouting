@@ -45,15 +45,18 @@ public abstract class InteractiveActionThread extends Thread
 
   protected abstract void thread_action();
 
+  @Override
   public void run() {
     thread_action();
     hdlg.repaint();
   }
 
+  @Override
   public synchronized void request_stop() {
     stop_requested = true;
   }
 
+  @Override
   public synchronized boolean is_stop_requested() {
     return stop_requested;
   }
@@ -76,6 +79,7 @@ public abstract class InteractiveActionThread extends Thread
       super(p_board_handling);
     }
 
+    @Override
     protected void thread_action() {
       if (!(hdlg.interactive_state instanceof SelectedItemState)) {
         return;
@@ -91,6 +95,7 @@ public abstract class InteractiveActionThread extends Thread
       super(p_board_handling);
     }
 
+    @Override
     protected void thread_action() {
       if (!(hdlg.interactive_state instanceof SelectedItemState)) {
         return;
@@ -106,6 +111,7 @@ public abstract class InteractiveActionThread extends Thread
       super(p_board_handling);
     }
 
+    @Override
     protected void thread_action() {
       if (!(hdlg.interactive_state instanceof SelectedItemState)) {
         return;
@@ -124,6 +130,7 @@ public abstract class InteractiveActionThread extends Thread
       this.input_stream = p_input_stream;
     }
 
+    @Override
     protected void thread_action() {
 
       java.util.ResourceBundle resources =

@@ -44,6 +44,7 @@ public abstract class WindowNetSamples extends BoardSubWindow {
     this.list.setVisibleRowCount(p_row_count);
     this.list.addMouseListener(
         new java.awt.event.MouseAdapter() {
+          @Override
           public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (evt.getClickCount() > 1) {
               button_pushed();
@@ -173,6 +174,7 @@ public abstract class WindowNetSamples extends BoardSubWindow {
   /** Additional Action to be performed after opening the board. */
   protected enum AdditionalAction {
     READ_LOGFILE {
+      @Override
       void perform(BoardFrame p_board_frame, String p_archive_name) {
         String logfile_archive_name = "route_" + p_archive_name;
         read_zipped_logfile(p_board_frame, logfile_archive_name, logfile_archive_name + ".log");
@@ -180,12 +182,14 @@ public abstract class WindowNetSamples extends BoardSubWindow {
     },
 
     AUTOROUTE {
+      @Override
       void perform(BoardFrame p_board_frame, String p_archive_name) {
         p_board_frame.board_panel.board_handling.start_batch_autorouter();
       }
     },
 
     NONE {
+      @Override
       void perform(BoardFrame p_board_frame, String p_archive_name) {}
     };
 
@@ -209,12 +213,14 @@ public abstract class WindowNetSamples extends BoardSubWindow {
       additional_action = p_additional_action;
     }
 
+    @Override
     public String toString() {
       return message_name;
     }
   }
 
   private class OpenListener implements java.awt.event.ActionListener {
+    @Override
     public void actionPerformed(java.awt.event.ActionEvent p_evt) {
       button_pushed();
     }

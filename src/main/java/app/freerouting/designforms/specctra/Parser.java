@@ -142,6 +142,7 @@ public class Parser extends ScopeKeyword {
     }
   }
 
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     Object next_token = null;
     for (; ; ) {

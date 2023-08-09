@@ -21,6 +21,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_ClearanceViolations");
   }
 
+  @Override
   protected void fill_list() {
     app.freerouting.interactive.BoardHandling board_handling =
         this.board_frame.board_panel.board_handling;
@@ -44,6 +45,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     }
   }
 
+  @Override
   protected void select_instances() {
     List<Object> selected_violations = list.getSelectedValuesList();
     if (selected_violations.size() <= 0) {
@@ -102,6 +104,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       this.delta = (p_violation.expected_clearance - p_violation.actual_clearance) / 10000.0;
     }
 
+    @Override
     public String toString() {
       app.freerouting.board.LayerStructure layer_structure =
           board_frame.board_panel.board_handling.get_routing_board().layer_structure;
@@ -117,11 +120,13 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       );
     }
 
+    @Override
     public void print_info(
         app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
       this.violation.print_info(p_window, p_locale);
     }
 
+    @Override
     public int compareTo(ViolationInfo p_other) {
       if (this.delta > p_other.delta) {
         return -1;

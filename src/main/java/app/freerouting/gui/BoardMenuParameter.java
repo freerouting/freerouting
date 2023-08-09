@@ -23,6 +23,7 @@ public class BoardMenuParameter extends javax.swing.JMenu {
     selectwindow.setText(parameter_menu.resources.getString("select"));
     selectwindow.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             parameter_menu.board_frame.select_parameter_window.setVisible(true);
           }
@@ -34,6 +35,7 @@ public class BoardMenuParameter extends javax.swing.JMenu {
     routewindow.setText(parameter_menu.resources.getString("route"));
     routewindow.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             parameter_menu.board_frame.route_parameter_window.setVisible(true);
           }
@@ -45,6 +47,7 @@ public class BoardMenuParameter extends javax.swing.JMenu {
     autoroutewindow.setText(parameter_menu.resources.getString("autoroute"));
     autoroutewindow.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             parameter_menu.board_frame.autoroute_parameter_window.setVisible(true);
           }
@@ -56,6 +59,7 @@ public class BoardMenuParameter extends javax.swing.JMenu {
     movewindow.setText(parameter_menu.resources.getString("move"));
     movewindow.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             parameter_menu.board_frame.move_parameter_window.setVisible(true);
           }

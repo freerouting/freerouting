@@ -12,6 +12,7 @@ public class WindowNetDemonstrations extends WindowNetSamples {
    * To be edited when the demonstration examples change. For every String in the second column a
    * String has to be added to the resource file WindowNetSamples.
    */
+  @Override
   protected void fill_list() {
     add("sample_45.dsn", "45_degree_logfile", AdditionalAction.READ_LOGFILE);
     add("int_ar.dsn", "drag_component_logfile", AdditionalAction.READ_LOGFILE);
@@ -21,6 +22,7 @@ public class WindowNetDemonstrations extends WindowNetSamples {
     add("sharp_empty.dsn", "autorouter_example_3", AdditionalAction.AUTOROUTE);
   }
 
+  @Override
   protected void button_pushed() {
     int index = list.getSelectedIndex();
     if (index < 0 || index >= list_model.getSize()) {

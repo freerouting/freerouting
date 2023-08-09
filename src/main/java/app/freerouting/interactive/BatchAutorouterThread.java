@@ -43,6 +43,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
             : new BatchOptRoute(this);
   }
 
+  @Override
   protected void thread_action() {
     for (ThreadActionListener hl : this.listeners) hl.autorouterStarted();
 
@@ -191,6 +192,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
     }
   }
 
+  @Override
   public void draw(java.awt.Graphics p_graphics) {
     FloatLine curr_air_line = batch_autorouter.get_air_line();
     if (curr_air_line != null) {

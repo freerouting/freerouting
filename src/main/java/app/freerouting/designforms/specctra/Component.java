@@ -325,6 +325,7 @@ public class Component extends ScopeKeyword {
   }
 
   /** Overwrites the function read_scope in ScopeKeyword */
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     try {
       ComponentPlacement component_placement = read_scope(p_par.scanner);

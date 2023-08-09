@@ -33,10 +33,12 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
     }
   }
 
+  @Override
   public int getColumnCount() {
     return ColumnNames.values().length;
   }
 
+  @Override
   public String getColumnName(int p_col) {
     java.util.ResourceBundle resources =
         java.util.ResourceBundle.getBundle(
@@ -44,6 +46,7 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
     return resources.getString(ColumnNames.values()[p_col].toString());
   }
 
+  @Override
   public boolean isCellEditable(int p_row, int p_col) {
     return true;
   }

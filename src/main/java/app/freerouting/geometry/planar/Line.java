@@ -45,6 +45,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
   }
 
   /** returns true, if this and p_ob define the same line */
+  @Override
   public final boolean equals(Object p_ob) {
     if (this == p_ob) {
       return true;
@@ -424,6 +425,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
    * not a Line. Fast implementation only for lines consisting of IntPoints because of critical
    * performance
    */
+  @Override
   public int compareTo(Line p_other) {
     IntPoint this_a = (IntPoint) a;
     IntPoint this_b = (IntPoint) b;

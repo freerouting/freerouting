@@ -26,6 +26,7 @@ public class BoardMenuOther extends javax.swing.JMenu {
     snapshots.setToolTipText(other_menu.resources.getString("snapshots_tooltip"));
     snapshots.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             other_menu.board_frame.snapshot_window.setVisible(true);
           }
@@ -39,6 +40,7 @@ public class BoardMenuOther extends javax.swing.JMenu {
     delete_all_tracks.setToolTipText(other_menu.resources.getString("delete_all_tracks_and_vias_tooltip"));
     delete_all_tracks.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
             // delete all tracks and vias

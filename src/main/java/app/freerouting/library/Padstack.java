@@ -47,6 +47,7 @@ public class Padstack
   }
 
   /** Compares 2 padstacks by name. Useful for example to display padstacks in alphabetic order. */
+  @Override
   public int compareTo(Padstack p_other) {
     return this.name.compareToIgnoreCase(p_other.name);
   }
@@ -83,6 +84,7 @@ public class Padstack
     return shapes.length;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
@@ -120,6 +122,7 @@ public class Padstack
     return result;
   }
 
+  @Override
   public void print_info(
       app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
     java.util.ResourceBundle resources =

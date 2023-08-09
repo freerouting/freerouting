@@ -266,6 +266,7 @@ public class NetIncompletes {
       length_square = p_to_corner.distance_square(p_from_corner);
     }
 
+    @Override
     public int compareTo(Edge p_other) {
       double result = this.length_square - p_other.length_square;
       if (result == 0) {
@@ -295,6 +296,7 @@ public class NetIncompletes {
       connected_set = p_connected_set;
     }
 
+    @Override
     public Point[] get_triangulation_corners() {
       return this.item.get_ratsnest_corners();
     }

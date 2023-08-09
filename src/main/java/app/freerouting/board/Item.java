@@ -76,6 +76,7 @@ public abstract class Item
   }
 
   /** Implements the comparable interface. */
+  @Override
   public int compareTo(Object p_other) {
     int result;
     if (p_other instanceof Item) {
@@ -104,10 +105,12 @@ public abstract class Item
     return false;
   }
 
+  @Override
   public boolean is_obstacle(int p_net_no) {
     return !contains_net(p_net_no);
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return !contains_net(p_net_no);
   }
@@ -146,6 +149,7 @@ public abstract class Item
     return get_tree_shape(this.board.search_tree_manager.get_default_tree(), p_index);
   }
 
+  @Override
   public int tree_shape_count(ShapeTree p_tree) {
     if (this.board == null) {
       return 0;
@@ -154,6 +158,7 @@ public abstract class Item
     return precalculated_tree_shapes.length;
   }
 
+  @Override
   public TileShape get_tree_shape(ShapeTree p_tree, int p_index) {
     if (this.board == null) {
       return null;
@@ -193,6 +198,7 @@ public abstract class Item
    */
   public abstract Item copy(int p_id_no);
 
+  @Override
   public Object clone() {
     Item dup = copy(this.get_id_no());
 
@@ -729,6 +735,7 @@ public abstract class Item
     return new Point[0];
   }
 
+  @Override
   public void draw(
       Graphics p_g, GraphicsContext p_graphics_context, Color p_color, double p_intensity) {
     Color[] color_arr = new Color[board.get_layer_count()];
@@ -762,6 +769,7 @@ public abstract class Item
    * Returns for this item the layer of the shape with index p_index. If p_id_no {@literal <}= 0, it
    * w2ill be generated internally.
    */
+  @Override
   public abstract int shape_layer(int p_index);
 
   /** Returns true, if it is not allowed to change this item except shoving the item */
@@ -944,6 +952,7 @@ public abstract class Item
   }
 
   /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  @Override
   public void set_search_tree_entries(ShapeTree.Leaf[] p_tree_entries, ShapeTree p_tree) {
     if (this.board == null) {
       return;

@@ -24,6 +24,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_RouteStubs");
   }
 
+  @Override
   protected void fill_list() {
     app.freerouting.board.BasicBoard routing_board =
         this.board_frame.board_panel.board_handling.get_routing_board();
@@ -92,6 +93,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
     this.list.setVisibleRowCount(Math.min(route_stub_info_set.size(), DEFAULT_TABLE_SIZE));
   }
 
+  @Override
   protected void select_instances() {
     List<Object> selected_list_values = list.getSelectedValuesList();
     if (selected_list_values.size() <= 0) {
@@ -124,6 +126,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
       this.net = board_handling.get_routing_board().rules.nets.get(net_no);
     }
 
+    @Override
     public String toString() {
       String item_string;
       if (this.stub_item instanceof app.freerouting.board.Trace) {
@@ -153,6 +156,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
       return result;
     }
 
+    @Override
     public int compareTo(RouteStubInfo p_other) {
       int result = this.net.name.compareTo(p_other.net.name);
       if (result == 0) {

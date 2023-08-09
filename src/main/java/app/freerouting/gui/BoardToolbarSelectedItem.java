@@ -22,6 +22,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     cancel_button.setToolTipText(resources.getString("cancel_tooltip"));
     cancel_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.cancel_state();
           }
@@ -34,6 +35,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     info_button.setToolTipText(resources.getString("info_tooltip"));
     info_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.display_selected_item_info();
           }
@@ -46,6 +48,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     delete_button.setToolTipText(resources.getString("delete_tooltip"));
     delete_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.delete_selected_items();
           }
@@ -58,6 +61,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     cutout_button.setToolTipText(resources.getString("cutout_tooltip"));
     cutout_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.cutout_selected_items();
           }
@@ -70,6 +74,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     fix_button.setToolTipText(resources.getString("fix_tooltip"));
     fix_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.fix_selected_items();
           }
@@ -82,6 +87,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     unfix_button.setToolTipText(resources.getString("unfix_tooltip"));
     unfix_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.unfix_selected_items();
           }
@@ -94,6 +100,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     autoroute_button.setToolTipText(resources.getString("autoroute_tooltip"));
     autoroute_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.autoroute_selected_items();
           }
@@ -105,6 +112,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     tidy_button.setToolTipText(resources.getString("pull_tight_tooltip"));
     tidy_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.optimize_selected_items();
           }
@@ -117,6 +125,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     clearance_class_button.setToolTipText(resources.getString("spacing_tooltip"));
     clearance_class_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             assign_clearance_class();
           }
@@ -127,6 +136,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     fanout_button.setToolTipText(resources.getString("fanout_tooltip"));
     fanout_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.fanout_selected_items();
           }
@@ -145,6 +155,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     whole_nets_button.setToolTipText(resources.getString("nets_tooltip"));
     whole_nets_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.extend_selection_to_whole_nets();
           }
@@ -157,6 +168,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     whole_connected_sets_button.setToolTipText(resources.getString("conn_sets_tooltip"));
     whole_connected_sets_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.extend_selection_to_whole_connected_sets();
           }
@@ -169,6 +181,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     whole_connections_button.setToolTipText(resources.getString("connections_tooltip"));
     whole_connections_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.extend_selection_to_whole_connections();
           }
@@ -181,6 +194,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     whole_groups_button.setToolTipText(resources.getString("components_tooltip"));
     whole_groups_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.extend_selection_to_whole_components();
           }
@@ -194,6 +208,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
       new_net_button.setToolTipText(resources.getString("new_net_tooltip"));
       new_net_button.addActionListener(
           new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
               board_frame.board_panel.board_handling.assign_selected_to_new_net();
             }
@@ -206,6 +221,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
       new_group_button.setToolTipText(resources.getString("new_component_tooltip"));
       new_group_button.addActionListener(
           new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
               board_frame.board_panel.board_handling.assign_selected_to_new_group();
             }
@@ -224,6 +240,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     violation_button.setToolTipText(resources.getString("violations_tooltip"));
     violation_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.toggle_selected_item_violations();
           }
@@ -241,6 +258,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     display_selection_button.setToolTipText(resources.getString("zoom_selection_tooltip"));
     display_selection_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.zoom_selection();
           }
@@ -252,6 +270,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     display_all_button.setToolTipText(resources.getString("zoom_all_tooltip"));
     display_all_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.zoom_all();
           }
@@ -263,6 +282,7 @@ class BoardToolbarSelectedItem extends javax.swing.JToolBar {
     display_region_button.setToolTipText(resources.getString("zoom_region_tooltip"));
     display_region_button.addActionListener(
         new java.awt.event.ActionListener() {
+          @Override
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             board_frame.board_panel.board_handling.zoom_region();
           }

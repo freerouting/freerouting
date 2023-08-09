@@ -22,6 +22,7 @@ public class CornerItemConstructionState extends InteractiveState {
   }
 
   /** adds a corner to the polygon of the item under construction */
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     return add_corner(p_location);
   }
@@ -38,11 +39,13 @@ public class CornerItemConstructionState extends InteractiveState {
     return this;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_point) {
     return add_corner(p_point);
   }
 
   /** stores the location of the mouse pointer after snapping it to the snap_angle */
+  @Override
   public InteractiveState mouse_moved() {
     super.mouse_moved();
     IntPoint curr_mouse_pos = hdlg.get_current_mouse_position().round();
@@ -51,11 +54,13 @@ public class CornerItemConstructionState extends InteractiveState {
     return this;
   }
 
+  @Override
   public javax.swing.JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_corneritem_construction;
   }
 
   /** draws the polygon constructed so far as a visual aid */
+  @Override
   public void draw(java.awt.Graphics p_graphics) {
     int corner_count = corner_list.size();
     if (this.snapped_mouse_position != null) {

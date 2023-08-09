@@ -49,6 +49,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
       this.index = p_index;
     }
 
+    @Override
     public String toString() {
       return name;
     }

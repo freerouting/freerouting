@@ -33,10 +33,12 @@ public class WindowLayerVisibility extends WindowVisibility {
     return result;
   }
 
+  @Override
   protected void set_changed_value(int p_index, double p_value) {
     get_board_handling().set_layer_visibility(p_index, p_value);
   }
 
+  @Override
   protected void set_all_minimum() {
     int layer_count = this.get_board_handling().graphics_context.layer_count();
     for (int i = 0; i < layer_count; ++i) {
@@ -48,6 +50,7 @@ public class WindowLayerVisibility extends WindowVisibility {
   }
 
   /** Refreshs the displayed values in this window. */
+  @Override
   public void refresh() {
     app.freerouting.boardgraphics.GraphicsContext graphics_context =
         this.get_board_handling().graphics_context;

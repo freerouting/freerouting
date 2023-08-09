@@ -33,6 +33,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         p_keep_point_layer);
   }
 
+  @Override
   Polyline pull_tight(Polyline p_polyline) {
     Polyline new_result = avoid_acid_traps(p_polyline);
     Polyline prev_result = null;
@@ -251,6 +252,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
   }
 
   /** tries to shorten p_polyline by relocating its lines */
+  @Override
   Polyline reposition_lines(Polyline p_polyline) {
     if (p_polyline.arr.length < 5) {
       return p_polyline;
@@ -497,6 +499,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     return result;
   }
 
+  @Override
   protected Line reposition_line(Line[] p_line_arr, int p_start_no) {
     if (p_line_arr.length - p_start_no < 5) {
       return null;
@@ -763,6 +766,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     return p_polyline;
   }
 
+  @Override
   Polyline smoothen_start_corner_at_trace(PolylineTrace p_trace) {
     boolean acute_angle = false;
     boolean bend = false;
@@ -891,6 +895,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     return null;
   }
 
+  @Override
   Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace) {
     boolean acute_angle = false;
     boolean bend = false;
