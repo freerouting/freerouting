@@ -62,7 +62,7 @@ public class DesignFile {
       // Set the intermediate snapshot file name
 
       // Calculate the CRC32 checksum of the input file
-      long crc32_checksum = 0;
+      long crc32_checksum;
       try (FileInputStream inputStream = new FileInputStream(this.input_file.getAbsoluteFile())) {
         CRC32 crc = new CRC32();
         int cnt;
@@ -125,7 +125,7 @@ public class DesignFile {
       BoardHandling p_board_handling,
       String p_confirm_message) {
 
-    boolean result = true;
+    boolean result;
     boolean dsn_file_generated_by_host =
         p_board_handling.get_routing_board()
             .communication
@@ -134,15 +134,10 @@ public class DesignFile {
 
     {
       try {
-        File rules_file =
-            p_parent_name == null
-                ? new File(rules_file_name)
-                : new File(p_parent_name, rules_file_name);
+        File rules_file = new File(p_parent_name, rules_file_name);
         FRLogger.info("Opening '" + rules_file_name + "'...");
         InputStream input_stream = new FileInputStream(rules_file);
-        if (input_stream != null
-            && dsn_file_generated_by_host
-            && (WindowMessage.confirm(p_confirm_message) || (p_confirm_message == null))) {
+        if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
           result = RulesFile.read(input_stream, p_design_name, p_board_handling);
         } else {
           result = false;
@@ -189,8 +184,6 @@ public class DesignFile {
     final ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
-    String[] file_name_parts = this.get_name().split("\\.", 2);
-    String design_name = file_name_parts[0];
 
     if (this.file_chooser == null) {
       String design_dir_name;
@@ -233,7 +226,7 @@ public class DesignFile {
       } catch (Exception e) {
         output_stream = null;
       }
-      design_name = new_file.toString();
+      String design_name = new_file.toString();
       if (p_board_frame.board_panel.board_handling.export_to_dsn_file(
           output_stream, design_name, false)) {
         p_board_frame.screen_messages.set_status_message(

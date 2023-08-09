@@ -21,7 +21,7 @@ public class NetClass
    */
   public DefaultItemClearanceClasses default_item_clearance_classes =
       new DefaultItemClearanceClasses();
-  public boolean is_ignored_by_autorouter = false;
+  public boolean is_ignored_by_autorouter;
   private String name;
   private ViaRule via_rule;
   private int trace_clearance_class;

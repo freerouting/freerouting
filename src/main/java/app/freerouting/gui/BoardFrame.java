@@ -98,7 +98,7 @@ public class BoardFrame extends WindowBase {
   Collection<BoardTemporarySubWindow> temporary_subwindows =
       new LinkedList<>();
   private LocalDateTime intermediate_stage_file_last_saved_at = null;
-  DesignFile design_file = null;
+  DesignFile design_file;
   private final Locale locale;
   /**
    * Creates new form BoardFrame. If p_option = FROM_START_MENU this frame is created from a start
@@ -229,10 +229,6 @@ public class BoardFrame extends WindowBase {
             p_save_intermediate_stages,
             p_optimization_improvement_threshold);
 
-    if (board_frame == null) {
-      WindowMessage.show("board_frame is null");
-      return null;
-    }
     InputStream input_stream = design_file.get_input_stream();
     boolean read_ok = board_frame.read(input_stream, true, null);
     if (!read_ok) {
@@ -267,7 +263,7 @@ public class BoardFrame extends WindowBase {
         initialize_windows();
       }
     } else {
-      ObjectInputStream object_stream = null;
+      ObjectInputStream object_stream;
       try {
         object_stream = new ObjectInputStream(p_input_stream);
       } catch (IOException e) {
@@ -416,8 +412,8 @@ public class BoardFrame extends WindowBase {
       return false;
     }
 
-    OutputStream output_stream = null;
-    ObjectOutputStream object_stream = null;
+    OutputStream output_stream;
+    ObjectOutputStream object_stream;
     try {
       FRLogger.info("Saving '" + output_file.getPath() + "'...");
 

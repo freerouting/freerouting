@@ -460,7 +460,7 @@ public class PolylineTrace extends Trace implements Serializable {
             if (lines.corner(i + 1).equals(lines.corner(found_entry.shape_index_in_object))) {
               continue;
             }
-          } else if (found_entry.shape_index_in_object < i) {
+          } else {
             if (lines.corner(found_entry.shape_index_in_object + 1).equals(lines.corner(i))) {
               continue;
             }

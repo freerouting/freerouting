@@ -79,7 +79,7 @@ class Structure extends ScopeKeyword {
   }
 
   static private void write_conduction_areas(WriteScopeParameter p_par) throws IOException {
-    Storable curr_ob = null;
+    Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
@@ -100,7 +100,7 @@ class Structure extends ScopeKeyword {
   }
 
   static private void write_keepouts(WriteScopeParameter p_par) throws IOException {
-    Storable curr_ob = null;
+    Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
@@ -134,7 +134,7 @@ class Structure extends ScopeKeyword {
     bounding_rectangle.write_scope(p_par.file, p_par.identifier_type);
     p_par.file.end_scope();
     // lookup the outline in the board
-    Storable curr_ob = null;
+    Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);

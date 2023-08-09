@@ -424,12 +424,10 @@ public class SortedRoomNeighbours {
         return false;
       }
       boolean remove_edge = false;
-      if (new_rooms.size() == 1) {
-        // Check, that the area increases to prevent endless loop.
-        IncompleteFreeSpaceExpansionRoom new_shape = new_rooms.iterator().next();
-        if (new_shape.get_shape().area() > room_shape_area) {
-          remove_edge = true;
-        }
+      // Check, that the area increases to prevent endless loop.
+      IncompleteFreeSpaceExpansionRoom new_shape = new_rooms.iterator().next();
+      if (new_shape.get_shape().area() > room_shape_area) {
+        remove_edge = true;
       }
       if (remove_edge) {
         Iterator<IncompleteFreeSpaceExpansionRoom> it2 = new_rooms.iterator();

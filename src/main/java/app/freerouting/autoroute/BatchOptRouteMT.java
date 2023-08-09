@@ -73,8 +73,6 @@ public class BatchOptRouteMT extends BatchOptRoute {
         }
       }
     }
-
-    hybrid_index = -1;
   }
 
   public int get_num_tasks() {
@@ -210,7 +208,6 @@ public class BatchOptRouteMT extends BatchOptRoute {
       winning_candidate = null;
     }
 
-    float route_improved = 0.0f;
     int via_count_before = this.routing_board.get_vias().size();
     double user_trace_length_before =
         this.thread.hdlg.coordinate_transform.board_to_user(
@@ -308,13 +305,13 @@ public class BatchOptRouteMT extends BatchOptRoute {
 
     pool = null;
 
-    route_improved = best_route_result.improvement_percentage();
-
     if (!interrupted
         && best_route_result.improved()
         && current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) {
       update_master_routing_board();
     }
+
+    float route_improved = best_route_result.improvement_percentage();
 
     if (this.use_increased_ripup_costs && !best_route_result.improved()) {
       this.use_increased_ripup_costs = false;

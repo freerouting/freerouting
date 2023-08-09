@@ -161,7 +161,7 @@ public class PartLibrary extends ScopeKeyword {
 
   private LogicalPart read_logical_part(IJFlexScanner p_scanner) {
     Collection<PartPin> part_pins = new LinkedList<>();
-    Object next_token = null;
+    Object next_token;
     try {
       next_token = p_scanner.next_token();
     } catch (IOException e) {

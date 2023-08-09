@@ -242,7 +242,7 @@ public class BoardMenuFile extends JMenu {
     if (filename == null) {
       board_frame.screen_messages.set_status_message(resources.getString("message_10"));
     } else {
-      InputStream input_stream = null;
+      InputStream input_stream;
       try {
         input_stream = new FileInputStream(filename);
       } catch (FileNotFoundException e) {
@@ -253,7 +253,7 @@ public class BoardMenuFile extends JMenu {
   }
 
   private void save_defaults_action() {
-    OutputStream output_stream = null;
+    OutputStream output_stream;
 
     FRLogger.info("Saving '" + BoardFrame.GUI_DEFAULTS_FILE_NAME + "'...");
     File defaults_file =

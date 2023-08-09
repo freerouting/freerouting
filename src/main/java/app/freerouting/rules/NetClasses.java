@@ -52,7 +52,7 @@ public class NetClasses implements Serializable {
     ResourceBundle resources =
         ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
     String name_front = resources.getString("class");
-    String new_name = null;
+    String new_name;
     Integer index = 0;
     for (; ; ) {
       ++index;

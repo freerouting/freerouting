@@ -14,7 +14,7 @@ import java.util.TreeSet;
 /** Class for interactive dragging items with the mouse on a routing board */
 public class DragItemState extends DragState {
 
-  private Item item_to_move = null;
+  private Item item_to_move;
 
   /** Creates a new instance of MoveItemState */
   protected DragItemState(

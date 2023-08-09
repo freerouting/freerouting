@@ -94,7 +94,7 @@ public class Library extends ScopeKeyword {
       LayerStructure p_layer_structure,
       CoordinateTransform p_coordinate_transform,
       Padstacks p_board_padstacks) {
-    String padstack_name = null;
+    String padstack_name;
     boolean is_drilllable = true;
     boolean placed_absolute = false;
     Collection<Shape> shape_list = new LinkedList<>();

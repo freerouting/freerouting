@@ -69,7 +69,7 @@ public class MainApplication extends WindowBase {
   private final boolean save_intermediate_stages;
   private final float optimization_improvement_threshold;
   private final String[] ignore_net_classes_by_autorouter;
-  private String design_dir_name = null;
+  private String design_dir_name;
   private final int max_passes;
   private final BoardUpdateStrategy board_update_strategy;
   // Issue: adding a new field into AutorouteSettings caused exception when loading
@@ -501,7 +501,7 @@ public class MainApplication extends WindowBase {
       String design_name = name_parts[0];
 
       String parent_folder_name = null;
-      String rules_file_name = null;
+      String rules_file_name;
       String confirm_import_rules_message = null;
       if (p_design_rules_file == null) {
         parent_folder_name = p_design_file.get_parent();

@@ -87,15 +87,15 @@ public abstract class WindowNetSamples extends BoardSubWindow {
    */
   protected static ZipInputStream open_zipped_file(String p_archive_name, String p_file_name) {
     String archive_path_name = MainApplication.WEB_FILE_BASE_NAME + p_archive_name + ".zip";
-    URL archive_url = null;
+    URL archive_url;
     try {
       archive_url = new URL(archive_path_name);
     } catch (MalformedURLException e) {
       return null;
     }
-    InputStream input_stream = null;
-    ZipInputStream zip_input_stream = null;
-    URLConnection net_connection = null;
+    InputStream input_stream;
+    ZipInputStream zip_input_stream;
+    URLConnection net_connection;
     try {
       net_connection = archive_url.openConnection();
     } catch (Exception e) {
@@ -115,7 +115,7 @@ public abstract class WindowNetSamples extends BoardSubWindow {
       return null;
     }
     String compare_name = p_archive_name + "/" + p_file_name;
-    ZipEntry curr_entry = null;
+    ZipEntry curr_entry;
     for (; ; ) {
       try {
         curr_entry = zip_input_stream.getNextEntry();

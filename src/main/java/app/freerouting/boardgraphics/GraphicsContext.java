@@ -39,7 +39,7 @@ public class GraphicsContext implements Serializable {
   public transient ItemColorTableModel item_color_table;
   public transient OtherColorTableModel other_color_table;
   public ColorIntensityTable color_intensity_table;
-  public CoordinateTransform coordinate_transform = null;
+  public CoordinateTransform coordinate_transform;
   /**
    * layer_visibility_arr[i] is between 0 and 1, for each layer i, 0 is invisible and 1 fully
    * visible.

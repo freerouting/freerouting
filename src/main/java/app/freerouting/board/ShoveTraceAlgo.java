@@ -557,13 +557,11 @@ public class ShoveTraceAlgo {
         } else if (curr_item instanceof PolylineTrace) {
           if (curr_item.is_shove_fixed()) {
             is_obstacle = true;
-            if (curr_item instanceof PolylineTrace) {
-              // check for a shove fixed trace exit stub, which has to be be ignored at a tie pin.
-              Collection<Item> curr_contacts = curr_item.get_normal_contacts();
-              for (Item curr_contact : curr_contacts) {
-                if (curr_contact.shares_net_no(p_net_no_arr)) {
-                  is_obstacle = false;
-                }
+            // check for a shove fixed trace exit stub, which has to be be ignored at a tie pin.
+            Collection<Item> curr_contacts = curr_item.get_normal_contacts();
+            for (Item curr_contact : curr_contacts) {
+              if (curr_contact.shares_net_no(p_net_no_arr)) {
+                is_obstacle = false;
               }
             }
           } else {

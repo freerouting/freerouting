@@ -936,9 +936,7 @@ public class BoardHandling extends BoardHandlingHeadless {
 
   /** Closes all currently used files so that the file buffers are written to disk. */
   public void close_files() {
-    if (activityReplayFile != null) {
-      activityReplayFile.close_output();
-    }
+    activityReplayFile.close_output();
   }
 
   /** Starts interactive routing at the input location. */

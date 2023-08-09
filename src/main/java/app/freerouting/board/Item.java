@@ -48,7 +48,7 @@ public abstract class Item
   private transient ItemSearchTreesInfo search_trees_info = null;
   private FixedState fixed_state;
   /** not 0, if this item belongs to a component */
-  private int component_no = 0;
+  private int component_no;
   /** False, if the item is deleted or not inserted into the board */
   private boolean on_the_board = false;
   /** Temporary data used in the autoroute algorithm. */

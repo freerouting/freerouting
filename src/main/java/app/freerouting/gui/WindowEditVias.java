@@ -144,7 +144,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
           board_frame.board_panel.board_handling.get_routing_board();
       ViaInfos via_infos = routing_board.rules.via_infos;
       Integer no = 1;
-      String new_name = null;
+      String new_name;
       final String name_start = resources.getString("new_via");
       for (; ; ) {
         new_name = name_start + no;
@@ -208,8 +208,8 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
   /** Table model of the via table. */
   private class ViaTableModel extends AbstractTableModel {
-    private Object[][] data = null;
-    private String[] column_names = null;
+    private Object[][] data;
+    private String[] column_names;
 
     public ViaTableModel() {
       column_names = new String[ColumnName.values().length];

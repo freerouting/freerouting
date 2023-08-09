@@ -155,7 +155,7 @@ public class ExpansionDoor implements ExpandableObject {
         // curr_corner is on the border of both room shapes.
         if (first_corner == null) {
           first_corner = curr_corner;
-        } else if (second_corner == null && !first_corner.equals(curr_corner)) {
+        } else if (!first_corner.equals(curr_corner)) {
           second_corner = curr_corner;
           break;
         }

@@ -53,12 +53,12 @@ public class Plane extends ScopeKeyword {
   @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     // read the net name
-    String net_name = null;
+    String net_name;
     boolean skip_window_scopes =
         p_par.host_cad != null && p_par.host_cad.equalsIgnoreCase("allegro");
     // Cadence Allegro cutouts the pins on power planes, which leads to performance problems
     // when dividing a conduction area into convex pieces.
-    Shape.ReadAreaScopeResult conduction_area = null;
+    Shape.ReadAreaScopeResult conduction_area;
     try {
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {

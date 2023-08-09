@@ -64,7 +64,7 @@ public abstract class Shape {
    * @return Layer object with the defined name
    */
   private static Layer get_layer(LayerStructure p_layer_structure, String layer_name) {
-    Layer layer = null;
+    Layer layer;
 
     if (layer_name.equals(Keyword.PCB_SCOPE.get_name())) {
       layer = Layer.PCB;
@@ -153,7 +153,7 @@ public abstract class Shape {
     String clearance_class_name = null;
     String area_name = null;
     boolean result_ok = true;
-    Object next_token = null;
+    Object next_token;
     try {
       next_token = p_scanner.next_token();
     } catch (IOException e) {

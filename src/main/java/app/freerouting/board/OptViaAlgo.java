@@ -481,7 +481,7 @@ public class OptViaAlgo {
           p_second_trace_layer,
           p_second_trace_cl_class);
     }
-    Point result = null;
+    Point result;
 
     double curr_weighted_distance_1 =
         float_via_location.weighted_distance(

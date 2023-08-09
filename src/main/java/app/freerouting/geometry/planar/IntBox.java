@@ -738,7 +738,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     // now the division will be optimised, so that the cumulative
     // circumference will be minimal.
 
-    IntBox b = null;
+    IntBox b;
 
     if (c.ll.x - p_d.ll.x > c.ll.y - p_d.ll.y) {
       // switch left dividing line to lower

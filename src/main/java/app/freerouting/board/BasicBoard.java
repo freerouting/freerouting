@@ -877,7 +877,7 @@ public class BasicBoard implements Serializable {
   public boolean normalize_traces(int p_net_no) throws Exception {
     boolean result = false;
     boolean something_changed = true;
-    Item curr_item = null;
+    Item curr_item;
     while (something_changed) {
       something_changed = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
@@ -1463,8 +1463,8 @@ public class BasicBoard implements Serializable {
     }
     // Remove tails at the endpoints after removing the cycle,
     // if there was no tail before.
-    boolean[] tail_at_endpoint_before = null;
-    Point[] end_corners = null;
+    boolean[] tail_at_endpoint_before;
+    Point[] end_corners;
     int curr_layer = p_trace.get_layer();
     int[] curr_net_no_arr = p_trace.net_no_arr;
     end_corners = new Point[2];

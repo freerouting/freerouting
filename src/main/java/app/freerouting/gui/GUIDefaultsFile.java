@@ -83,7 +83,7 @@ public class GUIDefaultsFile {
     GUIDefaultsScanner scanner = new GUIDefaultsScanner(p_input_stream);
     GUIDefaultsFile new_instance =
         new GUIDefaultsFile(p_board_frame, p_board_handling, scanner, null);
-    boolean result = true;
+    boolean result;
     try {
       result = new_instance.read_defaults_scope();
     } catch (IOException e) {
@@ -97,7 +97,7 @@ public class GUIDefaultsFile {
   private static boolean skip_scope(GUIDefaultsScanner p_scanner) {
     int open_bracked_count = 1;
     while (open_bracked_count > 0) {
-      Object curr_token = null;
+      Object curr_token;
       try {
         curr_token = p_scanner.next_token();
       } catch (Exception e) {

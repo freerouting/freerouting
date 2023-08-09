@@ -27,7 +27,7 @@ public class SpecctraSesFileWriter {
     if (p_output_stream == null) {
       return false;
     }
-    IndentFileWriter output_file = null;
+    IndentFileWriter output_file;
     try {
       output_file = new IndentFileWriter(p_output_stream);
     } catch (Exception e) {

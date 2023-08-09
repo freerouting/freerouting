@@ -66,8 +66,6 @@ public class SessionToEagle extends JFrame {
     // create a file_writer for the eagle script file.
     OutputStreamWriter file_writer = new OutputStreamWriter(p_output_stream);
 
-    boolean result = true;
-
     double board_scale_factor = p_board.communication.coordinate_transform.board_to_dsn(1);
     SessionToEagle new_instance =
         new SessionToEagle(
@@ -78,6 +76,7 @@ public class SessionToEagle extends JFrame {
             p_board.communication.resolution,
             board_scale_factor);
 
+    boolean result;
     try {
       result = new_instance.process_session_scope();
     } catch (IOException e) {
@@ -441,11 +440,6 @@ public class SessionToEagle extends JFrame {
     }
     if (next_token != Keyword.CLOSED_BRACKET) {
       FRLogger.warn("SessionToEagle.process_via_scope: closing bracket expected");
-      return false;
-    }
-
-    if (padstack_name == null) {
-      FRLogger.warn("SessionToEagle.process_via_scope: padstack_name missing");
       return false;
     }
 

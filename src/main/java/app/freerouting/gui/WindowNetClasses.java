@@ -458,7 +458,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private class NetClassTableModel extends AbstractTableModel {
 
     private Object[][] data = null;
-    private String[] column_names = null;
+    private String[] column_names;
 
     public NetClassTableModel() {
       column_names = new String[ColumnName.values().length];

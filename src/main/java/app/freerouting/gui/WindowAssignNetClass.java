@@ -112,8 +112,8 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   /** Table model of the net rule table. */
   private class AssignRuleTableModel extends AbstractTableModel {
-    private Object[][] data = null;
-    private String[] column_names = null;
+    private Object[][] data;
+    private String[] column_names;
 
     public AssignRuleTableModel() {
       column_names = new String[2];

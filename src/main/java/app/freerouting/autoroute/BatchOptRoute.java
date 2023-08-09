@@ -25,7 +25,7 @@ public class BatchOptRoute {
   protected static int MAX_AUTOROUTE_PASSES = 6;
   protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
   protected final InteractiveActionThread thread;
-  protected boolean clone_board = false;
+  protected boolean clone_board;
   protected RoutingBoard routing_board;
   protected ReadSortedRouteItems sorted_route_items;
   protected boolean
@@ -44,7 +44,6 @@ public class BatchOptRoute {
 
     this.routing_board =
         p_clone_board ? p_thread.hdlg.deep_copy_routing_board() : p_thread.hdlg.get_routing_board();
-    this.sorted_route_items = null;
   }
 
   static boolean contains_only_unfixed_traces(Collection<Item> p_item_list) {

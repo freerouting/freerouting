@@ -408,7 +408,7 @@ public class Polyline implements Serializable {
       // cut off outstanding corners with following shapes
       FloatPoint corner_to_check = null;
       Line curr_line = lines[1];
-      Line check_line = null;
+      Line check_line;
       if (next_dir_from_curr_dir == Side.ON_THE_LEFT) {
         check_line = lines[2];
       } else {
@@ -427,7 +427,7 @@ public class Polyline implements Serializable {
           corner_to_check = curr_line.intersection_approx(check_line);
         }
         Vector tmp_next_dir = arr[j].direction().get_vector();
-        Line next_border_line = null;
+        Line next_border_line;
         Side tmp_next_dir_from_tmp_curr_dir = tmp_next_dir.side_of(tmp_curr_dir);
         direction_changed = tmp_next_dir_from_tmp_curr_dir != next_dir_from_curr_dir;
         if (!direction_changed) {
@@ -466,7 +466,7 @@ public class Polyline implements Serializable {
           corner_to_check = curr_line.intersection_approx(check_line);
         }
         Vector tmp_prev_dir = arr[j].direction().get_vector();
-        Line prev_border_line = null;
+        Line prev_border_line;
         Side tmp_curr_dir_from_tmp_prev_dir = tmp_curr_dir.side_of(tmp_prev_dir);
         direction_changed = tmp_curr_dir_from_tmp_prev_dir != curr_dir_from_prev_dir;
         if (!direction_changed) {

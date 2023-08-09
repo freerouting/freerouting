@@ -130,7 +130,7 @@ public class ColorManager extends BoardSavableSubWindow {
   private static class ColorRenderer extends JLabel implements TableCellRenderer {
     Border unselectedBorder = null;
     Border selectedBorder = null;
-    boolean isBordered = true;
+    boolean isBordered;
 
     public ColorRenderer(boolean p_is_bordered) {
       super();

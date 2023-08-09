@@ -175,7 +175,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
   /** Adds a new class to the clearance matrix. */
   private void add_class() {
-    String new_name = null;
+    String new_name;
     // Ask for the name of the new class.
     for (; ; ) {
       new_name = JOptionPane.showInputDialog(resources.getString("new_name"));
@@ -308,8 +308,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   /** Table model of the clearance matrix. */
   private class ClearanceTableModel extends AbstractTableModel
       implements Serializable {
-    private Object[][] data = null;
-    private String[] column_names = null;
+    private Object[][] data;
+    private String[] column_names;
 
     public ClearanceTableModel(BoardHandling p_board_handling) {
       ClearanceMatrix clearance_matrix =
@@ -349,7 +349,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     @Override
     public void setValueAt(Object p_value, int p_row, int p_col) {
-      Number number_value = null;
+      Number number_value;
       if (p_value instanceof Number) {
         // does ot work because of a localisation Bug in Java
         number_value = (Number) p_value;

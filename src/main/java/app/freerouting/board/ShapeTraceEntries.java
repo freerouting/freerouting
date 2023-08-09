@@ -629,7 +629,7 @@ public class ShapeTraceEntries {
         }
         check_entry = check_entry.next;
       }
-      EntryPoint next_entry = null;
+      EntryPoint next_entry;
 
       if (next_index != 0) {
         if (index_of_next_foreign_set != 0

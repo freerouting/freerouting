@@ -18,9 +18,7 @@ public class PlaceControl extends ScopeKeyword {
       boolean result = false;
       Object next_token = p_scanner.next_token();
       if (next_token == ROTATE_FIRST) {
-        if (next_token == ROTATE_FIRST) {
-          result = true;
-        }
+        result = true;
       }
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {

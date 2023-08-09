@@ -526,7 +526,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       ViaRule selected_object = rule_list.getSelectedValue();
-      if (selected_object == null || !(selected_object instanceof ViaRule)) {
+      if (selected_object == null) {
         return;
       }
       BoardRules board_rules =
@@ -566,7 +566,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       ViaRule selected_object = rule_list.getSelectedValue();
-      if (selected_object == null || !(selected_object instanceof ViaRule)) {
+      if (selected_object == null) {
         return;
       }
       ViaRule selected_rule = selected_object;

@@ -57,7 +57,7 @@ public class NetClass {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       String class_name = p_scanner.next_string();
 
-      Object next_token = null;
+      Object next_token;
       Collection<String> net_list = new LinkedList<>();
       boolean rules_missing = false;
       // read the nets belonging to the class

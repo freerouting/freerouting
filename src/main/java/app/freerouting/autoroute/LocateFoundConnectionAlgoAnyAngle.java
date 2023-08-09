@@ -110,8 +110,8 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     // by advancing the door index as far as possible, so that still somthing is visible.
 
     boolean end_of_trace = false;
-    FloatPoint left_tangent_point = null;
-    FloatPoint right_tangent_point = null;
+    FloatPoint left_tangent_point;
+    FloatPoint right_tangent_point;
     int new_door_ind = this.current_to_door_index;
     int left_ind = new_door_ind;
     int right_ind = new_door_ind;

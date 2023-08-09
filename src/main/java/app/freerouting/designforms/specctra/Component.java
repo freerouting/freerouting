@@ -184,7 +184,7 @@ public class Component extends ScopeKeyword {
 
       String name = p_scanner.next_string(true);
 
-      Object next_token = null;
+      Object next_token;
       double[] location = new double[2];
       for (int i = 0; i < 2; ++i) {
         next_token = p_scanner.next_token();

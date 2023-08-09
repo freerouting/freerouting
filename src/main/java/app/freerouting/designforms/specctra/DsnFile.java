@@ -40,7 +40,7 @@ public class DsnFile {
       IdNoGenerator p_item_id_no_generator,
       TestLevel p_test_level) {
     IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
-    Object curr_token = null;
+    Object curr_token;
     for (int i = 0; i < 3; ++i) {
       try {
         curr_token = scanner.next_token();
@@ -198,10 +198,6 @@ public class DsnFile {
       boolean p_compat_mode) {
     // app.freerouting.tests.Validate.check("before writing dsn", p_board);
     IndentFileWriter output_file = new IndentFileWriter(p_file);
-    if (output_file == null) {
-      FRLogger.warn("unable to write dsn file");
-      return false;
-    }
 
     try {
       write_pcb_scope(p_board_handling, output_file, p_design_name, p_compat_mode);

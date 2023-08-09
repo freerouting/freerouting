@@ -33,7 +33,7 @@ public class MoveItemState extends InteractiveState {
   private IntPoint current_position;
   private IntPoint previous_position;
   private Collection<ClearanceViolation> clearance_violations;
-  private boolean observers_activated = false;
+  private boolean observers_activated;
 
   /** Creates a new instance of MoveComponentState */
   private MoveItemState(

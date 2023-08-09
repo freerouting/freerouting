@@ -54,7 +54,7 @@ public class Circuit {
   }
 
   static LengthMatchingRule read_length_scope(IJFlexScanner p_scanner) {
-    LengthMatchingRule result = null;
+    LengthMatchingRule result;
     double[] length_arr = new double[2];
     Object next_token = null;
     for (int i = 0; i < 2; ++i) {
