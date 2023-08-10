@@ -4,9 +4,13 @@ import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -144,10 +148,10 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   /** Draws the shape of this room. */
   @Override
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
-    java.awt.Color draw_color = p_graphics_context.get_trace_colors(false)[this.get_layer()];
+    Color draw_color = p_graphics_context.get_trace_colors(false)[this.get_layer()];
     double layer_visibility = p_graphics_context.get_layer_visibility(this.get_layer());
     p_graphics_context.fill_area(
         this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);

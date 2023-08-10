@@ -1,10 +1,12 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Implementation of the abstract class Point as a tuple of integers. */
-public class IntPoint extends Point implements java.io.Serializable {
+public class IntPoint extends Point implements Serializable {
 
   /** the x coordinate of this point */
   public final int x;

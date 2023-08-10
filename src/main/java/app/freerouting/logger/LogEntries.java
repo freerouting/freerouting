@@ -1,9 +1,10 @@
 package app.freerouting.logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LogEntries {
-  private final List<LogEntry> entries = new java.util.ArrayList<LogEntry>();
+  private final List<LogEntry> entries = new ArrayList<LogEntry>();
 
   public int getWarningCount()
   {

@@ -5,11 +5,13 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.library.Package;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 
 /** Contains the lists of components on the board. */
-public class Components implements java.io.Serializable {
+public class Components implements Serializable {
   private final UndoableObjects undo_list = new UndoableObjects();
   private final Vector<Component> component_arr = new Vector<Component>();
   /**

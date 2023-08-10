@@ -1,32 +1,49 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.Item;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.interactive.BoardHandling;
 import app.freerouting.rules.Net;
+import app.freerouting.rules.NetClass;
+import app.freerouting.rules.NetClasses;
 import app.freerouting.rules.Nets;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class WindowNets extends WindowObjectListWithFilter {
 
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
 
   /** Creates a new instance of NetsWindow */
   public WindowNets(BoardFrame p_board_frame) {
     super(p_board_frame);
     this.resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowNets", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
-    javax.swing.JPanel curr_button_panel = new javax.swing.JPanel();
-    this.south_panel.add(curr_button_panel, java.awt.BorderLayout.NORTH);
+    JPanel curr_button_panel = new JPanel();
+    this.south_panel.add(curr_button_panel, BorderLayout.NORTH);
 
-    final javax.swing.JButton assign_class_button =
-        new javax.swing.JButton(resources.getString("assign_class"));
+    final JButton assign_class_button =
+        new JButton(resources.getString("assign_class"));
     curr_button_panel.add(assign_class_button);
     assign_class_button.setToolTipText(resources.getString("assign_class_tooltip"));
     assign_class_button.addActionListener(new AssignClassListener());
 
-    final javax.swing.JButton filter_incompletes_button =
-        new javax.swing.JButton(resources.getString("filter_incompletes"));
+    final JButton filter_incompletes_button =
+        new JButton(resources.getString("filter_incompletes"));
     curr_button_panel.add(filter_incompletes_button);
     filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
     filter_incompletes_button.addActionListener(new FilterIncompletesListener());
@@ -41,7 +58,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     for (int i = 0; i < sorted_arr.length; ++i) {
       sorted_arr[i] = nets.get(i + 1);
     }
-    java.util.Arrays.sort(sorted_arr);
+    Arrays.sort(sorted_arr);
     for (int i = 0; i < sorted_arr.length; ++i) {
       this.add_to_list(sorted_arr[i]);
     }
@@ -58,12 +75,12 @@ public class WindowNets extends WindowObjectListWithFilter {
     for (int i = 0; i < selected_nets.size(); ++i) {
       selected_net_numbers[i] = ((Net) selected_nets.get(i)).net_number;
     }
-    app.freerouting.board.RoutingBoard routing_board =
+    RoutingBoard routing_board =
         board_frame.board_panel.board_handling.get_routing_board();
-    java.util.Set<app.freerouting.board.Item> selected_items =
-        new java.util.TreeSet<app.freerouting.board.Item>();
-    java.util.Collection<app.freerouting.board.Item> board_items = routing_board.get_items();
-    for (app.freerouting.board.Item curr_item : board_items) {
+    Set<Item> selected_items =
+        new TreeSet<Item>();
+    Collection<Item> board_items = routing_board.get_items();
+    for (Item curr_item : board_items) {
       boolean item_matches = false;
       for (int curr_net_no : selected_net_numbers) {
         if (curr_item.contains_net(curr_net_no)) {
@@ -79,34 +96,34 @@ public class WindowNets extends WindowObjectListWithFilter {
     board_frame.board_panel.board_handling.zoom_selection();
   }
 
-  private class AssignClassListener implements java.awt.event.ActionListener {
+  private class AssignClassListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       List<Object> selected_nets = list.getSelectedValuesList();
       if (selected_nets.size() <= 0) {
         return;
       }
-      app.freerouting.rules.NetClasses net_classes =
+      NetClasses net_classes =
           board_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
-      app.freerouting.rules.NetClass[] class_arr =
-          new app.freerouting.rules.NetClass[net_classes.count()];
+      NetClass[] class_arr =
+          new NetClass[net_classes.count()];
       for (int i = 0; i < class_arr.length; ++i) {
         class_arr[i] = net_classes.get(i);
       }
       Object selected_value =
-          javax.swing.JOptionPane.showInputDialog(
+          JOptionPane.showInputDialog(
               null,
               resources.getString("message_1"),
               resources.getString("message_2"),
-              javax.swing.JOptionPane.INFORMATION_MESSAGE,
+              JOptionPane.INFORMATION_MESSAGE,
               null,
               class_arr,
               class_arr[0]);
-      if (!(selected_value instanceof app.freerouting.rules.NetClass)) {
+      if (!(selected_value instanceof NetClass)) {
         return;
       }
-      app.freerouting.rules.NetClass selected_class =
-          (app.freerouting.rules.NetClass) selected_value;
+      NetClass selected_class =
+          (NetClass) selected_value;
       for (int i = 0; i < selected_nets.size(); ++i) {
         ((Net) selected_nets.get(i)).set_class(selected_class);
       }
@@ -114,14 +131,14 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
   }
 
-  private class FilterIncompletesListener implements java.awt.event.ActionListener {
+  private class FilterIncompletesListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       List<Object> selected_nets = list.getSelectedValuesList();
       if (selected_nets.size() <= 0) {
         return;
       }
-      app.freerouting.interactive.BoardHandling board_handling =
+      BoardHandling board_handling =
           board_frame.board_panel.board_handling;
       int max_net_no = board_handling.get_routing_board().rules.nets.max_net_no();
       for (int i = 1; i <= max_net_no; ++i) {

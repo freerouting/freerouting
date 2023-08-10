@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -10,11 +11,18 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * An item on the board with an relative_area shape, for example keepout, conduction relative_area
  */
-public class ObstacleArea extends Item implements java.io.Serializable {
+public class ObstacleArea extends Item implements Serializable {
   /** For debugging the division into tree shapes */
   private static final boolean display_tree_shapes = false;
   /**
@@ -263,12 +271,12 @@ public class ObstacleArea extends Item implements java.io.Serializable {
 
   @Override
   public int get_draw_priority() {
-    return app.freerouting.boardgraphics.Drawable.MIN_DRAW_PRIORITY;
+    return Drawable.MIN_DRAW_PRIORITY;
   }
 
   @Override
   public void draw(
-      java.awt.Graphics p_g,
+      Graphics p_g,
       GraphicsContext p_graphics_context,
       Color[] p_color_arr,
       double p_intensity) {
@@ -305,9 +313,9 @@ public class ObstacleArea extends Item implements java.io.Serializable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("keepout"));
     int cmp_no = this.get_component_no();
     if (cmp_no > 0) {
@@ -321,17 +329,17 @@ public class ObstacleArea extends Item implements java.io.Serializable {
   }
 
   /** Used in the implementation of print_info for this class and derived classes. */
-  protected final void print_shape_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  protected final void print_shape_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append(" " + resources.getString("at") + " ");
-    app.freerouting.geometry.planar.FloatPoint center =
+    FloatPoint center =
         this.get_area().get_border().centre_of_gravity();
     p_window.append(center);
     Integer hole_count = this.relative_area.get_holes().length;
     if (hole_count > 0) {
       p_window.append(" " + resources.getString("with") + " ");
-      java.text.NumberFormat nf = java.text.NumberFormat.getInstance(p_locale);
+      NumberFormat nf = NumberFormat.getInstance(p_locale);
       p_window.append(nf.format(hole_count));
       if (hole_count == 1) {
         p_window.append(" " + resources.getString("hole"));
@@ -358,10 +366,10 @@ public class ObstacleArea extends Item implements java.io.Serializable {
   }
 
   @Override
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;

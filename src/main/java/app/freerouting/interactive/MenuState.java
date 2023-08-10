@@ -2,10 +2,15 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.Pin;
 import app.freerouting.board.TestLevel;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.JPopupMenu;
 import java.util.Collection;
+import java.util.Set;
 
 /** Common base class for the main menus, which can be selected in the toolbar. */
 public class MenuState extends InteractiveState {
@@ -17,7 +22,7 @@ public class MenuState extends InteractiveState {
   }
 
   @Override
-  public javax.swing.JPopupMenu get_popup_menu() {
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_main;
   }
 
@@ -27,7 +32,7 @@ public class MenuState extends InteractiveState {
    */
   public InteractiveState select_items(FloatPoint p_location) {
     this.hdlg.display_layer_messsage();
-    java.util.Set<Item> picked_items = hdlg.pick_items(p_location);
+    Set<Item> picked_items = hdlg.pick_items(p_location);
     boolean something_found = (picked_items.size() > 0);
     InteractiveState result;
     if (something_found) {
@@ -50,11 +55,11 @@ public class MenuState extends InteractiveState {
     InteractiveState result = this;
     if (picked_items.size() > 0) {
       Item first_item = picked_items.iterator().next();
-      if (!(first_item instanceof app.freerouting.board.Pin)) {
+      if (!(first_item instanceof Pin)) {
         FRLogger.warn("MenuState.swap_pin: Pin expected");
         return this;
       }
-      app.freerouting.board.Pin selected_pin = (app.freerouting.board.Pin) first_item;
+      Pin selected_pin = (Pin) first_item;
       result = PinSwapState.get_instance(selected_pin, this, hdlg, this.activityReplayFile);
     } else {
       hdlg.screen_messages.set_status_message(resources.getString("no_pin_selected"));
@@ -99,7 +104,7 @@ public class MenuState extends InteractiveState {
       curr_return_state = swap_pin(hdlg.get_current_mouse_position());
     } else if (p_key_char == '+') {
       // increase the current layer to the next signal layer
-      app.freerouting.board.LayerStructure layer_structure =
+      LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int current_layer_no = hdlg.settings.layer;
       for (; ; ) {
@@ -114,7 +119,7 @@ public class MenuState extends InteractiveState {
       }
     } else if (p_key_char == '-') {
       // decrease the current layer to the previous signal layer
-      app.freerouting.board.LayerStructure layer_structure =
+      LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int current_layer_no = hdlg.settings.layer;
       for (; ; ) {

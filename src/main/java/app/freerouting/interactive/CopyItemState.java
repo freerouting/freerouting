@@ -13,6 +13,9 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.library.Package;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.JPopupMenu;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -112,9 +115,9 @@ public class CopyItemState extends InteractiveState {
     current_position = p_new_position.round();
     if (!current_position.equals(previous_position)) {
       Vector translate_vector = current_position.difference_by(previous_position);
-      Iterator<app.freerouting.board.Item> it = item_list.iterator();
+      Iterator<Item> it = item_list.iterator();
       while (it.hasNext()) {
-        app.freerouting.board.Item curr_item = it.next();
+        Item curr_item = it.next();
         curr_item.translate_by(translate_vector);
       }
       previous_position = current_position;
@@ -268,7 +271,7 @@ public class CopyItemState extends InteractiveState {
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(Graphics p_graphics) {
     if (item_list == null) {
       return;
     }
@@ -284,7 +287,7 @@ public class CopyItemState extends InteractiveState {
   }
 
   @Override
-  public javax.swing.JPopupMenu get_popup_menu() {
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_copy;
   }
 }

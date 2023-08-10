@@ -1,7 +1,12 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
+
+import java.awt.Color;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Describes Areas on the board, where vias are not allowed. */
 public class ViaObstacleArea extends ObstacleArea {
@@ -103,9 +108,9 @@ public class ViaObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via_keepout"));
     this.print_shape_info(p_window, p_locale);
     this.print_clearance_info(p_window, p_locale);
@@ -114,14 +119,14 @@ public class ViaObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_via_obstacle_colors();
   }
 
   @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_via_obstacle_color_intensity();
   }
 }

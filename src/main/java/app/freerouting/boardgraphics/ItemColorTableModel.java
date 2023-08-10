@@ -1,15 +1,22 @@
 package app.freerouting.boardgraphics;
 
+import app.freerouting.board.LayerStructure;
+
 import java.awt.Color;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Stores the layer dependent colors used for drawing for the items on the board. */
-public class ItemColorTableModel extends ColorTableModel implements java.io.Serializable {
+public class ItemColorTableModel extends ColorTableModel implements Serializable {
 
   private transient boolean item_colors_precalculated = false;
   private transient Color[][] precalculated_item_colors = null;
 
   public ItemColorTableModel(
-      app.freerouting.board.LayerStructure p_layer_structure, java.util.Locale p_locale) {
+      LayerStructure p_layer_structure, Locale p_locale) {
     super(p_layer_structure.arr.length, p_locale);
 
     int row_count = p_layer_structure.arr.length;
@@ -70,8 +77,8 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
     }
   }
 
-  public ItemColorTableModel(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  public ItemColorTableModel(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     super(p_stream);
   }
 
@@ -96,8 +103,8 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
 
   @Override
   public String getColumnName(int p_col) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.boardgraphics.ColorTableModel", this.locale);
     return resources.getString(ColumnNames.values()[p_col].toString());
   }

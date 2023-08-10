@@ -2,9 +2,12 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.ShapeTraceEntries;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -93,7 +96,7 @@ public class CutoutRouteState extends SelectRegionState {
     Set<Integer> changed_nets = new TreeSet<Integer>();
 
     for (PolylineTrace curr_trace : this.trace_list) {
-      app.freerouting.board.ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
+      ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
       for (int i = 0; i < curr_trace.net_count(); ++i) {
         changed_nets.add(curr_trace.get_net_no(i));
       }
@@ -105,7 +108,7 @@ public class CutoutRouteState extends SelectRegionState {
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(Graphics p_graphics) {
     if (trace_list == null) {
       return;
     }

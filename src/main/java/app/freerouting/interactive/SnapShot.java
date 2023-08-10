@@ -1,15 +1,21 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.boardgraphics.ColorIntensityTable;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.gui.BoardFrame;
 
+import java.awt.Point;
+import java.io.Serializable;
+
 /** Snapshot of the client situation in an interactive session. */
-public class SnapShot implements java.io.Serializable {
+public class SnapShot implements Serializable {
   public final Settings settings;
-  public final app.freerouting.boardgraphics.GraphicsContext graphics_context;
+  public final GraphicsContext graphics_context;
   public final BoardFrame.SubwindowSelections subwindow_filters;
   private final String name;
   private final int interactive_state_no;
-  private final java.awt.Point viewport_position;
+  private final Point viewport_position;
 
   /** Creates a SnapShot of the display region and the interactive settings */
   private SnapShot(String p_name, BoardHandling p_board_handling) {
@@ -17,9 +23,9 @@ public class SnapShot implements java.io.Serializable {
     this.settings = new Settings(p_board_handling.settings);
     this.interactive_state_no = get_no(p_board_handling.interactive_state);
     this.graphics_context =
-        new app.freerouting.boardgraphics.GraphicsContext(p_board_handling.graphics_context);
+        new GraphicsContext(p_board_handling.graphics_context);
     this.viewport_position =
-        new java.awt.Point(p_board_handling.get_panel().get_viewport_position());
+        new Point(p_board_handling.get_panel().get_viewport_position());
     this.subwindow_filters =
         p_board_handling.get_panel().board_frame.get_snapshot_subwindow_selections();
   }
@@ -57,21 +63,21 @@ public class SnapShot implements java.io.Serializable {
     return this.name;
   }
 
-  public java.awt.Point copy_viewport_position() {
+  public Point copy_viewport_position() {
     if (this.viewport_position == null) {
       return null;
     }
-    return new java.awt.Point(this.viewport_position);
+    return new Point(this.viewport_position);
   }
 
   /** Goes to this snapshot in interactive board editing. */
-  public void go_to(app.freerouting.interactive.BoardHandling p_board_handling) {
-    app.freerouting.interactive.SnapShot.Attributes snapshot_attributes =
+  public void go_to(BoardHandling p_board_handling) {
+    SnapShot.Attributes snapshot_attributes =
         this.settings.snapshot_attributes;
 
     if (snapshot_attributes.object_visibility) {
       p_board_handling.graphics_context.color_intensity_table =
-          new app.freerouting.boardgraphics.ColorIntensityTable(
+          new ColorIntensityTable(
               this.graphics_context.color_intensity_table);
     }
     if (snapshot_attributes.layer_visibility) {
@@ -89,7 +95,7 @@ public class SnapShot implements java.io.Serializable {
     }
     if (snapshot_attributes.selectable_items) {
       p_board_handling.settings.item_selection_filter =
-          new app.freerouting.board.ItemSelectionFilter(this.settings.item_selection_filter);
+          new ItemSelectionFilter(this.settings.item_selection_filter);
     }
     if (snapshot_attributes.current_layer) {
       p_board_handling.settings.layer = this.settings.layer;
@@ -145,7 +151,7 @@ public class SnapShot implements java.io.Serializable {
   }
 
   /** Defines the data of the snapshot selected for restoring. */
-  public static class Attributes implements java.io.Serializable {
+  public static class Attributes implements Serializable {
     public boolean object_colors;
     public boolean object_visibility;
     public boolean layer_visibility;

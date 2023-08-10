@@ -7,12 +7,15 @@ import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.ShapeSearchTree45Degree;
 import app.freerouting.board.ShapeSearchTree90Degree;
 import app.freerouting.board.TestLevel;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -227,8 +230,8 @@ public class AutorouteEngine {
 
   /** Draws the shapes of the expansion rooms created so far. */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
     if (complete_expansion_rooms == null) {
       return;

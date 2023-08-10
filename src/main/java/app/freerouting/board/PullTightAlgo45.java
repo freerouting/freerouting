@@ -13,6 +13,8 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 
+import java.util.Collection;
+
 class PullTightAlgo45 extends PullTightAlgo {
 
   /** Creates a new instance of PullTight90 */
@@ -479,7 +481,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     Direction line_direction = trace_polyline.arr[1].direction();
     Direction prev_line_direction = trace_polyline.arr[2].direction();
 
-    java.util.Collection<Item> contact_list = p_trace.get_start_contacts();
+    Collection<Item> contact_list = p_trace.get_start_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed()) {
         Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();
@@ -594,7 +596,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     Direction prev_line_direction =
         trace_polyline.arr[trace_polyline.arr.length - 3].direction().opposite();
 
-    java.util.Collection<Item> contact_list = p_trace.get_end_contacts();
+    Collection<Item> contact_list = p_trace.get_end_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed()) {
         Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();

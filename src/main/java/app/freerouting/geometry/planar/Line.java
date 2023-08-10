@@ -2,10 +2,12 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Implements functionality for lines in the plane. */
-public class Line implements Comparable<Line>, java.io.Serializable {
+public class Line implements Comparable<Line>, Serializable {
 
   public final Point a;
   public final Point b;

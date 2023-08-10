@@ -4,8 +4,13 @@ import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.TileShape;
+
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /** Expansion Room used for pushing and ripping obstacles in the autoroute algorithm. */
@@ -23,7 +28,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     this.item = p_item;
     this.index_in_item = p_index_in_item;
     this.shape = p_item.get_tree_shape(p_shape_tree, p_index_in_item);
-    this.doors = new java.util.LinkedList<ExpansionDoor>();
+    this.doors = new LinkedList<ExpansionDoor>();
   }
 
   public int get_index_in_item() {
@@ -99,7 +104,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   /** Removes all doors from this room. */
   @Override
   public void clear_doors() {
-    this.doors = new java.util.LinkedList<ExpansionDoor>();
+    this.doors = new LinkedList<ExpansionDoor>();
   }
 
   @Override
@@ -111,7 +116,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   @Override
   public Collection<TargetItemExpansionDoor> get_target_doors() {
-    return new java.util.LinkedList<TargetItemExpansionDoor>();
+    return new LinkedList<TargetItemExpansionDoor>();
   }
 
   public Item get_item() {
@@ -140,10 +145,10 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   /** Draws the shape of this room. */
   @Override
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
-    java.awt.Color draw_color = java.awt.Color.WHITE;
+    Color draw_color = Color.WHITE;
     double layer_visibility = p_graphics_context.get_layer_visibility(this.get_layer());
     p_graphics_context.fill_area(
         this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);

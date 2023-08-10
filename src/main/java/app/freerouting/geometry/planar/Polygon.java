@@ -1,6 +1,8 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +11,7 @@ import java.util.LinkedList;
  * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3
  * consecutive points collinear.
  */
-public class Polygon implements java.io.Serializable {
+public class Polygon implements Serializable {
   private final Collection<Point> corners;
 
   /**

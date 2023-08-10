@@ -9,6 +9,10 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.rules.BoardRules;
 
+import javax.swing.JPopupMenu;
+import java.awt.Color;
+import java.awt.Graphics;
+
 /** Interactive creation of a circle obstacle */
 public class CircleConstructionState extends InteractiveState {
   private final FloatPoint circle_center;
@@ -117,18 +121,18 @@ public class CircleConstructionState extends InteractiveState {
 
   /** draws the graphic construction aid for the circle */
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(Graphics p_graphics) {
     FloatPoint current_mouse_position = hdlg.get_current_mouse_position();
     if (current_mouse_position == null) {
       return;
     }
     this.circle_radius = circle_center.distance(current_mouse_position);
     hdlg.graphics_context.draw_circle(
-        circle_center, circle_radius, 300, java.awt.Color.white, p_graphics, 1);
+        circle_center, circle_radius, 300, Color.white, p_graphics, 1);
   }
 
   @Override
-  public javax.swing.JPopupMenu get_popup_menu() {
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_insert_cancel;
   }
 

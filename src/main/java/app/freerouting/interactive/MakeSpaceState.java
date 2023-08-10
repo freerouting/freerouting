@@ -4,6 +4,10 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.rules.Nets;
+import app.freerouting.rules.ViaRule;
+
+import java.awt.Graphics;
 
 /**
  * Class for shoving items out of a region to make space to insert something else. For that purpose
@@ -29,7 +33,7 @@ public class MakeSpaceState extends DragState {
       layer_active_arr[i] = true;
     }
     int[] route_net_no_arr = new int[1];
-    route_net_no_arr[0] = app.freerouting.rules.Nets.hidden_net_no;
+    route_net_no_arr[0] = Nets.hidden_net_no;
     route =
         new Route(
             p_location.round(),
@@ -38,7 +42,7 @@ public class MakeSpaceState extends DragState {
             layer_active_arr,
             route_net_no_arr,
             0,
-            app.freerouting.rules.ViaRule.EMPTY,
+            ViaRule.EMPTY,
             true,
             hdlg.settings.trace_pull_tight_region_width,
             hdlg.settings.trace_pull_tight_accuracy,
@@ -83,7 +87,7 @@ public class MakeSpaceState extends DragState {
 
   @Override
   public InteractiveState button_released() {
-    int delete_net_no = app.freerouting.rules.Nets.hidden_net_no;
+    int delete_net_no = Nets.hidden_net_no;
     BasicBoard board = hdlg.get_routing_board();
     board.remove_items(board.get_connectable_items(delete_net_no), false);
     if (this.observers_activated) {
@@ -98,7 +102,7 @@ public class MakeSpaceState extends DragState {
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(Graphics p_graphics) {
     if (route != null) {
       route.draw(p_graphics, hdlg.graphics_context);
     }

@@ -9,6 +9,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /** Auxiliary class used by the shove functions */
 public class ShapeTraceEntries {
@@ -46,7 +47,7 @@ public class ShapeTraceEntries {
     list_anchor = null;
     trace_piece_count = 0;
     max_stack_level = 0;
-    shove_via_list = new java.util.LinkedList<Via>();
+    shove_via_list = new LinkedList<Via>();
   }
 
   public static void cutout_trace(PolylineTrace p_trace, ConvexShape p_shape, int p_cl_class) {

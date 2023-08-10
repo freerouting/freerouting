@@ -1,6 +1,7 @@
 package app.freerouting.interactive;
 
 import app.freerouting.autoroute.AutorouteEngine;
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Component;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
@@ -21,8 +22,13 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.WindowObjectInfo;
 import app.freerouting.library.Package;
 import app.freerouting.rules.Net;
+
+import javax.swing.JPopupMenu;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -116,7 +122,7 @@ public class SelectedItemState extends InteractiveState {
       this.toggle_clearance_violations();
     } else if (p_key_char == 'w') {
       this.hdlg.zoom_selection();
-    } else if (p_key_char == java.awt.event.KeyEvent.VK_DELETE) {
+    } else if (p_key_char == KeyEvent.VK_DELETE) {
       result = delete_items();
     } else {
       result = super.key_typed(p_key_char);
@@ -126,7 +132,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** fixes all items in this selected set */
   public void fix_items() {
-    java.util.Iterator<Item> it = item_list.iterator();
+    Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_ob = it.next();
       if (curr_ob.get_fixed_state().ordinal() < FixedState.USER_FIXED.ordinal()) {
@@ -140,7 +146,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** unfixes all items in this selected set */
   public void unfix_items() {
-    java.util.Iterator<Item> it = item_list.iterator();
+    Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_ob = it.next();
       curr_ob.unfix();
@@ -157,7 +163,7 @@ public class SelectedItemState extends InteractiveState {
     board.generate_snapshot();
     boolean items_already_connected = false;
     Net new_net = board.rules.nets.new_net(hdlg.get_locale());
-    java.util.Iterator<Item> it = item_list.iterator();
+    Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
       if (curr_item instanceof ObstacleArea) {
@@ -194,7 +200,7 @@ public class SelectedItemState extends InteractiveState {
     double gravity_x = 0;
     double gravity_y = 0;
     int pin_count = 0;
-    java.util.Iterator<Item> it = item_list.iterator();
+    Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_ob = it.next();
       if (curr_ob instanceof Via) {
@@ -311,7 +317,7 @@ public class SelectedItemState extends InteractiveState {
     Integer not_found_count = 0;
     Integer found_count = 0;
     boolean interrupted = false;
-    Collection<Item> autoroute_item_list = new java.util.LinkedList<Item>();
+    Collection<Item> autoroute_item_list = new LinkedList<Item>();
     for (Item curr_item : item_list) {
       if (curr_item instanceof Connectable) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
@@ -339,7 +345,7 @@ public class SelectedItemState extends InteractiveState {
         continue;
       }
       boolean contains_plane = false;
-      app.freerouting.rules.Net route_net =
+      Net route_net =
           hdlg.get_routing_board().rules.nets.get(curr_item.get_net_no(0));
       if (route_net != null) {
         contains_plane = route_net.contains_plane();
@@ -413,7 +419,7 @@ public class SelectedItemState extends InteractiveState {
     Integer found_count = 0;
     int trace_pull_tight_accuracy = hdlg.settings.trace_pull_tight_accuracy;
     boolean interrupted = false;
-    Collection<Pin> fanout_list = new java.util.LinkedList<Pin>();
+    Collection<Pin> fanout_list = new LinkedList<Pin>();
     for (Item curr_item : item_list) {
       if (curr_item instanceof Pin) {
         fanout_list.add((Pin) curr_item);
@@ -556,7 +562,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** Assigns the input clearance class to the selected items. */
   public InteractiveState assign_clearance_class(int p_cl_class_index) {
-    app.freerouting.board.BasicBoard routing_board = this.hdlg.get_routing_board();
+    BasicBoard routing_board = this.hdlg.get_routing_board();
     if (p_cl_class_index < 0
         || p_cl_class_index >= routing_board.rules.clearance_matrix.get_class_count()) {
       return this.return_state;
@@ -756,12 +762,12 @@ public class SelectedItemState extends InteractiveState {
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(Graphics p_graphics) {
     if (item_list == null) {
       return;
     }
 
-    for (app.freerouting.board.Item curr_item : item_list) {
+    for (Item curr_item : item_list) {
       curr_item.draw(
           p_graphics,
           hdlg.graphics_context,
@@ -774,7 +780,7 @@ public class SelectedItemState extends InteractiveState {
   }
 
   @Override
-  public javax.swing.JPopupMenu get_popup_menu() {
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_select;
   }
 

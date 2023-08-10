@@ -3,8 +3,10 @@ package app.freerouting.geometry.planar;
 import app.freerouting.datastructures.BigIntAux;
 import app.freerouting.datastructures.Signum;
 
+import java.io.Serializable;
+
 /** Implementation of the interface Vector via a tuple of integers */
-public class IntVector extends Vector implements java.io.Serializable {
+public class IntVector extends Vector implements Serializable {
 
   /** the x coordinate of this vector */
   public final int x;

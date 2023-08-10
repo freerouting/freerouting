@@ -1,20 +1,27 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.CoordinateTransform;
+import app.freerouting.board.Item;
+import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.Nets;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class WindowLengthViolations extends WindowObjectListWithFilter {
 
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
 
   /** Creates a new instance of WindowLengthViolations */
   public WindowLengthViolations(BoardFrame p_board_frame) {
     super(p_board_frame);
     this.resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowLengthViolations", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
     this.list_empty_message.setText(resources.getString("list_empty"));
@@ -25,8 +32,8 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
   protected void fill_list() {
     RatsNest ratsnest = this.board_frame.board_panel.board_handling.get_ratsnest();
     Nets net_list = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
-    java.util.SortedSet<LengthViolation> length_violations =
-        new java.util.TreeSet<LengthViolation>();
+    SortedSet<LengthViolation> length_violations =
+        new TreeSet<LengthViolation>();
     for (int net_index = 1; net_index <= net_list.max_net_no(); ++net_index) {
       double curr_violation_length = ratsnest.get_length_violation(net_index);
       if (curr_violation_length != 0) {
@@ -48,13 +55,13 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     if (selected_violations.size() <= 0) {
       return;
     }
-    java.util.Set<app.freerouting.board.Item> selected_items =
-        new java.util.TreeSet<app.freerouting.board.Item>();
+    Set<Item> selected_items =
+        new TreeSet<Item>();
     for (int i = 0; i < selected_violations.size(); ++i) {
       LengthViolation curr_violation = ((LengthViolation) selected_violations.get(i));
       selected_items.addAll(curr_violation.net.get_items());
     }
-    app.freerouting.interactive.BoardHandling board_handling =
+    BoardHandling board_handling =
         board_frame.board_panel.board_handling;
     board_handling.select_items(selected_items);
     board_handling.zoom_selection();
@@ -76,7 +83,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
 
     @Override
     public String toString() {
-      app.freerouting.board.CoordinateTransform coordinate_transform =
+      CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;
       NetClass net_class = this.net.get_class();
       Float allowed_length;

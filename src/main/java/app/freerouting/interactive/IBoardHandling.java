@@ -1,5 +1,6 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
@@ -7,8 +8,10 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
 
+import java.util.Locale;
+
 public interface IBoardHandling {
-  java.util.Locale get_locale();
+  Locale get_locale();
 
   RoutingBoard get_routing_board();
 
@@ -20,7 +23,7 @@ public interface IBoardHandling {
       PolylineShape[] p_outline_shapes,
       String p_outline_clearance_class_name,
       BoardRules p_rules,
-      app.freerouting.board.Communication p_board_communication,
+      Communication p_board_communication,
       TestLevel p_test_level);
 
   Settings get_settings();

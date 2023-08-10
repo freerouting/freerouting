@@ -1,20 +1,41 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.TestLevel;
+import app.freerouting.interactive.AutorouteSettings;
+import app.freerouting.interactive.BoardHandling;
+
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ResourceBundle;
 
 public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
-  private final app.freerouting.interactive.BoardHandling board_handling;
-  private final javax.swing.JFormattedTextField via_cost_field;
-  private final javax.swing.JFormattedTextField plane_via_cost_field;
-  private final javax.swing.JFormattedTextField start_ripup_costs;
-  private final javax.swing.JFormattedTextField start_pass_no;
-  private final javax.swing.JComboBox<String> speed_combo_box;
+  private final BoardHandling board_handling;
+  private final JFormattedTextField via_cost_field;
+  private final JFormattedTextField plane_via_cost_field;
+  private final JFormattedTextField start_ripup_costs;
+  private final JFormattedTextField start_pass_no;
+  private final JComboBox<String> speed_combo_box;
   private final String speed_fast;
   private final String speed_slow;
-  private final javax.swing.JLabel[] layer_name_arr;
-  private final javax.swing.JFormattedTextField[] preferred_direction_trace_cost_arr;
-  private final javax.swing.JFormattedTextField[] against_preferred_direction_trace_cost_arr;
+  private final JLabel[] layer_name_arr;
+  private final JFormattedTextField[] preferred_direction_trace_cost_arr;
+  private final JFormattedTextField[] against_preferred_direction_trace_cost_arr;
   private final boolean[] preferred_direction_trace_costs_input_completed;
   private final boolean[] against_preferred_direction_trace_costs_input_completed;
   private boolean via_cost_input_completed = true;
@@ -23,80 +44,80 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
   /** Creates a new instance of WindowAutorouteDetailParameter */
   public WindowAutorouteDetailParameter(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowAutorouteParameter", p_board_frame.get_locale());
     this.setTitle(resources.getString("detail_autoroute_parameter"));
 
     // create main panel
 
-    final javax.swing.JPanel main_panel = new javax.swing.JPanel();
+    final JPanel main_panel = new JPanel();
     getContentPane().add(main_panel);
-    java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    GridBagLayout gridbag = new GridBagLayout();
     main_panel.setLayout(gridbag);
-    java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridbag_constraints.insets = new java.awt.Insets(5, 10, 5, 10);
+    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.anchor = GridBagConstraints.WEST;
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
 
     // add label and number field for the via costs.
 
     gridbag_constraints.gridwidth = 2;
-    javax.swing.JLabel via_cost_label = new javax.swing.JLabel(resources.getString("via_costs"));
+    JLabel via_cost_label = new JLabel(resources.getString("via_costs"));
     gridbag.setConstraints(via_cost_label, gridbag_constraints);
     main_panel.add(via_cost_label);
 
-    java.text.NumberFormat number_format =
-        java.text.NumberFormat.getIntegerInstance(p_board_frame.get_locale());
-    this.via_cost_field = new javax.swing.JFormattedTextField(number_format);
+    NumberFormat number_format =
+        NumberFormat.getIntegerInstance(p_board_frame.get_locale());
+    this.via_cost_field = new JFormattedTextField(number_format);
     this.via_cost_field.setColumns(3);
     this.via_cost_field.addKeyListener(new ViaCostFieldKeyListener());
     this.via_cost_field.addFocusListener(new ViaCostFieldFocusListener());
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(via_cost_field, gridbag_constraints);
     main_panel.add(via_cost_field);
 
-    this.plane_via_cost_field = new javax.swing.JFormattedTextField(number_format);
+    this.plane_via_cost_field = new JFormattedTextField(number_format);
     this.plane_via_cost_field.setColumns(3);
     this.plane_via_cost_field.addKeyListener(new PlaneViaCostFieldKeyListener());
     this.plane_via_cost_field.addFocusListener(new PlaneViaCostFieldFocusListener());
 
     gridbag_constraints.gridwidth = 2;
-    javax.swing.JLabel plane_via_cost_label =
-        new javax.swing.JLabel(resources.getString("plane_via_costs"));
+    JLabel plane_via_cost_label =
+        new JLabel(resources.getString("plane_via_costs"));
     gridbag.setConstraints(plane_via_cost_label, gridbag_constraints);
     main_panel.add(plane_via_cost_label);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(plane_via_cost_field, gridbag_constraints);
     main_panel.add(plane_via_cost_field);
 
     // add label and number field for the start pass no.
 
     gridbag_constraints.gridwidth = 2;
-    javax.swing.JLabel start_pass_label = new javax.swing.JLabel(resources.getString("start_pass"));
+    JLabel start_pass_label = new JLabel(resources.getString("start_pass"));
     gridbag.setConstraints(start_pass_label, gridbag_constraints);
     main_panel.add(start_pass_label);
 
-    start_pass_no = new javax.swing.JFormattedTextField(number_format);
+    start_pass_no = new JFormattedTextField(number_format);
     start_pass_no.setColumns(5);
     this.start_pass_no.addKeyListener(new StartPassFieldKeyListener());
     this.start_pass_no.addFocusListener(new StartPassFieldFocusListener());
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(start_pass_no, gridbag_constraints);
     main_panel.add(start_pass_no);
 
     // add label and number field for the start ripup costs.
 
     gridbag_constraints.gridwidth = 2;
-    javax.swing.JLabel start_ripup_costs_label = new javax.swing.JLabel();
+    JLabel start_ripup_costs_label = new JLabel();
     start_ripup_costs_label.setText(resources.getString("start_ripup_costs"));
     gridbag.setConstraints(start_ripup_costs_label, gridbag_constraints);
     main_panel.add(start_ripup_costs_label);
 
-    start_ripup_costs = new javax.swing.JFormattedTextField(number_format);
+    start_ripup_costs = new JFormattedTextField(number_format);
     start_ripup_costs.setColumns(3);
     this.start_ripup_costs.addKeyListener(new StartRipupCostFieldKeyListener());
     this.start_ripup_costs.addFocusListener(new StartRipupCostFieldFocusListener());
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(start_ripup_costs, gridbag_constraints);
     main_panel.add(start_ripup_costs);
 
@@ -105,26 +126,26 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     // is used also in the 45 and 90 degree modes.
     this.speed_fast = resources.getString("fast");
     this.speed_slow = resources.getString("slow");
-    speed_combo_box = new javax.swing.JComboBox<>();
+    speed_combo_box = new JComboBox<>();
     speed_combo_box.addItem(this.speed_fast);
     speed_combo_box.addItem(this.speed_slow);
     speed_combo_box.addActionListener(new SpeedListener());
 
     if (this.board_handling.get_routing_board().get_test_level()
-        != app.freerouting.board.TestLevel.RELEASE_VERSION) {
+        != TestLevel.RELEASE_VERSION) {
       gridbag_constraints.gridwidth = 2;
-      javax.swing.JLabel speed_label = new javax.swing.JLabel();
+      JLabel speed_label = new JLabel();
       speed_label.setText(resources.getString("speed"));
       gridbag.setConstraints(speed_label, gridbag_constraints);
       main_panel.add(speed_label);
 
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+      gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(speed_combo_box, gridbag_constraints);
       main_panel.add(speed_combo_box);
     }
 
-    javax.swing.JLabel separator =
-        new javax.swing.JLabel(
+    JLabel separator =
+        new JLabel(
             "––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
@@ -132,44 +153,44 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     // add label and number field for the trace costs on each layer.
 
     gridbag_constraints.gridwidth = 3;
-    javax.swing.JLabel layer_label =
-        new javax.swing.JLabel(resources.getString("trace_costs_on_layer"));
+    JLabel layer_label =
+        new JLabel(resources.getString("trace_costs_on_layer"));
     gridbag.setConstraints(layer_label, gridbag_constraints);
     main_panel.add(layer_label);
 
-    javax.swing.JLabel pref_dir_label =
-        new javax.swing.JLabel(resources.getString("in_preferred_direction"));
+    JLabel pref_dir_label =
+        new JLabel(resources.getString("in_preferred_direction"));
     gridbag.setConstraints(pref_dir_label, gridbag_constraints);
     main_panel.add(pref_dir_label);
 
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    javax.swing.JLabel against_pref_dir_label =
-        new javax.swing.JLabel(resources.getString("against_preferred_direction"));
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    JLabel against_pref_dir_label =
+        new JLabel(resources.getString("against_preferred_direction"));
     gridbag.setConstraints(against_pref_dir_label, gridbag_constraints);
     main_panel.add(against_pref_dir_label);
 
-    app.freerouting.board.LayerStructure layer_structure =
+    LayerStructure layer_structure =
         this.board_handling.get_routing_board().layer_structure;
     int signal_layer_count = layer_structure.signal_layer_count();
-    layer_name_arr = new javax.swing.JLabel[signal_layer_count];
-    preferred_direction_trace_cost_arr = new javax.swing.JFormattedTextField[signal_layer_count];
+    layer_name_arr = new JLabel[signal_layer_count];
+    preferred_direction_trace_cost_arr = new JFormattedTextField[signal_layer_count];
     against_preferred_direction_trace_cost_arr =
-        new javax.swing.JFormattedTextField[signal_layer_count];
+        new JFormattedTextField[signal_layer_count];
     preferred_direction_trace_costs_input_completed = new boolean[signal_layer_count];
     against_preferred_direction_trace_costs_input_completed = new boolean[signal_layer_count];
-    number_format = java.text.NumberFormat.getInstance(p_board_frame.get_locale());
+    number_format = NumberFormat.getInstance(p_board_frame.get_locale());
     number_format.setMaximumFractionDigits(2);
     final int TEXT_FIELD_LENGTH = 2;
-    java.text.NumberFormat float_number_format = new DecimalFormat("0.0");
+    NumberFormat float_number_format = new DecimalFormat("0.0");
     for (int i = 0; i < signal_layer_count; ++i) {
-      layer_name_arr[i] = new javax.swing.JLabel();
-      app.freerouting.board.Layer curr_signal_layer = layer_structure.get_signal_layer(i);
+      layer_name_arr[i] = new JLabel();
+      Layer curr_signal_layer = layer_structure.get_signal_layer(i);
       layer_name_arr[i].setText(curr_signal_layer.name);
       gridbag_constraints.gridwidth = 3;
       gridbag.setConstraints(layer_name_arr[i], gridbag_constraints);
       main_panel.add(layer_name_arr[i]);
       preferred_direction_trace_cost_arr[i] =
-          new javax.swing.JFormattedTextField(float_number_format);
+          new JFormattedTextField(float_number_format);
       preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
       preferred_direction_trace_cost_arr[i].addKeyListener(
           new PreferredDirectionTraceCostKeyListener(i));
@@ -178,21 +199,21 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       gridbag.setConstraints(preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(preferred_direction_trace_cost_arr[i]);
       against_preferred_direction_trace_cost_arr[i] =
-          new javax.swing.JFormattedTextField(float_number_format);
+          new JFormattedTextField(float_number_format);
       against_preferred_direction_trace_cost_arr[i].setColumns(TEXT_FIELD_LENGTH);
       against_preferred_direction_trace_cost_arr[i].addKeyListener(
           new AgainstPreferredDirectionTraceCostKeyListener(i));
       against_preferred_direction_trace_cost_arr[i].addFocusListener(
           new AgainstPreferredDirectionTraceCostFocusListener(i));
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+      gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(against_preferred_direction_trace_cost_arr[i], gridbag_constraints);
       main_panel.add(against_preferred_direction_trace_cost_arr[i]);
       preferred_direction_trace_costs_input_completed[i] = true;
       against_preferred_direction_trace_costs_input_completed[i] = true;
     }
 
-    javax.swing.JLabel applyValuesNote =
-        new javax.swing.JLabel("(note: you need to press Enter to apply the new values)");
+    JLabel applyValuesNote =
+        new JLabel("(note: you need to press Enter to apply the new values)");
     gridbag.setConstraints(applyValuesNote, gridbag_constraints);
     main_panel.add(applyValuesNote, gridbag_constraints);
 
@@ -206,9 +227,9 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
   /** Recalculates all displayed values */
   @Override
   public void refresh() {
-    app.freerouting.interactive.AutorouteSettings settings =
+    AutorouteSettings settings =
         this.board_handling.settings.autoroute_settings;
-    app.freerouting.board.LayerStructure layer_structure =
+    LayerStructure layer_structure =
         this.board_handling.get_routing_board().layer_structure;
     this.via_cost_field.setValue(settings.get_via_costs());
     this.plane_via_cost_field.setValue(settings.get_plane_via_costs());
@@ -233,10 +254,10 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     board_handling.settings.autoroute_settings.set_stop_pass_no(input_value);
   }
 
-  private class ViaCostFieldKeyListener extends java.awt.event.KeyAdapter {
+  private class ViaCostFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_via_costs();
         Object input = via_cost_field.getValue();
@@ -261,10 +282,10 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class ViaCostFieldFocusListener implements java.awt.event.FocusListener {
+  private class ViaCostFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+    public void focusLost(FocusEvent p_evt) {
       if (!via_cost_input_completed) {
         via_cost_input_completed = true;
         refresh();
@@ -272,13 +293,13 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt) {}
   }
 
-  private class PlaneViaCostFieldKeyListener extends java.awt.event.KeyAdapter {
+  private class PlaneViaCostFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_plane_via_costs();
         Object input = plane_via_cost_field.getValue();
@@ -303,10 +324,10 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class PlaneViaCostFieldFocusListener implements java.awt.event.FocusListener {
+  private class PlaneViaCostFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+    public void focusLost(FocusEvent p_evt) {
       if (!plane_via_cost_input_completed) {
         plane_via_cost_input_completed = true;
         refresh();
@@ -314,13 +335,13 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt) {}
   }
 
-  private class StartRipupCostFieldKeyListener extends java.awt.event.KeyAdapter {
+  private class StartRipupCostFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_start_ripup_costs();
         Object input = start_ripup_costs.getValue();
@@ -342,10 +363,10 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class StartRipupCostFieldFocusListener implements java.awt.event.FocusListener {
+  private class StartRipupCostFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+    public void focusLost(FocusEvent p_evt) {
       if (!start_ripup_cost_input_completed) {
         start_ripup_cost_input_completed = true;
         refresh();
@@ -353,13 +374,13 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt) {}
   }
 
-  private class StartPassFieldKeyListener extends java.awt.event.KeyAdapter {
+  private class StartPassFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int old_value = board_handling.settings.autoroute_settings.get_start_pass_no();
         Object input = start_pass_no.getValue();
@@ -381,23 +402,23 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class StartPassFieldFocusListener implements java.awt.event.FocusListener {
+  private class StartPassFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+    public void focusLost(FocusEvent p_evt) {
       if (!start_ripup_cost_input_completed) {
         refresh();
       }
     }
 
     @Override
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt) {}
   }
 
-  private class SpeedListener implements java.awt.event.ActionListener {
+  private class SpeedListener implements ActionListener {
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       boolean old_is_slow = board_handling.get_routing_board().rules.get_slow_autoroute_algorithm();
       boolean new_is_slow = speed_combo_box.getSelectedItem() == speed_slow;
       if (old_is_slow != new_is_slow) {
@@ -407,7 +428,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class PreferredDirectionTraceCostKeyListener extends java.awt.event.KeyAdapter {
+  private class PreferredDirectionTraceCostKeyListener extends KeyAdapter {
 
     private final int signal_layer_no;
 
@@ -416,7 +437,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no =
             board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
@@ -444,7 +465,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class PreferredDirectionTraceCostFocusListener implements java.awt.event.FocusListener {
+  private class PreferredDirectionTraceCostFocusListener implements FocusListener {
 
     private final int signal_layer_no;
 
@@ -453,7 +474,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+    public void focusLost(FocusEvent p_evt) {
       if (!preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
         start_ripup_cost_input_completed = true;
         refresh();
@@ -461,10 +482,10 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt) {}
   }
 
-  private class AgainstPreferredDirectionTraceCostKeyListener extends java.awt.event.KeyAdapter {
+  private class AgainstPreferredDirectionTraceCostKeyListener extends KeyAdapter {
 
     private final int signal_layer_no;
 
@@ -473,7 +494,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         int curr_layer_no =
             board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
@@ -502,7 +523,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
   }
 
   private class AgainstPreferredDirectionTraceCostFocusListener
-      implements java.awt.event.FocusListener {
+      implements FocusListener {
 
     private final int signal_layer_no;
 
@@ -511,7 +532,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+    public void focusLost(FocusEvent p_evt) {
       if (!against_preferred_direction_trace_costs_input_completed[this.signal_layer_no]) {
         start_ripup_cost_input_completed = true;
         refresh();
@@ -519,6 +540,6 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt) {}
   }
 }

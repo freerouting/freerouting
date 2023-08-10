@@ -2,6 +2,8 @@ package app.freerouting.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
 
+import javax.swing.JPopupMenu;
+
 /** State for dynamic interactive routing, which is routing while moving the mouse pointer. */
 public class DynamicRouteState extends RouteState {
 
@@ -48,7 +50,7 @@ public class DynamicRouteState extends RouteState {
   }
 
   @Override
-  public javax.swing.JPopupMenu get_popup_menu() {
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_dynamic_route;
   }
 

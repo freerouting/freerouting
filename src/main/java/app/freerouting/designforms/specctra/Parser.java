@@ -1,7 +1,11 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.Communication.SpecctraParserInfo;
+import app.freerouting.datastructures.IdentifierType;
+import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 
 /** Class for reading and writing parser scopes from dsn-files. */
 public class Parser extends ScopeKeyword {
@@ -31,7 +35,7 @@ public class Parser extends ScopeKeyword {
         return null;
       }
       return new SpecctraParserInfo.WriteResolution(resolution_string, resolution_value);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Parser.read_write_solution: IO error scanning file", e);
       return null;
     }
@@ -60,7 +64,7 @@ public class Parser extends ScopeKeyword {
         return null;
       }
       return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Parser.read_constant: IO error scanning file", e);
       return null;
     }
@@ -68,11 +72,11 @@ public class Parser extends ScopeKeyword {
 
   /** p_reduced is true if the scope is written to a session file. */
   public static void write_scope(
-      app.freerouting.datastructures.IndentFileWriter p_file,
+      IndentFileWriter p_file,
       SpecctraParserInfo p_parser_info,
-      app.freerouting.datastructures.IdentifierType p_identifier_type,
+      IdentifierType p_identifier_type,
       boolean p_reduced)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("parser");
     if (!p_reduced) {
@@ -136,7 +140,7 @@ public class Parser extends ScopeKeyword {
         return null;
       }
       return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Parser.read_quote_char: IO error scanning file", e);
       return null;
     }
@@ -149,7 +153,7 @@ public class Parser extends ScopeKeyword {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.warn("Parser.read_scope: IO error scanning file");
         return false;
       }

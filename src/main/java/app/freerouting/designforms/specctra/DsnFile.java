@@ -1,9 +1,25 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.BasicBoard;
+import app.freerouting.board.BoardObservers;
+import app.freerouting.board.BoardOutline;
+import app.freerouting.board.ConductionArea;
+import app.freerouting.board.FixedState;
+import app.freerouting.board.Item;
 import app.freerouting.board.TestLevel;
+import app.freerouting.board.Trace;
+import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.IBoardHandling;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /** Class for reading and writing dsn-files. */
 public class DsnFile {
@@ -18,17 +34,17 @@ public class DsnFile {
    * false, if an error occurred.
    */
   public static ReadResult read(
-      java.io.InputStream p_input_stream,
-      app.freerouting.interactive.IBoardHandling p_board_handling,
-      app.freerouting.board.BoardObservers p_observers,
-      app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator,
+      InputStream p_input_stream,
+      IBoardHandling p_board_handling,
+      BoardObservers p_observers,
+      IdNoGenerator p_item_id_no_generator,
       TestLevel p_test_level) {
     IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
     Object curr_token = null;
     for (int i = 0; i < 3; ++i) {
       try {
         curr_token = scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("DsnFile.read: IO error scanning file", e);
         return ReadResult.ERROR;
       }
@@ -72,7 +88,7 @@ public class DsnFile {
    * set correctly to plane in the dsn-file. Returns true, if something was changed.
    */
   private static boolean adjust_plane_autoroute_settings(
-      app.freerouting.interactive.IBoardHandling p_board_handling) {
+      IBoardHandling p_board_handling) {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     app.freerouting.board.LayerStructure board_layer_structure = routing_board.layer_structure;
     if (board_layer_structure.arr.length <= 2) {
@@ -89,31 +105,31 @@ public class DsnFile {
       layer_contains_wires_arr[i] = false;
       changed_layer_arr[i] = false;
     }
-    java.util.Collection<app.freerouting.board.ConductionArea> conduction_area_list =
-        new java.util.LinkedList<app.freerouting.board.ConductionArea>();
-    java.util.Collection<app.freerouting.board.Item> item_list = routing_board.get_items();
-    for (app.freerouting.board.Item curr_item : item_list) {
-      if (curr_item instanceof app.freerouting.board.Trace) {
-        int curr_layer = ((app.freerouting.board.Trace) curr_item).get_layer();
+    Collection<ConductionArea> conduction_area_list =
+        new LinkedList<ConductionArea>();
+    Collection<Item> item_list = routing_board.get_items();
+    for (Item curr_item : item_list) {
+      if (curr_item instanceof Trace) {
+        int curr_layer = ((Trace) curr_item).get_layer();
         layer_contains_wires_arr[curr_layer] = true;
-      } else if (curr_item instanceof app.freerouting.board.ConductionArea) {
-        conduction_area_list.add((app.freerouting.board.ConductionArea) curr_item);
+      } else if (curr_item instanceof ConductionArea) {
+        conduction_area_list.add((ConductionArea) curr_item);
       }
     }
     boolean nothing_changed = true;
 
-    app.freerouting.board.BoardOutline board_outline = routing_board.get_outline();
+    BoardOutline board_outline = routing_board.get_outline();
     double board_area = 0;
     for (int i = 0; i < board_outline.shape_count(); ++i) {
-      app.freerouting.geometry.planar.TileShape[] curr_piece_arr =
+      TileShape[] curr_piece_arr =
           board_outline.get_shape(i).split_to_convex();
       if (curr_piece_arr != null) {
-        for (app.freerouting.geometry.planar.TileShape curr_piece : curr_piece_arr) {
+        for (TileShape curr_piece : curr_piece_arr) {
           board_area += curr_piece.area();
         }
       }
     }
-    for (app.freerouting.board.ConductionArea curr_conduction_area : conduction_area_list) {
+    for (ConductionArea curr_conduction_area : conduction_area_list) {
       int layer_no = curr_conduction_area.get_layer();
       if (layer_contains_wires_arr[layer_no]) {
         continue;
@@ -124,10 +140,10 @@ public class DsnFile {
           || layer_no == board_layer_structure.arr.length - 1) {
         continue;
       }
-      app.freerouting.geometry.planar.TileShape[] convex_pieces =
+      TileShape[] convex_pieces =
           curr_conduction_area.get_area().split_to_convex();
       double curr_area = 0;
-      for (app.freerouting.geometry.planar.TileShape curr_piece : convex_pieces) {
+      for (TileShape curr_piece : convex_pieces) {
         curr_area += curr_piece.area();
       }
       if (curr_area < 0.5 * board_area) {
@@ -144,8 +160,8 @@ public class DsnFile {
 
       changed_layer_arr[layer_no] = true;
       if (curr_conduction_area.get_fixed_state().ordinal()
-          < app.freerouting.board.FixedState.USER_FIXED.ordinal()) {
-        curr_conduction_area.set_fixed_state(app.freerouting.board.FixedState.USER_FIXED);
+          < FixedState.USER_FIXED.ordinal()) {
+        curr_conduction_area.set_fixed_state(FixedState.USER_FIXED);
       }
     }
     if (nothing_changed) {
@@ -176,8 +192,8 @@ public class DsnFile {
    * system with an specctra interface can read them.
    */
   public static boolean write(
-      app.freerouting.interactive.BoardHandling p_board_handling,
-      java.io.OutputStream p_file,
+      BoardHandling p_board_handling,
+      OutputStream p_file,
       String p_design_name,
       boolean p_compat_mode) {
     // app.freerouting.tests.Validate.check("before writing dsn", p_board);
@@ -189,13 +205,13 @@ public class DsnFile {
 
     try {
       write_pcb_scope(p_board_handling, output_file, p_design_name, p_compat_mode);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to write dsn file", e);
       return false;
     }
     try {
       output_file.close();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to close dsn file", e);
       return false;
     }
@@ -203,11 +219,11 @@ public class DsnFile {
   }
 
   private static void write_pcb_scope(
-      app.freerouting.interactive.BoardHandling p_board_handling,
+      BoardHandling p_board_handling,
       IndentFileWriter p_file,
       String p_design_name,
       boolean p_compat_mode)
-      throws java.io.IOException {
+      throws IOException {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     WriteScopeParameter write_scope_parameter =
         new WriteScopeParameter(
@@ -248,7 +264,7 @@ public class DsnFile {
       }
       ScopeKeyword.skip_scope(p_scanner);
       return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.warn("DsnFile.read_boolean: IO error scanning file");
       return false;
     }
@@ -270,7 +286,7 @@ public class DsnFile {
         return 0;
       }
       return value;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_integer_scope: IO error scanning file", e);
       return 0;
     }
@@ -294,7 +310,7 @@ public class DsnFile {
         return 0;
       }
       return value;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_float_scope: IO error scanning file", e);
       return 0;
     }
@@ -309,7 +325,7 @@ public class DsnFile {
         FRLogger.warn("DsnFile.read_string_scope: closing bracket expected");
       }
       return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_string_scope: IO error scanning file", e);
       return null;
     }

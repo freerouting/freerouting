@@ -1,20 +1,32 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.Item;
+import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Vector;
+
 /** Contains the rules and constraints required for items to be inserted into a routing board */
-public class BoardRules implements java.io.Serializable {
+public class BoardRules implements Serializable {
   /** The matrix describing the spacing restrictions between item clearance classes. */
   public final ClearanceMatrix clearance_matrix;
   /** Describes the electrical nets on the board. */
   public final Nets nets;
   public final ViaInfos via_infos = new ViaInfos();
-  public final java.util.Vector<ViaRule> via_rules = new java.util.Vector<ViaRule>();
+  public final Vector<ViaRule> via_rules = new Vector<ViaRule>();
   public final NetClasses net_classes = new NetClasses();
-  private final app.freerouting.board.LayerStructure layer_structure;
+  private final LayerStructure layer_structure;
   /** The angle restriction for traces: 90 degree, 45 degree or none. */
-  private transient app.freerouting.board.AngleRestriction trace_angle_restriction;
+  private transient AngleRestriction trace_angle_restriction;
   /** If true, the router ignores conduction areas. */
   private boolean ignore_conduction = true;
   /** The smallest of all default trace half widths */
@@ -30,11 +42,11 @@ public class BoardRules implements java.io.Serializable {
 
   /** Creates a new instance of this class. */
   public BoardRules(
-      app.freerouting.board.LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix) {
+      LayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix) {
     layer_structure = p_layer_structure;
     clearance_matrix = p_clearance_matrix;
     nets = new Nets();
-    this.trace_angle_restriction = app.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE;
+    this.trace_angle_restriction = AngleRestriction.FORTYFIVE_DEGREE;
 
     this.min_trace_half_width = 100000;
     this.max_trace_half_width = 100;
@@ -112,7 +124,7 @@ public class BoardRules implements java.io.Serializable {
   }
 
   /** Returns an empty new net rule with an internally created name. */
-  public NetClass get_new_net_class(java.util.Locale p_locale) {
+  public NetClass get_new_net_class(Locale p_locale) {
     NetClass result =
         this.net_classes.append(this.layer_structure, this.clearance_matrix, p_locale);
     result.set_trace_clearance_class(this.get_default_net_class().get_trace_clearance_class());
@@ -146,7 +158,7 @@ public class BoardRules implements java.io.Serializable {
     for (int i = 0; i < this.via_infos.count(); ++i) {
       ViaInfo curr_via_info = this.via_infos.get(i);
       if (curr_via_info.get_clearance_class() == default_via_cl_class) {
-        app.freerouting.library.Padstack curr_padstack = curr_via_info.get_padstack();
+        Padstack curr_padstack = curr_via_info.get_padstack();
         int curr_from_layer = curr_padstack.from_layer();
         int curr_to_layer = curr_padstack.to_layer();
         ViaInfo existing_via = default_rule.get_layer_range(curr_from_layer, curr_to_layer);
@@ -177,7 +189,7 @@ public class BoardRules implements java.io.Serializable {
   }
 
   /** Appends a new net class initialized with default data and a default name. */
-  public NetClass append_net_class(java.util.Locale p_locale) {
+  public NetClass append_net_class(Locale p_locale) {
     NetClass new_class =
         this.net_classes.append(this.layer_structure, this.clearance_matrix, p_locale);
     NetClass default_class = this.net_classes.get(0);
@@ -229,15 +241,15 @@ public class BoardRules implements java.io.Serializable {
    * Changes the clearance class index of all objects on the board with index p_from_no to p_to_no.
    */
   public void change_clearance_class_no(
-      int p_from_no, int p_to_no, java.util.Collection<app.freerouting.board.Item> p_board_items) {
-    for (app.freerouting.board.Item curr_item : p_board_items) {
+      int p_from_no, int p_to_no, Collection<Item> p_board_items) {
+    for (Item curr_item : p_board_items) {
       if (curr_item.clearance_class_no() == p_from_no) {
         curr_item.set_clearance_class_no(p_to_no);
       }
     }
 
     for (int i = 0; i < this.net_classes.count(); ++i) {
-      app.freerouting.rules.NetClass curr_net_class = this.net_classes.get(i);
+      NetClass curr_net_class = this.net_classes.get(i);
       if (curr_net_class.get_trace_clearance_class() == p_from_no) {
         curr_net_class.set_trace_clearance_class(p_to_no);
       }
@@ -250,7 +262,7 @@ public class BoardRules implements java.io.Serializable {
     }
 
     for (int i = 0; i < this.via_infos.count(); ++i) {
-      app.freerouting.rules.ViaInfo curr_via = this.via_infos.get(i);
+      ViaInfo curr_via = this.via_infos.get(i);
       if (curr_via.get_clearance_class() == p_from_no) {
         curr_via.set_clearance_class(p_to_no);
       }
@@ -262,14 +274,14 @@ public class BoardRules implements java.io.Serializable {
    * because there were still items assigned to this class.
    */
   public boolean remove_clearance_class(
-      int p_index, java.util.Collection<app.freerouting.board.Item> p_board_items) {
-    for (app.freerouting.board.Item curr_item : p_board_items) {
+      int p_index, Collection<Item> p_board_items) {
+    for (Item curr_item : p_board_items) {
       if (curr_item.clearance_class_no() == p_index) {
         return false;
       }
     }
     for (int i = 0; i < this.net_classes.count(); ++i) {
-      app.freerouting.rules.NetClass curr_net_class = this.net_classes.get(i);
+      NetClass curr_net_class = this.net_classes.get(i);
       if (curr_net_class.get_trace_clearance_class() == p_index) {
         return false;
       }
@@ -282,20 +294,20 @@ public class BoardRules implements java.io.Serializable {
     }
 
     for (int i = 0; i < this.via_infos.count(); ++i) {
-      app.freerouting.rules.ViaInfo curr_via = this.via_infos.get(i);
+      ViaInfo curr_via = this.via_infos.get(i);
       if (curr_via.get_clearance_class() == p_index) {
         return false;
       }
     }
 
-    for (app.freerouting.board.Item curr_item : p_board_items) {
+    for (Item curr_item : p_board_items) {
       if (curr_item.clearance_class_no() > p_index) {
         curr_item.set_clearance_class_no(curr_item.clearance_class_no() - 1);
       }
     }
 
     for (int i = 0; i < this.net_classes.count(); ++i) {
-      app.freerouting.rules.NetClass curr_net_class = this.net_classes.get(i);
+      NetClass curr_net_class = this.net_classes.get(i);
       if (curr_net_class.get_trace_clearance_class() > p_index) {
         curr_net_class.set_trace_clearance_class(curr_net_class.get_trace_clearance_class() - 1);
       }
@@ -309,7 +321,7 @@ public class BoardRules implements java.io.Serializable {
     }
 
     for (int i = 0; i < this.via_infos.count(); ++i) {
-      app.freerouting.rules.ViaInfo curr_via = this.via_infos.get(i);
+      ViaInfo curr_via = this.via_infos.get(i);
       if (curr_via.get_clearance_class() > p_index) {
         curr_via.set_clearance_class(curr_via.get_clearance_class() - 1);
       }
@@ -347,13 +359,13 @@ public class BoardRules implements java.io.Serializable {
   }
 
   /** The angle restriction for tracese: 90 degree, 45 degree or none. */
-  public app.freerouting.board.AngleRestriction get_trace_angle_restriction() {
+  public AngleRestriction get_trace_angle_restriction() {
     return this.trace_angle_restriction;
   }
 
   /** Sets the angle restriction for tracese: 90 degree, 45 degree or none. */
   public void set_trace_angle_restriction(
-      app.freerouting.board.AngleRestriction p_angle_restriction) {
+      AngleRestriction p_angle_restriction) {
     this.trace_angle_restriction = p_angle_restriction;
   }
 
@@ -384,7 +396,7 @@ public class BoardRules implements java.io.Serializable {
     if (default_via_rule.via_count() <= 0) {
       return 0;
     }
-    app.freerouting.library.Padstack via_padstack = default_via_rule.get_via(0).get_padstack();
+    Padstack via_padstack = default_via_rule.get_via(0).get_padstack();
     ConvexShape curr_shape = via_padstack.get_shape(via_padstack.from_layer());
     double result = curr_shape.max_width();
     curr_shape = via_padstack.get_shape(via_padstack.to_layer());
@@ -393,16 +405,16 @@ public class BoardRules implements java.io.Serializable {
   }
 
   /** Writes an instance of this class to a file */
-  private void writeObject(java.io.ObjectOutputStream p_stream) throws java.io.IOException {
+  private void writeObject(ObjectOutputStream p_stream) throws IOException {
     p_stream.defaultWriteObject();
     p_stream.writeInt(trace_angle_restriction.get_no());
   }
 
   /** Reads an instance of this class from a file */
-  private void readObject(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  private void readObject(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     int snap_angle_no = p_stream.readInt();
-    this.trace_angle_restriction = app.freerouting.board.AngleRestriction.arr[snap_angle_no];
+    this.trace_angle_restriction = AngleRestriction.arr[snap_angle_no];
   }
 }

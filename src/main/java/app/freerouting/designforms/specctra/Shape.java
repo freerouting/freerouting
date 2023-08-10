@@ -2,8 +2,12 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -45,7 +49,7 @@ public abstract class Shape {
         // not a shape scope, skip it.
         ScopeKeyword.skip_scope(p_scanner);
       }
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Shape.read_scope: IO error scanning file", e);
       return result;
     }
@@ -132,7 +136,7 @@ public abstract class Shape {
         }
       }
       return new PolylinePath(layer, width, corner_arr);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("PolylinePath.read_scope: IO error scanning file", e);
       return null;
     }
@@ -152,7 +156,7 @@ public abstract class Shape {
     Object next_token = null;
     try {
       next_token = p_scanner.next_token();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.warn("Shape.read_area_scope: IO error scanning file");
       return null;
     }
@@ -173,7 +177,7 @@ public abstract class Shape {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Shape.read_area_scope: IO error scanning file", e);
         return null;
       }
@@ -194,7 +198,7 @@ public abstract class Shape {
           // overread closing bracket
           try {
             next_token = p_scanner.next_token();
-          } catch (java.io.IOException e) {
+          } catch (IOException e) {
             FRLogger.error("Shape.read_area_scope: IO error scanning file", e);
             return null;
           }
@@ -255,7 +259,7 @@ public abstract class Shape {
         return null;
       }
       return new Rectangle(rect_layer, rect_coor);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Shape.read_rectangle_scope: IO error scanning file", e);
       return null;
     }
@@ -335,7 +339,7 @@ public abstract class Shape {
         }
       }
       return new Polygon(polygon_layer, coor_arr);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Rectangle.read_scope: IO error scanning file", e);
       return null;
     }
@@ -381,7 +385,7 @@ public abstract class Shape {
         return null;
       }
       return new Circle(circle_layer, circle_coor);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Shape.read_rectangle_scope: IO error scanning file", e);
       return null;
     }
@@ -440,7 +444,7 @@ public abstract class Shape {
         }
       }
       return new PolygonPath(layer, width, coordinate_arr);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Shape.read_polygon_path_scope: IO error scanning file", e);
       return null;
     }
@@ -450,7 +454,7 @@ public abstract class Shape {
    * Transforms a shape with holes to the board coordinate system. The first shape in the Collection
    * p_area is the border, the other shapes are holes of the area.
    */
-  public static app.freerouting.geometry.planar.Area transform_area_to_board(
+  public static Area transform_area_to_board(
       Collection<Shape> p_area, CoordinateTransform p_coordinate_transform) {
     int hole_count = p_area.size() - 1;
     if (hole_count <= -1) {
@@ -461,12 +465,12 @@ public abstract class Shape {
     Shape boundary = it.next();
     app.freerouting.geometry.planar.Shape boundary_shape =
         boundary.transform_to_board(p_coordinate_transform);
-    app.freerouting.geometry.planar.Area result;
+    Area result;
     if (hole_count == 0) {
       result = boundary_shape;
     } else {
       // Area with holes
-      if (!(boundary_shape instanceof app.freerouting.geometry.planar.PolylineShape)) {
+      if (!(boundary_shape instanceof PolylineShape)) {
         FRLogger.warn("Shape.transform_area_to_board: PolylineShape expected");
         return null;
       }
@@ -481,7 +485,7 @@ public abstract class Shape {
         }
         holes[i] = (PolylineShape) hole_shape;
       }
-      result = new app.freerouting.geometry.planar.PolylineArea(border, holes);
+      result = new PolylineArea(border, holes);
     }
     return result;
   }
@@ -490,7 +494,7 @@ public abstract class Shape {
    * Transforms the relative coordinates of a shape with holes to the board coordinate system. The
    * first shape in the Collection p_area is the border, the other shapes are holes of the area.
    */
-  public static app.freerouting.geometry.planar.Area transform_area_to_board_rel(
+  public static Area transform_area_to_board_rel(
       Collection<Shape> p_area, CoordinateTransform p_coordinate_transform) {
     int hole_count = p_area.size() - 1;
     if (hole_count <= -1) {
@@ -501,12 +505,12 @@ public abstract class Shape {
     Shape boundary = it.next();
     app.freerouting.geometry.planar.Shape boundary_shape =
         boundary.transform_to_board_rel(p_coordinate_transform);
-    app.freerouting.geometry.planar.Area result;
+    Area result;
     if (hole_count == 0) {
       result = boundary_shape;
     } else {
       // Area with holes
-      if (!(boundary_shape instanceof app.freerouting.geometry.planar.PolylineShape)) {
+      if (!(boundary_shape instanceof PolylineShape)) {
         FRLogger.warn("Shape.transform_area_to_board_rel: PolylineShape expected");
         return null;
       }
@@ -521,24 +525,24 @@ public abstract class Shape {
         }
         holes[i] = (PolylineShape) hole_shape;
       }
-      result = new app.freerouting.geometry.planar.PolylineArea(border, holes);
+      result = new PolylineArea(border, holes);
     }
     return result;
   }
 
   /** Writes a shape scope to a Specctra dsn file. */
   public abstract void write_scope(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException;
+      throws IOException;
 
   /**
    * Writes a shape scope to a Specctra session file. In a session file all coordinates must be
    * integer.
    */
   public abstract void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException;
+      throws IOException;
 
   public void write_hole_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("window");
     this.write_scope(p_file, p_identifier_type);

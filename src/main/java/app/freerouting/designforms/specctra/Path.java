@@ -3,6 +3,8 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 
+import java.io.IOException;
+
 /** Class for writing path scopes from dsn-files. */
 public abstract class Path extends Shape {
 
@@ -19,5 +21,5 @@ public abstract class Path extends Shape {
   /** Writes this path as a scope to an output dsn-file. */
   @Override
   public abstract void write_scope(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException;
+      throws IOException;
 }

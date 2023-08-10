@@ -1,6 +1,9 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +12,7 @@ import java.util.LinkedList;
  * Convex shape defined as intersection of half-planes. A half-plane is defined as the positive side
  * of a directed line.
  */
-public class Simplex extends TileShape implements java.io.Serializable {
+public class Simplex extends TileShape implements Serializable {
 
   /** Standard implementation for an empty Simplex. */
   public static final Simplex EMPTY = new Simplex(new Line[0]);
@@ -36,7 +39,7 @@ public class Simplex extends TileShape implements java.io.Serializable {
     Line[] curr_arr = new Line[p_line_arr.length];
     System.arraycopy(p_line_arr, 0, curr_arr, 0, p_line_arr.length);
     // sort the lines in ascending direction
-    java.util.Arrays.sort(curr_arr);
+    Arrays.sort(curr_arr);
     Simplex curr_simplex = new Simplex(curr_arr);
     Simplex result = curr_simplex.remove_redundant_lines();
     return result;
@@ -613,7 +616,7 @@ public class Simplex extends TileShape implements java.io.Serializable {
     Line[] new_arr = new Line[arr.length + p_other.arr.length];
     System.arraycopy(arr, 0, new_arr, 0, arr.length);
     System.arraycopy(p_other.arr, 0, new_arr, arr.length, p_other.arr.length);
-    java.util.Arrays.sort(new_arr);
+    Arrays.sort(new_arr);
     Simplex result = new Simplex(new_arr);
     return result.remove_redundant_lines();
   }

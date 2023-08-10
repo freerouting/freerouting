@@ -3,6 +3,7 @@ package app.freerouting.board;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
+import app.freerouting.geometry.planar.TileShape;
 
 /** Used internally for marking changed areas on the board after shoving and optimizing items. */
 class ChangedArea {
@@ -38,7 +39,7 @@ class ChangedArea {
   }
 
   /** enlarges the octagon on p_layer, so that it contains p_shape */
-  public void join(app.freerouting.geometry.planar.TileShape p_shape, int p_layer) {
+  public void join(TileShape p_shape, int p_layer) {
     if (p_shape == null) {
       return;
     }

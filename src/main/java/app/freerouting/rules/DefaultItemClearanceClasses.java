@@ -1,6 +1,8 @@
 package app.freerouting.rules;
 
-public class DefaultItemClearanceClasses implements java.io.Serializable {
+import java.io.Serializable;
+
+public class DefaultItemClearanceClasses implements Serializable {
 
   private final int[] arr = new int[ItemClass.values().length];
 

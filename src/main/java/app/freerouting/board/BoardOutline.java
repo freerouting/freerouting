@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -10,10 +11,18 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Class describing a board outline. */
-public class BoardOutline extends Item implements java.io.Serializable {
+public class BoardOutline extends Item implements Serializable {
 
   private static final int HALF_WIDTH = 100;
   /** The board shapes inside the outline curves. */
@@ -149,7 +158,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
 
   @Override
   public int get_draw_priority() {
-    return app.freerouting.boardgraphics.Drawable.MAX_DRAW_PRIORITY;
+    return Drawable.MAX_DRAW_PRIORITY;
   }
 
   public int shape_count() {
@@ -173,9 +182,9 @@ public class BoardOutline extends Item implements java.io.Serializable {
   }
 
   @Override
-  public java.awt.Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    java.awt.Color[] color_arr = new java.awt.Color[this.board.layer_structure.arr.length];
-    java.awt.Color draw_color = p_graphics_context.get_outline_color();
+  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
+    Color[] color_arr = new Color[this.board.layer_structure.arr.length];
+    Color draw_color = p_graphics_context.get_outline_color();
     Arrays.fill(color_arr, draw_color);
     return color_arr;
   }
@@ -204,9 +213,9 @@ public class BoardOutline extends Item implements java.io.Serializable {
 
   @Override
   public void draw(
-      java.awt.Graphics p_g,
+      Graphics p_g,
       GraphicsContext p_graphics_context,
-      java.awt.Color[] p_color_arr,
+      Color[] p_color_arr,
       double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
@@ -226,19 +235,19 @@ public class BoardOutline extends Item implements java.io.Serializable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("board_outline"));
     print_clearance_info(p_window, p_locale);
     p_window.newline();
   }
 
   @Override
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;

@@ -1,53 +1,68 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 /** Window for the handling of the interactive selection parameters, */
 public class WindowSelectParameter extends BoardSavableSubWindow {
 
-  private final app.freerouting.interactive.BoardHandling board_handling;
-  private final javax.swing.JRadioButton[] layer_name_arr;
-  private final javax.swing.JCheckBox[] item_selection_choices;
-  private final javax.swing.JRadioButton all_visible_button;
-  private final javax.swing.JRadioButton current_only_button;
+  private final BoardHandling board_handling;
+  private final JRadioButton[] layer_name_arr;
+  private final JCheckBox[] item_selection_choices;
+  private final JRadioButton all_visible_button;
+  private final JRadioButton current_only_button;
 
   /** Creates a new instance of SelectWindow */
   public WindowSelectParameter(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
 
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowSelectParameter", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
     // create main panel
 
-    final javax.swing.JPanel main_panel = new javax.swing.JPanel();
+    final JPanel main_panel = new JPanel();
     getContentPane().add(main_panel);
-    java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    GridBagLayout gridbag = new GridBagLayout();
     main_panel.setLayout(gridbag);
-    java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-    gridbag_constraints.insets = new java.awt.Insets(1, 10, 1, 10);
+    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.anchor = GridBagConstraints.WEST;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
     // Create buttongroup for the selection layers
 
-    javax.swing.JLabel selection_layer_label =
-        new javax.swing.JLabel(resources.getString("selection_layers"));
+    JLabel selection_layer_label =
+        new JLabel(resources.getString("selection_layers"));
     gridbag.setConstraints(selection_layer_label, gridbag_constraints);
     main_panel.add(selection_layer_label);
 
-    this.all_visible_button = new javax.swing.JRadioButton(resources.getString("all_visible"));
+    this.all_visible_button = new JRadioButton(resources.getString("all_visible"));
     all_visible_button.setToolTipText(resources.getString("all_visible_tooltip"));
-    this.current_only_button = new javax.swing.JRadioButton(resources.getString("current_only"));
+    this.current_only_button = new JRadioButton(resources.getString("current_only"));
     current_only_button.setToolTipText(resources.getString("current_only_tooltip"));
 
     all_visible_button.addActionListener(new AllVisibleListener());
     current_only_button.addActionListener(new CurrentOnlyListener());
 
-    javax.swing.ButtonGroup selection_layer_button_group = new javax.swing.ButtonGroup();
+    ButtonGroup selection_layer_button_group = new ButtonGroup();
     selection_layer_button_group.add(all_visible_button);
     selection_layer_button_group.add(current_only_button);
     gridbag_constraints.gridheight = 1;
@@ -56,52 +71,52 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(current_only_button, gridbag_constraints);
     main_panel.add(current_only_button, gridbag_constraints);
 
-    javax.swing.JLabel separator = new javax.swing.JLabel("   –––––––––––––––––––––––––––––  ");
+    JLabel separator = new JLabel("   –––––––––––––––––––––––––––––  ");
 
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     // Create check boxes for selectable items:
 
-    javax.swing.JLabel selectable_items_label =
-        new javax.swing.JLabel(resources.getString("selectable_items"));
+    JLabel selectable_items_label =
+        new JLabel(resources.getString("selectable_items"));
     gridbag.setConstraints(selectable_items_label, gridbag_constraints);
     main_panel.add(selectable_items_label);
 
     final ItemSelectionFilter.SelectableChoices[] filter_values =
         ItemSelectionFilter.SelectableChoices.values();
 
-    this.item_selection_choices = new javax.swing.JCheckBox[filter_values.length];
+    this.item_selection_choices = new JCheckBox[filter_values.length];
 
     for (int i = 0; i < filter_values.length; ++i) {
       this.item_selection_choices[i] =
-          new javax.swing.JCheckBox(resources.getString(filter_values[i].toString()));
+          new JCheckBox(resources.getString(filter_values[i].toString()));
       gridbag.setConstraints(this.item_selection_choices[i], gridbag_constraints);
       main_panel.add(this.item_selection_choices[i], gridbag_constraints);
       this.item_selection_choices[i].addActionListener(new ItemSelectionListener(i));
     }
 
-    javax.swing.JLabel separator2 = new javax.swing.JLabel("   –––––––––––––––––––––––––––––  ");
+    JLabel separator2 = new JLabel("   –––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator2, gridbag_constraints);
     main_panel.add(separator2, gridbag_constraints);
 
     // Create buttongroup for the current layer:
 
-    app.freerouting.board.LayerStructure layer_structure =
+    LayerStructure layer_structure =
         this.board_handling.get_routing_board().layer_structure;
     int signal_layer_count = layer_structure.signal_layer_count();
-    javax.swing.JLabel current_layer_label =
-        new javax.swing.JLabel(resources.getString("current_layer"));
+    JLabel current_layer_label =
+        new JLabel(resources.getString("current_layer"));
     current_layer_label.setToolTipText(resources.getString("current_layer_tooltip"));
     gridbag.setConstraints(current_layer_label, gridbag_constraints);
     main_panel.add(current_layer_label);
 
-    this.layer_name_arr = new javax.swing.JRadioButton[signal_layer_count];
-    javax.swing.ButtonGroup current_layer_button_group = new javax.swing.ButtonGroup();
+    this.layer_name_arr = new JRadioButton[signal_layer_count];
+    ButtonGroup current_layer_button_group = new ButtonGroup();
     gridbag_constraints.gridheight = 1;
     for (int i = 0; i < signal_layer_count; ++i) {
-      app.freerouting.board.Layer curr_signal_layer = layer_structure.get_signal_layer(i);
-      layer_name_arr[i] = new javax.swing.JRadioButton();
+      Layer curr_signal_layer = layer_structure.get_signal_layer(i);
+      layer_name_arr[i] = new JRadioButton();
       layer_name_arr[i].setText(curr_signal_layer.name);
       gridbag.setConstraints(layer_name_arr[i], gridbag_constraints);
       main_panel.add(layer_name_arr[i]);
@@ -109,7 +124,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       int layer_no = layer_structure.get_no(curr_signal_layer);
       layer_name_arr[i].addActionListener(new CurrentLayerListener(i, layer_no));
     }
-    javax.swing.JLabel empty_label = new javax.swing.JLabel();
+    JLabel empty_label = new JLabel();
     gridbag.setConstraints(empty_label, gridbag_constraints);
     main_panel.add(empty_label);
 
@@ -140,9 +155,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
             item_selection_filter.is_selected(filter_values[i]));
       }
     }
-    app.freerouting.board.LayerStructure layer_structure =
+    LayerStructure layer_structure =
         this.board_handling.get_routing_board().layer_structure;
-    app.freerouting.board.Layer current_layer =
+    Layer current_layer =
         layer_structure.arr[this.board_handling.settings.get_layer()];
     layer_name_arr[layer_structure.get_signal_layer_no(current_layer)].setSelected(true);
   }
@@ -152,7 +167,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     layer_name_arr[p_signal_layer_no].setSelected(true);
   }
 
-  private class CurrentLayerListener implements java.awt.event.ActionListener {
+  private class CurrentLayerListener implements ActionListener {
     public final int signal_layer_no;
     public final int layer_no;
 
@@ -162,26 +177,26 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.set_current_layer(layer_no);
     }
   }
 
-  private class AllVisibleListener implements java.awt.event.ActionListener {
+  private class AllVisibleListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_select_on_all_visible_layers(true);
     }
   }
 
-  private class CurrentOnlyListener implements java.awt.event.ActionListener {
+  private class CurrentOnlyListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_select_on_all_visible_layers(false);
     }
   }
 
-  private class ItemSelectionListener implements java.awt.event.ActionListener {
+  private class ItemSelectionListener implements ActionListener {
     private final int item_no;
 
     public ItemSelectionListener(int p_item_no) {
@@ -189,7 +204,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       boolean is_selected = item_selection_choices[item_no].isSelected();
 
       ItemSelectionFilter.SelectableChoices item_type =

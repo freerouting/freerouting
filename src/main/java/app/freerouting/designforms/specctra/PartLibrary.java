@@ -1,6 +1,13 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.library.LogicalParts;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class PartLibrary extends ScopeKeyword {
 
@@ -9,8 +16,8 @@ public class PartLibrary extends ScopeKeyword {
     super("part_library");
   }
 
-  public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException {
-    app.freerouting.library.LogicalParts logical_parts = p_par.board.library.logical_parts;
+  public static void write_scope(WriteScopeParameter p_par) throws IOException {
+    LogicalParts logical_parts = p_par.board.library.logical_parts;
     if (logical_parts.count() <= 0) {
       return;
     }
@@ -75,7 +82,7 @@ public class PartLibrary extends ScopeKeyword {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("PartLibrary.read_scope: IO error scanning file", e);
         return false;
       }
@@ -127,7 +134,7 @@ public class PartLibrary extends ScopeKeyword {
         FRLogger.warn("PartLibrary.read_logical_part_mapping: Keyword.COMPONENT_SCOPE expected");
         return null;
       }
-      java.util.SortedSet<String> result = new java.util.TreeSet<String>();
+      SortedSet<String> result = new TreeSet<String>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnFileReader.NAME);
         next_token = p_scanner.next_token();
@@ -146,18 +153,18 @@ public class PartLibrary extends ScopeKeyword {
         return null;
       }
       return new LogicalPartMapping(name, result);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("PartLibrary.read_logical_part_mapping: IO error scanning file", e);
       return null;
     }
   }
 
   private LogicalPart read_logical_part(IJFlexScanner p_scanner) {
-    java.util.Collection<PartPin> part_pins = new java.util.LinkedList<PartPin>();
+    Collection<PartPin> part_pins = new LinkedList<PartPin>();
     Object next_token = null;
     try {
       next_token = p_scanner.next_token();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("PartLibrary.read_logical_part: IO error scanning file", e);
       return null;
     }
@@ -170,7 +177,7 @@ public class PartLibrary extends ScopeKeyword {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("PartLibrary.read_logical_part: IO error scanning file", e);
         return null;
       }
@@ -249,7 +256,7 @@ public class PartLibrary extends ScopeKeyword {
         }
       }
       return new PartPin(pin_name, gate_name, gate_swap_code, gate_pin_name, gate_pin_swap_code);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("PartLibrary.read_part_pin: IO error scanning file", e);
       return null;
     }
@@ -259,9 +266,9 @@ public class PartLibrary extends ScopeKeyword {
     /** The name of the maopping. */
     public final String name;
     /** The conponents belonging to the mapping. */
-    public final java.util.SortedSet<String> components;
+    public final SortedSet<String> components;
 
-    private LogicalPartMapping(String p_name, java.util.SortedSet<String> p_components) {
+    private LogicalPartMapping(String p_name, SortedSet<String> p_components) {
       name = p_name;
       components = p_components;
     }
@@ -291,9 +298,9 @@ public class PartLibrary extends ScopeKeyword {
     /** The name of the maopping. */
     public final String name;
     /** The pins of this logical part */
-    public final java.util.Collection<PartPin> part_pins;
+    public final Collection<PartPin> part_pins;
 
-    private LogicalPart(String p_name, java.util.Collection<PartPin> p_part_pins) {
+    private LogicalPart(String p_name, Collection<PartPin> p_part_pins) {
       name = p_name;
       part_pins = p_part_pins;
     }

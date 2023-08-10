@@ -1,6 +1,8 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +11,7 @@ import java.util.LinkedList;
  * Abstract class defining functionality for convex shapes, whose borders consists of straight
  * lines.
  */
-public abstract class TileShape extends PolylineShape implements ConvexShape, java.io.Serializable {
+public abstract class TileShape extends PolylineShape implements ConvexShape, Serializable {
 
   /** creates a Simplex as intersection of the halfplanes defined by an array of directed lines */
   public static TileShape get_instance(Line[] p_line_arr) {

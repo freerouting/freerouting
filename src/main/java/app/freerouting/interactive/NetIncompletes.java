@@ -2,17 +2,22 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
+import app.freerouting.board.Pin;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.PlanarDelaunayTriangulation;
+import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
+
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -32,7 +37,7 @@ public class NetIncompletes {
 
   /** Creates a new instance of NetIncompletes */
   public NetIncompletes(
-      int p_net_no, Collection<Item> p_net_items, BasicBoard p_board, java.util.Locale p_locale) {
+      int p_net_no, Collection<Item> p_net_items, BasicBoard p_board, Locale p_locale) {
     this.draw_marker_radius = p_board.rules.get_min_trace_half_width() * 2;
     this.incompletes = new LinkedList<RatsNest.AirLine>();
     this.net = p_board.rules.nets.get(p_net_no);
@@ -97,7 +102,7 @@ public class NetIncompletes {
       Graphics p_graphics,
       GraphicsContext p_graphics_context) {
     final int draw_width = 1;
-    java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
+    Color draw_color = p_graphics_context.get_incomplete_color();
     double draw_intensity = p_graphics_context.get_incomplete_color_intensity();
     FloatPoint[] draw_points = new FloatPoint[2];
     draw_points[0] = new FloatPoint(p_location.x - p_radius, p_location.y - p_radius);
@@ -114,7 +119,7 @@ public class NetIncompletes {
       Graphics p_graphics,
       GraphicsContext p_graphics_context) {
     final int draw_width = 1;
-    java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
+    Color draw_color = p_graphics_context.get_incomplete_color();
     double draw_intensity = p_graphics_context.get_incomplete_color_intensity();
     double circle_radius = 0.5 * Math.abs(p_diameter);
     p_graphics_context.draw_circle(
@@ -170,7 +175,7 @@ public class NetIncompletes {
   public void draw(
       Graphics p_graphics, GraphicsContext p_graphics_context, boolean p_length_violations_only) {
     if (!p_length_violations_only) {
-      java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
+      Color draw_color = p_graphics_context.get_incomplete_color();
       double draw_intensity = p_graphics_context.get_incomplete_color_intensity();
       if (draw_intensity <= 0) {
         return;
@@ -195,8 +200,8 @@ public class NetIncompletes {
       return;
     }
     // draw the length violation around every Pin of the net.
-    Collection<app.freerouting.board.Pin> net_pins = this.net.get_pins();
-    for (app.freerouting.board.Pin curr_pin : net_pins) {
+    Collection<Pin> net_pins = this.net.get_pins();
+    for (Pin curr_pin : net_pins) {
       draw_length_violation_marker(
           curr_pin.get_center().to_float(), this.length_violation, p_graphics, p_graphics_context);
     }
@@ -283,7 +288,7 @@ public class NetIncompletes {
           result = this.to_corner.y - p_other.to_corner.y;
         }
       }
-      return app.freerouting.datastructures.Signum.as_int(result);
+      return Signum.as_int(result);
     }
   }
 

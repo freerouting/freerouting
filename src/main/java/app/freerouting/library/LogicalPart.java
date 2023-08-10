@@ -1,10 +1,15 @@
 package app.freerouting.library;
 
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Contains information for gate swap and pin swap for a single component. */
 public class LogicalPart
-    implements app.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable {
+    implements ObjectInfoPanel.Printable, Serializable {
 
   public final String name;
   public final int no;
@@ -35,9 +40,9 @@ public class LogicalPart
 
   @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("logical_part_2") + " ");
     p_window.append_bold(this.name);
     for (int i = 0; i < this.part_pin_arr.length; ++i) {
@@ -61,7 +66,7 @@ public class LogicalPart
     p_window.newline();
   }
 
-  public static class PartPin implements Comparable<PartPin>, java.io.Serializable {
+  public static class PartPin implements Comparable<PartPin>, Serializable {
     /**
      * The number of the part pin. Must be the same number as in the componnents library package.
      */

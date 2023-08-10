@@ -1,13 +1,15 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
  * Abstract class describing functionality of Vectors. Vectors are used for translating Points in
  * the plane.
  */
-public abstract class Vector implements java.io.Serializable {
+public abstract class Vector implements Serializable {
 
   /** Standard implementation of the zero vector . */
   public static final IntVector ZERO = new IntVector(0, 0);

@@ -7,10 +7,14 @@ import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.InsertFoundConnectionAlgo;
 import app.freerouting.autoroute.LocateFoundConnectionAlgo;
 import app.freerouting.autoroute.MazeSearchAlgo;
+import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.TestLevel;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.TileShape;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -126,7 +130,7 @@ public class ExpandTestState extends InteractiveState {
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(Graphics p_graphics) {
     autoroute_engine.draw(p_graphics, hdlg.graphics_context, 0.1);
     if (this.autoroute_result != null) {
       this.autoroute_result.draw(p_graphics, hdlg.graphics_context);
@@ -143,7 +147,7 @@ public class ExpandTestState extends InteractiveState {
     Iterator<Item> it = found_items.iterator();
     while (it.hasNext()) {
       Item curr_ob = it.next();
-      if (curr_ob instanceof app.freerouting.board.Connectable) {
+      if (curr_ob instanceof Connectable) {
         Item curr_item = curr_ob;
         if (curr_item.net_count() == 1 && curr_item.get_net_no(0) > 0) {
           route_item = curr_item;
@@ -195,7 +199,7 @@ public class ExpandTestState extends InteractiveState {
               this.autoroute_engine.autoroute_search_tree,
               hdlg.get_routing_board().rules.get_trace_angle_restriction(),
               ripped_item_list,
-              app.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT);
+              TestLevel.ALL_DEBUGGING_OUTPUT);
       hdlg.get_routing_board().generate_snapshot();
       SortedSet<Item> ripped_connections = new TreeSet<Item>();
       for (Item curr_ripped_item : ripped_item_list) {

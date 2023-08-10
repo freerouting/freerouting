@@ -3,13 +3,15 @@ package app.freerouting.geometry.planar;
 import app.freerouting.datastructures.BigIntAux;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
  * Analog RationalPoint, but implementing the functionality of a Vector instead of the functionality
  * of a Point.
  */
-public class RationalVector extends Vector implements java.io.Serializable {
+public class RationalVector extends Vector implements Serializable {
   public final BigInteger x;
   public final BigInteger y;
   public final BigInteger z;

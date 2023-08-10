@@ -2,11 +2,17 @@ package app.freerouting.gui;
 
 import app.freerouting.logger.FRLogger;
 
+import java.awt.Rectangle;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 /** Subwindow of the board frame, whose location and visibility can be saved and read from disc. */
 public abstract class BoardSavableSubWindow extends BoardSubWindow {
 
   /** Reads the data of this frame from disc. Returns false, if the reading failed. */
-  public boolean read(java.io.ObjectInputStream p_object_stream) {
+  public boolean read(ObjectInputStream p_object_stream) {
     try {
       SavedAttributes saved_attributes = (SavedAttributes) p_object_stream.readObject();
       this.setBounds(saved_attributes.bounds);
@@ -19,12 +25,12 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
   }
 
   /** Saves this frame to disk. */
-  public void save(java.io.ObjectOutputStream p_object_stream) {
+  public void save(ObjectOutputStream p_object_stream) {
     SavedAttributes saved_attributes = new SavedAttributes(this.getBounds(), this.isVisible());
 
     try {
       p_object_stream.writeObject(saved_attributes);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("BoardSubWindow.save: save failed", e);
     }
   }
@@ -33,10 +39,10 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
   public void refresh() {}
 
   /** Type for attributes of this class, which are saved to an Objectstream. */
-  private static class SavedAttributes implements java.io.Serializable {
-    public final java.awt.Rectangle bounds;
+  private static class SavedAttributes implements Serializable {
+    public final Rectangle bounds;
     public final boolean is_visible;
-    public SavedAttributes(java.awt.Rectangle p_bounds, boolean p_is_visible) {
+    public SavedAttributes(Rectangle p_bounds, boolean p_is_visible) {
       bounds = p_bounds;
       is_visible = p_is_visible;
     }

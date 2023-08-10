@@ -2,11 +2,13 @@ package app.freerouting.library;
 
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 
 /** Describes a library of component packages. */
-public class Packages implements java.io.Serializable {
+public class Packages implements Serializable {
   final Padstacks padstack_list;
   /** The array of packages in this object */
   private final Vector<Package> package_arr = new Vector<Package>();

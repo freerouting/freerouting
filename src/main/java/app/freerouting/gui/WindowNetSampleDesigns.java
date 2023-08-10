@@ -1,10 +1,12 @@
 package app.freerouting.gui;
 
+import java.util.Locale;
+
 /** Window with a list for selecting sample board designs in the net. */
 public class WindowNetSampleDesigns extends WindowNetSamples {
 
   /** Creates a new instance of WindowNetSampleDesigns */
-  public WindowNetSampleDesigns(java.util.Locale p_locale) {
+  public WindowNetSampleDesigns(Locale p_locale) {
     super(p_locale, "sample_designs", "open_sample_design", 11);
   }
 

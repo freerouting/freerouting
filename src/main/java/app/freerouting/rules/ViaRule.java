@@ -1,14 +1,20 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.library.Padstack;
+
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Contains an array of vias used for routing. Vias at the beginning of the array are preferred to
  * later vias.
  */
 public class ViaRule
-    implements java.io.Serializable, app.freerouting.board.ObjectInfoPanel.Printable {
+    implements Serializable, ObjectInfoPanel.Printable {
 
   /** Empty via rule. Must not be changed. */
   public static final ViaRule EMPTY = new ViaRule("empty");
@@ -53,7 +59,7 @@ public class ViaRule
   }
 
   /** Returns true, if this rule contains a via with padstack p_padstack */
-  public boolean contains_padstack(app.freerouting.library.Padstack p_padstack) {
+  public boolean contains_padstack(Padstack p_padstack) {
     for (ViaInfo curr_info : this.list) {
       if (curr_info.get_padstack() == p_padstack) {
         return true;
@@ -96,9 +102,9 @@ public class ViaRule
 
   @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via_rule_2") + " ");
     p_window.append_bold(this.name);
     p_window.append_bold(":");

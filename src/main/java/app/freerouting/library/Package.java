@@ -1,9 +1,14 @@
 package app.freerouting.library;
 
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Component package templates describing the padstacks and relative locations of the package pins,
@@ -11,8 +16,8 @@ import app.freerouting.logger.FRLogger;
  */
 public class Package
     implements Comparable<Package>,
-        app.freerouting.board.ObjectInfoPanel.Printable,
-        java.io.Serializable {
+        ObjectInfoPanel.Printable,
+        Serializable {
 
   /** The name of the package. */
   public final String name;
@@ -94,9 +99,9 @@ public class Package
 
   @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("package") + " ");
     p_window.append_bold(this.name);
     for (int i = 0; i < this.pin_arr.length; ++i) {
@@ -117,7 +122,7 @@ public class Package
   }
 
   /** Describes a pin padstack of a package. */
-  public static class Pin implements java.io.Serializable {
+  public static class Pin implements Serializable {
     /** The name of the pin. */
     public final String name;
     /** The number of the padstack mask of the pin. */
@@ -138,7 +143,7 @@ public class Package
   }
 
   /** Deescribes a named keepout belonging to a package, */
-  public static class Keepout implements java.io.Serializable {
+  public static class Keepout implements Serializable {
     public final String name;
     public final Area area;
     public final int layer;

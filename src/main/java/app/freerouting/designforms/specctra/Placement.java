@@ -1,5 +1,7 @@
 package app.freerouting.designforms.specctra;
 
+import java.io.IOException;
+
 /** Class for writing placement scopes from dsn-files. */
 public class Placement extends ScopeKeyword {
 
@@ -8,7 +10,7 @@ public class Placement extends ScopeKeyword {
     super("placement");
   }
 
-  public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException {
+  public static void write_scope(WriteScopeParameter p_par) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("placement");
     if (p_par.board.components.get_flip_style_rotate_first()) {

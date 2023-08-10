@@ -2,8 +2,12 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /** Describes functionality of a circle shape in the plane. */
-public class Circle implements ConvexShape, java.io.Serializable {
+public class Circle implements ConvexShape, Serializable {
 
   public final IntPoint center;
   public final int radius;
@@ -323,16 +327,16 @@ public class Circle implements ConvexShape, java.io.Serializable {
 
   @Override
   public String toString() {
-    return to_string(java.util.Locale.ENGLISH);
+    return to_string(Locale.ENGLISH);
   }
 
-  public String to_string(java.util.Locale p_locale) {
+  public String to_string(Locale p_locale) {
     String result = "Circle: ";
     if (!(center.equals(Point.ZERO))) {
       String center_string = "center " + center;
       result += center_string;
     }
-    java.text.NumberFormat nf = java.text.NumberFormat.getInstance(p_locale);
+    NumberFormat nf = NumberFormat.getInstance(p_locale);
     String radius_string = "radius " + nf.format(radius);
     result += radius_string;
     return result;

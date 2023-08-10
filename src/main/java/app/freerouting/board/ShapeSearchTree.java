@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import app.freerouting.datastructures.MinAreaTree;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -29,7 +30,7 @@ import java.util.TreeSet;
  * Elementary geometric search functions making direct use of the MinAreaTree in the package
  * datastructures.
  */
-public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree {
+public class ShapeSearchTree extends MinAreaTree {
   /** used in objects of class EntrySortedByClearance */
   private static int last_generated_id_no = 0;
   /**

@@ -2,11 +2,13 @@ package app.freerouting.boardgraphics;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /**
  * The color intensities for each item type. The values are between 0 (invisible) and 1 (full
  * intensity).
  */
-public class ColorIntensityTable implements java.io.Serializable {
+public class ColorIntensityTable implements Serializable {
   private final double[] arr;
 
   /**

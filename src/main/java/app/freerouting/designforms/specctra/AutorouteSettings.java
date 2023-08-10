@@ -4,6 +4,8 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+
 public class AutorouteSettings {
 
   static app.freerouting.interactive.AutorouteSettings read_scope(
@@ -18,7 +20,7 @@ public class AutorouteSettings {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_scope: IO error scanning file", e);
         return null;
       }
@@ -71,7 +73,7 @@ public class AutorouteSettings {
     Object next_token;
     try {
       next_token = p_scanner.next_token();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
       return null;
     }
@@ -88,7 +90,7 @@ public class AutorouteSettings {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
         return null;
       }
@@ -119,7 +121,7 @@ public class AutorouteSettings {
               FRLogger.warn("AutorouteSettings.read_layer_rule: uclosing bracket expected");
               return null;
             }
-          } catch (java.io.IOException e) {
+          } catch (IOException e) {
             FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
             return null;
           }
@@ -142,7 +144,7 @@ public class AutorouteSettings {
       app.freerouting.interactive.AutorouteSettings p_settings,
       app.freerouting.board.LayerStructure p_layer_structure,
       IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("autoroute_settings");
     p_file.new_line();

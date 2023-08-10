@@ -4,8 +4,10 @@ import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /** Contains the interactive settings for the autorouter. */
-public class AutorouteSettings implements java.io.Serializable {
+public class AutorouteSettings implements Serializable {
 
   private final boolean[] layer_active_arr;
   private final boolean[] preferred_direction_is_horizontal_arr;

@@ -2,6 +2,8 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+
 /** Class for reading place_control scopes from dsn-files. */
 public class PlaceControl extends ScopeKeyword {
 
@@ -26,7 +28,7 @@ public class PlaceControl extends ScopeKeyword {
         return false;
       }
       return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Structure.read_flip_style: IO error scanning file", e);
       return false;
     }
@@ -41,7 +43,7 @@ public class PlaceControl extends ScopeKeyword {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("PlaceControl.read_scope: IO error scanning file", e);
         return false;
       }

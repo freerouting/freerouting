@@ -1,13 +1,20 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Describes routing rules for individual nets. */
 public class NetClass
-    implements java.io.Serializable, app.freerouting.board.ObjectInfoPanel.Printable {
+    implements Serializable, ObjectInfoPanel.Printable {
 
   private final ClearanceMatrix clearance_matrix;
-  private final app.freerouting.board.LayerStructure board_layer_structure;
+  private final LayerStructure board_layer_structure;
   /**
    * The clearance classes of the item types, if this net class comes from a class in a Speccctra
    * dsn-file Should eventually be moved to NetClass and used only when reading a dsn-file.
@@ -30,7 +37,7 @@ public class NetClass
   /** Creates a new instance of NetClass */
   public NetClass(
       String p_name,
-      app.freerouting.board.LayerStructure p_layer_structure,
+      LayerStructure p_layer_structure,
       ClearanceMatrix p_clearance_matrix,
       boolean p_is_ignored_by_autorouter) {
     this.name = p_name;
@@ -61,7 +68,7 @@ public class NetClass
 
   /** Sets the trace half width used for routing to p_value on all layers. */
   public void set_trace_half_width(int p_value) {
-    java.util.Arrays.fill(trace_half_width_arr, p_value);
+    Arrays.fill(trace_half_width_arr, p_value);
   }
 
   /** Sets the trace half width used for routing to p_value on all inner layers. */
@@ -189,7 +196,7 @@ public class NetClass
 
   /** Activates or deactivates all layers for routing */
   public void set_all_layers_active(boolean p_value) {
-    java.util.Arrays.fill(this.active_routing_layer_arr, p_value);
+    Arrays.fill(this.active_routing_layer_arr, p_value);
   }
 
   /** Activates or deactivates all inner layers for routing */
@@ -201,9 +208,9 @@ public class NetClass
 
   @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("net_class_2") + " ");
     p_window.append_bold(this.name);
     p_window.append_bold(":");

@@ -5,6 +5,9 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.PolygonShape;
+
+import java.io.IOException;
 
 /** Class for reading and writing path scopes consisting of a polygon from dsn-files. */
 public class PolygonPath extends Path {
@@ -17,7 +20,7 @@ public class PolygonPath extends Path {
   /** Writes this path as a scope to an output dsn-file. */
   @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -35,7 +38,7 @@ public class PolygonPath extends Path {
 
   @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -73,7 +76,7 @@ public class PolygonPath extends Path {
       rounded_corner_arr[i] = corner_arr[i].round();
     }
     app.freerouting.geometry.planar.Shape result =
-        new app.freerouting.geometry.planar.PolygonShape(rounded_corner_arr);
+        new PolygonShape(rounded_corner_arr);
     if (offset > 0) {
       result = result.bounding_tile().enlarge(offset);
     }
@@ -100,7 +103,7 @@ public class PolygonPath extends Path {
       rounded_corner_arr[i] = corner_arr[i].round();
     }
     app.freerouting.geometry.planar.Shape result =
-        new app.freerouting.geometry.planar.PolygonShape(rounded_corner_arr);
+        new PolygonShape(rounded_corner_arr);
     if (offset > 0) {
       result = result.bounding_tile().enlarge(offset);
     }

@@ -1,16 +1,22 @@
 package app.freerouting.gui;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
+
 /** Creates the rules menu of a board frame. */
-public class BoardMenuRules extends javax.swing.JMenu {
+public class BoardMenuRules extends JMenu {
 
   private final BoardFrame board_frame;
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
 
   /** Creates a new instance of BoardRulesMenu */
   private BoardMenuRules(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
     resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.BoardMenuRules", p_board_frame.get_locale());
   }
 
@@ -20,46 +26,46 @@ public class BoardMenuRules extends javax.swing.JMenu {
 
     rules_menu.setText(rules_menu.resources.getString("rules"));
 
-    javax.swing.JMenuItem clearance_window = new javax.swing.JMenuItem();
+    JMenuItem clearance_window = new JMenuItem();
     clearance_window.setText(rules_menu.resources.getString("clearance_matrix"));
     clearance_window.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             rules_menu.board_frame.clearance_matrix_window.setVisible(true);
           }
         });
     rules_menu.add(clearance_window);
 
-    javax.swing.JMenuItem via_window = new javax.swing.JMenuItem();
+    JMenuItem via_window = new JMenuItem();
     via_window.setText(rules_menu.resources.getString("vias"));
     via_window.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             rules_menu.board_frame.via_window.setVisible(true);
           }
         });
     rules_menu.add(via_window);
 
-    javax.swing.JMenuItem nets_window = new javax.swing.JMenuItem();
+    JMenuItem nets_window = new JMenuItem();
     nets_window.setText(rules_menu.resources.getString("nets"));
     nets_window.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             rules_menu.board_frame.net_info_window.setVisible(true);
           }
         });
 
     rules_menu.add(nets_window);
 
-    javax.swing.JMenuItem net_class_window = new javax.swing.JMenuItem();
+    JMenuItem net_class_window = new JMenuItem();
     net_class_window.setText(rules_menu.resources.getString("net_classes"));
     net_class_window.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             rules_menu.board_frame.edit_net_rules_window.setVisible(true);
           }
         });

@@ -1,10 +1,12 @@
 package app.freerouting.gui;
 
+import java.util.Locale;
+
 /** Window with a list for selecting router demonstrations in the net. */
 public class WindowNetDemonstrations extends WindowNetSamples {
 
   /** Creates a new instance of WindowNetDemonstration */
-  public WindowNetDemonstrations(java.util.Locale p_locale) {
+  public WindowNetDemonstrations(Locale p_locale) {
     super(p_locale, "router_demonstrations", "replay_example", 7);
   }
 

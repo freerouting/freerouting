@@ -1,61 +1,91 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.CoordinateTransform;
+import app.freerouting.board.Item;
+import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.Pin;
+import app.freerouting.board.PrintableShape;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
+import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.NumberFormat;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Window displaying text information for a list of objects implementing the
  * ObjectInfoWindow.Printable interface.
  */
 public class WindowObjectInfo extends BoardTemporarySubWindow
-    implements app.freerouting.board.ObjectInfoPanel {
+    implements ObjectInfoPanel {
   private static final int MAX_WINDOW_HEIGHT = 500;
   private static final int SCROLLBAR_ADD = 30;
-  private final javax.swing.JTextPane text_pane;
-  private final app.freerouting.board.CoordinateTransform coordinate_transform;
-  private final java.util.ResourceBundle resources;
-  private final java.text.NumberFormat number_format;
+  private final JTextPane text_pane;
+  private final CoordinateTransform coordinate_transform;
+  private final ResourceBundle resources;
+  private final NumberFormat number_format;
   /**
    * The new created windows by pushing buttons inside this window. Used when closing this window to
    * close also all subwindows.
    */
-  private final Collection<WindowObjectInfo> subwindows = new java.util.LinkedList<WindowObjectInfo>();
+  private final Collection<WindowObjectInfo> subwindows = new LinkedList<WindowObjectInfo>();
 
   /** Creates a new instance of ItemInfoWindow */
   private WindowObjectInfo(
-      BoardFrame p_board_frame, app.freerouting.board.CoordinateTransform p_coordinate_transform) {
+      BoardFrame p_board_frame, CoordinateTransform p_coordinate_transform) {
     super(p_board_frame);
     this.resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowObjectInfo", p_board_frame.get_locale());
     this.coordinate_transform = p_coordinate_transform;
 
     // create the text pane
-    this.text_pane = new javax.swing.JTextPane();
+    this.text_pane = new JTextPane();
     this.text_pane.setEditable(false);
-    this.number_format = java.text.NumberFormat.getInstance(p_board_frame.get_locale());
+    this.number_format = NumberFormat.getInstance(p_board_frame.get_locale());
     this.number_format.setMaximumFractionDigits(4);
 
     // set document and text styles
-    javax.swing.text.StyledDocument document = this.text_pane.getStyledDocument();
+    StyledDocument document = this.text_pane.getStyledDocument();
 
-    javax.swing.text.Style default_style =
-        javax.swing.text.StyleContext.getDefaultStyleContext()
-            .getStyle(javax.swing.text.StyleContext.DEFAULT_STYLE);
+    Style default_style =
+        StyleContext.getDefaultStyleContext()
+            .getStyle(StyleContext.DEFAULT_STYLE);
 
     // add bold style to the document
-    javax.swing.text.Style bold_style = document.addStyle("bold", default_style);
-    javax.swing.text.StyleConstants.setBold(bold_style, true);
+    Style bold_style = document.addStyle("bold", default_style);
+    StyleConstants.setBold(bold_style, true);
 
     // Create a scoll_pane arount the text_pane and insert it into this window.
-    javax.swing.JScrollPane scroll_pane = new javax.swing.JScrollPane(this.text_pane);
+    JScrollPane scroll_pane = new JScrollPane(this.text_pane);
     this.add(scroll_pane);
 
     // Dispose this window and all subwindows when closing the window.
     this.addWindowListener(
-        new java.awt.event.WindowAdapter() {
+        new WindowAdapter() {
           @Override
-          public void windowClosing(java.awt.event.WindowEvent evt) {
+          public void windowClosing(WindowEvent evt) {
             dispose();
           }
         });
@@ -67,10 +97,10 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * location of the window.
    */
   public static void display(
-      Collection<app.freerouting.board.Item> p_item_list,
+      Collection<Item> p_item_list,
       BoardFrame p_board_frame,
-      app.freerouting.board.CoordinateTransform p_coordinate_transform,
-      java.awt.Point p_location) {
+      CoordinateTransform p_coordinate_transform,
+      Point p_location) {
     WindowObjectInfo new_instance = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
     new_instance.setTitle(new_instance.resources.getString("title"));
     Integer pin_count = 0;
@@ -79,18 +109,18 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     double cumulative_trace_length = 0;
     for (WindowObjectInfo.Printable curr_object : p_item_list) {
       curr_object.print_info(new_instance, p_board_frame.get_locale());
-      if (curr_object instanceof app.freerouting.board.Pin) {
+      if (curr_object instanceof Pin) {
         ++pin_count;
-      } else if (curr_object instanceof app.freerouting.board.Via) {
+      } else if (curr_object instanceof Via) {
         ++via_count;
-      } else if (curr_object instanceof app.freerouting.board.Trace) {
+      } else if (curr_object instanceof Trace) {
         ++trace_count;
-        cumulative_trace_length += ((app.freerouting.board.Trace) curr_object).get_length();
+        cumulative_trace_length += ((Trace) curr_object).get_length();
       }
     }
     new_instance.append_bold(new_instance.resources.getString("summary") + " ");
-    java.text.NumberFormat number_format =
-        java.text.NumberFormat.getInstance(p_board_frame.get_locale());
+    NumberFormat number_format =
+        NumberFormat.getInstance(p_board_frame.get_locale());
     if (pin_count > 0) {
       new_instance.append(number_format.format(pin_count));
       if (pin_count == 1) {
@@ -124,11 +154,11 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     }
 
     new_instance.pack();
-    java.awt.Dimension size = new_instance.getSize();
+    Dimension size = new_instance.getSize();
     // make the window smaller, if its heicht gets bigger than MAX_WINDOW_HEIGHT
     if (size.getHeight() > MAX_WINDOW_HEIGHT) {
       new_instance.setPreferredSize(
-          new java.awt.Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
+          new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
       new_instance.pack();
     }
     new_instance.setLocation(p_location);
@@ -144,7 +174,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
       String p_title,
       Collection<Printable> p_object_list,
       BoardFrame p_board_frame,
-      app.freerouting.board.CoordinateTransform p_coordinate_transform) {
+      CoordinateTransform p_coordinate_transform) {
     WindowObjectInfo new_window = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
     new_window.setTitle(p_title);
     if (p_object_list.isEmpty()) {
@@ -154,11 +184,11 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
       curr_object.print_info(new_window, p_board_frame.get_locale());
     }
     new_window.pack();
-    java.awt.Dimension size = new_window.getSize();
+    Dimension size = new_window.getSize();
     // make the window smaller, if its heicht gets bigger than MAX_WINDOW_HEIGHT
     if (size.getHeight() > MAX_WINDOW_HEIGHT) {
       new_window.setPreferredSize(
-          new java.awt.Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
+          new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
       new_window.pack();
     }
     new_window.setVisible(true);
@@ -168,10 +198,10 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   /** Appends p_string to the text pane. Returns false, if that was not possible. */
   private boolean append(String p_string, String p_style) {
 
-    javax.swing.text.StyledDocument document = text_pane.getStyledDocument();
+    StyledDocument document = text_pane.getStyledDocument();
     try {
       document.insertString(document.getLength(), p_string, document.getStyle(p_style));
-    } catch (javax.swing.text.BadLocationException e) {
+    } catch (BadLocationException e) {
       FRLogger.warn("ObjectInfoWindow.append: unable to insert text into text pane.");
       return false;
     }
@@ -215,8 +245,8 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * false, if that was not possible.
    */
   @Override
-  public boolean append(app.freerouting.geometry.planar.FloatPoint p_point) {
-    app.freerouting.geometry.planar.FloatPoint transformed_point =
+  public boolean append(FloatPoint p_point) {
+    FloatPoint transformed_point =
         this.coordinate_transform.board_to_user(p_point);
     return append(transformed_point.to_string(board_frame.get_locale()));
   }
@@ -226,8 +256,8 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * false, if that was not possible.
    */
   @Override
-  public boolean append(app.freerouting.geometry.planar.Shape p_shape, java.util.Locale p_locale) {
-    app.freerouting.board.PrintableShape transformed_shape =
+  public boolean append(Shape p_shape, Locale p_locale) {
+    PrintableShape transformed_shape =
         this.coordinate_transform.board_to_user(p_shape, p_locale);
     if (transformed_shape == null) {
       return false;
@@ -254,8 +284,8 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   @Override
   public boolean append(
       String p_button_name, String p_window_title, WindowObjectInfo.Printable p_object) {
-    java.util.Collection<WindowObjectInfo.Printable> object_list =
-        new java.util.LinkedList<WindowObjectInfo.Printable>();
+    Collection<WindowObjectInfo.Printable> object_list =
+        new LinkedList<WindowObjectInfo.Printable>();
     object_list.add(p_object);
     return append_objects(p_button_name, p_window_title, object_list);
   }
@@ -268,9 +298,9 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   public boolean append_items(
       String p_button_name,
       String p_window_title,
-      java.util.Collection<app.freerouting.board.Item> p_items) {
-    java.util.Collection<WindowObjectInfo.Printable> object_list =
-        new java.util.LinkedList<WindowObjectInfo.Printable>();
+      Collection<Item> p_items) {
+    Collection<WindowObjectInfo.Printable> object_list =
+        new LinkedList<WindowObjectInfo.Printable>();
     object_list.addAll(p_items);
     return append_objects(p_button_name, p_window_title, object_list);
   }
@@ -283,33 +313,33 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   public boolean append_objects(
       String p_button_name,
       String p_window_title,
-      java.util.Collection<WindowObjectInfo.Printable> p_objects) {
+      Collection<WindowObjectInfo.Printable> p_objects) {
     // create a button without border and color.
-    javax.swing.JButton button = new javax.swing.JButton();
+    JButton button = new JButton();
     button.setText(p_button_name);
     button.setBorderPainted(false);
     button.setContentAreaFilled(false);
-    button.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    button.setMargin(new Insets(0, 0, 0, 0));
     button.setAlignmentY(0.75f);
     // Display the button name in blue.
-    button.setForeground(java.awt.Color.blue);
+    button.setForeground(Color.blue);
 
     button.addActionListener(new InfoButtonListener(p_window_title, p_objects));
 
     // Add style for inserting the button  to the document.
-    javax.swing.text.StyledDocument document = this.text_pane.getStyledDocument();
-    javax.swing.text.Style default_style =
-        javax.swing.text.StyleContext.getDefaultStyleContext()
-            .getStyle(javax.swing.text.StyleContext.DEFAULT_STYLE);
-    javax.swing.text.Style button_style = document.addStyle(p_button_name, default_style);
-    javax.swing.text.StyleConstants.setAlignment(
-        button_style, javax.swing.text.StyleConstants.ALIGN_CENTER);
-    javax.swing.text.StyleConstants.setComponent(button_style, button);
+    StyledDocument document = this.text_pane.getStyledDocument();
+    Style default_style =
+        StyleContext.getDefaultStyleContext()
+            .getStyle(StyleContext.DEFAULT_STYLE);
+    Style button_style = document.addStyle(p_button_name, default_style);
+    StyleConstants.setAlignment(
+        button_style, StyleConstants.ALIGN_CENTER);
+    StyleConstants.setComponent(button_style, button);
 
     // Add the button to the document.
     try {
       document.insertString(document.getLength(), p_button_name, button_style);
-    } catch (javax.swing.text.BadLocationException e) {
+    } catch (BadLocationException e) {
       System.err.println("ObjectInfoWindow.append: unable to insert text into text pane.");
       return false;
     }
@@ -326,26 +356,26 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     super.dispose();
   }
 
-  private class InfoButtonListener implements java.awt.event.ActionListener {
+  private class InfoButtonListener implements ActionListener {
     private static final int WINDOW_OFFSET = 30;
     /** The title of this window */
     private final String title;
     /** The objects, for which information is displayed in tne new window */
     private final Collection<Printable> objects;
 
-    public InfoButtonListener(String p_title, java.util.Collection<Printable> p_objects) {
+    public InfoButtonListener(String p_title, Collection<Printable> p_objects) {
       this.title = p_title;
       this.objects = p_objects;
     }
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       WindowObjectInfo new_window =
           display(this.title, this.objects, board_frame, coordinate_transform);
 
-      java.awt.Point loc = getLocation();
-      java.awt.Point new_window_location =
-          new java.awt.Point(
+      Point loc = getLocation();
+      Point new_window_location =
+          new Point(
               (int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
       new_window.setLocation(new_window_location);
       subwindows.add(new_window);

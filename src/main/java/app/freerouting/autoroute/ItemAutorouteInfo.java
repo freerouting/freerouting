@@ -2,7 +2,10 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.Item;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Graphics;
 
 /** Temporary data stored in board Items used in the autoroute algorithm */
 public class ItemAutorouteInfo {
@@ -71,8 +74,8 @@ public class ItemAutorouteInfo {
 
   /** Draws the shapes of the expansion rooms of this info for testing purposes. */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
     if (expansion_room_arr == null) {
       return;

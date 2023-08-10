@@ -1,5 +1,13 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+
+import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
+
 /** Popup menu used in the interactive copy item state. */
 public class PopupMenuCopy extends PopupMenuDisplay {
 
@@ -8,7 +16,7 @@ public class PopupMenuCopy extends PopupMenuDisplay {
   /** Creates a new instance of CopyPopupMenu */
   PopupMenuCopy(BoardFrame p_board_frame) {
     super(p_board_frame);
-    app.freerouting.board.LayerStructure layer_structure =
+    LayerStructure layer_structure =
         board_panel.board_handling.get_routing_board().layer_structure;
 
     if (layer_structure.arr.length > 0) {
@@ -17,34 +25,34 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     } else {
       change_layer_menu = null;
     }
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    javax.swing.JMenuItem insert_item = new javax.swing.JMenuItem();
+    JMenuItem insert_item = new JMenuItem();
     insert_item.setText(resources.getString("insert"));
     insert_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
           }
         });
 
     this.add(insert_item, 0);
 
-    javax.swing.JMenuItem done_item = new javax.swing.JMenuItem();
+    JMenuItem done_item = new JMenuItem();
     done_item.setText(resources.getString("done"));
     done_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             board_panel.board_handling.return_from_state();
           }
         });
 
     this.add(done_item, 1);
 
-    app.freerouting.board.Layer curr_layer =
+    Layer curr_layer =
         layer_structure.arr[board_panel.board_handling.settings.get_layer()];
     disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
   }

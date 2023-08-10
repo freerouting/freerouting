@@ -11,6 +11,7 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -190,7 +191,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     }
     result = divide_large_room(result, board.get_bounding_box());
     // remove rooms with shapes equal to the contained shape to prevent endless loop.
-    java.util.Iterator<IncompleteFreeSpaceExpansionRoom> it = result.iterator();
+    Iterator<IncompleteFreeSpaceExpansionRoom> it = result.iterator();
     while (it.hasNext()) {
       IncompleteFreeSpaceExpansionRoom curr_room = it.next();
       if (curr_room.get_contained_shape().contains(curr_room.get_shape())) {

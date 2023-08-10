@@ -3,6 +3,8 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -24,7 +26,7 @@ public class Net {
       WriteScopeParameter p_par,
       app.freerouting.rules.Net p_net,
       Collection<app.freerouting.board.Pin> p_pin_list)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     write_net_id(p_net, p_par.file, p_par.identifier_type);
     // write the pins scope
@@ -43,7 +45,7 @@ public class Net {
 
   public static void write_net_id(
       app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.write("net ");
     p_identifier_type.write(p_net.name, p_file);
     p_file.write(" ");
@@ -52,7 +54,7 @@ public class Net {
   }
 
   public static void write_pin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin)
-      throws java.io.IOException {
+      throws IOException {
     app.freerouting.board.Component curr_component =
         p_par.board.components.get(p_pin.get_component_no());
     if (curr_component == null) {

@@ -2,8 +2,12 @@ package app.freerouting.datastructures;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
 /** Handles the indenting of scopes while writing to an output text file. */
-public class IndentFileWriter extends java.io.OutputStreamWriter {
+public class IndentFileWriter extends OutputStreamWriter {
 
   private static final String INDENT_STRING = "  ";
   private static final String BEGIN_SCOPE = "(";
@@ -11,7 +15,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter {
   private int current_indent_level = 0;
 
   /** Creates a new instance of IndentFileWriter */
-  public IndentFileWriter(java.io.OutputStream p_stream) {
+  public IndentFileWriter(OutputStream p_stream) {
     super(p_stream);
   }
 
@@ -23,7 +27,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter {
 
     try {
       write(BEGIN_SCOPE);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("IndentFileWriter.start_scope: unable to write to file", e);
     }
     ++current_indent_level;
@@ -39,7 +43,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter {
     new_line();
     try {
       write(END_SCOPE);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("IndentFileWriter.end_scope: unable to write to file", e);
     }
   }
@@ -51,7 +55,7 @@ public class IndentFileWriter extends java.io.OutputStreamWriter {
       for (int i = 0; i < current_indent_level; ++i) {
         write(INDENT_STRING);
       }
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("IndentFileWriter.new_line: unable to write to file", e);
     }
   }

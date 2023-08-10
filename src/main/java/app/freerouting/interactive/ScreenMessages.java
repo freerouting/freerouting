@@ -1,17 +1,22 @@
 package app.freerouting.interactive;
 
+import app.freerouting.geometry.planar.FloatPoint;
+
 import javax.swing.JLabel;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Text fields to display messages on the screen. */
 public class ScreenMessages {
 
   private static final String empty_string = "            ";
-  private final java.util.ResourceBundle resources;
-  private final java.util.Locale locale;
+  private final ResourceBundle resources;
+  private final Locale locale;
   private final String active_layer_string;
   private final String target_layer_string;
   /** The number format for displaying the trace lengtht */
-  private final java.text.NumberFormat number_format;
+  private final NumberFormat number_format;
   private final JLabel add_field;
   private final JLabel status_field;
   private final JLabel layer_field;
@@ -25,9 +30,9 @@ public class ScreenMessages {
       JLabel p_add_field,
       JLabel p_layer_field,
       JLabel p_mouse_position,
-      java.util.Locale p_locale) {
+      Locale p_locale) {
     resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
+        ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
     locale = p_locale;
     active_layer_string = resources.getString("current_layer") + " ";
     target_layer_string = resources.getString("target_layer") + " ";
@@ -37,7 +42,7 @@ public class ScreenMessages {
     mouse_position = p_mouse_position;
     add_field.setText(empty_string);
 
-    this.number_format = java.text.NumberFormat.getInstance(p_locale);
+    this.number_format = NumberFormat.getInstance(p_locale);
     this.number_format.setMinimumFractionDigits(2);
     this.number_format.setMaximumFractionDigits(2);
   }
@@ -123,7 +128,7 @@ public class ScreenMessages {
     }
   }
 
-  public void set_mouse_position(app.freerouting.geometry.planar.FloatPoint p_pos) {
+  public void set_mouse_position(FloatPoint p_pos) {
     if (p_pos == null || this.mouse_position == null || this.write_protected) {
       return;
     }

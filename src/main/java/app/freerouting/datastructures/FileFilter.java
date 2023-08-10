@@ -1,5 +1,7 @@
 package app.freerouting.datastructures;
 
+import java.io.File;
+
 /**
  * Used in the file chooser to filter all files which do not have an extension from the input array.
  */
@@ -26,7 +28,7 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
   }
 
   @Override
-  public boolean accept(java.io.File p_file) {
+  public boolean accept(File p_file) {
     if (p_file.isDirectory()) {
       return true;
     }

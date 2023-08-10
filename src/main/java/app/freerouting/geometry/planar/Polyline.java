@@ -1,6 +1,8 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -14,7 +16,7 @@ import java.util.LinkedList;
  * points. We use polylines with integer coordinates instead of polygons with infinite precision
  * rational coordinates because of its better performance in geometric calculations.
  */
-public class Polyline implements java.io.Serializable {
+public class Polyline implements Serializable {
   private static final boolean USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES = true;
   /** the array of lines of this Polyline. */
   public final Line[] arr;

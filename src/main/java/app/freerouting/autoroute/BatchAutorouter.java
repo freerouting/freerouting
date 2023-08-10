@@ -1,10 +1,12 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.BasicBoard;
+import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
@@ -12,11 +14,14 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.OptionalDouble;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -122,8 +127,8 @@ public class BatchAutorouter {
    * Returns true if the board is completed.
    */
   public boolean autoroute_passes() {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.interactive.InteractiveState", hdlg.get_locale());
     boolean still_unrouted_items = true;
     int diffBetweenBoardsCheckSizeDefault = 20;
@@ -226,7 +231,7 @@ public class BatchAutorouter {
    */
   private boolean autoroute_pass(int p_pass_no, boolean p_with_screen_message) {
     try {
-      Collection<Item> autoroute_item_list = new java.util.LinkedList<Item>();
+      Collection<Item> autoroute_item_list = new LinkedList<Item>();
       Set<Item> handled_items = new TreeSet<Item>();
       Iterator<UndoableObjects.UndoableObjectNode> it = routing_board.item_list.start_read_object();
       for (; ; ) {
@@ -292,7 +297,7 @@ public class BatchAutorouter {
           }
         }
       }
-      if (routing_board.get_test_level() != app.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT) {
+      if (routing_board.get_test_level() != TestLevel.ALL_DEBUGGING_OUTPUT) {
         Item.StopConnectionOption stop_connection_option;
         if (this.remove_unconnected_vias) {
           stop_connection_option = Item.StopConnectionOption.NONE;
@@ -325,7 +330,7 @@ public class BatchAutorouter {
       Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no) {
     try {
       boolean contains_plane = false;
-      app.freerouting.rules.Net route_net = routing_board.rules.nets.get(p_route_net_no);
+      Net route_net = routing_board.rules.nets.get(p_route_net_no);
       if (route_net != null) {
         contains_plane = route_net.contains_plane();
       }
@@ -356,7 +361,7 @@ public class BatchAutorouter {
       Set<Item> route_dest_set;
       if (contains_plane) {
         for (Item curr_item : connected_set) {
-          if (curr_item instanceof app.freerouting.board.ConductionArea) {
+          if (curr_item instanceof ConductionArea) {
             return true; // already connected to plane
           }
         }

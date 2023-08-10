@@ -37,7 +37,7 @@ public class FRLogger {
     if (!enabled) return;
     if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
-    perfData.put(perfId.hashCode(), java.time.Instant.now());
+    perfData.put(perfId.hashCode(), Instant.now());
   }
 
   public static double traceExit(String perfId) {
@@ -52,7 +52,7 @@ public class FRLogger {
     if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     long timeElapsed =
-        Duration.between(perfData.get(perfId.hashCode()), java.time.Instant.now()).toMillis();
+        Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
 
     perfData.remove(perfId.hashCode());
     if (timeElapsed < 0) {

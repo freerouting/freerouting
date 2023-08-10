@@ -5,6 +5,8 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 
+import java.io.IOException;
+
 /** Describes a rectangle in a Specctra dsn file. */
 public class Rectangle extends Shape {
   public final double[] coor;
@@ -69,7 +71,7 @@ public class Rectangle extends Shape {
   /** Writes this rectangle as a scope to an output dsn-file. */
   @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);
@@ -82,7 +84,7 @@ public class Rectangle extends Shape {
 
   @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);

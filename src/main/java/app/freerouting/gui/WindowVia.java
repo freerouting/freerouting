@@ -1,124 +1,157 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.geometry.planar.Circle;
+import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.library.BoardLibrary;
+import app.freerouting.library.Padstack;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ViaInfo;
+import app.freerouting.rules.ViaInfos;
 import app.freerouting.rules.ViaRule;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /** Window for interactive editing of via rules. */
 public class WindowVia extends BoardSavableSubWindow {
 
   private static final int WINDOW_OFFSET = 30;
   private final BoardFrame board_frame;
-  private final java.util.ResourceBundle resources;
-  private final javax.swing.JList<ViaRule> rule_list;
-  private final javax.swing.DefaultListModel<ViaRule> rule_list_model;
-  private final javax.swing.JPanel main_panel;
+  private final ResourceBundle resources;
+  private final JList<ViaRule> rule_list;
+  private final DefaultListModel<ViaRule> rule_list_model;
+  private final JPanel main_panel;
   /** The subwindows with information about selected object */
-  private final java.util.Collection<javax.swing.JFrame> subwindows =
-      new java.util.LinkedList<javax.swing.JFrame>();
+  private final Collection<JFrame> subwindows =
+      new LinkedList<JFrame>();
 
   /** Creates a new instance of ViaWindow */
   public WindowVia(BoardFrame p_board_frame) {
     this.resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowVia", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
     this.board_frame = p_board_frame;
 
-    this.main_panel = new javax.swing.JPanel();
-    main_panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    main_panel.setLayout(new java.awt.BorderLayout());
+    this.main_panel = new JPanel();
+    main_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    main_panel.setLayout(new BorderLayout());
 
-    javax.swing.JPanel north_panel = new javax.swing.JPanel();
-    main_panel.add(north_panel, java.awt.BorderLayout.NORTH);
-    java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    JPanel north_panel = new JPanel();
+    main_panel.add(north_panel, BorderLayout.NORTH);
+    GridBagLayout gridbag = new GridBagLayout();
     north_panel.setLayout(gridbag);
-    java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
 
-    javax.swing.JLabel available_via_padstack_label =
-        new javax.swing.JLabel(resources.getString("available_via_padstacks"));
+    JLabel available_via_padstack_label =
+        new JLabel(resources.getString("available_via_padstacks"));
     available_via_padstack_label.setBorder(
-        javax.swing.BorderFactory.createEmptyBorder(10, 0, 10, 10));
+        BorderFactory.createEmptyBorder(10, 0, 10, 10));
     gridbag.setConstraints(available_via_padstack_label, gridbag_constraints);
     north_panel.add(available_via_padstack_label, gridbag_constraints);
 
-    javax.swing.JPanel padstack_button_panel = new javax.swing.JPanel();
-    padstack_button_panel.setLayout(new java.awt.FlowLayout());
+    JPanel padstack_button_panel = new JPanel();
+    padstack_button_panel.setLayout(new FlowLayout());
     gridbag.setConstraints(padstack_button_panel, gridbag_constraints);
     north_panel.add(padstack_button_panel, gridbag_constraints);
 
-    final javax.swing.JButton show_padstack_button =
-        new javax.swing.JButton(resources.getString("info"));
+    final JButton show_padstack_button =
+        new JButton(resources.getString("info"));
     show_padstack_button.setToolTipText(resources.getString("info_tooltip"));
     show_padstack_button.addActionListener(new ShowPadstacksListener());
     padstack_button_panel.add(show_padstack_button);
 
-    final javax.swing.JButton add_padstack_button =
-        new javax.swing.JButton(resources.getString("create"));
+    final JButton add_padstack_button =
+        new JButton(resources.getString("create"));
     add_padstack_button.setToolTipText(resources.getString("create_tooltip"));
     add_padstack_button.addActionListener(new AddPadstackListener());
     padstack_button_panel.add(add_padstack_button);
 
-    final javax.swing.JButton remove_padstack_button =
-        new javax.swing.JButton(resources.getString("remove"));
+    final JButton remove_padstack_button =
+        new JButton(resources.getString("remove"));
     remove_padstack_button.setToolTipText(resources.getString("remove_tooltip"));
     remove_padstack_button.addActionListener(new RemovePadstackListener());
     padstack_button_panel.add(remove_padstack_button);
 
-    javax.swing.JLabel separator_label =
-        new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
-    separator_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 10, 0));
+    JLabel separator_label =
+        new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
+    separator_label.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     gridbag.setConstraints(separator_label, gridbag_constraints);
     north_panel.add(separator_label, gridbag_constraints);
 
-    javax.swing.JLabel available_vias_label =
-        new javax.swing.JLabel(resources.getString("available_vias"));
-    available_vias_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 10, 10));
+    JLabel available_vias_label =
+        new JLabel(resources.getString("available_vias"));
+    available_vias_label.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
     gridbag.setConstraints(available_vias_label, gridbag_constraints);
     north_panel.add(available_vias_label, gridbag_constraints);
 
-    javax.swing.JPanel via_button_panel = new javax.swing.JPanel();
-    via_button_panel.setLayout(new java.awt.FlowLayout());
+    JPanel via_button_panel = new JPanel();
+    via_button_panel.setLayout(new FlowLayout());
     gridbag.setConstraints(via_button_panel, gridbag_constraints);
     north_panel.add(via_button_panel, gridbag_constraints);
 
-    final javax.swing.JButton show_vias_button =
-        new javax.swing.JButton(resources.getString("info"));
+    final JButton show_vias_button =
+        new JButton(resources.getString("info"));
     show_vias_button.setToolTipText(resources.getString("info_tooltip_2"));
     show_vias_button.addActionListener(new ShowViasListener());
     via_button_panel.add(show_vias_button);
 
-    final javax.swing.JButton edit_vias_button =
-        new javax.swing.JButton(resources.getString("edit"));
+    final JButton edit_vias_button =
+        new JButton(resources.getString("edit"));
     edit_vias_button.setToolTipText(resources.getString("edit_tooltip"));
     edit_vias_button.addActionListener(new EditViasListener());
     via_button_panel.add(edit_vias_button);
 
     separator_label =
-        new javax.swing.JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
-    separator_label.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
+    separator_label.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     gridbag.setConstraints(separator_label, gridbag_constraints);
     north_panel.add(separator_label, gridbag_constraints);
 
-    javax.swing.JLabel via_rule_list_name =
-        new javax.swing.JLabel(resources.getString("via_rules"));
-    via_rule_list_name.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 10, 10));
+    JLabel via_rule_list_name =
+        new JLabel(resources.getString("via_rules"));
+    via_rule_list_name.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
     gridbag.setConstraints(via_rule_list_name, gridbag_constraints);
     north_panel.add(via_rule_list_name, gridbag_constraints);
     north_panel.add(via_rule_list_name, gridbag_constraints);
 
-    this.rule_list_model = new javax.swing.DefaultListModel<ViaRule>();
-    this.rule_list = new javax.swing.JList<ViaRule>(this.rule_list_model);
+    this.rule_list_model = new DefaultListModel<ViaRule>();
+    this.rule_list = new JList<ViaRule>(this.rule_list_model);
 
-    this.rule_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+    this.rule_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.rule_list.setSelectedIndex(0);
     this.rule_list.setVisibleRowCount(5);
-    javax.swing.JScrollPane list_scroll_pane = new javax.swing.JScrollPane(this.rule_list);
-    list_scroll_pane.setPreferredSize(new java.awt.Dimension(200, 100));
-    this.main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
+    JScrollPane list_scroll_pane = new JScrollPane(this.rule_list);
+    list_scroll_pane.setPreferredSize(new Dimension(200, 100));
+    this.main_panel.add(list_scroll_pane, BorderLayout.CENTER);
 
     // fill the list
     BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
@@ -127,30 +160,30 @@ public class WindowVia extends BoardSavableSubWindow {
     }
 
     // Add buttons to edit the via rules.
-    javax.swing.JPanel via_rule_button_panel = new javax.swing.JPanel();
-    via_rule_button_panel.setLayout(new java.awt.FlowLayout());
-    this.add(via_rule_button_panel, java.awt.BorderLayout.SOUTH);
+    JPanel via_rule_button_panel = new JPanel();
+    via_rule_button_panel.setLayout(new FlowLayout());
+    this.add(via_rule_button_panel, BorderLayout.SOUTH);
 
-    final javax.swing.JButton show_rule_button =
-        new javax.swing.JButton(resources.getString("info"));
+    final JButton show_rule_button =
+        new JButton(resources.getString("info"));
     show_rule_button.setToolTipText(resources.getString("info_tooltip_3"));
     show_rule_button.addActionListener(new ShowViaRuleListener());
     via_rule_button_panel.add(show_rule_button);
 
-    final javax.swing.JButton add_rule_button =
-        new javax.swing.JButton(resources.getString("create"));
+    final JButton add_rule_button =
+        new JButton(resources.getString("create"));
     add_rule_button.setToolTipText(resources.getString("create_tooltip_2"));
     add_rule_button.addActionListener(new AddViaRuleListener());
     via_rule_button_panel.add(add_rule_button);
 
-    final javax.swing.JButton edit_rule_button =
-        new javax.swing.JButton(resources.getString("edit"));
+    final JButton edit_rule_button =
+        new JButton(resources.getString("edit"));
     edit_rule_button.setToolTipText(resources.getString("edit_tooltip_2"));
     edit_rule_button.addActionListener(new EditViaRuleListener());
     via_rule_button_panel.add(edit_rule_button);
 
-    final javax.swing.JButton remove_rule_button =
-        new javax.swing.JButton(resources.getString("remove"));
+    final JButton remove_rule_button =
+        new JButton(resources.getString("remove"));
     remove_rule_button.setToolTipText(resources.getString("remove_tooltip_2"));
     remove_rule_button.addActionListener(new RemoveViaRuleListener());
     via_rule_button_panel.add(remove_rule_button);
@@ -172,9 +205,9 @@ public class WindowVia extends BoardSavableSubWindow {
     }
 
     // Dispose all subwindows because they may be no longer uptodate.
-    java.util.Iterator<javax.swing.JFrame> it = this.subwindows.iterator();
+    Iterator<JFrame> it = this.subwindows.iterator();
     while (it.hasNext()) {
-      javax.swing.JFrame curr_subwindow = it.next();
+      JFrame curr_subwindow = it.next();
       if (curr_subwindow != null) {
 
         curr_subwindow.dispose();
@@ -185,7 +218,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    for (javax.swing.JFrame curr_subwindow : this.subwindows) {
+    for (JFrame curr_subwindow : this.subwindows) {
       if (curr_subwindow != null) {
         curr_subwindow.dispose();
       }
@@ -196,17 +229,17 @@ public class WindowVia extends BoardSavableSubWindow {
     super.dispose();
   }
 
-  private class ShowPadstacksListener implements java.awt.event.ActionListener {
+  private class ShowPadstacksListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
-      java.util.Collection<WindowObjectInfo.Printable> object_list =
-          new java.util.LinkedList<WindowObjectInfo.Printable>();
-      app.freerouting.library.BoardLibrary board_library =
+    public void actionPerformed(ActionEvent p_evt) {
+      Collection<WindowObjectInfo.Printable> object_list =
+          new LinkedList<WindowObjectInfo.Printable>();
+      BoardLibrary board_library =
           board_frame.board_panel.board_handling.get_routing_board().library;
       for (int i = 0; i < board_library.via_padstack_count(); ++i) {
         object_list.add(board_library.get_via_padstack(i));
       }
-      app.freerouting.board.CoordinateTransform coordinate_transform =
+      CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window =
           WindowObjectInfo.display(
@@ -223,22 +256,22 @@ public class WindowVia extends BoardSavableSubWindow {
     }
   }
 
-  private class AddPadstackListener implements java.awt.event.ActionListener {
+  private class AddPadstackListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
-      app.freerouting.board.BasicBoard pcb =
+    public void actionPerformed(ActionEvent p_evt) {
+      BasicBoard pcb =
           board_frame.board_panel.board_handling.get_routing_board();
       if (pcb.layer_structure.arr.length <= 1) {
         return;
       }
       String padstack_name =
-          javax.swing.JOptionPane.showInputDialog(resources.getString("message_1"));
+          JOptionPane.showInputDialog(resources.getString("message_1"));
       if (padstack_name == null) {
         return;
       }
       while (pcb.library.padstacks.get(padstack_name) != null) {
         padstack_name =
-            javax.swing.JOptionPane.showInputDialog(
+            JOptionPane.showInputDialog(
                 resources.getString("message_2"), padstack_name);
         if (padstack_name == null) {
           return;
@@ -251,16 +284,16 @@ public class WindowVia extends BoardSavableSubWindow {
         layers_selected = true;
       } else {
         Layer[] possible_start_layers =
-            new app.freerouting.board.Layer[pcb.layer_structure.arr.length - 1];
+            new Layer[pcb.layer_structure.arr.length - 1];
         for (int i = 0; i < possible_start_layers.length; ++i) {
           possible_start_layers[i] = pcb.layer_structure.arr[i];
         }
         Object selected_value =
-            javax.swing.JOptionPane.showInputDialog(
+            JOptionPane.showInputDialog(
                 null,
                 resources.getString("select_start_layer"),
                 resources.getString("start_layer_selection"),
-                javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                JOptionPane.INFORMATION_MESSAGE,
                 null,
                 possible_start_layers,
                 possible_start_layers[0]);
@@ -275,17 +308,17 @@ public class WindowVia extends BoardSavableSubWindow {
       if (!layers_selected) {
         int first_possible_end_layer_no = pcb.layer_structure.get_no(start_layer) + 1;
         Layer[] possible_end_layers =
-            new app.freerouting.board.Layer
+            new Layer
                 [pcb.layer_structure.arr.length - first_possible_end_layer_no];
         for (int i = first_possible_end_layer_no; i < pcb.layer_structure.arr.length; ++i) {
           possible_end_layers[i - first_possible_end_layer_no] = pcb.layer_structure.arr[i];
         }
         Object selected_value =
-            javax.swing.JOptionPane.showInputDialog(
+            JOptionPane.showInputDialog(
                 null,
                 resources.getString("select_end_layer"),
                 resources.getString("end_layer_selection"),
-                javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                JOptionPane.INFORMATION_MESSAGE,
                 null,
                 possible_end_layers,
                 possible_end_layers[possible_end_layers.length - 1]);
@@ -298,17 +331,17 @@ public class WindowVia extends BoardSavableSubWindow {
 
       // ask for the default radius
 
-      javax.swing.JPanel default_radius_input_panel = new javax.swing.JPanel();
-      default_radius_input_panel.add(new javax.swing.JLabel(resources.getString("message_3")));
-      java.text.NumberFormat number_format =
-          java.text.NumberFormat.getInstance(board_frame.get_locale());
+      JPanel default_radius_input_panel = new JPanel();
+      default_radius_input_panel.add(new JLabel(resources.getString("message_3")));
+      NumberFormat number_format =
+          NumberFormat.getInstance(board_frame.get_locale());
       number_format.setMaximumFractionDigits(7);
-      javax.swing.JFormattedTextField default_radius_input_field =
-          new javax.swing.JFormattedTextField(number_format);
+      JFormattedTextField default_radius_input_field =
+          new JFormattedTextField(number_format);
       default_radius_input_field.setColumns(7);
       default_radius_input_panel.add(default_radius_input_field);
-      javax.swing.JOptionPane.showMessageDialog(
-          board_frame, default_radius_input_panel, null, javax.swing.JOptionPane.PLAIN_MESSAGE);
+      JOptionPane.showMessageDialog(
+          board_frame, default_radius_input_panel, null, JOptionPane.PLAIN_MESSAGE);
       Object input_value = default_radius_input_field.getValue();
       if (input_value instanceof Number) {
         default_radius = ((Number) input_value).doubleValue();
@@ -318,16 +351,16 @@ public class WindowVia extends BoardSavableSubWindow {
 
       PadstackInputPanel padstack_input_panel =
           new PadstackInputPanel(start_layer, end_layer, default_radius);
-      javax.swing.JOptionPane.showMessageDialog(
+      JOptionPane.showMessageDialog(
           board_frame,
           padstack_input_panel,
           resources.getString("adjust_circles"),
-          javax.swing.JOptionPane.PLAIN_MESSAGE);
+          JOptionPane.PLAIN_MESSAGE);
       int from_layer_no = pcb.layer_structure.get_no(start_layer);
       int to_layer_no = pcb.layer_structure.get_no(end_layer);
-      app.freerouting.geometry.planar.ConvexShape[] padstack_shapes =
-          new app.freerouting.geometry.planar.ConvexShape[pcb.layer_structure.arr.length];
-      app.freerouting.board.CoordinateTransform coordinate_transform =
+      ConvexShape[] padstack_shapes =
+          new ConvexShape[pcb.layer_structure.arr.length];
+      CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;
       boolean shape_exists = false;
       for (int i = from_layer_no; i <= to_layer_no; ++i) {
@@ -339,7 +372,7 @@ public class WindowVia extends BoardSavableSubWindow {
         int circle_radius = (int) Math.round(coordinate_transform.user_to_board(radius));
         if (circle_radius > 0) {
           padstack_shapes[i] =
-              new app.freerouting.geometry.planar.Circle(
+              new Circle(
                   app.freerouting.geometry.planar.Point.ZERO, circle_radius);
           shape_exists = true;
         }
@@ -347,72 +380,72 @@ public class WindowVia extends BoardSavableSubWindow {
       if (!shape_exists) {
         return;
       }
-      app.freerouting.library.Padstack new_padstack =
+      Padstack new_padstack =
           pcb.library.padstacks.add(padstack_name, padstack_shapes, true, true);
       pcb.library.add_via_padstack(new_padstack);
     }
   }
 
   /** Internal class used in AddPadstackListener */
-  private class PadstackInputPanel extends javax.swing.JPanel {
-    private final javax.swing.JLabel[] layer_names;
-    private final javax.swing.JFormattedTextField[] circle_radius;
+  private class PadstackInputPanel extends JPanel {
+    private final JLabel[] layer_names;
+    private final JFormattedTextField[] circle_radius;
     PadstackInputPanel(Layer p_from_layer, Layer p_to_layer, Double p_default_radius) {
-      java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+      GridBagLayout gridbag = new GridBagLayout();
       this.setLayout(gridbag);
-      java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
+      GridBagConstraints gridbag_constraints = new GridBagConstraints();
 
-      app.freerouting.board.LayerStructure layer_structure =
+      LayerStructure layer_structure =
           board_frame.board_panel.board_handling.get_routing_board().layer_structure;
       int from_layer_no = layer_structure.get_no(p_from_layer);
       int to_layer_no = layer_structure.get_no(p_to_layer);
       int layer_count = to_layer_no - from_layer_no + 1;
-      layer_names = new javax.swing.JLabel[layer_count];
-      circle_radius = new javax.swing.JFormattedTextField[layer_count];
+      layer_names = new JLabel[layer_count];
+      circle_radius = new JFormattedTextField[layer_count];
       for (int i = 0; i < layer_count; ++i) {
         String label_string =
             resources.getString("radius_on_layer")
                 + " "
                 + layer_structure.arr[from_layer_no + i].name
                 + ": ";
-        layer_names[i] = new javax.swing.JLabel(label_string);
-        java.text.NumberFormat number_format =
-            java.text.NumberFormat.getInstance(board_frame.get_locale());
+        layer_names[i] = new JLabel(label_string);
+        NumberFormat number_format =
+            NumberFormat.getInstance(board_frame.get_locale());
         number_format.setMaximumFractionDigits(7);
-        circle_radius[i] = new javax.swing.JFormattedTextField(number_format);
+        circle_radius[i] = new JFormattedTextField(number_format);
         circle_radius[i].setColumns(7);
         circle_radius[i].setValue(p_default_radius);
         gridbag.setConstraints(layer_names[i], gridbag_constraints);
         gridbag_constraints.gridwidth = 2;
         this.add(layer_names[i], gridbag_constraints);
         gridbag.setConstraints(circle_radius[i], gridbag_constraints);
-        gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
         this.add(circle_radius[i], gridbag_constraints);
       }
     }
   }
 
-  private class RemovePadstackListener implements java.awt.event.ActionListener {
+  private class RemovePadstackListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
-      app.freerouting.board.BasicBoard pcb =
+    public void actionPerformed(ActionEvent p_evt) {
+      BasicBoard pcb =
           board_frame.board_panel.board_handling.get_routing_board();
-      app.freerouting.library.Padstack[] via_padstacks = pcb.library.get_via_padstacks();
+      Padstack[] via_padstacks = pcb.library.get_via_padstacks();
       Object selected_value =
-          javax.swing.JOptionPane.showInputDialog(
+          JOptionPane.showInputDialog(
               null,
               resources.getString("choose_padstack_to_remove"),
               resources.getString("remove_via_padstack"),
-              javax.swing.JOptionPane.INFORMATION_MESSAGE,
+              JOptionPane.INFORMATION_MESSAGE,
               null,
               via_padstacks,
               via_padstacks[0]);
       if (selected_value == null) {
         return;
       }
-      app.freerouting.library.Padstack selected_padstack =
-          (app.freerouting.library.Padstack) selected_value;
-      app.freerouting.rules.ViaInfo via_with_selected_padstack = null;
+      Padstack selected_padstack =
+          (Padstack) selected_value;
+      ViaInfo via_with_selected_padstack = null;
       for (int i = 0; i < pcb.rules.via_infos.count(); ++i) {
         if (pcb.rules.via_infos.get(i).get_padstack() == selected_padstack) {
           via_with_selected_padstack = pcb.rules.via_infos.get(i);
@@ -429,17 +462,17 @@ public class WindowVia extends BoardSavableSubWindow {
     }
   }
 
-  private class ShowViasListener implements java.awt.event.ActionListener {
+  private class ShowViasListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
-      java.util.Collection<WindowObjectInfo.Printable> object_list =
-          new java.util.LinkedList<WindowObjectInfo.Printable>();
-      app.freerouting.rules.ViaInfos via_infos =
+    public void actionPerformed(ActionEvent p_evt) {
+      Collection<WindowObjectInfo.Printable> object_list =
+          new LinkedList<WindowObjectInfo.Printable>();
+      ViaInfos via_infos =
           board_frame.board_panel.board_handling.get_routing_board().rules.via_infos;
       for (int i = 0; i < via_infos.count(); ++i) {
         object_list.add(via_infos.get(i));
       }
-      app.freerouting.board.CoordinateTransform coordinate_transform =
+      CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window =
           WindowObjectInfo.display(
@@ -456,26 +489,26 @@ public class WindowVia extends BoardSavableSubWindow {
     }
   }
 
-  private class EditViasListener implements java.awt.event.ActionListener {
+  private class EditViasListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       board_frame.edit_vias_window.setVisible(true);
     }
   }
 
-  private class ShowViaRuleListener implements java.awt.event.ActionListener {
+  private class ShowViaRuleListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       List<ViaRule> selected_objects = rule_list.getSelectedValuesList();
       if (selected_objects.size() <= 0) {
         return;
       }
-      java.util.Collection<WindowObjectInfo.Printable> object_list =
-          new java.util.LinkedList<WindowObjectInfo.Printable>();
+      Collection<WindowObjectInfo.Printable> object_list =
+          new LinkedList<WindowObjectInfo.Printable>();
       for (int i = 0; i < selected_objects.size(); ++i) {
         object_list.add(selected_objects.get(i));
       }
-      app.freerouting.board.CoordinateTransform coordinate_transform =
+      CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window =
           WindowObjectInfo.display(
@@ -489,14 +522,14 @@ public class WindowVia extends BoardSavableSubWindow {
     }
   }
 
-  private class EditViaRuleListener implements java.awt.event.ActionListener {
+  private class EditViaRuleListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       ViaRule selected_object = rule_list.getSelectedValue();
       if (selected_object == null || !(selected_object instanceof ViaRule)) {
         return;
       }
-      app.freerouting.rules.BoardRules board_rules =
+      BoardRules board_rules =
           board_frame.board_panel.board_handling.get_routing_board().rules;
       WindowViaRule new_window =
           new WindowViaRule(selected_object, board_rules.via_infos, board_frame);
@@ -509,10 +542,10 @@ public class WindowVia extends BoardSavableSubWindow {
     }
   }
 
-  private class AddViaRuleListener implements java.awt.event.ActionListener {
+  private class AddViaRuleListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
-      String new_name = javax.swing.JOptionPane.showInputDialog(resources.getString("message_5"));
+    public void actionPerformed(ActionEvent p_evt) {
+      String new_name = JOptionPane.showInputDialog(resources.getString("message_5"));
       if (new_name == null) {
         return;
       }
@@ -521,7 +554,7 @@ public class WindowVia extends BoardSavableSubWindow {
         return;
       }
       ViaRule new_via_rule = new ViaRule(new_name);
-      app.freerouting.rules.BoardRules board_rules =
+      BoardRules board_rules =
           board_frame.board_panel.board_handling.get_routing_board().rules;
       board_rules.via_rules.add(new_via_rule);
       rule_list_model.addElement(new_via_rule);
@@ -529,9 +562,9 @@ public class WindowVia extends BoardSavableSubWindow {
     }
   }
 
-  private class RemoveViaRuleListener implements java.awt.event.ActionListener {
+  private class RemoveViaRuleListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       ViaRule selected_object = rule_list.getSelectedValue();
       if (selected_object == null || !(selected_object instanceof ViaRule)) {
         return;
@@ -539,7 +572,7 @@ public class WindowVia extends BoardSavableSubWindow {
       ViaRule selected_rule = selected_object;
       String message = resources.getString("remove_via_rule") + " " + selected_rule.name + "?";
       if (WindowMessage.confirm(message)) {
-        app.freerouting.rules.BoardRules board_rules =
+        BoardRules board_rules =
             board_frame.board_panel.board_handling.get_routing_board().rules;
         board_rules.via_rules.remove(selected_rule);
         rule_list_model.removeElement(selected_rule);

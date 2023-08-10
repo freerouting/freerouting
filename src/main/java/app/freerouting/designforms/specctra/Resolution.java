@@ -1,6 +1,10 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.Communication;
+import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 
 /** Class for reading resolution scopes from dsn-files. */
 public class Resolution extends ScopeKeyword {
@@ -11,9 +15,9 @@ public class Resolution extends ScopeKeyword {
   }
 
   public static void write_scope(
-      app.freerouting.datastructures.IndentFileWriter p_file,
-      app.freerouting.board.Communication p_board_communication)
-      throws java.io.IOException {
+      IndentFileWriter p_file,
+      Communication p_board_communication)
+      throws IOException {
     p_file.new_line();
     p_file.write("(resolution ");
     p_file.write(p_board_communication.unit.toString());
@@ -50,7 +54,7 @@ public class Resolution extends ScopeKeyword {
         return false;
       }
       return true;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Resolution.read_scope: IO error scanning file", e);
       return false;
     }

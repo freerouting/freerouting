@@ -1,8 +1,13 @@
 package app.freerouting.interactive;
 
 import app.freerouting.board.BasicBoard;
+import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
+import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.Pin;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -11,6 +16,8 @@ import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Vector;
 
 /** Creates all Incompletes (Ratsnest) to display them on the screen */
@@ -18,11 +25,11 @@ public class RatsNest {
 
   private final NetIncompletes[] net_incompletes;
   private final boolean[] is_filtered;
-  private final java.util.Locale locale;
+  private final Locale locale;
   public boolean hidden = false;
 
   /** Creates a new instance of RatsNest */
-  public RatsNest(BasicBoard p_board, java.util.Locale p_locale) {
+  public RatsNest(BasicBoard p_board, Locale p_locale) {
     this.locale = p_locale;
     int max_net_no = p_board.rules.nets.max_net_no();
     // Create the net item lists at once for performance reasons.
@@ -165,20 +172,20 @@ public class RatsNest {
 
   /** Describes a single incomplete connection of the ratsnest. */
   public static class AirLine
-      implements Comparable<AirLine>, app.freerouting.board.ObjectInfoPanel.Printable {
+      implements Comparable<AirLine>, ObjectInfoPanel.Printable {
     public final Net net;
     public final Item from_item;
     public final FloatPoint from_corner;
     public final Item to_item;
     public final FloatPoint to_corner;
-    private final java.util.Locale locale;
+    private final Locale locale;
     AirLine(
         Net p_net,
         Item p_from_item,
         FloatPoint p_from_corner,
         Item p_to_item,
         FloatPoint p_to_corner,
-        java.util.Locale p_locale) {
+        Locale p_locale) {
       net = p_net;
       from_item = p_from_item;
       from_corner = p_from_corner;
@@ -200,17 +207,17 @@ public class RatsNest {
     }
 
     private String item_info(Item p_item) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.interactive.RatsNest", this.locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.interactive.RatsNest", this.locale);
       String result;
-      if (p_item instanceof app.freerouting.board.Pin) {
-        app.freerouting.board.Pin curr_pin = (app.freerouting.board.Pin) p_item;
+      if (p_item instanceof Pin) {
+        Pin curr_pin = (Pin) p_item;
         result = curr_pin.component_name() + ", " + curr_pin.name();
-      } else if (p_item instanceof app.freerouting.board.Via) {
+      } else if (p_item instanceof Via) {
         result = resources.getString("via");
-      } else if (p_item instanceof app.freerouting.board.Trace) {
+      } else if (p_item instanceof Trace) {
         result = resources.getString("trace");
-      } else if (p_item instanceof app.freerouting.board.ConductionArea) {
+      } else if (p_item instanceof ConductionArea) {
         result = resources.getString("conduction_area");
       } else {
         result = resources.getString("unknown");
@@ -220,9 +227,9 @@ public class RatsNest {
 
     @Override
     public void print_info(
-        app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.interactive.RatsNest", p_locale);
+        ObjectInfoPanel p_window, Locale p_locale) {
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.interactive.RatsNest", p_locale);
       p_window.append_bold(resources.getString("incomplete"));
       p_window.append(" " + resources.getString("net") + " ");
       p_window.append(net.name);

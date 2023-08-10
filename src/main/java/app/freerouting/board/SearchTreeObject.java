@@ -1,7 +1,9 @@
 package app.freerouting.board;
 
+import app.freerouting.datastructures.ShapeTree;
+
 /** Common ShapeSearchTree functionality for board.Items and autoroute.ExpansionRooms */
-public interface SearchTreeObject extends app.freerouting.datastructures.ShapeTree.Storable {
+public interface SearchTreeObject extends ShapeTree.Storable {
   /** Returns true if this object is an obstacle to objects containing the net number p_net_no */
   boolean is_obstacle(int p_net_no);
 

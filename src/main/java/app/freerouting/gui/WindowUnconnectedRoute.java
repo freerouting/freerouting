@@ -1,22 +1,30 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
+import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
 
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
   private int max_unconnected_route_info_id_no = 0;
 
   /** Creates a new instance of WindowUnconnectedRoute */
   public WindowUnconnectedRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
     this.resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.CleanupWindows", p_board_frame.get_locale());
     this.setTitle(resources.getString("unconnected_route"));
     this.list_empty_message.setText(resources.getString("no_unconnected_route_found"));
@@ -25,18 +33,18 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
 
   @Override
   protected void fill_list() {
-    app.freerouting.board.BasicBoard routing_board =
+    BasicBoard routing_board =
         this.board_frame.board_panel.board_handling.get_routing_board();
 
-    Set<Item> handled_items = new java.util.TreeSet<Item>();
+    Set<Item> handled_items = new TreeSet<Item>();
 
     SortedSet<UnconnectedRouteInfo> unconnected_route_info_set =
-        new java.util.TreeSet<UnconnectedRouteInfo>();
+        new TreeSet<UnconnectedRouteInfo>();
 
     Collection<Item> board_items = routing_board.get_items();
     for (Item curr_item : board_items) {
-      if (!(curr_item instanceof app.freerouting.board.Trace
-          || curr_item instanceof app.freerouting.board.Via)) {
+      if (!(curr_item instanceof Trace
+          || curr_item instanceof Via)) {
         continue;
       }
       if (handled_items.contains(curr_item)) {
@@ -46,15 +54,15 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
       boolean terminal_item_found = false;
       for (Item curr_connnected_item : curr_connected_set) {
         handled_items.add(curr_connnected_item);
-        if (!(curr_connnected_item instanceof app.freerouting.board.Trace
-            || curr_connnected_item instanceof app.freerouting.board.Via)) {
+        if (!(curr_connnected_item instanceof Trace
+            || curr_connnected_item instanceof Via)) {
           terminal_item_found = true;
         }
       }
       if (!terminal_item_found) {
         // We have found unconnnected route
         if (curr_item.net_count() == 1) {
-          app.freerouting.rules.Net curr_net =
+          Net curr_net =
               routing_board.rules.nets.get(curr_item.get_net_no(0));
           if (curr_net != null) {
             UnconnectedRouteInfo curr_unconnected_route_info =
@@ -79,12 +87,12 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
     if (selected_list_values.size() <= 0) {
       return;
     }
-    Set<app.freerouting.board.Item> selected_items =
-        new java.util.TreeSet<app.freerouting.board.Item>();
+    Set<Item> selected_items =
+        new TreeSet<Item>();
     for (int i = 0; i < selected_list_values.size(); ++i) {
       selected_items.addAll(((UnconnectedRouteInfo) selected_list_values.get(i)).item_list);
     }
-    app.freerouting.interactive.BoardHandling board_handling =
+    BoardHandling board_handling =
         board_frame.board_panel.board_handling;
     board_handling.select_items(selected_items);
     board_handling.zoom_selection();
@@ -92,12 +100,12 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
 
   /** Describes information of a connected set of unconnected traces and vias. */
   private class UnconnectedRouteInfo implements Comparable<UnconnectedRouteInfo> {
-    private final app.freerouting.rules.Net net;
+    private final Net net;
     private final Collection<Item> item_list;
     private final int id_no;
     private final Integer trace_count;
     private final Integer via_count;
-    public UnconnectedRouteInfo(app.freerouting.rules.Net p_net, Collection<Item> p_item_list) {
+    public UnconnectedRouteInfo(Net p_net, Collection<Item> p_item_list) {
       this.net = p_net;
       this.item_list = p_item_list;
       ++max_unconnected_route_info_id_no;
@@ -105,9 +113,9 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
       int curr_trace_count = 0;
       int curr_via_count = 0;
       for (Item curr_item : p_item_list) {
-        if (curr_item instanceof app.freerouting.board.Trace) {
+        if (curr_item instanceof Trace) {
           ++curr_trace_count;
-        } else if (curr_item instanceof app.freerouting.board.Via) {
+        } else if (curr_item instanceof Via) {
           ++curr_via_count;
         }
       }

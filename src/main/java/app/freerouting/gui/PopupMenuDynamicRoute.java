@@ -1,5 +1,13 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+
+import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
+
 /** Popup menu used in the interactive route state. */
 public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
@@ -9,42 +17,42 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
   PopupMenuDynamicRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
 
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    app.freerouting.board.LayerStructure layer_structure =
+    LayerStructure layer_structure =
         board_panel.board_handling.get_routing_board().layer_structure;
 
-    javax.swing.JMenuItem end_route_item = new javax.swing.JMenuItem();
+    JMenuItem end_route_item = new JMenuItem();
     end_route_item.setText(resources.getString("end_route"));
     end_route_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             board_panel.board_handling.return_from_state();
           }
         });
 
     this.add(end_route_item, 0);
 
-    javax.swing.JMenuItem cancel_item = new javax.swing.JMenuItem();
+    JMenuItem cancel_item = new JMenuItem();
     cancel_item.setText(resources.getString("cancel_route"));
     cancel_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             board_panel.board_handling.cancel_state();
           }
         });
 
     this.add(cancel_item, 1);
 
-    javax.swing.JMenuItem snapshot_item = new javax.swing.JMenuItem();
+    JMenuItem snapshot_item = new JMenuItem();
     snapshot_item.setText(resources.getString("generate_snapshot"));
     snapshot_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             board_panel.board_handling.generate_snapshot();
           }
         });
@@ -58,7 +66,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
       this.change_layer_menu = null;
     }
 
-    app.freerouting.board.Layer curr_layer =
+    Layer curr_layer =
         layer_structure.arr[board_panel.board_handling.settings.get_layer()];
     disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
   }

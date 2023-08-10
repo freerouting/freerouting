@@ -10,6 +10,7 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.BoardRules;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /** Class for interactive construction of a tile shaped obstacle */
 public class TileConstructionState extends CornerItemConstructionState {
@@ -149,7 +150,7 @@ public class TileConstructionState extends CornerItemConstructionState {
     }
     if (new_length < corner_arr.length) {
       // somthing skipped, update corner_list
-      corner_list = new java.util.LinkedList<IntPoint>();
+      corner_list = new LinkedList<IntPoint>();
       for (int i = 0; i < new_length; ++i) {
         corner_list.add(corner_arr[i]);
       }
@@ -183,7 +184,7 @@ public class TileConstructionState extends CornerItemConstructionState {
 
     if (new_length != corner_arr.length) {
       // recalculate the corner_list
-      corner_list = new java.util.LinkedList<IntPoint>();
+      corner_list = new LinkedList<IntPoint>();
       for (int i = 0; i < new_length; ++i) {
         corner_list.add(corner_arr[i]);
       }

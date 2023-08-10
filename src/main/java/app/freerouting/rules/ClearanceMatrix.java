@@ -1,13 +1,19 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * NxN Matrix describing the spacing restrictions between N clearance classes on a fixed set of
  * layers.
  */
-public class ClearanceMatrix implements java.io.Serializable {
-  private final app.freerouting.board.LayerStructure layer_structure;
+public class ClearanceMatrix implements Serializable {
+  private final LayerStructure layer_structure;
   /** count of clearance classes */
   private int class_count;
   private Row[] row; // vector of class_count rows of the clearance matrix
@@ -20,7 +26,7 @@ public class ClearanceMatrix implements java.io.Serializable {
    */
   public ClearanceMatrix(
       int p_class_count,
-      app.freerouting.board.LayerStructure p_layer_structure,
+      LayerStructure p_layer_structure,
       String[] p_name_arr) {
     class_count = Math.max(p_class_count, 1);
     layer_structure = p_layer_structure;
@@ -36,7 +42,7 @@ public class ClearanceMatrix implements java.io.Serializable {
    * p_default_value.
    */
   public static ClearanceMatrix get_default_instance(
-      app.freerouting.board.LayerStructure p_layer_structure, int p_default_value) {
+      LayerStructure p_layer_structure, int p_default_value) {
     String[] name_arr = new String[2];
     name_arr[0] = "null";
     name_arr[1] = "default";
@@ -308,7 +314,7 @@ public class ClearanceMatrix implements java.io.Serializable {
 
   /** contains a row of entries of the clearance matrix */
   private class Row
-      implements app.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable {
+      implements ObjectInfoPanel.Printable, Serializable {
     final String name;
     final MatrixEntry[] column;
     int[] max_value;
@@ -324,9 +330,9 @@ public class ClearanceMatrix implements java.io.Serializable {
 
     @Override
     public void print_info(
-        app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+        ObjectInfoPanel p_window, Locale p_locale) {
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append_bold(resources.getString("spacing_from_clearance_class") + " ");
       p_window.append_bold(this.name);
       for (int i = 1; i < this.column.length; ++i) {
@@ -354,7 +360,7 @@ public class ClearanceMatrix implements java.io.Serializable {
   }
 
   /** a single entry of the clearance matrix */
-  private class MatrixEntry implements java.io.Serializable {
+  private class MatrixEntry implements Serializable {
     int[] layer;
 
     private MatrixEntry() {

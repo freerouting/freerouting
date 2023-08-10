@@ -2,13 +2,15 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
 
+import java.io.Serializable;
+
 /**
  * Abstract class defining functionality of directions in the plane. A Direction is an equivalence
  * class of vectors. Two vectors define the same object of class Direction, if they point into the
  * same direction. We prefer using directions instead of angles, because with angles the arithmetic
  * calculations are in general not exact.
  */
-public abstract class Direction implements Comparable<Direction>, java.io.Serializable {
+public abstract class Direction implements Comparable<Direction>, Serializable {
   public static final IntDirection NULL = new IntDirection(0, 0);
 
   /** the direction to the east */

@@ -4,6 +4,8 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.IntPoint;
 
+import java.io.IOException;
+
 /** Class for reading and writing circle scopes from dsn-files. */
 public class Circle extends Shape {
   public final double[] coor;
@@ -61,7 +63,7 @@ public class Circle extends Shape {
 
   @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -74,7 +76,7 @@ public class Circle extends Shape {
 
   @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);

@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.Drawable;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -9,13 +11,18 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
 /** Common superclass for Pins and Vias */
-public abstract class DrillItem extends Item implements Connectable, java.io.Serializable {
+public abstract class DrillItem extends Item implements Connectable, Serializable {
 
   /** The center point of the drillitem */
   private Point center;
@@ -104,7 +111,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
 
     // Insert a Trace from the old center to the new center, on all layers, where
     // this DrillItem was connected to a Trace.
-    Collection<Point> connect_point_list = new java.util.LinkedList<Point>();
+    Collection<Point> connect_point_list = new LinkedList<Point>();
     connect_point_list.add(old_center);
     Point new_center = this.get_center();
     IntPoint add_corner = null;
@@ -369,14 +376,14 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
 
   @Override
   public int get_draw_priority() {
-    return app.freerouting.boardgraphics.Drawable.MIDDLE_DRAW_PRIORITY;
+    return Drawable.MIDDLE_DRAW_PRIORITY;
   }
 
   @Override
   public void draw(
-      java.awt.Graphics p_g,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
-      java.awt.Color[] p_color_arr,
+      Graphics p_g,
+      GraphicsContext p_graphics_context,
+      Color[] p_color_arr,
       double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
@@ -398,7 +405,7 @@ public abstract class DrillItem extends Item implements Connectable, java.io.Ser
       if (curr_shape == null) {
         continue;
       }
-      java.awt.Color color = p_color_arr[from_layer + i];
+      Color color = p_color_arr[from_layer + i];
       double layer_intensity = intensity * p_graphics_context.get_layer_visibility(from_layer + i);
       p_graphics_context.fill_area(curr_shape, p_g, color, layer_intensity);
     }

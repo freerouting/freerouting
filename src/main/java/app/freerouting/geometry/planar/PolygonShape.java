@@ -4,6 +4,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Shape described bei a closed polygon of corner points. The corners are ordered in counterclock
@@ -14,7 +15,7 @@ import java.util.LinkedList;
 public class PolygonShape extends PolylineShape {
 
   private static final int seed = 99;
-  private static final java.util.Random random_generator = new java.util.Random(seed);
+  private static final Random random_generator = new Random(seed);
   public final Point[] corners;
   /** the following fields are for storing precalculated data */
   private transient IntBox precalculated_bounding_box = null;

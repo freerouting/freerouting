@@ -2,29 +2,39 @@ package app.freerouting.gui;
 
 import app.freerouting.logger.FRLogger;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ResourceBundle;
+
 /**
  * Abstract class for windows displaying a list of objects The object name can be filtered by an
  * alphanumeric input string.
  */
 public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
-  private final javax.swing.JTextField filter_string;
+  private final JTextField filter_string;
 
   /** Creates a new instance of ObjectListWindowWithFilter */
   public WindowObjectListWithFilter(BoardFrame p_board_frame) {
     super(p_board_frame);
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowObjectList", p_board_frame.get_locale());
-    javax.swing.JPanel input_panel = new javax.swing.JPanel();
-    this.south_panel.add(input_panel, java.awt.BorderLayout.SOUTH);
+    JPanel input_panel = new JPanel();
+    this.south_panel.add(input_panel, BorderLayout.SOUTH);
 
-    javax.swing.JLabel filter_label = new javax.swing.JLabel(resources.getString("filter"));
-    input_panel.add(filter_label, java.awt.BorderLayout.WEST);
+    JLabel filter_label = new JLabel(resources.getString("filter"));
+    input_panel.add(filter_label, BorderLayout.WEST);
 
-    this.filter_string = new javax.swing.JTextField(10);
+    this.filter_string = new JTextField(10);
     this.filter_string.setText("");
-    input_panel.add(filter_string, java.awt.BorderLayout.EAST);
+    input_panel.add(filter_string, BorderLayout.EAST);
   }
 
   /** Adds p_object to the list only if its name matches the filter. */
@@ -65,17 +75,17 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
 
   /** Saves also the filter string to disk. */
   @Override
-  public void save(java.io.ObjectOutputStream p_object_stream) {
+  public void save(ObjectOutputStream p_object_stream) {
     try {
       p_object_stream.writeObject(filter_string.getText());
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.warn("WindowObjectListWithFilter.save: save failed");
     }
     super.save(p_object_stream);
   }
 
   @Override
-  public boolean read(java.io.ObjectInputStream p_object_stream) {
+  public boolean read(ObjectInputStream p_object_stream) {
     try {
       String curr_string = (String) p_object_stream.readObject();
       this.filter_string.setText(curr_string);
@@ -86,7 +96,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   }
 
   /** Information to be stored in a SnapShot. */
-  public static class SnapshotInfo implements java.io.Serializable {
+  public static class SnapshotInfo implements Serializable {
     private final String filter;
     private final int[] selected_indices;
     private SnapshotInfo(String p_filter, int[] p_selected_indices) {

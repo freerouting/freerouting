@@ -2,16 +2,22 @@ package app.freerouting.interactive;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.BoardObservers;
+import app.freerouting.board.Communication;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
+import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
 import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SessionToEagle;
 import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
@@ -24,16 +30,27 @@ import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.Net;
+import app.freerouting.rules.NetClass;
+import app.freerouting.rules.ViaRule;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -45,7 +62,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   /** The graphical panel used for displaying the board. */
   private final BoardPanel panel;
 
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
   /** The graphical context for drawing the board. */
   public GraphicsContext graphics_context = null;
   /** For transforming coordinates between the user and the board coordinate space */
@@ -80,7 +97,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   /** Creates a new BoardHandling */
   public BoardHandling(
       BoardPanel p_panel,
-      java.util.Locale p_locale,
+      Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
     super(p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
@@ -88,7 +105,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     this.screen_messages = p_panel.screen_messages;
     this.set_interactive_state(SelectMenuState.get_instance(this, activityReplayFile));
     this.resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.interactive.BoardHandling", p_locale);
+        ResourceBundle.getBundle("app.freerouting.interactive.BoardHandling", p_locale);
   }
 
   /** Return true, if the board is set to read only. */
@@ -107,7 +124,7 @@ public class BoardHandling extends BoardHandlingHeadless {
 
   /** Return the current language for the GUI messages. */
   @Override
-  public java.util.Locale get_locale() {
+  public Locale get_locale() {
     return this.locale;
   }
 
@@ -146,8 +163,8 @@ public class BoardHandling extends BoardHandlingHeadless {
     double edge_to_turn_dist = this.coordinate_transform.user_to_board(p_value);
     if (edge_to_turn_dist != board.rules.get_pin_edge_to_turn_dist()) {
       // unfix the pin exit stubs
-      Collection<app.freerouting.board.Pin> pin_list = board.get_pins();
-      for (app.freerouting.board.Pin curr_pin : pin_list) {
+      Collection<Pin> pin_list = board.get_pins();
+      for (Pin curr_pin : pin_list) {
         if (curr_pin.has_trace_exit_restrictions()) {
           Collection<Item> contact_list = curr_pin.get_normal_contacts();
           for (Item curr_contact : contact_list) {
@@ -202,11 +219,11 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (settings.manual_rule_selection) {
       return true;
     }
-    app.freerouting.rules.Net curr_net = this.board.rules.nets.get(p_net_no);
+    Net curr_net = this.board.rules.nets.get(p_net_no);
     if (curr_net == null) {
       return true;
     }
-    app.freerouting.rules.NetClass curr_net_class = curr_net.get_class();
+    NetClass curr_net_class = curr_net.get_class();
     if (curr_net_class == null) {
       return true;
     }
@@ -225,8 +242,8 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /** Gets the via rule used in interactive routing. */
-  public app.freerouting.rules.ViaRule get_via_rule(int p_net_no) {
-    app.freerouting.rules.ViaRule result = null;
+  public ViaRule get_via_rule(int p_net_no) {
+    ViaRule result = null;
     if (settings.manual_rule_selection) {
       result = board.rules.via_rules.get(this.settings.manual_via_rule_index);
     }
@@ -260,7 +277,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /** Changes the current snap angle in the interactive board handling. */
-  public void set_current_snap_angle(app.freerouting.board.AngleRestriction p_snap_angle) {
+  public void set_current_snap_angle(AngleRestriction p_snap_angle) {
     if (board_is_read_only) {
       return;
     }
@@ -284,7 +301,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * this package.
    */
   void set_layer(int p_layer_no) {
-    app.freerouting.board.Layer curr_layer = board.layer_structure.arr[p_layer_no];
+    Layer curr_layer = board.layer_structure.arr[p_layer_no];
     screen_messages.set_layer(curr_layer.name);
     settings.layer = p_layer_no;
 
@@ -309,7 +326,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    */
   public void display_layer_messsage() {
     screen_messages.clear_add_field();
-    app.freerouting.board.Layer curr_layer = board.layer_structure.arr[this.settings.layer];
+    Layer curr_layer = board.layer_structure.arr[this.settings.layer];
     screen_messages.set_layer(curr_layer.name);
   }
 
@@ -463,7 +480,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       PolylineShape[] p_outline_shapes,
       String p_outline_clearance_class_name,
       BoardRules p_rules,
-      app.freerouting.board.Communication p_board_communication,
+      Communication p_board_communication,
       TestLevel p_test_level) {
     super.create_board(
         p_bounding_box,
@@ -548,8 +565,8 @@ public class BoardHandling extends BoardHandlingHeadless {
    * Gets the popup menu used in the current interactive state. Returns null, if the current state
    * uses no popup menu.
    */
-  public javax.swing.JPopupMenu get_current_popup_menu() {
-    javax.swing.JPopupMenu result;
+  public JPopupMenu get_current_popup_menu() {
+    JPopupMenu result;
     if (interactive_state != null) {
       result = interactive_state.get_popup_menu();
     } else {
@@ -592,7 +609,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (board_is_read_only || !(interactive_state instanceof MenuState)) {
       return;
     }
-    java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<Integer>();
     if (board.undo(changed_nets)) {
       for (Integer changed_net : changed_nets) {
         this.update_ratsnest(changed_net);
@@ -615,7 +632,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (board_is_read_only || !(interactive_state instanceof MenuState)) {
       return;
     }
-    java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<Integer>();
     if (board.redo(changed_nets)) {
       for (Integer changed_net : changed_nets) {
         this.update_ratsnest(changed_net);
@@ -789,7 +806,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * Reads an existing board design from the input stream. Returns false, if the input stream does
    * not contain a legal board design.
    */
-  public boolean read_design(java.io.ObjectInputStream p_design, TestLevel p_test_level) {
+  public boolean read_design(ObjectInputStream p_design, TestLevel p_test_level) {
     try {
       board = (RoutingBoard) p_design.readObject();
       settings = (Settings) p_design.readObject();
@@ -811,9 +828,9 @@ public class BoardHandling extends BoardHandlingHeadless {
    * false, if the dsn-file is corrupted.
    */
   public DsnFile.ReadResult import_design(
-      java.io.InputStream p_design,
-      app.freerouting.board.BoardObservers p_observers,
-      app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator,
+      InputStream p_design,
+      BoardObservers p_observers,
+      IdNoGenerator p_item_id_no_generator,
       TestLevel p_test_level) {
     if (p_design == null) {
       return DsnFile.ReadResult.ERROR;
@@ -856,7 +873,7 @@ public class BoardHandling extends BoardHandlingHeadless {
 
     try {
       p_design.close();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       read_result = DsnFile.ReadResult.ERROR;
     }
     return read_result;
@@ -877,7 +894,7 @@ public class BoardHandling extends BoardHandlingHeadless {
 
   /** Writes a session file ins the Eagle SCR format. */
   public boolean export_eagle_session_file(
-      java.io.InputStream p_input_stream, OutputStream p_output_stream) {
+      InputStream p_input_stream, OutputStream p_output_stream) {
     if (board_is_read_only) {
       return false;
     }
@@ -893,7 +910,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /** Saves the currently edited board design to p_design_file. */
-  public boolean save_design_file(java.io.ObjectOutputStream p_object_stream) {
+  public boolean save_design_file(ObjectOutputStream p_object_stream) {
     boolean result = true;
     try {
       p_object_stream.writeObject(board);
@@ -1293,7 +1310,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * Gets all items at p_location on the active board layer. If nothing is found on the active layer
    * and settings.select_on_all_layers is true, all layers are selected.
    */
-  java.util.Set<Item> pick_items(FloatPoint p_location) {
+  Set<Item> pick_items(FloatPoint p_location) {
     return pick_items(p_location, settings.item_selection_filter);
   }
 
@@ -1302,9 +1319,9 @@ public class BoardHandling extends BoardHandlingHeadless {
    * is found on the active layer and settings.select_on_all_layers is true, all layers are
    * selected.
    */
-  java.util.Set<Item> pick_items(FloatPoint p_location, ItemSelectionFilter p_item_filter) {
+  Set<Item> pick_items(FloatPoint p_location, ItemSelectionFilter p_item_filter) {
     IntPoint location = p_location.round();
-    java.util.Set<Item> result = board.pick_items(location, settings.layer, p_item_filter);
+    Set<Item> result = board.pick_items(location, settings.layer, p_item_filter);
     if (result.size() == 0 && settings.select_on_all_visible_layers) {
       for (int i = 0; i < graphics_context.layer_count(); ++i) {
         if (i == settings.layer || graphics_context.get_layer_visibility(i) <= 0) {

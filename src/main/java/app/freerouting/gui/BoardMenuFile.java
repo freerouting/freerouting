@@ -1,23 +1,38 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.TestLevel;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ResourceBundle;
 
 /** Creates the file menu of a board frame. */
-public class BoardMenuFile extends javax.swing.JMenu {
+public class BoardMenuFile extends JMenu {
 
   private final BoardFrame board_frame;
   private final boolean session_file_option;
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
 
   /** Creates a new instance of BoardFileMenu */
   private BoardMenuFile(BoardFrame p_board_frame, boolean p_session_file_option) {
     session_file_option = p_session_file_option;
     board_frame = p_board_frame;
     resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
   }
 
@@ -30,14 +45,14 @@ public class BoardMenuFile extends javax.swing.JMenu {
     // Create the menu items.
 
     if (!p_session_file_option) {
-      javax.swing.JMenuItem save_item = new javax.swing.JMenuItem();
+      JMenuItem save_item = new JMenuItem();
       save_item.setText(file_menu.resources.getString("save"));
       save_item.setToolTipText(file_menu.resources.getString("save_tooltip"));
       save_item.addActionListener(
-          new java.awt.event.ActionListener() {
+          new ActionListener() {
 
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
               boolean save_ok = file_menu.board_frame.save();
               file_menu.board_frame.board_panel.board_handling.close_files();
               if (save_ok) {
@@ -51,13 +66,13 @@ public class BoardMenuFile extends javax.swing.JMenu {
     }
 
 
-    javax.swing.JMenuItem save_and_exit_item = new javax.swing.JMenuItem();
+    JMenuItem save_and_exit_item = new JMenuItem();
     save_and_exit_item.setText(file_menu.resources.getString("save_and_exit"));
     save_and_exit_item.setToolTipText(file_menu.resources.getString("save_and_exit_tooltip"));
     save_and_exit_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             if (file_menu.session_file_option) {
               file_menu.board_frame.design_file.write_specctra_session_file(
                   file_menu.board_frame);
@@ -70,14 +85,14 @@ public class BoardMenuFile extends javax.swing.JMenu {
 
     file_menu.add(save_and_exit_item);
 
-    javax.swing.JMenuItem cancel_and_exit_item = new javax.swing.JMenuItem();
+    JMenuItem cancel_and_exit_item = new JMenuItem();
     cancel_and_exit_item.setText(file_menu.resources.getString("cancel_and_exit"));
     cancel_and_exit_item.setToolTipText(file_menu.resources.getString("cancel_and_exit_tooltip"));
     cancel_and_exit_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
 
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             file_menu.board_frame.dispose();
           }
         });
@@ -85,14 +100,14 @@ public class BoardMenuFile extends javax.swing.JMenu {
     file_menu.add(cancel_and_exit_item);
 
     if (!file_menu.session_file_option) {
-      javax.swing.JMenuItem save_as_item = new javax.swing.JMenuItem();
+      JMenuItem save_as_item = new JMenuItem();
       save_as_item.setText(file_menu.resources.getString("save_as"));
       save_as_item.setToolTipText(file_menu.resources.getString("save_as_tooltip"));
       save_as_item.addActionListener(
-          new java.awt.event.ActionListener() {
+          new ActionListener() {
 
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
               file_menu.save_as_action();
             }
           });
@@ -100,29 +115,29 @@ public class BoardMenuFile extends javax.swing.JMenu {
       file_menu.add(save_as_item);
 
 
-      javax.swing.JMenuItem write_logfile_item = new javax.swing.JMenuItem();
+      JMenuItem write_logfile_item = new JMenuItem();
       write_logfile_item.setText(file_menu.resources.getString("generate_logfile"));
       write_logfile_item.setToolTipText(
           file_menu.resources.getString("generate_logfile_tooltip"));
       write_logfile_item.addActionListener(
-          new java.awt.event.ActionListener() {
+          new ActionListener() {
 
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
               file_menu.write_logfile_action();
             }
           });
 
       file_menu.add(write_logfile_item);
 
-      javax.swing.JMenuItem replay_logfile_item = new javax.swing.JMenuItem();
+      JMenuItem replay_logfile_item = new JMenuItem();
       replay_logfile_item.setText(file_menu.resources.getString("replay_logfile"));
       replay_logfile_item.setToolTipText(file_menu.resources.getString("replay_logfile_tooltip"));
       replay_logfile_item.addActionListener(
-          new java.awt.event.ActionListener() {
+          new ActionListener() {
 
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
               file_menu.read_logfile_action();
             }
           });
@@ -139,40 +154,40 @@ public class BoardMenuFile extends javax.swing.JMenu {
     if (this.session_file_option) {
       return;
     }
-    app.freerouting.board.BasicBoard routing_board =
+    BasicBoard routing_board =
         this.board_frame.board_panel.board_handling.get_routing_board();
     boolean host_cad_is_eagle = routing_board.communication.host_cad_is_eagle();
 
-    javax.swing.JMenuItem write_session_file_item = new javax.swing.JMenuItem();
+    JMenuItem write_session_file_item = new JMenuItem();
     write_session_file_item.setText(resources.getString("session_file"));
     write_session_file_item.setToolTipText(resources.getString("session_file_tooltip"));
     write_session_file_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             // The user selected the .SES file export function from the File menu
             board_frame.design_file.write_specctra_session_file(board_frame);
           }
         });
 
-    if ((routing_board.get_test_level() != app.freerouting.board.TestLevel.RELEASE_VERSION
+    if ((routing_board.get_test_level() != TestLevel.RELEASE_VERSION
         || !host_cad_is_eagle)) {
       this.add(write_session_file_item);
     }
 
-    javax.swing.JMenuItem write_eagle_session_script_item = new javax.swing.JMenuItem();
+    JMenuItem write_eagle_session_script_item = new JMenuItem();
     write_eagle_session_script_item.setText(resources.getString("eagle_script"));
     write_eagle_session_script_item.setToolTipText(resources.getString("eagle_script_tooltip"));
     write_eagle_session_script_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
 
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             board_frame.design_file.update_eagle(board_frame);
           }
         });
 
-    if (routing_board.get_test_level() != app.freerouting.board.TestLevel.RELEASE_VERSION
+    if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION
         || host_cad_is_eagle) {
       this.add(write_eagle_session_script_item);
     }
@@ -180,14 +195,14 @@ public class BoardMenuFile extends javax.swing.JMenu {
 
   /** Adds a menu item for saving the current interactive settings as default. */
   private void add_save_settings_item() {
-    javax.swing.JMenuItem save_settings_item = new javax.swing.JMenuItem();
+    JMenuItem save_settings_item = new JMenuItem();
     save_settings_item.setText(resources.getString("settings"));
     save_settings_item.setToolTipText(resources.getString("settings_tooltip"));
     save_settings_item.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
 
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             save_defaults_action();
           }
         });
@@ -201,13 +216,13 @@ public class BoardMenuFile extends javax.swing.JMenu {
   }
 
   private void write_logfile_action() {
-    javax.swing.JFileChooser file_chooser = new javax.swing.JFileChooser();
-    java.io.File logfile_dir = board_frame.design_file.get_parent_file();
-    file_chooser.setMinimumSize(new java.awt.Dimension(500, 250));
+    JFileChooser file_chooser = new JFileChooser();
+    File logfile_dir = board_frame.design_file.get_parent_file();
+    file_chooser.setMinimumSize(new Dimension(500, 250));
     file_chooser.setCurrentDirectory(logfile_dir);
     file_chooser.setFileFilter(BoardFrame.logfile_filter);
     file_chooser.showOpenDialog(this);
-    java.io.File filename = file_chooser.getSelectedFile();
+    File filename = file_chooser.getSelectedFile();
     if (filename == null) {
       board_frame.screen_messages.set_status_message(resources.getString("message_8"));
     } else {
@@ -218,21 +233,21 @@ public class BoardMenuFile extends javax.swing.JMenu {
   }
 
   private void read_logfile_action() {
-    javax.swing.JFileChooser file_chooser = new javax.swing.JFileChooser();
-    java.io.File logfile_dir = board_frame.design_file.get_parent_file();
-    file_chooser.setMinimumSize(new java.awt.Dimension(500, 250));
+    JFileChooser file_chooser = new JFileChooser();
+    File logfile_dir = board_frame.design_file.get_parent_file();
+    file_chooser.setMinimumSize(new Dimension(500, 250));
     file_chooser.setCurrentDirectory(logfile_dir);
     file_chooser.setFileFilter(BoardFrame.logfile_filter);
     file_chooser.showOpenDialog(this);
 
-    java.io.File filename = file_chooser.getSelectedFile();
+    File filename = file_chooser.getSelectedFile();
     if (filename == null) {
       board_frame.screen_messages.set_status_message(resources.getString("message_10"));
     } else {
-      java.io.InputStream input_stream = null;
+      InputStream input_stream = null;
       try {
-        input_stream = new java.io.FileInputStream(filename);
-      } catch (java.io.FileNotFoundException e) {
+        input_stream = new FileInputStream(filename);
+      } catch (FileNotFoundException e) {
         return;
       }
       board_frame.read_logfile(input_stream);
@@ -240,15 +255,15 @@ public class BoardMenuFile extends javax.swing.JMenu {
   }
 
   private void save_defaults_action() {
-    java.io.OutputStream output_stream = null;
+    OutputStream output_stream = null;
 
     FRLogger.info("Saving '" + BoardFrame.GUI_DEFAULTS_FILE_NAME + "'...");
-    java.io.File defaults_file =
-        new java.io.File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
+    File defaults_file =
+        new File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
     if (defaults_file.exists()) {
       // Make a backup copy of the old defaulds file.
-      java.io.File defaults_file_backup =
-          new java.io.File(
+      File defaults_file_backup =
+          new File(
               board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
       if (defaults_file_backup.exists()) {
         defaults_file_backup.delete();
@@ -256,7 +271,7 @@ public class BoardMenuFile extends javax.swing.JMenu {
       defaults_file.renameTo(defaults_file_backup);
     }
     try {
-      output_stream = new java.io.FileOutputStream(defaults_file);
+      output_stream = new FileOutputStream(defaults_file);
     } catch (Exception e) {
       output_stream = null;
     }

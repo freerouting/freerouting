@@ -2,6 +2,9 @@ package app.freerouting.board;
 
 import app.freerouting.geometry.planar.ConvexShape;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /** Information of a clearance violation between 2 items. */
 public class ClearanceViolation implements ObjectInfoPanel.Printable {
 
@@ -27,9 +30,9 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("clearance_violation_2"));
     p_window.append(" " + resources.getString("at") + " ");
     p_window.append(shape.centre_of_gravity());

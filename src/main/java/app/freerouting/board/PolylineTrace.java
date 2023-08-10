@@ -16,14 +16,19 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 /** Objects of class Trace, whose geometry is described by a Polyline */
-public class PolylineTrace extends Trace implements java.io.Serializable {
+public class PolylineTrace extends Trace implements Serializable {
 
   private static final int MAX_NORMALIZATION_DEPTH = 16;
   // primary data
@@ -547,7 +552,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
         } else if (!this.is_user_fixed() && (found_item instanceof ConductionArea)) {
           boolean ignore_areas = false;
           if (this.net_no_arr.length > 0) {
-            app.freerouting.rules.Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
+            Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
             if (curr_net != null && curr_net.get_class() != null) {
               ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
             }
@@ -587,7 +592,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
       return false;
     }
     Point intersection = this.lines.arr[p_line_no].intersection(p_line);
-    java.util.Collection<Item> overlap_items =
+    Collection<Item> overlap_items =
         this.board.pick_items(intersection, this.get_layer(), null);
     boolean pad_found = false;
     for (Item curr_item : overlap_items) {
@@ -846,10 +851,10 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
   }
 
   @Override
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;

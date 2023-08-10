@@ -1,11 +1,17 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.BasicBoard;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Vector;
 
 /** Describes the electrical Nets on a board. */
-public class Nets implements java.io.Serializable {
+public class Nets implements Serializable {
 
   /** The maximum legal net number for nets. */
   public static final int max_legal_net_no = 9999999;
@@ -13,7 +19,7 @@ public class Nets implements java.io.Serializable {
   public static final int hidden_net_no = 10000001;
   /** The list of electrical nets on the board */
   private final Vector<Net> net_arr;
-  private app.freerouting.board.BasicBoard board;
+  private BasicBoard board;
 
   /** Creates a new empty net list */
   public Nets() {
@@ -44,7 +50,7 @@ public class Nets implements java.io.Serializable {
 
   /** Returns all subnets with the input name. */
   public Collection<Net> get(String p_name) {
-    Collection<Net> result = new java.util.LinkedList<Net>();
+    Collection<Net> result = new LinkedList<Net>();
     for (Net curr_net : net_arr) {
       if (curr_net != null && curr_net.name.compareToIgnoreCase(p_name) == 0) {
         result.add(curr_net);
@@ -66,9 +72,9 @@ public class Nets implements java.io.Serializable {
   }
 
   /** Generates a new net number. */
-  public Net new_net(java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
+  public Net new_net(Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
     String net_name =
         resources.getString("net#") + (Integer.valueOf(net_arr.size() + 1)).toString();
     return add(net_name, 1, false);
@@ -89,12 +95,12 @@ public class Nets implements java.io.Serializable {
   }
 
   /** Gets the Board of this net list. Used for example to get access to the Items of the net. */
-  public app.freerouting.board.BasicBoard get_board() {
+  public BasicBoard get_board() {
     return this.board;
   }
 
   /** Sets the Board of this net list. Used for example to get access to the Items of the net. */
-  public void set_board(app.freerouting.board.BasicBoard p_board) {
+  public void set_board(BasicBoard p_board) {
     this.board = p_board;
   }
 }

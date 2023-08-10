@@ -2,13 +2,20 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.ConductionArea;
+import app.freerouting.board.FixedState;
+import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -16,7 +23,7 @@ import java.util.Iterator;
 public class SpecctraSesFileWriter {
   /** Creates a Specctra session file to update the host system from the RoutingBoard */
   public static boolean write(
-      BasicBoard p_board, java.io.OutputStream p_output_stream, String p_design_name) {
+      BasicBoard p_board, OutputStream p_output_stream, String p_design_name) {
     if (p_output_stream == null) {
       return false;
     }
@@ -34,13 +41,13 @@ public class SpecctraSesFileWriter {
           new IdentifierType(
               reserved_chars, p_board.communication.specctra_parser_info.string_quote);
       write_session_scope(p_board, identifier_type, output_file, session_name, p_design_name);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to write session file", e);
       return false;
     }
     try {
       output_file.close();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to close session file", e);
       return false;
     }
@@ -53,7 +60,7 @@ public class SpecctraSesFileWriter {
       IndentFileWriter p_file,
       String p_session_name,
       String p_design_name)
-      throws java.io.IOException {
+      throws IOException {
     double scale_factor =
         p_board.communication.coordinate_transform.dsn_to_board(1)
             / p_board.communication.resolution;
@@ -76,7 +83,7 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("placement");
     Resolution.write_scope(p_file, p_board.communication);
@@ -99,17 +106,17 @@ public class SpecctraSesFileWriter {
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file,
       app.freerouting.library.Package p_package)
-      throws java.io.IOException {
-    Collection<app.freerouting.board.Item> board_items = p_board.get_items();
+      throws IOException {
+    Collection<Item> board_items = p_board.get_items();
     boolean component_found = false;
     for (int i = 1; i <= p_board.components.count(); ++i) {
       app.freerouting.board.Component curr_component = p_board.components.get(i);
       if (curr_component.get_package() == p_package) {
         // check, if not all items of the component are deleted
         boolean undeleted_item_found = false;
-        Iterator<app.freerouting.board.Item> it = board_items.iterator();
+        Iterator<Item> it = board_items.iterator();
         while (it.hasNext()) {
-          app.freerouting.board.Item curr_item = it.next();
+          Item curr_item = it.next();
           if (curr_item.get_component_no() == curr_component.no) {
             undeleted_item_found = true;
             break;
@@ -139,7 +146,7 @@ public class SpecctraSesFileWriter {
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file,
       app.freerouting.board.Component p_component)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(place ");
     p_identifier_type.write(p_component.name, p_file);
@@ -166,7 +173,7 @@ public class SpecctraSesFileWriter {
 
   private static void write_was_is(
       BasicBoard p_board, IdentifierType p_identifier_type, IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("was_is");
     Collection<app.freerouting.board.Pin> board_pins = p_board.get_pins();
@@ -209,7 +216,7 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("routes ");
     Resolution.write_scope(p_file, p_board.communication);
@@ -224,7 +231,7 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("library_out ");
     for (int i = 0; i < p_board.library.via_padstack_count(); ++i) {
@@ -239,12 +246,12 @@ public class SpecctraSesFileWriter {
   }
 
   private static void write_padstack(
-      app.freerouting.library.Padstack p_padstack,
+      Padstack p_padstack,
       BasicBoard p_board,
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     // search the layer range of the padstack
     int first_layer_no = 0;
     while (first_layer_no < p_board.get_layer_count()) {
@@ -293,7 +300,7 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("network_out ");
     for (int i = 1; i <= p_board.rules.nets.max_net_no(); ++i) {
@@ -308,13 +315,13 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
-    Collection<app.freerouting.board.Item> net_items = p_board.get_connectable_items(p_net_no);
+      throws IOException {
+    Collection<Item> net_items = p_board.get_connectable_items(p_net_no);
     boolean header_written = false;
-    Iterator<app.freerouting.board.Item> it = net_items.iterator();
+    Iterator<Item> it = net_items.iterator();
     while (it.hasNext()) {
-      app.freerouting.board.Item curr_item = it.next();
-      if (curr_item.get_fixed_state() == app.freerouting.board.FixedState.SYSTEM_FIXED) {
+      Item curr_item = it.next();
+      if (curr_item.get_fixed_state() == FixedState.SYSTEM_FIXED) {
         continue;
       }
       boolean is_wire = curr_item instanceof PolylineTrace;
@@ -354,7 +361,7 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     int layer_no = p_wire.get_layer();
     app.freerouting.board.Layer board_layer = p_board.layer_structure.arr[layer_no];
     int wire_width =
@@ -396,8 +403,8 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
-    app.freerouting.library.Padstack via_padstack = p_via.get_padstack();
+      throws IOException {
+    Padstack via_padstack = p_via.get_padstack();
     FloatPoint via_location = p_via.get_center().to_float();
     p_file.start_scope();
     p_file.write("via ");
@@ -414,14 +421,14 @@ public class SpecctraSesFileWriter {
   }
 
   private static void write_fixed_state(
-      IndentFileWriter p_file, app.freerouting.board.FixedState p_fixed_state)
-      throws java.io.IOException {
-    if (p_fixed_state.ordinal() <= app.freerouting.board.FixedState.SHOVE_FIXED.ordinal()) {
+      IndentFileWriter p_file, FixedState p_fixed_state)
+      throws IOException {
+    if (p_fixed_state.ordinal() <= FixedState.SHOVE_FIXED.ordinal()) {
       return;
     }
     p_file.new_line();
     p_file.write("(type ");
-    if (p_fixed_state == app.freerouting.board.FixedState.SYSTEM_FIXED) {
+    if (p_fixed_state == FixedState.SYSTEM_FIXED) {
       p_file.write("fix)");
     } else {
       p_file.write("protect)");
@@ -434,7 +441,7 @@ public class SpecctraSesFileWriter {
       int[] p_coors,
       IdentifierType p_identifier_type,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("path ");
     p_identifier_type.write(p_layer_name, p_file);
@@ -456,13 +463,13 @@ public class SpecctraSesFileWriter {
       IdentifierType p_identifier_type,
       CoordinateTransform p_coordinate_transform,
       IndentFileWriter p_file)
-      throws java.io.IOException {
+      throws IOException {
     int net_count = p_conduction_area.net_count();
     if (net_count != 1) {
       FRLogger.warn("SessionFile.write_conduction_area: unexpected net count");
       return;
     }
-    app.freerouting.geometry.planar.Area curr_area = p_conduction_area.get_area();
+    Area curr_area = p_conduction_area.get_area();
     int layer_no = p_conduction_area.get_layer();
     app.freerouting.board.Layer board_layer = p_board.layer_structure.arr[layer_no];
     Layer conduction_layer = new Layer(board_layer.name, layer_no, board_layer.is_signal);

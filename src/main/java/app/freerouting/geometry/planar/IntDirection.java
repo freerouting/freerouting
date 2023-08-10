@@ -2,8 +2,10 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
 
+import java.io.Serializable;
+
 /** Implements an abstract class Direction as an equivalence class of IntVector's. */
-public class IntDirection extends Direction implements java.io.Serializable {
+public class IntDirection extends Direction implements Serializable {
   public final int x;
   public final int y;
 

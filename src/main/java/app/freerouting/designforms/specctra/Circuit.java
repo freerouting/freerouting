@@ -1,7 +1,11 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class Circuit {
   /**
@@ -12,13 +16,13 @@ public class Circuit {
     Object next_token = null;
     double min_trace_length = 0;
     double max_trace_length = 0;
-    java.util.Collection<String> use_via = new java.util.LinkedList<String>();
-    java.util.Collection<String> use_layer = new java.util.LinkedList<String>();
+    Collection<String> use_via = new LinkedList<String>();
+    Collection<String> use_layer = new LinkedList<String>();
     for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Circuit.read_scope: IO error scanning file", e);
         return null;
       }
@@ -56,7 +60,7 @@ public class Circuit {
     for (int i = 0; i < 2; ++i) {
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
       }
@@ -74,7 +78,7 @@ public class Circuit {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
       }
@@ -97,13 +101,13 @@ public class Circuit {
   public static class ReadScopeResult {
     public final double max_length;
     public final double min_length;
-    public final java.util.Collection<String> use_via;
-    public final java.util.Collection<String> use_layer;
+    public final Collection<String> use_via;
+    public final Collection<String> use_layer;
     public ReadScopeResult(
         double p_max_length,
         double p_min_length,
-        java.util.Collection<String> p_use_via,
-        java.util.Collection<String> p_use_layer) {
+        Collection<String> p_use_via,
+        Collection<String> p_use_layer) {
       max_length = p_max_length;
       min_length = p_min_length;
       use_via = p_use_via;

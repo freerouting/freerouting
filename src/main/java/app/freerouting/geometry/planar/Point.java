@@ -1,9 +1,10 @@
 package app.freerouting.geometry.planar;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Abstract class describing functionality for Points in the plane. */
-public abstract class Point implements java.io.Serializable {
+public abstract class Point implements Serializable {
 
   /** Standard implementation of the zero point . */
   public static final IntPoint ZERO = new IntPoint(0, 0);

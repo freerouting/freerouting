@@ -1,6 +1,9 @@
 package app.freerouting.geometry.planar;
 
+import app.freerouting.datastructures.Stoppable;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +12,7 @@ import java.util.LinkedList;
  * A PolylineArea is an Area, where the outside border curve and the hole borders consist of
  * straight lines.
  */
-public class PolylineArea implements Area, java.io.Serializable {
+public class PolylineArea implements Area, Serializable {
 
   final PolylineShape border_shape;
   final PolylineShape[] hole_arr;
@@ -162,7 +165,7 @@ public class PolylineArea implements Area, java.io.Serializable {
    * Polylines are returned instead of Polygons, so that no intersection points are needed in the
    * result. If p_stoppable_thread != null, this function can be interrupted.
    */
-  public TileShape[] split_to_convex(app.freerouting.datastructures.Stoppable p_stoppable_thread) {
+  public TileShape[] split_to_convex(Stoppable p_stoppable_thread) {
     if (precalculated_convex_pieces == null) {
       TileShape[] convex_border_pieces = border_shape.split_to_convex();
       if (convex_border_pieces == null) {

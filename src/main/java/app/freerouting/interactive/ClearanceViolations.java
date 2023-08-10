@@ -3,6 +3,8 @@ package app.freerouting.interactive;
 import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.Item;
 import app.freerouting.boardgraphics.GraphicsContext;
+
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,7 +40,7 @@ public class ClearanceViolations {
   }
 
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    java.awt.Color draw_color = p_graphics_context.get_violations_color();
+    Color draw_color = p_graphics_context.get_violations_color();
     Iterator<ClearanceViolation> it = list.iterator();
     while (it.hasNext()) {
       ClearanceViolation curr_violation = it.next();

@@ -1,7 +1,13 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
+
+import javax.swing.JPopupMenu;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
+import java.util.ResourceBundle;
 
 /** Common base class of all interaction states with the graphical interface */
 public class InteractiveState {
@@ -10,7 +16,7 @@ public class InteractiveState {
   /** if logfile != null, the interactive actions are stored in a logfile */
   protected final ActivityReplayFile activityReplayFile;
   /** Contains the files with the language dependent messages */
-  protected final java.util.ResourceBundle resources;
+  protected final ResourceBundle resources;
   /** The intended state after this state is finished */
   protected InteractiveState return_state;
 
@@ -23,7 +29,7 @@ public class InteractiveState {
     this.hdlg = p_board_handling;
     this.activityReplayFile = p_activityReplayFile;
     this.resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
   }
 
@@ -80,7 +86,7 @@ public class InteractiveState {
 
   /** Action to be taken, when the mouse wheel was turned.. */
   public InteractiveState mouse_wheel_moved(int p_rotation) {
-    java.awt.geom.Point2D screen_mouse_pos =
+    Point2D screen_mouse_pos =
         hdlg.graphics_context.coordinate_transform.board_to_screen(
             hdlg.get_current_mouse_position());
     hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
@@ -93,7 +99,7 @@ public class InteractiveState {
    */
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState result = this;
-    java.awt.geom.Point2D screen_mouse_pos =
+    Point2D screen_mouse_pos =
         hdlg.graphics_context.coordinate_transform.board_to_screen(
             hdlg.get_current_mouse_position());
     if (p_key_char == 'a') {
@@ -120,11 +126,11 @@ public class InteractiveState {
       hdlg.get_panel().set_custom_crosshair_cursor(!hdlg.get_panel().is_custom_cross_hair_cursor());
     } else if (p_key_char == '\n' || p_key_char == ' ') {
       result = this.complete();
-    } else if (p_key_char == java.awt.event.KeyEvent.VK_ESCAPE) {
+    } else if (p_key_char == KeyEvent.VK_ESCAPE) {
       result = this.cancel();
     } else if (Character.isDigit(p_key_char)) {
       // change the current layer to the p_key_char-ths signal layer
-      app.freerouting.board.LayerStructure layer_structure =
+      LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int d = Character.digit(p_key_char, 10);
       d = Math.min(d, layer_structure.signal_layer_count());
@@ -187,7 +193,7 @@ public class InteractiveState {
    * Returns the popup menu from board_panel, which is used in this interactive state. Default
    * function to be overwritten in derived classes.
    */
-  public javax.swing.JPopupMenu get_popup_menu() {
+  public JPopupMenu get_popup_menu() {
     return null;
   }
 

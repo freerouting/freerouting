@@ -18,9 +18,13 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.interactive.Settings;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,7 +32,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /** Contains higher level functions of a board */
-public class RoutingBoard extends BasicBoard implements java.io.Serializable {
+public class RoutingBoard extends BasicBoard implements Serializable {
   /** The time limit in milliseconds for the pull tight algorithm */
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
   /** the area marked for optimizing the route */
@@ -967,7 +971,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    */
   public AutorouteEngine.AutorouteResult autoroute(
       Item p_item,
-      app.freerouting.interactive.Settings p_settings,
+      Settings p_settings,
       int p_via_costs,
       Stoppable p_stoppable_thread,
       TimeLimit p_time_limit) {
@@ -987,10 +991,10 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
             p_settings.autoroute_settings.get_trace_cost_arr());
     ctrl_settings.remove_unconnected_vias = false;
     Set<Item> route_start_set = p_item.get_connected_set(route_net_no);
-    app.freerouting.rules.Net route_net = rules.nets.get(route_net_no);
+    Net route_net = rules.nets.get(route_net_no);
     if (route_net != null && route_net.contains_plane()) {
       for (Item curr_item : route_start_set) {
-        if (curr_item instanceof app.freerouting.board.ConductionArea) {
+        if (curr_item instanceof ConductionArea) {
           return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // already connected to plane
         }
       }
@@ -1030,7 +1034,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    */
   public AutorouteEngine.AutorouteResult fanout(
       Pin p_pin,
-      app.freerouting.interactive.Settings p_settings,
+      Settings p_settings,
       int p_ripup_costs,
       Stoppable p_stoppable_thread,
       TimeLimit p_time_limit) {

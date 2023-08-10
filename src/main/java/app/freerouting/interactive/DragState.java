@@ -4,7 +4,11 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
+
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /** Class implementing functionality when the mouse is dragged on a routing board */
 public abstract class DragState extends InteractiveState {
@@ -45,7 +49,7 @@ public abstract class DragState extends InteractiveState {
       if (i == 0
           || pick_layer != curr_layer
               && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0) {
-        java.util.Collection<Item> found_items =
+        Collection<Item> found_items =
             p_board_handling
                 .get_routing_board()
                 .pick_items(
@@ -99,7 +103,7 @@ public abstract class DragState extends InteractiveState {
     InteractiveState result = this.move_to(p_point);
     if (result != this) {
       // an error occured
-      java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
+      Set<Integer> changed_nets = new TreeSet<Integer>();
       hdlg.get_routing_board().undo(changed_nets);
       for (Integer changed_net : changed_nets) {
         hdlg.update_ratsnest(changed_net);

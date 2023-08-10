@@ -2,15 +2,21 @@ package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
 
-public class BoardMenuOther extends javax.swing.JMenu {
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
+
+public class BoardMenuOther extends JMenu {
   private final BoardFrame board_frame;
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
 
   /** Creates a new instance of BoardMenuOther */
   private BoardMenuOther(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
     resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.BoardMenuOther", p_board_frame.get_locale());
   }
 
@@ -21,13 +27,13 @@ public class BoardMenuOther extends javax.swing.JMenu {
     other_menu.setText(other_menu.resources.getString("other"));
 
     // Add Snapshots menu item
-    javax.swing.JMenuItem snapshots = new javax.swing.JMenuItem();
+    JMenuItem snapshots = new JMenuItem();
     snapshots.setText(other_menu.resources.getString("snapshots"));
     snapshots.setToolTipText(other_menu.resources.getString("snapshots_tooltip"));
     snapshots.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             other_menu.board_frame.snapshot_window.setVisible(true);
           }
         });
@@ -35,13 +41,13 @@ public class BoardMenuOther extends javax.swing.JMenu {
     other_menu.add(snapshots);
 
     // Add Delete All Tracks and Vias menu item
-    javax.swing.JMenuItem delete_all_tracks = new javax.swing.JMenuItem();
+    JMenuItem delete_all_tracks = new JMenuItem();
     delete_all_tracks.setText(other_menu.resources.getString("delete_all_tracks_and_vias"));
     delete_all_tracks.setToolTipText(other_menu.resources.getString("delete_all_tracks_and_vias_tooltip"));
     delete_all_tracks.addActionListener(
-        new java.awt.event.ActionListener() {
+        new ActionListener() {
           @Override
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
+          public void actionPerformed(ActionEvent evt) {
             RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
             // delete all tracks and vias
             board.delete_all_tracks_and_vias();

@@ -2,6 +2,8 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+
 /** Keywords defining a scope object */
 public class ScopeKeyword extends Keyword {
   public ScopeKeyword(String p_name) {
@@ -41,7 +43,7 @@ public class ScopeKeyword extends Keyword {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
       }

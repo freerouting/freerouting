@@ -1,19 +1,22 @@
 package app.freerouting.library;
 
+import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 
 /** Describes a library of padstacks for pins or vias. */
-public class Padstacks implements java.io.Serializable {
+public class Padstacks implements Serializable {
   /** The layer structure of each padstack. */
-  public final app.freerouting.board.LayerStructure board_layer_structure;
+  public final LayerStructure board_layer_structure;
   /** The array of Padstacks in this object */
   private final Vector<Padstack> padstack_arr;
 
   /** Creates a new instance of Padstacks */
-  public Padstacks(app.freerouting.board.LayerStructure p_layer_structure) {
+  public Padstacks(LayerStructure p_layer_structure) {
     board_layer_structure = p_layer_structure;
     padstack_arr = new Vector<Padstack>();
   }

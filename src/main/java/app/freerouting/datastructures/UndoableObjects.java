@@ -1,6 +1,8 @@
 package app.freerouting.datastructures;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,7 +14,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * Database of objects, for which Undo and Redo operations are made possible. The algorithm works
  * only for objects containing no references.
  */
-public class UndoableObjects implements java.io.Serializable {
+public class UndoableObjects implements Serializable {
 
   /**
    * The entries of this map are of type UnduableObject, the keys of type UndoableObjects.Storable.
@@ -317,7 +319,7 @@ public class UndoableObjects implements java.io.Serializable {
    * Stores informations for correct restoring or cancelling an object in an undo or redo operation.
    * p_level is the level in the Undo stack, where this object was inserted.
    */
-  public static class UndoableObjectNode implements java.io.Serializable {
+  public static class UndoableObjectNode implements Serializable {
 
     final Storable object; // the object in the node
     int level; // the level in the Undo stack, where this node was inserted

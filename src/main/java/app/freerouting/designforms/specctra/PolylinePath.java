@@ -4,6 +4,8 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+
 /** Describes a path defined by a sequence of lines (instead of a sequence of corners. */
 public class PolylinePath extends Path {
 
@@ -15,7 +17,7 @@ public class PolylinePath extends Path {
   /** Writes this path as a scope to an output dsn-file. */
   @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("polyline_path ");
     p_identifier.write(this.layer.name, p_file);
@@ -34,7 +36,7 @@ public class PolylinePath extends Path {
 
   @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("polyline_path ");
     p_identifier.write(this.layer.name, p_file);

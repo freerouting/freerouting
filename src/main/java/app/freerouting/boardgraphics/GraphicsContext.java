@@ -1,5 +1,6 @@
 package app.freerouting.boardgraphics;
 
+import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.Ellipse;
@@ -24,9 +25,14 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Locale;
 
 /** Context for drawing items in the board package to the screen. */
-public class GraphicsContext implements java.io.Serializable {
+public class GraphicsContext implements Serializable {
   private static final int update_offset = 10000;
   private static final boolean show_line_segments = false;
   private static final boolean show_area_division = false;
@@ -50,8 +56,8 @@ public class GraphicsContext implements java.io.Serializable {
   public GraphicsContext(
       IntBox p_design_bounds,
       Dimension p_panel_bounds,
-      app.freerouting.board.LayerStructure p_layer_structure,
-      java.util.Locale p_locale) {
+      LayerStructure p_layer_structure,
+      Locale p_locale) {
     coordinate_transform = new CoordinateTransform(p_design_bounds, p_panel_bounds);
     item_color_table = new ItemColorTableModel(p_layer_structure, p_locale);
     other_color_table = new OtherColorTableModel(p_locale);
@@ -442,7 +448,7 @@ public class GraphicsContext implements java.io.Serializable {
           corners[j] = curr_tile.corner_approx(j);
         }
         corners[corners.length - 1] = corners[0];
-        draw(corners, 1, java.awt.Color.white, p_g, 0.7);
+        draw(corners, 1, Color.white, p_g, 0.7);
       }
     }
   }
@@ -591,7 +597,7 @@ public class GraphicsContext implements java.io.Serializable {
         ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal(), p_value);
   }
 
-  public java.awt.Dimension get_panel_size() {
+  public Dimension get_panel_size() {
     return coordinate_transform.screen_bounds;
   }
 
@@ -602,7 +608,7 @@ public class GraphicsContext implements java.io.Serializable {
   }
 
   /** Returns the bounding box of the design in screen coordinates. */
-  public java.awt.Rectangle get_design_bounds() {
+  public Rectangle get_design_bounds() {
     return coordinate_transform.board_to_screen(coordinate_transform.design_box);
   }
 
@@ -688,15 +694,15 @@ public class GraphicsContext implements java.io.Serializable {
   }
 
   /** Writes an instance of this class to a file. */
-  private void writeObject(java.io.ObjectOutputStream p_stream) throws java.io.IOException {
+  private void writeObject(ObjectOutputStream p_stream) throws IOException {
     p_stream.defaultWriteObject();
     item_color_table.write_object(p_stream);
     other_color_table.write_object(p_stream);
   }
 
   /** Reads an instance of this class from a file */
-  private void readObject(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  private void readObject(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     this.item_color_table = new ItemColorTableModel(p_stream);
     this.other_color_table = new OtherColorTableModel(p_stream);

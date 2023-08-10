@@ -13,9 +13,13 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.ClearanceMatrix;
+
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Contains internal auxiliary functions of class RoutingBoard for shoving traces */
 public class ShoveTraceAlgo {
@@ -78,7 +82,7 @@ public class ShoveTraceAlgo {
     FloatPoint end_corner_appprox = p_line_segment.end_point_approx();
     double segment_length = end_corner_appprox.distance(start_corner_appprox);
 
-    app.freerouting.rules.ClearanceMatrix cl_matrix = p_board.rules.clearance_matrix;
+    ClearanceMatrix cl_matrix = p_board.rules.clearance_matrix;
 
     double result = Integer.MAX_VALUE;
 
@@ -99,7 +103,7 @@ public class ShoveTraceAlgo {
           return 0;
         }
         Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
-        Collection<Item> ignore_items = new java.util.LinkedList<Item>();
+        Collection<Item> ignore_items = new LinkedList<Item>();
         shove_via_ok =
             MoveDrillItemAlgo.check(
                 curr_shove_via,
@@ -271,7 +275,7 @@ public class ShoveTraceAlgo {
             || curr_shove_via_center.distance_square(try_via_centers[i].to_float())
                 <= max_dist_square) {
           Vector delta = try_via_centers[i].difference_by(curr_shove_via.get_center());
-          Collection<Item> ignore_items = new java.util.LinkedList<Item>();
+          Collection<Item> ignore_items = new LinkedList<Item>();
           if (MoveDrillItemAlgo.check(
               curr_shove_via,
               delta,
@@ -494,7 +498,7 @@ public class ShoveTraceAlgo {
   Collection<Item> get_ignore_items_at_tie_pins(
       TileShape p_trace_shape, int p_layer, int[] p_net_no_arr) {
     Collection<SearchTreeObject> overlaps = this.board.overlapping_objects(p_trace_shape, p_layer);
-    Set<Item> result = new java.util.TreeSet<Item>();
+    Set<Item> result = new TreeSet<Item>();
     for (SearchTreeObject curr_object : overlaps) {
       if (curr_object instanceof Pin) {
         Pin curr_pin = (Pin) curr_object;

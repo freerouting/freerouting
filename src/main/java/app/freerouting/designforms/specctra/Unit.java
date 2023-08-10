@@ -1,6 +1,9 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 
 /** Class for reading resolution scopes from dsn-files. */
 public class Unit extends ScopeKeyword {
@@ -11,9 +14,9 @@ public class Unit extends ScopeKeyword {
   }
 
   public static void write_scope(
-      app.freerouting.datastructures.IndentFileWriter p_file,
+      IndentFileWriter p_file,
       app.freerouting.board.Unit p_unit)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(unit ");
     p_file.write(p_unit.toString());

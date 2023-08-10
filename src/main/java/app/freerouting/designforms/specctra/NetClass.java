@@ -1,6 +1,8 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -141,7 +143,7 @@ public class NetClass {
           pull_tight,
           min_trace_length,
           max_trace_length);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
     }
@@ -175,7 +177,7 @@ public class NetClass {
         prev_token = next_token;
       }
       return new ClassClass(classes, rules, layer_rules);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
     }

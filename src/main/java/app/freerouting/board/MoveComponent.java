@@ -6,6 +6,8 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -88,7 +90,7 @@ public class MoveComponent {
     }
     // sort the items, in the direction of p_translate_vector, so that
     // the items in front come first.
-    java.util.Arrays.sort(item_group_arr);
+    Arrays.sort(item_group_arr);
   }
 
   /**

@@ -24,7 +24,7 @@ public class StartupOptions {
   String hybrid_ratio = "1:1";
   ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
   String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
-  java.util.Locale current_locale = java.util.Locale.getDefault();
+  Locale current_locale = Locale.getDefault();
   boolean save_intermediate_stages = true;
   // this value is equivalent to the setting of "-oit 0.001"
   float optimization_improvement_threshold = 0.00001f;

@@ -1,12 +1,28 @@
 package app.freerouting.gui;
 
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.ActivityReplayFileScope;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.AWTException;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
+import java.util.Locale;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -15,24 +31,24 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 /** Panel containing the graphical representation of a routing board. */
-public class BoardPanel extends javax.swing.JPanel {
+public class BoardPanel extends JPanel {
 
   private static final double c_zoom_factor = 2.0;
   public final ScreenMessages screen_messages;
   public final BoardFrame board_frame;
   private final JScrollPane scroll_pane;
-  public javax.swing.JPopupMenu popup_menu_insert_cancel;
+  public JPopupMenu popup_menu_insert_cancel;
   public PopupMenuCopy popup_menu_copy;
   public PopupMenuMove popup_menu_move;
-  public javax.swing.JPopupMenu popup_menu_corneritem_construction;
-  public javax.swing.JPopupMenu popup_menu_main;
+  public JPopupMenu popup_menu_corneritem_construction;
+  public JPopupMenu popup_menu_main;
   public PopupMenuDynamicRoute popup_menu_dynamic_route;
   public PopupMenuStitchRoute popup_menu_stitch_route;
-  public javax.swing.JPopupMenu popup_menu_select;
+  public JPopupMenu popup_menu_select;
   BoardHandling board_handling = null;
   Point2D right_button_click_location = null;
-  private java.awt.Robot robot;
-  private java.awt.Point middle_drag_position = null;
+  private Robot robot;
+  private Point middle_drag_position = null;
   /**
    * Defines the appearance of the custom custom_cursor in the board panel. Null, if the standard
    * custom_cursor is used.
@@ -43,14 +59,14 @@ public class BoardPanel extends javax.swing.JPanel {
   public BoardPanel(
       ScreenMessages p_screen_messages,
       BoardFrame p_board_frame,
-      java.util.Locale p_locale,
+      Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
     screen_messages = p_screen_messages;
     try {
       // used to be able to change the location of the mouse pointer
-      robot = new java.awt.Robot();
-    } catch (java.awt.AWTException e) {
+      robot = new Robot();
+    } catch (AWTException e) {
       FRLogger.warn("unable to create robot");
     }
     board_frame = p_board_frame;
@@ -59,56 +75,56 @@ public class BoardPanel extends javax.swing.JPanel {
   }
 
   private void default_init(
-      java.util.Locale p_locale,
+      Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
-    setLayout(new java.awt.BorderLayout());
+    setLayout(new BorderLayout());
 
-    setBackground(new java.awt.Color(0, 0, 0));
-    setMaximumSize(new java.awt.Dimension(30000, 20000));
-    setMinimumSize(new java.awt.Dimension(90, 60));
-    setPreferredSize(new java.awt.Dimension(1200, 900));
+    setBackground(new Color(0, 0, 0));
+    setMaximumSize(new Dimension(30000, 20000));
+    setMinimumSize(new Dimension(90, 60));
+    setPreferredSize(new Dimension(1200, 900));
     addMouseMotionListener(
-        new java.awt.event.MouseMotionAdapter() {
+        new MouseMotionAdapter() {
           @Override
-          public void mouseDragged(java.awt.event.MouseEvent evt) {
+          public void mouseDragged(MouseEvent evt) {
             mouse_dragged_action(evt);
           }
 
           @Override
-          public void mouseMoved(java.awt.event.MouseEvent evt) {
+          public void mouseMoved(MouseEvent evt) {
             mouse_moved_action(evt);
           }
         });
     addKeyListener(
-        new java.awt.event.KeyAdapter() {
+        new KeyAdapter() {
           @Override
-          public void keyTyped(java.awt.event.KeyEvent evt) {
+          public void keyTyped(KeyEvent evt) {
             board_handling.key_typed_action(evt.getKeyChar());
           }
         });
     addMouseListener(
-        new java.awt.event.MouseAdapter() {
+        new MouseAdapter() {
           @Override
-          public void mouseClicked(java.awt.event.MouseEvent evt) {
+          public void mouseClicked(MouseEvent evt) {
             mouse_clicked_action(evt);
           }
 
           @Override
-          public void mousePressed(java.awt.event.MouseEvent evt) {
+          public void mousePressed(MouseEvent evt) {
             mouse_pressed_action(evt);
           }
 
           @Override
-          public void mouseReleased(java.awt.event.MouseEvent evt) {
+          public void mouseReleased(MouseEvent evt) {
             board_handling.button_released();
             middle_drag_position = null;
           }
         });
     addMouseWheelListener(
-        new java.awt.event.MouseWheelListener() {
+        new MouseWheelListener() {
           @Override
-          public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+          public void mouseWheelMoved(MouseWheelEvent evt) {
             board_handling.mouse_wheel_moved(evt.getWheelRotation());
           }
         });
@@ -130,7 +146,7 @@ public class BoardPanel extends javax.swing.JPanel {
     popup_menu_move = new PopupMenuMove(this.board_frame);
   }
 
-  public void zoom_with_mouse_wheel(java.awt.geom.Point2D p_point, int p_wheel_rotation) {
+  public void zoom_with_mouse_wheel(Point2D p_point, int p_wheel_rotation) {
     if (this.middle_drag_position != null || p_wheel_rotation == 0) {
       return; // scrolling with the middle mouse butten in progress
     }
@@ -139,15 +155,15 @@ public class BoardPanel extends javax.swing.JPanel {
     zoom(zoom_factor, p_point);
   }
 
-  private void mouse_pressed_action(java.awt.event.MouseEvent evt) {
+  private void mouse_pressed_action(MouseEvent evt) {
     if (evt.getButton() == 1) {
       board_handling.mouse_pressed(evt.getPoint());
     } else if (evt.getButton() == 2 && middle_drag_position == null) {
-      middle_drag_position = new java.awt.Point(evt.getPoint());
+      middle_drag_position = new Point(evt.getPoint());
     }
   }
 
-  private void mouse_dragged_action(java.awt.event.MouseEvent evt) {
+  private void mouse_dragged_action(MouseEvent evt) {
     if (middle_drag_position != null) {
       scroll_middle_mouse(evt);
     } else {
@@ -156,7 +172,7 @@ public class BoardPanel extends javax.swing.JPanel {
     }
   }
 
-  private void mouse_moved_action(java.awt.event.MouseEvent p_evt) {
+  private void mouse_moved_action(MouseEvent p_evt) {
     this.requestFocusInWindow(); // to enable keyboard aliases
     if (board_handling != null) {
       board_handling.mouse_moved(p_evt.getPoint());
@@ -167,7 +183,7 @@ public class BoardPanel extends javax.swing.JPanel {
     }
   }
 
-  private void mouse_clicked_action(java.awt.event.MouseEvent evt) {
+  private void mouse_clicked_action(MouseEvent evt) {
     if (evt.getButton() == 1) {
       board_handling.left_button_clicked(evt.getPoint());
     } else if (evt.getButton() == 3) {
@@ -203,30 +219,30 @@ public class BoardPanel extends javax.swing.JPanel {
   }
 
   /** Returns the position of the viewport */
-  public java.awt.Point get_viewport_position() {
+  public Point get_viewport_position() {
     JViewport viewport = scroll_pane.getViewport();
     return viewport.getViewPosition();
   }
 
   /** Sets the position of the viewport */
-  void set_viewport_position(java.awt.Point p_position) {
+  void set_viewport_position(Point p_position) {
     JViewport viewport = scroll_pane.getViewport();
     viewport.setViewPosition(p_position);
   }
 
   /** zooms in at p_position */
-  public void zoom_in(java.awt.geom.Point2D p_position) {
+  public void zoom_in(Point2D p_position) {
     zoom(c_zoom_factor, p_position);
   }
 
   /** zooms out at p_position */
-  public void zoom_out(java.awt.geom.Point2D p_position) {
+  public void zoom_out(Point2D p_position) {
     double zoom_factor = 1 / c_zoom_factor;
     zoom(zoom_factor, p_position);
   }
 
   /** zooms to frame */
-  public void zoom_frame(java.awt.geom.Point2D p_position1, java.awt.geom.Point2D p_position2) {
+  public void zoom_frame(Point2D p_position1, Point2D p_position2) {
     double width_of_zoom_frame = Math.abs(p_position1.getX() - p_position2.getX());
     double height_of_zoom_frame = Math.abs(p_position1.getY() - p_position2.getY());
 
@@ -235,42 +251,42 @@ public class BoardPanel extends javax.swing.JPanel {
 
     Point2D center_point = new Point2D.Double(center_x, center_y);
 
-    java.awt.Rectangle display_rect = get_viewport_bounds();
+    Rectangle display_rect = get_viewport_bounds();
 
     double width_factor = display_rect.getWidth() / width_of_zoom_frame;
     double height_factor = display_rect.getHeight() / height_of_zoom_frame;
 
-    java.awt.geom.Point2D changed_location =
+    Point2D changed_location =
         zoom(Math.min(width_factor, height_factor), center_point);
     set_viewport_center(changed_location);
   }
 
   public void center_display(Point2D p_new_center) {
-    java.awt.Point delta = set_viewport_center(p_new_center);
-    java.awt.geom.Point2D new_center = get_viewport_center();
-    java.awt.Point new_mouse_location =
-        new java.awt.Point(
+    Point delta = set_viewport_center(p_new_center);
+    Point2D new_center = get_viewport_center();
+    Point new_mouse_location =
+        new Point(
             (int) (new_center.getX() - delta.getX()), (int) (new_center.getY() - delta.getY()));
     move_mouse(new_mouse_location);
     repaint();
     this.board_handling.activityReplayFile.start_scope(ActivityReplayFileScope.CENTER_DISPLAY);
-    app.freerouting.geometry.planar.FloatPoint curr_corner =
-        new app.freerouting.geometry.planar.FloatPoint(p_new_center.getX(), p_new_center.getY());
+    FloatPoint curr_corner =
+        new FloatPoint(p_new_center.getX(), p_new_center.getY());
     this.board_handling.activityReplayFile.add_corner(curr_corner);
   }
 
-  public java.awt.geom.Point2D get_viewport_center() {
-    java.awt.Point pos = get_viewport_position();
-    java.awt.Rectangle display_rect = get_viewport_bounds();
-    return new java.awt.geom.Point2D.Double(
+  public Point2D get_viewport_center() {
+    Point pos = get_viewport_position();
+    Rectangle display_rect = get_viewport_bounds();
+    return new Point2D.Double(
         pos.getX() + display_rect.getCenterX(), pos.getY() + display_rect.getCenterY());
   }
 
   /** zooms the content of the board by p_factor Returns the change of the cursor location */
-  public java.awt.geom.Point2D zoom(double p_factor, java.awt.geom.Point2D p_location) {
+  public Point2D zoom(double p_factor, Point2D p_location) {
     final int max_panel_size = 10000000;
     Dimension old_size = this.getSize();
-    java.awt.geom.Point2D old_center = get_viewport_center();
+    Point2D old_center = get_viewport_center();
 
     if (p_factor > 1 && Math.max(old_size.getWidth(), old_size.getHeight()) >= max_panel_size) {
       return p_location; // to prevent an sun.dc.pr.PRException, which I do not know, how to handle;
@@ -284,24 +300,24 @@ public class BoardPanel extends javax.swing.JPanel {
     setSize(new_size);
     revalidate();
 
-    java.awt.geom.Point2D new_cursor =
-        new java.awt.geom.Point2D.Double(
+    Point2D new_cursor =
+        new Point2D.Double(
             p_location.getX() * p_factor, p_location.getY() * p_factor);
     double dx = new_cursor.getX() - p_location.getX();
     double dy = new_cursor.getY() - p_location.getY();
-    java.awt.geom.Point2D new_center =
-        new java.awt.geom.Point2D.Double(old_center.getX() + dx, old_center.getY() + dy);
-    java.awt.geom.Point2D adjustment_vector = set_viewport_center(new_center);
+    Point2D new_center =
+        new Point2D.Double(old_center.getX() + dx, old_center.getY() + dy);
+    Point2D adjustment_vector = set_viewport_center(new_center);
     repaint();
-    java.awt.geom.Point2D adjusted_new_cursor =
-        new java.awt.geom.Point2D.Double(
+    Point2D adjusted_new_cursor =
+        new Point2D.Double(
             new_cursor.getX() + adjustment_vector.getX() + 0.5,
             new_cursor.getY() + adjustment_vector.getY() + 0.5);
     return adjusted_new_cursor;
   }
 
   /** Returns the viewport bounds of the scroll pane */
-  java.awt.Rectangle get_viewport_bounds() {
+  Rectangle get_viewport_bounds() {
     return scroll_pane.getViewportBorderBounds();
   }
 
@@ -309,8 +325,8 @@ public class BoardPanel extends javax.swing.JPanel {
    * Sets the viewport center to p_point. Adjust the result, if p_point is near the border of the
    * viewport. Returns the adjustment vector
    */
-  java.awt.Point set_viewport_center(java.awt.geom.Point2D p_point) {
-    java.awt.Rectangle display_rect = get_viewport_bounds();
+  Point set_viewport_center(Point2D p_point) {
+    Rectangle display_rect = get_viewport_bounds();
     double x_corner = p_point.getX() - display_rect.getWidth() / 2;
     double y_corner = p_point.getY() - display_rect.getHeight() / 2;
     Dimension panel_size = getSize();
@@ -318,11 +334,11 @@ public class BoardPanel extends javax.swing.JPanel {
     adjusted_x_corner = Math.max(x_corner, 0);
     double adjusted_y_corner = Math.min(y_corner, panel_size.getHeight());
     adjusted_y_corner = Math.max(y_corner, 0);
-    java.awt.Point new_position =
-        new java.awt.Point((int) adjusted_x_corner, (int) adjusted_y_corner);
+    Point new_position =
+        new Point((int) adjusted_x_corner, (int) adjusted_y_corner);
     set_viewport_position(new_position);
-    java.awt.Point adjustment_vector =
-        new java.awt.Point(
+    Point adjustment_vector =
+        new Point(
             (int) (adjusted_x_corner - x_corner), (int) (adjusted_y_corner - y_corner));
     return adjustment_vector;
   }
@@ -345,10 +361,10 @@ public class BoardPanel extends javax.swing.JPanel {
     setBackground(board_handling.graphics_context.get_background_color());
   }
 
-  private void scroll_near_border(java.awt.event.MouseEvent p_evt) {
+  private void scroll_near_border(MouseEvent p_evt) {
     final int border_dist = 50;
-    java.awt.Rectangle r =
-        new java.awt.Rectangle(
+    Rectangle r =
+        new Rectangle(
             p_evt.getX() - border_dist,
             p_evt.getY() - border_dist,
             2 * border_dist,
@@ -356,11 +372,11 @@ public class BoardPanel extends javax.swing.JPanel {
     ((JPanel) p_evt.getSource()).scrollRectToVisible(r);
   }
 
-  private void scroll_middle_mouse(java.awt.event.MouseEvent p_evt) {
+  private void scroll_middle_mouse(MouseEvent p_evt) {
     double delta_x = middle_drag_position.x - p_evt.getX();
     double delta_y = middle_drag_position.y - p_evt.getY();
 
-    java.awt.Point view_position = get_viewport_position();
+    Point view_position = get_viewport_position();
 
     double x = (view_position.x + delta_x);
     double y = (view_position.y + delta_y);
@@ -372,7 +388,7 @@ public class BoardPanel extends javax.swing.JPanel {
     x = Math.max(x, 0);
     y = Math.max(y, 0);
 
-    java.awt.Point p = new java.awt.Point((int) x, (int) y);
+    Point p = new Point((int) x, (int) y);
     set_viewport_position(p);
   }
 
@@ -380,8 +396,8 @@ public class BoardPanel extends javax.swing.JPanel {
     if (robot == null) {
       return;
     }
-    java.awt.Point absolute_panel_location = board_frame.absolute_panel_location();
-    java.awt.Point view_position = get_viewport_position();
+    Point absolute_panel_location = board_frame.absolute_panel_location();
+    Point view_position = get_viewport_position();
     int x =
         (int) Math.round(absolute_panel_location.getX() - view_position.getX() + p_location.getX())
             + 1;

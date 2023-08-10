@@ -1,6 +1,12 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.datastructures.IdentifierType;
+import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +22,7 @@ public abstract class Rule {
       Object prev_token = current_token;
       try {
         current_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Rule.read_scope: IO error scanning file", e);
         return null;
       }
@@ -81,7 +87,7 @@ public abstract class Rule {
         rule_list.addAll(read_scope(p_scanner));
       }
       return new LayerRule(layer_names, rule_list);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Rule.read_layer_rule_scope: IO error scanning file", e);
       return null;
     }
@@ -99,7 +105,7 @@ public abstract class Rule {
 
   public static void write_scope(
       app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rule");
 
@@ -120,7 +126,7 @@ public abstract class Rule {
 
   private static void write_layer_rule(
       app.freerouting.rules.NetClass p_net_class, int p_layer_no, WriteScopeParameter p_par)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("layer_rule ");
 
@@ -144,7 +150,7 @@ public abstract class Rule {
 
   /** Writes the default rule as a scope to an output dsn-file. */
   public static void write_default_rule(WriteScopeParameter p_par, int p_layer)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rule");
     // write the trace width
@@ -157,7 +163,7 @@ public abstract class Rule {
     p_par.file.write((Double.valueOf(trace_width)).toString());
     p_par.file.write(")");
     // write the default clearance rule
-    int default_cl_no = app.freerouting.rules.BoardRules.default_clearance_class();
+    int default_cl_no = BoardRules.default_clearance_class();
     int default_board_clearance =
         p_par.board.rules.clearance_matrix.get_value(default_cl_no, default_cl_no, p_layer, false);
     double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
@@ -186,9 +192,9 @@ public abstract class Rule {
       WriteScopeParameter p_par,
       int p_layer,
       int p_default_clearance)
-      throws java.io.IOException {
+      throws IOException {
 
-    app.freerouting.rules.ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
+    ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
 
     for (int i = 1; i <= cl_count; ++i) {
@@ -216,9 +222,9 @@ public abstract class Rule {
   private static void write_named_clearance_rules(
       WriteScopeParameter p_par,
       int p_layer)
-      throws java.io.IOException {
+      throws IOException {
 
-    app.freerouting.rules.ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
+    ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
 
     for (int i = 1; i < cl_count; ++i) {
@@ -272,7 +278,7 @@ public abstract class Rule {
       }
 
       return new ClearanceRule(value, class_pairs);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Rule.read_clearance_rule: IO error scanning file", e);
       return null;
     }
@@ -280,9 +286,9 @@ public abstract class Rule {
 
   public static void write_item_clearance_class(
       String p_name,
-      app.freerouting.datastructures.IndentFileWriter p_file,
-      app.freerouting.datastructures.IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      IndentFileWriter p_file,
+      IdentifierType p_identifier_type)
+      throws IOException {
     p_file.new_line();
     p_file.write("(clearance_class ");
     p_identifier_type.write(p_name, p_file);

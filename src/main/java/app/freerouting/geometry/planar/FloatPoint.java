@@ -2,11 +2,15 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Implements a point in the plane as a tuple of double's. Because arithmetic calculations with
  * doubles are in general not exact, FloatPoint is not derived from the abstract class Point.
  */
-public class FloatPoint implements java.io.Serializable {
+public class FloatPoint implements Serializable {
 
   public static final FloatPoint ZERO = new FloatPoint(0, 0);
   /** the x coordinate of this point */
@@ -482,14 +486,14 @@ public class FloatPoint implements java.io.Serializable {
         < radius_square - 1); // - 1 is a tolerance for numerical stability.
   }
 
-  public String to_string(java.util.Locale p_locale) {
-    java.text.NumberFormat nf = java.text.NumberFormat.getInstance(p_locale);
+  public String to_string(Locale p_locale) {
+    NumberFormat nf = NumberFormat.getInstance(p_locale);
     nf.setMaximumFractionDigits(4);
     return ("(" + nf.format(x) + " , " + nf.format(y) + ")");
   }
 
   @Override
   public String toString() {
-    return to_string(java.util.Locale.ENGLISH);
+    return to_string(Locale.ENGLISH);
   }
 }

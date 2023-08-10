@@ -7,8 +7,10 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /** Computes transformations between a specctra dsn-file coordinates and board coordinates. */
-public class CoordinateTransform implements java.io.Serializable {
+public class CoordinateTransform implements Serializable {
 
   private final double scale_factor;
   private final double base_x;

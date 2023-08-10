@@ -1,15 +1,23 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Locale;
 
-public class ComponentOutline extends Item implements java.io.Serializable {
+public class ComponentOutline extends Item implements Serializable {
 
   private final Area relative_area;
   private transient Area precalculated_absolute_area = null;
@@ -93,9 +101,9 @@ public class ComponentOutline extends Item implements java.io.Serializable {
   }
 
   @Override
-  protected app.freerouting.geometry.planar.TileShape[] calculate_tree_shapes(
+  protected TileShape[] calculate_tree_shapes(
       ShapeSearchTree p_search_tree) {
-    return new app.freerouting.geometry.planar.TileShape[0];
+    return new TileShape[0];
   }
 
   @Override
@@ -105,7 +113,7 @@ public class ComponentOutline extends Item implements java.io.Serializable {
 
   @Override
   public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    Color[] color_arr = new java.awt.Color[this.board.layer_structure.arr.length];
+    Color[] color_arr = new Color[this.board.layer_structure.arr.length];
     Color front_draw_color = p_graphics_context.get_component_color(true);
     for (int i = 0; i < color_arr.length - 1; ++i) {
       color_arr[i] = front_draw_color;
@@ -118,12 +126,12 @@ public class ComponentOutline extends Item implements java.io.Serializable {
 
   @Override
   public int get_draw_priority() {
-    return app.freerouting.boardgraphics.Drawable.MIDDLE_DRAW_PRIORITY;
+    return Drawable.MIDDLE_DRAW_PRIORITY;
   }
 
   @Override
   public void draw(
-      java.awt.Graphics p_g,
+      Graphics p_g,
       GraphicsContext p_graphics_context,
       Color[] p_color_arr,
       double p_intensity) {
@@ -141,7 +149,7 @@ public class ComponentOutline extends Item implements java.io.Serializable {
   }
 
   @Override
-  public app.freerouting.geometry.planar.IntBox bounding_box() {
+  public IntBox bounding_box() {
     return get_area().bounding_box();
   }
 
@@ -224,13 +232,13 @@ public class ComponentOutline extends Item implements java.io.Serializable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {}
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {}
 
   @Override
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;

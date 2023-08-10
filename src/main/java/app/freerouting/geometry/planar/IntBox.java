@@ -2,8 +2,10 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /** Implements functionality of orthogonal rectangles in the plane with integer coordinates. */
-public class IntBox extends RegularTileShape implements java.io.Serializable {
+public class IntBox extends RegularTileShape implements Serializable {
   /** Standard implementation of an empty box. */
   public static final IntBox EMPTY =
       new IntBox(Limits.CRIT_INT, Limits.CRIT_INT, -Limits.CRIT_INT, -Limits.CRIT_INT);

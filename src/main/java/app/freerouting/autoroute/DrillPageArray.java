@@ -1,8 +1,11 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.TileShape;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -104,8 +107,8 @@ public class DrillPageArray {
    * Test draw of the all drills
    */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
     for (int j = 0; j < page_arr.length; ++j) {
       DrillPage[] curr_row = page_arr[j];

@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,7 +27,7 @@ public class PlanarDelaunayTriangulation {
    * reproduceble.
    */
   private static final int seed = 99;
-  private static final java.util.Random random_generator = new java.util.Random(seed);
+  private static final Random random_generator = new Random(seed);
   /** The structure for seaching the triangle containing a given input corner. */
   private final TriangleGraph search_graph;
   /**
@@ -268,7 +269,7 @@ public class PlanarDelaunayTriangulation {
   /** Interface with funktionality required for objects to be used in a planar triangulation. */
   public interface Storable {
     /** Returns an array of corners, which can be used in a planar triangulation. */
-    app.freerouting.geometry.planar.Point[] get_triangulation_corners();
+    Point[] get_triangulation_corners();
   }
 
   /** Describes a line segment in the result of the Delaunay Triangulation. */

@@ -20,10 +20,13 @@ import app.freerouting.rules.BoardRules;
 import java.awt.Graphics;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -36,7 +39,7 @@ import java.util.TreeSet;
  * inserting, deleting, modifying and picking items and elementary checking functions. A board may
  * have one or several layers.
  */
-public class BasicBoard implements java.io.Serializable {
+public class BasicBoard implements Serializable {
 
   /** List of items inserted into this board */
   public final UndoableObjects item_list;
@@ -881,7 +884,7 @@ public class BasicBoard implements java.io.Serializable {
       for (; ; ) {
         try {
           curr_item = (Item) item_list.read_object(it);
-        } catch (java.util.ConcurrentModificationException e) {
+        } catch (ConcurrentModificationException e) {
           something_changed = true;
           break;
         }
@@ -1151,7 +1154,7 @@ public class BasicBoard implements java.io.Serializable {
           if (curr_item.get_draw_priority() == curr_priority) {
             curr_item.draw(p_graphics, p_graphics_context);
           }
-        } catch (java.util.ConcurrentModificationException e) {
+        } catch (ConcurrentModificationException e) {
           // may happen when window are changed interactively while running a logfile
           return;
         }
@@ -1498,8 +1501,8 @@ public class BasicBoard implements java.io.Serializable {
     this.test_level = p_value;
   }
 
-  private void readObject(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  private void readObject(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     // insert the items on the board into the search trees
     search_tree_manager = new SearchTreeManager(this);

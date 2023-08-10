@@ -2,6 +2,7 @@ package app.freerouting.autoroute;
 
 import app.freerouting.geometry.planar.TileShape;
 import java.util.Collection;
+import java.util.LinkedList;
 
 /** An expansion room, whose shape is not yet completely calculated. */
 public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
@@ -28,6 +29,6 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
   }
 
   public Collection<TargetItemExpansionDoor> get_target_doors() {
-    return new java.util.LinkedList<TargetItemExpansionDoor>();
+    return new LinkedList<TargetItemExpansionDoor>();
   }
 }

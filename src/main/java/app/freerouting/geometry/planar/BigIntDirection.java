@@ -1,10 +1,12 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Implements the abstract class Direction as a tuple of infinite precision integers. */
-public class BigIntDirection extends Direction implements java.io.Serializable {
+public class BigIntDirection extends Direction implements Serializable {
   final BigInteger x;
   final BigInteger y;
 

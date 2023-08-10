@@ -4,6 +4,8 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
+import app.freerouting.board.TestLevel;
+import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Polyline;
@@ -22,7 +24,7 @@ public class Validate {
    * false, if problems were detected.
    */
   public static boolean check(String p_s, BasicBoard p_board) {
-    if (p_board.get_test_level() == app.freerouting.board.TestLevel.RELEASE_VERSION) {
+    if (p_board.get_test_level() == TestLevel.RELEASE_VERSION) {
       return true;
     }
     boolean result = true;
@@ -206,10 +208,10 @@ public class Validate {
     Iterator<Item> it = p_board.get_items().iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
-      if (!(curr_item instanceof app.freerouting.board.Trace)) {
+      if (!(curr_item instanceof Trace)) {
         continue;
       }
-      if (((app.freerouting.board.Trace) curr_item).is_cycle()) {
+      if (((Trace) curr_item).is_cycle()) {
         System.out.print(p_s);
         System.out.println(": cycle found");
         result = true;
@@ -226,7 +228,7 @@ public class Validate {
     Iterator<Item> it = p_board.get_items().iterator();
     while (it.hasNext()) {
       Item curr_ob = it.next();
-      if (curr_ob instanceof app.freerouting.board.Trace) {
+      if (curr_ob instanceof Trace) {
         if (curr_ob.contains_net(p_net_no)) {
           ++found_traces;
         }

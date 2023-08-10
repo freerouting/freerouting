@@ -1,8 +1,17 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.Component;
+import app.freerouting.board.Item;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.library.Package;
 import app.freerouting.library.Packages;
+
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 
 /** Window displaying the library packages. */
 public class WindowPackages extends WindowObjectListWithFilter {
@@ -10,8 +19,8 @@ public class WindowPackages extends WindowObjectListWithFilter {
   /** Creates a new instance of PackagesWindow */
   public WindowPackages(BoardFrame p_board_frame) {
     super(p_board_frame);
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
     this.setTitle(resources.getString("packages"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LibraryPackages");
@@ -26,7 +35,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
     for (int i = 0; i < sorted_arr.length; ++i) {
       sorted_arr[i] = packages.get(i + 1);
     }
-    java.util.Arrays.sort(sorted_arr);
+    Arrays.sort(sorted_arr);
     for (int i = 0; i < sorted_arr.length; ++i) {
       this.add_to_list(sorted_arr[i]);
     }
@@ -39,14 +48,14 @@ public class WindowPackages extends WindowObjectListWithFilter {
     if (selected_packages.size() <= 0) {
       return;
     }
-    app.freerouting.board.RoutingBoard routing_board =
+    RoutingBoard routing_board =
         board_frame.board_panel.board_handling.get_routing_board();
-    java.util.Set<app.freerouting.board.Item> board_instances =
-        new java.util.TreeSet<app.freerouting.board.Item>();
-    java.util.Collection<app.freerouting.board.Item> board_items = routing_board.get_items();
-    for (app.freerouting.board.Item curr_item : board_items) {
+    Set<Item> board_instances =
+        new TreeSet<Item>();
+    Collection<Item> board_items = routing_board.get_items();
+    for (Item curr_item : board_items) {
       if (curr_item.get_component_no() > 0) {
-        app.freerouting.board.Component curr_component =
+        Component curr_component =
             routing_board.components.get(curr_item.get_component_no());
         Package curr_package = curr_component.get_package();
         boolean package_matches = false;

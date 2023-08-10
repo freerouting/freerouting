@@ -2,6 +2,9 @@ package app.freerouting.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 /** Common base class for interactive selection of a rectangle. */
 public class SelectRegionState extends InteractiveState {
 
@@ -35,13 +38,13 @@ public class SelectRegionState extends InteractiveState {
   }
 
   @Override
-  public void draw(java.awt.Graphics p_graphics) {
+  public void draw(Graphics p_graphics) {
     this.return_state.draw(p_graphics);
     FloatPoint current_mouse_position = hdlg.get_current_mouse_position();
     if (corner1 == null || current_mouse_position == null) {
       return;
     }
     corner2 = current_mouse_position;
-    hdlg.graphics_context.draw_rectangle(corner1, corner2, 1, java.awt.Color.white, p_graphics, 1);
+    hdlg.graphics_context.draw_rectangle(corner1, corner2, 1, Color.white, p_graphics, 1);
   }
 }

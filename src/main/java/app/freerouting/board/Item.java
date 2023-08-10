@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
@@ -17,11 +18,14 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -48,7 +52,7 @@ public abstract class Item
   /** False, if the item is deleted or not inserted into the board */
   private boolean on_the_board = false;
   /** Temporary data used in the autoroute algorithm. */
-  private transient app.freerouting.autoroute.ItemAutorouteInfo autoroute_info = null;
+  private transient ItemAutorouteInfo autoroute_info = null;
   public double smallest_clearance;
 
   Item(
@@ -218,7 +222,7 @@ public abstract class Item
   public abstract int last_layer();
 
   /** write this item to an output stream */
-  public abstract boolean write(java.io.ObjectOutputStream p_stream);
+  public abstract boolean write(ObjectOutputStream p_stream);
 
   /** Translates the shapes of this item by p_vector. Does not move the item in the board. */
   public abstract void translate_by(Vector p_vector);
@@ -995,15 +999,15 @@ public abstract class Item
   }
 
   /** Gets the information for the autoroute algorithm. Creates it, if it does not yet exist. */
-  public app.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info() {
+  public ItemAutorouteInfo get_autoroute_info() {
     if (autoroute_info == null) {
-      autoroute_info = new app.freerouting.autoroute.ItemAutorouteInfo(this);
+      autoroute_info = new ItemAutorouteInfo(this);
     }
     return autoroute_info;
   }
 
   /** Gets the information for the autoroute algorithm. */
-  public app.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info_pur() {
+  public ItemAutorouteInfo get_autoroute_info_pur() {
     return autoroute_info;
   }
 
@@ -1024,21 +1028,21 @@ public abstract class Item
   }
 
   /** Internal funktion used in the implementation of print_info */
-  protected void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  protected void print_net_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     for (int i = 0; i < this.net_count(); ++i) {
       p_window.append(", " + resources.getString("net") + " ");
-      app.freerouting.rules.Net curr_net = board.rules.nets.get(this.get_net_no(i));
+      Net curr_net = board.rules.nets.get(this.get_net_no(i));
       p_window.append(curr_net.name, resources.getString("net_info"), curr_net);
     }
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_clearance_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_clearance_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.clearance_class > 0) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", " + resources.getString("clearance_class") + " ");
       String name = board.rules.clearance_matrix.get_name(this.clearance_class);
       p_window.append(
@@ -1049,21 +1053,21 @@ public abstract class Item
   }
 
   /** Internal funktion used in the implementation of print_info */
-  protected void print_fixed_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_fixed_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.fixed_state != FixedState.UNFIXED) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
       p_window.append(", ");
       p_window.append(resources.getString(this.fixed_state.toString()));
     }
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_contact_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_contact_info(ObjectInfoPanel p_window, Locale p_locale) {
     Collection<Item> contacts = this.get_normal_contacts();
     if (!contacts.isEmpty()) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", " + resources.getString("contacts") + " ");
       Integer contact_count = contacts.size();
       p_window.append_items(
@@ -1073,15 +1077,15 @@ public abstract class Item
 
   /** Internal function used in the implementation of print_info */
   protected void print_clearance_violation_info(
-      ObjectInfoPanel p_window, java.util.Locale p_locale) {
+      ObjectInfoPanel p_window, Locale p_locale) {
     Collection<ClearanceViolation> clearance_violations = this.clearance_violations();
     if (!clearance_violations.isEmpty()) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", ");
       Integer violation_count = clearance_violations.size();
       Collection<ObjectInfoPanel.Printable> violations =
-          new java.util.LinkedList<ObjectInfoPanel.Printable>();
+          new LinkedList<ObjectInfoPanel.Printable>();
       violations.addAll(clearance_violations);
       p_window.append_objects(
           violation_count.toString(), resources.getString("violation_info"), violations);
@@ -1094,7 +1098,7 @@ public abstract class Item
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_connectable_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_connectable_item_info(ObjectInfoPanel p_window, Locale p_locale) {
     this.print_clearance_info(p_window, p_locale);
     this.print_fixed_info(p_window, p_locale);
     this.print_net_info(p_window, p_locale);
@@ -1103,7 +1107,7 @@ public abstract class Item
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_item_info(ObjectInfoPanel p_window, Locale p_locale) {
     this.print_clearance_info(p_window, p_locale);
     this.print_fixed_info(p_window, p_locale);
     this.print_clearance_violation_info(p_window, p_locale);

@@ -2,6 +2,10 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.interactive.Settings;
+import app.freerouting.library.Padstack;
+import app.freerouting.rules.Net;
+import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
 
@@ -66,7 +70,7 @@ public class AutorouteControl {
   double min_cheap_via_cost;
   /** Creates a new instance of AutorouteControl for the input net */
   public AutorouteControl(
-      RoutingBoard p_board, int p_net_no, app.freerouting.interactive.Settings p_settings) {
+      RoutingBoard p_board, int p_net_no, Settings p_settings) {
     this(p_board, p_settings, p_settings.autoroute_settings.get_trace_cost_arr());
     init_net(p_net_no, p_board, p_settings.autoroute_settings.get_via_costs());
   }
@@ -74,7 +78,7 @@ public class AutorouteControl {
   public AutorouteControl(
       RoutingBoard p_board,
       int p_net_no,
-      app.freerouting.interactive.Settings p_settings,
+      Settings p_settings,
       int p_via_costs,
       ExpansionCostFactor[] p_trace_cost_arr) {
     this(p_board, p_settings, p_trace_cost_arr);
@@ -83,7 +87,7 @@ public class AutorouteControl {
   /** Creates a new instance of AutorouteControl */
   private AutorouteControl(
       RoutingBoard p_board,
-      app.freerouting.interactive.Settings p_settings,
+      Settings p_settings,
       ExpansionCostFactor[] p_trace_costs_arr) {
     layer_count = p_board.get_layer_count();
     trace_half_width = new int[layer_count];
@@ -122,8 +126,8 @@ public class AutorouteControl {
 
   private void init_net(int p_net_no, RoutingBoard p_board, int p_via_costs) {
     net_no = p_net_no;
-    app.freerouting.rules.Net curr_net = p_board.rules.nets.get(p_net_no);
-    app.freerouting.rules.NetClass curr_net_class;
+    Net curr_net = p_board.rules.nets.get(p_net_no);
+    NetClass curr_net_class;
     if (curr_net != null) {
       curr_net_class = curr_net.get_class();
       trace_clearance_class_no = curr_net_class.get_trace_clearance_class();
@@ -158,7 +162,7 @@ public class AutorouteControl {
       if (curr_via.attach_smd_allowed()) {
         this.attach_smd_allowed = true;
       }
-      app.freerouting.library.Padstack curr_via_padstack = curr_via.get_padstack();
+      Padstack curr_via_padstack = curr_via.get_padstack();
       int from_layer = curr_via_padstack.from_layer();
       int to_layer = curr_via_padstack.to_layer();
       for (int j = from_layer; j <= to_layer; ++j) {

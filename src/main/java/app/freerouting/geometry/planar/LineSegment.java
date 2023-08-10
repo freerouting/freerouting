@@ -3,11 +3,13 @@ package app.freerouting.geometry.planar;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /**
  * Implements functionality for line segments. The difference between a LineSegment and a Line is,
  * that a Line is infinite and a LineSegment has a start and an endpoint.
  */
-public class LineSegment implements java.io.Serializable {
+public class LineSegment implements Serializable {
 
   private final Line start;
   private final Line middle;

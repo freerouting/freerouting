@@ -1,12 +1,14 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 /** Abstract class with functions for shapes, whose borders consist ob straight lines. */
-public abstract class PolylineShape implements Shape, java.io.Serializable {
+public abstract class PolylineShape implements Shape, Serializable {
   /** returns true, if the shape has no infinite part at this corner */
   public abstract boolean corner_is_bounded(int p_no);
 

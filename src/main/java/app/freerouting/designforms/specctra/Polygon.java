@@ -3,6 +3,10 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.PolygonShape;
+import app.freerouting.geometry.planar.Simplex;
+
+import java.io.IOException;
 
 /** Describes a polygon in a Specctra dsn file. */
 public class Polygon extends Shape {
@@ -27,14 +31,14 @@ public class Polygon extends Shape {
       curr_point[1] = coor[2 * i + 1];
       corner_arr[i] = p_coordinate_transform.dsn_to_board(curr_point).round();
     }
-    return new app.freerouting.geometry.planar.PolygonShape(corner_arr);
+    return new PolygonShape(corner_arr);
   }
 
   @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
     if (coor.length < 2) {
-      return app.freerouting.geometry.planar.Simplex.EMPTY;
+      return Simplex.EMPTY;
     }
     IntPoint[] corner_arr = new IntPoint[coor.length / 2];
     for (int i = 0; i < corner_arr.length; ++i) {
@@ -42,7 +46,7 @@ public class Polygon extends Shape {
       int curr_y = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[2 * i + 1]));
       corner_arr[i] = new IntPoint(curr_x, curr_y);
     }
-    return new app.freerouting.geometry.planar.PolygonShape(corner_arr);
+    return new PolygonShape(corner_arr);
   }
 
   @Override
@@ -69,7 +73,7 @@ public class Polygon extends Shape {
   /** Writes this polygon as a scope to an output dsn-file. */
   @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("polygon ");
     p_identifier_type.write(this.layer.name, p_file);
@@ -87,7 +91,7 @@ public class Polygon extends Shape {
 
   @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("polygon ");
     p_identifier_type.write(this.layer.name, p_file);

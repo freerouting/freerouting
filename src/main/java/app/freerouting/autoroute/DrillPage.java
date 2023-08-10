@@ -1,13 +1,17 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.Item;
+import app.freerouting.board.Pin;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.TileShape;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,8 +46,8 @@ class DrillPage implements ExpandableObject {
     Collection<Item> overlapping_items = p_board.overlapping_items(p_drill_shape, p_layer);
     Point result = null;
     for (Item curr_item : overlapping_items) {
-      if (curr_item instanceof app.freerouting.board.Pin) {
-        app.freerouting.board.Pin curr_pin = (app.freerouting.board.Pin) curr_item;
+      if (curr_item instanceof Pin) {
+        Pin curr_pin = (Pin) curr_item;
         if (curr_pin.drill_allowed() && p_drill_shape.contains_inside(curr_pin.get_center())) {
           result = curr_pin.get_center();
         }
@@ -72,8 +76,8 @@ class DrillPage implements ExpandableObject {
         if (curr_item.is_drillable(this.net_no)) {
           continue;
         }
-        if (curr_item instanceof app.freerouting.board.Pin) {
-          if (p_attach_smd && ((app.freerouting.board.Pin) curr_item).drill_allowed()) {
+        if (curr_item instanceof Pin) {
+          if (p_attach_smd && ((Pin) curr_item).drill_allowed()) {
             continue;
           }
         }
@@ -173,8 +177,8 @@ class DrillPage implements ExpandableObject {
    * Test draw of the drills on this page.
    */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
     if (true || drills == null) {
       return;

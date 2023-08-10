@@ -1,7 +1,9 @@
 package app.freerouting.board;
 
+import java.io.Serializable;
+
 /** Describes the structure of a board layer. */
-public class Layer implements java.io.Serializable {
+public class Layer implements Serializable {
 
   /** The name of the layer. */
   public final String name;

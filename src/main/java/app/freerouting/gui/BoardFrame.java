@@ -1,16 +1,47 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
+import app.freerouting.board.ItemIdNoGenerator;
 import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Graphical frame of for interactive editing of a routing board. */
 public class BoardFrame extends WindowBase {
@@ -21,7 +52,7 @@ public class BoardFrame extends WindowBase {
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
   static final FileFilter logfile_filter = new FileFilter(log_file_extensions);
   /** The scroll pane for the panel of the routing board. */
-  final javax.swing.JScrollPane scroll_pane;
+  final JScrollPane scroll_pane;
   /** The menubar of this frame */
   final BoardMenuBar menubar;
   /** The panel with the graphical representation of the board. */
@@ -30,15 +61,15 @@ public class BoardFrame extends WindowBase {
   /** The panel with the toolbars */
   private final BoardToolbar toolbar_panel;
   /** The toolbar used in the selected item state. */
-  private final javax.swing.JToolBar select_toolbar;
+  private final JToolBar select_toolbar;
   /** The panel with the message line */
   private final BoardPanelStatus message_panel;
   private final TestLevel test_level;
   private final boolean help_system_used;
   private final boolean confirm_cancel;
-  private final java.util.ResourceBundle resources;
+  private final ResourceBundle resources;
   private final BoardObservers board_observers;
-  private final app.freerouting.datastructures.IdNoGenerator item_id_no_generator;
+  private final IdNoGenerator item_id_no_generator;
   WindowAbout about_window = null;
   WindowRouteParameter route_parameter_window = null;
   WindowAutorouteParameter autoroute_parameter_window = null;
@@ -64,11 +95,11 @@ public class BoardFrame extends WindowBase {
   WindowSnapshot snapshot_window = null;
   ColorManager color_manager = null;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
-  java.util.Collection<BoardTemporarySubWindow> temporary_subwindows =
-      new java.util.LinkedList<BoardTemporarySubWindow>();
+  Collection<BoardTemporarySubWindow> temporary_subwindows =
+      new LinkedList<BoardTemporarySubWindow>();
   private LocalDateTime intermediate_stage_file_last_saved_at = null;
   DesignFile design_file = null;
-  private final java.util.Locale locale;
+  private final Locale locale;
   /**
    * Creates new form BoardFrame. If p_option = FROM_START_MENU this frame is created from a start
    * menu frame. If p_option = SINGLE_FRAME, this frame is created directly a single frame. If
@@ -83,7 +114,7 @@ public class BoardFrame extends WindowBase {
       DesignFile p_design,
       Option p_option,
       TestLevel p_test_level,
-      java.util.Locale p_locale,
+      Locale p_locale,
       boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
@@ -91,8 +122,8 @@ public class BoardFrame extends WindowBase {
         p_design,
         p_option,
         p_test_level,
-        new app.freerouting.board.BoardObserverAdaptor(),
-        new app.freerouting.board.ItemIdNoGenerator(),
+        new BoardObserverAdaptor(),
+        new ItemIdNoGenerator(),
         p_locale,
         p_confirm_cancel,
         p_save_intermediate_stages,
@@ -107,8 +138,8 @@ public class BoardFrame extends WindowBase {
       Option p_option,
       TestLevel p_test_level,
       BoardObservers p_observers,
-      app.freerouting.datastructures.IdNoGenerator p_item_id_no_generator,
-      java.util.Locale p_locale,
+      IdNoGenerator p_item_id_no_generator,
+      Locale p_locale,
       boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
@@ -121,13 +152,13 @@ public class BoardFrame extends WindowBase {
     this.board_observers = p_observers;
     this.item_id_no_generator = p_item_id_no_generator;
     this.locale = p_locale;
-    this.resources = java.util.ResourceBundle.getBundle("app.freerouting.gui.BoardFrame", p_locale);
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.BoardFrame", p_locale);
     BoardMenuBar curr_menubar;
     boolean session_file_option = (p_option == Option.SESSION_FILE);
     boolean curr_help_system_used = true;
     try {
       curr_menubar = BoardMenuBar.get_instance(this, curr_help_system_used, session_file_option);
-    } catch (java.lang.NoClassDefFoundError e) {
+    } catch (NoClassDefFoundError e) {
       // the system-file jh.jar may be missing
       curr_help_system_used = false;
       curr_menubar = BoardMenuBar.get_instance(this, false, session_file_option);
@@ -138,10 +169,10 @@ public class BoardFrame extends WindowBase {
     setJMenuBar(this.menubar);
 
     this.toolbar_panel = new BoardToolbar(this);
-    this.add(this.toolbar_panel, java.awt.BorderLayout.NORTH);
+    this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     this.message_panel = new BoardPanelStatus(this.locale);
-    this.add(this.message_panel, java.awt.BorderLayout.SOUTH);
+    this.add(this.message_panel, BorderLayout.SOUTH);
 
     this.select_toolbar = new BoardToolbarSelectedItem(this, p_option == Option.EXTENDED_TOOL_BAR);
 
@@ -153,10 +184,10 @@ public class BoardFrame extends WindowBase {
             this.message_panel.mouse_position,
             this.locale);
 
-    this.scroll_pane = new javax.swing.JScrollPane();
-    this.scroll_pane.setPreferredSize(new java.awt.Dimension(1150, 800));
+    this.scroll_pane = new JScrollPane();
+    this.scroll_pane.setPreferredSize(new Dimension(1150, 800));
     this.scroll_pane.setVerifyInputWhenFocusTarget(false);
-    this.add(scroll_pane, java.awt.BorderLayout.CENTER);
+    this.add(scroll_pane, BorderLayout.CENTER);
 
     this.board_panel =
         new BoardPanel(
@@ -178,7 +209,7 @@ public class BoardFrame extends WindowBase {
       String p_design_file_path_name,
       BoardObservers p_observers,
       IdNoGenerator p_id_no_generator,
-      java.util.Locale p_locale,
+      Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
     final DesignFile design_file = DesignFile.get_instance(p_design_file_path_name);
@@ -202,7 +233,7 @@ public class BoardFrame extends WindowBase {
       WindowMessage.show("board_frame is null");
       return null;
     }
-    java.io.InputStream input_stream = design_file.get_input_stream();
+    InputStream input_stream = design_file.get_input_stream();
     boolean read_ok = board_frame.read(input_stream, true, null);
     if (!read_ok) {
       String error_message = "Unable to read design file with pathname " + p_design_file_path_name;
@@ -213,7 +244,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Reads interactive actions from a logfile. */
-  void read_logfile(java.io.InputStream p_input_stream) {
+  void read_logfile(InputStream p_input_stream) {
     board_panel.board_handling.read_logfile(p_input_stream);
   }
 
@@ -222,36 +253,36 @@ public class BoardFrame extends WindowBase {
    * dsn file. Returns false, if the file is invalid.
    */
   boolean read(
-      java.io.InputStream p_input_stream,
+      InputStream p_input_stream,
       boolean p_is_import,
-      javax.swing.JTextField p_message_field) {
-    java.awt.Point viewport_position = null;
+      JTextField p_message_field) {
+    Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
     if (p_is_import) {
       read_result =
           board_panel.board_handling.import_design(
               p_input_stream, this.board_observers, this.item_id_no_generator, this.test_level);
       if (read_result == DsnFile.ReadResult.OK) {
-        viewport_position = new java.awt.Point(0, 0);
+        viewport_position = new Point(0, 0);
         initialize_windows();
       }
     } else {
-      java.io.ObjectInputStream object_stream = null;
+      ObjectInputStream object_stream = null;
       try {
-        object_stream = new java.io.ObjectInputStream(p_input_stream);
-      } catch (java.io.IOException e) {
+        object_stream = new ObjectInputStream(p_input_stream);
+      } catch (IOException e) {
         return false;
       }
       boolean read_ok = board_panel.board_handling.read_design(object_stream, this.test_level);
       if (!read_ok) {
         return false;
       }
-      java.awt.Point frame_location;
-      java.awt.Rectangle frame_bounds;
+      Point frame_location;
+      Rectangle frame_bounds;
       try {
-        viewport_position = (java.awt.Point) object_stream.readObject();
-        frame_location = (java.awt.Point) object_stream.readObject();
-        frame_bounds = (java.awt.Rectangle) object_stream.readObject();
+        viewport_position = (Point) object_stream.readObject();
+        frame_location = (Point) object_stream.readObject();
+        frame_bounds = (Rectangle) object_stream.readObject();
       } catch (Exception e) {
         return false;
       }
@@ -266,7 +297,7 @@ public class BoardFrame extends WindowBase {
     }
     try {
       p_input_stream.close();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
 
@@ -276,8 +307,8 @@ public class BoardFrame extends WindowBase {
   private boolean update_gui(
       boolean p_is_import,
       DsnFile.ReadResult read_result,
-      java.awt.Point viewport_position,
-      javax.swing.JTextField p_message_field) {
+      Point viewport_position,
+      JTextField p_message_field) {
     if (p_is_import) {
       if (read_result != DsnFile.ReadResult.OK) {
         if (p_message_field != null) {
@@ -291,7 +322,7 @@ public class BoardFrame extends WindowBase {
       }
     }
 
-    java.awt.Dimension panel_size = board_panel.board_handling.graphics_context.get_panel_size();
+    Dimension panel_size = board_panel.board_handling.graphics_context.get_panel_size();
     board_panel.setSize(panel_size);
     board_panel.setPreferredSize(panel_size);
     if (viewport_position != null) {
@@ -308,14 +339,14 @@ public class BoardFrame extends WindowBase {
     this.setVisible(true);
     if (p_is_import) {
       // Read the default gui settings, if gui default file exists.
-      java.io.InputStream input_stream = null;
+      InputStream input_stream = null;
       boolean defaults_file_found;
 
       File defaults_file = new File(this.design_file.get_parent(), GUI_DEFAULTS_FILE_NAME);
       defaults_file_found = true;
       try {
-        input_stream = new java.io.FileInputStream(defaults_file);
-      } catch (java.io.FileNotFoundException e) {
+        input_stream = new FileInputStream(defaults_file);
+      } catch (FileNotFoundException e) {
         defaults_file_found = false;
       }
 
@@ -326,7 +357,7 @@ public class BoardFrame extends WindowBase {
         }
         try {
           input_stream.close();
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
           return false;
         }
       }
@@ -341,9 +372,9 @@ public class BoardFrame extends WindowBase {
 
   public boolean load_intermediate_stage_file() {
     try {
-      java.io.FileInputStream input_stream = new java.io.FileInputStream(this.design_file.get_snapshot_file());
+      FileInputStream input_stream = new FileInputStream(this.design_file.get_snapshot_file());
       return this.read(input_stream, false, null);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       screen_messages.set_status_message(resources.getString("error_2"));
       return false;
     } catch (Exception e) {
@@ -385,14 +416,14 @@ public class BoardFrame extends WindowBase {
       return false;
     }
 
-    java.io.OutputStream output_stream = null;
-    java.io.ObjectOutputStream object_stream = null;
+    OutputStream output_stream = null;
+    ObjectOutputStream object_stream = null;
     try {
       FRLogger.info("Saving '" + output_file.getPath() + "'...");
 
-      output_stream = new java.io.FileOutputStream(output_file);
-      object_stream = new java.io.ObjectOutputStream(output_stream);
-    } catch (java.io.IOException e) {
+      output_stream = new FileOutputStream(output_file);
+      object_stream = new ObjectOutputStream(output_stream);
+    } catch (IOException e) {
       screen_messages.set_status_message(resources.getString("error_2"));
       return false;
     } catch (Exception e) {
@@ -411,7 +442,7 @@ public class BoardFrame extends WindowBase {
       object_stream.writeObject(board_panel.get_viewport_position());
       object_stream.writeObject(this.getLocation());
       object_stream.writeObject(this.getBounds());
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       screen_messages.set_status_message(resources.getString("error_4"));
       return false;
     }
@@ -425,7 +456,7 @@ public class BoardFrame extends WindowBase {
     try {
       object_stream.flush();
       output_stream.close();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       screen_messages.set_status_message(resources.getString("error_5"));
       return false;
     }
@@ -433,13 +464,13 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets contexts sensitive help for the input component, if the help system is used. */
-  public void set_context_sensitive_help(java.awt.Component p_component, String p_help_id) {
+  public void set_context_sensitive_help(Component p_component, String p_help_id) {
     if (p_component == null) throw new NullPointerException("p_component");
 
     if (this.help_system_used) {
-      java.awt.Component curr_component;
-      if (p_component instanceof javax.swing.JFrame) {
-        curr_component = ((javax.swing.JFrame) p_component).getRootPane();
+      Component curr_component;
+      if (p_component instanceof JFrame) {
+        curr_component = ((JFrame) p_component).getRootPane();
       } else {
         curr_component = p_component;
       }
@@ -456,43 +487,43 @@ public class BoardFrame extends WindowBase {
   /** Sets the toolbar to the buttons of the selected item state. */
   public void set_select_toolbar() {
     getContentPane().remove(toolbar_panel);
-    getContentPane().add(select_toolbar, java.awt.BorderLayout.NORTH);
+    getContentPane().add(select_toolbar, BorderLayout.NORTH);
     repaint();
   }
 
   /** Sets the toolbar buttons to the select. route and drag menu buttons of the main menu. */
   public void set_menu_toolbar() {
     getContentPane().remove(select_toolbar);
-    getContentPane().add(toolbar_panel, java.awt.BorderLayout.NORTH);
+    getContentPane().add(toolbar_panel, BorderLayout.NORTH);
     repaint();
   }
 
   /** Calculates the absolute location of the board frame in his outmost parent frame. */
-  java.awt.Point absolute_panel_location() {
+  Point absolute_panel_location() {
     int x = this.scroll_pane.getX();
     int y = this.scroll_pane.getY();
-    java.awt.Container curr_parent = this.scroll_pane.getParent();
+    Container curr_parent = this.scroll_pane.getParent();
     while (curr_parent != null) {
       x += curr_parent.getX();
       y += curr_parent.getY();
       curr_parent = curr_parent.getParent();
     }
-    return new java.awt.Point(x, y);
+    return new Point(x, y);
   }
 
   /** Sets the displayed region to the whole board. */
   public void zoom_all() {
     board_panel.board_handling.adjust_design_bounds();
-    java.awt.Rectangle display_rect = board_panel.get_viewport_bounds();
-    java.awt.Rectangle design_bounds =
+    Rectangle display_rect = board_panel.get_viewport_bounds();
+    Rectangle design_bounds =
         board_panel.board_handling.graphics_context.get_design_bounds();
     double width_factor = display_rect.getWidth() / design_bounds.getWidth();
     double height_factor = display_rect.getHeight() / design_bounds.getHeight();
     double zoom_factor = Math.min(width_factor, height_factor);
-    java.awt.geom.Point2D zoom_center =
+    Point2D zoom_center =
         board_panel.board_handling.graphics_context.get_design_center();
     board_panel.zoom(zoom_factor, zoom_center);
-    java.awt.geom.Point2D new_vieport_center =
+    Point2D new_vieport_center =
         board_panel.board_handling.graphics_context.get_design_center();
     board_panel.set_viewport_center(new_vieport_center);
   }
@@ -604,12 +635,12 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Returns the currently used locale for the language dependent output. */
-  public java.util.Locale get_locale() {
+  public Locale get_locale() {
     return this.locale;
   }
 
   /** Sets the background of the board panel */
-  public void set_board_background(java.awt.Color p_color) {
+  public void set_board_background(Color p_color) {
     this.board_panel.setBackground(p_color);
   }
 
@@ -691,7 +722,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Used for storing the subwindow filters in a snapshot. */
-  public static class SubwindowSelections implements java.io.Serializable {
+  public static class SubwindowSelections implements Serializable {
     private WindowObjectListWithFilter.SnapshotInfo incompletes_selection;
     private WindowObjectListWithFilter.SnapshotInfo packages_selection;
     private WindowObjectListWithFilter.SnapshotInfo nets_selection;
@@ -699,25 +730,25 @@ public class BoardFrame extends WindowBase {
     private WindowObjectListWithFilter.SnapshotInfo padstacks_selection;
   }
 
-  private class WindowStateListener extends java.awt.event.WindowAdapter {
+  private class WindowStateListener extends WindowAdapter {
     @Override
-    public void windowClosing(java.awt.event.WindowEvent evt) {
+    public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       if (confirm_cancel) {
         int option =
-            javax.swing.JOptionPane.showConfirmDialog(
+            JOptionPane.showConfirmDialog(
                 null,
                 resources.getString("confirm_cancel"),
                 null,
-                javax.swing.JOptionPane.YES_NO_OPTION);
-        if (option == javax.swing.JOptionPane.NO_OPTION) {
+                JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }
       }
     }
 
     @Override
-    public void windowIconified(java.awt.event.WindowEvent evt) {
+    public void windowIconified(WindowEvent evt) {
       for (int i = 0; i < permanent_subwindows.length; ++i) {
         permanent_subwindows[i].parent_iconified();
       }
@@ -729,7 +760,7 @@ public class BoardFrame extends WindowBase {
     }
 
     @Override
-    public void windowDeiconified(java.awt.event.WindowEvent evt) {
+    public void windowDeiconified(WindowEvent evt) {
       for (int i = 0; i < permanent_subwindows.length; ++i) {
         if (permanent_subwindows[i] != null) {
           permanent_subwindows[i].parent_deiconified();

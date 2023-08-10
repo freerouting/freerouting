@@ -3,10 +3,14 @@ package app.freerouting.interactive;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 
 /** Contains the values of the interactive settings of the board handling. */
-public class Settings implements java.io.Serializable {
+public class Settings implements Serializable {
   /** The array of manual trace half widths, initially equal to the automatic trace half widths. */
   final int[] manual_trace_half_width_arr;
   public AutorouteSettings autoroute_settings;
@@ -427,8 +431,8 @@ public class Settings implements java.io.Serializable {
   }
 
   /** Reads an instance of this class from a file */
-  private void readObject(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  private void readObject(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     if (this.item_selection_filter == null) {
       FRLogger.warn("Settings.readObject: item_selection_filter is null");

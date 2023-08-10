@@ -1,6 +1,8 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.BigIntAux;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
@@ -12,7 +14,7 @@ import java.math.BigInteger;
  * in addition to the affine plane with rational coordinates the so-called line at infinity, which
  * consist of all projective points (x, y, z) with z = 0.
  */
-public class RationalPoint extends Point implements java.io.Serializable {
+public class RationalPoint extends Point implements Serializable {
 
   final BigInteger x;
   final BigInteger y;

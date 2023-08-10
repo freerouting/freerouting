@@ -1,82 +1,105 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.interactive.BoardHandling;
+import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.ViaRule;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
+import java.util.ResourceBundle;
+
 /** Used for manual choice of trace widths in interactive routing. */
 public class WindowManualRules extends BoardSavableSubWindow {
 
   private static final int max_slider_value = 15000;
   private static final double scale_factor = 1;
-  private final app.freerouting.interactive.BoardHandling board_handling;
+  private final BoardHandling board_handling;
   private final ComboBoxLayer layer_combo_box;
   private final ComboBoxClearance clearance_combo_box;
-  private final javax.swing.JComboBox<app.freerouting.rules.ViaRule> via_rule_combo_box;
-  private final javax.swing.JFormattedTextField trace_width_field;
+  private final JComboBox<ViaRule> via_rule_combo_box;
+  private final JFormattedTextField trace_width_field;
   private boolean key_input_completed = true;
   /** Creates a new instance of TraceWidthWindow */
   public WindowManualRules(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowManualRule", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
     // create main panel
 
-    final javax.swing.JPanel main_panel = new javax.swing.JPanel();
+    final JPanel main_panel = new JPanel();
     getContentPane().add(main_panel);
-    java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    GridBagLayout gridbag = new GridBagLayout();
     main_panel.setLayout(gridbag);
-    java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.insets = new java.awt.Insets(5, 10, 5, 10);
-    gridbag_constraints.anchor = java.awt.GridBagConstraints.WEST;
+    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
+    gridbag_constraints.anchor = GridBagConstraints.WEST;
 
-    javax.swing.JLabel via_rule_label = new javax.swing.JLabel(resources.getString("via_rule"));
+    JLabel via_rule_label = new JLabel(resources.getString("via_rule"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(via_rule_label, gridbag_constraints);
     main_panel.add(via_rule_label);
 
-    app.freerouting.board.RoutingBoard routing_board = this.board_handling.get_routing_board();
-    this.via_rule_combo_box = new javax.swing.JComboBox<>(routing_board.rules.via_rules);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    RoutingBoard routing_board = this.board_handling.get_routing_board();
+    this.via_rule_combo_box = new JComboBox<>(routing_board.rules.via_rules);
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(this.via_rule_combo_box, gridbag_constraints);
     main_panel.add(this.via_rule_combo_box);
     this.via_rule_combo_box.addActionListener(new ViaRuleComboBoxListener());
 
-    javax.swing.JLabel class_label =
-        new javax.swing.JLabel(resources.getString("trace_clearance_class"));
+    JLabel class_label =
+        new JLabel(resources.getString("trace_clearance_class"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(class_label, gridbag_constraints);
     main_panel.add(class_label);
 
     this.clearance_combo_box = new ComboBoxClearance(routing_board.rules.clearance_matrix);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(this.clearance_combo_box, gridbag_constraints);
     main_panel.add(this.clearance_combo_box);
     this.clearance_combo_box.addActionListener(new ClearanceComboBoxListener());
 
-    javax.swing.JLabel separator =
-        new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    JLabel separator =
+        new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
-    javax.swing.JLabel width_label = new javax.swing.JLabel(resources.getString("trace_width"));
+    JLabel width_label = new JLabel(resources.getString("trace_width"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(width_label, gridbag_constraints);
     main_panel.add(width_label);
-    java.text.NumberFormat number_format =
-        java.text.NumberFormat.getInstance(p_board_frame.get_locale());
+    NumberFormat number_format =
+        NumberFormat.getInstance(p_board_frame.get_locale());
     number_format.setMaximumFractionDigits(7);
-    this.trace_width_field = new javax.swing.JFormattedTextField(number_format);
+    this.trace_width_field = new JFormattedTextField(number_format);
     this.trace_width_field.setColumns(7);
     int curr_half_width = this.board_handling.settings.get_manual_trace_half_width(0);
     this.set_trace_width_field(curr_half_width);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(trace_width_field, gridbag_constraints);
     main_panel.add(trace_width_field);
     trace_width_field.addKeyListener(new TraceWidthFieldKeyListener());
     trace_width_field.addFocusListener(new TraceWidthFieldFocusListener());
 
-    javax.swing.JLabel layer_label = new javax.swing.JLabel(resources.getString("on_layer"));
+    JLabel layer_label = new JLabel(resources.getString("on_layer"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(layer_label, gridbag_constraints);
     main_panel.add(layer_label);
@@ -84,12 +107,12 @@ public class WindowManualRules extends BoardSavableSubWindow {
     this.layer_combo_box =
         new ComboBoxLayer(
             this.board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(this.layer_combo_box, gridbag_constraints);
     main_panel.add(this.layer_combo_box);
     this.layer_combo_box.addActionListener(new LayerComboBoxListener());
 
-    javax.swing.JLabel empty_label = new javax.swing.JLabel();
+    JLabel empty_label = new JLabel();
     gridbag.setConstraints(empty_label, gridbag_constraints);
     main_panel.add(empty_label);
 
@@ -102,11 +125,11 @@ public class WindowManualRules extends BoardSavableSubWindow {
   /** Recalculates the values in the trace width fields. */
   @Override
   public void refresh() {
-    app.freerouting.board.RoutingBoard routing_board = board_handling.get_routing_board();
-    javax.swing.ComboBoxModel<app.freerouting.rules.ViaRule> new_model =
-        new javax.swing.DefaultComboBoxModel<>(routing_board.rules.via_rules);
+    RoutingBoard routing_board = board_handling.get_routing_board();
+    ComboBoxModel<ViaRule> new_model =
+        new DefaultComboBoxModel<>(routing_board.rules.via_rules);
     this.via_rule_combo_box.setModel(new_model);
-    app.freerouting.rules.ClearanceMatrix clearance_matrix =
+    ClearanceMatrix clearance_matrix =
         board_handling.get_routing_board().rules.clearance_matrix;
     if (this.clearance_combo_box.get_class_count()
         != routing_board.rules.clearance_matrix.get_class_count()) {
@@ -171,37 +194,37 @@ public class WindowManualRules extends BoardSavableSubWindow {
     set_trace_width_field(curr_half_width);
   }
 
-  private class LayerComboBoxListener implements java.awt.event.ActionListener {
+  private class LayerComboBoxListener implements ActionListener {
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
+    public void actionPerformed(ActionEvent evt) {
       ComboBoxLayer.Layer new_selected_layer = layer_combo_box.get_selected_layer();
       set_selected_layer(new_selected_layer);
     }
   }
 
-  private class ClearanceComboBoxListener implements java.awt.event.ActionListener {
+  private class ClearanceComboBoxListener implements ActionListener {
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
+    public void actionPerformed(ActionEvent evt) {
       int new_index = clearance_combo_box.get_selected_class_index();
       board_handling.settings.set_manual_trace_clearance_class(new_index);
     }
   }
 
-  private class ViaRuleComboBoxListener implements java.awt.event.ActionListener {
+  private class ViaRuleComboBoxListener implements ActionListener {
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
+    public void actionPerformed(ActionEvent evt) {
       int new_index = via_rule_combo_box.getSelectedIndex();
       board_handling.settings.set_manual_via_rule_index(new_index);
     }
   }
 
-  private class TraceWidthFieldKeyListener extends java.awt.event.KeyAdapter {
+  private class TraceWidthFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
         Object input = trace_width_field.getValue();
@@ -223,10 +246,10 @@ public class WindowManualRules extends BoardSavableSubWindow {
     }
   }
 
-  private class TraceWidthFieldFocusListener implements java.awt.event.FocusListener {
+  private class TraceWidthFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+    public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
         set_selected_layer(layer_combo_box.get_selected_layer());
@@ -235,6 +258,6 @@ public class WindowManualRules extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt) {}
   }
 }

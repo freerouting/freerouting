@@ -5,10 +5,13 @@ import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.TestLevel;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -411,8 +414,8 @@ public abstract class LocateFoundConnectionAlgo {
 
   /** Test display of the baktrack rooms. */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context) {
     for (int i = 0; i < backtrack_array.length; ++i) {
       CompleteExpansionRoom next_room = backtrack_array[i].next_room;
       if (next_room != null) {

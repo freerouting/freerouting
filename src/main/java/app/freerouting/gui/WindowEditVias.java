@@ -1,9 +1,29 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.DefaultItemClearanceClasses;
+import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;
+import app.freerouting.rules.ViaRule;
+
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.AbstractTableModel;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 /** Edit window for the table of available vias. */
 public class WindowEditVias extends BoardSavableSubWindow {
@@ -11,41 +31,41 @@ public class WindowEditVias extends BoardSavableSubWindow {
   private static final int TEXTFIELD_HEIGHT = 16;
   private static final int TEXTFIELD_WIDTH = 100;
   private final BoardFrame board_frame;
-  private final javax.swing.JPanel main_panel;
-  private final javax.swing.JComboBox<String> cl_class_combo_box;
-  private final javax.swing.JComboBox<String> padstack_combo_box;
-  private final java.util.ResourceBundle resources;
-  private javax.swing.JScrollPane scroll_pane;
-  private javax.swing.JTable table;
+  private final JPanel main_panel;
+  private final JComboBox<String> cl_class_combo_box;
+  private final JComboBox<String> padstack_combo_box;
+  private final ResourceBundle resources;
+  private JScrollPane scroll_pane;
+  private JTable table;
   private ViaTableModel table_model;
 
   /** Creates a new instance of ViaTablePanel */
   public WindowEditVias(BoardFrame p_board_frame) {
     this.resources =
-        java.util.ResourceBundle.getBundle(
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowEditVias", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
     this.board_frame = p_board_frame;
 
-    this.main_panel = new javax.swing.JPanel();
-    this.main_panel.setLayout(new java.awt.BorderLayout());
+    this.main_panel = new JPanel();
+    this.main_panel.setLayout(new BorderLayout());
 
-    this.cl_class_combo_box = new javax.swing.JComboBox<>();
-    this.padstack_combo_box = new javax.swing.JComboBox<>();
+    this.cl_class_combo_box = new JComboBox<>();
+    this.padstack_combo_box = new JComboBox<>();
     add_combobox_items();
 
     add_table();
 
-    javax.swing.JPanel via_info_button_panel = new javax.swing.JPanel();
-    via_info_button_panel.setLayout(new java.awt.FlowLayout());
-    this.main_panel.add(via_info_button_panel, java.awt.BorderLayout.SOUTH);
-    final javax.swing.JButton add_via_button = new javax.swing.JButton(resources.getString("add"));
+    JPanel via_info_button_panel = new JPanel();
+    via_info_button_panel.setLayout(new FlowLayout());
+    this.main_panel.add(via_info_button_panel, BorderLayout.SOUTH);
+    final JButton add_via_button = new JButton(resources.getString("add"));
     add_via_button.setToolTipText(resources.getString("add_tooltip"));
     add_via_button.addActionListener(new AddViaListener());
     via_info_button_panel.add(add_via_button);
-    final javax.swing.JButton remove_via_button =
-        new javax.swing.JButton(resources.getString("remove"));
+    final JButton remove_via_button =
+        new JButton(resources.getString("remove"));
     remove_via_button.setToolTipText(resources.getString("remove_tooltip"));
     remove_via_button.addActionListener(new RemoveViaListener());
     via_info_button_panel.add(remove_via_button);
@@ -67,28 +87,28 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
   private void add_table() {
     this.table_model = new ViaTableModel();
-    this.table = new javax.swing.JTable(this.table_model);
-    this.scroll_pane = new javax.swing.JScrollPane(this.table);
+    this.table = new JTable(this.table_model);
+    this.scroll_pane = new JScrollPane(this.table);
     int table_height = TEXTFIELD_HEIGHT * this.table_model.getRowCount();
     int table_width = TEXTFIELD_WIDTH * this.table_model.getColumnCount();
     this.table.setPreferredScrollableViewportSize(
-        new java.awt.Dimension(table_width, table_height));
-    this.table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    this.main_panel.add(scroll_pane, java.awt.BorderLayout.CENTER);
+        new Dimension(table_width, table_height));
+    this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.main_panel.add(scroll_pane, BorderLayout.CENTER);
 
     this.table
         .getColumnModel()
         .getColumn(ColumnName.CLEARANCE_CLASS.ordinal())
-        .setCellEditor(new javax.swing.DefaultCellEditor(cl_class_combo_box));
+        .setCellEditor(new DefaultCellEditor(cl_class_combo_box));
 
     this.table
         .getColumnModel()
         .getColumn(ColumnName.PADSTACK.ordinal())
-        .setCellEditor(new javax.swing.DefaultCellEditor(padstack_combo_box));
+        .setCellEditor(new DefaultCellEditor(padstack_combo_box));
   }
 
   private void add_combobox_items() {
-    app.freerouting.board.RoutingBoard routing_board =
+    RoutingBoard routing_board =
         board_frame.board_panel.board_handling.get_routing_board();
     for (int i = 0; i < routing_board.rules.clearance_matrix.get_class_count(); ++i) {
       cl_class_combo_box.addItem(routing_board.rules.clearance_matrix.get_name(i));
@@ -103,7 +123,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
    */
   private void adjust_table() {
     this.table_model = new ViaTableModel();
-    this.table = new javax.swing.JTable(this.table_model);
+    this.table = new JTable(this.table_model);
     this.main_panel.remove(this.scroll_pane);
     this.add_table();
     this.pack();
@@ -117,10 +137,10 @@ public class WindowEditVias extends BoardSavableSubWindow {
     ATTACH_SMD
   }
 
-  private class AddViaListener implements java.awt.event.ActionListener {
+  private class AddViaListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
-      app.freerouting.board.RoutingBoard routing_board =
+    public void actionPerformed(ActionEvent p_evt) {
+      RoutingBoard routing_board =
           board_frame.board_panel.board_handling.get_routing_board();
       ViaInfos via_infos = routing_board.rules.via_infos;
       Integer no = 1;
@@ -133,14 +153,14 @@ public class WindowEditVias extends BoardSavableSubWindow {
         }
         ++no;
       }
-      app.freerouting.rules.NetClass default_net_class =
+      NetClass default_net_class =
           routing_board.rules.get_default_net_class();
       ViaInfo new_via =
           new ViaInfo(
               new_name,
               routing_board.library.get_via_padstack(0),
               default_net_class.default_item_clearance_classes.get(
-                  app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA),
+                  DefaultItemClearanceClasses.ItemClass.VIA),
               false,
               routing_board.rules);
       via_infos.add(new_via);
@@ -148,9 +168,9 @@ public class WindowEditVias extends BoardSavableSubWindow {
     }
   }
 
-  private class RemoveViaListener implements java.awt.event.ActionListener {
+  private class RemoveViaListener implements ActionListener {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt) {
       if (table_model.getRowCount() <= 1) {
         board_frame.screen_messages.set_status_message(resources.getString("message_1"));
         return;
@@ -166,7 +186,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
       ViaInfo via_info = board_rules.via_infos.get((String) via_name);
       // Check, if via_info is used in a via rule.
-      for (app.freerouting.rules.ViaRule curr_rule : board_rules.via_rules) {
+      for (ViaRule curr_rule : board_rules.via_rules) {
         if (curr_rule.contains(via_info)) {
           String message = resources.getString("message_2") + " " + curr_rule.name;
           board_frame.screen_messages.set_status_message(message);
@@ -187,7 +207,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
   }
 
   /** Table model of the via table. */
-  private class ViaTableModel extends javax.swing.table.AbstractTableModel {
+  private class ViaTableModel extends AbstractTableModel {
     private Object[][] data = null;
     private String[] column_names = null;
 
@@ -197,7 +217,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
       for (int i = 0; i < column_names.length; ++i) {
         column_names[i] = resources.getString((ColumnName.values()[i]).toString());
       }
-      app.freerouting.rules.BoardRules board_rules =
+      BoardRules board_rules =
           board_frame.board_panel.board_handling.get_routing_board().rules;
       data = new Object[board_rules.via_infos.count()][];
       for (int i = 0; i < data.length; ++i) {
@@ -208,7 +228,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
     /** Calculates the the valus in this table */
     public void set_values() {
-      app.freerouting.rules.BoardRules board_rules =
+      BoardRules board_rules =
           board_frame.board_panel.board_handling.get_routing_board().rules;
       for (int i = 0; i < data.length; ++i) {
         ViaInfo curr_via = board_rules.via_infos.get(i);
@@ -242,7 +262,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
     @Override
     public void setValueAt(Object p_value, int p_row, int p_col) {
-      app.freerouting.board.RoutingBoard routing_board =
+      RoutingBoard routing_board =
           board_frame.board_panel.board_handling.get_routing_board();
       BoardRules board_rules = routing_board.rules;
       Object via_name = getValueAt(p_row, ColumnName.NAME.ordinal());
@@ -271,7 +291,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
           return;
         }
         String new_name = (String) p_value;
-        app.freerouting.library.Padstack new_padstack =
+        Padstack new_padstack =
             routing_board.library.get_via_padstack(new_name);
         if (new_padstack == null) {
           FRLogger.warn("ViaVindow.setValueAt: via padstack not found");

@@ -1,10 +1,13 @@
 package app.freerouting.board;
 
+import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 
 /** Creates unique Item identification numbers. */
 public class ItemIdNoGenerator
-    implements app.freerouting.datastructures.IdNoGenerator, java.io.Serializable {
+    implements IdNoGenerator, Serializable {
 
   private static final int c_max_id_no = Integer.MAX_VALUE / 2;
   private int last_generated_id_no = 0;

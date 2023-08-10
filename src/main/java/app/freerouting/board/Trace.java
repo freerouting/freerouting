@@ -1,17 +1,26 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.Drawable;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
+import app.freerouting.rules.Nets;
+
+import java.awt.Color;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
 /** Class describing functionality required for traces in the plane. */
-public abstract class Trace extends Item implements Connectable, java.io.Serializable {
+public abstract class Trace extends Item implements Connectable, Serializable {
 
   private final int half_width; // half width of the trace pen
   private int layer; // board layer of the trace
@@ -141,19 +150,19 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
   }
 
   @Override
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_trace_colors(this.is_user_fixed());
   }
 
   @Override
   public int get_draw_priority() {
-    return app.freerouting.boardgraphics.Drawable.MAX_DRAW_PRIORITY;
+    return Drawable.MAX_DRAW_PRIORITY;
   }
 
   @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_trace_color_intensity();
   }
 
@@ -259,9 +268,9 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     }
 
     // check, if the trace  belongs to a net, which is not shovable.
-    app.freerouting.rules.Nets nets = this.board.rules.nets;
+    Nets nets = this.board.rules.nets;
     for (int curr_net_no : this.net_no_arr) {
-      if (app.freerouting.rules.Nets.is_normal_net_no(curr_net_no)) {
+      if (Nets.is_normal_net_no(curr_net_no)) {
         if (nets.get(curr_net_no).get_class().is_shove_fixed()) {
           return true;
         }
@@ -303,7 +312,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     }
     boolean ignore_areas = false;
     if (this.net_no_arr.length > 0) {
-      app.freerouting.rules.Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
+      Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
       if (curr_net != null && curr_net.get_class() != null) {
         ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
       }
@@ -395,9 +404,9 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("trace"));
     p_window.append(" " + resources.getString("from") + " ");
     p_window.append(this.first_corner().to_float());

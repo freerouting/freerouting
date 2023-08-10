@@ -2,12 +2,18 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Connectable;
+import app.freerouting.board.FixedState;
+import app.freerouting.board.ForcedPadAlgo;
 import app.freerouting.board.ForcedViaAlgo;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.board.TestLevel;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -18,11 +24,14 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /** Class for autorouting an incomplete connection via a maze search algorithm. */
@@ -33,7 +42,7 @@ public class MazeSearchAlgo {
   public final AutorouteEngine autoroute_engine;
   final AutorouteControl ctrl;
   /** The queue of of expanded elements used in this search algorithm. */
-  final java.util.SortedSet<MazeListElement> maze_expansion_list;
+  final SortedSet<MazeListElement> maze_expansion_list;
   /**
    * Used for calculating of a good lower bound for the distance between a new MazeExpansionElement
    * and the destination set of the expansion.
@@ -41,7 +50,7 @@ public class MazeSearchAlgo {
   final DestinationDistance destination_distance;
   /** The seach tree for expanding. It is the tree compensated for the current net. */
   private final ShapeSearchTree search_tree;
-  private final java.util.Random random_generator = new java.util.Random();
+  private final Random random_generator = new Random();
   /** The destination door found by the expanding algorithm. */
   private ExpandableObject destination_door = null;
   private int section_no_of_destination_door = 0;
@@ -85,16 +94,16 @@ public class MazeSearchAlgo {
   private static void reduce_trace_shapes_at_tie_pins(
       Collection<Item> p_item_list, int p_own_net_no, ShapeSearchTree p_autoroute_tree) {
     for (Item curr_item : p_item_list) {
-      if ((curr_item instanceof app.freerouting.board.Pin) && curr_item.net_count() > 1) {
+      if ((curr_item instanceof Pin) && curr_item.net_count() > 1) {
         Collection<Item> pin_contacts = curr_item.get_normal_contacts();
-        app.freerouting.board.Pin curr_tie_pin = (app.freerouting.board.Pin) curr_item;
+        Pin curr_tie_pin = (Pin) curr_item;
         for (Item curr_contact : pin_contacts) {
-          if (!(curr_contact instanceof app.freerouting.board.PolylineTrace)
+          if (!(curr_contact instanceof PolylineTrace)
               || curr_contact.contains_net(p_own_net_no)) {
             continue;
           }
           p_autoroute_tree.reduce_trace_shape_at_tie_pin(
-              curr_tie_pin, (app.freerouting.board.PolylineTrace) curr_contact);
+              curr_tie_pin, (PolylineTrace) curr_contact);
         }
       }
     }
@@ -104,7 +113,7 @@ public class MazeSearchAlgo {
    * Return the addditional cost factor for ripping the trace, if it is connected to a fanout via or
    * 1, if no fanout via was found.
    */
-  private static double calc_fanout_via_ripup_cost_factor(app.freerouting.board.Trace p_trace) {
+  private static double calc_fanout_via_ripup_cost_factor(Trace p_trace) {
     final double FANOUT_COST_CONST = 20000;
     Collection<Item> curr_end_contacts;
     for (int i = 0; i < 2; ++i) {
@@ -118,11 +127,11 @@ public class MazeSearchAlgo {
       }
       Item curr_trace_contact = curr_end_contacts.iterator().next();
       boolean protect_fanout_via = false;
-      if (curr_trace_contact instanceof app.freerouting.board.Pin
+      if (curr_trace_contact instanceof Pin
           && curr_trace_contact.first_layer() == curr_trace_contact.last_layer()) {
         protect_fanout_via = true;
       } else if (curr_trace_contact instanceof PolylineTrace
-          && curr_trace_contact.get_fixed_state() == app.freerouting.board.FixedState.SHOVE_FIXED) {
+          && curr_trace_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
         // look for shove fixed exit traces of SMD-pins
         PolylineTrace contact_trace = (PolylineTrace) curr_trace_contact;
         if (contact_trace.corner_count() == 2) {
@@ -306,9 +315,9 @@ public class MazeSearchAlgo {
     if (this.ctrl.with_neckdown && p_list_element.door instanceof TargetItemExpansionDoor) {
       // try evtl. neckdown at a start pin
       Item start_item = ((TargetItemExpansionDoor) p_list_element.door).item;
-      if (start_item instanceof app.freerouting.board.Pin) {
+      if (start_item instanceof Pin) {
         double neckdown_half_width =
-            ((app.freerouting.board.Pin) start_item).get_trace_neckdown_halfwidth(layer_no);
+            ((Pin) start_item).get_trace_neckdown_halfwidth(layer_no);
         if (neckdown_half_width > 0) {
           half_width = Math.min(half_width, neckdown_half_width);
         }
@@ -388,7 +397,7 @@ public class MazeSearchAlgo {
           Item obstacle_item = obstacle_room.get_item();
           if (!curr_door_is_small
               && this.ctrl.max_shove_trace_recursion_depth > 0
-              && obstacle_item instanceof app.freerouting.board.PolylineTrace) {
+              && obstacle_item instanceof PolylineTrace) {
             if (!shove_trace_room(p_list_element, obstacle_room)) {
               if (ripup_costs > 0) {
                 // delay the occupation by ripup to allow shoving the room by another door sections.
@@ -448,8 +457,8 @@ public class MazeSearchAlgo {
         }
       } else if (p_list_element.next_room instanceof ObstacleExpansionRoom) {
         Item curr_obstacle_item = ((ObstacleExpansionRoom) p_list_element.next_room).get_item();
-        if (curr_obstacle_item instanceof app.freerouting.board.Via) {
-          app.freerouting.board.Via curr_via = (app.freerouting.board.Via) curr_obstacle_item;
+        if (curr_obstacle_item instanceof Via) {
+          Via curr_via = (Via) curr_obstacle_item;
           ExpansionDrill via_drill_info =
               curr_via.get_autoroute_drill_info(this.autoroute_engine.autoroute_search_tree);
           expand_to_drill(via_drill_info, p_list_element, ripup_costs);
@@ -591,7 +600,7 @@ public class MazeSearchAlgo {
       TileShape door_shape = p_door.get_shape();
       if (door_shape.is_empty()) {
         if (this.autoroute_engine.board.get_test_level().ordinal()
-            >= app.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
+            >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
           FRLogger.warn("MazeSearchAlgo:check_door_width door_shape is empty");
         }
         return true;
@@ -683,9 +692,9 @@ public class MazeSearchAlgo {
       // If expansion comes from a pin with trace exit directions the eapansion_value is calculated
       // from the nearest trace exit point instead from the center olf the pin.
       Item from_item = ((TargetItemExpansionDoor) p_from_element.backtrack_door).item;
-      if (from_item instanceof app.freerouting.board.Pin) {
+      if (from_item instanceof Pin) {
         FloatPoint nearest_exit_corner =
-            ((app.freerouting.board.Pin) from_item)
+            ((Pin) from_item)
                 .nearest_trace_exit_corner(p_drill.location.to_float(), trace_half_width, layer);
         if (nearest_exit_corner != null) {
           compare_corner = nearest_exit_corner;
@@ -800,11 +809,11 @@ public class MazeSearchAlgo {
       Item curr_obstacle_item =
           ((ObstacleExpansionRoom) curr_drill.room_arr[p_list_element.section_no_of_door])
               .get_item();
-      if (!(curr_obstacle_item instanceof app.freerouting.board.Via)) {
+      if (!(curr_obstacle_item instanceof Via)) {
         return;
       }
-      app.freerouting.library.Padstack curr_obstacle_padstack =
-          ((app.freerouting.board.Via) curr_obstacle_item).get_padstack();
+      Padstack curr_obstacle_padstack =
+          ((Via) curr_obstacle_item).get_padstack();
       if (!this.ctrl.via_rule.contains_padstack(curr_obstacle_padstack)
           || curr_obstacle_item.clearance_class_no() != this.ctrl.via_clearance_class) {
         return;
@@ -824,7 +833,7 @@ public class MazeSearchAlgo {
       for (; ; ) {
         TileShape curr_room_shape =
             curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        app.freerouting.board.ForcedPadAlgo.CheckDrillResult drill_result =
+        ForcedPadAlgo.CheckDrillResult drill_result =
             ForcedViaAlgo.check_layer(
                 ctrl.via_radius_arr[curr_layer],
                 ctrl.via_clearance_class,
@@ -836,11 +845,11 @@ public class MazeSearchAlgo {
                 ctrl.max_shove_trace_recursion_depth,
                 0,
                 autoroute_engine.board);
-        if (drill_result == app.freerouting.board.ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+        if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_lower_bound = curr_layer + 1;
           break;
         } else if (drill_result
-            == app.freerouting.board.ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+            == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
           if (curr_layer == 0) {
             smd_attached_on_component_side = true;
           } else if (curr_layer == ctrl.layer_count - 1) {
@@ -864,7 +873,7 @@ public class MazeSearchAlgo {
         }
         TileShape curr_room_shape =
             curr_drill.room_arr[curr_layer - curr_drill.first_layer].get_shape();
-        app.freerouting.board.ForcedPadAlgo.CheckDrillResult drill_result =
+        ForcedPadAlgo.CheckDrillResult drill_result =
             ForcedViaAlgo.check_layer(
                 ctrl.via_radius_arr[curr_layer],
                 ctrl.via_clearance_class,
@@ -876,11 +885,11 @@ public class MazeSearchAlgo {
                 ctrl.max_shove_trace_recursion_depth,
                 0,
                 autoroute_engine.board);
-        if (drill_result == app.freerouting.board.ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
+        if (drill_result == ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE) {
           via_upper_bound = curr_layer - 1;
           break;
         } else if (drill_result
-            == app.freerouting.board.ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
+            == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD) {
           if (curr_layer == ctrl.layer_count - 1) {
             smd_attached_on_solder_side = true;
           }
@@ -1076,15 +1085,15 @@ public class MazeSearchAlgo {
     Item obstacle_item = p_obstacle_room.get_item();
     int layer = p_obstacle_room.get_layer();
     double obstacle_half_width;
-    if (obstacle_item instanceof app.freerouting.board.Trace) {
+    if (obstacle_item instanceof Trace) {
       obstacle_half_width =
-          ((app.freerouting.board.Trace) obstacle_item).get_half_width()
+          ((Trace) obstacle_item).get_half_width()
               + this.search_tree.clearance_compensation_value(
                   obstacle_item.clearance_class_no(), layer);
 
-    } else if (obstacle_item instanceof app.freerouting.board.Via) {
+    } else if (obstacle_item instanceof Via) {
       TileShape via_shape =
-          ((app.freerouting.board.Via) obstacle_item)
+          ((Via) obstacle_item)
               .get_tree_shape_on_layer(this.search_tree, layer);
       obstacle_half_width = 0.5 * via_shape.max_width();
     } else {
@@ -1131,24 +1140,24 @@ public class MazeSearchAlgo {
 
     double fanout_via_cost_factor = 1.0;
     double cost_factor = 1;
-    if (p_obstacle_item instanceof app.freerouting.board.Trace) {
-      app.freerouting.board.Trace obstacle_trace = (app.freerouting.board.Trace) p_obstacle_item;
+    if (p_obstacle_item instanceof Trace) {
+      Trace obstacle_trace = (Trace) p_obstacle_item;
       cost_factor = obstacle_trace.get_half_width();
       if (!this.ctrl.remove_unconnected_vias) {
         // protect traces between SMD-pins and fanout vias
         fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
       }
-    } else if (p_obstacle_item instanceof app.freerouting.board.Via) {
+    } else if (p_obstacle_item instanceof Via) {
       boolean look_if_fanout_via = !this.ctrl.remove_unconnected_vias;
       Collection<Item> contact_list = p_obstacle_item.get_normal_contacts();
       int contact_count = 0;
       for (Item curr_contact : contact_list) {
-        if (!(curr_contact instanceof app.freerouting.board.Trace)
+        if (!(curr_contact instanceof Trace)
             || curr_contact.is_user_fixed()) {
           return -1;
         }
         ++contact_count;
-        app.freerouting.board.Trace obstacle_trace = (app.freerouting.board.Trace) curr_contact;
+        Trace obstacle_trace = (Trace) curr_contact;
         cost_factor = Math.max(cost_factor, obstacle_trace.get_half_width());
         if (look_if_fanout_via) {
           double curr_fanout_via_cost_factor = calc_fanout_via_ripup_cost_factor(obstacle_trace);
@@ -1205,7 +1214,7 @@ public class MazeSearchAlgo {
     boolean result = false;
     if (p_list_element.adjustment != MazeSearchElement.Adjustment.RIGHT) {
       Collection<MazeShoveTraceAlgo.DoorSection> left_to_door_section_list =
-          new java.util.LinkedList<MazeShoveTraceAlgo.DoorSection>();
+          new LinkedList<MazeShoveTraceAlgo.DoorSection>();
 
       if (MazeShoveTraceAlgo.check_shove_trace_line(
           p_list_element,
@@ -1238,7 +1247,7 @@ public class MazeSearchAlgo {
 
     if (p_list_element.adjustment != MazeSearchElement.Adjustment.LEFT) {
       Collection<MazeShoveTraceAlgo.DoorSection> right_to_door_section_list =
-          new java.util.LinkedList<MazeShoveTraceAlgo.DoorSection>();
+          new LinkedList<MazeShoveTraceAlgo.DoorSection>();
 
       if (MazeShoveTraceAlgo.check_shove_trace_line(
           p_list_element,
@@ -1276,8 +1285,8 @@ public class MazeSearchAlgo {
   private double check_neck_down_at_dest_pin(CompleteExpansionRoom p_room) {
     Collection<TargetItemExpansionDoor> target_doors = p_room.get_target_doors();
     for (TargetItemExpansionDoor curr_target_door : target_doors) {
-      if (curr_target_door.item instanceof app.freerouting.board.Pin) {
-        return ((app.freerouting.board.Pin) curr_target_door.item)
+      if (curr_target_door.item instanceof Pin) {
+        return ((Pin) curr_target_door.item)
             .get_trace_neckdown_halfwidth(p_room.get_layer());
       }
     }

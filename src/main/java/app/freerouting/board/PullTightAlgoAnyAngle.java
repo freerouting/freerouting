@@ -12,6 +12,8 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 
+import java.util.Collection;
+
 /** Auxiliary class containing internal functions for pulling any angle traces tight. */
 class PullTightAlgoAnyAngle extends PullTightAlgo {
 
@@ -797,7 +799,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     Direction line_direction = trace_polyline.arr[start_line_no].direction();
     Direction prev_line_direction = trace_polyline.arr[start_line_no + 1].direction();
 
-    java.util.Collection<Item> contact_list = p_trace.get_start_contacts();
+    Collection<Item> contact_list = p_trace.get_start_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed()) {
         Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();
@@ -926,7 +928,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     Direction line_direction = trace_polyline.arr[end_line_no].direction().opposite();
     Direction prev_line_direction = trace_polyline.arr[end_line_no].direction().opposite();
 
-    java.util.Collection<Item> contact_list = p_trace.get_end_contacts();
+    Collection<Item> contact_list = p_trace.get_end_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed()) {
         Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();

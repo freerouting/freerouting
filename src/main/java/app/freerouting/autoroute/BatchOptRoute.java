@@ -11,9 +11,13 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Optimizes routes using a single thread on a board that has completed auto-routing. */
 public class BatchOptRoute {
@@ -58,7 +62,7 @@ public class BatchOptRoute {
    */
   protected static double calc_weighted_trace_length(RoutingBoard p_board) {
     double result = 0;
-    int default_clearance_class = app.freerouting.rules.BoardRules.default_clearance_class();
+    int default_clearance_class = BoardRules.default_clearance_class();
     Iterator<UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
     for (; ; ) {
       UndoableObjects.Storable curr_item = p_board.item_list.read_object(it);
@@ -192,8 +196,8 @@ public class BatchOptRoute {
   /** Try to improve the route by re-routing the connections containing p_item. */
   protected ItemRouteResult opt_route_item(
       Item p_item, int p_pass_no, boolean p_with_prefered_directions) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
     String start_message =
         resources.getString("batch_optimizer")
@@ -210,7 +214,7 @@ public class BatchOptRoute {
     int incomplete_count_before = this.get_ratsnest().incomplete_count();
 
     int via_count_before = this.routing_board.get_vias().size();
-    Set<Item> ripped_items = new java.util.TreeSet<Item>();
+    Set<Item> ripped_items = new TreeSet<Item>();
     ripped_items.add(p_item);
     if (p_item instanceof Trace) {
       // add also the fork items, especially because not all fork items may be
@@ -224,7 +228,7 @@ public class BatchOptRoute {
         curr_contact_list = curr_trace.get_end_contacts();
       }
     }
-    Set<Item> ripped_connections = new java.util.TreeSet<Item>();
+    Set<Item> ripped_connections = new TreeSet<Item>();
     for (Item curr_item : ripped_items) {
       ripped_connections.addAll(curr_item.get_connection_items(Item.StopConnectionOption.NONE));
     }

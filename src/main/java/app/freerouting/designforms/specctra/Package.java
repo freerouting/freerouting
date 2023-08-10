@@ -1,7 +1,10 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.Item;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -121,7 +124,7 @@ public class Package {
       }
       return new Package(
           package_name, pin_info_arr, outline, keepouts, via_keepouts, place_keepouts, is_front);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Package.read_scope: IO error scanning file", e);
       return null;
     }
@@ -129,7 +132,7 @@ public class Package {
 
   public static void write_scope(
       WriteScopeParameter p_par, app.freerouting.library.Package p_package)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("image ");
     p_par.identifier_type.write(p_package.name, p_par.file);
@@ -146,7 +149,7 @@ public class Package {
       app.freerouting.library.Package.Pin curr_pin = p_package.get_pin(i);
       p_par.file.new_line();
       p_par.file.write("(pin ");
-      app.freerouting.library.Padstack curr_padstack =
+      Padstack curr_padstack =
           p_par.board.library.padstacks.get(curr_pin.padstack_no);
       p_par.identifier_type.write(curr_padstack.name, p_par.file);
       p_par.file.write(" ");
@@ -187,7 +190,7 @@ public class Package {
       app.freerouting.library.Package.Keepout p_keepout,
       WriteScopeParameter p_par,
       boolean p_is_via_keepout)
-      throws java.io.IOException {
+      throws IOException {
     Layer keepout_layer;
     if (p_keepout.layer >= 0) {
       app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[p_keepout.layer];
@@ -297,7 +300,7 @@ public class Package {
         }
       }
       return new PinInfo(padstack_name, pin_name, pin_coor, rotation);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Package.read_pin_info: IO error while scanning file", e);
       return null;
     }
@@ -319,7 +322,7 @@ public class Package {
       if (next_token != Keyword.CLOSED_BRACKET) {
         FRLogger.warn("Package.read_rotation: closing bracket expected");
       }
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Package.read_rotation: IO error while scanning file", e);
     }
     return result;
@@ -328,7 +331,7 @@ public class Package {
   /** Writes the placements of p_package to a Specctra dsn-file. */
   public static void write_placement_scope(
       WriteScopeParameter p_par, app.freerouting.library.Package p_package)
-      throws java.io.IOException {
+      throws IOException {
     Collection<Item> board_items = p_par.board.get_items();
     boolean component_found = false;
     for (int i = 1; i <= p_par.board.components.count(); ++i) {
@@ -361,7 +364,7 @@ public class Package {
     }
   }
 
-  private static boolean read_placement_side(IJFlexScanner p_scanner) throws java.io.IOException {
+  private static boolean read_placement_side(IJFlexScanner p_scanner) throws IOException {
     Object next_token = p_scanner.next_token();
     boolean result = (next_token != Keyword.BACK);
 

@@ -1,17 +1,19 @@
 package app.freerouting.board;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
 /** Filter for selecting items on the board. */
-public class ItemSelectionFilter implements java.io.Serializable {
+public class ItemSelectionFilter implements Serializable {
   /** the filter array of the item types */
   private final boolean[] values;
 
   /** Creates a new filter with all item types selected. */
   public ItemSelectionFilter() {
     this.values = new boolean[SelectableChoices.values().length];
-    java.util.Arrays.fill(this.values, true);
+    Arrays.fill(this.values, true);
     this.values[SelectableChoices.KEEPOUT.ordinal()] = false;
     this.values[SelectableChoices.VIA_KEEPOUT.ordinal()] = false;
     this.values[SelectableChoices.COMPONENT_KEEPOUT.ordinal()] = false;
@@ -22,7 +24,7 @@ public class ItemSelectionFilter implements java.io.Serializable {
   /** Creates a new filter with only p_item_type selected. */
   public ItemSelectionFilter(SelectableChoices p_item_type) {
     this.values = new boolean[SelectableChoices.values().length];
-    java.util.Arrays.fill(this.values, false);
+    Arrays.fill(this.values, false);
     values[p_item_type.ordinal()] = true;
     values[SelectableChoices.FIXED.ordinal()] = true;
     values[SelectableChoices.UNFIXED.ordinal()] = true;
@@ -31,7 +33,7 @@ public class ItemSelectionFilter implements java.io.Serializable {
   /** Creates a new filter with only p_item_types selected. */
   public ItemSelectionFilter(SelectableChoices[] p_item_types) {
     this.values = new boolean[SelectableChoices.values().length];
-    java.util.Arrays.fill(this.values, false);
+    Arrays.fill(this.values, false);
     for (int i = 0; i < p_item_types.length; ++i) {
       values[p_item_types[i].ordinal()] = true;
     }
@@ -54,18 +56,18 @@ public class ItemSelectionFilter implements java.io.Serializable {
 
   /** Selects all item types. */
   public void select_all() {
-    java.util.Arrays.fill(values, true);
+    Arrays.fill(values, true);
   }
 
   /** Deselects all item types. */
   public void deselect_all() {
-    java.util.Arrays.fill(values, false);
+    Arrays.fill(values, false);
   }
 
   /** Filters a collection of items with this filter. */
-  public Set<Item> filter(java.util.Set<app.freerouting.board.Item> p_items) {
+  public Set<Item> filter(Set<Item> p_items) {
     Set<Item> result = new TreeSet<Item>();
-    for (app.freerouting.board.Item curr_item : p_items) {
+    for (Item curr_item : p_items) {
       if (curr_item.is_selected_by_filter(this)) {
         result.add(curr_item);
       }

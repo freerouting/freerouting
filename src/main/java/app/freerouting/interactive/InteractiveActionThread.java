@@ -1,12 +1,18 @@
 package app.freerouting.interactive;
 
+import app.freerouting.datastructures.Stoppable;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Graphics;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /** Used for running an interactive action in a separate thread, that can be stopped by the user. */
 public abstract class InteractiveActionThread extends Thread
-    implements app.freerouting.datastructures.Stoppable {
+    implements Stoppable {
   public final BoardHandling hdlg;
   protected List<ThreadActionListener> listeners = new ArrayList<ThreadActionListener>();
   private boolean stop_requested = false;
@@ -35,7 +41,7 @@ public abstract class InteractiveActionThread extends Thread
   }
 
   public static InteractiveActionThread get_read_logfile_instance(
-      BoardHandling p_board_handling, java.io.InputStream p_input_stream) {
+      BoardHandling p_board_handling, InputStream p_input_stream) {
     return new ReadLogfileThread(p_board_handling, p_input_stream);
   }
 
@@ -69,7 +75,7 @@ public abstract class InteractiveActionThread extends Thread
     return stop_auto_router;
   }
 
-  public synchronized void draw(java.awt.Graphics p_graphics) {
+  public synchronized void draw(Graphics p_graphics) {
     // Can be overwritten in derived classes.
   }
 
@@ -123,9 +129,9 @@ public abstract class InteractiveActionThread extends Thread
 
   private static class ReadLogfileThread extends InteractiveActionThread {
 
-    private final java.io.InputStream input_stream;
+    private final InputStream input_stream;
 
-    private ReadLogfileThread(BoardHandling p_board_handling, java.io.InputStream p_input_stream) {
+    private ReadLogfileThread(BoardHandling p_board_handling, InputStream p_input_stream) {
       super(p_board_handling);
       this.input_stream = p_input_stream;
     }
@@ -133,8 +139,8 @@ public abstract class InteractiveActionThread extends Thread
     @Override
     protected void thread_action() {
 
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle(
+      ResourceBundle resources =
+          ResourceBundle.getBundle(
               "app.freerouting.interactive.InteractiveState", hdlg.get_locale());
       boolean saved_board_read_only = hdlg.is_board_read_only();
       hdlg.set_board_read_only(true);
@@ -179,7 +185,7 @@ public abstract class InteractiveActionThread extends Thread
       hdlg.paint_immediately = false;
       try {
         this.input_stream.close();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("ReadLogfileThread: unable to close input stream", e);
       }
       hdlg.get_panel().board_frame.refresh_windows();
