@@ -50,7 +50,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
     RoutingBoard routing_board =
         board_frame.board_panel.board_handling.get_routing_board();
     Set<Item> selected_items =
-        new TreeSet<Item>();
+        new TreeSet<>();
     Collection<Item> board_items = routing_board.get_items();
     for (Item curr_item : board_items) {
       if (curr_item.get_component_no() > 0) {

@@ -38,7 +38,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
   private final JTextField name_field;
   private final ResourceBundle resources;
   private DefaultListModel<SnapShot> list_model =
-      new DefaultListModel<SnapShot>();
+      new DefaultListModel<>();
   private int snapshot_count = 0;
 
   /** Creates a new instance of SnapshotFrame */

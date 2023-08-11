@@ -28,7 +28,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
     this.item = p_item;
     this.index_in_item = p_index_in_item;
     this.shape = p_item.get_tree_shape(p_shape_tree, p_index_in_item);
-    this.doors = new LinkedList<ExpansionDoor>();
+    this.doors = new LinkedList<>();
   }
 
   public int get_index_in_item() {
@@ -104,7 +104,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   /** Removes all doors from this room. */
   @Override
   public void clear_doors() {
-    this.doors = new LinkedList<ExpansionDoor>();
+    this.doors = new LinkedList<>();
   }
 
   @Override
@@ -116,7 +116,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   @Override
   public Collection<TargetItemExpansionDoor> get_target_doors() {
-    return new LinkedList<TargetItemExpansionDoor>();
+    return new LinkedList<>();
   }
 
   public Item get_item() {

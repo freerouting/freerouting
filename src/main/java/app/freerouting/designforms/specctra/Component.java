@@ -174,13 +174,13 @@ public class Component extends ScopeKeyword {
   private static ComponentPlacement.ComponentLocation read_place_scope(IJFlexScanner p_scanner) {
     try {
       Map<String, ComponentPlacement.ItemClearanceInfo> pin_infos =
-          new TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
+          new TreeMap<>();
       Map<String, ComponentPlacement.ItemClearanceInfo> keepout_infos =
-          new TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
+          new TreeMap<>();
       Map<String, ComponentPlacement.ItemClearanceInfo> via_keepout_infos =
-          new TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
+          new TreeMap<>();
       Map<String, ComponentPlacement.ItemClearanceInfo> place_keepout_infos =
-          new TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
+          new TreeMap<>();
 
       String name = p_scanner.next_string(true);
 

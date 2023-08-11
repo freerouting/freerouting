@@ -45,10 +45,10 @@ public class MoveComponent {
       item_group_list = board.get_component_items(component_no);
       this.component = board.components.get(component_no);
     } else {
-      item_group_list = new LinkedList<Item>();
+      item_group_list = new LinkedList<>();
       item_group_list.add(p_item);
     }
-    Collection<FloatPoint> item_centers = new LinkedList<FloatPoint>();
+    Collection<FloatPoint> item_centers = new LinkedList<>();
     for (Item curr_item : item_group_list) {
       boolean curr_item_movable =
           !curr_item.is_user_fixed()
@@ -102,7 +102,7 @@ public class MoveComponent {
       return false;
     }
     TimeLimit time_limit = new TimeLimit(CHECK_TIME_LIMIT);
-    Collection<Item> ignore_items = new LinkedList<Item>();
+    Collection<Item> ignore_items = new LinkedList<>();
     for (int i = 0; i < item_group_arr.length; ++i) {
       boolean move_ok;
       if (item_group_arr[i].item instanceof DrillItem) {

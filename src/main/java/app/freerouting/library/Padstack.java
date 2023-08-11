@@ -102,7 +102,7 @@ public class Padstack
    * the long side is allowed.
    */
   public Collection<Direction> get_trace_exit_directions(int p_layer, double p_factor) {
-    Collection<Direction> result = new LinkedList<Direction>();
+    Collection<Direction> result = new LinkedList<>();
     if (p_layer < 0 || p_layer >= shapes.length) {
       return result;
     }

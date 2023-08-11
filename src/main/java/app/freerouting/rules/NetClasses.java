@@ -9,7 +9,7 @@ import java.util.Vector;
 
 /** Contains the array of net classes for interactive routing. */
 public class NetClasses implements Serializable {
-  private final Vector<NetClass> class_arr = new Vector<NetClass>();
+  private final Vector<NetClass> class_arr = new Vector<>();
 
   /** Returns the number of classes in this array. */
   public int count() {

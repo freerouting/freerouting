@@ -106,7 +106,7 @@ public class DsnFile {
       changed_layer_arr[i] = false;
     }
     Collection<ConductionArea> conduction_area_list =
-        new LinkedList<ConductionArea>();
+        new LinkedList<>();
     Collection<Item> item_list = routing_board.get_items();
     for (Item curr_item : item_list) {
       if (curr_item instanceof Trace) {

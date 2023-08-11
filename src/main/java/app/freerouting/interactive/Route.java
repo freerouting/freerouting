@@ -441,7 +441,7 @@ public class Route {
 
   /** Returns all pins, which can be reached by a pin swap from a srtart or target pin. */
   private Set<SwapPinInfo> calculate_swap_pin_infos() {
-    Set<SwapPinInfo> result = new TreeSet<SwapPinInfo>();
+    Set<SwapPinInfo> result = new TreeSet<>();
     if (this.target_set == null) {
       return result;
     }
@@ -626,8 +626,8 @@ public class Route {
    * ConductionAreas in the target set.
    */
   private void calculate_target_points_and_areas() {
-    target_points = new LinkedList<TargetPoint>();
-    target_traces_and_areas = new LinkedList<Item>();
+    target_points = new LinkedList<>();
+    target_traces_and_areas = new LinkedList<>();
     if (target_set == null) {
       return;
     }

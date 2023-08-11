@@ -62,7 +62,7 @@ public class MazeSearchAlgo {
     random_generator.setSeed(
         p_ctrl.ripup_costs); // To get reproducable random numbers in the ripup algorithm.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
-    maze_expansion_list = new TreeSet<MazeListElement>();
+    maze_expansion_list = new TreeSet<>();
     destination_distance =
         new DestinationDistance(
             ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost, ctrl.min_cheap_via_cost);
@@ -1000,7 +1000,7 @@ public class MazeSearchAlgo {
     }
     // process the start items
     Collection<IncompleteFreeSpaceExpansionRoom> start_rooms =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
     it = p_start_items.iterator();
     while (it.hasNext()) {
       if (this.autoroute_engine.is_stop_requested()) {
@@ -1023,7 +1023,7 @@ public class MazeSearchAlgo {
 
     // complete the start rooms
     Collection<CompleteFreeSpaceExpansionRoom> completed_start_rooms =
-        new LinkedList<CompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
 
     if (this.autoroute_engine.maintain_database) {
       // add the completed start rooms carried over from the last autoroute to the start rooms.
@@ -1214,7 +1214,7 @@ public class MazeSearchAlgo {
     boolean result = false;
     if (p_list_element.adjustment != MazeSearchElement.Adjustment.RIGHT) {
       Collection<MazeShoveTraceAlgo.DoorSection> left_to_door_section_list =
-          new LinkedList<MazeShoveTraceAlgo.DoorSection>();
+          new LinkedList<>();
 
       if (MazeShoveTraceAlgo.check_shove_trace_line(
           p_list_element,
@@ -1247,7 +1247,7 @@ public class MazeSearchAlgo {
 
     if (p_list_element.adjustment != MazeSearchElement.Adjustment.LEFT) {
       Collection<MazeShoveTraceAlgo.DoorSection> right_to_door_section_list =
-          new LinkedList<MazeShoveTraceAlgo.DoorSection>();
+          new LinkedList<>();
 
       if (MazeShoveTraceAlgo.check_shove_trace_line(
           p_list_element,
@@ -1335,7 +1335,7 @@ public class MazeSearchAlgo {
     TileShape check_shape = check_polyline.offset_shape(check_radius, 0);
     int[] ignore_net_nos = new int[1];
     ignore_net_nos[0] = this.ctrl.net_no;
-    Set<SearchTreeObject> overlapping_objects = new TreeSet<SearchTreeObject>();
+    Set<SearchTreeObject> overlapping_objects = new TreeSet<>();
     this.autoroute_engine.autoroute_search_tree.overlapping_objects(
         check_shape, curr_layer, ignore_net_nos, overlapping_objects);
 

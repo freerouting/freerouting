@@ -713,7 +713,7 @@ public class Simplex extends TileShape implements Serializable {
     Line prev_division_line = null;
     Line first_division_line = division_line_arr[0][0];
     IntDirection first_direction = (IntDirection) first_division_line.direction();
-    Collection<Simplex> result_list = new LinkedList<Simplex>();
+    Collection<Simplex> result_list = new LinkedList<>();
 
     for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no) {
       Line next_division_line;

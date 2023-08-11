@@ -609,7 +609,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (board_is_read_only || !(interactive_state instanceof MenuState)) {
       return;
     }
-    Set<Integer> changed_nets = new TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<>();
     if (board.undo(changed_nets)) {
       for (Integer changed_net : changed_nets) {
         this.update_ratsnest(changed_net);
@@ -632,7 +632,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (board_is_read_only || !(interactive_state instanceof MenuState)) {
       return;
     }
-    Set<Integer> changed_nets = new TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<>();
     if (board.redo(changed_nets)) {
       for (Integer changed_net : changed_nets) {
         this.update_ratsnest(changed_net);

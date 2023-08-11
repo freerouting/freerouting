@@ -249,7 +249,7 @@ public class RouteState extends InteractiveState {
    * p_layer.
    */
   static int[] get_route_net_numbers_at_tie_pin(Pin p_pin, int p_layer) {
-    Set<Integer> net_number_list = new TreeSet<Integer>();
+    Set<Integer> net_number_list = new TreeSet<>();
     for (int i = 0; i < p_pin.net_count(); ++i) {
       net_number_list.add(p_pin.get_net_no(i));
     }

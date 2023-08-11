@@ -75,7 +75,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public Set<Item> get_normal_contacts() {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     for (int i = 0; i < tile_shape_count(); ++i) {
       TileShape curr_shape = get_tile_shape(i);
       Set<SearchTreeObject> overlaps = board.overlapping_objects(curr_shape, get_layer());

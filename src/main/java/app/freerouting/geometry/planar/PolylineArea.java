@@ -172,7 +172,7 @@ public class PolylineArea implements Area, Serializable {
         // split failed
         return null;
       }
-      Collection<TileShape> curr_piece_list = new LinkedList<TileShape>();
+      Collection<TileShape> curr_piece_list = new LinkedList<>();
       for (int i = 0; i < convex_border_pieces.length; ++i) {
         curr_piece_list.add(convex_border_pieces[i]);
       }
@@ -187,7 +187,7 @@ public class PolylineArea implements Area, Serializable {
         }
         for (int j = 0; j < convex_hole_pieces.length; ++j) {
           TileShape curr_hole_piece = convex_hole_pieces[j];
-          Collection<TileShape> new_piece_list = new LinkedList<TileShape>();
+          Collection<TileShape> new_piece_list = new LinkedList<>();
           Iterator<TileShape> it = curr_piece_list.iterator();
           while (it.hasNext()) {
             if (p_stoppable_thread != null && p_stoppable_thread.is_stop_requested()) {

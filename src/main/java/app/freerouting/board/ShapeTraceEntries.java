@@ -47,7 +47,7 @@ public class ShapeTraceEntries {
     list_anchor = null;
     trace_piece_count = 0;
     max_stack_level = 0;
-    shove_via_list = new LinkedList<Via>();
+    shove_via_list = new LinkedList<>();
   }
 
   public static void cutout_trace(PolylineTrace p_trace, ConvexShape p_shape, int p_cl_class) {

@@ -15,7 +15,7 @@ class ItemSearchTreesInfo {
 
   /** Creates a new instance of ItemSearchTreeEntries */
   public ItemSearchTreesInfo() {
-    this.tree_list = new LinkedList<SearchTreeInfo>();
+    this.tree_list = new LinkedList<>();
   }
 
   /**

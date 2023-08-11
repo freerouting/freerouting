@@ -96,7 +96,7 @@ public class BoardFrame extends WindowBase {
   ColorManager color_manager = null;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows =
-      new LinkedList<BoardTemporarySubWindow>();
+      new LinkedList<>();
   private LocalDateTime intermediate_stage_file_last_saved_at = null;
   DesignFile design_file = null;
   private final Locale locale;

@@ -30,7 +30,7 @@ public class Sorted45DegreeRoomNeighbours {
     from_room = p_from_room;
     completed_room = p_completed_room;
     room_shape = p_completed_room.get_shape().bounding_octagon();
-    sorted_neighbours = new TreeSet<SortedRoomNeighbour>();
+    sorted_neighbours = new TreeSet<>();
 
     edge_interiour_touches_obstacle = new boolean[8];
     for (int i = 0; i < 8; ++i) {
@@ -98,7 +98,7 @@ public class Sorted45DegreeRoomNeighbours {
     }
     IntOctagon room_oct = room_shape.bounding_octagon();
     Sorted45DegreeRoomNeighbours result = new Sorted45DegreeRoomNeighbours(p_room, completed_room);
-    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<ShapeTree.TreeEntry>();
+    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     p_autoroute_search_tree.overlapping_tree_entries(
         room_shape, p_room.get_layer(), overlapping_objects);
     // Calculate the touching neigbour objects and sort them in counterclock sence

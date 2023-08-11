@@ -48,7 +48,7 @@ public class CutoutRouteState extends SelectRegionState {
       ActivityReplayFile p_activityReplayFile) {
     p_board_handling.display_layer_messsage();
     // filter items, whichh cannnot be cutout
-    Collection<PolylineTrace> item_list = new LinkedList<PolylineTrace>();
+    Collection<PolylineTrace> item_list = new LinkedList<>();
 
     for (Item curr_item : p_item_list) {
       if (!curr_item.is_user_fixed() && curr_item instanceof PolylineTrace) {
@@ -93,7 +93,7 @@ public class CutoutRouteState extends SelectRegionState {
         new IntBox(
             Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
 
-    Set<Integer> changed_nets = new TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<>();
 
     for (PolylineTrace curr_trace : this.trace_list) {
       ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);

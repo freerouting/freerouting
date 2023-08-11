@@ -416,7 +416,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   @Override
   public Collection<PolylineTrace> split(IntOctagon p_clip_shape) {
-    Collection<PolylineTrace> result = new LinkedList<PolylineTrace>();
+    Collection<PolylineTrace> result = new LinkedList<>();
     if (!this.nets_normal()) {
       // only normal nets are split
       result.add(this);
@@ -434,7 +434,7 @@ public class PolylineTrace extends Trace implements Serializable {
       TileShape curr_shape = this.get_tree_shape(default_tree, i);
       LineSegment curr_line_segment = new LineSegment(this.lines, i + 1);
       Collection<ShapeSearchTree.TreeEntry> overlapping_tree_entries =
-          new LinkedList<ShapeSearchTree.TreeEntry>();
+          new LinkedList<>();
       // look for intersecting traces with the i-th line segment
       default_tree.overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
       Iterator<ShapeSearchTree.TreeEntry> it = overlapping_tree_entries.iterator();
@@ -474,7 +474,7 @@ public class PolylineTrace extends Trace implements Serializable {
           LineSegment found_line_segment =
               new LineSegment(found_trace.lines, found_entry.shape_index_in_object + 1);
           Line[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
-          Collection<PolylineTrace> split_pieces = new LinkedList<PolylineTrace>();
+          Collection<PolylineTrace> split_pieces = new LinkedList<>();
 
           // try splitting the found trace first
           boolean found_trace_split = false;

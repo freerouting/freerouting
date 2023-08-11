@@ -16,7 +16,7 @@ import java.util.TreeSet;
  */
 public class MinAreaTree extends ShapeTree {
 
-  protected ArrayStack<TreeNode> node_stack = new ArrayStack<TreeNode>(10000);
+  protected ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
 
   /** Constructor with a fixed set of directions defining the keys and and the surrounding shapes */
   public MinAreaTree(ShapeBoundingDirections p_directions) {
@@ -25,7 +25,7 @@ public class MinAreaTree extends ShapeTree {
 
   /** Calculates the objects in this tree, which overlap with p_shape */
   public Set<Leaf> overlaps(RegularTileShape p_shape) {
-    Set<Leaf> found_overlaps = new TreeSet<Leaf>();
+    Set<Leaf> found_overlaps = new TreeSet<>();
     if (this.root == null) {
       return found_overlaps;
     }

@@ -92,7 +92,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   public void move_by(Vector p_vector) {
     Point old_center = this.get_center();
     // remember the contact situation of this drillitem  to traces on each layer
-    Set<TraceInfo> contact_trace_info = new TreeSet<TraceInfo>();
+    Set<TraceInfo> contact_trace_info = new TreeSet<>();
     Collection<Item> contacts = this.get_normal_contacts();
     Iterator<Item> it = contacts.iterator();
     while (it.hasNext()) {
@@ -111,7 +111,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
 
     // Insert a Trace from the old center to the new center, on all layers, where
     // this DrillItem was connected to a Trace.
-    Collection<Point> connect_point_list = new LinkedList<Point>();
+    Collection<Point> connect_point_list = new LinkedList<>();
     connect_point_list.add(old_center);
     Point new_center = this.get_center();
     IntPoint add_corner = null;
@@ -273,7 +273,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     TileShape search_shape = TileShape.get_instance(drill_center);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, -1);
     Iterator<SearchTreeObject> it = overlaps.iterator();
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     while (it.hasNext()) {
       SearchTreeObject curr_ob = it.next();
       if (!(curr_ob instanceof Item)) {

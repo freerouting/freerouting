@@ -78,7 +78,7 @@ public class BoardLibrary implements Serializable {
    */
   public void set_via_padstacks(Padstack[] p_padstacks) {
 
-    this.via_padstacks = new Vector<Padstack>();
+    this.via_padstacks = new Vector<>();
     for (int i = 0; i < p_padstacks.length; ++i) {
       this.via_padstacks.add(p_padstacks[i]);
     }
@@ -95,7 +95,7 @@ public class BoardLibrary implements Serializable {
 
     if (this.via_padstacks == null)
     {
-      this.via_padstacks = new Vector<Padstack>();
+      this.via_padstacks = new Vector<>();
     }
 
     this.via_padstacks.add(p_padstack);

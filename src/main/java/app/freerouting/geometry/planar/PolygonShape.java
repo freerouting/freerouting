@@ -539,7 +539,7 @@ public class PolygonShape extends PolylineShape {
       curr_corner = next_corner;
       start_corner_no = (start_corner_no + 1) % corners.length;
     }
-    Collection<PolygonShape> result = new LinkedList<PolygonShape>();
+    Collection<PolygonShape> result = new LinkedList<>();
     if (concave_corner_no < 0) {
       // no concave corner found, this shape is already convex
       result.add(this);

@@ -16,8 +16,8 @@ public class Circuit {
     Object next_token = null;
     double min_trace_length = 0;
     double max_trace_length = 0;
-    Collection<String> use_via = new LinkedList<String>();
-    Collection<String> use_layer = new LinkedList<String>();
+    Collection<String> use_via = new LinkedList<>();
+    Collection<String> use_layer = new LinkedList<>();
     for (; ; ) {
       Object prev_token = next_token;
       try {

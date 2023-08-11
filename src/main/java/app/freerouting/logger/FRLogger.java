@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 public class FRLogger {
   public static DecimalFormat DefaultFloatFormat = new DecimalFormat("0.00");
   private static Logger logger;
-  private static final HashMap<Integer, Instant> perfData = new HashMap<Integer, Instant>();
+  private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static boolean enabled = true;
   private static final LogEntries logEntries = new LogEntries();
 

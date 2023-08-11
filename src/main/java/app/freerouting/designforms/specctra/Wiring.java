@@ -218,7 +218,7 @@ class Wiring extends ScopeKeyword {
 
   private static Collection<app.freerouting.rules.Net> get_subnets(
       Net.Id p_net_id, BoardRules p_rules) {
-    Collection<app.freerouting.rules.Net> found_nets = new LinkedList<app.freerouting.rules.Net>();
+    Collection<app.freerouting.rules.Net> found_nets = new LinkedList<>();
     if (p_net_id != null) {
       if (p_net_id.subnet_number > 0) {
         app.freerouting.rules.Net found_net =
@@ -354,7 +354,7 @@ class Wiring extends ScopeKeyword {
     FixedState fixed = FixedState.UNFIXED;
     Path path = null; // Used, if a trace is read.
     Shape border_shape = null; // Used, if a conduction area is read.
-    Collection<Shape> hole_list = new LinkedList<Shape>();
+    Collection<Shape> hole_list = new LinkedList<>();
     Object next_token = null;
     for (; ; ) {
       Object prev_token = next_token;
@@ -458,7 +458,7 @@ class Wiring extends ScopeKeyword {
             net_class.default_item_clearance_classes.get(
                 DefaultItemClearanceClasses.ItemClass.AREA);
       }
-      Collection<Shape> area = new LinkedList<Shape>();
+      Collection<Shape> area = new LinkedList<>();
       area.add(border_shape);
       area.addAll(hole_list);
       Area conduction_area =

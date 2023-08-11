@@ -51,14 +51,14 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
     if (selected_padstacks.size() <= 0) {
       return;
     }
-    Collection<Padstack> padstack_list = new LinkedList<Padstack>();
+    Collection<Padstack> padstack_list = new LinkedList<>();
     for (int i = 0; i < selected_padstacks.size(); ++i) {
       padstack_list.add((Padstack) selected_padstacks.get(i));
     }
     RoutingBoard routing_board =
         board_frame.board_panel.board_handling.get_routing_board();
     Set<Item> board_instances =
-        new TreeSet<Item>();
+        new TreeSet<>();
     Iterator<UndoableObjects.UndoableObjectNode> it =
         routing_board.item_list.start_read_object();
     for (; ; ) {

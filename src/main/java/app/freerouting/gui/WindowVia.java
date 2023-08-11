@@ -49,7 +49,7 @@ public class WindowVia extends BoardSavableSubWindow {
   private final JPanel main_panel;
   /** The subwindows with information about selected object */
   private final Collection<JFrame> subwindows =
-      new LinkedList<JFrame>();
+      new LinkedList<>();
 
   /** Creates a new instance of ViaWindow */
   public WindowVia(BoardFrame p_board_frame) {
@@ -143,8 +143,8 @@ public class WindowVia extends BoardSavableSubWindow {
     north_panel.add(via_rule_list_name, gridbag_constraints);
     north_panel.add(via_rule_list_name, gridbag_constraints);
 
-    this.rule_list_model = new DefaultListModel<ViaRule>();
-    this.rule_list = new JList<ViaRule>(this.rule_list_model);
+    this.rule_list_model = new DefaultListModel<>();
+    this.rule_list = new JList<>(this.rule_list_model);
 
     this.rule_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.rule_list.setSelectedIndex(0);
@@ -233,7 +233,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       Collection<WindowObjectInfo.Printable> object_list =
-          new LinkedList<WindowObjectInfo.Printable>();
+          new LinkedList<>();
       BoardLibrary board_library =
           board_frame.board_panel.board_handling.get_routing_board().library;
       for (int i = 0; i < board_library.via_padstack_count(); ++i) {
@@ -466,7 +466,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       Collection<WindowObjectInfo.Printable> object_list =
-          new LinkedList<WindowObjectInfo.Printable>();
+          new LinkedList<>();
       ViaInfos via_infos =
           board_frame.board_panel.board_handling.get_routing_board().rules.via_infos;
       for (int i = 0; i < via_infos.count(); ++i) {
@@ -504,7 +504,7 @@ public class WindowVia extends BoardSavableSubWindow {
         return;
       }
       Collection<WindowObjectInfo.Printable> object_list =
-          new LinkedList<WindowObjectInfo.Printable>();
+          new LinkedList<>();
       for (int i = 0; i < selected_objects.size(); ++i) {
         object_list.add(selected_objects.get(i));
       }

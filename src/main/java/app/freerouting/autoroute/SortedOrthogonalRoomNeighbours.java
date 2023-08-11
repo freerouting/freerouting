@@ -30,7 +30,7 @@ public class SortedOrthogonalRoomNeighbours {
     completed_room = p_completed_room;
     is_obstacle_expansion_room = p_from_room instanceof ObstacleExpansionRoom;
     room_shape = (IntBox) p_completed_room.get_shape();
-    sorted_neighbours = new TreeSet<SortedRoomNeighbour>();
+    sorted_neighbours = new TreeSet<>();
     edge_interiour_touches_obstacle = new boolean[4];
     for (int i = 0; i < 4; ++i) {
       edge_interiour_touches_obstacle[i] = false;
@@ -140,7 +140,7 @@ public class SortedOrthogonalRoomNeighbours {
     }
     SortedOrthogonalRoomNeighbours result =
         new SortedOrthogonalRoomNeighbours(p_room, completed_room);
-    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<ShapeTree.TreeEntry>();
+    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     p_autoroute_search_tree.overlapping_tree_entries(
         room_shape, p_room.get_layer(), overlapping_objects);
     // Calculate the touching neigbour objects and sort them in counterclock sence

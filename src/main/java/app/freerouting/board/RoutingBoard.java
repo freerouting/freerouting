@@ -112,7 +112,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       calculate_tidy_region = false;
     }
     start_marking_changed_area();
-    Set<Integer> changed_nets = new TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<>();
     Iterator<Item> it = p_item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
@@ -1003,7 +1003,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (route_dest_set.size() == 0) {
       return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // p_item is already routed.
     }
-    SortedSet<Item> ripped_item_list = new TreeSet<Item>();
+    SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine =
         init_autoroute(
             p_item.get_net_no(0),
@@ -1060,7 +1060,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       ctrl_settings.ripup_allowed = true;
       ctrl_settings.ripup_costs = p_ripup_costs;
     }
-    SortedSet<Item> ripped_item_list = new TreeSet<Item>();
+    SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine =
         init_autoroute(
             pin_net_no,
@@ -1168,7 +1168,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    */
   public boolean remove_trace_tails(
       int p_net_no, Item.StopConnectionOption p_stop_connection_option) {
-    SortedSet<Item> stub_set = new TreeSet<Item>();
+    SortedSet<Item> stub_set = new TreeSet<>();
     Collection<Item> board_items = this.get_items();
     for (Item curr_item : board_items) {
       if (!curr_item.is_routable()) {
@@ -1194,7 +1194,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         stub_set.add(curr_item);
       }
     }
-    SortedSet<Item> stub_connections = new TreeSet<Item>();
+    SortedSet<Item> stub_connections = new TreeSet<>();
     for (Item curr_item : stub_set) {
       int item_contact_count = curr_item.get_normal_contacts().size();
       if (item_contact_count == 1) {

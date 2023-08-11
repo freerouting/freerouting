@@ -150,7 +150,7 @@ public class TileConstructionState extends CornerItemConstructionState {
     }
     if (new_length < corner_arr.length) {
       // somthing skipped, update corner_list
-      corner_list = new LinkedList<IntPoint>();
+      corner_list = new LinkedList<>();
       for (int i = 0; i < new_length; ++i) {
         corner_list.add(corner_arr[i]);
       }
@@ -184,7 +184,7 @@ public class TileConstructionState extends CornerItemConstructionState {
 
     if (new_length != corner_arr.length) {
       // recalculate the corner_list
-      corner_list = new LinkedList<IntPoint>();
+      corner_list = new LinkedList<>();
       for (int i = 0; i < new_length; ++i) {
         corner_list.add(corner_arr[i]);
       }

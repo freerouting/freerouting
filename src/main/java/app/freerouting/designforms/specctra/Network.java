@@ -187,7 +187,7 @@ public class Network extends ScopeKeyword {
   /** Creates a sequence of subnets with 2 pins from p_pin_list */
   private static Collection<Collection<Net.Pin>> create_ordered_subnets(
       Collection<Net.Pin> p_pin_list) {
-    Collection<Collection<Net.Pin>> result = new LinkedList<Collection<Net.Pin>>();
+    Collection<Collection<Net.Pin>> result = new LinkedList<>();
     if (p_pin_list.isEmpty()) {
       return result;
     }
@@ -196,7 +196,7 @@ public class Network extends ScopeKeyword {
     Net.Pin prev_pin = it.next();
     while (it.hasNext()) {
       Net.Pin next_pin = it.next();
-      Set<Net.Pin> curr_subnet_pin_list = new TreeSet<Net.Pin>();
+      Set<Net.Pin> curr_subnet_pin_list = new TreeSet<>();
       curr_subnet_pin_list.add(prev_pin);
       curr_subnet_pin_list.add(next_pin);
       result.add(curr_subnet_pin_list);
@@ -305,7 +305,7 @@ public class Network extends ScopeKeyword {
   static Collection<String> read_via_rule(
       IJFlexScanner p_scanner, BasicBoard p_board) {
     try {
-      Collection<String> result = new LinkedList<String>();
+      Collection<String> result = new LinkedList<>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnFileReader.NAME);
         Object next_token = p_scanner.next_token();
@@ -982,7 +982,7 @@ public class Network extends ScopeKeyword {
         return;
       }
       Collection<Net> pin_nets = p_par.netlist.get_nets(p_location.name, curr_pin.name);
-      Collection<Integer> net_numbers = new LinkedList<Integer>();
+      Collection<Integer> net_numbers = new LinkedList<>();
       for (Net curr_pin_net : pin_nets) {
         app.freerouting.rules.Net curr_board_net =
             routing_board.rules.nets.get(curr_pin_net.id.name, curr_pin_net.id.subnet_number);
@@ -1161,11 +1161,11 @@ public class Network extends ScopeKeyword {
 
   @Override
   public boolean read_scope(ReadScopeParameter p_par) {
-    Collection<NetClass> classes = new LinkedList<NetClass>();
-    Collection<NetClass.ClassClass> class_class_list = new LinkedList<NetClass.ClassClass>();
+    Collection<NetClass> classes = new LinkedList<>();
+    Collection<NetClass.ClassClass> class_class_list = new LinkedList<>();
     Collection<ViaInfo> via_infos =
-        new LinkedList<ViaInfo>();
-    Collection<Collection<String>> via_rules = new LinkedList<Collection<String>>();
+        new LinkedList<>();
+    Collection<Collection<String>> via_rules = new LinkedList<>();
     Object next_token = null;
     for (; ; ) {
       Object prev_token = next_token;
@@ -1296,9 +1296,9 @@ public class Network extends ScopeKeyword {
       subnet_number = ((Integer) next_token).intValue();
     }
     boolean pin_order_found = false;
-    Collection<Net.Pin> pin_list = new LinkedList<Net.Pin>();
-    Collection<Rule> net_rules = new LinkedList<Rule>();
-    Collection<Collection<Net.Pin>> subnet_pin_lists = new LinkedList<Collection<Net.Pin>>();
+    Collection<Net.Pin> pin_list = new LinkedList<>();
+    Collection<Rule> net_rules = new LinkedList<>();
+    Collection<Collection<Net.Pin>> subnet_pin_lists = new LinkedList<>();
     if (!scope_is_empty) {
       for (; ; ) {
         Object prev_token = next_token;
@@ -1327,7 +1327,7 @@ public class Network extends ScopeKeyword {
               return false;
             }
           } else if (next_token == Keyword.FROMTO) {
-            Set<Net.Pin> curr_subnet_pin_list = new TreeSet<Net.Pin>();
+            Set<Net.Pin> curr_subnet_pin_list = new TreeSet<>();
             if (!read_net_pins(p_scanner, curr_subnet_pin_list)) {
               return false;
             }

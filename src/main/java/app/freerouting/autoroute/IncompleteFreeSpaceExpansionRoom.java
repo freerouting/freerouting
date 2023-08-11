@@ -29,6 +29,6 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom {
   }
 
   public Collection<TargetItemExpansionDoor> get_target_doors() {
-    return new LinkedList<TargetItemExpansionDoor>();
+    return new LinkedList<>();
   }
 }

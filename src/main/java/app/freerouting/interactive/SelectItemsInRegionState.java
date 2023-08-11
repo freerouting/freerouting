@@ -80,7 +80,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
             hdlg.get_routing_board().overlapping_items(b, select_layer));
     if (hdlg.settings.select_on_all_visible_layers) {
       // remove items, which are not visible
-      Set<Item> visible_items = new TreeSet<Item>();
+      Set<Item> visible_items = new TreeSet<>();
       Iterator<Item> it = found_items.iterator();
       while (it.hasNext()) {
         Item curr_item = it.next();

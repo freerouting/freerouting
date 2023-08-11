@@ -61,11 +61,11 @@ class DrillPage implements ExpandableObject {
       AutorouteEngine p_autoroute_engine, boolean p_attach_smd) {
     if (this.drills == null || p_autoroute_engine.get_net_no() != this.net_no) {
       this.net_no = p_autoroute_engine.get_net_no();
-      this.drills = new LinkedList<ExpansionDrill>();
+      this.drills = new LinkedList<>();
       ShapeSearchTree search_tree = this.board.search_tree_manager.get_default_tree();
-      Collection<TreeEntry> overlaps = new LinkedList<TreeEntry>();
+      Collection<TreeEntry> overlaps = new LinkedList<>();
       search_tree.overlapping_tree_entries(this.shape, -1, overlaps);
-      Collection<TileShape> cutout_shapes = new LinkedList<TileShape>();
+      Collection<TileShape> cutout_shapes = new LinkedList<>();
       // drills on top of existing vias are used in the ripup algorithm
       TileShape prev_obstacle_shape = IntBox.EMPTY;
       for (TreeEntry curr_entry : overlaps) {

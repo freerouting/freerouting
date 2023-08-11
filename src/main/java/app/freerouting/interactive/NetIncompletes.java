@@ -39,7 +39,7 @@ public class NetIncompletes {
   public NetIncompletes(
       int p_net_no, Collection<Item> p_net_items, BasicBoard p_board, Locale p_locale) {
     this.draw_marker_radius = p_board.rules.get_min_trace_half_width() * 2;
-    this.incompletes = new LinkedList<RatsNest.AirLine>();
+    this.incompletes = new LinkedList<>();
     this.net = p_board.rules.nets.get(p_net_no);
 
     // Create an array of Item-connected_set pairs.
@@ -50,7 +50,7 @@ public class NetIncompletes {
 
     // create a Delauny Triangulation for the net_items
     Collection<PlanarDelaunayTriangulation.Storable> triangulation_objects =
-        new LinkedList<PlanarDelaunayTriangulation.Storable>();
+        new LinkedList<>();
     for (PlanarDelaunayTriangulation.Storable curr_object : net_items) {
       triangulation_objects.add(curr_object);
     }
@@ -60,7 +60,7 @@ public class NetIncompletes {
     // sort the result edges of the triangulation by length in ascending order.
     Collection<PlanarDelaunayTriangulation.ResultEdge> triangulation_lines =
         triangulation.get_edge_lines();
-    SortedSet<Edge> sorted_edges = new TreeSet<Edge>();
+    SortedSet<Edge> sorted_edges = new TreeSet<>();
 
     for (PlanarDelaunayTriangulation.ResultEdge curr_line : triangulation_lines) {
       Edge new_edge =
@@ -212,10 +212,10 @@ public class NetIncompletes {
    * the same connected set are located next to each other.
    */
   private NetItem[] calculate_net_items(Collection<Item> p_item_list) {
-    ArrayList<NetItem> result = new ArrayList<NetItem>();
+    ArrayList<NetItem> result = new ArrayList<>();
     int input_size = p_item_list.size();
 
-    Collection<Item> handeled_items = new LinkedList<Item>();
+    Collection<Item> handeled_items = new LinkedList<>();
     int curr_index = 0;
     while (!p_item_list.isEmpty()) {
       Item start_item = p_item_list.iterator().next();

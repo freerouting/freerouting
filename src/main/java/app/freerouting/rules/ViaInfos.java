@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
  */
 public class ViaInfos
     implements Serializable, ObjectInfoPanel.Printable {
-  private final List<ViaInfo> list = new LinkedList<ViaInfo>();
+  private final List<ViaInfo> list = new LinkedList<>();
 
   /**
    * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed. Return false,

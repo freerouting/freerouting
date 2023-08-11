@@ -46,7 +46,7 @@ public abstract class PolylineShape implements Shape, Serializable {
   /** Return all unbounded cornersw of this shape. */
   public Point[] bounded_corners() {
     int corner_count = this.border_line_count();
-    Collection<Point> result_list = new LinkedList<Point>();
+    Collection<Point> result_list = new LinkedList<>();
     for (int i = 0; i < corner_count; ++i) {
       if (this.corner_is_bounded(i)) {
         result_list.add(this.corner(i));

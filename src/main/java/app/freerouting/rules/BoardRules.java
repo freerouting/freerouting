@@ -22,7 +22,7 @@ public class BoardRules implements Serializable {
   /** Describes the electrical nets on the board. */
   public final Nets nets;
   public final ViaInfos via_infos = new ViaInfos();
-  public final Vector<ViaRule> via_rules = new Vector<ViaRule>();
+  public final Vector<ViaRule> via_rules = new Vector<>();
   public final NetClasses net_classes = new NetClasses();
   private final LayerStructure layer_structure;
   /** The angle restriction for traces: 90 degree, 45 degree or none. */

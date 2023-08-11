@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 public abstract class InteractiveActionThread extends Thread
     implements Stoppable {
   public final BoardHandling hdlg;
-  protected List<ThreadActionListener> listeners = new ArrayList<ThreadActionListener>();
+  protected List<ThreadActionListener> listeners = new ArrayList<>();
   private boolean stop_requested = false;
   private boolean stop_auto_router = false;
 

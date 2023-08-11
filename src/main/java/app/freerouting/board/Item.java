@@ -312,7 +312,7 @@ public abstract class Item
    * list are of type ClearanceViolations. The first_item in such an object is always this item.
    */
   public Collection<ClearanceViolation> clearance_violations() {
-    Collection<ClearanceViolation> result = new LinkedList<ClearanceViolation>();
+    Collection<ClearanceViolation> result = new LinkedList<>();
     if (this.board == null) {
       return result;
     }
@@ -429,7 +429,7 @@ public abstract class Item
    * this item is not connectable.
    */
   public Set<Item> get_all_contacts() {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (!(this instanceof Connectable)) {
       return result;
     }
@@ -456,7 +456,7 @@ public abstract class Item
    * result will be empty, if this item is not connectable.
    */
   public Set<Item> get_all_contacts(int p_layer) {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (!(this instanceof Connectable)) {
       return result;
     }
@@ -501,7 +501,7 @@ public abstract class Item
 
   /** default implementation to be overwritten in the Connectable subclasses */
   public Set<Item> get_normal_contacts() {
-    return new TreeSet<Item>();
+    return new TreeSet<>();
   }
 
   /**
@@ -538,7 +538,7 @@ public abstract class Item
    * which does not belong to a component.
    */
   public Set<Item> get_connected_set(int p_net_no, boolean p_stop_at_plane) {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (p_net_no > 0 && !this.contains_net(p_net_no)) {
       return result;
     }
@@ -613,7 +613,7 @@ public abstract class Item
    * in this items are used instead of p_net_no.
    */
   public Set<Item> get_unconnected_set(int p_net_no) {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (p_net_no > 0 && !this.contains_net(p_net_no)) {
       return result;
     }
@@ -640,7 +640,7 @@ public abstract class Item
    */
   public Set<Item> get_connection_items(StopConnectionOption p_stop_option) {
     Set<Item> contacts = this.get_normal_contacts();
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (this.is_routable()) {
       result.add(this);
     }
@@ -1085,7 +1085,7 @@ public abstract class Item
       p_window.append(", ");
       Integer violation_count = clearance_violations.size();
       Collection<ObjectInfoPanel.Printable> violations =
-          new LinkedList<ObjectInfoPanel.Printable>();
+          new LinkedList<>();
       violations.addAll(clearance_violations);
       p_window.append_objects(
           violation_count.toString(), resources.getString("violation_info"), violations);

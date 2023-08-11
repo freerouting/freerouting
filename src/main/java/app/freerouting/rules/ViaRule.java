@@ -19,7 +19,7 @@ public class ViaRule
   /** Empty via rule. Must not be changed. */
   public static final ViaRule EMPTY = new ViaRule("empty");
   public final String name;
-  private final List<ViaInfo> list = new LinkedList<ViaInfo>();
+  private final List<ViaInfo> list = new LinkedList<>();
 
   public ViaRule(String p_name) {
     name = p_name;

@@ -58,7 +58,7 @@ public class NetClass {
       String class_name = p_scanner.next_string();
 
       Object next_token = null;
-      Collection<String> net_list = new LinkedList<String>();
+      Collection<String> net_list = new LinkedList<>();
       boolean rules_missing = false;
       // read the nets belonging to the class
       for (; ; ) {
@@ -77,10 +77,10 @@ public class NetClass {
         }
         net_list.add((String) next_token);
       }
-      Collection<Rule> rules = new LinkedList<Rule>();
-      Collection<Rule.LayerRule> layer_rules = new LinkedList<Rule.LayerRule>();
-      Collection<String> use_via = new LinkedList<String>();
-      Collection<String> use_layer = new LinkedList<String>();
+      Collection<Rule> rules = new LinkedList<>();
+      Collection<Rule.LayerRule> layer_rules = new LinkedList<>();
+      Collection<String> use_via = new LinkedList<>();
+      Collection<String> use_layer = new LinkedList<>();
       String via_rule = null;
       String trace_clearance_class = null;
       boolean pull_tight = true;
@@ -151,9 +151,9 @@ public class NetClass {
 
   public static ClassClass read_class_class_scope(IJFlexScanner p_scanner) {
     try {
-      Collection<String> classes = new LinkedList<String>();
-      Collection<Rule> rules = new LinkedList<Rule>();
-      Collection<Rule.LayerRule> layer_rules = new LinkedList<Rule.LayerRule>();
+      Collection<String> classes = new LinkedList<>();
+      Collection<Rule> rules = new LinkedList<>();
+      Collection<Rule.LayerRule> layer_rules = new LinkedList<>();
       Object prev_token = null;
       for (; ; ) {
         Object next_token = p_scanner.next_token();

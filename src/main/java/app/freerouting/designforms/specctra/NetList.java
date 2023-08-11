@@ -11,7 +11,7 @@ import java.util.TreeMap;
 public class NetList {
 
   /** The entries of this map are of type Net, the keys are the net_ids. */
-  private final Map<Net.Id, Net> nets = new TreeMap<Net.Id, Net>();
+  private final Map<Net.Id, Net> nets = new TreeMap<>();
 
   /** Returns true, if the netlist contains a net with the input name. */
   public boolean contains(Net.Id p_net_id) {
@@ -44,7 +44,7 @@ public class NetList {
 
   /** Returns all nets in this net list containing the input pin. */
   public Collection<Net> get_nets(String p_component_name, String p_pin_name) {
-    Collection<Net> result = new LinkedList<Net>();
+    Collection<Net> result = new LinkedList<>();
     Net.Pin search_pin = new Net.Pin(p_component_name, p_pin_name);
     Collection<Net> net_list = nets.values();
     Iterator<Net> it = net_list.iterator();

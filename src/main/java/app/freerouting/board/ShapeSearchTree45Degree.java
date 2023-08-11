@@ -105,25 +105,25 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     if (!(p_room.get_contained_shape().is_IntOctagon())
         && this.board.get_test_level() != TestLevel.RELEASE_VERSION) {
       FRLogger.warn("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
-      return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+      return new LinkedList<>();
     }
     IntOctagon shape_to_be_contained = p_room.get_contained_shape().bounding_octagon();
     if (this.root == null) {
-      return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+      return new LinkedList<>();
     }
     IntOctagon start_shape = board.get_bounding_box().bounding_octagon();
     if (p_room.get_shape() != null) {
       if (!(p_room.get_shape() instanceof IntOctagon)) {
         FRLogger.warn(
             "ShapeSearchTree45Degree.complete_shape: p_start_shape of type IntOctagon expected");
-        return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        return new LinkedList<>();
       }
       start_shape = p_room.get_shape().bounding_octagon().intersection(start_shape);
     }
     IntOctagon bounding_shape = start_shape;
     int room_layer = p_room.get_layer();
     Collection<IncompleteFreeSpaceExpansionRoom> result =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
     result.add(
         new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
     this.node_stack.reset();
@@ -149,7 +149,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             IntOctagon curr_object_shape =
                 curr_object.get_tree_shape(this, shape_index).bounding_octagon();
             Collection<IncompleteFreeSpaceExpansionRoom> new_result =
-                new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+                new LinkedList<>();
             IntOctagon new_bounding_shape = IntOctagon.EMPTY;
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntOctagon curr_shape = (IntOctagon) curr_room.get_shape();
@@ -234,7 +234,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     // opposite of this line.
 
     Collection<IncompleteFreeSpaceExpansionRoom> result =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
 
     TileShape contained_shape = p_incomplete_room.get_contained_shape();
     if (contained_shape == null || contained_shape.is_empty()) {

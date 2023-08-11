@@ -261,7 +261,7 @@ public class Pin extends DrillItem implements Serializable {
    */
   public Collection<TraceExitRestriction> get_trace_exit_restrictions(int p_layer) {
     Collection<TraceExitRestriction> result =
-        new LinkedList<TraceExitRestriction>();
+        new LinkedList<>();
     int padstack_layer = this.get_padstack_layer(p_layer - this.first_layer());
     double pad_xy_factor = 1.5;
     // setting 1.5 to a higher factor may hinder the shove algorithm of the autorouter between
@@ -390,7 +390,7 @@ public class Pin extends DrillItem implements Serializable {
 
   /** Return all Pins, that can be swapped with this pin. */
   public Set<Pin> get_swappable_pins() {
-    Set<Pin> result = new TreeSet<Pin>();
+    Set<Pin> result = new TreeSet<>();
     Component component = this.board.components.get(this.get_component_no());
     if (component == null) {
       return result;

@@ -134,7 +134,7 @@ public class PartLibrary extends ScopeKeyword {
         FRLogger.warn("PartLibrary.read_logical_part_mapping: Keyword.COMPONENT_SCOPE expected");
         return null;
       }
-      SortedSet<String> result = new TreeSet<String>();
+      SortedSet<String> result = new TreeSet<>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnFileReader.NAME);
         next_token = p_scanner.next_token();
@@ -160,7 +160,7 @@ public class PartLibrary extends ScopeKeyword {
   }
 
   private LogicalPart read_logical_part(IJFlexScanner p_scanner) {
-    Collection<PartPin> part_pins = new LinkedList<PartPin>();
+    Collection<PartPin> part_pins = new LinkedList<>();
     Object next_token = null;
     try {
       next_token = p_scanner.next_token();

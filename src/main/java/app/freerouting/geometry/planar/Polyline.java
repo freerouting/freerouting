@@ -416,7 +416,7 @@ public class Polyline implements Serializable {
       }
       FloatPoint check_distance_corner = corner_approx(i);
       final double check_dist_square = 2.0 * p_half_width * p_half_width;
-      Collection<Line> cut_dog_ear_lines = new LinkedList<Line>();
+      Collection<Line> cut_dog_ear_lines = new LinkedList<>();
       Vector tmp_curr_dir = next_dir;
       boolean direction_changed = false;
       for (int j = i + 2; j < arr.length - 1; ++j) {

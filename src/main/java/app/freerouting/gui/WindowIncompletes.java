@@ -42,7 +42,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
       return;
     }
     Set<Item> selected_items =
-        new TreeSet<Item>();
+        new TreeSet<>();
     for (int i = 0; i < selected_incompletes.size(); ++i) {
       RatsNest.AirLine curr_airline = (RatsNest.AirLine) selected_incompletes.get(i);
       selected_items.add(curr_airline.from_item);

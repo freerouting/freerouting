@@ -121,7 +121,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   @Override
   public Set<Item> get_normal_contacts() {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     Point start_corner = this.first_corner();
     if (start_corner != null) {
       result.addAll(get_normal_contacts(start_corner, false));
@@ -174,11 +174,11 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public Set<Item> get_normal_contacts(Point p_point, boolean p_ignore_net) {
     if (p_point == null
         || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
-      return new TreeSet<Item>();
+      return new TreeSet<>();
     }
     TileShape search_shape = TileShape.get_instance(p_point);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_ob : overlaps) {
       if (!(curr_ob instanceof Item)) {
         continue;
@@ -300,7 +300,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (this.is_overlap()) {
       return true;
     }
-    Set<Item> visited_items = new TreeSet<Item>();
+    Set<Item> visited_items = new TreeSet<>();
     Collection<Item> start_contacts = this.get_start_contacts();
     // a cycle exists if through expanding the start contact we reach
     // this trace again via an end contact
@@ -382,7 +382,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * traps.
    */
   Set<Pin> touching_pins_at_end_corners() {
-    Set<Pin> result = new TreeSet<Pin>();
+    Set<Pin> result = new TreeSet<>();
     if (this.board == null) {
       return result;
     }

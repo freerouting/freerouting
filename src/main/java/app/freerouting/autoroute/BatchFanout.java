@@ -22,7 +22,7 @@ public class BatchFanout {
     this.thread = p_thread;
     this.routing_board = p_thread.hdlg.get_routing_board();
     Collection<app.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
-    this.sorted_components = new TreeSet<Component>();
+    this.sorted_components = new TreeSet<>();
     for (int i = 1; i <= routing_board.components.count(); ++i) {
       app.freerouting.board.Component curr_board_component = routing_board.components.get(i);
       Component curr_component = new Component(curr_board_component, board_smd_pin_list);
@@ -109,7 +109,7 @@ public class BatchFanout {
 
       // calcoulate the center of gravity of all SMD pins of this component.
       Collection<app.freerouting.board.Pin> curr_pin_list =
-          new LinkedList<app.freerouting.board.Pin>();
+          new LinkedList<>();
       int cmp_no = p_board_component.no;
       for (app.freerouting.board.Pin curr_board_pin : p_board_smd_pin_list) {
         if (curr_board_pin.get_component_no() == cmp_no) {
@@ -129,7 +129,7 @@ public class BatchFanout {
       this.gravity_center_of_smd_pins = new FloatPoint(x, y);
 
       // calculate the sorted SMD pins of this component
-      this.smd_pins = new TreeSet<Pin>();
+      this.smd_pins = new TreeSet<>();
 
       for (app.freerouting.board.Pin curr_board_pin : curr_pin_list) {
         this.smd_pins.add(new Pin(curr_board_pin));

@@ -258,7 +258,7 @@ public class ForcedPadAlgo {
         return CheckDrillResult.NOT_DRILLABLE;
       }
       Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
-      Collection<Item> ignore_items = new LinkedList<Item>();
+      Collection<Item> ignore_items = new LinkedList<>();
       if (!MoveDrillItemAlgo.check(
           curr_shove_via,
           delta,

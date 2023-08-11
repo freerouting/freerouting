@@ -34,7 +34,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   protected final JPanel south_panel;
   /** The subwindows with information about selected object */
   protected final Collection<WindowObjectInfo> subwindows =
-      new LinkedList<WindowObjectInfo>();
+      new LinkedList<>();
 
   private final JPanel main_panel;
   private final ResourceBundle resources;
@@ -121,7 +121,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     main_panel.remove(this.list_empty_message);
     // Create display list
     this.list_model = new DefaultListModel<>();
-    this.list = new JList<Object>(this.list_model);
+    this.list = new JList<>(this.list_model);
     this.list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     this.fill_list();
     if (this.list.getVisibleRowCount() > 0) {
@@ -206,7 +206,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
         return;
       }
       Collection<WindowObjectInfo.Printable> object_list =
-          new LinkedList<WindowObjectInfo.Printable>();
+          new LinkedList<>();
       for (int i = 0; i < selected_objects.size(); ++i) {
         object_list.add((WindowObjectInfo.Printable) (selected_objects.get(i)));
       }

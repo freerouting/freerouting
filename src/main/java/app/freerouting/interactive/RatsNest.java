@@ -33,9 +33,9 @@ public class RatsNest {
     this.locale = p_locale;
     int max_net_no = p_board.rules.nets.max_net_no();
     // Create the net item lists at once for performance reasons.
-    Vector<Collection<Item>> net_item_lists = new Vector<Collection<Item>>(max_net_no);
+    Vector<Collection<Item>> net_item_lists = new Vector<>(max_net_no);
     for (int i = 0; i < max_net_no; ++i) {
-      net_item_lists.add(new LinkedList<Item>());
+      net_item_lists.add(new LinkedList<>());
     }
     Iterator<UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
     for (; ; ) {
@@ -69,7 +69,7 @@ public class RatsNest {
   public void recalculate(int p_net_no, Collection<Item> p_item_list, BasicBoard p_board) {
     if (p_net_no >= 1 && p_net_no <= net_incompletes.length) {
       // copy p_item_list, because it will be changed inside the constructor of NetIncompletes
-      Collection<Item> item_list = new LinkedList<Item>(p_item_list);
+      Collection<Item> item_list = new LinkedList<>(p_item_list);
       net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board, locale);
     }
   }

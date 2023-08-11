@@ -67,7 +67,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
    */
   @Override
   protected Collection<FloatPoint> calculate_next_trace_corners() {
-    Collection<FloatPoint> result = new LinkedList<FloatPoint>();
+    Collection<FloatPoint> result = new LinkedList<>();
     if (this.current_to_door_index >= this.current_target_door_index) {
       if (this.current_to_door_index == this.current_target_door_index) {
         FloatPoint nearest_point =

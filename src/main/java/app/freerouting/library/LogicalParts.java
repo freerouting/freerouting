@@ -9,7 +9,7 @@ import java.util.Vector;
 /** The logical parts contain information for gate swap and pin swap. */
 public class LogicalParts implements Serializable {
   /** The array of logical parts */
-  private final Vector<LogicalPart> part_arr = new Vector<LogicalPart>();
+  private final Vector<LogicalPart> part_arr = new Vector<>();
 
   /** Adds a logical part to the database. */
   public LogicalPart add(String p_name, LogicalPart.PartPin[] p_part_pin_arr) {

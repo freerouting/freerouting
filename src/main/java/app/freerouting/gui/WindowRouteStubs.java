@@ -37,7 +37,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
     BasicBoard routing_board =
         this.board_frame.board_panel.board_handling.get_routing_board();
 
-    SortedSet<RouteStubInfo> route_stub_info_set = new TreeSet<RouteStubInfo>();
+    SortedSet<RouteStubInfo> route_stub_info_set = new TreeSet<>();
 
     Collection<Item> board_items = routing_board.get_items();
     for (Item curr_item : board_items) {
@@ -108,7 +108,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
       return;
     }
     Set<Item> selected_items =
-        new TreeSet<Item>();
+        new TreeSet<>();
     for (int i = 0; i < selected_list_values.size(); ++i) {
       selected_items.add(((RouteStubInfo) selected_list_values.get(i)).stub_item);
     }

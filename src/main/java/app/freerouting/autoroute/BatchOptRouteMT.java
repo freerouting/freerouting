@@ -22,10 +22,10 @@ public class BatchOptRouteMT extends BatchOptRoute {
   private final int thread_pool_size;
   private int num_tasks_finished = 0;
   private int update_count = 0;
-  private final ArrayList<Integer> item_ids = new ArrayList<Integer>();
-  private final HashMap<Integer, ItemRouteResult> result_map = new HashMap<Integer, ItemRouteResult>();
+  private final ArrayList<Integer> item_ids = new ArrayList<>();
+  private final HashMap<Integer, ItemRouteResult> result_map = new HashMap<>();
   private CountDownLatch task_completion_signal = new CountDownLatch(1);
-  private final ArrayList<BoardUpdateStrategy> hybrid_list = new ArrayList<BoardUpdateStrategy>();
+  private final ArrayList<BoardUpdateStrategy> hybrid_list = new ArrayList<>();
   private int hybrid_index = -1;
 
   /**
@@ -168,8 +168,8 @@ public class BatchOptRouteMT extends BatchOptRoute {
 
     if (current_item_selection_strategy() == ItemSelectionStrategy.PRIORITIZED
         && result_map.size() > 0) {
-      ArrayList<Integer> new_item_ids = new ArrayList<Integer>();
-      PriorityQueue<ItemRouteResult> pq = new PriorityQueue<ItemRouteResult>();
+      ArrayList<Integer> new_item_ids = new ArrayList<>();
+      PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 
       for (Item item = sorted_route_items.next(); item != null; item = sorted_route_items.next()) {
         ItemRouteResult r = result_map.get(item.get_id_no());

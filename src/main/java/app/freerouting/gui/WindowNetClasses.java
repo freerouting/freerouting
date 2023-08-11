@@ -50,7 +50,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private final ResourceBundle resources;
   /** The subwindows created inside this window */
   private final Collection<JFrame> subwindows =
-      new LinkedList<JFrame>();
+      new LinkedList<>();
   private JPanel center_panel;
   private NetClassTable table;
   private NetClassTableModel table_model;
@@ -315,7 +315,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       }
       Nets nets = routing_board.rules.nets;
       Set<Item> selected_items =
-          new TreeSet<Item>();
+          new TreeSet<>();
       Collection<Item> board_items = routing_board.get_items();
       for (Item curr_item : board_items) {
         boolean item_matches = false;
@@ -393,7 +393,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
             board_rules.net_classes.get(
                 (String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
       }
-      Collection<Printable> contained_nets = new LinkedList<Printable>();
+      Collection<Printable> contained_nets = new LinkedList<>();
       int max_net_no = board_rules.nets.max_net_no();
       for (int i = 1; i <= max_net_no; ++i) {
         Net curr_net = board_rules.nets.get(i);

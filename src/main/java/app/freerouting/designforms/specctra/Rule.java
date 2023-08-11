@@ -16,7 +16,7 @@ import java.util.Objects;
 public abstract class Rule {
   /** Returns a collection of objects of class Rule. */
   public static Collection<Rule> read_scope(IJFlexScanner p_scanner) {
-    Collection<Rule> result = new LinkedList<Rule>();
+    Collection<Rule> result = new LinkedList<>();
     Object current_token = null;
     for (; ; ) {
       Object prev_token = current_token;
@@ -59,8 +59,8 @@ public abstract class Rule {
   /** Reads a LayerRule from dsn-file. */
   public static LayerRule read_layer_rule_scope(IJFlexScanner p_scanner) {
     try {
-      Collection<String> layer_names = new LinkedList<String>();
-      Collection<Rule> rule_list = new LinkedList<Rule>();
+      Collection<String> layer_names = new LinkedList<>();
+      Collection<Rule> rule_list = new LinkedList<>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnFileReader.LAYER_NAME);
         Object next_token = p_scanner.next_token();
@@ -248,7 +248,7 @@ public abstract class Rule {
     try {
       double value = p_scanner.next_double();
 
-      Collection<String> class_pairs = new LinkedList<String>();
+      Collection<String> class_pairs = new LinkedList<>();
       Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
         // look for "(type"

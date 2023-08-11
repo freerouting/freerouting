@@ -63,8 +63,8 @@ public class MoveItemState extends InteractiveState {
     for (Item curr_item : p_item_list) {
       routing_board.remove_item(curr_item);
     }
-    this.net_items_list = new LinkedList<NetItems>();
-    this.item_list = new TreeSet<Item>();
+    this.net_items_list = new LinkedList<>();
+    this.item_list = new TreeSet<>();
 
     for (Item curr_item : p_item_list) {
       // Copy the items in p_item_list, because otherwise the undo algorithm will not work.
@@ -95,8 +95,8 @@ public class MoveItemState extends InteractiveState {
       return null;
     }
     // extend p_item_list to full  components
-    Set<Item> item_list = new TreeSet<Item>();
-    Set<Component> component_list = new TreeSet<Component>();
+    Set<Item> item_list = new TreeSet<>();
+    Set<Component> component_list = new TreeSet<>();
     BasicBoard routing_board = p_board_handling.get_routing_board();
     Component grid_snap_component = null;
     for (Item curr_item : p_item_list) {
@@ -123,9 +123,9 @@ public class MoveItemState extends InteractiveState {
         item_list.add(curr_item);
       }
     }
-    Set<Item> fixed_items = new TreeSet<Item>();
-    Set<Item> obstacle_items = new TreeSet<Item>();
-    Set<Item> add_items = new TreeSet<Item>();
+    Set<Item> fixed_items = new TreeSet<>();
+    Set<Item> obstacle_items = new TreeSet<>();
+    Set<Item> add_items = new TreeSet<>();
     boolean move_ok = true;
     for (Item curr_item : item_list) {
       if (curr_item.is_user_fixed()) {
@@ -294,7 +294,7 @@ public class MoveItemState extends InteractiveState {
       for (Component curr_component : this.component_list) {
         components.move(curr_component.no, translate_vector);
       }
-      this.clearance_violations = new LinkedList<ClearanceViolation>();
+      this.clearance_violations = new LinkedList<>();
       for (Item curr_item : this.item_list) {
         curr_item.translate_by(translate_vector);
         this.clearance_violations.addAll(curr_item.clearance_violations());
@@ -329,7 +329,7 @@ public class MoveItemState extends InteractiveState {
     for (Component curr_component : this.component_list) {
       components.turn_90_degree(curr_component.no, p_factor, current_position);
     }
-    this.clearance_violations = new LinkedList<ClearanceViolation>();
+    this.clearance_violations = new LinkedList<>();
     for (Item curr_item : this.item_list) {
       curr_item.turn_90_degree(p_factor, current_position);
       this.clearance_violations.addAll(curr_item.clearance_violations());
@@ -351,7 +351,7 @@ public class MoveItemState extends InteractiveState {
     for (Component curr_component : this.component_list) {
       components.rotate(curr_component.no, p_angle_in_degree, this.current_position);
     }
-    this.clearance_violations = new LinkedList<ClearanceViolation>();
+    this.clearance_violations = new LinkedList<>();
     FloatPoint float_position = this.current_position.to_float();
     for (Item curr_item : this.item_list) {
       curr_item.rotate_approx(p_angle_in_degree, float_position);
@@ -404,7 +404,7 @@ public class MoveItemState extends InteractiveState {
     for (Component curr_component : this.component_list) {
       components.change_side(curr_component.no, current_position);
     }
-    this.clearance_violations = new LinkedList<ClearanceViolation>();
+    this.clearance_violations = new LinkedList<>();
     for (Item curr_item : this.item_list) {
       curr_item.change_placement_side(current_position);
       this.clearance_violations.addAll(curr_item.clearance_violations());

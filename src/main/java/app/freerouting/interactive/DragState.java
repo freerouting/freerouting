@@ -103,7 +103,7 @@ public abstract class DragState extends InteractiveState {
     InteractiveState result = this.move_to(p_point);
     if (result != this) {
       // an error occured
-      Set<Integer> changed_nets = new TreeSet<Integer>();
+      Set<Integer> changed_nets = new TreeSet<>();
       hdlg.get_routing_board().undo(changed_nets);
       for (Integer changed_net : changed_nets) {
         hdlg.update_ratsnest(changed_net);

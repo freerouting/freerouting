@@ -44,7 +44,7 @@ public class PlanarDelaunayTriangulation {
   /** Creates a new instance of PlanarDelaunayTriangulation from p_object_list. */
   public PlanarDelaunayTriangulation(
       Collection<PlanarDelaunayTriangulation.Storable> p_object_list) {
-    List<Corner> corner_list = new LinkedList<Corner>();
+    List<Corner> corner_list = new LinkedList<>();
     for (PlanarDelaunayTriangulation.Storable curr_object : p_object_list) {
       Point[] curr_corners = curr_object.get_triangulation_corners();
       for (Point curr_corner : curr_corners) {
@@ -82,7 +82,7 @@ public class PlanarDelaunayTriangulation {
     // Initialize the search graph.
 
     this.search_graph = new TriangleGraph(start_triangle);
-    this.degenerate_edges = new LinkedList<Edge>();
+    this.degenerate_edges = new LinkedList<>();
 
     // Insert the corners in the corner list into the search graph.
 
@@ -94,7 +94,7 @@ public class PlanarDelaunayTriangulation {
 
   /** Returns all edge lines of the result of the Delaunay Triangulation. */
   public Collection<ResultEdge> get_edge_lines() {
-    Collection<ResultEdge> result = new LinkedList<ResultEdge>();
+    Collection<ResultEdge> result = new LinkedList<>();
     for (Edge curr_edge : this.degenerate_edges) {
       result.add(
           new ResultEdge(
@@ -104,7 +104,7 @@ public class PlanarDelaunayTriangulation {
               curr_edge.end_corner.object));
     }
     if (this.search_graph.anchor != null) {
-      Set<Edge> result_edges = new TreeSet<Edge>();
+      Set<Edge> result_edges = new TreeSet<>();
       this.search_graph.anchor.get_leaf_edges(result_edges);
       for (Edge curr_edge : result_edges) {
         result.add(
@@ -617,7 +617,7 @@ public class PlanarDelaunayTriangulation {
     public Triangle(Edge[] p_edge_lines, Triangle p_first_parent) {
       this.edge_lines = p_edge_lines;
       // create an empty list for the children.
-      this.children = new LinkedList<Triangle>();
+      this.children = new LinkedList<>();
       this.first_parent = p_first_parent;
     }
 

@@ -47,19 +47,19 @@ public class Package {
   public static Package read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       boolean is_front = true;
-      Collection<Shape> outline = new LinkedList<Shape>();
-      Collection<Shape.ReadAreaScopeResult> keepouts = new LinkedList<Shape.ReadAreaScopeResult>();
+      Collection<Shape> outline = new LinkedList<>();
+      Collection<Shape.ReadAreaScopeResult> keepouts = new LinkedList<>();
       Collection<Shape.ReadAreaScopeResult> via_keepouts =
-          new LinkedList<Shape.ReadAreaScopeResult>();
+          new LinkedList<>();
       Collection<Shape.ReadAreaScopeResult> place_keepouts =
-          new LinkedList<Shape.ReadAreaScopeResult>();
+          new LinkedList<>();
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
         FRLogger.warn("Package.read_scope: String expected");
         return null;
       }
       String package_name = (String) next_token;
-      Collection<PinInfo> pin_info_list = new LinkedList<PinInfo>();
+      Collection<PinInfo> pin_info_list = new LinkedList<>();
       for (; ; ) {
         Object prev_token = next_token;
         next_token = p_scanner.next_token();

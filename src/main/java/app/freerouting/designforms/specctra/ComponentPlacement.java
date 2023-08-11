@@ -15,7 +15,7 @@ public class ComponentPlacement {
   /** Creates a new instance of ComponentPlacement */
   public ComponentPlacement(String p_lib_name) {
     lib_name = p_lib_name;
-    locations = new LinkedList<ComponentLocation>();
+    locations = new LinkedList<>();
   }
 
   /** The structure of an entry in the list locations. */

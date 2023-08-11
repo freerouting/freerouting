@@ -64,7 +64,7 @@ public abstract class LocateFoundConnectionAlgo {
     for (int i = 0; i < backtrack_array.length; ++i) {
       this.backtrack_array[i] = it.next();
     }
-    this.connection_items = new LinkedList<ResultItem>();
+    this.connection_items = new LinkedList<>();
     BacktrackElement start_info = this.backtrack_array[backtrack_array.length - 1];
     if (!(start_info.door instanceof TargetItemExpansionDoor)) {
       FRLogger.warn("LocateFoundConnectionAlgo: ItemExpansionDoor expected for start_info.door");
@@ -208,7 +208,7 @@ public abstract class LocateFoundConnectionAlgo {
     if (p_maze_search_result == null) {
       return null;
     }
-    Collection<BacktrackElement> result = new LinkedList<BacktrackElement>();
+    Collection<BacktrackElement> result = new LinkedList<>();
     CompleteExpansionRoom curr_next_room = null;
     ExpandableObject curr_backtrack_door = p_maze_search_result.destination_door;
     MazeSearchElement curr_maze_search_element =
@@ -341,7 +341,7 @@ public abstract class LocateFoundConnectionAlgo {
    * traces are returned.
    */
   private ResultItem calculate_next_trace(boolean p_layer_changed, boolean p_at_fanout_end) {
-    Collection<FloatPoint> corner_list = new LinkedList<FloatPoint>();
+    Collection<FloatPoint> corner_list = new LinkedList<>();
     corner_list.add(this.current_from_point);
     if (!p_at_fanout_end) {
       FloatPoint adjusted_start_corner = this.adjust_start_corner();
@@ -384,7 +384,7 @@ public abstract class LocateFoundConnectionAlgo {
     }
 
     // Round the new trace corners to Integer.
-    Collection<IntPoint> rounded_corner_list = new LinkedList<IntPoint>();
+    Collection<IntPoint> rounded_corner_list = new LinkedList<>();
     Iterator<FloatPoint> it = corner_list.iterator();
     IntPoint prev_point = null;
     while (it.hasNext()) {

@@ -257,7 +257,7 @@ public class SelectedItemState extends InteractiveState {
     hdlg.get_routing_board().generate_snapshot();
 
     // calculate the changed nets for updating the ratsnest
-    Set<Integer> changed_nets = new TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<>();
     Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
@@ -317,7 +317,7 @@ public class SelectedItemState extends InteractiveState {
     Integer not_found_count = 0;
     Integer found_count = 0;
     boolean interrupted = false;
-    Collection<Item> autoroute_item_list = new LinkedList<Item>();
+    Collection<Item> autoroute_item_list = new LinkedList<>();
     for (Item curr_item : item_list) {
       if (curr_item instanceof Connectable) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
@@ -331,7 +331,7 @@ public class SelectedItemState extends InteractiveState {
     hdlg.screen_messages.set_interactive_autoroute_info(
         found_count, not_found_count, items_to_go_count);
     // Empty this.item_list to avoid displaying the seected items.
-    this.item_list = new TreeSet<Item>();
+    this.item_list = new TreeSet<>();
     boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
     if (!ratsnest_hidden_before) {
       hdlg.get_ratsnest().hide();
@@ -419,7 +419,7 @@ public class SelectedItemState extends InteractiveState {
     Integer found_count = 0;
     int trace_pull_tight_accuracy = hdlg.settings.trace_pull_tight_accuracy;
     boolean interrupted = false;
-    Collection<Pin> fanout_list = new LinkedList<Pin>();
+    Collection<Pin> fanout_list = new LinkedList<>();
     for (Item curr_item : item_list) {
       if (curr_item instanceof Pin) {
         fanout_list.add((Pin) curr_item);
@@ -429,7 +429,7 @@ public class SelectedItemState extends InteractiveState {
     hdlg.screen_messages.set_interactive_autoroute_info(
         found_count, not_found_count, items_to_go_count);
     // Empty this.item_list to avoid displaying the seected items.
-    this.item_list = new TreeSet<Item>();
+    this.item_list = new TreeSet<>();
     boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
     if (!ratsnest_hidden_before) {
       hdlg.get_ratsnest().hide();
@@ -586,7 +586,7 @@ public class SelectedItemState extends InteractiveState {
   public InteractiveState extent_to_whole_nets() {
 
     // collect all net numbers of the selected items
-    Set<Integer> curr_net_no_set = new TreeSet<Integer>();
+    Set<Integer> curr_net_no_set = new TreeSet<>();
     Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
@@ -596,7 +596,7 @@ public class SelectedItemState extends InteractiveState {
         }
       }
     }
-    Set<Item> new_selected_items = new TreeSet<Item>();
+    Set<Item> new_selected_items = new TreeSet<>();
     Iterator<Integer> it2 = curr_net_no_set.iterator();
     while (it2.hasNext()) {
       int curr_net_no = it2.next();
@@ -618,7 +618,7 @@ public class SelectedItemState extends InteractiveState {
   public InteractiveState extent_to_whole_components() {
 
     // collect all group numbers of the selected items
-    Set<Integer> curr_group_no_set = new TreeSet<Integer>();
+    Set<Integer> curr_group_no_set = new TreeSet<>();
     Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
@@ -626,7 +626,7 @@ public class SelectedItemState extends InteractiveState {
         curr_group_no_set.add(curr_item.get_component_no());
       }
     }
-    Set<Item> new_selected_items = new TreeSet<Item>();
+    Set<Item> new_selected_items = new TreeSet<>();
     new_selected_items.addAll(item_list);
     Iterator<Integer> it2 = curr_group_no_set.iterator();
     while (it2.hasNext()) {
@@ -646,7 +646,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** Select also all items belonging to any connected set of the current selected items. */
   public InteractiveState extent_to_whole_connected_sets() {
-    Set<Item> new_selected_items = new TreeSet<Item>();
+    Set<Item> new_selected_items = new TreeSet<>();
     Iterator<Item> it = this.item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();
@@ -668,7 +668,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** Select also all items belonging to any connection of the current selected items. */
   public InteractiveState extent_to_whole_connections() {
-    Set<Item> new_selected_items = new TreeSet<Item>();
+    Set<Item> new_selected_items = new TreeSet<>();
     Iterator<Item> it = this.item_list.iterator();
     while (it.hasNext()) {
       Item curr_item = it.next();

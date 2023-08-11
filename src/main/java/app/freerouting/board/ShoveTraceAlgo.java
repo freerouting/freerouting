@@ -103,7 +103,7 @@ public class ShoveTraceAlgo {
           return 0;
         }
         Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
-        Collection<Item> ignore_items = new LinkedList<Item>();
+        Collection<Item> ignore_items = new LinkedList<>();
         shove_via_ok =
             MoveDrillItemAlgo.check(
                 curr_shove_via,
@@ -275,7 +275,7 @@ public class ShoveTraceAlgo {
             || curr_shove_via_center.distance_square(try_via_centers[i].to_float())
                 <= max_dist_square) {
           Vector delta = try_via_centers[i].difference_by(curr_shove_via.get_center());
-          Collection<Item> ignore_items = new LinkedList<Item>();
+          Collection<Item> ignore_items = new LinkedList<>();
           if (MoveDrillItemAlgo.check(
               curr_shove_via,
               delta,
@@ -498,7 +498,7 @@ public class ShoveTraceAlgo {
   Collection<Item> get_ignore_items_at_tie_pins(
       TileShape p_trace_shape, int p_layer, int[] p_net_no_arr) {
     Collection<SearchTreeObject> overlaps = this.board.overlapping_objects(p_trace_shape, p_layer);
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_object : overlaps) {
       if (curr_object instanceof Pin) {
         Pin curr_pin = (Pin) curr_object;

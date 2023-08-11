@@ -37,24 +37,24 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
       TileShape p_ignore_shape) {
     if (!(p_room.get_contained_shape() instanceof IntBox)) {
       FRLogger.warn("BoxShapeSearchTree.complete_shape: unexpected p_shape_to_be_contained");
-      return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+      return new LinkedList<>();
     }
     IntBox shape_to_be_contained = (IntBox) p_room.get_contained_shape();
     if (this.root == null) {
-      return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+      return new LinkedList<>();
     }
     IntBox start_shape = board.get_bounding_box();
     if (p_room.get_shape() != null) {
       if (!(p_room.get_shape() instanceof IntBox)) {
         FRLogger.warn("BoxShapeSearchTree.complete_shape: p_start_shape of type IntBox expected");
-        return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        return new LinkedList<>();
       }
       start_shape = ((IntBox) p_room.get_shape()).intersection(start_shape);
     }
     IntBox bounding_shape = start_shape;
     int room_layer = p_room.get_layer();
     Collection<IncompleteFreeSpaceExpansionRoom> result =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
     result.add(
         new IncompleteFreeSpaceExpansionRoom(start_shape, room_layer, shape_to_be_contained));
     this.node_stack.reset();
@@ -77,7 +77,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
             IntBox curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_box();
             Collection<IncompleteFreeSpaceExpansionRoom> new_result =
-                new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+                new LinkedList<>();
             IntBox new_bounding_shape = IntBox.EMPTY;
             for (IncompleteFreeSpaceExpansionRoom curr_room : result) {
               IntBox curr_shape = (IntBox) curr_room.get_shape();
@@ -132,7 +132,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     // opposite of this line.
 
     Collection<IncompleteFreeSpaceExpansionRoom> result =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
 
     TileShape contained_shape = p_incomplete_room.get_contained_shape();
     if (contained_shape == null || contained_shape.is_empty()) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogEntries {
-  private final List<LogEntry> entries = new ArrayList<LogEntry>();
+  private final List<LogEntry> entries = new ArrayList<>();
 
   public int getWarningCount()
   {

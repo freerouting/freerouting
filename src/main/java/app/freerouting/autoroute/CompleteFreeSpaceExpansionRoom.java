@@ -33,7 +33,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   /** Creates a new instance of CompleteFreeSpaceExpansionRoom */
   public CompleteFreeSpaceExpansionRoom(TileShape p_shape, int p_layer, int p_id_no) {
     super(p_shape, p_layer);
-    target_doors = new LinkedList<TargetItemExpansionDoor>();
+    target_doors = new LinkedList<>();
     id_no = p_id_no;
   }
 
@@ -161,7 +161,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   /** Check, if this FreeSpaceExpansionRoom is valid. */
   public boolean validate(AutorouteEngine p_autoroute_engine) {
     boolean result = true;
-    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<ShapeTree.TreeEntry>();
+    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     int[] net_no_arr = new int[1];
     net_no_arr[0] = p_autoroute_engine.get_net_no();
     p_autoroute_engine.autoroute_search_tree.overlapping_tree_entries(
@@ -195,7 +195,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   @Override
   public void clear_doors() {
     super.clear_doors();
-    this.target_doors = new LinkedList<TargetItemExpansionDoor>();
+    this.target_doors = new LinkedList<>();
   }
 
   @Override

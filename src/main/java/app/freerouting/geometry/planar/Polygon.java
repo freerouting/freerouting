@@ -19,7 +19,7 @@ public class Polygon implements Serializable {
    * previous and next point will be removed.
    */
   public Polygon(Point[] p_point_arr) {
-    corners = new LinkedList<Point>();
+    corners = new LinkedList<>();
     if (p_point_arr.length == 0) {
       return;
     }

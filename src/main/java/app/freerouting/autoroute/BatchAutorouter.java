@@ -36,8 +36,8 @@ public class BatchAutorouter {
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
   private final boolean retain_autoroute_database;
   private final int start_ripup_costs;
-  private final HashSet<String> already_checked_board_hashes = new HashSet<String>();
-  private final LinkedList<Integer> diffBetweenBoards = new LinkedList<Integer>();
+  private final HashSet<String> already_checked_board_hashes = new HashSet<>();
+  private final LinkedList<Integer> diffBetweenBoards = new LinkedList<>();
   private boolean is_interrupted = false;
   /** Used to draw the airline of the current routed incomplete. */
   private FloatLine air_line = null;
@@ -231,8 +231,8 @@ public class BatchAutorouter {
    */
   private boolean autoroute_pass(int p_pass_no, boolean p_with_screen_message) {
     try {
-      Collection<Item> autoroute_item_list = new LinkedList<Item>();
-      Set<Item> handled_items = new TreeSet<Item>();
+      Collection<Item> autoroute_item_list = new LinkedList<>();
+      Set<Item> handled_items = new TreeSet<>();
       Iterator<UndoableObjects.UndoableObjectNode> it = routing_board.item_list.start_read_object();
       for (; ; ) {
         UndoableObjects.Storable curr_ob = routing_board.item_list.read_object(it);
@@ -282,7 +282,7 @@ public class BatchAutorouter {
             break;
           }
           routing_board.start_marking_changed_area();
-          SortedSet<Item> ripped_item_list = new TreeSet<Item>();
+          SortedSet<Item> ripped_item_list = new TreeSet<>();
           if (autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no)) {
             ++routed;
             hdlg.repaint();

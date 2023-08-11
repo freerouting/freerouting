@@ -813,7 +813,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       result[0] = p_polyline;
       return result;
     }
-    Collection<Polyline> pieces = new LinkedList<Polyline>();
+    Collection<Polyline> pieces = new LinkedList<>();
     int curr_intersection_no = 0;
     int[] curr_intersection_tuple = intersection_no[curr_intersection_no];
     Point first_intersection =
@@ -915,7 +915,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       return result;
     }
     TileShape[] section_boxes = this.bounding_box().divide_into_sections(p_max_section_width);
-    Collection<TileShape> section_list = new LinkedList<TileShape>();
+    Collection<TileShape> section_list = new LinkedList<>();
     for (int i = 0; i < section_boxes.length; ++i) {
       TileShape curr_section = this.intersection_with_simplify(section_boxes[i]);
       if (curr_section.dimension() == 2) {

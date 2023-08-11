@@ -23,13 +23,13 @@ public class ReadScopeParameter {
    * Collection of elements of class PlaneInfo. The plane cannot be inserted directly into the
    * boards, because the layers may not be read completely.
    */
-  final Collection<PlaneInfo> plane_list = new LinkedList<PlaneInfo>();
+  final Collection<PlaneInfo> plane_list = new LinkedList<>();
   /**
    * Component placement information. It is filled while reading the placement scope and can be
    * evaluated after reading the library and network scope.
    */
-  final Collection<ComponentPlacement> placement_list = new LinkedList<ComponentPlacement>();
-  final Collection<String[]> constants = new LinkedList<String[]>();
+  final Collection<ComponentPlacement> placement_list = new LinkedList<>();
+  final Collection<String[]> constants = new LinkedList<>();
   /**
    * The names of the via padstacks filled while reading the structure scope and evaluated after
    * reading the library scope.
@@ -42,10 +42,10 @@ public class ReadScopeParameter {
 
   /** The logical parts are used for pin and gate swaw */
   Collection<PartLibrary.LogicalPartMapping> logical_part_mappings =
-      new LinkedList<PartLibrary.LogicalPartMapping>();
+      new LinkedList<>();
 
   Collection<PartLibrary.LogicalPart> logical_parts =
-      new LinkedList<PartLibrary.LogicalPart>();
+      new LinkedList<>();
 
   /** The following objects are from the parser scope. */
   String string_quote = "\"";

@@ -121,7 +121,7 @@ public class DragItemState extends DragState {
       } else {
         Collection<Item> moved_items =
             hdlg.get_routing_board().get_component_items(item_to_move.get_component_no());
-        Set<Integer> changed_nets = new TreeSet<Integer>();
+        Set<Integer> changed_nets = new TreeSet<>();
         Iterator<Item> it = moved_items.iterator();
         while (it.hasNext()) {
           Item curr_moved_item = it.next();

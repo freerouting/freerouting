@@ -73,7 +73,7 @@ public class Net
 
   /** Returns the pins and conduction areas of this net. */
   public Collection<Item> get_terminal_items() {
-    Collection<Item> result = new LinkedList<Item>();
+    Collection<Item> result = new LinkedList<>();
     BasicBoard board = this.net_list.get_board();
     Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
     for (; ; ) {
@@ -93,7 +93,7 @@ public class Net
   /** Returns the pins of this net. */
   public Collection<Pin> get_pins() {
     Collection<Pin> result =
-        new LinkedList<Pin>();
+        new LinkedList<>();
     BasicBoard board = this.net_list.get_board();
     Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
     for (; ; ) {
@@ -113,7 +113,7 @@ public class Net
   /** Returns all items of this net. */
   public Collection<Item> get_items() {
     Collection<Item> result =
-        new LinkedList<Item>();
+        new LinkedList<>();
     BasicBoard board = this.net_list.get_board();
     Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
     for (; ; ) {
@@ -174,7 +174,7 @@ public class Net
     Integer via_count = this.get_via_count();
     double cumulative_trace_length = this.get_trace_length();
     Collection<Item> terminal_items = this.get_terminal_items();
-    Collection<Printable> terminals = new LinkedList<Printable>();
+    Collection<Printable> terminals = new LinkedList<>();
     terminals.addAll(terminal_items);
     Integer terminal_item_count = terminals.size();
 

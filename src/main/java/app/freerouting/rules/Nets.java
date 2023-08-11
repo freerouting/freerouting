@@ -23,7 +23,7 @@ public class Nets implements Serializable {
 
   /** Creates a new empty net list */
   public Nets() {
-    net_arr = new Vector<Net>();
+    net_arr = new Vector<>();
   }
 
   /** Returns false, if p_net_no belongs to a net internally used for special purposes. */
@@ -50,7 +50,7 @@ public class Nets implements Serializable {
 
   /** Returns all subnets with the input name. */
   public Collection<Net> get(String p_name) {
-    Collection<Net> result = new LinkedList<Net>();
+    Collection<Net> result = new LinkedList<>();
     for (Net curr_net : net_arr) {
       if (curr_net != null && curr_net.name.compareToIgnoreCase(p_name) == 0) {
         result.add(curr_net);

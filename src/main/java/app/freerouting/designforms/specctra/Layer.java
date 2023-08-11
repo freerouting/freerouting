@@ -36,7 +36,7 @@ public class Layer {
     name = p_name;
     no = p_no;
     is_signal = p_is_signal;
-    net_names = new LinkedList<String>();
+    net_names = new LinkedList<>();
   }
 
   /** Writes a layer scope in the stucture scope. */

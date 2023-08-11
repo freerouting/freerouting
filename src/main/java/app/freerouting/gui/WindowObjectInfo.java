@@ -49,7 +49,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
    * The new created windows by pushing buttons inside this window. Used when closing this window to
    * close also all subwindows.
    */
-  private final Collection<WindowObjectInfo> subwindows = new LinkedList<WindowObjectInfo>();
+  private final Collection<WindowObjectInfo> subwindows = new LinkedList<>();
 
   /** Creates a new instance of ItemInfoWindow */
   private WindowObjectInfo(
@@ -285,7 +285,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   public boolean append(
       String p_button_name, String p_window_title, WindowObjectInfo.Printable p_object) {
     Collection<WindowObjectInfo.Printable> object_list =
-        new LinkedList<WindowObjectInfo.Printable>();
+        new LinkedList<>();
     object_list.add(p_object);
     return append_objects(p_button_name, p_window_title, object_list);
   }
@@ -300,7 +300,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
       String p_window_title,
       Collection<Item> p_items) {
     Collection<WindowObjectInfo.Printable> object_list =
-        new LinkedList<WindowObjectInfo.Printable>();
+        new LinkedList<>();
     object_list.addAll(p_items);
     return append_objects(p_button_name, p_window_title, object_list);
   }

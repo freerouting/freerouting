@@ -24,7 +24,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
   public FreeSpaceExpansionRoom(TileShape p_shape, int p_layer) {
     shape = p_shape;
     layer = p_layer;
-    doors = new LinkedList<ExpansionDoor>();
+    doors = new LinkedList<>();
   }
 
   /** Adds p_door to the list of doors of this room. */
@@ -42,7 +42,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
   /** Removes all doors from this room. */
   @Override
   public void clear_doors() {
-    this.doors = new LinkedList<ExpansionDoor>();
+    this.doors = new LinkedList<>();
   }
 
   @Override

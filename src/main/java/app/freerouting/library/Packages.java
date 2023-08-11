@@ -11,7 +11,7 @@ import java.util.Vector;
 public class Packages implements Serializable {
   final Padstacks padstack_list;
   /** The array of packages in this object */
-  private final Vector<Package> package_arr = new Vector<Package>();
+  private final Vector<Package> package_arr = new Vector<>();
 
   /**
    * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins

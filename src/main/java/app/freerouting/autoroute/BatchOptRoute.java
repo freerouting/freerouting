@@ -214,7 +214,7 @@ public class BatchOptRoute {
     int incomplete_count_before = this.get_ratsnest().incomplete_count();
 
     int via_count_before = this.routing_board.get_vias().size();
-    Set<Item> ripped_items = new TreeSet<Item>();
+    Set<Item> ripped_items = new TreeSet<>();
     ripped_items.add(p_item);
     if (p_item instanceof Trace) {
       // add also the fork items, especially because not all fork items may be
@@ -228,7 +228,7 @@ public class BatchOptRoute {
         curr_contact_list = curr_trace.get_end_contacts();
       }
     }
-    Set<Item> ripped_connections = new TreeSet<Item>();
+    Set<Item> ripped_connections = new TreeSet<>();
     for (Item curr_item : ripped_items) {
       ripped_connections.addAll(curr_item.get_connection_items(Item.StopConnectionOption.NONE));
     }

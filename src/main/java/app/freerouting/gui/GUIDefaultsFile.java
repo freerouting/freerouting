@@ -691,7 +691,7 @@ public class GUIDefaultsFile {
    * found.
    */
   private Color[] read_color_array() throws IOException {
-    Collection<Color> color_list = new LinkedList<Color>();
+    Collection<Color> color_list = new LinkedList<>();
     for (; ; ) {
       Color curr_color = read_color();
       if (curr_color == null) {
