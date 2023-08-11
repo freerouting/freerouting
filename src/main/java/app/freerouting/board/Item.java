@@ -1069,9 +1069,9 @@ public abstract class Item
       ResourceBundle resources =
           ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", " + resources.getString("contacts") + " ");
-      Integer contact_count = contacts.size();
+      int contact_count = contacts.size();
       p_window.append_items(
-          contact_count.toString(), resources.getString("contact_info"), contacts);
+          String.valueOf(contact_count), resources.getString("contact_info"), contacts);
     }
   }
 
@@ -1083,12 +1083,12 @@ public abstract class Item
       ResourceBundle resources =
           ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", ");
-      Integer violation_count = clearance_violations.size();
+      int violation_count = clearance_violations.size();
       Collection<ObjectInfoPanel.Printable> violations =
           new LinkedList<>();
       violations.addAll(clearance_violations);
       p_window.append_objects(
-          violation_count.toString(), resources.getString("violation_info"), violations);
+          String.valueOf(violation_count), resources.getString("violation_info"), violations);
       if (violation_count == 1) {
         p_window.append(" " + resources.getString("clearance_violation"));
       } else {

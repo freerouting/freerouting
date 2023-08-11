@@ -171,12 +171,12 @@ public class Net
   @Override
   public void print_info(
       ObjectInfoPanel p_window, Locale p_locale) {
-    Integer via_count = this.get_via_count();
+    int via_count = this.get_via_count();
     double cumulative_trace_length = this.get_trace_length();
     Collection<Item> terminal_items = this.get_terminal_items();
     Collection<Printable> terminals = new LinkedList<>();
     terminals.addAll(terminal_items);
-    Integer terminal_item_count = terminals.size();
+    int terminal_item_count = terminals.size();
 
     ResourceBundle resources =
         ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
@@ -187,10 +187,10 @@ public class Net
     p_window.append(net_class.get_name(), resources.getString("net_class"), net_class);
     p_window.append(", ");
     p_window.append_objects(
-        terminal_item_count.toString(), resources.getString("terminal_items_2"), terminals);
+        String.valueOf(terminal_item_count), resources.getString("terminal_items_2"), terminals);
     p_window.append(" " + resources.getString("terminal_items"));
     p_window.append(", " + resources.getString("via_count") + " ");
-    p_window.append(via_count.toString());
+    p_window.append(String.valueOf(via_count));
     p_window.append(", " + resources.getString("trace_length") + " ");
     p_window.append(cumulative_trace_length);
     p_window.newline();

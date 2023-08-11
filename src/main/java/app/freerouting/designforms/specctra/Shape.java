@@ -116,9 +116,9 @@ public abstract class Shape {
       double width = 0;
       Object next_object = it.next();
       if (next_object instanceof Double) {
-        width = ((Double) next_object).doubleValue();
+        width = (Double) next_object;
       } else if (next_object instanceof Integer) {
-        width = ((Integer) next_object).intValue();
+        width = (Integer) next_object;
       } else {
         FRLogger.warn("PolylinePath.read_scope: number expected");
         return null;
@@ -127,9 +127,9 @@ public abstract class Shape {
       for (int i = 0; i < corner_arr.length; ++i) {
         next_object = it.next();
         if (next_object instanceof Double) {
-          corner_arr[i] = ((Double) next_object).doubleValue();
+          corner_arr[i] = (Double) next_object;
         } else if (next_object instanceof Integer) {
-          corner_arr[i] = ((Integer) next_object).intValue();
+          corner_arr[i] = (Integer) next_object;
         } else {
           FRLogger.warn("Shape.read_polygon_path_scope: number expected");
           return null;
@@ -240,9 +240,9 @@ public abstract class Shape {
       for (int i = 0; i < 4; ++i) {
         next_token = p_scanner.next_token();
         if (next_token instanceof Double) {
-          rect_coor[i] = ((Double) next_token).doubleValue();
+          rect_coor[i] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          rect_coor[i] = ((Integer) next_token).intValue();
+          rect_coor[i] = (Integer) next_token;
         } else {
           FRLogger.warn("Shape.read_rectangle_scope: number expected");
           return null;
@@ -330,9 +330,9 @@ public abstract class Shape {
       for (int i = 0; i < coor_arr.length; ++i) {
         Object next_object = it.next();
         if (next_object instanceof Double) {
-          coor_arr[i] = ((Double) next_object).doubleValue();
+          coor_arr[i] = (Double) next_object;
         } else if (next_object instanceof Integer) {
-          coor_arr[i] = ((Integer) next_object).intValue();
+          coor_arr[i] = (Integer) next_object;
         } else {
           FRLogger.warn("Shape.read_polygon_scope: number expected");
           return null;
@@ -371,9 +371,9 @@ public abstract class Shape {
           return null;
         }
         if (next_token instanceof Double) {
-          circle_coor[curr_index] = ((Double) next_token).doubleValue();
+          circle_coor[curr_index] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          circle_coor[curr_index] = ((Integer) next_token).intValue();
+          circle_coor[curr_index] = (Integer) next_token;
         } else {
           FRLogger.warn("Shape.read_circle_scope: number expected");
           return null;
@@ -424,9 +424,9 @@ public abstract class Shape {
       double width = 0;
       Object next_object = it.next();
       if (next_object instanceof Double) {
-        width = ((Double) next_object).doubleValue();
+        width = (Double) next_object;
       } else if (next_object instanceof Integer) {
-        width = ((Integer) next_object).intValue();
+        width = (Integer) next_object;
       } else {
         FRLogger.warn("Shape.read_polygon_path_scope: number expected");
         return null;
@@ -435,9 +435,9 @@ public abstract class Shape {
       for (int i = 0; i < coordinate_arr.length; ++i) {
         next_object = it.next();
         if (next_object instanceof Double) {
-          coordinate_arr[i] = ((Double) next_object).doubleValue();
+          coordinate_arr[i] = (Double) next_object;
         } else if (next_object instanceof Integer) {
-          coordinate_arr[i] = ((Integer) next_object).intValue();
+          coordinate_arr[i] = (Integer) next_object;
         } else {
           FRLogger.warn("Shape.read_polygon_path_scope: number expected");
           return null;

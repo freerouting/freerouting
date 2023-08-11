@@ -55,7 +55,7 @@ public class Component extends ScopeKeyword {
           p_par.coordinate_transform.board_to_dsn(p_component.get_location().to_float());
       for (int i = 0; i < coor.length; ++i) {
         p_par.file.write(" ");
-        p_par.file.write((Double.valueOf(coor[i])).toString());
+        p_par.file.write(String.valueOf(coor[i]));
       }
       if (p_component.placed_on_front()) {
         p_par.file.write(" front ");
@@ -63,7 +63,7 @@ public class Component extends ScopeKeyword {
         p_par.file.write(" back ");
       }
       int rotation = (int) Math.round(p_component.get_rotation_in_degree());
-      p_par.file.write((Integer.valueOf(rotation).toString()));
+      p_par.file.write(String.valueOf(rotation));
     }
     if (p_component.position_fixed) {
       p_par.file.new_line();
@@ -189,9 +189,9 @@ public class Component extends ScopeKeyword {
       for (int i = 0; i < 2; ++i) {
         next_token = p_scanner.next_token();
         if (next_token instanceof Double) {
-          location[i] = ((Double) next_token).doubleValue();
+          location[i] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          location[i] = ((Integer) next_token).intValue();
+          location[i] = (Integer) next_token;
         } else if (next_token == CLOSED_BRACKET) {
           // component is not yet placed
           return new ComponentPlacement.ComponentLocation(
@@ -221,9 +221,9 @@ public class Component extends ScopeKeyword {
       double rotation;
       next_token = p_scanner.next_token();
       if (next_token instanceof Double) {
-        rotation = ((Double) next_token).doubleValue();
+        rotation = (Double) next_token;
       } else if (next_token instanceof Integer) {
-        rotation = ((Integer) next_token).intValue();
+        rotation = (Integer) next_token;
       } else {
         FRLogger.warn("Component.read_place_scope: number expected");
         return null;

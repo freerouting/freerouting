@@ -353,17 +353,17 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("bounds");
     out_file.new_line();
-    Integer x = (int) p_bounds.getX();
-    out_file.write(x.toString());
-    Integer y = (int) p_bounds.getY();
+    int x = (int) p_bounds.getX();
+    out_file.write(String.valueOf(x));
+    int y = (int) p_bounds.getY();
     out_file.write(" ");
-    out_file.write(y.toString());
-    Integer width = (int) p_bounds.getWidth();
+    out_file.write(String.valueOf(y));
+    int width = (int) p_bounds.getWidth();
     out_file.write(" ");
-    out_file.write(width.toString());
-    Integer height = (int) p_bounds.getHeight();
+    out_file.write(String.valueOf(width));
+    int height = (int) p_bounds.getHeight();
     out_file.write(" ");
-    out_file.write(height.toString());
+    out_file.write(String.valueOf(height));
     out_file.end_scope();
   }
 
@@ -792,20 +792,20 @@ public class GUIDefaultsFile {
 
   private void write_color_intensity(double p_value) throws IOException {
     out_file.write(" ");
-    Float value = (float) p_value;
-    out_file.write(value.toString());
+    float value = (float) p_value;
+    out_file.write(String.valueOf(value));
   }
 
   private void write_color_scope(Color p_color) throws IOException {
     out_file.new_line();
-    Integer red = p_color.getRed();
-    out_file.write(red.toString());
+    int red = p_color.getRed();
+    out_file.write(String.valueOf(red));
     out_file.write(" ");
-    Integer green = p_color.getGreen();
-    out_file.write(green.toString());
+    int green = p_color.getGreen();
+    out_file.write(String.valueOf(green));
     out_file.write(" ");
-    Integer blue = p_color.getBlue();
-    out_file.write(blue.toString());
+    int blue = p_color.getBlue();
+    out_file.write(String.valueOf(blue));
   }
 
   private void write_color(Color[] p_colors) throws IOException {
@@ -1091,8 +1091,8 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("pull_tight_region ");
     out_file.new_line();
-    Integer pull_tight_region = this.board_handling.settings.get_trace_pull_tight_region_width();
-    out_file.write(pull_tight_region.toString());
+    int pull_tight_region = this.board_handling.settings.get_trace_pull_tight_region_width();
+    out_file.write(String.valueOf(pull_tight_region));
     out_file.end_scope();
   }
 
@@ -1116,8 +1116,8 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("pull_tight_accuracy ");
     out_file.new_line();
-    Integer pull_tight_accuracy = this.board_handling.settings.get_trace_pull_tight_accuracy();
-    out_file.write(pull_tight_accuracy.toString());
+    int pull_tight_accuracy = this.board_handling.settings.get_trace_pull_tight_accuracy();
+    out_file.write(String.valueOf(pull_tight_accuracy));
     out_file.end_scope();
   }
 
@@ -1145,8 +1145,8 @@ public class GUIDefaultsFile {
     out_file.start_scope();
     out_file.write("automatic_layer_dimming ");
     out_file.new_line();
-    Float layer_dimming = (float) this.board_handling.graphics_context.get_auto_layer_dim_factor();
-    out_file.write(layer_dimming.toString());
+    float layer_dimming = (float) this.board_handling.graphics_context.get_auto_layer_dim_factor();
+    out_file.write(String.valueOf(layer_dimming));
     out_file.end_scope();
   }
 

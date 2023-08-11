@@ -512,7 +512,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     }
 
     void set_trace_width_field(int p_rule_no, ComboBoxLayer.Layer p_layer) {
-      Float trace_width;
+      float trace_width;
       BoardHandling board_handling =
           board_frame.board_panel.board_handling;
       BoardRules board_rules = board_handling.get_routing_board().rules;
@@ -632,7 +632,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         net_rule.set_ignore_cycles_with_areas(value);
       } else if (p_col == ColumnName.MIN_TRACE_LENGTH.ordinal()) {
 
-        Float curr_value = 0f;
+        float curr_value = 0f;
         if (p_value instanceof Float) {
           curr_value = (Float) p_value;
         } else if (p_value instanceof String) {
@@ -644,7 +644,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           } catch (Exception e) {
             curr_value = 0f;
           }
-          p_value = curr_value.toString();
+          p_value = String.valueOf(curr_value);
         }
         if (curr_value <= 0) {
           curr_value = (float) 0;
@@ -657,7 +657,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         net_rule.set_minimum_trace_length(min_trace_length);
         board_frame.board_panel.board_handling.recalculate_length_violations();
       } else if (p_col == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
-        Float curr_value = 0f;
+        float curr_value = 0f;
         if (p_value instanceof Float) {
           curr_value = (Float) p_value;
         } else if (p_value instanceof String) {
@@ -669,7 +669,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           } catch (Exception e) {
             curr_value = 0f;
           }
-          p_value = curr_value.toString();
+          p_value = String.valueOf(curr_value);
         }
         if (curr_value <= 0) {
           curr_value = (float) 0;
@@ -702,7 +702,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         }
         net_rule.set_trace_clearance_class(new_cl_class_index);
       } else if (p_col == ColumnName.TRACE_WIDTH.ordinal()) {
-        Float curr_value = 0f;
+        float curr_value = 0f;
         if (p_value instanceof Float) {
           curr_value = (Float) p_value;
         } else if (p_value instanceof String) {
@@ -735,7 +735,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           is_active = true;
         }
         if (p_value instanceof String) {
-          p_value = curr_value.toString();
+          p_value = String.valueOf(curr_value);
         }
         int layer_index = layer_combo_box.get_selected_layer().index;
         NetClass curr_net_class = board_rules.net_classes.get(p_row);

@@ -157,12 +157,12 @@ public class Package {
       double[] rel_coor = p_par.coordinate_transform.board_to_dsn(curr_pin.relative_location);
       for (int j = 0; j < rel_coor.length; ++j) {
         p_par.file.write(" ");
-        p_par.file.write((Double.valueOf(rel_coor[j])).toString());
+        p_par.file.write(String.valueOf(rel_coor[j]));
       }
       int rotation = (int) Math.round(curr_pin.rotation_in_degree);
       if (rotation != 0) {
         p_par.file.write("(rotate ");
-        p_par.file.write((Integer.valueOf(rotation)).toString());
+        p_par.file.write(String.valueOf(rotation));
         p_par.file.write(")");
       }
       p_par.file.write(")");
@@ -262,9 +262,9 @@ public class Package {
       for (int i = 0; i < 2; ++i) {
         next_token = p_scanner.next_token();
         if (next_token instanceof Double) {
-          pin_coor[i] = ((Double) next_token).doubleValue();
+          pin_coor[i] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          pin_coor[i] = ((Integer) next_token).intValue();
+          pin_coor[i] = (Integer) next_token;
         } else {
           FRLogger.warn("Package.read_pin_info: number expected");
           return null;
@@ -303,9 +303,9 @@ public class Package {
     try {
       Object next_token = p_scanner.next_token();
       if (next_token instanceof Integer) {
-        result = ((Integer) next_token).intValue();
+        result = (Integer) next_token;
       } else if (next_token instanceof Double) {
-        result = ((Double) next_token).doubleValue();
+        result = (Double) next_token;
       } else {
         FRLogger.warn("Package.read_rotation: number expected");
       }

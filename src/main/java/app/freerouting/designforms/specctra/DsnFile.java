@@ -271,7 +271,7 @@ public class DsnFile {
       int value;
       Object next_token = p_scanner.next_token();
       if (next_token instanceof Integer) {
-        value = ((Integer) next_token).intValue();
+        value = (Integer) next_token;
       } else {
         FRLogger.warn("DsnFile.read_integer_scope: number expected");
         return 0;
@@ -293,9 +293,9 @@ public class DsnFile {
       double value;
       Object next_token = p_scanner.next_token();
       if (next_token instanceof Double) {
-        value = ((Double) next_token).doubleValue();
+        value = (Double) next_token;
       } else if (next_token instanceof Integer) {
-        value = ((Integer) next_token).intValue();
+        value = (Integer) next_token;
       } else {
         FRLogger.warn("DsnFile.read_float_scope: number expected");
         return 0;

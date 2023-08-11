@@ -1344,7 +1344,7 @@ public class BasicBoard implements Serializable {
       communication.observers.notify_deleted(curr_item);
       if (p_changed_nets != null) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
-          p_changed_nets.add(Integer.valueOf(curr_item.get_net_no(i)));
+          p_changed_nets.add(curr_item.get_net_no(i));
         }
       }
     }
@@ -1358,7 +1358,7 @@ public class BasicBoard implements Serializable {
       communication.observers.notify_new(curr_item);
       if (p_changed_nets != null) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
-          p_changed_nets.add(Integer.valueOf(curr_item.get_net_no(i)));
+          p_changed_nets.add(curr_item.get_net_no(i));
         }
       }
     }

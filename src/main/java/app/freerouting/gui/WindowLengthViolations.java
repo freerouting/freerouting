@@ -86,7 +86,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
       CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;
       NetClass net_class = this.net.get_class();
-      Float allowed_length;
+      float allowed_length;
       String allowed_string;
       if (violation_length > 0) {
         allowed_length =
@@ -97,7 +97,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
             (float) coordinate_transform.board_to_user(net_class.get_minimum_trace_length());
         allowed_string = " " + resources.getString("minimum_allowed") + " ";
       }
-      Float length = (float) coordinate_transform.board_to_user(this.net.get_trace_length());
+      float length = (float) coordinate_transform.board_to_user(this.net.get_trace_length());
       String result =
           resources.getString("net")
               + " "

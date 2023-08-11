@@ -127,7 +127,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
           } else {
             curr_message = resources.getString("completed");
           }
-          Integer incomplete_count = hdlg.get_ratsnest().incomplete_count();
+          int incomplete_count = hdlg.get_ratsnest().incomplete_count();
           String end_message =
               resources.getString("autoroute")
                   + " "

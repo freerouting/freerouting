@@ -34,7 +34,7 @@ public class ActivityReplayFile {
         this.pending_token = curr_ob;
         return null;
       }
-      double f = ((Double) curr_ob).doubleValue();
+      double f = (Double) curr_ob;
       if (i == 0) {
         x = f;
       } else {
@@ -130,7 +130,7 @@ public class ActivityReplayFile {
 
     if (write_enabled) {
       try {
-        this.file_writer.write((Integer.valueOf(p_int)).toString());
+        this.file_writer.write(String.valueOf(p_int));
         this.file_writer.write("\n");
       } catch (IOException e) {
         FRLogger.error("Unable to write integer to the file", e);
@@ -146,7 +146,7 @@ public class ActivityReplayFile {
       this.pending_token = curr_ob;
       return -1;
     }
-    return (((Integer) curr_ob).intValue());
+    return ((Integer) curr_ob);
   }
 
   /** adds a FloatPoint to the ActivityReplayFile */
@@ -157,9 +157,9 @@ public class ActivityReplayFile {
         return;
       }
       try {
-        this.file_writer.write((Double.valueOf(p_corner.x)).toString());
+        this.file_writer.write(String.valueOf(p_corner.x));
         this.file_writer.write(" ");
-        this.file_writer.write((Double.valueOf(p_corner.y)).toString());
+        this.file_writer.write(String.valueOf(p_corner.y));
         this.file_writer.write("\n");
       } catch (IOException e) {
         FRLogger.error("Unable to write to the file  while adding corner", e);

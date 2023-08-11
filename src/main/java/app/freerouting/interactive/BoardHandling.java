@@ -372,7 +372,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   public void toggle_clearance_violations() {
     if (clearance_violations == null) {
       clearance_violations = new ClearanceViolations(this.board.get_items());
-      Integer violation_count = Integer.valueOf((clearance_violations.list.size() + 1) / 2);
+      Integer violation_count = (clearance_violations.list.size() + 1) / 2;
       String curr_message =
           violation_count + " " + resources.getString("clearance_violations_found");
       screen_messages.set_status_message(curr_message);
@@ -387,7 +387,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   public void create_ratsnest() {
     ratsnest = new RatsNest(this.board, this.locale);
     Integer incomplete_count = ratsnest.incomplete_count();
-    Integer length_violation_count = ratsnest.length_violation_count();
+    int length_violation_count = ratsnest.length_violation_count();
     String curr_message;
     if (length_violation_count == 0) {
       curr_message =

@@ -345,7 +345,7 @@ public class Library extends ScopeKeyword {
       return;
     }
     // generate names
-    Integer curr_name_index = 1;
+    int curr_name_index = 1;
     for (Shape.ReadAreaScopeResult curr_keepout : p_keepout_list) {
       curr_keepout.area_name = p_keepout_type + curr_name_index;
       ++curr_name_index;

@@ -69,7 +69,7 @@ public class Circle extends Shape {
     p_identifier_type.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; ++i) {
       p_file.write(" ");
-      p_file.write(Double.valueOf(coor[i]).toString());
+      p_file.write(String.valueOf(coor[i]));
     }
     p_file.write(")");
   }
@@ -82,8 +82,8 @@ public class Circle extends Shape {
     p_identifier_type.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; ++i) {
       p_file.write(" ");
-      Integer curr_coor = (int) Math.round(coor[i]);
-      p_file.write(curr_coor.toString());
+      int curr_coor = (int) Math.round(coor[i]);
+      p_file.write(String.valueOf(curr_coor));
     }
     p_file.write(")");
   }

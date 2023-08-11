@@ -204,7 +204,7 @@ public class BatchOptRoute {
             + resources.getString("stop_message")
             + "        "
             + resources.getString("routeoptimizer_pass")
-            + (Integer.valueOf(p_pass_no)).toString();
+            + p_pass_no;
     this.thread.hdlg.screen_messages.set_status_message(
         start_message); // assume overwriting messages is harmless
 

@@ -62,9 +62,9 @@ public class ScreenMessages {
   }
 
   public void set_interactive_autoroute_info(int p_found, int p_not_found, int p_items_to_go) {
-    Integer found = p_found;
-    Integer failed = p_not_found;
-    Integer items_to_go = p_items_to_go;
+    int found = p_found;
+    int failed = p_not_found;
+    int items_to_go = p_items_to_go;
     add_field.setText(resources.getString("to_route") + " " + items_to_go);
     layer_field.setText(
         resources.getString("found")
@@ -78,10 +78,10 @@ public class ScreenMessages {
 
   public void set_batch_autoroute_info(
       int p_items_to_go, int p_routed, int p_ripped, int p_failed) {
-    Integer ripped = p_ripped;
-    Integer routed = p_routed;
-    Integer items_to_go = p_items_to_go;
-    Integer failed = p_failed;
+    int ripped = p_ripped;
+    int routed = p_routed;
+    int items_to_go = p_items_to_go;
+    int failed = p_failed;
     add_field.setText(
         resources.getString("to_route")
             + " "
@@ -102,8 +102,8 @@ public class ScreenMessages {
   }
 
   public void set_batch_fanout_info(int p_pass_no, int p_components_to_go) {
-    Integer components_to_go = p_components_to_go;
-    Integer pass_no = Integer.valueOf(p_pass_no);
+    int components_to_go = p_components_to_go;
+    int pass_no = p_pass_no;
     add_field.setText(resources.getString("fanout_pass") + " " + pass_no + ": ");
     layer_field.setText(
         resources.getString("still")
@@ -114,7 +114,7 @@ public class ScreenMessages {
   }
 
   public void set_post_route_info(int p_via_count, double p_trace_length) {
-    Integer via_count = p_via_count;
+    int via_count = p_via_count;
     add_field.setText(resources.getString("via_count") + " " + via_count);
     layer_field.setText(
         resources.getString("trace_length") + " " + this.number_format.format(p_trace_length / 1000.0) + " mm");

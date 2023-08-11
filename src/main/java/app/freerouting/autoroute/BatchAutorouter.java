@@ -146,7 +146,7 @@ public class BatchAutorouter {
         break;
       }
 
-      Integer curr_pass_no = hdlg.get_settings().autoroute_settings.get_start_pass_no();
+      int curr_pass_no = hdlg.get_settings().autoroute_settings.get_start_pass_no();
       if (curr_pass_no > hdlg.get_settings().autoroute_settings.get_stop_pass_no()) {
         thread.request_stop_auto_router();
         break;

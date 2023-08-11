@@ -115,8 +115,8 @@ public class Parser extends ScopeKeyword {
       p_file.write("(write_resolution ");
       p_file.write(p_parser_info.write_resolution.char_name.substring(0, 1));
       p_file.write(" ");
-      Integer positive_int = p_parser_info.write_resolution.positive_int;
-      p_file.write(positive_int.toString());
+      int positive_int = p_parser_info.write_resolution.positive_int;
+      p_file.write(String.valueOf(positive_int));
       p_file.write(")");
     }
     if (!p_reduced) {

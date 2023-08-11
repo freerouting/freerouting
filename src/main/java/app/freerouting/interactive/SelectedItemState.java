@@ -225,7 +225,7 @@ public class SelectedItemState extends InteractiveState {
     for (int i = 0; i < pin_arr.length; ++i) {
       Via curr_via = (Via) it.next();
       Vector rel_coor = curr_via.get_center().difference_by(gravity_point);
-      String pin_name = (Integer.valueOf(i + 1)).toString();
+      String pin_name = String.valueOf(i + 1);
       pin_arr[i] = new Package.Pin(pin_name, curr_via.get_padstack().no, rel_coor, 0);
     }
     Package new_package = board.library.packages.add(pin_arr);
@@ -290,7 +290,7 @@ public class SelectedItemState extends InteractiveState {
     }
 
     for (Integer curr_net_no : changed_nets) {
-      hdlg.update_ratsnest(curr_net_no.intValue());
+      hdlg.update_ratsnest(curr_net_no);
     }
     hdlg.repaint();
     return this.return_state;
@@ -314,8 +314,8 @@ public class SelectedItemState extends InteractiveState {
           resources.getString("autoroute") + " " + resources.getString("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
-    Integer not_found_count = 0;
-    Integer found_count = 0;
+    int not_found_count = 0;
+    int found_count = 0;
     boolean interrupted = false;
     Collection<Item> autoroute_item_list = new LinkedList<>();
     for (Item curr_item : item_list) {
@@ -415,8 +415,8 @@ public class SelectedItemState extends InteractiveState {
           resources.getString("fanout") + " " + resources.getString("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
-    Integer not_found_count = 0;
-    Integer found_count = 0;
+    int not_found_count = 0;
+    int found_count = 0;
     int trace_pull_tight_accuracy = hdlg.settings.trace_pull_tight_accuracy;
     boolean interrupted = false;
     Collection<Pin> fanout_list = new LinkedList<>();
@@ -724,7 +724,7 @@ public class SelectedItemState extends InteractiveState {
   public void toggle_clearance_violations() {
     if (clearance_violations == null) {
       clearance_violations = new ClearanceViolations(this.item_list);
-      Integer violation_count = Integer.valueOf(clearance_violations.list.size());
+      Integer violation_count = clearance_violations.list.size();
       String curr_message =
           violation_count + " " + resources.getString("clearance_violations_found");
       hdlg.screen_messages.set_status_message(curr_message);

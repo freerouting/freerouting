@@ -141,19 +141,19 @@ public class SessionToEagle extends JFrame {
 
     IntBox board_bounding_box = this.board.get_bounding_box();
 
-    Float min_x = (float) this.board_scale_factor * (board_bounding_box.ll.x - 1);
-    Float min_y = (float) this.board_scale_factor * (board_bounding_box.ll.y - 1);
-    Float max_x = (float) this.board_scale_factor * (board_bounding_box.ur.x + 1);
-    Float max_y = (float) this.board_scale_factor * (board_bounding_box.ur.y + 1);
+    float min_x = (float) this.board_scale_factor * (board_bounding_box.ll.x - 1);
+    float min_y = (float) this.board_scale_factor * (board_bounding_box.ll.y - 1);
+    float max_x = (float) this.board_scale_factor * (board_bounding_box.ur.x + 1);
+    float max_y = (float) this.board_scale_factor * (board_bounding_box.ur.y + 1);
 
     this.out_file.write("GROUP (");
-    this.out_file.write(min_x.toString());
+    this.out_file.write(String.valueOf(min_x));
     this.out_file.write(" ");
-    this.out_file.write(min_y.toString());
+    this.out_file.write(String.valueOf(min_y));
     this.out_file.write(") (");
-    this.out_file.write(max_x.toString());
+    this.out_file.write(String.valueOf(max_x));
     this.out_file.write(" ");
-    this.out_file.write(max_y.toString());
+    this.out_file.write(String.valueOf(max_y));
     this.out_file.write(");\n");
     this.out_file.write("RIPUP;\n");
 
@@ -228,7 +228,7 @@ public class SessionToEagle extends JFrame {
     }
     for (ComponentPlacement.ComponentLocation curr_location : component_placement.locations) {
       this.out_file.write("ROTATE =");
-      Integer rotation = (int) Math.round(curr_location.rotation);
+      int rotation = (int) Math.round(curr_location.rotation);
       String rotation_string;
       if (curr_location.is_front) {
         rotation_string = "R" + rotation;
@@ -242,11 +242,11 @@ public class SessionToEagle extends JFrame {
       this.out_file.write("move '");
       this.out_file.write(curr_location.name);
       this.out_file.write("' (");
-      Double x_coor = curr_location.coor[0] / this.session_file_scale_denominator;
-      this.out_file.write(x_coor.toString());
+      double x_coor = curr_location.coor[0] / this.session_file_scale_denominator;
+      this.out_file.write(String.valueOf(x_coor));
       this.out_file.write(" ");
-      Double y_coor = curr_location.coor[1] / this.session_file_scale_denominator;
-      this.out_file.write(y_coor.toString());
+      double y_coor = curr_location.coor[1] / this.session_file_scale_denominator;
+      this.out_file.write(String.valueOf(y_coor));
       this.out_file.write(");\n");
     }
     return true;
@@ -390,12 +390,12 @@ public class SessionToEagle extends JFrame {
 
     this.out_file.write(p_net_name);
     this.out_file.write("' ");
-    Double wire_width = wire_path.width / this.session_file_scale_denominator;
-    this.out_file.write(wire_width.toString());
+    double wire_width = wire_path.width / this.session_file_scale_denominator;
+    this.out_file.write(String.valueOf(wire_width));
     this.out_file.write(" (");
     for (int i = 0; i < wire_path.coordinate_arr.length; ++i) {
-      Double wire_coor = wire_path.coordinate_arr[i] / this.session_file_scale_denominator;
-      this.out_file.write(wire_coor.toString());
+      double wire_coor = wire_path.coordinate_arr[i] / this.session_file_scale_denominator;
+      this.out_file.write(String.valueOf(wire_coor));
       if (i % 2 == 0) {
         this.out_file.write(" ");
       } else {
@@ -424,9 +424,9 @@ public class SessionToEagle extends JFrame {
     for (int i = 0; i < 2; ++i) {
       next_token = this.scanner.next_token();
       if (next_token instanceof Double) {
-        location[i] = ((Double) next_token).doubleValue();
+        location[i] = (Double) next_token;
       } else if (next_token instanceof Integer) {
-        location[i] = ((Integer) next_token).intValue();
+        location[i] = (Integer) next_token;
       } else {
         FRLogger.warn("SessionToEagle.process_via_scope: number expected");
         return false;
@@ -453,7 +453,7 @@ public class SessionToEagle extends JFrame {
     ConvexShape via_shape =
         via_padstack.get_shape(via_padstack.from_layer());
 
-    Double via_diameter = via_shape.max_width() * this.board_scale_factor;
+    double via_diameter = via_shape.max_width() * this.board_scale_factor;
 
     // The Padstack name is of the form Name$drill_diameter$from_layer-to_layer
 
@@ -478,7 +478,7 @@ public class SessionToEagle extends JFrame {
     this.out_file.write("' ");
 
     // Durchmesser aus Padstack
-    this.out_file.write(via_diameter.toString());
+    this.out_file.write(String.valueOf(via_diameter));
 
     // Shape lesen und einsetzen Square / Round / Octagon
     if (via_shape instanceof app.freerouting.geometry.planar.Circle) {
@@ -492,11 +492,11 @@ public class SessionToEagle extends JFrame {
     this.out_file.write("-");
     this.out_file.write(get_eagle_layer_string(via_padstack.to_layer()));
     this.out_file.write(" (");
-    Double x_coor = location[0] / this.session_file_scale_denominator;
-    this.out_file.write(x_coor.toString());
+    double x_coor = location[0] / this.session_file_scale_denominator;
+    this.out_file.write(String.valueOf(x_coor));
     this.out_file.write(" ");
-    Double y_coor = location[1] / this.session_file_scale_denominator;
-    this.out_file.write(y_coor.toString());
+    double y_coor = location[1] / this.session_file_scale_denominator;
+    this.out_file.write(String.valueOf(y_coor));
     this.out_file.write(");\n");
 
     return true;
@@ -575,17 +575,17 @@ public class SessionToEagle extends JFrame {
 
     this.out_file.write("PINSWAP ");
     this.out_file.write(" (");
-    Double curr_coor = location_1[0];
-    this.out_file.write(curr_coor.toString());
+    double curr_coor = location_1[0];
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(" ");
     curr_coor = location_1[1];
-    this.out_file.write(curr_coor.toString());
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(") (");
     curr_coor = location_2[0];
-    this.out_file.write(curr_coor.toString());
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(" ");
     curr_coor = location_2[1];
-    this.out_file.write(curr_coor.toString());
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(");\n");
   }
 

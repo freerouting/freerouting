@@ -78,13 +78,13 @@ public class Polygon extends Shape {
     p_file.write("polygon ");
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
-    p_file.write((Integer.valueOf(0)).toString());
+    p_file.write(String.valueOf(0));
     int corner_count = coor.length / 2;
     for (int i = 0; i < corner_count; ++i) {
       p_file.new_line();
-      p_file.write(Double.valueOf(coor[2 * i]).toString());
+      p_file.write(String.valueOf(coor[2 * i]));
       p_file.write(" ");
-      p_file.write(Double.valueOf(coor[2 * i + 1]).toString());
+      p_file.write(String.valueOf(coor[2 * i + 1]));
     }
     p_file.end_scope();
   }
@@ -96,15 +96,15 @@ public class Polygon extends Shape {
     p_file.write("polygon ");
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
-    p_file.write((Integer.valueOf(0)).toString());
+    p_file.write(String.valueOf(0));
     int corner_count = coor.length / 2;
     for (int i = 0; i < corner_count; ++i) {
       p_file.new_line();
-      Integer curr_coor = (int) Math.round(coor[2 * i]);
-      p_file.write(curr_coor.toString());
+      int curr_coor = (int) Math.round(coor[2 * i]);
+      p_file.write(String.valueOf(curr_coor));
       p_file.write(" ");
       curr_coor = (int) Math.round(coor[2 * i + 1]);
-      p_file.write(curr_coor.toString());
+      p_file.write(String.valueOf(curr_coor));
     }
     p_file.end_scope();
   }

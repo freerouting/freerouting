@@ -92,7 +92,7 @@ class Wiring extends ScopeKeyword {
     p_par.identifier_type.write(via_padstack.name, p_par.file);
     for (int i = 0; i < via_coor.length; ++i) {
       p_par.file.write(" ");
-      p_par.file.write((Double.valueOf(via_coor[i])).toString());
+      p_par.file.write(String.valueOf(via_coor[i]));
     }
     if (via_net != null) {
       write_net(via_net, p_par.file, p_par.identifier_type);
@@ -564,9 +564,9 @@ class Wiring extends ScopeKeyword {
       for (int i = 0; i < 2; ++i) {
         next_token = p_par.scanner.next_token();
         if (next_token instanceof Double) {
-          location[i] = ((Double) next_token).doubleValue();
+          location[i] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          location[i] = ((Integer) next_token).intValue();
+          location[i] = (Integer) next_token;
         } else {
           FRLogger.warn("Wiring.read_via_scope: number expected");
           return false;

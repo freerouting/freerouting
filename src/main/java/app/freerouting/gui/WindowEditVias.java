@@ -143,7 +143,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
       RoutingBoard routing_board =
           board_frame.board_panel.board_handling.get_routing_board();
       ViaInfos via_infos = routing_board.rules.via_infos;
-      Integer no = 1;
+      int no = 1;
       String new_name;
       final String name_start = resources.getString("new_via");
       for (; ; ) {

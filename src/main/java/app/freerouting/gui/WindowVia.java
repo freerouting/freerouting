@@ -327,7 +327,7 @@ public class WindowVia extends BoardSavableSubWindow {
         }
         end_layer = (Layer) selected_value;
       }
-      Double default_radius = 100.0;
+      double default_radius = 100.0;
 
       // ask for the default radius
 

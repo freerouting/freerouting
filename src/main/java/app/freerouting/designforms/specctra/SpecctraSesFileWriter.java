@@ -151,19 +151,19 @@ public class SpecctraSesFileWriter {
     p_file.write("(place ");
     p_identifier_type.write(p_component.name, p_file);
     double[] location = p_coordinate_transform.board_to_dsn(p_component.get_location().to_float());
-    Integer x_coor = (int) Math.round(location[0]);
-    Integer y_coor = (int) Math.round(location[1]);
+    int x_coor = (int) Math.round(location[0]);
+    int y_coor = (int) Math.round(location[1]);
     p_file.write(" ");
-    p_file.write(x_coor.toString());
+    p_file.write(String.valueOf(x_coor));
     p_file.write(" ");
-    p_file.write(y_coor.toString());
+    p_file.write(String.valueOf(y_coor));
     if (p_component.placed_on_front()) {
       p_file.write(" front ");
     } else {
       p_file.write(" back ");
     }
     int rotation = (int) Math.round(p_component.get_rotation_in_degree());
-    p_file.write((Integer.valueOf(rotation).toString()));
+    p_file.write(String.valueOf(rotation));
     if (p_component.position_fixed) {
       p_file.new_line();
       p_file.write(" (lock_type position)");
@@ -411,11 +411,11 @@ public class SpecctraSesFileWriter {
     p_identifier_type.write(via_padstack.name, p_file);
     p_file.write(" ");
     double[] location = p_coordinate_transform.board_to_dsn(via_location);
-    Integer x_coor = (int) Math.round(location[0]);
-    p_file.write(x_coor.toString());
+    int x_coor = (int) Math.round(location[0]);
+    p_file.write(String.valueOf(x_coor));
     p_file.write(" ");
-    Integer y_coor = (int) Math.round(location[1]);
-    p_file.write(y_coor.toString());
+    int y_coor = (int) Math.round(location[1]);
+    p_file.write(String.valueOf(y_coor));
     write_fixed_state(p_file, p_via.get_fixed_state());
     p_file.end_scope();
   }
@@ -446,13 +446,13 @@ public class SpecctraSesFileWriter {
     p_file.write("path ");
     p_identifier_type.write(p_layer_name, p_file);
     p_file.write(" ");
-    p_file.write((Integer.valueOf(p_width)).toString());
+    p_file.write(String.valueOf(p_width));
     int corner_count = p_coors.length / 2;
     for (int i = 0; i < corner_count; ++i) {
       p_file.new_line();
-      p_file.write(Integer.valueOf(p_coors[2 * i]).toString());
+      p_file.write(String.valueOf(p_coors[2 * i]));
       p_file.write(" ");
-      p_file.write(Integer.valueOf(p_coors[2 * i + 1]).toString());
+      p_file.write(String.valueOf(p_coors[2 * i + 1]));
     }
     p_file.end_scope();
   }

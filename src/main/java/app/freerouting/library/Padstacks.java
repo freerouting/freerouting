@@ -44,7 +44,7 @@ public class Padstacks implements Serializable {
    */
   public Padstack get(int p_padstack_no) {
     if (p_padstack_no <= 0 || p_padstack_no > padstack_arr.size()) {
-      Integer padstack_count = padstack_arr.size();
+      int padstack_count = padstack_arr.size();
       FRLogger.warn(
           "Padstacks.get: 1 <= p_padstack_no <= " + padstack_count + " expected");
       return null;
@@ -76,7 +76,7 @@ public class Padstacks implements Serializable {
    * dimension board layer_count. The padatack name is generated internally.
    */
   public Padstack add(ConvexShape[] p_shapes) {
-    String new_name = "padstack#" + (Integer.valueOf(padstack_arr.size() + 1).toString());
+    String new_name = "padstack#" + (padstack_arr.size() + 1);
     return add(new_name, p_shapes, false, false);
   }
 

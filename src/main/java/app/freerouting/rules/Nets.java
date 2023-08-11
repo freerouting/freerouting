@@ -76,7 +76,7 @@ public class Nets implements Serializable {
     ResourceBundle resources =
         ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
     String net_name =
-        resources.getString("net#") + (Integer.valueOf(net_arr.size() + 1)).toString();
+        resources.getString("net#") + (net_arr.size() + 1);
     return add(net_name, 1, false);
   }
 

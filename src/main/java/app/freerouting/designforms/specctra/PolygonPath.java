@@ -25,13 +25,13 @@ public class PolygonPath extends Path {
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
-    p_file.write((Double.valueOf(this.width)).toString());
+    p_file.write(String.valueOf(this.width));
     int corner_count = coordinate_arr.length / 2;
     for (int i = 0; i < corner_count; ++i) {
       p_file.new_line();
-      p_file.write(Double.valueOf(coordinate_arr[2 * i]).toString());
+      p_file.write(String.valueOf(coordinate_arr[2 * i]));
       p_file.write(" ");
-      p_file.write(Double.valueOf(coordinate_arr[2 * i + 1]).toString());
+      p_file.write(String.valueOf(coordinate_arr[2 * i + 1]));
     }
     p_file.end_scope();
   }
@@ -43,15 +43,15 @@ public class PolygonPath extends Path {
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
-    p_file.write((Double.valueOf(this.width)).toString());
+    p_file.write(String.valueOf(this.width));
     int corner_count = coordinate_arr.length / 2;
     for (int i = 0; i < corner_count; ++i) {
       p_file.new_line();
-      Integer curr_coor = (int) Math.round(coordinate_arr[2 * i]);
-      p_file.write(curr_coor.toString());
+      int curr_coor = (int) Math.round(coordinate_arr[2 * i]);
+      p_file.write(String.valueOf(curr_coor));
       p_file.write(" ");
       curr_coor = (int) Math.round(coordinate_arr[2 * i + 1]);
-      p_file.write(curr_coor.toString());
+      p_file.write(String.valueOf(curr_coor));
     }
     p_file.end_scope();
   }

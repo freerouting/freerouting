@@ -82,7 +82,7 @@ public class Packages implements Serializable {
    * internally.
    */
   public Package add(Package.Pin[] p_pin_arr) {
-    String package_name = "Package#" + (Integer.valueOf(package_arr.size() + 1)).toString();
+    String package_name = "Package#" + (package_arr.size() + 1);
 
     return add(
         package_name,

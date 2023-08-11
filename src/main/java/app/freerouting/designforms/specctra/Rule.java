@@ -114,7 +114,7 @@ public abstract class Rule {
     double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(default_trace_half_width);
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write((Double.valueOf(trace_width)).toString());
+    p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(")");
     p_par.file.end_scope();
     for (int i = 1; i < p_par.board.layer_structure.arr.length; ++i) {
@@ -142,7 +142,7 @@ public abstract class Rule {
     double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(curr_trace_half_width);
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write((Double.valueOf(trace_width)).toString());
+    p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(") ");
     p_par.file.end_scope();
     p_par.file.end_scope();
@@ -160,7 +160,7 @@ public abstract class Rule {
                 p_par.board.rules.get_default_net_class().get_trace_half_width(0));
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write((Double.valueOf(trace_width)).toString());
+    p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(")");
     // write the default clearance rule
     int default_cl_no = BoardRules.default_clearance_class();
@@ -170,14 +170,14 @@ public abstract class Rule {
     p_par.file.new_line();
     // write the default clearance
     p_par.file.write("(clearance ");
-    p_par.file.write((Double.valueOf(default_clearance)).toString());
+    p_par.file.write(String.valueOf(default_clearance));
     p_par.file.write(")");
     // write the smd_to_turn_gap
-    Double smd_to_turn_dist =
+    double smd_to_turn_dist =
         p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
     p_par.file.new_line();
     p_par.file.write("(clearance ");
-    p_par.file.write(smd_to_turn_dist.toString());
+    p_par.file.write(String.valueOf(smd_to_turn_dist));
     p_par.file.write(" (type smd_to_turn_gap))");
 
     // write the named clearance rules from the clearance matrix
@@ -208,7 +208,7 @@ public abstract class Rule {
         double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
         p_par.file.new_line();
         p_par.file.write("(clearance ");
-        p_par.file.write((Double.valueOf(curr_clearance)).toString());
+        p_par.file.write(String.valueOf(curr_clearance));
         p_par.file.write(" (type ");
         p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
         p_par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
@@ -237,7 +237,7 @@ public abstract class Rule {
 
       p_par.file.new_line();
       p_par.file.write("(clearance ");
-      p_par.file.write((Double.valueOf(curr_clearance)).toString());
+      p_par.file.write(String.valueOf(curr_clearance));
       p_par.file.write(" (type ");
       p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
       p_par.file.write("))");

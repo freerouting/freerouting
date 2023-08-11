@@ -61,13 +61,13 @@ public class PartLibrary extends ScopeKeyword {
         p_par.file.write(" 0 ");
         p_par.identifier_type.write(curr_pin.gate_name, p_par.file);
         p_par.file.write(" ");
-        Integer gate_swap_code = curr_pin.gate_swap_code;
-        p_par.file.write(gate_swap_code.toString());
+        int gate_swap_code = curr_pin.gate_swap_code;
+        p_par.file.write(String.valueOf(gate_swap_code));
         p_par.file.write(" ");
         p_par.identifier_type.write(curr_pin.gate_pin_name, p_par.file);
         p_par.file.write(" ");
-        Integer gate_pin_swap_code = curr_pin.gate_pin_swap_code;
-        p_par.file.write(gate_pin_swap_code.toString());
+        int gate_pin_swap_code = curr_pin.gate_pin_swap_code;
+        p_par.file.write(String.valueOf(gate_pin_swap_code));
         p_par.file.write(")");
       }
       p_par.file.end_scope();

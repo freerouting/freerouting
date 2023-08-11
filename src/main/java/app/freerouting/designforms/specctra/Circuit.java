@@ -65,9 +65,9 @@ public class Circuit {
         return null;
       }
       if (next_token instanceof Double) {
-        length_arr[i] = ((Double) next_token).doubleValue();
+        length_arr[i] = (Double) next_token;
       } else if (next_token instanceof Integer) {
-        length_arr[i] = ((Integer) next_token).intValue();
+        length_arr[i] = (Integer) next_token;
       } else {
         FRLogger.warn("Circuit.read_length_scope: number expected");
         return null;

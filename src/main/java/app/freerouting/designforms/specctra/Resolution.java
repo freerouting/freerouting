@@ -22,7 +22,7 @@ public class Resolution extends ScopeKeyword {
     p_file.write("(resolution ");
     p_file.write(p_board_communication.unit.toString());
     p_file.write(" ");
-    p_file.write((Integer.valueOf(p_board_communication.resolution)).toString());
+    p_file.write(String.valueOf(p_board_communication.resolution));
     p_file.write(")");
   }
 
@@ -46,7 +46,7 @@ public class Resolution extends ScopeKeyword {
         FRLogger.warn("Resolution.read_scope: integer expected");
         return false;
       }
-      p_par.resolution = ((Integer) next_token).intValue();
+      p_par.resolution = (Integer) next_token;
       // overread the closing bracket
       next_token = p_par.scanner.next_token();
       if (next_token != CLOSED_BRACKET) {

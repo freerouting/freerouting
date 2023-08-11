@@ -164,21 +164,21 @@ public class Network extends ScopeKeyword {
     if (min_trace_length > 0 || max_trace_length > 0) {
       p_par.file.new_line();
       p_par.file.write("(length ");
-      Double transformed_max_length;
+      double transformed_max_length;
       if (max_trace_length <= 0) {
         transformed_max_length = (double) -1;
       } else {
         transformed_max_length = p_par.coordinate_transform.board_to_dsn(max_trace_length);
       }
-      p_par.file.write(transformed_max_length.toString());
+      p_par.file.write(String.valueOf(transformed_max_length));
       p_par.file.write(" ");
-      Double transformed_min_length;
+      double transformed_min_length;
       if (min_trace_length <= 0) {
         transformed_min_length = (double) 0;
       } else {
         transformed_min_length = p_par.coordinate_transform.board_to_dsn(min_trace_length);
       }
-      p_par.file.write(transformed_min_length.toString());
+      p_par.file.write(String.valueOf(transformed_min_length));
       p_par.file.write(")");
     }
     p_par.file.end_scope();
@@ -1293,7 +1293,7 @@ public class Network extends ScopeKeyword {
     }
     boolean scope_is_empty = (next_token == CLOSED_BRACKET);
     if (next_token instanceof Integer) {
-      subnet_number = ((Integer) next_token).intValue();
+      subnet_number = (Integer) next_token;
     }
     boolean pin_order_found = false;
     Collection<Net.Pin> pin_list = new LinkedList<>();
