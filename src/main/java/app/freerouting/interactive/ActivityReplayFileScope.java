@@ -188,7 +188,7 @@ public abstract class ActivityReplayFileScope {
   /** Returns the LogfileScope with name p_name if it exists, else null. */
   public static ActivityReplayFileScope get_scope(String p_name) {
     for (int i = 0; i < arr.length; ++i) {
-      if (arr[i].name.compareTo(p_name) == 0) {
+      if (arr[i].name.equals(p_name)) {
         return arr[i];
       }
     }

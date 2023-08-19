@@ -22,7 +22,7 @@ public class LogicalParts implements Serializable {
   /** Returns the logical part with the input name or null, if no such package exists. */
   public LogicalPart get(String p_name) {
     for (LogicalPart curr_part : this.part_arr) {
-      if (curr_part != null && curr_part.name.compareToIgnoreCase(p_name) == 0) {
+      if (curr_part != null && curr_part.name.equalsIgnoreCase(p_name)) {
         return curr_part;
       }
     }

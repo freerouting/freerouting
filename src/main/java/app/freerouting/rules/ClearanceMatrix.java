@@ -57,7 +57,7 @@ public class ClearanceMatrix implements Serializable {
    */
   public int get_no(String p_name) {
     for (int i = 0; i < class_count; ++i) {
-      if (row[i].name.compareToIgnoreCase(p_name) == 0) {
+      if (row[i].name.equalsIgnoreCase(p_name)) {
         return i;
       }
     }

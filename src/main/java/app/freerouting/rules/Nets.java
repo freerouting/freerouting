@@ -39,7 +39,7 @@ public class Nets implements Serializable {
   /** Returns the net with the input name and subnet_number , or null, if no such net exists. */
   public Net get(String p_name, int p_subnet_number) {
     for (Net curr_net : net_arr) {
-      if (curr_net != null && curr_net.name.compareToIgnoreCase(p_name) == 0) {
+      if (curr_net != null && curr_net.name.equalsIgnoreCase(p_name)) {
         if (curr_net.subnet_number == p_subnet_number) {
           return curr_net;
         }
@@ -52,7 +52,7 @@ public class Nets implements Serializable {
   public Collection<Net> get(String p_name) {
     Collection<Net> result = new LinkedList<>();
     for (Net curr_net : net_arr) {
-      if (curr_net != null && curr_net.name.compareToIgnoreCase(p_name) == 0) {
+      if (curr_net != null && curr_net.name.equalsIgnoreCase(p_name)) {
         result.add(curr_net);
       }
     }

@@ -29,7 +29,7 @@ public class Packages implements Serializable {
     Package other_side_package = null;
     while (it.hasNext()) {
       Package curr_package = it.next();
-      if (curr_package != null && curr_package.name.compareToIgnoreCase(p_name) == 0) {
+      if (curr_package != null && curr_package.name.equalsIgnoreCase(p_name)) {
         if (curr_package.is_front == p_is_front) {
           return curr_package;
         }

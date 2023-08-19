@@ -39,7 +39,7 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
     }
     String found_extension = name_parts[name_parts.length - 1];
     for (int i = 0; i < extensions.length; ++i) {
-      if (found_extension.compareToIgnoreCase(extensions[i]) == 0) {
+      if (found_extension.equalsIgnoreCase(extensions[i])) {
         return true;
       }
     }

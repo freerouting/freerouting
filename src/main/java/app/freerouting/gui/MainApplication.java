@@ -529,7 +529,7 @@ public class MainApplication extends WindowBase {
             new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 
         for (int i = 0; i < netClasses.count(); i++) {
-          if (netClasses.get(i).get_name().compareToIgnoreCase(net_class_name) == 0) {
+          if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name)) {
             netClasses.get(i).is_ignored_by_autorouter = true;
           }
         }

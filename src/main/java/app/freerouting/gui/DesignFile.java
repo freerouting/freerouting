@@ -50,7 +50,7 @@ public class DesignFile {
     String[] name_parts = file_name.split("\\.");
 
     // Check if the file has an extension
-    String extension = "";
+    String extension = null;
     if (name_parts.length > 1)
     {
       extension = name_parts[name_parts.length - 1];
@@ -58,7 +58,7 @@ public class DesignFile {
     }
 
     // Set the binary output file name
-    if (extension.compareToIgnoreCase(binary_file_extension) != 0) {
+    if (!binary_file_extension.equalsIgnoreCase(extension)) {
       String binary_output_file_name = file_name + "." + binary_file_extension;
       this.output_file = new File(p_design_file.getParent(), binary_output_file_name);
     }
@@ -192,7 +192,7 @@ public class DesignFile {
     FRLogger.info("Saving '" + new_file_name + "'...");
     String[] new_name_parts = new_file_name.split("\\.");
     String found_file_extension = new_name_parts[new_name_parts.length - 1];
-    if (found_file_extension.compareToIgnoreCase(binary_file_extension) == 0) {
+    if (found_file_extension.equalsIgnoreCase(binary_file_extension)) {
       // Save as binary file
       p_board_frame.screen_messages.set_status_message(
           resources.getString("message_2") + " " + new_file.getName());
@@ -200,7 +200,7 @@ public class DesignFile {
       p_board_frame.save();
     } else {
       // Save as text file
-      if (found_file_extension.compareToIgnoreCase(text_file_extension) != 0) {
+      if (!found_file_extension.equalsIgnoreCase(text_file_extension)) {
         p_board_frame.screen_messages.set_status_message(resources.getString("message_3"));
         return;
       }

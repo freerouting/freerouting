@@ -85,13 +85,13 @@ public enum Unit implements Serializable {
    */
   public static Unit from_string(String p_string) {
     Unit result;
-    if (p_string.compareToIgnoreCase("mil") == 0) {
+    if (p_string.equalsIgnoreCase("mil")) {
       result = MIL;
-    } else if (p_string.compareToIgnoreCase("inch") == 0) {
+    } else if (p_string.equalsIgnoreCase("inch")) {
       result = INCH;
-    } else if (p_string.compareToIgnoreCase("mm") == 0) {
+    } else if (p_string.equalsIgnoreCase("mm")) {
       result = MM;
-    } else if (p_string.compareToIgnoreCase("um") == 0) {
+    } else if (p_string.equalsIgnoreCase("um")) {
       result = UM;
     } else {
       result = null;

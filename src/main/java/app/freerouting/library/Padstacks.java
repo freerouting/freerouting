@@ -26,7 +26,7 @@ public class Padstacks implements Serializable {
     Iterator<Padstack> it = padstack_arr.iterator();
     while (it.hasNext()) {
       Padstack curr_padstack = it.next();
-      if (curr_padstack != null && curr_padstack.name.compareToIgnoreCase(p_name) == 0) {
+      if (curr_padstack != null && curr_padstack.name.equalsIgnoreCase(p_name)) {
         return curr_padstack;
       }
     }
