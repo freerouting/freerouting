@@ -4,79 +4,25 @@ import java.io.Serializable;
 
 /** Enum for the user units inch, mil or millimeter. */
 public enum Unit implements Serializable {
-  MIL {
-    @Override
-    public String toString() {
-      return "mil";
-    }
-  },
-  INCH {
-    @Override
-    public String toString() {
-      return "inch";
-    }
-  },
+  MIL(25.4),
+  INCH(25_400),
+  MM(1000),
+  UM(1);
 
-  MM {
-    @Override
-    public String toString() {
-      return "mm";
-    }
-  },
+  private final double micrometers;
 
-  UM {
-    @Override
-    public String toString() {
-      return "um";
-    }
-  };
+  Unit(double micrometers) {
+    this.micrometers = micrometers;
+  }
 
-  public static final double INCH_TO_MM = 25.4;
+  @Override
+  public String toString() {
+    return super.toString().toLowerCase();
+  }
 
   /** Scales p_value from p_from_unit to p_to_unit */
   public static double scale(double p_value, Unit p_from_unit, Unit p_to_unit) {
-    double result;
-    if (p_from_unit == p_to_unit) {
-      result = p_value;
-    } else if (p_from_unit == INCH) {
-      if (p_to_unit == MIL) {
-        result = p_value * 1000.0;
-      } else if (p_to_unit == MM) {
-        result = p_value * INCH_TO_MM;
-      } else // um
-      {
-        result = p_value * INCH_TO_MM * 1000.0;
-      }
-    } else if (p_from_unit == MIL) {
-      if (p_to_unit == INCH) {
-        result = p_value / 1000.0;
-      } else if (p_to_unit == MM) {
-        result = p_value * INCH_TO_MM;
-      } else // um
-      {
-        result = (p_value * INCH_TO_MM) * 1000.0;
-      }
-    } else if (p_from_unit == MM) {
-      if (p_to_unit == INCH) {
-        result = p_value / INCH_TO_MM;
-      } else if (p_to_unit == UM) {
-        result = p_value * 1000;
-      } else // mil
-      {
-        result = (p_value * 1000.0) / INCH_TO_MM;
-      }
-    } else // UM
-    {
-      if (p_to_unit == INCH) {
-        result = p_value / (INCH_TO_MM * 1000.0);
-      } else if (p_to_unit == MM) {
-        result = p_value / 1000.0;
-      } else // mil
-      {
-        result = p_value / INCH_TO_MM;
-      }
-    }
-    return result;
+    return p_value * p_from_unit.micrometers / p_to_unit.micrometers;
   }
 
   /**
@@ -84,18 +30,10 @@ public enum Unit implements Serializable {
    * from mil, inch and mm.
    */
   public static Unit from_string(String p_string) {
-    Unit result;
-    if (p_string.equalsIgnoreCase("mil")) {
-      result = MIL;
-    } else if (p_string.equalsIgnoreCase("inch")) {
-      result = INCH;
-    } else if (p_string.equalsIgnoreCase("mm")) {
-      result = MM;
-    } else if (p_string.equalsIgnoreCase("um")) {
-      result = UM;
-    } else {
-      result = null;
+    try {
+      return Unit.valueOf(p_string.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      return null;
     }
-    return result;
   }
 }
