@@ -407,7 +407,7 @@ public class BoardRules implements Serializable {
   /** Writes an instance of this class to a file */
   private void writeObject(ObjectOutputStream p_stream) throws IOException {
     p_stream.defaultWriteObject();
-    p_stream.writeInt(trace_angle_restriction.get_no());
+    p_stream.writeInt(trace_angle_restriction.getValue());
   }
 
   /** Reads an instance of this class from a file */
@@ -415,6 +415,6 @@ public class BoardRules implements Serializable {
       throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     int snap_angle_no = p_stream.readInt();
-    this.trace_angle_restriction = AngleRestriction.arr[snap_angle_no];
+    this.trace_angle_restriction = AngleRestriction.valueOf(snap_angle_no);
   }
 }

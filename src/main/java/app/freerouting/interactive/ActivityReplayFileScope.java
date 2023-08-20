@@ -1123,7 +1123,7 @@ public abstract class ActivityReplayFileScope {
           .get_routing_board()
           .rules
           .set_trace_angle_restriction(
-              AngleRestriction.arr[new_snap_angle_no]);
+              AngleRestriction.valueOf(new_snap_angle_no));
       return p_return_state;
     }
   }

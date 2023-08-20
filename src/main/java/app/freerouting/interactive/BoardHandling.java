@@ -282,7 +282,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       return;
     }
     board.rules.set_trace_angle_restriction(p_snap_angle);
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_SNAP_ANGLE, p_snap_angle.get_no());
+    activityReplayFile.start_scope(ActivityReplayFileScope.SET_SNAP_ANGLE, p_snap_angle.getValue());
   }
 
   /** Changes the current layer in the interactive board handling. */
