@@ -1,7 +1,6 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.datastructures.IndentFileWriter;
-import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
 

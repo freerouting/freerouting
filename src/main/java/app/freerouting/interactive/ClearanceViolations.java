@@ -6,13 +6,9 @@ import app.freerouting.boardgraphics.GraphicsContext;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 /** To display the clearance violations between items on the screen. */
 public class ClearanceViolations {
