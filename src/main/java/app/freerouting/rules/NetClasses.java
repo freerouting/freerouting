@@ -54,13 +54,10 @@ public class NetClasses implements Serializable {
     String name_front = resources.getString("class");
     String new_name;
     int index = 0;
-    for (; ; ) {
+    do {
       ++index;
       new_name = name_front + index;
-      if (this.get(new_name) == null) {
-        break;
-      }
-    }
+    } while (this.get(new_name) != null);
     return append(new_name, p_layer_structure, p_clearance_matrix, false);
   }
 

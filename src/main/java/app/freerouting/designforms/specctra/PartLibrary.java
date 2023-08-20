@@ -249,12 +249,9 @@ public class PartLibrary extends ScopeKeyword {
       }
       int gate_pin_swap_code = (Integer) next_token;
       // overread subgates
-      for (; ; ) {
+      do {
         next_token = p_scanner.next_token();
-        if (next_token == CLOSED_BRACKET) {
-          break;
-        }
-      }
+      } while (next_token != CLOSED_BRACKET);
       return new PartPin(pin_name, gate_name, gate_swap_code, gate_pin_name, gate_pin_swap_code);
     } catch (IOException e) {
       FRLogger.error("PartLibrary.read_part_pin: IO error scanning file", e);

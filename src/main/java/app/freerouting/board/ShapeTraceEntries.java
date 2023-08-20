@@ -692,10 +692,7 @@ public class ShapeTraceEntries {
     EntryPoint first = list_anchor;
     EntryPoint prev_first = null;
 
-    while (first != null) {
-      if (first.stack_level == this.max_stack_level) {
-        break;
-      }
+    while (first != null && first.stack_level != this.max_stack_level) {
       prev_first = first;
       first = first.next;
     }
@@ -708,10 +705,9 @@ public class ShapeTraceEntries {
     EntryPoint last = first;
     EntryPoint after_last = first.next;
 
-    while (after_last != null) {
-      if (after_last.stack_level != max_stack_level || !after_last.trace.nets_equal(first.trace)) {
-        break;
-      }
+    while (after_last != null
+        && after_last.stack_level == max_stack_level
+        && after_last.trace.nets_equal(first.trace)) {
       last = after_last;
       after_last = last.next;
     }

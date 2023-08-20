@@ -38,10 +38,7 @@ class PullTightAlgo45 extends PullTightAlgo {
   Polyline pull_tight(Polyline p_polyline) {
     Polyline new_result = avoid_acid_traps(p_polyline);
     Polyline prev_result = null;
-    while (new_result != prev_result) {
-      if (this.is_stop_requested()) {
-        break;
-      }
+    while (new_result != prev_result && !this.is_stop_requested()) {
       prev_result = new_result;
       Polyline tmp1 = reduce_corners(prev_result);
       Polyline tmp2 = smoothen_corners(tmp1);

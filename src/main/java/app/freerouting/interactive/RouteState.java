@@ -296,13 +296,10 @@ public class RouteState extends InteractiveState {
       LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int current_layer_no = hdlg.settings.layer;
-      for (; ; ) {
+      do {
         ++current_layer_no;
-        if (current_layer_no >= layer_structure.arr.length
-            || layer_structure.arr[current_layer_no].is_signal) {
-          break;
-        }
-      }
+      } while (current_layer_no < layer_structure.arr.length
+          && !layer_structure.arr[current_layer_no].is_signal);
       if (current_layer_no < layer_structure.arr.length) {
         change_layer_action(current_layer_no);
       }
@@ -311,12 +308,9 @@ public class RouteState extends InteractiveState {
       LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int current_layer_no = hdlg.settings.layer;
-      for (; ; ) {
+      do {
         --current_layer_no;
-        if (current_layer_no < 0 || layer_structure.arr[current_layer_no].is_signal) {
-          break;
-        }
-      }
+      } while (current_layer_no >= 0 && !layer_structure.arr[current_layer_no].is_signal);
       if (current_layer_no >= 0) {
         change_layer_action(current_layer_no);
       }

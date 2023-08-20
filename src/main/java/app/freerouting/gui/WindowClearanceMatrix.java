@@ -177,16 +177,14 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private void add_class() {
     String new_name;
     // Ask for the name of the new class.
-    for (; ; ) {
+    do {
       new_name = JOptionPane.showInputDialog(resources.getString("new_name"));
       if (new_name == null) {
         return;
       }
       new_name = new_name.trim();
-      if (is_legal_class_name(new_name)) {
-        break;
-      }
-    }
+    } while (!is_legal_class_name(new_name));
+
     final BasicBoard routing_board =
         this.board_frame.board_panel.board_handling.get_routing_board();
     final ClearanceMatrix clearance_matrix =

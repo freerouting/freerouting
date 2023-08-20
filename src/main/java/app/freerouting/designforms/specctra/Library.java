@@ -44,17 +44,13 @@ public class Library extends ScopeKeyword {
       throws IOException {
     // search the layer range of the padstack
     int first_layer_no = 0;
-    while (first_layer_no < p_par.board.get_layer_count()) {
-      if (p_padstack.get_shape(first_layer_no) != null) {
-        break;
-      }
+    while (first_layer_no < p_par.board.get_layer_count()
+        && p_padstack.get_shape(first_layer_no) == null) {
       ++first_layer_no;
     }
     int last_layer_no = p_par.board.get_layer_count() - 1;
-    while (last_layer_no >= 0) {
-      if (p_padstack.get_shape(last_layer_no) != null) {
-        break;
-      }
+    while (last_layer_no >= 0
+        && p_padstack.get_shape(last_layer_no) == null) {
       --last_layer_no;
     }
     if (first_layer_no >= p_par.board.get_layer_count() || last_layer_no < 0) {
