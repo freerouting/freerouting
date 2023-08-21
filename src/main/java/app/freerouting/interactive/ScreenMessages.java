@@ -1,5 +1,6 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatPoint;
 
 import javax.swing.JLabel;
@@ -113,11 +114,11 @@ public class ScreenMessages {
             + resources.getString("components"));
   }
 
-  public void set_post_route_info(int p_via_count, double p_trace_length) {
+  public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
     int via_count = p_via_count;
     add_field.setText(resources.getString("via_count") + " " + via_count);
     layer_field.setText(
-        resources.getString("trace_length") + " " + this.number_format.format(p_trace_length / 1000.0) + " mm");
+        resources.getString("trace_length") + " " + this.number_format.format(p_trace_length) + " " + unit);
   }
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */

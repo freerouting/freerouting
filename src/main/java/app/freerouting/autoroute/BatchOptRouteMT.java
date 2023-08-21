@@ -150,7 +150,9 @@ public class BatchOptRouteMT extends BatchOptRoute {
         this.thread.hdlg.coordinate_transform.board_to_user(
             this.routing_board.cumulative_trace_length());
     this.thread.hdlg.screen_messages.set_post_route_info(
-        this.routing_board.get_vias().size(), new_trace_length);
+        this.routing_board.get_vias().size(),
+        new_trace_length,
+        this.thread.hdlg.coordinate_transform.user_unit);
 
     ++update_count;
   }
@@ -213,7 +215,9 @@ public class BatchOptRouteMT extends BatchOptRoute {
         this.thread.hdlg.coordinate_transform.board_to_user(
             this.routing_board.cumulative_trace_length());
     this.thread.hdlg.screen_messages.set_post_route_info(
-        via_count_before, user_trace_length_before);
+        via_count_before,
+        user_trace_length_before,
+        this.thread.hdlg.coordinate_transform.user_unit);
     this.min_cumulative_trace_length_before = calc_weighted_trace_length(routing_board);
     // double pass_trace_length_before = this.min_cumulative_trace_length_before;
     String optimizationPassId =
