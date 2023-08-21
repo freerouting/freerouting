@@ -102,42 +102,34 @@ public class InteractiveState {
     Point2D screen_mouse_pos =
         hdlg.graphics_context.coordinate_transform.board_to_screen(
             hdlg.get_current_mouse_position());
-    if (p_key_char == 'a') {
-      hdlg.get_panel().board_frame.zoom_all();
-    } else if (p_key_char == 'c') {
-      hdlg.get_panel().center_display(screen_mouse_pos);
-    } else if (p_key_char == 'f') {
-      result =
-          ZoomRegionState.get_instance(
+    switch (p_key_char) {
+      case 'a' -> hdlg.get_panel().board_frame.zoom_all();
+      case 'c' -> hdlg.get_panel().center_display(screen_mouse_pos);
+      case 'f' -> result = ZoomRegionState.get_instance(
               hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
-    } else if (p_key_char == 'h') {
-      hdlg.get_panel().board_frame.select_previous_snapshot();
-    }
-    if (p_key_char == 'j') {
-      hdlg.get_panel().board_frame.goto_selected_snapshot();
-    } else if (p_key_char == 'k') {
-      hdlg.get_panel().board_frame.select_next_snapshot();
-    } else if (p_key_char == 'o') {
-      hdlg.get_panel().zoom_out(screen_mouse_pos);
-    } else if (p_key_char == 'z') {
-      hdlg.get_panel().zoom_in(screen_mouse_pos);
-    } else if (p_key_char == ',') {
-      // toggle the crosshair cursor
-      hdlg.get_panel().set_custom_crosshair_cursor(!hdlg.get_panel().is_custom_cross_hair_cursor());
-    } else if (p_key_char == '\n' || p_key_char == ' ') {
-      result = this.complete();
-    } else if (p_key_char == KeyEvent.VK_ESCAPE) {
-      result = this.cancel();
-    } else if (Character.isDigit(p_key_char)) {
-      // change the current layer to the p_key_char-ths signal layer
-      LayerStructure layer_structure =
-          hdlg.get_routing_board().layer_structure;
-      int d = Character.digit(p_key_char, 10);
-      d = Math.min(d, layer_structure.signal_layer_count());
-      // Board layers start at 0, keyboard input for layers starts at 1.
-      d = Math.max(d - 1, 0);
-      d = layer_structure.get_no(layer_structure.get_signal_layer(d));
-      hdlg.set_current_layer(d);
+      case 'h' -> hdlg.get_panel().board_frame.select_previous_snapshot();
+      case 'j' -> hdlg.get_panel().board_frame.goto_selected_snapshot();
+      case 'k' -> hdlg.get_panel().board_frame.select_next_snapshot();
+      case 'o' -> hdlg.get_panel().zoom_out(screen_mouse_pos);
+      case 'z' -> hdlg.get_panel().zoom_in(screen_mouse_pos);
+      case ',' ->
+        // toggle the crosshair cursor
+          hdlg.get_panel().set_custom_crosshair_cursor(!hdlg.get_panel().is_custom_cross_hair_cursor());
+      case '\n', ' ' -> result = this.complete();
+      case KeyEvent.VK_ESCAPE -> result = this.cancel();
+      default -> {
+        if (Character.isDigit(p_key_char)) {
+          // change the current layer to the p_key_char-ths signal layer
+          LayerStructure layer_structure =
+              hdlg.get_routing_board().layer_structure;
+          int d = Character.digit(p_key_char, 10);
+          d = Math.min(d, layer_structure.signal_layer_count());
+          // Board layers start at 0, keyboard input for layers starts at 1.
+          d = Math.max(d - 1, 0);
+          d = layer_structure.get_no(layer_structure.get_signal_layer(d));
+          hdlg.set_current_layer(d);
+        }
+      }
     }
     return result;
   }

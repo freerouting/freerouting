@@ -335,24 +335,25 @@ public class MainApplication extends WindowBase {
             try {
               String filename_only = new File(filename).getName();
               String design_name = filename_only.substring(0, filename_only.length() - 4);
+              String extension = filename_only.substring(filename_only.length() - 4);
 
               OutputStream output_stream = new FileOutputStream(filename);
 
-              if (filename.toLowerCase().endsWith(".dsn")) {
-                new_frame.board_panel.board_handling.export_to_dsn_file(
+              switch (extension) {
+                case ".dsn" -> new_frame.board_panel.board_handling.export_to_dsn_file(
                     output_stream, design_name, false);
-              } else if (filename.toLowerCase().endsWith(".ses")) {
-                new_frame.board_panel.board_handling.export_specctra_session_file(
+                case ".ses" -> new_frame.board_panel.board_handling.export_specctra_session_file(
                     design_name, output_stream);
-              } else if (filename.toLowerCase().endsWith(".scr")) {
-                ByteArrayOutputStream session_output_stream =
-                    new ByteArrayOutputStream();
-                new_frame.board_panel.board_handling.export_specctra_session_file(
-                    filename, session_output_stream);
-                InputStream input_stream =
-                    new ByteArrayInputStream(session_output_stream.toByteArray());
-                new_frame.board_panel.board_handling.export_eagle_session_file(
-                    input_stream, output_stream);
+                case ".scr" -> {
+                  ByteArrayOutputStream session_output_stream =
+                      new ByteArrayOutputStream();
+                  new_frame.board_panel.board_handling.export_specctra_session_file(
+                      filename, session_output_stream);
+                  InputStream input_stream =
+                      new ByteArrayInputStream(session_output_stream.toByteArray());
+                  new_frame.board_panel.board_handling.export_eagle_session_file(
+                      input_stream, output_stream);
+                }
               }
 
               Runtime.getRuntime().exit(0);

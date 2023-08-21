@@ -383,36 +383,36 @@ public class IntBox extends RegularTileShape implements Serializable {
     int b_x;
     int b_y;
     switch (p_no) {
-      case 0:
+      case 0 -> {
         // lower boundary line
         a_x = 0;
         a_y = ll.y;
         b_x = 1;
         b_y = ll.y;
-        break;
-      case 1:
+      }
+      case 1 -> {
         // right boundary line
         a_x = ur.x;
         a_y = 0;
         b_x = ur.x;
         b_y = 1;
-        break;
-      case 2:
+      }
+      case 2 -> {
         // upper boundary line
         a_x = 0;
         a_y = ur.y;
         b_x = -1;
         b_y = ur.y;
-        break;
-      case 3:
+      }
+      case 3 -> {
         // left boundary line
         a_x = ll.x;
         a_y = 0;
         b_x = ll.x;
         b_y = -1;
-        break;
-      default:
-        throw new IllegalArgumentException("IntBox.edge_line: p_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntBox.edge_line: p_no out of range");
     }
     return new Line(a_x, a_y, b_x, b_y);
   }
@@ -501,7 +501,7 @@ public class IntBox extends RegularTileShape implements Serializable {
   public Side compare(IntBox p_other, int p_edge_no) {
     Side result;
     switch (p_edge_no) {
-      case 0:
+      case 0 -> {
         // compare the lower edge line
         if (ll.y > p_other.ll.y) {
           result = Side.ON_THE_LEFT;
@@ -510,9 +510,8 @@ public class IntBox extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 1:
+      }
+      case 1 -> {
         // compare the right edge line
         if (ur.x < p_other.ur.x) {
           result = Side.ON_THE_LEFT;
@@ -521,9 +520,8 @@ public class IntBox extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 2:
+      }
+      case 2 -> {
         // compare the upper edge line
         if (ur.y < p_other.ur.y) {
           result = Side.ON_THE_LEFT;
@@ -532,9 +530,8 @@ public class IntBox extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 3:
+      }
+      case 3 -> {
         // compare the left edge line
         if (ll.x > p_other.ll.x) {
           result = Side.ON_THE_LEFT;
@@ -543,9 +540,9 @@ public class IntBox extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-      default:
-        throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
     }
     return result;
   }

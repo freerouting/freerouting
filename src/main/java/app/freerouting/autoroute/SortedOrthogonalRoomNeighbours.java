@@ -85,24 +85,13 @@ public class SortedOrthogonalRoomNeighbours {
     IntBox room_box = (IntBox) room_shape;
     IntBox bounding_box = p_autoroute_engine.board.get_bounding_box();
     for (int i = 0; i < 4; ++i) {
-      IntBox new_room_box;
-      if (i == 0) {
-        new_room_box =
-            new IntBox(bounding_box.ll.x, bounding_box.ll.y, bounding_box.ur.x, room_box.ll.y);
-      } else if (i == 1) {
-        new_room_box =
-            new IntBox(room_box.ur.x, bounding_box.ll.y, bounding_box.ur.x, bounding_box.ur.y);
-      } else if (i == 2) {
-        new_room_box =
-            new IntBox(bounding_box.ll.x, room_box.ur.y, bounding_box.ur.x, bounding_box.ur.y);
-      } else if (i == 3) {
-        new_room_box =
+      IntBox new_room_box = switch (i) {
+        case 0 -> new IntBox(bounding_box.ll.x, bounding_box.ll.y, bounding_box.ur.x, room_box.ll.y);
+        case 1 -> new IntBox(room_box.ur.x, bounding_box.ll.y, bounding_box.ur.x, bounding_box.ur.y);
+        case 2 -> new IntBox(bounding_box.ll.x, room_box.ur.y, bounding_box.ur.x, bounding_box.ur.y);
+        default -> // i == 3
             new IntBox(bounding_box.ll.x, bounding_box.ll.y, room_box.ll.x, bounding_box.ur.y);
-      } else {
-        FRLogger.warn(
-            "SortedOrthoganelRoomNeighbours.calculate_incomplete_rooms_with_empty_neighbours: illegal index i");
-        return;
-      }
+      };
       IntBox new_contained_box = room_box.intersection(new_room_box);
       FreeSpaceExpansionRoom new_room =
           p_autoroute_engine.add_incomplete_expansion_room(
@@ -214,20 +203,16 @@ public class SortedOrthogonalRoomNeighbours {
   }
 
   private static IntBox remove_border_line(IntBox p_room_box, int p_remove_edge_no) {
-    IntBox result;
-    if (p_remove_edge_no == 0) {
-      result = new IntBox(p_room_box.ll.x, -Limits.CRIT_INT, p_room_box.ur.x, p_room_box.ur.y);
-    } else if (p_remove_edge_no == 1) {
-      result = new IntBox(p_room_box.ll.x, p_room_box.ll.y, Limits.CRIT_INT, p_room_box.ur.y);
-    } else if (p_remove_edge_no == 2) {
-      result = new IntBox(p_room_box.ll.x, p_room_box.ll.y, p_room_box.ur.x, Limits.CRIT_INT);
-    } else if (p_remove_edge_no == 3) {
-      result = new IntBox(-Limits.CRIT_INT, p_room_box.ll.y, p_room_box.ur.x, p_room_box.ur.y);
-    } else {
-      FRLogger.warn("SortedOrthogonalRoomNeighbours.remove_border_line: illegal p_remove_edge_no");
-      result = null;
-    }
-    return result;
+    return switch (p_remove_edge_no) {
+      case 0 -> new IntBox(p_room_box.ll.x, -Limits.CRIT_INT, p_room_box.ur.x, p_room_box.ur.y);
+      case 1 -> new IntBox(p_room_box.ll.x, p_room_box.ll.y, Limits.CRIT_INT, p_room_box.ur.y);
+      case 2 -> new IntBox(p_room_box.ll.x, p_room_box.ll.y, p_room_box.ur.x, Limits.CRIT_INT);
+      case 3 -> new IntBox(-Limits.CRIT_INT, p_room_box.ll.y, p_room_box.ur.x, p_room_box.ur.y);
+      default -> {
+        FRLogger.warn("SortedOrthogonalRoomNeighbours.remove_border_line: illegal p_remove_edge_no");
+        yield null;
+      }
+    };
   }
 
   private void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine) {
@@ -242,164 +227,168 @@ public class SortedOrthogonalRoomNeighbours {
         // create a door to a new incomplete expansion room between
         // the last corner of the previous neighbour and the first corner of the
         // current neighbour.
-        if (next_neighbour.first_touching_side == 0) {
-          if (prev_neighbour.last_touching_side == 0) {
-            if (prev_neighbour.intersection.ur.x < next_neighbour.intersection.ll.x) {
-              insert_incomplete_room(
-                  p_autoroute_engine,
-                  prev_neighbour.intersection.ur.x,
-                  board_bounds.ll.y,
-                  next_neighbour.intersection.ll.x,
-                  this.room_shape.ll.y);
-            }
-          } else {
-            if (prev_neighbour.intersection.ll.y > this.room_shape.ll.y
-                || next_neighbour.intersection.ll.x > this.room_shape.ll.x) {
-              if (is_obstacle_expansion_room) {
-                // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
-                if (prev_neighbour.last_touching_side == 3) {
-                  insert_incomplete_room(
-                      p_autoroute_engine,
-                      board_bounds.ll.x,
-                      room_shape.ll.y,
-                      room_shape.ll.x,
-                      prev_neighbour.intersection.ll.y);
-                }
-                insert_incomplete_room(
-                    p_autoroute_engine,
-                    room_shape.ll.x,
-                    board_bounds.ll.y,
-                    next_neighbour.intersection.ll.x,
-                    room_shape.ll.y);
-              } else {
-                insert_incomplete_room(
-                    p_autoroute_engine,
-                    board_bounds.ll.x,
-                    board_bounds.ll.y,
-                    next_neighbour.intersection.ll.x,
-                    prev_neighbour.intersection.ll.y);
-              }
-            }
-          }
-        } else if (next_neighbour.first_touching_side == 1) {
-          if (prev_neighbour.last_touching_side == 1) {
-            if (prev_neighbour.intersection.ur.y < next_neighbour.intersection.ll.y) {
-              insert_incomplete_room(
-                  p_autoroute_engine,
-                  this.room_shape.ur.x,
-                  prev_neighbour.intersection.ur.y,
-                  board_bounds.ur.x,
-                  next_neighbour.intersection.ll.y);
-            }
-          } else {
-            if (prev_neighbour.intersection.ur.x < this.room_shape.ur.x
-                || next_neighbour.intersection.ll.y > this.room_shape.ll.y) {
-              if (is_obstacle_expansion_room) {
-                // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
-                if (prev_neighbour.last_touching_side == 0) {
-                  insert_incomplete_room(
-                      p_autoroute_engine,
-                      prev_neighbour.intersection.ur.x,
-                      board_bounds.ll.y,
-                      room_shape.ur.x,
-                      room_shape.ll.y);
-                }
-                insert_incomplete_room(
-                    p_autoroute_engine,
-                    room_shape.ur.x,
-                    room_shape.ll.y,
-                    room_shape.ur.x,
-                    next_neighbour.intersection.ll.y);
-              } else {
+        switch (next_neighbour.first_touching_side) {
+          case 0 -> {
+            if (prev_neighbour.last_touching_side == 0) {
+              if (prev_neighbour.intersection.ur.x < next_neighbour.intersection.ll.x) {
                 insert_incomplete_room(
                     p_autoroute_engine,
                     prev_neighbour.intersection.ur.x,
                     board_bounds.ll.y,
-                    board_bounds.ur.x,
-                    next_neighbour.intersection.ll.y);
+                    next_neighbour.intersection.ll.x,
+                    this.room_shape.ll.y);
               }
-            }
-          }
-        } else if (next_neighbour.first_touching_side == 2) {
-          if (prev_neighbour.last_touching_side == 2) {
-            if (prev_neighbour.intersection.ll.x > next_neighbour.intersection.ur.x) {
-              insert_incomplete_room(
-                  p_autoroute_engine,
-                  next_neighbour.intersection.ur.x,
-                  this.room_shape.ur.y,
-                  prev_neighbour.intersection.ll.x,
-                  board_bounds.ur.y);
-            }
-          } else {
-            if (prev_neighbour.intersection.ur.y < this.room_shape.ur.y
-                || next_neighbour.intersection.ur.x < this.room_shape.ur.x) {
-              if (is_obstacle_expansion_room) {
-                // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
-                if (prev_neighbour.last_touching_side == 1) {
-                  insert_incomplete_room(
-                      p_autoroute_engine,
-                      room_shape.ur.x,
-                      prev_neighbour.intersection.ur.y,
-                      board_bounds.ur.x,
-                      room_shape.ur.y);
-                }
-                insert_incomplete_room(
-                    p_autoroute_engine,
-                    next_neighbour.intersection.ur.x,
-                    room_shape.ur.y,
-                    room_shape.ur.x,
-                    board_bounds.ur.y);
-              } else {
-                insert_incomplete_room(
-                    p_autoroute_engine,
-                    next_neighbour.intersection.ur.x,
-                    prev_neighbour.intersection.ur.y,
-                    board_bounds.ur.x,
-                    board_bounds.ur.y);
-              }
-            }
-          }
-        } else if (next_neighbour.first_touching_side == 3) {
-          if (prev_neighbour.last_touching_side == 3) {
-            if (prev_neighbour.intersection.ll.y > next_neighbour.intersection.ur.y) {
-              insert_incomplete_room(
-                  p_autoroute_engine,
-                  board_bounds.ll.x,
-                  next_neighbour.intersection.ur.y,
-                  this.room_shape.ll.x,
-                  prev_neighbour.intersection.ll.y);
-            }
-          } else {
-            if (next_neighbour.intersection.ur.y < this.room_shape.ur.y
-                || prev_neighbour.intersection.ll.x > this.room_shape.ll.x) {
-              if (is_obstacle_expansion_room) {
-                // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
-                if (prev_neighbour.last_touching_side == 2) {
+            } else {
+              if (prev_neighbour.intersection.ll.y > this.room_shape.ll.y
+                  || next_neighbour.intersection.ll.x > this.room_shape.ll.x) {
+                if (is_obstacle_expansion_room) {
+                  // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
+                  if (prev_neighbour.last_touching_side == 3) {
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        board_bounds.ll.x,
+                        room_shape.ll.y,
+                        room_shape.ll.x,
+                        prev_neighbour.intersection.ll.y);
+                  }
                   insert_incomplete_room(
                       p_autoroute_engine,
                       room_shape.ll.x,
-                      room_shape.ur.y,
-                      prev_neighbour.intersection.ll.x,
-                      board_bounds.ur.y);
+                      board_bounds.ll.y,
+                      next_neighbour.intersection.ll.x,
+                      room_shape.ll.y);
+                } else {
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      board_bounds.ll.x,
+                      board_bounds.ll.y,
+                      next_neighbour.intersection.ll.x,
+                      prev_neighbour.intersection.ll.y);
                 }
-                insert_incomplete_room(
-                    p_autoroute_engine,
-                    board_bounds.ll.x,
-                    next_neighbour.intersection.ur.y,
-                    room_shape.ll.x,
-                    room_shape.ur.y);
-              } else {
-                insert_incomplete_room(
-                    p_autoroute_engine,
-                    board_bounds.ll.x,
-                    next_neighbour.intersection.ur.y,
-                    prev_neighbour.intersection.ll.x,
-                    board_bounds.ur.y);
               }
             }
           }
-        } else {
-          FRLogger.warn(
+          case 1 -> {
+            if (prev_neighbour.last_touching_side == 1) {
+              if (prev_neighbour.intersection.ur.y < next_neighbour.intersection.ll.y) {
+                insert_incomplete_room(
+                    p_autoroute_engine,
+                    this.room_shape.ur.x,
+                    prev_neighbour.intersection.ur.y,
+                    board_bounds.ur.x,
+                    next_neighbour.intersection.ll.y);
+              }
+            } else {
+              if (prev_neighbour.intersection.ur.x < this.room_shape.ur.x
+                  || next_neighbour.intersection.ll.y > this.room_shape.ll.y) {
+                if (is_obstacle_expansion_room) {
+                  // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
+                  if (prev_neighbour.last_touching_side == 0) {
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        prev_neighbour.intersection.ur.x,
+                        board_bounds.ll.y,
+                        room_shape.ur.x,
+                        room_shape.ll.y);
+                  }
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      room_shape.ur.x,
+                      room_shape.ll.y,
+                      room_shape.ur.x,
+                      next_neighbour.intersection.ll.y);
+                } else {
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      prev_neighbour.intersection.ur.x,
+                      board_bounds.ll.y,
+                      board_bounds.ur.x,
+                      next_neighbour.intersection.ll.y);
+                }
+              }
+            }
+          }
+          case 2 -> {
+            if (prev_neighbour.last_touching_side == 2) {
+              if (prev_neighbour.intersection.ll.x > next_neighbour.intersection.ur.x) {
+                insert_incomplete_room(
+                    p_autoroute_engine,
+                    next_neighbour.intersection.ur.x,
+                    this.room_shape.ur.y,
+                    prev_neighbour.intersection.ll.x,
+                    board_bounds.ur.y);
+              }
+            } else {
+              if (prev_neighbour.intersection.ur.y < this.room_shape.ur.y
+                  || next_neighbour.intersection.ur.x < this.room_shape.ur.x) {
+                if (is_obstacle_expansion_room) {
+                  // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
+                  if (prev_neighbour.last_touching_side == 1) {
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        room_shape.ur.x,
+                        prev_neighbour.intersection.ur.y,
+                        board_bounds.ur.x,
+                        room_shape.ur.y);
+                  }
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      next_neighbour.intersection.ur.x,
+                      room_shape.ur.y,
+                      room_shape.ur.x,
+                      board_bounds.ur.y);
+                } else {
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      next_neighbour.intersection.ur.x,
+                      prev_neighbour.intersection.ur.y,
+                      board_bounds.ur.x,
+                      board_bounds.ur.y);
+                }
+              }
+            }
+          }
+          case 3 -> {
+            if (prev_neighbour.last_touching_side == 3) {
+              if (prev_neighbour.intersection.ll.y > next_neighbour.intersection.ur.y) {
+                insert_incomplete_room(
+                    p_autoroute_engine,
+                    board_bounds.ll.x,
+                    next_neighbour.intersection.ur.y,
+                    this.room_shape.ll.x,
+                    prev_neighbour.intersection.ll.y);
+              }
+            } else {
+              if (next_neighbour.intersection.ur.y < this.room_shape.ur.y
+                  || prev_neighbour.intersection.ll.x > this.room_shape.ll.x) {
+                if (is_obstacle_expansion_room) {
+                  // no 2-dim doors between obstacle_expansion_rooms and free space rooms allowed.
+                  if (prev_neighbour.last_touching_side == 2) {
+                    insert_incomplete_room(
+                        p_autoroute_engine,
+                        room_shape.ll.x,
+                        room_shape.ur.y,
+                        prev_neighbour.intersection.ll.x,
+                        board_bounds.ur.y);
+                  }
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      board_bounds.ll.x,
+                      next_neighbour.intersection.ur.y,
+                      room_shape.ll.x,
+                      room_shape.ur.y);
+                } else {
+                  insert_incomplete_room(
+                      p_autoroute_engine,
+                      board_bounds.ll.x,
+                      next_neighbour.intersection.ur.y,
+                      prev_neighbour.intersection.ll.x,
+                      board_bounds.ur.y);
+                }
+              }
+            }
+          }
+          default -> FRLogger.warn(
               "SortedOrthogonalRoomNeighbour.calculate_new_incomplete: illegal touching side");
         }
       }
@@ -588,17 +577,15 @@ public class SortedOrthogonalRoomNeighbours {
       IntBox is2 = p_other.intersection;
       int cmp_value;
 
-      if (first_touching_side == 0) {
-        cmp_value = is1.ll.x - is2.ll.x;
-      } else if (first_touching_side == 1) {
-        cmp_value = is1.ll.y - is2.ll.y;
-      } else if (first_touching_side == 2) {
-        cmp_value = is2.ur.x - is1.ur.x;
-      } else if (first_touching_side == 3) {
-        cmp_value = is2.ur.y - is1.ur.y;
-      } else {
-        FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
-        return 0;
+      switch (first_touching_side) {
+        case 0 -> cmp_value = is1.ll.x - is2.ll.x;
+        case 1 -> cmp_value = is1.ll.y - is2.ll.y;
+        case 2 -> cmp_value = is2.ur.x - is1.ur.x;
+        case 3 -> cmp_value = is2.ur.y - is1.ur.y;
+        default -> {
+          FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
+          return 0;
+        }
       }
       if (cmp_value == 0) {
         // The first touching points of this neighbour and p_other with the room shape are equal.
@@ -614,17 +601,15 @@ public class SortedOrthogonalRoomNeighbours {
         }
 
         // now the last touch of this and p_other is at the same side
-        if (last_touching_side == 0) {
-          cmp_value = is1.ur.x - is2.ur.x;
-        } else if (last_touching_side == 1) {
-          cmp_value = is1.ur.y - is2.ur.y;
-        } else if (last_touching_side == 2) {
-          cmp_value = is2.ll.x - is1.ll.x;
-        } else if (last_touching_side == 3) {
-          cmp_value = is2.ll.y - is1.ll.y;
-        } else {
-          FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
-          return 0;
+        switch (last_touching_side) {
+          case 0 -> cmp_value = is1.ur.x - is2.ur.x;
+          case 1 -> cmp_value = is1.ur.y - is2.ur.y;
+          case 2 -> cmp_value = is2.ll.x - is1.ll.x;
+          case 3 -> cmp_value = is2.ll.y - is1.ll.y;
+          default -> {
+            FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
+            return 0;
+          }
         }
       }
       return cmp_value;

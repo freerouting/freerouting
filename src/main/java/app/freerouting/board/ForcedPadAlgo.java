@@ -61,7 +61,7 @@ public class ForcedPadAlgo {
 
     boolean result;
     switch (p_from_side) {
-      case 0:
+      case 0 -> {
         result =
             Math.min(line_a.y, line_b.y) >= pad_octagon.uy + p_width
                 || Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
@@ -77,8 +77,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
                           >= pad_octagon.urx + diag_width;
         }
-        break;
-      case 1:
+      }
+      case 1 -> {
         result =
             Math.min(line_a.y, line_b.y) >= pad_octagon.uy + p_width
                 || Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
@@ -93,8 +93,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
                           >= pad_octagon.urx + diag_width;
         }
-        break;
-      case 2:
+      }
+      case 2 -> {
         result =
             Math.max(line_a.x, line_b.x) <= pad_octagon.lx - p_width
                 || Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
@@ -110,8 +110,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x - line_a.y, line_b.x - line_b.y)
                           <= pad_octagon.ulx - diag_width;
         }
-        break;
-      case 3:
+      }
+      case 3 -> {
         result =
             Math.max(line_a.x, line_b.x) <= pad_octagon.lx - p_width
                 || Math.max(line_a.y, line_b.y) <= pad_octagon.ly - p_width
@@ -126,8 +126,8 @@ public class ForcedPadAlgo {
                       && Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
                           <= pad_octagon.ulx - diag_width;
         }
-        break;
-      case 4:
+      }
+      case 4 -> {
         result =
             Math.max(line_a.y, line_b.y) <= pad_octagon.ly - p_width
                 || Math.max(line_a.x + line_a.y, line_b.x + line_b.y)
@@ -143,8 +143,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
                           <= pad_octagon.llx - diag_width;
         }
-        break;
-      case 5:
+      }
+      case 5 -> {
         result =
             Math.max(line_a.y, line_b.y) <= pad_octagon.ly - p_width
                 || Math.min(line_a.x, line_b.x) >= pad_octagon.rx + p_width
@@ -159,8 +159,8 @@ public class ForcedPadAlgo {
                       && Math.max(line_a.x + line_a.y, line_b.x + line_b.y)
                           <= pad_octagon.llx - diag_width;
         }
-        break;
-      case 6:
+      }
+      case 6 -> {
         result =
             Math.min(line_a.x, line_b.x) >= pad_octagon.rx + p_width
                 || Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
@@ -176,8 +176,8 @@ public class ForcedPadAlgo {
                       && Math.max(line_a.x + line_a.y, line_b.x + line_b.y)
                           >= pad_octagon.urx + diag_width;
         }
-        break;
-      case 7:
+      }
+      case 7 -> {
         result =
             Math.min(line_a.y, line_b.y) >= pad_octagon.uy + p_width
                 || Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
@@ -192,12 +192,11 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x - line_a.y, line_b.x - line_b.y)
                           >= pad_octagon.lrx + diag_width;
         }
-        break;
-      default:
-        {
-          FRLogger.warn("ForcedPadAlgo.in_front_of_pad: p_from_side out of range");
-          result = true;
-        }
+      }
+      default -> {
+        FRLogger.warn("ForcedPadAlgo.in_front_of_pad: p_from_side out of range");
+        result = true;
+      }
     }
 
     return result;

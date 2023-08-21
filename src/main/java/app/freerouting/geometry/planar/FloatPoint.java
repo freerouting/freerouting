@@ -290,25 +290,26 @@ public class FloatPoint implements Serializable {
     double new_x;
     double new_y;
     switch (n) {
-      case 0: // 0 degree
+      case 0 -> { // 0 degree
         new_x = x;
         new_y = y;
-        break;
-      case 1: // 90 degree
+      }
+      case 1 -> { // 90 degree
         new_x = -y;
         new_y = x;
-        break;
-      case 2: // 180 degree
+      }
+      case 2 -> { // 180 degree
         new_x = -x;
         new_y = -y;
-        break;
-      case 3: // 270 degree
+      }
+      case 3 -> { // 270 degree
         new_x = y;
         new_y = -x;
-        break;
-      default:
+      }
+      default -> {
         new_x = 0;
         new_y = 0;
+      }
     }
     return new FloatPoint(new_x, new_y);
   }

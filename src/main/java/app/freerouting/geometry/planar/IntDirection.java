@@ -86,41 +86,42 @@ public class IntDirection extends Direction implements Serializable {
     int new_x;
     int new_y;
     switch (n) {
-      case 0: // 0 degree
+      case 0 -> { // 0 degree
         new_x = x;
         new_y = y;
-        break;
-      case 1: // 45 degree
+      }
+      case 1 -> { // 45 degree
         new_x = x - y;
         new_y = x + y;
-        break;
-      case 2: // 90 degree
+      }
+      case 2 -> { // 90 degree
         new_x = -y;
         new_y = x;
-        break;
-      case 3: // 135 degree
+      }
+      case 3 -> { // 135 degree
         new_x = -x - y;
         new_y = x - y;
-        break;
-      case 4: // 180 degree
+      }
+      case 4 -> { // 180 degree
         new_x = -x;
         new_y = -y;
-        break;
-      case 5: // 225 degree
+      }
+      case 5 -> { // 225 degree
         new_x = y - x;
         new_y = -x - y;
-        break;
-      case 6: // 270 degree
+      }
+      case 6 -> { // 270 degree
         new_x = y;
         new_y = -x;
-        break;
-      case 7: // 315 degree
+      }
+      case 7 -> { // 315 degree
         new_x = x + y;
         new_y = y - x;
-        break;
-      default:
+      }
+      default -> {
         new_x = 0;
         new_y = 0;
+      }
     }
     return new IntDirection(new_x, new_y);
   }

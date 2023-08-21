@@ -72,65 +72,59 @@ public class MenuState extends InteractiveState {
   @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState curr_return_state = this;
-    if (p_key_char == 'b') {
-      hdlg.redo();
-    } else if (p_key_char == 'd') {
-      curr_return_state = DragMenuState.get_instance(hdlg, activityReplayFile);
-    } else if (p_key_char == 'e') {
-      if (hdlg.get_routing_board().get_test_level() != TestLevel.RELEASE_VERSION) {
-        curr_return_state =
-            ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+    switch (p_key_char) {
+      case 'b' -> hdlg.redo();
+      case 'd' -> curr_return_state = DragMenuState.get_instance(hdlg, activityReplayFile);
+      case 'e' -> {
+        if (hdlg.get_routing_board().get_test_level() != TestLevel.RELEASE_VERSION) {
+          curr_return_state =
+              ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
+        }
       }
-    } else if (p_key_char == 'g') {
-      hdlg.toggle_ratsnest();
-    } else if (p_key_char == 'i') {
-      curr_return_state = this.select_items(hdlg.get_current_mouse_position());
-    } else if (p_key_char == 'p') {
-      hdlg.settings.set_push_enabled(!hdlg.settings.push_enabled);
-      hdlg.get_panel().board_frame.refresh_windows();
-    } else if (p_key_char == 'r') {
-      curr_return_state = RouteMenuState.get_instance(hdlg, activityReplayFile);
-    } else if (p_key_char == 's') {
-      curr_return_state = SelectMenuState.get_instance(hdlg, activityReplayFile);
-    } else if (p_key_char == 't') {
-      curr_return_state =
+      case 'g' -> hdlg.toggle_ratsnest();
+      case 'i' -> curr_return_state = this.select_items(hdlg.get_current_mouse_position());
+      case 'p' -> {
+        hdlg.settings.set_push_enabled(!hdlg.settings.push_enabled);
+        hdlg.get_panel().board_frame.refresh_windows();
+      }
+      case 'r' -> curr_return_state = RouteMenuState.get_instance(hdlg, activityReplayFile);
+      case 's' -> curr_return_state = SelectMenuState.get_instance(hdlg, activityReplayFile);
+      case 't' -> curr_return_state =
           RouteState.get_instance(
               hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
-    } else if (p_key_char == 'u') {
-      hdlg.undo();
-    } else if (p_key_char == 'v') {
-      hdlg.toggle_clearance_violations();
-    } else if (p_key_char == 'w') {
-      curr_return_state = swap_pin(hdlg.get_current_mouse_position());
-    } else if (p_key_char == '+') {
-      // increase the current layer to the next signal layer
-      LayerStructure layer_structure =
-          hdlg.get_routing_board().layer_structure;
-      int current_layer_no = hdlg.settings.layer;
-      do {
-        ++current_layer_no;
-      } while (current_layer_no < layer_structure.arr.length
-          && !layer_structure.arr[current_layer_no].is_signal);
+      case 'u' -> hdlg.undo();
+      case 'v' -> hdlg.toggle_clearance_violations();
+      case 'w' -> curr_return_state = swap_pin(hdlg.get_current_mouse_position());
+      case '+' -> {
+        // increase the current layer to the next signal layer
+        LayerStructure layer_structure =
+            hdlg.get_routing_board().layer_structure;
+        int current_layer_no = hdlg.settings.layer;
+        do {
+          ++current_layer_no;
+        } while (current_layer_no < layer_structure.arr.length
+            && !layer_structure.arr[current_layer_no].is_signal);
 
-      if (current_layer_no < layer_structure.arr.length) {
-        hdlg.set_current_layer(current_layer_no);
+        if (current_layer_no < layer_structure.arr.length) {
+          hdlg.set_current_layer(current_layer_no);
+        }
       }
-    } else if (p_key_char == '-') {
-      // decrease the current layer to the previous signal layer
-      LayerStructure layer_structure =
-          hdlg.get_routing_board().layer_structure;
-      int current_layer_no = hdlg.settings.layer;
-      do {
-        --current_layer_no;
-      } while (current_layer_no >= 0
-          && !layer_structure.arr[current_layer_no].is_signal);
+      case '-' -> {
+        // decrease the current layer to the previous signal layer
+        LayerStructure layer_structure =
+            hdlg.get_routing_board().layer_structure;
+        int current_layer_no = hdlg.settings.layer;
+        do {
+          --current_layer_no;
+        } while (current_layer_no >= 0
+            && !layer_structure.arr[current_layer_no].is_signal);
 
-      if (current_layer_no >= 0) {
-        hdlg.set_current_layer(current_layer_no);
+        if (current_layer_no >= 0) {
+          hdlg.set_current_layer(current_layer_no);
+        }
+
       }
-
-    } else {
-      curr_return_state = super.key_typed(p_key_char);
+      default -> curr_return_state = super.key_typed(p_key_char);
     }
     return curr_return_state;
   }

@@ -263,53 +263,33 @@ public class GUIDefaultsFile {
       }
     }
     JFrame curr_frame;
-    if (p_frame == Keyword.BOARD_FRAME) {
-      curr_frame = this.board_frame;
-    } else if (p_frame == Keyword.COLOR_MANAGER) {
-      curr_frame = this.board_frame.color_manager;
-    } else if (p_frame == Keyword.OBJECT_VISIBILITY) {
-      curr_frame = this.board_frame.object_visibility_window;
-    } else if (p_frame == Keyword.LAYER_VISIBILITY) {
-      curr_frame = this.board_frame.layer_visibility_window;
-    } else if (p_frame == Keyword.DISPLAY_MISCELLANIOUS) {
-      curr_frame = this.board_frame.display_misc_window;
-    } else if (p_frame == Keyword.SNAPSHOTS) {
-      curr_frame = this.board_frame.snapshot_window;
-    } else if (p_frame == Keyword.SELECT_PARAMETER) {
-      curr_frame = this.board_frame.select_parameter_window;
-    } else if (p_frame == Keyword.ROUTE_PARAMETER) {
-      curr_frame = this.board_frame.route_parameter_window;
-    } else if (p_frame == Keyword.MANUAL_RULES) {
-      curr_frame = this.board_frame.route_parameter_window.manual_rule_window;
-    } else if (p_frame == Keyword.ROUTE_DETAILS) {
-      curr_frame = this.board_frame.route_parameter_window.detail_window;
-    } else if (p_frame == Keyword.MOVE_PARAMETER) {
-      curr_frame = this.board_frame.move_parameter_window;
-    } else if (p_frame == Keyword.CLEARANCE_MATRIX) {
-      curr_frame = this.board_frame.clearance_matrix_window;
-    } else if (p_frame == Keyword.VIA_RULES) {
-      curr_frame = this.board_frame.via_window;
-    } else if (p_frame == Keyword.EDIT_VIAS) {
-      curr_frame = this.board_frame.edit_vias_window;
-    } else if (p_frame == Keyword.EDIT_NET_RULES) {
-      curr_frame = this.board_frame.edit_net_rules_window;
-    } else if (p_frame == Keyword.ASSIGN_NET_RULES) {
-      curr_frame = this.board_frame.assign_net_classes_window;
-    } else if (p_frame == Keyword.PADSTACK_INFO) {
-      curr_frame = this.board_frame.padstacks_window;
-    } else if (p_frame == Keyword.PACKAGE_INFO) {
-      curr_frame = this.board_frame.packages_window;
-    } else if (p_frame == Keyword.COMPONENT_INFO) {
-      curr_frame = this.board_frame.components_window;
-    } else if (p_frame == Keyword.NET_INFO) {
-      curr_frame = this.board_frame.net_info_window;
-    } else if (p_frame == Keyword.INCOMPLETES_INFO) {
-      curr_frame = this.board_frame.incompletes_window;
-    } else if (p_frame == Keyword.VIOLATIONS_INFO) {
-      curr_frame = this.board_frame.clearance_violations_window;
-    } else {
-      FRLogger.warn("GUIDefaultsFile.read_frame_scope: unknown frame");
-      return false;
+    switch (p_frame) {
+      case BOARD_FRAME           -> curr_frame = this.board_frame;
+      case COLOR_MANAGER         -> curr_frame = this.board_frame.color_manager;
+      case OBJECT_VISIBILITY     -> curr_frame = this.board_frame.object_visibility_window;
+      case LAYER_VISIBILITY      -> curr_frame = this.board_frame.layer_visibility_window;
+      case DISPLAY_MISCELLANIOUS -> curr_frame = this.board_frame.display_misc_window;
+      case SNAPSHOTS             -> curr_frame = this.board_frame.snapshot_window;
+      case SELECT_PARAMETER      -> curr_frame = this.board_frame.select_parameter_window;
+      case ROUTE_PARAMETER       -> curr_frame = this.board_frame.route_parameter_window;
+      case MANUAL_RULES          -> curr_frame = this.board_frame.route_parameter_window.manual_rule_window;
+      case ROUTE_DETAILS         -> curr_frame = this.board_frame.route_parameter_window.detail_window;
+      case MOVE_PARAMETER        -> curr_frame = this.board_frame.move_parameter_window;
+      case CLEARANCE_MATRIX      -> curr_frame = this.board_frame.clearance_matrix_window;
+      case VIA_RULES             -> curr_frame = this.board_frame.via_window;
+      case EDIT_VIAS             -> curr_frame = this.board_frame.edit_vias_window;
+      case EDIT_NET_RULES        -> curr_frame = this.board_frame.edit_net_rules_window;
+      case ASSIGN_NET_RULES      -> curr_frame = this.board_frame.assign_net_classes_window;
+      case PADSTACK_INFO         -> curr_frame = this.board_frame.padstacks_window;
+      case PACKAGE_INFO          -> curr_frame = this.board_frame.packages_window;
+      case COMPONENT_INFO        -> curr_frame = this.board_frame.components_window;
+      case NET_INFO              -> curr_frame = this.board_frame.net_info_window;
+      case INCOMPLETES_INFO      -> curr_frame = this.board_frame.incompletes_window;
+      case VIOLATIONS_INFO       -> curr_frame = this.board_frame.clearance_violations_window;
+      default -> {
+        FRLogger.warn("GUIDefaultsFile.read_frame_scope: unknown frame");
+        return false;
+      }
     }
     curr_frame.setVisible(is_visible);
     if (p_frame == Keyword.BOARD_FRAME) {

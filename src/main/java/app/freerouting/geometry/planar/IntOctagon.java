@@ -117,40 +117,40 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     int x;
     int y;
     switch (p_no) {
-      case 0:
+      case 0 -> {
         x = llx - ly;
         y = ly;
-        break;
-      case 1:
+      }
+      case 1 -> {
         x = lrx + ly;
         y = ly;
-        break;
-      case 2:
+      }
+      case 2 -> {
         x = rx;
         y = rx - lrx;
-        break;
-      case 3:
+      }
+      case 3 -> {
         x = rx;
         y = urx - rx;
-        break;
-      case 4:
+      }
+      case 4 -> {
         x = urx - uy;
         y = uy;
-        break;
-      case 5:
+      }
+      case 5 -> {
         x = ulx + uy;
         y = uy;
-        break;
-      case 6:
+      }
+      case 6 -> {
         x = lx;
         y = lx - ulx;
-        break;
-      case 7:
+      }
+      case 7 -> {
         x = lx;
         y = llx - lx;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
     }
     return new IntPoint(x, y);
   }
@@ -159,73 +159,32 @@ public class IntOctagon extends RegularTileShape implements Serializable {
    * Additional to the function corner() for performance reasons to avoid allocation of an IntPoint.
    */
   public int corner_y(int p_no) {
-    int y;
-    switch (p_no) {
-      case 0:
-        y = ly;
-        break;
-      case 1:
-        y = ly;
-        break;
-      case 2:
-        y = rx - lrx;
-        break;
-      case 3:
-        y = urx - rx;
-        break;
-      case 4:
-        y = uy;
-        break;
-      case 5:
-        y = uy;
-        break;
-      case 6:
-        y = lx - ulx;
-        break;
-      case 7:
-        y = llx - lx;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
-    }
-    return y;
+    return switch (p_no) {
+      case 0, 1 -> ly;
+      case 2    -> rx - lrx;
+      case 3    -> urx - rx;
+      case 4, 5 -> uy;
+      case 6    -> lx - ulx;
+      case 7    -> llx - lx;
+      default ->
+          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+    };
   }
 
   /**
    * Additional to the function corner() for performance reasons to avoid allocation of an IntPoint.
    */
   public int corner_x(int p_no) {
-
-    int x;
-    switch (p_no) {
-      case 0:
-        x = llx - ly;
-        break;
-      case 1:
-        x = lrx + ly;
-        break;
-      case 2:
-        x = rx;
-        break;
-      case 3:
-        x = rx;
-        break;
-      case 4:
-        x = urx - uy;
-        break;
-      case 5:
-        x = ulx + uy;
-        break;
-      case 6:
-        x = lx;
-        break;
-      case 7:
-        x = lx;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
-    }
-    return x;
+    return switch (p_no) {
+      case 0    -> llx - ly;
+      case 1    -> lrx + ly;
+      case 2, 3 -> rx;
+      case 4    -> urx - uy;
+      case 5    -> ulx + uy;
+      case 6, 7 -> lx;
+      default ->
+          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+    };
   }
 
   @Override
@@ -260,64 +219,64 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     int b_x;
     int b_y;
     switch (p_no) {
-      case 0:
+      case 0 -> {
         // lower boundary line
         a_x = 0;
         a_y = ly;
         b_x = 1;
         b_y = ly;
-        break;
-      case 1:
+      }
+      case 1 -> {
         // lower right boundary line
         a_x = lrx;
         a_y = 0;
         b_x = lrx + 1;
         b_y = 1;
-        break;
-      case 2:
+      }
+      case 2 -> {
         // right boundary line
         a_x = rx;
         a_y = 0;
         b_x = rx;
         b_y = 1;
-        break;
-      case 3:
+      }
+      case 3 -> {
         // upper right boundary line
         a_x = urx;
         a_y = 0;
         b_x = urx - 1;
         b_y = 1;
-        break;
-      case 4:
+      }
+      case 4 -> {
         // upper boundary line
         a_x = 0;
         a_y = uy;
         b_x = -1;
         b_y = uy;
-        break;
-      case 5:
+      }
+      case 5 -> {
         // upper left boundary line
         a_x = ulx;
         a_y = 0;
         b_x = ulx - 1;
         b_y = -1;
-        break;
-      case 6:
+      }
+      case 6 -> {
         // left boundary line
         a_x = lx;
         a_y = 0;
         b_x = lx;
         b_y = -1;
-        break;
-      case 7:
+      }
+      case 7 -> {
         // lower left boundary line
         a_x = llx;
         a_y = 0;
         b_x = llx + 1;
         b_y = -1;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.edge_line: p_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntOctagon.edge_line: p_no out of range");
     }
     return new Line(a_x, a_y, b_x, b_y);
   }
@@ -618,27 +577,20 @@ public class IntOctagon extends RegularTileShape implements Serializable {
    */
   public Side side_of_border_line(int p_x, int p_y, int p_border_line_no) {
 
-    int tmp;
-    if (p_border_line_no == 0) {
-      tmp = this.ly - p_y;
-    } else if (p_border_line_no == 2) {
-      tmp = p_x - this.rx;
-    } else if (p_border_line_no == 4) {
-      tmp = p_y - this.uy;
-    } else if (p_border_line_no == 6) {
-      tmp = this.lx - p_x;
-    } else if (p_border_line_no == 1) {
-      tmp = p_x - p_y - this.lrx;
-    } else if (p_border_line_no == 3) {
-      tmp = p_x + p_y - this.urx;
-    } else if (p_border_line_no == 5) {
-      tmp = this.ulx + p_y - p_x;
-    } else if (p_border_line_no == 7) {
-      tmp = this.llx - p_x - p_y;
-    } else {
-      FRLogger.warn("IntOctagon.side_of_border_line: p_border_line_no out of range");
-      tmp = 0;
-    }
+    int tmp = switch (p_border_line_no) {
+      case 0 -> this.ly - p_y;
+      case 2 -> p_x - this.rx;
+      case 4 -> p_y - this.uy;
+      case 6 -> this.lx - p_x;
+      case 1 -> p_x - p_y - this.lrx;
+      case 3 -> p_x + p_y - this.urx;
+      case 5 -> this.ulx + p_y - p_x;
+      case 7 -> this.llx - p_x - p_y;
+      default -> {
+        FRLogger.warn("IntOctagon.side_of_border_line: p_border_line_no out of range");
+        yield 0;
+      }
+    };
     Side result;
     if (tmp < 0) {
       result = Side.ON_THE_LEFT;
@@ -898,7 +850,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   public Side compare(IntOctagon p_other, int p_edge_no) {
     Side result;
     switch (p_edge_no) {
-      case 0:
+      case 0 -> {
         // compare the lower edge line
         if (ly > p_other.ly) {
           result = Side.ON_THE_LEFT;
@@ -907,9 +859,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 1:
+      }
+      case 1 -> {
         // compare the lower right edge line
         if (lrx < p_other.lrx) {
           result = Side.ON_THE_LEFT;
@@ -918,9 +869,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 2:
+      }
+      case 2 -> {
         // compare the right edge line
         if (rx < p_other.rx) {
           result = Side.ON_THE_LEFT;
@@ -929,9 +879,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 3:
+      }
+      case 3 -> {
         // compare the upper right edge line
         if (urx < p_other.urx) {
           result = Side.ON_THE_LEFT;
@@ -940,9 +889,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 4:
+      }
+      case 4 -> {
         // compare the upper edge line
         if (uy < p_other.uy) {
           result = Side.ON_THE_LEFT;
@@ -951,9 +899,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 5:
+      }
+      case 5 -> {
         // compare the upper left edge line
         if (ulx > p_other.ulx) {
           result = Side.ON_THE_LEFT;
@@ -962,9 +909,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 6:
+      }
+      case 6 -> {
         // compare the left edge line
         if (lx > p_other.lx) {
           result = Side.ON_THE_LEFT;
@@ -973,9 +919,8 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 7:
+      }
+      case 7 -> {
         // compare the lower left edge line
         if (llx > p_other.llx) {
           result = Side.ON_THE_LEFT;
@@ -984,9 +929,9 @@ public class IntOctagon extends RegularTileShape implements Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-      default:
-        throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
     }
     return result;
   }
@@ -1010,54 +955,55 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     int result_x;
     int result_y;
     switch (p_dir) {
-      case RIGHT:
+      case RIGHT -> {
         result_x = Math.min(rx, urx - p_point.y);
         result_x = Math.min(result_x, lrx + p_point.y);
         result_y = p_point.y;
-        break;
-      case LEFT:
+      }
+      case LEFT -> {
         result_x = Math.max(lx, ulx + p_point.y);
         result_x = Math.max(result_x, llx - p_point.y);
         result_y = p_point.y;
-        break;
-      case UP:
+      }
+      case UP -> {
         result_x = p_point.x;
         result_y = Math.min(uy, p_point.x - ulx);
         result_y = Math.min(result_y, urx - p_point.x);
-        break;
-      case DOWN:
+      }
+      case DOWN -> {
         result_x = p_point.x;
         result_y = Math.max(ly, llx - p_point.x);
         result_y = Math.max(result_y, p_point.x - lrx);
-        break;
-      case RIGHT45:
+      }
+      case RIGHT45 -> {
         result_x = (int) (Math.ceil(0.5 * (p_point.x - p_point.y + urx)));
         result_x = Math.min(result_x, rx);
         result_x = Math.min(result_x, p_point.x - p_point.y + uy);
         result_y = p_point.y - p_point.x + result_x;
-        break;
-      case UP45:
+      }
+      case UP45 -> {
         result_x = (int) (Math.floor(0.5 * (p_point.x + p_point.y + ulx)));
         result_x = Math.max(result_x, lx);
         result_x = Math.max(result_x, p_point.x + p_point.y - uy);
         result_y = p_point.y + p_point.x - result_x;
-        break;
-      case LEFT45:
+      }
+      case LEFT45 -> {
         result_x = (int) (Math.floor(0.5 * (p_point.x - p_point.y + llx)));
         result_x = Math.max(result_x, lx);
         result_x = Math.max(result_x, p_point.x - p_point.y + ly);
         result_y = p_point.y - p_point.x + result_x;
-        break;
-      case DOWN45:
+      }
+      case DOWN45 -> {
         result_x = (int) (Math.ceil(0.5 * (p_point.x + p_point.y + lrx)));
         result_x = Math.min(result_x, rx);
         result_x = Math.min(result_x, p_point.x + p_point.y - ly);
         result_y = p_point.y + p_point.x - result_x;
-        break;
-      default:
+      }
+      default -> {
         FRLogger.warn("IntOctagon.border_point: unexpected 45 degree direction");
         result_x = 0;
         result_y = 0;
+      }
     }
     return new IntPoint(result_x, result_y);
   }
@@ -1096,92 +1042,100 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   }
 
   Side border_line_side_of(FloatPoint p_point, int p_line_no, double p_tolerance) {
-    Side result;
-    if (p_line_no == 0) {
-      if (p_point.y > this.ly + p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.y < this.ly - p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+    return switch (p_line_no) {
+      case 0 -> {
+        if (p_point.y > this.ly + p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.y < this.ly - p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 2) {
-      if (p_point.x < this.rx - p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.x > this.rx + p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 2 -> {
+        if (p_point.x < this.rx - p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.x > this.rx + p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 4) {
-      if (p_point.y < this.uy - p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.y > this.uy + p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 4 -> {
+        if (p_point.y < this.uy - p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.y > this.uy + p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 6) {
-      if (p_point.x > this.lx + p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.x < this.lx - p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 6 -> {
+        if (p_point.x > this.lx + p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.x < this.lx - p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 1) {
-      double tmp = p_point.y - p_point.x + lrx;
-      if (tmp > p_tolerance)
-      // the p_point is above the the lower right border line of this octagon
-      {
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp < -p_tolerance)
-      // the p_point is below the the lower right border line of this octagon
-      {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 1 -> {
+        double tmp = p_point.y - p_point.x + lrx;
+        if (tmp > p_tolerance)
+        // the p_point is above the the lower right border line of this octagon
+        {
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp < -p_tolerance)
+        // the p_point is below the the lower right border line of this octagon
+        {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 3) {
-      double tmp = p_point.x + p_point.y - urx;
-      if (tmp < -p_tolerance) {
-        // the p_point is below the the upper right border line of this octagon
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp > p_tolerance) {
-        // the p_point is above the the upper right border line of this octagon
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 3 -> {
+        double tmp = p_point.x + p_point.y - urx;
+        if (tmp < -p_tolerance) {
+          // the p_point is below the the upper right border line of this octagon
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp > p_tolerance) {
+          // the p_point is above the the upper right border line of this octagon
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 5) {
-      double tmp = p_point.y - p_point.x + ulx;
-      if (tmp < -p_tolerance)
-      // the p_point is below the the upper left border line of this octagon
-      {
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp > p_tolerance)
-      // the p_point is above the the upper left border line of this octagon
-      {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 5 -> {
+        double tmp = p_point.y - p_point.x + ulx;
+        if (tmp < -p_tolerance)
+        // the p_point is below the the upper left border line of this octagon
+        {
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp > p_tolerance)
+        // the p_point is above the the upper left border line of this octagon
+        {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 7) {
-      double tmp = p_point.x + p_point.y - llx;
-      if (tmp > p_tolerance) {
-        // the p_point is above the the lower left border line of this octagon
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp < -p_tolerance) {
-        // the p_point is below the the lower left border line of this octagon
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 7 -> {
+        double tmp = p_point.x + p_point.y - llx;
+        if (tmp > p_tolerance) {
+          // the p_point is above the the lower left border line of this octagon
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp < -p_tolerance) {
+          // the p_point is below the the lower left border line of this octagon
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else {
-      FRLogger.warn("IntOctagon.border_line_side_of: p_line_no out of range");
-      result = Side.COLLINEAR;
-    }
-    return result;
+      default -> {
+        FRLogger.warn("IntOctagon.border_line_side_of: p_line_no out of range");
+        yield Side.COLLINEAR;
+      }
+    };
   }
 
   /** Checks, if this octagon can be converted to an IntBox. */

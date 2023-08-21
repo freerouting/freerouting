@@ -60,32 +60,24 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
   private static double signed_line_distance(
       IntOctagon p_obstacle_shape, int p_obstacle_line_no, IntOctagon p_contained_shape) {
-    double result;
-    if (p_obstacle_line_no == 0) {
-      result = p_obstacle_shape.ly - p_contained_shape.uy;
-    } else if (p_obstacle_line_no == 2) {
-      result = p_contained_shape.lx - p_obstacle_shape.rx;
-    } else if (p_obstacle_line_no == 4) {
-      result = p_contained_shape.ly - p_obstacle_shape.uy;
-    } else if (p_obstacle_line_no == 6) {
-      result = p_obstacle_shape.lx - p_contained_shape.rx;
-    }
-    // factor 0.5 used instead to 1 / sqrt(2) to prefer orthogonal lines slightly to diagonal
-    // restraining lines.
-    else if (p_obstacle_line_no == 1) {
-      result = 0.5 * (p_contained_shape.ulx - p_obstacle_shape.lrx);
-    } else if (p_obstacle_line_no == 3) {
-      result = 0.5 * (p_contained_shape.llx - p_obstacle_shape.urx);
-    } else if (p_obstacle_line_no == 5) {
-      result = 0.5 * (p_obstacle_shape.ulx - p_contained_shape.lrx);
-    } else if (p_obstacle_line_no == 7) {
-      result = 0.5 * (p_obstacle_shape.llx - p_contained_shape.urx);
-    } else {
-      FRLogger.warn(
-          "ShapeSearchTree45Degree.signed_line_distance: p_obstacle_line_no out of range");
-      result = 0;
-    }
-    return result;
+    return switch (p_obstacle_line_no) {
+      case 0 -> p_obstacle_shape.ly - p_contained_shape.uy;
+      case 2 -> p_contained_shape.lx - p_obstacle_shape.rx;
+      case 4 -> p_contained_shape.ly - p_obstacle_shape.uy;
+      case 6 -> p_obstacle_shape.lx - p_contained_shape.rx;
+
+      // factor 0.5 used instead to 1 / sqrt(2) to prefer orthogonal lines slightly to diagonal
+      // restraining lines.
+      case 1 -> 0.5 * (p_contained_shape.ulx - p_obstacle_shape.lrx);
+      case 3 -> 0.5 * (p_contained_shape.llx - p_obstacle_shape.urx);
+      case 5 -> 0.5 * (p_obstacle_shape.ulx - p_contained_shape.lrx);
+      case 7 -> 0.5 * (p_obstacle_shape.llx - p_contained_shape.urx);
+      default -> {
+        FRLogger.warn(
+            "ShapeSearchTree45Degree.signed_line_distance: p_obstacle_line_no out of range");
+        yield 0;
+      }
+    };
   }
 
   /**
@@ -331,24 +323,16 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int llx = p_room_shape.llx;
     int urx = p_room_shape.urx;
 
-    if (p_obstacle_line_no == 0) {
-      uy = p_obstacle_shape.ly;
-    } else if (p_obstacle_line_no == 2) {
-      lx = p_obstacle_shape.rx;
-    } else if (p_obstacle_line_no == 4) {
-      ly = p_obstacle_shape.uy;
-    } else if (p_obstacle_line_no == 6) {
-      rx = p_obstacle_shape.lx;
-    } else if (p_obstacle_line_no == 1) {
-      ulx = p_obstacle_shape.lrx;
-    } else if (p_obstacle_line_no == 3) {
-      llx = p_obstacle_shape.urx;
-    } else if (p_obstacle_line_no == 5) {
-      lrx = p_obstacle_shape.ulx;
-    } else if (p_obstacle_line_no == 7) {
-      urx = p_obstacle_shape.llx;
-    } else {
-      FRLogger.warn(
+    switch (p_obstacle_line_no) {
+      case 0 -> uy = p_obstacle_shape.ly;
+      case 2 -> lx = p_obstacle_shape.rx;
+      case 4 -> ly = p_obstacle_shape.uy;
+      case 6 -> rx = p_obstacle_shape.lx;
+      case 1 -> ulx = p_obstacle_shape.lrx;
+      case 3 -> llx = p_obstacle_shape.urx;
+      case 5 -> lrx = p_obstacle_shape.ulx;
+      case 7 -> urx = p_obstacle_shape.llx;
+      default -> FRLogger.warn(
           "ShapeSearchTree45Degree.calc_outside_restrained_shape: p_obstacle_line_no out of range");
     }
 
@@ -371,24 +355,16 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int llx = p_room_shape.llx;
     int urx = p_room_shape.urx;
 
-    if (p_obstacle_line_no == 0) {
-      ly = p_obstacle_shape.ly;
-    } else if (p_obstacle_line_no == 2) {
-      rx = p_obstacle_shape.rx;
-    } else if (p_obstacle_line_no == 4) {
-      uy = p_obstacle_shape.uy;
-    } else if (p_obstacle_line_no == 6) {
-      lx = p_obstacle_shape.lx;
-    } else if (p_obstacle_line_no == 1) {
-      lrx = p_obstacle_shape.lrx;
-    } else if (p_obstacle_line_no == 3) {
-      urx = p_obstacle_shape.urx;
-    } else if (p_obstacle_line_no == 5) {
-      ulx = p_obstacle_shape.ulx;
-    } else if (p_obstacle_line_no == 7) {
-      llx = p_obstacle_shape.llx;
-    } else {
-      FRLogger.warn(
+    switch (p_obstacle_line_no) {
+      case 0 -> ly = p_obstacle_shape.ly;
+      case 2 -> rx = p_obstacle_shape.rx;
+      case 4 -> uy = p_obstacle_shape.uy;
+      case 6 -> lx = p_obstacle_shape.lx;
+      case 1 -> lrx = p_obstacle_shape.lrx;
+      case 3 -> urx = p_obstacle_shape.urx;
+      case 5 -> ulx = p_obstacle_shape.ulx;
+      case 7 -> llx = p_obstacle_shape.llx;
+      default -> FRLogger.warn(
           "ShapeSearchTree45Degree.calc_inside_restrained_shape: p_obstacle_line_no out of range");
     }
 

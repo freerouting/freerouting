@@ -45,19 +45,15 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
           // currenntly 6 different default colors for traces on the inner layers
           final int different_inner_colors = 6;
           int remainder = signal_layer_no % different_inner_colors;
-          if (remainder % different_inner_colors == 1) {
-            curr_row[ColumnNames.TRACES.ordinal()] = Color.GREEN;
-          } else if (remainder % different_inner_colors == 2) {
-            curr_row[ColumnNames.TRACES.ordinal()] = Color.YELLOW;
-          } else if (remainder % different_inner_colors == 3) {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(200, 100, 255);
-          } else if (remainder % different_inner_colors == 4) {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(255, 150, 150);
-          } else if (remainder % different_inner_colors == 5) {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(100, 150, 0);
-          } else {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(0, 200, 255);
-          }
+          curr_row[ColumnNames.TRACES.ordinal()] =
+              switch (remainder % different_inner_colors) {
+                case 1  -> Color.GREEN;
+                case 2  -> Color.YELLOW;
+                case 3  -> new Color(200, 100, 255);
+                case 4  -> new Color(255, 150, 150);
+                case 5  -> new Color(100, 150, 0);
+                default -> new Color(0, 200, 255);
+              };
         } else // power layer
         {
           curr_row[ColumnNames.TRACES.ordinal()] = Color.BLACK;

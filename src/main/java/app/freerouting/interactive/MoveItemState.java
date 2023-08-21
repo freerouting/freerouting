@@ -445,20 +445,14 @@ public class MoveItemState extends InteractiveState {
   @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState curr_return_state = this;
-    if (p_key_char == '+') {
-      turn_90_degree(1);
-    } else if (p_key_char == '*') {
-      turn_90_degree(2);
-    } else if (p_key_char == '-') {
-      turn_90_degree(3);
-    } else if (p_key_char == '/') {
-      change_placement_side();
-    } else if (p_key_char == 'r') {
-      hdlg.settings.set_zoom_with_wheel(false);
-    } else if (p_key_char == 'z') {
-      hdlg.settings.set_zoom_with_wheel(true);
-    } else {
-      curr_return_state = super.key_typed(p_key_char);
+    switch (p_key_char) {
+      case '+' -> turn_90_degree(1);
+      case '*' -> turn_90_degree(2);
+      case '-' -> turn_90_degree(3);
+      case '/' -> change_placement_side();
+      case 'r' -> hdlg.settings.set_zoom_with_wheel(false);
+      case 'z' -> hdlg.settings.set_zoom_with_wheel(true);
+      default -> curr_return_state = super.key_typed(p_key_char);
     }
     return curr_return_state;
   }

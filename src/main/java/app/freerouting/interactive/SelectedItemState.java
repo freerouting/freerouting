@@ -86,46 +86,29 @@ public class SelectedItemState extends InteractiveState {
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState result = this;
 
-    if (p_key_char == 'a') {
-      this.hdlg.autoroute_selected_items();
-    } else if (p_key_char == 'b') {
-      this.extent_to_whole_components();
-    } else if (p_key_char == 'd') {
-      result = this.cutout_items();
-    } else if (p_key_char == 'e') {
-      result = this.extent_to_whole_connections();
-    } else if (p_key_char == 'f') {
-      this.fix_items();
-    } else if (p_key_char == 'i') {
-      result = this.info();
-    } else if (p_key_char == 'm') {
-      result =
-          MoveItemState.get_instance(
+    switch (p_key_char) {
+      case 'a' -> this.hdlg.autoroute_selected_items();
+      case 'b' -> this.extent_to_whole_components();
+      case 'd' -> result = this.cutout_items();
+      case 'e' -> result = this.extent_to_whole_connections();
+      case 'f' -> this.fix_items();
+      case 'i' -> result = this.info();
+      case 'm' -> result = MoveItemState.get_instance(
               hdlg.get_current_mouse_position(),
               item_list,
               this.return_state,
               hdlg,
               activityReplayFile);
-    } else if (p_key_char == 'n') {
-      this.extent_to_whole_nets();
-    } else if (p_key_char == 'p') {
-      this.hdlg.optimize_selected_items();
-    } else if (p_key_char == 'r') {
-      result =
-          ZoomRegionState.get_instance(
+      case 'n' -> this.extent_to_whole_nets();
+      case 'p' -> this.hdlg.optimize_selected_items();
+      case 'r' -> result = ZoomRegionState.get_instance(
               hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
-    } else if (p_key_char == 's') {
-      result = this.extent_to_whole_connected_sets();
-    } else if (p_key_char == 'u') {
-      this.unfix_items();
-    } else if (p_key_char == 'v') {
-      this.toggle_clearance_violations();
-    } else if (p_key_char == 'w') {
-      this.hdlg.zoom_selection();
-    } else if (p_key_char == KeyEvent.VK_DELETE) {
-      result = delete_items();
-    } else {
-      result = super.key_typed(p_key_char);
+      case 's' -> result = this.extent_to_whole_connected_sets();
+      case 'u' -> this.unfix_items();
+      case 'v' -> this.toggle_clearance_violations();
+      case 'w' -> this.hdlg.zoom_selection();
+      case KeyEvent.VK_DELETE -> result = delete_items();
+      default -> result = super.key_typed(p_key_char);
     }
     return result;
   }

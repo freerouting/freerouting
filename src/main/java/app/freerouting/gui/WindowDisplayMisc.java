@@ -195,17 +195,15 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     int ninety_degree_rotation =
         panel.board_handling.graphics_context.coordinate_transform.get_90_degree_rotation();
 
-    if (ninety_degree_rotation == 0) {
-      rotation_none_checkbox.setSelected(true);
-    } else if (ninety_degree_rotation == 1) {
-      rotation_90_degree_checkbox.setSelected(true);
-    } else if (ninety_degree_rotation == 2) {
-      rotation_180_degree_checkbox.setSelected(true);
-    } else if (ninety_degree_rotation == 3) {
-      rotation_270_degree_checkbox.setSelected(true);
-    } else {
-      FRLogger.warn("DisplayMiscWindow: unexpected ninety_degree_rotation");
-      rotation_none_checkbox.setSelected(true);
+    switch (ninety_degree_rotation) {
+      case 0 -> rotation_none_checkbox.setSelected(true);
+      case 1 -> rotation_90_degree_checkbox.setSelected(true);
+      case 2 -> rotation_180_degree_checkbox.setSelected(true);
+      case 3 -> rotation_270_degree_checkbox.setSelected(true);
+      default -> {
+        FRLogger.warn("DisplayMiscWindow: unexpected ninety_degree_rotation");
+        rotation_none_checkbox.setSelected(true);
+      }
     }
 
     boolean is_mirror_left_right =

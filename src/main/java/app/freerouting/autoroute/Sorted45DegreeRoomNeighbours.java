@@ -257,26 +257,20 @@ public class Sorted45DegreeRoomNeighbours {
         int lrx = board_bounding_oct.lrx;
         int llx = board_bounding_oct.llx;
         int urx = board_bounding_oct.urx;
-        if (curr_side_no == 0) {
-          uy = this.room_shape.ly;
-        } else if (curr_side_no == 1) {
-          ulx = this.room_shape.lrx;
-        } else if (curr_side_no == 2) {
-          lx = this.room_shape.rx;
-        } else if (curr_side_no == 3) {
-          llx = this.room_shape.urx;
-        } else if (curr_side_no == 4) {
-          ly = this.room_shape.uy;
-        } else if (curr_side_no == 5) {
-          lrx = this.room_shape.ulx;
-        } else if (curr_side_no == 6) {
-          rx = this.room_shape.lx;
-        } else if (curr_side_no == 7) {
-          urx = this.room_shape.llx;
-        } else {
-          FRLogger.warn(
-              "SortedOrthoganelRoomNeighbours.calculate_edge_incomplete_rooms_of_obstacle_expansion_room: curr_side_no illegal");
-          return;
+        switch (curr_side_no) {
+          case 0 -> uy = this.room_shape.ly;
+          case 1 -> ulx = this.room_shape.lrx;
+          case 2 -> lx = this.room_shape.rx;
+          case 3 -> llx = this.room_shape.urx;
+          case 4 -> ly = this.room_shape.uy;
+          case 5 -> lrx = this.room_shape.ulx;
+          case 6 -> rx = this.room_shape.lx;
+          case 7 -> urx = this.room_shape.llx;
+          default -> {
+            FRLogger.warn(
+                "SortedOrthoganelRoomNeighbours.calculate_edge_incomplete_rooms_of_obstacle_expansion_room: curr_side_no illegal");
+            return;
+          }
         }
         insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
       }
@@ -419,30 +413,39 @@ public class Sorted45DegreeRoomNeighbours {
     int lrx = board_bounding_oct.lrx;
     int llx = board_bounding_oct.llx;
     int urx = board_bounding_oct.urx;
-    if (from_side_no == 0) {
-      uy = this.room_shape.ly;
-      ulx = p_prev_neighbour.intersection.lrx;
-    } else if (from_side_no == 1) {
-      ulx = this.room_shape.lrx;
-      lx = p_prev_neighbour.intersection.rx;
-    } else if (from_side_no == 2) {
-      lx = this.room_shape.rx;
-      llx = p_prev_neighbour.intersection.urx;
-    } else if (from_side_no == 3) {
-      llx = this.room_shape.urx;
-      ly = p_prev_neighbour.intersection.uy;
-    } else if (from_side_no == 4) {
-      ly = this.room_shape.uy;
-      lrx = p_prev_neighbour.intersection.ulx;
-    } else if (from_side_no == 5) {
-      lrx = this.room_shape.ulx;
-      rx = p_prev_neighbour.intersection.lx;
-    } else if (from_side_no == 6) {
-      rx = this.room_shape.lx;
-      urx = p_prev_neighbour.intersection.llx;
-    } else if (from_side_no == 7) {
-      urx = this.room_shape.llx;
-      uy = p_prev_neighbour.intersection.ly;
+    switch (from_side_no) {
+      case 0 -> {
+        uy = this.room_shape.ly;
+        ulx = p_prev_neighbour.intersection.lrx;
+      }
+      case 1 -> {
+        ulx = this.room_shape.lrx;
+        lx = p_prev_neighbour.intersection.rx;
+      }
+      case 2 -> {
+        lx = this.room_shape.rx;
+        llx = p_prev_neighbour.intersection.urx;
+      }
+      case 3 -> {
+        llx = this.room_shape.urx;
+        ly = p_prev_neighbour.intersection.uy;
+      }
+      case 4 -> {
+        ly = this.room_shape.uy;
+        lrx = p_prev_neighbour.intersection.ulx;
+      }
+      case 5 -> {
+        lrx = this.room_shape.ulx;
+        rx = p_prev_neighbour.intersection.lx;
+      }
+      case 6 -> {
+        rx = this.room_shape.lx;
+        urx = p_prev_neighbour.intersection.llx;
+      }
+      case 7 -> {
+        urx = this.room_shape.llx;
+        uy = p_prev_neighbour.intersection.ly;
+      }
     }
     insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
 
@@ -457,30 +460,39 @@ public class Sorted45DegreeRoomNeighbours {
     llx = board_bounding_oct.llx;
     urx = board_bounding_oct.urx;
 
-    if (to_side_no == 0) {
-      uy = this.room_shape.ly;
-      urx = p_next_neighbour.intersection.llx;
-    } else if (to_side_no == 1) {
-      ulx = this.room_shape.lrx;
-      uy = p_next_neighbour.intersection.ly;
-    } else if (to_side_no == 2) {
-      lx = this.room_shape.rx;
-      ulx = p_next_neighbour.intersection.lrx;
-    } else if (to_side_no == 3) {
-      llx = this.room_shape.urx;
-      lx = p_next_neighbour.intersection.rx;
-    } else if (to_side_no == 4) {
-      ly = this.room_shape.uy;
-      llx = p_next_neighbour.intersection.urx;
-    } else if (to_side_no == 5) {
-      lrx = this.room_shape.ulx;
-      ly = p_next_neighbour.intersection.uy;
-    } else if (to_side_no == 6) {
-      rx = this.room_shape.lx;
-      lrx = p_next_neighbour.intersection.ulx;
-    } else if (to_side_no == 7) {
-      urx = this.room_shape.llx;
-      rx = p_next_neighbour.intersection.lx;
+    switch (to_side_no) {
+      case 0 -> {
+        uy = this.room_shape.ly;
+        urx = p_next_neighbour.intersection.llx;
+      }
+      case 1 -> {
+        ulx = this.room_shape.lrx;
+        uy = p_next_neighbour.intersection.ly;
+      }
+      case 2 -> {
+        lx = this.room_shape.rx;
+        ulx = p_next_neighbour.intersection.lrx;
+      }
+      case 3 -> {
+        llx = this.room_shape.urx;
+        lx = p_next_neighbour.intersection.rx;
+      }
+      case 4 -> {
+        ly = this.room_shape.uy;
+        llx = p_next_neighbour.intersection.urx;
+      }
+      case 5 -> {
+        lrx = this.room_shape.ulx;
+        ly = p_next_neighbour.intersection.uy;
+      }
+      case 6 -> {
+        rx = this.room_shape.lx;
+        lrx = p_next_neighbour.intersection.ulx;
+      }
+      case 7 -> {
+        urx = this.room_shape.llx;
+        rx = p_next_neighbour.intersection.lx;
+      }
     }
     insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
 
@@ -555,120 +567,128 @@ public class Sorted45DegreeRoomNeighbours {
           int llx = board_bounding_oct.llx;
           int urx = board_bounding_oct.urx;
 
-          if (next_neighbour.first_touching_side == 0) {
-            if (prev_neighbour.intersection.llx < next_neighbour.intersection.llx) {
-              urx = next_neighbour.intersection.llx;
-              uy = prev_neighbour.intersection.ly;
-              if (prev_neighbour.last_touching_side == 0) {
-                ulx = prev_neighbour.intersection.lrx;
-              }
-            } else if (prev_neighbour.intersection.llx > next_neighbour.intersection.llx) {
-              rx = next_neighbour.intersection.lx;
-              urx = prev_neighbour.intersection.llx;
-            } else // prev_neighbour.intersection.llx == next_neighbour.intersection.llx
-            {
-              urx = next_neighbour.intersection.llx;
-            }
-          } else if (next_neighbour.first_touching_side == 1) {
-            if (prev_neighbour.intersection.ly < next_neighbour.intersection.ly) {
-              uy = next_neighbour.intersection.ly;
-              ulx = prev_neighbour.intersection.lrx;
-              if (prev_neighbour.last_touching_side == 1) {
-                lx = prev_neighbour.intersection.rx;
-              }
-            } else if (prev_neighbour.intersection.ly > next_neighbour.intersection.ly) {
-              uy = prev_neighbour.intersection.ly;
-              urx = next_neighbour.intersection.llx;
-            } else // prev_neighbour.intersection.ly == next_neighbour.intersection.ly
-            {
-              uy = next_neighbour.intersection.ly;
-            }
-          } else if (next_neighbour.first_touching_side == 2) {
-            if (prev_neighbour.intersection.lrx > next_neighbour.intersection.lrx) {
-              ulx = next_neighbour.intersection.lrx;
-              lx = prev_neighbour.intersection.rx;
-              if (prev_neighbour.last_touching_side == 2) {
-                llx = prev_neighbour.intersection.urx;
-              }
-            } else if (prev_neighbour.intersection.lrx < next_neighbour.intersection.lrx) {
-              uy = next_neighbour.intersection.ly;
-              ulx = prev_neighbour.intersection.lrx;
-            } else // prev_neighbour.intersection.lrx == next_neighbour.intersection.lrx
-            {
-              ulx = next_neighbour.intersection.lrx;
-            }
-          } else if (next_neighbour.first_touching_side == 3) {
-            if (prev_neighbour.intersection.rx > next_neighbour.intersection.rx) {
-              lx = next_neighbour.intersection.rx;
-              llx = prev_neighbour.intersection.urx;
-              if (prev_neighbour.last_touching_side == 3) {
-                ly = prev_neighbour.intersection.uy;
-              }
-            } else if (prev_neighbour.intersection.rx < next_neighbour.intersection.rx) {
-              lx = prev_neighbour.intersection.rx;
-              ulx = next_neighbour.intersection.lrx;
-            } else // prev_neighbour.intersection.ry == next_neighbour.intersection.ry
-            {
-              lx = next_neighbour.intersection.rx;
-            }
-          } else if (next_neighbour.first_touching_side == 4) {
-            if (prev_neighbour.intersection.urx > next_neighbour.intersection.urx) {
-              llx = next_neighbour.intersection.urx;
-              ly = prev_neighbour.intersection.uy;
-              if (prev_neighbour.last_touching_side == 4) {
-                lrx = prev_neighbour.intersection.ulx;
-              }
-            } else if (prev_neighbour.intersection.urx < next_neighbour.intersection.urx) {
-              lx = next_neighbour.intersection.rx;
-              llx = prev_neighbour.intersection.urx;
-            } else // prev_neighbour.intersection.urx == next_neighbour.intersection.urx
-            {
-              llx = next_neighbour.intersection.urx;
-            }
-          } else if (next_neighbour.first_touching_side == 5) {
-            if (prev_neighbour.intersection.uy > next_neighbour.intersection.uy) {
-              ly = next_neighbour.intersection.uy;
-              lrx = prev_neighbour.intersection.ulx;
-              if (prev_neighbour.last_touching_side == 5) {
-                rx = prev_neighbour.intersection.lx;
-              }
-            } else if (prev_neighbour.intersection.uy < next_neighbour.intersection.uy) {
-              ly = prev_neighbour.intersection.uy;
-              llx = next_neighbour.intersection.urx;
-            } else // prev_neighbour.intersection.uy == next_neighbour.intersection.uy
-            {
-              ly = next_neighbour.intersection.uy;
-            }
-          } else if (next_neighbour.first_touching_side == 6) {
-            if (prev_neighbour.intersection.ulx < next_neighbour.intersection.ulx) {
-              lrx = next_neighbour.intersection.ulx;
-              rx = prev_neighbour.intersection.lx;
-              if (prev_neighbour.last_touching_side == 6) {
-                urx = prev_neighbour.intersection.llx;
-              }
-            } else if (prev_neighbour.intersection.ulx > next_neighbour.intersection.ulx) {
-              ly = next_neighbour.intersection.uy;
-              lrx = prev_neighbour.intersection.ulx;
-            } else // prev_neighbour.intersection.ulx == next_neighbour.intersection.ulx
-            {
-              lrx = next_neighbour.intersection.ulx;
-            }
-          } else if (next_neighbour.first_touching_side == 7) {
-            if (prev_neighbour.intersection.lx < next_neighbour.intersection.lx) {
-              rx = next_neighbour.intersection.lx;
-              urx = prev_neighbour.intersection.llx;
-              if (prev_neighbour.last_touching_side == 7) {
+          switch (next_neighbour.first_touching_side) {
+            case 0 -> {
+              if (prev_neighbour.intersection.llx < next_neighbour.intersection.llx) {
+                urx = next_neighbour.intersection.llx;
                 uy = prev_neighbour.intersection.ly;
+                if (prev_neighbour.last_touching_side == 0) {
+                  ulx = prev_neighbour.intersection.lrx;
+                }
+              } else if (prev_neighbour.intersection.llx > next_neighbour.intersection.llx) {
+                rx = next_neighbour.intersection.lx;
+                urx = prev_neighbour.intersection.llx;
+              } else // prev_neighbour.intersection.llx == next_neighbour.intersection.llx
+              {
+                urx = next_neighbour.intersection.llx;
               }
-            } else if (prev_neighbour.intersection.lx > next_neighbour.intersection.lx) {
-              rx = prev_neighbour.intersection.lx;
-              lrx = next_neighbour.intersection.ulx;
-            } else // prev_neighbour.intersection.lx == next_neighbour.intersection.lx
-            {
-              rx = next_neighbour.intersection.lx;
             }
-          } else {
-            FRLogger.warn(
+            case 1 -> {
+              if (prev_neighbour.intersection.ly < next_neighbour.intersection.ly) {
+                uy = next_neighbour.intersection.ly;
+                ulx = prev_neighbour.intersection.lrx;
+                if (prev_neighbour.last_touching_side == 1) {
+                  lx = prev_neighbour.intersection.rx;
+                }
+              } else if (prev_neighbour.intersection.ly > next_neighbour.intersection.ly) {
+                uy = prev_neighbour.intersection.ly;
+                urx = next_neighbour.intersection.llx;
+              } else // prev_neighbour.intersection.ly == next_neighbour.intersection.ly
+              {
+                uy = next_neighbour.intersection.ly;
+              }
+            }
+            case 2 -> {
+              if (prev_neighbour.intersection.lrx > next_neighbour.intersection.lrx) {
+                ulx = next_neighbour.intersection.lrx;
+                lx = prev_neighbour.intersection.rx;
+                if (prev_neighbour.last_touching_side == 2) {
+                  llx = prev_neighbour.intersection.urx;
+                }
+              } else if (prev_neighbour.intersection.lrx < next_neighbour.intersection.lrx) {
+                uy = next_neighbour.intersection.ly;
+                ulx = prev_neighbour.intersection.lrx;
+              } else // prev_neighbour.intersection.lrx == next_neighbour.intersection.lrx
+              {
+                ulx = next_neighbour.intersection.lrx;
+              }
+            }
+            case 3 -> {
+              if (prev_neighbour.intersection.rx > next_neighbour.intersection.rx) {
+                lx = next_neighbour.intersection.rx;
+                llx = prev_neighbour.intersection.urx;
+                if (prev_neighbour.last_touching_side == 3) {
+                  ly = prev_neighbour.intersection.uy;
+                }
+              } else if (prev_neighbour.intersection.rx < next_neighbour.intersection.rx) {
+                lx = prev_neighbour.intersection.rx;
+                ulx = next_neighbour.intersection.lrx;
+              } else // prev_neighbour.intersection.ry == next_neighbour.intersection.ry
+              {
+                lx = next_neighbour.intersection.rx;
+              }
+            }
+            case 4 -> {
+              if (prev_neighbour.intersection.urx > next_neighbour.intersection.urx) {
+                llx = next_neighbour.intersection.urx;
+                ly = prev_neighbour.intersection.uy;
+                if (prev_neighbour.last_touching_side == 4) {
+                  lrx = prev_neighbour.intersection.ulx;
+                }
+              } else if (prev_neighbour.intersection.urx < next_neighbour.intersection.urx) {
+                lx = next_neighbour.intersection.rx;
+                llx = prev_neighbour.intersection.urx;
+              } else // prev_neighbour.intersection.urx == next_neighbour.intersection.urx
+              {
+                llx = next_neighbour.intersection.urx;
+              }
+            }
+            case 5 -> {
+              if (prev_neighbour.intersection.uy > next_neighbour.intersection.uy) {
+                ly = next_neighbour.intersection.uy;
+                lrx = prev_neighbour.intersection.ulx;
+                if (prev_neighbour.last_touching_side == 5) {
+                  rx = prev_neighbour.intersection.lx;
+                }
+              } else if (prev_neighbour.intersection.uy < next_neighbour.intersection.uy) {
+                ly = prev_neighbour.intersection.uy;
+                llx = next_neighbour.intersection.urx;
+              } else // prev_neighbour.intersection.uy == next_neighbour.intersection.uy
+              {
+                ly = next_neighbour.intersection.uy;
+              }
+            }
+            case 6 -> {
+              if (prev_neighbour.intersection.ulx < next_neighbour.intersection.ulx) {
+                lrx = next_neighbour.intersection.ulx;
+                rx = prev_neighbour.intersection.lx;
+                if (prev_neighbour.last_touching_side == 6) {
+                  urx = prev_neighbour.intersection.llx;
+                }
+              } else if (prev_neighbour.intersection.ulx > next_neighbour.intersection.ulx) {
+                ly = next_neighbour.intersection.uy;
+                lrx = prev_neighbour.intersection.ulx;
+              } else // prev_neighbour.intersection.ulx == next_neighbour.intersection.ulx
+              {
+                lrx = next_neighbour.intersection.ulx;
+              }
+            }
+            case 7 -> {
+              if (prev_neighbour.intersection.lx < next_neighbour.intersection.lx) {
+                rx = next_neighbour.intersection.lx;
+                urx = prev_neighbour.intersection.llx;
+                if (prev_neighbour.last_touching_side == 7) {
+                  uy = prev_neighbour.intersection.ly;
+                }
+              } else if (prev_neighbour.intersection.lx > next_neighbour.intersection.lx) {
+                rx = prev_neighbour.intersection.lx;
+                lrx = next_neighbour.intersection.ulx;
+              } else // prev_neighbour.intersection.lx == next_neighbour.intersection.lx
+              {
+                rx = next_neighbour.intersection.lx;
+              }
+            }
+            default -> FRLogger.warn(
                 "Sorted45DegreeRoomNeighbour.calculate_new_incomplete: illegal touching side");
           }
           insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
@@ -791,25 +811,19 @@ public class Sorted45DegreeRoomNeighbours {
       IntOctagon is2 = p_other.intersection;
       int cmp_value;
 
-      if (first_touching_side == 0) {
-        cmp_value = is1.corner(0).x - is2.corner(0).x;
-      } else if (first_touching_side == 1) {
-        cmp_value = is1.corner(1).x - is2.corner(1).x;
-      } else if (first_touching_side == 2) {
-        cmp_value = is1.corner(2).y - is2.corner(2).y;
-      } else if (first_touching_side == 3) {
-        cmp_value = is1.corner(3).y - is2.corner(3).y;
-      } else if (first_touching_side == 4) {
-        cmp_value = is2.corner(4).x - is1.corner(4).x;
-      } else if (first_touching_side == 5) {
-        cmp_value = is2.corner(5).x - is1.corner(5).x;
-      } else if (first_touching_side == 6) {
-        cmp_value = is2.corner(6).y - is1.corner(6).y;
-      } else if (first_touching_side == 7) {
-        cmp_value = is2.corner(7).y - is1.corner(7).y;
-      } else {
-        FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
-        return 0;
+      switch (first_touching_side) {
+        case 0 -> cmp_value = is1.corner(0).x - is2.corner(0).x;
+        case 1 -> cmp_value = is1.corner(1).x - is2.corner(1).x;
+        case 2 -> cmp_value = is1.corner(2).y - is2.corner(2).y;
+        case 3 -> cmp_value = is1.corner(3).y - is2.corner(3).y;
+        case 4 -> cmp_value = is2.corner(4).x - is1.corner(4).x;
+        case 5 -> cmp_value = is2.corner(5).x - is1.corner(5).x;
+        case 6 -> cmp_value = is2.corner(6).y - is1.corner(6).y;
+        case 7 -> cmp_value = is2.corner(7).y - is1.corner(7).y;
+        default -> {
+          FRLogger.warn("SortedRoomNeighbour.compareTo: first_touching_side out of range ");
+          return 0;
+        }
       }
 
       if (cmp_value == 0) {
@@ -825,22 +839,15 @@ public class Sorted45DegreeRoomNeighbours {
           return -1;
         }
         // now the last touch of this and p_other is at the same side
-        if (last_touching_side == 0) {
-          cmp_value = is1.corner(1).x - is2.corner(1).x;
-        } else if (last_touching_side == 1) {
-          cmp_value = is1.corner(2).x - is2.corner(2).x;
-        } else if (last_touching_side == 2) {
-          cmp_value = is1.corner(3).y - is2.corner(3).y;
-        } else if (last_touching_side == 3) {
-          cmp_value = is1.corner(4).y - is2.corner(4).y;
-        } else if (last_touching_side == 4) {
-          cmp_value = is2.corner(5).x - is1.corner(5).x;
-        } else if (last_touching_side == 5) {
-          cmp_value = is2.corner(6).x - is1.corner(6).x;
-        } else if (last_touching_side == 6) {
-          cmp_value = is2.corner(7).y - is1.corner(7).y;
-        } else if (last_touching_side == 7) {
-          cmp_value = is2.corner(0).y - is1.corner(0).y;
+        switch (last_touching_side) {
+          case 0 -> cmp_value = is1.corner(1).x - is2.corner(1).x;
+          case 1 -> cmp_value = is1.corner(2).x - is2.corner(2).x;
+          case 2 -> cmp_value = is1.corner(3).y - is2.corner(3).y;
+          case 3 -> cmp_value = is1.corner(4).y - is2.corner(4).y;
+          case 4 -> cmp_value = is2.corner(5).x - is1.corner(5).x;
+          case 5 -> cmp_value = is2.corner(6).x - is1.corner(6).x;
+          case 6 -> cmp_value = is2.corner(7).y - is1.corner(7).y;
+          case 7 -> cmp_value = is2.corner(0).y - is1.corner(0).y;
         }
       }
       return cmp_value;

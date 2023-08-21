@@ -821,14 +821,11 @@ public class Network extends ScopeKeyword {
         p_clearance_matrix.set_value(i, result, j, curr_value);
       }
     }
-    if (p_item_class_name.equals("via")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.VIA, result);
-    } else if (p_item_class_name.equals("pin")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.PIN, result);
-    } else if (p_item_class_name.equals("smd")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.SMD, result);
-    } else if (p_item_class_name.equals("area")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.AREA, result);
+    switch (p_item_class_name) {
+      case "via"  -> p_net_class.default_item_clearance_classes.set(ItemClass.VIA, result);
+      case "pin"  -> p_net_class.default_item_clearance_classes.set(ItemClass.PIN, result);
+      case "smd"  -> p_net_class.default_item_clearance_classes.set(ItemClass.SMD, result);
+      case "area" -> p_net_class.default_item_clearance_classes.set(ItemClass.AREA, result);
     }
     return result;
   }

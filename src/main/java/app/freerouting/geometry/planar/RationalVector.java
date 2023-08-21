@@ -144,24 +144,25 @@ public class RationalVector extends Vector implements Serializable {
     BigInteger new_x;
     BigInteger new_y;
     switch (n) {
-      case 0: // 0 degree
+      case 0 -> { // 0 degree
         new_x = x;
         new_y = y;
-        break;
-      case 1: // 90 degree
+      }
+      case 1 -> { // 90 degree
         new_x = y.negate();
         new_y = x;
-        break;
-      case 2: // 180 degree
+      }
+      case 2 -> { // 180 degree
         new_x = x.negate();
         new_y = y.negate();
-        break;
-      case 3: // 270 degree
+      }
+      case 3 -> { // 270 degree
         new_x = y;
         new_y = x.negate();
-        break;
-      default:
+      }
+      default -> {
         return this;
+      }
     }
     return new RationalVector(new_x, new_y, this.z);
   }

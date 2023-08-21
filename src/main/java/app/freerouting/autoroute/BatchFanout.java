@@ -65,12 +65,10 @@ public class BatchFanout {
                 ripup_costs,
                 this.thread,
                 time_limit);
-        if (curr_result == AutorouteEngine.AutorouteResult.ROUTED) {
-          ++routed_count;
-        } else if (curr_result == AutorouteEngine.AutorouteResult.NOT_ROUTED) {
-          ++not_routed_count;
-        } else if (curr_result == AutorouteEngine.AutorouteResult.INSERT_ERROR) {
-          ++insert_error_count;
+        switch (curr_result) {
+          case ROUTED       -> ++routed_count;
+          case NOT_ROUTED   -> ++not_routed_count;
+          case INSERT_ERROR -> ++insert_error_count;
         }
         if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED) {
           this.thread.hdlg.repaint();
