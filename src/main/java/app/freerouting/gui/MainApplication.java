@@ -8,6 +8,7 @@ import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.NetClasses;
+import java.awt.Component;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -366,8 +367,17 @@ public class MainApplication extends WindowBase {
         JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
         JDialog dialog = optionPane.createDialog(resources.getString("auto_start_routing_title"));
 
+        // Get the correct panel from the option pane
+        JPanel optionPanel = null;
+        for(Component c : optionPane.getComponents())
+          // Ensure there are buttons on the panel
+          if(c instanceof JPanel && ((JPanel)c).getComponents()[0] instanceof JButton){
+            optionPanel = (JPanel)c;
+            break;
+          }
+
         // Set the default button to "Start now"
-        JButton startButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
+        JButton startButton = (JButton)(optionPanel.getComponents()[0]);
         startButton.setText(resources.getString("auto_start_routing_startnow_button"));
         startButton.addActionListener(e -> {
           ModelDialogTimeout = 0;
@@ -375,7 +385,7 @@ public class MainApplication extends WindowBase {
         });
 
         // Set the cancel button to "Cancel (20)"
-        JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[1];
+        JButton cancelButton = (JButton)(optionPanel.getComponents()[1]);
         cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(20)");
         cancelButton.addActionListener(e -> {
           ModelDialogTimeout = -1;
