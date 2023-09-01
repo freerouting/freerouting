@@ -9,6 +9,8 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.BoardRules;
+
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -150,10 +152,8 @@ public class TileConstructionState extends CornerItemConstructionState {
     }
     if (new_length < corner_arr.length) {
       // somthing skipped, update corner_list
-      corner_list = new LinkedList<>();
-      for (int i = 0; i < new_length; ++i) {
-        corner_list.add(corner_arr[i]);
-      }
+      corner_list =
+          new LinkedList<>(Arrays.asList(corner_arr).subList(0, new_length));
     }
   }
   /**
@@ -184,10 +184,7 @@ public class TileConstructionState extends CornerItemConstructionState {
 
     if (new_length != corner_arr.length) {
       // recalculate the corner_list
-      corner_list = new LinkedList<>();
-      for (int i = 0; i < new_length; ++i) {
-        corner_list.add(corner_arr[i]);
-      }
+      corner_list = new LinkedList<>(Arrays.asList(corner_arr).subList(0, new_length));
       add_corner_for_snap_angle();
     }
   }

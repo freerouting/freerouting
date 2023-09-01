@@ -15,6 +15,8 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
+
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -132,10 +134,7 @@ public class InsertFoundConnectionAlgo {
 
     int from_corner_no = 0;
     for (int i = 1; i < p_trace.corners.length; ++i) {
-      Point[] curr_corner_arr = new Point[i - from_corner_no + 1];
-      for (int j = from_corner_no; j <= i; ++j) {
-        curr_corner_arr[j - from_corner_no] = p_trace.corners[j];
-      }
+      Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
       Point ok_point =
           board.insert_forced_trace_polyline(

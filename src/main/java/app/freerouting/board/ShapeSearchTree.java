@@ -119,9 +119,8 @@ public class ShapeSearchTree extends MinAreaTree {
     }
 
     // correct the precalculated tree shapes first, because it is used in this.insert
-    for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; ++i) {
-      new_precalculated_tree_shapes[i] = changed_shapes[i - p_keep_at_start_count];
-    }
+    System.arraycopy(
+        changed_shapes, 0, new_precalculated_tree_shapes, p_keep_at_start_count, changed_shapes.length);
     p_obj.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
     for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; ++i) {

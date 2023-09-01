@@ -744,24 +744,16 @@ public class Polyline implements Serializable {
         }
       } else {
         // skip the last line of p_other
-        for (int i = 0; i < p_other.arr.length - 1; ++i) {
-          line_arr[i] = p_other.arr[i];
-        }
+        System.arraycopy(p_other.arr, 0, line_arr, 0, p_other.arr.length - 1);
       }
       // append the lines of this polyline, skip the first line
-      for (int i = 1; i < arr.length; ++i) {
-        line_arr[p_other.arr.length + i - 2] = arr[i];
-      }
+      System.arraycopy(arr, 1, line_arr, p_other.arr.length - 1, arr.length - 1);
     } else {
       // insert the lines of this polyline in front, skip the last line
-      for (int i = 0; i < arr.length - 1; ++i) {
-        line_arr[i] = arr[i];
-      }
+      System.arraycopy(arr, 0, line_arr, 0, arr.length - 1);
       if (combine_other_at_start) {
         // skip the first line of p_other
-        for (int i = 1; i < p_other.arr.length; ++i) {
-          line_arr[arr.length + i - 2] = p_other.arr[i];
-        }
+        System.arraycopy(p_other.arr, 1, line_arr, arr.length - 1, p_other.arr.length - 1);
       } else {
         // insert in reverse order, skip the last line of p_other
         for (int i = 1; i < p_other.arr.length; ++i) {

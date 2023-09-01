@@ -43,10 +43,7 @@ public class ItemSelectionFilter implements Serializable {
 
   /** Copy constructor */
   public ItemSelectionFilter(ItemSelectionFilter p_item_selection_filter) {
-    this.values = new boolean[SelectableChoices.values().length];
-    for (int i = 0; i < this.values.length; ++i) {
-      this.values[i] = p_item_selection_filter.values[i];
-    }
+    this.values = p_item_selection_filter.values.clone();
   }
 
   /** Selects or deselects an item type */

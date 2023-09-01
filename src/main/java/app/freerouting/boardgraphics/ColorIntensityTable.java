@@ -32,10 +32,7 @@ public class ColorIntensityTable implements Serializable {
 
   /** Copy constructor. */
   public ColorIntensityTable(ColorIntensityTable p_color_intesity_table) {
-    this.arr = new double[p_color_intesity_table.arr.length];
-    for (int i = 0; i < this.arr.length; ++i) {
-      this.arr[i] = p_color_intesity_table.arr[i];
-    }
+    this.arr = p_color_intesity_table.arr.clone();
   }
 
   public double get_value(int p_no) {

@@ -32,11 +32,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /** Window for interactive editing of via rules. */
 public class WindowVia extends BoardSavableSubWindow {
@@ -284,10 +280,7 @@ public class WindowVia extends BoardSavableSubWindow {
         layers_selected = true;
       } else {
         Layer[] possible_start_layers =
-            new Layer[pcb.layer_structure.arr.length - 1];
-        for (int i = 0; i < possible_start_layers.length; ++i) {
-          possible_start_layers[i] = pcb.layer_structure.arr[i];
-        }
+            Arrays.copyOf(pcb.layer_structure.arr, pcb.layer_structure.arr.length - 1);
         Object selected_value =
             JOptionPane.showInputDialog(
                 null,
@@ -308,11 +301,7 @@ public class WindowVia extends BoardSavableSubWindow {
       if (!layers_selected) {
         int first_possible_end_layer_no = pcb.layer_structure.get_no(start_layer) + 1;
         Layer[] possible_end_layers =
-            new Layer
-                [pcb.layer_structure.arr.length - first_possible_end_layer_no];
-        for (int i = first_possible_end_layer_no; i < pcb.layer_structure.arr.length; ++i) {
-          possible_end_layers[i - first_possible_end_layer_no] = pcb.layer_structure.arr[i];
-        }
+            Arrays.copyOfRange(pcb.layer_structure.arr, first_possible_end_layer_no, pcb.layer_structure.arr.length);
         Object selected_value =
             JOptionPane.showInputDialog(
                 null,

@@ -231,9 +231,7 @@ public class ClearanceMatrix implements Serializable {
       new_row[i] = new Row(curr_old_row.name);
       Row curr_new_row = new_row[i];
       curr_new_row.max_value = curr_old_row.max_value;
-      for (int j = 0; j < old_class_count; ++j) {
-        curr_new_row.column[j] = curr_old_row.column[j];
-      }
+      System.arraycopy(curr_old_row.column, 0, curr_new_row.column, 0, old_class_count);
 
       curr_new_row.column[old_class_count] = new MatrixEntry();
     }

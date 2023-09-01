@@ -3,6 +3,7 @@ package app.freerouting.geometry.planar;
 import app.freerouting.logger.FRLogger;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -780,13 +781,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
         }
       }
     }
-    int[][] normalized_result = new int[intersection_count][2];
-    for (int j = 0; j < intersection_count; ++j) {
-      for (int i = 0; i < 2; ++i) {
-        normalized_result[j][i] = result[j][i];
-      }
-    }
-    return normalized_result;
+    return Arrays.copyOf(result, intersection_count);
   }
 
   /**

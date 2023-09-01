@@ -1143,9 +1143,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
     Line[] cut_lines = new Line[trace_polyline.arr.length - latest_entry_tuple[0] + 1];
     cut_lines[0] = curr_lines[curr_lines.length - 2];
-    for (int i = 1; i < cut_lines.length; ++i) {
-      cut_lines[i] = trace_polyline.arr[latest_entry_tuple[0] + i - 1];
-    }
+    System.arraycopy(trace_polyline.arr, latest_entry_tuple[0], cut_lines, 1, cut_lines.length - 1);
     Polyline cut_polyline = new Polyline(cut_lines);
     Polyline changed_polyline;
     if (cut_polyline.first_corner().equals(cut_polyline.last_corner())) {

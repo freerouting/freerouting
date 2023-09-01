@@ -195,10 +195,7 @@ public class BoardOutline extends Item implements Serializable {
    */
   Area get_keepout_area() {
     if (this.keepout_area == null) {
-      PolylineShape[] hole_arr = new PolylineShape[this.shapes.length];
-      for (int i = 0; i < hole_arr.length; ++i) {
-        hole_arr[i] = this.shapes[i];
-      }
+      PolylineShape[] hole_arr = this.shapes.clone();
       keepout_area = new PolylineArea(this.board.bounding_box, hole_arr);
     }
     return this.keepout_area;

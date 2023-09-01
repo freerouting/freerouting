@@ -866,11 +866,15 @@ public abstract class Item
       return false;
     }
     int[] new_net_no_arr = new int[this.net_no_arr.length - 1];
-    for (int i = 0; i < found_index; ++i) {
-      new_net_no_arr[i] = this.net_no_arr[i];
-    }
-    for (int i = found_index; i < new_net_no_arr.length; ++i) {
-      new_net_no_arr[i] = this.net_no_arr[i + 1];
+    System.arraycopy(this.net_no_arr, 0, new_net_no_arr, 0, found_index);
+    if (found_index < new_net_no_arr.length) {
+      // copy remaining elements if present
+      System.arraycopy(
+          this.net_no_arr,
+          found_index + 1,
+          new_net_no_arr,
+          found_index,
+          new_net_no_arr.length - found_index);
     }
     this.net_no_arr = new_net_no_arr;
     return true;

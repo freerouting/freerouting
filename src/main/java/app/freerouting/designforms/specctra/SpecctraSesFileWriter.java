@@ -16,6 +16,7 @@ import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -381,11 +382,7 @@ public class SpecctraSesFileWriter {
       }
     }
     if (corner_index < coors.length) {
-      int[] adjusted_coors = new int[corner_index];
-      for (int i = 0; i < adjusted_coors.length; ++i) {
-        adjusted_coors[i] = coors[i];
-      }
-      coors = adjusted_coors;
+      coors = Arrays.copyOf(coors, corner_index);
     }
     write_path(board_layer.name, wire_width, coors, p_identifier_type, p_file);
     write_fixed_state(p_file, p_wire.get_fixed_state());
