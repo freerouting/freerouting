@@ -594,41 +594,25 @@ public class IntBox extends RegularTileShape implements Serializable {
 
     if (p_from_box.ll.x >= this.ll.x) {
       ll_x = p_from_box.ll.x;
-    } else if (p_from_box.ur.x >= this.ll.x) {
-      ll_x = this.ll.x;
-    } else {
-      ll_x = p_from_box.ur.x;
-    }
+    } else ll_x = Math.min(p_from_box.ur.x, this.ll.x);
 
     int ur_x;
 
     if (p_from_box.ur.x <= this.ur.x) {
       ur_x = p_from_box.ur.x;
-    } else if (p_from_box.ll.x <= this.ur.x) {
-      ur_x = this.ur.x;
-    } else {
-      ur_x = p_from_box.ll.x;
-    }
+    } else ur_x = Math.max(p_from_box.ll.x, this.ur.x);
 
     int ll_y;
 
     if (p_from_box.ll.y >= this.ll.y) {
       ll_y = p_from_box.ll.y;
-    } else if (p_from_box.ur.y >= this.ll.y) {
-      ll_y = this.ll.y;
-    } else {
-      ll_y = p_from_box.ur.y;
-    }
+    } else ll_y = Math.min(p_from_box.ur.y, this.ll.y);
 
     int ur_y;
 
     if (p_from_box.ur.y <= this.ur.y) {
       ur_y = p_from_box.ur.y;
-    } else if (p_from_box.ll.y <= this.ur.y) {
-      ur_y = this.ur.y;
-    } else {
-      ur_y = p_from_box.ll.y;
-    }
+    } else ur_y = Math.max(p_from_box.ll.y, this.ur.y);
     return new IntBox(ll_x, ll_y, ur_x, ur_y);
   }
 

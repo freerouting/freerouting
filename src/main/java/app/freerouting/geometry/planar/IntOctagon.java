@@ -673,64 +673,32 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   public boolean intersects(IntOctagon p_other) {
     int is_lx;
     int is_rx;
-    if (p_other.lx > this.lx) {
-      is_lx = p_other.lx;
-    } else {
-      is_lx = this.lx;
-    }
-    if (p_other.rx < this.rx) {
-      is_rx = p_other.rx;
-    } else {
-      is_rx = this.rx;
-    }
+    is_lx = Math.max(p_other.lx, this.lx);
+    is_rx = Math.min(p_other.rx, this.rx);
     if (is_lx > is_rx) {
       return false;
     }
 
     int is_ly;
     int is_uy;
-    if (p_other.ly > this.ly) {
-      is_ly = p_other.ly;
-    } else {
-      is_ly = this.ly;
-    }
-    if (p_other.uy < this.uy) {
-      is_uy = p_other.uy;
-    } else {
-      is_uy = this.uy;
-    }
+    is_ly = Math.max(p_other.ly, this.ly);
+    is_uy = Math.min(p_other.uy, this.uy);
     if (is_ly > is_uy) {
       return false;
     }
 
     int is_llx;
     int is_urx;
-    if (p_other.llx > this.llx) {
-      is_llx = p_other.llx;
-    } else {
-      is_llx = this.llx;
-    }
-    if (p_other.urx < this.urx) {
-      is_urx = p_other.urx;
-    } else {
-      is_urx = this.urx;
-    }
+    is_llx = Math.max(p_other.llx, this.llx);
+    is_urx = Math.min(p_other.urx, this.urx);
     if (is_llx > is_urx) {
       return false;
     }
 
     int is_ulx;
     int is_lrx;
-    if (p_other.ulx > this.ulx) {
-      is_ulx = p_other.ulx;
-    } else {
-      is_ulx = this.ulx;
-    }
-    if (p_other.lrx < this.lrx) {
-      is_lrx = p_other.lrx;
-    } else {
-      is_lrx = this.lrx;
-    }
+    is_ulx = Math.max(p_other.ulx, this.ulx);
+    is_lrx = Math.min(p_other.lrx, this.lrx);
     return is_ulx <= is_lrx;
   }
 
@@ -740,64 +708,32 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   public boolean overlaps(IntOctagon p_other) {
     int is_lx;
     int is_rx;
-    if (p_other.lx > this.lx) {
-      is_lx = p_other.lx;
-    } else {
-      is_lx = this.lx;
-    }
-    if (p_other.rx < this.rx) {
-      is_rx = p_other.rx;
-    } else {
-      is_rx = this.rx;
-    }
+    is_lx = Math.max(p_other.lx, this.lx);
+    is_rx = Math.min(p_other.rx, this.rx);
     if (is_lx >= is_rx) {
       return false;
     }
 
     int is_ly;
     int is_uy;
-    if (p_other.ly > this.ly) {
-      is_ly = p_other.ly;
-    } else {
-      is_ly = this.ly;
-    }
-    if (p_other.uy < this.uy) {
-      is_uy = p_other.uy;
-    } else {
-      is_uy = this.uy;
-    }
+    is_ly = Math.max(p_other.ly, this.ly);
+    is_uy = Math.min(p_other.uy, this.uy);
     if (is_ly >= is_uy) {
       return false;
     }
 
     int is_llx;
     int is_urx;
-    if (p_other.llx > this.llx) {
-      is_llx = p_other.llx;
-    } else {
-      is_llx = this.llx;
-    }
-    if (p_other.urx < this.urx) {
-      is_urx = p_other.urx;
-    } else {
-      is_urx = this.urx;
-    }
+    is_llx = Math.max(p_other.llx, this.llx);
+    is_urx = Math.min(p_other.urx, this.urx);
     if (is_llx >= is_urx) {
       return false;
     }
 
     int is_ulx;
     int is_lrx;
-    if (p_other.ulx > this.ulx) {
-      is_ulx = p_other.ulx;
-    } else {
-      is_ulx = this.ulx;
-    }
-    if (p_other.lrx < this.lrx) {
-      is_lrx = p_other.lrx;
-    } else {
-      is_lrx = this.lrx;
-    }
+    is_ulx = Math.max(p_other.ulx, this.ulx);
+    is_lrx = Math.min(p_other.lrx, this.lrx);
     return is_ulx < is_lrx;
   }
 
