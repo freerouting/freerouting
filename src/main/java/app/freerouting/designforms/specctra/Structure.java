@@ -574,9 +574,7 @@ class Structure extends ScopeKeyword {
       BoardRules p_board_rules) {
     boolean smd_to_turn_gap_found = false;
     // update the clearance matrix
-    Iterator<Rule> it = p_board_construction_info.default_rules.iterator();
-    while (it.hasNext()) {
-      Rule curr_ob = it.next();
+    for (Rule curr_ob : p_board_construction_info.default_rules) {
       if (curr_ob instanceof Rule.ClearanceRule) {
         Rule.ClearanceRule curr_rule = (Rule.ClearanceRule) curr_ob;
         if (set_clearance_rule(
@@ -586,9 +584,7 @@ class Structure extends ScopeKeyword {
       }
     }
     // update width rules
-    it = p_board_construction_info.default_rules.iterator();
-    while (it.hasNext()) {
-      Object curr_ob = it.next();
+    for (Object curr_ob : p_board_construction_info.default_rules) {
       if (curr_ob instanceof Rule.WidthRule) {
         double wire_width = ((Rule.WidthRule) curr_ob).value;
         int trace_halfwidth =
@@ -596,16 +592,12 @@ class Structure extends ScopeKeyword {
         p_board_rules.set_default_trace_half_widths(trace_halfwidth);
       }
     }
-    Iterator<LayerRule> it3 = p_board_construction_info.layer_dependent_rules.iterator();
-    while (it3.hasNext()) {
-      LayerRule layer_rule = it3.next();
+    for (LayerRule layer_rule : p_board_construction_info.layer_dependent_rules) {
       int layer_no = p_par.layer_structure.get_no(layer_rule.layer_name);
       if (layer_no < 0) {
         continue;
       }
-      Iterator<Rule> it2 = layer_rule.rule.iterator();
-      while (it2.hasNext()) {
-        Rule curr_ob = it2.next();
+      for (Rule curr_ob : layer_rule.rule) {
         if (curr_ob instanceof Rule.WidthRule) {
           double wire_width = ((Rule.WidthRule) curr_ob).value;
           int trace_halfwidth =
@@ -646,9 +638,7 @@ class Structure extends ScopeKeyword {
     if (contains_wire_clearance_pair(p_rule.clearance_class_pairs)) {
       create_default_clearance_classes(p_board_rules);
     }
-    Iterator<String> it = p_rule.clearance_class_pairs.iterator();
-    while (it.hasNext()) {
-      String curr_string = it.next();
+    for (String curr_string : p_rule.clearance_class_pairs) {
       if (curr_string.equalsIgnoreCase("smd_to_turn_gap")) {
         p_board_rules.set_pin_edge_to_turn_dist(curr_clearance);
         result = true;
@@ -961,9 +951,7 @@ class Structure extends ScopeKeyword {
     }
 
     // insert the planes.
-    Iterator<ReadScopeParameter.PlaneInfo> it = p_par.plane_list.iterator();
-    while (it.hasNext()) {
-      ReadScopeParameter.PlaneInfo plane_info = it.next();
+    for (ReadScopeParameter.PlaneInfo plane_info : p_par.plane_list) {
       Net.Id net_id = new Net.Id(plane_info.net_name, 1);
       if (!p_par.netlist.contains(net_id)) {
         Net new_net = p_par.netlist.add_net(net_id);

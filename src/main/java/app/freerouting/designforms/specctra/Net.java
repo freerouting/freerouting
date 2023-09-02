@@ -6,7 +6,6 @@ import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,9 +31,7 @@ public class Net {
     // write the pins scope
     p_par.file.start_scope();
     p_par.file.write("pins");
-    Iterator<app.freerouting.board.Pin> it = p_pin_list.iterator();
-    while (it.hasNext()) {
-      app.freerouting.board.Pin curr_pin = it.next();
+    for (app.freerouting.board.Pin curr_pin : p_pin_list) {
       if (curr_pin.contains_net(p_net.net_number)) {
         write_pin(p_par, curr_pin);
       }

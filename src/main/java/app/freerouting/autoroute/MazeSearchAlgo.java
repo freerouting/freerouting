@@ -971,12 +971,10 @@ public class MazeSearchAlgo {
     reduce_trace_shapes_at_tie_pins(p_destination_items, this.ctrl.net_no, this.search_tree);
     // process the destination items
     boolean destination_ok = false;
-    Iterator<Item> it = p_destination_items.iterator();
-    while (it.hasNext()) {
+    for (Item curr_item : p_destination_items) {
       if (this.autoroute_engine.is_stop_requested()) {
         return false;
       }
-      Item curr_item = it.next();
       ItemAutorouteInfo curr_info = curr_item.get_autoroute_info();
       curr_info.set_start_info(false);
       for (int i = 0; i < curr_item.tree_shape_count(this.search_tree); ++i) {
@@ -1001,12 +999,10 @@ public class MazeSearchAlgo {
     // process the start items
     Collection<IncompleteFreeSpaceExpansionRoom> start_rooms =
         new LinkedList<>();
-    it = p_start_items.iterator();
-    while (it.hasNext()) {
+    for (Item curr_item : p_start_items) {
       if (this.autoroute_engine.is_stop_requested()) {
         return false;
       }
-      Item curr_item = it.next();
       ItemAutorouteInfo curr_info = curr_item.get_autoroute_info();
       curr_info.set_start_info(true);
       if (curr_item instanceof Connectable) {
@@ -1044,12 +1040,10 @@ public class MazeSearchAlgo {
     // the maze_expansion_list.
     boolean start_ok = false;
     for (CompleteFreeSpaceExpansionRoom curr_room : completed_start_rooms) {
-      Iterator<TargetItemExpansionDoor> it2 = curr_room.get_target_doors().iterator();
-      while (it2.hasNext()) {
+      for (TargetItemExpansionDoor curr_door : curr_room.get_target_doors()) {
         if (this.autoroute_engine.is_stop_requested()) {
           return false;
         }
-        TargetItemExpansionDoor curr_door = it2.next();
         if (curr_door.is_destination_door()) {
           continue;
         }

@@ -227,9 +227,7 @@ public class PolylineTrace extends Trace implements Serializable {
     PolylineTrace other_trace = null;
     boolean trace_found = false;
     boolean reverse_order = false;
-    Iterator<Item> it = contacts.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : contacts) {
       if (curr_ob instanceof PolylineTrace) {
         other_trace = (PolylineTrace) curr_ob;
         if (other_trace.get_layer() == get_layer()
@@ -328,9 +326,7 @@ public class PolylineTrace extends Trace implements Serializable {
     PolylineTrace other_trace = null;
     boolean trace_found = false;
     boolean reverse_order = false;
-    Iterator<Item> it = contacts.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : contacts) {
       if (curr_ob instanceof PolylineTrace) {
         other_trace = (PolylineTrace) curr_ob;
         if (other_trace.get_layer() == get_layer()
@@ -703,9 +699,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     Collection<PolylineTrace> split_pieces = this.split(p_clip_shape);
     boolean result = (split_pieces.size() != 1);
-    Iterator<PolylineTrace> it = split_pieces.iterator();
-    while (it.hasNext()) {
-      PolylineTrace curr_split_trace = it.next();
+    for (PolylineTrace curr_split_trace : split_pieces) {
       if (curr_split_trace.is_on_the_board()) {
         boolean trace_combined = curr_split_trace.combine();
         if (curr_split_trace.corner_count() == 2

@@ -17,7 +17,6 @@ import app.freerouting.logger.FRLogger;
 import javax.swing.JPopupMenu;
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -46,9 +45,7 @@ public class CopyItemState extends InteractiveState {
     layer_changed = false;
     current_position = start_position;
     previous_position = current_position;
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       if (curr_item instanceof DrillItem || curr_item instanceof ObstacleArea) {
         Item new_item = curr_item.copy(0);
         item_list.add(new_item);
@@ -115,9 +112,7 @@ public class CopyItemState extends InteractiveState {
     current_position = p_new_position.round();
     if (!current_position.equals(previous_position)) {
       Vector translate_vector = current_position.difference_by(previous_position);
-      Iterator<Item> it = item_list.iterator();
-      while (it.hasNext()) {
-        Item curr_item = it.next();
+      for (Item curr_item : item_list) {
         curr_item.translate_by(translate_vector);
       }
       previous_position = current_position;
@@ -151,9 +146,7 @@ public class CopyItemState extends InteractiveState {
     RoutingBoard board = hdlg.get_routing_board();
     if (layer_changed) {
       // create new via padstacks
-      Iterator<Item> it = item_list.iterator();
-      while (it.hasNext()) {
-        Item curr_ob = it.next();
+      for (Item curr_ob : item_list) {
         if (curr_ob instanceof Via) {
           Via curr_via = (Via) curr_ob;
           Padstack new_padstack =
@@ -171,9 +164,7 @@ public class CopyItemState extends InteractiveState {
     Collection<Component> copied_components = new LinkedList<>();
 
     Vector translate_vector = current_position.difference_by(start_position);
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       int curr_cmp_no = curr_item.get_component_no();
       if (curr_cmp_no > 0) {
         // This item belongs to a component
@@ -228,10 +219,8 @@ public class CopyItemState extends InteractiveState {
       }
     }
     boolean all_items_inserted = true;
-    it = item_list.iterator();
     boolean first_time = true;
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       if (curr_item.board != null && curr_item.clearance_violation_count() == 0) {
         if (first_time) {
           // make the current situation restorable by undo
@@ -275,9 +264,7 @@ public class CopyItemState extends InteractiveState {
     if (item_list == null) {
       return;
     }
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       curr_item.draw(
           p_graphics,
           hdlg.graphics_context,

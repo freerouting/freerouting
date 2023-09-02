@@ -4,7 +4,7 @@ import app.freerouting.board.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
-import java.util.Iterator;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -81,9 +81,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
     if (hdlg.settings.select_on_all_visible_layers) {
       // remove items, which are not visible
       Set<Item> visible_items = new TreeSet<>();
-      Iterator<Item> it = found_items.iterator();
-      while (it.hasNext()) {
-        Item curr_item = it.next();
+      for (Item curr_item : found_items) {
         for (int i = curr_item.first_layer(); i <= curr_item.last_layer(); ++i) {
           if (hdlg.graphics_context.get_layer_visibility(i) > 0) {
             visible_items.add(curr_item);

@@ -17,7 +17,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Set;
 
 /** Inserts the traces and vias of the connection found by the autoroute algorithm. */
@@ -45,10 +44,7 @@ public class InsertFoundConnectionAlgo {
     }
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
-    Iterator<LocateFoundConnectionAlgoAnyAngle.ResultItem> it =
-        p_connection.connection_items.iterator();
-    while (it.hasNext()) {
-      LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item = it.next();
+    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
         return null;
       }

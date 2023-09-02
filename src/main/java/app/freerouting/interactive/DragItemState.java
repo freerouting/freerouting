@@ -7,7 +7,6 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Vector;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -122,9 +121,7 @@ public class DragItemState extends DragState {
         Collection<Item> moved_items =
             hdlg.get_routing_board().get_component_items(item_to_move.get_component_no());
         Set<Integer> changed_nets = new TreeSet<>();
-        Iterator<Item> it = moved_items.iterator();
-        while (it.hasNext()) {
-          Item curr_moved_item = it.next();
+        for (Item curr_moved_item : moved_items) {
           for (int i = 0; i < curr_moved_item.net_count(); ++i) {
             changed_nets.add(curr_moved_item.get_net_no(i));
           }

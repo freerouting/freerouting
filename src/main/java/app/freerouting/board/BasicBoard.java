@@ -733,9 +733,7 @@ public class BasicBoard implements Serializable {
    */
   public boolean remove_items(Collection<Item> p_item_list, boolean p_with_delete_fixed) {
     boolean result = true;
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       if (!p_with_delete_fixed && curr_item.is_delete_fixed() || curr_item.is_user_fixed()) {
         result = false;
       } else {
@@ -1425,9 +1423,7 @@ public class BasicBoard implements Serializable {
   public Trace get_trace_tail(Point p_location, int p_layer, int[] p_net_no_arr) {
     TileShape point_shape = TileShape.get_instance(p_location);
     Collection<SearchTreeObject> found_items = overlapping_objects(point_shape, p_layer);
-    Iterator<SearchTreeObject> it = found_items.iterator();
-    while (it.hasNext()) {
-      SearchTreeObject curr_ob = it.next();
+    for (SearchTreeObject curr_ob : found_items) {
       if (curr_ob instanceof Trace) {
         Trace curr_trace = (Trace) curr_ob;
         if (!curr_trace.nets_equal(p_net_no_arr)) {
@@ -1506,9 +1502,7 @@ public class BasicBoard implements Serializable {
     p_stream.defaultReadObject();
     // insert the items on the board into the search trees
     search_tree_manager = new SearchTreeManager(this);
-    Iterator<Item> it = this.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : this.get_items()) {
       curr_item.board = this;
       search_tree_manager.insert(curr_item);
     }

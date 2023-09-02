@@ -11,7 +11,6 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.Collection;
-import java.util.Iterator;
 
 /** Some consistency checking on a routing board. */
 public class Validate {
@@ -40,12 +39,11 @@ public class Validate {
         first_time = false;
       }
       Collection<SearchTreeObject> l = p_board.overlapping_objects(surr_oct, layer);
-      Iterator<SearchTreeObject> i = l.iterator();
       int clearance_violation_count = 0;
       int conflict_ob_count = 0;
       int trace_count = 0;
-      while (i.hasNext()) {
-        Item curr_ob = (Item) i.next();
+      for (SearchTreeObject search_tree_object : l) {
+        Item curr_ob = (Item) search_tree_object;
         if (!curr_ob.validate()) {
           System.out.println(p_s);
         }
@@ -71,9 +69,8 @@ public class Validate {
         if (clearance_violation_count > 0) {
           System.out.print("with items of nets: ");
         }
-        i = l.iterator();
-        while (i.hasNext()) {
-          Item curr_ob = (Item) i.next();
+        for (SearchTreeObject search_tree_object : l) {
+          Item curr_ob = (Item) search_tree_object;
           int cl_count = curr_ob.clearance_violation_count();
           if (cl_count == 0) {
             continue;
@@ -114,9 +111,7 @@ public class Validate {
               .search_tree_manager
               .get_default_tree()
               .overlapping_items_with_clearance(offset_shapes[i], p_layer, p_net_no_arr, p_cl_type);
-      Iterator<Item> it = obstacles.iterator();
-      while (it.hasNext()) {
-        Item curr_obs = it.next();
+      for (Item curr_obs : obstacles) {
         if (!curr_obs.shares_net_no(p_net_no_arr)) {
           System.out.print(p_s);
           System.out.println(": cannot insert trace without violations");
@@ -129,9 +124,7 @@ public class Validate {
 
   /** check, that all traces on p_board are orthogonal */
   public static void orthogonal(String p_s, BasicBoard p_board) {
-    Iterator<Item> it = p_board.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : p_board.get_items()) {
       if (curr_ob instanceof PolylineTrace) {
         PolylineTrace curr_trace = (PolylineTrace) curr_ob;
         if (!curr_trace.polyline().is_orthogonal()) {
@@ -146,9 +139,7 @@ public class Validate {
   /** check, that all traces on p_board are multiples of 45 degree */
   public static void multiple_of_45_degree(String p_s, BasicBoard p_board) {
     int count = 0;
-    Iterator<Item> it = p_board.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : p_board.get_items()) {
       if (curr_ob instanceof PolylineTrace) {
         PolylineTrace curr_trace = (PolylineTrace) curr_ob;
         if (!curr_trace.polyline().is_multiple_of_45_degree()) {
@@ -180,9 +171,7 @@ public class Validate {
       first_time = false;
     }
     int result = 0;
-    Iterator<Item> it = p_board.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : p_board.get_items()) {
       if (curr_ob instanceof PolylineTrace) {
         PolylineTrace curr_trace = (PolylineTrace) curr_ob;
         if (curr_trace.contains_net(p_net_no)) {
@@ -205,9 +194,7 @@ public class Validate {
 
   public static boolean has_cycles(String p_s, BasicBoard p_board) {
     boolean result = false;
-    Iterator<Item> it = p_board.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_board.get_items()) {
       if (!(curr_item instanceof Trace)) {
         continue;
       }
@@ -225,9 +212,7 @@ public class Validate {
   public static boolean trace_count_exceeded(
       String p_s, BasicBoard p_board, int p_net_no, int p_max_count) {
     int found_traces = 0;
-    Iterator<Item> it = p_board.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : p_board.get_items()) {
       if (curr_ob instanceof Trace) {
         if (curr_ob.contains_net(p_net_no)) {
           ++found_traces;
@@ -246,9 +231,7 @@ public class Validate {
 
   /** checks, if there are unconnected traces ore vias on the board */
   public static boolean unconnnected_routing_items(String p_s, BasicBoard p_board) {
-    Iterator<Item> it = p_board.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_board.get_items()) {
       if (curr_item.is_routable()) {
         Collection<Item> contact_list = curr_item.get_normal_contacts();
         if (contact_list.size() == 0) {

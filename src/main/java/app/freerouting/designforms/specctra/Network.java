@@ -643,9 +643,7 @@ public class Network extends ScopeKeyword {
         p_clearance_matrix.set_value(second_class_no, first_class_no, p_layer_no, curr_clearance);
       }
     } else {
-      Iterator<String> it = p_clearance_rule.clearance_class_pairs.iterator();
-      while (it.hasNext()) {
-        String curr_string = it.next();
+      for (String curr_string : p_clearance_rule.clearance_class_pairs) {
         String[] curr_pair = curr_string.split("_");
         if (curr_pair.length != 2) {
           continue;
@@ -767,9 +765,7 @@ public class Network extends ScopeKeyword {
     if (Structure.contains_wire_clearance_pair(p_rule.clearance_class_pairs)) {
       create_default_clearance_classes(p_net_class, p_clearance_matrix);
     }
-    Iterator<String> it = p_rule.clearance_class_pairs.iterator();
-    while (it.hasNext()) {
-      String curr_string = it.next();
+    for (String curr_string : p_rule.clearance_class_pairs) {
       String[] curr_pair = curr_string.split("_");
       if (curr_pair.length != 2) {
         continue;
@@ -831,12 +827,8 @@ public class Network extends ScopeKeyword {
   }
 
   private static void insert_compoments(ReadScopeParameter p_par) {
-    Iterator<ComponentPlacement> it = p_par.placement_list.iterator();
-    while (it.hasNext()) {
-      ComponentPlacement next_lib_component = it.next();
-      Iterator<ComponentPlacement.ComponentLocation> it2 = next_lib_component.locations.iterator();
-      while (it2.hasNext()) {
-        ComponentPlacement.ComponentLocation next_component = it2.next();
+    for (ComponentPlacement next_lib_component : p_par.placement_list) {
+      for (ComponentPlacement.ComponentLocation next_component : next_lib_component.locations) {
         insert_component(next_component, next_lib_component.lib_name, p_par);
       }
     }
@@ -1370,9 +1362,7 @@ public class Network extends ScopeKeyword {
           FRLogger.warn("Network.read_net_scope: board net not found");
           return false;
         }
-        Iterator<Rule> it = net_rules.iterator();
-        while (it.hasNext()) {
-          Rule curr_ob = it.next();
+        for (Rule curr_ob : net_rules) {
           if (curr_ob instanceof Rule.WidthRule) {
             app.freerouting.rules.NetClass default_net_rule = p_board.rules.get_default_net_class();
             double wire_width = ((Rule.WidthRule) curr_ob).value;

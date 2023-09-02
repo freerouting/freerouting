@@ -9,7 +9,6 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 
 import java.awt.Color;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -79,9 +78,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     for (int i = 0; i < tile_shape_count(); ++i) {
       TileShape curr_shape = get_tile_shape(i);
       Set<SearchTreeObject> overlaps = board.overlapping_objects(curr_shape, get_layer());
-      Iterator<SearchTreeObject> it = overlaps.iterator();
-      while (it.hasNext()) {
-        SearchTreeObject curr_ob = it.next();
+      for (SearchTreeObject curr_ob : overlaps) {
         if (!(curr_ob instanceof Item)) {
           continue;
         }

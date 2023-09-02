@@ -188,12 +188,10 @@ public class PolylineArea implements Area, Serializable {
         for (int j = 0; j < convex_hole_pieces.length; ++j) {
           TileShape curr_hole_piece = convex_hole_pieces[j];
           Collection<TileShape> new_piece_list = new LinkedList<>();
-          Iterator<TileShape> it = curr_piece_list.iterator();
-          while (it.hasNext()) {
+          for (TileShape curr_divide_piece : curr_piece_list) {
             if (p_stoppable_thread != null && p_stoppable_thread.is_stop_requested()) {
               return null;
             }
-            TileShape curr_divide_piece = it.next();
             cutout_hole_piece(curr_divide_piece, curr_hole_piece, new_piece_list);
           }
           curr_piece_list = new_piece_list;

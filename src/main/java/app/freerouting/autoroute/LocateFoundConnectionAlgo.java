@@ -361,9 +361,7 @@ public abstract class LocateFoundConnectionAlgo {
       if (next_corners.isEmpty()) {
         break;
       }
-      Iterator<FloatPoint> it = next_corners.iterator();
-      while (it.hasNext()) {
-        FloatPoint curr_next_corner = it.next();
+      for (FloatPoint curr_next_corner : next_corners) {
         if (curr_next_corner != prev_corner) {
           corner_list.add(curr_next_corner);
           this.previous_from_point = this.current_from_point;
@@ -385,10 +383,9 @@ public abstract class LocateFoundConnectionAlgo {
 
     // Round the new trace corners to Integer.
     Collection<IntPoint> rounded_corner_list = new LinkedList<>();
-    Iterator<FloatPoint> it = corner_list.iterator();
     IntPoint prev_point = null;
-    while (it.hasNext()) {
-      IntPoint curr_point = (it.next()).round();
+    for (FloatPoint corner : corner_list) {
+      IntPoint curr_point = corner.round();
       if (!curr_point.equals(prev_point)) {
         rounded_corner_list.add(curr_point);
         prev_point = curr_point;

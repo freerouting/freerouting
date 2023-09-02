@@ -16,7 +16,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ClearanceMatrix;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -539,9 +538,7 @@ public class ShoveTraceAlgo {
       Collection<Item> obstacles =
           search_tree.overlapping_items_with_clearance(
               curr_shape, p_layer, check_net_no_arr, p_cl_type);
-      Iterator<Item> it = obstacles.iterator();
-      while (it.hasNext()) {
-        Item curr_item = it.next();
+      for (Item curr_item : obstacles) {
         boolean is_obstacle;
         if (curr_item.shares_net_no(p_net_no_arr)) {
           // to avoid acid traps

@@ -61,9 +61,7 @@ public class Components implements Serializable {
 
   /** Returns the component with the input name or null, if no such component exists. */
   public Component get(String p_name) {
-    Iterator<Component> it = component_arr.iterator();
-    while (it.hasNext()) {
-      Component curr = it.next();
+    for (Component curr : component_arr) {
       if (curr.name.equals(p_name)) {
         return curr;
       }

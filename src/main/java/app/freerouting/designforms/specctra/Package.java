@@ -331,9 +331,7 @@ public class Package {
       if (curr_component.get_package() == p_package) {
         // check, if not all items of the component are deleted
         boolean undeleted_item_found = false;
-        Iterator<Item> it = board_items.iterator();
-        while (it.hasNext()) {
-          Item curr_item = it.next();
+        for (Item curr_item : board_items) {
           if (curr_item.get_component_no() == curr_component.no) {
             undeleted_item_found = true;
             break;

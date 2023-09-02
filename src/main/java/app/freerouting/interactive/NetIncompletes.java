@@ -15,7 +15,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.SortedSet;
@@ -76,9 +75,7 @@ public class NetIncompletes {
     // connected set
     // or whose connected sets have already an airline.
     Net curr_net = p_board.rules.nets.get(p_net_no);
-    Iterator<Edge> it = sorted_edges.iterator();
-    while (it.hasNext()) {
-      Edge curr_edge = it.next();
+    for (Edge curr_edge : sorted_edges) {
       if (curr_edge.from_item.connected_set == curr_edge.to_item.connected_set) {
         continue; // airline exists already
       }
@@ -182,9 +179,7 @@ public class NetIncompletes {
       }
       FloatPoint[] draw_points = new FloatPoint[2];
       int draw_width = 1;
-      Iterator<RatsNest.AirLine> it = incompletes.iterator();
-      while (it.hasNext()) {
-        RatsNest.AirLine curr_incomplete = it.next();
+      for (RatsNest.AirLine curr_incomplete : incompletes) {
         draw_points[0] = curr_incomplete.from_corner;
         draw_points[1] = curr_incomplete.to_corner;
         p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
@@ -222,9 +217,7 @@ public class NetIncompletes {
       Collection<Item> curr_connected_set = start_item.get_connected_set(this.net.net_number);
       handeled_items.addAll(curr_connected_set);
       p_item_list.removeAll(curr_connected_set);
-      Iterator<Item> it = curr_connected_set.iterator();
-      while (it.hasNext()) {
-        Item curr_item = it.next();
+      for (Item curr_item : curr_connected_set) {
         result.add(new NetItem(curr_item, curr_connected_set));
         ++curr_index;
       }

@@ -352,10 +352,8 @@ public class AutorouteEngine {
           this.autoroute_search_tree.complete_shape(
               p_room, this.net_no, ignore_object, from_door_shape);
       this.remove_incomplete_expansion_room(p_room);
-      Iterator<IncompleteFreeSpaceExpansionRoom> it = completed_shapes.iterator();
       boolean is_first_completed_room = true;
-      while (it.hasNext()) {
-        IncompleteFreeSpaceExpansionRoom curr_incomplete_room = it.next();
+      for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
         if (curr_incomplete_room.get_shape().dimension() != 2) {
           continue;
         }
@@ -373,9 +371,7 @@ public class AutorouteEngine {
           Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes =
               this.autoroute_search_tree.complete_shape(
                   curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
-          Iterator<IncompleteFreeSpaceExpansionRoom> it2 = curr_completed_shapes.iterator();
-          while (it2.hasNext()) {
-            IncompleteFreeSpaceExpansionRoom tmp_room = it2.next();
+          for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
             CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
             if (completed_room != null) {
               result.add(completed_room);
@@ -463,10 +459,7 @@ public class AutorouteEngine {
 
   /** Removes all doors from p_room */
   void remove_all_doors(ExpansionRoom p_room) {
-
-    Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
-    while (it.hasNext()) {
-      ExpansionDoor curr_door = it.next();
+    for (ExpansionDoor curr_door : p_room.get_doors()) {
       ExpansionRoom other_room = curr_door.other_room(p_room);
       if (other_room == null) {
         continue;

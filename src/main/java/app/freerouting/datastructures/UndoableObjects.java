@@ -128,9 +128,7 @@ public class UndoableObjects implements Serializable {
     if (stack_level == 0) {
       return false; // no more undo possible
     }
-    Iterator<UndoableObjectNode> it = objects.values().iterator();
-    while (it.hasNext()) {
-      UndoableObjectNode curr_node = it.next();
+    for (UndoableObjectNode curr_node : objects.values()) {
       if (curr_node.level == stack_level) {
         if (curr_node.undo_object != null) {
           // replace the current object by  its previous state.
@@ -148,9 +146,7 @@ public class UndoableObjects implements Serializable {
     // restore the deleted objects
     Collection<UndoableObjectNode> curr_delete_list =
         deleted_objects_stack.elementAt(stack_level - 1);
-    Iterator<UndoableObjectNode> it2 = curr_delete_list.iterator();
-    while (it2.hasNext()) {
-      UndoableObjectNode curr_deleted_node = it2.next();
+    for (UndoableObjectNode curr_deleted_node : curr_delete_list) {
       this.objects.put(curr_deleted_node.object, curr_deleted_node);
       if (p_restored_objects != null) {
         p_restored_objects.add(curr_deleted_node.object);
@@ -173,9 +169,7 @@ public class UndoableObjects implements Serializable {
       return false; // alredy at the top level
     }
     ++this.stack_level;
-    Iterator<UndoableObjectNode> it = objects.values().iterator();
-    while (it.hasNext()) {
-      UndoableObjectNode curr_node = it.next();
+    for (UndoableObjectNode curr_node : objects.values()) {
       if (curr_node.redo_object != null && curr_node.redo_object.level == this.stack_level) {
         // Object was created on a lower level and changed on the currenzt level,
         // replace the lower level object by the object on the current layer.
@@ -195,9 +189,7 @@ public class UndoableObjects implements Serializable {
     // Delete the objects, which were deleted on the current level, again.
     Collection<UndoableObjectNode> curr_delete_list =
         deleted_objects_stack.elementAt(stack_level - 1);
-    Iterator<UndoableObjectNode> it2 = curr_delete_list.iterator();
-    while (it2.hasNext()) {
-      UndoableObjectNode curr_deleted_node = it2.next();
+    for (UndoableObjectNode curr_deleted_node : curr_delete_list) {
       while (curr_deleted_node.redo_object != null
           && curr_deleted_node.redo_object.level <= this.stack_level) {
         curr_deleted_node = curr_deleted_node.redo_object;
@@ -224,9 +216,7 @@ public class UndoableObjects implements Serializable {
     if (stack_level == 0) {
       return false;
     }
-    Iterator<UndoableObjectNode> it = objects.values().iterator();
-    while (it.hasNext()) {
-      UndoableObjectNode curr_node = it.next();
+    for (UndoableObjectNode curr_node : objects.values()) {
       if (curr_node.level == stack_level - 1) {
         if (curr_node.redo_object != null && curr_node.redo_object.level == stack_level) {
           curr_node.redo_object.undo_object = curr_node.undo_object;

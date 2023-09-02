@@ -12,7 +12,6 @@ import app.freerouting.logger.FRLogger;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -166,9 +165,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     net_no_arr[0] = p_autoroute_engine.get_net_no();
     p_autoroute_engine.autoroute_search_tree.overlapping_tree_entries(
         this.get_shape(), this.get_layer(), net_no_arr, overlapping_objects);
-    Iterator<ShapeTree.TreeEntry> it = overlapping_objects.iterator();
-    while (it.hasNext()) {
-      ShapeTree.TreeEntry curr_entry = it.next();
+    for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
       if (curr_entry.object == this) {
         continue;
       }

@@ -9,7 +9,6 @@ import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -218,11 +217,8 @@ public class SortedOrthogonalRoomNeighbours {
   private void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine) {
     IntBox board_bounds = p_autoroute_engine.board.bounding_box;
     SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.last();
-    Iterator<SortedRoomNeighbour> it = this.sorted_neighbours.iterator();
 
-    while (it.hasNext()) {
-      SortedRoomNeighbour next_neighbour = it.next();
-
+    for (SortedRoomNeighbour next_neighbour : this.sorted_neighbours) {
       if (!next_neighbour.intersection.intersects(prev_neighbour.intersection)) {
         // create a door to a new incomplete expansion room between
         // the last corner of the previous neighbour and the first corner of the

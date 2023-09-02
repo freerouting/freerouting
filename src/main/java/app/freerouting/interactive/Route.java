@@ -33,7 +33,6 @@ import app.freerouting.rules.ViaRule;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -631,9 +630,7 @@ public class Route {
     if (target_set == null) {
       return;
     }
-    Iterator<Item> it = target_set.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : target_set) {
       if (curr_ob instanceof DrillItem) {
         Point curr_point = ((DrillItem) curr_ob).get_center();
         target_points.add(new TargetPoint(curr_point.to_float(), curr_ob));
@@ -667,9 +664,7 @@ public class Route {
         nearest_item = curr_target_point.item;
       }
     }
-    Iterator<Item> it = target_traces_and_areas.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : target_traces_and_areas) {
       if (curr_item instanceof PolylineTrace) {
         PolylineTrace curr_trace = (PolylineTrace) curr_item;
         Polyline curr_polyline = curr_trace.polyline();

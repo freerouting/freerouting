@@ -1,7 +1,6 @@
 package app.freerouting.designforms.specctra;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -47,9 +46,7 @@ public class NetList {
     Collection<Net> result = new LinkedList<>();
     Net.Pin search_pin = new Net.Pin(p_component_name, p_pin_name);
     Collection<Net> net_list = nets.values();
-    Iterator<Net> it = net_list.iterator();
-    while (it.hasNext()) {
-      Net curr_net = it.next();
+    for (Net curr_net : net_list) {
       Set<Net.Pin> net_pins = curr_net.get_pins();
       if (net_pins != null && net_pins.contains(search_pin)) {
         result.add(curr_net);

@@ -44,9 +44,8 @@ class Wiring extends ScopeKeyword {
     p_par.file.write("wiring");
     // write the wires
     Collection<Trace> board_wires = p_par.board.get_traces();
-    Iterator<Trace> it = board_wires.iterator();
-    while (it.hasNext()) {
-      write_wire_scope(p_par, it.next());
+    for (Trace curr_board_wire : board_wires) {
+      write_wire_scope(p_par, curr_board_wire);
     }
     Collection<Via> board_vias = p_par.board.get_vias();
     for (Via curr_via : board_vias) {

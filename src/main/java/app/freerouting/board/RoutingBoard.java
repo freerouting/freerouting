@@ -113,9 +113,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
     start_marking_changed_area();
     Set<Integer> changed_nets = new TreeSet<>();
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       if (!p_with_delete_fixed && curr_item.is_delete_fixed() || curr_item.is_user_fixed()) {
         result = false;
       } else {
@@ -422,9 +420,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     clear_shove_failing_obstacle();
     // unfix the connected shove fixed traces.
     Collection<Item> contact_list = p_drill_item.get_normal_contacts();
-    Iterator<Item> it = contact_list.iterator();
-    while (it.hasNext()) {
-      Item curr_contact = it.next();
+    for (Item curr_contact : contact_list) {
       if (curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
         curr_contact.set_fixed_state(FixedState.UNFIXED);
       }
@@ -477,9 +473,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     double min_dist = Integer.MAX_VALUE;
     Item nearest_item = null;
     Set<Item> ignore_set = null;
-    Iterator<Item> it = found_items.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : found_items) {
       if (!curr_item.is_connectable()) {
         continue;
       }
@@ -1147,9 +1141,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * Trace with net number p_except_net_no are ignored.
    */
   public boolean contains_trace_tails(Collection<Item> p_items, int[] p_except_net_no_arr) {
-    Iterator<Item> it = p_items.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : p_items) {
       if (curr_ob instanceof Trace) {
         Trace curr_trace = (Trace) curr_ob;
         if (!curr_trace.nets_equal(p_except_net_no_arr)) {

@@ -8,7 +8,6 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /** Auxiliary class used by the shove functions */
@@ -161,10 +160,7 @@ public class ShapeTraceEntries {
    */
   boolean store_items(
       Collection<Item> p_item_list, boolean p_is_pad_check, boolean p_copper_sharing_allowed) {
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
-
+    for (Item curr_item : p_item_list) {
       if (!p_is_pad_check && curr_item instanceof ViaObstacleArea
           || curr_item instanceof ComponentObstacleArea) {
         continue;
@@ -294,9 +290,7 @@ public class ShapeTraceEntries {
    * p_except_net_no are ignored
    */
   void cutout_traces(Collection<Item> p_item_list) {
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       if (curr_item instanceof PolylineTrace && !curr_item.shares_net_no(this.own_net_nos)) {
         cutout_trace((PolylineTrace) curr_item, this.shape, this.cl_class);
       }
@@ -360,9 +354,7 @@ public class ShapeTraceEntries {
           boolean store_end_corner = true;
 
           // check for contact object, which is not shovable
-          Iterator<Item> it = contact_list.iterator();
-          while (it.hasNext()) {
-            Item contact_item = it.next();
+          for (Item contact_item : contact_list) {
             if (!contact_item.is_routable()) {
               this.found_obstacle = contact_item;
               return false;

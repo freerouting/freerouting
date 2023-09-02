@@ -4,7 +4,6 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Vector;
 
 /** Describes a library of component packages. */
@@ -25,10 +24,8 @@ public class Packages implements Serializable {
    * Returns the package with the input name and the input side or null, if no such package exists.
    */
   public Package get(String p_name, boolean p_is_front) {
-    Iterator<Package> it = package_arr.iterator();
     Package other_side_package = null;
-    while (it.hasNext()) {
-      Package curr_package = it.next();
+    for (Package curr_package : package_arr) {
       if (curr_package != null && curr_package.name.equalsIgnoreCase(p_name)) {
         if (curr_package.is_front == p_is_front) {
           return curr_package;

@@ -321,9 +321,7 @@ public class ShapeSearchTree extends MinAreaTree {
     Collection<TreeEntry> tree_entries = new LinkedList<>();
     overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
     if (p_obstacles != null) {
-      Iterator<TreeEntry> it = tree_entries.iterator();
-      while (it.hasNext()) {
-        TreeEntry curr_entry = it.next();
+      for (TreeEntry curr_entry : tree_entries) {
         p_obstacles.add((SearchTreeObject) curr_entry.object);
       }
     }
@@ -371,12 +369,9 @@ public class ShapeSearchTree extends MinAreaTree {
       return;
     }
     Collection<Leaf> tmp_list = this.overlaps(bounds);
-    Iterator<Leaf> it = tmp_list.iterator();
-
     boolean is_45_degree = p_shape instanceof IntOctagon;
 
-    while (it.hasNext()) {
-      Leaf curr_leaf = it.next();
+    for (Leaf curr_leaf : tmp_list) {
       SearchTreeObject curr_object = (SearchTreeObject) curr_leaf.object;
       int shape_index = curr_leaf.shape_index_in_object;
       boolean ignore_object = p_layer >= 0 && curr_object.shape_layer(shape_index) != p_layer;
@@ -439,12 +434,10 @@ public class ShapeSearchTree extends MinAreaTree {
     // enlarging is not symmetric.
     RegularTileShape offset_bounds = (RegularTileShape) bounds.offset(max_clearance);
     Collection<Leaf> tmp_list = overlaps(offset_bounds);
-    Iterator<Leaf> it1 = tmp_list.iterator();
     // sort the found items by its clearances tp p_cl_type on layer p_layer
     Set<EntrySortedByClearance> sorted_items = new TreeSet<>();
 
-    while (it1.hasNext()) {
-      Leaf curr_leaf = it1.next();
+    for (Leaf curr_leaf : tmp_list) {
       Item curr_item = (Item) curr_leaf.object;
       int shape_index = curr_leaf.shape_index_in_object;
       boolean ignore_item = p_layer >= 0 && curr_item.shape_layer(shape_index) != p_layer;
@@ -462,11 +455,9 @@ public class ShapeSearchTree extends MinAreaTree {
         sorted_items.add(sorted_ob);
       }
     }
-    Iterator<EntrySortedByClearance> it = sorted_items.iterator();
     int curr_half_clearance = 0;
     ConvexShape curr_offset_shape = p_shape;
-    while (it.hasNext()) {
-      EntrySortedByClearance tmp_entry = it.next();
+    for (EntrySortedByClearance tmp_entry : sorted_items) {
       int tmp_half_clearance = tmp_entry.clearance / 2;
       if (tmp_half_clearance != curr_half_clearance) {
         curr_half_clearance = tmp_half_clearance;
@@ -504,9 +495,7 @@ public class ShapeSearchTree extends MinAreaTree {
     if (p_obstacles == null) {
       return;
     }
-    Iterator<TreeEntry> it = tree_entries.iterator();
-    while (it.hasNext()) {
-      TreeEntry curr_entry = it.next();
+    for (TreeEntry curr_entry : tree_entries) {
       p_obstacles.add((SearchTreeObject) curr_entry.object);
     }
   }

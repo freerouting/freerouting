@@ -5,7 +5,6 @@ import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.logger.FRLogger;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Vector;
 
 /** Describes a library of padstacks for pins or vias. */
@@ -23,9 +22,7 @@ public class Padstacks implements Serializable {
 
   /** Returns the padstack with the input name or null, if no such padstack exists. */
   public Padstack get(String p_name) {
-    Iterator<Padstack> it = padstack_arr.iterator();
-    while (it.hasNext()) {
-      Padstack curr_padstack = it.next();
+    for (Padstack curr_padstack : padstack_arr) {
       if (curr_padstack != null && curr_padstack.name.equalsIgnoreCase(p_name)) {
         return curr_padstack;
       }

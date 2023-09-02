@@ -13,7 +13,6 @@ import app.freerouting.rules.Nets;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -249,9 +248,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public boolean is_overlap() {
     Set<Item> start_contacts = this.get_start_contacts();
     Set<Item> end_contacts = this.get_end_contacts();
-    Iterator<Item> it = end_contacts.iterator();
-    while (it.hasNext()) {
-      if (start_contacts.contains(it.next())) {
+    for (Item curr_end_contact : end_contacts) {
+      if (start_contacts.contains(curr_end_contact)) {
         return true;
       }
     }

@@ -1,7 +1,7 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.geometry.planar.TileShape;
-import java.util.Iterator;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -79,9 +79,7 @@ public abstract class FreeSpaceExpansionRoom implements ExpansionRoom {
     if (doors == null) {
       return false;
     }
-    Iterator<ExpansionDoor> it = doors.iterator();
-    while (it.hasNext()) {
-      ExpansionDoor curr_door = it.next();
+    for (ExpansionDoor curr_door : doors) {
       if (curr_door.first_room == p_other || curr_door.second_room == p_other) {
         return true;
       }

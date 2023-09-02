@@ -22,7 +22,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -322,9 +321,7 @@ public abstract class Item
       Collection<TreeEntry> curr_overlapping_items =
           default_tree.overlapping_tree_entries_with_clearance(
               curr_tile_shape, shape_layer(i), new int[0], clearance_class);
-      Iterator<TreeEntry> it = curr_overlapping_items.iterator();
-      while (it.hasNext()) {
-        TreeEntry curr_entry = it.next();
+      for (TreeEntry curr_entry : curr_overlapping_items) {
         if (!(curr_entry.object instanceof Item) || curr_entry.object == this) {
           continue;
         }
@@ -436,9 +433,7 @@ public abstract class Item
     for (int i = 0; i < this.tile_shape_count(); ++i) {
       Collection<SearchTreeObject> overlapping_items =
           board.overlapping_objects(get_tile_shape(i), shape_layer(i));
-      Iterator<SearchTreeObject> it = overlapping_items.iterator();
-      while (it.hasNext()) {
-        SearchTreeObject curr_ob = it.next();
+      for (SearchTreeObject curr_ob : overlapping_items) {
         if (!(curr_ob instanceof Item)) {
           continue;
         }
@@ -466,9 +461,7 @@ public abstract class Item
       }
       Collection<SearchTreeObject> overlapping_items =
           board.overlapping_objects(get_tile_shape(i), p_layer);
-      Iterator<SearchTreeObject> it = overlapping_items.iterator();
-      while (it.hasNext()) {
-        SearchTreeObject curr_ob = it.next();
+      for (SearchTreeObject curr_ob : overlapping_items) {
         if (!(curr_ob instanceof Item)) {
           continue;
         }
@@ -589,9 +582,7 @@ public abstract class Item
     if (contact_list == null) {
       return false;
     }
-    Iterator<Item> it = contact_list.iterator();
-    while (it.hasNext()) {
-      Item curr_contact = it.next();
+    for (Item curr_contact : contact_list) {
       if (curr_contact == p_come_from_item) {
         continue;
       }
@@ -644,9 +635,7 @@ public abstract class Item
     if (this.is_routable()) {
       result.add(this);
     }
-    Iterator<Item> it = contacts.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : contacts) {
       Point prev_contact_point = this.normal_contact_point(curr_item);
       if (prev_contact_point == null) {
         // no unique contact point
@@ -691,9 +680,7 @@ public abstract class Item
         int next_contact_layer = -1;
         Item next_contact = null;
         boolean fork_found = false;
-        Iterator<Item> curr_it = curr_ob_contacts.iterator();
-        while (curr_it.hasNext()) {
-          Item tmp_contact = curr_it.next();
+        for (Item tmp_contact : curr_ob_contacts) {
           int tmp_contact_layer = curr_item.first_common_layer(tmp_contact);
           if (tmp_contact_layer >= 0) {
             Point tmp_contact_point = curr_item.normal_contact_point(tmp_contact);

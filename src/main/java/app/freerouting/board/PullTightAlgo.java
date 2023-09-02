@@ -14,7 +14,6 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 /** Class with functionality for optimising traces and vias. */
@@ -142,12 +141,10 @@ public abstract class PullTightAlgo {
         // search in the ShapeSearchTree for all overlapping traces
         // with clip_shape on layer i
         Collection<SearchTreeObject> items = board.overlapping_objects(changed_region, i);
-        Iterator<SearchTreeObject> it = items.iterator();
-        while (it.hasNext()) {
+        for (SearchTreeObject curr_ob : items) {
           if (this.is_stop_requested()) {
             return;
           }
-          SearchTreeObject curr_ob = it.next();
           if (curr_ob instanceof PolylineTrace) {
             PolylineTrace curr_trace = (PolylineTrace) curr_ob;
             if (curr_trace.pull_tight(this)) {

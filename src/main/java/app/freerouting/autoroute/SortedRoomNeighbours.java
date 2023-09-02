@@ -378,15 +378,13 @@ public class SortedRoomNeighbours {
     }
     IncompleteFreeSpaceExpansionRoom curr_incomplete_room =
         (IncompleteFreeSpaceExpansionRoom) this.from_room;
-    Iterator<SortedRoomNeighbour> it = sorted_neighbours.iterator();
     int remove_edge_no = -1;
     Simplex room_simplex = curr_incomplete_room.get_shape().to_Simplex();
     double room_shape_area = room_simplex.area();
 
     int prev_edge_no = -1;
     int curr_edge_no = 0;
-    while (it.hasNext()) {
-      SortedRoomNeighbour next_neighbour = it.next();
+    for (SortedRoomNeighbour next_neighbour : sorted_neighbours) {
       if (next_neighbour.touching_side_no_of_room == prev_edge_no) {
         continue;
       }
@@ -445,10 +443,8 @@ public class SortedRoomNeighbours {
    */
   public void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine) {
     SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.last();
-    Iterator<SortedRoomNeighbour> it = this.sorted_neighbours.iterator();
     Simplex room_simplex = this.from_room.get_shape().to_Simplex();
-    while (it.hasNext()) {
-      SortedRoomNeighbour next_neighbour = it.next();
+    for (SortedRoomNeighbour next_neighbour : this.sorted_neighbours) {
       int first_touching_side_no = prev_neighbour.touching_side_no_of_room;
       int last_touching_side_no = next_neighbour.touching_side_no_of_room;
 

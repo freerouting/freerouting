@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 
 /** Methods to handle a Specctra session file. */
 public class SpecctraSesFileWriter {
@@ -115,9 +114,7 @@ public class SpecctraSesFileWriter {
       if (curr_component.get_package() == p_package) {
         // check, if not all items of the component are deleted
         boolean undeleted_item_found = false;
-        Iterator<Item> it = board_items.iterator();
-        while (it.hasNext()) {
-          Item curr_item = it.next();
+        for (Item curr_item : board_items) {
           if (curr_item.get_component_no() == curr_component.no) {
             undeleted_item_found = true;
             break;
@@ -314,9 +311,7 @@ public class SpecctraSesFileWriter {
       throws IOException {
     Collection<Item> net_items = p_board.get_connectable_items(p_net_no);
     boolean header_written = false;
-    Iterator<Item> it = net_items.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : net_items) {
       if (curr_item.get_fixed_state() == FixedState.SYSTEM_FIXED) {
         continue;
       }

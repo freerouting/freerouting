@@ -115,9 +115,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** fixes all items in this selected set */
   public void fix_items() {
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : item_list) {
       if (curr_ob.get_fixed_state().ordinal() < FixedState.USER_FIXED.ordinal()) {
         curr_ob.set_fixed_state(FixedState.USER_FIXED);
       }
@@ -129,9 +127,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** unfixes all items in this selected set */
   public void unfix_items() {
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : item_list) {
       curr_ob.unfix();
     }
     if (this.activityReplayFile != null) {
@@ -146,9 +142,7 @@ public class SelectedItemState extends InteractiveState {
     board.generate_snapshot();
     boolean items_already_connected = false;
     Net new_net = board.rules.nets.new_net(hdlg.get_locale());
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       if (curr_item instanceof ObstacleArea) {
         board.make_conductive((ObstacleArea) curr_item, new_net.net_number);
       } else if (curr_item instanceof DrillItem) {
@@ -241,9 +235,7 @@ public class SelectedItemState extends InteractiveState {
 
     // calculate the changed nets for updating the ratsnest
     Set<Integer> changed_nets = new TreeSet<>();
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       if (curr_item instanceof Connectable) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
           changed_nets.add(curr_item.get_net_no(i));
@@ -570,9 +562,7 @@ public class SelectedItemState extends InteractiveState {
 
     // collect all net numbers of the selected items
     Set<Integer> curr_net_no_set = new TreeSet<>();
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       if (curr_item instanceof Connectable) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
           curr_net_no_set.add(curr_item.get_net_no(i));
@@ -580,9 +570,7 @@ public class SelectedItemState extends InteractiveState {
       }
     }
     Set<Item> new_selected_items = new TreeSet<>();
-    Iterator<Integer> it2 = curr_net_no_set.iterator();
-    while (it2.hasNext()) {
-      int curr_net_no = it2.next();
+    for (int curr_net_no : curr_net_no_set) {
       new_selected_items.addAll(hdlg.get_routing_board().get_connectable_items(curr_net_no));
     }
     this.item_list = new_selected_items;
@@ -602,18 +590,14 @@ public class SelectedItemState extends InteractiveState {
 
     // collect all group numbers of the selected items
     Set<Integer> curr_group_no_set = new TreeSet<>();
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       if (curr_item.get_component_no() > 0) {
         curr_group_no_set.add(curr_item.get_component_no());
       }
     }
     Set<Item> new_selected_items = new TreeSet<>();
     new_selected_items.addAll(item_list);
-    Iterator<Integer> it2 = curr_group_no_set.iterator();
-    while (it2.hasNext()) {
-      int curr_group_no = it2.next();
+    for (int curr_group_no : curr_group_no_set) {
       new_selected_items.addAll(hdlg.get_routing_board().get_component_items(curr_group_no));
     }
     if (new_selected_items.isEmpty()) {
@@ -630,9 +614,7 @@ public class SelectedItemState extends InteractiveState {
   /** Select also all items belonging to any connected set of the current selected items. */
   public InteractiveState extent_to_whole_connected_sets() {
     Set<Item> new_selected_items = new TreeSet<>();
-    Iterator<Item> it = this.item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : this.item_list) {
       if (curr_item instanceof Connectable) {
         new_selected_items.addAll(curr_item.get_connected_set(-1));
       }
@@ -652,9 +634,7 @@ public class SelectedItemState extends InteractiveState {
   /** Select also all items belonging to any connection of the current selected items. */
   public InteractiveState extent_to_whole_connections() {
     Set<Item> new_selected_items = new TreeSet<>();
-    Iterator<Item> it = this.item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : this.item_list) {
       if (curr_item instanceof Connectable) {
         new_selected_items.addAll(curr_item.get_connection_items());
       }

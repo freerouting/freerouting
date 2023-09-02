@@ -11,7 +11,6 @@ import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -516,11 +515,8 @@ public class Sorted45DegreeRoomNeighbours {
           prev_neighbour, prev_neighbour, p_autoroute_engine);
       return;
     }
-    Iterator<SortedRoomNeighbour> it = this.sorted_neighbours.iterator();
 
-    while (it.hasNext()) {
-      SortedRoomNeighbour next_neighbour = it.next();
-
+    for (SortedRoomNeighbour next_neighbour : this.sorted_neighbours) {
       boolean insert_incomplete_room;
 
       if (this.completed_room instanceof ObstacleExpansionRoom

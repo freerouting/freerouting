@@ -6,7 +6,6 @@ import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -56,10 +55,8 @@ public abstract class DragState extends InteractiveState {
                     p_location.round(),
                     pick_layer,
                     p_board_handling.settings.item_selection_filter);
-        Iterator<Item> it = found_items.iterator();
-        while (it.hasNext()) {
+        for (Item curr_item : found_items) {
           item_found = true;
-          Item curr_item = it.next();
           if (curr_item instanceof Trace) {
             continue; // traces are not moved
           }

@@ -16,7 +16,6 @@ import app.freerouting.geometry.planar.TileShape;
 
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -144,9 +143,7 @@ public class ExpandTestState extends InteractiveState {
     Collection<Item> found_items = board.pick_items(p_location.round(), layer, null);
     Item route_item = null;
     int route_net_no = 0;
-    Iterator<Item> it = found_items.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : found_items) {
       if (curr_ob instanceof Connectable) {
         Item curr_item = curr_ob;
         if (curr_item.net_count() == 1 && curr_item.get_net_no(0) > 0) {

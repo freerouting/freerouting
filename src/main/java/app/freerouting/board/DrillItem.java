@@ -94,9 +94,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     // remember the contact situation of this drillitem  to traces on each layer
     Set<TraceInfo> contact_trace_info = new TreeSet<>();
     Collection<Item> contacts = this.get_normal_contacts();
-    Iterator<Item> it = contacts.iterator();
-    while (it.hasNext()) {
-      Item curr_contact = it.next();
+    for (Item curr_contact : contacts) {
       if (curr_contact instanceof Trace) {
         Trace curr_trace = (Trace) curr_contact;
         TraceInfo curr_trace_info =
@@ -132,9 +130,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     for (int i = 0; i < connect_points.length; ++i) {
       connect_points[i] = it3.next();
     }
-    Iterator<TraceInfo> it2 = contact_trace_info.iterator();
-    while (it2.hasNext()) {
-      TraceInfo curr_trace_info = it2.next();
+    for (TraceInfo curr_trace_info : contact_trace_info) {
       board.insert_trace(
           connect_points,
           curr_trace_info.layer,
@@ -272,10 +268,8 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     Point drill_center = this.get_center();
     TileShape search_shape = TileShape.get_instance(drill_center);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, -1);
-    Iterator<SearchTreeObject> it = overlaps.iterator();
     Set<Item> result = new TreeSet<>();
-    while (it.hasNext()) {
-      SearchTreeObject curr_ob = it.next();
+    for (SearchTreeObject curr_ob : overlaps) {
       if (!(curr_ob instanceof Item)) {
         continue;
       }

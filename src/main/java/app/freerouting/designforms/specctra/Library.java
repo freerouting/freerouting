@@ -148,9 +148,7 @@ public class Library extends ScopeKeyword {
     }
     ConvexShape[] padstack_shapes =
         new ConvexShape[p_layer_structure.arr.length];
-    Iterator<Shape> it = shape_list.iterator();
-    while (it.hasNext()) {
-      Shape pad_shape = it.next();
+    for (Shape pad_shape : shape_list) {
       app.freerouting.geometry.planar.Shape curr_shape =
           pad_shape.transform_to_board_rel(p_coordinate_transform);
       ConvexShape convex_shape;
@@ -245,9 +243,7 @@ public class Library extends ScopeKeyword {
 
     // Create the library packages on the board
     board.library.packages = new Packages(board.library.padstacks);
-    Iterator<Package> it = package_list.iterator();
-    while (it.hasNext()) {
-      Package curr_package = it.next();
+    for (Package curr_package : package_list) {
       app.freerouting.library.Package.Pin[] pin_arr =
           new app.freerouting.library.Package.Pin[curr_package.pin_info_arr.length];
       for (int i = 0; i < pin_arr.length; ++i) {
