@@ -99,13 +99,8 @@ public class SearchTreeManager {
   /** Actions to be done, when a value in the clearance matrix is changed interactively. */
   public void clearance_value_changed() {
     // delete all trees except the default tree
-    Iterator<ShapeSearchTree> it = this.compensated_search_trees.iterator();
-    while (it.hasNext()) {
-      ShapeSearchTree curr_tree = it.next();
-      if (curr_tree.compensated_clearance_class_no != default_tree.compensated_clearance_class_no) {
-        it.remove();
-      }
-    }
+    this.compensated_search_trees.removeIf(
+        t -> t.compensated_clearance_class_no != default_tree.compensated_clearance_class_no);
     if (this.clearance_compensation_used) {
       remove_all_board_items();
       insert_all_board_items();
@@ -171,13 +166,7 @@ public class SearchTreeManager {
 
   /** Clears all compensated trees used in the autoroute algorithm apart from the default tree. */
   public void reset_compensated_trees() {
-    Iterator<ShapeSearchTree> it = this.compensated_search_trees.iterator();
-    while (it.hasNext()) {
-      ShapeSearchTree curr_tree = it.next();
-      if (curr_tree != default_tree) {
-        it.remove();
-      }
-    }
+    this.compensated_search_trees.removeIf(t -> t != default_tree);
   }
 
   /** Reinsert all items into the search trees */

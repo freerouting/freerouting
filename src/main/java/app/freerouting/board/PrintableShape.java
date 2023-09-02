@@ -3,8 +3,10 @@ package app.freerouting.board;
 import app.freerouting.geometry.planar.FloatPoint;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Shape class used for printing a geometry.planar.Shape after transforming it to user coordinates.
@@ -89,14 +91,9 @@ public abstract class PrintableShape {
     public String toString() {
       ResourceBundle resources =
           ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
-      String result = resources.getString("polygon") + ": ";
-      for (int i = 0; i < corner_arr.length; ++i) {
-        if (i > 0) {
-          result += ", ";
-        }
-        result += corner_arr[i].to_string(this.locale);
-      }
-      return result;
+      return resources.getString("polygon") + ": " + Arrays.stream(corner_arr)
+          .map(c -> c.to_string(this.locale))
+          .collect(Collectors.joining(", "));
     }
   }
 }

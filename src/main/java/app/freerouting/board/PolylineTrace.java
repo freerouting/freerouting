@@ -214,12 +214,7 @@ public class PolylineTrace extends Trace implements Serializable {
     Collection<Item> contacts = get_normal_contacts(start_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
-      Iterator<Item> it = contacts.iterator();
-      while (it.hasNext()) {
-        if (it.next() instanceof ConductionArea) {
-          it.remove();
-        }
-      }
+      contacts.removeIf(c -> c instanceof ConductionArea);
     }
     if (contacts.size() != 1) {
       return false;
@@ -313,12 +308,7 @@ public class PolylineTrace extends Trace implements Serializable {
     Collection<Item> contacts = get_normal_contacts(end_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
-      Iterator<Item> it = contacts.iterator();
-      while (it.hasNext()) {
-        if (it.next() instanceof ConductionArea) {
-          it.remove();
-        }
-      }
+      contacts.removeIf(c -> c instanceof ConductionArea);
     }
     if (contacts.size() != 1) {
       return false;
