@@ -390,9 +390,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     }
     FloatPoint[] nearest_points = new FloatPoint[result_count];
     double[] min_dists = new double[result_count];
-    for (int i = 0; i < result_count; ++i) {
-      min_dists[i] = Double.MAX_VALUE;
-    }
+    Arrays.fill(min_dists, Double.MAX_VALUE);
 
     // calculate the distances to the nearest corners first
     for (int i = 0; i < line_count; ++i) {
@@ -485,9 +483,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
     FloatPoint[] translate_coors = new FloatPoint[result_count];
     double[] min_dists = new double[result_count];
-    for (int i = 0; i < result_count; ++i) {
-      min_dists[i] = Double.MAX_VALUE;
-    }
+    Arrays.fill(min_dists, Double.MAX_VALUE);
 
     int curr_ind = line_count - 1;
 
