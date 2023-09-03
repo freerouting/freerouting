@@ -3,7 +3,6 @@ package app.freerouting.geometry.planar;
 import app.freerouting.logger.FRLogger;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -285,7 +284,6 @@ public class Polyline implements Serializable {
     // corner array is not yet allocated
     {
       precalculated_float_corners = new FloatPoint[arr.length - 1];
-      Arrays.fill(precalculated_float_corners, null);
     }
     if (precalculated_float_corners[no] == null)
     // corner is not yet calculated
@@ -315,7 +313,6 @@ public class Polyline implements Serializable {
     // corner array is not yet allocated
     {
       precalculated_corners = new Point[arr.length - 1];
-      Arrays.fill(precalculated_corners, null);
     }
     if (precalculated_corners[no] == null)
     // corner is not yet calculated

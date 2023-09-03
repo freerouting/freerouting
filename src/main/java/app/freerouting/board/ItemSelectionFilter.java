@@ -24,7 +24,6 @@ public class ItemSelectionFilter implements Serializable {
   /** Creates a new filter with only p_item_type selected. */
   public ItemSelectionFilter(SelectableChoices p_item_type) {
     this.values = new boolean[SelectableChoices.values().length];
-    Arrays.fill(this.values, false);
     values[p_item_type.ordinal()] = true;
     values[SelectableChoices.FIXED.ordinal()] = true;
     values[SelectableChoices.UNFIXED.ordinal()] = true;
@@ -33,7 +32,6 @@ public class ItemSelectionFilter implements Serializable {
   /** Creates a new filter with only p_item_types selected. */
   public ItemSelectionFilter(SelectableChoices[] p_item_types) {
     this.values = new boolean[SelectableChoices.values().length];
-    Arrays.fill(this.values, false);
     for (int i = 0; i < p_item_types.length; ++i) {
       values[p_item_types[i].ordinal()] = true;
     }
