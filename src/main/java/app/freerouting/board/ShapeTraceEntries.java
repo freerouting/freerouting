@@ -144,6 +144,7 @@ public class ShapeTraceEntries {
       for (int curr_net_no_2 : p_net_nos_2) {
         if (curr_net_no_1 == curr_net_no_2) {
           net_no_found = true;
+          break;
         }
       }
       if (!net_no_found) {

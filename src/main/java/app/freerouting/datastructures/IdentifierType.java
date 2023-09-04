@@ -41,6 +41,7 @@ public class IdentifierType {
       for (String reserved_char : reserved_chars) {
         if (p_name.contains(reserved_char)) {
           need_quotes = true;
+          break;
         }
       }
 
@@ -48,6 +49,7 @@ public class IdentifierType {
       for (byte ch : p_name.getBytes(StandardCharsets.UTF_8)) {
         if (ch <= 0) {
           need_quotes = true;
+          break;
         }
       }
 
