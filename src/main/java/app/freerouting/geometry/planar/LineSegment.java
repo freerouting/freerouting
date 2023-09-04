@@ -153,8 +153,7 @@ public class LineSegment implements Serializable {
     } else {
       line_arr[3] = this.end;
     }
-    Simplex result = Simplex.get_instance(line_arr);
-    return result;
+    return Simplex.get_instance(line_arr);
   }
 
   /** Checks if p_point is contained in this line segment */
@@ -220,8 +219,7 @@ public class LineSegment implements Serializable {
     FloatPoint new_end_point = start_point_approx().change_length(end_point_approx(), p_new_length);
     Direction perpendicular_direction = this.middle.direction().turn_45_degree(2);
     Line new_end_line = new Line(new_end_point.round(), perpendicular_direction);
-    LineSegment result = new LineSegment(this.start, this.middle, new_end_line);
-    return result;
+    return new LineSegment(this.start, this.middle, new_end_line);
   }
 
   /**

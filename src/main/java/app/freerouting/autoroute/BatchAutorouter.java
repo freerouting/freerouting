@@ -398,10 +398,8 @@ public class BatchAutorouter {
             TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
       }
       // app.freerouting.tests.Validate.check("Autoroute  ", hdlg.get_routing_board());
-      boolean result =
-          autoroute_result == AutorouteEngine.AutorouteResult.ROUTED
+      return autoroute_result == AutorouteEngine.AutorouteResult.ROUTED
               || autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
-      return result;
     } catch (Exception e) {
       return false;
     }

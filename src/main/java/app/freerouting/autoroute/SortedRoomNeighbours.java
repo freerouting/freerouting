@@ -683,8 +683,7 @@ public class SortedRoomNeighbours {
           }
         }
       }
-      int result = Signum.as_int(delta_distance);
-      return result;
+      return Signum.as_int(delta_distance);
     }
 
     /** Returns the first corner of the intersection shape with the neighbour. */

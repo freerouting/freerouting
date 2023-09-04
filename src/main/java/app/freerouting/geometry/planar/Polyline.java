@@ -540,8 +540,7 @@ public class Polyline implements Serializable {
    */
   public IntBox offset_box(int p_half_width, int p_no) {
     LineSegment curr_line_segment = new LineSegment(this, p_no + 1);
-    IntBox result = curr_line_segment.bounding_box().offset(p_half_width);
-    return result;
+    return curr_line_segment.bounding_box().offset(p_half_width);
   }
 
   /** Returns the by p_vector translated polyline */
@@ -699,8 +698,7 @@ public class Polyline implements Serializable {
 
   /** Calculates the distance of p_from_point to the the nearest point on this polyline */
   public double distance(FloatPoint p_from_point) {
-    double result = p_from_point.distance(nearest_point_approx(p_from_point));
-    return result;
+    return p_from_point.distance(nearest_point_approx(p_from_point));
   }
 
   /**
@@ -873,8 +871,7 @@ public class Polyline implements Serializable {
       return null;
     }
     Line start_line = new Line(p_from_point, nearest_line.direction());
-    LineSegment result = new LineSegment(start_line, result_line, nearest_line);
-    return result;
+    return new LineSegment(start_line, result_line, nearest_line);
   }
 
   /**

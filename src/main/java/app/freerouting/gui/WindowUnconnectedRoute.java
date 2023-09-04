@@ -125,9 +125,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
 
     @Override
     public String toString() {
-
-      String result =
-          resources.getString("net")
+      return resources.getString("net")
               + " "
               + this.net.name
               + ": "
@@ -138,8 +136,6 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
               + resources.getString("via_count")
               + " "
               + this.via_count;
-
-      return result;
     }
 
     @Override

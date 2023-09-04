@@ -306,16 +306,14 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   public double max_width() {
     double width_1 = Math.max(rx - lx, uy - ly);
     double width2 = Math.max(urx - llx, lrx - ulx);
-    double result = Math.max(width_1, width2 / Limits.sqrt2);
-    return result;
+    return Math.max(width_1, width2 / Limits.sqrt2);
   }
 
   @Override
   public double min_width() {
     double width_1 = Math.min(rx - lx, uy - ly);
     double width2 = Math.min(urx - llx, lrx - ulx);
-    double result = Math.min(width_1, width2 / Limits.sqrt2);
-    return result;
+    return Math.min(width_1, width2 / Limits.sqrt2);
   }
 
   @Override
@@ -519,8 +517,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   /** Checks, if this IntOctagon is normalized. */
   public boolean is_normalized() {
     IntOctagon on = this.normalize();
-    boolean result =
-        lx == on.lx
+    return lx == on.lx
             && ly == on.ly
             && rx == on.rx
             && uy == on.uy
@@ -528,7 +525,6 @@ public class IntOctagon extends RegularTileShape implements Serializable {
             && lrx == on.lrx
             && ulx == on.ulx
             && urx == on.urx;
-    return result;
   }
 
   @Override
@@ -635,8 +631,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
   @Override
   public boolean is_contained_in(IntOctagon p_other) {
-    boolean result =
-        lx >= p_other.lx
+    return lx >= p_other.lx
             && ly >= p_other.ly
             && rx <= p_other.rx
             && uy <= p_other.uy
@@ -644,14 +639,11 @@ public class IntOctagon extends RegularTileShape implements Serializable {
             && ulx >= p_other.ulx
             && lrx <= p_other.lrx
             && urx <= p_other.urx;
-
-    return result;
   }
 
   @Override
   public IntOctagon union(IntOctagon p_other) {
-    IntOctagon result =
-        new IntOctagon(
+    return new IntOctagon(
             Math.min(lx, p_other.lx),
             Math.min(ly, p_other.ly),
             Math.max(rx, p_other.rx),
@@ -660,7 +652,6 @@ public class IntOctagon extends RegularTileShape implements Serializable {
             Math.max(lrx, p_other.lrx),
             Math.min(llx, p_other.llx),
             Math.max(urx, p_other.urx));
-    return result;
   }
 
   @Override

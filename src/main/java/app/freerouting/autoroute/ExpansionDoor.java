@@ -134,8 +134,7 @@ public class ExpansionDoor implements ExpandableObject {
     int section_count =
         (int) (door_line_segment.b.distance(door_line_segment.a) / c_max_door_section_width) + 1;
     this.allocate_sections(section_count);
-    FloatLine[] result = shrinked_line_segment.divide_segment_into_sections(section_count);
-    return result;
+    return shrinked_line_segment.divide_segment_into_sections(section_count);
   }
 
   /**

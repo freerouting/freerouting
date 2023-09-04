@@ -78,10 +78,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * p_ttree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int get_compensated_half_width(ShapeSearchTree p_search_tree) {
-    int result =
-        this.half_width
+    return this.half_width
             + p_search_tree.clearance_compensation_value(clearance_class_no(), this.layer);
-    return result;
   }
 
   @Override

@@ -56,8 +56,7 @@ public class WindowMessage extends WindowBase {
     int option =
         JOptionPane.showConfirmDialog(
             null, p_message, null, JOptionPane.YES_NO_OPTION);
-    boolean result = option == JOptionPane.YES_OPTION;
-    return result;
+    return option == JOptionPane.YES_OPTION;
   }
 
   /** Calls a dialog with an ok-button. */

@@ -141,13 +141,11 @@ public class CoordinateTransform implements Serializable {
     double ll_y = Math.min(corner_1.getY(), corner_2.getY());
     double dx = Math.abs(corner_2.getX() - corner_1.getX());
     double dy = Math.abs(corner_2.getY() - corner_1.getY());
-    Rectangle result =
-        new Rectangle(
+    return new Rectangle(
             (int) Math.floor(ll_x),
             (int) Math.floor(ll_y),
             (int) Math.ceil(dx),
             (int) Math.ceil(dy));
-    return result;
   }
 
   /**

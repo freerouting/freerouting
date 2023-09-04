@@ -218,8 +218,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     }
     Line[] cleaned_new_lines = new Line[new_line_index + 1];
     System.arraycopy(new_lines, 0, cleaned_new_lines, 0, cleaned_new_lines.length);
-    Polyline result = new Polyline(cleaned_new_lines);
-    return result;
+    return new Polyline(cleaned_new_lines);
   }
 
   /** tries to smoothen p_polyline by cutting of corners, if possible */

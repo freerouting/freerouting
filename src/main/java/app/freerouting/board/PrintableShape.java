@@ -65,8 +65,7 @@ public abstract class PrintableShape {
     public String toString() {
       ResourceBundle resources =
           ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
-      String result =
-          resources.getString("rectangle")
+      return resources.getString("rectangle")
               + ": "
               + resources.getString("lower_left")
               + " = "
@@ -75,7 +74,6 @@ public abstract class PrintableShape {
               + resources.getString("upper_right")
               + " = "
               + upper_right.to_string(this.locale);
-      return result;
     }
   }
 

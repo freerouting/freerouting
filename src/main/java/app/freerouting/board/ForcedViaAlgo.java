@@ -66,8 +66,7 @@ public class ForcedViaAlgo {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
 
-    ForcedPadAlgo.CheckDrillResult result =
-        forced_pad_algo.check_forced_pad(
+    return forced_pad_algo.check_forced_pad(
             tile_shape,
             from_side,
             p_layer,
@@ -79,7 +78,6 @@ public class ForcedViaAlgo {
             p_max_via_recursion_depth,
             false,
             null);
-    return result;
   }
 
   /**

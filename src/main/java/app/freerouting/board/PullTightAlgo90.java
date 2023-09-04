@@ -148,8 +148,7 @@ class PullTightAlgo90 extends PullTightAlgo {
 
     Line[] cleaned_new_lines = new Line[new_line_index + 1];
     System.arraycopy(new_lines, 0, cleaned_new_lines, 0, cleaned_new_lines.length);
-    Polyline result = new Polyline(cleaned_new_lines);
-    return result;
+    return new Polyline(cleaned_new_lines);
   }
 
   @Override

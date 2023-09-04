@@ -38,8 +38,7 @@ public class ExpandTestState extends InteractiveState {
 
   public static ExpandTestState get_instance(
       FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
-    ExpandTestState result = new ExpandTestState(p_location, p_return_state, p_board_handling);
-    return result;
+    return new ExpandTestState(p_location, p_return_state, p_board_handling);
   }
 
   @Override

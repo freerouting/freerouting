@@ -109,8 +109,7 @@ public class BoardLibrary implements Serializable {
    */
   public boolean remove_via_padstack(
       Padstack p_padstack, BasicBoard p_board) {
-    boolean result = via_padstacks.remove(p_padstack);
-    return result;
+    return via_padstacks.remove(p_padstack);
   }
 
   /**

@@ -121,8 +121,7 @@ public class ActivityReplayFile {
       this.pending_token = curr_ob;
       return null;
     }
-    ActivityReplayFileScope result = ActivityReplayFileScope.get_scope((String) curr_ob);
-    return result;
+    return ActivityReplayFileScope.get_scope((String) curr_ob);
   }
 
   /** adds an int to the ActivityReplayFile */
@@ -174,8 +173,7 @@ public class ActivityReplayFile {
       return result;
     }
     try {
-      Object result = this.scanner.next_token();
-      return result;
+      return this.scanner.next_token();
     } catch (IOException e) {
       FRLogger.error("ActivityReplayFile.next_token: IO error scanning file", e);
       return null;

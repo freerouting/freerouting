@@ -270,8 +270,7 @@ public class Component extends ScopeKeyword {
         FRLogger.warn("Component.read_place_scope: ) expected");
         return null;
       }
-      ComponentPlacement.ComponentLocation result =
-          new ComponentPlacement.ComponentLocation(
+      return new ComponentPlacement.ComponentLocation(
               name,
               location,
               is_front,
@@ -281,7 +280,6 @@ public class Component extends ScopeKeyword {
               keepout_infos,
               via_keepout_infos,
               place_keepout_infos);
-      return result;
     } catch (IOException e) {
       FRLogger.error("Component.read_scope: IO error scanning file", e);
       return null;

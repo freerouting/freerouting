@@ -830,8 +830,7 @@ public class PolylineTrace extends Trace implements Serializable {
       return null;
     }
     LineSegment curr_line_segment = new LineSegment(this.lines, p_index + 1);
-    TileShape result = curr_line_segment.to_simplex().simplify();
-    return result;
+    return curr_line_segment.to_simplex().simplify();
   }
 
   @Override

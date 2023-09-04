@@ -41,8 +41,7 @@ public class Simplex extends TileShape implements Serializable {
     // sort the lines in ascending direction
     Arrays.sort(curr_arr);
     Simplex curr_simplex = new Simplex(curr_arr);
-    Simplex result = curr_simplex.remove_redundant_lines();
-    return result;
+    return curr_simplex.remove_redundant_lines();
   }
 
   /** Return true, if this simplex is empty */
@@ -624,8 +623,7 @@ public class Simplex extends TileShape implements Serializable {
   /** Returns the intersection of this simplex and the shape p_other */
   @Override
   public TileShape intersection(TileShape p_other) {
-    TileShape result = p_other.intersection(this);
-    return result;
+    return p_other.intersection(this);
   }
 
   @Override

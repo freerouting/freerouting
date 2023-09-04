@@ -156,8 +156,7 @@ public class NetIncompletes {
       new_violation = trace_length - min_length;
     }
     this.length_violation = new_violation;
-    boolean result = Math.abs(new_violation - old_violation) > 0.1;
-    return result;
+    return Math.abs(new_violation - old_violation) > 0.1;
   }
 
   /**

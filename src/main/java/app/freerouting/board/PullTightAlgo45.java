@@ -214,8 +214,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     System.arraycopy(new_corners, 0, adjusted_corners, 0, new_corner_count);
     adjusted_corners[new_corner_count] = curr_corner[1];
     adjusted_corners[new_corner_count + 1] = curr_corner[2];
-    Polyline result = new Polyline(adjusted_corners);
-    return result;
+    return new Polyline(adjusted_corners);
   }
 
   /**

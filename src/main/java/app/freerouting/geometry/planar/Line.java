@@ -490,8 +490,7 @@ public class Line implements Comparable<Line>, Serializable {
     }
     double dy = p2.y - p1.y;
     double det = p1.x * p2.y - p2.x * p1.y;
-    double result = (dy * p_x - det) / dx;
-    return result;
+    return  (dy * p_x - det) / dx;
   }
 
   /**
@@ -508,8 +507,7 @@ public class Line implements Comparable<Line>, Serializable {
     }
     double dx = p2.x - p1.x;
     double det = p1.x * p2.y - p2.x * p1.y;
-    double result = (dx * p_y + det) / dy;
-    return result;
+    return  (dx * p_y + det) / dy;
   }
 
   /**

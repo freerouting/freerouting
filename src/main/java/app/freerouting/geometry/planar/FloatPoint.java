@@ -94,8 +94,7 @@ public class FloatPoint implements Serializable {
     double delta_y = this.y - p_other.y;
     delta_x *= p_horizontal_weight;
     delta_y *= p_vertical_weight;
-    double result = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
-    return result;
+    return Math.sqrt(delta_x * delta_x + delta_y * delta_y);
   }
 
   /** rounds the coordinates from an object of class Point_double to an object of class IntPoint */

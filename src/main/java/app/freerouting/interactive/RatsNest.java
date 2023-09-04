@@ -201,9 +201,7 @@ public class RatsNest {
 
     @Override
     public String toString() {
-
-      String result = this.net.name + ": " + item_info(from_item) + " - " + item_info(to_item);
-      return result;
+      return this.net.name + ": " + item_info(from_item) + " - " + item_info(to_item);
     }
 
     private String item_info(Item p_item) {

@@ -21,8 +21,7 @@ public class SelectMenuState extends MenuState {
 
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
-    InteractiveState result = select_items(p_location);
-    return result;
+    return select_items(p_location);
   }
 
   @Override

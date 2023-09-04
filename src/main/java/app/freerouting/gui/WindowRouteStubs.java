@@ -147,8 +147,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
               .layer_structure
               .arr[layer_no]
               .name;
-      String result =
-          item_string
+      return item_string
               + " "
               + resources.getString("stub_net")
               + " "
@@ -161,7 +160,6 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
               + resources.getString("on_layer")
               + " "
               + layer_name;
-      return result;
     }
 
     @Override
