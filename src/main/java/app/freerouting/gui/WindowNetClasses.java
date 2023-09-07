@@ -457,7 +457,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   /** Table model of the net rule table. */
   private class NetClassTableModel extends AbstractTableModel {
 
-    private Object[][] data = null;
+    private Object[][] data;
     private String[] column_names;
 
     public NetClassTableModel() {

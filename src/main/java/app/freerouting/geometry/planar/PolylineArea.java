@@ -16,7 +16,7 @@ public class PolylineArea implements Area, Serializable {
 
   final PolylineShape border_shape;
   final PolylineShape[] hole_arr;
-  private transient TileShape[] precalculated_convex_pieces = null;
+  private transient TileShape[] precalculated_convex_pieces;
 
   /** Creates a new instance of PolylineShapeWithHoles */
   public PolylineArea(PolylineShape p_border_shape, PolylineShape[] p_hole_arr) {

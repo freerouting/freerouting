@@ -24,8 +24,8 @@ import java.util.TreeSet;
 public class ExpandTestState extends InteractiveState {
 
   private boolean in_autoroute = false;
-  private MazeSearchAlgo maze_search_algo = null;
-  private LocateFoundConnectionAlgo autoroute_result = null;
+  private MazeSearchAlgo maze_search_algo;
+  private LocateFoundConnectionAlgo autoroute_result;
   private AutorouteControl control_settings;
   private AutorouteEngine autoroute_engine;
 

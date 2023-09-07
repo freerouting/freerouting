@@ -19,9 +19,9 @@ public class Polyline implements Serializable {
   private static final boolean USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES = true;
   /** the array of lines of this Polyline. */
   public final Line[] arr;
-  private transient FloatPoint[] precalculated_float_corners = null;
-  private transient Point[] precalculated_corners = null;
-  private transient IntBox precalculated_bounding_box = null;
+  private transient FloatPoint[] precalculated_float_corners;
+  private transient Point[] precalculated_corners;
+  private transient IntBox precalculated_bounding_box;
 
   /**
    * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so that the i-th corner

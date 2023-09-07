@@ -37,7 +37,7 @@ public class Pin extends DrillItem implements Serializable {
   public final int pin_no;
   /** The pin, this pin was changed to by swapping or this pin, if no pin swap accured. */
   private Pin changed_to = this;
-  private transient Shape[] precalculated_shapes = null;
+  private transient Shape[] precalculated_shapes;
 
   /**
    * Creates a new instance of Pin with the input parameters. (p_to_layer - p_from_layer + 1) shapes

@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 public class ItemColorTableModel extends ColorTableModel implements Serializable {
 
   private transient boolean item_colors_precalculated = false;
-  private transient Color[][] precalculated_item_colors = null;
+  private transient Color[][] precalculated_item_colors;
 
   public ItemColorTableModel(
       LayerStructure p_layer_structure, Locale p_locale) {

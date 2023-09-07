@@ -25,9 +25,9 @@ import java.util.TreeSet;
 /** Interactive routing state. */
 public class RouteState extends InteractiveState {
 
-  protected Route route = null;
+  protected Route route;
   protected boolean observers_activated = false;
-  private Set<Item> routing_target_set = null;
+  private Set<Item> routing_target_set;
 
   /**
    * Creates a new instance of RouteState If p_logfile != null, the creation of the route is stored

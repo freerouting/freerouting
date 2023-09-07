@@ -128,8 +128,8 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   private static class ColorRenderer extends JLabel implements TableCellRenderer {
-    Border unselectedBorder = null;
-    Border selectedBorder = null;
+    Border unselectedBorder;
+    Border selectedBorder;
     boolean isBordered;
 
     public ColorRenderer(boolean p_is_bordered) {
@@ -171,7 +171,7 @@ public class ColorManager extends BoardSavableSubWindow {
    * implementation of TableCellEditor methods from the source code for DefaultCellEditor.
    */
   private static class ColorEditor extends DefaultCellEditor {
-    Color currentColor = null;
+    Color currentColor;
 
     public ColorEditor(JButton b) {
       super(new JCheckBox()); // Unfortunately, the constructor

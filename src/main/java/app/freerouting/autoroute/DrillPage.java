@@ -23,7 +23,7 @@ class DrillPage implements ExpandableObject {
   private final MazeSearchElement[] maze_search_info_arr;
   private final RoutingBoard board;
   /** The list of expansion drills on this page. Null, if not yet calculated. */
-  private Collection<ExpansionDrill> drills = null;
+  private Collection<ExpansionDrill> drills;
   /** The number of the net, for which the drills are calculated */
   private int net_no = -1;
 

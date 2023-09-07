@@ -34,7 +34,7 @@ public class ReadScopeParameter {
    * The names of the via padstacks filled while reading the structure scope and evaluated after
    * reading the library scope.
    */
-  Collection<String> via_padstack_names = null;
+  Collection<String> via_padstack_names;
 
   boolean via_at_smd_allowed = false;
   AngleRestriction snap_angle =
@@ -50,17 +50,17 @@ public class ReadScopeParameter {
   /** The following objects are from the parser scope. */
   String string_quote = "\"";
 
-  String host_cad = null;
-  String host_version = null;
+  String host_cad;
+  String host_version;
 
   boolean dsn_file_generated_by_host = true;
 
   boolean board_outline_ok = true;
-  Communication.SpecctraParserInfo.WriteResolution write_resolution = null;
+  Communication.SpecctraParserInfo.WriteResolution write_resolution;
   /** The following objects will be initialised when the structure scope is read. */
-  CoordinateTransform coordinate_transform = null;
-  LayerStructure layer_structure = null;
-  app.freerouting.interactive.AutorouteSettings autoroute_settings = null;
+  CoordinateTransform coordinate_transform;
+  LayerStructure layer_structure;
+  app.freerouting.interactive.AutorouteSettings autoroute_settings;
   app.freerouting.board.Unit unit = app.freerouting.board.Unit.MIL;
   int resolution = 100; // default resulution
   /** Creates a new instance of ReadScopeParameter */

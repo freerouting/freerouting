@@ -14,8 +14,8 @@ public class LineSegment implements Serializable {
   private final Line start;
   private final Line middle;
   private final Line end;
-  private transient Point precalculated_start_point = null;
-  private transient Point precalculated_end_point = null;
+  private transient Point precalculated_start_point;
+  private transient Point precalculated_end_point;
 
   /**
    * Creates a line segment from the 3 input lines. It starts at the intersection of p_start_line

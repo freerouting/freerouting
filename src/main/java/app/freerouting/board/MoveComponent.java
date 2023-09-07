@@ -22,7 +22,7 @@ public class MoveComponent {
   private final RoutingBoard board;
   private boolean all_items_movable = true;
   private SortedItem[] item_group_arr;
-  private Component component = null;
+  private Component component;
   /** Creates a new instance of MoveItemGroup */
   public MoveComponent(
       Item p_item,

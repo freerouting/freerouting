@@ -11,10 +11,10 @@ import java.io.InputStream;
  * ActivityReplayFile to track the actions in the interactive board handling for automatic replay.
  */
 public class ActivityReplayFile {
-  private ActivityReplayFileScanner scanner = null;
-  private FileWriter file_writer = null;
+  private ActivityReplayFileScanner scanner;
+  private FileWriter file_writer;
   private boolean write_enabled = false;
-  private Object pending_token = null;
+  private Object pending_token;
 
   /** opens the ActivityReplayFile for reading */
   public boolean start_read(InputStream p_input_stream) {

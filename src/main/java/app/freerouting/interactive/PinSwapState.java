@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class PinSwapState extends InteractiveState {
   private final Pin from_pin;
-  private Pin to_pin = null;
+  private Pin to_pin;
   private final Set<Pin> swappable_pins;
 
   /** Creates a new instance of PinSwapState */

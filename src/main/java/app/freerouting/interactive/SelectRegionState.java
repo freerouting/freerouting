@@ -8,8 +8,8 @@ import java.awt.Graphics;
 /** Common base class for interactive selection of a rectangle. */
 public class SelectRegionState extends InteractiveState {
 
-  protected FloatPoint corner1 = null;
-  protected FloatPoint corner2 = null;
+  protected FloatPoint corner1;
+  protected FloatPoint corner2;
 
   /** Creates a new instance of SelectRegionState */
   protected SelectRegionState(

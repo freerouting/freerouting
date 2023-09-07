@@ -20,7 +20,7 @@ import java.util.Locale;
 public class ComponentOutline extends Item implements Serializable {
 
   private final Area relative_area;
-  private transient Area precalculated_absolute_area = null;
+  private transient Area precalculated_absolute_area;
   private Vector translation;
   private double rotation_in_degree;
   private boolean is_front;

@@ -64,11 +64,11 @@ public class BoardHandling extends BoardHandlingHeadless {
 
   private final ResourceBundle resources;
   /** The graphical context for drawing the board. */
-  public GraphicsContext graphics_context = null;
+  public GraphicsContext graphics_context;
   /** For transforming coordinates between the user and the board coordinate space */
-  public CoordinateTransform coordinate_transform = null;
+  public CoordinateTransform coordinate_transform;
   /** The currently active interactive state. */
-  InteractiveState interactive_state = null;
+  InteractiveState interactive_state;
   /** To repaint the board immediately for example when reading a logfile. */
   boolean paint_immediately = false;
   /** thread pool size */
@@ -78,18 +78,18 @@ public class BoardHandling extends BoardHandlingHeadless {
   private String hybrid_ratio;
   private ItemSelectionStrategy item_selection_strategy;
   /** Used for running an interactive action in a separate thread. */
-  private InteractiveActionThread interactive_action_thread = null;
+  private InteractiveActionThread interactive_action_thread;
   /** To display all incomplete connections on the screen. */
-  private RatsNest ratsnest = null;
+  private RatsNest ratsnest;
   /** To display all clearance violations between items on the screen. */
-  private ClearanceViolations clearance_violations = null;
+  private ClearanceViolations clearance_violations;
   /**
    * True if currently a logfile is being processed. Used to prevent interactive changes of the
    * board database in this case.
    */
   private boolean board_is_read_only = false;
   /** The current position of the mouse pointer. */
-  private FloatPoint current_mouse_position = null;
+  private FloatPoint current_mouse_position;
 
   private static long last_repainted_time = 0;
   private static long repaint_interval = 1000;

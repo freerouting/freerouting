@@ -14,7 +14,7 @@ import java.util.Collection;
 
 /** Some consistency checking on a routing board. */
 public class Validate {
-  private static int[] last_violation_count = null;
+  private static int[] last_violation_count;
   private static boolean first_time = true;
   private static int prev_stub_count = 0;
 

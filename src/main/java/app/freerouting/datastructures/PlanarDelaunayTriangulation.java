@@ -320,7 +320,7 @@ public class PlanarDelaunayTriangulation {
    * of the triangulationn at some earlier stage, but have been replaced their children.
    */
   private static class TriangleGraph {
-    private Triangle anchor = null;
+    private Triangle anchor;
 
     public TriangleGraph(Triangle p_triangle) {
       if (p_triangle != null) {
@@ -390,9 +390,9 @@ public class PlanarDelaunayTriangulation {
     /** The unique id number of this triangle. */
     private final int id_no;
     /** The triangle on the left side of this edge. */
-    private Triangle left_triangle = null;
+    private Triangle left_triangle;
     /** The triangle on the right side of this edge. */
-    private Triangle right_triangle = null;
+    private Triangle right_triangle;
 
     public Edge(Corner p_start_corner, Corner p_end_corner) {
       start_corner = p_start_corner;
@@ -610,7 +610,7 @@ public class PlanarDelaunayTriangulation {
      * if this triagngle is an inner node because left_triangle and right_triangle of edge lines
      * point only to leaf nodes.
      */
-    private boolean[] is_on_the_left_of_edge_line = null;
+    private boolean[] is_on_the_left_of_edge_line;
     /** The children of this triangle when used as a node in the triangle search graph. */
     private final Collection<Triangle> children;
 

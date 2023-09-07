@@ -37,7 +37,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
   /** x axis intersection of the upper right border line */
   public final int urx;
   /** Result of to_simplex() memorized for performance reasons. */
-  private Simplex precalculated_to_simplex = null;
+  private Simplex precalculated_to_simplex;
 
   /**
    * Creates an IntOctagon from 8 integer values. p_lx is the smallest x value of the shape. p_ly is

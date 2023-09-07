@@ -49,9 +49,9 @@ public class AutorouteEngine {
   /** To stop the expansion algorithm after a time limit is exceeded. */
   private TimeLimit time_limit;
   /** The list of incomplete expansion rooms on the routing board */
-  private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms = null;
+  private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms;
   /** The list of complete expansion rooms on the routing board */
-  private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms = null;
+  private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms;
   /** The count of expansion rooms created so far */
   private int expansion_room_instance_count = 0;
 

@@ -40,7 +40,7 @@ public class BatchAutorouter {
   private final LinkedList<Integer> diffBetweenBoards = new LinkedList<>();
   private boolean is_interrupted = false;
   /** Used to draw the airline of the current routed incomplete. */
-  private FloatLine air_line = null;
+  private FloatLine air_line;
 
   /** Creates a new batch autorouter. */
   public BatchAutorouter(

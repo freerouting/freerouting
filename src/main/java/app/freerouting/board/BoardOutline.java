@@ -31,11 +31,11 @@ public class BoardOutline extends Item implements Serializable {
    * The board shape outside the outline curves, where a keepout will be generated The outline
    * curves are holes of the keepout_area.
    */
-  private Area keepout_area = null;
+  private Area keepout_area;
   /**
    * Used instead of keepout_area if only the line shapes of the outlines are inserted as keepout.
    */
-  private TileShape[] keepout_lines = null;
+  private TileShape[] keepout_lines;
   private boolean keepout_outside_outline = false;
 
   /** Creates a new instance of BoardOutline */

@@ -18,10 +18,10 @@ public class Simplex extends TileShape implements Serializable {
   public static final Simplex EMPTY = new Simplex(new Line[0]);
   private final Line[] arr;
   /** the following fields are for storing precalculated data */
-  private transient Point[] precalculated_corners = null;
-  private transient FloatPoint[] precalculated_float_corners = null;
-  private transient IntBox precalculated_bounding_box = null;
-  private transient IntOctagon precalculated_bounding_octagon = null;
+  private transient Point[] precalculated_corners;
+  private transient FloatPoint[] precalculated_float_corners;
+  private transient IntBox precalculated_bounding_box;
+  private transient IntOctagon precalculated_bounding_octagon;
 
   /**
    * Constructs a Simplex from the directed lines in p_line_arr. The simplex will not be normalized.

@@ -44,14 +44,14 @@ public abstract class Item
   /** the index in the clearance matrix describing the required spacing to other items */
   private int clearance_class;
   /** points to the entries of this item in the ShapeSearchTrees */
-  private transient ItemSearchTreesInfo search_trees_info = null;
+  private transient ItemSearchTreesInfo search_trees_info;
   private FixedState fixed_state;
   /** not 0, if this item belongs to a component */
   private int component_no;
   /** False, if the item is deleted or not inserted into the board */
   private boolean on_the_board = false;
   /** Temporary data used in the autoroute algorithm. */
-  private transient ItemAutorouteInfo autoroute_info = null;
+  private transient ItemAutorouteInfo autoroute_info;
   public double smallest_clearance;
 
   Item(

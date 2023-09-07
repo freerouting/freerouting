@@ -71,7 +71,7 @@ public class Route {
   private Collection<Item> target_traces_and_areas; // from traces and conduction areas
   private FloatPoint nearest_target_point;
   private Item nearest_target_item;
-  private Item shove_failing_obstacle = null;
+  private Item shove_failing_obstacle;
   /**
    * Starts routing a connection. p_pen_half_width_arr is provided because it may be different from
    * the half width array in p_board.rules.

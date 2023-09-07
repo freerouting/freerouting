@@ -52,7 +52,7 @@ public class MazeSearchAlgo {
   private final ShapeSearchTree search_tree;
   private final Random random_generator = new Random();
   /** The destination door found by the expanding algorithm. */
-  private ExpandableObject destination_door = null;
+  private ExpandableObject destination_door;
   private int section_no_of_destination_door = 0;
 
   /** Creates a new instance of MazeSearchAlgo */

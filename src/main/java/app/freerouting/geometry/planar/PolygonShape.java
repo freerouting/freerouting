@@ -18,9 +18,9 @@ public class PolygonShape extends PolylineShape {
   private static final Random random_generator = new Random(seed);
   public final Point[] corners;
   /** the following fields are for storing precalculated data */
-  private transient IntBox precalculated_bounding_box = null;
-  private transient IntOctagon precalculated_bounding_octagon = null;
-  private transient TileShape[] precalculated_convex_pieces = null;
+  private transient IntBox precalculated_bounding_box;
+  private transient IntOctagon precalculated_bounding_octagon;
+  private transient TileShape[] precalculated_convex_pieces;
 
   /** Creates a new instance of PolygonShape */
   public PolygonShape(Polygon p_polygon) {

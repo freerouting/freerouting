@@ -24,7 +24,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   // ** identification number for implementong the Comparable interfacw */
   private final int id_no;
   /** The array of entries in the SearchTree. Consists of just one element */
-  private ShapeTree.Leaf[] tree_entries = null;
+  private ShapeTree.Leaf[] tree_entries;
   /** The list of doors to items of the own net */
   private Collection<TargetItemExpansionDoor> target_doors;
   private boolean room_is_net_dependent = false;

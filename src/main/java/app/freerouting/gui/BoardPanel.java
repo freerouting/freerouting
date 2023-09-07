@@ -45,15 +45,15 @@ public class BoardPanel extends JPanel {
   public PopupMenuDynamicRoute popup_menu_dynamic_route;
   public PopupMenuStitchRoute popup_menu_stitch_route;
   public JPopupMenu popup_menu_select;
-  BoardHandling board_handling = null;
-  Point2D right_button_click_location = null;
+  BoardHandling board_handling;
+  Point2D right_button_click_location;
   private Robot robot;
-  private Point middle_drag_position = null;
+  private Point middle_drag_position;
   /**
    * Defines the appearance of the custom custom_cursor in the board panel. Null, if the standard
    * custom_cursor is used.
    */
-  private Cursor custom_cursor = null;
+  private Cursor custom_cursor;
 
   /** Creates a new BoardPanel in an Application */
   public BoardPanel(

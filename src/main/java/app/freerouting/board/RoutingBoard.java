@@ -38,8 +38,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /** the area marked for optimizing the route */
   transient ChangedArea changed_area;
   /** Contains the database for the auto-route algorithm. */
-  private transient AutorouteEngine autoroute_engine = null;
-  private transient Item shove_failing_obstacle = null;
+  private transient AutorouteEngine autoroute_engine;
+  private transient Item shove_failing_obstacle;
   private transient int shove_failing_layer = -1;
 
   /**

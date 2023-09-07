@@ -12,7 +12,7 @@ public class ItemAutorouteInfo {
   private final Item item;
   /** Defines, if this item belongs to the start or destination set of the maze search algorithm */
   private boolean start_info;
-  private Connection precalculated_connnection = null;
+  private Connection precalculated_connnection;
   /** ExpansionRoom for pushing or ripping the this object for each tree shape. */
   private ObstacleExpansionRoom[] expansion_room_arr;
 

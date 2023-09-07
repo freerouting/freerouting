@@ -12,14 +12,14 @@ import java.util.Vector;
 /** Describes a board library of packages and padstacks. */
 public class BoardLibrary implements Serializable {
 
-  public Padstacks padstacks = null;
-  public Packages packages = null;
+  public Padstacks padstacks;
+  public Packages packages;
   /** Contains information for gate swap and pin swap in the Specctra-dsn format. */
   public LogicalParts logical_parts = new LogicalParts();
   /**
    * The subset of padstacks in the board library, which can be used in routing for inserting vias.
    */
-  private List<Padstack> via_padstacks = null;
+  private List<Padstack> via_padstacks;
 
   /** Creates a new instance of BoardLibrary */
   public BoardLibrary(Padstacks p_padstacks, Packages p_packages) {

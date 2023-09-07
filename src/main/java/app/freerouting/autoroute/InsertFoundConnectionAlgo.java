@@ -24,8 +24,8 @@ public class InsertFoundConnectionAlgo {
 
   private final RoutingBoard board;
   private final AutorouteControl ctrl;
-  private IntPoint last_corner = null;
-  private IntPoint first_corner = null;
+  private IntPoint last_corner;
+  private IntPoint first_corner;
 
   /** Creates a new instance of InsertFoundConnectionAlgo */
   private InsertFoundConnectionAlgo(RoutingBoard p_board, AutorouteControl p_ctrl) {

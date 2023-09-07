@@ -1151,7 +1151,7 @@ class Structure extends ScopeKeyword {
     Collection<Layer> layer_info = new LinkedList<>();
     Shape bounding_shape;
     List<Shape> outline_shapes = new LinkedList<>();
-    String outline_clearance_class_name = null;
+    String outline_clearance_class_name;
     int found_layer_count = 0;
     Collection<Rule> default_rules = new LinkedList<>();
     Collection<LayerRule> layer_dependent_rules = new LinkedList<>();

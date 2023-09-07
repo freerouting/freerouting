@@ -17,7 +17,7 @@ public class ExpansionDoor implements ExpandableObject {
   /**
    * each section of the following arrray can be expanded seperately by the maze search algorithm
    */
-  MazeSearchElement[] section_arr = null;
+  MazeSearchElement[] section_arr;
 
   /** Creates a new instance of ExpansionDoor */
   public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room, int p_dimension) {

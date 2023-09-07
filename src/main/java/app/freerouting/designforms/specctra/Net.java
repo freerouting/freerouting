@@ -14,7 +14,7 @@ public class Net {
 
   public final Id id;
   /** List of elements of type Pin. */
-  private Set<Pin> pin_list = null;
+  private Set<Pin> pin_list;
 
   /** Creates a new instance of Net */
   public Net(Id p_net_id) {

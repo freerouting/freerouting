@@ -40,8 +40,8 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
   private final ResourceBundle resources;
   protected JLabel list_empty_message;
   protected JList<Object> list;
-  private JScrollPane list_scroll_pane = null;
-  private DefaultListModel<Object> list_model = null;
+  private JScrollPane list_scroll_pane;
+  private DefaultListModel<Object> list_model;
   /** Creates a new instance of ObjectListWindow */
   public WindowObjectList(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;

@@ -13,10 +13,10 @@ public class StartupOptions {
   boolean show_help_option = false;
   boolean session_file_option = false;
   boolean webstart_option = false;
-  String design_input_filename = null;
-  String design_output_filename = null;
-  String design_rules_filename = null;
-  String design_input_directory_name = null;
+  String design_input_filename;
+  String design_output_filename;
+  String design_rules_filename;
+  String design_input_directory_name;
   int max_passes = 99999;
   //int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   int num_threads = 1;

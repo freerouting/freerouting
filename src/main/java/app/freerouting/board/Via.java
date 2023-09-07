@@ -28,9 +28,9 @@ public class Via extends DrillItem implements Serializable {
   /** True, if coppersharing of this via with smd pins of the same net is allowed. */
   public final boolean attach_allowed;
   private Padstack padstack;
-  private transient Shape[] precalculated_shapes = null;
+  private transient Shape[] precalculated_shapes;
   /** Temporary data used in the autoroute algorithm. */
-  private transient ExpansionDrill autoroute_drill_info = null;
+  private transient ExpansionDrill autoroute_drill_info;
 
   /** Creates a new instance of Via with the input parameters */
   public Via(

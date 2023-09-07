@@ -36,7 +36,7 @@ import java.util.TreeSet;
 public class SelectedItemState extends InteractiveState {
 
   private Set<Item> item_list;
-  private ClearanceViolations clearance_violations = null;
+  private ClearanceViolations clearance_violations;
 
   /** Creates a new instance of SelectedItemState */
   private SelectedItemState(

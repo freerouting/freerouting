@@ -21,15 +21,15 @@ public class BoardHandlingHeadless implements IBoardHandling {
   /** The file used for logging interactive action, so that they can be replayed later */
   public final ActivityReplayFile activityReplayFile = new ActivityReplayFile();
   /** The current settings for interactive actions on the board */
-  public Settings settings = null;
+  public Settings settings;
   /** The board database used in this interactive handling. */
-  protected RoutingBoard board = null;
+  protected RoutingBoard board;
   protected Locale locale;
   protected boolean save_intermediate_stages;
   protected float optimization_improvement_threshold;
-  private byte[] serializedBoard = null;
+  private byte[] serializedBoard;
   /** The listener for the autorouter thread */
-  public ThreadActionListener autorouter_listener = null;
+  public ThreadActionListener autorouter_listener;
 
   public BoardHandlingHeadless(
       Locale p_locale,

@@ -621,8 +621,8 @@ public class SortedRoomNeighbours {
      * neighbour room
      */
     public final boolean neighbour_room_touch_is_corner;
-    private Point precalculated_first_corner = null;
-    private Point precalculated_last_corner = null;
+    private Point precalculated_first_corner;
+    private Point precalculated_last_corner;
 
     public SortedRoomNeighbour(
         TileShape p_neighbour_shape,

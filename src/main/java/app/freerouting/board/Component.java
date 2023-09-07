@@ -32,7 +32,7 @@ public class Component
   /** The rotation of the library package of the component in degree */
   private double rotation_in_degree;
   /** Contains information for gate swapping and pin swapping, if != null */
-  private LogicalPart logical_part = null;
+  private LogicalPart logical_part;
   /** If false, the component will be placed on the back side of the board. */
   private boolean on_front;
 

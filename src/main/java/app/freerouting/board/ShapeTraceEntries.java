@@ -24,7 +24,7 @@ public class ShapeTraceEntries {
   private int trace_piece_count;
   private int max_stack_level;
   private boolean shape_contains_trace_tails = false;
-  private Item found_obstacle = null;
+  private Item found_obstacle;
 
   /**
    * Used for shoving traces and vias out of the input shape. p_from_side.no is the side of p_shape,
