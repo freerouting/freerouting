@@ -45,7 +45,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
   @Override
   protected void select_instances() {
     List<Object> selected_packages = list.getSelectedValuesList();
-    if (selected_packages.size() <= 0) {
+    if (selected_packages.isEmpty()) {
       return;
     }
     RoutingBoard routing_board =

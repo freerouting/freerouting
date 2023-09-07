@@ -63,7 +63,7 @@ public class CopyItemState extends InteractiveState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    if (p_item_list.size() == 0) {
+    if (p_item_list.isEmpty()) {
       return null;
     }
     p_board_handling.remove_ratsnest(); // copying an item may change the connectivity.

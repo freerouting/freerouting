@@ -33,7 +33,7 @@ public class MenuState extends InteractiveState {
   public InteractiveState select_items(FloatPoint p_location) {
     this.hdlg.display_layer_messsage();
     Set<Item> picked_items = hdlg.pick_items(p_location);
-    boolean something_found = (picked_items.size() > 0);
+    boolean something_found = (!picked_items.isEmpty());
     InteractiveState result;
     if (something_found) {
       result = SelectedItemState.get_instance(picked_items, this, hdlg, this.activityReplayFile);
@@ -53,7 +53,7 @@ public class MenuState extends InteractiveState {
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
     Collection<Item> picked_items = hdlg.pick_items(p_location, selection_filter);
     InteractiveState result = this;
-    if (picked_items.size() > 0) {
+    if (!picked_items.isEmpty()) {
       Item first_item = picked_items.iterator().next();
       if (!(first_item instanceof Pin)) {
         FRLogger.warn("MenuState.swap_pin: Pin expected");

@@ -489,7 +489,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       List<ViaRule> selected_objects = rule_list.getSelectedValuesList();
-      if (selected_objects.size() <= 0) {
+      if (selected_objects.isEmpty()) {
         return;
       }
       Collection<WindowObjectInfo.Printable> object_list =
@@ -539,7 +539,7 @@ public class WindowVia extends BoardSavableSubWindow {
         return;
       }
       new_name = new_name.trim();
-      if (new_name.equals("")) {
+      if (new_name.isEmpty()) {
         return;
       }
       ViaRule new_via_rule = new ViaRule(new_name);

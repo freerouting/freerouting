@@ -44,7 +44,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
   @Override
   protected void select_instances() {
     List<Object> selected_components = list.getSelectedValuesList();
-    if (selected_components.size() <= 0) {
+    if (selected_components.isEmpty()) {
       return;
     }
     RoutingBoard routing_board =

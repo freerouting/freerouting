@@ -38,7 +38,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
   @Override
   protected void select_instances() {
     List<Object> selected_incompletes = list.getSelectedValuesList();
-    if (selected_incompletes.size() <= 0) {
+    if (selected_incompletes.isEmpty()) {
       return;
     }
     Set<Item> selected_items =

@@ -202,7 +202,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       List<Object> selected_objects = list.getSelectedValuesList();
-      if (selected_objects.size() <= 0) {
+      if (selected_objects.isEmpty()) {
         return;
       }
       Collection<WindowObjectInfo.Printable> object_list =

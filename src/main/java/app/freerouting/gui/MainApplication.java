@@ -635,7 +635,7 @@ public class MainApplication extends WindowBase {
     public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       boolean exit_program = true;
-      if (!is_test_version && board_frames.size() > 0) {
+      if (!is_test_version && !board_frames.isEmpty()) {
         int option =
             JOptionPane.showConfirmDialog(
                 null,

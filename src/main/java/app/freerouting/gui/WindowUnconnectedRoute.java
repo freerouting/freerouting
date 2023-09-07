@@ -84,7 +84,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
   @Override
   protected void select_instances() {
     List<Object> selected_list_values = list.getSelectedValuesList();
-    if (selected_list_values.size() <= 0) {
+    if (selected_list_values.isEmpty()) {
       return;
     }
     Set<Item> selected_items =

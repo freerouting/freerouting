@@ -167,7 +167,7 @@ public class BatchOptRouteMT extends BatchOptRoute {
     this.sorted_route_items = new ReadSortedRouteItems();
 
     if (current_item_selection_strategy() == ItemSelectionStrategy.PRIORITIZED
-        && result_map.size() > 0) {
+        && !result_map.isEmpty()) {
       ArrayList<Integer> new_item_ids = new ArrayList<>();
       PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 

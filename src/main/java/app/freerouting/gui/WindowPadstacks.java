@@ -48,7 +48,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
   @Override
   protected void select_instances() {
     List<Object> selected_padstacks = list.getSelectedValuesList();
-    if (selected_padstacks.size() <= 0) {
+    if (selected_padstacks.isEmpty()) {
       return;
     }
     Collection<Padstack> padstack_list = new LinkedList<>();

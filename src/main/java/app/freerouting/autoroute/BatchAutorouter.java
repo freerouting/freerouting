@@ -353,7 +353,7 @@ public class BatchAutorouter {
       autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;
 
       Set<Item> unconnected_set = p_item.get_unconnected_set(p_route_net_no);
-      if (unconnected_set.size() == 0) {
+      if (unconnected_set.isEmpty()) {
         return true; // p_item is already routed.
       }
       Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);

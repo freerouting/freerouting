@@ -152,7 +152,7 @@ public class NetIncompletes {
     if (max_length > 0 && trace_length > max_length) {
       new_violation = trace_length - max_length;
     }
-    if (min_length > 0 && trace_length < min_length && this.incompletes.size() == 0) {
+    if (min_length > 0 && trace_length < min_length && this.incompletes.isEmpty()) {
       new_violation = trace_length - min_length;
     }
     this.length_violation = new_violation;

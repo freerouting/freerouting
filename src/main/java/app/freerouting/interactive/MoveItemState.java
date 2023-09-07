@@ -171,7 +171,7 @@ public class MoveItemState extends InteractiveState {
     }
     if (!move_ok) {
       if (p_parent_state instanceof SelectedItemState) {
-        if (fixed_items.size() > 0) {
+        if (!fixed_items.isEmpty()) {
           ((SelectedItemState) p_parent_state).get_item_list().addAll(fixed_items);
           p_board_handling.screen_messages.set_status_message(
               resources.getString("please_unfix_selected_items_before_moving"));

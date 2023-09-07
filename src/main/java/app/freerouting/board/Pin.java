@@ -335,7 +335,7 @@ public class Pin extends DrillItem implements Serializable {
     for (int i = this.first_layer(); i <= this.last_layer(); ++i) {
       Collection<TraceExitRestriction> curr_exit_restrictions =
           get_trace_exit_restrictions(i);
-      if (curr_exit_restrictions.size() > 0) {
+      if (!curr_exit_restrictions.isEmpty()) {
         return true;
       }
     }

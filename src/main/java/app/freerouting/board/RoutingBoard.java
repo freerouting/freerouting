@@ -994,7 +994,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       }
     }
     Set<Item> route_dest_set = p_item.get_unconnected_set(route_net_no);
-    if (route_dest_set.size() == 0) {
+    if (route_dest_set.isEmpty()) {
       return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // p_item is already routed.
     }
     SortedSet<Item> ripped_item_list = new TreeSet<>();

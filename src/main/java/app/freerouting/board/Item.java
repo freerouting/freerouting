@@ -480,7 +480,7 @@ public abstract class Item
    */
   public boolean is_connected() {
     Collection<Item> contacts = this.get_all_contacts();
-    return (contacts.size() > 0);
+    return (!contacts.isEmpty());
   }
 
   /**
@@ -489,7 +489,7 @@ public abstract class Item
    */
   public boolean is_connected_on_layer(int p_layer) {
     Collection<Item> contacts_on_layer = this.get_all_contacts(p_layer);
-    return (contacts_on_layer.size() > 0);
+    return (!contacts_on_layer.isEmpty());
   }
 
   /** default implementation to be overwritten in the Connectable subclasses */

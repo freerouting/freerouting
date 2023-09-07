@@ -175,7 +175,7 @@ public class ExpandTestState extends InteractiveState {
     }
     Set<Item> route_start_set = route_item.get_connected_set(route_net_no);
     Set<Item> route_dest_set = route_item.get_unconnected_set(route_net_no);
-    if (route_dest_set.size() > 0) {
+    if (!route_dest_set.isEmpty()) {
       hdlg.screen_messages.set_status_message("app.freerouting.autoroute test started");
       this.maze_search_algo =
           MazeSearchAlgo.get_instance(
@@ -212,6 +212,6 @@ public class ExpandTestState extends InteractiveState {
   private boolean complete_expansion_room(IncompleteFreeSpaceExpansionRoom p_incomplete_room) {
     Collection<CompleteFreeSpaceExpansionRoom> completed_rooms =
         autoroute_engine.complete_expansion_room(p_incomplete_room);
-    return (completed_rooms.size() > 0);
+    return (!completed_rooms.isEmpty());
   }
 }

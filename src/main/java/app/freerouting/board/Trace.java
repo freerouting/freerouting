@@ -139,11 +139,11 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   @Override
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_start_contacts();
-    if (contact_list.size() == 0) {
+    if (contact_list.isEmpty()) {
       return true;
     }
     contact_list = this.get_end_contacts();
-    return (contact_list.size() == 0);
+    return (contact_list.isEmpty());
   }
 
   @Override

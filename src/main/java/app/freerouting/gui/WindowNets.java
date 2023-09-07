@@ -68,7 +68,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   @Override
   protected void select_instances() {
     List<Object> selected_nets = list.getSelectedValuesList();
-    if (selected_nets.size() <= 0) {
+    if (selected_nets.isEmpty()) {
       return;
     }
     int[] selected_net_numbers = new int[selected_nets.size()];
@@ -100,7 +100,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       List<Object> selected_nets = list.getSelectedValuesList();
-      if (selected_nets.size() <= 0) {
+      if (selected_nets.isEmpty()) {
         return;
       }
       NetClasses net_classes =
@@ -135,7 +135,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       List<Object> selected_nets = list.getSelectedValuesList();
-      if (selected_nets.size() <= 0) {
+      if (selected_nets.isEmpty()) {
         return;
       }
       BoardHandling board_handling =

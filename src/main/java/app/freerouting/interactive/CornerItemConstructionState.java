@@ -111,7 +111,7 @@ public class CornerItemConstructionState extends InteractiveState {
    */
   private IntPoint snap(IntPoint p_point) {
     IntPoint result;
-    boolean list_empty = (corner_list.size() == 0);
+    boolean list_empty = (corner_list.isEmpty());
     if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
             == AngleRestriction.NINETY_DEGREE
         && !list_empty) {

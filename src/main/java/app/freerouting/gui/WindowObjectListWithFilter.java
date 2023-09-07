@@ -42,7 +42,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   protected void add_to_list(Object p_object) {
     String curr_filter_string = this.filter_string.getText().trim();
     boolean object_matches;
-    if (curr_filter_string.length() == 0) {
+    if (curr_filter_string.isEmpty()) {
       object_matches = true;
     } else {
       object_matches = p_object.toString().contains(curr_filter_string);

@@ -614,7 +614,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       for (Integer changed_net : changed_nets) {
         this.update_ratsnest(changed_net);
       }
-      if (changed_nets.size() > 0) {
+      if (!changed_nets.isEmpty()) {
         // reset the start pass number in the autorouter in case
         // a batch autorouter is undone.
         this.settings.autoroute_settings.set_start_pass_no(1);
@@ -1320,7 +1320,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   Set<Item> pick_items(FloatPoint p_location, ItemSelectionFilter p_item_filter) {
     IntPoint location = p_location.round();
     Set<Item> result = board.pick_items(location, settings.layer, p_item_filter);
-    if (result.size() == 0 && settings.select_on_all_visible_layers) {
+    if (result.isEmpty() && settings.select_on_all_visible_layers) {
       for (int i = 0; i < graphics_context.layer_count(); ++i) {
         if (i == settings.layer || graphics_context.get_layer_visibility(i) <= 0) {
           continue;

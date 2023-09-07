@@ -175,10 +175,10 @@ public class Validate {
       if (curr_ob instanceof PolylineTrace) {
         PolylineTrace curr_trace = (PolylineTrace) curr_ob;
         if (curr_trace.contains_net(p_net_no)) {
-          if (curr_trace.get_start_contacts().size() == 0) {
+          if (curr_trace.get_start_contacts().isEmpty()) {
             ++result;
           }
-          if (curr_trace.get_end_contacts().size() == 0) {
+          if (curr_trace.get_end_contacts().isEmpty()) {
             ++result;
           }
         }
@@ -234,7 +234,7 @@ public class Validate {
     for (Item curr_item : p_board.get_items()) {
       if (curr_item.is_routable()) {
         Collection<Item> contact_list = curr_item.get_normal_contacts();
-        if (contact_list.size() == 0) {
+        if (contact_list.isEmpty()) {
           System.out.print(p_s);
           System.out.print(": uncontacted routing item found ");
           return true;
