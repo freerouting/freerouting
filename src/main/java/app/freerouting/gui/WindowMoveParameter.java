@@ -46,7 +46,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag_constraints.anchor = GridBagConstraints.WEST;
     gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
-    // Create label and number field for the horizontal and verical component grid
+    // Create label and number field for the horizontal and vertical component grid
 
     gridbag_constraints.gridwidth = 2;
     JLabel horizontal_grid_label =

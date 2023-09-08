@@ -42,7 +42,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
       } else // inner layer
       {
         if (is_signal_layer) {
-          // currenntly 6 different default colors for traces on the inner layers
+          // currently 6 different default colors for traces on the inner layers
           final int different_inner_colors = 6;
           int remainder = signal_layer_no % different_inner_colors;
           curr_row[ColumnNames.TRACES.ordinal()] =
@@ -78,7 +78,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     super(p_stream);
   }
 
-  /** Copy construcror. */
+  /** Copy constructor. */
   public ItemColorTableModel(ItemColorTableModel p_item_color_model) {
     super(p_item_color_model.data.length, p_item_color_model.locale);
     for (int i = 0; i < this.data.length; ++i) {
@@ -121,7 +121,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
 
   Color[] get_trace_colors(boolean p_fixed) {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     Color[] result;
     if (p_fixed) {
@@ -134,7 +134,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
 
   Color[] get_via_colors(boolean p_fixed) {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     Color[] result;
     if (p_fixed) {
@@ -147,7 +147,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
 
   Color[] get_pin_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.PINS.ordinal() - 1];
   }
@@ -158,7 +158,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
 
   Color[] get_conduction_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.CONDUCTION_AREAS.ordinal() - 1];
   }
@@ -169,21 +169,21 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
 
   Color[] get_obstacle_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.KEEPOUTS.ordinal() - 1];
   }
 
   Color[] get_via_obstacle_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.VIA_KEEPOUTS.ordinal() - 1];
   }
 
   Color[] get_place_obstacle_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.PLACE_KEEPOUTS.ordinal() - 1];
   }
@@ -225,7 +225,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     this.item_colors_precalculated = false;
   }
 
-  private void precalulate_item_colors() {
+  private void precalculate_item_colors() {
     precalculated_item_colors = new Color[ColumnNames.values().length - 1][];
     for (int i = 0; i < precalculated_item_colors.length; ++i) {
       precalculated_item_colors[i] = new Color[data.length];

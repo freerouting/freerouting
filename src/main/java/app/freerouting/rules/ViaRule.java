@@ -69,7 +69,7 @@ public class ViaRule
   }
 
   /**
-   * Searchs a via in this rule with first layer = p_from_layer and last layer = p_to_layer. Returns
+   * Searches a via in this rule with first layer = p_from_layer and last layer = p_to_layer. Returns
    * null, if no such via exists.
    */
   public ViaInfo get_layer_range(int p_from_layer, int p_to_layer) {

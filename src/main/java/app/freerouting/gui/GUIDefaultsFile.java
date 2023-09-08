@@ -39,7 +39,7 @@ public class GUIDefaultsFile {
 
   /**
    * Writes the GUI setting of p_board_frame as default to p_file. Returns false, if an error
-   * occured.
+   * occurred.
    */
   public static boolean write(
       BoardFrame p_board_frame,
@@ -70,7 +70,7 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * Reads the GUI setting of p_board_frame from file. Returns false, if an error occured while
+   * Reads the GUI setting of p_board_frame from file. Returns false, if an error occurred while
    * reading the file.
    */
   public static boolean read(
@@ -113,7 +113,7 @@ public class GUIDefaultsFile {
         --open_bracked_count;
       }
     }
-    FRLogger.warn("GUIDefaultsFile.skip_spope: unknown scope skipped");
+    FRLogger.warn("GUIDefaultsFile.skip_scope: unknown scope skipped");
     return true;
   }
 
@@ -209,7 +209,7 @@ public class GUIDefaultsFile {
     write_frame_scope(this.board_frame.color_manager, "color_manager");
     write_frame_scope(this.board_frame.layer_visibility_window, "layer_visibility");
     write_frame_scope(this.board_frame.object_visibility_window, "object_visibility");
-    write_frame_scope(this.board_frame.display_misc_window, "display_miscellanious");
+    write_frame_scope(this.board_frame.display_misc_window, "display_miscellaneous");
     write_frame_scope(this.board_frame.snapshot_window, "snapshots");
     write_frame_scope(this.board_frame.select_parameter_window, "select_parameter");
     write_frame_scope(this.board_frame.route_parameter_window, "route_parameter");
@@ -268,7 +268,7 @@ public class GUIDefaultsFile {
       case COLOR_MANAGER         -> curr_frame = this.board_frame.color_manager;
       case OBJECT_VISIBILITY     -> curr_frame = this.board_frame.object_visibility_window;
       case LAYER_VISIBILITY      -> curr_frame = this.board_frame.layer_visibility_window;
-      case DISPLAY_MISCELLANIOUS -> curr_frame = this.board_frame.display_misc_window;
+      case DISPLAY_MISCELLANEOUS -> curr_frame = this.board_frame.display_misc_window;
       case SNAPSHOTS             -> curr_frame = this.board_frame.snapshot_window;
       case SELECT_PARAMETER      -> curr_frame = this.board_frame.select_parameter_window;
       case ROUTE_PARAMETER       -> curr_frame = this.board_frame.route_parameter_window;
@@ -667,7 +667,7 @@ public class GUIDefaultsFile {
   }
 
   /**
-   * reads a n array java.awt.Color from the defaults file. Returns null, if no valid colors were
+   * reads an array java.awt.Color from the defaults file. Returns null, if no valid colors were
    * found.
    */
   private Color[] read_color_array() throws IOException {
@@ -1027,7 +1027,7 @@ public class GUIDefaultsFile {
     } else if (next_token == Keyword.DYNAMIC) {
       is_stitch_mode = false;
     } else {
-      FRLogger.warn("GUIDefaultsFile.read_roude_mode_scope: unexpected token");
+      FRLogger.warn("GUIDefaultsFile.read_route_mode_scope: unexpected token");
       return false;
     }
     next_token = this.scanner.next_token();
@@ -1408,7 +1408,7 @@ public class GUIDefaultsFile {
     CURRENT_LAYER,
     CURRENT_ONLY,
     DESELECTED_SNAPSHOT_ATTRIBUTES,
-    DISPLAY_MISCELLANIOUS,
+    DISPLAY_MISCELLANEOUS,
     DISPLAY_REGION,
     DRAG_COMPONENTS_ENABLED,
     DYNAMIC,

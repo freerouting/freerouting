@@ -86,7 +86,7 @@ public class Padstack
     return result;
   }
 
-  /** Returns the layer ciount of the board of this padstack. */
+  /** Returns the layer count of the board of this padstack. */
   public int board_layer_count() {
     return shapes.length;
   }

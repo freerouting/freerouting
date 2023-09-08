@@ -10,8 +10,8 @@ import java.util.LinkedList;
 /**
  * A Polyline is a sequence of lines, where no 2 consecutive lines may be parallel. A Polyline of n
  * lines defines a Polygon of n-1 intersection points of consecutive lines. The lines of the objects
- * of class Polyline are normally defined by points with integer coordinates, wheras the
- * intersections of Lines can be representated in general only by infinite precision rational
+ * of class Polyline are normally defined by points with integer coordinates, whereas the
+ * intersections of Lines can be represented in general only by infinite precision rational
  * points. We use polylines with integer coordinates instead of polygons with infinite precision
  * rational coordinates because of its better performance in geometric calculations.
  */
@@ -666,7 +666,7 @@ public class Polyline implements Serializable {
     return surrounding_octagon;
   }
 
-  /** Calculates an aproximation of the nearest point on this polyline to p_from_point. */
+  /** Calculates an approximation of the nearest point on this polyline to p_from_point. */
   public FloatPoint nearest_point_approx(FloatPoint p_from_point) {
     double min_distance = Double.MAX_VALUE;
     FloatPoint nearest_point = null;
@@ -696,7 +696,7 @@ public class Polyline implements Serializable {
     return nearest_point;
   }
 
-  /** Calculates the distance of p_from_point to the the nearest point on this polyline */
+  /** Calculates the distance of p_from_point to the nearest point on this polyline */
   public double distance(FloatPoint p_from_point) {
     return p_from_point.distance(nearest_point_approx(p_from_point));
   }
@@ -763,7 +763,7 @@ public class Polyline implements Serializable {
    * Splits this polyline at the line with number p_line_no into two by inserting p_endline as
    * concluding line of the first split piece and as the start line of the second split piece.
    * p_endline and the line with number p_line_no must not be parallel. The order of the lines ins
-   * the two result pieces is preserved. p_line_no must be bigger than 0 and less then arr.length -
+   * the two result pieces is preserved. p_line_no must be bigger than 0 and less than arr.length -
    * 1. Returns null, if nothing was split.
    */
   public Polyline[] split(int p_line_no, Line p_end_line) {
@@ -778,7 +778,7 @@ public class Polyline implements Serializable {
     if (p_line_no <= 1 && new_end_corner.equals(this.first_corner())
         || p_line_no >= arr.length - 2 && new_end_corner.equals(this.last_corner())) {
       // No split, if p_end_line does not intersect, but touches
-      // only tnis Polyline at an end point.
+      // only this Polyline at an end point.
       return null;
     }
     Line[] first_piece;
@@ -835,7 +835,7 @@ public class Polyline implements Serializable {
 
   /**
    * Creates a perpendicular line segment from p_from_point onto the nearest line segment of this
-   * polyline to p_from_side. Returns null, if the perpendicular line does not intersect the neares
+   * polyline to p_from_side. Returns null, if the perpendicular line does not intersect the nearest
    * line segment inside its segment bounds or if p_from_point is contained in this polyline.
    */
   public LineSegment projection_line(Point p_from_point) {
@@ -875,7 +875,7 @@ public class Polyline implements Serializable {
   }
 
   /**
-   * Shortens this polyline to p_new_line_count lines. Additioanally the last line segment will be
+   * Shortens this polyline to p_new_line_count lines. Additionally, the last line segment will be
    * approximately shortened to p_new_length. The last corner of the new polyline will be an
    * IntPoint.
    */

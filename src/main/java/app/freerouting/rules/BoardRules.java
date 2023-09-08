@@ -114,7 +114,7 @@ public class BoardRules implements Serializable {
     max_trace_half_width = Math.max(max_trace_half_width, p_value);
   }
 
-  /** Returns the net rule used for all nets, for whichh no special rrule was set. */
+  /** Returns the net rule used for all nets, for which no special rrule was set. */
   public NetClass get_default_net_class() {
     if (this.net_classes.count() <= 0) {
       // net rules not yet initialized
@@ -145,7 +145,7 @@ public class BoardRules implements Serializable {
 
   /**
    * Create a default via rule for p_net_class with name p_name. If more than one via infos with the
-   * same layer range are found, only the via info with the smmallest pad size is inserted.
+   * same layer range are found, only the via info with the smallest pad size is inserted.
    */
   public void create_default_via_rule(NetClass p_net_class, String p_name) {
     if (this.via_infos.count() == 0) {
@@ -353,17 +353,17 @@ public class BoardRules implements Serializable {
     return this.ignore_conduction;
   }
 
-  /** Tells the router, if conduction areas should be ignored.. */
+  /** Tells the router, if conduction areas should be ignored. */
   public void set_ignore_conduction(boolean p_value) {
     this.ignore_conduction = p_value;
   }
 
-  /** The angle restriction for tracese: 90 degree, 45 degree or none. */
+  /** The angle restriction for traces: 90 degree, 45 degree or none. */
   public AngleRestriction get_trace_angle_restriction() {
     return this.trace_angle_restriction;
   }
 
-  /** Sets the angle restriction for tracese: 90 degree, 45 degree or none. */
+  /** Sets the angle restriction for traces: 90 degree, 45 degree or none. */
   public void set_trace_angle_restriction(
       AngleRestriction p_angle_restriction) {
     this.trace_angle_restriction = p_angle_restriction;

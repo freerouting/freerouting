@@ -103,7 +103,7 @@ public class InsertFoundConnectionAlgo {
     double saved_edge_to_turn_dist = board.rules.get_pin_edge_to_turn_dist();
     board.rules.set_pin_edge_to_turn_dist(-1);
 
-    // Look for pins att the start and the end of p_trace in case that neckdown is necessecary.
+    // Look for pins att the start and the end of p_trace in case that neckdown is necessary.
     Pin start_pin = null;
     Pin end_pin = null;
     if (ctrl.with_neckdown) {

@@ -312,7 +312,7 @@ public class Route {
   }
 
   /**
-   * Snaps to the center of an smd pin, if the location location on p_layer is inside an smd pin of
+   * Snaps to the center of a smd pin, if the location on p_layer is inside a smd pin of
    * the own net,
    */
   private boolean snap_to_smd_center(int p_layer) {
@@ -438,7 +438,7 @@ public class Route {
     return result;
   }
 
-  /** Returns all pins, which can be reached by a pin swap from a srtart or target pin. */
+  /** Returns all pins, which can be reached by a pin swap from a start or target pin. */
   private Set<SwapPinInfo> calculate_swap_pin_infos() {
     Set<SwapPinInfo> result = new TreeSet<>();
     if (this.target_set == null) {
@@ -446,9 +446,9 @@ public class Route {
     }
     for (Item curr_item : this.target_set) {
       if (curr_item instanceof Pin) {
-        Collection<Pin> curr_swapppable_pins =
+        Collection<Pin> curr_swappable_pins =
             ((Pin) curr_item).get_swappable_pins();
-        for (Pin curr_swappable_pin : curr_swapppable_pins) {
+        for (Pin curr_swappable_pin : curr_swappable_pins) {
           result.add(new SwapPinInfo(curr_swappable_pin));
         }
       }
@@ -460,9 +460,9 @@ public class Route {
         board.pick_items(this.prev_corner, this.layer, selection_filter);
     for (Item curr_item : picked_items) {
       if (curr_item instanceof Pin) {
-        Collection<Pin> curr_swapppable_pins =
+        Collection<Pin> curr_swappable_pins =
             ((Pin) curr_item).get_swappable_pins();
-        for (Pin curr_swappable_pin : curr_swapppable_pins) {
+        for (Pin curr_swappable_pin : curr_swappable_pins) {
           result.add(new SwapPinInfo(curr_swappable_pin));
         }
       }
@@ -486,7 +486,7 @@ public class Route {
     Color highlight_color = p_graphics_context.get_hilight_color();
     double highligt_color_intensity = p_graphics_context.get_hilight_color_intensity();
 
-    // hilight the swapppable pins and their incompletes
+    // hilight the swappable pins and their incompletes
     for (SwapPinInfo curr_info : this.swap_pin_infos) {
       curr_info.pin.draw(
           p_graphics, p_graphics_context, highlight_color, 0.3 * highligt_color_intensity);
@@ -651,7 +651,7 @@ public class Route {
     return layer_active[p_layer];
   }
 
-  /** The nearest point is used for drowing the incomplete */
+  /** The nearest point is used for drawing the incomplete */
   void calc_nearest_target_point(FloatPoint p_from_point) {
     double min_dist = Double.MAX_VALUE;
     FloatPoint nearest_point = null;
@@ -710,7 +710,7 @@ public class Route {
 
   /**
    * If the routed starts at a pin and the route failed with the normal trace width, another try
-   * with the smalllest pin width is done. Returns the ok_point of the try, which is
+   * with the smallest pin width is done. Returns the ok_point of the try, which is
    * this.prev_point, if the try failed.
    */
   private Point try_neckdown_at_start(IntPoint p_to_corner) {
@@ -766,7 +766,7 @@ public class Route {
 
   /**
    * If the routed ends at a pin and the route failed with the normal trace width, another try with
-   * the smalllest pin width is done. Returns the ok_point of the try, which is p_from_corner, if
+   * the smallest pin width is done. Returns the ok_point of the try, which is p_from_corner, if
    * the try failed.
    */
   private Point try_neckdown_at_end(Point p_from_corner, Point p_to_corner) {

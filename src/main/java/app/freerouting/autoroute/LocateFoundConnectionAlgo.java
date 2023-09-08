@@ -337,7 +337,7 @@ public abstract class LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calclates the next trace trace of the connection under construction. Returns null, if all
+   * Calculates the next trace of the connection under construction. Returns null, if all
    * traces are returned.
    */
   private ResultItem calculate_next_trace(boolean p_layer_changed, boolean p_at_fanout_end) {
@@ -405,7 +405,7 @@ public abstract class LocateFoundConnectionAlgo {
 
   /**
    * Returns the next list of corners for the construction of the trace in calculate_next_trace. If
-   * the result is emppty, the trace is already completed.
+   * the result is empty, the trace is already completed.
    */
   protected abstract Collection<FloatPoint> calculate_next_trace_corners();
 

@@ -162,9 +162,9 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
 
     @Override
     public void stateChanged(ChangeEvent evt) {
-      int new_accurracy =
+      int new_accuracy =
           (c_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
-      board_handling.settings.set_current_pull_tight_accuracy(new_accurracy);
+      board_handling.settings.set_current_pull_tight_accuracy(new_accuracy);
     }
   }
 

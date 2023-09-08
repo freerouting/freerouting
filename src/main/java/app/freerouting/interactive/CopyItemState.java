@@ -71,7 +71,7 @@ public class CopyItemState extends InteractiveState {
         p_location, p_item_list, p_parent_state, p_board_handling, p_activityReplayFile);
   }
 
-  /** Creates a new padstack from p_old_pastack with a layer range starting at p_new_layer. */
+  /** Creates a new padstack from p_old_padstack with a layer range starting at p_new_layer. */
   private static Padstack change_padstack_layers(
       Padstack p_old_padstack,
       int p_new_layer,

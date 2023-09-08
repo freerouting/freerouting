@@ -36,7 +36,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    p_board_handling.display_layer_messsage();
+    p_board_handling.display_layer_message();
     SelectItemsInRegionState new_instance =
         new SelectItemsInRegionState(p_parent_state, p_board_handling, p_activityReplayFile);
     new_instance.corner1 = p_location;

@@ -316,7 +316,7 @@ public class MazeShoveTraceAlgo {
   }
 
   /**
-   * Check if the endpoints of p_trace and p_from_item are maching, so that the shove can continue
+   * Check if the endpoints of p_trace and p_from_item are matching, so that the shove can continue
    * through a link door.
    */
   private static boolean end_points_matching(

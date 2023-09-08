@@ -267,7 +267,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     }
   }
 
-  /** Switches clearance compansation on or off. */
+  /** Switches clearance compensation on or off. */
   public void set_clearance_compensation(boolean p_value) {
     if (board_is_read_only) {
       return;
@@ -324,7 +324,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * Displays the current layer in the layer message field, and clears the field for the additional
    * message.
    */
-  public void display_layer_messsage() {
+  public void display_layer_message() {
     screen_messages.clear_add_field();
     Layer curr_layer = board.layer_structure.arr[this.settings.layer];
     screen_messages.set_layer(curr_layer.name);
@@ -627,7 +627,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     repaint();
   }
 
-  /** Restores the sitiation before the last undo. */
+  /** Restores the situation before the last undo. */
   public void redo() {
     if (board_is_read_only || !(interactive_state instanceof MenuState)) {
       return;
@@ -976,7 +976,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       // no interactive action when logfile is running
       return;
     }
-    this.display_layer_messsage();
+    this.display_layer_message();
     if (interactive_state instanceof MenuState) {
       set_interactive_state(
           SelectedItemState.get_instance(p_items, interactive_state, this, activityReplayFile));

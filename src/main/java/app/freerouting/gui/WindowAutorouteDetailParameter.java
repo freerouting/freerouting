@@ -121,7 +121,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(start_ripup_costs, gridbag_constraints);
     main_panel.add(start_ripup_costs);
 
-    // add label and combo box for the router speed (if the speed is set to slow, free angle
+    // add label and combo box for the router speed if the speed is set to slow, free angle
     // geometry
     // is used also in the 45 and 90 degree modes.
     this.speed_fast = resources.getString("fast");

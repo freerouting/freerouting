@@ -291,7 +291,7 @@ public class DestinationDistance {
       return result;
     }
     if (p_layer == layer_count - 1)
-    // calculate shortest distance to solder side box
+    // calculate the shortest distance to solder side box
     {
       // calculate one layer distance
 

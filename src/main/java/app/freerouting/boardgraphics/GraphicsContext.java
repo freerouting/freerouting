@@ -46,7 +46,7 @@ public class GraphicsContext implements Serializable {
    */
   private double[] layer_visibility_arr;
   /**
-   * The factor for autoomatic layer dimming of layers different from the current layer. Values are
+   * The factor for automatic layer dimming of layers different from the current layer. Values are
    * between 0 and 1. If 1, there is no automatic layer dimming.
    */
   private double auto_layer_dim_factor = 0.7;
@@ -102,7 +102,7 @@ public class GraphicsContext implements Serializable {
 
   /**
    * Changes the bounds of the board design to p_design_bounds. Useful when components are still
-   * placed outside the boaed.
+   * placed outside the board.
    */
   public void change_design_bounds(IntBox p_new_design_bounds) {
     if (p_new_design_bounds.equals(this.coordinate_transform.design_box)) {
@@ -141,7 +141,7 @@ public class GraphicsContext implements Serializable {
     Rectangle clip_shape = p_g.getClip().getBounds();
     // the class member update_box cannot be used here, because
     // the dirty rectangle is internally enlarged by the system.
-    // Therefore we can not improve the performance by using an
+    // Therefore, we can not improve the performance by using an
     // update octagon instead of a box.
     IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
     double scaled_width = coordinate_transform.board_to_screen(p_half_width);
@@ -157,7 +157,7 @@ public class GraphicsContext implements Serializable {
     for (int i = 0; i < (p_points.length - 1); i++) {
       if (line_outside_update_box(
           p_points[i], p_points[i + 1], p_half_width + update_offset, clip_box)) {
-        // this check should be unnessersary here,
+        // this check should be unnecessary here,
         // the system should do it in the draw(line) function
         continue;
       }
@@ -303,7 +303,7 @@ public class GraphicsContext implements Serializable {
   }
 
   /**
-   * Draws the interior of an array of ellipses. Ellipses contained in an other ellipse are treated
+   * Draws the interior of an array of ellipses. Ellipses contained in another ellipse are treated
    * as holes.
    */
   public void fill_ellipse_arr(
@@ -644,7 +644,7 @@ public class GraphicsContext implements Serializable {
     return result;
   }
 
-  /** Gets the visibility factor of the input layer without the aoutomatic layer dimming. */
+  /** Gets the visibility factor of the input layer without the automatic layer dimming. */
   public double get_raw_layer_visibility(int p_layer_no) {
     return layer_visibility_arr[p_layer_no];
   }
@@ -674,7 +674,7 @@ public class GraphicsContext implements Serializable {
 
   /**
    * filter lines, which cannot touch the update_box to improve the performance of the draw function
-   * by avoiding unnessesary calls of draw (line)
+   * by avoiding unnecessary calls of draw (line)
    */
   private boolean line_outside_update_box(
       FloatPoint p_1, FloatPoint p_2, double p_update_offset, IntBox p_update_box) {

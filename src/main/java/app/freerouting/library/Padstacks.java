@@ -70,7 +70,7 @@ public class Padstacks implements Serializable {
 
   /**
    * Appends a new padstack with the input shapes to this padstacks. p_shapes is an array of
-   * dimension board layer_count. The padatack name is generated internally.
+   * dimension board layer_count. The padstack name is generated internally.
    */
   public Padstack add(ConvexShape[] p_shapes) {
     String new_name = "padstack#" + (padstack_arr.size() + 1);
@@ -78,8 +78,8 @@ public class Padstacks implements Serializable {
   }
 
   /**
-   * Appends a new padstack withe the input shape from p_from_layer to p_to_layer and null on the
-   * other layers. The padatack name is generated internally.
+   * Appends a new padstack with the input shape from p_from_layer to p_to_layer and null on the
+   * other layers. The padstack name is generated internally.
    */
   public Padstack add(ConvexShape p_shape, int p_from_layer, int p_to_layer) {
     ConvexShape[] shape_arr = new ConvexShape[board_layer_structure.arr.length];

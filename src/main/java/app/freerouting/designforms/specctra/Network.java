@@ -826,7 +826,7 @@ public class Network extends ScopeKeyword {
     return result;
   }
 
-  private static void insert_compoments(ReadScopeParameter p_par) {
+  private static void insert_components(ReadScopeParameter p_par) {
     for (ComponentPlacement next_lib_component : p_par.placement_list) {
       for (ComponentPlacement.ComponentLocation next_component : next_lib_component.locations) {
         insert_component(next_component, next_lib_component.lib_name, p_par);
@@ -1257,7 +1257,7 @@ public class Network extends ScopeKeyword {
     insert_via_rules(via_rules, p_par.board_handling.get_routing_board());
     insert_net_classes(classes, p_par);
     insert_class_pairs(class_class_list, p_par);
-    insert_compoments(p_par);
+    insert_components(p_par);
     insert_logical_parts(p_par);
     return true;
   }

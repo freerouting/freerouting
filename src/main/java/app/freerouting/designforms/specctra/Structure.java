@@ -463,7 +463,7 @@ class Structure extends ScopeKeyword {
       }
       return snap_angle;
     } catch (IOException e) {
-      FRLogger.error("Structure.read_snap_angl: IO error scanning file", e);
+      FRLogger.error("Structure.read_snap_angle: IO error scanning file", e);
       return null;
     }
   }
@@ -809,7 +809,7 @@ class Structure extends ScopeKeyword {
     } else {
       clearance_class_no = p_board.rules.clearance_matrix.get_no(p_clearance_class_name);
       if (clearance_class_no < 0) {
-        FRLogger.warn("Keepout.insert_leepout: clearance class not found");
+        FRLogger.warn("Keepout.insert_keepout: clearance class not found");
         clearance_class_no = BoardRules.clearance_class_none();
       }
     }
@@ -1167,7 +1167,7 @@ class Structure extends ScopeKeyword {
     }
   }
 
-  /** Used to seperate the holes in the outline. */
+  /** Used to separate the holes in the outline. */
   private static class OutlineShape {
 
     final PolylineShape shape;

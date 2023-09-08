@@ -43,7 +43,7 @@ public abstract class PolylineShape implements Shape, Serializable {
   @Override
   public abstract PolylineShape translate_by(Vector p_vector);
 
-  /** Return all unbounded cornersw of this shape. */
+  /** Return all unbounded corners of this shape. */
   public Point[] bounded_corners() {
     int corner_count = this.border_line_count();
     Collection<Point> result_list = new LinkedList<>();
@@ -202,7 +202,7 @@ public abstract class PolylineShape implements Shape, Serializable {
   /** Returns the p_no-th border line of this shape. */
   public abstract Line border_line(int p_no);
 
-  /** Returns the previos border line or corner number of this shape. */
+  /** Returns the previous border line or corner number of this shape. */
   public int prev_no(int p_no) {
     int result;
     if (p_no == 0) {

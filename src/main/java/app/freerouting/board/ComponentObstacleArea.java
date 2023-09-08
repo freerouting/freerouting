@@ -89,13 +89,6 @@ public class ComponentObstacleArea extends ObstacleArea {
     return p_graphics_context.get_place_obstacle_color_intensity();
   }
 
-  public boolean is_selectrd_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
-      return false;
-    }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
-  }
-
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
     ResourceBundle resources =

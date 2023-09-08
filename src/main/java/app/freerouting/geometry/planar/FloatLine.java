@@ -63,15 +63,15 @@ public class FloatLine {
     double dy = b.y - a.y;
     double dxdx = dx * dx;
     double dydy = dy * dy;
-    double lenght = Math.sqrt(dxdx + dydy);
+    double length = Math.sqrt(dxdx + dydy);
     FloatPoint new_a;
     if (dxdx <= dydy) {
       // translate along the x axis
-      double rel_x = (p_dist * lenght) / dy;
+      double rel_x = (p_dist * length) / dy;
       new_a = new FloatPoint(this.a.x - rel_x, this.a.y);
     } else {
-      // translate along the  y axis
-      double rel_y = (p_dist * lenght) / dx;
+      // translate along the y axis
+      double rel_y = (p_dist * length) / dx;
       new_a = new FloatPoint(this.a.x, this.a.y + rel_y);
     }
     FloatPoint new_b = new FloatPoint(new_a.x + dx, new_a.y + dy);
@@ -113,7 +113,7 @@ public class FloatLine {
   }
 
   /**
-   * Returns the distance of p_point to the nearest point of this line betweem this.a and this.b.
+   * Returns the distance of p_point to the nearest point of this line between this.a and this.b.
    */
   public double segment_distance(FloatPoint p_point) {
     FloatPoint projection = perpendicular_projection(p_point);
@@ -161,7 +161,7 @@ public class FloatLine {
 
   /**
    * Returns the projection of p_line_segment onto this oriented line segment by moving
-   * p_line_segment perpendicular into the direction of this line segmant Returns null, if the
+   * p_line_segment perpendicular into the direction of this line segment Returns null, if the
    * projection is empty or p_line_segment.a == p_line_segment.b
    */
   public FloatLine segment_projection_2(FloatLine p_line_segment) {

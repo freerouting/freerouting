@@ -61,8 +61,8 @@ public class SortedRoomNeighbours {
             p_autoroute_engine.generate_room_id_no(),
             test_level);
 
-    // Check, that each side of the romm shape has at least one touching neighbour.
-    // Otherwise improve the room shape by enlarging.
+    // Check, that each side of the room shape has at least one touching neighbour.
+    // Otherwise, improve the room shape by enlarging.
 
     boolean edge_removed =
         room_neighbours.try_remove_edge(
@@ -169,7 +169,7 @@ public class SortedRoomNeighbours {
     Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     p_autoroute_search_tree.overlapping_tree_entries(
         room_shape, p_room.get_layer(), overlapping_objects);
-    // Calculate the touching neigbour objects and sort them in counterclock sence
+    // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
     for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
       SearchTreeObject curr_object = (SearchTreeObject) curr_entry.object;
@@ -178,7 +178,7 @@ public class SortedRoomNeighbours {
       }
       if ((p_room instanceof IncompleteFreeSpaceExpansionRoom)
           && !curr_object.is_trace_obstacle(p_net_no)) {
-        // delay processing the target doors until the room shape will not change any more
+        // delay processing the target doors until the room shape will not change anymore
         result.own_net_objects.add(curr_entry);
         continue;
       }
@@ -188,7 +188,7 @@ public class SortedRoomNeighbours {
       int dimension = intersection.dimension();
       if (dimension > 1) {
         if (completed_room instanceof ObstacleExpansionRoom && curr_object instanceof Item) {
-          // only Obstacle expansion roos may have a 2-dim overlap
+          // only Obstacle expansion room may have a 2-dim overlap
           Item curr_item = (Item) curr_object;
           if (curr_item.is_routable()) {
             ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
@@ -219,7 +219,7 @@ public class SortedRoomNeighbours {
         }
         result.add_sorted_neighbour(
             curr_shape, intersection, touching_sides[0], touching_sides[1], false, false);
-        // make  shure, that there is a door to the neighbour room.
+        // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbour_room = null;
         if (curr_object instanceof ExpansionRoom) {
           neighbour_room = (ExpansionRoom) curr_object;
@@ -240,7 +240,7 @@ public class SortedRoomNeighbours {
             completed_room.add_door(new_door);
           }
         }
-      } else // dimensin = 0
+      } else // dimension = 0
       {
         Point touching_point = intersection.corner(0);
         int room_corner_no = room_shape.equals_corner(touching_point);
@@ -287,7 +287,7 @@ public class SortedRoomNeighbours {
     return result;
   }
 
-  /** p_door_shape is expected to bave dimension 1. */
+  /** p_door_shape is expected to have dimension 1. */
   static boolean insert_door_ok(
       ExpansionRoom p_room_1, ExpansionRoom p_room_2, TileShape p_door_shape) {
     if (p_room_1.door_exists(p_room_2)) {
@@ -304,7 +304,7 @@ public class SortedRoomNeighbours {
       return true;
     }
     // Insert 1 dimensional doors of trace rooms only, if they are parallel to the trace line.
-    // Otherwise there may be check ripup problems with entering at the wrong side at a fork.
+    // Otherwise, there may be check ripup problems with entering at the wrong side at a fork.
     Line door_line = null;
     Point prev_corner = p_door_shape.corner(0);
     int corner_count = p_door_shape.border_line_count();
@@ -329,7 +329,7 @@ public class SortedRoomNeighbours {
 
   /**
    * Insert 1 dimensional doors for the first and the last room of a trace rooms only, if they are
-   * parallel to the trace line. Otherwise there may be check ripup problems with entering at the
+   * parallel to the trace line. Otherwise, there may be check ripup problems with entering at the
    * wrong side at a fork.
    */
   private static boolean insert_door_ok(ObstacleExpansionRoom p_room, Line p_door_line) {
@@ -368,7 +368,7 @@ public class SortedRoomNeighbours {
   }
 
   /**
-   * Check, that each side of the romm shape has at least one touching neighbour. Otherwise the room
+   * Check, that each side of the room shape has at least one touching neighbour. Otherwise, the room
    * shape will be improved the by enlarging. Returns true, if the room shape was changed.
    */
   private boolean try_remove_edge(
@@ -492,8 +492,8 @@ public class SortedRoomNeighbours {
         Line middle_edge_line = null;
         int curr_touching_side_no = last_touching_side_no;
         boolean first_time = true;
-        // The loop goes backwards fromm the edge line of next_neigbour to the edge line of
-        // prev_neigbour.
+        // The loop goes backwards fromm the edge line of next_neighbour to the edge line of
+        // prev_neighbour.
         for (; ; ) {
           boolean corner_cut_off = false;
           if (this.from_room instanceof IncompleteFreeSpaceExpansionRoom) {
@@ -531,7 +531,7 @@ public class SortedRoomNeighbours {
           boolean last_time =
               curr_touching_side_no == first_touching_side_no
                       && !(prev_neighbour == this.sorted_neighbours.last() && first_time)
-                  // The expression above handles the case, when all neigbours are on 1 edge line.
+                  // The expression above handles the case, when all neighbours are on 1 edge line.
                   || corner_cut_off;
 
           Line end_edge_line;
@@ -541,7 +541,7 @@ public class SortedRoomNeighbours {
                 prev_neighbour.neighbour_shape.border_line(last_bounding_line_no).opposite();
             if (end_edge_line.direction().side_of(middle_line_dir) != Side.ON_THE_LEFT) {
               // Concave corner between the middle and the last line.
-              // May be there is a 1 point touch.
+              // Maybe there is a 1 point touch.
               end_edge_line = null;
             }
           } else {
@@ -606,7 +606,7 @@ public class SortedRoomNeighbours {
     private static final double c_dist_tolerance = 1;
     /** The shape of the neighbour room */
     public final TileShape neighbour_shape;
-    /** The intersection of tnis ExpansionRoom shape with the neighbour_shape */
+    /** The intersection of this ExpansionRoom shape with the neighbour_shape */
     public final TileShape intersection;
     /** The side number of this room, where it touches the neighbour */
     public final int touching_side_no_of_room;

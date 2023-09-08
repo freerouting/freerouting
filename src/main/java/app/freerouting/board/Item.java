@@ -90,7 +90,7 @@ public abstract class Item
     return result;
   }
 
-  /** returns the unique idcentification number of this item */
+  /** returns the unique identification number of this item */
   public int get_id_no() {
     return id_no;
   }
@@ -183,7 +183,7 @@ public abstract class Item
     return precalculated_tree_shapes;
   }
 
-  /** Caculates the tree shapes for this item for p_search_tree. */
+  /** Calculates the tree shapes for this item for p_search_tree. */
   protected abstract TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree);
 
   /** Returns false, if this item is deleted oor not inserted into the board. */
@@ -252,7 +252,7 @@ public abstract class Item
     board.search_tree_manager.remove(this);
     this.translate_by(p_vector);
     board.search_tree_manager.insert(this);
-    // let the observers syncronize the changes
+    // let the observers synchronize the changes
     board.communication.observers.notify_changed(this);
   }
 
@@ -265,7 +265,7 @@ public abstract class Item
 
   /**
    * Returns the first layer, where both this item and p_other have a shape. Returns -1, if such a
-   * layer does not exisr.
+   * layer does not exist.
    */
   public int first_common_layer(Item p_other) {
     int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
@@ -278,7 +278,7 @@ public abstract class Item
 
   /**
    * Returns the last layer, where both this item and p_other have a shape. Returns -1, if such a
-   * layer does not exisr.
+   * layer does not exist.
    */
   public int last_common_layer(Item p_other) {
     int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
@@ -713,7 +713,7 @@ public abstract class Item
     return result;
   }
 
-  /** Function o be overwritten by classes Trace ans Via */
+  /** Function to be overwritten by classes Trace and Via */
   public boolean is_tail() {
     return false;
   }
@@ -735,7 +735,7 @@ public abstract class Item
   }
 
   /**
-   * Draws this item whith its draw colors from p_graphics_context. p_layer_visibility[i] is
+   * Draws this item with its draw colors from p_graphics_context. p_layer_visibility[i] is
    * expected between 0 and 1 for each layer i.
    */
   public void draw(Graphics p_g, GraphicsContext p_graphics_context) {
@@ -743,7 +743,7 @@ public abstract class Item
     draw(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context));
   }
 
-  /** Test function checking the item for inconsitencies. */
+  /** Test function checking the item for inconsistencies. */
   public boolean validate() {
     boolean result = board.search_tree_manager.validate_entries(this);
     for (int i = 0; i < this.tile_shape_count(); ++i) {
@@ -758,7 +758,7 @@ public abstract class Item
 
   /**
    * Returns for this item the layer of the shape with index p_index. If p_id_no {@literal <}= 0, it
-   * w2ill be generated internally.
+   * will be generated internally.
    */
   @Override
   public abstract int shape_layer(int p_index);
@@ -935,7 +935,7 @@ public abstract class Item
   /** Returns true, if p_item is contained in the input filter. */
   public abstract boolean is_selected_by_filter(ItemSelectionFilter p_filter);
 
-  /** Internally used for implementing the function is_selectrd_by_filter */
+  /** Internally used for implementing the function is_selected_by_filter */
   protected boolean is_selected_by_fixed_filter(ItemSelectionFilter p_filter) {
     boolean result;
     if (this.is_user_fixed()) {
@@ -984,7 +984,7 @@ public abstract class Item
     this.search_trees_info.set_precalculated_tree_shapes(p_shapes, p_tree);
   }
 
-  /** Sets the searh tree entries of this item to null. */
+  /** Sets the search tree entries of this item to null. */
   public void clear_search_tree_entries() {
     this.search_trees_info = null;
   }
@@ -1018,7 +1018,7 @@ public abstract class Item
     autoroute_info = null;
   }
 
-  /** Internal funktion used in the implementation of print_info */
+  /** Internal function used in the implementation of print_info */
   protected void print_net_info(ObjectInfoPanel p_window, Locale p_locale) {
     ResourceBundle resources =
         ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
@@ -1043,7 +1043,7 @@ public abstract class Item
     }
   }
 
-  /** Internal funktion used in the implementation of print_info */
+  /** Internal function used in the implementation of print_info */
   protected void print_fixed_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.fixed_state != FixedState.UNFIXED) {
       ResourceBundle resources =
@@ -1119,7 +1119,7 @@ public abstract class Item
     return nets_equal(p_other.net_no_arr);
   }
 
-  /** Checks, if this item contains exacly the nets in p_net_no_arr */
+  /** Checks, if this item contains exactly the nets in p_net_no_arr */
   public boolean nets_equal(int[] p_net_no_arr) {
     if (this.net_no_arr.length != p_net_no_arr.length) {
       return false;

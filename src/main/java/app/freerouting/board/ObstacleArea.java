@@ -20,13 +20,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * An item on the board with an relative_area shape, for example keepout, conduction relative_area
+ * An item on the board with a relative_area shape, for example keepout, conduction relative_area
  */
 public class ObstacleArea extends Item implements Serializable {
   /** For debugging the division into tree shapes */
   private static final boolean display_tree_shapes = false;
   /**
-   * The name of this ObstacleArea, which is null, if the ObstacleArea doos not belong to a
+   * The name of this ObstacleArea, which is null, if the ObstacleArea does not belong to a
    * component.
    */
   public final String name;
@@ -185,7 +185,7 @@ public class ObstacleArea extends Item implements Serializable {
   public int tile_shape_count() {
     TileShape[] tile_shapes = this.split_to_convex();
     if (tile_shapes == null) {
-      // an error accured while dividing the relative_area
+      // an error occurred while dividing the relative_area
       return 0;
     }
     return tile_shapes.length;

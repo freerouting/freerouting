@@ -23,7 +23,7 @@ public abstract class Shape {
 
   /**
    * Reads shape scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and
-   * Layer.Signal are expected, no induvidual layers.
+   * Layer.Signal are expected, no individual layers.
    */
   public static Shape read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     Shape result = null;
@@ -223,7 +223,7 @@ public abstract class Shape {
 
   /**
    * Reads a rectangle scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB
-   * and Layer.Signal are expected, no induvidual layers.
+   * and Layer.Signal are expected, no individual layers.
    */
   public static Rectangle read_rectangle_scope(
       IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
@@ -267,7 +267,7 @@ public abstract class Shape {
 
   /**
    * Reads a closed polygon scope from a Specctra dsn file. If p_layer_structure == null, only
-   * Layer.PCB and Layer.Signal are expected, no induvidual layers.
+   * Layer.PCB and Layer.Signal are expected, no individual layers.
    */
   public static Polygon read_polygon_scope(
       IJFlexScanner p_scanner, LayerStructure p_layer_structure) {

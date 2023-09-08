@@ -92,7 +92,7 @@ public class Components implements Serializable {
   }
 
   /**
-   * Restores the sitiation at the previous snapshot. Returns false, if no more undo is possible.
+   * Restores the situation at the previous snapshot. Returns false, if no more undo is possible.
    */
   public boolean undo(BoardObservers p_observers) {
     if (!this.undo_list.undo(null, null)) {
@@ -102,7 +102,7 @@ public class Components implements Serializable {
     return true;
   }
 
-  /** Restores the sitiation before the last undo. Returns false, if no more redo is possible. */
+  /** Restores the situation before the last undo. Returns false, if no more redo is possible. */
   public boolean redo(BoardObservers p_observers) {
     if (!this.undo_list.redo(null, null)) {
       return false;
@@ -157,7 +157,7 @@ public class Components implements Serializable {
   }
 
   /**
-   * Changes the placement side of the component the component with number p_component_no and
+   * Changes the placement side of the component with number p_component_no and
    * mirrors it at the vertical line through p_pole. Works contrary to Component.change_side the
    * undo algorithm of the board.
    */

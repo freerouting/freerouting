@@ -36,7 +36,7 @@ public class CornerItemConstructionState extends InteractiveState {
   /** adds a corner to the polygon of the item under construction */
   public InteractiveState add_corner(FloatPoint p_location) {
     IntPoint location = this.snap(p_location.round());
-    // make shure that the coordinates are integer
+    // make sure that the coordinates are integer
     this.corner_list.add(location);
     hdlg.repaint();
     if (activityReplayFile != null) {

@@ -49,7 +49,7 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Creates a new SelectedItemState with with the items in p_item_list selected. Returns null, if
+   * Creates a new SelectedItemState with the items in p_item_list selected. Returns null, if
    * p_item_list is empty.
    */
   public static SelectedItemState get_instance(
@@ -186,7 +186,7 @@ public class SelectedItemState extends InteractiveState {
         gravity_y += curr_center.y;
         ++pin_count;
       } else {
-        // currently only Vias can be aasigned to a new component
+        // currently only Vias can be assigned to a new component
         it.remove();
       }
     }
@@ -229,7 +229,7 @@ public class SelectedItemState extends InteractiveState {
     return this.return_state;
   }
 
-  /** Deletes all unfixed items in this selected set and pulls tight the neighour traces. */
+  /** Deletes all unfixed items in this selected set and pulls tight the neighbour traces. */
   public InteractiveState delete_items() {
     hdlg.get_routing_board().generate_snapshot();
 
@@ -278,7 +278,7 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Autoroutes the selected items. If p_stoppable_thread != null, the algorithm can be requestet to
+   * Autoroutes the selected items. If p_stoppable_thread != null, the algorithm can be requested to
    * terminate.
    */
   public InteractiveState autoroute(Stoppable p_stoppable_thread) {
@@ -305,7 +305,7 @@ public class SelectedItemState extends InteractiveState {
     int items_to_go_count = autoroute_item_list.size();
     hdlg.screen_messages.set_interactive_autoroute_info(
         found_count, not_found_count, items_to_go_count);
-    // Empty this.item_list to avoid displaying the seected items.
+    // Empty this.item_list to avoid displaying the selected items.
     this.item_list = new TreeSet<>();
     boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
     if (!ratsnest_hidden_before) {
@@ -380,7 +380,7 @@ public class SelectedItemState extends InteractiveState {
 
   /**
    * Fanouts the pins contained in the selected items. If p_stoppable_thread != null, the algorithm
-   * can be requestet to terminate.
+   * can be requested to terminate.
    */
   public InteractiveState fanout(Stoppable p_stoppable_thread) {
     boolean saved_board_read_only = hdlg.is_board_read_only();
@@ -403,7 +403,7 @@ public class SelectedItemState extends InteractiveState {
     int items_to_go_count = fanout_list.size();
     hdlg.screen_messages.set_interactive_autoroute_info(
         found_count, not_found_count, items_to_go_count);
-    // Empty this.item_list to avoid displaying the seected items.
+    // Empty this.item_list to avoid displaying the selected items.
     this.item_list = new TreeSet<>();
     boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
     if (!ratsnest_hidden_before) {
@@ -462,7 +462,7 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Optimizes the selected items. If p_stoppable_thread != null, the algorithm can be requestet to
+   * Optimizes the selected items. If p_stoppable_thread != null, the algorithm can be requested to
    * terminate.
    */
   public InteractiveState pull_tight(Stoppable p_stoppable_thread) {
@@ -683,7 +683,7 @@ public class SelectedItemState extends InteractiveState {
     return result;
   }
 
-  /** Shows or hides the clearance violations of the selected items.. */
+  /** Shows or hides the clearance violations of the selected items. */
   public void toggle_clearance_violations() {
     if (clearance_violations == null) {
       clearance_violations = new ClearanceViolations(this.item_list);

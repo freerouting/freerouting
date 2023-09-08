@@ -136,7 +136,7 @@ public class SnapShot implements Serializable {
     }
   }
 
-  /** Returns a new InterativeState from the data of this instance. */
+  /** Returns a new InteractiveState from the data of this instance. */
   public InteractiveState get_interactive_state(
       BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile) {
     InteractiveState result;

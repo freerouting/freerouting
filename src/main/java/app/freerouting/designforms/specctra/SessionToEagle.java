@@ -23,7 +23,7 @@ public class SessionToEagle extends JFrame {
   /** The generated Eagle script file. */
   private final OutputStreamWriter out_file;
   /**
-   * Some information is read from the board, because it is not contained in the speccctra session
+   * Some information is read from the board, because it is not contained in the specctra session
    * file.
    */
   private final BasicBoard board;
@@ -94,7 +94,7 @@ public class SessionToEagle extends JFrame {
     return result;
   }
 
-  /** Processes the outmost scope of the session file. Returns false, if an error occured. */
+  /** Processes the outmost scope of the session file. Returns false, if an error occurred. */
   private boolean process_session_scope() throws IOException {
 
     // read the first line of the session file
@@ -314,7 +314,7 @@ public class SessionToEagle extends JFrame {
     // read the net name
     Object next_token = this.scanner.next_token();
     if (!(next_token instanceof String)) {
-      FRLogger.warn("SessionToEagle.processnet_scope: String expected");
+      FRLogger.warn("SessionToEagle.process_net_scope: String expected");
       return false;
     }
     String net_name = (String) next_token;

@@ -37,7 +37,7 @@ public class DefaultItemClearanceClasses implements Serializable {
   }
 
   /**
-   * Used in the function get_default_clearance_class to get the default claearance classes for item
+   * Used in the function get_default_clearance_class to get the default clearance classes for item
    * classes.
    */
   public enum ItemClass {

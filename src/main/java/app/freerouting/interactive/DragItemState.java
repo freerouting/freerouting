@@ -32,7 +32,7 @@ public class DragItemState extends DragState {
   }
 
   /**
-   * Moves the items of the group to p_to_location. Return this.return_state, if an error eccured
+   * Moves the items of the group to p_to_location. Return this.return_state, if an error occurred
    * while moving, so that an undo may be necessary.
    */
   @Override
@@ -75,7 +75,7 @@ public class DragItemState extends DragState {
 
     if (shove_ok) {
       if (!this.something_dragged) {
-        // initialisitions for the first time dragging
+        // initialisations for the first time dragging
         this.observers_activated = !hdlg.get_routing_board().observers_active();
         if (this.observers_activated) {
           hdlg.get_routing_board().start_notify_observers();
@@ -93,7 +93,7 @@ public class DragItemState extends DragState {
       }
       if (!move_component.insert(
           hdlg.settings.trace_pull_tight_region_width, hdlg.settings.trace_pull_tight_accuracy)) {
-        // an insert error occured, end the drag state
+        // an insert error occurred, end the drag state
         return this.return_state;
       }
       hdlg.repaint();

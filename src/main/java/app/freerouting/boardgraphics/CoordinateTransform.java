@@ -175,14 +175,14 @@ public class CoordinateTransform implements Serializable {
     mirror_left_right = p_value;
   }
 
-  /** Returns, if the top side and the botton side of the board are swapped. */
+  /** Returns, if the top side and the bottom side of the board are swapped. */
   public boolean is_mirror_top_bottom() {
     // Because the origin of display is the upper left corner, the internal value
     // is opposite to the result of this function.
     return !mirror_top_bottom;
   }
 
-  /** If p_value is true, the top side and the botton side of the board will be swapped. */
+  /** If p_value is true, the top side and the bottom side of the board will be swapped. */
   public void set_mirror_top_bottom(boolean p_value) {
     // Because the origin of display is the upper left corner, the internal value
     // will be opposite to the input value of this function.

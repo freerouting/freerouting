@@ -54,7 +54,7 @@ public class ShapeSearchTree extends MinAreaTree {
     board = p_board;
   }
 
-  /** Returns, if for the shapes stored in this tree clearance compensatiion is used. */
+  /** Returns, if for the shapes stored in this tree clearance compensation is used. */
   public boolean is_clearance_compensation_used() {
     return this.compensated_clearance_class_no > 0;
   }
@@ -275,9 +275,9 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Trannsfers tree entries from p_from_trace to p_start and p_end_piece after a moddle piece was
+   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a middle piece was
    * cut out. Special implementation for ShapeTraceEntries.fast_cutout_trace for performance
-   * reasoms.
+   * reasons.
    */
   void reuse_entries_after_cutout(
       PolylineTrace p_from_trace, PolylineTrace p_start_piece, PolylineTrace p_end_piece) {
@@ -545,7 +545,7 @@ public class ShapeSearchTree extends MinAreaTree {
    * possible, several rooms are returned with shapes, which intersect with
    * p_room.get_contained_shape(). The result room is not yet complete, because its doors are not
    * yet calculated. If p_ignore_shape != null, objects of type CompleteFreeSpaceExpansionRoom,
-   * whose intersection with the shape of p_room is containes in p_ignore_shape, are ignored.
+   * whose intersection with the shape of p_room is contained in p_ignore_shape, are ignored.
    */
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(
       IncompleteFreeSpaceExpansionRoom p_room,
@@ -605,8 +605,8 @@ public class ShapeSearchTree extends MinAreaTree {
                     curr_object instanceof CompleteFreeSpaceExpansionRoom
                         && p_ignore_shape != null
                         && p_ignore_shape.contains(intersection);
-                // cannot happen in free angle roouting, because then expansion_rooms
-                // may not overlap. Therefore that can be removed as soon as special
+                // cannot happen in free angle routing, because then expansion_rooms
+                // may not overlap. Therefore, that can be removed as soon as special
                 // function for 45-degree routing is used.
                 if (!ignore_expansion_room) {
                   something_changed = true;
@@ -640,7 +640,7 @@ public class ShapeSearchTree extends MinAreaTree {
 
   /**
    * Restrains the shape of p_incomplete_room to a TileShape, which does not intersect with the
-   * interiour of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
+   * interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
    * shape of the result room. If that is not possible, several rooms are returned with shapes,
    * which intersect with p_incomplete_room.get_contained_shape().
    */
@@ -648,14 +648,14 @@ public class ShapeSearchTree extends MinAreaTree {
       IncompleteFreeSpaceExpansionRoom p_incomplete_room, TileShape p_obstacle_shape) {
     // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
     // are on the right side of this line, and that the line segment
-    // intersects with the interiour of p_shape.
+    // intersects with the interior of p_shape.
     // If there are more than 1 such lines take the line which is
     // furthest away from p_points_to_be_con.tained
-    // Then insersect p_shape with the halfplane defined by the
+    // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
     Simplex obstacle_simplex =
         p_obstacle_shape
-            .to_Simplex(); // otherwise border_lines of lenth 0 for octagons may not be handeled
+            .to_Simplex(); // otherwise border_lines of length 0 for octagons may not be handled
                            // correctly
     Collection<IncompleteFreeSpaceExpansionRoom> result =
         new LinkedList<>();
@@ -679,7 +679,7 @@ public class ShapeSearchTree extends MinAreaTree {
     double cut_line_distance = -1;
     for (int i = 0; i < obstacle_simplex.border_line_count(); ++i) {
       LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-      if (room_shape.is_intersected_interiour_by(curr_line_segment)) {
+      if (room_shape.is_intersected_interior_by(curr_line_segment)) {
         // otherwise curr_object may not touch the intersection
         // of p_shape with the half_plane defined by the cut_line.
         // That may lead to problems when creating the ExpansionRooms.
@@ -713,10 +713,10 @@ public class ShapeSearchTree extends MinAreaTree {
 
       for (int i = 0; i < obstacle_simplex.border_line_count(); ++i) {
         LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-        if (room_shape.is_intersected_interiour_by(curr_line_segment)) {
+        if (room_shape.is_intersected_interior_by(curr_line_segment)) {
           Line curr_line = obstacle_simplex.border_line(i);
           if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
-            // curr_line intersects with the interiour of p_shape_to_be_contained
+            // curr_line intersects with the interior of p_shape_to_be_contained
             cut_line = curr_line.opposite();
             break;
           }
@@ -915,7 +915,7 @@ public class ShapeSearchTree extends MinAreaTree {
         result[i] = it.next();
       }
     } else {
-      // Only the line shapes of the outline are inserted as obstales into the tree.
+      // Only the line shapes of the outline are inserted as obstacles into the tree.
       result = new TileShape[p_board_outline.line_count() * this.board.layer_structure.arr.length];
       int half_width = p_board_outline.get_half_width();
       Line[] curr_line_arr = new Line[3];
@@ -971,8 +971,8 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Makes shure that on each layer there will be more than 1 IncompleteFreeSpaceExpansionRoom, even
-   * if there are no objects on the layer. Otherwise the maze search algprithm gets problems with
+   * Makes sure that on each layer there will be more than 1 IncompleteFreeSpaceExpansionRoom, even
+   * if there are no objects on the layer. Otherwise, the maze search algorithm gets problems with
    * vias.
    */
   protected Collection<IncompleteFreeSpaceExpansionRoom> divide_large_room(

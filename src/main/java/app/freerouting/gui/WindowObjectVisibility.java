@@ -32,7 +32,7 @@ public class WindowObjectVisibility extends WindowVisibility {
     return result;
   }
 
-  /** Refreshs the displayed values in this window. */
+  /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
     ColorIntensityTable color_intensity_table =

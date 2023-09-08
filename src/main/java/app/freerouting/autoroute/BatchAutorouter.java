@@ -69,7 +69,7 @@ public class BatchAutorouter {
     if (p_with_preferred_directions) {
       this.trace_cost_arr = this.hdlg.get_settings().autoroute_settings.get_trace_cost_arr();
     } else {
-      // remove prefered direction
+      // remove preferred direction
       this.trace_cost_arr =
           new AutorouteControl.ExpansionCostFactor[this.routing_board.get_layer_count()];
       for (int i = 0; i < this.trace_cost_arr.length; ++i) {
@@ -94,11 +94,11 @@ public class BatchAutorouter {
       InteractiveActionThread p_thread,
       int p_max_pass_count,
       int p_ripup_costs,
-      boolean p_with_prefered_directions,
+      boolean p_with_preferred_directions,
       RoutingBoard updated_routing_board) {
     BatchAutorouter router_instance =
         new BatchAutorouter(
-            p_thread, true, p_with_prefered_directions, p_ripup_costs, updated_routing_board);
+            p_thread, true, p_with_preferred_directions, p_ripup_costs, updated_routing_board);
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items
@@ -406,7 +406,7 @@ public class BatchAutorouter {
   }
 
   /**
-   * Returns the airline of the current autorouted connnection or null, if no such airline exists
+   * Returns the airline of the current autorouted connection or null, if no such airline exists
    */
   public FloatLine get_air_line() {
     if (this.air_line == null) {

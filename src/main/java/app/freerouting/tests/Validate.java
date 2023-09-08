@@ -230,7 +230,7 @@ public class Validate {
   }
 
   /** checks, if there are unconnected traces ore vias on the board */
-  public static boolean unconnnected_routing_items(String p_s, BasicBoard p_board) {
+  public static boolean unconnected_routing_items(String p_s, BasicBoard p_board) {
     for (Item curr_item : p_board.get_items()) {
       if (curr_item.is_routable()) {
         Collection<Item> contact_list = curr_item.get_normal_contacts();

@@ -7,12 +7,12 @@ import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Popup menu used while constructing a cornered shape. */
-class PupupMenuCornerItemConstruction extends JPopupMenu {
+class PopupMenuCornerItemConstruction extends JPopupMenu {
 
   private final BoardPanel board_panel;
 
   /** Creates a new instance of CornerItemConstructionPopupMenu */
-  PupupMenuCornerItemConstruction(BoardFrame p_board_frame) {
+  PopupMenuCornerItemConstruction(BoardFrame p_board_frame) {
     this.board_panel = p_board_frame.board_panel;
     ResourceBundle resources =
         ResourceBundle.getBundle(
@@ -25,7 +25,7 @@ class PupupMenuCornerItemConstruction extends JPopupMenu {
           public void actionPerformed(ActionEvent evt) {
             // Same action as if the left button is clicked with
             // the current mouse coordinates in this situation
-            // because the left button is a short cut for this action.
+            // because the left button is a shortcut for this action.
             board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
           }
         });

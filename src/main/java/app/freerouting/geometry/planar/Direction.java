@@ -104,7 +104,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of of a vector representing this
+   * The function returns Signum.POSITIVE, if the scalar product of a vector representing this
    * direction and a vector representing p_other is {@literal >} 0, Signum.NEGATIVE, if the scalar
    * product is {@literal <} 0, and Signum.ZERO, if the scalar product is equal 0.
    */
@@ -148,7 +148,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable {
     return result;
   }
 
-  /** Returns an approximation of the signed angle corresponding to this dierection. */
+  /** Returns an approximation of the signed angle corresponding to this direction. */
   public double angle_approx() {
     return this.get_vector().angle_approx();
   }

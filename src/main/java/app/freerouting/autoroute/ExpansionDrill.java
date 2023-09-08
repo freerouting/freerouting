@@ -65,7 +65,7 @@ public class ExpansionDrill implements ExpandableObject {
         }
       }
       if (found_room == null) {
-        // create a new expansion romm on this layer
+        // create a new expansion room on this layer
         IncompleteFreeSpaceExpansionRoom new_incomplete_room =
             new IncompleteFreeSpaceExpansionRoom(null, i, search_shape);
         Collection<CompleteFreeSpaceExpansionRoom> new_rooms =
@@ -117,7 +117,7 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   /*
-   * Test draw of the the shape of this drill.
+   * Test draw of the shape of this drill.
    */
   public void draw(
       Graphics p_graphics,

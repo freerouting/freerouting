@@ -55,7 +55,7 @@ public class LayerStructure {
     return result;
   }
 
-  /** Returns, if the net with name p_net_name contains a powwer plane. */
+  /** Returns, if the net with name p_net_name contains a power plane. */
   public boolean contains_plane(String p_net_name) {
 
     for (Layer curr_layer : arr) {

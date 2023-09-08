@@ -25,7 +25,7 @@
         0 550 362 512
       )
     )
-    (display_miscellanious
+    (display_miscellaneous
       not_visible
       (bounds
         0 350 236 348

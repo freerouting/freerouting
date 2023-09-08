@@ -526,7 +526,7 @@ class Wiring extends ScopeKeyword {
   }
 
   /**
-   * Maybe trace of type turret without net in Mentor design. Try to assig the net by calculating
+   * Maybe trace of type turret without net in Mentor design. Try to assign the net by calculating
    * the overlaps.
    */
   private void try_correct_net(Item p_item) {

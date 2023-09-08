@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-/** Popup menu used in the interactive selected item state.. */
+/** Popup menu used in the interactive selected item state. */
 class PopupMenuSelectedItems extends PopupMenuDisplay {
 
   /** Creates a new instance of SelectedItemPopupMenu */

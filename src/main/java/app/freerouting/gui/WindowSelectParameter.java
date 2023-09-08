@@ -135,7 +135,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.setResizable(false);
   }
 
-  /** Refreshs the displayed values in this window. */
+  /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
     if (this.board_handling.settings.get_select_on_all_visible_layers()) {
@@ -212,7 +212,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
       board_handling.set_selectable(item_type, is_selected);
 
-      // make shure that from fixed and unfixed items at least one type is selected.
+      // make sure that from fixed and unfixed items at least one type is selected.
       if (item_type == ItemSelectionFilter.SelectableChoices.FIXED) {
         int unfixed_no = ItemSelectionFilter.SelectableChoices.UNFIXED.ordinal();
         if (!is_selected && !item_selection_choices[unfixed_no].isSelected()) {

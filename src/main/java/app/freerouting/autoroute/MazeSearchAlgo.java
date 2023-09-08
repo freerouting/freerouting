@@ -41,14 +41,14 @@ public class MazeSearchAlgo {
   /** The autoroute engine of this expansion algorithm. */
   public final AutorouteEngine autoroute_engine;
   final AutorouteControl ctrl;
-  /** The queue of of expanded elements used in this search algorithm. */
+  /** The queue of expanded elements used in this search algorithm. */
   final SortedSet<MazeListElement> maze_expansion_list;
   /**
    * Used for calculating of a good lower bound for the distance between a new MazeExpansionElement
    * and the destination set of the expansion.
    */
   final DestinationDistance destination_distance;
-  /** The seach tree for expanding. It is the tree compensated for the current net. */
+  /** The search tree for expanding. It is the tree compensated for the current net. */
   private final ShapeSearchTree search_tree;
   private final Random random_generator = new Random();
   /** The destination door found by the expanding algorithm. */
@@ -60,7 +60,7 @@ public class MazeSearchAlgo {
     autoroute_engine = p_autoroute_engine;
     ctrl = p_ctrl;
     random_generator.setSeed(
-        p_ctrl.ripup_costs); // To get reproducable random numbers in the ripup algorithm.
+        p_ctrl.ripup_costs); // To get reproducible random numbers in the ripup algorithm.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
     maze_expansion_list = new TreeSet<>();
     destination_distance =
@@ -69,7 +69,7 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Initializes a new instance of MazeSearchAlgo for secrching a connection between p_start_items
+   * Initializes a new instance of MazeSearchAlgo for searching a connection between p_start_items
    * and p_destination_items. Returns null, if the initialisation failed.
    */
   public static MazeSearchAlgo get_instance(
@@ -88,7 +88,7 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Looks for pins with more than 1 nets and reduces shapes of thraces of foreign nets, which are
+   * Looks for pins with more than 1 nets and reduces shapes of traces of foreign nets, which are
    * already connected to such a pin, so that the pin center is not blocked for connection.
    */
   private static void reduce_trace_shapes_at_tie_pins(
@@ -110,7 +110,7 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Return the addditional cost factor for ripping the trace, if it is connected to a fanout via or
+   * Return the additional cost factor for ripping the trace, if it is connected to a fanout via or
    * 1, if no fanout via was found.
    */
   private static double calc_fanout_via_ripup_cost_factor(Trace p_trace) {
@@ -190,7 +190,7 @@ public class MazeSearchAlgo {
   /**
    * Does a maze search to find a connection route between the start and the destination items. If
    * the algorithm succeeds, the ExpansionDoor and its section number of the found destination is
-   * returned, from where the whole found connection can be backtracked. Otherwise the return value
+   * returned, from where the whole found connection can be backtracked. Otherwise, the return value
    * will be null.
    */
   public Result find_connection() {
@@ -280,7 +280,7 @@ public class MazeSearchAlgo {
    */
   private boolean expand_to_room_doors(MazeListElement p_list_element) {
 
-    // Complete the neigbour rooms to make shure, that the
+    // Complete the neighbour rooms to make sure, that the
     // doors of this room will not change later on.
     int layer_no = p_list_element.next_room.get_layer();
 
@@ -307,7 +307,7 @@ public class MazeSearchAlgo {
       curr_door_is_small = door_is_small(curr_door, 2 * half_width_add);
     }
 
-    this.autoroute_engine.complete_neigbour_rooms(p_list_element.next_room);
+    this.autoroute_engine.complete_neighbour_rooms(p_list_element.next_room);
 
     FloatPoint shape_entry_middle =
         p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
@@ -330,7 +330,7 @@ public class MazeSearchAlgo {
     } else {
       TileShape next_room_shape = p_list_element.next_room.get_shape();
       if (next_room_shape.min_width() < 2 * half_width) {
-        next_room_is_thick = false; // to prevent probles with the opposite side
+        next_room_is_thick = false; // to prevent problems with the opposite side
       } else if (!p_list_element.already_checked
           && p_list_element.door.get_dimension() == 1
           && !curr_door_is_small) {
@@ -689,7 +689,7 @@ public class MazeSearchAlgo {
         p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
     if (p_from_element.door instanceof DrillPage
         && p_from_element.backtrack_door instanceof TargetItemExpansionDoor) {
-      // If expansion comes from a pin with trace exit directions the eapansion_value is calculated
+      // If expansion comes from a pin with trace exit directions the expansion_value is calculated
       // from the nearest trace exit point instead from the center olf the pin.
       Item from_item = ((TargetItemExpansionDoor) p_from_element.backtrack_door).item;
       if (from_item instanceof Pin) {
@@ -742,7 +742,7 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * A drill page is inserted between an expansion roomm and the drill to expand in order to prevent
+   * A drill page is inserted between an expansion room and the drill to expand in order to prevent
    * performance problems with rooms with big shapes containing many drills.
    */
   private void expand_to_drill_page(DrillPage p_drill_page, MazeListElement p_from_element) {
@@ -905,7 +905,7 @@ public class MazeSearchAlgo {
       if (to_layer == from_layer) {
         continue;
       }
-      // check, there there is a fitting via mask.
+      // check, there is a fitting via mask.
       int curr_first_layer;
       int curr_last_layer;
       if (to_layer < from_layer) {
@@ -986,7 +986,7 @@ public class MazeSearchAlgo {
       destination_ok = true;
     }
     if (!destination_ok && this.ctrl.is_fanout) {
-      // detination set is not needed for fanout
+      // destination set is not needed for fanout
       IntBox board_bounding_box = this.autoroute_engine.board.bounding_box;
       destination_distance.join(board_bounding_box, 0);
       destination_distance.join(board_bounding_box, this.ctrl.layer_count - 1);
@@ -1201,7 +1201,7 @@ public class MazeSearchAlgo {
     if (p_list_element.section_no_of_door != 0
         && p_list_element.section_no_of_door
             != p_list_element.door.maze_search_element_count() - 1) {
-      // No delay of occupation necessesary because inner sections of a door are currently not
+      // No delay of occupation necessary because inner sections of a door are currently not
       // shoved.
       return true;
     }
@@ -1273,8 +1273,8 @@ public class MazeSearchAlgo {
   }
 
   /**
-   * Checks, if the next roomm contains a destination pin, where evtl. neckdown is necessary. Return
-   * the neck down width in this case, or 0, if no such pin waas found,
+   * Checks, if the next room contains a destination pin, where evtl. neckdown is necessary. Return
+   * the neck down width in this case, or 0, if no such pin was found,
    */
   private double check_neck_down_at_dest_pin(CompleteExpansionRoom p_room) {
     Collection<TargetItemExpansionDoor> target_doors = p_room.get_target_doors();
@@ -1303,7 +1303,7 @@ public class MazeSearchAlgo {
     FloatPoint prev_corner = door_shape.corner_approx(0);
     int corner_count = door_shape.border_line_count();
     for (int i = 1; i < corner_count; ++i) {
-      // skip lines of lenghth 0
+      // skip lines of length 0
       FloatPoint next_corner = door_shape.corner_approx(i);
       if (next_corner.distance_square(prev_corner) > 1) {
         door_line = door_shape.border_line(i - 1);

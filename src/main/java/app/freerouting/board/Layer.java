@@ -8,7 +8,7 @@ public class Layer implements Serializable {
   /** The name of the layer. */
   public final String name;
   /**
-   * True, if this is a signal layer, which can be used for routing. Otherwise it may be for example
+   * True, if this is a signal layer, which can be used for routing. Otherwise, it may be for example
    * a power ground layer.
    */
   public final boolean is_signal;

@@ -82,8 +82,8 @@ public abstract class WindowNetSamples extends BoardSubWindow {
   }
 
   /**
-   * Opens a zipped archive from an URL in the net. Returns a zipped input stream, who is positioned
-   * at the start of p_file_name, or null, if an error occured,
+   * Opens a zipped archive from a URL in the net. Returns a zipped input stream, who is positioned
+   * at the start of p_file_name, or null, if an error occurred,
    */
   protected static ZipInputStream open_zipped_file(String p_archive_name, String p_file_name) {
     String archive_path_name = MainApplication.WEB_FILE_BASE_NAME + p_archive_name + ".zip";
@@ -162,7 +162,7 @@ public abstract class WindowNetSamples extends BoardSubWindow {
     return new_frame;
   }
 
-  /** Replays a zipped logfile from an URL in the net. */
+  /** Replays a zipped logfile from a URL in the net. */
   private static void read_zipped_logfile(
       BoardFrame p_board_frame, String p_archive_name, String p_logfile_name) {
     if (p_board_frame == null) {
@@ -178,7 +178,7 @@ public abstract class WindowNetSamples extends BoardSubWindow {
   /** Fill the list with the examples. */
   protected abstract void fill_list();
 
-  /** Action to be perfomed. when the button is pushed after selecting an item in the list. */
+  /** Action to be performed. when the button is pushed after selecting an item in the list. */
   protected abstract void button_pushed();
 
   /** Adds an element to the list. */

@@ -38,7 +38,7 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /**
-   * Creates a new instance with the 2 clearance classes "none"and "default" ans initializes it with
+   * Creates a new instance with the 2 clearance classes "none" and "default" and initializes it with
    * p_default_value.
    */
   public static ClearanceMatrix get_default_instance(
@@ -67,7 +67,7 @@ public class ClearanceMatrix implements Serializable {
   /** Gets the name of the clearance class with the input number. */
   public String get_name(int p_cl_class) {
     if (p_cl_class < 0 || p_cl_class >= row.length) {
-      FRLogger.warn("CleatranceMatrix.get_name: p_cl_class out of range");
+      FRLogger.warn("ClearanceMatrix.get_name: p_cl_class out of range");
       return null;
     }
     return row[p_cl_class].name;
@@ -213,7 +213,7 @@ public class ClearanceMatrix implements Serializable {
   }
 
   /**
-   * Appends a new clearance class to the clearence matrix and initializes it with the values of the
+   * Appends a new clearance class to the clearance matrix and initializes it with the values of the
    * default class. Returns false, oif a clearance class with name p_class_name is already existing.
    */
   public boolean append_class(String p_class_name) {
@@ -368,7 +368,7 @@ public class ClearanceMatrix implements Serializable {
       }
     }
 
-    /** Returns thrue of all clearances values of this and p_other are equal. */
+    /** Returns true of all clearances values of this and p_other are equal. */
     boolean equals(MatrixEntry p_other) {
       for (int i = 0; i < layer_structure.arr.length; ++i) {
         if (this.layer[i] != p_other.layer[i]) {

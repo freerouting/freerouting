@@ -29,7 +29,7 @@ public class NetIncompletes {
   private final double draw_marker_radius;
   /**
    * The length of the violation of the length restriction of the net, > 0, if the cumulative trace
-   * length is to big, < 0, if the trace length is to smalll, 0, if the thace length is ok or the
+   * length is too big, < 0, if the trace length is too small, 0, if the trace length is ok or the
    * net has no length restrictions
    */
   private double length_violation = 0;
@@ -47,7 +47,7 @@ public class NetIncompletes {
       return;
     }
 
-    // create a Delauny Triangulation for the net_items
+    // create a Delaunay Triangulation for the net_items
     Collection<PlanarDelaunayTriangulation.Storable> triangulation_objects =
         new LinkedList<>();
     for (PlanarDelaunayTriangulation.Storable curr_object : net_items) {
@@ -138,7 +138,7 @@ public class NetIncompletes {
     return incompletes.size();
   }
 
-  /** Recalculates the length violations. Return false, if the lenght violation has not changed. */
+  /** Recalculates the length violations. Return false, if the length violation has not changed. */
   boolean calc_length_violation() {
     double old_violation = this.length_violation;
     double max_length = this.net.get_class().get_maximum_trace_length();
@@ -161,7 +161,7 @@ public class NetIncompletes {
 
   /**
    * Returns the length of the violation of the length restriction of the net, > 0, if the
-   * cumulative trace length is to big, < 0, if the trace length is to smalll, 0, if the thace
+   * cumulative trace length is too big, < 0, if the trace length is too small, 0, if the trace
    * length is ok or the net has no length restrictions
    */
   double get_length_violation() {
@@ -209,12 +209,12 @@ public class NetIncompletes {
     ArrayList<NetItem> result = new ArrayList<>();
     int input_size = p_item_list.size();
 
-    Collection<Item> handeled_items = new LinkedList<>();
+    Collection<Item> handled_items = new LinkedList<>();
     int curr_index = 0;
     while (!p_item_list.isEmpty()) {
       Item start_item = p_item_list.iterator().next();
       Collection<Item> curr_connected_set = start_item.get_connected_set(this.net.net_number);
-      handeled_items.addAll(curr_connected_set);
+      handled_items.addAll(curr_connected_set);
       p_item_list.removeAll(curr_connected_set);
       for (Item curr_item : curr_connected_set) {
         result.add(new NetItem(curr_item, curr_connected_set));

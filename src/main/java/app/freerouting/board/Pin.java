@@ -35,13 +35,13 @@ import java.util.TreeSet;
 public class Pin extends DrillItem implements Serializable {
   /** The number of this pin in its component (starting with 0). */
   public final int pin_no;
-  /** The pin, this pin was changed to by swapping or this pin, if no pin swap accured. */
+  /** The pin, this pin was changed to by swapping or this pin, if no pin swap occurred. */
   private Pin changed_to = this;
   private transient Shape[] precalculated_shapes;
 
   /**
    * Creates a new instance of Pin with the input parameters. (p_to_layer - p_from_layer + 1) shapes
-   * must be provided. p_pin_no isthe number of the pin in its component (starting with 0).
+   * must be provided. p_pin_no is the number of the pin in its component (starting with 0).
    */
   Pin(
       int p_component_no,
@@ -256,7 +256,7 @@ public class Pin extends DrillItem implements Serializable {
 
   /**
    * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer
-   * together with the minimal trace line lengths into thei directions. Currently only implemented
+   * together with the minimal trace line lengths into their directions. Currently implemented
    * only for box shapes, where traces are allowed to exit the pad only on the small sides.
    */
   public Collection<TraceExitRestriction> get_trace_exit_restrictions(int p_layer) {
@@ -343,7 +343,7 @@ public class Pin extends DrillItem implements Serializable {
   }
 
   /**
-   * Returns true, if vias throw the pads of this pins are allowed, false, otherwise. Currently
+   * Returns true, if vias throw the pads of this pins are allowed, false, otherwise. Currently,
    * drills are allowed to SMD-pins.
    */
   public boolean drill_allowed() {
@@ -525,7 +525,7 @@ public class Pin extends DrillItem implements Serializable {
 
   /**
    * Returns the neckdown half width for traces on p_layer. The neckdown width is used, when the pin
-   * width is smmaller than the trace width to enter or leave the pin with a trace.
+   * width is smaller than the trace width to enter or leave the pin with a trace.
    */
   public int get_trace_neckdown_halfwidth(int p_layer) {
     double result = Math.max(0.5 * this.get_min_width(p_layer) - 1, 1);

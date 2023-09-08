@@ -153,10 +153,10 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     table_header.setBackground(header_background_color);
 
     TableColumn first_column = this.clearance_table.getColumnModel().getColumn(0);
-    DefaultTableCellRenderer first_colunn_renderer =
+    DefaultTableCellRenderer first_column_renderer =
         new DefaultTableCellRenderer();
-    first_colunn_renderer.setBackground(header_background_color);
-    first_column.setCellRenderer(first_colunn_renderer);
+    first_column_renderer.setBackground(header_background_color);
+    first_column.setCellRenderer(first_column_renderer);
 
     final JPanel result = new JPanel();
     result.setLayout(new BorderLayout());

@@ -79,7 +79,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
     return true;
   }
 
-  /** Adds a corner to the polygon of the the hole under construction. */
+  /** Adds a corner to the polygon of the hole under construction. */
   @Override
   public InteractiveState left_button_clicked(FloatPoint p_next_corner) {
     if (item_to_modify == null) {

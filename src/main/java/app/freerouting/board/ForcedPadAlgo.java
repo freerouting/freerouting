@@ -28,11 +28,11 @@ public class ForcedPadAlgo {
     board = p_board;
   }
 
-  private static TileShape calc_check_chape_for_from_side(
+  private static TileShape calc_check_shape_for_from_side(
       TileShape p_shape, Point p_shape_center, Line p_border_line) {
     FloatPoint shape_center = p_shape_center.to_float();
     FloatPoint offset_projection = shape_center.projection_approx(p_border_line);
-    // Make shure, that direction restrictions are retained.
+    // Make sure, that direction restrictions are retained.
     Line[] line_arr = new Line[3];
     Direction curr_dir = p_border_line.direction();
     line_arr[0] = new Line(p_shape_center, curr_dir);
@@ -42,7 +42,7 @@ public class ForcedPadAlgo {
     return check_line.offset_shape(1, 0);
   }
 
-  /** Checks, if p_line is in frone of p_pad_shape when shoving from p_from_side */
+  /** Checks, if p_line is in front of p_pad_shape when shoving from p_from_side */
   private static boolean in_front_of_pad(
       Line p_line, TileShape p_pad_shape, int p_from_side, int p_width, boolean p_with_sides) {
     if (!p_pad_shape.is_IntOctagon()) {
@@ -337,7 +337,7 @@ public class ForcedPadAlgo {
   /**
    * Shoves aside traces, so that a pad with the input parameters can be inserted without clearance
    * violations. Returns false, if the shove failed. In this case the database may be damaged, so
-   * that an undo becomes necessesary.
+   * that an undo becomes necessary.
    */
   boolean forced_pad(
       TileShape p_pad_shape,
@@ -470,7 +470,7 @@ public class ForcedPadAlgo {
     TileShape offset_shape = (TileShape) p_shape.offset(p_offset);
     for (int i = 0; i < offset_shape.border_line_count(); ++i) {
       TileShape check_shape =
-          calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
+          calc_check_shape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
 
       if (board.check_trace_shape(check_shape, p_layer, empty_arr, p_cl_class, null)) {
         return new CalcFromSide(i, null);
@@ -479,7 +479,7 @@ public class ForcedPadAlgo {
     // try second check without clearance
     for (int i = 0; i < offset_shape.border_line_count(); ++i) {
       TileShape check_shape =
-          calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
+          calc_check_shape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
       if (board.check_trace_shape(check_shape, p_layer, empty_arr, 0, null)) {
         return new CalcFromSide(i, null);
       }

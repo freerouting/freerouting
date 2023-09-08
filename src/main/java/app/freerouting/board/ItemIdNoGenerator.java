@@ -16,8 +16,8 @@ public class ItemIdNoGenerator
   public ItemIdNoGenerator() {}
 
   /**
-   * Create a new unique identification number. Use eventually the id_no generater from the host
-   * system for syncronisation
+   * Create a new unique identification number. Use eventually the id_no generated from the host
+   * system for synchronisation
    */
   @Override
   public int new_no() {

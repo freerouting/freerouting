@@ -33,7 +33,7 @@ public abstract class ActivityReplayFileScope {
       new SetManualTraceClearanceClassScope("set_manual_trace_clearance_class");
   public static final ActivityReplayFileScope SET_MANUAL_TRACE_HALF_WIDTH =
       new SetManualTraceHalfWidthScope("set_manual_trace_half_width");
-  public static final ActivityReplayFileScope SET_MANUAL_TRACEWITH_SELECTION =
+  public static final ActivityReplayFileScope SET_MANUAL_TRACEWIDTH_SELECTION =
       new SetManualTraceWidthSelectionScope("set_manual_tracewidth_selection");
   public static final ActivityReplayFileScope SET_PULL_TIGHT_ACCURACY =
       new SetPullTightAccuracyScope("set_pull_tight_accuracy");
@@ -84,7 +84,7 @@ public abstract class ActivityReplayFileScope {
       new DeleteSelectedScope("delete_selected");
   public static final ActivityReplayFileScope CUTOUT_ROUTE = new CutoutRouteScope("cutout_route");
   public static final ActivityReplayFileScope OPTIMIZE_SELECTED =
-      new OptimizeSelectedScope("optmize_selected");
+      new OptimizeSelectedScope("optimize_selected");
   public static final ActivityReplayFileScope AUTOROUTE_SELECTED =
       new AutorouteSelectedScope("autoroute_selected");
   public static final ActivityReplayFileScope FANOUT_SELECTED =
@@ -132,7 +132,7 @@ public abstract class ActivityReplayFileScope {
     SET_LAYER,
     SET_MANUAL_TRACE_CLEARANCE_CLASS,
     SET_MANUAL_TRACE_HALF_WIDTH,
-    SET_MANUAL_TRACEWITH_SELECTION,
+    SET_MANUAL_TRACEWIDTH_SELECTION,
     SET_SNAP_ANGLE,
     SET_SELECTABLE,
     SET_SELECT_ON_ALL_LAYER,

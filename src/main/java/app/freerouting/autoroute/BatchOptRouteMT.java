@@ -200,7 +200,7 @@ public class BatchOptRouteMT extends BatchOptRoute {
   }
 
   @Override
-  protected float opt_route_pass(int p_pass_no, boolean p_with_prefered_directions) {
+  protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
     long startTime = System.currentTimeMillis();
     update_count = 0;
     num_tasks_finished = 0;
@@ -272,7 +272,7 @@ public class BatchOptRouteMT extends BatchOptRoute {
                 this,
                 item_id,
                 p_pass_no,
-                p_with_prefered_directions,
+                p_with_preferred_directions,
                 this.min_cumulative_trace_length_before));
     }
 

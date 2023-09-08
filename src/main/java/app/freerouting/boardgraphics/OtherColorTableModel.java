@@ -29,7 +29,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     super(p_stream);
   }
 
-  /** Copy construcror. */
+  /** Copy constructor. */
   public OtherColorTableModel(OtherColorTableModel p_item_color_model) {
     super(p_item_color_model.data.length, p_item_color_model.locale);
     for (int i = 0; i < this.data.length; ++i) {

@@ -133,7 +133,7 @@ public class ForcedViaAlgo {
   /**
    * Shoves aside traces, so that a via with the input parameters can be inserted without clearance
    * violations. If the shove failed, the database may be damaged, so that an undo becomes
-   * necessesary. p_trace_clearance_class_no and p_trace_pen_halfwidth_arr is provided to make space
+   * necessary. p_trace_clearance_class_no and p_trace_pen_halfwidth_arr is provided to make space
    * for starting a trace in case the trace width is bigger than the via shape. Returns false, if
    * the forced via failed.
    */
@@ -192,7 +192,7 @@ public class ForcedViaAlgo {
         return false;
       }
       if (start_trace_shape != null) {
-        // necessesary in case strart_trace_shape is bigger than tile_shape
+        // necessary in case start_trace_shape is bigger than tile_shape
         if (!forced_pad_algo.forced_pad(
             start_trace_shape,
             from_side,
@@ -265,7 +265,7 @@ public class ForcedViaAlgo {
     if (is_90_degree) {
       return null;
     }
-    // try the diagonal drections
+    // try the diagonal directions
     double dist = p_dist / Limits.sqrt2;
     double border_dist = via_box.max_width() / (2 * Limits.sqrt2);
     for (int i = 0; i < 4; ++i) {

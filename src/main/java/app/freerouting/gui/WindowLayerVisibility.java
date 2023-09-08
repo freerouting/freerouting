@@ -54,7 +54,7 @@ public class WindowLayerVisibility extends WindowVisibility {
     }
   }
 
-  /** Refreshs the displayed values in this window. */
+  /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
     GraphicsContext graphics_context =

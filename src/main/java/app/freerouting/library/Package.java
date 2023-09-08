@@ -21,7 +21,7 @@ public class Package
 
   /** The name of the package. */
   public final String name;
-  /** Internallly generated package number. */
+  /** Internally generated package number. */
   public final int no;
   /** The outline of the component, which may be null. */
   public final Shape[] outline;
@@ -142,7 +142,7 @@ public class Package
     }
   }
 
-  /** Deescribes a named keepout belonging to a package, */
+  /** Describes a named keepout belonging to a package, */
   public static class Keepout implements Serializable {
     public final String name;
     public final Area area;

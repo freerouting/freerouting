@@ -103,7 +103,7 @@ public class IntBox extends RegularTileShape implements Serializable {
     return 2;
   }
 
-  /** Chechs, if p_point is located in the interiour of this box. */
+  /** Checks, if p_point is located in the interior of this box. */
   public boolean contains_inside(IntPoint p_point) {
     return p_point.x > this.ll.x
         && p_point.x < this.ur.x
@@ -138,7 +138,7 @@ public class IntBox extends RegularTileShape implements Serializable {
 
   /**
    * Calculates the sorted p_max_result_points nearest points on the border of this box. p_point is
-   * assumed to be located in the interiour of this nox. The funtion is only imoplemented for
+   * assumed to be located in the interior of this nox. The function is only implemented for
    * p_max_result_points {@literal <}= 2;
    */
   public IntPoint[] nearest_border_projections(IntPoint p_point, int p_max_result_points) {
@@ -580,8 +580,8 @@ public class IntBox extends RegularTileShape implements Serializable {
         && ur.y <= p_other.ur.y;
   }
 
-  /** Return true, if p_other is contained in the interiour of this box. */
-  public boolean contains_in_interiour(IntBox p_other) {
+  /** Return true, if p_other is contained in the interior of this box. */
+  public boolean contains_in_interior(IntBox p_other) {
     if (p_other.is_empty()) {
       return true;
     }

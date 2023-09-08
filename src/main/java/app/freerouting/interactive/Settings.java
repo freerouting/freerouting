@@ -30,14 +30,14 @@ public class Settings implements Serializable {
   int trace_pull_tight_region_width;
   /** The accuracy of the pull tight algorithm. */
   int trace_pull_tight_accuracy;
-  /** Via snaps to smd center, if attach smd is alllowed. */
+  /** Via snaps to smd center, if attach smd is allowed. */
   boolean via_snap_to_smd_center;
   /** The horizontal placement grid when moving components, if {@literal >} 0. */
   int horizontal_component_grid;
   /** The vertical placement grid when moving components, if {@literal >} 0. */
   int vertical_component_grid;
   /**
-   * If true, the trace width at static pins smaller the the trace width will be lowered
+   * If true, the trace width at static pins smaller the trace width will be lowered
    * automatically to the pin with, if necessary.
    */
   boolean automatic_neckdown;
@@ -191,7 +191,7 @@ public class Settings implements Serializable {
     return this.manual_rule_selection;
   }
 
-  /** Via snaps to smd center, if attach smd is alllowed. */
+  /** Via snaps to smd center, if attach smd is allowed. */
   public boolean get_via_snap_to_smd_center() {
     return this.via_snap_to_smd_center;
   }
@@ -218,7 +218,7 @@ public class Settings implements Serializable {
   }
 
   /**
-   * If true, the trace width at static pins smaller the the trace width will be lowered
+   * If true, the trace width at static pins smaller the trace width will be lowered
    * automatically to the pin with, if necessary.
    */
   public boolean get_automatic_neckdown() {
@@ -226,7 +226,7 @@ public class Settings implements Serializable {
   }
 
   /**
-   * If true, the trace width at static pins smaller the the trace width will be lowered
+   * If true, the trace width at static pins smaller the trace width will be lowered
    * automatically to the pin with, if necessary.
    */
   public void set_automatic_neckdown(boolean p_value) {
@@ -391,7 +391,7 @@ public class Settings implements Serializable {
       return;
     }
     manual_rule_selection = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACEWITH_SELECTION, p_value);
+    activityReplayFile.start_scope(ActivityReplayFileScope.SET_MANUAL_TRACEWIDTH_SELECTION, p_value);
   }
 
   /** Sets the manual trace half width used in interactive routing. */

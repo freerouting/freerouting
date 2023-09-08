@@ -95,7 +95,7 @@ public class Polygon implements Serializable {
 
   /**
    * Returns the winding number of this polygon, treated as closed. It will be {@literal >} 0, if
-   * the corners are in countercock sense, and {@literal <} 0, if the corners are in clockwise
+   * the corners are in counterclock sense, and {@literal <} 0, if the corners are in clockwise
    * sense.
    */
   public int winding_number_after_closing() {

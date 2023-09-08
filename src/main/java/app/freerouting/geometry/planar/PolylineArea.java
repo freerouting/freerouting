@@ -178,7 +178,7 @@ public class PolylineArea implements Area, Serializable {
       }
       for (int i = 0; i < hole_arr.length; ++i) {
         if (hole_arr[i].dimension() < 2) {
-          FRLogger.warn("PolylineArea. split_to_convex: dimennsion 2 for hole expected");
+          FRLogger.warn("PolylineArea. split_to_convex: dimension 2 for hole expected");
           continue;
         }
         TileShape[] convex_hole_pieces = hole_arr[i].split_to_convex();

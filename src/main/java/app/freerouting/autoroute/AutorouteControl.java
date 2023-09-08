@@ -26,7 +26,7 @@ public class AutorouteControl {
    */
   final int[] compensated_trace_half_width;
   final double[] via_radius_arr;
-  /** the additiomal costs to min_normal via_cost for inserting a via between 2 layers */
+  /** the additional costs to min_normal via_cost for inserting a via between 2 layers */
   final ViaCost[] add_via_costs;
   /** The currently used clearance class for traces in the autoroute algorithm */
   public int trace_clearance_class_no;
@@ -34,7 +34,7 @@ public class AutorouteControl {
   public boolean vias_allowed;
   /** True, if vias may drill to the pad of SMD pins */
   public boolean attach_smd_allowed;
-  /** The minimum cost valua of all normal vias */
+  /** The minimum cost value of all normal vias */
   public double min_normal_via_cost;
   public boolean ripup_allowed;
   public int ripup_costs;

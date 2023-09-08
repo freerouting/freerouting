@@ -29,7 +29,7 @@ public class BatchOptRoute {
   protected RoutingBoard routing_board;
   protected ReadSortedRouteItems sorted_route_items;
   protected boolean
-      use_increased_ripup_costs; // in the first passes the ripup costs are icreased for better
+      use_increased_ripup_costs; // in the first passes the ripup costs are increased for better
                                  // performance.
   protected double min_cumulative_trace_length_before = 0;
 
@@ -128,7 +128,7 @@ public class BatchOptRoute {
    * the amount of improvements is made in percentage (expressed between 0.0 and 1.0). -1 if the
    * routing must go on no matter how much it improved.
    */
-  protected float opt_route_pass(int p_pass_no, boolean p_with_prefered_directions) {
+  protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
     float route_improved = 0.0f;
     int via_count_before = this.routing_board.get_vias().size();
     double trace_length_before =
@@ -158,7 +158,7 @@ public class BatchOptRoute {
       if (curr_item == null) {
         break;
       }
-      if (opt_route_item(curr_item, p_pass_no, p_with_prefered_directions).improved()) {
+      if (opt_route_item(curr_item, p_pass_no, p_with_preferred_directions).improved()) {
         int via_count_after = this.routing_board.get_vias().size();
         double trace_length_after =
             this.thread.hdlg.coordinate_transform.board_to_user(
@@ -195,7 +195,7 @@ public class BatchOptRoute {
 
   /** Try to improve the route by re-routing the connections containing p_item. */
   protected ItemRouteResult opt_route_item(
-      Item p_item, int p_pass_no, boolean p_with_prefered_directions) {
+      Item p_item, int p_pass_no, boolean p_with_preferred_directions) {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
@@ -260,7 +260,7 @@ public class BatchOptRoute {
         this.thread,
         MAX_AUTOROUTE_PASSES,
         ripup_costs,
-        p_with_prefered_directions,
+        p_with_preferred_directions,
         this.clone_board ? this.routing_board : null);
 
     this.remove_ratsnest();
@@ -288,8 +288,8 @@ public class BatchOptRoute {
         this.min_cumulative_trace_length_before = trace_length_after;
       } else {
         // Only cumulative trace length shortened.
-        // Catch unexpected increase of cumulative trace length somewhere for examole by removing
-        // acid trapsw.
+        // Catch unexpected increase of cumulative trace length somewhere for example by removing
+        // acid traps.
         this.min_cumulative_trace_length_before =
             Math.min(this.min_cumulative_trace_length_before, trace_length_after);
       }

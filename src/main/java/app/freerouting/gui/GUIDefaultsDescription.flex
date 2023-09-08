@@ -58,7 +58,7 @@ Identifier = ({Letter}|{SpecChar})({Letter}|{Digit}|{SpecChar})*
    "current_layer"             { return GUIDefaultsFile.Keyword.CURRENT_LAYER; }
    "current_only"              { return GUIDefaultsFile.Keyword.CURRENT_ONLY; }
    "deselected_snapshot_attributes" { return GUIDefaultsFile.Keyword.DESELECTED_SNAPSHOT_ATTRIBUTES; }
-   "display_miscellanious"     { return GUIDefaultsFile.Keyword.DISPLAY_MISCELLANIOUS; }
+   "display_miscellaneous"     { return GUIDefaultsFile.Keyword.DISPLAY_MISCELLANEOUS; }
    "display_region"            { return GUIDefaultsFile.Keyword.DISPLAY_REGION; }
    "drag_components_enabled"   { return GUIDefaultsFile.Keyword.DRAG_COMPONENTS_ENABLED; }
    "dynamic"                   { return GUIDefaultsFile.Keyword.DYNAMIC; }

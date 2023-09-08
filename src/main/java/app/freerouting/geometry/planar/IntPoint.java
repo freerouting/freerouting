@@ -185,7 +185,7 @@ public class IntPoint extends Point implements Serializable {
 
   /**
    * Calculates the nearest point to this point on the horizontal or vertical line through p_other
-   * (Snaps this point to on ortogonal line through p_other).
+   * (Snaps this point to on orthogonal line through p_other).
    */
   public IntPoint orthogonal_projection(IntPoint p_other) {
     IntPoint result;
@@ -310,7 +310,7 @@ public class IntPoint extends Point implements Serializable {
 
   /**
    * Calculates a corner point p so that the lines through this point and p and from p to p_to_point
-   * are hprizontal or vertical, and that the angle at p will be 90 degree. If p_left_turn,
+   * are horizontal or vertical, and that the angle at p will be 90 degree. If p_left_turn,
    * p_to_point will be on the left of the line from this point to p, else on the right. Returns
    * null, if the line from this point to p_to_point is already orthogonal.
    */

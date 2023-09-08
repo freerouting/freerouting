@@ -66,7 +66,7 @@ public interface ObjectInfoPanel {
   boolean append_objects(
       String p_button_name, String p_window_title, Collection<Printable> p_objects);
 
-  /** Funktionality needed for objects to print information into an ObjectInfoWindow */
+  /** Functionality needed for objects to print information into an ObjectInfoWindow */
   interface Printable {
     /** Prints information about an ObjectInfoWindow.Printable object into the input window. */
     void print_info(ObjectInfoPanel p_window, Locale p_locale);

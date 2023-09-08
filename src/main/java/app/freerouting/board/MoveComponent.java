@@ -142,9 +142,9 @@ public class MoveComponent {
       return false;
     }
     if (this.component != null) {
-      // component must be moved first, so that the new pin shapes are calculeted correctly
+      // component must be moved first, so that the new pin shapes are calculated correctly
       board.components.move(this.component.no, translate_vector);
-      // let the observers syncronize the moving
+      // let the observers synchronize the moving
       board.communication.observers.notify_moved(this.component);
     }
     for (int i = 0; i < item_group_arr.length; ++i) {

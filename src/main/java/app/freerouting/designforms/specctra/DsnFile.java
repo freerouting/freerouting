@@ -188,8 +188,8 @@ public class DsnFile {
 
   /**
    * Writes p_board to a text file in the Specctra dsn format. Returns false, if the write failed.
-   * If p_compat_mode is true, only standard speecctra dsn scopes are written, so that any host
-   * system with an specctra interface can read them.
+   * If p_compat_mode is true, only standard specctra dsn scopes are written, so that any host
+   * system with a specctra interface can read them.
    */
   public static boolean write(
       BoardHandling p_board_handling,

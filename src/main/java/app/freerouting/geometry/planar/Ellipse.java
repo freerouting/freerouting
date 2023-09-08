@@ -3,7 +3,7 @@ package app.freerouting.geometry.planar;
 import java.io.Serializable;
 
 /**
- * Describes functionality of an elllipse in the plane. Does not implement the ConvexShape
+ * Describes functionality of an ellipse in the plane. Does not implement the ConvexShape
  * interface, because coordinates are float.
  */
 public class Ellipse implements Serializable {

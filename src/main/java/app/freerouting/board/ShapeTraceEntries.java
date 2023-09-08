@@ -208,7 +208,7 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * calculates the next substitute trace piece. Returns null at he end of the substitute trace
+   * calculates the next substitute trace piece. Returns null at the end of the substitute trace
    * list.
    */
   PolylineTrace next_substitute_trace_piece() {
@@ -240,7 +240,7 @@ public class ShapeTraceEntries {
     piece_lines[0] = entries[0].trace.polyline().arr[entries[0].trace_line_no];
     // end with the intersecting line of the trace at the end entry
     piece_lines[piece_lines.length - 1] = entries[1].trace.polyline().arr[entries[1].trace_line_no];
-    // fill the interiour lines of piece_lines with the appropriate edge
+    // fill the interior lines of piece_lines with the appropriate edge
     // lines of the offset shape
     int curr_edge_no = entries[0].edge_no % edge_count;
     for (int i = 1; i < piece_lines.length - 1; ++i) {
@@ -279,7 +279,7 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Looks if an unconnected endpoint of a trace of a foreign net is contained in the interiour of
+   * Looks if an unconnected endpoint of a trace of a foreign net is contained in the interior of
    * the shape.
    */
   public boolean trace_tails_in_shape() {
@@ -335,7 +335,7 @@ public class ShapeTraceEntries {
       insert_entry_point(p_trace, entry_tuple[0], entry_tuple[1], entry_approx);
     }
 
-    // Look, if an end point of the trace lies in the interiour of
+    // Look, if an end point of the trace lies in the interior of
     // the shape. This may be the case, if a via touches the shape
 
     if (!p_trace.shares_net_no(own_net_nos)) {
@@ -403,7 +403,7 @@ public class ShapeTraceEntries {
             {
               int projection_side = offset_shape.contains_on_border_line_no(projection);
               int trace_line_segment_no;
-              // the following may not be correct because the trace may not conntain a suitable
+              // the following may not be correct because the trace may not contain a suitable
               // line for the construction oof the end line of the substitute trace.
               if (i == 0) {
                 trace_line_segment_no = 0;
@@ -603,7 +603,7 @@ public class ShapeTraceEntries {
       // set stack level for all entries of the current net;
       EntryPoint check_entry = curr_entry.next;
       int index_of_next_foreign_set = 0;
-      int index_of_last_occurance_of_set = 0;
+      int index_of_last_occurrence_of_set = 0;
       int next_index = 0;
       EntryPoint last_own_entry = null;
       EntryPoint first_foreign_entry = null;
@@ -612,11 +612,11 @@ public class ShapeTraceEntries {
         ++next_index;
         int[] check_net_nos = check_entry.trace.net_no_arr;
         if (net_nos_equal(check_net_nos, curr_net_nos)) {
-          index_of_last_occurance_of_set = next_index;
+          index_of_last_occurrence_of_set = next_index;
           last_own_entry = check_entry;
           check_entry.stack_level = curr_entry.stack_level;
         } else if (index_of_next_foreign_set == 0) {
-          // first occurance of a foreign connected set
+          // first occurrence of a foreign connected set
           index_of_next_foreign_set = next_index;
           first_foreign_entry = check_entry;
         }
@@ -626,18 +626,18 @@ public class ShapeTraceEntries {
 
       if (next_index != 0) {
         if (index_of_next_foreign_set != 0
-            && index_of_next_foreign_set < index_of_last_occurance_of_set)
+            && index_of_next_foreign_set < index_of_last_occurrence_of_set)
         // raise level
         {
           next_entry = first_foreign_entry;
           if (next_entry.stack_level >= 0) // already calculated
           {
-            // stack property failes
+            // stack property fails
             return false;
           }
           ++curr_level;
         } else {
-          if (index_of_last_occurance_of_set != 0) {
+          if (index_of_last_occurrence_of_set != 0) {
             next_entry = last_own_entry;
           } else {
             next_entry = first_foreign_entry;
@@ -671,7 +671,7 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Pops the next piece with minimal level from the imtersection list Returns null, if the stack is
+   * Pops the next piece with minimal level from the intersection list Returns null, if the stack is
    * empty. The returned array has 2 elements. The first is the first entry point, and the second is
    * the last entry point of the minimal level.
    */

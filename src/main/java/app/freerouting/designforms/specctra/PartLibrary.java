@@ -34,10 +34,10 @@ public class PartLibrary extends ScopeKeyword {
       p_par.file.new_line();
       p_par.file.write("(comp");
       for (int j = 1; j <= p_par.board.components.count(); ++j) {
-        app.freerouting.board.Component curr_compomnent = p_par.board.components.get(j);
-        if (curr_compomnent.get_logical_part() == curr_part) {
+        app.freerouting.board.Component curr_component = p_par.board.components.get(j);
+        if (curr_component.get_logical_part() == curr_part) {
           p_par.file.write(" ");
-          p_par.file.write(curr_compomnent.name);
+          p_par.file.write(curr_component.name);
         }
       }
       p_par.file.write(")");
@@ -115,7 +115,7 @@ public class PartLibrary extends ScopeKeyword {
     return true;
   }
 
-  /** Reads the component list of a logical part mapping. Returns null, if an error occured. */
+  /** Reads the component list of a logical part mapping. Returns null, if an error occurred. */
   private LogicalPartMapping read_logical_part_mapping(IJFlexScanner p_scanner) {
     try {
       Object next_token = p_scanner.next_token();
@@ -260,9 +260,9 @@ public class PartLibrary extends ScopeKeyword {
   }
 
   public static class LogicalPartMapping {
-    /** The name of the maopping. */
+    /** The name of the mapping. */
     public final String name;
-    /** The conponents belonging to the mapping. */
+    /** The components belonging to the mapping. */
     public final SortedSet<String> components;
 
     private LogicalPartMapping(String p_name, SortedSet<String> p_components) {
@@ -292,7 +292,7 @@ public class PartLibrary extends ScopeKeyword {
   }
 
   public static class LogicalPart {
-    /** The name of the maopping. */
+    /** The name of the mapping. */
     public final String name;
     /** The pins of this logical part */
     public final Collection<PartPin> part_pins;

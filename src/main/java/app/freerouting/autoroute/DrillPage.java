@@ -56,7 +56,7 @@ class DrillPage implements ExpandableObject {
     return result;
   }
 
-  /** Returns the drills on this page. If p_atttach_smd, drilling to smd pins is allowed. */
+  /** Returns the drills on this page. If p_attach_smd, drilling to smd pins is allowed. */
   public Collection<ExpansionDrill> get_drills(
       AutorouteEngine p_autoroute_engine, boolean p_attach_smd) {
     if (this.drills == null || p_autoroute_engine.get_net_no() != this.net_no) {

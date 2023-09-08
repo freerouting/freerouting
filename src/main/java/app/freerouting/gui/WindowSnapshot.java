@@ -225,7 +225,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     }
   }
 
-  /** Refreshs the displayed values in this window. */
+  /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
     this.settings_window.refresh();

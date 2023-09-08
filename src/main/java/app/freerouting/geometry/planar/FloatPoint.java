@@ -18,7 +18,7 @@ public class FloatPoint implements Serializable {
   /** the y coordinate of this point */
   public final double y;
 
-  /** creates an instance of class FloatPoint from two double's, */
+  /** creates an instance of class FloatPoint from two doubles, */
   public FloatPoint(double p_x, double p_y) {
     x = p_x;
     y = p_y;
@@ -194,7 +194,7 @@ public class FloatPoint implements Serializable {
     return line.perpendicular_projection(this);
   }
 
-  /** Calculates the scalar prodct of (p_1 - this). with (p_2 - this). */
+  /** Calculates the scalar product of (p_1 - this). with (p_2 - this). */
   public double scalar_product(FloatPoint p_1, FloatPoint p_2) {
     if (p_1 == null || p_2 == null) {
       FRLogger.warn("FloatPoint.scalar_product: parameter point is null");
@@ -252,7 +252,7 @@ public class FloatPoint implements Serializable {
   /**
    * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
    * p_2; and Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2.
-   * Collinearity is not defined, becouse numerical calculations ar not exact for FloatPoints.
+   * Collinearity is not defined, because numerical calculations ar not exact for FloatPoints.
    */
   public Side side_of(FloatPoint p_1, FloatPoint p_2) {
     double d21_x = p_2.x - p_1.x;
@@ -360,7 +360,7 @@ public class FloatPoint implements Serializable {
    * with radius p_distance. Solves the quadratic equation, which results by substituting x by the
    * term in y from the equation of the polar line of a circle with center p_to_point and radius
    * p_distance and putting it into the circle equation. The polar line is the line through the 2
-   * tangential points of the circle looked at from from this point and has the equation (this.x -
+   * tangential points of the circle looked at from this point and has the equation (this.x -
    * p_to_point.x) * (x - p_to_point.x) + (this.y - p_to_point.y) * (y - p_to_point.y) = p_distance
    * **2
    */

@@ -259,7 +259,7 @@ public class BoardMenuFile extends JMenu {
     File defaults_file =
         new File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
     if (defaults_file.exists()) {
-      // Make a backup copy of the old defaulds file.
+      // Make a backup copy of the old defaults file.
       File defaults_file_backup =
           new File(
               board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);

@@ -13,7 +13,7 @@ public class Rectangle extends Shape {
 
   /**
    * Creates a new instance of Rectangle p_coor is an array of dimension 4 and contains the
-   * rectangle coordinates in the following order: lower left x, lower left y, upper right x, uppper
+   * rectangle coordinates in the following order: lower left x, lower left y, upper right x, upper
    * right y.
    */
   public Rectangle(Layer p_layer, double[] p_coor) {

@@ -187,8 +187,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   /**
-   * Makes shure that on each layer there will be more than 1 IncompleteFreeSpaceExpansionRoom, even
-   * if there are no objects on the layer. Otherwise the maze search algprithm gets problems with
+   * Makes sure that on each layer there will be more than 1 IncompleteFreeSpaceExpansionRoom, even
+   * if there are no objects on the layer. Otherwise, the maze search algorithm gets problems with
    * vias.
    */
   @Override
@@ -204,18 +204,18 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
   }
 
   /**
-   * Restrains the shape of p_incomplete_room to a octagon shape, which does not intersect with the
-   * interiour of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
+   * Restrains the shape of p_incomplete_room to an octagon shape, which does not intersect with the
+   * interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
    * shape of the result room.
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrain_shape(
       IncompleteFreeSpaceExpansionRoom p_incomplete_room, IntOctagon p_obstacle_shape) {
     // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
     // are on the right side of this line, and that the line segment
-    // intersects with the interiour of p_shape.
+    // intersects with the interior of p_shape.
     // If there are more than 1 such lines take the line which is
     // furthest away from the shape_to_be_contained
-    // Then insersect p_shape with the halfplane defined by the
+    // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
 
     Collection<IncompleteFreeSpaceExpansionRoom> result =
@@ -265,7 +265,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       if (obstacle_segment_touches_inside(p_obstacle_shape, obstacle_line_no, room_shape)) {
         Line curr_line = p_obstacle_shape.border_line(obstacle_line_no);
         if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
-          // curr_line intersects with the interiour of p_shape_to_be_contained
+          // curr_line intersects with the interior of p_shape_to_be_contained
           restraining_line_no = obstacle_line_no;
           break;
         }
@@ -381,7 +381,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
           curr_tile_shape = curr_shape.bounding_box();
 
           // To avoid small corner cutoffs when taking the offset as an octagon.
-          // That may complicate the room division in the maze expand algorithm unnecessesary.
+          // That may complicate the room division in the maze expand algorithm unnecessary.
         }
 
         int offset_width =

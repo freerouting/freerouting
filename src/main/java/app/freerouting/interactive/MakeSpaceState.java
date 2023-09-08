@@ -58,7 +58,7 @@ public class MakeSpaceState extends DragState {
   @Override
   public InteractiveState move_to(FloatPoint p_to_location) {
     if (!something_dragged) {
-      // initialisitions for the first time dragging
+      // initialisations for the first time dragging
       this.observers_activated = !hdlg.get_routing_board().observers_active();
       if (this.observers_activated) {
         hdlg.get_routing_board().start_notify_observers();

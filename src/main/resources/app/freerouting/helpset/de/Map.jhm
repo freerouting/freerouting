@@ -22,8 +22,8 @@
 
   <mapID target="html_files.WindowVia_EditViaRule" url="html_files/WindowVia.html#EditViaRule"/>
 
-  <mapID target="html_files.WindowDisplay_Miscellanious"
-    url="html_files/WindowDisplay.html#Miscellanious"/>
+  <mapID target="html_files.WindowDisplay_Miscellaneous"
+    url="html_files/WindowDisplay.html#Miscellaneous"/>
 
   <mapID target="html_files.SelectedItemState_ConnectedSets"
     url="html_files/SelectedItemState.html#ConnectedSets"/>

@@ -68,10 +68,10 @@ public class LogicalPart
 
   public static class PartPin implements Comparable<PartPin>, Serializable {
     /**
-     * The number of the part pin. Must be the same number as in the componnents library package.
+     * The number of the part pin. Must be the same number as in the components library package.
      */
     public final int pin_no;
-    /** The name of the part pin. Must be the same name as in the componnents library package. */
+    /** The name of the part pin. Must be the same name as in the components library package. */
     public final String pin_name;
     /** The name of the gate this pin belongs to. */
     public final String gate_name;

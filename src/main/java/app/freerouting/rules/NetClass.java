@@ -16,7 +16,7 @@ public class NetClass
   private final ClearanceMatrix clearance_matrix;
   private final LayerStructure board_layer_structure;
   /**
-   * The clearance classes of the item types, if this net class comes from a class in a Speccctra
+   * The clearance classes of the item types, if this net class comes from a class in a Specctra
    * dsn-file Should eventually be moved to NetClass and used only when reading a dsn-file.
    */
   public DefaultItemClearanceClasses default_item_clearance_classes =

@@ -510,7 +510,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       if (candidate_found) {
         if (p_from_item != null) {
           if (ignore_set == null) {
-            // calculated here to avoid unnessery calculations for performance reasoss.
+            // calculated here to avoid unnecessary calculations for performance reasoss.
             ignore_set = p_from_item.get_connected_set(-1);
           }
           if (ignore_set.contains(curr_item)) {
@@ -703,7 +703,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       return from_corner;
     }
     start_marking_changed_area();
-    // Check, if there ends a item of the same net at p_from_corner.
+    // Check, if there ends an item of the same net at p_from_corner.
     // If so, its geometry will be used to cut off dog ears of the check shape.
     Trace picked_trace = null;
     ItemSelectionFilter filter =
@@ -1219,7 +1219,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   /** Sets, if all conduction areas on the board are obstacles for route of foreign nets. */
   public void change_conduction_is_obstacle(boolean p_value) {
     if (this.rules.get_ignore_conduction() != p_value) {
-      return; // no muultiply
+      return; // no multiply
     }
     boolean something_changed = false;
     // Change the is_obstacle property of all conduction areas of the board.
@@ -1347,7 +1347,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
-   * Returns, if the auto-route database is maintained outside the outo-route algorithm while changing
+   * Returns, if the auto-route database is maintained outside the auto-route algorithm while changing
    * items on rhe board.
    */
   boolean is_maintaining_autoroute_database() {

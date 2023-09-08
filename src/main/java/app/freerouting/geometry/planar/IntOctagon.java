@@ -41,7 +41,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
   /**
    * Creates an IntOctagon from 8 integer values. p_lx is the smallest x value of the shape. p_ly is
-   * the smallest y value of the shape. p_rx is the biggest x valuje af the shape. p_uy is the
+   * the smallest y value of the shape. p_rx is the biggest x value af the shape. p_uy is the
    * biggest y value of the shape. p_ulx is the intersection of the upper left diagonal boundary
    * line with the x axis. p_lrx is the intersection of the lower right diagonal boundary line with
    * the x axis. p_llx is the intersection of the lower left diagonal boundary line with the x axis.
@@ -194,7 +194,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     // x0 (y1 - y7) + x1 (y2 - y0) + x2 (y3 - y1) + ...+ x7( y0 - y6)
     // where xi, yi are the coordinates of the i-th corner of this Octagon.
 
-    // Overwrites the same implementation in TileShape for performence
+    // Overwrites the same implementation in TileShape for performance
     // reasons to avoid Point allocation.
 
     double result = (double) (llx - ly) * (double) (ly - llx + lx);
@@ -370,36 +370,36 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     int new_urx = urx;
 
     if (new_lx < new_llx - new_uy)
-    // the point new_lx, new_uy is the the lower left border line of
+    // the point new_lx, new_uy is the lower left border line of
     // this octagon
-    // change new_lx , that the the lower left border line runs through
+    // change new_lx , that the lower left border line runs through
     // this point
     {
       new_lx = new_llx - new_uy;
     }
 
     if (new_lx < new_ulx + new_ly)
-    // the point new_lx, new_ly is above the the upper left border line of
+    // the point new_lx, new_ly is above the upper left border line of
     // this octagon
-    // change new_lx , that the the upper left border line runs through
+    // change new_lx , that the upper left border line runs through
     // this point
     {
       new_lx = new_ulx + new_ly;
     }
 
     if (new_rx > new_urx - new_ly)
-    // the point new_rx, new_ly is above the the upper right border line of
+    // the point new_rx, new_ly is above the upper right border line of
     // this octagon
-    // change new_rx , that the the upper right border line runs through
+    // change new_rx , that the upper right border line runs through
     // this point
     {
       new_rx = new_urx - new_ly;
     }
 
     if (new_rx > new_lrx + new_uy)
-    // the point new_rx, new_uy is below the the lower right border line of
+    // the point new_rx, new_uy is below the lower right border line of
     // this octagon
-    // change rx , that the the lower right border line runs through
+    // change rx , that the lower right border line runs through
     // this point
 
     {
@@ -623,7 +623,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
     return intersection(p_other.to_IntOctagon());
   }
 
-  /** checkes if this (normalized) octagon is contained in p_box */
+  /** checks if this (normalized) octagon is contained in p_box */
   @Override
   public boolean is_contained_in(IntBox p_box) {
     return (lx >= p_box.ll.x && ly >= p_box.ll.y && rx <= p_box.ur.x && uy <= p_box.ur.y);
@@ -937,7 +937,7 @@ public class IntOctagon extends RegularTileShape implements Serializable {
 
   /**
    * Calculates the sorted p_max_result_points nearest points on the border of this octagon in the
-   * 45-degree directions. p_point is assumed to be located in the interiour of this octagon.
+   * 45-degree directions. p_point is assumed to be located in the interior of this octagon.
    */
   public IntPoint[] nearest_border_projections(IntPoint p_point, int p_max_result_points) {
     if (!this.contains(p_point) || p_max_result_points <= 0) {
@@ -1009,11 +1009,11 @@ public class IntOctagon extends RegularTileShape implements Serializable {
       case 1 -> {
         double tmp = p_point.y - p_point.x + lrx;
         if (tmp > p_tolerance)
-        // the p_point is above the the lower right border line of this octagon
+        // the p_point is above the lower right border line of this octagon
         {
           yield Side.ON_THE_RIGHT;
         } else if (tmp < -p_tolerance)
-        // the p_point is below the the lower right border line of this octagon
+        // the p_point is below the lower right border line of this octagon
         {
           yield Side.ON_THE_LEFT;
         } else {
@@ -1023,10 +1023,10 @@ public class IntOctagon extends RegularTileShape implements Serializable {
       case 3 -> {
         double tmp = p_point.x + p_point.y - urx;
         if (tmp < -p_tolerance) {
-          // the p_point is below the the upper right border line of this octagon
+          // the p_point is below the upper right border line of this octagon
           yield Side.ON_THE_RIGHT;
         } else if (tmp > p_tolerance) {
-          // the p_point is above the the upper right border line of this octagon
+          // the p_point is above the upper right border line of this octagon
           yield Side.ON_THE_LEFT;
         } else {
           yield Side.COLLINEAR;
@@ -1035,11 +1035,11 @@ public class IntOctagon extends RegularTileShape implements Serializable {
       case 5 -> {
         double tmp = p_point.y - p_point.x + ulx;
         if (tmp < -p_tolerance)
-        // the p_point is below the the upper left border line of this octagon
+        // the p_point is below the upper left border line of this octagon
         {
           yield Side.ON_THE_RIGHT;
         } else if (tmp > p_tolerance)
-        // the p_point is above the the upper left border line of this octagon
+        // the p_point is above the upper left border line of this octagon
         {
           yield Side.ON_THE_LEFT;
         } else {
@@ -1049,10 +1049,10 @@ public class IntOctagon extends RegularTileShape implements Serializable {
       case 7 -> {
         double tmp = p_point.x + p_point.y - llx;
         if (tmp > p_tolerance) {
-          // the p_point is above the the lower left border line of this octagon
+          // the p_point is above the lower left border line of this octagon
           yield Side.ON_THE_RIGHT;
         } else if (tmp < -p_tolerance) {
-          // the p_point is below the the lower left border line of this octagon
+          // the p_point is below the lower left border line of this octagon
           yield Side.ON_THE_LEFT;
         } else {
           yield Side.COLLINEAR;

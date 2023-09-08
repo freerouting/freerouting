@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
-/** A ObstacleArea, which can be electrically conected to other items. */
+/** A ObstacleArea, which can be electrically connected to other items. */
 public class ConductionArea extends ObstacleArea implements Connectable {
 
   private boolean is_obstacle;

@@ -73,7 +73,7 @@ class ChangedArea {
     return new IntBox(llx, lly, urx, ury);
   }
 
-  /** inizialises the marking octagon on p_layer to empty */
+  /** initializes the marking octagon on p_layer to empty */
   void set_empty(int p_layer) {
     arr[p_layer].set_empty();
   }

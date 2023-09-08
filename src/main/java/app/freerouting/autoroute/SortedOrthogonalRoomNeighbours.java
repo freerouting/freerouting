@@ -20,7 +20,7 @@ public class SortedOrthogonalRoomNeighbours {
   private final ExpansionRoom from_room;
   private final boolean is_obstacle_expansion_room;
   private final IntBox room_shape;
-  private final boolean[] edge_interiour_touches_obstacle;
+  private final boolean[] edge_interior_touches_obstacle;
 
   /** Creates a new instance of SortedOrthogonalRoomNeighbours */
   private SortedOrthogonalRoomNeighbours(
@@ -30,9 +30,9 @@ public class SortedOrthogonalRoomNeighbours {
     is_obstacle_expansion_room = p_from_room instanceof ObstacleExpansionRoom;
     room_shape = (IntBox) p_completed_room.get_shape();
     sorted_neighbours = new TreeSet<>();
-    edge_interiour_touches_obstacle = new boolean[4];
+    edge_interior_touches_obstacle = new boolean[4];
     for (int i = 0; i < 4; ++i) {
-      edge_interiour_touches_obstacle[i] = false;
+      edge_interior_touches_obstacle[i] = false;
     }
   }
 
@@ -49,8 +49,8 @@ public class SortedOrthogonalRoomNeighbours {
       return null;
     }
 
-    // Check, that each side of the romm shape has at least one touching neighbour.
-    // Otherwise improve the room shape by enlarging.
+    // Check, that each side of the room shape has at least one touching neighbour.
+    // Otherwise, improve the room shape by enlarging.
     boolean edge_removed =
         room_neighbours.try_remove_edge(net_no, p_autoroute_engine.autoroute_search_tree);
     CompleteExpansionRoom result = room_neighbours.completed_room;
@@ -131,7 +131,7 @@ public class SortedOrthogonalRoomNeighbours {
     Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     p_autoroute_search_tree.overlapping_tree_entries(
         room_shape, p_room.get_layer(), overlapping_objects);
-    // Calculate the touching neigbour objects and sort them in counterclock sence
+    // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.
     for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
       SearchTreeObject curr_object = (SearchTreeObject) curr_entry.object;
@@ -156,7 +156,7 @@ public class SortedOrthogonalRoomNeighbours {
       int dimension = intersection.dimension();
       if (dimension > 1 && completed_room instanceof ObstacleExpansionRoom) {
         if (curr_object instanceof Item) {
-          // only Obstacle expansion roos may have a 2-dim overlap
+          // only Obstacle expansion room may have a 2-dim overlap
           Item curr_item = (Item) curr_object;
           if (curr_item.is_routable()) {
             ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
@@ -175,7 +175,7 @@ public class SortedOrthogonalRoomNeighbours {
       }
       result.add_sorted_neighbour(curr_box, intersection);
       if (dimension > 0) {
-        // make  shure, that there is a door to the neighbour room.
+        // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbour_room = null;
         if (curr_object instanceof ExpansionRoom) {
           neighbour_room = (ExpansionRoom) curr_object;
@@ -412,7 +412,7 @@ public class SortedOrthogonalRoomNeighbours {
   }
 
   /**
-   * Check, that each side of the romm shape has at least one touching neighbour. Otherwise the room
+   * Check, that each side of the room shape has at least one touching neighbour. Otherwise, the room
    * shape will be improved the by enlarging. Returns true, if the room shape was changed.
    */
   private boolean try_remove_edge(int p_net_no, ShapeSearchTree p_autoroute_search_tree) {
@@ -431,7 +431,7 @@ public class SortedOrthogonalRoomNeighbours {
 
     int remove_edge_no = -1;
     for (int i = 0; i < 4; ++i) {
-      if (!this.edge_interiour_touches_obstacle[i]) {
+      if (!this.edge_interior_touches_obstacle[i]) {
         remove_edge_no = i;
         break;
       }
@@ -490,13 +490,13 @@ public class SortedOrthogonalRoomNeighbours {
   }
 
   /**
-   * Helper class to sort the doors of an expansion room counterclockwise arount the border of the
+   * Helper class to sort the doors of an expansion room counterclockwise around the border of the
    * room shape.
    */
   private class SortedRoomNeighbour implements Comparable<SortedRoomNeighbour> {
     /** The shape of the neighbour room */
     public final IntBox shape;
-    /** The intersection of tnis ExpansionRoom shape with the neighbour_shape */
+    /** The intersection of this ExpansionRoom shape with the neighbour_shape */
     public final IntBox intersection;
     /** The first side of the room shape, where the neighbour_shape touches */
     public final int first_touching_side;
@@ -510,22 +510,22 @@ public class SortedOrthogonalRoomNeighbours {
       if (p_intersection.ll.y == room_shape.ll.y
           && p_intersection.ur.x > room_shape.ll.x
           && p_intersection.ll.x < room_shape.ur.x) {
-        edge_interiour_touches_obstacle[0] = true;
+        edge_interior_touches_obstacle[0] = true;
       }
       if (p_intersection.ur.x == room_shape.ur.x
           && p_intersection.ur.y > room_shape.ll.y
           && p_intersection.ll.y < room_shape.ur.y) {
-        edge_interiour_touches_obstacle[1] = true;
+        edge_interior_touches_obstacle[1] = true;
       }
       if (p_intersection.ur.y == room_shape.ur.y
           && p_intersection.ur.x > room_shape.ll.x
           && p_intersection.ll.x < room_shape.ur.x) {
-        edge_interiour_touches_obstacle[2] = true;
+        edge_interior_touches_obstacle[2] = true;
       }
       if (p_intersection.ll.x == room_shape.ll.x
           && p_intersection.ur.y > room_shape.ll.y
           && p_intersection.ll.y < room_shape.ur.y) {
-        edge_interiour_touches_obstacle[3] = true;
+        edge_interior_touches_obstacle[3] = true;
       }
 
       if (p_intersection.ll.y == room_shape.ll.y && p_intersection.ll.x > room_shape.ll.x) {

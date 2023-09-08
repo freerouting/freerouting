@@ -60,7 +60,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
         }
       }
       if (!terminal_item_found) {
-        // We have found unconnnected route
+        // We have found unconnected route
         if (curr_item.net_count() == 1) {
           Net curr_net =
               routing_board.rules.nets.get(curr_item.get_net_no(0));

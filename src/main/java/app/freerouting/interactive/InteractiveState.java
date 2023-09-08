@@ -84,7 +84,7 @@ public class InteractiveState {
     return this;
   }
 
-  /** Action to be taken, when the mouse wheel was turned.. */
+  /** Action to be taken, when the mouse wheel was turned. */
   public InteractiveState mouse_wheel_moved(int p_rotation) {
     Point2D screen_mouse_pos =
         hdlg.graphics_context.coordinate_transform.board_to_screen(

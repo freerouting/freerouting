@@ -62,7 +62,7 @@ public class ReadScopeParameter {
   LayerStructure layer_structure;
   app.freerouting.interactive.AutorouteSettings autoroute_settings;
   app.freerouting.board.Unit unit = app.freerouting.board.Unit.MIL;
-  int resolution = 100; // default resulution
+  int resolution = 100; // default resolution
   /** Creates a new instance of ReadScopeParameter */
   ReadScopeParameter(
       IJFlexScanner p_scanner,

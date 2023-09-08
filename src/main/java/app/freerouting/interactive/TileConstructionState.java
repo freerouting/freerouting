@@ -151,7 +151,7 @@ public class TileConstructionState extends CornerItemConstructionState {
       curr_corner = prev_corner;
     }
     if (new_length < corner_arr.length) {
-      // somthing skipped, update corner_list
+      // something skipped, update corner_list
       corner_list =
           new LinkedList<>(Arrays.asList(corner_arr).subList(0, new_length));
     }

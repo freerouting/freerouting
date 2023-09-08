@@ -101,7 +101,7 @@ public class AutorouteEngine {
     this.time_limit = p_time_limit;
   }
 
-  /* Autoroutes a connection between p_start_set and p_dest_set.
+  /** Autoroutes a connection between p_start_set and p_dest_set.
    * Returns ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
    */
   public AutorouteResult autoroute_connection(
@@ -267,7 +267,7 @@ public class AutorouteEngine {
   }
 
   /**
-   * Returns the first elemment in the list of incomplete expansion rooms or null, if the list is
+   * Returns the first element in the list of incomplete expansion rooms or null, if the list is
    * empty.
    */
   public IncompleteFreeSpaceExpansionRoom get_first_incomplete_expansion_room() {
@@ -366,7 +366,7 @@ public class AutorouteEngine {
           }
         } else {
           // the shape of the first completed room may have changed and may
-          // intersect now with the other shapes. Therefore the completed shapes
+          // intersect now with the other shapes. Therefore, the completed shapes
           // have to be recalculated.
           Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes =
               this.autoroute_search_tree.complete_shape(
@@ -419,17 +419,17 @@ public class AutorouteEngine {
   }
 
   /**
-   * Completes the shapes of the neigbour rooms of p_room, so that the doors of p_room will not
+   * Completes the shapes of the neighbour rooms of p_room, so that the doors of p_room will not
    * change later on.
    */
-  public void complete_neigbour_rooms(CompleteExpansionRoom p_room) {
+  public void complete_neighbour_rooms(CompleteExpansionRoom p_room) {
     if (p_room.get_doors() == null) {
       return;
     }
     Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
     while (it.hasNext()) {
       ExpansionDoor curr_door = it.next();
-      // cast to ExpansionRoom becaus ExpansionDoor.other_room works differently with
+      // cast to ExpansionRoom because ExpansionDoor.other_room works differently with
       // parameter type CompleteExpansionRoom.
       ExpansionRoom neighbour_room = curr_door.other_room((ExpansionRoom) p_room);
       if (neighbour_room == null) {
@@ -450,7 +450,7 @@ public class AutorouteEngine {
   }
 
   /**
-   * Invalidates all drill pages intersecting with p_shape, so the they must be recalculated at the
+   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the
    * next call of get_ddrills()
    */
   public void invalidate_drill_pages(TileShape p_shape) {
@@ -507,7 +507,7 @@ public class AutorouteEngine {
   }
 
   /**
-   * Reset all doors for autorouting the next connnection, in case the autorouting database is
+   * Reset all doors for autorouting the next connection, in case the autorouting database is
    * retained.
    */
   private void reset_all_doors() {
@@ -532,7 +532,7 @@ public class AutorouteEngine {
     return expansion_room_instance_count;
   }
 
-  /** The pussible results of autorouting a connection */
+  /** The possible results of autorouting a connection */
   public enum AutorouteResult {
     ALREADY_CONNECTED,
     ROUTED,

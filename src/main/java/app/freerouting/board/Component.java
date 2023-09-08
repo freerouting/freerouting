@@ -184,7 +184,7 @@ public class Component
     return this.logical_part;
   }
 
-  /** Sets the infomation for pin swap and gate swap. */
+  /** Sets the information for pin swap and gate swap. */
   public void set_logical_part(LogicalPart p_logical_part) {
     this.logical_part = p_logical_part;
   }

@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public class Circuit {
   /**
    * Currently only the length matching rule is read from a circuit scope. If the scope does not
-   * contain a length matching rule, nulll is returned.
+   * contain a length matching rule, null is returned.
    */
   public static ReadScopeResult read_scope(IJFlexScanner p_scanner) {
     Object next_token = null;

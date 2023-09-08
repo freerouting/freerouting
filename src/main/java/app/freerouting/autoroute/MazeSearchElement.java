@@ -1,6 +1,6 @@
 package app.freerouting.autoroute;
 
-/** Describes the structure of a section of an ExpandebleObject. */
+/** Describes the structure of a section of an ExpandableObject. */
 public class MazeSearchElement {
   /** true, if this door is already occupied by the maze expanding algorithm */
   public boolean is_occupied = false;

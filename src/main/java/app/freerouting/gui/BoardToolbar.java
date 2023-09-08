@@ -295,7 +295,7 @@ class BoardToolbar extends JPanel {
     this.add(right_toolbar, BorderLayout.EAST);
   }
 
-  /** Sets the selected button in the menu button button group */
+  /** Sets the selected button in the menu button group */
   void hilight_selected_button() {
     InteractiveState interactive_state =
         this.board_frame.board_panel.board_handling.get_interactive_state();

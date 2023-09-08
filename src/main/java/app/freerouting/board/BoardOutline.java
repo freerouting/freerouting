@@ -51,7 +51,7 @@ public class BoardOutline extends Item implements Serializable {
     if (this.keepout_outside_outline) {
       TileShape[] tile_shapes = this.get_keepout_area().split_to_convex();
       if (tile_shapes == null) {
-        // an error accured while dividing the area
+        // an error occurred while dividing the area
         result = 0;
       } else {
         result = tile_shapes.length * this.board.layer_structure.arr.length;
@@ -251,7 +251,7 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /**
-   * Returns, if keepout is generated outside the board outline. Otherwise only the line shapes of
+   * Returns, if keepout is generated outside the board outline. Otherwise, only the line shapes of
    * the outlines are inserted as keepout.
    */
   public boolean keepout_outside_outline_generated() {
@@ -259,7 +259,7 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /**
-   * Makes the area outside this Outline to Keepout, if p_valus = true. Reinserts this Outline into
+   * Makes the area outside this Outline to Keepout, if p_value = true. Reinserts this Outline into
    * the search trees, if the value changes.
    */
   public void generate_keepout_outside(boolean p_value) {
@@ -274,7 +274,7 @@ public class BoardOutline extends Item implements Serializable {
     this.board.search_tree_manager.insert(this);
   }
 
-  /** Returns the sum of the lines of all outline poligons. */
+  /** Returns the sum of the lines of all outline polygons. */
   public int line_count() {
     int result = 0;
     for (PolylineShape curr_shape : this.shapes) {

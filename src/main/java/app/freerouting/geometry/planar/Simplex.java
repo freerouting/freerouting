@@ -25,7 +25,7 @@ public class Simplex extends TileShape implements Serializable {
 
   /**
    * Constructs a Simplex from the directed lines in p_line_arr. The simplex will not be normalized.
-   * To get a normalised simplex use TileShape.get_instance
+   * To get a normalized simplex use TileShape.get_instance
    */
   public Simplex(Line[] p_line_arr) {
     arr = p_line_arr;
@@ -388,7 +388,7 @@ public class Simplex extends TileShape implements Serializable {
       return IntOctagon.EMPTY;
     }
 
-    // initialise to biggest octagon values
+    // initialise to the biggest octagon values
 
     int rx = Limits.CRIT_INT;
     int uy = Limits.CRIT_INT;
@@ -720,7 +720,7 @@ public class Simplex extends TileShape implements Serializable {
       else next_division_line = division_line_arr[inner_corner_no + 1][0];
       Line[] curr_division_lines = division_line_arr[inner_corner_no];
       if (curr_division_lines.length == 2) {
-        // 2 division lines are nessesary (sharp corner).
+        // 2 division lines are necessary (sharp corner).
         // Construct an unbounded simplex from
         // curr_division_lines[1] and curr_division_lines[0]
         // and intersect it with the outer simplex
@@ -1022,7 +1022,7 @@ public class Simplex extends TileShape implements Serializable {
   /**
    * For each corner of this inner simplex 1 or 2 perpendicular projections onto lines of the outer
    * simplex are constructed, so that the resulting pieces after cutting out the inner simplex are
-   * convex. 2 projections may be nessesary at sharp angle corners. Used in in the method
+   * convex. 2 projections may be necessary at sharp angle corners. Used in the method
    * cutout_from with parametertype Simplex.
    */
   private Line[] calc_division_lines(int p_inner_corner_no, Simplex p_outer_simplex) {
@@ -1032,7 +1032,7 @@ public class Simplex extends TileShape implements Serializable {
     else prev_inner_line = this.arr[arr.length - 1];
     FloatPoint intersection = curr_inner_line.intersection_approx(prev_inner_line);
     if (intersection.x >= Integer.MAX_VALUE) {
-      FRLogger.warn("Simplex.calc_division_lines: intersection expexted");
+      FRLogger.warn("Simplex.calc_division_lines: intersection expected");
       return null;
     }
     IntPoint inner_corner = intersection.round();
@@ -1046,7 +1046,7 @@ public class Simplex extends TileShape implements Serializable {
       // exact and the not exact corners come from the intersection of
       // the inner simplex with the outer simplex.
       // Because these corners lie on the border of the outer simplex,
-      // no division is nessesary
+      // no division is necessary
       Line[] result = new Line[1];
       result[0] = prev_inner_line;
       return result;
@@ -1076,7 +1076,7 @@ public class Simplex extends TileShape implements Serializable {
       if (projection_visible) {
         double curr_distance = Math.abs(outer_line.signed_distance(inner_corner.to_float()));
         boolean second_division_necessary = curr_projection_dir.determinant(next_inner_dir) < 0;
-        // may occor at a sharp angle
+        // may occur at a sharp angle
         IntDirection curr_second_projection_dir = curr_projection_dir;
 
         if (second_division_necessary) {

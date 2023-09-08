@@ -46,8 +46,8 @@ public class CutoutRouteState extends SelectRegionState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    p_board_handling.display_layer_messsage();
-    // filter items, whichh cannnot be cutout
+    p_board_handling.display_layer_message();
+    // filter items, which cannot be cutout
     Collection<PolylineTrace> item_list = new LinkedList<>();
 
     for (Item curr_item : p_item_list) {

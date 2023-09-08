@@ -52,7 +52,7 @@ public class RouteState extends InteractiveState {
     if (!(p_parent_state instanceof MenuState)) {
       FRLogger.warn("RouteState.get_instance: unexpected parent state");
     }
-    p_board_handling.display_layer_messsage();
+    p_board_handling.display_layer_message();
     IntPoint location = p_location.round();
     Item picked_item = start_ok(location, p_board_handling);
     if (picked_item == null) {
@@ -64,7 +64,7 @@ public class RouteState extends InteractiveState {
     }
     int[] route_net_no_arr;
     if (picked_item instanceof Pin && net_count > 1) {
-      // tie pin, remove nets, which are already conneccted to this pin on the current layer.
+      // tie pin, remove nets, which are already connected to this pin on the current layer.
       route_net_no_arr =
           get_route_net_numbers_at_tie_pin(
               (Pin) picked_item, p_board_handling.settings.layer);
@@ -243,7 +243,7 @@ public class RouteState extends InteractiveState {
   }
 
   /**
-   * get nets of p_tie_pin except nets of traces, which are already conneccted to this pin on
+   * get nets of p_tie_pin except nets of traces, which are already connected to this pin on
    * p_layer.
    */
   static int[] get_route_net_numbers_at_tie_pin(Pin p_pin, int p_layer) {
@@ -304,7 +304,7 @@ public class RouteState extends InteractiveState {
         change_layer_action(current_layer_no);
       }
     } else if (p_key_char == '-') {
-      // change to the to the previous signal layer
+      // change to the previous signal layer
       LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int current_layer_no = hdlg.settings.layer;

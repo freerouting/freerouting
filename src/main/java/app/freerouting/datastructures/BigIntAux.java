@@ -6,7 +6,7 @@ import java.math.BigInteger;
 public class BigIntAux {
   /*
    * trailingZeroTable[i] is the number of trailing zero bits in the binary
-   * representaion of i.
+   * representation of i.
    */
   static final byte[] trailingZeroTable = {
     -25, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1,
@@ -49,7 +49,7 @@ public class BigIntAux {
     } else
     // multiply both denominators for the new denominator
     // to be on the save side:
-    // taking the leat common multiple whould be optimal
+    // taking the least common multiple would be optimal
     {
       result[2] = p_first[2].multiply(p_second[2]);
       BigInteger tmp_1 = p_first[0].multiply(p_second[2]);

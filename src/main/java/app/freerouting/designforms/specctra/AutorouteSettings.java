@@ -118,7 +118,7 @@ public class AutorouteSettings {
             p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: uclosing bracket expected");
+              FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected");
               return null;
             }
           } catch (IOException e) {

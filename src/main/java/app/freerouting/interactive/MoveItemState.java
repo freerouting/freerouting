@@ -103,7 +103,7 @@ public class MoveItemState extends InteractiveState {
       if (curr_item.get_component_no() > 0) {
         Component curr_component = routing_board.components.get(curr_item.get_component_no());
         if (curr_component == null) {
-          FRLogger.warn("MoveComponentState.get_instance inconsistant component number");
+          FRLogger.warn("MoveComponentState.get_instance inconsistent component number");
           return null;
         }
         if (grid_snap_component == null
@@ -243,7 +243,7 @@ public class MoveItemState extends InteractiveState {
       routing_board.insert_item(curr_item);
     }
 
-    // let the observers syncronize the moving
+    // let the observers synchronize the moving
     for (Component curr_component : this.component_list) {
       routing_board.communication.observers.notify_moved(curr_component);
     }

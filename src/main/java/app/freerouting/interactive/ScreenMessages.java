@@ -16,7 +16,7 @@ public class ScreenMessages {
   private final Locale locale;
   private final String active_layer_string;
   private final String target_layer_string;
-  /** The number format for displaying the trace lengtht */
+  /** The number format for displaying the trace length */
   private final NumberFormat number_format;
   private final JLabel add_field;
   private final JLabel status_field;

@@ -105,7 +105,7 @@ public class BatchFanout {
         Collection<app.freerouting.board.Pin> p_board_smd_pin_list) {
       this.board_component = p_board_component;
 
-      // calcoulate the center of gravity of all SMD pins of this component.
+      // calculate the center of gravity of all SMD pins of this component.
       Collection<app.freerouting.board.Pin> curr_pin_list =
           new LinkedList<>();
       int cmp_no = p_board_component.no;

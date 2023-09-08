@@ -53,7 +53,7 @@
 
       <tocitem target="html_files.WindowDisplay_Colors" text="Farben "/>
 
-      <tocitem target="html_files.WindowDisplay_Miscellanious" text="sonstiges "/>
+      <tocitem target="html_files.WindowDisplay_Miscellaneous" text="sonstiges "/>
 
     </tocitem>
     <tocitem text="Parameter ">
@@ -159,7 +159,7 @@
 
       <tocitem target="html_files.WindowDisplay_Colors" text="Farben "/>
 
-      <tocitem target="html_files.WindowDisplay_Miscellanious" text="sonstiges "/>
+      <tocitem target="html_files.WindowDisplay_Miscellaneous" text="sonstiges "/>
 
     </tocitem>
   </tocitem>

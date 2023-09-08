@@ -121,14 +121,14 @@ public abstract class ShapeTree {
         maximum_depth = Math.max(maximum_depth, distance_to_root);
       }
     }
-    double everage_depth = cumulative_depth / leaf_arr.length;
+    double average_depth = cumulative_depth / leaf_arr.length;
     FRLogger.info(
         "MinAreaTree: Entry count: "
             + leaf_arr.length
             + " log: "
             + Math.round(Math.log(leaf_arr.length))
-            + " Everage depth: "
-            + Math.round(everage_depth)
+            + " Average depth: "
+            + Math.round(average_depth)
             + " "
             + " Maximum depth: "
             + maximum_depth
@@ -172,7 +172,7 @@ public abstract class ShapeTree {
   }
 
   //////////////////////////////////////////////////////////
-  /** Desscription of an inner node of the tree, which implements a fork to its two children. */
+  /** Description of an inner node of the tree, which implements a fork to its two children. */
   public static class InnerNode extends TreeNode {
     public TreeNode first_child;
     public TreeNode second_child;

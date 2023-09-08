@@ -246,7 +246,7 @@ public class MoveDrillItemAlgo {
   /**
    * Calculates possible new location for a via to shove outside p_obstacle_shape. if
    * p_extended_check is true, more than 1 possible new locations are calculated. The function
-   * isused here and in ShoveTraceAlgo.check.
+   * is used here and in ShoveTraceAlgo.check.
    */
   static IntPoint[] try_shove_via_points(
       TileShape p_obstacle_shape,
@@ -274,7 +274,7 @@ public class MoveDrillItemAlgo {
       // a different algorithm is used for calculating the new via centers
       shove_distance = 0;
       if (!search_tree.is_clearance_compensation_used()) {
-        // enlarge p_obstacle_shape and curr_via_shape by half of the clearance value to syncronize
+        // enlarge p_obstacle_shape and curr_via_shape by half of the clearance value to synchronize
         // with the check algorithm in ShapeSearchTree.overlapping_tree_entries_with_clearance
         shove_distance += 0.5 * clearance_value;
       }

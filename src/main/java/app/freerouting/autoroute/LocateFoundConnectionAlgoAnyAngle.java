@@ -107,7 +107,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
 
     // Calculate the visibility range for a trace line from current_from_point
     // through the interval from left_most_visible_point to right_most_visible_point,
-    // by advancing the door index as far as possible, so that still somthing is visible.
+    // by advancing the door index as far as possible, so that still something is visible.
 
     boolean end_of_trace = false;
     FloatPoint left_tangent_point;
@@ -118,7 +118,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
     int curr_door_ind = this.current_to_door_index + 1;
     FloatPoint result_corner = null;
 
-    // construct a maximum lenght straight line through the doors
+    // construct a maximum length straight line through the doors
 
     for (; ; ) {
       left_tangent_point =
@@ -192,7 +192,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo {
         }
         if (next_left_corner == null && next_right_corner == null) {
           // The door is completely passed.
-          // Should not happen because the previous door was not passed compledtely.
+          // Should not happen because the previous door was not passed completely.
           if (this.test_level.ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
             FRLogger.warn(
                 "LocateFoundConnectionAlgo.calculate_next_trace_corner: next door passed unexpected");

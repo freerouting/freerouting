@@ -26,7 +26,7 @@ public abstract class DragState extends InteractiveState {
   }
 
   /**
-   * Returns a new instance of this state, if a item to drag was found at the input location; null
+   * Returns a new instance of this state, if an item to drag was found at the input location; null
    * otherwise.
    */
   public static DragState get_instance(
@@ -34,7 +34,7 @@ public abstract class DragState extends InteractiveState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    p_board_handling.display_layer_messsage();
+    p_board_handling.display_layer_message();
     Item item_to_move = null;
     int try_count = 1;
     if (p_board_handling.settings.select_on_all_visible_layers) {
@@ -99,7 +99,7 @@ public abstract class DragState extends InteractiveState {
   public InteractiveState mouse_dragged(FloatPoint p_point) {
     InteractiveState result = this.move_to(p_point);
     if (result != this) {
-      // an error occured
+      // an error occurred
       Set<Integer> changed_nets = new TreeSet<>();
       hdlg.get_routing_board().undo(changed_nets);
       for (Integer changed_net : changed_nets) {

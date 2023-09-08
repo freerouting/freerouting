@@ -13,7 +13,7 @@ public class Polygon extends Shape {
   public final double[] coor;
 
   /**
-   * Creates a new instance of Polygon p_coor is an array of dimension of dimension 2 * point_count
+   * Creates a new instance of Polygon p_coor is an array of dimension 2 * point_count
    * and contains x0, y0, x1, y1, ... If the polygon is used as rectangle,
    */
   public Polygon(Layer p_layer, double[] p_coor) {

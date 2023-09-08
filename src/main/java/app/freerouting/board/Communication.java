@@ -11,7 +11,7 @@ import java.util.Collection;
 /** Communication information to host systems or host design formats. */
 public class Communication implements Serializable {
 
-  /** For coordinate tramsforms to a Specctra dsn file for example. */
+  /** For coordinate transforms to a Specctra dsn file for example. */
   public final CoordinateTransform coordinate_transform;
   /** mil, inch or mm */
   public final Unit unit;

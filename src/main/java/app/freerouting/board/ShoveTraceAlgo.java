@@ -30,8 +30,8 @@ public class ShoveTraceAlgo {
 
   /**
    * Checks if a shove with the input parameters is possible without clearance violations The result
-   * is the maximum lenght of a trace from the start of the line segment to the end of the line
-   * segment, for wich the algoritm succeedes. If the algorithm succeedes completely, the result
+   * is the maximum length of a trace from the start of the line segment to the end of the line
+   * segment, for which the algorithm succeeds. If the algorithm succeedes completely, the result
    * will be equal to Integer.MAX_VALUE.
    */
   public static double check(
@@ -122,15 +122,15 @@ public class ShoveTraceAlgo {
         IntBox via_box =
             curr_shove_via.get_tree_shape_on_layer(search_tree, p_layer).bounding_box();
         double via_radius = 0.5 * via_box.max_width();
-        double curr_ok_lenght = projection - via_radius - p_trace_half_width;
+        double curr_ok_length = projection - via_radius - p_trace_half_width;
         if (!search_tree.is_clearance_compensation_used()) {
-          curr_ok_lenght -=
+          curr_ok_length -=
               cl_matrix.get_value(p_cl_type, curr_shove_via.clearance_class_no(), p_layer, true);
         }
-        if (curr_ok_lenght <= 0) {
+        if (curr_ok_length <= 0) {
           return 0;
         }
-        result = Math.min(result, curr_ok_lenght);
+        result = Math.min(result, curr_ok_length);
       }
     }
     if (trace_piece_count == 0) {
@@ -149,8 +149,8 @@ public class ShoveTraceAlgo {
       for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i) {
         LineSegment curr_line_segment = new LineSegment(curr_substitute_trace.polyline(), i + 1);
         if (p_shove_to_the_left) {
-          // swap the line segmment to get the corredct shove length
-          // in case it is smmaller than the length of the whole line segmment.
+          // swap the line segment to get the correct shove length
+          // in case it is smaller than the length of the whole line segment.
           curr_line_segment = curr_line_segment.opposite();
         }
         boolean is_in_front = curr_line_segment.get_line().direction().equals(line_direction);
@@ -554,7 +554,7 @@ public class ShoveTraceAlgo {
         } else if (curr_item instanceof PolylineTrace) {
           if (curr_item.is_shove_fixed()) {
             is_obstacle = true;
-            // check for a shove fixed trace exit stub, which has to be be ignored at a tie pin.
+            // check for a shove fixed trace exit stub, which has to be ignored at a tie pin.
             Collection<Item> curr_contacts = curr_item.get_normal_contacts();
             for (Item curr_contact : curr_contacts) {
               if (curr_contact.shares_net_no(p_net_no_arr)) {
@@ -562,11 +562,11 @@ public class ShoveTraceAlgo {
               }
             }
           } else {
-            // a unfixed trace can be pushed aside eventually
+            // an unfixed trace can be pushed aside eventually
             is_obstacle = false;
           }
         } else {
-          // a unfixed via can be pushed aside eventually
+          // an unfixed via can be pushed aside eventually
           is_obstacle = !curr_item.is_routable();
         }
 
@@ -729,7 +729,7 @@ public class ShoveTraceAlgo {
    * Checks, if there are obstacle in the way of p_polyline and tries to wrap the polyline trace
    * around these obstacles. Returns null, if that is not possible. Returns p_polyline, if there
    * were no obstacles This function looks contrary to the previous function for the shortest way
-   * around the obstaccles. If p_contact_pins != null, all pins not contained in p_contact_pins are
+   * around the obstacles. If p_contact_pins != null, all pins not contained in p_contact_pins are
    * regarded as obstacles, even if they are of the own net.
    */
   Polyline spring_over_obstacles(

@@ -11,13 +11,13 @@ import java.util.LinkedList;
 
 /**
  * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm.
- * The pages are rectangles of about equal width and height covering covering the bounding box of
+ * The pages are rectangles of about equal width and height covering the bounding box of
  * the board area.
  */
 public class DrillPageArray {
 
   private final IntBox bounds;
-  /** The number of colums in the array. */
+  /** The number of columns in the array. */
   private final int COLUMN_COUNT;
   /** The number of rows in the array. */
   private final int ROW_COUNT;
@@ -59,7 +59,7 @@ public class DrillPageArray {
   }
 
   /**
-   * Invalidates all drill pages intersecting with p_shape, so the they must be recalculated at the
+   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the
    * next call of get_ddrills()
    */
   public void invalidate(TileShape p_shape) {

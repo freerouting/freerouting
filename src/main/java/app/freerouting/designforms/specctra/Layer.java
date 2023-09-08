@@ -39,7 +39,7 @@ public class Layer {
     net_names = new LinkedList<>();
   }
 
-  /** Writes a layer scope in the stucture scope. */
+  /** Writes a layer scope in the structure scope. */
   public static void write_scope(WriteScopeParameter p_par, int p_layer_no, boolean p_write_rule)
       throws IOException {
     p_par.file.start_scope();

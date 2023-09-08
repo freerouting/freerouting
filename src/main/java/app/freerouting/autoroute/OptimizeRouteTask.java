@@ -10,7 +10,7 @@ import java.util.Iterator;
 public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
   private Item curr_item;
   private final int pass_no;
-  private final boolean with_prefered_directions;
+  private final boolean with_preferred_directions;
   private ItemRouteResult route_result;
   private final BatchOptRouteMT optimizer;
 
@@ -28,7 +28,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
     // curr_item.board = this.routing_board;
 
     pass_no = p_pass_no;
-    with_prefered_directions = p_with_preferred_directions;
+    with_preferred_directions = p_with_preferred_directions;
     this.min_cumulative_trace_length_before = p_min_cumulative_trace_length;
   }
 
@@ -65,7 +65,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable {
 //            + curr_item.get_id_no()
 //            + ".");
 
-    route_result = opt_route_item(curr_item, pass_no, with_prefered_directions);
+    route_result = opt_route_item(curr_item, pass_no, with_preferred_directions);
 
     boolean winning_candidate = optimizer.is_winning_candidate(this);
 

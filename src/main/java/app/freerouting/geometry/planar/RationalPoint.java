@@ -21,7 +21,7 @@ public class RationalPoint extends Point implements Serializable {
   final BigInteger z;
 
   /**
-   * creates a RetionalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensinal
+   * creates a RationalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
    * point with the rational number Tuple ( p_x / p_z , p_y / p_z). Throws IllegalArgumentException
    * if denominator p_z is <= 0
    */
@@ -34,7 +34,7 @@ public class RationalPoint extends Point implements Serializable {
     }
   }
 
-  /** creates a RetionalPoint from an IntPoint */
+  /** creates a RationalPoint from an IntPoint */
   RationalPoint(IntPoint p_point) {
     x = BigInteger.valueOf(p_point.x);
     y = BigInteger.valueOf(p_point.y);

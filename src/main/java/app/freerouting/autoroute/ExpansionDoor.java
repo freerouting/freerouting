@@ -15,7 +15,7 @@ public class ExpansionDoor implements ExpandableObject {
   /** The dimension of a door may be 1 or 2. */
   public final int dimension;
   /**
-   * each section of the following arrray can be expanded seperately by the maze search algorithm
+   * each section of the following array can be expanded separately by the maze search algorithm
    */
   MazeSearchElement[] section_arr;
 
@@ -51,7 +51,7 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_roon is neither equal to this.first_room nor
+   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
    * to this.second_room.
    */
   public ExpansionRoom other_room(ExpansionRoom p_room) {
@@ -67,7 +67,7 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_roon is neither equal to this.first_room nor
+   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
    * to this.second_room, or if the other room is not a CompleteExpansionRoom.
    */
   @Override

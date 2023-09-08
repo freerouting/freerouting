@@ -33,7 +33,7 @@ public class RationalVector extends Vector implements Serializable {
     }
   }
 
-  /** creates a RetionalVector from an IntVector */
+  /** creates a RationalVector from an IntVector */
   RationalVector(IntVector p_vector) {
     x = BigInteger.valueOf(p_vector.x);
     y = BigInteger.valueOf(p_vector.y);
@@ -127,7 +127,7 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   @Override
-  public Vector change_length_approx(double p_lenght) {
+  public Vector change_length_approx(double p_length) {
     FRLogger.warn("RationalVector: change_length_approx not yet implemented");
     return this;
   }

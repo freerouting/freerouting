@@ -77,7 +77,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     Style bold_style = document.addStyle("bold", default_style);
     StyleConstants.setBold(bold_style, true);
 
-    // Create a scoll_pane arount the text_pane and insert it into this window.
+    // Create a scroll_pane around the text_pane and insert it into this window.
     JScrollPane scroll_pane = new JScrollPane(this.text_pane);
     this.add(scroll_pane);
 
@@ -155,7 +155,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
 
     new_instance.pack();
     Dimension size = new_instance.getSize();
-    // make the window smaller, if its heicht gets bigger than MAX_WINDOW_HEIGHT
+    // make the window smaller, if its height gets bigger than MAX_WINDOW_HEIGHT
     if (size.getHeight() > MAX_WINDOW_HEIGHT) {
       new_instance.setPreferredSize(
           new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));
@@ -185,7 +185,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     }
     new_window.pack();
     Dimension size = new_window.getSize();
-    // make the window smaller, if its heicht gets bigger than MAX_WINDOW_HEIGHT
+    // make the window smaller, if its height gets bigger than MAX_WINDOW_HEIGHT
     if (size.getHeight() > MAX_WINDOW_HEIGHT) {
       new_window.setPreferredSize(
           new Dimension((int) size.getWidth() + SCROLLBAR_ADD, MAX_WINDOW_HEIGHT));

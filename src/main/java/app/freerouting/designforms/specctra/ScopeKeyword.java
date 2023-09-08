@@ -11,7 +11,7 @@ public class ScopeKeyword extends Keyword {
   }
 
   /**
-   * Scips the current scope while reading a dsn file. Returns false, if no legal scope was found.
+   * Skips the current scope while reading a dsn file. Returns false, if no legal scope was found.
    */
   public static boolean skip_scope(IJFlexScanner p_scanner) {
     int open_bracked_count = 1;

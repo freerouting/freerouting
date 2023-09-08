@@ -11,7 +11,7 @@ import java.awt.Graphics;
 /** State for interactive routing by adding corners with the left mouse button. */
 public class StitchRouteState extends RouteState {
 
-  /** Creates a new instance of StichRouteState */
+  /** Creates a new instance of StitchRouteState */
   protected StitchRouteState(
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,

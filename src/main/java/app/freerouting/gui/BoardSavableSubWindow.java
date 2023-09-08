@@ -35,7 +35,7 @@ public abstract class BoardSavableSubWindow extends BoardSubWindow {
     }
   }
 
-  /** Refreshs the displayed values in this window. To be overwritten in derived classes. */
+  /** Refresh the displayed values in this window. To be overwritten in derived classes. */
   public void refresh() {}
 
   /** Type for attributes of this class, which are saved to an Objectstream. */

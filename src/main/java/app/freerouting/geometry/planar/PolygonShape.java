@@ -8,7 +8,7 @@ import java.util.Random;
 
 /**
  * Shape described bei a closed polygon of corner points. The corners are ordered in counterclock
- * sense around the border of the shape. The corners are normalysed, so that the corner with the
+ * sense around the border of the shape. The corners are normalised, so that the corner with the
  * lowest y-value comes first. In case of equal y-value the corner with the lowest x-value comes
  * first.
  */
@@ -26,7 +26,7 @@ public class PolygonShape extends PolylineShape {
   public PolygonShape(Polygon p_polygon) {
     Polygon curr_polygon = p_polygon;
     if (p_polygon.winding_number_after_closing() < 0) {
-      // the the corners of the polygon are in clockwise sense
+      // the corners of the polygon are in clockwise sense
       curr_polygon = p_polygon.revert_corners();
     }
     Point[] curr_corners = curr_polygon.corner_array();
@@ -303,7 +303,7 @@ public class PolygonShape extends PolylineShape {
    * Checks, if every line segment between 2 points of the shape is contained completely in the
    * shape.
    */
-  public boolean is_comvex() {
+  public boolean is_convex() {
     if (corners.length <= 2) return true;
     Point prev_point = corners[corners.length - 1];
     Point curr_point = corners[0];
@@ -495,7 +495,7 @@ public class PolygonShape extends PolylineShape {
     if (this.precalculated_convex_pieces == null)
     // not yet precalculated
     {
-      // use a fixed seed to get reproducable result
+      // use a fixed seed to get reproducible result
       random_generator.setSeed(seed);
       Collection<PolygonShape> convex_pieces = split_to_convex_recu();
       if (convex_pieces == null) {
@@ -652,7 +652,7 @@ public class PolygonShape extends PolylineShape {
             Line curr_line = new Line(corner_before_curr_projection, corner_after_curr_projection);
             double x_intersect = curr_line.function_in_y_value_approx(concave_corner.y);
             curr_dist = Math.abs(x_intersect - concave_corner.x);
-            // Make shure, that the new shape will not be concave at the projection point.
+            // Make sure, that the new shape will not be concave at the projection point.
             // That might happen, if the boundary curve runs back in itself.
             boolean projection_ok =
                 curr_dist < min_projection_dist
@@ -686,7 +686,7 @@ public class PolygonShape extends PolylineShape {
             Line curr_line = new Line(corner_before_curr_projection, corner_after_curr_projection);
             double y_intersect = curr_line.function_value_approx(concave_corner.x);
             curr_dist = Math.abs(y_intersect - concave_corner.y);
-            // make shure, that the new shape will be convex at the projection point
+            // make sure, that the new shape will be convex at the projection point
             boolean projection_ok =
                 curr_dist < min_projection_dist
                     && (search_up

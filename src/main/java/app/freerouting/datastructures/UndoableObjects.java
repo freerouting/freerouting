@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class UndoableObjects implements Serializable {
 
   /**
-   * The entries of this map are of type UnduableObject, the keys of type UndoableObjects.Storable.
+   * The entries of this map are of type UndoableObject, the keys of type UndoableObjects.Storable.
    */
   private final ConcurrentMap<Storable, UndoableObjectNode> objects;
   /** the current undo level */
@@ -166,12 +166,12 @@ public class UndoableObjects implements Serializable {
       Collection<UndoableObjects.Storable> p_cancelled_objects,
       Collection<UndoableObjects.Storable> p_restored_objects) {
     if (this.stack_level >= deleted_objects_stack.size()) {
-      return false; // alredy at the top level
+      return false; // already at the top level
     }
     ++this.stack_level;
     for (UndoableObjectNode curr_node : objects.values()) {
       if (curr_node.redo_object != null && curr_node.redo_object.level == this.stack_level) {
-        // Object was created on a lower level and changed on the currenzt level,
+        // Object was created on a lower level and changed on the current level,
         // replace the lower level object by the object on the current layer.
         objects.put(curr_node.object, curr_node.redo_object);
         if (p_cancelled_objects != null) {
@@ -208,8 +208,8 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Removes the top snapshot from the undo stack, so that its situation cannot be restored any
-   * more. Returns false, if no more snapshot could be popped.
+   * Removes the top snapshot from the undo stack, so that its situation cannot be restored
+   * anymore. Returns false, if no more snapshot could be popped.
    */
   public boolean pop_snapshot() {
     disable_redo();
@@ -249,7 +249,7 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Must be callel before p_object will be modified after a snapshot for the first time, if it may
+   * Must be called before p_object will be modified after a snapshot for the first time, if it may
    * have existed before that snapshot.
    */
   public void save_for_undo(UndoableObjects.Storable p_object) {
@@ -293,7 +293,7 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Conditiom for an Object to be stored in an UndoableObjects database. An object of class
+   * Condition for an Object to be stored in an UndoableObjects database. An object of class
    * UndoableObjects.Storable must not contain any references.
    */
   public interface Storable extends Comparable<Object> {
@@ -306,7 +306,7 @@ public class UndoableObjects implements Serializable {
   }
 
   /**
-   * Stores informations for correct restoring or cancelling an object in an undo or redo operation.
+   * Stores information for correct restoring or cancelling an object in an undo or redo operation.
    * p_level is the level in the Undo stack, where this object was inserted.
    */
   public static class UndoableObjectNode implements Serializable {

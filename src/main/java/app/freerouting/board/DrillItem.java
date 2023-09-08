@@ -27,7 +27,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   /** The center point of the drillitem */
   private Point center;
   /**
-   * Contains the precalculated mininal width of the shapes of this DrillItem on all layers. If
+   * Contains the precalculated minimal width of the shapes of this DrillItem on all layers. If
    * {@literal <} 0, the value is not yet calculated
    */
   private double precalculated_min_width = -1;
@@ -54,7 +54,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     this.center = p_center;
   }
 
-  /** Works only for symmettric DrillItems */
+  /** Works only for symmetric DrillItems */
   @Override
   public void translate_by(Vector p_vector) {
     if (center != null) {
@@ -114,7 +114,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     Point new_center = this.get_center();
     IntPoint add_corner = null;
     if (old_center instanceof IntPoint && new_center instanceof IntPoint) {
-      // Make shure, that the traces will remain 90- or 45-degree.
+      // Make sure, that the traces will remain 90- or 45-degree.
       if (board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE) {
         add_corner = ((IntPoint) old_center).ninety_degree_corner((IntPoint) new_center, true);
       } else if (board.rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE) {
@@ -339,7 +339,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     return true;
   }
 
-  /** Return the mininal width of the shapes of this DrillItem on all signal layers. */
+  /** Return the minimal width of the shapes of this DrillItem on all signal layers. */
   public double min_width() {
     if (this.precalculated_min_width < 0) {
       double min_width = Integer.MAX_VALUE;

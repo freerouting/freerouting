@@ -90,16 +90,16 @@ public class BoardMenuInfo extends JMenu {
         });
     info_menu.add(clearance_violations_window);
 
-    JMenuItem unconnnected_route_window = new JMenuItem();
-    unconnnected_route_window.setText(info_menu.resources.getString("unconnected_route"));
-    unconnnected_route_window.addActionListener(
+    JMenuItem unconnected_route_window = new JMenuItem();
+    unconnected_route_window.setText(info_menu.resources.getString("unconnected_route"));
+    unconnected_route_window.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent evt) {
             info_menu.board_frame.unconnected_route_window.setVisible(true);
           }
         });
-    info_menu.add(unconnnected_route_window);
+    info_menu.add(unconnected_route_window);
 
     JMenuItem route_stubs_window = new JMenuItem();
     route_stubs_window.setText(info_menu.resources.getString("route_stubs"));

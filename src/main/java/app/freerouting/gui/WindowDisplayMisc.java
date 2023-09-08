@@ -54,7 +54,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     gridbag_constraints.anchor = GridBagConstraints.WEST;
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
 
-    // add label and buttongroup for the apearance of the cross hair cursor.
+    // add label and buttongroup for the appearance of the cross hair cursor.
 
     JLabel cursor_label =
         new JLabel("   " + resources.getString("cross_hair_cursor"));
@@ -179,14 +179,14 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     main_panel.add(auto_layer_dim_slider);
     this.auto_layer_dim_slider.addChangeListener(new SliderChangeListener());
 
-    p_board_frame.set_context_sensitive_help(this, "WindowDisplay_Miscellanious");
+    p_board_frame.set_context_sensitive_help(this, "WindowDisplay_Miscellaneous");
 
     this.refresh();
     this.pack();
     this.setResizable(false);
   }
 
-  /** Refreshs the displayed values in this window. */
+  /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
     small_cursor_checkbox.setSelected(!panel.is_custom_cross_hair_cursor());

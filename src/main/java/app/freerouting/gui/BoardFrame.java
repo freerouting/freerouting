@@ -105,9 +105,9 @@ public class BoardFrame extends WindowBase {
    * menu frame. If p_option = SINGLE_FRAME, this frame is created directly a single frame. If
    * p_option = Option.IN_SAND_BOX, no security sensitive actions like for example choosing If
    * p_option = Option.WEBSTART, the application has been started with Java Webstart. files are
-   * allowed, so that the frame can be used in an applet. Currently Option.EXTENDED_TOOL_BAR is used
+   * allowed, so that the frame can be used in an applet. Currently, Option.EXTENDED_TOOL_BAR is used
    * only if a new board is created by the application from scratch. If p_test_level {@literal >}
-   * RELEASE_VERSION, functionality not yet ready for release is included. Also the warning output
+   * RELEASE_VERSION, functionality not yet ready for release is included. Also, the warning output
    * depends on p_test_level.
    */
   public BoardFrame(

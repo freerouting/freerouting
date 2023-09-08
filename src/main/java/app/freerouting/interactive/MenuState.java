@@ -28,10 +28,10 @@ public class MenuState extends InteractiveState {
 
   /**
    * Selects items at p_location. Returns a new instance of SelectedItemState with the selected
-   * items, if somthing was selected.
+   * items, if something was selected.
    */
   public InteractiveState select_items(FloatPoint p_location) {
-    this.hdlg.display_layer_messsage();
+    this.hdlg.display_layer_message();
     Set<Item> picked_items = hdlg.pick_items(p_location);
     boolean something_found = (!picked_items.isEmpty());
     InteractiveState result;

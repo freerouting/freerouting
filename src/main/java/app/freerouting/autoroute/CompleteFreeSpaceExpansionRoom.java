@@ -21,7 +21,7 @@ import java.util.LinkedList;
 public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     implements CompleteExpansionRoom, SearchTreeObject {
 
-  // ** identification number for implementong the Comparable interfacw */
+  // ** identification number for implementing the Comparable interface */
   private final int id_no;
   /** The array of entries in the SearchTree. Consists of just one element */
   private ShapeTree.Leaf[] tree_entries;
@@ -52,7 +52,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     return result;
   }
 
-  /** Removes the tree entries of this roomm from p_shape_tree. */
+  /** Removes the tree entries of this room from p_shape_tree. */
   public void remove_from_tree(ShapeTree p_shape_tree) {
     p_shape_tree.remove(this.tree_entries);
   }

@@ -707,7 +707,7 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * Returns the pin with the input component number and pin number, or null, if no such pinn
+   * Returns the pin with the input component number and pin number, or null, if no such pin
    * exists.
    */
   public Pin get_pin(int p_component_no, int p_pin_no) {
@@ -1377,7 +1377,7 @@ public class BasicBoard implements Serializable {
     while (it.hasNext()) {
       Item curr_item = (Item) it.next();
       search_tree_manager.remove(curr_item);
-      // let the observers syncronize the deletion
+      // let the observers synchronize the deletion
       communication.observers.notify_deleted(curr_item);
       if (p_changed_nets != null) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
@@ -1485,7 +1485,7 @@ public class BasicBoard implements Serializable {
   }
 
   /**
-   * If != RELEASE_VERSION,, some features may be used, which are still in experimental state. Also
+   * If != RELEASE_VERSION, some features may be used, which are still in experimental state. Also,
    * warnings for debugging may be printed depending on the test_level.
    */
   public TestLevel get_test_level() {

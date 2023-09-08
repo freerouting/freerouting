@@ -336,7 +336,7 @@ public class WindowVia extends BoardSavableSubWindow {
         default_radius = ((Number) input_value).doubleValue();
       }
 
-      // input panel  to make the default radius layer-depemdent
+      // input panel  to make the default radius layer-dependent
 
       PadstackInputPanel padstack_input_panel =
           new PadstackInputPanel(start_layer, end_layer, default_radius);

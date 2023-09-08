@@ -160,7 +160,7 @@ public class SearchTreeManager {
 
   // ********************************************************************************
 
-  // The following functions are used internally for perfomance improvement.
+  // The following functions are used internally for performance improvement.
 
   // ********************************************************************************
 
@@ -254,9 +254,9 @@ public class SearchTreeManager {
   }
 
   /**
-   * Trannsfers tree entries from p_from_trace to p_start and p_end_piece after a moddle piece was
+   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a middle piece was
    * cut out. Special implementation for ShapeTraceEntries.fast_cutout_trace for performance
-   * reasoms.
+   * reasons.
    */
   void reuse_entries_after_cutout(
       PolylineTrace p_from_trace, PolylineTrace p_start_piece, PolylineTrace p_end_piece) {

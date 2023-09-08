@@ -6,7 +6,7 @@ import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
 
-/** Describes a path defined by a sequence of lines (instead of a sequence of corners. */
+/** Describes a path defined by a sequence of lines instead of a sequence of corners. */
 public class PolylinePath extends Path {
 
   /** Creates a new instance of PolylinePath */
@@ -64,13 +64,13 @@ public class PolylinePath extends Path {
   @Override
   public app.freerouting.geometry.planar.Shape transform_to_board(
       CoordinateTransform p_coordinate_transform) {
-    FRLogger.warn("PolylinePath.transform_to_board_rel not implemented");
+    FRLogger.warn("PolylinePath.transform_to_board not implemented");
     return null;
   }
 
   @Override
   public Rectangle bounding_box() {
-    FRLogger.warn("PolylinePath.boundingbox not implemented");
+    FRLogger.warn("PolylinePath.bounding_box not implemented");
     return null;
   }
 }

@@ -205,8 +205,8 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * looks, if this trace can be combined at its first point with an other trace. Returns true, if
-   * something was combined. The corners of the other trace will be inserted in front of thie trace.
+   * looks, if this trace can be combined at its first point with another trace. Returns true, if
+   * something was combined. The corners of the other trace will be inserted in front of this trace.
    * In case of combine the other trace will be deleted and this trace will remain.
    */
   private boolean combine_at_start(boolean p_ignore_areas) {
@@ -271,7 +271,7 @@ public class PolylineTrace extends Trace implements Serializable {
     Polyline joined_polyline = new Polyline(new_lines);
     if (joined_polyline.arr.length != new_line_count) {
       // consecutive parallel lines where skipped at the join location
-      // combine without performance optimation
+      // combine without performance optimization
       board.search_tree_manager.remove(this);
       this.lines = joined_polyline;
       this.clear_derived_data();
@@ -300,7 +300,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
   /**
    * looks, if this trace can be combined at its last point with another trace. Returns true, if
-   * somthing was combined. The corners of the other trace will be inserted at the end of thie
+   * something was combined. The corners of the other trace will be inserted at the end of this
    * trace. In case of combine the other trace will be deleted and this trace will remain.
    */
   private boolean combine_at_end(boolean p_ignore_areas) {
@@ -365,7 +365,7 @@ public class PolylineTrace extends Trace implements Serializable {
     Polyline joined_polyline = new Polyline(new_lines);
     if (joined_polyline.arr.length != new_line_count) {
       // consecutive parallel lines where skipped at the join location
-      // combine without performance optimation
+      // combine without performance optimization
       board.search_tree_manager.remove(this);
       this.clear_search_tree_entries();
       this.lines = joined_polyline;
@@ -397,7 +397,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * Looks up traces intersecting with this trace and splits them at the intersection points. In
    * case of an overlaps, the traces are split at their first and their last common point. Returns
    * the pieces resulting from splitting. Found cycles are removed. If nothing is split, the result
-   * will contain just this Trace. If p_clip_shape != null, the split may be resticted to
+   * will contain just this Trace. If p_clip_shape != null, the split may be restricted to
    * p_clip_shape.
    */
   @Override
@@ -853,7 +853,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
     board.additional_update_after_change(this);
 
-    // The precalculated tile shapes must not be cleared here here because they are used and
+    // The precalculated tile shapes must not be cleared here because they are used and
     // modified
     // in ShapeSearchTree.change_entries.
 
@@ -863,7 +863,7 @@ public class PolylineTrace extends Trace implements Serializable {
     // ShapeTree entries of the old trace in the changed trace
 
     // look for the first line in p_new_polyline different from
-    // the lines of the existung trace
+    // the lines of the existing trace
     int last_index = Math.min(p_new_polyline.arr.length, lines.arr.length);
     int index_of_first_different_line = last_index;
     for (int i = 0; i < last_index; ++i) {
@@ -873,10 +873,10 @@ public class PolylineTrace extends Trace implements Serializable {
       }
     }
     if (index_of_first_different_line == last_index) {
-      return; // both polylines are equal, no change nessesary
+      return; // both polylines are equal, no change necessary
     }
     // look for the last line in p_new_polyline different from
-    // the lines of the existung trace
+    // the lines of the existing trace
     int index_of_last_different_line = -1;
     for (int i = 1; i <= last_index; ++i) {
       if (p_new_polyline.arr[p_new_polyline.arr.length - i] != lines.arr[lines.arr.length - i]) {
@@ -885,7 +885,7 @@ public class PolylineTrace extends Trace implements Serializable {
       }
     }
     if (index_of_last_different_line < 0) {
-      return; // both polylines are equal, no change nessesary
+      return; // both polylines are equal, no change necessary
     }
     int keep_at_start_count = Math.max(index_of_first_different_line - 2, 0);
     int keep_at_end_count =
@@ -894,7 +894,7 @@ public class PolylineTrace extends Trace implements Serializable {
         this, p_new_polyline, keep_at_start_count, keep_at_end_count);
     lines = p_new_polyline;
 
-    // let the observers syncronize the changes
+    // let the observers synchronize the changes
     board.communication.observers.notify_changed(this);
 
     IntOctagon clip_shape = null;
@@ -1139,7 +1139,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     this.change(changed_polyline);
 
-    // create an shove_fixed exit line.
+    // create a shove_fixed exit line.
     curr_lines = new Line[3];
     curr_lines[0] = new Line(pin_center, pin_exit_direction.turn_45_degree(2));
     curr_lines[1] = nearest_pin_exit_ray;
@@ -1156,7 +1156,7 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Looks, if an other pin connection restriction fits better than the current connection
+   * Looks, if another pin connection restriction fits better than the current connection
    * restriction and changes this trace in this case. If p_at_start, the start of the trace polygon
    * is changed, else the end. Returns true, if this trace was changed.
    */

@@ -130,7 +130,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       set_values();
     }
 
-    /** Calculates the the valus in this table */
+    /** Calculates the values in this table */
     public void set_values() {
       BoardRules board_rules =
           board_frame.board_panel.board_handling.get_routing_board().rules;

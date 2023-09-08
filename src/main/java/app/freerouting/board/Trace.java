@@ -75,7 +75,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   /**
    * Returns the half with enlarged by the clearance compensation value for the tree with id number
-   * p_ttree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
+   * p_tree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int get_compensated_half_width(ShapeSearchTree p_search_tree) {
     return this.half_width
@@ -241,7 +241,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     return this.contains_net(p_net_no);
   }
 
-  /** looks, if this trace is connectet to the same object at its start and its end point */
+  /** looks, if this trace is connected to the same object at its start and its end point */
   @Override
   public boolean is_overlap() {
     Set<Item> start_contacts = this.get_start_contacts();
@@ -301,7 +301,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     // a cycle exists if through expanding the start contact we reach
     // this trace again via an end contact
     for (Item curr_contact : start_contacts) {
-      // make shure, that all direct neighbours are
+      // make sure, that all direct neighbours are
       // expanded from here, to block coming back to
       // this trace via a start contact.
       visited_items.add(curr_contact);
@@ -328,8 +328,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   @Override
   public Point[] get_ratsnest_corners() {
-    // Use only uncontacted enpoints of the trace.
-    // Otherwise the allocated memory in the calculation of the incompletes might become very big.
+    // Use only uncontacted endpoints of the trace.
+    // Otherwise, the allocated memory in the calculation of the incompletes might become very big.
     int stub_count = 0;
     boolean stub_at_start = false;
     boolean stub_at_end = false;
@@ -430,7 +430,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   }
 
   /**
-   * looks, if this trace can be combined with other traces . Returns true, if somthing has been
+   * looks, if this trace can be combined with other traces . Returns true, if something has been
    * combined.
    */
   abstract boolean combine();
@@ -439,7 +439,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * Looks up traces intersecting with this trace and splits them at the intersection points. In
    * case of an overlaps, the traces are split at their first and their last common point. Returns
    * the pieces resulting from splitting. If nothing is split, the result will contain just this
-   * Trace. If p_clip_shape != null, the split may be resticted to p_clip_shape.
+   * Trace. If p_clip_shape != null, the split may be restricted to p_clip_shape.
    */
   public abstract Collection<PolylineTrace> split(IntOctagon p_clip_shape);
 

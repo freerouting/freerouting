@@ -307,7 +307,7 @@ class PullTightAlgo45 extends PullTightAlgo {
   }
 
   /**
-   * Smoothens with a short axis parrallel line to remove a non integer corner of two intersecting
+   * Smoothens with a short axis parallel line to remove a non integer corner of two intersecting
    * diagonal lines. Returns null, if that is not possible.
    */
   private Line smoothen_non_integer_corner(Line[] p_line_arr, int p_no) {
@@ -539,7 +539,7 @@ class PullTightAlgo45 extends PullTightAlgo {
           translate_dist = -translate_dist;
         }
         Line add_line = translate_line.translate(translate_dist);
-        // constract the new trace polyline.
+        // construct the new trace polyline.
         Line[] new_lines = new Line[trace_polyline.arr.length + 1];
         new_lines[0] = other_trace_line;
         new_lines[1] = add_line;
@@ -648,7 +648,7 @@ class PullTightAlgo45 extends PullTightAlgo {
           translate_dist = -translate_dist;
         }
         Line add_line = translate_line.translate(translate_dist);
-        // constract the new trace polyline.
+        // construct the new trace polyline.
         Line[] new_lines = new Line[trace_polyline.arr.length + 1];
         System.arraycopy(trace_polyline.arr, 0, new_lines, 0, trace_polyline.arr.length - 1);
         new_lines[new_lines.length - 2] = add_line;

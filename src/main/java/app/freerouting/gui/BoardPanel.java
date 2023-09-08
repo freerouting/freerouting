@@ -139,7 +139,7 @@ public class BoardPanel extends JPanel {
     popup_menu_main = new PopupMenuMain(this.board_frame);
     popup_menu_dynamic_route = new PopupMenuDynamicRoute(this.board_frame);
     popup_menu_stitch_route = new PopupMenuStitchRoute(this.board_frame);
-    popup_menu_corneritem_construction = new PupupMenuCornerItemConstruction(this.board_frame);
+    popup_menu_corneritem_construction = new PopupMenuCornerItemConstruction(this.board_frame);
     popup_menu_select = new PopupMenuSelectedItems(this.board_frame);
     popup_menu_insert_cancel = new PopupMenuInsertCancel(this.board_frame);
     popup_menu_copy = new PopupMenuCopy(this.board_frame);
@@ -148,7 +148,7 @@ public class BoardPanel extends JPanel {
 
   public void zoom_with_mouse_wheel(Point2D p_point, int p_wheel_rotation) {
     if (this.middle_drag_position != null || p_wheel_rotation == 0) {
-      return; // scrolling with the middle mouse butten in progress
+      return; // scrolling with the middle mouse button in progress
     }
     double zoom_factor = 1 - 0.1 * p_wheel_rotation;
     zoom_factor = Math.max(zoom_factor, 0.5);
@@ -409,7 +409,7 @@ public class BoardPanel extends JPanel {
   }
 
   /**
-   * If p_value is true, the custom crosshair cursor will be used in display. Otherwise the standard
+   * If p_value is true, the custom crosshair cursor will be used in display. Otherwise, the standard
    * Cursor will be used. Using the custom cursor may slow down the display performance a lot.
    */
   public void set_custom_crosshair_cursor(boolean p_value) {
@@ -423,7 +423,7 @@ public class BoardPanel extends JPanel {
   }
 
   /**
-   * If the result is true, the custom crosshair cursor will be used in display. Otherwise the
+   * If the result is true, the custom crosshair cursor will be used in display. Otherwise, the
    * standard Cursor will be used. Using the custom cursor may slow down the display performance a
    * lot.
    */

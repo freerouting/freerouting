@@ -120,7 +120,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         // check, if the intersection of curr_lines[0] and curr_lines[1]
         // is near new_a and the intersection of curr_lines[0] and
         // curr_lines[1] and curr_lines[2] is near new_b.
-        // There may be numerical stability proplems with
+        // There may be numerical stability problems with
         // near parallel lines.
 
         final double check_dist = 100;
@@ -141,7 +141,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         }
         if (ok && i == 1 && !(p_polyline.first_corner() instanceof IntPoint)) {
           // There may be a connection to a trace.
-          // make shure that the second corner of the new polyline
+          // make sure that the second corner of the new polyline
           // is on the same side of the trace as the third corner. (There may be splitting problems)
           Point new_corner = curr_lines[0].intersection(curr_lines[1]);
           if (new_corner.side_of(new_lines[0]) != p_polyline.corner(1).side_of(new_lines[0])) {
@@ -150,7 +150,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         }
         if (ok && i == last_index - 1 && !(p_polyline.last_corner() instanceof IntPoint)) {
           // There may be a connection to a trace.
-          // make shure that the second last corner of the new polyline
+          // make sure that the second last corner of the new polyline
           // is on the same side of the trace as the third last corner (There may be splitting
           // problems)
           Point new_corner = curr_lines[1].intersection(curr_lines[2]);
@@ -167,7 +167,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
           }
           double length_before = skip_corner.distance(new_a) + skip_corner.distance(new_b);
           double length_after = curr_polyline.length_approx() + 1.5;
-          // 1.5 added because of possible inacurracy SQRT_2
+          // 1.5 added because of possible inaccuracy SQRT_2
           // by twice rounding.
           if (length_after >= length_before)
           // May happen from rounding to integer.
@@ -279,7 +279,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
 
   /**
    * tries to reduce te number of lines of p_polyline by moving lines parallel beyond the
-   * intersection of the next or privious lines.
+   * intersection of the next or previous lines.
    */
   private Polyline reduce_lines(Polyline p_polyline) {
     if (p_polyline.arr.length < 6) {
@@ -317,7 +317,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       }
       Side line_side = translate_line.side_of(prev_corner);
       Line new_line = translate_line.translate(-translate_dist);
-      // make shure, we have crossed the nearest_corner;
+      // make sure, we have crossed the nearest_corner;
       int sign = Signum.as_int(translate_dist);
       Side new_line_side_of_prev_corner = new_line.side_of(prev_corner);
       Side new_line_side_of_next_corner = new_line.side_of(next_corner);
@@ -336,7 +336,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
       if (new_line_side_of_next_corner != line_side) {
         ++crossed_corners_after_count;
       }
-      // check, that we havent crossed both corners
+      // check, that we haven't crossed both corners
       if (crossed_corners_before_count > 1 || crossed_corners_after_count > 1) {
         continue;
       }
@@ -523,7 +523,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     int corners_skipped_after = 0;
     final double c_epsilon = 0.001;
     while (Math.abs(prev_dist) < c_epsilon)
-    // move also all lines trough the start corner of the line to translate
+    // move also all lines through the start corner of the line to translate
     {
       ++corners_skipped_before;
       int curr_no = p_start_no - corners_skipped_before;
@@ -537,7 +537,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
     }
     double next_dist = translate_line.signed_distance(next_corner);
     while (Math.abs(next_dist) < c_epsilon)
-    // move also all lines trough the end corner of the line to translate
+    // move also all lines through the end corner of the line to translate
     {
       ++corners_skipped_after;
       int curr_no = p_start_no + 3 + corners_skipped_after;
@@ -597,7 +597,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
         // corners_skipped_before > 0 or corners_skipped_after > 0
         // happens very rarely. But this handling seems to be
         // important because there are situations which no other
-        // tightening function can solve. For example when 3 ore more
+        // tightening function can solve. For example when 3 or more
         // consecutive corners are equal.
         Line prev_translated_line = new_line;
         for (int i = 0; i < corners_skipped_before; ++i)
@@ -863,7 +863,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
           translate_dist = -translate_dist;
         }
         Line add_line = translate_line.translate(translate_dist);
-        // constract the new trace polyline.
+        // construct the new trace polyline.
         Line[] new_lines = new Line[new_line_count];
         new_lines[0] = other_trace_line;
         new_lines[1] = add_line;
@@ -989,7 +989,7 @@ class PullTightAlgoAnyAngle extends PullTightAlgo {
           translate_dist = -translate_dist;
         }
         Line add_line = translate_line.translate(translate_dist);
-        // constract the new trace polyline.
+        // construct the new trace polyline.
         Line[] new_lines = new Line[new_line_count];
         System.arraycopy(trace_polyline.arr, 0, new_lines, 0, trace_polyline.arr.length - 1);
         new_lines[new_lines.length - 2] = add_line;

@@ -118,17 +118,17 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
 
   /**
    * Restrains the shape of p_incomplete_room to a box shape, which does not intersect with the
-   * interiour of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
+   * interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
    * shape of the result room.
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrain_shape(
       IncompleteFreeSpaceExpansionRoom p_incomplete_room, IntBox p_obstacle_shape) {
     // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
     // are on the right side of this line, and that the line segment
-    // intersects with the interiour of p_shape.
+    // intersects with the interior of p_shape.
     // If there are more than 1 such lines take the line which is
     // furthest away from the shape_to_be_contained
-    // Then insersect p_shape with the halfplane defined by the
+    // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
 
     Collection<IncompleteFreeSpaceExpansionRoom> result =
@@ -150,7 +150,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && room_shape.ur.x > p_obstacle_shape.ur.x
         && room_shape.ur.y > p_obstacle_shape.ll.y
         && room_shape.ll.y < p_obstacle_shape.ur.y) {
-      // The right line segment of the obstacle_shape intersects the interiour of p_shape
+      // The right line segment of the obstacle_shape intersects the interior of p_shape
       int curr_distance = shape_to_be_contained.ll.x - p_obstacle_shape.ur.x;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
@@ -162,7 +162,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && room_shape.ur.x > p_obstacle_shape.ll.x
         && room_shape.ur.y > p_obstacle_shape.ll.y
         && room_shape.ll.y < p_obstacle_shape.ur.y) {
-      // The left line segment of the obstacle_shape intersects the interiour of p_shape
+      // The left line segment of the obstacle_shape intersects the interior of p_shape
       int curr_distance = p_obstacle_shape.ll.x - shape_to_be_contained.ur.x;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
@@ -174,7 +174,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && room_shape.ur.y > p_obstacle_shape.ll.y
         && room_shape.ur.x > p_obstacle_shape.ll.x
         && room_shape.ll.x < p_obstacle_shape.ur.x) {
-      // The lower  line segment of the obstacle_shape intersects the interiour of p_shape
+      // The lower  line segment of the obstacle_shape intersects the interior of p_shape
       int curr_distance = p_obstacle_shape.ll.y - shape_to_be_contained.ur.y;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
@@ -186,7 +186,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
         && room_shape.ur.y > p_obstacle_shape.ur.y
         && room_shape.ur.x > p_obstacle_shape.ll.x
         && room_shape.ll.x < p_obstacle_shape.ur.x) {
-      // The upper line segment of the obstacle_shape intersects the interiour of p_shape
+      // The upper line segment of the obstacle_shape intersects the interior of p_shape
       int curr_distance = shape_to_be_contained.ll.y - p_obstacle_shape.ur.y;
       if (curr_distance > cut_line_distance) {
         cut_line_distance = curr_distance;
