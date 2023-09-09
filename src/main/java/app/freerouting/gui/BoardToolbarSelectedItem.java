@@ -7,8 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Describes the toolbar of the board frame, when it is in the selected item state. */
@@ -32,12 +30,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     cancel_button.setText(resources.getString("cancel"));
     cancel_button.setToolTipText(resources.getString("cancel_tooltip"));
     cancel_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.cancel_state();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.cancel_state());
 
     this.add(cancel_button);
 
@@ -45,12 +38,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     info_button.setText(resources.getString("info"));
     info_button.setToolTipText(resources.getString("info_tooltip"));
     info_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.display_selected_item_info();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.display_selected_item_info());
 
     this.add(info_button);
 
@@ -58,12 +46,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     delete_button.setText(resources.getString("delete"));
     delete_button.setToolTipText(resources.getString("delete_tooltip"));
     delete_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.delete_selected_items();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.delete_selected_items());
 
     this.add(delete_button);
 
@@ -71,12 +54,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     cutout_button.setText(resources.getString("cutout"));
     cutout_button.setToolTipText(resources.getString("cutout_tooltip"));
     cutout_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.cutout_selected_items();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.cutout_selected_items());
 
     this.add(cutout_button);
 
@@ -84,12 +62,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     fix_button.setText(resources.getString("fix"));
     fix_button.setToolTipText(resources.getString("fix_tooltip"));
     fix_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.fix_selected_items();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.fix_selected_items());
 
     this.add(fix_button);
 
@@ -97,12 +70,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     unfix_button.setText(resources.getString("unfix"));
     unfix_button.setToolTipText(resources.getString("unfix_tooltip"));
     unfix_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.unfix_selected_items();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.unfix_selected_items());
 
     this.add(unfix_button);
 
@@ -110,24 +78,14 @@ class BoardToolbarSelectedItem extends JToolBar {
     autoroute_button.setText(resources.getString("autoroute"));
     autoroute_button.setToolTipText(resources.getString("autoroute_tooltip"));
     autoroute_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.autoroute_selected_items();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.autoroute_selected_items());
     this.add(autoroute_button);
 
     JButton tidy_button = new JButton();
     tidy_button.setText(resources.getString("pull_tight"));
     tidy_button.setToolTipText(resources.getString("pull_tight_tooltip"));
     tidy_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.optimize_selected_items();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.optimize_selected_items());
 
     this.add(tidy_button);
 
@@ -135,23 +93,13 @@ class BoardToolbarSelectedItem extends JToolBar {
     clearance_class_button.setText(resources.getString("spacing"));
     clearance_class_button.setToolTipText(resources.getString("spacing_tooltip"));
     clearance_class_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            assign_clearance_class();
-          }
-        });
+        evt -> assign_clearance_class());
 
     JButton fanout_button = new JButton();
     fanout_button.setText(resources.getString("fanout"));
     fanout_button.setToolTipText(resources.getString("fanout_tooltip"));
     fanout_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.fanout_selected_items();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.fanout_selected_items());
     this.add(fanout_button);
 
     this.add(clearance_class_button);
@@ -165,12 +113,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     whole_nets_button.setText(resources.getString("nets"));
     whole_nets_button.setToolTipText(resources.getString("nets_tooltip"));
     whole_nets_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.extend_selection_to_whole_nets();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.extend_selection_to_whole_nets());
 
     this.add(whole_nets_button);
 
@@ -178,12 +121,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     whole_connected_sets_button.setText(resources.getString("conn_sets"));
     whole_connected_sets_button.setToolTipText(resources.getString("conn_sets_tooltip"));
     whole_connected_sets_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.extend_selection_to_whole_connected_sets();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.extend_selection_to_whole_connected_sets());
 
     this.add(whole_connected_sets_button);
 
@@ -191,12 +129,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     whole_connections_button.setText(resources.getString("connections"));
     whole_connections_button.setToolTipText(resources.getString("connections_tooltip"));
     whole_connections_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.extend_selection_to_whole_connections();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.extend_selection_to_whole_connections());
 
     this.add(whole_connections_button);
 
@@ -204,12 +137,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     whole_groups_button.setText(resources.getString("components"));
     whole_groups_button.setToolTipText(resources.getString("components_tooltip"));
     whole_groups_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.extend_selection_to_whole_components();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.extend_selection_to_whole_components());
 
     this.add(whole_groups_button);
 
@@ -218,12 +146,7 @@ class BoardToolbarSelectedItem extends JToolBar {
       new_net_button.setText(resources.getString("new_net"));
       new_net_button.setToolTipText(resources.getString("new_net_tooltip"));
       new_net_button.addActionListener(
-          new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-              board_frame.board_panel.board_handling.assign_selected_to_new_net();
-            }
-          });
+          evt -> board_frame.board_panel.board_handling.assign_selected_to_new_net());
 
       this.add(new_net_button);
 
@@ -231,12 +154,7 @@ class BoardToolbarSelectedItem extends JToolBar {
       new_group_button.setText(resources.getString("new_component"));
       new_group_button.setToolTipText(resources.getString("new_component_tooltip"));
       new_group_button.addActionListener(
-          new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-              board_frame.board_panel.board_handling.assign_selected_to_new_group();
-            }
-          });
+          evt -> board_frame.board_panel.board_handling.assign_selected_to_new_group());
 
       this.add(new_group_button);
     }
@@ -250,12 +168,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     violation_button.setText(resources.getString("violations"));
     violation_button.setToolTipText(resources.getString("violations_tooltip"));
     violation_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.toggle_selected_item_violations();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.toggle_selected_item_violations());
 
     this.add(violation_button);
 
@@ -268,36 +181,20 @@ class BoardToolbarSelectedItem extends JToolBar {
     display_selection_button.setText(resources.getString("zoom_selection"));
     display_selection_button.setToolTipText(resources.getString("zoom_selection_tooltip"));
     display_selection_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.zoom_selection();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.zoom_selection());
     this.add(display_selection_button);
 
     JButton display_all_button = new JButton();
     display_all_button.setText(resources.getString("zoom_all"));
     display_all_button.setToolTipText(resources.getString("zoom_all_tooltip"));
-    display_all_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.zoom_all();
-          }
-        });
+    display_all_button.addActionListener(evt -> board_frame.zoom_all());
     this.add(display_all_button);
 
     JButton display_region_button = new JButton();
     display_region_button.setText(resources.getString("zoom_region"));
     display_region_button.setToolTipText(resources.getString("zoom_region_tooltip"));
     display_region_button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_frame.board_panel.board_handling.zoom_region();
-          }
-        });
+        evt -> board_frame.board_panel.board_handling.zoom_region());
 
     this.add(display_region_button);
   }

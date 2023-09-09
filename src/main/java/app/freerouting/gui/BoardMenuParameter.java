@@ -2,8 +2,6 @@ package app.freerouting.gui;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Creates the parameter menu of a board frame. */
@@ -28,48 +26,28 @@ public class BoardMenuParameter extends JMenu {
     JMenuItem selectwindow = new JMenuItem();
     selectwindow.setText(parameter_menu.resources.getString("select"));
     selectwindow.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            parameter_menu.board_frame.select_parameter_window.setVisible(true);
-          }
-        });
+        evt -> parameter_menu.board_frame.select_parameter_window.setVisible(true));
 
     parameter_menu.add(selectwindow);
 
     JMenuItem routewindow = new JMenuItem();
     routewindow.setText(parameter_menu.resources.getString("route"));
     routewindow.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            parameter_menu.board_frame.route_parameter_window.setVisible(true);
-          }
-        });
+        evt -> parameter_menu.board_frame.route_parameter_window.setVisible(true));
 
     parameter_menu.add(routewindow);
 
     JMenuItem autoroutewindow = new JMenuItem();
     autoroutewindow.setText(parameter_menu.resources.getString("autoroute"));
     autoroutewindow.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            parameter_menu.board_frame.autoroute_parameter_window.setVisible(true);
-          }
-        });
+        evt -> parameter_menu.board_frame.autoroute_parameter_window.setVisible(true));
 
     parameter_menu.add(autoroutewindow);
 
     JMenuItem movewindow = new JMenuItem();
     movewindow.setText(parameter_menu.resources.getString("move"));
     movewindow.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            parameter_menu.board_frame.move_parameter_window.setVisible(true);
-          }
-        });
+        evt -> parameter_menu.board_frame.move_parameter_window.setVisible(true));
 
     parameter_menu.add(movewindow);
 

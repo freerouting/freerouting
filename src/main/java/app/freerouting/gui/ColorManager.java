@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -94,12 +93,7 @@ public class ColorManager extends BoardSavableSubWindow {
     // Set up the dialog that the button brings up.
     final JColorChooser colorChooser = new JColorChooser();
     ActionListener okListener =
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            colorEditor.currentColor = colorChooser.getColor();
-          }
-        };
+        e -> colorEditor.currentColor = colorChooser.getColor();
     ResourceBundle resources =
         ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
     final JDialog dialog =
@@ -108,16 +102,13 @@ public class ColorManager extends BoardSavableSubWindow {
 
     // Here's the code that brings up the dialog.
     button.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            button.setBackground(colorEditor.currentColor);
-            colorChooser.setColor(colorEditor.currentColor);
-            // Without the following line, the dialog comes up
-            // in the middle of the screen.
-            // dialog.setLocationRelativeTo(button);
-            dialog.setVisible(true);
-          }
+        e -> {
+          button.setBackground(colorEditor.currentColor);
+          colorChooser.setColor(colorEditor.currentColor);
+          // Without the following line, the dialog comes up
+          // in the middle of the screen.
+          // dialog.setLocationRelativeTo(button);
+          dialog.setVisible(true);
         });
   }
 
@@ -181,13 +172,7 @@ public class ColorManager extends BoardSavableSubWindow {
       setClickCountToStart(1); // This is usually 1 or 2.
 
       // Must do this so that editing stops when appropriate.
-      b.addActionListener(
-          new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-              fireEditingStopped();
-            }
-          });
+      b.addActionListener(e -> fireEditingStopped());
     }
 
     @Override

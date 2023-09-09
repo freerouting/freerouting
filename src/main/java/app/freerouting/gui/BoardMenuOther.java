@@ -4,8 +4,6 @@ import app.freerouting.board.RoutingBoard;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class BoardMenuOther extends JMenu {
@@ -31,12 +29,7 @@ public class BoardMenuOther extends JMenu {
     snapshots.setText(other_menu.resources.getString("snapshots"));
     snapshots.setToolTipText(other_menu.resources.getString("snapshots_tooltip"));
     snapshots.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            other_menu.board_frame.snapshot_window.setVisible(true);
-          }
-        });
+        evt -> other_menu.board_frame.snapshot_window.setVisible(true));
 
     other_menu.add(snapshots);
 
@@ -45,23 +38,20 @@ public class BoardMenuOther extends JMenu {
     delete_all_tracks.setText(other_menu.resources.getString("delete_all_tracks_and_vias"));
     delete_all_tracks.setToolTipText(other_menu.resources.getString("delete_all_tracks_and_vias_tooltip"));
     delete_all_tracks.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
-            // delete all tracks and vias
-            board.delete_all_tracks_and_vias();
-            // update the board
-            other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
-            // create a deep copy of the routing board
-            board = other_menu.board_frame.board_panel.board_handling.deep_copy_routing_board();
-            // update the board again
-            other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
-            // create ratsnest
-            other_menu.board_frame.board_panel.board_handling.create_ratsnest();
-            // redraw the board
-            other_menu.board_frame.board_panel.board_handling.repaint();
-          }
+        evt -> {
+          RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
+          // delete all tracks and vias
+          board.delete_all_tracks_and_vias();
+          // update the board
+          other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
+          // create a deep copy of the routing board
+          board = other_menu.board_frame.board_panel.board_handling.deep_copy_routing_board();
+          // update the board again
+          other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
+          // create ratsnest
+          other_menu.board_frame.board_panel.board_handling.create_ratsnest();
+          // redraw the board
+          other_menu.board_frame.board_panel.board_handling.repaint();
         });
 
     other_menu.add(delete_all_tracks);

@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 
 public class BoardMenuHelpReduced extends JMenu {
@@ -23,9 +22,7 @@ public class BoardMenuHelpReduced extends JMenu {
     JMenuItem about_window = new JMenuItem();
     about_window.setText(this.resources.getString("about"));
     about_window.addActionListener(
-        (ActionEvent evt) -> {
-          board_frame.about_window.setVisible(true);
-        });
+        evt -> board_frame.about_window.setVisible(true));
     this.add(about_window);
   }
 }

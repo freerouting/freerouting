@@ -4,8 +4,6 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Popup menu used in the interactive route state. */
@@ -26,36 +24,21 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     JMenuItem end_route_item = new JMenuItem();
     end_route_item.setText(resources.getString("end_route"));
     end_route_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.return_from_state();
-          }
-        });
+        evt -> board_panel.board_handling.return_from_state());
 
     this.add(end_route_item, 0);
 
     JMenuItem cancel_item = new JMenuItem();
     cancel_item.setText(resources.getString("cancel_route"));
     cancel_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.cancel_state();
-          }
-        });
+        evt -> board_panel.board_handling.cancel_state());
 
     this.add(cancel_item, 1);
 
     JMenuItem snapshot_item = new JMenuItem();
     snapshot_item.setText(resources.getString("generate_snapshot"));
     snapshot_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.generate_snapshot();
-          }
-        });
+        evt -> board_panel.board_handling.generate_snapshot());
 
     this.add(snapshot_item, 2);
 

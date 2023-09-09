@@ -135,9 +135,7 @@ public class MainApplication extends WindowBase {
         demonstration_button.setText(resources.getString("router_demonstrations"));
         demonstration_button.setToolTipText(resources.getString("router_demonstrations_tooltip"));
         demonstration_button.addActionListener(
-            (ActionEvent evt) -> {
-              window_net_demonstrations.setVisible(true);
-            });
+            evt -> window_net_demonstrations.setVisible(true));
 
         gridbag.setConstraints(demonstration_button, gridbag_constraints);
         main_panel.add(demonstration_button, gridbag_constraints);
@@ -145,9 +143,7 @@ public class MainApplication extends WindowBase {
         sample_board_button.setText(resources.getString("sample_designs"));
         sample_board_button.setToolTipText(resources.getString("sample_designs_tooltip"));
         sample_board_button.addActionListener(
-            (ActionEvent evt) -> {
-              window_net_sample_designs.setVisible(true);
-            });
+            evt -> window_net_sample_designs.setVisible(true));
 
         gridbag.setConstraints(sample_board_button, gridbag_constraints);
         main_panel.add(sample_board_button, gridbag_constraints);
@@ -156,10 +152,7 @@ public class MainApplication extends WindowBase {
 
     open_board_button.setText(resources.getString("open_own_design"));
     open_board_button.setToolTipText(resources.getString("open_own_design_tooltip"));
-    open_board_button.addActionListener(
-        (ActionEvent evt) -> {
-          open_board_design_action(evt);
-        });
+    open_board_button.addActionListener(this::open_board_design_action);
 
     gridbag.setConstraints(open_board_button, gridbag_constraints);
     if (add_buttons) {
@@ -169,7 +162,7 @@ public class MainApplication extends WindowBase {
     if (startupOptions.getWebstartOption() && add_buttons) {
       restore_defaults_button.setText(resources.getString("restore_defaults"));
       restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
-      restore_defaults_button.addActionListener((ActionEvent evt) -> {});
+      restore_defaults_button.addActionListener(evt -> {});
       gridbag.setConstraints(restore_defaults_button, gridbag_constraints);
       main_panel.add(restore_defaults_button, gridbag_constraints);
     }

@@ -4,8 +4,6 @@ import app.freerouting.board.LayerStructure;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Used as submenu in a popup menu for change layer actions. */
@@ -55,22 +53,19 @@ class PopupMenuChangeLayer extends JMenu {
       message1 = resources.getString("layer_changed_to") + " ";
       layer_no = p_layer_no;
       addActionListener(
-          new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-              final BoardPanel board_panel = board_frame.board_panel;
-              if (board_panel.board_handling.change_layer_action(layer_no)) {
-                String layer_name =
-                    board_panel.board_handling.get_routing_board()
-                        .layer_structure
-                        .arr[layer_no]
-                        .name;
-                board_panel.screen_messages.set_status_message(message1 + layer_name);
-              }
-              // If change_layer failed the status message is set inside change_layer_action
-              // because the information of the cause of the failing is missing here.
-              board_panel.move_mouse(board_panel.right_button_click_location);
+          evt -> {
+            final BoardPanel board_panel = board_frame.board_panel;
+            if (board_panel.board_handling.change_layer_action(layer_no)) {
+              String layer_name =
+                  board_panel.board_handling.get_routing_board()
+                      .layer_structure
+                      .arr[layer_no]
+                      .name;
+              board_panel.screen_messages.set_status_message(message1 + layer_name);
             }
+            // If change_layer failed the status message is set inside change_layer_action
+            // because the information of the cause of the failing is missing here.
+            board_panel.move_mouse(board_panel.right_button_click_location);
           });
     }
   }

@@ -4,8 +4,6 @@ import app.freerouting.board.TestLevel;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Popup Menu used in the interactive select state. */
@@ -23,12 +21,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem select_item_item = new JMenuItem();
     select_item_item.setText(resources.getString("select_item"));
     select_item_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.select_items(board_panel.right_button_click_location);
-          }
-        });
+        evt -> board_panel.board_handling.select_items(board_panel.right_button_click_location));
 
     this.add(select_item_item, 0);
 
@@ -37,12 +30,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem start_route_item = new JMenuItem();
     start_route_item.setText(resources.getString("start_route"));
     start_route_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.start_route(board_panel.right_button_click_location);
-          }
-        });
+        evt -> board_panel.board_handling.start_route(board_panel.right_button_click_location));
 
     this.add(start_route_item, 1);
 
@@ -55,12 +43,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem create_tile_item = new JMenuItem();
     create_tile_item.setText(resources.getString("tile"));
     create_tile_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.start_tile(board_panel.right_button_click_location);
-          }
-        });
+        evt -> board_panel.board_handling.start_tile(board_panel.right_button_click_location));
 
     if (board_panel.board_handling.get_routing_board().get_test_level()
         != TestLevel.RELEASE_VERSION) {
@@ -70,37 +53,22 @@ class PopupMenuMain extends PopupMenuDisplay {
     JMenuItem create_circle_item = new JMenuItem();
     create_circle_item.setText(resources.getString("circle"));
     create_circle_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.start_circle(board_panel.right_button_click_location);
-          }
-        });
+        evt -> board_panel.board_handling.start_circle(board_panel.right_button_click_location));
 
     create_obstacle_menu.add(create_circle_item);
 
     JMenuItem create_polygon_item = new JMenuItem();
     create_polygon_item.setText(resources.getString("polygon"));
     create_polygon_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.start_polygonshape_item(
-                board_panel.right_button_click_location);
-          }
-        });
+        evt -> board_panel.board_handling.start_polygonshape_item(
+            board_panel.right_button_click_location));
 
     create_obstacle_menu.add(create_polygon_item);
 
     JMenuItem add_hole_item = new JMenuItem();
     add_hole_item.setText(resources.getString("hole"));
     add_hole_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.start_adding_hole(board_panel.right_button_click_location);
-          }
-        });
+        evt -> board_panel.board_handling.start_adding_hole(board_panel.right_button_click_location));
 
     create_obstacle_menu.add(add_hole_item);
 
@@ -113,12 +81,7 @@ class PopupMenuMain extends PopupMenuDisplay {
       JMenuItem swap_pin_item = new JMenuItem();
       swap_pin_item.setText(resources.getString("swap_pin"));
       swap_pin_item.addActionListener(
-          new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-              board_panel.board_handling.swap_pin(board_panel.right_button_click_location);
-            }
-          });
+          evt -> board_panel.board_handling.swap_pin(board_panel.right_button_click_location));
 
       this.add(swap_pin_item, 3);
     }

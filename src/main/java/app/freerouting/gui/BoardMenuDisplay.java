@@ -2,8 +2,6 @@ package app.freerouting.gui;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Creates the display menu of a board frame. */
@@ -28,12 +26,7 @@ public class BoardMenuDisplay extends JMenu {
     itemvisibility.setText(display_menu.resources.getString("object_visibility"));
     itemvisibility.setToolTipText(display_menu.resources.getString("object_visibility_tooltip"));
     itemvisibility.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            display_menu.board_frame.object_visibility_window.setVisible(true);
-          }
-        });
+        evt -> display_menu.board_frame.object_visibility_window.setVisible(true));
 
     display_menu.add(itemvisibility);
 
@@ -41,12 +34,7 @@ public class BoardMenuDisplay extends JMenu {
     layervisibility.setText(display_menu.resources.getString("layer_visibility"));
     layervisibility.setToolTipText(display_menu.resources.getString("layer_visibility_tooltip"));
     layervisibility.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            display_menu.board_frame.layer_visibility_window.setVisible(true);
-          }
-        });
+        evt -> display_menu.board_frame.layer_visibility_window.setVisible(true));
 
     display_menu.add(layervisibility);
 
@@ -54,24 +42,14 @@ public class BoardMenuDisplay extends JMenu {
     colors.setText(display_menu.resources.getString("colors"));
     colors.setToolTipText(display_menu.resources.getString("colors_tooltip"));
     colors.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            display_menu.board_frame.color_manager.setVisible(true);
-          }
-        });
+        evt -> display_menu.board_frame.color_manager.setVisible(true));
 
     display_menu.add(colors);
 
     JMenuItem miscellaneous = new JMenuItem();
     miscellaneous.setText(display_menu.resources.getString("miscellaneous"));
     miscellaneous.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            display_menu.board_frame.display_misc_window.setVisible(true);
-          }
-        });
+        evt -> display_menu.board_frame.display_misc_window.setVisible(true));
 
     display_menu.add(miscellaneous);
 

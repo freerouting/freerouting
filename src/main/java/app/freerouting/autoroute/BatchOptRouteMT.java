@@ -246,10 +246,8 @@ public class BatchOptRouteMT extends BatchOptRoute {
                 r -> {
                   Thread t = new Thread(r);
                   t.setUncaughtExceptionHandler(
-                      (t1, e) -> {
-                        FRLogger.error(
-                            "Exception in thread pool worker thread: " + t1.toString(), e);
-                      });
+                      (t1, e) -> FRLogger.error(
+                          "Exception in thread pool worker thread: " + t1.toString(), e));
                   return t;
                 });
 

@@ -4,8 +4,6 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 /** Popup menu used in the interactive copy item state. */
@@ -31,24 +29,14 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     JMenuItem insert_item = new JMenuItem();
     insert_item.setText(resources.getString("insert"));
     insert_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
-          }
-        });
+        evt -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));
 
     this.add(insert_item, 0);
 
     JMenuItem done_item = new JMenuItem();
     done_item.setText(resources.getString("done"));
     done_item.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            board_panel.board_handling.return_from_state();
-          }
-        });
+        evt -> board_panel.board_handling.return_from_state());
 
     this.add(done_item, 1);
 
