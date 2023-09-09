@@ -308,7 +308,7 @@ public class GraphicsContext implements Serializable {
    */
   public void fill_ellipse_arr(
       Ellipse[] p_ellipse_arr, Graphics p_g, Color p_color, double p_translucency_factor) {
-    if (p_color == null || p_ellipse_arr.length <= 0) {
+    if (p_color == null || p_ellipse_arr.length == 0) {
       return;
     }
     GeneralPath draw_path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);

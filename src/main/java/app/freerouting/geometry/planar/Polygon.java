@@ -3,6 +3,7 @@ package app.freerouting.geometry.planar;
 import app.freerouting.logger.FRLogger;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,9 +24,7 @@ public class Polygon implements Serializable {
     if (p_point_arr.length == 0) {
       return;
     }
-    for (int i = 0; i < p_point_arr.length; ++i) {
-      corners.add(p_point_arr[i]);
-    }
+    corners.addAll(Arrays.asList(p_point_arr));
 
     boolean corner_removed = true;
     while (corner_removed) {

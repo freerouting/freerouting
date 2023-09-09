@@ -108,7 +108,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   @Override
   public void setVisible(boolean p_value) {
-    if (p_value == true) {
+    if (p_value) {
       recalculate();
     }
     super.setVisible(p_value);

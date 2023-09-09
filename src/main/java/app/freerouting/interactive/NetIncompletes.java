@@ -13,12 +13,7 @@ import app.freerouting.rules.Net;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /** Creates the Incompletes (Ratsnest) of one net to display them on the screen. */
 public class NetIncompletes {
@@ -49,10 +44,7 @@ public class NetIncompletes {
 
     // create a Delaunay Triangulation for the net_items
     Collection<PlanarDelaunayTriangulation.Storable> triangulation_objects =
-        new LinkedList<>();
-    for (PlanarDelaunayTriangulation.Storable curr_object : net_items) {
-      triangulation_objects.add(curr_object);
-    }
+        new LinkedList<>(Arrays.asList(net_items));
     PlanarDelaunayTriangulation triangulation =
         new PlanarDelaunayTriangulation(triangulation_objects);
 
@@ -228,7 +220,7 @@ public class NetIncompletes {
       FRLogger.warn("NetIncompletes.calculate_net_items: too few items");
     }
 
-    return result.toArray(new NetItem[result.size()]);
+    return result.toArray(new NetItem[0]);
   }
 
   /**

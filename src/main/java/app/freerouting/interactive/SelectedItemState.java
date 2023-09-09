@@ -595,8 +595,7 @@ public class SelectedItemState extends InteractiveState {
         curr_group_no_set.add(curr_item.get_component_no());
       }
     }
-    Set<Item> new_selected_items = new TreeSet<>();
-    new_selected_items.addAll(item_list);
+    Set<Item> new_selected_items = new TreeSet<>(item_list);
     for (int curr_group_no : curr_group_no_set) {
       new_selected_items.addAll(hdlg.get_routing_board().get_component_items(curr_group_no));
     }

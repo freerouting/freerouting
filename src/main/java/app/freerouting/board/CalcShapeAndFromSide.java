@@ -51,11 +51,11 @@ class CalcShapeAndFromSide {
       }
       int from_side_no = -1;
       Line curr_cut_line = null;
-      if (cut_off_at_start == true) {
+      if (cut_off_at_start) {
         curr_cut_line = start_cutline;
         from_side_no = curr_shape.border_line_index(curr_cut_line);
       }
-      if (from_side_no < 0 && cut_off_at_end == true) {
+      if (from_side_no < 0 && cut_off_at_end) {
         curr_cut_line = end_cutline;
         from_side_no = curr_shape.border_line_index(curr_cut_line);
       }

@@ -5,6 +5,7 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.datastructures.UndoableObjects;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -78,10 +79,7 @@ public class BoardLibrary implements Serializable {
    */
   public void set_via_padstacks(Padstack[] p_padstacks) {
 
-    this.via_padstacks = new Vector<>();
-    for (int i = 0; i < p_padstacks.length; ++i) {
-      this.via_padstacks.add(p_padstacks[i]);
-    }
+    this.via_padstacks = new Vector<>(Arrays.asList(p_padstacks));
   }
 
   /**

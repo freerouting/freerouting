@@ -528,8 +528,7 @@ public class AutorouteEngine {
   }
 
   protected int generate_room_id_no() {
-    ++expansion_room_instance_count;
-    return expansion_room_instance_count;
+    return ++expansion_room_instance_count;
   }
 
   /** The possible results of autorouting a connection */

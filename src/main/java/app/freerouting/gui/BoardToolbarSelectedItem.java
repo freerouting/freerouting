@@ -218,7 +218,7 @@ class BoardToolbarSelectedItem extends JToolBar {
             null,
             class_name_arr,
             class_name_arr[0]);
-    if (selected_value == null || !(selected_value instanceof String)) {
+    if (!(selected_value instanceof String)) {
       return;
     }
     int class_index = clearance_matrix.get_no((String) selected_value);

@@ -12,11 +12,7 @@ import app.freerouting.rules.Nets;
 
 import java.awt.Color;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /** Class describing functionality required for traces in the plane. */
 public abstract class Trace extends Item implements Connectable, Serializable {
@@ -246,12 +242,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public boolean is_overlap() {
     Set<Item> start_contacts = this.get_start_contacts();
     Set<Item> end_contacts = this.get_end_contacts();
-    for (Item curr_end_contact : end_contacts) {
-      if (start_contacts.contains(curr_end_contact)) {
-        return true;
-      }
-    }
-    return false;
+    return !Collections.disjoint(start_contacts, end_contacts);
   }
 
   /**
@@ -296,16 +287,13 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     if (this.is_overlap()) {
       return true;
     }
-    Set<Item> visited_items = new TreeSet<>();
     Collection<Item> start_contacts = this.get_start_contacts();
     // a cycle exists if through expanding the start contact we reach
     // this trace again via an end contact
-    for (Item curr_contact : start_contacts) {
-      // make sure, that all direct neighbours are
-      // expanded from here, to block coming back to
-      // this trace via a start contact.
-      visited_items.add(curr_contact);
-    }
+    // make sure, that all direct neighbours are
+    // expanded from here, to block coming back to
+    // this trace via a start contact.
+    Set<Item> visited_items = new TreeSet<>(start_contacts);
     boolean ignore_areas = false;
     if (this.net_no_arr.length > 0) {
       Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);

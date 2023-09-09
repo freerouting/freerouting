@@ -4,6 +4,7 @@ import app.freerouting.datastructures.Stoppable;
 import app.freerouting.logger.FRLogger;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -172,10 +173,7 @@ public class PolylineArea implements Area, Serializable {
         // split failed
         return null;
       }
-      Collection<TileShape> curr_piece_list = new LinkedList<>();
-      for (int i = 0; i < convex_border_pieces.length; ++i) {
-        curr_piece_list.add(convex_border_pieces[i]);
-      }
+      Collection<TileShape> curr_piece_list = new LinkedList<>(Arrays.asList(convex_border_pieces));
       for (int i = 0; i < hole_arr.length; ++i) {
         if (hole_arr[i].dimension() < 2) {
           FRLogger.warn("PolylineArea. split_to_convex: dimension 2 for hole expected");

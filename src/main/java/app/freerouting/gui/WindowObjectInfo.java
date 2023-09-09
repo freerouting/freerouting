@@ -284,8 +284,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   @Override
   public boolean append(
       String p_button_name, String p_window_title, WindowObjectInfo.Printable p_object) {
-    Collection<WindowObjectInfo.Printable> object_list =
-        new LinkedList<>();
+    Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
     object_list.add(p_object);
     return append_objects(p_button_name, p_window_title, object_list);
   }
@@ -299,9 +298,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
       String p_button_name,
       String p_window_title,
       Collection<Item> p_items) {
-    Collection<WindowObjectInfo.Printable> object_list =
-        new LinkedList<>();
-    object_list.addAll(p_items);
+    Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>(p_items);
     return append_objects(p_button_name, p_window_title, object_list);
   }
 

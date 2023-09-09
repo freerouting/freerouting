@@ -1118,7 +1118,7 @@ public class MazeSearchAlgo {
     CompleteExpansionRoom previous_room = p_list_element.door.other_room(p_list_element.next_room);
     boolean room_was_shoved = p_list_element.adjustment != MazeSearchElement.Adjustment.NONE;
     Item previous_item = null;
-    if (previous_room != null && previous_room instanceof ObstacleExpansionRoom) {
+    if (previous_room instanceof ObstacleExpansionRoom) {
       previous_item = ((ObstacleExpansionRoom) previous_room).get_item();
     }
     if (room_was_shoved) {

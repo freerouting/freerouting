@@ -55,8 +55,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     if (selected_violations.isEmpty()) {
       return;
     }
-    Set<Item> selected_items =
-        new TreeSet<>();
+    Set<Item> selected_items = new TreeSet<>();
     for (int i = 0; i < selected_violations.size(); ++i) {
       LengthViolation curr_violation = ((LengthViolation) selected_violations.get(i));
       selected_items.addAll(curr_violation.net.get_items());

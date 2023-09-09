@@ -252,7 +252,7 @@ public class PlanarDelaunayTriangulation {
   /** Checks the consistency of the triangles in this triangulation. Used for debugging purposes. */
   public boolean validate() {
     boolean result = this.search_graph.anchor.validate();
-    if (result == true) {
+    if (result) {
       FRLogger.warn("Delaunay triangulation check passed ok");
     } else {
       FRLogger.warn("Delaunay triangulation check has detected problems");

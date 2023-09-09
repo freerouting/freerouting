@@ -252,7 +252,7 @@ public class ForcedPadAlgo {
           MoveDrillItemAlgo.try_shove_via_points(
               p_pad_shape, p_layer, curr_shove_via, p_cl_type, false, board);
 
-      if (new_via_center.length <= 0) {
+      if (new_via_center.length == 0) {
         this.board.set_shove_failing_obstacle(curr_shove_via);
         return CheckDrillResult.NOT_DRILLABLE;
       }

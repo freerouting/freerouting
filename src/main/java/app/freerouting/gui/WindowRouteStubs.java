@@ -24,8 +24,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
   /** Creates a new instance of WindowRouteStubs */
   public WindowRouteStubs(BoardFrame p_board_frame) {
     super(p_board_frame);
-    this.resources =
-        ResourceBundle.getBundle(
+    this.resources = ResourceBundle.getBundle(
             "app.freerouting.gui.CleanupWindows", p_board_frame.get_locale());
     this.setTitle(resources.getString("route_stubs"));
     this.list_empty_message.setText(resources.getString("no_route_stubs_found"));

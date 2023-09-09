@@ -124,7 +124,7 @@ public class WindowViaRule extends WindowBase {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       Object[] possible_values = new Object[via_list.count() - via_rule.via_count()];
-      if (possible_values.length <= 0) {
+      if (possible_values.length == 0) {
         return;
       }
       int curr_index = 0;

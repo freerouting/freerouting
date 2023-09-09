@@ -95,7 +95,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
       if (num_threads > 0) {
         FRLogger.info(
             "Starting route optimization on "
-                + (num_threads <= 1 ? "1 thread" : num_threads + " threads")
+                + (num_threads == 1 ? "1 thread" : num_threads + " threads")
                 + "...");
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
 

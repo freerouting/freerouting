@@ -372,7 +372,7 @@ public class Route {
     } else if (nearest_target_item instanceof ConductionArea) {
       connection_point = p_from_point;
     }
-    if (connection_point != null && connection_point instanceof IntPoint) {
+    if (connection_point instanceof IntPoint) {
       route_completed = connect(p_from_point, (IntPoint) connection_point);
     }
     return route_completed;

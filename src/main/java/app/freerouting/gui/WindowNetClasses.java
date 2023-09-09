@@ -302,7 +302,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int[] selected_rows = table.getSelectedRows();
-      if (selected_rows.length <= 0) {
+      if (selected_rows.length == 0) {
         return;
       }
       RoutingBoard routing_board =
@@ -349,7 +349,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int[] selected_rows = table.getSelectedRows();
-      if (selected_rows.length <= 0) {
+      if (selected_rows.length == 0) {
         return;
       }
       BoardHandling board_handling =
@@ -381,7 +381,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int[] selected_rows = table.getSelectedRows();
-      if (selected_rows.length <= 0) {
+      if (selected_rows.length == 0) {
         return;
       }
       BoardHandling board_handling =

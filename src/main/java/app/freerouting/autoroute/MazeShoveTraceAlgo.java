@@ -252,7 +252,6 @@ public class MazeShoveTraceAlgo {
           FloatLine[] line_sections = curr_door.get_section_segments(compensated_trace_half_width);
           p_to_door_list.add(new DoorSection(curr_door, 0, line_sections[0]));
         }
-        continue;
       } else if (!segment_ist_point) {
         // now curr_door is 1-dimensional
 

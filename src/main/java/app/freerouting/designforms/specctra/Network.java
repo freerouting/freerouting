@@ -166,7 +166,7 @@ public class Network extends ScopeKeyword {
       p_par.file.write("(length ");
       double transformed_max_length;
       if (max_trace_length <= 0) {
-        transformed_max_length = (double) -1;
+        transformed_max_length = -1;
       } else {
         transformed_max_length = p_par.coordinate_transform.board_to_dsn(max_trace_length);
       }
@@ -174,7 +174,7 @@ public class Network extends ScopeKeyword {
       p_par.file.write(" ");
       double transformed_min_length;
       if (min_trace_length <= 0) {
-        transformed_min_length = (double) 0;
+        transformed_min_length = 0;
       } else {
         transformed_min_length = p_par.coordinate_transform.board_to_dsn(min_trace_length);
       }

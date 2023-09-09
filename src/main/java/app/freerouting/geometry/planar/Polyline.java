@@ -775,7 +775,7 @@ public class Polyline implements Serializable {
       return null;
     }
     Point new_end_corner = this.arr[p_line_no].intersection(p_end_line);
-    if (p_line_no <= 1 && new_end_corner.equals(this.first_corner())
+    if (p_line_no == 1 && new_end_corner.equals(this.first_corner())
         || p_line_no >= arr.length - 2 && new_end_corner.equals(this.last_corner())) {
       // No split, if p_end_line does not intersect, but touches
       // only this Polyline at an end point.
@@ -856,9 +856,7 @@ public class Polyline implements Serializable {
         Point next_corner = this.corner(i);
         Side prev_corner_side = curr_result_line.side_of(prev_corner);
         Side next_corner_side = curr_result_line.side_of(next_corner);
-        if (prev_corner_side != Side.COLLINEAR
-            && next_corner_side != Side.COLLINEAR
-            && prev_corner_side == next_corner_side) {
+        if (prev_corner_side == next_corner_side && prev_corner_side != Side.COLLINEAR) {
           // the projection point is outside the line segment
           continue;
         }

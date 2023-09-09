@@ -20,11 +20,8 @@ import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ClearanceMatrix;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
+
+import java.util.*;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in the package
@@ -877,9 +874,7 @@ public class ShapeSearchTree extends MinAreaTree {
               p_obstacle_area.clearance_class_no(), p_obstacle_area.get_layer());
       curr_convex_shape = (TileShape) curr_convex_shape.enlarge(offset_width);
       TileShape[] curr_tree_shapes = curr_convex_shape.divide_into_sections(max_tree_shape_width);
-      for (int j = 0; j < curr_tree_shapes.length; ++j) {
-        tree_shape_list.add(curr_tree_shapes[j]);
-      }
+      tree_shape_list.addAll(Arrays.asList(curr_tree_shapes));
     }
     TileShape[] result = new TileShape[tree_shape_list.size()];
     Iterator<TileShape> it = tree_shape_list.iterator();
@@ -1023,7 +1018,7 @@ public class ShapeSearchTree extends MinAreaTree {
     EntrySortedByClearance(Leaf p_leaf, int p_clearance) {
       leaf = p_leaf;
       clearance = p_clearance;
-      if (last_generated_id_no >= Integer.MAX_VALUE) {
+      if (last_generated_id_no == Integer.MAX_VALUE) {
         last_generated_id_no = 0;
       } else {
         ++last_generated_id_no;

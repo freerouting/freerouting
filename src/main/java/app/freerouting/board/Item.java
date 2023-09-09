@@ -1076,8 +1076,7 @@ public abstract class Item
       p_window.append(", ");
       int violation_count = clearance_violations.size();
       Collection<ObjectInfoPanel.Printable> violations =
-          new LinkedList<>();
-      violations.addAll(clearance_violations);
+          new LinkedList<>(clearance_violations);
       p_window.append_objects(
           String.valueOf(violation_count), resources.getString("violation_info"), violations);
       if (violation_count == 1) {

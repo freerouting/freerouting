@@ -188,7 +188,7 @@ public class MainApplication extends WindowBase {
    */
   public static void main(String[] args) {
     // we have a special case if logging must be disabled before the general command line arguments are parsed
-    if (args.length > 0 && Arrays.stream(args).anyMatch("-dl"::equals)) {
+    if (args.length > 0 && Arrays.asList(args).contains("-dl")) {
       // disable logging
       FRLogger.disableLogging();
     }
@@ -227,7 +227,7 @@ public class MainApplication extends WindowBase {
             + " CPU cores,"
             + (Runtime.getRuntime().maxMemory() / 1024 / 1024)
             + " MB RAM");
-    FRLogger.debug(" UTC Time: " + Instant.now().toString());
+    FRLogger.debug(" UTC Time: " + Instant.now());
 
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
     StartupOptions startupOptions = StartupOptions.parse(args);
@@ -349,7 +349,7 @@ public class MainApplication extends WindowBase {
                 }
               }
 
-              Runtime.getRuntime().exit(0);
+              System.exit(0);
             } catch (Exception e) {
               FRLogger.error("Couldn't export board to file", e);
             }
@@ -434,7 +434,7 @@ public class MainApplication extends WindowBase {
           new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent evt) {
-              Runtime.getRuntime().exit(0);
+              System.exit(0);
             }
           });
     } else {
@@ -469,12 +469,7 @@ public class MainApplication extends WindowBase {
       return null;
     }
 
-    TestLevel test_level;
-    if (p_is_test_version) {
-      test_level = DEBUG_LEVEL;
-    } else {
-      test_level = TestLevel.RELEASE_VERSION;
-    }
+    TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
     BoardFrame new_frame =
         new BoardFrame(
             p_design_file,
@@ -498,15 +493,17 @@ public class MainApplication extends WindowBase {
 
       String design_name = name_parts[0];
 
-      String parent_folder_name = null;
       String rules_file_name;
-      String confirm_import_rules_message = null;
+      String parent_folder_name;
+      String confirm_import_rules_message;
       if (p_design_rules_file == null) {
-        parent_folder_name = p_design_file.get_parent();
         rules_file_name = design_name + ".rules";
+        parent_folder_name = p_design_file.get_parent();
         confirm_import_rules_message = resources.getString("confirm_import_rules");
       } else {
         rules_file_name = p_design_rules_file;
+        parent_folder_name = null;
+        confirm_import_rules_message = null;
       }
 
       // load the .rules file

@@ -284,7 +284,7 @@ public class Pin extends DrillItem implements Serializable {
       return result;
     }
     Shape curr_shape = this.get_shape(p_layer - this.first_layer());
-    if (curr_shape == null || !(curr_shape instanceof TileShape)) {
+    if (!(curr_shape instanceof TileShape)) {
       return result;
     }
     TileShape pad_shape = (TileShape) curr_shape;

@@ -358,7 +358,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
    */
   public FloatPoint nearest_border_point_approx(FloatPoint p_from_point) {
     FloatPoint[] nearest_points = nearest_border_points_approx(p_from_point, 1);
-    if (nearest_points.length <= 0) {
+    if (nearest_points.length == 0) {
       return null;
     }
     return nearest_points[0];

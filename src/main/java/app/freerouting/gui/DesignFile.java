@@ -93,16 +93,13 @@ public class DesignFile {
     if (p_design_file_name == null) {
       return null;
     }
-    DesignFile result = new DesignFile(new File(p_design_file_name), null);
-    return result;
+    return new DesignFile(new File(p_design_file_name), null);
   }
 
   /**
    * Shows a file chooser for opening a design file.
    */
   public static DesignFile open_dialog(String p_design_dir_name) {
-    DesignFile result;
-
     JFileChooser file_chooser = new JFileChooser(p_design_dir_name);
     FileFilter file_filter = new FileFilter(all_file_extensions);
     file_chooser.setMinimumSize(new Dimension(500, 250));
@@ -112,9 +109,7 @@ public class DesignFile {
     if (curr_design_file == null) {
       return null;
     }
-    result = new DesignFile(curr_design_file, file_chooser);
-
-    return result;
+    return new DesignFile(curr_design_file, file_chooser);
   }
 
   public static boolean read_rules_file(

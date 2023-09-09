@@ -32,7 +32,7 @@ public class StartupOptions {
   boolean disable_logging_option = false;
 
   private StartupOptions() {
-    if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals)) {
+    if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
       // the fallback language is English
       current_locale = Locale.ENGLISH;
     }

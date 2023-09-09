@@ -75,10 +75,7 @@ public class Net {
   }
 
   public void set_pins(Collection<Pin> p_pin_list) {
-    pin_list = new TreeSet<>();
-    for (Pin curr_pin : p_pin_list) {
-      pin_list.add(curr_pin);
-    }
+    pin_list = new TreeSet<>(p_pin_list);
   }
 
   public static class Id implements Comparable<Id> {

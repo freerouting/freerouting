@@ -171,9 +171,7 @@ public class LineSegment implements Serializable {
     Line perpendicular_line = new Line(p_point, perpendicular_direction);
     Side start_point_side = perpendicular_line.side_of(this.start_point());
     Side end_point_side = perpendicular_line.side_of(this.end_point());
-    return start_point_side == Side.COLLINEAR
-        || end_point_side == Side.COLLINEAR
-        || start_point_side != end_point_side;
+    return start_point_side != end_point_side || start_point_side == Side.COLLINEAR;
   }
 
   /** calculates the smallest surrounding box of this line segment */

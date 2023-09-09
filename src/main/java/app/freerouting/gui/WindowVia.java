@@ -493,10 +493,7 @@ public class WindowVia extends BoardSavableSubWindow {
         return;
       }
       Collection<WindowObjectInfo.Printable> object_list =
-          new LinkedList<>();
-      for (int i = 0; i < selected_objects.size(); ++i) {
-        object_list.add(selected_objects.get(i));
-      }
+          new LinkedList<>(selected_objects);
       CoordinateTransform coordinate_transform =
           board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window =

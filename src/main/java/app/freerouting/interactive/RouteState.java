@@ -74,7 +74,7 @@ public class RouteState extends InteractiveState {
         route_net_no_arr[i] = picked_item.get_net_no(i);
       }
     }
-    if (route_net_no_arr.length <= 0) {
+    if (route_net_no_arr.length == 0) {
       return null;
     }
     RoutingBoard routing_board = p_board_handling.get_routing_board();

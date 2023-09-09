@@ -33,7 +33,7 @@ public class Simplex extends TileShape implements Serializable {
 
   /** creates a Simplex as intersection of the halfplanes defined by an array of directed lines */
   public static Simplex get_instance(Line[] p_line_arr) {
-    if (p_line_arr.length <= 0) {
+    if (p_line_arr.length == 0) {
       return Simplex.EMPTY;
     }
     Line[] curr_arr = new Line[p_line_arr.length];
@@ -163,7 +163,7 @@ public class Simplex extends TileShape implements Serializable {
    */
   @Override
   public FloatPoint corner_approx(int p_no) {
-    if (arr.length <= 0) {
+    if (arr.length == 0) {
       return null;
     }
     int no;
@@ -224,7 +224,7 @@ public class Simplex extends TileShape implements Serializable {
    */
   @Override
   public Line border_line(int p_no) {
-    if (arr.length <= 0) {
+    if (arr.length == 0) {
       FRLogger.warn("Simplex.edge_line : simplex is empty");
       return null;
     }

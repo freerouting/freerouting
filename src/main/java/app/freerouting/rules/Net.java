@@ -174,8 +174,7 @@ public class Net
     int via_count = this.get_via_count();
     double cumulative_trace_length = this.get_trace_length();
     Collection<Item> terminal_items = this.get_terminal_items();
-    Collection<Printable> terminals = new LinkedList<>();
-    terminals.addAll(terminal_items);
+    Collection<Printable> terminals = new LinkedList<>(terminal_items);
     int terminal_item_count = terminals.size();
 
     ResourceBundle resources =

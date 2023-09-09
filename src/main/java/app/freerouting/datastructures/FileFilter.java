@@ -15,16 +15,16 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
 
   @Override
   public String getDescription() {
-    String message = "Files with the extensions";
+    StringBuilder message = new StringBuilder("Files with the extensions");
     for (int i = 0; i < extensions.length; ++i) {
-      message += " ." + extensions[i];
+      message.append(" .").append(extensions[i]);
       if (i == extensions.length - 2) {
-        message += " or";
+        message.append(" or");
       } else if (i < extensions.length - 2) {
-        message += ",";
+        message.append(",");
       }
     }
-    return message;
+    return message.toString();
   }
 
   @Override

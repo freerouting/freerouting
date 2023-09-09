@@ -98,7 +98,7 @@ public class ShoveTraceAlgo {
             MoveDrillItemAlgo.try_shove_via_points(
                 trace_shape, p_layer, curr_shove_via, p_cl_type, false, p_board);
 
-        if (new_via_center.length <= 0) {
+        if (new_via_center.length == 0) {
           return 0;
         }
         Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());

@@ -278,9 +278,8 @@ public class UndoableObjects implements Serializable {
     }
     redo_possible = false;
     // shorten the size of the deleted_objects_stack to this.stack_level
-    for (int i = deleted_objects_stack.size() - 1; i >= this.stack_level; --i) {
-      deleted_objects_stack.remove(i);
-    }
+    deleted_objects_stack.subList(
+        this.stack_level, deleted_objects_stack.size()).clear();
     Iterator<UndoableObjectNode> it = objects.values().iterator();
     while (it.hasNext()) {
       UndoableObjectNode curr_node = it.next();
