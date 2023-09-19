@@ -1,1 +1,1 @@
-python -c "import checkjava; checkjava.get_java_version()"
+python checkjava.py
