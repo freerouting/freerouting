@@ -3,29 +3,23 @@
 // -----------------------------------------------------------------------------
 ext.publishing = [:]
 
-ext.publishing.pomName =  ext.publishing.artifactId
-
-apply from: "gradle/project-info.gradle"
+apply from: 'gradle/project-info.gradle'
 
 // -----------------------------------------------------------------------------
 // Performs publishing
 // -----------------------------------------------------------------------------
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
 // create one jar for the source files
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
-}
-
-Date buildTimeAndDate = new Date()
-ext {
-    buildDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildTime = new java.text.SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
 

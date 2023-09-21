@@ -1,14 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
-
-    dependencies {
-        //
-    }
-}
-
 plugins {
     id 'java'
     id 'maven-publish'
@@ -16,30 +5,20 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.48.0'
 }
 
-ext.mainClassName = 'app.freerouting.gui.MainApplication'
-
-wrapper {
-    gradleVersion = '7.3'
+java.toolchain {
+    languageVersion = JavaLanguageVersion.of 17
 }
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
 // javadoc is way too strict for my taste.
-if (JavaVersion.current().isJava8Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc) {
-            options.addStringOption("encoding", "UTF-8")
-            options.addStringOption('Xdoclint:none', '-quiet')
-        }
-    }
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption 'encoding', 'UTF-8'
+    options.addStringOption 'Xdoclint:none', '-quiet'
 }
 
 repositories {
@@ -58,89 +37,82 @@ dependencies {
 }
 
 
-Date buildTimeAndDate = new Date()
 ext {
-    buildDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildTime = new java.text.SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    mainClassName = 'app.freerouting.gui.MainApplication'
+
+    def buildDateTime = new Date()
+    buildDate = buildDateTime.format('yyyy-MM-dd')
+    buildTime = buildDateTime.format('HH:mm:ss.SSSZ')
 }
+
+def manifestAttributes = [
+    'Automatic-Module-Name': 'app.freerouting',
+    'Built-By': System.properties['user.name'],
+    'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+    'Build-Date': project.buildDate,
+    'Build-Time': project.buildTime,
+    'Build-Revision': versioning.info.commit,
+    'Specification-Title': project.name,
+    'Specification-Version': project.version,
+    'Implementation-Title': project.name,
+    'Implementation-Version': project.version
+].asImmutable()
 
 jar {
     manifest {
-        attributes(
-          'Automatic-Module-Name': 'app.freerouting',
-          'Built-By': System.properties['user.name'],
-          'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
-          'Build-Date': project.buildDate,
-          'Build-Time': project.buildTime,
-          'Build-Revision': versioning.info.commit,
-          'Specification-Title': project.name,
-          'Specification-Version': project.version,
-          'Implementation-Title': project.name,
-          'Implementation-Version': project.version
-        )
+        attributes manifestAttributes
     }
 }
 
-task executableJar(type: Jar) {
-    classifier = 'executable'
-	
-	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+tasks.register('executableJar', Jar) {
+    archiveClassifier = 'executable'
+
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 
     from configurations.runtimeClasspath.collect { zipTree(it) }
 
     from files(sourceSets.main.output)
 
     manifest {
-
-        attributes(
-                'Automatic-Module-Name': 'app.freerouting',
-                'Built-By': System.properties['user.name'],
-                'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
-                'Build-Date': project.buildDate,
-                'Build-Time': project.buildTime,
-                'Build-Revision': versioning.info.commit,
-                'Specification-Title': project.name,
-                'Specification-Version': project.version,
-                'Implementation-Title': project.name,
-                'Implementation-Version': project.version,
-                'Main-Class': mainClassName
-        )
+        attributes manifestAttributes + ['Main-Class': project.mainClassName]
     }
 }
 
 apply from: 'gradle/publishing.gradle'
 
 // write constants to code
-task writeVersionInfo() {
+tasks.register('writeVersionInfo') {
     doLast {
-        def buildInfoCode = new File("${project.buildDir}/generated-src/app/freerouting/constants/Constants.java")
+        def buildInfoCode = file("${project.buildDir}/generated-src/app/freerouting/constants/Constants.java")
         buildInfoCode.getParentFile().mkdirs()
-        buildInfoCode.write("package app.freerouting.constants;\n"
-                + "public class Constants {\n"
-                + "  public static final String FREEROUTING_VERSION = \"${publishing.versionId}\";\n"
-                + "  public static final String FREEROUTING_BUILD_DATE = \"${buildDate}\";\n"
-                + "}\n"
+        buildInfoCode.write(
+            """
+            package app.freerouting.constants;
+            public final class Constants {
+              public static final String FREEROUTING_VERSION = \"${publishing.versionId}\";
+              public static final String FREEROUTING_BUILD_DATE = \"${project.buildDate}\";
+            }
+            """.stripIndent().trim()
         )
     }
 }
 
 // add the 'vmfconstants' src dir to the folders to compile (input to groovyc)
-sourceSets.main.java.srcDirs+=file("${project.buildDir}/generated-src/app/freerouting/constants/")
+sourceSets.main.java.srcDirs += "${project.buildDir}/generated-src/"
 
-compileJava.dependsOn+="writeVersionInfo"
+compileJava.dependsOn += 'writeVersionInfo'
 
 
-task dist(type: Copy) {
-    from('build/libs/freerouting-executable.jar')
-    into('build/dist/')
+tasks.register('dist', Copy) {
+    dependsOn assemble
+    from 'build/libs/freerouting-executable.jar'
+    into 'build/dist/'
 }
 
-dist.dependsOn+="assemble"
-
-task run(type: JavaExec) {
+tasks.register('run', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
-    mainClass = mainClassName
+    mainClass = project.mainClassName
 
     // arguments to pass to the application
     //    args 'appArg1'
