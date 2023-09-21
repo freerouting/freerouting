@@ -376,7 +376,7 @@ public class MainApplication extends WindowBase {
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
         final int AUTOSTART_TIMEOUT = 20;
         final String START_NOW_TEXT = resources.getString("auto_start_routing_startnow_button");
-        JButton startNowButton = new JButton(START_NOW_TEXT + '(' + AUTOSTART_TIMEOUT + ')');
+        JButton startNowButton = new JButton(START_NOW_TEXT + " (" + AUTOSTART_TIMEOUT + ")");
 
         final String CANCEL_TEXT = resources.getString("auto_start_routing_cancel_button");
         Object[] options = {startNowButton, CANCEL_TEXT};
@@ -403,7 +403,7 @@ public class MainApplication extends WindowBase {
           @Override
           public void actionPerformed(ActionEvent e) {
             if (--secondsLeft > 0) {
-              startNowButton.setText(START_NOW_TEXT + '(' + secondsLeft + ')');
+              startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
             } else {
               optionPane.setValue(options[0]);
             }
