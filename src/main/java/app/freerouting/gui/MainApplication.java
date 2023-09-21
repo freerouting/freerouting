@@ -374,7 +374,11 @@ public class MainApplication extends WindowBase {
         int cancelButtonIndex = -1;
         for(Component c : optionPane.getComponents())
           // Ensure there are buttons on the panel
-          if(c instanceof JPanel && ((JPanel)c).getComponents()[0] instanceof JButton && ((JPanel)c).getComponents()[1] instanceof JButton){
+          if(c instanceof JPanel
+              && ((JPanel)c).getComponents().length >= 2
+              && ((JPanel)c).getComponents()[0] instanceof JButton
+              && ((JPanel)c).getComponents()[1] instanceof JButton
+          ){
             optionPanel = (JPanel)c;
 
             JButton firstButton = (JButton)optionPanel.getComponents()[0];
@@ -396,8 +400,9 @@ public class MainApplication extends WindowBase {
           }
 
         // Set the default button to "Start now"
+        JButton startButton;
         if ((optionPanel != null) && (startButtonIndex >= 0)) {
-          JButton startButton = (JButton) (optionPanel.getComponents()[startButtonIndex]);
+          startButton = (JButton) (optionPanel.getComponents()[startButtonIndex]);
           startButton.setText(resources.getString("auto_start_routing_startnow_button"));
           startButton.addActionListener(
               e -> {
