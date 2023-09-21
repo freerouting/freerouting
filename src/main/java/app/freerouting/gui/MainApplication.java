@@ -8,6 +8,7 @@ import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.NetClasses;
+import java.awt.Component;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -366,38 +368,80 @@ public class MainApplication extends WindowBase {
         JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
         JDialog dialog = optionPane.createDialog(resources.getString("auto_start_routing_title"));
 
+        // Get the correct panel from the option pane
+        JPanel optionPanel = null;
+        int startButtonIndex = -1;
+        int cancelButtonIndex = -1;
+        for(Component c : optionPane.getComponents())
+          // Ensure there are buttons on the panel
+          if(c instanceof JPanel && ((JPanel)c).getComponents()[0] instanceof JButton && ((JPanel)c).getComponents()[1] instanceof JButton){
+            optionPanel = (JPanel)c;
+
+            JButton firstButton = (JButton)optionPanel.getComponents()[0];
+            JButton secondButton = (JButton)optionPanel.getComponents()[1];
+
+            if (firstButton.isDefaultButton())
+            {
+              // we normally have the first button as the default
+              startButtonIndex = 0;
+              cancelButtonIndex = 1;
+            } else if (secondButton.isDefaultButton())
+            {
+              // we might have a UI/localization where the second button is the default
+              startButtonIndex = 1;
+              cancelButtonIndex = 0;
+            }
+
+            break;
+          }
+
         // Set the default button to "Start now"
-        JButton startButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[0];
-        startButton.setText(resources.getString("auto_start_routing_startnow_button"));
-        startButton.addActionListener(e -> {
-          ModelDialogTimeout = 0;
-          dialog.dispose();
-        });
+        if ((optionPanel != null) && (startButtonIndex >= 0)) {
+          JButton startButton = (JButton) (optionPanel.getComponents()[startButtonIndex]);
+          startButton.setText(resources.getString("auto_start_routing_startnow_button"));
+          startButton.addActionListener(
+              e -> {
+                ModelDialogTimeout = 0;
+                dialog.dispose();
+              });
+        }
 
         // Set the cancel button to "Cancel (20)"
-        JButton cancelButton = (JButton)((JPanel)optionPane.getComponents()[1]).getComponents()[1];
-        cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(20)");
-        cancelButton.addActionListener(e -> {
-          ModelDialogTimeout = -1;
-          dialog.dispose();
-        });
+        JButton cancelButton;
+        if ((optionPanel != null) && (cancelButtonIndex >= 0)) {
+          cancelButton = (JButton) (optionPanel.getComponents()[1]);
+          cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(20)");
+          cancelButton.addActionListener(
+              e -> {
+                ModelDialogTimeout = -1;
+                dialog.dispose();
+              });
+        } else {
+          cancelButton = null;
+        }
 
         dialog.pack();
 
         // Set the timeout to 20 seconds
         MainApplication.ModelDialogTimeout = 20;
         Timer timer = new Timer(1000, null);
-        timer.addActionListener(
-            e -> {
-              ModelDialogTimeout--;
-              if (ModelDialogTimeout > 0) {
-                cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(" + ModelDialogTimeout + ")");
-              } else {
-                timer.stop();
-                dialog.dispose();
-              }
-            });
-        timer.start();
+        if ((optionPanel != null) && (cancelButtonIndex >= 0)) {
+          timer.addActionListener(
+              e -> {
+                ModelDialogTimeout--;
+                if (ModelDialogTimeout > 0) {
+                  cancelButton.setText(
+                      resources.getString("auto_start_routing_cancel_button")
+                          + "("
+                          + ModelDialogTimeout
+                          + ")");
+                } else {
+                  timer.stop();
+                  dialog.dispose();
+                }
+              });
+          timer.start();
+        }
 
         dialog.setVisible(true);
 
