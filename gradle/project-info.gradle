@@ -18,4 +18,4 @@ ext.publishing.websiteUrl            = 'https://github.com/freerouting/freerouti
 ext.publishing.issueTrackerUrl       = 'https://github.com/freerouting/freerouting/issues'
 ext.publishing.vcsUrl                = 'https://github.com/freerouting/freerouting.git'
 
-ext.publishing.pomName               =  ext.publishing.artifactId
+ext.publishing.pomName               =  publishing.artifactId
