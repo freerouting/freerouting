@@ -62,6 +62,7 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
                 : 0);
   }
 
+  @Override
   public int compareTo(ItemRouteResult r) {
     if (incomplete_count_after < r.incomplete_count_after) {
       return -1;

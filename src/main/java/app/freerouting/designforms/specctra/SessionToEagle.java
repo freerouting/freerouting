@@ -1,19 +1,32 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.Pin;
+import app.freerouting.geometry.planar.ConvexShape;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.IntOctagon;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
+import javax.swing.JFrame;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.Collection;
+
 /** Transforms a Specctra session file into an Eagle script file. */
-public class SessionToEagle extends javax.swing.JFrame {
+public class SessionToEagle extends JFrame {
 
   /** The function for scanning the session file */
   private final IJFlexScanner scanner;
   /** The generated Eagle script file. */
-  private final java.io.OutputStreamWriter out_file;
+  private final OutputStreamWriter out_file;
   /**
-   * Some information is read from the board, because it is not contained in the speccctra session
+   * Some information is read from the board, because it is not contained in the specctra session
    * file.
    */
-  private final app.freerouting.board.BasicBoard board;
+  private final BasicBoard board;
   /** The layer structure in specctra format */
   private final LayerStructure specctra_layer_structure;
   private final app.freerouting.board.Unit unit;
@@ -24,8 +37,8 @@ public class SessionToEagle extends javax.swing.JFrame {
 
   SessionToEagle(
       IJFlexScanner p_scanner,
-      java.io.OutputStreamWriter p_out_file,
-      app.freerouting.board.BasicBoard p_board,
+      OutputStreamWriter p_out_file,
+      BasicBoard p_board,
       app.freerouting.board.Unit p_unit,
       double p_session_file_scale_dominator,
       double p_board_scale_factor) {
@@ -39,9 +52,9 @@ public class SessionToEagle extends javax.swing.JFrame {
   }
 
   public static boolean get_instance(
-      java.io.InputStream p_session,
-      java.io.OutputStream p_output_stream,
-      app.freerouting.board.BasicBoard p_board) {
+      InputStream p_session,
+      OutputStream p_output_stream,
+      BasicBoard p_board) {
     if (p_output_stream == null) {
       return false;
     }
@@ -51,9 +64,7 @@ public class SessionToEagle extends javax.swing.JFrame {
     IJFlexScanner scanner = new SpecctraDsnFileReader(p_session);
 
     // create a file_writer for the eagle script file.
-    java.io.OutputStreamWriter file_writer = new java.io.OutputStreamWriter(p_output_stream);
-
-    boolean result = true;
+    OutputStreamWriter file_writer = new OutputStreamWriter(p_output_stream);
 
     double board_scale_factor = p_board.communication.coordinate_transform.board_to_dsn(1);
     SessionToEagle new_instance =
@@ -65,9 +76,10 @@ public class SessionToEagle extends javax.swing.JFrame {
             p_board.communication.resolution,
             board_scale_factor);
 
+    boolean result;
     try {
       result = new_instance.process_session_scope();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to process session scope", e);
       result = false;
     }
@@ -76,14 +88,14 @@ public class SessionToEagle extends javax.swing.JFrame {
     try {
       p_session.close();
       file_writer.close();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to close files", e);
     }
     return result;
   }
 
-  /** Processes the outmost scope of the session file. Returns false, if an error occured. */
-  private boolean process_session_scope() throws java.io.IOException {
+  /** Processes the outmost scope of the session file. Returns false, if an error occurred. */
+  private boolean process_session_scope() throws IOException {
 
     // read the first line of the session file
     Object next_token = null;
@@ -127,21 +139,21 @@ public class SessionToEagle extends javax.swing.JFrame {
     // Generate Code to remove the complete route.
     // Write a bounding rectangle with GROUP (Min_X-1 Min_Y-1) (Max_X+1 Max_Y+1);
 
-    app.freerouting.geometry.planar.IntBox board_bounding_box = this.board.get_bounding_box();
+    IntBox board_bounding_box = this.board.get_bounding_box();
 
-    Float min_x = (float) this.board_scale_factor * (board_bounding_box.ll.x - 1);
-    Float min_y = (float) this.board_scale_factor * (board_bounding_box.ll.y - 1);
-    Float max_x = (float) this.board_scale_factor * (board_bounding_box.ur.x + 1);
-    Float max_y = (float) this.board_scale_factor * (board_bounding_box.ur.y + 1);
+    float min_x = (float) this.board_scale_factor * (board_bounding_box.ll.x - 1);
+    float min_y = (float) this.board_scale_factor * (board_bounding_box.ll.y - 1);
+    float max_x = (float) this.board_scale_factor * (board_bounding_box.ur.x + 1);
+    float max_y = (float) this.board_scale_factor * (board_bounding_box.ur.y + 1);
 
     this.out_file.write("GROUP (");
-    this.out_file.write(min_x.toString());
+    this.out_file.write(String.valueOf(min_x));
     this.out_file.write(" ");
-    this.out_file.write(min_y.toString());
+    this.out_file.write(String.valueOf(min_y));
     this.out_file.write(") (");
-    this.out_file.write(max_x.toString());
+    this.out_file.write(String.valueOf(max_x));
     this.out_file.write(" ");
-    this.out_file.write(max_y.toString());
+    this.out_file.write(String.valueOf(max_y));
     this.out_file.write(");\n");
     this.out_file.write("RIPUP;\n");
 
@@ -178,7 +190,7 @@ public class SessionToEagle extends javax.swing.JFrame {
     return true;
   }
 
-  private boolean process_placement_scope() throws java.io.IOException {
+  private boolean process_placement_scope() throws IOException {
     // read the component scopes
     Object next_token = null;
     for (; ; ) {
@@ -209,14 +221,14 @@ public class SessionToEagle extends javax.swing.JFrame {
     return true;
   }
 
-  private boolean process_component_placement() throws java.io.IOException {
+  private boolean process_component_placement() throws IOException {
     ComponentPlacement component_placement = Component.read_scope(this.scanner);
     if (component_placement == null) {
       return false;
     }
     for (ComponentPlacement.ComponentLocation curr_location : component_placement.locations) {
       this.out_file.write("ROTATE =");
-      Integer rotation = (int) Math.round(curr_location.rotation);
+      int rotation = (int) Math.round(curr_location.rotation);
       String rotation_string;
       if (curr_location.is_front) {
         rotation_string = "R" + rotation;
@@ -230,17 +242,17 @@ public class SessionToEagle extends javax.swing.JFrame {
       this.out_file.write("move '");
       this.out_file.write(curr_location.name);
       this.out_file.write("' (");
-      Double x_coor = curr_location.coor[0] / this.session_file_scale_denominator;
-      this.out_file.write(x_coor.toString());
+      double x_coor = curr_location.coor[0] / this.session_file_scale_denominator;
+      this.out_file.write(String.valueOf(x_coor));
       this.out_file.write(" ");
-      Double y_coor = curr_location.coor[1] / this.session_file_scale_denominator;
-      this.out_file.write(y_coor.toString());
+      double y_coor = curr_location.coor[1] / this.session_file_scale_denominator;
+      this.out_file.write(String.valueOf(y_coor));
       this.out_file.write(");\n");
     }
     return true;
   }
 
-  private boolean process_routes_scope() throws java.io.IOException {
+  private boolean process_routes_scope() throws IOException {
     // read the direct subscopes of the routes scope
     boolean result = true;
     Object next_token = null;
@@ -269,7 +281,7 @@ public class SessionToEagle extends javax.swing.JFrame {
     return result;
   }
 
-  private boolean process_network_scope() throws java.io.IOException {
+  private boolean process_network_scope() throws IOException {
     boolean result = true;
     Object next_token = null;
     // read the net scopes
@@ -298,11 +310,11 @@ public class SessionToEagle extends javax.swing.JFrame {
     return result;
   }
 
-  private boolean process_net_scope() throws java.io.IOException {
+  private boolean process_net_scope() throws IOException {
     // read the net name
     Object next_token = this.scanner.next_token();
     if (!(next_token instanceof String)) {
-      FRLogger.warn("SessionToEagle.processnet_scope: String expected");
+      FRLogger.warn("SessionToEagle.process_net_scope: String expected");
       return false;
     }
     String net_name = (String) next_token;
@@ -340,7 +352,7 @@ public class SessionToEagle extends javax.swing.JFrame {
     return true;
   }
 
-  private boolean process_wire_scope(String p_net_name) throws java.io.IOException {
+  private boolean process_wire_scope(String p_net_name) throws IOException {
     PolygonPath wire_path = null;
     Object next_token = null;
     for (; ; ) {
@@ -378,12 +390,12 @@ public class SessionToEagle extends javax.swing.JFrame {
 
     this.out_file.write(p_net_name);
     this.out_file.write("' ");
-    Double wire_width = wire_path.width / this.session_file_scale_denominator;
-    this.out_file.write(wire_width.toString());
+    double wire_width = wire_path.width / this.session_file_scale_denominator;
+    this.out_file.write(String.valueOf(wire_width));
     this.out_file.write(" (");
     for (int i = 0; i < wire_path.coordinate_arr.length; ++i) {
-      Double wire_coor = wire_path.coordinate_arr[i] / this.session_file_scale_denominator;
-      this.out_file.write(wire_coor.toString());
+      double wire_coor = wire_path.coordinate_arr[i] / this.session_file_scale_denominator;
+      this.out_file.write(String.valueOf(wire_coor));
       if (i % 2 == 0) {
         this.out_file.write(" ");
       } else {
@@ -399,7 +411,7 @@ public class SessionToEagle extends javax.swing.JFrame {
     return true;
   }
 
-  private boolean process_via_scope(String p_net_name) throws java.io.IOException {
+  private boolean process_via_scope(String p_net_name) throws IOException {
     // read the padstack name
     Object next_token = this.scanner.next_token();
     if (!(next_token instanceof String)) {
@@ -412,9 +424,9 @@ public class SessionToEagle extends javax.swing.JFrame {
     for (int i = 0; i < 2; ++i) {
       next_token = this.scanner.next_token();
       if (next_token instanceof Double) {
-        location[i] = ((Double) next_token).doubleValue();
+        location[i] = (Double) next_token;
       } else if (next_token instanceof Integer) {
-        location[i] = ((Integer) next_token).intValue();
+        location[i] = (Integer) next_token;
       } else {
         FRLogger.warn("SessionToEagle.process_via_scope: number expected");
         return false;
@@ -431,22 +443,17 @@ public class SessionToEagle extends javax.swing.JFrame {
       return false;
     }
 
-    if (padstack_name == null) {
-      FRLogger.warn("SessionToEagle.process_via_scope: padstack_name missing");
-      return false;
-    }
-
-    app.freerouting.library.Padstack via_padstack = this.board.library.padstacks.get(padstack_name);
+    Padstack via_padstack = this.board.library.padstacks.get(padstack_name);
 
     if (via_padstack == null) {
       FRLogger.warn("SessionToEagle.process_via_scope: via padstack not found");
       return false;
     }
 
-    app.freerouting.geometry.planar.ConvexShape via_shape =
+    ConvexShape via_shape =
         via_padstack.get_shape(via_padstack.from_layer());
 
-    Double via_diameter = via_shape.max_width() * this.board_scale_factor;
+    double via_diameter = via_shape.max_width() * this.board_scale_factor;
 
     // The Padstack name is of the form Name$drill_diameter$from_layer-to_layer
 
@@ -471,12 +478,12 @@ public class SessionToEagle extends javax.swing.JFrame {
     this.out_file.write("' ");
 
     // Durchmesser aus Padstack
-    this.out_file.write(via_diameter.toString());
+    this.out_file.write(String.valueOf(via_diameter));
 
     // Shape lesen und einsetzen Square / Round / Octagon
     if (via_shape instanceof app.freerouting.geometry.planar.Circle) {
       this.out_file.write(" round ");
-    } else if (via_shape instanceof app.freerouting.geometry.planar.IntOctagon) {
+    } else if (via_shape instanceof IntOctagon) {
       this.out_file.write(" octagon ");
     } else {
       this.out_file.write(" square ");
@@ -485,11 +492,11 @@ public class SessionToEagle extends javax.swing.JFrame {
     this.out_file.write("-");
     this.out_file.write(get_eagle_layer_string(via_padstack.to_layer()));
     this.out_file.write(" (");
-    Double x_coor = location[0] / this.session_file_scale_denominator;
-    this.out_file.write(x_coor.toString());
+    double x_coor = location[0] / this.session_file_scale_denominator;
+    this.out_file.write(String.valueOf(x_coor));
     this.out_file.write(" ");
-    Double y_coor = location[1] / this.session_file_scale_denominator;
-    this.out_file.write(y_coor.toString());
+    double y_coor = location[1] / this.session_file_scale_denominator;
+    this.out_file.write(String.valueOf(y_coor));
     this.out_file.write(");\n");
 
     return true;
@@ -503,7 +510,7 @@ public class SessionToEagle extends javax.swing.JFrame {
     return name_pieces[0];
   }
 
-  private boolean process_swapped_pins() throws java.io.IOException {
+  private boolean process_swapped_pins() throws IOException {
     for (int i = 1; i <= this.board.components.count(); ++i) {
       if (!process_swapped_pins(i)) {
         return false;
@@ -512,11 +519,11 @@ public class SessionToEagle extends javax.swing.JFrame {
     return true;
   }
 
-  private boolean process_swapped_pins(int p_component_no) throws java.io.IOException {
-    java.util.Collection<app.freerouting.board.Pin> component_pins =
+  private boolean process_swapped_pins(int p_component_no) throws IOException {
+    Collection<Pin> component_pins =
         this.board.get_component_pins(p_component_no);
     boolean component_has_swapped_pins = false;
-    for (app.freerouting.board.Pin curr_pin : component_pins) {
+    for (Pin curr_pin : component_pins) {
       if (curr_pin.get_changed_to() != curr_pin) {
         component_has_swapped_pins = true;
         break;
@@ -527,7 +534,7 @@ public class SessionToEagle extends javax.swing.JFrame {
     }
     PinInfo[] pin_info_arr = new PinInfo[component_pins.size()];
     int i = 0;
-    for (app.freerouting.board.Pin curr_pin : component_pins) {
+    for (Pin curr_pin : component_pins) {
       pin_info_arr[i] = new PinInfo(curr_pin);
       ++i;
     }
@@ -552,8 +559,8 @@ public class SessionToEagle extends javax.swing.JFrame {
     return true;
   }
 
-  private void write_pin_swap(app.freerouting.board.Pin p_pin_1, app.freerouting.board.Pin p_pin_2)
-      throws java.io.IOException {
+  private void write_pin_swap(Pin p_pin_1, Pin p_pin_2)
+      throws IOException {
     int layer_no = Math.max(p_pin_1.first_layer(), p_pin_2.first_layer());
     String layer_name = board.layer_structure.arr[layer_no].name;
 
@@ -568,24 +575,24 @@ public class SessionToEagle extends javax.swing.JFrame {
 
     this.out_file.write("PINSWAP ");
     this.out_file.write(" (");
-    Double curr_coor = location_1[0];
-    this.out_file.write(curr_coor.toString());
+    double curr_coor = location_1[0];
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(" ");
     curr_coor = location_1[1];
-    this.out_file.write(curr_coor.toString());
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(") (");
     curr_coor = location_2[0];
-    this.out_file.write(curr_coor.toString());
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(" ");
     curr_coor = location_2[1];
-    this.out_file.write(curr_coor.toString());
+    this.out_file.write(String.valueOf(curr_coor));
     this.out_file.write(");\n");
   }
 
   private static class PinInfo {
-    final app.freerouting.board.Pin pin;
-    app.freerouting.board.Pin curr_changed_to;
-    PinInfo(app.freerouting.board.Pin p_pin) {
+    final Pin pin;
+    Pin curr_changed_to;
+    PinInfo(Pin p_pin) {
       pin = p_pin;
       curr_changed_to = p_pin;
     }

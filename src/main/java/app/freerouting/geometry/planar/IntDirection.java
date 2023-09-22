@@ -2,8 +2,10 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
 
+import java.io.Serializable;
+
 /** Implements an abstract class Direction as an equivalence class of IntVector's. */
-public class IntDirection extends Direction implements java.io.Serializable {
+public class IntDirection extends Direction implements Serializable {
   public final int x;
   public final int y;
 
@@ -17,18 +19,22 @@ public class IntDirection extends Direction implements java.io.Serializable {
     y = p_vector.y;
   }
 
+  @Override
   public boolean is_orthogonal() {
     return (x == 0 || y == 0);
   }
 
+  @Override
   public boolean is_diagonal() {
     return (Math.abs(x) == Math.abs(y));
   }
 
+  @Override
   public Vector get_vector() {
     return new IntVector(x, y);
   }
 
+  @Override
   int compareTo(IntDirection p_other) {
     if (y > 0) {
       if (p_other.y < 0) {
@@ -69,50 +75,53 @@ public class IntDirection extends Direction implements java.io.Serializable {
     return Signum.as_int(determinant);
   }
 
+  @Override
   public Direction opposite() {
     return new IntDirection(-x, -y);
   }
 
+  @Override
   public Direction turn_45_degree(int p_factor) {
     int n = p_factor % 8;
     int new_x;
     int new_y;
     switch (n) {
-      case 0: // 0 degree
+      case 0 -> { // 0 degree
         new_x = x;
         new_y = y;
-        break;
-      case 1: // 45 degree
+      }
+      case 1 -> { // 45 degree
         new_x = x - y;
         new_y = x + y;
-        break;
-      case 2: // 90 degree
+      }
+      case 2 -> { // 90 degree
         new_x = -y;
         new_y = x;
-        break;
-      case 3: // 135 degree
+      }
+      case 3 -> { // 135 degree
         new_x = -x - y;
         new_y = x - y;
-        break;
-      case 4: // 180 degree
+      }
+      case 4 -> { // 180 degree
         new_x = -x;
         new_y = -y;
-        break;
-      case 5: // 225 degree
+      }
+      case 5 -> { // 225 degree
         new_x = y - x;
         new_y = -x - y;
-        break;
-      case 6: // 270 degree
+      }
+      case 6 -> { // 270 degree
         new_x = y;
         new_y = -x;
-        break;
-      case 7: // 315 degree
+      }
+      case 7 -> { // 315 degree
         new_x = x + y;
         new_y = y - x;
-        break;
-      default:
+      }
+      default -> {
         new_x = 0;
         new_y = 0;
+      }
     }
     return new IntDirection(new_x, new_y);
   }
@@ -123,10 +132,12 @@ public class IntDirection extends Direction implements java.io.Serializable {
    * p_other_direction, and -1 otherwise. Throws an exception, if p_other_direction is not a
    * Direction.
    */
+  @Override
   public int compareTo(Direction p_other_direction) {
     return -p_other_direction.compareTo(this);
   }
 
+  @Override
   int compareTo(BigIntDirection p_other) {
     return -(p_other.compareTo(this));
   }

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 public class FRLogger {
   public static DecimalFormat DefaultFloatFormat = new DecimalFormat("0.00");
   private static Logger logger;
-  private static final HashMap<Integer, Instant> perfData = new HashMap<Integer, Instant>();
+  private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static boolean enabled = true;
   private static final LogEntries logEntries = new LogEntries();
 
@@ -37,7 +37,7 @@ public class FRLogger {
     if (!enabled) return;
     if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
-    perfData.put(perfId.hashCode(), java.time.Instant.now());
+    perfData.put(perfId.hashCode(), Instant.now());
   }
 
   public static double traceExit(String perfId) {
@@ -52,7 +52,7 @@ public class FRLogger {
     if (logger == null) logger = LogManager.getLogger(Freerouting.class);
 
     long timeElapsed =
-        Duration.between(perfData.get(perfId.hashCode()), java.time.Instant.now()).toMillis();
+        Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
 
     perfData.remove(perfId.hashCode());
     if (timeElapsed < 0) {

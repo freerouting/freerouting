@@ -1,6 +1,11 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.library.Padstack;
+
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed
@@ -8,8 +13,8 @@ import app.freerouting.library.Padstack;
  */
 public class ViaInfo
     implements Comparable<ViaInfo>,
-        app.freerouting.board.ObjectInfoPanel.Printable,
-        java.io.Serializable {
+        ObjectInfoPanel.Printable,
+        Serializable {
 
   private final BoardRules board_rules;
   private String name;
@@ -39,6 +44,7 @@ public class ViaInfo
     name = p_name;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
@@ -67,14 +73,16 @@ public class ViaInfo
     attach_smd_allowed = p_attach_smd_allowed;
   }
 
+  @Override
   public int compareTo(ViaInfo p_other) {
     return this.name.compareTo(p_other.name);
   }
 
+  @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via") + " ");
     p_window.append_bold(this.name);
     p_window.append_bold(": ");

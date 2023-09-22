@@ -1,20 +1,23 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.TileShape;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 
 /**
  * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm.
- * The pages are rectangles of about equal width and height covering covering the bounding box of
+ * The pages are rectangles of about equal width and height covering the bounding box of
  * the board area.
  */
 public class DrillPageArray {
 
   private final IntBox bounds;
-  /** The number of colums in the array. */
+  /** The number of columns in the array. */
   private final int COLUMN_COUNT;
   /** The number of rows in the array. */
   private final int ROW_COUNT;
@@ -56,7 +59,7 @@ public class DrillPageArray {
   }
 
   /**
-   * Invalidates all drill pages intersecting with p_shape, so the they must be recalculated at the
+   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the
    * next call of get_ddrills()
    */
   public void invalidate(TileShape p_shape) {
@@ -68,7 +71,7 @@ public class DrillPageArray {
 
   /** Collects all drill pages with a 2-dimensional overlap with p_shape. */
   public Collection<DrillPage> overlapping_pages(TileShape p_shape) {
-    Collection<DrillPage> result = new LinkedList<DrillPage>();
+    Collection<DrillPage> result = new LinkedList<>();
 
     IntBox shape_box = p_shape.bounding_box().intersection(this.bounds);
 
@@ -104,8 +107,8 @@ public class DrillPageArray {
    * Test draw of the all drills
    */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
     for (int j = 0; j < page_arr.length; ++j) {
       DrillPage[] curr_row = page_arr[j];

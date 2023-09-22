@@ -2,12 +2,12 @@ package app.freerouting.geometry.planar;
 
 /** Describing the functionality for the fixed directions of a RegularTileShape. */
 public interface ShapeBoundingDirections {
-  /** Retuns the count of the fixed directions. */
+  /** Returns the count of the fixed directions. */
   int count();
 
   /**
    * Calculates for an arbitrary ConvexShape a surrounding RegularTileShape with this fixed
-   * directions. Is used in the implementation of the seach trees.
+   * directions. Is used in the implementation of the search trees.
    */
   RegularTileShape bounds(ConvexShape p_shape);
 

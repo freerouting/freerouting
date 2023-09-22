@@ -5,6 +5,9 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.PolygonShape;
+
+import java.io.IOException;
 
 /** Class for reading and writing path scopes consisting of a polygon from dsn-files. */
 public class PolygonPath extends Path {
@@ -15,42 +18,45 @@ public class PolygonPath extends Path {
   }
 
   /** Writes this path as a scope to an output dsn-file. */
+  @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
-    p_file.write((Double.valueOf(this.width)).toString());
+    p_file.write(String.valueOf(this.width));
     int corner_count = coordinate_arr.length / 2;
     for (int i = 0; i < corner_count; ++i) {
       p_file.new_line();
-      p_file.write(Double.valueOf(coordinate_arr[2 * i]).toString());
+      p_file.write(String.valueOf(coordinate_arr[2 * i]));
       p_file.write(" ");
-      p_file.write(Double.valueOf(coordinate_arr[2 * i + 1]).toString());
+      p_file.write(String.valueOf(coordinate_arr[2 * i + 1]));
     }
     p_file.end_scope();
   }
 
+  @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("path ");
     p_identifier_type.write(this.layer.name, p_file);
     p_file.write(" ");
-    p_file.write((Double.valueOf(this.width)).toString());
+    p_file.write(String.valueOf(this.width));
     int corner_count = coordinate_arr.length / 2;
     for (int i = 0; i < corner_count; ++i) {
       p_file.new_line();
-      Integer curr_coor = (int) Math.round(coordinate_arr[2 * i]);
-      p_file.write(curr_coor.toString());
+      int curr_coor = (int) Math.round(coordinate_arr[2 * i]);
+      p_file.write(String.valueOf(curr_coor));
       p_file.write(" ");
       curr_coor = (int) Math.round(coordinate_arr[2 * i + 1]);
-      p_file.write(curr_coor.toString());
+      p_file.write(String.valueOf(curr_coor));
     }
     p_file.end_scope();
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board(
       CoordinateTransform p_coordinate_transform) {
     FloatPoint[] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
@@ -70,13 +76,14 @@ public class PolygonPath extends Path {
       rounded_corner_arr[i] = corner_arr[i].round();
     }
     app.freerouting.geometry.planar.Shape result =
-        new app.freerouting.geometry.planar.PolygonShape(rounded_corner_arr);
+        new PolygonShape(rounded_corner_arr);
     if (offset > 0) {
       result = result.bounding_tile().enlarge(offset);
     }
     return result;
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
     FloatPoint[] corner_arr = new FloatPoint[this.coordinate_arr.length / 2];
@@ -96,13 +103,14 @@ public class PolygonPath extends Path {
       rounded_corner_arr[i] = corner_arr[i].round();
     }
     app.freerouting.geometry.planar.Shape result =
-        new app.freerouting.geometry.planar.PolygonShape(rounded_corner_arr);
+        new PolygonShape(rounded_corner_arr);
     if (offset > 0) {
       result = result.bounding_tile().enlarge(offset);
     }
     return result;
   }
 
+  @Override
   public Rectangle bounding_box() {
     double offset = this.width / 2;
     double[] bounds = new double[4];

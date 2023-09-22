@@ -1,24 +1,28 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class Circuit {
   /**
    * Currently only the length matching rule is read from a circuit scope. If the scope does not
-   * contain a length matching rule, nulll is returned.
+   * contain a length matching rule, null is returned.
    */
   public static ReadScopeResult read_scope(IJFlexScanner p_scanner) {
     Object next_token = null;
     double min_trace_length = 0;
     double max_trace_length = 0;
-    java.util.Collection<String> use_via = new java.util.LinkedList<String>();
-    java.util.Collection<String> use_layer = new java.util.LinkedList<String>();
+    Collection<String> use_via = new LinkedList<>();
+    Collection<String> use_layer = new LinkedList<>();
     for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Circuit.read_scope: IO error scanning file", e);
         return null;
       }
@@ -50,20 +54,20 @@ public class Circuit {
   }
 
   static LengthMatchingRule read_length_scope(IJFlexScanner p_scanner) {
-    LengthMatchingRule result = null;
+    LengthMatchingRule result;
     double[] length_arr = new double[2];
     Object next_token = null;
     for (int i = 0; i < 2; ++i) {
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
       }
       if (next_token instanceof Double) {
-        length_arr[i] = ((Double) next_token).doubleValue();
+        length_arr[i] = (Double) next_token;
       } else if (next_token instanceof Integer) {
-        length_arr[i] = ((Integer) next_token).intValue();
+        length_arr[i] = (Integer) next_token;
       } else {
         FRLogger.warn("Circuit.read_length_scope: number expected");
         return null;
@@ -74,7 +78,7 @@ public class Circuit {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
       }
@@ -97,13 +101,13 @@ public class Circuit {
   public static class ReadScopeResult {
     public final double max_length;
     public final double min_length;
-    public final java.util.Collection<String> use_via;
-    public final java.util.Collection<String> use_layer;
+    public final Collection<String> use_via;
+    public final Collection<String> use_layer;
     public ReadScopeResult(
         double p_max_length,
         double p_min_length,
-        java.util.Collection<String> p_use_via,
-        java.util.Collection<String> p_use_layer) {
+        Collection<String> p_use_via,
+        Collection<String> p_use_layer) {
       max_length = p_max_length;
       min_length = p_min_length;
       use_via = p_use_via;

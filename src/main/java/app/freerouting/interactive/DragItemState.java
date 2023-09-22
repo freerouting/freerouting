@@ -7,14 +7,13 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Vector;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
 /** Class for interactive dragging items with the mouse on a routing board */
 public class DragItemState extends DragState {
 
-  private Item item_to_move = null;
+  private Item item_to_move;
 
   /** Creates a new instance of MoveItemState */
   protected DragItemState(
@@ -27,14 +26,16 @@ public class DragItemState extends DragState {
     item_to_move = p_item_to_move;
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("dragging_item"));
   }
 
   /**
-   * Moves the items of the group to p_to_location. Return this.return_state, if an error eccured
+   * Moves the items of the group to p_to_location. Return this.return_state, if an error occurred
    * while moving, so that an undo may be necessary.
    */
+  @Override
   public InteractiveState move_to(FloatPoint p_to_location) {
     IntPoint to_location = p_to_location.round();
     IntPoint from_location = this.previous_location.round();
@@ -74,7 +75,7 @@ public class DragItemState extends DragState {
 
     if (shove_ok) {
       if (!this.something_dragged) {
-        // initialisitions for the first time dragging
+        // initialisations for the first time dragging
         this.observers_activated = !hdlg.get_routing_board().observers_active();
         if (this.observers_activated) {
           hdlg.get_routing_board().start_notify_observers();
@@ -92,7 +93,7 @@ public class DragItemState extends DragState {
       }
       if (!move_component.insert(
           hdlg.settings.trace_pull_tight_region_width, hdlg.settings.trace_pull_tight_accuracy)) {
-        // an insert error occured, end the drag state
+        // an insert error occurred, end the drag state
         return this.return_state;
       }
       hdlg.repaint();
@@ -101,6 +102,7 @@ public class DragItemState extends DragState {
     return this;
   }
 
+  @Override
   public InteractiveState button_released() {
     if (this.observers_activated) {
       hdlg.get_routing_board().end_notify_observers();
@@ -118,16 +120,14 @@ public class DragItemState extends DragState {
       } else {
         Collection<Item> moved_items =
             hdlg.get_routing_board().get_component_items(item_to_move.get_component_no());
-        Set<Integer> changed_nets = new TreeSet<Integer>();
-        Iterator<Item> it = moved_items.iterator();
-        while (it.hasNext()) {
-          Item curr_moved_item = it.next();
+        Set<Integer> changed_nets = new TreeSet<>();
+        for (Item curr_moved_item : moved_items) {
           for (int i = 0; i < curr_moved_item.net_count(); ++i) {
-            changed_nets.add(Integer.valueOf(curr_moved_item.get_net_no(i)));
+            changed_nets.add(curr_moved_item.get_net_no(i));
           }
         }
         for (Integer curr_net_no : changed_nets) {
-          hdlg.update_ratsnest(curr_net_no.intValue());
+          hdlg.update_ratsnest(curr_net_no);
         }
       }
     } else {

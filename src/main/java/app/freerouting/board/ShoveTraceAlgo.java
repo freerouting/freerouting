@@ -13,9 +13,12 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.ClearanceMatrix;
+
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Contains internal auxiliary functions of class RoutingBoard for shoving traces */
 public class ShoveTraceAlgo {
@@ -27,8 +30,8 @@ public class ShoveTraceAlgo {
 
   /**
    * Checks if a shove with the input parameters is possible without clearance violations The result
-   * is the maximum lenght of a trace from the start of the line segment to the end of the line
-   * segment, for wich the algoritm succeedes. If the algorithm succeedes completely, the result
+   * is the maximum length of a trace from the start of the line segment to the end of the line
+   * segment, for which the algorithm succeeds. If the algorithm succeedes completely, the result
    * will be equal to Integer.MAX_VALUE.
    */
   public static double check(
@@ -78,7 +81,7 @@ public class ShoveTraceAlgo {
     FloatPoint end_corner_appprox = p_line_segment.end_point_approx();
     double segment_length = end_corner_appprox.distance(start_corner_appprox);
 
-    app.freerouting.rules.ClearanceMatrix cl_matrix = p_board.rules.clearance_matrix;
+    ClearanceMatrix cl_matrix = p_board.rules.clearance_matrix;
 
     double result = Integer.MAX_VALUE;
 
@@ -95,11 +98,11 @@ public class ShoveTraceAlgo {
             MoveDrillItemAlgo.try_shove_via_points(
                 trace_shape, p_layer, curr_shove_via, p_cl_type, false, p_board);
 
-        if (new_via_center.length <= 0) {
+        if (new_via_center.length == 0) {
           return 0;
         }
         Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
-        Collection<Item> ignore_items = new java.util.LinkedList<Item>();
+        Collection<Item> ignore_items = new LinkedList<>();
         shove_via_ok =
             MoveDrillItemAlgo.check(
                 curr_shove_via,
@@ -119,15 +122,15 @@ public class ShoveTraceAlgo {
         IntBox via_box =
             curr_shove_via.get_tree_shape_on_layer(search_tree, p_layer).bounding_box();
         double via_radius = 0.5 * via_box.max_width();
-        double curr_ok_lenght = projection - via_radius - p_trace_half_width;
+        double curr_ok_length = projection - via_radius - p_trace_half_width;
         if (!search_tree.is_clearance_compensation_used()) {
-          curr_ok_lenght -=
+          curr_ok_length -=
               cl_matrix.get_value(p_cl_type, curr_shove_via.clearance_class_no(), p_layer, true);
         }
-        if (curr_ok_lenght <= 0) {
+        if (curr_ok_length <= 0) {
           return 0;
         }
-        result = Math.min(result, curr_ok_lenght);
+        result = Math.min(result, curr_ok_length);
       }
     }
     if (trace_piece_count == 0) {
@@ -146,8 +149,8 @@ public class ShoveTraceAlgo {
       for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i) {
         LineSegment curr_line_segment = new LineSegment(curr_substitute_trace.polyline(), i + 1);
         if (p_shove_to_the_left) {
-          // swap the line segmment to get the corredct shove length
-          // in case it is smmaller than the length of the whole line segmment.
+          // swap the line segment to get the correct shove length
+          // in case it is smaller than the length of the whole line segment.
           curr_line_segment = curr_line_segment.opposite();
         }
         boolean is_in_front = curr_line_segment.get_line().direction().equals(line_direction);
@@ -271,7 +274,7 @@ public class ShoveTraceAlgo {
             || curr_shove_via_center.distance_square(try_via_centers[i].to_float())
                 <= max_dist_square) {
           Vector delta = try_via_centers[i].difference_by(curr_shove_via.get_center());
-          Collection<Item> ignore_items = new java.util.LinkedList<Item>();
+          Collection<Item> ignore_items = new LinkedList<>();
           if (MoveDrillItemAlgo.check(
               curr_shove_via,
               delta,
@@ -494,7 +497,7 @@ public class ShoveTraceAlgo {
   Collection<Item> get_ignore_items_at_tie_pins(
       TileShape p_trace_shape, int p_layer, int[] p_net_no_arr) {
     Collection<SearchTreeObject> overlaps = this.board.overlapping_objects(p_trace_shape, p_layer);
-    Set<Item> result = new java.util.TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_object : overlaps) {
       if (curr_object instanceof Pin) {
         Pin curr_pin = (Pin) curr_object;
@@ -535,9 +538,7 @@ public class ShoveTraceAlgo {
       Collection<Item> obstacles =
           search_tree.overlapping_items_with_clearance(
               curr_shape, p_layer, check_net_no_arr, p_cl_type);
-      Iterator<Item> it = obstacles.iterator();
-      while (it.hasNext()) {
-        Item curr_item = it.next();
+      for (Item curr_item : obstacles) {
         boolean is_obstacle;
         if (curr_item.shares_net_no(p_net_no_arr)) {
           // to avoid acid traps
@@ -553,21 +554,19 @@ public class ShoveTraceAlgo {
         } else if (curr_item instanceof PolylineTrace) {
           if (curr_item.is_shove_fixed()) {
             is_obstacle = true;
-            if (curr_item instanceof PolylineTrace) {
-              // check for a shove fixed trace exit stub, which has to be be ignored at a tie pin.
-              Collection<Item> curr_contacts = curr_item.get_normal_contacts();
-              for (Item curr_contact : curr_contacts) {
-                if (curr_contact.shares_net_no(p_net_no_arr)) {
-                  is_obstacle = false;
-                }
+            // check for a shove fixed trace exit stub, which has to be ignored at a tie pin.
+            Collection<Item> curr_contacts = curr_item.get_normal_contacts();
+            for (Item curr_contact : curr_contacts) {
+              if (curr_contact.shares_net_no(p_net_no_arr)) {
+                is_obstacle = false;
               }
             }
           } else {
-            // a unfixed trace can be pushed aside eventually
+            // an unfixed trace can be pushed aside eventually
             is_obstacle = false;
           }
         } else {
-          // a unfixed via can be pushed aside eventually
+          // an unfixed via can be pushed aside eventually
           is_obstacle = !curr_item.is_routable();
         }
 
@@ -730,7 +729,7 @@ public class ShoveTraceAlgo {
    * Checks, if there are obstacle in the way of p_polyline and tries to wrap the polyline trace
    * around these obstacles. Returns null, if that is not possible. Returns p_polyline, if there
    * were no obstacles This function looks contrary to the previous function for the shortest way
-   * around the obstaccles. If p_contact_pins != null, all pins not contained in p_contact_pins are
+   * around the obstacles. If p_contact_pins != null, all pins not contained in p_contact_pins are
    * regarded as obstacles, even if they are of the own net.
    */
   Polyline spring_over_obstacles(

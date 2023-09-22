@@ -1,6 +1,15 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.Item;
+import app.freerouting.board.ObstacleArea;
+import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /** Handles the placement data of a library component. */
 public class Component extends ScopeKeyword {
@@ -11,7 +20,7 @@ public class Component extends ScopeKeyword {
   }
 
   /** Used also when reading a session file. */
-  public static ComponentPlacement read_scope(IJFlexScanner p_scanner) throws java.io.IOException {
+  public static ComponentPlacement read_scope(IJFlexScanner p_scanner) throws IOException {
     Object next_token = p_scanner.next_token();
     if (!(next_token instanceof String)) {
       FRLogger.warn("Component.read_scope: component name expected");
@@ -36,7 +45,7 @@ public class Component extends ScopeKeyword {
 
   public static void write_scope(
       WriteScopeParameter p_par, app.freerouting.board.Component p_component)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("place ");
     p_par.file.new_line();
@@ -46,7 +55,7 @@ public class Component extends ScopeKeyword {
           p_par.coordinate_transform.board_to_dsn(p_component.get_location().to_float());
       for (int i = 0; i < coor.length; ++i) {
         p_par.file.write(" ");
-        p_par.file.write((Double.valueOf(coor[i])).toString());
+        p_par.file.write(String.valueOf(coor[i]));
       }
       if (p_component.placed_on_front()) {
         p_par.file.write(" front ");
@@ -54,7 +63,7 @@ public class Component extends ScopeKeyword {
         p_par.file.write(" back ");
       }
       int rotation = (int) Math.round(p_component.get_rotation_in_degree());
-      p_par.file.write((Integer.valueOf(rotation).toString()));
+      p_par.file.write(String.valueOf(rotation));
     }
     if (p_component.position_fixed) {
       p_par.file.new_line();
@@ -70,7 +79,7 @@ public class Component extends ScopeKeyword {
 
   private static void write_pin_info(
       WriteScopeParameter p_par, app.freerouting.board.Component p_component, int p_pin_no)
-      throws java.io.IOException {
+      throws IOException {
     if (!p_component.is_placed()) {
       return;
     }
@@ -100,7 +109,7 @@ public class Component extends ScopeKeyword {
 
   private static void write_keepout_infos(
       WriteScopeParameter p_par, app.freerouting.board.Component p_component)
-      throws java.io.IOException {
+      throws IOException {
     if (!p_component.is_placed()) {
       return;
     }
@@ -119,7 +128,7 @@ public class Component extends ScopeKeyword {
       }
       for (int i = 0; i < curr_keepout_arr.length; ++i) {
         app.freerouting.library.Package.Keepout curr_keepout = curr_keepout_arr[i];
-        app.freerouting.board.ObstacleArea curr_obstacle_area =
+        ObstacleArea curr_obstacle_area =
             get_keepout(p_par.board, p_component.no, curr_keepout.name);
         if (curr_obstacle_area == null || curr_obstacle_area.clearance_class_no() == 0) {
           continue;
@@ -140,20 +149,20 @@ public class Component extends ScopeKeyword {
     }
   }
 
-  private static app.freerouting.board.ObstacleArea get_keepout(
-      app.freerouting.board.BasicBoard p_board, int p_component_no, String p_name) {
-    java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it =
+  private static ObstacleArea get_keepout(
+      BasicBoard p_board, int p_component_no, String p_name) {
+    Iterator<UndoableObjects.UndoableObjectNode> it =
         p_board.item_list.start_read_object();
     for (; ; ) {
-      app.freerouting.board.Item curr_item =
-          (app.freerouting.board.Item) p_board.item_list.read_object(it);
+      Item curr_item =
+          (Item) p_board.item_list.read_object(it);
       if (curr_item == null) {
         break;
       }
       if (curr_item.get_component_no() == p_component_no
-          && curr_item instanceof app.freerouting.board.ObstacleArea) {
-        app.freerouting.board.ObstacleArea curr_area =
-            (app.freerouting.board.ObstacleArea) curr_item;
+          && curr_item instanceof ObstacleArea) {
+        ObstacleArea curr_area =
+            (ObstacleArea) curr_item;
         if (curr_area.name != null && curr_area.name.equals(p_name)) {
           return curr_area;
         }
@@ -164,25 +173,25 @@ public class Component extends ScopeKeyword {
 
   private static ComponentPlacement.ComponentLocation read_place_scope(IJFlexScanner p_scanner) {
     try {
-      java.util.Map<String, ComponentPlacement.ItemClearanceInfo> pin_infos =
-          new java.util.TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
-      java.util.Map<String, ComponentPlacement.ItemClearanceInfo> keepout_infos =
-          new java.util.TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
-      java.util.Map<String, ComponentPlacement.ItemClearanceInfo> via_keepout_infos =
-          new java.util.TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
-      java.util.Map<String, ComponentPlacement.ItemClearanceInfo> place_keepout_infos =
-          new java.util.TreeMap<String, ComponentPlacement.ItemClearanceInfo>();
+      Map<String, ComponentPlacement.ItemClearanceInfo> pin_infos =
+          new TreeMap<>();
+      Map<String, ComponentPlacement.ItemClearanceInfo> keepout_infos =
+          new TreeMap<>();
+      Map<String, ComponentPlacement.ItemClearanceInfo> via_keepout_infos =
+          new TreeMap<>();
+      Map<String, ComponentPlacement.ItemClearanceInfo> place_keepout_infos =
+          new TreeMap<>();
 
       String name = p_scanner.next_string(true);
 
-      Object next_token = null;
+      Object next_token;
       double[] location = new double[2];
       for (int i = 0; i < 2; ++i) {
         next_token = p_scanner.next_token();
         if (next_token instanceof Double) {
-          location[i] = ((Double) next_token).doubleValue();
+          location[i] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          location[i] = ((Integer) next_token).intValue();
+          location[i] = (Integer) next_token;
         } else if (next_token == CLOSED_BRACKET) {
           // component is not yet placed
           return new ComponentPlacement.ComponentLocation(
@@ -212,9 +221,9 @@ public class Component extends ScopeKeyword {
       double rotation;
       next_token = p_scanner.next_token();
       if (next_token instanceof Double) {
-        rotation = ((Double) next_token).doubleValue();
+        rotation = (Double) next_token;
       } else if (next_token instanceof Integer) {
-        rotation = ((Integer) next_token).intValue();
+        rotation = (Integer) next_token;
       } else {
         FRLogger.warn("Component.read_place_scope: number expected");
         return null;
@@ -261,8 +270,7 @@ public class Component extends ScopeKeyword {
         FRLogger.warn("Component.read_place_scope: ) expected");
         return null;
       }
-      ComponentPlacement.ComponentLocation result =
-          new ComponentPlacement.ComponentLocation(
+      return new ComponentPlacement.ComponentLocation(
               name,
               location,
               is_front,
@@ -272,15 +280,14 @@ public class Component extends ScopeKeyword {
               keepout_infos,
               via_keepout_infos,
               place_keepout_infos);
-      return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Component.read_scope: IO error scanning file", e);
       return null;
     }
   }
 
   private static ComponentPlacement.ItemClearanceInfo read_item_clearance_info(
-      IJFlexScanner p_scanner) throws java.io.IOException {
+      IJFlexScanner p_scanner) throws IOException {
     p_scanner.yybegin(SpecctraDsnFileReader.NAME);
     Object next_token = p_scanner.next_token();
     if (!(next_token instanceof String)) {
@@ -310,7 +317,7 @@ public class Component extends ScopeKeyword {
     return new ComponentPlacement.ItemClearanceInfo(name, cl_class_name);
   }
 
-  private static boolean read_lock_type(IJFlexScanner p_scanner) throws java.io.IOException {
+  private static boolean read_lock_type(IJFlexScanner p_scanner) throws IOException {
     boolean result = false;
     for (; ; ) {
       Object next_token = p_scanner.next_token();
@@ -325,6 +332,7 @@ public class Component extends ScopeKeyword {
   }
 
   /** Overwrites the function read_scope in ScopeKeyword */
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     try {
       ComponentPlacement component_placement = read_scope(p_par.scanner);
@@ -332,7 +340,7 @@ public class Component extends ScopeKeyword {
         return false;
       }
       p_par.placement_list.add(component_placement);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Component.read_scope: IO error scanning file", e);
       return false;
     }

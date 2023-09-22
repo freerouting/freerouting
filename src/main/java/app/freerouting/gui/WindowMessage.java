@@ -1,5 +1,12 @@
 package app.freerouting.gui;
 
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
 /** Startup window visible when the program is loading. */
 public class WindowMessage extends WindowBase {
 
@@ -7,14 +14,14 @@ public class WindowMessage extends WindowBase {
   private WindowMessage(String[] p_message_arr) {
     super(300, 100);
 
-    final javax.swing.JPanel main_panel = new javax.swing.JPanel();
-    final java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    final JPanel main_panel = new JPanel();
+    final GridBagLayout gridbag = new GridBagLayout();
     main_panel.setLayout(gridbag);
-    final java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.insets = new java.awt.Insets(40, 40, 40, 40);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    final GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.insets = new Insets(40, 40, 40, 40);
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     for (int i = 0; i < p_message_arr.length; ++i) {
-      final javax.swing.JLabel message_label = new javax.swing.JLabel();
+      final JLabel message_label = new JLabel();
       message_label.setText(p_message_arr[i]);
 
       gridbag.setConstraints(message_label, gridbag_constraints);
@@ -47,14 +54,13 @@ public class WindowMessage extends WindowBase {
     }
 
     int option =
-        javax.swing.JOptionPane.showConfirmDialog(
-            null, p_message, null, javax.swing.JOptionPane.YES_NO_OPTION);
-    boolean result = option == javax.swing.JOptionPane.YES_OPTION;
-    return result;
+        JOptionPane.showConfirmDialog(
+            null, p_message, null, JOptionPane.YES_NO_OPTION);
+    return option == JOptionPane.YES_OPTION;
   }
 
   /** Calls a dialog with an ok-button. */
   public static void ok(String p_message) {
-    javax.swing.JOptionPane.showMessageDialog(null, p_message);
+    JOptionPane.showMessageDialog(null, p_message);
   }
 }

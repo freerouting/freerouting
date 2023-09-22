@@ -1,5 +1,6 @@
 package app.freerouting.designforms.specctra;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -12,7 +13,7 @@ public class Layer {
   public final String name;
   public final int no;
   public final boolean is_signal;
-  public final java.util.Collection<String> net_names;
+  public final Collection<String> net_names;
   /**
    * Creates a new instance of Layer. p_no is the physical layer number starting with 0 at the
    * component side and ending at the solder side. If p_is_signal, the layer is a signal layer,
@@ -35,12 +36,12 @@ public class Layer {
     name = p_name;
     no = p_no;
     is_signal = p_is_signal;
-    net_names = new LinkedList<String>();
+    net_names = new LinkedList<>();
   }
 
-  /** Writes a layer scope in the stucture scope. */
+  /** Writes a layer scope in the structure scope. */
   public static void write_scope(WriteScopeParameter p_par, int p_layer_no, boolean p_write_rule)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("layer ");
     app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[p_layer_no];

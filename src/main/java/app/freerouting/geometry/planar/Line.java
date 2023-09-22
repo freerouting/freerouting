@@ -2,10 +2,12 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Implements functionality for lines in the plane. */
-public class Line implements Comparable<Line>, java.io.Serializable {
+public class Line implements Comparable<Line>, Serializable {
 
   public final Point a;
   public final Point b;
@@ -45,6 +47,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
   }
 
   /** returns true, if this and p_ob define the same line */
+  @Override
   public final boolean equals(Object p_ob) {
     if (this == p_ob) {
       return true;
@@ -101,7 +104,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
   }
 
   /**
-   * Returns Side.COLLINEAR, if p_point is on the line with tolerance p_tolerance. Otherwise
+   * Returns Side.COLLINEAR, if p_point is on the line with tolerance p_tolerance. Otherwise,
    * Side.ON_THE_LEFT, if this line is on the left of p_point, or Side.ON_THE_RIGHT, if this line is
    * on the right of p_point,
    */
@@ -135,7 +138,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
   /**
    * Returns Side.ON_THE_LEFT, if this line is on the left of the intersection of p_1 and p_2,
    * Side.ON_THE_RIGHT, if this line is on the right of the intersection, and Side.COLLINEAR, if all
-   * 3 lines intersect in exacly 1 point.
+   * 3 lines intersect in exactly 1 point.
    */
   public Side side_of_intersection(Line p_1, Line p_2) {
 
@@ -151,7 +154,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
     return result;
   }
 
-  /** Looks, if all interiour points of p_tile are on the right side of this line. */
+  /** Looks, if all interior points of p_tile are on the right side of this line. */
   public boolean is_on_the_left(TileShape p_tile) {
     for (int i = 0; i < p_tile.border_line_count(); ++i) {
       if (this.side_of(p_tile.corner(i)) == Side.ON_THE_RIGHT) {
@@ -161,7 +164,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
     return true;
   }
 
-  /** Looks, if all interiour points of p_tile are on the left side of this line. */
+  /** Looks, if all interior points of p_tile are on the left side of this line. */
   public boolean is_on_the_right(TileShape p_tile) {
     for (int i = 0; i < p_tile.border_line_count(); ++i) {
       if (this.side_of(p_tile.corner(i)) == Side.ON_THE_LEFT) {
@@ -188,7 +191,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
   }
 
   /**
-   * returns true, if the 2 lines defins the same set of points, but may have opposite directions
+   * returns true, if the 2 lines define the same set of points, but may have opposite directions
    */
   public boolean overlaps(Line p_other) {
     return side_of(p_other.a) == Side.COLLINEAR && side_of(p_other.b) == Side.COLLINEAR;
@@ -209,7 +212,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
     // The general implementation is still missing.
     IntVector delta_1 = (IntVector) b.difference_by(a);
     IntVector delta_2 = (IntVector) p_other.b.difference_by(p_other.a);
-    // Separate handling for orthogonal and 45 degree lines for better perpormance
+    // Separate handling for orthogonal and 45 degree lines for better performance
     if (delta_1.x == 0) // this line is vertical
     {
       if (delta_2.y == 0) // other line is horizontal
@@ -307,7 +310,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
 
   /**
    * Returns an approximation of the intersection of the 2 lines by a FloatPoint. If the lines are
-   * parallel the result coordinates will be Integer.MAX_VALUE. Useful in situations ehere
+   * parallel the result coordinates will be Integer.MAX_VALUE. Useful in situations where
    * performance is more important than accuracy.
    */
   public FloatPoint intersection_approx(Line p_other) {
@@ -354,15 +357,15 @@ public class Line implements Comparable<Line>, java.io.Serializable {
     IntVector v = (IntVector) direction().get_vector();
     double vxvx = (double) v.x * v.x;
     double vyvy = (double) v.y * v.y;
-    double lenght = Math.sqrt(vxvx + vyvy);
+    double length = Math.sqrt(vxvx + vyvy);
     IntPoint new_a;
     if (vxvx <= vyvy) {
       // translate along the x axis
-      int rel_x = (int) Math.round((p_dist * lenght) / v.y);
+      int rel_x = (int) Math.round((p_dist * length) / v.y);
       new_a = new IntPoint(ai.x - rel_x, ai.y);
     } else {
       // translate along the  y axis
-      int rel_y = (int) Math.round((p_dist * lenght) / v.x);
+      int rel_y = (int) Math.round((p_dist * length) / v.x);
       new_a = new IntPoint(ai.x, ai.y + rel_y);
     }
     return Line.get_instance(new_a, direction());
@@ -424,6 +427,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
    * not a Line. Fast implementation only for lines consisting of IntPoints because of critical
    * performance
    */
+  @Override
   public int compareTo(Line p_other) {
     IntPoint this_a = (IntPoint) a;
     IntPoint this_b = (IntPoint) b;
@@ -486,8 +490,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
     }
     double dy = p2.y - p1.y;
     double det = p1.x * p2.y - p2.x * p1.y;
-    double result = (dy * p_x - det) / dx;
-    return result;
+    return  (dy * p_x - det) / dx;
   }
 
   /**
@@ -504,8 +507,7 @@ public class Line implements Comparable<Line>, java.io.Serializable {
     }
     double dx = p2.x - p1.x;
     double det = p1.x * p2.y - p2.x * p1.y;
-    double result = (dx * p_y + det) / dy;
-    return result;
+    return  (dx * p_y + det) / dy;
   }
 
   /**

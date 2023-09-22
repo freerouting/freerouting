@@ -1,29 +1,29 @@
 package app.freerouting.library;
 
+import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.logger.FRLogger;
-import java.util.Iterator;
+
+import java.io.Serializable;
 import java.util.Vector;
 
 /** Describes a library of padstacks for pins or vias. */
-public class Padstacks implements java.io.Serializable {
+public class Padstacks implements Serializable {
   /** The layer structure of each padstack. */
-  public final app.freerouting.board.LayerStructure board_layer_structure;
+  public final LayerStructure board_layer_structure;
   /** The array of Padstacks in this object */
   private final Vector<Padstack> padstack_arr;
 
   /** Creates a new instance of Padstacks */
-  public Padstacks(app.freerouting.board.LayerStructure p_layer_structure) {
+  public Padstacks(LayerStructure p_layer_structure) {
     board_layer_structure = p_layer_structure;
-    padstack_arr = new Vector<Padstack>();
+    padstack_arr = new Vector<>();
   }
 
   /** Returns the padstack with the input name or null, if no such padstack exists. */
   public Padstack get(String p_name) {
-    Iterator<Padstack> it = padstack_arr.iterator();
-    while (it.hasNext()) {
-      Padstack curr_padstack = it.next();
-      if (curr_padstack != null && curr_padstack.name.compareToIgnoreCase(p_name) == 0) {
+    for (Padstack curr_padstack : padstack_arr) {
+      if (curr_padstack != null && curr_padstack.name.equalsIgnoreCase(p_name)) {
         return curr_padstack;
       }
     }
@@ -41,7 +41,7 @@ public class Padstacks implements java.io.Serializable {
    */
   public Padstack get(int p_padstack_no) {
     if (p_padstack_no <= 0 || p_padstack_no > padstack_arr.size()) {
-      Integer padstack_count = padstack_arr.size();
+      int padstack_count = padstack_arr.size();
       FRLogger.warn(
           "Padstacks.get: 1 <= p_padstack_no <= " + padstack_count + " expected");
       return null;
@@ -70,16 +70,16 @@ public class Padstacks implements java.io.Serializable {
 
   /**
    * Appends a new padstack with the input shapes to this padstacks. p_shapes is an array of
-   * dimension board layer_count. The padatack name is generated internally.
+   * dimension board layer_count. The padstack name is generated internally.
    */
   public Padstack add(ConvexShape[] p_shapes) {
-    String new_name = "padstack#" + (Integer.valueOf(padstack_arr.size() + 1).toString());
+    String new_name = "padstack#" + (padstack_arr.size() + 1);
     return add(new_name, p_shapes, false, false);
   }
 
   /**
-   * Appends a new padstack withe the input shape from p_from_layer to p_to_layer and null on the
-   * other layers. The padatack name is generated internally.
+   * Appends a new padstack with the input shape from p_from_layer to p_to_layer and null on the
+   * other layers. The padstack name is generated internally.
    */
   public Padstack add(ConvexShape p_shape, int p_from_layer, int p_to_layer) {
     ConvexShape[] shape_arr = new ConvexShape[board_layer_structure.arr.length];

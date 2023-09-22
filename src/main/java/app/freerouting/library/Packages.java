@@ -2,14 +2,15 @@ package app.freerouting.library;
 
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
-import java.util.Iterator;
+
+import java.io.Serializable;
 import java.util.Vector;
 
 /** Describes a library of component packages. */
-public class Packages implements java.io.Serializable {
+public class Packages implements Serializable {
   final Padstacks padstack_list;
   /** The array of packages in this object */
-  private final Vector<Package> package_arr = new Vector<Package>();
+  private final Vector<Package> package_arr = new Vector<>();
 
   /**
    * Creates a new instance of Packages. p_padstack_list is the list of padstacks used for the pins
@@ -23,11 +24,9 @@ public class Packages implements java.io.Serializable {
    * Returns the package with the input name and the input side or null, if no such package exists.
    */
   public Package get(String p_name, boolean p_is_front) {
-    Iterator<Package> it = package_arr.iterator();
     Package other_side_package = null;
-    while (it.hasNext()) {
-      Package curr_package = it.next();
-      if (curr_package != null && curr_package.name.compareToIgnoreCase(p_name) == 0) {
+    for (Package curr_package : package_arr) {
+      if (curr_package != null && curr_package.name.equalsIgnoreCase(p_name)) {
         if (curr_package.is_front == p_is_front) {
           return curr_package;
         }
@@ -80,7 +79,7 @@ public class Packages implements java.io.Serializable {
    * internally.
    */
   public Package add(Package.Pin[] p_pin_arr) {
-    String package_name = "Package#" + (Integer.valueOf(package_arr.size() + 1)).toString();
+    String package_name = "Package#" + (package_arr.size() + 1);
 
     return add(
         package_name,

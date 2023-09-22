@@ -3,17 +3,19 @@ package app.freerouting.geometry.planar;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /**
  * Implements functionality for line segments. The difference between a LineSegment and a Line is,
  * that a Line is infinite and a LineSegment has a start and an endpoint.
  */
-public class LineSegment implements java.io.Serializable {
+public class LineSegment implements Serializable {
 
   private final Line start;
   private final Line middle;
   private final Line end;
-  private transient Point precalculated_start_point = null;
-  private transient Point precalculated_end_point = null;
+  private transient Point precalculated_start_point;
+  private transient Point precalculated_end_point;
 
   /**
    * Creates a line segment from the 3 input lines. It starts at the intersection of p_start_line
@@ -124,7 +126,7 @@ public class LineSegment implements java.io.Serializable {
     return new LineSegment(end.opposite(), middle.opposite(), start.opposite());
   }
 
-  /** Transforms this LinsSegment into a polyline of lenght 3. */
+  /** Transforms this LineSegment into a polyline of length 3. */
   public Polyline to_polyline() {
     Line[] lines = new Line[3];
     lines[0] = start;
@@ -135,7 +137,7 @@ public class LineSegment implements java.io.Serializable {
 
   /**
    * Creates a 1 dimensional simplex rom this line segment, which has the same shape as the line
-   * sgment.
+   * segment.
    */
   public Simplex to_simplex() {
     Line[] line_arr = new Line[4];
@@ -151,31 +153,28 @@ public class LineSegment implements java.io.Serializable {
     } else {
       line_arr[3] = this.end;
     }
-    Simplex result = Simplex.get_instance(line_arr);
-    return result;
+    return Simplex.get_instance(line_arr);
   }
 
   /** Checks if p_point is contained in this line segment */
   public boolean contains(Point p_point) {
     if (!(p_point instanceof IntPoint)) {
-      FRLogger.warn("LineSegments.contains currently only implementet for IntPoints");
+      FRLogger.warn("LineSegments.contains currently only implemented for IntPoints");
       return false;
     }
     if (middle.side_of(p_point) != Side.COLLINEAR) {
       return false;
     }
     // create a perpendicular line at p_point and check, that the two
-    // endpoints of this segment are on difcferent sides of that line.
+    // endpoints of this segment are on different sides of that line.
     Direction perpendicular_direction = middle.direction().turn_45_degree(2);
     Line perpendicular_line = new Line(p_point, perpendicular_direction);
     Side start_point_side = perpendicular_line.side_of(this.start_point());
     Side end_point_side = perpendicular_line.side_of(this.end_point());
-    return start_point_side == Side.COLLINEAR
-        || end_point_side == Side.COLLINEAR
-        || start_point_side != end_point_side;
+    return start_point_side != end_point_side || start_point_side == Side.COLLINEAR;
   }
 
-  /** calculates the smallest surrounding box of this line segmant */
+  /** calculates the smallest surrounding box of this line segment */
   public IntBox bounding_box() {
     FloatPoint start_corner = middle.intersection_approx(start);
     FloatPoint end_corner = middle.intersection_approx(end);
@@ -188,7 +187,7 @@ public class LineSegment implements java.io.Serializable {
     return new IntBox(lower_left, upper_right);
   }
 
-  /** calculates the smallest surrounding octagon of this line segmant */
+  /** calculates the smallest surrounding octagon of this line segment */
   public IntOctagon bounding_octagon() {
     FloatPoint start_corner = middle.intersection_approx(start);
     FloatPoint end_corner = middle.intersection_approx(end);
@@ -218,8 +217,7 @@ public class LineSegment implements java.io.Serializable {
     FloatPoint new_end_point = start_point_approx().change_length(end_point_approx(), p_new_length);
     Direction perpendicular_direction = this.middle.direction().turn_45_degree(2);
     Line new_end_line = new Line(new_end_point.round(), perpendicular_direction);
-    LineSegment result = new LineSegment(this.start, this.middle, new_end_line);
-    return result;
+    return new LineSegment(this.start, this.middle, new_end_line);
   }
 
   /**
@@ -227,8 +225,8 @@ public class LineSegment implements java.io.Serializable {
    * 0, 1 or 2. If the segments do not intersect the result array will have length 0. The result
    * lines are so that the intersections of the result lines with this line segment will deliver the
    * intersection points. If the segments overlap, the result array has length 2 and the
-   * intersection points are the first and the last overlap point. Otherwise the result array has
-   * length 1 and the intersection point is the the unique intersection or touching point. The
+   * intersection points are the first and the last overlap point. Otherwise, the result array has
+   * length 1 and the intersection point is the unique intersection or touching point. The
    * result is not symmetric in this and p_other, because intersecting lines and not the
    * intersection points are returned.
    */
@@ -253,7 +251,7 @@ public class LineSegment implements java.io.Serializable {
       }
       int cmp = left_line.end_point().compare_x_y(right_line.start_point());
       if (cmp < 0) {
-        // end point of the left line is to the lsft of the start point of the right line
+        // end point of the left line is to the left of the start point of the right line
         return new Line[0];
       }
       if (cmp == 0) {
@@ -283,7 +281,7 @@ public class LineSegment implements java.io.Serializable {
     return result;
   }
 
-  /** Checks if this LineSegment and p_other contain a commen point */
+  /** Checks if this LineSegment and p_other contain a common point */
   public boolean intersects(LineSegment p_other) {
     Line[] intersections = this.intersection(p_other);
     return intersections.length > 0;
@@ -485,7 +483,7 @@ public class LineSegment implements java.io.Serializable {
   /**
    * Returns an array with the borderline numbers of p_shape, which are intersected by this line
    * segment. Intersections at an endpoint of this line segment are only counted, if the line
-   * segment intersects with the interiour of p_shape. The result array may have lenght 0, 1 or 2.
+   * segment intersects with the interior of p_shape. The result array may have length 0, 1 or 2.
    * With 2 intersections the intersection which is nearest to the start point of the line segment
    * comes first.
    */
@@ -522,7 +520,7 @@ public class LineSegment implements java.io.Serializable {
 
       if (start_point_side == Side.COLLINEAR) {
         // the start is on curr_line, check that the end point is inside
-        // the halfplane, because touches count only, if the interiour
+        // the halfplane, because touches count only, if the interior
         // is entered
         if (end_point_side != Side.ON_THE_RIGHT) {
           return empty_result;
@@ -531,7 +529,7 @@ public class LineSegment implements java.io.Serializable {
 
       if (end_point_side == Side.COLLINEAR) {
         // the end is on curr_line, check that the start point is inside
-        // the halfplane, because touches count only, if the interiour
+        // the halfplane, because touches count only, if the interior
         // is entered
         if (start_point_side != Side.ON_THE_RIGHT) {
           return empty_result;
@@ -598,14 +596,14 @@ public class LineSegment implements java.io.Serializable {
               return empty_result;
             }
           }
-          boolean intersection_already_handeled = false;
+          boolean intersection_already_handled = false;
           for (int i = 0; i < intersection_count; ++i) {
             if (is.equals(intersection[i])) {
-              intersection_already_handeled = true;
+              intersection_already_handled = true;
               break;
             }
           }
-          if (!intersection_already_handeled) {
+          if (!intersection_already_handled) {
             if (intersection_count < result.length) {
               // a new intersection is found
               result[intersection_count] = edge_line_no;

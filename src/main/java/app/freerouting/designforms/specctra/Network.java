@@ -1,18 +1,30 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.FixedState;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
+import app.freerouting.rules.ViaInfo;
+import app.freerouting.rules.ViaRule;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Class for reading and writing net network from dsn-files. */
 public class Network extends ScopeKeyword {
@@ -22,7 +34,7 @@ public class Network extends ScopeKeyword {
     super("network");
   }
 
-  public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException {
+  public static void write_scope(WriteScopeParameter p_par) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("network");
     Collection<app.freerouting.board.Pin> board_pins = p_par.board.get_pins();
@@ -36,12 +48,12 @@ public class Network extends ScopeKeyword {
   }
 
   public static void write_via_infos(
-      app.freerouting.rules.BoardRules p_rules,
+      BoardRules p_rules,
       IndentFileWriter p_file,
       IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     for (int i = 0; i < p_rules.via_infos.count(); ++i) {
-      app.freerouting.rules.ViaInfo curr_via = p_rules.via_infos.get(i);
+      ViaInfo curr_via = p_rules.via_infos.get(i);
       p_file.start_scope();
       p_file.write("via ");
       p_file.new_line();
@@ -59,11 +71,11 @@ public class Network extends ScopeKeyword {
   }
 
   public static void write_via_rules(
-      app.freerouting.rules.BoardRules p_rules,
+      BoardRules p_rules,
       IndentFileWriter p_file,
       IdentifierType p_identifier_type)
-      throws java.io.IOException {
-    for (app.freerouting.rules.ViaRule curr_rule : p_rules.via_rules) {
+      throws IOException {
+    for (ViaRule curr_rule : p_rules.via_rules) {
       p_file.start_scope();
       p_file.write("via_rule");
       p_file.new_line();
@@ -76,7 +88,7 @@ public class Network extends ScopeKeyword {
     }
   }
 
-  public static void write_net_classes(WriteScopeParameter p_par) throws java.io.IOException {
+  public static void write_net_classes(WriteScopeParameter p_par) throws IOException {
     for (int i = 0; i < p_par.board.rules.net_classes.count(); ++i) {
       write_net_class(p_par.board.rules.net_classes.get(i), p_par);
     }
@@ -84,7 +96,7 @@ public class Network extends ScopeKeyword {
 
   public static void write_net_class(
       app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("class ");
     p_par.identifier_type.write(p_net_class.get_name(), p_par.file);
@@ -134,7 +146,7 @@ public class Network extends ScopeKeyword {
 
   private static void write_circuit(
       app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par)
-      throws java.io.IOException {
+      throws IOException {
     double min_trace_length = p_net_class.get_minimum_trace_length();
     double max_trace_length = p_net_class.get_maximum_trace_length();
     p_par.file.start_scope();
@@ -152,21 +164,21 @@ public class Network extends ScopeKeyword {
     if (min_trace_length > 0 || max_trace_length > 0) {
       p_par.file.new_line();
       p_par.file.write("(length ");
-      Double transformed_max_length;
+      double transformed_max_length;
       if (max_trace_length <= 0) {
-        transformed_max_length = (double) -1;
+        transformed_max_length = -1;
       } else {
         transformed_max_length = p_par.coordinate_transform.board_to_dsn(max_trace_length);
       }
-      p_par.file.write(transformed_max_length.toString());
+      p_par.file.write(String.valueOf(transformed_max_length));
       p_par.file.write(" ");
-      Double transformed_min_length;
+      double transformed_min_length;
       if (min_trace_length <= 0) {
-        transformed_min_length = (double) 0;
+        transformed_min_length = 0;
       } else {
         transformed_min_length = p_par.coordinate_transform.board_to_dsn(min_trace_length);
       }
-      p_par.file.write(transformed_min_length.toString());
+      p_par.file.write(String.valueOf(transformed_min_length));
       p_par.file.write(")");
     }
     p_par.file.end_scope();
@@ -175,7 +187,7 @@ public class Network extends ScopeKeyword {
   /** Creates a sequence of subnets with 2 pins from p_pin_list */
   private static Collection<Collection<Net.Pin>> create_ordered_subnets(
       Collection<Net.Pin> p_pin_list) {
-    Collection<Collection<Net.Pin>> result = new LinkedList<Collection<Net.Pin>>();
+    Collection<Collection<Net.Pin>> result = new LinkedList<>();
     if (p_pin_list.isEmpty()) {
       return result;
     }
@@ -184,7 +196,7 @@ public class Network extends ScopeKeyword {
     Net.Pin prev_pin = it.next();
     while (it.hasNext()) {
       Net.Pin next_pin = it.next();
-      Set<Net.Pin> curr_subnet_pin_list = new java.util.TreeSet<Net.Pin>();
+      Set<Net.Pin> curr_subnet_pin_list = new TreeSet<>();
       curr_subnet_pin_list.add(prev_pin);
       curr_subnet_pin_list.add(next_pin);
       result.add(curr_subnet_pin_list);
@@ -196,12 +208,12 @@ public class Network extends ScopeKeyword {
   private static boolean read_net_pins(IJFlexScanner p_scanner, Collection<Net.Pin> p_pin_list) {
     Object next_token;
     String component_name, pin_name;
-    while((component_name = ((SpecctraDsnFileReader)p_scanner).next_string(true, '-')).length() > 0) {
+    while(!(component_name = ((SpecctraDsnFileReader) p_scanner).next_string(true, '-')).isEmpty()) {
       
       try {
         p_scanner.yybegin(SpecctraDsnFileReader.SPEC_CHAR);
         next_token = p_scanner.next_token(); // overread the hyphen
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Network.read_net_pins: IO error while scanning file", e);
         return false;
       }
@@ -213,7 +225,7 @@ public class Network extends ScopeKeyword {
 
     try {
       next_token = p_scanner.next_token();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Network.read_net_pins: IO error scanning file", e);
       return false;
     }
@@ -229,8 +241,8 @@ public class Network extends ScopeKeyword {
     return true;
   }
 
-  static app.freerouting.rules.ViaInfo read_via_info(
-      IJFlexScanner p_scanner, app.freerouting.board.BasicBoard p_board) {
+  static ViaInfo read_via_info(
+      IJFlexScanner p_scanner, BasicBoard p_board) {
     try {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       Object next_token = p_scanner.next_token();
@@ -246,7 +258,7 @@ public class Network extends ScopeKeyword {
         return null;
       }
       String padstack_name = (String) next_token;
-      app.freerouting.library.Padstack via_padstack =
+      Padstack via_padstack =
           p_board.library.get_via_padstack(padstack_name);
       if (via_padstack == null) {
         // The padstack may not yet be inserted into the list of via padstacks
@@ -282,18 +294,18 @@ public class Network extends ScopeKeyword {
           return null;
         }
       }
-      return new app.freerouting.rules.ViaInfo(
+      return new ViaInfo(
           name, via_padstack, clearance_class, attach_allowed, p_board.rules);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Network.read_via_info: IO error while scanning file", e);
       return null;
     }
   }
 
   static Collection<String> read_via_rule(
-      IJFlexScanner p_scanner, app.freerouting.board.BasicBoard p_board) {
+      IJFlexScanner p_scanner, BasicBoard p_board) {
     try {
-      Collection<String> result = new LinkedList<String>();
+      Collection<String> result = new LinkedList<>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnFileReader.NAME);
         Object next_token = p_scanner.next_token();
@@ -307,18 +319,18 @@ public class Network extends ScopeKeyword {
         result.add((String) next_token);
       }
       return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Network.read_via_rule: IO error while scanning file", e);
       return null;
     }
   }
 
   private static void insert_via_infos(
-      Collection<app.freerouting.rules.ViaInfo> p_via_infos,
+      Collection<ViaInfo> p_via_infos,
       RoutingBoard p_board,
       boolean p_attach_allowed) {
-    if (p_via_infos.size() > 0) {
-      for (app.freerouting.rules.ViaInfo curr_info : p_via_infos) {
+    if (!p_via_infos.isEmpty()) {
+      for (ViaInfo curr_info : p_via_infos) {
         p_board.rules.via_infos.add(curr_info);
       }
     } else // no via infos found, create default via infos from the via padstacks.
@@ -328,15 +340,15 @@ public class Network extends ScopeKeyword {
   }
 
   private static void create_default_via_infos(
-      app.freerouting.board.BasicBoard p_board,
+      BasicBoard p_board,
       app.freerouting.rules.NetClass p_net_class,
       boolean p_attach_allowed) {
     int cl_class =
         p_net_class.default_item_clearance_classes.get(
-            app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
+            DefaultItemClearanceClasses.ItemClass.VIA);
     boolean is_default_class = (p_net_class == p_board.rules.get_default_net_class());
     for (int i = 0; i < p_board.library.via_padstack_count(); ++i) {
-      app.freerouting.library.Padstack curr_padstack = p_board.library.get_via_padstack(i);
+      Padstack curr_padstack = p_board.library.get_via_padstack(i);
       boolean attach_allowed = p_attach_allowed && curr_padstack.attach_allowed;
       String via_name;
       if (is_default_class) {
@@ -344,15 +356,15 @@ public class Network extends ScopeKeyword {
       } else {
         via_name = curr_padstack.name + DsnFile.CLASS_CLEARANCE_SEPARATOR + p_net_class.get_name();
       }
-      app.freerouting.rules.ViaInfo found_via_info =
-          new app.freerouting.rules.ViaInfo(
+      ViaInfo found_via_info =
+          new ViaInfo(
               via_name, curr_padstack, cl_class, attach_allowed, p_board.rules);
       p_board.rules.via_infos.add(found_via_info);
     }
   }
 
   private static void insert_via_rules(
-      Collection<Collection<String>> p_via_rules, app.freerouting.board.BasicBoard p_board) {
+      Collection<Collection<String>> p_via_rules, BasicBoard p_board) {
     boolean rule_found = false;
     for (Collection<String> curr_list : p_via_rules) {
       if (curr_list.size() < 2) {
@@ -372,14 +384,14 @@ public class Network extends ScopeKeyword {
 
   /** Inserts a via rule into the board. Replaces an already existing via rule with the same */
   static boolean add_via_rule(
-      Collection<String> p_name_list, app.freerouting.board.BasicBoard p_board) {
+      Collection<String> p_name_list, BasicBoard p_board) {
     Iterator<String> it = p_name_list.iterator();
     String rule_name = it.next();
-    app.freerouting.rules.ViaRule existing_rule = p_board.rules.get_via_rule(rule_name);
-    app.freerouting.rules.ViaRule curr_rule = new app.freerouting.rules.ViaRule(rule_name);
+    ViaRule existing_rule = p_board.rules.get_via_rule(rule_name);
+    ViaRule curr_rule = new ViaRule(rule_name);
     boolean rule_ok = true;
     while (it.hasNext()) {
-      app.freerouting.rules.ViaInfo curr_via = p_board.rules.via_infos.get(it.next());
+      ViaInfo curr_via = p_board.rules.via_infos.get(it.next());
       if (curr_via != null) {
         curr_rule.append_via(curr_via);
       } else {
@@ -399,7 +411,7 @@ public class Network extends ScopeKeyword {
 
   private static void insert_net_classes(
       Collection<NetClass> p_net_classes, ReadScopeParameter p_par) {
-    app.freerouting.board.BasicBoard routing_board = p_par.board_handling.get_routing_board();
+    BasicBoard routing_board = p_par.board_handling.get_routing_board();
     for (NetClass curr_class : p_net_classes) {
       insert_net_class(
           curr_class,
@@ -413,7 +425,7 @@ public class Network extends ScopeKeyword {
   static void insert_net_class(
       NetClass p_class,
       LayerStructure p_layer_structure,
-      app.freerouting.board.BasicBoard p_board,
+      BasicBoard p_board,
       CoordinateTransform p_coordinate_transform,
       boolean p_via_at_smd_allowed) {
     app.freerouting.rules.NetClass board_net_class = p_board.rules.append_net_class(p_class.name);
@@ -427,7 +439,7 @@ public class Network extends ScopeKeyword {
       }
     }
     if (p_class.via_rule != null) {
-      app.freerouting.rules.ViaRule via_rule = p_board.rules.get_via_rule(p_class.via_rule);
+      ViaRule via_rule = p_board.rules.get_via_rule(p_class.via_rule);
       if (via_rule != null) {
         board_net_class.set_via_rule(via_rule);
       } else {
@@ -527,8 +539,8 @@ public class Network extends ScopeKeyword {
   private static void insert_class_pairs(
       Collection<NetClass.ClassClass> p_class_classes, ReadScopeParameter p_par) {
     for (NetClass.ClassClass curr_class_class : p_class_classes) {
-      java.util.Iterator<String> it1 = curr_class_class.class_names.iterator();
-      app.freerouting.board.BasicBoard routing_board = p_par.board_handling.get_routing_board();
+      Iterator<String> it1 = curr_class_class.class_names.iterator();
+      BasicBoard routing_board = p_par.board_handling.get_routing_board();
       while (it1.hasNext()) {
         String first_name = it1.next();
         app.freerouting.rules.NetClass first_class =
@@ -536,7 +548,7 @@ public class Network extends ScopeKeyword {
         if (first_class == null) {
           FRLogger.warn("Network.insert_class_pairs: first class not found");
         } else {
-          java.util.Iterator<String> it2 = it1;
+          Iterator<String> it2 = it1;
           while (it2.hasNext()) {
             String second_name = it2.next();
             app.freerouting.rules.NetClass second_class =
@@ -561,7 +573,7 @@ public class Network extends ScopeKeyword {
       NetClass.ClassClass p_class_class,
       app.freerouting.rules.NetClass p_first_class,
       app.freerouting.rules.NetClass p_second_class,
-      app.freerouting.board.BasicBoard p_board,
+      BasicBoard p_board,
       CoordinateTransform p_coordinate_transform) {
     for (Rule curr_rule : p_class_class.rules) {
       if (curr_rule instanceof Rule.ClearanceRule) {
@@ -602,7 +614,7 @@ public class Network extends ScopeKeyword {
   }
 
   private static void add_mixed_clearance_rule(
-      app.freerouting.rules.ClearanceMatrix p_clearance_matrix,
+      ClearanceMatrix p_clearance_matrix,
       app.freerouting.rules.NetClass p_first_class,
       app.freerouting.rules.NetClass p_second_class,
       Rule.ClearanceRule p_clearance_rule,
@@ -631,9 +643,7 @@ public class Network extends ScopeKeyword {
         p_clearance_matrix.set_value(second_class_no, first_class_no, p_layer_no, curr_clearance);
       }
     } else {
-      Iterator<String> it = p_clearance_rule.clearance_class_pairs.iterator();
-      while (it.hasNext()) {
-        String curr_string = it.next();
+      for (String curr_string : p_clearance_rule.clearance_class_pairs) {
         String[] curr_pair = curr_string.split("_");
         if (curr_pair.length != 2) {
           continue;
@@ -669,7 +679,7 @@ public class Network extends ScopeKeyword {
 
   private static void create_default_clearance_classes(
       app.freerouting.rules.NetClass p_net_class,
-      app.freerouting.rules.ClearanceMatrix p_clearance_matrix) {
+      ClearanceMatrix p_clearance_matrix) {
     get_clearance_class(p_clearance_matrix, p_net_class, "via");
     get_clearance_class(p_clearance_matrix, p_net_class, "smd");
     get_clearance_class(p_clearance_matrix, p_net_class, "pin");
@@ -679,16 +689,16 @@ public class Network extends ScopeKeyword {
   private static void create_via_rule(
       Collection<String> p_use_via,
       app.freerouting.rules.NetClass p_net_class,
-      app.freerouting.board.BasicBoard p_board,
+      BasicBoard p_board,
       boolean p_attach_allowed) {
-    app.freerouting.rules.ViaRule new_via_rule =
-        new app.freerouting.rules.ViaRule(p_net_class.get_name());
+    ViaRule new_via_rule =
+        new ViaRule(p_net_class.get_name());
     int default_via_cl_class =
         p_net_class.default_item_clearance_classes.get(
-            app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
+            DefaultItemClearanceClasses.ItemClass.VIA);
     for (String curr_via_name : p_use_via) {
       for (int i = 0; i < p_board.rules.via_infos.count(); ++i) {
-        app.freerouting.rules.ViaInfo curr_via_info = p_board.rules.via_infos.get(i);
+        ViaInfo curr_via_info = p_board.rules.via_infos.get(i);
         if (curr_via_info.get_clearance_class() == default_via_cl_class) {
           if (curr_via_info.get_padstack().name.equals(curr_via_name)) {
             new_via_rule.append_via(curr_via_info);
@@ -720,7 +730,7 @@ public class Network extends ScopeKeyword {
   }
 
   private static void add_clearance_rule(
-      app.freerouting.rules.ClearanceMatrix p_clearance_matrix,
+      ClearanceMatrix p_clearance_matrix,
       app.freerouting.rules.NetClass p_net_class,
       Rule.ClearanceRule p_rule,
       int p_layer_no,
@@ -755,9 +765,7 @@ public class Network extends ScopeKeyword {
     if (Structure.contains_wire_clearance_pair(p_rule.clearance_class_pairs)) {
       create_default_clearance_classes(p_net_class, p_clearance_matrix);
     }
-    Iterator<String> it = p_rule.clearance_class_pairs.iterator();
-    while (it.hasNext()) {
-      String curr_string = it.next();
+    for (String curr_string : p_rule.clearance_class_pairs) {
       String[] curr_pair = curr_string.split("_");
       if (curr_pair.length != 2) {
         continue;
@@ -781,7 +789,7 @@ public class Network extends ScopeKeyword {
    * p_item_class_name. Creates a new class, if that class is not yet existing.
    */
   private static int get_clearance_class(
-      app.freerouting.rules.ClearanceMatrix p_clearance_matrix,
+      ClearanceMatrix p_clearance_matrix,
       app.freerouting.rules.NetClass p_net_class,
       String p_item_class_name) {
     String net_class_name = p_net_class.get_name();
@@ -809,25 +817,18 @@ public class Network extends ScopeKeyword {
         p_clearance_matrix.set_value(i, result, j, curr_value);
       }
     }
-    if (p_item_class_name.equals("via")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.VIA, result);
-    } else if (p_item_class_name.equals("pin")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.PIN, result);
-    } else if (p_item_class_name.equals("smd")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.SMD, result);
-    } else if (p_item_class_name.equals("area")) {
-      p_net_class.default_item_clearance_classes.set(ItemClass.AREA, result);
+    switch (p_item_class_name) {
+      case "via"  -> p_net_class.default_item_clearance_classes.set(ItemClass.VIA, result);
+      case "pin"  -> p_net_class.default_item_clearance_classes.set(ItemClass.PIN, result);
+      case "smd"  -> p_net_class.default_item_clearance_classes.set(ItemClass.SMD, result);
+      case "area" -> p_net_class.default_item_clearance_classes.set(ItemClass.AREA, result);
     }
     return result;
   }
 
-  private static void insert_compoments(ReadScopeParameter p_par) {
-    Iterator<ComponentPlacement> it = p_par.placement_list.iterator();
-    while (it.hasNext()) {
-      ComponentPlacement next_lib_component = it.next();
-      Iterator<ComponentPlacement.ComponentLocation> it2 = next_lib_component.locations.iterator();
-      while (it2.hasNext()) {
-        ComponentPlacement.ComponentLocation next_component = it2.next();
+  private static void insert_components(ReadScopeParameter p_par) {
+    for (ComponentPlacement next_lib_component : p_par.placement_list) {
+      for (ComponentPlacement.ComponentLocation next_component : next_lib_component.locations) {
         insert_component(next_component, next_lib_component.lib_name, p_par);
       }
     }
@@ -838,7 +839,7 @@ public class Network extends ScopeKeyword {
    * false, if an error occurred.
    */
   private static boolean insert_logical_parts(ReadScopeParameter p_par) {
-    app.freerouting.board.BasicBoard routing_board = p_par.board_handling.get_routing_board();
+    BasicBoard routing_board = p_par.board_handling.get_routing_board();
     for (PartLibrary.LogicalPart next_part : p_par.logical_parts) {
       app.freerouting.library.Package lib_package =
           search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
@@ -894,8 +895,8 @@ public class Network extends ScopeKeyword {
    */
   private static app.freerouting.library.Package search_lib_package(
       String p_part_name,
-      java.util.Collection<PartLibrary.LogicalPartMapping> p_logical_part_mappings,
-      app.freerouting.board.BasicBoard p_board) {
+      Collection<PartLibrary.LogicalPartMapping> p_logical_part_mappings,
+      BasicBoard p_board) {
     for (PartLibrary.LogicalPartMapping curr_mapping : p_logical_part_mappings) {
       if (curr_mapping.name.equals(p_part_name)) {
         if (curr_mapping.components.isEmpty()) {
@@ -922,7 +923,7 @@ public class Network extends ScopeKeyword {
   /** Inserts all board components belonging to the input library component. */
   private static void insert_component(
       ComponentPlacement.ComponentLocation p_location, String p_lib_key, ReadScopeParameter p_par) {
-    app.freerouting.board.RoutingBoard routing_board = p_par.board_handling.get_routing_board();
+    RoutingBoard routing_board = p_par.board_handling.get_routing_board();
     app.freerouting.library.Package curr_front_package =
         routing_board.library.packages.get(p_lib_key, true);
     app.freerouting.library.Package curr_back_package =
@@ -954,23 +955,23 @@ public class Network extends ScopeKeyword {
       return; // component is not yet placed.
     }
     Vector component_translation = component_location.difference_by(Point.ZERO);
-    app.freerouting.board.FixedState fixed_state;
+    FixedState fixed_state;
     if (p_location.position_fixed) {
-      fixed_state = app.freerouting.board.FixedState.SYSTEM_FIXED;
+      fixed_state = FixedState.SYSTEM_FIXED;
     } else {
-      fixed_state = app.freerouting.board.FixedState.UNFIXED;
+      fixed_state = FixedState.UNFIXED;
     }
     app.freerouting.library.Package curr_package = new_component.get_package();
     for (int i = 0; i < curr_package.pin_count(); ++i) {
       app.freerouting.library.Package.Pin curr_pin = curr_package.get_pin(i);
-      app.freerouting.library.Padstack curr_padstack =
+      Padstack curr_padstack =
           routing_board.library.padstacks.get(curr_pin.padstack_no);
       if (curr_padstack == null) {
         FRLogger.warn("Network.insert_component: pin padstack not found");
         return;
       }
       Collection<Net> pin_nets = p_par.netlist.get_nets(p_location.name, curr_pin.name);
-      Collection<Integer> net_numbers = new LinkedList<Integer>();
+      Collection<Integer> net_numbers = new LinkedList<>();
       for (Net curr_pin_net : pin_nets) {
         app.freerouting.rules.Net curr_board_net =
             routing_board.rules.nets.get(curr_pin_net.id.name, curr_pin_net.id.subnet_number);
@@ -1007,11 +1008,11 @@ public class Network extends ScopeKeyword {
         if (curr_padstack.from_layer() == curr_padstack.to_layer()) {
           clearance_class =
               net_class.default_item_clearance_classes.get(
-                  app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.SMD);
+                  DefaultItemClearanceClasses.ItemClass.SMD);
         } else {
           clearance_class =
               net_class.default_item_clearance_classes.get(
-                  app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.PIN);
+                  DefaultItemClearanceClasses.ItemClass.PIN);
         }
       }
       routing_board.insert_pin(new_component.no, i, net_no_arr, clearance_class, fixed_state);
@@ -1020,7 +1021,7 @@ public class Network extends ScopeKeyword {
     // insert the keepouts belonging to the package (k = 1 for via keepouts)
     for (int k = 0; k <= 2; ++k) {
       app.freerouting.library.Package.Keepout[] keepout_arr;
-      java.util.Map<String, ComponentPlacement.ItemClearanceInfo> curr_keepout_infos;
+      Map<String, ComponentPlacement.ItemClearanceInfo> curr_keepout_infos;
       if (k == 0) {
         keepout_arr = curr_package.keepout_arr;
         curr_keepout_infos = p_location.keepout_infos;
@@ -1046,7 +1047,7 @@ public class Network extends ScopeKeyword {
                 .rules
                 .get_default_net_class()
                 .default_item_clearance_classes
-                .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.AREA);
+                .get(DefaultItemClearanceClasses.ItemClass.AREA);
         ComponentPlacement.ItemClearanceInfo keepout_info =
             curr_keepout_infos.get(curr_keepout.name);
         if (keepout_info != null) {
@@ -1147,18 +1148,19 @@ public class Network extends ScopeKeyword {
     }
   }
 
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
-    Collection<NetClass> classes = new LinkedList<NetClass>();
-    Collection<NetClass.ClassClass> class_class_list = new LinkedList<NetClass.ClassClass>();
-    Collection<app.freerouting.rules.ViaInfo> via_infos =
-        new LinkedList<app.freerouting.rules.ViaInfo>();
-    Collection<Collection<String>> via_rules = new LinkedList<Collection<String>>();
+    Collection<NetClass> classes = new LinkedList<>();
+    Collection<NetClass.ClassClass> class_class_list = new LinkedList<>();
+    Collection<ViaInfo> via_infos =
+        new LinkedList<>();
+    Collection<Collection<String>> via_rules = new LinkedList<>();
     Object next_token = null;
     for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Network.read_scope: IO error scanning file", e);
         return false;
       }
@@ -1180,7 +1182,7 @@ public class Network extends ScopeKeyword {
               p_par.layer_structure,
               p_par.board_handling.get_locale());
         } else if (next_token == Keyword.VIA) {
-          app.freerouting.rules.ViaInfo curr_via_info =
+          ViaInfo curr_via_info =
               read_via_info(p_par.scanner, p_par.board_handling.get_routing_board());
           if (curr_via_info == null) {
             return false;
@@ -1220,18 +1222,18 @@ public class Network extends ScopeKeyword {
       }
     }
 
-    app.freerouting.board.RoutingBoard board = p_par.board_handling.get_routing_board();
+    RoutingBoard board = p_par.board_handling.get_routing_board();
 
     // Set the via padstacks after network parsing, so that named vias from both structure and
     // network DSN sections are properly instantiated .
     if (p_par.via_padstack_names != null) {
-      app.freerouting.library.Padstack[] via_padstacks =
-          new app.freerouting.library.Padstack[p_par.via_padstack_names.size()];
+      Padstack[] via_padstacks =
+          new Padstack[p_par.via_padstack_names.size()];
       Iterator<String> it = p_par.via_padstack_names.iterator();
       int found_padstack_count = 0;
       for (int i = 0; i < via_padstacks.length; ++i) {
         String curr_padstack_name = it.next();
-        app.freerouting.library.Padstack curr_padstack =
+        Padstack curr_padstack =
             board.library.padstacks.get(curr_padstack_name);
         if (curr_padstack != null) {
           via_padstacks[found_padstack_count] = curr_padstack;
@@ -1243,8 +1245,8 @@ public class Network extends ScopeKeyword {
       }
       if (found_padstack_count != via_padstacks.length) {
         // Some via padstacks were not found in the padstacks scope of the dsn-file.
-        app.freerouting.library.Padstack[] corrected_padstacks =
-            new app.freerouting.library.Padstack[found_padstack_count];
+        Padstack[] corrected_padstacks =
+            new Padstack[found_padstack_count];
         System.arraycopy(via_padstacks, 0, corrected_padstacks, 0, found_padstack_count);
         via_padstacks = corrected_padstacks;
       }
@@ -1255,7 +1257,7 @@ public class Network extends ScopeKeyword {
     insert_via_rules(via_rules, p_par.board_handling.get_routing_board());
     insert_net_classes(classes, p_par);
     insert_class_pairs(class_class_list, p_par);
-    insert_compoments(p_par);
+    insert_components(p_par);
     insert_logical_parts(p_par);
     return true;
   }
@@ -1266,7 +1268,7 @@ public class Network extends ScopeKeyword {
       RoutingBoard p_board,
       CoordinateTransform p_coordinate_transform,
       LayerStructure p_layer_structure,
-      java.util.Locale p_locale) {
+      Locale p_locale) {
     // read the net name
     String net_name = p_scanner.next_string();
 
@@ -1274,24 +1276,24 @@ public class Network extends ScopeKeyword {
     int subnet_number = 1;
     try {
       next_token = p_scanner.next_token();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Network.read_net_scope: IO error while scanning file", e);
       return false;
     }
     boolean scope_is_empty = (next_token == CLOSED_BRACKET);
     if (next_token instanceof Integer) {
-      subnet_number = ((Integer) next_token).intValue();
+      subnet_number = (Integer) next_token;
     }
     boolean pin_order_found = false;
-    Collection<Net.Pin> pin_list = new LinkedList<Net.Pin>();
-    Collection<Rule> net_rules = new LinkedList<Rule>();
-    Collection<Collection<Net.Pin>> subnet_pin_lists = new LinkedList<Collection<Net.Pin>>();
+    Collection<Net.Pin> pin_list = new LinkedList<>();
+    Collection<Rule> net_rules = new LinkedList<>();
+    Collection<Collection<Net.Pin>> subnet_pin_lists = new LinkedList<>();
     if (!scope_is_empty) {
       for (; ; ) {
         Object prev_token = next_token;
         try {
           next_token = p_scanner.next_token();
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
           FRLogger.error("Network.read_net_scope: IO error scanning file", e);
           return false;
         }
@@ -1314,7 +1316,7 @@ public class Network extends ScopeKeyword {
               return false;
             }
           } else if (next_token == Keyword.FROMTO) {
-            Set<Net.Pin> curr_subnet_pin_list = new java.util.TreeSet<Net.Pin>();
+            Set<Net.Pin> curr_subnet_pin_list = new TreeSet<>();
             if (!read_net_pins(p_scanner, curr_subnet_pin_list)) {
               return false;
             }
@@ -1360,9 +1362,7 @@ public class Network extends ScopeKeyword {
           FRLogger.warn("Network.read_net_scope: board net not found");
           return false;
         }
-        Iterator<Rule> it = net_rules.iterator();
-        while (it.hasNext()) {
-          Rule curr_ob = it.next();
+        for (Rule curr_ob : net_rules) {
           if (curr_ob instanceof Rule.WidthRule) {
             app.freerouting.rules.NetClass default_net_rule = p_board.rules.get_default_net_class();
             double wire_width = ((Rule.WidthRule) curr_ob).value;

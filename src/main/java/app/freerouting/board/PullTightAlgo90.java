@@ -26,13 +26,11 @@ class PullTightAlgo90 extends PullTightAlgo {
         p_keep_point_layer);
   }
 
+  @Override
   Polyline pull_tight(Polyline p_polyline) {
     Polyline new_result = avoid_acid_traps(p_polyline);
     Polyline prev_result = null;
-    while (new_result != prev_result) {
-      if (this.is_stop_requested()) {
-        break;
-      }
+    while (new_result != prev_result && !this.is_stop_requested()) {
       prev_result = new_result;
       Polyline tmp1 = try_skip_second_corner(prev_result);
       Polyline tmp2 = try_skip_corners(tmp1);
@@ -67,9 +65,7 @@ class PullTightAlgo90 extends PullTightAlgo {
     Line[] new_lines = new Line[p_polyline.arr.length - 1];
     new_lines[0] = p_polyline.arr[1];
     new_lines[1] = p_polyline.arr[0];
-    for (int i = 2; i < new_lines.length; ++i) {
-      new_lines[i] = p_polyline.arr[i + 1];
-    }
+    System.arraycopy(p_polyline.arr, 3, new_lines, 2, new_lines.length - 2);
     return new Polyline(new_lines);
   }
 
@@ -152,14 +148,15 @@ class PullTightAlgo90 extends PullTightAlgo {
 
     Line[] cleaned_new_lines = new Line[new_line_index + 1];
     System.arraycopy(new_lines, 0, cleaned_new_lines, 0, cleaned_new_lines.length);
-    Polyline result = new Polyline(cleaned_new_lines);
-    return result;
+    return new Polyline(cleaned_new_lines);
   }
 
+  @Override
   Polyline smoothen_start_corner_at_trace(PolylineTrace p_trace) {
     return null;
   }
 
+  @Override
   Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace) {
     return null;
   }

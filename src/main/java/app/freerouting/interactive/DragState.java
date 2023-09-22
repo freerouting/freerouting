@@ -4,7 +4,10 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
-import java.util.Iterator;
+
+import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
 
 /** Class implementing functionality when the mouse is dragged on a routing board */
 public abstract class DragState extends InteractiveState {
@@ -23,7 +26,7 @@ public abstract class DragState extends InteractiveState {
   }
 
   /**
-   * Returns a new instance of this state, if a item to drag was found at the input location; null
+   * Returns a new instance of this state, if an item to drag was found at the input location; null
    * otherwise.
    */
   public static DragState get_instance(
@@ -31,7 +34,7 @@ public abstract class DragState extends InteractiveState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    p_board_handling.display_layer_messsage();
+    p_board_handling.display_layer_message();
     Item item_to_move = null;
     int try_count = 1;
     if (p_board_handling.settings.select_on_all_visible_layers) {
@@ -45,17 +48,15 @@ public abstract class DragState extends InteractiveState {
       if (i == 0
           || pick_layer != curr_layer
               && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0) {
-        java.util.Collection<Item> found_items =
+        Collection<Item> found_items =
             p_board_handling
                 .get_routing_board()
                 .pick_items(
                     p_location.round(),
                     pick_layer,
                     p_board_handling.settings.item_selection_filter);
-        Iterator<Item> it = found_items.iterator();
-        while (it.hasNext()) {
+        for (Item curr_item : found_items) {
           item_found = true;
-          Item curr_item = it.next();
           if (curr_item instanceof Trace) {
             continue; // traces are not moved
           }
@@ -94,11 +95,12 @@ public abstract class DragState extends InteractiveState {
 
   public abstract InteractiveState move_to(FloatPoint p_to_location);
 
+  @Override
   public InteractiveState mouse_dragged(FloatPoint p_point) {
     InteractiveState result = this.move_to(p_point);
     if (result != this) {
-      // an error occured
-      java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
+      // an error occurred
+      Set<Integer> changed_nets = new TreeSet<>();
       hdlg.get_routing_board().undo(changed_nets);
       for (Integer changed_net : changed_nets) {
         hdlg.update_ratsnest(changed_net);
@@ -112,10 +114,12 @@ public abstract class DragState extends InteractiveState {
     return result;
   }
 
+  @Override
   public InteractiveState complete() {
     return this.button_released();
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_point) {
     return move_to(p_point);
   }

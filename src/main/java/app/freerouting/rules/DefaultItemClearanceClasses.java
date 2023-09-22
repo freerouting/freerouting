@@ -1,20 +1,19 @@
 package app.freerouting.rules;
 
-public class DefaultItemClearanceClasses implements java.io.Serializable {
+import java.io.Serializable;
 
-  private final int[] arr = new int[ItemClass.values().length];
+public class DefaultItemClearanceClasses implements Serializable {
+
+  private final int[] arr;
 
   /** Creates a new instance of DefaultItemClearancesClasses */
   public DefaultItemClearanceClasses() {
-    for (int i = 1; i < ItemClass.values().length; ++i) {
-      arr[i] = 1;
-    }
+    this.arr = new int[ItemClass.values().length];
+    this.set_all(1);
   }
 
   public DefaultItemClearanceClasses(DefaultItemClearanceClasses p_classes) {
-    for (int i = 1; i < ItemClass.values().length; ++i) {
-      arr[i] = p_classes.arr[i];
-    }
+    this.arr = p_classes.arr.clone();
   }
 
   /** Returns the number of the default clearance class for the input item class. */
@@ -38,7 +37,7 @@ public class DefaultItemClearanceClasses implements java.io.Serializable {
   }
 
   /**
-   * Used in the function get_default_clearance_class to get the default claearance classes for item
+   * Used in the function get_default_clearance_class to get the default clearance classes for item
    * classes.
    */
   public enum ItemClass {

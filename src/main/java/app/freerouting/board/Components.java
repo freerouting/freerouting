@@ -5,13 +5,15 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.library.Package;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 
 /** Contains the lists of components on the board. */
-public class Components implements java.io.Serializable {
+public class Components implements Serializable {
   private final UndoableObjects undo_list = new UndoableObjects();
-  private final Vector<Component> component_arr = new Vector<Component>();
+  private final Vector<Component> component_arr = new Vector<>();
   /**
    * If true, components on the back side are rotated before mirroring, else they are mirrored
    * before rotating.
@@ -53,15 +55,13 @@ public class Components implements java.io.Serializable {
    * name is generated internally.
    */
   public Component add(Point p_location, double p_rotation, boolean p_on_front, Package p_package) {
-    String component_name = "Component#" + (Integer.valueOf(component_arr.size() + 1)).toString();
+    String component_name = "Component#" + (component_arr.size() + 1);
     return add(component_name, p_location, p_rotation, p_on_front, p_package, p_package, false);
   }
 
   /** Returns the component with the input name or null, if no such component exists. */
   public Component get(String p_name) {
-    Iterator<Component> it = component_arr.iterator();
-    while (it.hasNext()) {
-      Component curr = it.next();
+    for (Component curr : component_arr) {
       if (curr.name.equals(p_name)) {
         return curr;
       }
@@ -92,7 +92,7 @@ public class Components implements java.io.Serializable {
   }
 
   /**
-   * Restores the sitiation at the previous snapshot. Returns false, if no more undo is possible.
+   * Restores the situation at the previous snapshot. Returns false, if no more undo is possible.
    */
   public boolean undo(BoardObservers p_observers) {
     if (!this.undo_list.undo(null, null)) {
@@ -102,7 +102,7 @@ public class Components implements java.io.Serializable {
     return true;
   }
 
-  /** Restores the sitiation before the last undo. Returns false, if no more redo is possible. */
+  /** Restores the situation before the last undo. Returns false, if no more redo is possible. */
   public boolean redo(BoardObservers p_observers) {
     if (!this.undo_list.redo(null, null)) {
       return false;
@@ -157,7 +157,7 @@ public class Components implements java.io.Serializable {
   }
 
   /**
-   * Changes the placement side of the component the component with number p_component_no and
+   * Changes the placement side of the component with number p_component_no and
    * mirrors it at the vertical line through p_pole. Works contrary to Component.change_side the
    * undo algorithm of the board.
    */

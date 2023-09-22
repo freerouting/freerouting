@@ -194,7 +194,7 @@ public class OptViaAlgo {
     } else if (contact_trace.last_corner().equals(via_center)) {
       at_first_corner = false;
     } else {
-      FRLogger.warn("OptViaAlgo.opt_plane_or_fanout_via: unconsistant contact");
+      FRLogger.warn("OptViaAlgo.opt_plane_or_fanout_via: inconsistent contact");
       return false;
     }
     Polyline trace_polyline = contact_trace.polyline();
@@ -387,7 +387,7 @@ public class OptViaAlgo {
 
     if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NONE
         && delta.length_approx() <= 1.5) {
-      // PullTightAlgoAnyAngle.reduce_corners mmay not be able to remove the new generated overlap
+      // PullTightAlgoAnyAngle.reduce_corners may not be able to remove the new generated overlap
       // because of numerical stability problems
       // That would result in an endless loop with removing the generated acute angle in
       // reposition_via.
@@ -481,7 +481,7 @@ public class OptViaAlgo {
           p_second_trace_layer,
           p_second_trace_cl_class);
     }
-    Point result = null;
+    Point result;
 
     double curr_weighted_distance_1 =
         float_via_location.weighted_distance(

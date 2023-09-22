@@ -1,15 +1,22 @@
 package app.freerouting.boardgraphics;
 
+import app.freerouting.board.LayerStructure;
+
 import java.awt.Color;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Stores the layer dependent colors used for drawing for the items on the board. */
-public class ItemColorTableModel extends ColorTableModel implements java.io.Serializable {
+public class ItemColorTableModel extends ColorTableModel implements Serializable {
 
   private transient boolean item_colors_precalculated = false;
-  private transient Color[][] precalculated_item_colors = null;
+  private transient Color[][] precalculated_item_colors;
 
   public ItemColorTableModel(
-      app.freerouting.board.LayerStructure p_layer_structure, java.util.Locale p_locale) {
+      LayerStructure p_layer_structure, Locale p_locale) {
     super(p_layer_structure.arr.length, p_locale);
 
     int row_count = p_layer_structure.arr.length;
@@ -35,22 +42,18 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
       } else // inner layer
       {
         if (is_signal_layer) {
-          // currenntly 6 different default colors for traces on the inner layers
+          // currently 6 different default colors for traces on the inner layers
           final int different_inner_colors = 6;
           int remainder = signal_layer_no % different_inner_colors;
-          if (remainder % different_inner_colors == 1) {
-            curr_row[ColumnNames.TRACES.ordinal()] = Color.GREEN;
-          } else if (remainder % different_inner_colors == 2) {
-            curr_row[ColumnNames.TRACES.ordinal()] = Color.YELLOW;
-          } else if (remainder % different_inner_colors == 3) {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(200, 100, 255);
-          } else if (remainder % different_inner_colors == 4) {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(255, 150, 150);
-          } else if (remainder % different_inner_colors == 5) {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(100, 150, 0);
-          } else {
-            curr_row[ColumnNames.TRACES.ordinal()] = new Color(0, 200, 255);
-          }
+          curr_row[ColumnNames.TRACES.ordinal()] =
+              switch (remainder % different_inner_colors) {
+                case 1  -> Color.GREEN;
+                case 2  -> Color.YELLOW;
+                case 3  -> new Color(200, 100, 255);
+                case 4  -> new Color(255, 150, 150);
+                case 5  -> new Color(100, 150, 0);
+                default -> new Color(0, 200, 255);
+              };
         } else // power layer
         {
           curr_row[ColumnNames.TRACES.ordinal()] = Color.BLACK;
@@ -70,12 +73,12 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
     }
   }
 
-  public ItemColorTableModel(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  public ItemColorTableModel(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     super(p_stream);
   }
 
-  /** Copy construcror. */
+  /** Copy constructor. */
   public ItemColorTableModel(ItemColorTableModel p_item_color_model) {
     super(p_item_color_model.data.length, p_item_color_model.locale);
     for (int i = 0; i < this.data.length; ++i) {
@@ -84,27 +87,32 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
     }
   }
 
+  @Override
   public int getColumnCount() {
     return ColumnNames.values().length;
   }
 
+  @Override
   public int getRowCount() {
     return data.length;
   }
 
+  @Override
   public String getColumnName(int p_col) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.boardgraphics.ColorTableModel", this.locale);
     return resources.getString(ColumnNames.values()[p_col].toString());
   }
 
+  @Override
   public void setValueAt(Object p_value, int p_row, int p_col) {
     super.setValueAt(p_value, p_row, p_col);
     this.item_colors_precalculated = false;
   }
 
   /** Don't need to implement this method unless your table's editable. */
+  @Override
   public boolean isCellEditable(int p_row, int p_col) {
     // Note that the data/cell address is constant,
     // no matter where the cell appears onscreen.
@@ -113,7 +121,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
 
   Color[] get_trace_colors(boolean p_fixed) {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     Color[] result;
     if (p_fixed) {
@@ -126,7 +134,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
 
   Color[] get_via_colors(boolean p_fixed) {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     Color[] result;
     if (p_fixed) {
@@ -139,7 +147,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
 
   Color[] get_pin_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.PINS.ordinal() - 1];
   }
@@ -150,7 +158,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
 
   Color[] get_conduction_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.CONDUCTION_AREAS.ordinal() - 1];
   }
@@ -161,21 +169,21 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
 
   Color[] get_obstacle_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.KEEPOUTS.ordinal() - 1];
   }
 
   Color[] get_via_obstacle_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.VIA_KEEPOUTS.ordinal() - 1];
   }
 
   Color[] get_place_obstacle_colors() {
     if (!item_colors_precalculated) {
-      precalulate_item_colors();
+      precalculate_item_colors();
     }
     return precalculated_item_colors[ColumnNames.PLACE_KEEPOUTS.ordinal() - 1];
   }
@@ -217,7 +225,7 @@ public class ItemColorTableModel extends ColorTableModel implements java.io.Seri
     this.item_colors_precalculated = false;
   }
 
-  private void precalulate_item_colors() {
+  private void precalculate_item_colors() {
     precalculated_item_colors = new Color[ColumnNames.values().length - 1][];
     for (int i = 0; i < precalculated_item_colors.length; ++i) {
       precalculated_item_colors[i] = new Color[data.length];

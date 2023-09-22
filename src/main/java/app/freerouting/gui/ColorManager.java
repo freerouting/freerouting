@@ -6,8 +6,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -30,8 +31,8 @@ public class ColorManager extends BoardSavableSubWindow {
   /** Creates a new instance of ColorManager */
   public ColorManager(BoardFrame p_board_frame) {
     GraphicsContext graphics_context = p_board_frame.board_panel.board_handling.graphics_context;
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
     this.setTitle(resources.getString("color_manager"));
     final JPanel panel = new JPanel();
@@ -60,7 +61,7 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   /** Initializes p_color_table and return the created scroll_pane of the color table. */
-  private static JScrollPane init_color_table(JTable p_color_table, java.util.Locale p_locale) {
+  private static JScrollPane init_color_table(JTable p_color_table, Locale p_locale) {
     // Create the scroll pane and add the table to it.
     JScrollPane scroll_pane = new JScrollPane(p_color_table);
     // Set up renderer and editor for the Color columns.
@@ -71,10 +72,11 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   // Set up the editor for the Color cells.
-  private static void setUpColorEditor(JTable p_table, java.util.Locale p_locale) {
+  private static void setUpColorEditor(JTable p_table, Locale p_locale) {
     // First, set up the button that brings up the dialog.
     final JButton button =
         new JButton("") {
+          @Override
           public void setText(String s) {
             // Button never shows text -- only color.
           }
@@ -91,28 +93,22 @@ public class ColorManager extends BoardSavableSubWindow {
     // Set up the dialog that the button brings up.
     final JColorChooser colorChooser = new JColorChooser();
     ActionListener okListener =
-        new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            colorEditor.currentColor = colorChooser.getColor();
-          }
-        };
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
+        e -> colorEditor.currentColor = colorChooser.getColor();
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
     final JDialog dialog =
         JColorChooser.createDialog(
             button, resources.getString("pick_a_color"), true, colorChooser, okListener, null);
 
     // Here's the code that brings up the dialog.
     button.addActionListener(
-        new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            button.setBackground(colorEditor.currentColor);
-            colorChooser.setColor(colorEditor.currentColor);
-            // Without the following line, the dialog comes up
-            // in the middle of the screen.
-            // dialog.setLocationRelativeTo(button);
-            dialog.setVisible(true);
-          }
+        e -> {
+          button.setBackground(colorEditor.currentColor);
+          colorChooser.setColor(colorEditor.currentColor);
+          // Without the following line, the dialog comes up
+          // in the middle of the screen.
+          // dialog.setLocationRelativeTo(button);
+          dialog.setVisible(true);
         });
   }
 
@@ -123,9 +119,9 @@ public class ColorManager extends BoardSavableSubWindow {
   }
 
   private static class ColorRenderer extends JLabel implements TableCellRenderer {
-    Border unselectedBorder = null;
-    Border selectedBorder = null;
-    boolean isBordered = true;
+    Border unselectedBorder;
+    Border selectedBorder;
+    boolean isBordered;
 
     public ColorRenderer(boolean p_is_bordered) {
       super();
@@ -133,6 +129,7 @@ public class ColorManager extends BoardSavableSubWindow {
       setOpaque(true); // MUST do this for background to show up.
     }
 
+    @Override
     public Component getTableCellRendererComponent(
         JTable p_table,
         Object p_color,
@@ -165,7 +162,7 @@ public class ColorManager extends BoardSavableSubWindow {
    * implementation of TableCellEditor methods from the source code for DefaultCellEditor.
    */
   private static class ColorEditor extends DefaultCellEditor {
-    Color currentColor = null;
+    Color currentColor;
 
     public ColorEditor(JButton b) {
       super(new JCheckBox()); // Unfortunately, the constructor
@@ -175,22 +172,20 @@ public class ColorManager extends BoardSavableSubWindow {
       setClickCountToStart(1); // This is usually 1 or 2.
 
       // Must do this so that editing stops when appropriate.
-      b.addActionListener(
-          new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              fireEditingStopped();
-            }
-          });
+      b.addActionListener(e -> fireEditingStopped());
     }
 
+    @Override
     protected void fireEditingStopped() {
       super.fireEditingStopped();
     }
 
+    @Override
     public Object getCellEditorValue() {
       return currentColor;
     }
 
+    @Override
     public Component getTableCellEditorComponent(
         JTable table, Object value, boolean isSelected, int row, int column) {
       ((JButton) editorComponent).setText(value.toString());

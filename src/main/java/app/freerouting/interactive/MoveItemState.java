@@ -1,7 +1,10 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.Component;
+import app.freerouting.board.Components;
+import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Via;
@@ -11,8 +14,13 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.library.BoardLibrary;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.JPopupMenu;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,7 +33,7 @@ public class MoveItemState extends InteractiveState {
   private IntPoint current_position;
   private IntPoint previous_position;
   private Collection<ClearanceViolation> clearance_violations;
-  private boolean observers_activated = false;
+  private boolean observers_activated;
 
   /** Creates a new instance of MoveComponentState */
   private MoveItemState(
@@ -44,7 +52,7 @@ public class MoveItemState extends InteractiveState {
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.MOVE_ITEMS, p_location);
     }
-    app.freerouting.board.BasicBoard routing_board = hdlg.get_routing_board();
+    BasicBoard routing_board = hdlg.get_routing_board();
     this.observers_activated = !hdlg.get_routing_board().observers_active();
     if (this.observers_activated) {
       hdlg.get_routing_board().start_notify_observers();
@@ -55,8 +63,8 @@ public class MoveItemState extends InteractiveState {
     for (Item curr_item : p_item_list) {
       routing_board.remove_item(curr_item);
     }
-    this.net_items_list = new LinkedList<NetItems>();
-    this.item_list = new TreeSet<Item>();
+    this.net_items_list = new LinkedList<>();
+    this.item_list = new TreeSet<>();
 
     for (Item curr_item : p_item_list) {
       // Copy the items in p_item_list, because otherwise the undo algorithm will not work.
@@ -78,8 +86,8 @@ public class MoveItemState extends InteractiveState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
     if (p_item_list.isEmpty()) {
       p_board_handling.screen_messages.set_status_message(
@@ -87,15 +95,15 @@ public class MoveItemState extends InteractiveState {
       return null;
     }
     // extend p_item_list to full  components
-    Set<Item> item_list = new TreeSet<Item>();
-    Set<Component> component_list = new TreeSet<Component>();
-    app.freerouting.board.BasicBoard routing_board = p_board_handling.get_routing_board();
+    Set<Item> item_list = new TreeSet<>();
+    Set<Component> component_list = new TreeSet<>();
+    BasicBoard routing_board = p_board_handling.get_routing_board();
     Component grid_snap_component = null;
     for (Item curr_item : p_item_list) {
       if (curr_item.get_component_no() > 0) {
         Component curr_component = routing_board.components.get(curr_item.get_component_no());
         if (curr_component == null) {
-          FRLogger.warn("MoveComponentState.get_instance inconsistant component number");
+          FRLogger.warn("MoveComponentState.get_instance inconsistent component number");
           return null;
         }
         if (grid_snap_component == null
@@ -104,7 +112,7 @@ public class MoveItemState extends InteractiveState {
           grid_snap_component = curr_component;
         }
         if (!component_list.contains(curr_component)) {
-          java.util.Collection<Item> component_items =
+          Collection<Item> component_items =
               routing_board.get_component_items(curr_component.no);
           for (Item curr_component_item : component_items) {
             component_list.add(curr_component);
@@ -115,9 +123,9 @@ public class MoveItemState extends InteractiveState {
         item_list.add(curr_item);
       }
     }
-    Set<Item> fixed_items = new TreeSet<Item>();
-    Set<Item> obstacle_items = new TreeSet<Item>();
-    Set<Item> add_items = new TreeSet<Item>();
+    Set<Item> fixed_items = new TreeSet<>();
+    Set<Item> obstacle_items = new TreeSet<>();
+    Set<Item> add_items = new TreeSet<>();
     boolean move_ok = true;
     for (Item curr_item : item_list) {
       if (curr_item.is_user_fixed()) {
@@ -135,7 +143,7 @@ public class MoveItemState extends InteractiveState {
         Collection<Item> contacts = curr_item.get_connected_set(-1, true);
         {
           for (Item curr_contact : contacts) {
-            if (curr_contact instanceof app.freerouting.board.ConductionArea) {
+            if (curr_contact instanceof ConductionArea) {
 
               continue;
             }
@@ -163,7 +171,7 @@ public class MoveItemState extends InteractiveState {
     }
     if (!move_ok) {
       if (p_parent_state instanceof SelectedItemState) {
-        if (fixed_items.size() > 0) {
+        if (!fixed_items.isEmpty()) {
           ((SelectedItemState) p_parent_state).get_item_list().addAll(fixed_items);
           p_board_handling.screen_messages.set_status_message(
               resources.getString("please_unfix_selected_items_before_moving"));
@@ -200,6 +208,7 @@ public class MoveItemState extends InteractiveState {
     this.net_items_list.add(new_net_items);
   }
 
+  @Override
   public InteractiveState mouse_moved() {
     super.mouse_moved();
     move(hdlg.get_current_mouse_position());
@@ -209,15 +218,18 @@ public class MoveItemState extends InteractiveState {
     return this;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_point) {
     move(p_point);
     return this;
   }
 
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     return this.complete();
   }
 
+  @Override
   public InteractiveState complete() {
     for (Item curr_item : this.item_list) {
       if (curr_item.clearance_violation_count() > 0) {
@@ -226,12 +238,12 @@ public class MoveItemState extends InteractiveState {
         return this;
       }
     }
-    app.freerouting.board.BasicBoard routing_board = hdlg.get_routing_board();
+    BasicBoard routing_board = hdlg.get_routing_board();
     for (Item curr_item : this.item_list) {
       routing_board.insert_item(curr_item);
     }
 
-    // let the observers syncronize the moving
+    // let the observers synchronize the moving
     for (Component curr_component : this.component_list) {
       routing_board.communication.observers.notify_moved(curr_component);
     }
@@ -248,6 +260,7 @@ public class MoveItemState extends InteractiveState {
     return this.return_state;
   }
 
+  @Override
   public InteractiveState cancel() {
     hdlg.get_routing_board().undo(null);
     for (NetItems curr_net_items : this.net_items_list) {
@@ -259,6 +272,7 @@ public class MoveItemState extends InteractiveState {
     return this.return_state;
   }
 
+  @Override
   public InteractiveState mouse_wheel_moved(int p_rotation) {
     if (hdlg.settings.zoom_with_wheel) {
       super.mouse_wheel_moved(p_rotation);
@@ -276,11 +290,11 @@ public class MoveItemState extends InteractiveState {
       if (this.grid_snap_component != null) {
         translate_vector = adjust_to_placement_grid(translate_vector);
       }
-      app.freerouting.board.Components components = hdlg.get_routing_board().components;
+      Components components = hdlg.get_routing_board().components;
       for (Component curr_component : this.component_list) {
         components.move(curr_component.no, translate_vector);
       }
-      this.clearance_violations = new java.util.LinkedList<ClearanceViolation>();
+      this.clearance_violations = new LinkedList<>();
       for (Item curr_item : this.item_list) {
         curr_item.translate_by(translate_vector);
         this.clearance_violations.addAll(curr_item.clearance_violations());
@@ -311,11 +325,11 @@ public class MoveItemState extends InteractiveState {
     if (p_factor == 0) {
       return;
     }
-    app.freerouting.board.Components components = hdlg.get_routing_board().components;
+    Components components = hdlg.get_routing_board().components;
     for (Component curr_component : this.component_list) {
       components.turn_90_degree(curr_component.no, p_factor, current_position);
     }
-    this.clearance_violations = new java.util.LinkedList<ClearanceViolation>();
+    this.clearance_violations = new LinkedList<>();
     for (Item curr_item : this.item_list) {
       curr_item.turn_90_degree(p_factor, current_position);
       this.clearance_violations.addAll(curr_item.clearance_violations());
@@ -333,11 +347,11 @@ public class MoveItemState extends InteractiveState {
     if (p_angle_in_degree == 0) {
       return;
     }
-    app.freerouting.board.Components components = hdlg.get_routing_board().components;
+    Components components = hdlg.get_routing_board().components;
     for (Component curr_component : this.component_list) {
       components.rotate(curr_component.no, p_angle_in_degree, this.current_position);
     }
-    this.clearance_violations = new java.util.LinkedList<ClearanceViolation>();
+    this.clearance_violations = new LinkedList<>();
     FloatPoint float_position = this.current_position.to_float();
     for (Item curr_item : this.item_list) {
       curr_item.rotate_approx(p_angle_in_degree, float_position);
@@ -386,11 +400,11 @@ public class MoveItemState extends InteractiveState {
       return;
     }
 
-    app.freerouting.board.Components components = hdlg.get_routing_board().components;
+    Components components = hdlg.get_routing_board().components;
     for (Component curr_component : this.component_list) {
       components.change_side(curr_component.no, current_position);
     }
-    this.clearance_violations = new java.util.LinkedList<ClearanceViolation>();
+    this.clearance_violations = new LinkedList<>();
     for (Item curr_item : this.item_list) {
       curr_item.change_placement_side(current_position);
       this.clearance_violations.addAll(curr_item.clearance_violations());
@@ -428,35 +442,33 @@ public class MoveItemState extends InteractiveState {
   }
 
   /** Action to be taken when a key is pressed (Shortcut). */
+  @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState curr_return_state = this;
-    if (p_key_char == '+') {
-      turn_90_degree(1);
-    } else if (p_key_char == '*') {
-      turn_90_degree(2);
-    } else if (p_key_char == '-') {
-      turn_90_degree(3);
-    } else if (p_key_char == '/') {
-      change_placement_side();
-    } else if (p_key_char == 'r') {
-      hdlg.settings.set_zoom_with_wheel(false);
-    } else if (p_key_char == 'z') {
-      hdlg.settings.set_zoom_with_wheel(true);
-    } else {
-      curr_return_state = super.key_typed(p_key_char);
+    switch (p_key_char) {
+      case '+' -> turn_90_degree(1);
+      case '*' -> turn_90_degree(2);
+      case '-' -> turn_90_degree(3);
+      case '/' -> change_placement_side();
+      case 'r' -> hdlg.settings.set_zoom_with_wheel(false);
+      case 'z' -> hdlg.settings.set_zoom_with_wheel(true);
+      default -> curr_return_state = super.key_typed(p_key_char);
     }
     return curr_return_state;
   }
 
-  public javax.swing.JPopupMenu get_popup_menu() {
+  @Override
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_move;
   }
 
+  @Override
   public String get_help_id() {
     return "MoveItemState";
   }
 
-  public void draw(java.awt.Graphics p_graphics) {
+  @Override
+  public void draw(Graphics p_graphics) {
     if (this.item_list == null) {
       return;
     }
@@ -464,7 +476,7 @@ public class MoveItemState extends InteractiveState {
       curr_item.draw(p_graphics, hdlg.graphics_context);
     }
     if (this.clearance_violations != null) {
-      java.awt.Color draw_color = hdlg.graphics_context.get_violations_color();
+      Color draw_color = hdlg.graphics_context.get_violations_color();
       for (ClearanceViolation curr_violation : this.clearance_violations) {
         hdlg.graphics_context.fill_area(curr_violation.shape, p_graphics, draw_color, 1);
       }

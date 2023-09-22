@@ -5,6 +5,7 @@ import app.freerouting.board.ConductionArea;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
@@ -14,10 +15,12 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Ellipse;
+import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Vector;
@@ -26,11 +29,13 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
+
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Functionality for interactive routing. */
 public class Route {
@@ -66,7 +71,7 @@ public class Route {
   private Collection<Item> target_traces_and_areas; // from traces and conduction areas
   private FloatPoint nearest_target_point;
   private Item nearest_target_item;
-  private Item shove_failing_obstacle = null;
+  private Item shove_failing_obstacle;
   /**
    * Starts routing a connection. p_pen_half_width_arr is provided because it may be different from
    * the half width array in p_board.rules.
@@ -307,19 +312,19 @@ public class Route {
   }
 
   /**
-   * Snaps to the center of an smd pin, if the location location on p_layer is inside an smd pin of
+   * Snaps to the center of a smd pin, if the location on p_layer is inside a smd pin of
    * the own net,
    */
   private boolean snap_to_smd_center(int p_layer) {
     ItemSelectionFilter selection_filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    java.util.Collection<Item> picked_items =
+    Collection<Item> picked_items =
         board.pick_items(this.prev_corner, p_layer, selection_filter);
-    app.freerouting.board.Pin found_smd_pin = null;
+    Pin found_smd_pin = null;
     for (Item curr_item : picked_items) {
-      if (curr_item instanceof app.freerouting.board.Pin
+      if (curr_item instanceof Pin
           && curr_item.shares_net_no(this.net_no_arr)) {
-        app.freerouting.board.Pin curr_pin = (app.freerouting.board.Pin) curr_item;
+        Pin curr_pin = (Pin) curr_item;
         if (curr_pin.first_layer() == p_layer && curr_pin.last_layer() == p_layer) {
           found_smd_pin = curr_pin;
           break;
@@ -367,7 +372,7 @@ public class Route {
     } else if (nearest_target_item instanceof ConductionArea) {
       connection_point = p_from_point;
     }
-    if (connection_point != null && connection_point instanceof IntPoint) {
+    if (connection_point instanceof IntPoint) {
       route_completed = connect(p_from_point, (IntPoint) connection_point);
     }
     return route_completed;
@@ -433,17 +438,17 @@ public class Route {
     return result;
   }
 
-  /** Returns all pins, which can be reached by a pin swap from a srtart or target pin. */
+  /** Returns all pins, which can be reached by a pin swap from a start or target pin. */
   private Set<SwapPinInfo> calculate_swap_pin_infos() {
-    Set<SwapPinInfo> result = new java.util.TreeSet<SwapPinInfo>();
+    Set<SwapPinInfo> result = new TreeSet<>();
     if (this.target_set == null) {
       return result;
     }
     for (Item curr_item : this.target_set) {
-      if (curr_item instanceof app.freerouting.board.Pin) {
-        Collection<app.freerouting.board.Pin> curr_swapppable_pins =
-            ((app.freerouting.board.Pin) curr_item).get_swappable_pins();
-        for (app.freerouting.board.Pin curr_swappable_pin : curr_swapppable_pins) {
+      if (curr_item instanceof Pin) {
+        Collection<Pin> curr_swappable_pins =
+            ((Pin) curr_item).get_swappable_pins();
+        for (Pin curr_swappable_pin : curr_swappable_pins) {
           result.add(new SwapPinInfo(curr_swappable_pin));
         }
       }
@@ -451,13 +456,13 @@ public class Route {
     // add the from item, if it is a pin
     ItemSelectionFilter selection_filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    java.util.Collection<Item> picked_items =
+    Collection<Item> picked_items =
         board.pick_items(this.prev_corner, this.layer, selection_filter);
     for (Item curr_item : picked_items) {
-      if (curr_item instanceof app.freerouting.board.Pin) {
-        Collection<app.freerouting.board.Pin> curr_swapppable_pins =
-            ((app.freerouting.board.Pin) curr_item).get_swappable_pins();
-        for (app.freerouting.board.Pin curr_swappable_pin : curr_swapppable_pins) {
+      if (curr_item instanceof Pin) {
+        Collection<Pin> curr_swappable_pins =
+            ((Pin) curr_item).get_swappable_pins();
+        for (Pin curr_swappable_pin : curr_swappable_pins) {
           result.add(new SwapPinInfo(curr_swappable_pin));
         }
       }
@@ -478,10 +483,10 @@ public class Route {
     if (curr_net == null) {
       return;
     }
-    java.awt.Color highlight_color = p_graphics_context.get_hilight_color();
+    Color highlight_color = p_graphics_context.get_hilight_color();
     double highligt_color_intensity = p_graphics_context.get_hilight_color_intensity();
 
-    // hilight the swapppable pins and their incompletes
+    // hilight the swappable pins and their incompletes
     for (SwapPinInfo curr_info : this.swap_pin_infos) {
       curr_info.pin.draw(
           p_graphics, p_graphics_context, highlight_color, 0.3 * highligt_color_intensity);
@@ -490,7 +495,7 @@ public class Route {
         FloatPoint[] draw_points = new FloatPoint[2];
         draw_points[0] = curr_info.incomplete.a;
         draw_points[1] = curr_info.incomplete.b;
-        java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
+        Color draw_color = p_graphics_context.get_incomplete_color();
         p_graphics_context.draw(draw_points, 1, draw_color, p_graphics, highligt_color_intensity);
       }
     }
@@ -515,7 +520,7 @@ public class Route {
         // trace_length_add is != 0 only in stitching mode.
         if (max_trace_length <= 0) {
           // max_trace_length not provided. Create an ellipse containing the whole board.
-          max_trace_length = 0.3 * app.freerouting.geometry.planar.Limits.CRIT_INT;
+          max_trace_length = 0.3 * Limits.CRIT_INT;
         }
         double curr_max_trace_length =
             max_trace_length - (curr_net.get_trace_length() + trace_length_add);
@@ -569,7 +574,7 @@ public class Route {
       FloatPoint[] draw_points = new FloatPoint[2];
       draw_points[0] = from_corner;
       draw_points[1] = nearest_target_point;
-      java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
+      Color draw_color = p_graphics_context.get_incomplete_color();
       double draw_width =
           Math.min(
               this.board.communication.get_resolution(Unit.MIL),
@@ -620,14 +625,12 @@ public class Route {
    * ConductionAreas in the target set.
    */
   private void calculate_target_points_and_areas() {
-    target_points = new LinkedList<TargetPoint>();
-    target_traces_and_areas = new LinkedList<Item>();
+    target_points = new LinkedList<>();
+    target_traces_and_areas = new LinkedList<>();
     if (target_set == null) {
       return;
     }
-    Iterator<Item> it = target_set.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : target_set) {
       if (curr_ob instanceof DrillItem) {
         Point curr_point = ((DrillItem) curr_ob).get_center();
         target_points.add(new TargetPoint(curr_point.to_float(), curr_ob));
@@ -648,7 +651,7 @@ public class Route {
     return layer_active[p_layer];
   }
 
-  /** The nearest point is used for drowing the incomplete */
+  /** The nearest point is used for drawing the incomplete */
   void calc_nearest_target_point(FloatPoint p_from_point) {
     double min_dist = Double.MAX_VALUE;
     FloatPoint nearest_point = null;
@@ -661,9 +664,7 @@ public class Route {
         nearest_item = curr_target_point.item;
       }
     }
-    Iterator<Item> it = target_traces_and_areas.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : target_traces_and_areas) {
       if (curr_item instanceof PolylineTrace) {
         PolylineTrace curr_trace = (PolylineTrace) curr_item;
         Polyline curr_polyline = curr_trace.polyline();
@@ -709,14 +710,14 @@ public class Route {
 
   /**
    * If the routed starts at a pin and the route failed with the normal trace width, another try
-   * with the smalllest pin width is done. Returns the ok_point of the try, which is
+   * with the smallest pin width is done. Returns the ok_point of the try, which is
    * this.prev_point, if the try failed.
    */
   private Point try_neckdown_at_start(IntPoint p_to_corner) {
-    if (!(this.start_item instanceof app.freerouting.board.Pin)) {
+    if (!(this.start_item instanceof Pin)) {
       return this.prev_corner;
     }
-    app.freerouting.board.Pin start_pin = (app.freerouting.board.Pin) this.start_item;
+    Pin start_pin = (Pin) this.start_item;
     if (!start_pin.is_on_layer(this.layer)) {
       return this.prev_corner;
     }
@@ -765,14 +766,14 @@ public class Route {
 
   /**
    * If the routed ends at a pin and the route failed with the normal trace width, another try with
-   * the smalllest pin width is done. Returns the ok_point of the try, which is p_from_corner, if
+   * the smallest pin width is done. Returns the ok_point of the try, which is p_from_corner, if
    * the try failed.
    */
   private Point try_neckdown_at_end(Point p_from_corner, Point p_to_corner) {
-    if (!(this.nearest_target_item instanceof app.freerouting.board.Pin)) {
+    if (!(this.nearest_target_item instanceof Pin)) {
       return p_from_corner;
     }
-    app.freerouting.board.Pin target_pin = (app.freerouting.board.Pin) this.nearest_target_item;
+    Pin target_pin = (Pin) this.nearest_target_item;
     if (!target_pin.is_on_layer(this.layer)) {
       return p_from_corner;
     }
@@ -820,10 +821,10 @@ public class Route {
 
   private class SwapPinInfo implements Comparable<SwapPinInfo> {
 
-    final app.freerouting.board.Pin pin;
-    app.freerouting.geometry.planar.FloatLine incomplete;
+    final Pin pin;
+    FloatLine incomplete;
 
-    SwapPinInfo(app.freerouting.board.Pin p_pin) {
+    SwapPinInfo(Pin p_pin) {
       pin = p_pin;
       incomplete = null;
       if (p_pin.is_connected() || p_pin.net_count() != 1) {
@@ -846,10 +847,11 @@ public class Route {
         }
       }
       if (nearest_point != null) {
-        incomplete = new app.freerouting.geometry.planar.FloatLine(pin_center, nearest_point);
+        incomplete = new FloatLine(pin_center, nearest_point);
       }
     }
 
+    @Override
     public int compareTo(SwapPinInfo p_other) {
       return this.pin.compareTo(p_other.pin);
     }

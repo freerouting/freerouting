@@ -15,7 +15,7 @@ public class WriteScopeParameter {
   final IdentifierType identifier_type;
   /**
    * Creates a new instance of WriteScopeParameter. If p_compat_mode is true, only standard
-   * speecctra dsb scopes are written, so that any host system with an specctra interface can read
+   * specctra dsb scopes are written, so that any host system with a specctra interface can read
    * them.
    */
   WriteScopeParameter(

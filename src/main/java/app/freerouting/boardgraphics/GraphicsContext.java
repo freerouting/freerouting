@@ -1,5 +1,6 @@
 package app.freerouting.boardgraphics;
 
+import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.Ellipse;
@@ -24,23 +25,28 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Locale;
 
 /** Context for drawing items in the board package to the screen. */
-public class GraphicsContext implements java.io.Serializable {
+public class GraphicsContext implements Serializable {
   private static final int update_offset = 10000;
   private static final boolean show_line_segments = false;
   private static final boolean show_area_division = false;
   public transient ItemColorTableModel item_color_table;
   public transient OtherColorTableModel other_color_table;
   public ColorIntensityTable color_intensity_table;
-  public CoordinateTransform coordinate_transform = null;
+  public CoordinateTransform coordinate_transform;
   /**
    * layer_visibility_arr[i] is between 0 and 1, for each layer i, 0 is invisible and 1 fully
    * visible.
    */
   private double[] layer_visibility_arr;
   /**
-   * The factor for autoomatic layer dimming of layers different from the current layer. Values are
+   * The factor for automatic layer dimming of layers different from the current layer. Values are
    * between 0 and 1. If 1, there is no automatic layer dimming.
    */
   private double auto_layer_dim_factor = 0.7;
@@ -50,8 +56,8 @@ public class GraphicsContext implements java.io.Serializable {
   public GraphicsContext(
       IntBox p_design_bounds,
       Dimension p_panel_bounds,
-      app.freerouting.board.LayerStructure p_layer_structure,
-      java.util.Locale p_locale) {
+      LayerStructure p_layer_structure,
+      Locale p_locale) {
     coordinate_transform = new CoordinateTransform(p_design_bounds, p_panel_bounds);
     item_color_table = new ItemColorTableModel(p_layer_structure, p_locale);
     other_color_table = new OtherColorTableModel(p_locale);
@@ -96,7 +102,7 @@ public class GraphicsContext implements java.io.Serializable {
 
   /**
    * Changes the bounds of the board design to p_design_bounds. Useful when components are still
-   * placed outside the boaed.
+   * placed outside the board.
    */
   public void change_design_bounds(IntBox p_new_design_bounds) {
     if (p_new_design_bounds.equals(this.coordinate_transform.design_box)) {
@@ -135,7 +141,7 @@ public class GraphicsContext implements java.io.Serializable {
     Rectangle clip_shape = p_g.getClip().getBounds();
     // the class member update_box cannot be used here, because
     // the dirty rectangle is internally enlarged by the system.
-    // Therefore we can not improve the performance by using an
+    // Therefore, we can not improve the performance by using an
     // update octagon instead of a box.
     IntBox clip_box = coordinate_transform.screen_to_board(clip_shape);
     double scaled_width = coordinate_transform.board_to_screen(p_half_width);
@@ -151,7 +157,7 @@ public class GraphicsContext implements java.io.Serializable {
     for (int i = 0; i < (p_points.length - 1); i++) {
       if (line_outside_update_box(
           p_points[i], p_points[i + 1], p_half_width + update_offset, clip_box)) {
-        // this check should be unnessersary here,
+        // this check should be unnecessary here,
         // the system should do it in the draw(line) function
         continue;
       }
@@ -297,12 +303,12 @@ public class GraphicsContext implements java.io.Serializable {
   }
 
   /**
-   * Draws the interior of an array of ellipses. Ellipses contained in an other ellipse are treated
+   * Draws the interior of an array of ellipses. Ellipses contained in another ellipse are treated
    * as holes.
    */
   public void fill_ellipse_arr(
       Ellipse[] p_ellipse_arr, Graphics p_g, Color p_color, double p_translucency_factor) {
-    if (p_color == null || p_ellipse_arr.length <= 0) {
+    if (p_color == null || p_ellipse_arr.length == 0) {
       return;
     }
     GeneralPath draw_path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
@@ -442,7 +448,7 @@ public class GraphicsContext implements java.io.Serializable {
           corners[j] = curr_tile.corner_approx(j);
         }
         corners[corners.length - 1] = corners[0];
-        draw(corners, 1, java.awt.Color.white, p_g, 0.7);
+        draw(corners, 1, Color.white, p_g, 0.7);
       }
     }
   }
@@ -591,7 +597,7 @@ public class GraphicsContext implements java.io.Serializable {
         ColorIntensityTable.ObjectNames.LENGTH_MATCHING_AREAS.ordinal(), p_value);
   }
 
-  public java.awt.Dimension get_panel_size() {
+  public Dimension get_panel_size() {
     return coordinate_transform.screen_bounds;
   }
 
@@ -602,7 +608,7 @@ public class GraphicsContext implements java.io.Serializable {
   }
 
   /** Returns the bounding box of the design in screen coordinates. */
-  public java.awt.Rectangle get_design_bounds() {
+  public Rectangle get_design_bounds() {
     return coordinate_transform.board_to_screen(coordinate_transform.design_box);
   }
 
@@ -638,7 +644,7 @@ public class GraphicsContext implements java.io.Serializable {
     return result;
   }
 
-  /** Gets the visibility factor of the input layer without the aoutomatic layer dimming. */
+  /** Gets the visibility factor of the input layer without the automatic layer dimming. */
   public double get_raw_layer_visibility(int p_layer_no) {
     return layer_visibility_arr[p_layer_no];
   }
@@ -668,7 +674,7 @@ public class GraphicsContext implements java.io.Serializable {
 
   /**
    * filter lines, which cannot touch the update_box to improve the performance of the draw function
-   * by avoiding unnessesary calls of draw (line)
+   * by avoiding unnecessary calls of draw (line)
    */
   private boolean line_outside_update_box(
       FloatPoint p_1, FloatPoint p_2, double p_update_offset, IntBox p_update_box) {
@@ -688,15 +694,15 @@ public class GraphicsContext implements java.io.Serializable {
   }
 
   /** Writes an instance of this class to a file. */
-  private void writeObject(java.io.ObjectOutputStream p_stream) throws java.io.IOException {
+  private void writeObject(ObjectOutputStream p_stream) throws IOException {
     p_stream.defaultWriteObject();
     item_color_table.write_object(p_stream);
     other_color_table.write_object(p_stream);
   }
 
   /** Reads an instance of this class from a file */
-  private void readObject(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  private void readObject(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     this.item_color_table = new ItemColorTableModel(p_stream);
     this.other_color_table = new OtherColorTableModel(p_stream);

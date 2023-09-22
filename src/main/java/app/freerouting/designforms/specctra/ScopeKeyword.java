@@ -2,6 +2,8 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+
 /** Keywords defining a scope object */
 public class ScopeKeyword extends Keyword {
   public ScopeKeyword(String p_name) {
@@ -9,13 +11,13 @@ public class ScopeKeyword extends Keyword {
   }
 
   /**
-   * Scips the current scope while reading a dsn file. Returns false, if no legal scope was found.
+   * Skips the current scope while reading a dsn file. Returns false, if no legal scope was found.
    */
   public static boolean skip_scope(IJFlexScanner p_scanner) {
     int open_bracked_count = 1;
     while (open_bracked_count > 0) {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-      Object curr_token = null;
+      Object curr_token;
       try {
         curr_token = p_scanner.next_token();
       } catch (Exception e) {
@@ -41,7 +43,7 @@ public class ScopeKeyword extends Keyword {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
       }

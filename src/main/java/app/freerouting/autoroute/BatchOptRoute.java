@@ -11,9 +11,13 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Optimizes routes using a single thread on a board that has completed auto-routing. */
 public class BatchOptRoute {
@@ -21,11 +25,11 @@ public class BatchOptRoute {
   protected static int MAX_AUTOROUTE_PASSES = 6;
   protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
   protected final InteractiveActionThread thread;
-  protected boolean clone_board = false;
+  protected boolean clone_board;
   protected RoutingBoard routing_board;
   protected ReadSortedRouteItems sorted_route_items;
   protected boolean
-      use_increased_ripup_costs; // in the first passes the ripup costs are icreased for better
+      use_increased_ripup_costs; // in the first passes the ripup costs are increased for better
                                  // performance.
   protected double min_cumulative_trace_length_before = 0;
 
@@ -40,7 +44,6 @@ public class BatchOptRoute {
 
     this.routing_board =
         p_clone_board ? p_thread.hdlg.deep_copy_routing_board() : p_thread.hdlg.get_routing_board();
-    this.sorted_route_items = null;
   }
 
   static boolean contains_only_unfixed_traces(Collection<Item> p_item_list) {
@@ -58,7 +61,7 @@ public class BatchOptRoute {
    */
   protected static double calc_weighted_trace_length(RoutingBoard p_board) {
     double result = 0;
-    int default_clearance_class = app.freerouting.rules.BoardRules.default_clearance_class();
+    int default_clearance_class = BoardRules.default_clearance_class();
     Iterator<UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
     for (; ; ) {
       UndoableObjects.Storable curr_item = p_board.item_list.read_object(it);
@@ -125,13 +128,14 @@ public class BatchOptRoute {
    * the amount of improvements is made in percentage (expressed between 0.0 and 1.0). -1 if the
    * routing must go on no matter how much it improved.
    */
-  protected float opt_route_pass(int p_pass_no, boolean p_with_prefered_directions) {
+  protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
     float route_improved = 0.0f;
     int via_count_before = this.routing_board.get_vias().size();
     double trace_length_before =
         this.thread.hdlg.coordinate_transform.board_to_user(
             this.routing_board.cumulative_trace_length());
-    this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before);
+    this.thread.hdlg.screen_messages.set_post_route_info(
+        via_count_before, trace_length_before, this.thread.hdlg.coordinate_transform.user_unit);
     this.sorted_route_items = new ReadSortedRouteItems();
     this.min_cumulative_trace_length_before = calc_weighted_trace_length(routing_board);
     String optimizationPassId =
@@ -154,7 +158,7 @@ public class BatchOptRoute {
       if (curr_item == null) {
         break;
       }
-      if (opt_route_item(curr_item, p_pass_no, p_with_prefered_directions).improved()) {
+      if (opt_route_item(curr_item, p_pass_no, p_with_preferred_directions).improved()) {
         int via_count_after = this.routing_board.get_vias().size();
         double trace_length_after =
             this.thread.hdlg.coordinate_transform.board_to_user(
@@ -191,9 +195,9 @@ public class BatchOptRoute {
 
   /** Try to improve the route by re-routing the connections containing p_item. */
   protected ItemRouteResult opt_route_item(
-      Item p_item, int p_pass_no, boolean p_with_prefered_directions) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+      Item p_item, int p_pass_no, boolean p_with_preferred_directions) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
     String start_message =
         resources.getString("batch_optimizer")
@@ -201,7 +205,7 @@ public class BatchOptRoute {
             + resources.getString("stop_message")
             + "        "
             + resources.getString("routeoptimizer_pass")
-            + (Integer.valueOf(p_pass_no)).toString();
+            + p_pass_no;
     this.thread.hdlg.screen_messages.set_status_message(
         start_message); // assume overwriting messages is harmless
 
@@ -210,7 +214,7 @@ public class BatchOptRoute {
     int incomplete_count_before = this.get_ratsnest().incomplete_count();
 
     int via_count_before = this.routing_board.get_vias().size();
-    Set<Item> ripped_items = new java.util.TreeSet<Item>();
+    Set<Item> ripped_items = new TreeSet<>();
     ripped_items.add(p_item);
     if (p_item instanceof Trace) {
       // add also the fork items, especially because not all fork items may be
@@ -224,7 +228,7 @@ public class BatchOptRoute {
         curr_contact_list = curr_trace.get_end_contacts();
       }
     }
-    Set<Item> ripped_connections = new java.util.TreeSet<Item>();
+    Set<Item> ripped_connections = new TreeSet<>();
     for (Item curr_item : ripped_items) {
       ripped_connections.addAll(curr_item.get_connection_items(Item.StopConnectionOption.NONE));
     }
@@ -256,7 +260,7 @@ public class BatchOptRoute {
         this.thread,
         MAX_AUTOROUTE_PASSES,
         ripup_costs,
-        p_with_prefered_directions,
+        p_with_preferred_directions,
         this.clone_board ? this.routing_board : null);
 
     this.remove_ratsnest();
@@ -284,8 +288,8 @@ public class BatchOptRoute {
         this.min_cumulative_trace_length_before = trace_length_after;
       } else {
         // Only cumulative trace length shortened.
-        // Catch unexpected increase of cumulative trace length somewhere for examole by removing
-        // acid trapsw.
+        // Catch unexpected increase of cumulative trace length somewhere for example by removing
+        // acid traps.
         this.min_cumulative_trace_length_before =
             Math.min(this.min_cumulative_trace_length_before, trace_length_after);
       }
@@ -297,7 +301,8 @@ public class BatchOptRoute {
       double new_trace_length =
           this.thread.hdlg.coordinate_transform.board_to_user(
               this.routing_board.cumulative_trace_length());
-      this.thread.hdlg.screen_messages.set_post_route_info(via_count_after, new_trace_length);
+      this.thread.hdlg.screen_messages.set_post_route_info(
+          via_count_after, new_trace_length, this.thread.hdlg.coordinate_transform.user_unit);
     } else {
       if (!this.clone_board) {
         routing_board.undo(null);

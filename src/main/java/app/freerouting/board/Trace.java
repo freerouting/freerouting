@@ -1,17 +1,21 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.Drawable;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import app.freerouting.rules.Net;
+import app.freerouting.rules.Nets;
+
+import java.awt.Color;
+import java.io.Serializable;
+import java.util.*;
 
 /** Class describing functionality required for traces in the plane. */
-public abstract class Trace extends Item implements Connectable, java.io.Serializable {
+public abstract class Trace extends Item implements Connectable, Serializable {
 
   private final int half_width; // half width of the trace pen
   private int layer; // board layer of the trace
@@ -40,10 +44,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
   /** returns the last corner of the trace */
   public abstract Point last_corner();
 
+  @Override
   public int first_layer() {
     return this.layer;
   }
 
+  @Override
   public int last_layer() {
     return this.layer;
   }
@@ -65,15 +71,14 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
 
   /**
    * Returns the half with enlarged by the clearance compensation value for the tree with id number
-   * p_ttree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
+   * p_tree_id_no Equals get_half_width(), if no clearance compensation is used in this tree.
    */
   public int get_compensated_half_width(ShapeSearchTree p_search_tree) {
-    int result =
-        this.half_width
+    return this.half_width
             + p_search_tree.clearance_compensation_value(clearance_class_no(), this.layer);
-    return result;
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other == this
         || p_other instanceof ViaObstacleArea
@@ -102,12 +107,14 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return get_normal_contacts(last_corner(), false);
   }
 
+  @Override
   public Point normal_contact_point(Item p_other) {
     return p_other.normal_contact_point(this);
   }
 
+  @Override
   public Set<Item> get_normal_contacts() {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     Point start_corner = this.first_corner();
     if (start_corner != null) {
       result.addAll(get_normal_contacts(start_corner, false));
@@ -119,31 +126,36 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   public boolean is_routable() {
     return !is_user_fixed() && (this.net_count() > 0);
   }
 
   /** Returns true, if this trace is not contacted at its first or at its last point. */
+  @Override
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_start_contacts();
-    if (contact_list.size() == 0) {
+    if (contact_list.isEmpty()) {
       return true;
     }
     contact_list = this.get_end_contacts();
-    return (contact_list.size() == 0);
+    return (contact_list.isEmpty());
   }
 
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+  @Override
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_trace_colors(this.is_user_fixed());
   }
 
+  @Override
   public int get_draw_priority() {
-    return app.freerouting.boardgraphics.Drawable.MAX_DRAW_PRIORITY;
+    return Drawable.MAX_DRAW_PRIORITY;
   }
 
+  @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_trace_color_intensity();
   }
 
@@ -155,11 +167,11 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
   public Set<Item> get_normal_contacts(Point p_point, boolean p_ignore_net) {
     if (p_point == null
         || !(p_point.equals(this.first_corner()) || p_point.equals(this.last_corner()))) {
-      return new TreeSet<Item>();
+      return new TreeSet<>();
     }
     TileShape search_shape = TileShape.get_instance(p_point);
     Set<SearchTreeObject> overlaps = board.overlapping_objects(search_shape, this.layer);
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_ob : overlaps) {
       if (!(curr_ob instanceof Item)) {
         continue;
@@ -190,10 +202,12 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   Point normal_contact_point(DrillItem p_drill_item) {
     return p_drill_item.normal_contact_point(this);
   }
 
+  @Override
   Point normal_contact_point(Trace p_other) {
     if (this.layer != p_other.layer) {
       return null;
@@ -218,35 +232,32 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
+  @Override
   public boolean is_drillable(int p_net_no) {
     return this.contains_net(p_net_no);
   }
 
-  /** looks, if this trace is connectet to the same object at its start and its end point */
+  /** looks, if this trace is connected to the same object at its start and its end point */
+  @Override
   public boolean is_overlap() {
     Set<Item> start_contacts = this.get_start_contacts();
     Set<Item> end_contacts = this.get_end_contacts();
-    Iterator<Item> it = end_contacts.iterator();
-    while (it.hasNext()) {
-      if (start_contacts.contains(it.next())) {
-        return true;
-      }
-    }
-    return false;
+    return !Collections.disjoint(start_contacts, end_contacts);
   }
 
   /**
    * Returns true, if it is not allowed to change the location of this item by the push algorithm.
    */
+  @Override
   public boolean is_shove_fixed() {
     if (super.is_shove_fixed()) {
       return true;
     }
 
     // check, if the trace  belongs to a net, which is not shovable.
-    app.freerouting.rules.Nets nets = this.board.rules.nets;
+    Nets nets = this.board.rules.nets;
     for (int curr_net_no : this.net_no_arr) {
-      if (app.freerouting.rules.Nets.is_normal_net_no(curr_net_no)) {
+      if (Nets.is_normal_net_no(curr_net_no)) {
         if (nets.get(curr_net_no).get_class().is_shove_fixed()) {
           return true;
         }
@@ -276,19 +287,16 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     if (this.is_overlap()) {
       return true;
     }
-    Set<Item> visited_items = new TreeSet<Item>();
     Collection<Item> start_contacts = this.get_start_contacts();
     // a cycle exists if through expanding the start contact we reach
     // this trace again via an end contact
-    for (Item curr_contact : start_contacts) {
-      // make shure, that all direct neighbours are
-      // expanded from here, to block coming back to
-      // this trace via a start contact.
-      visited_items.add(curr_contact);
-    }
+    // make sure, that all direct neighbours are
+    // expanded from here, to block coming back to
+    // this trace via a start contact.
+    Set<Item> visited_items = new TreeSet<>(start_contacts);
     boolean ignore_areas = false;
     if (this.net_no_arr.length > 0) {
-      app.freerouting.rules.Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
+      Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
       if (curr_net != null && curr_net.get_class() != null) {
         ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
       }
@@ -301,13 +309,15 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return false;
   }
 
+  @Override
   public int shape_layer(int p_index) {
     return layer;
   }
 
+  @Override
   public Point[] get_ratsnest_corners() {
-    // Use only uncontacted enpoints of the trace.
-    // Otherwise the allocated memory in the calculation of the incompletes might become very big.
+    // Use only uncontacted endpoints of the trace.
+    // Otherwise, the allocated memory in the calculation of the incompletes might become very big.
     int stub_count = 0;
     boolean stub_at_start = false;
     boolean stub_at_end = false;
@@ -343,6 +353,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
    */
   public abstract boolean check_connection_to_pin(boolean p_at_start);
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -355,7 +366,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
    * traps.
    */
   Set<Pin> touching_pins_at_end_corners() {
-    Set<Pin> result = new TreeSet<Pin>();
+    Set<Pin> result = new TreeSet<>();
     if (this.board == null) {
       return result;
     }
@@ -376,9 +387,10 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     return result;
   }
 
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("trace"));
     p_window.append(" " + resources.getString("from") + " ");
     p_window.append(this.first_corner().to_float());
@@ -394,6 +406,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
     p_window.newline();
   }
 
+  @Override
   public boolean validate() {
     boolean result = super.validate();
 
@@ -405,7 +418,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
   }
 
   /**
-   * looks, if this trace can be combined with other traces . Returns true, if somthing has been
+   * looks, if this trace can be combined with other traces . Returns true, if something has been
    * combined.
    */
   abstract boolean combine();
@@ -414,7 +427,7 @@ public abstract class Trace extends Item implements Connectable, java.io.Seriali
    * Looks up traces intersecting with this trace and splits them at the intersection points. In
    * case of an overlaps, the traces are split at their first and their last common point. Returns
    * the pieces resulting from splitting. If nothing is split, the result will contain just this
-   * Trace. If p_clip_shape != null, the split may be resticted to p_clip_shape.
+   * Trace. If p_clip_shape != null, the split may be restricted to p_clip_shape.
    */
   public abstract Collection<PolylineTrace> split(IntOctagon p_clip_shape);
 

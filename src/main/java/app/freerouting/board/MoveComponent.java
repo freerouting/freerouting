@@ -6,6 +6,8 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +22,7 @@ public class MoveComponent {
   private final RoutingBoard board;
   private boolean all_items_movable = true;
   private SortedItem[] item_group_arr;
-  private Component component = null;
+  private Component component;
   /** Creates a new instance of MoveItemGroup */
   public MoveComponent(
       Item p_item,
@@ -43,10 +45,10 @@ public class MoveComponent {
       item_group_list = board.get_component_items(component_no);
       this.component = board.components.get(component_no);
     } else {
-      item_group_list = new LinkedList<Item>();
+      item_group_list = new LinkedList<>();
       item_group_list.add(p_item);
     }
-    Collection<FloatPoint> item_centers = new LinkedList<FloatPoint>();
+    Collection<FloatPoint> item_centers = new LinkedList<>();
     for (Item curr_item : item_group_list) {
       boolean curr_item_movable =
           !curr_item.is_user_fixed()
@@ -88,7 +90,7 @@ public class MoveComponent {
     }
     // sort the items, in the direction of p_translate_vector, so that
     // the items in front come first.
-    java.util.Arrays.sort(item_group_arr);
+    Arrays.sort(item_group_arr);
   }
 
   /**
@@ -100,7 +102,7 @@ public class MoveComponent {
       return false;
     }
     TimeLimit time_limit = new TimeLimit(CHECK_TIME_LIMIT);
-    Collection<Item> ignore_items = new LinkedList<Item>();
+    Collection<Item> ignore_items = new LinkedList<>();
     for (int i = 0; i < item_group_arr.length; ++i) {
       boolean move_ok;
       if (item_group_arr[i].item instanceof DrillItem) {
@@ -140,9 +142,9 @@ public class MoveComponent {
       return false;
     }
     if (this.component != null) {
-      // component must be moved first, so that the new pin shapes are calculeted correctly
+      // component must be moved first, so that the new pin shapes are calculated correctly
       board.components.move(this.component.no, translate_vector);
-      // let the observers syncronize the moving
+      // let the observers synchronize the moving
       board.communication.observers.notify_moved(this.component);
     }
     for (int i = 0; i < item_group_arr.length; ++i) {
@@ -185,6 +187,7 @@ public class MoveComponent {
       projection = p_projection;
     }
 
+    @Override
     public int compareTo(SortedItem p_other) {
       return Signum.as_int(this.projection - p_other.projection);
     }

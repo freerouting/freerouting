@@ -8,7 +8,7 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.LinkedList;
 
 /** Auxiliary class used by the shove functions */
 public class ShapeTraceEntries {
@@ -24,7 +24,7 @@ public class ShapeTraceEntries {
   private int trace_piece_count;
   private int max_stack_level;
   private boolean shape_contains_trace_tails = false;
-  private Item found_obstacle = null;
+  private Item found_obstacle;
 
   /**
    * Used for shoving traces and vias out of the input shape. p_from_side.no is the side of p_shape,
@@ -46,7 +46,7 @@ public class ShapeTraceEntries {
     list_anchor = null;
     trace_piece_count = 0;
     max_stack_level = 0;
-    shove_via_list = new java.util.LinkedList<Via>();
+    shove_via_list = new LinkedList<>();
   }
 
   public static void cutout_trace(PolylineTrace p_trace, ConvexShape p_shape, int p_cl_class) {
@@ -144,6 +144,7 @@ public class ShapeTraceEntries {
       for (int curr_net_no_2 : p_net_nos_2) {
         if (curr_net_no_1 == curr_net_no_2) {
           net_no_found = true;
+          break;
         }
       }
       if (!net_no_found) {
@@ -160,10 +161,7 @@ public class ShapeTraceEntries {
    */
   boolean store_items(
       Collection<Item> p_item_list, boolean p_is_pad_check, boolean p_copper_sharing_allowed) {
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
-
+    for (Item curr_item : p_item_list) {
       if (!p_is_pad_check && curr_item instanceof ViaObstacleArea
           || curr_item instanceof ComponentObstacleArea) {
         continue;
@@ -210,7 +208,7 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * calculates the next substitute trace piece. Returns null at he end of the substitute trace
+   * calculates the next substitute trace piece. Returns null at the end of the substitute trace
    * list.
    */
   PolylineTrace next_substitute_trace_piece() {
@@ -242,7 +240,7 @@ public class ShapeTraceEntries {
     piece_lines[0] = entries[0].trace.polyline().arr[entries[0].trace_line_no];
     // end with the intersecting line of the trace at the end entry
     piece_lines[piece_lines.length - 1] = entries[1].trace.polyline().arr[entries[1].trace_line_no];
-    // fill the interiour lines of piece_lines with the appropriate edge
+    // fill the interior lines of piece_lines with the appropriate edge
     // lines of the offset shape
     int curr_edge_no = entries[0].edge_no % edge_count;
     for (int i = 1; i < piece_lines.length - 1; ++i) {
@@ -281,7 +279,7 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Looks if an unconnected endpoint of a trace of a foreign net is contained in the interiour of
+   * Looks if an unconnected endpoint of a trace of a foreign net is contained in the interior of
    * the shape.
    */
   public boolean trace_tails_in_shape() {
@@ -293,9 +291,7 @@ public class ShapeTraceEntries {
    * p_except_net_no are ignored
    */
   void cutout_traces(Collection<Item> p_item_list) {
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       if (curr_item instanceof PolylineTrace && !curr_item.shares_net_no(this.own_net_nos)) {
         cutout_trace((PolylineTrace) curr_item, this.shape, this.cl_class);
       }
@@ -339,7 +335,7 @@ public class ShapeTraceEntries {
       insert_entry_point(p_trace, entry_tuple[0], entry_tuple[1], entry_approx);
     }
 
-    // Look, if an end point of the trace lies in the interiour of
+    // Look, if an end point of the trace lies in the interior of
     // the shape. This may be the case, if a via touches the shape
 
     if (!p_trace.shares_net_no(own_net_nos)) {
@@ -359,9 +355,7 @@ public class ShapeTraceEntries {
           boolean store_end_corner = true;
 
           // check for contact object, which is not shovable
-          Iterator<Item> it = contact_list.iterator();
-          while (it.hasNext()) {
-            Item contact_item = it.next();
+          for (Item contact_item : contact_list) {
             if (!contact_item.is_routable()) {
               this.found_obstacle = contact_item;
               return false;
@@ -409,7 +403,7 @@ public class ShapeTraceEntries {
             {
               int projection_side = offset_shape.contains_on_border_line_no(projection);
               int trace_line_segment_no;
-              // the following may not be correct because the trace may not conntain a suitable
+              // the following may not be correct because the trace may not contain a suitable
               // line for the construction oof the end line of the substitute trace.
               if (i == 0) {
                 trace_line_segment_no = 0;
@@ -609,7 +603,7 @@ public class ShapeTraceEntries {
       // set stack level for all entries of the current net;
       EntryPoint check_entry = curr_entry.next;
       int index_of_next_foreign_set = 0;
-      int index_of_last_occurance_of_set = 0;
+      int index_of_last_occurrence_of_set = 0;
       int next_index = 0;
       EntryPoint last_own_entry = null;
       EntryPoint first_foreign_entry = null;
@@ -618,32 +612,32 @@ public class ShapeTraceEntries {
         ++next_index;
         int[] check_net_nos = check_entry.trace.net_no_arr;
         if (net_nos_equal(check_net_nos, curr_net_nos)) {
-          index_of_last_occurance_of_set = next_index;
+          index_of_last_occurrence_of_set = next_index;
           last_own_entry = check_entry;
           check_entry.stack_level = curr_entry.stack_level;
         } else if (index_of_next_foreign_set == 0) {
-          // first occurance of a foreign connected set
+          // first occurrence of a foreign connected set
           index_of_next_foreign_set = next_index;
           first_foreign_entry = check_entry;
         }
         check_entry = check_entry.next;
       }
-      EntryPoint next_entry = null;
+      EntryPoint next_entry;
 
       if (next_index != 0) {
         if (index_of_next_foreign_set != 0
-            && index_of_next_foreign_set < index_of_last_occurance_of_set)
+            && index_of_next_foreign_set < index_of_last_occurrence_of_set)
         // raise level
         {
           next_entry = first_foreign_entry;
           if (next_entry.stack_level >= 0) // already calculated
           {
-            // stack property failes
+            // stack property fails
             return false;
           }
           ++curr_level;
         } else {
-          if (index_of_last_occurance_of_set != 0) {
+          if (index_of_last_occurrence_of_set != 0) {
             next_entry = last_own_entry;
           } else {
             next_entry = first_foreign_entry;
@@ -677,7 +671,7 @@ public class ShapeTraceEntries {
   }
 
   /**
-   * Pops the next piece with minimal level from the imtersection list Returns null, if the stack is
+   * Pops the next piece with minimal level from the intersection list Returns null, if the stack is
    * empty. The returned array has 2 elements. The first is the first entry point, and the second is
    * the last entry point of the minimal level.
    */
@@ -691,10 +685,7 @@ public class ShapeTraceEntries {
     EntryPoint first = list_anchor;
     EntryPoint prev_first = null;
 
-    while (first != null) {
-      if (first.stack_level == this.max_stack_level) {
-        break;
-      }
+    while (first != null && first.stack_level != this.max_stack_level) {
       prev_first = first;
       first = first.next;
     }
@@ -707,10 +698,9 @@ public class ShapeTraceEntries {
     EntryPoint last = first;
     EntryPoint after_last = first.next;
 
-    while (after_last != null) {
-      if (after_last.stack_level != max_stack_level || !after_last.trace.nets_equal(first.trace)) {
-        break;
-      }
+    while (after_last != null
+        && after_last.stack_level == max_stack_level
+        && after_last.trace.nets_equal(first.trace)) {
       last = after_last;
       after_last = last.next;
     }

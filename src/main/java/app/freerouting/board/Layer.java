@@ -1,12 +1,14 @@
 package app.freerouting.board;
 
+import java.io.Serializable;
+
 /** Describes the structure of a board layer. */
-public class Layer implements java.io.Serializable {
+public class Layer implements Serializable {
 
   /** The name of the layer. */
   public final String name;
   /**
-   * True, if this is a signal layer, which can be used for routing. Otherwise it may be for example
+   * True, if this is a signal layer, which can be used for routing. Otherwise, it may be for example
    * a power ground layer.
    */
   public final boolean is_signal;
@@ -17,6 +19,7 @@ public class Layer implements java.io.Serializable {
     is_signal = p_is_signal;
   }
 
+  @Override
   public String toString() {
     return name;
   }

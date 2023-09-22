@@ -1,6 +1,8 @@
 package app.freerouting.datastructures;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
@@ -39,6 +41,7 @@ public class IdentifierType {
       for (String reserved_char : reserved_chars) {
         if (p_name.contains(reserved_char)) {
           need_quotes = true;
+          break;
         }
       }
 
@@ -46,6 +49,7 @@ public class IdentifierType {
       for (byte ch : p_name.getBytes(StandardCharsets.UTF_8)) {
         if (ch <= 0) {
           need_quotes = true;
+          break;
         }
       }
 
@@ -56,7 +60,7 @@ public class IdentifierType {
 
       // always put quotes around the identifiers even if they don't have illegal characters
       p_file.write(p_name);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.warn("IdentifierType.write: unable to write to file");
     }
   }

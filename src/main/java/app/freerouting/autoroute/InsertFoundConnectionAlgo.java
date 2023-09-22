@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.ForcedViaAlgo;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
@@ -14,7 +15,8 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
-import java.util.Iterator;
+
+import java.util.Arrays;
 import java.util.Set;
 
 /** Inserts the traces and vias of the connection found by the autoroute algorithm. */
@@ -22,8 +24,8 @@ public class InsertFoundConnectionAlgo {
 
   private final RoutingBoard board;
   private final AutorouteControl ctrl;
-  private IntPoint last_corner = null;
-  private IntPoint first_corner = null;
+  private IntPoint last_corner;
+  private IntPoint first_corner;
 
   /** Creates a new instance of InsertFoundConnectionAlgo */
   private InsertFoundConnectionAlgo(RoutingBoard p_board, AutorouteControl p_ctrl) {
@@ -42,10 +44,7 @@ public class InsertFoundConnectionAlgo {
     }
     int curr_layer = p_connection.target_layer;
     InsertFoundConnectionAlgo new_instance = new InsertFoundConnectionAlgo(p_board, p_ctrl);
-    Iterator<LocateFoundConnectionAlgoAnyAngle.ResultItem> it =
-        p_connection.connection_items.iterator();
-    while (it.hasNext()) {
-      LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item = it.next();
+    for (LocateFoundConnectionAlgoAnyAngle.ResultItem curr_new_item : p_connection.connection_items) {
       if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer)) {
         return null;
       }
@@ -104,9 +103,9 @@ public class InsertFoundConnectionAlgo {
     double saved_edge_to_turn_dist = board.rules.get_pin_edge_to_turn_dist();
     board.rules.set_pin_edge_to_turn_dist(-1);
 
-    // Look for pins att the start and the end of p_trace in case that neckdown is necessecary.
-    app.freerouting.board.Pin start_pin = null;
-    app.freerouting.board.Pin end_pin = null;
+    // Look for pins att the start and the end of p_trace in case that neckdown is necessary.
+    Pin start_pin = null;
+    Pin end_pin = null;
     if (ctrl.with_neckdown) {
       ItemSelectionFilter item_filter =
           new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
@@ -114,7 +113,7 @@ public class InsertFoundConnectionAlgo {
       for (int i = 0; i < 2; ++i) {
         Set<Item> picked_items = this.board.pick_items(curr_end_corner, p_trace.layer, item_filter);
         for (Item curr_item : picked_items) {
-          app.freerouting.board.Pin curr_pin = (app.freerouting.board.Pin) curr_item;
+          Pin curr_pin = (Pin) curr_item;
           if (curr_pin.contains_net(ctrl.net_no) && curr_pin.get_center().equals(curr_end_corner)) {
             if (i == 0) {
               start_pin = curr_pin;
@@ -131,10 +130,7 @@ public class InsertFoundConnectionAlgo {
 
     int from_corner_no = 0;
     for (int i = 1; i < p_trace.corners.length; ++i) {
-      Point[] curr_corner_arr = new Point[i - from_corner_no + 1];
-      for (int j = from_corner_no; j <= i; ++j) {
-        curr_corner_arr[j - from_corner_no] = p_trace.corners[j];
-      }
+      Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
       Point ok_point =
           board.insert_forced_trace_polyline(
@@ -203,8 +199,8 @@ public class InsertFoundConnectionAlgo {
       Point p_from_corner,
       Point p_to_corner,
       int p_layer,
-      app.freerouting.board.Pin p_start_pin,
-      app.freerouting.board.Pin p_end_pin) {
+      Pin p_start_pin,
+      Pin p_end_pin) {
     if (p_start_pin != null) {
       Point ok_point = try_neck_down(p_to_corner, p_from_corner, p_layer, p_start_pin, true);
       if (ok_point == p_from_corner) {
@@ -222,7 +218,7 @@ public class InsertFoundConnectionAlgo {
       Point p_from_corner,
       Point p_to_corner,
       int p_layer,
-      app.freerouting.board.Pin p_pin,
+      Pin p_pin,
       boolean p_at_start) {
     if (!p_pin.is_on_layer(p_layer)) {
       return null;

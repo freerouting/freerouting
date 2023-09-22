@@ -15,7 +15,7 @@ class ItemSearchTreesInfo {
 
   /** Creates a new instance of ItemSearchTreeEntries */
   public ItemSearchTreesInfo() {
-    this.tree_list = new LinkedList<SearchTreeInfo>();
+    this.tree_list = new LinkedList<>();
   }
 
   /**
@@ -45,8 +45,8 @@ class ItemSearchTreesInfo {
   }
 
   /**
-   * Returns the precalculated tiles hapes for the tree with identification number p_tree_no, or
-   * null, if the tile shapes of this tree are nnot yet precalculated.
+   * Returns the precalculated tiles shapes for the tree with identification number p_tree_no, or
+   * null, if the tile shapes of this tree are not yet precalculated.
    */
   public TileShape[] get_precalculated_tree_shapes(ShapeTree p_tree) {
     for (SearchTreeInfo curr_tree_info : this.tree_list) {

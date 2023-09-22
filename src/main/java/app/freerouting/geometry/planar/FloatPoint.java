@@ -2,11 +2,15 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Implements a point in the plane as a tuple of double's. Because arithmetic calculations with
  * doubles are in general not exact, FloatPoint is not derived from the abstract class Point.
  */
-public class FloatPoint implements java.io.Serializable {
+public class FloatPoint implements Serializable {
 
   public static final FloatPoint ZERO = new FloatPoint(0, 0);
   /** the x coordinate of this point */
@@ -14,7 +18,7 @@ public class FloatPoint implements java.io.Serializable {
   /** the y coordinate of this point */
   public final double y;
 
-  /** creates an instance of class FloatPoint from two double's, */
+  /** creates an instance of class FloatPoint from two doubles, */
   public FloatPoint(double p_x, double p_y) {
     x = p_x;
     y = p_y;
@@ -90,8 +94,7 @@ public class FloatPoint implements java.io.Serializable {
     double delta_y = this.y - p_other.y;
     delta_x *= p_horizontal_weight;
     delta_y *= p_vertical_weight;
-    double result = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
-    return result;
+    return Math.sqrt(delta_x * delta_x + delta_y * delta_y);
   }
 
   /** rounds the coordinates from an object of class Point_double to an object of class IntPoint */
@@ -191,7 +194,7 @@ public class FloatPoint implements java.io.Serializable {
     return line.perpendicular_projection(this);
   }
 
-  /** Calculates the scalar prodct of (p_1 - this). with (p_2 - this). */
+  /** Calculates the scalar product of (p_1 - this). with (p_2 - this). */
   public double scalar_product(FloatPoint p_1, FloatPoint p_2) {
     if (p_1 == null || p_2 == null) {
       FRLogger.warn("FloatPoint.scalar_product: parameter point is null");
@@ -249,7 +252,7 @@ public class FloatPoint implements java.io.Serializable {
   /**
    * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
    * p_2; and Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2.
-   * Collinearity is not defined, becouse numerical calculations ar not exact for FloatPoints.
+   * Collinearity is not defined, because numerical calculations ar not exact for FloatPoints.
    */
   public Side side_of(FloatPoint p_1, FloatPoint p_2) {
     double d21_x = p_2.x - p_1.x;
@@ -286,25 +289,26 @@ public class FloatPoint implements java.io.Serializable {
     double new_x;
     double new_y;
     switch (n) {
-      case 0: // 0 degree
+      case 0 -> { // 0 degree
         new_x = x;
         new_y = y;
-        break;
-      case 1: // 90 degree
+      }
+      case 1 -> { // 90 degree
         new_x = -y;
         new_y = x;
-        break;
-      case 2: // 180 degree
+      }
+      case 2 -> { // 180 degree
         new_x = -x;
         new_y = -y;
-        break;
-      case 3: // 270 degree
+      }
+      case 3 -> { // 270 degree
         new_x = y;
         new_y = -x;
-        break;
-      default:
+      }
+      default -> {
         new_x = 0;
         new_y = 0;
+      }
     }
     return new FloatPoint(new_x, new_y);
   }
@@ -356,7 +360,7 @@ public class FloatPoint implements java.io.Serializable {
    * with radius p_distance. Solves the quadratic equation, which results by substituting x by the
    * term in y from the equation of the polar line of a circle with center p_to_point and radius
    * p_distance and putting it into the circle equation. The polar line is the line through the 2
-   * tangential points of the circle looked at from from this point and has the equation (this.x -
+   * tangential points of the circle looked at from this point and has the equation (this.x -
    * p_to_point.x) * (x - p_to_point.x) + (this.y - p_to_point.y) * (y - p_to_point.y) = p_distance
    * **2
    */
@@ -482,13 +486,14 @@ public class FloatPoint implements java.io.Serializable {
         < radius_square - 1); // - 1 is a tolerance for numerical stability.
   }
 
-  public String to_string(java.util.Locale p_locale) {
-    java.text.NumberFormat nf = java.text.NumberFormat.getInstance(p_locale);
+  public String to_string(Locale p_locale) {
+    NumberFormat nf = NumberFormat.getInstance(p_locale);
     nf.setMaximumFractionDigits(4);
     return ("(" + nf.format(x) + " , " + nf.format(y) + ")");
   }
 
+  @Override
   public String toString() {
-    return to_string(java.util.Locale.ENGLISH);
+    return to_string(Locale.ENGLISH);
   }
 }

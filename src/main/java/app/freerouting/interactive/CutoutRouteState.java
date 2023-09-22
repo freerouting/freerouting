@@ -2,9 +2,12 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.ShapeTraceEntries;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -43,9 +46,9 @@ public class CutoutRouteState extends SelectRegionState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    p_board_handling.display_layer_messsage();
-    // filter items, whichh cannnot be cutout
-    Collection<PolylineTrace> item_list = new LinkedList<PolylineTrace>();
+    p_board_handling.display_layer_message();
+    // filter items, which cannot be cutout
+    Collection<PolylineTrace> item_list = new LinkedList<>();
 
     for (Item curr_item : p_item_list) {
       if (!curr_item.is_user_fixed() && curr_item instanceof PolylineTrace) {
@@ -64,6 +67,7 @@ public class CutoutRouteState extends SelectRegionState {
     return new_instance;
   }
 
+  @Override
   public InteractiveState complete() {
     hdlg.screen_messages.set_status_message("");
     corner2 = hdlg.get_current_mouse_position();
@@ -89,10 +93,10 @@ public class CutoutRouteState extends SelectRegionState {
         new IntBox(
             Math.min(p1.x, p2.x), Math.min(p1.y, p2.y), Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
 
-    Set<Integer> changed_nets = new TreeSet<Integer>();
+    Set<Integer> changed_nets = new TreeSet<>();
 
     for (PolylineTrace curr_trace : this.trace_list) {
-      app.freerouting.board.ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
+      ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
       for (int i = 0; i < curr_trace.net_count(); ++i) {
         changed_nets.add(curr_trace.get_net_no(i));
       }
@@ -103,7 +107,8 @@ public class CutoutRouteState extends SelectRegionState {
     }
   }
 
-  public void draw(java.awt.Graphics p_graphics) {
+  @Override
+  public void draw(Graphics p_graphics) {
     if (trace_list == null) {
       return;
     }

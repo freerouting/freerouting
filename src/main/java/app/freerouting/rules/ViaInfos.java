@@ -1,15 +1,20 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.ObjectInfoPanel;
+
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Contains the lists of different ViaInfo's, which can be used in interactive and automatic
  * routing.
  */
 public class ViaInfos
-    implements java.io.Serializable, app.freerouting.board.ObjectInfoPanel.Printable {
-  private final List<ViaInfo> list = new LinkedList<ViaInfo>();
+    implements Serializable, ObjectInfoPanel.Printable {
+  private final List<ViaInfo> list = new LinkedList<>();
 
   /**
    * Adds a via info consisting of padstack, clearance class and drill_to_smd_allowed. Return false,
@@ -61,10 +66,11 @@ public class ViaInfos
     return this.list.remove(p_via_info);
   }
 
+  @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("vias") + ": ");
     int counter = 0;
     boolean first_time = true;

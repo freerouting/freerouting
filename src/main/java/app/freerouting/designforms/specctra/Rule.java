@@ -1,6 +1,12 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.datastructures.IdentifierType;
+import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,13 +16,13 @@ import java.util.Objects;
 public abstract class Rule {
   /** Returns a collection of objects of class Rule. */
   public static Collection<Rule> read_scope(IJFlexScanner p_scanner) {
-    Collection<Rule> result = new LinkedList<Rule>();
+    Collection<Rule> result = new LinkedList<>();
     Object current_token = null;
     for (; ; ) {
       Object prev_token = current_token;
       try {
         current_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Rule.read_scope: IO error scanning file", e);
         return null;
       }
@@ -53,8 +59,8 @@ public abstract class Rule {
   /** Reads a LayerRule from dsn-file. */
   public static LayerRule read_layer_rule_scope(IJFlexScanner p_scanner) {
     try {
-      Collection<String> layer_names = new LinkedList<String>();
-      Collection<Rule> rule_list = new LinkedList<Rule>();
+      Collection<String> layer_names = new LinkedList<>();
+      Collection<Rule> rule_list = new LinkedList<>();
       for (; ; ) {
         p_scanner.yybegin(SpecctraDsnFileReader.LAYER_NAME);
         Object next_token = p_scanner.next_token();
@@ -81,7 +87,7 @@ public abstract class Rule {
         rule_list.addAll(read_scope(p_scanner));
       }
       return new LayerRule(layer_names, rule_list);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Rule.read_layer_rule_scope: IO error scanning file", e);
       return null;
     }
@@ -99,7 +105,7 @@ public abstract class Rule {
 
   public static void write_scope(
       app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rule");
 
@@ -108,7 +114,7 @@ public abstract class Rule {
     double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(default_trace_half_width);
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write((Double.valueOf(trace_width)).toString());
+    p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(")");
     p_par.file.end_scope();
     for (int i = 1; i < p_par.board.layer_structure.arr.length; ++i) {
@@ -120,7 +126,7 @@ public abstract class Rule {
 
   private static void write_layer_rule(
       app.freerouting.rules.NetClass p_net_class, int p_layer_no, WriteScopeParameter p_par)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("layer_rule ");
 
@@ -136,7 +142,7 @@ public abstract class Rule {
     double trace_width = 2 * p_par.coordinate_transform.board_to_dsn(curr_trace_half_width);
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write((Double.valueOf(trace_width)).toString());
+    p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(") ");
     p_par.file.end_scope();
     p_par.file.end_scope();
@@ -144,7 +150,7 @@ public abstract class Rule {
 
   /** Writes the default rule as a scope to an output dsn-file. */
   public static void write_default_rule(WriteScopeParameter p_par, int p_layer)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rule");
     // write the trace width
@@ -154,24 +160,24 @@ public abstract class Rule {
                 p_par.board.rules.get_default_net_class().get_trace_half_width(0));
     p_par.file.new_line();
     p_par.file.write("(width ");
-    p_par.file.write((Double.valueOf(trace_width)).toString());
+    p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(")");
     // write the default clearance rule
-    int default_cl_no = app.freerouting.rules.BoardRules.default_clearance_class();
+    int default_cl_no = BoardRules.default_clearance_class();
     int default_board_clearance =
         p_par.board.rules.clearance_matrix.get_value(default_cl_no, default_cl_no, p_layer, false);
     double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
     p_par.file.new_line();
     // write the default clearance
     p_par.file.write("(clearance ");
-    p_par.file.write((Double.valueOf(default_clearance)).toString());
+    p_par.file.write(String.valueOf(default_clearance));
     p_par.file.write(")");
     // write the smd_to_turn_gap
-    Double smd_to_turn_dist =
+    double smd_to_turn_dist =
         p_par.coordinate_transform.board_to_dsn(p_par.board.rules.get_pin_edge_to_turn_dist());
     p_par.file.new_line();
     p_par.file.write("(clearance ");
-    p_par.file.write(smd_to_turn_dist.toString());
+    p_par.file.write(String.valueOf(smd_to_turn_dist));
     p_par.file.write(" (type smd_to_turn_gap))");
 
     // write the named clearance rules from the clearance matrix
@@ -186,9 +192,9 @@ public abstract class Rule {
       WriteScopeParameter p_par,
       int p_layer,
       int p_default_clearance)
-      throws java.io.IOException {
+      throws IOException {
 
-    app.freerouting.rules.ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
+    ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
 
     for (int i = 1; i <= cl_count; ++i) {
@@ -202,7 +208,7 @@ public abstract class Rule {
         double curr_clearance = p_par.coordinate_transform.board_to_dsn(curr_board_clearance);
         p_par.file.new_line();
         p_par.file.write("(clearance ");
-        p_par.file.write((Double.valueOf(curr_clearance)).toString());
+        p_par.file.write(String.valueOf(curr_clearance));
         p_par.file.write(" (type ");
         p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
         p_par.file.write(DsnFile.CLASS_CLEARANCE_SEPARATOR);
@@ -216,9 +222,9 @@ public abstract class Rule {
   private static void write_named_clearance_rules(
       WriteScopeParameter p_par,
       int p_layer)
-      throws java.io.IOException {
+      throws IOException {
 
-    app.freerouting.rules.ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
+    ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
 
     for (int i = 1; i < cl_count; ++i) {
@@ -231,7 +237,7 @@ public abstract class Rule {
 
       p_par.file.new_line();
       p_par.file.write("(clearance ");
-      p_par.file.write((Double.valueOf(curr_clearance)).toString());
+      p_par.file.write(String.valueOf(curr_clearance));
       p_par.file.write(" (type ");
       p_par.identifier_type.write(cl_matrix.get_name(i), p_par.file);
       p_par.file.write("))");
@@ -242,7 +248,7 @@ public abstract class Rule {
     try {
       double value = p_scanner.next_double();
 
-      Collection<String> class_pairs = new LinkedList<String>();
+      Collection<String> class_pairs = new LinkedList<>();
       Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
         // look for "(type"
@@ -272,7 +278,7 @@ public abstract class Rule {
       }
 
       return new ClearanceRule(value, class_pairs);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Rule.read_clearance_rule: IO error scanning file", e);
       return null;
     }
@@ -280,9 +286,9 @@ public abstract class Rule {
 
   public static void write_item_clearance_class(
       String p_name,
-      app.freerouting.datastructures.IndentFileWriter p_file,
-      app.freerouting.datastructures.IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      IndentFileWriter p_file,
+      IdentifierType p_identifier_type)
+      throws IOException {
     p_file.new_line();
     p_file.write("(clearance_class ");
     p_identifier_type.write(p_name, p_file);

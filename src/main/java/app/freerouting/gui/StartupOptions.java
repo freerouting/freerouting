@@ -13,10 +13,10 @@ public class StartupOptions {
   boolean show_help_option = false;
   boolean session_file_option = false;
   boolean webstart_option = false;
-  String design_input_filename = null;
-  String design_output_filename = null;
-  String design_rules_filename = null;
-  String design_input_directory_name = null;
+  String design_input_filename;
+  String design_output_filename;
+  String design_rules_filename;
+  String design_input_directory_name;
   int max_passes = 99999;
   //int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   int num_threads = 1;
@@ -24,7 +24,7 @@ public class StartupOptions {
   String hybrid_ratio = "1:1";
   ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
   String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
-  java.util.Locale current_locale = java.util.Locale.getDefault();
+  Locale current_locale = Locale.getDefault();
   boolean save_intermediate_stages = true;
   // this value is equivalent to the setting of "-oit 0.001"
   float optimization_improvement_threshold = 0.00001f;
@@ -32,7 +32,7 @@ public class StartupOptions {
   boolean disable_logging_option = false;
 
   private StartupOptions() {
-    if (!Arrays.stream(supported_languages).anyMatch(current_locale.getLanguage()::equals)) {
+    if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
       // the fallback language is English
       current_locale = Locale.ENGLISH;
     }

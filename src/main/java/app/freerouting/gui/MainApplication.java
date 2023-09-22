@@ -8,21 +8,34 @@ import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.NetClasses;
-import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Objects;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -37,25 +50,25 @@ public class MainApplication extends WindowBase {
           + Constants.FREEROUTING_BUILD_DATE
           + ")";
   private static final TestLevel DEBUG_LEVEL = TestLevel.CRITICAL_DEBUGGING_OUTPUT;
-  private final java.util.ResourceBundle resources;
-  private final javax.swing.JButton demonstration_button;
-  private final javax.swing.JButton sample_board_button;
-  private final javax.swing.JButton open_board_button;
-  private final javax.swing.JButton restore_defaults_button;
-  private final javax.swing.JTextField message_field;
-  private final javax.swing.JPanel main_panel;
+  private final ResourceBundle resources;
+  private final JButton demonstration_button;
+  private final JButton sample_board_button;
+  private final JButton open_board_button;
+  private final JButton restore_defaults_button;
+  private final JTextField message_field;
+  private final JPanel main_panel;
   /** A Frame with routing demonstrations in the net. */
   private final WindowNetSamples window_net_demonstrations;
   /** A Frame with sample board designs in the net. */
   private final WindowNetSamples window_net_sample_designs;
   /** The list of open board frames */
-  private final java.util.Collection<BoardFrame> board_frames = new java.util.LinkedList<>();
+  private final Collection<BoardFrame> board_frames = new LinkedList<>();
   private final boolean is_test_version;
-  private final java.util.Locale locale;
+  private final Locale locale;
   private final boolean save_intermediate_stages;
   private final float optimization_improvement_threshold;
   private final String[] ignore_net_classes_by_autorouter;
-  private String design_dir_name = null;
+  private String design_dir_name;
   private final int max_passes;
   private final BoardUpdateStrategy board_update_strategy;
   // Issue: adding a new field into AutorouteSettings caused exception when loading
@@ -65,7 +78,6 @@ public class MainApplication extends WindowBase {
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
-  public static int ModelDialogTimeout = 20;
   /**
    * Creates new form MainApplication It takes the directory of the board designs as optional
    * argument.
@@ -87,26 +99,26 @@ public class MainApplication extends WindowBase {
     this.optimization_improvement_threshold = startupOptions.optimization_improvement_threshold;
     this.ignore_net_classes_by_autorouter = startupOptions.ignore_net_classes_by_autorouter;
     this.resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
+        ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
 
-    main_panel = new javax.swing.JPanel();
+    main_panel = new JPanel();
     getContentPane().add(main_panel);
-    java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    GridBagLayout gridbag = new GridBagLayout();
     main_panel.setLayout(gridbag);
 
-    java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.insets = new Insets(10, 10, 10, 10);
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
 
-    demonstration_button = new javax.swing.JButton();
-    sample_board_button = new javax.swing.JButton();
-    open_board_button = new javax.swing.JButton();
-    restore_defaults_button = new javax.swing.JButton();
+    demonstration_button = new JButton();
+    sample_board_button = new JButton();
+    open_board_button = new JButton();
+    restore_defaults_button = new JButton();
 
-    message_field = new javax.swing.JTextField();
+    message_field = new JTextField();
     message_field.setText(resources.getString("command_line_missing_input"));
     this.window_net_demonstrations = new WindowNetDemonstrations(locale);
-    java.awt.Point location = getLocation();
+    Point location = getLocation();
     this.window_net_demonstrations.setLocation(
         (int) location.getX() + 50, (int) location.getY() + 50);
     this.window_net_sample_designs = new WindowNetSampleDesigns(locale);
@@ -122,9 +134,7 @@ public class MainApplication extends WindowBase {
         demonstration_button.setText(resources.getString("router_demonstrations"));
         demonstration_button.setToolTipText(resources.getString("router_demonstrations_tooltip"));
         demonstration_button.addActionListener(
-            (java.awt.event.ActionEvent evt) -> {
-              window_net_demonstrations.setVisible(true);
-            });
+            evt -> window_net_demonstrations.setVisible(true));
 
         gridbag.setConstraints(demonstration_button, gridbag_constraints);
         main_panel.add(demonstration_button, gridbag_constraints);
@@ -132,9 +142,7 @@ public class MainApplication extends WindowBase {
         sample_board_button.setText(resources.getString("sample_designs"));
         sample_board_button.setToolTipText(resources.getString("sample_designs_tooltip"));
         sample_board_button.addActionListener(
-            (java.awt.event.ActionEvent evt) -> {
-              window_net_sample_designs.setVisible(true);
-            });
+            evt -> window_net_sample_designs.setVisible(true));
 
         gridbag.setConstraints(sample_board_button, gridbag_constraints);
         main_panel.add(sample_board_button, gridbag_constraints);
@@ -143,10 +151,7 @@ public class MainApplication extends WindowBase {
 
     open_board_button.setText(resources.getString("open_own_design"));
     open_board_button.setToolTipText(resources.getString("open_own_design_tooltip"));
-    open_board_button.addActionListener(
-        (java.awt.event.ActionEvent evt) -> {
-          open_board_design_action(evt);
-        });
+    open_board_button.addActionListener(this::open_board_design_action);
 
     gridbag.setConstraints(open_board_button, gridbag_constraints);
     if (add_buttons) {
@@ -156,7 +161,7 @@ public class MainApplication extends WindowBase {
     if (startupOptions.getWebstartOption() && add_buttons) {
       restore_defaults_button.setText(resources.getString("restore_defaults"));
       restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
-      restore_defaults_button.addActionListener((java.awt.event.ActionEvent evt) -> {});
+      restore_defaults_button.addActionListener(evt -> {});
       gridbag.setConstraints(restore_defaults_button, gridbag_constraints);
       main_panel.add(restore_defaults_button, gridbag_constraints);
     }
@@ -164,7 +169,7 @@ public class MainApplication extends WindowBase {
     int window_width = 620;
     int window_height = 300;
 
-    message_field.setPreferredSize(new java.awt.Dimension(window_width - 40, 100));
+    message_field.setPreferredSize(new Dimension(window_width - 40, 100));
     message_field.setRequestFocusEnabled(false);
     gridbag.setConstraints(message_field, gridbag_constraints);
     main_panel.add(message_field, gridbag_constraints);
@@ -182,7 +187,7 @@ public class MainApplication extends WindowBase {
    */
   public static void main(String[] args) {
     // we have a special case if logging must be disabled before the general command line arguments are parsed
-    if (args.length > 0 && Arrays.stream(args).anyMatch("-dl"::equals)) {
+    if (args.length > 0 && Arrays.asList(args).contains("-dl")) {
       // disable logging
       FRLogger.disableLogging();
     }
@@ -221,15 +226,15 @@ public class MainApplication extends WindowBase {
             + " CPU cores,"
             + (Runtime.getRuntime().maxMemory() / 1024 / 1024)
             + " MB RAM");
-    FRLogger.debug(" UTC Time: " + Instant.now().toString());
+    FRLogger.debug(" UTC Time: " + Instant.now());
 
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
     StartupOptions startupOptions = StartupOptions.parse(args);
 
     FRLogger.debug(" GUI Language: " + startupOptions.current_locale);
 
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.MainApplication", startupOptions.current_locale);
     if (startupOptions.show_help_option) {
       System.out.print(resources.getString("command_line_help"));
@@ -306,41 +311,46 @@ public class MainApplication extends WindowBase {
           }
 
           private void ExportBoardToFile(String filename) {
-            if ((filename != null)
-                && ((filename.toLowerCase().endsWith(".dsn"))
-                || (filename.toLowerCase().endsWith(".ses"))
-                || (filename.toLowerCase().endsWith(".scr")))) {
+            if (filename == null) {
+              FRLogger.warn("Couldn't export board, filename not specified");
+              return;
+            }
 
-              FRLogger.info("Saving '" + filename + "'...");
-              try {
-                String filename_only = new File(filename).getName();
-                String design_name = filename_only.substring(0, filename_only.length() - 4);
+            if (!(filename.toLowerCase().endsWith(".dsn") ||
+                  filename.toLowerCase().endsWith(".ses") ||
+                  filename.toLowerCase().endsWith(".scr"))) {
+              FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
+              return;
+            }
 
-                java.io.OutputStream output_stream = new java.io.FileOutputStream(filename);
+            FRLogger.info("Saving '" + filename + "'...");
+            try {
+              String filename_only = new File(filename).getName();
+              String design_name = filename_only.substring(0, filename_only.length() - 4);
+              String extension = filename_only.substring(filename_only.length() - 4);
 
-                if (filename.toLowerCase().endsWith(".dsn")) {
-                  new_frame.board_panel.board_handling.export_to_dsn_file(
-                      output_stream, design_name, false);
-                } else if (filename.toLowerCase().endsWith(".ses")) {
-                  new_frame.board_panel.board_handling.export_specctra_session_file(
-                      design_name, output_stream);
-                } else if (filename.toLowerCase().endsWith(".scr")) {
-                  java.io.ByteArrayOutputStream session_output_stream =
+              OutputStream output_stream = new FileOutputStream(filename);
+
+              switch (extension) {
+                case ".dsn" -> new_frame.board_panel.board_handling.export_to_dsn_file(
+                    output_stream, design_name, false);
+                case ".ses" -> new_frame.board_panel.board_handling.export_specctra_session_file(
+                    design_name, output_stream);
+                case ".scr" -> {
+                  ByteArrayOutputStream session_output_stream =
                       new ByteArrayOutputStream();
                   new_frame.board_panel.board_handling.export_specctra_session_file(
                       filename, session_output_stream);
-                  java.io.InputStream input_stream =
+                  InputStream input_stream =
                       new ByteArrayInputStream(session_output_stream.toByteArray());
                   new_frame.board_panel.board_handling.export_eagle_session_file(
                       input_stream, output_stream);
                 }
-
-                Runtime.getRuntime().exit(0);
-              } catch (Exception e) {
-                FRLogger.error("Couldn't export board to file", e);
               }
-            } else {
-              FRLogger.warn("Couldn't export board to '" + filename + "'.");
+
+              System.exit(0);
+            } catch (Exception e) {
+              FRLogger.error("Couldn't export board to file", e);
             }
           }
         };
@@ -363,96 +373,51 @@ public class MainApplication extends WindowBase {
           && (startupOptions.design_output_filename != null)) {
 
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
-        String errorMessage = resources.getString("auto_start_routing_message");
-        JTextArea textArea = new JTextArea(errorMessage);
-        JOptionPane optionPane = new JOptionPane(textArea, JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
-        JDialog dialog = optionPane.createDialog(resources.getString("auto_start_routing_title"));
+        final int AUTOSTART_TIMEOUT = 20;
+        final String START_NOW_TEXT = resources.getString("auto_start_routing_startnow_button");
+        JButton startNowButton = new JButton(START_NOW_TEXT + " (" + AUTOSTART_TIMEOUT + ")");
 
-        // Get the correct panel from the option pane
-        JPanel optionPanel = null;
-        int startButtonIndex = -1;
-        int cancelButtonIndex = -1;
-        for(Component c : optionPane.getComponents())
-          // Ensure there are buttons on the panel
-          if(c instanceof JPanel
-              && ((JPanel)c).getComponents().length >= 2
-              && ((JPanel)c).getComponents()[0] instanceof JButton
-              && ((JPanel)c).getComponents()[1] instanceof JButton
-          ){
-            optionPanel = (JPanel)c;
+        final String CANCEL_TEXT = resources.getString("auto_start_routing_cancel_button");
+        Object[] options = {startNowButton, CANCEL_TEXT};
 
-            JButton firstButton = (JButton)optionPanel.getComponents()[0];
-            JButton secondButton = (JButton)optionPanel.getComponents()[1];
+        final String AUTOSTART_MSG = resources.getString("auto_start_routing_message");
+        JOptionPane optionPane = new JOptionPane(
+            AUTOSTART_MSG,
+            JOptionPane.WARNING_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION,
+            null,
+            options,
+            options[0]
+        );
 
-            if (firstButton.isDefaultButton())
-            {
-              // we normally have the first button as the default
-              startButtonIndex = 0;
-              cancelButtonIndex = 1;
-            } else if (secondButton.isDefaultButton())
-            {
-              // we might have a UI/localization where the second button is the default
-              startButtonIndex = 1;
-              cancelButtonIndex = 0;
+        startNowButton.addActionListener(event -> optionPane.setValue(options[0]));
+
+        final String AUTOSTART_TITLE = resources.getString("auto_start_routing_title");
+        JDialog autostartDialog = optionPane.createDialog(AUTOSTART_TITLE);
+
+        // Update startNowButton text every second
+        Timer autostartTimer = new Timer(1000, new ActionListener() {
+          private int secondsLeft = AUTOSTART_TIMEOUT;
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            if (--secondsLeft > 0) {
+              startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
+            } else {
+              optionPane.setValue(options[0]);
             }
-
-            break;
           }
+        });
 
-        // Set the default button to "Start now"
-        JButton startButton;
-        if ((optionPanel != null) && (startButtonIndex >= 0)) {
-          startButton = (JButton) (optionPanel.getComponents()[startButtonIndex]);
-          startButton.setText(resources.getString("auto_start_routing_startnow_button"));
-          startButton.addActionListener(
-              e -> {
-                ModelDialogTimeout = 0;
-                dialog.dispose();
-              });
-        }
+        autostartTimer.start();
+        autostartDialog.setVisible(true); // blocks execution
 
-        // Set the cancel button to "Cancel (20)"
-        JButton cancelButton;
-        if ((optionPanel != null) && (cancelButtonIndex >= 0)) {
-          cancelButton = (JButton) (optionPanel.getComponents()[1]);
-          cancelButton.setText(resources.getString("auto_start_routing_cancel_button") + "(20)");
-          cancelButton.addActionListener(
-              e -> {
-                ModelDialogTimeout = -1;
-                dialog.dispose();
-              });
-        } else {
-          cancelButton = null;
-        }
+        autostartDialog.dispose();
+        autostartTimer.stop();
 
-        dialog.pack();
-
-        // Set the timeout to 20 seconds
-        MainApplication.ModelDialogTimeout = 20;
-        Timer timer = new Timer(1000, null);
-        if ((optionPanel != null) && (cancelButtonIndex >= 0)) {
-          timer.addActionListener(
-              e -> {
-                ModelDialogTimeout--;
-                if (ModelDialogTimeout > 0) {
-                  cancelButton.setText(
-                      resources.getString("auto_start_routing_cancel_button")
-                          + "("
-                          + ModelDialogTimeout
-                          + ")");
-                } else {
-                  timer.stop();
-                  dialog.dispose();
-                }
-              });
-          timer.start();
-        }
-
-        dialog.setVisible(true);
-
+        Object choice = optionPane.getValue();
         // Start the autorouter if the user didn't cancel the dialog
-        if (ModelDialogTimeout >= 0)
-        {
+        if (choice == options[0]) {
           // Start the autorouter
           InteractiveActionThread thread =
               new_frame.board_panel.board_handling.start_batch_autorouter();
@@ -465,10 +430,10 @@ public class MainApplication extends WindowBase {
       }
 
       new_frame.addWindowListener(
-          new java.awt.event.WindowAdapter() {
+          new WindowAdapter() {
             @Override
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-              Runtime.getRuntime().exit(0);
+            public void windowClosed(WindowEvent evt) {
+              System.exit(0);
             }
           });
     } else {
@@ -484,18 +449,18 @@ public class MainApplication extends WindowBase {
    */
   private static BoardFrame create_board_frame(
       DesignFile p_design_file,
-      javax.swing.JTextField p_message_field,
+      JTextField p_message_field,
       BoardFrame.Option p_option,
       boolean p_is_test_version,
-      java.util.Locale p_locale,
+      Locale p_locale,
       String p_design_rules_file,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
       String[] p_ignore_net_classes_by_autorouter) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
 
-    java.io.InputStream input_stream = p_design_file.get_input_stream();
+    InputStream input_stream = p_design_file.get_input_stream();
     if (input_stream == null) {
       if (p_message_field != null) {
         p_message_field.setText(resources.getString("message_8") + " " + p_design_file.get_name());
@@ -503,12 +468,7 @@ public class MainApplication extends WindowBase {
       return null;
     }
 
-    TestLevel test_level;
-    if (p_is_test_version) {
-      test_level = DEBUG_LEVEL;
-    } else {
-      test_level = TestLevel.RELEASE_VERSION;
-    }
+    TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
     BoardFrame new_frame =
         new BoardFrame(
             p_design_file,
@@ -532,15 +492,17 @@ public class MainApplication extends WindowBase {
 
       String design_name = name_parts[0];
 
-      String parent_folder_name = null;
-      String rules_file_name = null;
-      String confirm_import_rules_message = null;
+      String rules_file_name;
+      String parent_folder_name;
+      String confirm_import_rules_message;
       if (p_design_rules_file == null) {
-        parent_folder_name = p_design_file.get_parent();
         rules_file_name = design_name + ".rules";
+        parent_folder_name = p_design_file.get_parent();
         confirm_import_rules_message = resources.getString("confirm_import_rules");
       } else {
         rules_file_name = p_design_rules_file;
+        parent_folder_name = null;
+        confirm_import_rules_message = null;
       }
 
       // load the .rules file
@@ -557,7 +519,7 @@ public class MainApplication extends WindowBase {
             new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 
         for (int i = 0; i < netClasses.count(); i++) {
-          if (netClasses.get(i).get_name().compareToIgnoreCase(net_class_name) == 0) {
+          if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name)) {
             netClasses.get(i).is_ignored_by_autorouter = true;
           }
         }
@@ -569,7 +531,7 @@ public class MainApplication extends WindowBase {
   }
 
   /** opens a board design from a binary file or a specctra dsn file. */
-  private void open_board_design_action(java.awt.event.ActionEvent evt) {
+  private void open_board_design_action(ActionEvent evt) {
     DesignFile design_file = DesignFile.open_dialog(this.design_dir_name);
 
     if (design_file == null) {
@@ -633,11 +595,11 @@ public class MainApplication extends WindowBase {
   }
 
   /** Exit the Application */
-  private void exitForm(java.awt.event.WindowEvent evt) {
+  private void exitForm(WindowEvent evt) {
     System.exit(0);
   }
 
-  private class BoardFrameWindowListener extends java.awt.event.WindowAdapter {
+  private class BoardFrameWindowListener extends WindowAdapter {
 
     private BoardFrame board_frame;
 
@@ -646,7 +608,7 @@ public class MainApplication extends WindowBase {
     }
 
     @Override
-    public void windowClosed(java.awt.event.WindowEvent evt) {
+    public void windowClosed(WindowEvent evt) {
       if (board_frame != null) {
         // remove this board_frame from the list of board frames
         board_frame.dispose();
@@ -656,20 +618,20 @@ public class MainApplication extends WindowBase {
     }
   }
 
-  private class WindowStateListener extends java.awt.event.WindowAdapter {
+  private class WindowStateListener extends WindowAdapter {
 
     @Override
-    public void windowClosing(java.awt.event.WindowEvent evt) {
+    public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       boolean exit_program = true;
-      if (!is_test_version && board_frames.size() > 0) {
+      if (!is_test_version && !board_frames.isEmpty()) {
         int option =
-            javax.swing.JOptionPane.showConfirmDialog(
+            JOptionPane.showConfirmDialog(
                 null,
                 resources.getString("confirm_cancel"),
                 null,
-                javax.swing.JOptionPane.YES_NO_OPTION);
-        if (option == javax.swing.JOptionPane.NO_OPTION) {
+                JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
           exit_program = false;
         }
@@ -680,12 +642,12 @@ public class MainApplication extends WindowBase {
     }
 
     @Override
-    public void windowIconified(java.awt.event.WindowEvent evt) {
+    public void windowIconified(WindowEvent evt) {
       window_net_sample_designs.parent_iconified();
     }
 
     @Override
-    public void windowDeiconified(java.awt.event.WindowEvent evt) {
+    public void windowDeiconified(WindowEvent evt) {
       window_net_sample_designs.parent_deiconified();
     }
   }

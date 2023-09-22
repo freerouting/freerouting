@@ -1,16 +1,20 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
-import java.util.Iterator;
+
+import java.awt.Color;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
-/** A ObstacleArea, which can be electrically conected to other items. */
+/** A ObstacleArea, which can be electrically connected to other items. */
 public class ConductionArea extends ObstacleArea implements Connectable {
 
   private boolean is_obstacle;
@@ -46,6 +50,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     is_obstacle = p_is_obstacle;
   }
 
+  @Override
   public Item copy(int p_id_no) {
     if (this.net_count() != 1) {
       FRLogger.warn("ConductionArea.copy not yet implemented for areas with more than 1 net");
@@ -67,14 +72,13 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         board);
   }
 
+  @Override
   public Set<Item> get_normal_contacts() {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     for (int i = 0; i < tile_shape_count(); ++i) {
       TileShape curr_shape = get_tile_shape(i);
       Set<SearchTreeObject> overlaps = board.overlapping_objects(curr_shape, get_layer());
-      Iterator<SearchTreeObject> it = overlaps.iterator();
-      while (it.hasNext()) {
-        SearchTreeObject curr_ob = it.next();
+      for (SearchTreeObject curr_ob : overlaps) {
         if (!(curr_ob instanceof Item)) {
           continue;
         }
@@ -98,6 +102,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return result;
   }
 
+  @Override
   public TileShape get_trace_connection_shape(ShapeSearchTree p_search_tree, int p_index) {
     if (p_index < 0 || p_index >= this.tree_shape_count(p_search_tree)) {
       FRLogger.warn("ConductionArea.get_trace_connection_shape p_index out of range");
@@ -106,6 +111,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return this.get_tree_shape(p_search_tree, p_index);
   }
 
+  @Override
   public Point[] get_ratsnest_corners() {
     Point[] result;
     FloatPoint[] corners = this.get_area().corner_approx_arr();
@@ -117,6 +123,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return result;
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (this.is_obstacle) {
       return super.is_obstacle(p_other);
@@ -134,14 +141,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     this.is_obstacle = p_value;
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return this.is_obstacle && !this.contains_net(p_net_no);
   }
 
+  @Override
   public boolean is_drillable(int p_net_no) {
     return !this.is_obstacle || this.contains_net(p_net_no);
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -149,19 +159,22 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.CONDUCTION);
   }
 
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+  @Override
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_conduction_colors();
   }
 
+  @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_conduction_color_intensity();
   }
 
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("conduction_area"));
     this.print_shape_info(p_window, p_locale);
     this.print_connectable_item_info(p_window, p_locale);

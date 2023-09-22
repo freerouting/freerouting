@@ -1,8 +1,11 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
+import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.ShoveTraceAlgo;
+import app.freerouting.board.TestLevel;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -32,11 +35,11 @@ public class MazeShoveTraceAlgo {
       return true;
     }
     ExpansionDoor from_door = (ExpansionDoor) p_list_element.door;
-    if (!(p_obstacle_room.get_item() instanceof app.freerouting.board.PolylineTrace)) {
+    if (!(p_obstacle_room.get_item() instanceof PolylineTrace)) {
       return true;
     }
-    app.freerouting.board.PolylineTrace obstacle_trace =
-        (app.freerouting.board.PolylineTrace) p_obstacle_room.get_item();
+    PolylineTrace obstacle_trace =
+        (PolylineTrace) p_obstacle_room.get_item();
     int trace_layer = p_obstacle_room.get_layer();
     // only traces with the same halfwidth and the same clearance class can be shoved.
     if (obstacle_trace.get_half_width() != p_ctrl.trace_half_width[trace_layer]
@@ -249,14 +252,13 @@ public class MazeShoveTraceAlgo {
           FloatLine[] line_sections = curr_door.get_section_segments(compensated_trace_half_width);
           p_to_door_list.add(new DoorSection(curr_door, 0, line_sections[0]));
         }
-        continue;
       } else if (!segment_ist_point) {
         // now curr_door is 1-dimensional
 
         // check, that curr_door is on the same border_line as p_from_door.
         FloatLine curr_door_segment = curr_door_shape.diagonal_corner_segment();
         if (curr_door_segment == null) {
-          if (p_board.get_test_level() == app.freerouting.board.TestLevel.ALL_DEBUGGING_OUTPUT) {
+          if (p_board.get_test_level() == TestLevel.ALL_DEBUGGING_OUTPUT) {
             FRLogger.warn("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
           }
           continue;
@@ -313,11 +315,11 @@ public class MazeShoveTraceAlgo {
   }
 
   /**
-   * Check if the endpoints of p_trace and p_from_item are maching, so that the shove can continue
+   * Check if the endpoints of p_trace and p_from_item are matching, so that the shove can continue
    * through a link door.
    */
   private static boolean end_points_matching(
-      app.freerouting.board.PolylineTrace p_trace, Item p_from_item) {
+      PolylineTrace p_trace, Item p_from_item) {
     if (p_from_item == p_trace) {
       return true;
     }
@@ -325,13 +327,13 @@ public class MazeShoveTraceAlgo {
       return false;
     }
     boolean points_matching;
-    if (p_from_item instanceof app.freerouting.board.DrillItem) {
-      Point from_center = ((app.freerouting.board.DrillItem) p_from_item).get_center();
+    if (p_from_item instanceof DrillItem) {
+      Point from_center = ((DrillItem) p_from_item).get_center();
       points_matching =
           from_center.equals(p_trace.first_corner()) || from_center.equals(p_trace.last_corner());
-    } else if (p_from_item instanceof app.freerouting.board.PolylineTrace) {
-      app.freerouting.board.PolylineTrace from_trace =
-          (app.freerouting.board.PolylineTrace) p_from_item;
+    } else if (p_from_item instanceof PolylineTrace) {
+      PolylineTrace from_trace =
+          (PolylineTrace) p_from_item;
       points_matching =
           p_trace.first_corner().equals(from_trace.first_corner())
               || p_trace.first_corner().equals(from_trace.last_corner())

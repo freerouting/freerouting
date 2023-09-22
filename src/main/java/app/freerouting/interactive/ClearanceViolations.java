@@ -3,14 +3,11 @@ package app.freerouting.interactive;
 import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.Item;
 import app.freerouting.boardgraphics.GraphicsContext;
+
+import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 /** To display the clearance violations between items on the screen. */
 public class ClearanceViolations {
@@ -25,9 +22,7 @@ public class ClearanceViolations {
   public ClearanceViolations(Collection<Item> p_item_list) {
 
     this.list = new LinkedList<>();
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       this.list.addAll(curr_item.clearance_violations());
       if ((curr_item.smallest_clearance > 0) && (curr_item.smallest_clearance < global_smallest_clearance)) {
         global_smallest_clearance = curr_item.smallest_clearance;
@@ -38,10 +33,8 @@ public class ClearanceViolations {
   }
 
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context) {
-    java.awt.Color draw_color = p_graphics_context.get_violations_color();
-    Iterator<ClearanceViolation> it = list.iterator();
-    while (it.hasNext()) {
-      ClearanceViolation curr_violation = it.next();
+    Color draw_color = p_graphics_context.get_violations_color();
+    for (ClearanceViolation curr_violation : list) {
       double intensity = p_graphics_context.get_layer_visibility(curr_violation.layer);
       p_graphics_context.fill_area(curr_violation.shape, p_graphics, draw_color, intensity);
       // draw a circle around the violation.

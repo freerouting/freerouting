@@ -1,5 +1,7 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.FixedState;
+import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.geometry.planar.Area;
@@ -10,11 +12,13 @@ import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.Shape;
+
+import java.util.Collection;
 import java.util.Iterator;
 
 /** Interactive cutting a hole into an obstacle shape */
 public class HoleConstructionState extends CornerItemConstructionState {
-  private ObstacleArea item_to_modify = null;
+  private ObstacleArea item_to_modify;
 
   /** Creates a new instance of HoleConstructionState */
   private HoleConstructionState(
@@ -50,13 +54,13 @@ public class HoleConstructionState extends CornerItemConstructionState {
       ItemSelectionFilter.SelectableChoices.CONDUCTION
     };
     ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-    java.util.Collection<app.freerouting.board.Item> found_items =
+    Collection<Item> found_items =
         hdlg.get_routing_board().pick_items(pick_location, hdlg.settings.layer, selection_filter);
     if (found_items.size() != 1) {
       hdlg.screen_messages.set_status_message(resources.getString("no_item_found_for_adding_hole"));
       return false;
     }
-    app.freerouting.board.Item found_item = found_items.iterator().next();
+    Item found_item = found_items.iterator().next();
     if (!(found_item instanceof ObstacleArea)) {
       hdlg.screen_messages.set_status_message(
           resources.getString("no_obstacle_area_found_for_adding_hole"));
@@ -75,7 +79,8 @@ public class HoleConstructionState extends CornerItemConstructionState {
     return true;
   }
 
-  /** Adds a corner to the polygon of the the hole under construction. */
+  /** Adds a corner to the polygon of the hole under construction. */
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_next_corner) {
     if (item_to_modify == null) {
       return this.return_state;
@@ -91,6 +96,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
    * adds the just constructed hole to the item under modification, if that is possible without
    * clearance violations
    */
+  @Override
   public InteractiveState complete() {
     if (item_to_modify == null) {
       return this.return_state;
@@ -141,7 +147,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
                 new_obs_area,
                 item_to_modify.get_layer(),
                 item_to_modify.clearance_class_no(),
-                app.freerouting.board.FixedState.UNFIXED);
+                FixedState.UNFIXED);
         if (this.observers_activated) {
           hdlg.get_routing_board().end_notify_observers();
           this.observers_activated = false;
@@ -159,6 +165,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
     return this.return_state;
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("adding_hole_to_obstacle_area"));
   }

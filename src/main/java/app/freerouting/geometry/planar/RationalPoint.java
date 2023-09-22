@@ -1,6 +1,8 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.BigIntAux;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
@@ -12,14 +14,14 @@ import java.math.BigInteger;
  * in addition to the affine plane with rational coordinates the so-called line at infinity, which
  * consist of all projective points (x, y, z) with z = 0.
  */
-public class RationalPoint extends Point implements java.io.Serializable {
+public class RationalPoint extends Point implements Serializable {
 
   final BigInteger x;
   final BigInteger y;
   final BigInteger z;
 
   /**
-   * creates a RetionalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensinal
+   * creates a RationalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
    * point with the rational number Tuple ( p_x / p_z , p_y / p_z). Throws IllegalArgumentException
    * if denominator p_z is <= 0
    */
@@ -32,7 +34,7 @@ public class RationalPoint extends Point implements java.io.Serializable {
     }
   }
 
-  /** creates a RetionalPoint from an IntPoint */
+  /** creates a RationalPoint from an IntPoint */
   RationalPoint(IntPoint p_point) {
     x = BigInteger.valueOf(p_point.x);
     y = BigInteger.valueOf(p_point.y);
@@ -40,6 +42,7 @@ public class RationalPoint extends Point implements java.io.Serializable {
   }
 
   /** approximates the coordinates of this point by float coordinates */
+  @Override
   public FloatPoint to_float() {
     double xd = x.doubleValue();
     double yd = y.doubleValue();
@@ -56,6 +59,7 @@ public class RationalPoint extends Point implements java.io.Serializable {
   }
 
   /** returns true, if this RationalPoint is equal to p_ob */
+  @Override
   public final boolean equals(Object p_ob) {
     if (this == p_ob) {
       return true;
@@ -76,10 +80,12 @@ public class RationalPoint extends Point implements java.io.Serializable {
     return (det.signum() == 0);
   }
 
+  @Override
   public boolean is_infinite() {
     return z.signum() == 0;
   }
 
+  @Override
   public IntBox surrounding_box() {
     FloatPoint fp = to_float();
     int llx = (int) Math.floor(fp.x);
@@ -89,6 +95,7 @@ public class RationalPoint extends Point implements java.io.Serializable {
     return new IntBox(llx, lly, urx, ury);
   }
 
+  @Override
   public IntOctagon surrounding_octagon() {
     FloatPoint fp = to_float();
     int lx = (int) Math.floor(fp.x);
@@ -106,6 +113,7 @@ public class RationalPoint extends Point implements java.io.Serializable {
     return new IntOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
   }
 
+  @Override
   public boolean is_contained_in(IntBox p_box) {
     BigInteger tmp = BigInteger.valueOf(p_box.ll.x).multiply(z);
     if (x.compareTo(tmp) < 0) {
@@ -124,6 +132,7 @@ public class RationalPoint extends Point implements java.io.Serializable {
   }
 
   /** returns the translation of this point by p_vector */
+  @Override
   public Point translate_by(Vector p_vector) {
     if (p_vector.equals(Vector.ZERO)) {
       return this;
@@ -131,11 +140,13 @@ public class RationalPoint extends Point implements java.io.Serializable {
     return p_vector.add_to(this);
   }
 
+  @Override
   Point translate_by(IntVector p_vector) {
     RationalVector vector = new RationalVector(p_vector);
     return translate_by(vector);
   }
 
+  @Override
   Point translate_by(RationalVector p_vector) {
     BigInteger[] v1 = new BigInteger[3];
     v1[0] = x;
@@ -151,16 +162,19 @@ public class RationalPoint extends Point implements java.io.Serializable {
   }
 
   /** returns the difference vector of this point and p_other */
+  @Override
   public Vector difference_by(Point p_other) {
     Vector tmp = p_other.difference_by(this);
     return tmp.negate();
   }
 
+  @Override
   Vector difference_by(IntPoint p_other) {
     RationalPoint other = new RationalPoint(p_other);
     return difference_by(other);
   }
 
+  @Override
   Vector difference_by(RationalPoint p_other) {
     BigInteger[] v1 = new BigInteger[3];
     v1[0] = x;
@@ -180,16 +194,19 @@ public class RationalPoint extends Point implements java.io.Serializable {
    * p_2; Side.ON_THE_RIGHT, if this Point is on the right f the line from p_1 to p_2; and
    * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
    */
+  @Override
   public Side side_of(Point p_1, Point p_2) {
     Vector v1 = difference_by(p_1);
     Vector v2 = p_2.difference_by(p_1);
     return v1.side_of(v2);
   }
 
+  @Override
   public Side side_of(Line p_line) {
     return side_of(p_line.a, p_line.b);
   }
 
+  @Override
   public Point perpendicular_projection(Line p_line) {
     // this function is at the moment only implemented for lines
     // consisting of IntPoints.
@@ -235,31 +252,37 @@ public class RationalPoint extends Point implements java.io.Serializable {
     return new RationalPoint(proj_x, proj_y, denominator);
   }
 
+  @Override
   public int compare_x(Point p_other) {
     return -p_other.compare_x(this);
   }
 
+  @Override
   public int compare_y(Point p_other) {
     return -p_other.compare_y(this);
   }
 
+  @Override
   int compare_x(RationalPoint p_other) {
     BigInteger tmp1 = this.x.multiply(p_other.z);
     BigInteger tmp2 = p_other.x.multiply(this.z);
     return tmp1.compareTo(tmp2);
   }
 
+  @Override
   int compare_y(RationalPoint p_other) {
     BigInteger tmp1 = this.y.multiply(p_other.z);
     BigInteger tmp2 = p_other.y.multiply(this.z);
     return tmp1.compareTo(tmp2);
   }
 
+  @Override
   int compare_x(IntPoint p_other) {
     BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(p_other.x));
     return this.x.compareTo(tmp1);
   }
 
+  @Override
   int compare_y(IntPoint p_other) {
     BigInteger tmp1 = this.z.multiply(BigInteger.valueOf(p_other.y));
     return this.y.compareTo(tmp1);

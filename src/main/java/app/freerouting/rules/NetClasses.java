@@ -1,8 +1,15 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.LayerStructure;
+
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
 /** Contains the array of net classes for interactive routing. */
-public class NetClasses implements java.io.Serializable {
-  private final java.util.Vector<NetClass> class_arr = new java.util.Vector<NetClass>();
+public class NetClasses implements Serializable {
+  private final Vector<NetClass> class_arr = new Vector<>();
 
   /** Returns the number of classes in this array. */
   public int count() {
@@ -28,7 +35,7 @@ public class NetClasses implements java.io.Serializable {
   /** Appends a new empty class with name p_name to the class array */
   NetClass append(
       String p_name,
-      app.freerouting.board.LayerStructure p_layer_structure,
+      LayerStructure p_layer_structure,
       ClearanceMatrix p_clearance_matrix,
       boolean p_is_ignored_by_autorouter) {
     NetClass new_class =
@@ -39,21 +46,18 @@ public class NetClasses implements java.io.Serializable {
 
   /** Appends a new empty class to the class array. A name for the class is created internally */
   NetClass append(
-      app.freerouting.board.LayerStructure p_layer_structure,
+      LayerStructure p_layer_structure,
       ClearanceMatrix p_clearance_matrix,
-      java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
+      Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
     String name_front = resources.getString("class");
-    String new_name = null;
-    Integer index = 0;
-    for (; ; ) {
+    String new_name;
+    int index = 0;
+    do {
       ++index;
       new_name = name_front + index;
-      if (this.get(new_name) == null) {
-        break;
-      }
-    }
+    } while (this.get(new_name) != null);
     return append(new_name, p_layer_structure, p_clearance_matrix, false);
   }
 

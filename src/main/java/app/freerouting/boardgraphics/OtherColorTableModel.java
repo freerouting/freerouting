@@ -1,11 +1,16 @@
 package app.freerouting.boardgraphics;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Stores the colors used for the background and highlighting. */
-public class OtherColorTableModel extends ColorTableModel implements java.io.Serializable {
+public class OtherColorTableModel extends ColorTableModel implements Serializable {
 
-  public OtherColorTableModel(java.util.Locale p_locale) {
+  public OtherColorTableModel(Locale p_locale) {
     super(1, p_locale);
     data[0] = new Color[ColumnNames.values().length];
     Object[] curr_row = data[0];
@@ -19,12 +24,12 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
     curr_row[ColumnNames.LENGTH_MATCHING_AREA.ordinal()] = Color.green;
   }
 
-  public OtherColorTableModel(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  public OtherColorTableModel(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     super(p_stream);
   }
 
-  /** Copy construcror. */
+  /** Copy constructor. */
   public OtherColorTableModel(OtherColorTableModel p_item_color_model) {
     super(p_item_color_model.data.length, p_item_color_model.locale);
     for (int i = 0; i < this.data.length; ++i) {
@@ -33,17 +38,20 @@ public class OtherColorTableModel extends ColorTableModel implements java.io.Ser
     }
   }
 
+  @Override
   public int getColumnCount() {
     return ColumnNames.values().length;
   }
 
+  @Override
   public String getColumnName(int p_col) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.boardgraphics.ColorTableModel", this.locale);
     return resources.getString(ColumnNames.values()[p_col].toString());
   }
 
+  @Override
   public boolean isCellEditable(int p_row, int p_col) {
     return true;
   }

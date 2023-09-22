@@ -1,15 +1,16 @@
 package app.freerouting.geometry.planar;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Abstract class describing functionality for Points in the plane. */
-public abstract class Point implements java.io.Serializable {
+public abstract class Point implements Serializable {
 
   /** Standard implementation of the zero point . */
   public static final IntPoint ZERO = new IntPoint(0, 0);
 
   /**
-   * creates an IntPoint from p_x and p_y. If p_x or p_y is to big for an IntPoint, a RationalPoint
+   * creates an IntPoint from p_x and p_y. If p_x or p_y is too big for an IntPoint, a RationalPoint
    * is created.
    */
   public static Point get_instance(int p_x, int p_y) {
@@ -62,7 +63,7 @@ public abstract class Point implements java.io.Serializable {
   /** creates the smallest Octagon with integer coordinates containing this point. */
   public abstract IntOctagon surrounding_octagon();
 
-  /** Returns true, if this point lies in the interiour or on the border of p_box. */
+  /** Returns true, if this point lies in the interior or on the border of p_box. */
   public abstract boolean is_contained_in(IntBox p_box);
 
   public abstract Side side_of(Line p_line);
@@ -82,7 +83,7 @@ public abstract class Point implements java.io.Serializable {
   }
 
   /**
-   * Calculates the perpendicular direction froma this point to p_line. Returns Direction.NULL, if
+   * Calculates the perpendicular direction from this point to p_line. Returns Direction. NULL, if
    * this point lies on p_line.
    */
   public Direction perpendicular_direction(Line p_line) {
@@ -101,18 +102,18 @@ public abstract class Point implements java.io.Serializable {
 
   /**
    * Returns 1, if this Point has a strict bigger x coordinate than p_other, 0, if the x
-   * cooordinates are equal, and -1 otherwise.
+   * coordinates are equal, and -1 otherwise.
    */
   public abstract int compare_x(Point p_other);
 
   /**
    * Returns 1, if this Point has a strict bigger y coordinate than p_other, 0, if the y
-   * cooordinates are equal, and -1 otherwise.
+   * coordinates are equal, and -1 otherwise.
    */
   public abstract int compare_y(Point p_other);
 
   /**
-   * The function returns compare_x (p_other), if the result is not 0. Otherwise it returns
+   * The function returns compare_x (p_other), if the result is not 0. Otherwise, it returns
    * compare_y (p_other).
    */
   public int compare_x_y(Point p_other) {

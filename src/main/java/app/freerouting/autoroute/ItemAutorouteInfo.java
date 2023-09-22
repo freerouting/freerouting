@@ -2,15 +2,18 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.Item;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Graphics;
 
 /** Temporary data stored in board Items used in the autoroute algorithm */
 public class ItemAutorouteInfo {
   private final Item item;
   /** Defines, if this item belongs to the start or destination set of the maze search algorithm */
   private boolean start_info;
-  private Connection precalculated_connnection = null;
-  /** ExpansionRoom for pushing or ripping the this object for each tree shape. */
+  private Connection precalculated_connection;
+  /** ExpansionRoom for pushing or ripping this object for each tree shape. */
   private ObstacleExpansionRoom[] expansion_room_arr;
 
   public ItemAutorouteInfo(Item p_item) {
@@ -35,15 +38,15 @@ public class ItemAutorouteInfo {
 
   /** Returns the precalculated connection of this item or null, if it is not yet precalculated. */
   public Connection get_precalculated_connection() {
-    return this.precalculated_connnection;
+    return this.precalculated_connection;
   }
 
-  /** Sets the precalculated connnection of this item. */
+  /** Sets the precalculated connection of this item. */
   public void set_precalculated_connection(Connection p_connection) {
-    this.precalculated_connnection = p_connection;
+    this.precalculated_connection = p_connection;
   }
 
-  /** Gets the ExpansionRoom of of index p_index. Creates it, if it is not yet existing. */
+  /** Gets the ExpansionRoom of index p_index. Creates it, if it is not yet existing. */
   public ObstacleExpansionRoom get_expansion_room(int p_index, ShapeSearchTree p_autoroute_tree) {
     if (expansion_room_arr == null) {
       expansion_room_arr = new ObstacleExpansionRoom[this.item.tree_shape_count(p_autoroute_tree)];
@@ -58,7 +61,7 @@ public class ItemAutorouteInfo {
     return expansion_room_arr[p_index];
   }
 
-  /** Resets the expansion rooms for autorouting the next connnection. */
+  /** Resets the expansion rooms for autorouting the next connection. */
   public void reset_doors() {
     if (expansion_room_arr != null) {
       for (ObstacleExpansionRoom curr_room : expansion_room_arr) {
@@ -71,8 +74,8 @@ public class ItemAutorouteInfo {
 
   /** Draws the shapes of the expansion rooms of this info for testing purposes. */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
     if (expansion_room_arr == null) {
       return;

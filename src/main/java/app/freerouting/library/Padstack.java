@@ -1,16 +1,23 @@
 package app.freerouting.library;
 
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /** Describes padstack masks for pins or vias located at the origin. */
 public class Padstack
     implements Comparable<Padstack>,
-        app.freerouting.board.ObjectInfoPanel.Printable,
-        java.io.Serializable {
+        ObjectInfoPanel.Printable,
+        Serializable {
 
   public final String name;
   public final int no;
@@ -47,6 +54,7 @@ public class Padstack
   }
 
   /** Compares 2 padstacks by name. Useful for example to display padstacks in alphabetic order. */
+  @Override
   public int compareTo(Padstack p_other) {
     return this.name.compareToIgnoreCase(p_other.name);
   }
@@ -78,11 +86,12 @@ public class Padstack
     return result;
   }
 
-  /** Returns the layer ciount of the board of this padstack. */
+  /** Returns the layer count of the board of this padstack. */
   public int board_layer_count() {
     return shapes.length;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
@@ -92,8 +101,8 @@ public class Padstack
    * the length of the pad is smaller than p_factor times the height of the pad, connection also to
    * the long side is allowed.
    */
-  public java.util.Collection<Direction> get_trace_exit_directions(int p_layer, double p_factor) {
-    java.util.Collection<Direction> result = new java.util.LinkedList<Direction>();
+  public Collection<Direction> get_trace_exit_directions(int p_layer, double p_factor) {
+    Collection<Direction> result = new LinkedList<>();
     if (p_layer < 0 || p_layer >= shapes.length) {
       return result;
     }
@@ -120,10 +129,11 @@ public class Padstack
     return result;
   }
 
+  @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("padstack") + " ");
     p_window.append_bold(this.name);
     for (int i = 0; i < shapes.length; ++i) {

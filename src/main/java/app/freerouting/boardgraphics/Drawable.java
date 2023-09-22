@@ -11,7 +11,7 @@ public interface Drawable {
 
   /**
    * Draws this item to the device provided in p_graphics_context. p_color_arr is an array of
-   * dimenssion layer_count. p_intensity is a number between between 0 and 1.
+   * dimension layer_count. p_intensity is a number between 0 and 1.
    */
   void draw(
       Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity);

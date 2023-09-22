@@ -66,8 +66,7 @@ public class ForcedViaAlgo {
       return ForcedPadAlgo.CheckDrillResult.NOT_DRILLABLE;
     }
 
-    ForcedPadAlgo.CheckDrillResult result =
-        forced_pad_algo.check_forced_pad(
+    return forced_pad_algo.check_forced_pad(
             tile_shape,
             from_side,
             p_layer,
@@ -79,7 +78,6 @@ public class ForcedViaAlgo {
             p_max_via_recursion_depth,
             false,
             null);
-    return result;
   }
 
   /**
@@ -135,7 +133,7 @@ public class ForcedViaAlgo {
   /**
    * Shoves aside traces, so that a via with the input parameters can be inserted without clearance
    * violations. If the shove failed, the database may be damaged, so that an undo becomes
-   * necessesary. p_trace_clearance_class_no and p_trace_pen_halfwidth_arr is provided to make space
+   * necessary. p_trace_clearance_class_no and p_trace_pen_halfwidth_arr is provided to make space
    * for starting a trace in case the trace width is bigger than the via shape. Returns false, if
    * the forced via failed.
    */
@@ -194,7 +192,7 @@ public class ForcedViaAlgo {
         return false;
       }
       if (start_trace_shape != null) {
-        // necessesary in case strart_trace_shape is bigger than tile_shape
+        // necessary in case start_trace_shape is bigger than tile_shape
         if (!forced_pad_algo.forced_pad(
             start_trace_shape,
             from_side,
@@ -231,23 +229,27 @@ public class ForcedViaAlgo {
       FloatPoint check_point;
       double border_x;
       double border_y;
-      if (i == 0) {
-        check_point = new FloatPoint(p_via_location.x, p_via_location.y - p_dist);
-        border_x = p_via_location.x;
-        border_y = via_box.ll.y;
-      } else if (i == 1) {
-        check_point = new FloatPoint(p_via_location.x + p_dist, p_via_location.y);
-        border_x = via_box.ur.x;
-        border_y = p_via_location.y;
-      } else if (i == 2) {
-        check_point = new FloatPoint(p_via_location.x, p_via_location.y + p_dist);
-        border_x = p_via_location.x;
-        border_y = via_box.ur.y;
-      } else // i == 3
-      {
-        check_point = new FloatPoint(p_via_location.x - p_dist, p_via_location.y);
-        border_x = via_box.ll.x;
-        border_y = p_via_location.y;
+      switch (i) {
+        case 0 -> {
+          check_point = new FloatPoint(p_via_location.x, p_via_location.y - p_dist);
+          border_x = p_via_location.x;
+          border_y = via_box.ll.y;
+        }
+        case 1 -> {
+          check_point = new FloatPoint(p_via_location.x + p_dist, p_via_location.y);
+          border_x = via_box.ur.x;
+          border_y = p_via_location.y;
+        }
+        case 2 -> {
+          check_point = new FloatPoint(p_via_location.x, p_via_location.y + p_dist);
+          border_x = p_via_location.x;
+          border_y = via_box.ur.y;
+        }
+        default -> { // i == 3
+          check_point = new FloatPoint(p_via_location.x - p_dist, p_via_location.y);
+          border_x = via_box.ll.x;
+          border_y = p_via_location.y;
+        }
       }
       if (p_room_shape.contains(check_point)) {
         int from_side_no;
@@ -263,30 +265,34 @@ public class ForcedViaAlgo {
     if (is_90_degree) {
       return null;
     }
-    // try the diagonal drections
+    // try the diagonal directions
     double dist = p_dist / Limits.sqrt2;
     double border_dist = via_box.max_width() / (2 * Limits.sqrt2);
     for (int i = 0; i < 4; ++i) {
       FloatPoint check_point;
       double border_x;
       double border_y;
-      if (i == 0) {
-        check_point = new FloatPoint(p_via_location.x + dist, p_via_location.y - dist);
-        border_x = p_via_location.x + border_dist;
-        border_y = p_via_location.y - border_dist;
-      } else if (i == 1) {
-        check_point = new FloatPoint(p_via_location.x + dist, p_via_location.y + dist);
-        border_x = p_via_location.x + border_dist;
-        border_y = p_via_location.y + border_dist;
-      } else if (i == 2) {
-        check_point = new FloatPoint(p_via_location.x - dist, p_via_location.y + dist);
-        border_x = p_via_location.x - border_dist;
-        border_y = p_via_location.y + border_dist;
-      } else // i == 3
-      {
-        check_point = new FloatPoint(p_via_location.x - dist, p_via_location.y - dist);
-        border_x = p_via_location.x - border_dist;
-        border_y = p_via_location.y - border_dist;
+      switch (i) {
+        case 0 -> {
+          check_point = new FloatPoint(p_via_location.x + dist, p_via_location.y - dist);
+          border_x = p_via_location.x + border_dist;
+          border_y = p_via_location.y - border_dist;
+        }
+        case 1 -> {
+          check_point = new FloatPoint(p_via_location.x + dist, p_via_location.y + dist);
+          border_x = p_via_location.x + border_dist;
+          border_y = p_via_location.y + border_dist;
+        }
+        case 2 -> {
+          check_point = new FloatPoint(p_via_location.x - dist, p_via_location.y + dist);
+          border_x = p_via_location.x - border_dist;
+          border_y = p_via_location.y + border_dist;
+        }
+        default -> { // i == 3
+          check_point = new FloatPoint(p_via_location.x - dist, p_via_location.y - dist);
+          border_x = p_via_location.x - border_dist;
+          border_y = p_via_location.y - border_dist;
+        }
       }
       if (p_room_shape.contains(check_point)) {
 

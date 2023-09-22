@@ -1,7 +1,12 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.board.SearchTreeObject;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
+
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -41,13 +46,13 @@ public class ExpansionDrill implements ExpandableObject {
    */
   public boolean calculate_expansion_rooms(AutorouteEngine p_autoroute_engine) {
     TileShape search_shape = TileShape.get_instance(location);
-    Collection<app.freerouting.board.SearchTreeObject> overlaps =
+    Collection<SearchTreeObject> overlaps =
         p_autoroute_engine.autoroute_search_tree.overlapping_objects(search_shape, -1);
     for (int i = this.first_layer; i <= this.last_layer; ++i) {
       CompleteExpansionRoom found_room = null;
-      Iterator<app.freerouting.board.SearchTreeObject> it = overlaps.iterator();
+      Iterator<SearchTreeObject> it = overlaps.iterator();
       while (it.hasNext()) {
-        app.freerouting.board.SearchTreeObject curr_ob = it.next();
+        SearchTreeObject curr_ob = it.next();
         if (!(curr_ob instanceof CompleteExpansionRoom)) {
           it.remove();
           continue;
@@ -60,7 +65,7 @@ public class ExpansionDrill implements ExpandableObject {
         }
       }
       if (found_room == null) {
-        // create a new expansion romm on this layer
+        // create a new expansion room on this layer
         IncompleteFreeSpaceExpansionRoom new_incomplete_room =
             new IncompleteFreeSpaceExpansionRoom(null, i, search_shape);
         Collection<CompleteFreeSpaceExpansionRoom> new_rooms =
@@ -79,26 +84,32 @@ public class ExpansionDrill implements ExpandableObject {
     return true;
   }
 
+  @Override
   public TileShape get_shape() {
     return this.shape;
   }
 
+  @Override
   public int get_dimension() {
     return 2;
   }
 
+  @Override
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     return null;
   }
 
+  @Override
   public int maze_search_element_count() {
     return this.maze_search_info_arr.length;
   }
 
+  @Override
   public MazeSearchElement get_maze_search_element(int p_no) {
     return this.maze_search_info_arr[p_no];
   }
 
+  @Override
   public void reset() {
     for (MazeSearchElement curr_info : maze_search_info_arr) {
       curr_info.reset();
@@ -106,13 +117,13 @@ public class ExpansionDrill implements ExpandableObject {
   }
 
   /*
-   * Test draw of the the shape of this drill.
+   * Test draw of the shape of this drill.
    */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
-    java.awt.Color draw_color = p_graphics_context.get_hilight_color();
+    Color draw_color = p_graphics_context.get_hilight_color();
     p_graphics_context.fill_area(this.shape, p_graphics, draw_color, p_intensity);
     p_graphics_context.draw_boundary(this.shape, 0, draw_color, p_graphics, 1);
   }

@@ -4,6 +4,8 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+
 public class AutorouteSettings {
 
   static app.freerouting.interactive.AutorouteSettings read_scope(
@@ -18,7 +20,7 @@ public class AutorouteSettings {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_scope: IO error scanning file", e);
         return null;
       }
@@ -71,7 +73,7 @@ public class AutorouteSettings {
     Object next_token;
     try {
       next_token = p_scanner.next_token();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
       return null;
     }
@@ -88,7 +90,7 @@ public class AutorouteSettings {
       Object prev_token = next_token;
       try {
         next_token = p_scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
         return null;
       }
@@ -116,10 +118,10 @@ public class AutorouteSettings {
             p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: uclosing bracket expected");
+              FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected");
               return null;
             }
-          } catch (java.io.IOException e) {
+          } catch (IOException e) {
             FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
             return null;
           }
@@ -142,7 +144,7 @@ public class AutorouteSettings {
       app.freerouting.interactive.AutorouteSettings p_settings,
       app.freerouting.board.LayerStructure p_layer_structure,
       IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.start_scope();
     p_file.write("autoroute_settings");
     p_file.new_line();
@@ -176,29 +178,29 @@ public class AutorouteSettings {
     p_file.new_line();
     p_file.write("(via_costs ");
     {
-      Integer via_costs = p_settings.get_via_costs();
-      p_file.write(via_costs.toString());
+      int via_costs = p_settings.get_via_costs();
+      p_file.write(String.valueOf(via_costs));
     }
     p_file.write(")");
     p_file.new_line();
     p_file.write("(plane_via_costs ");
     {
-      Integer via_costs = p_settings.get_plane_via_costs();
-      p_file.write(via_costs.toString());
+      int via_costs = p_settings.get_plane_via_costs();
+      p_file.write(String.valueOf(via_costs));
     }
     p_file.write(")");
     p_file.new_line();
     p_file.write("(start_ripup_costs ");
     {
-      Integer ripup_costs = p_settings.get_start_ripup_costs();
-      p_file.write(ripup_costs.toString());
+      int ripup_costs = p_settings.get_start_ripup_costs();
+      p_file.write(String.valueOf(ripup_costs));
     }
     p_file.write(")");
     p_file.new_line();
     p_file.write("(start_pass_no ");
     {
-      Integer pass_no = p_settings.get_start_pass_no();
-      p_file.write(pass_no.toString());
+      int pass_no = p_settings.get_start_pass_no();
+      p_file.write(String.valueOf(pass_no));
     }
     p_file.write(")");
     for (int i = 0; i < p_layer_structure.arr.length; ++i) {
@@ -222,13 +224,13 @@ public class AutorouteSettings {
       }
       p_file.new_line();
       p_file.write("(preferred_direction_trace_costs ");
-      Float trace_costs = (float) p_settings.get_preferred_direction_trace_costs(i);
-      p_file.write(trace_costs.toString());
+      float trace_costs = (float) p_settings.get_preferred_direction_trace_costs(i);
+      p_file.write(String.valueOf(trace_costs));
       p_file.write(")");
       p_file.new_line();
       p_file.write("(against_preferred_direction_trace_costs ");
       trace_costs = (float) p_settings.get_against_preferred_direction_trace_costs(i);
-      p_file.write(trace_costs.toString());
+      p_file.write(String.valueOf(trace_costs));
       p_file.write(")");
       p_file.end_scope();
     }

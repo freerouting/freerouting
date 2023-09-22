@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -10,10 +11,18 @@ import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Class describing a board outline. */
-public class BoardOutline extends Item implements java.io.Serializable {
+public class BoardOutline extends Item implements Serializable {
 
   private static final int HALF_WIDTH = 100;
   /** The board shapes inside the outline curves. */
@@ -22,11 +31,11 @@ public class BoardOutline extends Item implements java.io.Serializable {
    * The board shape outside the outline curves, where a keepout will be generated The outline
    * curves are holes of the keepout_area.
    */
-  private Area keepout_area = null;
+  private Area keepout_area;
   /**
    * Used instead of keepout_area if only the line shapes of the outlines are inserted as keepout.
    */
-  private TileShape[] keepout_lines = null;
+  private TileShape[] keepout_lines;
   private boolean keepout_outside_outline = false;
 
   /** Creates a new instance of BoardOutline */
@@ -36,12 +45,13 @@ public class BoardOutline extends Item implements java.io.Serializable {
     shapes = p_shapes;
   }
 
+  @Override
   public int tile_shape_count() {
     int result;
     if (this.keepout_outside_outline) {
       TileShape[] tile_shapes = this.get_keepout_area().split_to_convex();
       if (tile_shapes == null) {
-        // an error accured while dividing the area
+        // an error occurred while dividing the area
         result = 0;
       } else {
         result = tile_shapes.length * this.board.layer_structure.arr.length;
@@ -52,6 +62,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public int shape_layer(int p_index) {
     int shape_count = this.tile_shape_count();
     int result;
@@ -66,10 +77,12 @@ public class BoardOutline extends Item implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     return !(p_other instanceof BoardOutline || p_other instanceof ObstacleArea);
   }
 
+  @Override
   public IntBox bounding_box() {
     IntBox result = IntBox.EMPTY;
     for (PolylineShape curr_shape : this.shapes) {
@@ -78,18 +91,22 @@ public class BoardOutline extends Item implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public int first_layer() {
     return 0;
   }
 
+  @Override
   public int last_layer() {
     return this.board.layer_structure.arr.length - 1;
   }
 
+  @Override
   public boolean is_on_layer(int p_layer) {
     return true;
   }
 
+  @Override
   public void translate_by(Vector p_vector) {
     for (PolylineShape curr_shape : this.shapes) {
       curr_shape = curr_shape.translate_by(p_vector);
@@ -100,6 +117,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
     keepout_lines = null;
   }
 
+  @Override
   public void turn_90_degree(int p_factor, IntPoint p_pole) {
     for (PolylineShape curr_shape : this.shapes) {
       curr_shape = curr_shape.turn_90_degree(p_factor, p_pole);
@@ -110,6 +128,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
     keepout_lines = null;
   }
 
+  @Override
   public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole) {
     double angle = Math.toRadians(p_angle_in_degree);
     for (PolylineShape curr_shape : this.shapes) {
@@ -121,6 +140,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
     keepout_lines = null;
   }
 
+  @Override
   public void change_placement_side(IntPoint p_pole) {
     for (PolylineShape curr_shape : this.shapes) {
       curr_shape = curr_shape.mirror_vertical(p_pole);
@@ -131,12 +151,14 @@ public class BoardOutline extends Item implements java.io.Serializable {
     keepout_lines = null;
   }
 
+  @Override
   public double get_draw_intensity(GraphicsContext p_graphics_context) {
     return 1;
   }
 
+  @Override
   public int get_draw_priority() {
-    return app.freerouting.boardgraphics.Drawable.MAX_DRAW_PRIORITY;
+    return Drawable.MAX_DRAW_PRIORITY;
   }
 
   public int shape_count() {
@@ -151,6 +173,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
     return this.shapes[p_index];
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -158,9 +181,10 @@ public class BoardOutline extends Item implements java.io.Serializable {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.BOARD_OUTLINE);
   }
 
-  public java.awt.Color[] get_draw_colors(GraphicsContext p_graphics_context) {
-    java.awt.Color[] color_arr = new java.awt.Color[this.board.layer_structure.arr.length];
-    java.awt.Color draw_color = p_graphics_context.get_outline_color();
+  @Override
+  public Color[] get_draw_colors(GraphicsContext p_graphics_context) {
+    Color[] color_arr = new Color[this.board.layer_structure.arr.length];
+    Color draw_color = p_graphics_context.get_outline_color();
     Arrays.fill(color_arr, draw_color);
     return color_arr;
   }
@@ -171,10 +195,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
    */
   Area get_keepout_area() {
     if (this.keepout_area == null) {
-      PolylineShape[] hole_arr = new PolylineShape[this.shapes.length];
-      for (int i = 0; i < hole_arr.length; ++i) {
-        hole_arr[i] = this.shapes[i];
-      }
+      PolylineShape[] hole_arr = this.shapes.clone();
       keepout_area = new PolylineArea(this.board.bounding_box, hole_arr);
     }
     return this.keepout_area;
@@ -187,10 +208,11 @@ public class BoardOutline extends Item implements java.io.Serializable {
     return this.keepout_lines;
   }
 
+  @Override
   public void draw(
-      java.awt.Graphics p_g,
+      Graphics p_g,
       GraphicsContext p_graphics_context,
-      java.awt.Color[] p_color_arr,
+      Color[] p_color_arr,
       double p_intensity) {
     if (p_graphics_context == null || p_intensity <= 0) {
       return;
@@ -204,29 +226,32 @@ public class BoardOutline extends Item implements java.io.Serializable {
     }
   }
 
+  @Override
   public Item copy(int p_id_no) {
     return new BoardOutline(this.shapes, this.clearance_class_no(), p_id_no, this.board);
   }
 
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("board_outline"));
     print_clearance_info(p_window, p_locale);
     p_window.newline();
   }
 
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  @Override
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;
   }
 
   /**
-   * Returns, if keepout is generated outside the board outline. Otherwise only the line shapes of
+   * Returns, if keepout is generated outside the board outline. Otherwise, only the line shapes of
    * the outlines are inserted as keepout.
    */
   public boolean keepout_outside_outline_generated() {
@@ -234,7 +259,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
   }
 
   /**
-   * Makes the area outside this Outline to Keepout, if p_valus = true. Reinserts this Outline into
+   * Makes the area outside this Outline to Keepout, if p_value = true. Reinserts this Outline into
    * the search trees, if the value changes.
    */
   public void generate_keepout_outside(boolean p_value) {
@@ -249,7 +274,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
     this.board.search_tree_manager.insert(this);
   }
 
-  /** Returns the sum of the lines of all outline poligons. */
+  /** Returns the sum of the lines of all outline polygons. */
   public int line_count() {
     int result = 0;
     for (PolylineShape curr_shape : this.shapes) {
@@ -263,6 +288,7 @@ public class BoardOutline extends Item implements java.io.Serializable {
     return HALF_WIDTH;
   }
 
+  @Override
   protected TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree) {
     return p_search_tree.calculate_tree_shapes(this);
   }

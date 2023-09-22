@@ -4,11 +4,14 @@ import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -18,10 +21,10 @@ import java.util.LinkedList;
 public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     implements CompleteExpansionRoom, SearchTreeObject {
 
-  // ** identification number for implementong the Comparable interfacw */
+  // ** identification number for implementing the Comparable interface */
   private final int id_no;
   /** The array of entries in the SearchTree. Consists of just one element */
-  private ShapeTree.Leaf[] tree_entries = null;
+  private ShapeTree.Leaf[] tree_entries;
   /** The list of doors to items of the own net */
   private Collection<TargetItemExpansionDoor> target_doors;
   private boolean room_is_net_dependent = false;
@@ -29,14 +32,16 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   /** Creates a new instance of CompleteFreeSpaceExpansionRoom */
   public CompleteFreeSpaceExpansionRoom(TileShape p_shape, int p_layer, int p_id_no) {
     super(p_shape, p_layer);
-    target_doors = new LinkedList<TargetItemExpansionDoor>();
+    target_doors = new LinkedList<>();
     id_no = p_id_no;
   }
 
+  @Override
   public void set_search_tree_entries(ShapeTree.Leaf[] p_entries, ShapeTree p_tree) {
     tree_entries = p_entries;
   }
 
+  @Override
   public int compareTo(Object p_other) {
     int result;
     if (p_other instanceof FreeSpaceExpansionRoom) {
@@ -47,27 +52,32 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     return result;
   }
 
-  /** Removes the tree entries of this roomm from p_shape_tree. */
+  /** Removes the tree entries of this room from p_shape_tree. */
   public void remove_from_tree(ShapeTree p_shape_tree) {
     p_shape_tree.remove(this.tree_entries);
   }
 
+  @Override
   public int tree_shape_count(ShapeTree p_shape_tree) {
     return 1;
   }
 
+  @Override
   public TileShape get_tree_shape(ShapeTree p_shape_tree, int p_index) {
     return this.get_shape();
   }
 
+  @Override
   public int shape_layer(int p_index) {
     return this.get_layer();
   }
 
+  @Override
   public boolean is_obstacle(int p_net_no) {
     return true;
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return true;
   }
@@ -86,6 +96,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   /** Returns the list doors to target items of this room */
+  @Override
   public Collection<TargetItemExpansionDoor> get_target_doors() {
     return this.target_doors;
   }
@@ -95,6 +106,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     this.target_doors.add(p_door);
   }
 
+  @Override
   public boolean remove_door(ExpandableObject p_door) {
     boolean result;
     if (p_door instanceof TargetItemExpansionDoor) {
@@ -105,6 +117,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     return result;
   }
 
+  @Override
   public SearchTreeObject get_object() {
     return this;
   }
@@ -132,11 +145,12 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   /** Draws the shape of this room. */
+  @Override
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
-    java.awt.Color draw_color = p_graphics_context.get_trace_colors(false)[this.get_layer()];
+    Color draw_color = p_graphics_context.get_trace_colors(false)[this.get_layer()];
     double layer_visibility = p_graphics_context.get_layer_visibility(this.get_layer());
     p_graphics_context.fill_area(
         this.get_shape(), p_graphics, draw_color, p_intensity * layer_visibility);
@@ -146,14 +160,12 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   /** Check, if this FreeSpaceExpansionRoom is valid. */
   public boolean validate(AutorouteEngine p_autoroute_engine) {
     boolean result = true;
-    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<ShapeTree.TreeEntry>();
+    Collection<ShapeTree.TreeEntry> overlapping_objects = new LinkedList<>();
     int[] net_no_arr = new int[1];
     net_no_arr[0] = p_autoroute_engine.get_net_no();
     p_autoroute_engine.autoroute_search_tree.overlapping_tree_entries(
         this.get_shape(), this.get_layer(), net_no_arr, overlapping_objects);
-    Iterator<ShapeTree.TreeEntry> it = overlapping_objects.iterator();
-    while (it.hasNext()) {
-      ShapeTree.TreeEntry curr_entry = it.next();
+    for (ShapeTree.TreeEntry curr_entry : overlapping_objects) {
       if (curr_entry.object == this) {
         continue;
       }
@@ -177,11 +189,13 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   /** Removes all doors and target doors from this room. */
+  @Override
   public void clear_doors() {
     super.clear_doors();
-    this.target_doors = new LinkedList<TargetItemExpansionDoor>();
+    this.target_doors = new LinkedList<>();
   }
 
+  @Override
   public void reset_doors() {
     super.reset_doors();
     for (ExpandableObject curr_door : this.target_doors) {

@@ -6,10 +6,17 @@ import app.freerouting.autoroute.BatchOptRoute;
 import app.freerouting.autoroute.BatchOptRouteMT;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.TestLevel;
 import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.tests.Validate;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.ResourceBundle;
 
 /** GUI interactive thread for the batch autorouter. */
 public class BatchAutorouterThread extends InteractiveActionThread {
@@ -43,13 +50,14 @@ public class BatchAutorouterThread extends InteractiveActionThread {
             : new BatchOptRoute(this);
   }
 
+  @Override
   protected void thread_action() {
     for (ThreadActionListener hl : this.listeners) hl.autorouterStarted();
 
     FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
     try {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle(
+      ResourceBundle resources =
+          ResourceBundle.getBundle(
               "app.freerouting.interactive.InteractiveState", hdlg.get_locale());
       boolean saved_board_read_only = hdlg.is_board_read_only();
       hdlg.set_board_read_only(true);
@@ -87,7 +95,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
       if (num_threads > 0) {
         FRLogger.info(
             "Starting route optimization on "
-                + (num_threads <= 1 ? "1 thread" : num_threads + " threads")
+                + (num_threads == 1 ? "1 thread" : num_threads + " threads")
                 + "...");
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
 
@@ -119,7 +127,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
           } else {
             curr_message = resources.getString("completed");
           }
-          Integer incomplete_count = hdlg.get_ratsnest().incomplete_count();
+          int incomplete_count = hdlg.get_ratsnest().incomplete_count();
           String end_message =
               resources.getString("autoroute")
                   + " "
@@ -170,10 +178,10 @@ public class BatchAutorouterThread extends InteractiveActionThread {
 
       hdlg.get_panel().board_frame.refresh_windows();
       if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
-              == app.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE
+              == AngleRestriction.FORTYFIVE_DEGREE
           && hdlg.get_routing_board().get_test_level()
-              != app.freerouting.board.TestLevel.RELEASE_VERSION) {
-        app.freerouting.tests.Validate.multiple_of_45_degree(
+              != TestLevel.RELEASE_VERSION) {
+        Validate.multiple_of_45_degree(
             "after autoroute: ", hdlg.get_routing_board());
       }
     } catch (Exception e) {
@@ -191,14 +199,15 @@ public class BatchAutorouterThread extends InteractiveActionThread {
     }
   }
 
-  public void draw(java.awt.Graphics p_graphics) {
+  @Override
+  public void draw(Graphics p_graphics) {
     FloatLine curr_air_line = batch_autorouter.get_air_line();
     if (curr_air_line != null) {
       FloatPoint[] draw_line = new FloatPoint[2];
       draw_line[0] = curr_air_line.a;
       draw_line[1] = curr_air_line.b;
       // draw the incomplete
-      java.awt.Color draw_color = this.hdlg.graphics_context.get_incomplete_color();
+      Color draw_color = this.hdlg.graphics_context.get_incomplete_color();
       double draw_width =
           Math.min(
               this.hdlg.get_routing_board().communication.get_resolution(Unit.MIL) * 3,
@@ -209,7 +218,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
     int radius = 10 * this.hdlg.get_routing_board().rules.get_default_trace_half_width(0);
     if (current_opt_position != null) {
       final int draw_width = 1;
-      java.awt.Color draw_color = this.hdlg.graphics_context.get_incomplete_color();
+      Color draw_color = this.hdlg.graphics_context.get_incomplete_color();
       FloatPoint[] draw_points = new FloatPoint[2];
       draw_points[0] =
           new FloatPoint(current_opt_position.x - radius, current_opt_position.y - radius);

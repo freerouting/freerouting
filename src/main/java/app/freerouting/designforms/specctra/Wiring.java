@@ -1,5 +1,7 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.ConductionArea;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
@@ -10,6 +12,7 @@ import app.freerouting.board.Via;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -17,10 +20,16 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polygon;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.DefaultItemClearanceClasses;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 /** Class for reading and writing wiring scopes from dsn-files. */
 class Wiring extends ScopeKeyword {
@@ -30,14 +39,13 @@ class Wiring extends ScopeKeyword {
     super("wiring");
   }
 
-  public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException {
+  public static void write_scope(WriteScopeParameter p_par) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("wiring");
     // write the wires
     Collection<Trace> board_wires = p_par.board.get_traces();
-    Iterator<Trace> it = board_wires.iterator();
-    while (it.hasNext()) {
-      write_wire_scope(p_par, it.next());
+    for (Trace curr_board_wire : board_wires) {
+      write_wire_scope(p_par, curr_board_wire);
     }
     Collection<Via> board_vias = p_par.board.get_vias();
     for (Via curr_via : board_vias) {
@@ -50,23 +58,23 @@ class Wiring extends ScopeKeyword {
       if (curr_ob == null) {
         break;
       }
-      if (!(curr_ob instanceof app.freerouting.board.ConductionArea)) {
+      if (!(curr_ob instanceof ConductionArea)) {
         continue;
       }
-      app.freerouting.board.ConductionArea curr_area =
-          (app.freerouting.board.ConductionArea) curr_ob;
+      ConductionArea curr_area =
+          (ConductionArea) curr_ob;
       if (!(p_par.board.layer_structure.arr[curr_area.get_layer()].is_signal)) {
         // This conduction areas arw written in the structure scope.
         continue;
       }
-      write_conduction_area_scope(p_par, (app.freerouting.board.ConductionArea) curr_ob);
+      write_conduction_area_scope(p_par, (ConductionArea) curr_ob);
     }
     p_par.file.end_scope();
   }
 
   private static void write_via_scope(WriteScopeParameter p_par, Via p_via)
-      throws java.io.IOException {
-    app.freerouting.library.Padstack via_padstack = p_via.get_padstack();
+      throws IOException {
+    Padstack via_padstack = p_via.get_padstack();
     FloatPoint via_location = p_via.get_center().to_float();
     double[] via_coor = p_par.coordinate_transform.board_to_dsn(via_location);
     int net_no;
@@ -83,7 +91,7 @@ class Wiring extends ScopeKeyword {
     p_par.identifier_type.write(via_padstack.name, p_par.file);
     for (int i = 0; i < via_coor.length; ++i) {
       p_par.file.write(" ");
-      p_par.file.write((Double.valueOf(via_coor[i])).toString());
+      p_par.file.write(String.valueOf(via_coor[i]));
     }
     if (via_net != null) {
       write_net(via_net, p_par.file, p_par.identifier_type);
@@ -97,7 +105,7 @@ class Wiring extends ScopeKeyword {
   }
 
   private static void write_wire_scope(WriteScopeParameter p_par, Trace p_wire)
-      throws java.io.IOException {
+      throws IOException {
     if (!(p_wire instanceof PolylineTrace)) {
       FRLogger.warn("Wiring.write_wire_scope: trace type not yet implemented");
       return;
@@ -142,8 +150,8 @@ class Wiring extends ScopeKeyword {
   }
 
   private static void write_conduction_area_scope(
-      WriteScopeParameter p_par, app.freerouting.board.ConductionArea p_conduction_area)
-      throws java.io.IOException {
+      WriteScopeParameter p_par, ConductionArea p_conduction_area)
+      throws IOException {
     int net_count = p_conduction_area.net_count();
     if (net_count != 1) {
       FRLogger.warn("Plane.write_scope: unexpected net count");
@@ -151,7 +159,7 @@ class Wiring extends ScopeKeyword {
     }
     app.freerouting.rules.Net curr_net =
         p_par.board.rules.nets.get(p_conduction_area.get_net_no(0));
-    app.freerouting.geometry.planar.Area curr_area = p_conduction_area.get_area();
+    Area curr_area = p_conduction_area.get_area();
     int layer_no = p_conduction_area.get_layer();
     app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[layer_no];
     Layer conduction_layer = new Layer(board_layer.name, layer_no, board_layer.is_signal);
@@ -184,7 +192,7 @@ class Wiring extends ScopeKeyword {
 
   private static void write_net(
       app.freerouting.rules.Net p_net, IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(");
     Net.write_net_id(p_net, p_file, p_identifier_type);
@@ -192,7 +200,7 @@ class Wiring extends ScopeKeyword {
   }
 
   private static void write_fixed_state(IndentFileWriter p_file, FixedState p_fixed_state)
-      throws java.io.IOException {
+      throws IOException {
     if (p_fixed_state == FixedState.UNFIXED) {
       return;
     }
@@ -208,8 +216,8 @@ class Wiring extends ScopeKeyword {
   }
 
   private static Collection<app.freerouting.rules.Net> get_subnets(
-      Net.Id p_net_id, app.freerouting.rules.BoardRules p_rules) {
-    Collection<app.freerouting.rules.Net> found_nets = new LinkedList<app.freerouting.rules.Net>();
+      Net.Id p_net_id, BoardRules p_rules) {
+    Collection<app.freerouting.rules.Net> found_nets = new LinkedList<>();
     if (p_net_id != null) {
       if (p_net_id.subnet_number > 0) {
         app.freerouting.rules.Net found_net =
@@ -226,9 +234,9 @@ class Wiring extends ScopeKeyword {
 
   private static boolean via_exists(
       IntPoint p_location,
-      app.freerouting.library.Padstack p_padstack,
+      Padstack p_padstack,
       int[] p_net_no_arr,
-      app.freerouting.board.BasicBoard p_board) {
+      BasicBoard p_board) {
     ItemSelectionFilter filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
     int from_layer = p_padstack.from_layer();
@@ -246,26 +254,26 @@ class Wiring extends ScopeKeyword {
     return false;
   }
 
-  static app.freerouting.board.FixedState calc_fixed(IJFlexScanner p_scanner) {
+  static FixedState calc_fixed(IJFlexScanner p_scanner) {
     try {
-      app.freerouting.board.FixedState result = app.freerouting.board.FixedState.UNFIXED;
+      FixedState result = FixedState.UNFIXED;
       Object next_token = p_scanner.next_token();
       if (next_token == SHOVE_FIXED) {
-        result = app.freerouting.board.FixedState.SHOVE_FIXED;
+        result = FixedState.SHOVE_FIXED;
       } else if (next_token == FIX) {
-        result = app.freerouting.board.FixedState.SYSTEM_FIXED;
+        result = FixedState.SYSTEM_FIXED;
       } else if (next_token != NORMAL) {
-        result = app.freerouting.board.FixedState.USER_FIXED;
+        result = FixedState.USER_FIXED;
       }
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
         FRLogger.warn("Wiring.is_fixed: ) expected");
-        return app.freerouting.board.FixedState.UNFIXED;
+        return FixedState.UNFIXED;
       }
       return result;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Wiring.is_fixed: IO error scanning file", e);
-      return app.freerouting.board.FixedState.UNFIXED;
+      return FixedState.UNFIXED;
     }
   }
 
@@ -289,19 +297,20 @@ class Wiring extends ScopeKeyword {
         FRLogger.warn("Wiring.read_net_id: closing bracket expected");
       }
       return new Net.Id(net_name, subnet_number);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_string_scope: IO error scanning file", e);
       return null;
     }
   }
 
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     Object next_token = null;
     for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.warn("Wiring.read_scope: IO error scanning file");
         return false;
       }
@@ -341,16 +350,16 @@ class Wiring extends ScopeKeyword {
   private Item read_wire_scope(ReadScopeParameter p_par) {
     Net.Id net_id = null;
     String clearance_class_name = null;
-    app.freerouting.board.FixedState fixed = app.freerouting.board.FixedState.UNFIXED;
+    FixedState fixed = FixedState.UNFIXED;
     Path path = null; // Used, if a trace is read.
     Shape border_shape = null; // Used, if a conduction area is read.
-    Collection<Shape> hole_list = new LinkedList<Shape>();
+    Collection<Shape> hole_list = new LinkedList<>();
     Object next_token = null;
     for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Wiring.read_wire_scope: IO error scanning file", e);
         return null;
       }
@@ -382,7 +391,7 @@ class Wiring extends ScopeKeyword {
           // overread the closing bracket
           try {
             next_token = p_par.scanner.next_token();
-          } catch (java.io.IOException e) {
+          } catch (IOException e) {
             FRLogger.error("Wiring.read_wire_scope: IO error scanning file", e);
             return null;
           }
@@ -446,12 +455,12 @@ class Wiring extends ScopeKeyword {
       if (clearance_class_no < 0) {
         clearance_class_no =
             net_class.default_item_clearance_classes.get(
-                app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.AREA);
+                DefaultItemClearanceClasses.ItemClass.AREA);
       }
-      Collection<Shape> area = new LinkedList<Shape>();
+      Collection<Shape> area = new LinkedList<>();
       area.add(border_shape);
       area.addAll(hole_list);
-      app.freerouting.geometry.planar.Area conduction_area =
+      Area conduction_area =
           Shape.transform_area_to_board(area, p_par.coordinate_transform);
       result =
           board.insert_conduction_area(
@@ -460,7 +469,7 @@ class Wiring extends ScopeKeyword {
       if (clearance_class_no < 0) {
         clearance_class_no =
             net_class.default_item_clearance_classes.get(
-                app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
+                DefaultItemClearanceClasses.ItemClass.TRACE);
       }
       IntPoint[] corner_arr = new IntPoint[path.coordinate_arr.length / 2];
       double[] curr_point = new double[2];
@@ -489,7 +498,7 @@ class Wiring extends ScopeKeyword {
       if (clearance_class_no < 0) {
         clearance_class_no =
             net_class.default_item_clearance_classes.get(
-                app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
+                DefaultItemClearanceClasses.ItemClass.TRACE);
       }
       Line[] line_arr = new Line[path.coordinate_arr.length / 4];
       double[] curr_point = new double[2];
@@ -517,7 +526,7 @@ class Wiring extends ScopeKeyword {
   }
 
   /**
-   * Maybe trace of type turret without net in Mentor design. Try to assig the net by calculating
+   * Maybe trace of type turret without net in Mentor design. Try to assign the net by calculating
    * the overlaps.
    */
   private void try_correct_net(Item p_item) {
@@ -525,7 +534,7 @@ class Wiring extends ScopeKeyword {
       return;
     }
     Trace curr_trace = (Trace) p_item;
-    java.util.Set<Item> contacts = curr_trace.get_normal_contacts(curr_trace.first_corner(), true);
+    Set<Item> contacts = curr_trace.get_normal_contacts(curr_trace.first_corner(), true);
     contacts.addAll(curr_trace.get_normal_contacts(curr_trace.last_corner(), true));
     int corrected_net_no = 0;
     for (Item curr_contact : contacts) {
@@ -541,7 +550,7 @@ class Wiring extends ScopeKeyword {
 
   private boolean read_via_scope(ReadScopeParameter p_par) {
     try {
-      app.freerouting.board.FixedState fixed = app.freerouting.board.FixedState.UNFIXED;
+      FixedState fixed = FixedState.UNFIXED;
       // read the padstack name
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {
@@ -554,9 +563,9 @@ class Wiring extends ScopeKeyword {
       for (int i = 0; i < 2; ++i) {
         next_token = p_par.scanner.next_token();
         if (next_token instanceof Double) {
-          location[i] = ((Double) next_token).doubleValue();
+          location[i] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          location[i] = ((Integer) next_token).intValue();
+          location[i] = (Integer) next_token;
         } else {
           FRLogger.warn("Wiring.read_via_scope: number expected");
           return false;
@@ -588,7 +597,7 @@ class Wiring extends ScopeKeyword {
         }
       }
       RoutingBoard board = p_par.board_handling.get_routing_board();
-      app.freerouting.library.Padstack curr_padstack = board.library.padstacks.get(padstack_name);
+      Padstack curr_padstack = board.library.padstacks.get(padstack_name);
       if (curr_padstack == null) {
         FRLogger.warn("Wiring.read_via_scope: via padstack not found");
         return false;
@@ -611,7 +620,7 @@ class Wiring extends ScopeKeyword {
       if (clearance_class_no < 0) {
         clearance_class_no =
             net_class.default_item_clearance_classes.get(
-                app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
+                DefaultItemClearanceClasses.ItemClass.VIA);
       }
       IntPoint board_location = p_par.coordinate_transform.dsn_to_board(location).round();
       if (via_exists(board_location, curr_padstack, net_no_arr, board)) {
@@ -623,7 +632,7 @@ class Wiring extends ScopeKeyword {
             curr_padstack, board_location, net_no_arr, clearance_class_no, fixed, attach_allowed);
       }
       return true;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Wiring.read_via_scope: IO error scanning file", e);
       return false;
     }

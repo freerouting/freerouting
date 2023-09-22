@@ -1,16 +1,19 @@
 package app.freerouting.library;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Vector;
 
 /** The logical parts contain information for gate swap and pin swap. */
-public class LogicalParts implements java.io.Serializable {
+public class LogicalParts implements Serializable {
   /** The array of logical parts */
-  private final Vector<LogicalPart> part_arr = new Vector<LogicalPart>();
+  private final Vector<LogicalPart> part_arr = new Vector<>();
 
   /** Adds a logical part to the database. */
   public LogicalPart add(String p_name, LogicalPart.PartPin[] p_part_pin_arr) {
-    java.util.Arrays.sort(p_part_pin_arr);
+    Arrays.sort(p_part_pin_arr);
     LogicalPart new_part = new LogicalPart(p_name, part_arr.size() + 1, p_part_pin_arr);
     part_arr.add(new_part);
     return new_part;
@@ -19,7 +22,7 @@ public class LogicalParts implements java.io.Serializable {
   /** Returns the logical part with the input name or null, if no such package exists. */
   public LogicalPart get(String p_name) {
     for (LogicalPart curr_part : this.part_arr) {
-      if (curr_part != null && curr_part.name.compareToIgnoreCase(p_name) == 0) {
+      if (curr_part != null && curr_part.name.equalsIgnoreCase(p_name)) {
         return curr_part;
       }
     }

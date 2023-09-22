@@ -1,10 +1,12 @@
 package app.freerouting.gui;
 
+import java.util.Locale;
+
 /** Window with a list for selecting router demonstrations in the net. */
 public class WindowNetDemonstrations extends WindowNetSamples {
 
   /** Creates a new instance of WindowNetDemonstration */
-  public WindowNetDemonstrations(java.util.Locale p_locale) {
+  public WindowNetDemonstrations(Locale p_locale) {
     super(p_locale, "router_demonstrations", "replay_example", 7);
   }
 
@@ -12,6 +14,7 @@ public class WindowNetDemonstrations extends WindowNetSamples {
    * To be edited when the demonstration examples change. For every String in the second column a
    * String has to be added to the resource file WindowNetSamples.
    */
+  @Override
   protected void fill_list() {
     add("sample_45.dsn", "45_degree_logfile", AdditionalAction.READ_LOGFILE);
     add("int_ar.dsn", "drag_component_logfile", AdditionalAction.READ_LOGFILE);
@@ -21,6 +24,7 @@ public class WindowNetDemonstrations extends WindowNetSamples {
     add("sharp_empty.dsn", "autorouter_example_3", AdditionalAction.AUTOROUTE);
   }
 
+  @Override
   protected void button_pushed() {
     int index = list.getSelectedIndex();
     if (index < 0 || index >= list_model.getSize()) {

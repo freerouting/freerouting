@@ -4,10 +4,12 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Limits;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 /** Transformation function between the board and the screen coordinate systems. */
-public class CoordinateTransform implements java.io.Serializable {
+public class CoordinateTransform implements Serializable {
   final IntBox design_box;
   final IntBox design_box_with_offset;
   final Dimension screen_bounds;
@@ -132,27 +134,25 @@ public class CoordinateTransform implements java.io.Serializable {
    * Transform a geometry.planar.IntBox to a java.awt.Rectangle If the internal rotation is not a
    * multiple of Pi/2, a bounding rectangle of the rotated rectangular shape is returned.
    */
-  public java.awt.Rectangle board_to_screen(IntBox p_box) {
+  public Rectangle board_to_screen(IntBox p_box) {
     Point2D corner_1 = board_to_screen(p_box.ll.to_float());
     Point2D corner_2 = board_to_screen(p_box.ur.to_float());
     double ll_x = Math.min(corner_1.getX(), corner_2.getX());
     double ll_y = Math.min(corner_1.getY(), corner_2.getY());
     double dx = Math.abs(corner_2.getX() - corner_1.getX());
     double dy = Math.abs(corner_2.getY() - corner_1.getY());
-    java.awt.Rectangle result =
-        new java.awt.Rectangle(
+    return new Rectangle(
             (int) Math.floor(ll_x),
             (int) Math.floor(ll_y),
             (int) Math.ceil(dx),
             (int) Math.ceil(dy));
-    return result;
   }
 
   /**
    * Transform a java.awt.Rectangle to a geometry.planar.IntBox If the internal rotation is not a
    * multiple of Pi/2, a bounding box of the rotated rectangular shape is returned.
    */
-  public IntBox screen_to_board(java.awt.Rectangle p_rect) {
+  public IntBox screen_to_board(Rectangle p_rect) {
     FloatPoint corner_1 = screen_to_board(new Point2D.Double(p_rect.getX(), p_rect.getY()));
     FloatPoint corner_2 =
         screen_to_board(
@@ -175,14 +175,14 @@ public class CoordinateTransform implements java.io.Serializable {
     mirror_left_right = p_value;
   }
 
-  /** Returns, if the top side and the botton side of the board are swapped. */
+  /** Returns, if the top side and the bottom side of the board are swapped. */
   public boolean is_mirror_top_bottom() {
     // Because the origin of display is the upper left corner, the internal value
     // is opposite to the result of this function.
     return !mirror_top_bottom;
   }
 
-  /** If p_value is true, the top side and the botton side of the board will be swapped. */
+  /** If p_value is true, the top side and the bottom side of the board will be swapped. */
   public void set_mirror_top_bottom(boolean p_value) {
     // Because the origin of display is the upper left corner, the internal value
     // will be opposite to the input value of this function.

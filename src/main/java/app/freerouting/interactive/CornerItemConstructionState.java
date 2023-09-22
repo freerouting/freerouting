@@ -4,11 +4,17 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 
+import javax.swing.JPopupMenu;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Iterator;
+import java.util.LinkedList;
+
 /** Common class for constructing an obstacle with a polygonal shape. */
 public class CornerItemConstructionState extends InteractiveState {
 
   /** stored corners of the shape of the item under construction */
-  protected java.util.LinkedList<IntPoint> corner_list = new java.util.LinkedList<IntPoint>();
+  protected LinkedList<IntPoint> corner_list = new LinkedList<>();
   protected FloatPoint snapped_mouse_position;
   protected boolean observers_activated = false;
 
@@ -22,6 +28,7 @@ public class CornerItemConstructionState extends InteractiveState {
   }
 
   /** adds a corner to the polygon of the item under construction */
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     return add_corner(p_location);
   }
@@ -29,7 +36,7 @@ public class CornerItemConstructionState extends InteractiveState {
   /** adds a corner to the polygon of the item under construction */
   public InteractiveState add_corner(FloatPoint p_location) {
     IntPoint location = this.snap(p_location.round());
-    // make shure that the coordinates are integer
+    // make sure that the coordinates are integer
     this.corner_list.add(location);
     hdlg.repaint();
     if (activityReplayFile != null) {
@@ -38,11 +45,13 @@ public class CornerItemConstructionState extends InteractiveState {
     return this;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_point) {
     return add_corner(p_point);
   }
 
   /** stores the location of the mouse pointer after snapping it to the snap_angle */
+  @Override
   public InteractiveState mouse_moved() {
     super.mouse_moved();
     IntPoint curr_mouse_pos = hdlg.get_current_mouse_position().round();
@@ -51,18 +60,20 @@ public class CornerItemConstructionState extends InteractiveState {
     return this;
   }
 
-  public javax.swing.JPopupMenu get_popup_menu() {
+  @Override
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_corneritem_construction;
   }
 
   /** draws the polygon constructed so far as a visual aid */
-  public void draw(java.awt.Graphics p_graphics) {
+  @Override
+  public void draw(Graphics p_graphics) {
     int corner_count = corner_list.size();
     if (this.snapped_mouse_position != null) {
       ++corner_count;
     }
     FloatPoint[] corners = new FloatPoint[corner_count];
-    java.util.Iterator<IntPoint> it = corner_list.iterator();
+    Iterator<IntPoint> it = corner_list.iterator();
     for (int i = 0; i < corners.length - 1; ++i) {
       corners[i] = (it.next()).to_float();
     }
@@ -71,7 +82,7 @@ public class CornerItemConstructionState extends InteractiveState {
     } else {
       corners[corners.length - 1] = this.snapped_mouse_position;
     }
-    hdlg.graphics_context.draw(corners, 300, java.awt.Color.white, p_graphics, 0.5);
+    hdlg.graphics_context.draw(corners, 300, Color.white, p_graphics, 0.5);
   }
 
   /** add a corner to make the last lines fulfil the snap angle restrictions */
@@ -100,7 +111,7 @@ public class CornerItemConstructionState extends InteractiveState {
    */
   private IntPoint snap(IntPoint p_point) {
     IntPoint result;
-    boolean list_empty = (corner_list.size() == 0);
+    boolean list_empty = (corner_list.isEmpty());
     if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
             == AngleRestriction.NINETY_DEGREE
         && !list_empty) {

@@ -1,6 +1,9 @@
 package app.freerouting.gui;
 
+import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
+
+import java.util.ResourceBundle;
 
 /** Interactive Frame to adjust the visibility of the individual board items */
 public class WindowObjectVisibility extends WindowVisibility {
@@ -13,8 +16,8 @@ public class WindowObjectVisibility extends WindowVisibility {
 
   /** Returns a new instance of ItemVisibilityFrame */
   public static WindowObjectVisibility get_instance(BoardFrame p_board_frame) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowObjectVisibility", p_board_frame.get_locale());
     String title = resources.getString("title");
     String header_message = resources.getString("header_message");
@@ -29,15 +32,17 @@ public class WindowObjectVisibility extends WindowVisibility {
     return result;
   }
 
-  /** Refreshs the displayed values in this window. */
+  /** Refreshes the displayed values in this window. */
+  @Override
   public void refresh() {
-    app.freerouting.boardgraphics.ColorIntensityTable color_intensity_table =
+    ColorIntensityTable color_intensity_table =
         this.get_board_handling().graphics_context.color_intensity_table;
     for (int i = 0; i < ObjectNames.values().length; ++i) {
       this.set_slider_value(i, color_intensity_table.get_value(i));
     }
   }
 
+  @Override
   protected void set_changed_value(int p_index, double p_value) {
 
     get_board_handling().graphics_context.color_intensity_table.set_value(p_index, p_value);

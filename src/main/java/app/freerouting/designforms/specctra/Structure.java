@@ -1,21 +1,38 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.BoardOutline;
+import app.freerouting.board.Communication;
+import app.freerouting.board.ConductionArea;
 import app.freerouting.board.FixedState;
+import app.freerouting.board.ObstacleArea;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
+import app.freerouting.board.ViaObstacleArea;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.datastructures.UndoableObjects.Storable;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.Limits;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.library.BoardLibrary;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 /** Class for reading and writing structure scopes from dsn-files. */
@@ -26,7 +43,7 @@ class Structure extends ScopeKeyword {
     super("structure");
   }
 
-  public static void write_scope(WriteScopeParameter p_par) throws java.io.IOException {
+  public static void write_scope(WriteScopeParameter p_par) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("structure");
 
@@ -61,45 +78,45 @@ class Structure extends ScopeKeyword {
     p_par.file.end_scope();
   }
 
-  static private void write_conduction_areas(WriteScopeParameter p_par) throws java.io.IOException {
-    Storable curr_ob = null;
+  static private void write_conduction_areas(WriteScopeParameter p_par) throws IOException {
+    Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
       if (curr_ob == null) {
         break;
       }
-      if (!(curr_ob instanceof app.freerouting.board.ConductionArea)) {
+      if (!(curr_ob instanceof ConductionArea)) {
         continue;
       }
-      app.freerouting.board.ConductionArea curr_area =
-          (app.freerouting.board.ConductionArea) curr_ob;
+      ConductionArea curr_area =
+          (ConductionArea) curr_ob;
       if (p_par.board.layer_structure.arr[curr_area.get_layer()].is_signal) {
         // These conduction areas are written in the wiring scope.
         continue;
       }
-      Plane.write_scope(p_par, (app.freerouting.board.ConductionArea) curr_ob);
+      Plane.write_scope(p_par, (ConductionArea) curr_ob);
     }
   }
 
-  static private void write_keepouts(WriteScopeParameter p_par) throws java.io.IOException {
-    Storable curr_ob = null;
+  static private void write_keepouts(WriteScopeParameter p_par) throws IOException {
+    Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
       if (curr_ob == null) {
         break;
       }
-      if (!(curr_ob instanceof app.freerouting.board.ObstacleArea)) {
+      if (!(curr_ob instanceof ObstacleArea)) {
         continue;
       }
-      app.freerouting.board.ObstacleArea curr_keepout =
-          (app.freerouting.board.ObstacleArea) curr_ob;
+      ObstacleArea curr_keepout =
+          (ObstacleArea) curr_ob;
       if (curr_keepout.get_component_no() != 0) {
         // keepouts belonging to a component are not written individually.
         continue;
       }
-      if (curr_keepout instanceof app.freerouting.board.ConductionArea) {
+      if (curr_keepout instanceof ConductionArea) {
         // conduction area will be written later.
         continue;
       }
@@ -107,7 +124,7 @@ class Structure extends ScopeKeyword {
     }
   }
 
-  static private void write_boundaries(WriteScopeParameter p_par) throws java.io.IOException {
+  static private void write_boundaries(WriteScopeParameter p_par) throws IOException {
     // write the bounding box
     p_par.file.start_scope();
     p_par.file.write("boundary");
@@ -117,14 +134,14 @@ class Structure extends ScopeKeyword {
     bounding_rectangle.write_scope(p_par.file, p_par.identifier_type);
     p_par.file.end_scope();
     // lookup the outline in the board
-    Storable curr_ob = null;
+    Storable curr_ob;
     Iterator<UndoableObjects.UndoableObjectNode> it = p_par.board.item_list.start_read_object();
     for (; ; ) {
       curr_ob = p_par.board.item_list.read_object(it);
       if (curr_ob == null) {
         break;
       }
-      if (curr_ob instanceof app.freerouting.board.BoardOutline) {
+      if (curr_ob instanceof BoardOutline) {
         break;
       }
     }
@@ -132,7 +149,7 @@ class Structure extends ScopeKeyword {
       FRLogger.warn("Structure.write_scope; outline not found");
       return;
     }
-    app.freerouting.board.BoardOutline outline = (app.freerouting.board.BoardOutline) curr_ob;
+    BoardOutline outline = (BoardOutline) curr_ob;
 
     // write the outline
     for (int i = 0; i < outline.shape_count(); ++i) {
@@ -145,7 +162,7 @@ class Structure extends ScopeKeyword {
     }
   }
 
-  static void write_layers(WriteScopeParameter p_par) throws java.io.IOException {
+  static void write_layers(WriteScopeParameter p_par) throws IOException {
     for (int i = 0; i < p_par.board.layer_structure.arr.length; ++i) {
       boolean write_layer_rule =
           p_par.board.rules.get_default_net_class().get_trace_half_width(i)
@@ -155,20 +172,20 @@ class Structure extends ScopeKeyword {
     }
   }
 
-  static void write_default_rules(WriteScopeParameter p_par) throws java.io.IOException {
+  static void write_default_rules(WriteScopeParameter p_par) throws IOException {
     // write the default rule using 0 as default layer.
     Rule.write_default_rule(p_par, 0);
   }
 
   private static void write_via_padstacks(
-      app.freerouting.library.BoardLibrary p_library,
+      BoardLibrary p_library,
       IndentFileWriter p_file,
       IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(via");
     for (int i = 0; i < p_library.via_padstack_count(); ++i) {
-      app.freerouting.library.Padstack curr_padstack = p_library.get_via_padstack(i);
+      Padstack curr_padstack = p_library.get_via_padstack(i);
       if (curr_padstack != null) {
         p_file.write(" ");
         p_identifier_type.write(curr_padstack.name, p_file);
@@ -180,8 +197,8 @@ class Structure extends ScopeKeyword {
   }
 
   private static void write_control_scope(
-      app.freerouting.rules.BoardRules p_rules, IndentFileWriter p_file)
-      throws java.io.IOException {
+      BoardRules p_rules, IndentFileWriter p_file)
+      throws IOException {
     p_file.start_scope();
     p_file.write("control");
     p_file.new_line();
@@ -202,9 +219,9 @@ class Structure extends ScopeKeyword {
   }
 
   private static void write_keepout_scope(
-      WriteScopeParameter p_par, app.freerouting.board.ObstacleArea p_keepout)
-      throws java.io.IOException {
-    app.freerouting.geometry.planar.Area keepout_area = p_keepout.get_area();
+      WriteScopeParameter p_par, ObstacleArea p_keepout)
+      throws IOException {
+    Area keepout_area = p_keepout.get_area();
     int layer_no = p_keepout.get_layer();
     app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[layer_no];
     Layer keepout_layer = new Layer(board_layer.name, layer_no, board_layer.is_signal);
@@ -218,7 +235,7 @@ class Structure extends ScopeKeyword {
       holes = keepout_area.get_holes();
     }
     p_par.file.start_scope();
-    if (p_keepout instanceof app.freerouting.board.ViaObstacleArea) {
+    if (p_keepout instanceof ViaObstacleArea) {
       p_par.file.write("via_keepout");
     } else {
       p_par.file.write("keepout");
@@ -271,7 +288,7 @@ class Structure extends ScopeKeyword {
         }
         prev_token = next_token;
       }
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Structure.read_boundary_scope: IO error scanning file", e);
       return false;
     }
@@ -303,7 +320,7 @@ class Structure extends ScopeKeyword {
 
       String layer_string = p_scanner.next_string();
 
-      Collection<String> net_names = new LinkedList<String>();
+      Collection<String> net_names = new LinkedList<>();
       Object next_token = p_scanner.next_token();
       while (next_token != Keyword.CLOSED_BRACKET) {
         if (next_token != Keyword.OPEN_BRACKET) {
@@ -357,7 +374,7 @@ class Structure extends ScopeKeyword {
         p_board_construction_info.layer_info.add(curr_layer);
         ++p_board_construction_info.found_layer_count;
       }
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Layer.read_scope: IO error scanning file", e);
       return false;
     }
@@ -366,8 +383,8 @@ class Structure extends ScopeKeyword {
 
   static Collection<String> read_via_padstacks(IJFlexScanner p_scanner) {
     try {
-      Collection<String> normal_vias = new LinkedList<String>();
-      Collection<String> spare_vias = new LinkedList<String>();
+      Collection<String> normal_vias = new LinkedList<>();
+      Collection<String> spare_vias = new LinkedList<>();
       for (; ; ) {
         Object next_token = p_scanner.next_token();
         if (next_token == Keyword.CLOSED_BRACKET) {
@@ -390,7 +407,7 @@ class Structure extends ScopeKeyword {
       // add the spare vias to the end of the list
       normal_vias.addAll(spare_vias);
       return normal_vias;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Structure.read_via_padstack: IO error scanning file", e);
       return null;
     }
@@ -402,7 +419,7 @@ class Structure extends ScopeKeyword {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Structure.read_control_scope: IO error scanning file", e);
         return false;
       }
@@ -425,16 +442,16 @@ class Structure extends ScopeKeyword {
     return true;
   }
 
-  static app.freerouting.board.AngleRestriction read_snap_angle(IJFlexScanner p_scanner) {
+  static AngleRestriction read_snap_angle(IJFlexScanner p_scanner) {
     try {
       Object next_token = p_scanner.next_token();
-      app.freerouting.board.AngleRestriction snap_angle;
+      AngleRestriction snap_angle;
       if (next_token == Keyword.NINETY_DEGREE) {
-        snap_angle = app.freerouting.board.AngleRestriction.NINETY_DEGREE;
+        snap_angle = AngleRestriction.NINETY_DEGREE;
       } else if (next_token == Keyword.FORTYFIVE_DEGREE) {
-        snap_angle = app.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE;
+        snap_angle = AngleRestriction.FORTYFIVE_DEGREE;
       } else if (next_token == Keyword.NONE) {
-        snap_angle = app.freerouting.board.AngleRestriction.NONE;
+        snap_angle = AngleRestriction.NONE;
       } else {
         FRLogger.warn("Structure.read_snap_angle_scope: unexpected token");
         return null;
@@ -445,22 +462,22 @@ class Structure extends ScopeKeyword {
         return null;
       }
       return snap_angle;
-    } catch (java.io.IOException e) {
-      FRLogger.error("Structure.read_snap_angl: IO error scanning file", e);
+    } catch (IOException e) {
+      FRLogger.error("Structure.read_snap_angle: IO error scanning file", e);
       return null;
     }
   }
 
   static void write_snap_angle(
-      IndentFileWriter p_file, app.freerouting.board.AngleRestriction p_angle_restriction)
-      throws java.io.IOException {
+      IndentFileWriter p_file, AngleRestriction p_angle_restriction)
+      throws IOException {
     p_file.start_scope();
     p_file.write("snap_angle ");
     p_file.new_line();
 
-    if (p_angle_restriction == app.freerouting.board.AngleRestriction.NINETY_DEGREE) {
+    if (p_angle_restriction == AngleRestriction.NINETY_DEGREE) {
       p_file.write("ninety_degree");
-    } else if (p_angle_restriction == app.freerouting.board.AngleRestriction.FORTYFIVE_DEGREE) {
+    } else if (p_angle_restriction == AngleRestriction.FORTYFIVE_DEGREE) {
       p_file.write("fortyfive_degree");
     } else {
       p_file.write("none");
@@ -469,15 +486,15 @@ class Structure extends ScopeKeyword {
   }
 
   private static void insert_missing_power_planes(
-      Collection<Layer> p_layer_info, NetList p_netlist, app.freerouting.board.BasicBoard p_board) {
-    Collection<app.freerouting.board.ConductionArea> conduction_areas =
+      Collection<Layer> p_layer_info, NetList p_netlist, BasicBoard p_board) {
+    Collection<ConductionArea> conduction_areas =
         p_board.get_conduction_areas();
     for (Layer curr_layer : p_layer_info) {
       if (curr_layer.is_signal) {
         continue;
       }
       boolean conduction_area_found = false;
-      for (app.freerouting.board.ConductionArea curr_conduction_area : conduction_areas) {
+      for (ConductionArea curr_conduction_area : conduction_areas) {
         if (curr_conduction_area.get_layer() == curr_layer.no) {
           conduction_area_found = true;
           break;
@@ -538,7 +555,7 @@ class Structure extends ScopeKeyword {
         curr_shape.is_hole = other_shape.contains_all_corners(curr_shape);
       }
     }
-    Collection<PolylineShape> hole_list = new LinkedList<PolylineShape>();
+    Collection<PolylineShape> hole_list = new LinkedList<>();
     for (int i = 0; i < shape_arr.length; ++i) {
       if (shape_arr[i].is_hole) {
         p_outline_shapes.remove(shape_arr[i].shape);
@@ -557,9 +574,7 @@ class Structure extends ScopeKeyword {
       BoardRules p_board_rules) {
     boolean smd_to_turn_gap_found = false;
     // update the clearance matrix
-    Iterator<Rule> it = p_board_construction_info.default_rules.iterator();
-    while (it.hasNext()) {
-      Rule curr_ob = it.next();
+    for (Rule curr_ob : p_board_construction_info.default_rules) {
       if (curr_ob instanceof Rule.ClearanceRule) {
         Rule.ClearanceRule curr_rule = (Rule.ClearanceRule) curr_ob;
         if (set_clearance_rule(
@@ -569,9 +584,7 @@ class Structure extends ScopeKeyword {
       }
     }
     // update width rules
-    it = p_board_construction_info.default_rules.iterator();
-    while (it.hasNext()) {
-      Object curr_ob = it.next();
+    for (Object curr_ob : p_board_construction_info.default_rules) {
       if (curr_ob instanceof Rule.WidthRule) {
         double wire_width = ((Rule.WidthRule) curr_ob).value;
         int trace_halfwidth =
@@ -579,16 +592,12 @@ class Structure extends ScopeKeyword {
         p_board_rules.set_default_trace_half_widths(trace_halfwidth);
       }
     }
-    Iterator<LayerRule> it3 = p_board_construction_info.layer_dependent_rules.iterator();
-    while (it3.hasNext()) {
-      LayerRule layer_rule = it3.next();
+    for (LayerRule layer_rule : p_board_construction_info.layer_dependent_rules) {
       int layer_no = p_par.layer_structure.get_no(layer_rule.layer_name);
       if (layer_no < 0) {
         continue;
       }
-      Iterator<Rule> it2 = layer_rule.rule.iterator();
-      while (it2.hasNext()) {
-        Rule curr_ob = it2.next();
+      for (Rule curr_ob : layer_rule.rule) {
         if (curr_ob instanceof Rule.WidthRule) {
           double wire_width = ((Rule.WidthRule) curr_ob).value;
           int trace_halfwidth =
@@ -629,9 +638,7 @@ class Structure extends ScopeKeyword {
     if (contains_wire_clearance_pair(p_rule.clearance_class_pairs)) {
       create_default_clearance_classes(p_board_rules);
     }
-    Iterator<String> it = p_rule.clearance_class_pairs.iterator();
-    while (it.hasNext()) {
-      String curr_string = it.next();
+    for (String curr_string : p_rule.clearance_class_pairs) {
       if (curr_string.equalsIgnoreCase("smd_to_turn_gap")) {
         p_board_rules.set_pin_edge_to_turn_dist(curr_clearance);
         result = true;
@@ -719,21 +726,18 @@ class Structure extends ScopeKeyword {
     p_board_rules.clearance_matrix.append_class(p_name);
     int result = p_board_rules.clearance_matrix.get_no(p_name);
     app.freerouting.rules.NetClass default_net_class = p_board_rules.get_default_net_class();
-    if (p_name.equals("via")) {
-      default_net_class.default_item_clearance_classes.set(ItemClass.VIA, result);
-    } else if (p_name.equals("pin")) {
-      default_net_class.default_item_clearance_classes.set(ItemClass.PIN, result);
-    } else if (p_name.equals("smd")) {
-      default_net_class.default_item_clearance_classes.set(ItemClass.SMD, result);
-    } else if (p_name.equals("area")) {
-      default_net_class.default_item_clearance_classes.set(ItemClass.AREA, result);
+    switch (p_name) {
+      case "via"  -> default_net_class.default_item_clearance_classes.set(ItemClass.VIA, result);
+      case "pin"  -> default_net_class.default_item_clearance_classes.set(ItemClass.PIN, result);
+      case "smd"  -> default_net_class.default_item_clearance_classes.set(ItemClass.SMD, result);
+      case "area" -> default_net_class.default_item_clearance_classes.set(ItemClass.AREA, result);
     }
     return result;
   }
 
   /** Returns true, if all clearance values on the 2 input layers are equal. */
   private static boolean clearance_equals(
-      app.freerouting.rules.ClearanceMatrix p_cl_matrix, int p_layer_1, int p_layer_2) {
+      ClearanceMatrix p_cl_matrix, int p_layer_1, int p_layer_2) {
     if (p_layer_1 == p_layer_2) {
       return true;
     }
@@ -752,13 +756,13 @@ class Structure extends ScopeKeyword {
       ReadScopeParameter p_par,
       KeepoutType p_keepout_type,
       FixedState p_fixed_state) {
-    app.freerouting.geometry.planar.Area keepout_area =
+    Area keepout_area =
         Shape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
     if (keepout_area.dimension() < 2) {
       FRLogger.warn("Structure.insert_keepout: keepout is not an area");
       return true;
     }
-    app.freerouting.board.BasicBoard board = p_par.board_handling.get_routing_board();
+    BasicBoard board = p_par.board_handling.get_routing_board();
     if (board == null) {
       FRLogger.warn("Structure.insert_keepout: app.freerouting.board not initialized");
       return false;
@@ -788,8 +792,8 @@ class Structure extends ScopeKeyword {
   }
 
   private static void insert_keepout(
-      app.freerouting.board.BasicBoard p_board,
-      app.freerouting.geometry.planar.Area p_area,
+      BasicBoard p_board,
+      Area p_area,
       int p_layer,
       String p_clearance_class_name,
       KeepoutType p_keepout_type,
@@ -801,11 +805,11 @@ class Structure extends ScopeKeyword {
               .rules
               .get_default_net_class()
               .default_item_clearance_classes
-              .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.AREA);
+              .get(DefaultItemClearanceClasses.ItemClass.AREA);
     } else {
       clearance_class_no = p_board.rules.clearance_matrix.get_no(p_clearance_class_name);
       if (clearance_class_no < 0) {
-        FRLogger.warn("Keepout.insert_leepout: clearance class not found");
+        FRLogger.warn("Keepout.insert_keepout: clearance class not found");
         clearance_class_no = BoardRules.clearance_class_none();
       }
     }
@@ -818,6 +822,7 @@ class Structure extends ScopeKeyword {
     }
   }
 
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     BoardConstructionInfo board_construction_info = new BoardConstructionInfo();
 
@@ -826,18 +831,18 @@ class Structure extends ScopeKeyword {
     boolean flip_style_rotate_first = false;
 
     Collection<Shape.ReadAreaScopeResult> keepout_list =
-        new LinkedList<Shape.ReadAreaScopeResult>();
+        new LinkedList<>();
     Collection<Shape.ReadAreaScopeResult> via_keepout_list =
-        new LinkedList<Shape.ReadAreaScopeResult>();
+        new LinkedList<>();
     Collection<Shape.ReadAreaScopeResult> place_keepout_list =
-        new LinkedList<Shape.ReadAreaScopeResult>();
+        new LinkedList<>();
 
     Object next_token = null;
     for (; ; ) {
       Object prev_token = next_token;
       try {
         next_token = p_par.scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("Structure.read_scope: IO error scanning file", e);
         return false;
       }
@@ -896,7 +901,7 @@ class Structure extends ScopeKeyword {
           flip_style_rotate_first = PlaceControl.read_flip_style_rotate_first(p_par.scanner);
         } else if (next_token == Keyword.SNAP_ANGLE) {
 
-          app.freerouting.board.AngleRestriction snap_angle = read_snap_angle(p_par.scanner);
+          AngleRestriction snap_angle = read_snap_angle(p_par.scanner);
           if (snap_angle != null) {
             p_par.snap_angle = snap_angle;
           }
@@ -913,7 +918,7 @@ class Structure extends ScopeKeyword {
     if (p_par.board_handling.get_routing_board() == null) {
       result = create_board(p_par, board_construction_info);
     }
-    app.freerouting.board.RoutingBoard board = p_par.board_handling.get_routing_board();
+    RoutingBoard board = p_par.board_handling.get_routing_board();
     if (board == null) {
       return false;
     }
@@ -946,9 +951,7 @@ class Structure extends ScopeKeyword {
     }
 
     // insert the planes.
-    Iterator<ReadScopeParameter.PlaneInfo> it = p_par.plane_list.iterator();
-    while (it.hasNext()) {
-      ReadScopeParameter.PlaneInfo plane_info = it.next();
+    for (ReadScopeParameter.PlaneInfo plane_info : p_par.plane_list) {
       Net.Id net_id = new Net.Id(plane_info.net_name, 1);
       if (!p_par.netlist.contains(net_id)) {
         Net new_net = p_par.netlist.add_net(net_id);
@@ -961,7 +964,7 @@ class Structure extends ScopeKeyword {
         FRLogger.warn("Plane.read_scope: net not found");
         continue;
       }
-      app.freerouting.geometry.planar.Area plane_area =
+      Area plane_area =
           Shape.transform_area_to_board(plane_info.area.shape_list, p_par.coordinate_transform);
       Layer curr_layer = (plane_info.area.shape_list.iterator().next()).layer;
       if (curr_layer.no >= 0) {
@@ -978,7 +981,7 @@ class Structure extends ScopeKeyword {
               curr_net
                   .get_class()
                   .default_item_clearance_classes
-                  .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.AREA);
+                  .get(DefaultItemClearanceClasses.ItemClass.AREA);
         }
         int[] net_numbers = new int[1];
         net_numbers[0] = curr_net.net_number;
@@ -1052,7 +1055,7 @@ class Structure extends ScopeKeyword {
       return false;
     }
     // make scalefactor smaller, if there is a danger of integer overflow.
-    while (5 * max_coor >= app.freerouting.geometry.planar.Limits.CRIT_INT) {
+    while (5 * max_coor >= Limits.CRIT_INT) {
       scale_factor /= 10;
       max_coor /= 10;
     }
@@ -1062,7 +1065,7 @@ class Structure extends ScopeKeyword {
     IntBox bounds = (IntBox) bounding_box.transform_to_board(p_par.coordinate_transform);
     bounds = bounds.offset(1000);
 
-    Collection<PolylineShape> board_outline_shapes = new LinkedList<PolylineShape>();
+    Collection<PolylineShape> board_outline_shapes = new LinkedList<>();
     for (Shape curr_shape : p_board_construction_info.outline_shapes) {
       if (curr_shape instanceof PolygonPath) {
         PolygonPath curr_path = (PolygonPath) curr_shape;
@@ -1088,20 +1091,20 @@ class Structure extends ScopeKeyword {
       board_outline_shapes.add(curr_board_shape);
     }
     Collection<PolylineShape> hole_shapes = separate_holes(board_outline_shapes);
-    app.freerouting.rules.ClearanceMatrix clearance_matrix =
-        app.freerouting.rules.ClearanceMatrix.get_default_instance(board_layer_structure, 0);
-    app.freerouting.rules.BoardRules board_rules =
-        new app.freerouting.rules.BoardRules(board_layer_structure, clearance_matrix);
-    app.freerouting.board.Communication.SpecctraParserInfo specctra_parser_info =
-        new app.freerouting.board.Communication.SpecctraParserInfo(
+    ClearanceMatrix clearance_matrix =
+        ClearanceMatrix.get_default_instance(board_layer_structure, 0);
+    BoardRules board_rules =
+        new BoardRules(board_layer_structure, clearance_matrix);
+    Communication.SpecctraParserInfo specctra_parser_info =
+        new Communication.SpecctraParserInfo(
             p_par.string_quote,
             p_par.host_cad,
             p_par.host_version,
             p_par.constants,
             p_par.write_resolution,
             p_par.dsn_file_generated_by_host);
-    app.freerouting.board.Communication board_communication =
-        new app.freerouting.board.Communication(
+    Communication board_communication =
+        new Communication(
             p_par.unit,
             p_par.resolution,
             specctra_parser_info,
@@ -1125,7 +1128,7 @@ class Structure extends ScopeKeyword {
         board_communication,
         p_par.test_level);
 
-    app.freerouting.board.BasicBoard board = p_par.board_handling.get_routing_board();
+    BasicBoard board = p_par.board_handling.get_routing_board();
 
     // Insert the holes in the board outline as keepouts.
     for (PolylineShape curr_outline_hole : hole_shapes) {
@@ -1145,13 +1148,13 @@ class Structure extends ScopeKeyword {
 
   private static class BoardConstructionInfo {
 
-    Collection<Layer> layer_info = new LinkedList<Layer>();
+    Collection<Layer> layer_info = new LinkedList<>();
     Shape bounding_shape;
-    java.util.List<Shape> outline_shapes = new LinkedList<Shape>();
-    String outline_clearance_class_name = null;
+    List<Shape> outline_shapes = new LinkedList<>();
+    String outline_clearance_class_name;
     int found_layer_count = 0;
-    Collection<Rule> default_rules = new LinkedList<Rule>();
-    Collection<LayerRule> layer_dependent_rules = new LinkedList<LayerRule>();
+    Collection<Rule> default_rules = new LinkedList<>();
+    Collection<LayerRule> layer_dependent_rules = new LinkedList<>();
   }
 
   private static class LayerRule {
@@ -1164,7 +1167,7 @@ class Structure extends ScopeKeyword {
     }
   }
 
-  /** Used to seperate the holes in the outline. */
+  /** Used to separate the holes in the outline. */
   private static class OutlineShape {
 
     final PolylineShape shape;

@@ -1,93 +1,109 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.BoardOutline;
+import app.freerouting.interactive.BoardHandling;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 /** Window handling detail parameters of the interactive routing. */
 public class WindowRouteDetail extends BoardSavableSubWindow {
 
   private static final int c_max_slider_value = 100;
   private static final int c_accuracy_scale_factor = 20;
-  private final app.freerouting.interactive.BoardHandling board_handling;
-  private final javax.swing.JSlider accuracy_slider;
-  private final javax.swing.JRadioButton on_button;
-  private final javax.swing.JRadioButton off_button;
-  private final javax.swing.JCheckBox outline_keepout_check_box;
+  private final BoardHandling board_handling;
+  private final JSlider accuracy_slider;
+  private final JRadioButton on_button;
+  private final JRadioButton off_button;
+  private final JCheckBox outline_keepout_check_box;
   /** Creates a new instance of RouteDetailWindow */
   public WindowRouteDetail(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowRouteDetail", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
     // create main panel
 
-    final javax.swing.JPanel main_panel = new javax.swing.JPanel();
+    final JPanel main_panel = new JPanel();
     getContentPane().add(main_panel);
-    java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    GridBagLayout gridbag = new GridBagLayout();
     main_panel.setLayout(gridbag);
-    java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridbag_constraints.insets = new java.awt.Insets(5, 10, 5, 10);
+    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.anchor = GridBagConstraints.WEST;
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
 
     // add label and button group for the clearance compensation.
 
-    javax.swing.JLabel clearance_compensation_label =
-        new javax.swing.JLabel(resources.getString("clearance_compensation"));
+    JLabel clearance_compensation_label =
+        new JLabel(resources.getString("clearance_compensation"));
     clearance_compensation_label.setToolTipText(
         resources.getString("clearance_compensation_tooltip"));
 
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
+    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(clearance_compensation_label, gridbag_constraints);
     main_panel.add(clearance_compensation_label);
 
-    this.on_button = new javax.swing.JRadioButton(resources.getString("on"));
-    this.off_button = new javax.swing.JRadioButton(resources.getString("off"));
+    this.on_button = new JRadioButton(resources.getString("on"));
+    this.off_button = new JRadioButton(resources.getString("off"));
 
     on_button.addActionListener(new CompensationOnListener());
     off_button.addActionListener(new CompensationOffListener());
 
-    javax.swing.ButtonGroup clearance_compensation_button_group = new javax.swing.ButtonGroup();
+    ButtonGroup clearance_compensation_button_group = new ButtonGroup();
     clearance_compensation_button_group.add(on_button);
     clearance_compensation_button_group.add(off_button);
     off_button.setSelected(true);
 
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
     gridbag.setConstraints(on_button, gridbag_constraints);
     main_panel.add(on_button, gridbag_constraints);
     gridbag.setConstraints(off_button, gridbag_constraints);
     main_panel.add(off_button, gridbag_constraints);
 
-    javax.swing.JLabel separator =
-        new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator =
+        new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     // add label and slider for the pull tight accuracy.
 
-    javax.swing.JLabel pull_tight_accuracy_label =
-        new javax.swing.JLabel(resources.getString("pull_tight_accuracy"));
+    JLabel pull_tight_accuracy_label =
+        new JLabel(resources.getString("pull_tight_accuracy"));
     pull_tight_accuracy_label.setToolTipText(resources.getString("pull_tight_accuracy_tooltip"));
-    gridbag_constraints.insets = new java.awt.Insets(5, 10, 5, 10);
+    gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag.setConstraints(pull_tight_accuracy_label, gridbag_constraints);
     main_panel.add(pull_tight_accuracy_label);
 
-    this.accuracy_slider = new javax.swing.JSlider();
+    this.accuracy_slider = new JSlider();
     accuracy_slider.setMaximum(c_max_slider_value);
     accuracy_slider.addChangeListener(new SliderChangeListener());
     gridbag.setConstraints(accuracy_slider, gridbag_constraints);
     main_panel.add(accuracy_slider);
 
-    separator = new javax.swing.JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+    separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     // add switch to define, if keepout is generated outside the outline.
 
     this.outline_keepout_check_box =
-        new javax.swing.JCheckBox(resources.getString("keepout_outside_outline"));
+        new JCheckBox(resources.getString("keepout_outside_outline"));
     this.outline_keepout_check_box.setSelected(false);
     this.outline_keepout_check_box.addActionListener(new OutLineKeepoutListener());
     gridbag.setConstraints(outline_keepout_check_box, gridbag_constraints);
@@ -95,7 +111,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
         resources.getString("keepout_outside_outline_tooltip"));
     main_panel.add(outline_keepout_check_box, gridbag_constraints);
 
-    separator = new javax.swing.JLabel();
+    separator = new JLabel();
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
@@ -105,6 +121,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
   }
 
   /** Recalculates all displayed values */
+  @Override
   public void refresh() {
     if (this.board_handling
         .get_routing_board()
@@ -125,32 +142,36 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     accuracy_slider.setValue(accuracy_slider_value);
   }
 
-  private class CompensationOnListener implements java.awt.event.ActionListener {
+  private class CompensationOnListener implements ActionListener {
 
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.set_clearance_compensation(true);
     }
   }
 
-  private class CompensationOffListener implements java.awt.event.ActionListener {
+  private class CompensationOffListener implements ActionListener {
 
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.set_clearance_compensation(false);
     }
   }
 
-  private class SliderChangeListener implements javax.swing.event.ChangeListener {
+  private class SliderChangeListener implements ChangeListener {
 
-    public void stateChanged(javax.swing.event.ChangeEvent evt) {
-      int new_accurracy =
+    @Override
+    public void stateChanged(ChangeEvent evt) {
+      int new_accuracy =
           (c_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
-      board_handling.settings.set_current_pull_tight_accuracy(new_accurracy);
+      board_handling.settings.set_current_pull_tight_accuracy(new_accuracy);
     }
   }
 
-  private class OutLineKeepoutListener implements java.awt.event.ActionListener {
+  private class OutLineKeepoutListener implements ActionListener {
 
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
       if (board_handling.is_board_read_only()) {
         return;
       }

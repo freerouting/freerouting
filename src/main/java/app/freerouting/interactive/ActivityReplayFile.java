@@ -11,10 +11,10 @@ import java.io.InputStream;
  * ActivityReplayFile to track the actions in the interactive board handling for automatic replay.
  */
 public class ActivityReplayFile {
-  private ActivityReplayFileScanner scanner = null;
-  private FileWriter file_writer = null;
+  private ActivityReplayFileScanner scanner;
+  private FileWriter file_writer;
   private boolean write_enabled = false;
-  private Object pending_token = null;
+  private Object pending_token;
 
   /** opens the ActivityReplayFile for reading */
   public boolean start_read(InputStream p_input_stream) {
@@ -34,7 +34,7 @@ public class ActivityReplayFile {
         this.pending_token = curr_ob;
         return null;
       }
-      double f = ((Double) curr_ob).doubleValue();
+      double f = (Double) curr_ob;
       if (i == 0) {
         x = f;
       } else {
@@ -121,8 +121,7 @@ public class ActivityReplayFile {
       this.pending_token = curr_ob;
       return null;
     }
-    ActivityReplayFileScope result = ActivityReplayFileScope.get_scope((String) curr_ob);
-    return result;
+    return ActivityReplayFileScope.get_scope((String) curr_ob);
   }
 
   /** adds an int to the ActivityReplayFile */
@@ -130,7 +129,7 @@ public class ActivityReplayFile {
 
     if (write_enabled) {
       try {
-        this.file_writer.write((Integer.valueOf(p_int)).toString());
+        this.file_writer.write(String.valueOf(p_int));
         this.file_writer.write("\n");
       } catch (IOException e) {
         FRLogger.error("Unable to write integer to the file", e);
@@ -146,7 +145,7 @@ public class ActivityReplayFile {
       this.pending_token = curr_ob;
       return -1;
     }
-    return (((Integer) curr_ob).intValue());
+    return ((Integer) curr_ob);
   }
 
   /** adds a FloatPoint to the ActivityReplayFile */
@@ -157,9 +156,9 @@ public class ActivityReplayFile {
         return;
       }
       try {
-        this.file_writer.write((Double.valueOf(p_corner.x)).toString());
+        this.file_writer.write(String.valueOf(p_corner.x));
         this.file_writer.write(" ");
-        this.file_writer.write((Double.valueOf(p_corner.y)).toString());
+        this.file_writer.write(String.valueOf(p_corner.y));
         this.file_writer.write("\n");
       } catch (IOException e) {
         FRLogger.error("Unable to write to the file  while adding corner", e);
@@ -174,8 +173,7 @@ public class ActivityReplayFile {
       return result;
     }
     try {
-      Object result = this.scanner.next_token();
-      return result;
+      return this.scanner.next_token();
     } catch (IOException e) {
       FRLogger.error("ActivityReplayFile.next_token: IO error scanning file", e);
       return null;

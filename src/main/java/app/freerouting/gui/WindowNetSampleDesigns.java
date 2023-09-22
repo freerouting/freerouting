@@ -1,13 +1,16 @@
 package app.freerouting.gui;
 
+import java.util.Locale;
+
 /** Window with a list for selecting sample board designs in the net. */
 public class WindowNetSampleDesigns extends WindowNetSamples {
 
   /** Creates a new instance of WindowNetSampleDesigns */
-  public WindowNetSampleDesigns(java.util.Locale p_locale) {
+  public WindowNetSampleDesigns(Locale p_locale) {
     super(p_locale, "sample_designs", "open_sample_design", 11);
   }
 
+  @Override
   protected void fill_list() {
     this.add("hexapod_empty.dsn");
     this.add("hexapod_autorouted.dsn");
@@ -23,6 +26,7 @@ public class WindowNetSampleDesigns extends WindowNetSamples {
     this.add("single_layer_handrouted.dsn");
   }
 
+  @Override
   protected void button_pushed() {
     int index = list.getSelectedIndex();
     if (index < 0 || index >= list_model.getSize()) {

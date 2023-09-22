@@ -15,9 +15,9 @@ public class ExpansionDoor implements ExpandableObject {
   /** The dimension of a door may be 1 or 2. */
   public final int dimension;
   /**
-   * each section of the following arrray can be expanded seperately by the maze search algorithm
+   * each section of the following array can be expanded separately by the maze search algorithm
    */
-  MazeSearchElement[] section_arr = null;
+  MazeSearchElement[] section_arr;
 
   /** Creates a new instance of ExpansionDoor */
   public ExpansionDoor(ExpansionRoom p_first_room, ExpansionRoom p_second_room, int p_dimension) {
@@ -51,7 +51,7 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_roon is neither equal to this.first_room nor
+   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
    * to this.second_room.
    */
   public ExpansionRoom other_room(ExpansionRoom p_room) {
@@ -67,9 +67,10 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /**
-   * Returns the other room of this door, or null, if p_roon is neither equal to this.first_room nor
+   * Returns the other room of this door, or null, if p_room is neither equal to this.first_room nor
    * to this.second_room, or if the other room is not a CompleteExpansionRoom.
    */
+  @Override
   public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     ExpansionRoom result;
     if (p_room == first_room) {
@@ -85,10 +86,12 @@ public class ExpansionDoor implements ExpandableObject {
     return (CompleteExpansionRoom) result;
   }
 
+  @Override
   public int maze_search_element_count() {
     return this.section_arr.length;
   }
 
+  @Override
   public MazeSearchElement get_maze_search_element(int p_no) {
     return this.section_arr[p_no];
   }
@@ -131,8 +134,7 @@ public class ExpansionDoor implements ExpandableObject {
     int section_count =
         (int) (door_line_segment.b.distance(door_line_segment.a) / c_max_door_section_width) + 1;
     this.allocate_sections(section_count);
-    FloatLine[] result = shrinked_line_segment.divide_segment_into_sections(section_count);
-    return result;
+    return shrinked_line_segment.divide_segment_into_sections(section_count);
   }
 
   /**
@@ -152,7 +154,7 @@ public class ExpansionDoor implements ExpandableObject {
         // curr_corner is on the border of both room shapes.
         if (first_corner == null) {
           first_corner = curr_corner;
-        } else if (second_corner == null && !first_corner.equals(curr_corner)) {
+        } else if (!first_corner.equals(curr_corner)) {
           second_corner = curr_corner;
           break;
         }
@@ -165,6 +167,7 @@ public class ExpansionDoor implements ExpandableObject {
   }
 
   /** Resets this ExpandableObject for autorouting the next connection. */
+  @Override
   public void reset() {
     if (section_arr != null) {
       for (MazeSearchElement curr_section : section_arr) {

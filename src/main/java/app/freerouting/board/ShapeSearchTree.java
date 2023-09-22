@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
+import app.freerouting.datastructures.MinAreaTree;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -19,17 +20,14 @@ import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ClearanceMatrix;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
+
+import java.util.*;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in the package
  * datastructures.
  */
-public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree {
+public class ShapeSearchTree extends MinAreaTree {
   /** used in objects of class EntrySortedByClearance */
   private static int last_generated_id_no = 0;
   /**
@@ -53,7 +51,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
     board = p_board;
   }
 
-  /** Returns, if for the shapes stored in this tree clearance compensatiion is used. */
+  /** Returns, if for the shapes stored in this tree clearance compensation is used. */
   public boolean is_clearance_compensation_used() {
     return this.compensated_clearance_class_no > 0;
   }
@@ -118,9 +116,8 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
     }
 
     // correct the precalculated tree shapes first, because it is used in this.insert
-    for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; ++i) {
-      new_precalculated_tree_shapes[i] = changed_shapes[i - p_keep_at_start_count];
-    }
+    System.arraycopy(
+        changed_shapes, 0, new_precalculated_tree_shapes, p_keep_at_start_count, changed_shapes.length);
     p_obj.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
     for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; ++i) {
@@ -275,9 +272,9 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
   }
 
   /**
-   * Trannsfers tree entries from p_from_trace to p_start and p_end_piece after a moddle piece was
+   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a middle piece was
    * cut out. Special implementation for ShapeTraceEntries.fast_cutout_trace for performance
-   * reasoms.
+   * reasons.
    */
   void reuse_entries_after_cutout(
       PolylineTrace p_from_trace, PolylineTrace p_start_piece, PolylineTrace p_end_piece) {
@@ -318,12 +315,10 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
    */
   public void overlapping_objects(
       ConvexShape p_shape, int p_layer, int[] p_ignore_net_nos, Set<SearchTreeObject> p_obstacles) {
-    Collection<TreeEntry> tree_entries = new LinkedList<TreeEntry>();
+    Collection<TreeEntry> tree_entries = new LinkedList<>();
     overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
     if (p_obstacles != null) {
-      Iterator<TreeEntry> it = tree_entries.iterator();
-      while (it.hasNext()) {
-        TreeEntry curr_entry = it.next();
+      for (TreeEntry curr_entry : tree_entries) {
         p_obstacles.add((SearchTreeObject) curr_entry.object);
       }
     }
@@ -334,7 +329,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
    * {@literal <} 0, the layer is ignored
    */
   public Set<SearchTreeObject> overlapping_objects(ConvexShape p_shape, int p_layer) {
-    Set<SearchTreeObject> result = new TreeSet<SearchTreeObject>();
+    Set<SearchTreeObject> result = new TreeSet<>();
     this.overlapping_objects(p_shape, p_layer, new int[0], result);
     return result;
   }
@@ -371,12 +366,9 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       return;
     }
     Collection<Leaf> tmp_list = this.overlaps(bounds);
-    Iterator<Leaf> it = tmp_list.iterator();
-
     boolean is_45_degree = p_shape instanceof IntOctagon;
 
-    while (it.hasNext()) {
-      Leaf curr_leaf = it.next();
+    for (Leaf curr_leaf : tmp_list) {
       SearchTreeObject curr_object = (SearchTreeObject) curr_leaf.object;
       int shape_index = curr_leaf.shape_index_in_object;
       boolean ignore_object = p_layer >= 0 && curr_object.shape_layer(shape_index) != p_layer;
@@ -439,12 +431,10 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
     // enlarging is not symmetric.
     RegularTileShape offset_bounds = (RegularTileShape) bounds.offset(max_clearance);
     Collection<Leaf> tmp_list = overlaps(offset_bounds);
-    Iterator<Leaf> it1 = tmp_list.iterator();
     // sort the found items by its clearances tp p_cl_type on layer p_layer
-    Set<EntrySortedByClearance> sorted_items = new TreeSet<EntrySortedByClearance>();
+    Set<EntrySortedByClearance> sorted_items = new TreeSet<>();
 
-    while (it1.hasNext()) {
-      Leaf curr_leaf = it1.next();
+    for (Leaf curr_leaf : tmp_list) {
       Item curr_item = (Item) curr_leaf.object;
       int shape_index = curr_leaf.shape_index_in_object;
       boolean ignore_item = p_layer >= 0 && curr_item.shape_layer(shape_index) != p_layer;
@@ -462,11 +452,9 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
         sorted_items.add(sorted_ob);
       }
     }
-    Iterator<EntrySortedByClearance> it = sorted_items.iterator();
     int curr_half_clearance = 0;
     ConvexShape curr_offset_shape = p_shape;
-    while (it.hasNext()) {
-      EntrySortedByClearance tmp_entry = it.next();
+    for (EntrySortedByClearance tmp_entry : sorted_items) {
       int tmp_half_clearance = tmp_entry.clearance / 2;
       if (tmp_half_clearance != curr_half_clearance) {
         curr_half_clearance = tmp_half_clearance;
@@ -494,19 +482,18 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       int[] p_ignore_net_nos,
       int p_cl_type,
       Set<SearchTreeObject> p_obstacles) {
-    Collection<TreeEntry> tree_entries = new LinkedList<TreeEntry>();
+    Collection<TreeEntry> tree_entries = new LinkedList<>();
     if (this.is_clearance_compensation_used()) {
       overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
     } else {
       overlapping_tree_entries_with_clearance(
           p_shape, p_layer, p_ignore_net_nos, p_cl_type, tree_entries);
     }
-    if (p_obstacles != null) {
-      Iterator<TreeEntry> it = tree_entries.iterator();
-      while (it.hasNext()) {
-        TreeEntry curr_entry = it.next();
-        p_obstacles.add((SearchTreeObject) curr_entry.object);
-      }
+    if (p_obstacles == null) {
+      return;
+    }
+    for (TreeEntry curr_entry : tree_entries) {
+      p_obstacles.add((SearchTreeObject) curr_entry.object);
     }
   }
 
@@ -518,11 +505,11 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
    */
   public Set<Item> overlapping_items_with_clearance(
       ConvexShape p_shape, int p_layer, int[] p_ignore_net_nos, int p_clearance_class) {
-    Set<SearchTreeObject> overlaps = new TreeSet<SearchTreeObject>();
+    Set<SearchTreeObject> overlaps = new TreeSet<>();
 
     this.overlapping_objects_with_clearance(
         p_shape, p_layer, p_ignore_net_nos, p_clearance_class, overlaps);
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_object : overlaps) {
       if (curr_object instanceof Item) {
         result.add((Item) curr_object);
@@ -538,7 +525,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
    */
   public Collection<TreeEntry> overlapping_tree_entries_with_clearance(
       ConvexShape p_shape, int p_layer, int[] p_ignore_net_nos, int p_clearance_class) {
-    Collection<TreeEntry> result = new LinkedList<TreeEntry>();
+    Collection<TreeEntry> result = new LinkedList<>();
     if (this.is_clearance_compensation_used()) {
       this.overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, result);
     } else {
@@ -555,7 +542,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
    * possible, several rooms are returned with shapes, which intersect with
    * p_room.get_contained_shape(). The result room is not yet complete, because its doors are not
    * yet calculated. If p_ignore_shape != null, objects of type CompleteFreeSpaceExpansionRoom,
-   * whose intersection with the shape of p_room is containes in p_ignore_shape, are ignored.
+   * whose intersection with the shape of p_room is contained in p_ignore_shape, are ignored.
    */
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(
       IncompleteFreeSpaceExpansionRoom p_room,
@@ -564,10 +551,10 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       TileShape p_ignore_shape) {
     if (p_room.get_contained_shape() == null) {
       FRLogger.warn("ShapeSearchTree.complete_shape: p_shape_to_be_contained != null expected");
-      return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+      return new LinkedList<>();
     }
     if (this.root == null) {
-      return new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+      return new LinkedList<>();
     }
     TileShape start_shape = board.get_bounding_box();
     if (p_room.get_shape() != null) {
@@ -575,7 +562,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
     }
     RegularTileShape bounding_shape = start_shape.bounding_shape(this.bounding_directions);
     Collection<IncompleteFreeSpaceExpansionRoom> result =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
     if (start_shape.dimension() == 2) {
       IncompleteFreeSpaceExpansionRoom new_room =
           new IncompleteFreeSpaceExpansionRoom(
@@ -603,7 +590,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
 
             TileShape curr_object_shape = curr_object.get_tree_shape(this, shape_index);
             Collection<IncompleteFreeSpaceExpansionRoom> new_result =
-                new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+                new LinkedList<>();
             RegularTileShape new_bounding_shape = IntOctagon.EMPTY;
 
             for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : result) {
@@ -615,8 +602,8 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
                     curr_object instanceof CompleteFreeSpaceExpansionRoom
                         && p_ignore_shape != null
                         && p_ignore_shape.contains(intersection);
-                // cannot happen in free angle roouting, because then expansion_rooms
-                // may not overlap. Therefore that can be removed as soon as special
+                // cannot happen in free angle routing, because then expansion_rooms
+                // may not overlap. Therefore, that can be removed as soon as special
                 // function for 45-degree routing is used.
                 if (!ignore_expansion_room) {
                   something_changed = true;
@@ -650,7 +637,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
 
   /**
    * Restrains the shape of p_incomplete_room to a TileShape, which does not intersect with the
-   * interiour of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
+   * interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
    * shape of the result room. If that is not possible, several rooms are returned with shapes,
    * which intersect with p_incomplete_room.get_contained_shape().
    */
@@ -658,17 +645,17 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       IncompleteFreeSpaceExpansionRoom p_incomplete_room, TileShape p_obstacle_shape) {
     // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
     // are on the right side of this line, and that the line segment
-    // intersects with the interiour of p_shape.
+    // intersects with the interior of p_shape.
     // If there are more than 1 such lines take the line which is
     // furthest away from p_points_to_be_con.tained
-    // Then insersect p_shape with the halfplane defined by the
+    // Then intersect p_shape with the halfplane defined by the
     // opposite of this line.
     Simplex obstacle_simplex =
         p_obstacle_shape
-            .to_Simplex(); // otherwise border_lines of lenth 0 for octagons may not be handeled
+            .to_Simplex(); // otherwise border_lines of length 0 for octagons may not be handled
                            // correctly
     Collection<IncompleteFreeSpaceExpansionRoom> result =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
     TileShape room_shape = p_incomplete_room.get_shape();
     int layer = p_incomplete_room.get_layer();
 
@@ -689,7 +676,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
     double cut_line_distance = -1;
     for (int i = 0; i < obstacle_simplex.border_line_count(); ++i) {
       LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-      if (room_shape.is_intersected_interiour_by(curr_line_segment)) {
+      if (room_shape.is_intersected_interior_by(curr_line_segment)) {
         // otherwise curr_object may not touch the intersection
         // of p_shape with the half_plane defined by the cut_line.
         // That may lead to problems when creating the ExpansionRooms.
@@ -723,10 +710,10 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
 
       for (int i = 0; i < obstacle_simplex.border_line_count(); ++i) {
         LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
-        if (room_shape.is_intersected_interiour_by(curr_line_segment)) {
+        if (room_shape.is_intersected_interior_by(curr_line_segment)) {
           Line curr_line = obstacle_simplex.border_line(i);
           if (shape_to_be_contained.side_of(curr_line) == Side.COLLINEAR) {
-            // curr_line intersects with the interiour of p_shape_to_be_contained
+            // curr_line intersects with the interior of p_shape_to_be_contained
             cut_line = curr_line.opposite();
             break;
           }
@@ -878,7 +865,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       // many tree shapes.
     }
 
-    Collection<TileShape> tree_shape_list = new LinkedList<TileShape>();
+    Collection<TileShape> tree_shape_list = new LinkedList<>();
     for (int i = 0; i < convex_shapes.length; ++i) {
       TileShape curr_convex_shape = convex_shapes[i];
 
@@ -887,9 +874,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
               p_obstacle_area.clearance_class_no(), p_obstacle_area.get_layer());
       curr_convex_shape = (TileShape) curr_convex_shape.enlarge(offset_width);
       TileShape[] curr_tree_shapes = curr_convex_shape.divide_into_sections(max_tree_shape_width);
-      for (int j = 0; j < curr_tree_shapes.length; ++j) {
-        tree_shape_list.add(curr_tree_shapes[j]);
-      }
+      tree_shape_list.addAll(Arrays.asList(curr_tree_shapes));
     }
     TileShape[] result = new TileShape[tree_shape_list.size()];
     Iterator<TileShape> it = tree_shape_list.iterator();
@@ -909,7 +894,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       if (convex_shapes == null) {
         return new TileShape[0];
       }
-      Collection<TileShape> tree_shape_list = new LinkedList<TileShape>();
+      Collection<TileShape> tree_shape_list = new LinkedList<>();
       for (int layer_no = 0; layer_no < this.board.layer_structure.arr.length; ++layer_no) {
         for (int i = 0; i < convex_shapes.length; ++i) {
           TileShape curr_convex_shape = convex_shapes[i];
@@ -925,7 +910,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
         result[i] = it.next();
       }
     } else {
-      // Only the line shapes of the outline are inserted as obstales into the tree.
+      // Only the line shapes of the outline are inserted as obstacles into the tree.
       result = new TileShape[p_board_outline.line_count() * this.board.layer_structure.arr.length];
       int half_width = p_board_outline.get_half_width();
       Line[] curr_line_arr = new Line[3];
@@ -981,8 +966,8 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
   }
 
   /**
-   * Makes shure that on each layer there will be more than 1 IncompleteFreeSpaceExpansionRoom, even
-   * if there are no objects on the layer. Otherwise the maze search algprithm gets problems with
+   * Makes sure that on each layer there will be more than 1 IncompleteFreeSpaceExpansionRoom, even
+   * if there are no objects on the layer. Otherwise, the maze search algorithm gets problems with
    * vias.
    */
   protected Collection<IncompleteFreeSpaceExpansionRoom> divide_large_room(
@@ -1000,7 +985,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
         0.5 * Math.max(p_board_bounding_box.height(), p_board_bounding_box.width());
     TileShape[] section_arr = curr_room.get_shape().divide_into_sections(max_section_width);
     Collection<IncompleteFreeSpaceExpansionRoom> result =
-        new LinkedList<IncompleteFreeSpaceExpansionRoom>();
+        new LinkedList<>();
     for (TileShape curr_section : section_arr) {
       TileShape curr_shape_to_be_contained =
           curr_section.intersection(curr_room.get_contained_shape());
@@ -1033,7 +1018,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
     EntrySortedByClearance(Leaf p_leaf, int p_clearance) {
       leaf = p_leaf;
       clearance = p_clearance;
-      if (last_generated_id_no >= Integer.MAX_VALUE) {
+      if (last_generated_id_no == Integer.MAX_VALUE) {
         last_generated_id_no = 0;
       } else {
         ++last_generated_id_no;
@@ -1041,6 +1026,7 @@ public class ShapeSearchTree extends app.freerouting.datastructures.MinAreaTree 
       entry_id_no = last_generated_id_no;
     }
 
+    @Override
     public int compareTo(EntrySortedByClearance p_other) {
       if (clearance != p_other.clearance) {
         return Signum.as_int(clearance - p_other.clearance);

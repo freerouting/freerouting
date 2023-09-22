@@ -2,9 +2,12 @@ package app.freerouting.gui;
 
 import app.freerouting.board.LayerStructure;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** A Combo Box with items for individual board layers plus an additional item for all layers. */
-public class ComboBoxLayer extends javax.swing.JComboBox<ComboBoxLayer.Layer> {
+public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
 
   /** The custom layer index in the combobox, when all layers are selected. */
   public static final int ALL_LAYER_INDEX = -1;
@@ -13,9 +16,9 @@ public class ComboBoxLayer extends javax.swing.JComboBox<ComboBoxLayer.Layer> {
   private final Layer[] layer_arr;
 
   /** Creates a new instance of LayerComboBox */
-  public ComboBoxLayer(LayerStructure p_layer_structure, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
+  public ComboBoxLayer(LayerStructure p_layer_structure, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
     int signal_layer_count = p_layer_structure.signal_layer_count();
     int item_count = signal_layer_count + 1;
 
@@ -59,6 +62,7 @@ public class ComboBoxLayer extends javax.swing.JComboBox<ComboBoxLayer.Layer> {
       index = p_index;
     }
 
+    @Override
     public String toString() {
       return name;
     }

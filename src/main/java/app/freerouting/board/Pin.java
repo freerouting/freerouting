@@ -1,8 +1,10 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Point;
@@ -10,24 +12,36 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.library.LogicalPart;
 import app.freerouting.library.Package;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Class describing the functionality of an electrical Item on the board with a shape on 1 or
  * several layers.
  */
-public class Pin extends DrillItem implements java.io.Serializable {
+public class Pin extends DrillItem implements Serializable {
   /** The number of this pin in its component (starting with 0). */
   public final int pin_no;
-  /** The pin, this pin was changed to by swapping or this pin, if no pin swap accured. */
+  /** The pin, this pin was changed to by swapping or this pin, if no pin swap occurred. */
   private Pin changed_to = this;
-  private transient Shape[] precalculated_shapes = null;
+  private transient Shape[] precalculated_shapes;
 
   /**
    * Creates a new instance of Pin with the input parameters. (p_to_layer - p_from_layer + 1) shapes
-   * must be provided. p_pin_no isthe number of the pin in its component (starting with 0).
+   * must be provided. p_pin_no is the number of the pin in its component (starting with 0).
    */
   Pin(
       int p_component_no,
@@ -69,6 +83,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return rel_location;
   }
 
+  @Override
   public Point get_center() {
     Point pin_center = super.get_center();
     if (pin_center == null) {
@@ -99,6 +114,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return pin_center;
   }
 
+  @Override
   public Padstack get_padstack() {
     Component component = board.components.get(get_component_no());
     if (component == null) {
@@ -109,6 +125,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return board.library.padstacks.get(padstack_no);
   }
 
+  @Override
   public Item copy(int p_id_no) {
     int[] curr_net_no_arr = new int[this.net_count()];
     for (int i = 0; i < curr_net_no_arr.length; ++i) {
@@ -139,6 +156,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return pin_no;
   }
 
+  @Override
   public Shape get_shape(int p_index) {
     Padstack padstack = get_padstack();
     if (this.precalculated_shapes == null) {
@@ -238,12 +256,12 @@ public class Pin extends DrillItem implements java.io.Serializable {
 
   /**
    * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer
-   * together with the minimal trace line lengths into thei directions. Currently only implemented
+   * together with the minimal trace line lengths into their directions. Currently implemented
    * only for box shapes, where traces are allowed to exit the pad only on the small sides.
    */
-  public java.util.Collection<TraceExitRestriction> get_trace_exit_restrictions(int p_layer) {
-    java.util.Collection<TraceExitRestriction> result =
-        new java.util.LinkedList<TraceExitRestriction>();
+  public Collection<TraceExitRestriction> get_trace_exit_restrictions(int p_layer) {
+    Collection<TraceExitRestriction> result =
+        new LinkedList<>();
     int padstack_layer = this.get_padstack_layer(p_layer - this.first_layer());
     double pad_xy_factor = 1.5;
     // setting 1.5 to a higher factor may hinder the shove algorithm of the autorouter between
@@ -256,7 +274,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
       }
     }
 
-    java.util.Collection<Direction> padstack_exit_directions =
+    Collection<Direction> padstack_exit_directions =
         this.get_padstack().get_trace_exit_directions(padstack_layer, pad_xy_factor);
     if (padstack_exit_directions.isEmpty()) {
       return result;
@@ -266,7 +284,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
       return result;
     }
     Shape curr_shape = this.get_shape(p_layer - this.first_layer());
-    if (curr_shape == null || !(curr_shape instanceof TileShape)) {
+    if (!(curr_shape instanceof TileShape)) {
       return result;
     }
     TileShape pad_shape = (TileShape) curr_shape;
@@ -315,9 +333,9 @@ public class Pin extends DrillItem implements java.io.Serializable {
   /** Returns true, if this pin has exit restrictions on some kayer. */
   public boolean has_trace_exit_restrictions() {
     for (int i = this.first_layer(); i <= this.last_layer(); ++i) {
-      java.util.Collection<TraceExitRestriction> curr_exit_restrictions =
+      Collection<TraceExitRestriction> curr_exit_restrictions =
           get_trace_exit_restrictions(i);
-      if (curr_exit_restrictions.size() > 0) {
+      if (!curr_exit_restrictions.isEmpty()) {
         return true;
       }
     }
@@ -325,13 +343,14 @@ public class Pin extends DrillItem implements java.io.Serializable {
   }
 
   /**
-   * Returns true, if vias throw the pads of this pins are allowed, false, otherwise. Currently
+   * Returns true, if vias throw the pads of this pins are allowed, false, otherwise. Currently,
    * drills are allowed to SMD-pins.
    */
   public boolean drill_allowed() {
     return (this.first_layer() == this.last_layer());
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other == this || p_other instanceof ObstacleArea) {
       return false;
@@ -345,38 +364,42 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return !this.drill_allowed() || !(p_other instanceof Via) || !((Via) p_other).attach_allowed;
   }
 
+  @Override
   public void turn_90_degree(int p_factor, IntPoint p_pole) {
     this.set_center(null);
     clear_derived_data();
   }
 
+  @Override
   public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole) {
     this.set_center(null);
     this.clear_derived_data();
   }
 
+  @Override
   public void change_placement_side(IntPoint p_pole) {
     this.set_center(null);
     this.clear_derived_data();
   }
 
+  @Override
   public void clear_derived_data() {
     super.clear_derived_data();
     this.precalculated_shapes = null;
   }
 
   /** Return all Pins, that can be swapped with this pin. */
-  public java.util.Set<Pin> get_swappable_pins() {
-    java.util.Set<Pin> result = new java.util.TreeSet<Pin>();
+  public Set<Pin> get_swappable_pins() {
+    Set<Pin> result = new TreeSet<>();
     Component component = this.board.components.get(this.get_component_no());
     if (component == null) {
       return result;
     }
-    app.freerouting.library.LogicalPart logical_part = component.get_logical_part();
+    LogicalPart logical_part = component.get_logical_part();
     if (logical_part == null) {
       return result;
     }
-    app.freerouting.library.LogicalPart.PartPin this_part_pin = logical_part.get_pin(this.pin_no);
+    LogicalPart.PartPin this_part_pin = logical_part.get_pin(this.pin_no);
     if (this_part_pin == null) {
       return result;
     }
@@ -388,7 +411,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
       if (i == this.pin_no) {
         continue;
       }
-      app.freerouting.library.LogicalPart.PartPin curr_part_pin = logical_part.get_pin(i);
+      LogicalPart.PartPin curr_part_pin = logical_part.get_pin(i);
       if (curr_part_pin != null
           && curr_part_pin.gate_pin_swap_code == this_part_pin.gate_pin_swap_code
           && curr_part_pin.gate_name.equals(this_part_pin.gate_name)) {
@@ -403,6 +426,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -410,9 +434,10 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.PINS);
   }
 
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
-    java.awt.Color[] result;
+  @Override
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
+    Color[] result;
     if (this.net_count() > 0) {
       result = p_graphics_context.get_pin_colors();
     } else {
@@ -422,8 +447,9 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_pin_color_intensity();
   }
 
@@ -460,16 +486,18 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return changed_to;
   }
 
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  @Override
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;
   }
 
   /** False, if this drillitem is places on the back side of the board */
+  @Override
   public boolean is_placed_on_front() {
     boolean result = true;
     Component component = board.components.get(this.get_component_no());
@@ -487,7 +515,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
       FRLogger.warn("Pin.get_min_width: padstack_shape is null");
       return 0;
     }
-    app.freerouting.geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
+    IntBox padstack_bounding_box = padstack_shape.bounding_box();
     if (padstack_bounding_box == null) {
       FRLogger.warn("Pin.get_min_width: padstack_bounding_box is null");
       return 0;
@@ -497,7 +525,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
 
   /**
    * Returns the neckdown half width for traces on p_layer. The neckdown width is used, when the pin
-   * width is smmaller than the trace width to enter or leave the pin with a trace.
+   * width is smaller than the trace width to enter or leave the pin with a trace.
    */
   public int get_trace_neckdown_halfwidth(int p_layer) {
     double result = Math.max(0.5 * this.get_min_width(p_layer) - 1, 1);
@@ -512,7 +540,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
       FRLogger.warn("Pin.get_max_width: padstack_shape is null");
       return 0;
     }
-    app.freerouting.geometry.planar.IntBox padstack_bounding_box = padstack_shape.bounding_box();
+    IntBox padstack_bounding_box = padstack_shape.bounding_box();
     if (padstack_bounding_box == null) {
       FRLogger.warn("Pin.get_max_width: padstack_bounding_box is null");
       return 0;
@@ -520,9 +548,10 @@ public class Pin extends DrillItem implements java.io.Serializable {
     return padstack_bounding_box.max_width();
   }
 
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("pin") + ": ");
     p_window.append(resources.getString("component_2") + " ");
     Component component = board.components.get(this.get_component_no());
@@ -530,7 +559,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
     p_window.append(", " + resources.getString("pin_2") + " ");
     p_window.append(component.get_package().get_pin(this.pin_no).name);
     p_window.append(", " + resources.getString("padstack") + " ");
-    app.freerouting.library.Padstack padstack = this.get_padstack();
+    Padstack padstack = this.get_padstack();
     p_window.append(padstack.name, resources.getString("padstack_info"), padstack);
     p_window.append(" " + resources.getString("at") + " ");
     p_window.append(this.get_center().to_float());
@@ -545,7 +574,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
    */
   Direction calc_nearest_exit_restriction_direction(
       Polyline p_trace_polyline, int p_trace_half_width, int p_layer) {
-    java.util.Collection<Pin.TraceExitRestriction> trace_exit_restrictions =
+    Collection<Pin.TraceExitRestriction> trace_exit_restrictions =
         this.get_trace_exit_restrictions(p_layer);
     if (trace_exit_restrictions.isEmpty()) {
       return null;
@@ -615,7 +644,7 @@ public class Pin extends DrillItem implements java.io.Serializable {
    */
   public FloatPoint nearest_trace_exit_corner(
       FloatPoint p_from_point, int p_trace_half_width, int p_layer) {
-    java.util.Collection<Pin.TraceExitRestriction> trace_exit_restrictions =
+    Collection<Pin.TraceExitRestriction> trace_exit_restrictions =
         this.get_trace_exit_restrictions(p_layer);
     if (trace_exit_restrictions.isEmpty()) {
       return null;

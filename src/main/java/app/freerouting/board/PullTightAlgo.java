@@ -14,7 +14,6 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 /** Class with functionality for optimising traces and vias. */
@@ -26,7 +25,7 @@ public abstract class PullTightAlgo {
   protected final RoutingBoard board;
   /** If only_net_no {@literal >} 0, only nets with this net numbers are optimized. */
   protected final int[] only_net_no_arr;
-  /** If stoppable_thread != null, the agorithm can be requested to be stopped. */
+  /** If stoppable_thread != null, the algorithm can be requested to be stopped. */
   private final Stoppable stoppable_thread;
   private final TimeLimit time_limit;
   /**
@@ -65,7 +64,7 @@ public abstract class PullTightAlgo {
 
   /**
    * Returns a new instance of PullTightAlgo. If p_only_net_no > 0, only traces with net number
-   * p_not_no are optimized. If p_stoppable_thread != null, the agorithm can be requested to be
+   * p_not_no are optimized. If p_stoppable_thread != null, the algorithm can be requested to be
    * stopped. If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds.
    */
   static PullTightAlgo get_instance(
@@ -142,12 +141,10 @@ public abstract class PullTightAlgo {
         // search in the ShapeSearchTree for all overlapping traces
         // with clip_shape on layer i
         Collection<SearchTreeObject> items = board.overlapping_objects(changed_region, i);
-        Iterator<SearchTreeObject> it = items.iterator();
-        while (it.hasNext()) {
+        for (SearchTreeObject curr_ob : items) {
           if (this.is_stop_requested()) {
             return;
           }
-          SearchTreeObject curr_ob = it.next();
           if (curr_ob instanceof PolylineTrace) {
             PolylineTrace curr_trace = (PolylineTrace) curr_ob;
             if (curr_trace.pull_tight(this)) {
@@ -344,7 +341,7 @@ public abstract class PullTightAlgo {
   }
 
   /**
-   * tries to skip linesegments of length 0. A check is nessesary before skipping because new dog
+   * tries to skip linesegments of length 0. A check is necessary before skipping because new dog
    * ears may occur.
    */
   Polyline skip_segments_of_length_0(Polyline p_polyline) {

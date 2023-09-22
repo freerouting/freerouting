@@ -4,6 +4,8 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.IntPoint;
 
+import java.io.IOException;
+
 /** Class for reading and writing circle scopes from dsn-files. */
 public class Circle extends Shape {
   public final double[] coor;
@@ -26,6 +28,7 @@ public class Circle extends Shape {
     coor[2] = p_center_y;
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board(
       CoordinateTransform p_coordinate_transform) {
     double[] location = new double[2];
@@ -36,6 +39,7 @@ public class Circle extends Shape {
     return new app.freerouting.geometry.planar.Circle(center, radius);
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
     int[] new_coor = new int[3];
@@ -47,6 +51,7 @@ public class Circle extends Shape {
         new IntPoint(new_coor[1], new_coor[2]), new_coor[0]);
   }
 
+  @Override
   public Rectangle bounding_box() {
     double[] bounds = new double[4];
     bounds[0] = coor[1] - coor[0];
@@ -56,27 +61,29 @@ public class Circle extends Shape {
     return new Rectangle(layer, bounds);
   }
 
+  @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; ++i) {
       p_file.write(" ");
-      p_file.write(Double.valueOf(coor[i]).toString());
+      p_file.write(String.valueOf(coor[i]));
     }
     p_file.write(")");
   }
 
+  @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier_type)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; ++i) {
       p_file.write(" ");
-      Integer curr_coor = (int) Math.round(coor[i]);
-      p_file.write(curr_coor.toString());
+      int curr_coor = (int) Math.round(coor[i]);
+      p_file.write(String.valueOf(curr_coor));
     }
     p_file.write(")");
   }

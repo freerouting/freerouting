@@ -2,11 +2,13 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /**
  * Implements functionality for convex shapes, whose borderline directions are multiples of 45
  * degree and defined with integer coordinates.
  */
-public class IntOctagon extends RegularTileShape implements java.io.Serializable {
+public class IntOctagon extends RegularTileShape implements Serializable {
   /** Reusable instance of an empty octagon. */
   public static final IntOctagon EMPTY =
       new IntOctagon(
@@ -35,11 +37,11 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
   /** x axis intersection of the upper right border line */
   public final int urx;
   /** Result of to_simplex() memorized for performance reasons. */
-  private Simplex precalculated_to_simplex = null;
+  private Simplex precalculated_to_simplex;
 
   /**
    * Creates an IntOctagon from 8 integer values. p_lx is the smallest x value of the shape. p_ly is
-   * the smallest y value of the shape. p_rx is the biggest x valuje af the shape. p_uy is the
+   * the smallest y value of the shape. p_rx is the biggest x value af the shape. p_uy is the
    * biggest y value of the shape. p_ulx is the intersection of the upper left diagonal boundary
    * line with the x axis. p_lrx is the intersection of the lower right diagonal boundary line with
    * the x axis. p_llx is the intersection of the lower left diagonal boundary line with the x axis.
@@ -57,34 +59,42 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     urx = p_urx;
   }
 
+  @Override
   public boolean is_empty() {
     return this == EMPTY;
   }
 
+  @Override
   public boolean is_IntOctagon() {
     return true;
   }
 
+  @Override
   public boolean is_bounded() {
     return true;
   }
 
+  @Override
   public boolean corner_is_bounded(int p_no) {
     return true;
   }
 
+  @Override
   public IntBox bounding_box() {
     return new IntBox(lx, ly, rx, uy);
   }
 
+  @Override
   public IntOctagon bounding_octagon() {
     return this;
   }
 
+  @Override
   public IntOctagon bounding_tile() {
     return this;
   }
 
+  @Override
   public int dimension() {
     if (this == EMPTY) {
       return -1;
@@ -101,45 +111,46 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return result;
   }
 
+  @Override
   public IntPoint corner(int p_no) {
 
     int x;
     int y;
     switch (p_no) {
-      case 0:
+      case 0 -> {
         x = llx - ly;
         y = ly;
-        break;
-      case 1:
+      }
+      case 1 -> {
         x = lrx + ly;
         y = ly;
-        break;
-      case 2:
+      }
+      case 2 -> {
         x = rx;
         y = rx - lrx;
-        break;
-      case 3:
+      }
+      case 3 -> {
         x = rx;
         y = urx - rx;
-        break;
-      case 4:
+      }
+      case 4 -> {
         x = urx - uy;
         y = uy;
-        break;
-      case 5:
+      }
+      case 5 -> {
         x = ulx + uy;
         y = uy;
-        break;
-      case 6:
+      }
+      case 6 -> {
         x = lx;
         y = lx - ulx;
-        break;
-      case 7:
+      }
+      case 7 -> {
         x = lx;
         y = llx - lx;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
     }
     return new IntPoint(x, y);
   }
@@ -148,82 +159,42 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
    * Additional to the function corner() for performance reasons to avoid allocation of an IntPoint.
    */
   public int corner_y(int p_no) {
-    int y;
-    switch (p_no) {
-      case 0:
-        y = ly;
-        break;
-      case 1:
-        y = ly;
-        break;
-      case 2:
-        y = rx - lrx;
-        break;
-      case 3:
-        y = urx - rx;
-        break;
-      case 4:
-        y = uy;
-        break;
-      case 5:
-        y = uy;
-        break;
-      case 6:
-        y = lx - ulx;
-        break;
-      case 7:
-        y = llx - lx;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
-    }
-    return y;
+    return switch (p_no) {
+      case 0, 1 -> ly;
+      case 2    -> rx - lrx;
+      case 3    -> urx - rx;
+      case 4, 5 -> uy;
+      case 6    -> lx - ulx;
+      case 7    -> llx - lx;
+      default ->
+          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+    };
   }
 
   /**
    * Additional to the function corner() for performance reasons to avoid allocation of an IntPoint.
    */
   public int corner_x(int p_no) {
-
-    int x;
-    switch (p_no) {
-      case 0:
-        x = llx - ly;
-        break;
-      case 1:
-        x = lrx + ly;
-        break;
-      case 2:
-        x = rx;
-        break;
-      case 3:
-        x = rx;
-        break;
-      case 4:
-        x = urx - uy;
-        break;
-      case 5:
-        x = ulx + uy;
-        break;
-      case 6:
-        x = lx;
-        break;
-      case 7:
-        x = lx;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
-    }
-    return x;
+    return switch (p_no) {
+      case 0    -> llx - ly;
+      case 1    -> lrx + ly;
+      case 2, 3 -> rx;
+      case 4    -> urx - uy;
+      case 5    -> ulx + uy;
+      case 6, 7 -> lx;
+      default ->
+          throw new IllegalArgumentException("IntOctagon.corner: p_no out of range");
+    };
   }
 
+  @Override
   public double area() {
 
     // calculate half of the absolute value of
     // x0 (y1 - y7) + x1 (y2 - y0) + x2 (y3 - y1) + ...+ x7( y0 - y6)
     // where xi, yi are the coordinates of the i-th corner of this Octagon.
 
-    // Overwrites the same implementation in TileShape for performence
+    // Overwrites the same implementation in TileShape for performance
     // reasons to avoid Point allocation.
 
     double result = (double) (llx - ly) * (double) (ly - llx + lx);
@@ -236,78 +207,81 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return 0.5 * Math.abs(result);
   }
 
+  @Override
   public int border_line_count() {
     return 8;
   }
 
+  @Override
   public Line border_line(int p_no) {
     int a_x;
     int a_y;
     int b_x;
     int b_y;
     switch (p_no) {
-      case 0:
+      case 0 -> {
         // lower boundary line
         a_x = 0;
         a_y = ly;
         b_x = 1;
         b_y = ly;
-        break;
-      case 1:
+      }
+      case 1 -> {
         // lower right boundary line
         a_x = lrx;
         a_y = 0;
         b_x = lrx + 1;
         b_y = 1;
-        break;
-      case 2:
+      }
+      case 2 -> {
         // right boundary line
         a_x = rx;
         a_y = 0;
         b_x = rx;
         b_y = 1;
-        break;
-      case 3:
+      }
+      case 3 -> {
         // upper right boundary line
         a_x = urx;
         a_y = 0;
         b_x = urx - 1;
         b_y = 1;
-        break;
-      case 4:
+      }
+      case 4 -> {
         // upper boundary line
         a_x = 0;
         a_y = uy;
         b_x = -1;
         b_y = uy;
-        break;
-      case 5:
+      }
+      case 5 -> {
         // upper left boundary line
         a_x = ulx;
         a_y = 0;
         b_x = ulx - 1;
         b_y = -1;
-        break;
-      case 6:
+      }
+      case 6 -> {
         // left boundary line
         a_x = lx;
         a_y = 0;
         b_x = lx;
         b_y = -1;
-        break;
-      case 7:
+      }
+      case 7 -> {
         // lower left boundary line
         a_x = llx;
         a_y = 0;
         b_x = llx + 1;
         b_y = -1;
-        break;
-      default:
-        throw new IllegalArgumentException("IntOctagon.edge_line: p_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntOctagon.edge_line: p_no out of range");
     }
     return new Line(a_x, a_y, b_x, b_y);
   }
 
+  @Override
   public IntOctagon translate_by(Vector p_rel_coor) {
     // This function is at the moment only implemented for Vectors
     // with integer coordinates.
@@ -328,20 +302,21 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         urx + rel_coor.x + rel_coor.y);
   }
 
+  @Override
   public double max_width() {
     double width_1 = Math.max(rx - lx, uy - ly);
     double width2 = Math.max(urx - llx, lrx - ulx);
-    double result = Math.max(width_1, width2 / Limits.sqrt2);
-    return result;
+    return Math.max(width_1, width2 / Limits.sqrt2);
   }
 
+  @Override
   public double min_width() {
     double width_1 = Math.min(rx - lx, uy - ly);
     double width2 = Math.min(urx - llx, lrx - ulx);
-    double result = Math.min(width_1, width2 / Limits.sqrt2);
-    return result;
+    return Math.min(width_1, width2 / Limits.sqrt2);
   }
 
+  @Override
   public IntOctagon offset(double p_distance) {
     int width = (int) Math.round(p_distance);
     if (width == 0) {
@@ -361,18 +336,22 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return result.normalize();
   }
 
+  @Override
   public IntOctagon enlarge(double p_offset) {
     return offset(p_offset);
   }
 
+  @Override
   public boolean contains(RegularTileShape p_other) {
     return p_other.is_contained_in(this);
   }
 
+  @Override
   public RegularTileShape union(RegularTileShape p_other) {
     return p_other.union(this);
   }
 
+  @Override
   public TileShape intersection(TileShape p_other) {
     return p_other.intersection(this);
   }
@@ -391,36 +370,36 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     int new_urx = urx;
 
     if (new_lx < new_llx - new_uy)
-    // the point new_lx, new_uy is the the lower left border line of
+    // the point new_lx, new_uy is the lower left border line of
     // this octagon
-    // change new_lx , that the the lower left border line runs through
+    // change new_lx , that the lower left border line runs through
     // this point
     {
       new_lx = new_llx - new_uy;
     }
 
     if (new_lx < new_ulx + new_ly)
-    // the point new_lx, new_ly is above the the upper left border line of
+    // the point new_lx, new_ly is above the upper left border line of
     // this octagon
-    // change new_lx , that the the upper left border line runs through
+    // change new_lx , that the upper left border line runs through
     // this point
     {
       new_lx = new_ulx + new_ly;
     }
 
     if (new_rx > new_urx - new_ly)
-    // the point new_rx, new_ly is above the the upper right border line of
+    // the point new_rx, new_ly is above the upper right border line of
     // this octagon
-    // change new_rx , that the the upper right border line runs through
+    // change new_rx , that the upper right border line runs through
     // this point
     {
       new_rx = new_urx - new_ly;
     }
 
     if (new_rx > new_lrx + new_uy)
-    // the point new_rx, new_uy is below the the lower right border line of
+    // the point new_rx, new_uy is below the lower right border line of
     // this octagon
-    // change rx , that the the lower right border line runs through
+    // change rx , that the lower right border line runs through
     // this point
 
     {
@@ -538,8 +517,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
   /** Checks, if this IntOctagon is normalized. */
   public boolean is_normalized() {
     IntOctagon on = this.normalize();
-    boolean result =
-        lx == on.lx
+    return lx == on.lx
             && ly == on.ly
             && rx == on.rx
             && uy == on.uy
@@ -547,9 +525,9 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
             && lrx == on.lrx
             && ulx == on.ulx
             && urx == on.urx;
-    return result;
   }
 
+  @Override
   public Simplex to_Simplex() {
     if (is_empty()) {
       return Simplex.EMPTY;
@@ -565,10 +543,12 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return precalculated_to_simplex;
   }
 
+  @Override
   public RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs) {
     return p_dirs.bounds(this);
   }
 
+  @Override
   public boolean intersects(Shape p_other) {
     return p_other.intersects(this);
   }
@@ -577,6 +557,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
    * Returns true, if p_point is contained in this octagon. Because of the parameter type
    * FloatPoint, the function may not be exact close to the border.
    */
+  @Override
   public boolean contains(FloatPoint p_point) {
     if (lx > p_point.x || ly > p_point.y || rx < p_point.x || uy < p_point.y) {
       return false;
@@ -592,27 +573,20 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
    */
   public Side side_of_border_line(int p_x, int p_y, int p_border_line_no) {
 
-    int tmp;
-    if (p_border_line_no == 0) {
-      tmp = this.ly - p_y;
-    } else if (p_border_line_no == 2) {
-      tmp = p_x - this.rx;
-    } else if (p_border_line_no == 4) {
-      tmp = p_y - this.uy;
-    } else if (p_border_line_no == 6) {
-      tmp = this.lx - p_x;
-    } else if (p_border_line_no == 1) {
-      tmp = p_x - p_y - this.lrx;
-    } else if (p_border_line_no == 3) {
-      tmp = p_x + p_y - this.urx;
-    } else if (p_border_line_no == 5) {
-      tmp = this.ulx + p_y - p_x;
-    } else if (p_border_line_no == 7) {
-      tmp = this.llx - p_x - p_y;
-    } else {
-      FRLogger.warn("IntOctagon.side_of_border_line: p_border_line_no out of range");
-      tmp = 0;
-    }
+    int tmp = switch (p_border_line_no) {
+      case 0 -> this.ly - p_y;
+      case 2 -> p_x - this.rx;
+      case 4 -> p_y - this.uy;
+      case 6 -> this.lx - p_x;
+      case 1 -> p_x - p_y - this.lrx;
+      case 3 -> p_x + p_y - this.urx;
+      case 5 -> this.ulx + p_y - p_x;
+      case 7 -> this.llx - p_x - p_y;
+      default -> {
+        FRLogger.warn("IntOctagon.side_of_border_line: p_border_line_no out of range");
+        yield 0;
+      }
+    };
     Side result;
     if (tmp < 0) {
       result = Side.ON_THE_LEFT;
@@ -624,10 +598,12 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return result;
   }
 
+  @Override
   Simplex intersection(Simplex p_other) {
     return p_other.intersection(this);
   }
 
+  @Override
   public IntOctagon intersection(IntOctagon p_other) {
     IntOctagon result =
         new IntOctagon(
@@ -642,18 +618,20 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return result.normalize();
   }
 
+  @Override
   IntOctagon intersection(IntBox p_other) {
     return intersection(p_other.to_IntOctagon());
   }
 
-  /** checkes if this (normalized) octagon is contained in p_box */
+  /** checks if this (normalized) octagon is contained in p_box */
+  @Override
   public boolean is_contained_in(IntBox p_box) {
     return (lx >= p_box.ll.x && ly >= p_box.ll.y && rx <= p_box.ur.x && uy <= p_box.ur.y);
   }
 
+  @Override
   public boolean is_contained_in(IntOctagon p_other) {
-    boolean result =
-        lx >= p_other.lx
+    return lx >= p_other.lx
             && ly >= p_other.ly
             && rx <= p_other.rx
             && uy <= p_other.uy
@@ -661,13 +639,11 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
             && ulx >= p_other.ulx
             && lrx <= p_other.lrx
             && urx <= p_other.urx;
-
-    return result;
   }
 
+  @Override
   public IntOctagon union(IntOctagon p_other) {
-    IntOctagon result =
-        new IntOctagon(
+    return new IntOctagon(
             Math.min(lx, p_other.lx),
             Math.min(ly, p_other.ly),
             Math.max(rx, p_other.rx),
@@ -676,75 +652,44 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
             Math.max(lrx, p_other.lrx),
             Math.min(llx, p_other.llx),
             Math.max(urx, p_other.urx));
-    return result;
   }
 
+  @Override
   public boolean intersects(IntBox p_other) {
     return intersects(p_other.to_IntOctagon());
   }
 
   /** checks, if two normalized Octagons intersect. */
+  @Override
   public boolean intersects(IntOctagon p_other) {
     int is_lx;
     int is_rx;
-    if (p_other.lx > this.lx) {
-      is_lx = p_other.lx;
-    } else {
-      is_lx = this.lx;
-    }
-    if (p_other.rx < this.rx) {
-      is_rx = p_other.rx;
-    } else {
-      is_rx = this.rx;
-    }
+    is_lx = Math.max(p_other.lx, this.lx);
+    is_rx = Math.min(p_other.rx, this.rx);
     if (is_lx > is_rx) {
       return false;
     }
 
     int is_ly;
     int is_uy;
-    if (p_other.ly > this.ly) {
-      is_ly = p_other.ly;
-    } else {
-      is_ly = this.ly;
-    }
-    if (p_other.uy < this.uy) {
-      is_uy = p_other.uy;
-    } else {
-      is_uy = this.uy;
-    }
+    is_ly = Math.max(p_other.ly, this.ly);
+    is_uy = Math.min(p_other.uy, this.uy);
     if (is_ly > is_uy) {
       return false;
     }
 
     int is_llx;
     int is_urx;
-    if (p_other.llx > this.llx) {
-      is_llx = p_other.llx;
-    } else {
-      is_llx = this.llx;
-    }
-    if (p_other.urx < this.urx) {
-      is_urx = p_other.urx;
-    } else {
-      is_urx = this.urx;
-    }
+    is_llx = Math.max(p_other.llx, this.llx);
+    is_urx = Math.min(p_other.urx, this.urx);
     if (is_llx > is_urx) {
       return false;
     }
 
     int is_ulx;
     int is_lrx;
-    if (p_other.ulx > this.ulx) {
-      is_ulx = p_other.ulx;
-    } else {
-      is_ulx = this.ulx;
-    }
-    if (p_other.lrx < this.lrx) {
-      is_lrx = p_other.lrx;
-    } else {
-      is_lrx = this.lrx;
-    }
+    is_ulx = Math.max(p_other.ulx, this.ulx);
+    is_lrx = Math.min(p_other.lrx, this.lrx);
     return is_ulx <= is_lrx;
   }
 
@@ -754,75 +699,46 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
   public boolean overlaps(IntOctagon p_other) {
     int is_lx;
     int is_rx;
-    if (p_other.lx > this.lx) {
-      is_lx = p_other.lx;
-    } else {
-      is_lx = this.lx;
-    }
-    if (p_other.rx < this.rx) {
-      is_rx = p_other.rx;
-    } else {
-      is_rx = this.rx;
-    }
+    is_lx = Math.max(p_other.lx, this.lx);
+    is_rx = Math.min(p_other.rx, this.rx);
     if (is_lx >= is_rx) {
       return false;
     }
 
     int is_ly;
     int is_uy;
-    if (p_other.ly > this.ly) {
-      is_ly = p_other.ly;
-    } else {
-      is_ly = this.ly;
-    }
-    if (p_other.uy < this.uy) {
-      is_uy = p_other.uy;
-    } else {
-      is_uy = this.uy;
-    }
+    is_ly = Math.max(p_other.ly, this.ly);
+    is_uy = Math.min(p_other.uy, this.uy);
     if (is_ly >= is_uy) {
       return false;
     }
 
     int is_llx;
     int is_urx;
-    if (p_other.llx > this.llx) {
-      is_llx = p_other.llx;
-    } else {
-      is_llx = this.llx;
-    }
-    if (p_other.urx < this.urx) {
-      is_urx = p_other.urx;
-    } else {
-      is_urx = this.urx;
-    }
+    is_llx = Math.max(p_other.llx, this.llx);
+    is_urx = Math.min(p_other.urx, this.urx);
     if (is_llx >= is_urx) {
       return false;
     }
 
     int is_ulx;
     int is_lrx;
-    if (p_other.ulx > this.ulx) {
-      is_ulx = p_other.ulx;
-    } else {
-      is_ulx = this.ulx;
-    }
-    if (p_other.lrx < this.lrx) {
-      is_lrx = p_other.lrx;
-    } else {
-      is_lrx = this.lrx;
-    }
+    is_ulx = Math.max(p_other.ulx, this.ulx);
+    is_lrx = Math.min(p_other.lrx, this.lrx);
     return is_ulx < is_lrx;
   }
 
+  @Override
   public boolean intersects(Simplex p_other) {
     return p_other.intersects(this);
   }
 
+  @Override
   public boolean intersects(Circle p_other) {
     return p_other.intersects(this);
   }
 
+  @Override
   public IntOctagon union(IntBox p_other) {
     return union(p_other.to_IntOctagon());
   }
@@ -851,15 +767,17 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return Math.min(result, urx - p_x);
   }
 
+  @Override
   public Side compare(RegularTileShape p_other, int p_edge_no) {
     Side result = p_other.compare(this, p_edge_no);
     return result.negate();
   }
 
+  @Override
   public Side compare(IntOctagon p_other, int p_edge_no) {
     Side result;
     switch (p_edge_no) {
-      case 0:
+      case 0 -> {
         // compare the lower edge line
         if (ly > p_other.ly) {
           result = Side.ON_THE_LEFT;
@@ -868,9 +786,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 1:
+      }
+      case 1 -> {
         // compare the lower right edge line
         if (lrx < p_other.lrx) {
           result = Side.ON_THE_LEFT;
@@ -879,9 +796,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 2:
+      }
+      case 2 -> {
         // compare the right edge line
         if (rx < p_other.rx) {
           result = Side.ON_THE_LEFT;
@@ -890,9 +806,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 3:
+      }
+      case 3 -> {
         // compare the upper right edge line
         if (urx < p_other.urx) {
           result = Side.ON_THE_LEFT;
@@ -901,9 +816,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 4:
+      }
+      case 4 -> {
         // compare the upper edge line
         if (uy < p_other.uy) {
           result = Side.ON_THE_LEFT;
@@ -912,9 +826,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 5:
+      }
+      case 5 -> {
         // compare the upper left edge line
         if (ulx > p_other.ulx) {
           result = Side.ON_THE_LEFT;
@@ -923,9 +836,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 6:
+      }
+      case 6 -> {
         // compare the left edge line
         if (lx > p_other.lx) {
           result = Side.ON_THE_LEFT;
@@ -934,9 +846,8 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 7:
+      }
+      case 7 -> {
         // compare the lower left edge line
         if (llx > p_other.llx) {
           result = Side.ON_THE_LEFT;
@@ -945,17 +856,19 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-      default:
-        throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
     }
     return result;
   }
 
+  @Override
   public Side compare(IntBox p_other, int p_edge_no) {
     return compare(p_other.to_IntOctagon(), p_edge_no);
   }
 
+  @Override
   public int border_line_index(Line p_line) {
     FRLogger.warn("edge_index_of_line not yet implemented for octagons");
     return -1;
@@ -969,61 +882,62 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     int result_x;
     int result_y;
     switch (p_dir) {
-      case RIGHT:
+      case RIGHT -> {
         result_x = Math.min(rx, urx - p_point.y);
         result_x = Math.min(result_x, lrx + p_point.y);
         result_y = p_point.y;
-        break;
-      case LEFT:
+      }
+      case LEFT -> {
         result_x = Math.max(lx, ulx + p_point.y);
         result_x = Math.max(result_x, llx - p_point.y);
         result_y = p_point.y;
-        break;
-      case UP:
+      }
+      case UP -> {
         result_x = p_point.x;
         result_y = Math.min(uy, p_point.x - ulx);
         result_y = Math.min(result_y, urx - p_point.x);
-        break;
-      case DOWN:
+      }
+      case DOWN -> {
         result_x = p_point.x;
         result_y = Math.max(ly, llx - p_point.x);
         result_y = Math.max(result_y, p_point.x - lrx);
-        break;
-      case RIGHT45:
+      }
+      case RIGHT45 -> {
         result_x = (int) (Math.ceil(0.5 * (p_point.x - p_point.y + urx)));
         result_x = Math.min(result_x, rx);
         result_x = Math.min(result_x, p_point.x - p_point.y + uy);
         result_y = p_point.y - p_point.x + result_x;
-        break;
-      case UP45:
+      }
+      case UP45 -> {
         result_x = (int) (Math.floor(0.5 * (p_point.x + p_point.y + ulx)));
         result_x = Math.max(result_x, lx);
         result_x = Math.max(result_x, p_point.x + p_point.y - uy);
         result_y = p_point.y + p_point.x - result_x;
-        break;
-      case LEFT45:
+      }
+      case LEFT45 -> {
         result_x = (int) (Math.floor(0.5 * (p_point.x - p_point.y + llx)));
         result_x = Math.max(result_x, lx);
         result_x = Math.max(result_x, p_point.x - p_point.y + ly);
         result_y = p_point.y - p_point.x + result_x;
-        break;
-      case DOWN45:
+      }
+      case DOWN45 -> {
         result_x = (int) (Math.ceil(0.5 * (p_point.x + p_point.y + lrx)));
         result_x = Math.min(result_x, rx);
         result_x = Math.min(result_x, p_point.x + p_point.y - ly);
         result_y = p_point.y + p_point.x - result_x;
-        break;
-      default:
+      }
+      default -> {
         FRLogger.warn("IntOctagon.border_point: unexpected 45 degree direction");
         result_x = 0;
         result_y = 0;
+      }
     }
     return new IntPoint(result_x, result_y);
   }
 
   /**
    * Calculates the sorted p_max_result_points nearest points on the border of this octagon in the
-   * 45-degree directions. p_point is assumed to be located in the interiour of this octagon.
+   * 45-degree directions. p_point is assumed to be located in the interior of this octagon.
    */
   public IntPoint[] nearest_border_projections(IntPoint p_point, int p_max_result_points) {
     if (!this.contains(p_point) || p_max_result_points <= 0) {
@@ -1055,95 +969,104 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
   }
 
   Side border_line_side_of(FloatPoint p_point, int p_line_no, double p_tolerance) {
-    Side result;
-    if (p_line_no == 0) {
-      if (p_point.y > this.ly + p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.y < this.ly - p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+    return switch (p_line_no) {
+      case 0 -> {
+        if (p_point.y > this.ly + p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.y < this.ly - p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 2) {
-      if (p_point.x < this.rx - p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.x > this.rx + p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 2 -> {
+        if (p_point.x < this.rx - p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.x > this.rx + p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 4) {
-      if (p_point.y < this.uy - p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.y > this.uy + p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 4 -> {
+        if (p_point.y < this.uy - p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.y > this.uy + p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 6) {
-      if (p_point.x > this.lx + p_tolerance) {
-        result = Side.ON_THE_RIGHT;
-      } else if (p_point.x < this.lx - p_tolerance) {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 6 -> {
+        if (p_point.x > this.lx + p_tolerance) {
+          yield Side.ON_THE_RIGHT;
+        } else if (p_point.x < this.lx - p_tolerance) {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 1) {
-      double tmp = p_point.y - p_point.x + lrx;
-      if (tmp > p_tolerance)
-      // the p_point is above the the lower right border line of this octagon
-      {
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp < -p_tolerance)
-      // the p_point is below the the lower right border line of this octagon
-      {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 1 -> {
+        double tmp = p_point.y - p_point.x + lrx;
+        if (tmp > p_tolerance)
+        // the p_point is above the lower right border line of this octagon
+        {
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp < -p_tolerance)
+        // the p_point is below the lower right border line of this octagon
+        {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 3) {
-      double tmp = p_point.x + p_point.y - urx;
-      if (tmp < -p_tolerance) {
-        // the p_point is below the the upper right border line of this octagon
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp > p_tolerance) {
-        // the p_point is above the the upper right border line of this octagon
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 3 -> {
+        double tmp = p_point.x + p_point.y - urx;
+        if (tmp < -p_tolerance) {
+          // the p_point is below the upper right border line of this octagon
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp > p_tolerance) {
+          // the p_point is above the upper right border line of this octagon
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 5) {
-      double tmp = p_point.y - p_point.x + ulx;
-      if (tmp < -p_tolerance)
-      // the p_point is below the the upper left border line of this octagon
-      {
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp > p_tolerance)
-      // the p_point is above the the upper left border line of this octagon
-      {
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 5 -> {
+        double tmp = p_point.y - p_point.x + ulx;
+        if (tmp < -p_tolerance)
+        // the p_point is below the upper left border line of this octagon
+        {
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp > p_tolerance)
+        // the p_point is above the upper left border line of this octagon
+        {
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else if (p_line_no == 7) {
-      double tmp = p_point.x + p_point.y - llx;
-      if (tmp > p_tolerance) {
-        // the p_point is above the the lower left border line of this octagon
-        result = Side.ON_THE_RIGHT;
-      } else if (tmp < -p_tolerance) {
-        // the p_point is below the the lower left border line of this octagon
-        result = Side.ON_THE_LEFT;
-      } else {
-        result = Side.COLLINEAR;
+      case 7 -> {
+        double tmp = p_point.x + p_point.y - llx;
+        if (tmp > p_tolerance) {
+          // the p_point is above the lower left border line of this octagon
+          yield Side.ON_THE_RIGHT;
+        } else if (tmp < -p_tolerance) {
+          // the p_point is below the lower left border line of this octagon
+          yield Side.ON_THE_LEFT;
+        } else {
+          yield Side.COLLINEAR;
+        }
       }
-    } else {
-      FRLogger.warn("IntOctagon.border_line_side_of: p_line_no out of range");
-      result = Side.COLLINEAR;
-    }
-    return result;
+      default -> {
+        FRLogger.warn("IntOctagon.border_line_side_of: p_line_no out of range");
+        yield Side.COLLINEAR;
+      }
+    };
   }
 
   /** Checks, if this octagon can be converted to an IntBox. */
+  @Override
   public boolean is_IntBox() {
     if (llx != lx + ly) return false;
     if (lrx != rx - ly) return false;
@@ -1151,6 +1074,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return ulx == lx - uy;
   }
 
+  @Override
   public TileShape simplify() {
     if (this.is_IntBox()) {
       return this.bounding_box();
@@ -1158,11 +1082,13 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return this;
   }
 
+  @Override
   public TileShape[] cutout(TileShape p_shape) {
     return p_shape.cutout_from(this);
   }
 
   /** Divide p_d minus this octagon into 8 convex pieces, from which 4 have cut off a corner. */
+  @Override
   IntOctagon[] cutout_from(IntBox p_d) {
     IntOctagon c = this.intersection(p_d);
 
@@ -1332,13 +1258,12 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     }
 
     // add the 4 octagons to the result
-    for (int i = 0; i < 4; ++i) {
-      result[4 + i] = octagons[i];
-    }
+    System.arraycopy(octagons, 0, result, 4, 4);
     return result;
   }
 
   /** Divide p_divide_octagon minus cut_octagon into 8 convex pieces without sharp angles. */
+  @Override
   IntOctagon[] cutout_from(IntOctagon p_d) {
     IntOctagon c = this.intersection(p_d);
 
@@ -1653,6 +1578,7 @@ public class IntOctagon extends RegularTileShape implements java.io.Serializable
     return result;
   }
 
+  @Override
   Simplex[] cutout_from(Simplex p_simplex) {
     return this.to_Simplex().cutout_from(p_simplex);
   }

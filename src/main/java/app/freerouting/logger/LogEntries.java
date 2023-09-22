@@ -1,9 +1,11 @@
 package app.freerouting.logger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LogEntries {
-  private final List<LogEntry> entries = new java.util.ArrayList<LogEntry>();
+  private final List<LogEntry> entries = new ArrayList<>();
 
   public int getWarningCount()
   {
@@ -22,23 +24,16 @@ public class LogEntries {
 
   public String getAsString()
   {
-    StringBuilder sb = new StringBuilder();
-    for (LogEntry entry : entries)
-    {
-      sb.append(entry.toString());
-      sb.append("\n");
-    }
-    return sb.toString();
+    return entries.stream()
+        .map(LogEntry::toString)
+        .collect(Collectors.joining("\n", "", "\n"));
   }
 
   public String[] get()
   {
-    String[] result = new String[entries.size()];
-    for (int i = 0; i < entries.size(); i++)
-    {
-      result[i] = entries.get(i).toString();
-    }
-    return result;
+    return entries.stream()
+        .map(LogEntry::toString)
+        .toArray(String[]::new);
   }
 
   public LogEntry[] getEntries()

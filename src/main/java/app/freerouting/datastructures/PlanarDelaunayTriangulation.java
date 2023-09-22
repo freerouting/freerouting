@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,14 +24,14 @@ public class PlanarDelaunayTriangulation {
 
   /**
    * Randum generatur to shuffle the input corners. A fixed seed is used to make the results
-   * reproduceble.
+   * reproducible.
    */
   private static final int seed = 99;
-  private static final java.util.Random random_generator = new java.util.Random(seed);
-  /** The structure for seaching the triangle containing a given input corner. */
+  private static final Random random_generator = new Random(seed);
+  /** The structure for searching the triangle containing a given input corner. */
   private final TriangleGraph search_graph;
   /**
-   * This list contain the edges of the trinangulation, where the start corner and end corner are
+   * This list contain the edges of the triangulation, where the start corner and end corner are
    * equal.
    */
   private final Collection<Edge> degenerate_edges;
@@ -43,7 +44,7 @@ public class PlanarDelaunayTriangulation {
   /** Creates a new instance of PlanarDelaunayTriangulation from p_object_list. */
   public PlanarDelaunayTriangulation(
       Collection<PlanarDelaunayTriangulation.Storable> p_object_list) {
-    List<Corner> corner_list = new LinkedList<Corner>();
+    List<Corner> corner_list = new LinkedList<>();
     for (PlanarDelaunayTriangulation.Storable curr_object : p_object_list) {
       Point[] curr_corners = curr_object.get_triangulation_corners();
       for (Point curr_corner : curr_corners) {
@@ -52,11 +53,11 @@ public class PlanarDelaunayTriangulation {
     }
 
     // create a random permutation of the corners.
-    // use a fixed seed to get reproducable result
+    // use a fixed seed to get reproducible result
     random_generator.setSeed(seed);
     Collections.shuffle(corner_list, random_generator);
 
-    // create a big triangle contaning all corners in the list to start with.
+    // create a big triangle containing all corners in the list to start with.
 
     int bounding_coor = Limits.CRIT_INT;
     Corner[] bounding_corners = new Corner[3];
@@ -81,7 +82,7 @@ public class PlanarDelaunayTriangulation {
     // Initialize the search graph.
 
     this.search_graph = new TriangleGraph(start_triangle);
-    this.degenerate_edges = new LinkedList<Edge>();
+    this.degenerate_edges = new LinkedList<>();
 
     // Insert the corners in the corner list into the search graph.
 
@@ -93,7 +94,7 @@ public class PlanarDelaunayTriangulation {
 
   /** Returns all edge lines of the result of the Delaunay Triangulation. */
   public Collection<ResultEdge> get_edge_lines() {
-    Collection<ResultEdge> result = new LinkedList<ResultEdge>();
+    Collection<ResultEdge> result = new LinkedList<>();
     for (Edge curr_edge : this.degenerate_edges) {
       result.add(
           new ResultEdge(
@@ -103,7 +104,7 @@ public class PlanarDelaunayTriangulation {
               curr_edge.end_corner.object));
     }
     if (this.search_graph.anchor != null) {
-      Set<Edge> result_edges = new TreeSet<Edge>();
+      Set<Edge> result_edges = new TreeSet<>();
       this.search_graph.anchor.get_leaf_edges(result_edges);
       for (Edge curr_edge : result_edges) {
         result.add(
@@ -118,14 +119,14 @@ public class PlanarDelaunayTriangulation {
   }
 
   /**
-   * Splits p_triangle into 3 new triangles at p_corner, if p_corner lies in the interiour. If
+   * Splits p_triangle into 3 new triangles at p_corner, if p_corner lies in the interior. If
    * p_corner lies on the border, p_triangle and the corresponding neighbour are split into 2 new
    * triangles each at p_corner. If p_corner lies outside this triangle or on a corner, nothing is
    * split. In this case the function returns false.
    */
   private boolean split(Triangle p_triangle, Corner p_corner) {
 
-    // check, if p_corner is in the interiour of this triangle or
+    // check, if p_corner is in the interior of this triangle or
     // if p_corner is contained in an edge line.
 
     Edge containing_edge = null;
@@ -226,7 +227,7 @@ public class PlanarDelaunayTriangulation {
     } else if (p_edge.right_triangle.opposite_corner(p_edge) == p_corner) {
       triangle_to_change = p_edge.left_triangle;
     } else {
-      FRLogger.warn("PlanarDelaunayTriangulation.legalize_edge: edge lines inconsistant");
+      FRLogger.warn("PlanarDelaunayTriangulation.legalize_edge: edge lines inconsistent");
       return false;
     }
     Edge flipped_edge = p_edge.flip();
@@ -248,13 +249,13 @@ public class PlanarDelaunayTriangulation {
     return true;
   }
 
-  /** Checks the consistancy of the triangles in this triagulation. Used for debugging purposes. */
+  /** Checks the consistency of the triangles in this triangulation. Used for debugging purposes. */
   public boolean validate() {
     boolean result = this.search_graph.anchor.validate();
-    if (result == true) {
-      FRLogger.warn("Delauny triangulation check passed ok");
+    if (result) {
+      FRLogger.warn("Delaunay triangulation check passed ok");
     } else {
-      FRLogger.warn("Delauny triangulation check has detected problems");
+      FRLogger.warn("Delaunay triangulation check has detected problems");
     }
     return result;
   }
@@ -265,10 +266,10 @@ public class PlanarDelaunayTriangulation {
     return this.last_edge_id_no;
   }
 
-  /** Interface with funktionality required for objects to be used in a planar triangulation. */
+  /** Interface with functionality required for objects to be used in a planar triangulation. */
   public interface Storable {
     /** Returns an array of corners, which can be used in a planar triangulation. */
-    app.freerouting.geometry.planar.Point[] get_triangulation_corners();
+    Point[] get_triangulation_corners();
   }
 
   /** Describes a line segment in the result of the Delaunay Triangulation. */
@@ -315,11 +316,11 @@ public class PlanarDelaunayTriangulation {
 
   /**
    * Directed acyclic graph for finding the triangle containing a search point p. The leaves contain
-   * the trianngles of the current triangulation. The internal nodes are triangles, that were part
-   * of the triangulationn at some earlier stage, but have been replaced their children.
+   * the triangles of the current triangulation. The internal nodes are triangles, that were part
+   * of the triangulation at some earlier stage, but have been replaced their children.
    */
   private static class TriangleGraph {
-    private Triangle anchor = null;
+    private Triangle anchor;
 
     public TriangleGraph(Triangle p_triangle) {
       if (p_triangle != null) {
@@ -389,9 +390,9 @@ public class PlanarDelaunayTriangulation {
     /** The unique id number of this triangle. */
     private final int id_no;
     /** The triangle on the left side of this edge. */
-    private Triangle left_triangle = null;
+    private Triangle left_triangle;
     /** The triangle on the right side of this edge. */
-    private Triangle right_triangle = null;
+    private Triangle right_triangle;
 
     public Edge(Corner p_start_corner, Corner p_end_corner) {
       start_corner = p_start_corner;
@@ -399,6 +400,7 @@ public class PlanarDelaunayTriangulation {
       id_no = new_edge_id_no();
     }
 
+    @Override
     public int compareTo(Edge p_other) {
       return (this.id_no - p_other.id_no);
     }
@@ -419,7 +421,7 @@ public class PlanarDelaunayTriangulation {
       right_triangle = p_triangle;
     }
 
-    /** Returns the common corner of this edge and p_other, or null, if no commen corner exists. */
+    /** Returns the common corner of this edge and p_other, or null, if no common corner exists. */
     public Corner common_corner(Edge p_other) {
       Corner result = null;
       if (p_other.start_corner.equals(this.start_corner)
@@ -443,7 +445,7 @@ public class PlanarDelaunayTriangulation {
       } else if (p_triangle == this.right_triangle) {
         result = this.left_triangle;
       } else {
-        FRLogger.warn("Edge.other_neighbour: inconsistant neigbour triangle");
+        FRLogger.warn("Edge.other_neighbour: inconsistent neighbour triangle");
         result = null;
       }
       return result;
@@ -494,7 +496,7 @@ public class PlanarDelaunayTriangulation {
         }
       }
       if (left_index < 0 || right_index < 0) {
-        FRLogger.warn("Edge.flip: edge line inconsistant");
+        FRLogger.warn("Edge.flip: edge line inconsistent");
         return null;
       }
       Edge left_prev_edge = this.left_triangle.edge_lines[(left_index + 2) % 3];
@@ -543,7 +545,7 @@ public class PlanarDelaunayTriangulation {
       return flipped_edge;
     }
 
-    /** Checks the consistancy of this edge in its database. Used for debugging purposes. */
+    /** Checks the consistency of this edge in its database. Used for debugging purposes. */
     public boolean validate() {
       boolean result = true;
       if (this.left_triangle == null) {
@@ -590,7 +592,7 @@ public class PlanarDelaunayTriangulation {
   }
 
   /**
-   * Describes a triangle in the triagulation. edge_lines ia an array of dimension 3. The edge lines
+   * Describes a triangle in the triangulation. edge_lines ia an array of dimension 3. The edge lines
    * arec sorted in counter clock sense around the border of this triangle. The list children points
    * to the children of this triangle, when used as a node in the search graph.
    */
@@ -605,17 +607,17 @@ public class PlanarDelaunayTriangulation {
     private final Triangle first_parent;
     /**
      * Indicates, if this triangle is on the left of the i-th edge line for i = 0 to 2. Must be set,
-     * if this triagngle is an inner node because left_triangle and right_triangle of edge lines
+     * if this triangle is an inner node because left_triangle and right_triangle of edge lines
      * point only to leaf nodes.
      */
-    private boolean[] is_on_the_left_of_edge_line = null;
+    private boolean[] is_on_the_left_of_edge_line;
     /** The children of this triangle when used as a node in the triangle search graph. */
     private final Collection<Triangle> children;
 
     public Triangle(Edge[] p_edge_lines, Triangle p_first_parent) {
       this.edge_lines = p_edge_lines;
       // create an empty list for the children.
-      this.children = new LinkedList<Triangle>();
+      this.children = new LinkedList<>();
       this.first_parent = p_first_parent;
     }
 
@@ -637,7 +639,7 @@ public class PlanarDelaunayTriangulation {
       } else if (curr_edge.right_triangle == this) {
         result = curr_edge.end_corner;
       } else {
-        FRLogger.warn("Triangle.get_corner: inconsistant edge lines");
+        FRLogger.warn("Triangle.get_corner: inconsistent edge lines");
         result = null;
       }
       return result;
@@ -717,7 +719,7 @@ public class PlanarDelaunayTriangulation {
 
     /**
      * Split this triangle into 3 new triangles by adding edges from the corners of this triangle to
-     * p_corner, p_corner has to be located in the interiour of this triangle.
+     * p_corner, p_corner has to be located in the interior of this triangle.
      */
     public Triangle[] split_at_inner_point(Corner p_corner) {
       Triangle[] new_triangles = new Triangle[3];
@@ -747,7 +749,7 @@ public class PlanarDelaunayTriangulation {
       curr_edge_lines[2] = new_triangles[1].edge_lines[1];
       new_triangles[2] = new Triangle(curr_edge_lines, this);
 
-      // Set the new neigbour triangles of the edge lines.
+      // Set the new neighbour triangles of the edge lines.
 
       for (int i = 0; i < 3; ++i) {
         Edge curr_edge = new_triangles[i].edge_lines[0];
@@ -775,8 +777,8 @@ public class PlanarDelaunayTriangulation {
 
     /**
      * Split this triangle and p_neighbour_to_split into 4 new triangles by adding edges from the
-     * corners of the triangles to p_corner. p_corner is assumed to be loacated on the common edge
-     * line of this triangle and p_neigbour_to_split. If that is not true, the function returns
+     * corners of the triangles to p_corner. p_corner is assumed to be located on the common edge
+     * line of this triangle and p_neighbour_to_split. If that is not true, the function returns
      * null. The first 2 result triangles are from splitting this triangle, and the last 2 result
      * triangles are from splitting p_neighbour_to_split.
      */
@@ -784,7 +786,7 @@ public class PlanarDelaunayTriangulation {
       Triangle[] new_triangles = new Triangle[4];
       // look for the triangle edge of this and the neighbour triangle containing p_point;
       int this_touching_edge_no = -1;
-      int neigbbour_touching_edge_no = -1;
+      int neighbour_touching_edge_no = -1;
       Edge touching_edge = null;
       Edge other_touching_edge = null;
       for (int i = 0; i < 3; ++i) {
@@ -795,11 +797,11 @@ public class PlanarDelaunayTriangulation {
         }
         curr_edge = p_neighbour_to_split.edge_lines[i];
         if (p_corner.side_of(curr_edge.start_corner, curr_edge.end_corner) == Side.COLLINEAR) {
-          neigbbour_touching_edge_no = i;
+          neighbour_touching_edge_no = i;
           other_touching_edge = curr_edge;
         }
       }
-      if (this_touching_edge_no < 0 || neigbbour_touching_edge_no < 0) {
+      if (this_touching_edge_no < 0 || neighbour_touching_edge_no < 0) {
         FRLogger.warn("Triangle.split_at_border_point: touching edge not found");
         return null;
       }
@@ -861,7 +863,7 @@ public class PlanarDelaunayTriangulation {
       }
 
       // construct the first split triangle of p_neighbour_to_split
-      next_edge = p_neighbour_to_split.edge_lines[(neigbbour_touching_edge_no + 1) % 3];
+      next_edge = p_neighbour_to_split.edge_lines[(neighbour_touching_edge_no + 1) % 3];
       Edge neighbour_splitting_edge;
       // construct the splitting edge line of p_neighbour_to_split, so that the first split
       // triangle lies on the left side, and the second split triangle on the right side.
@@ -884,7 +886,7 @@ public class PlanarDelaunayTriangulation {
       }
 
       // construct the second split triangle of p_neighbour_to_split
-      prev_edge = p_neighbour_to_split.edge_lines[(neigbbour_touching_edge_no + 2) % 3];
+      prev_edge = p_neighbour_to_split.edge_lines[(neighbour_touching_edge_no + 2) % 3];
       curr_edge_lines = new Edge[3];
       curr_edge_lines[0] = prev_edge;
       curr_edge_lines[1] = second_common_new_edge;
@@ -901,7 +903,7 @@ public class PlanarDelaunayTriangulation {
       return new_triangles;
     }
 
-    /** Checks the consistancy of this triangle and its children. Used for debugging purposes. */
+    /** Checks the consistency of this triangle and its children. Used for debugging purposes. */
     public boolean validate() {
       boolean result = true;
       if (this.is_leaf()) {

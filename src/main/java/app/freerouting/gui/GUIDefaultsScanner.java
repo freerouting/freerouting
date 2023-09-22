@@ -1288,7 +1288,7 @@ class GUIDefaultsScanner {
           break;
         case 76:
           {
-            return GUIDefaultsFile.Keyword.DISPLAY_MISCELLANIOUS;
+            return GUIDefaultsFile.Keyword.DISPLAY_MISCELLANEOUS;
           }
         case 92:
           break;

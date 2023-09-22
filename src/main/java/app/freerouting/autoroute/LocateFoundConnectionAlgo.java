@@ -5,10 +5,13 @@ import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.TestLevel;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,7 +64,7 @@ public abstract class LocateFoundConnectionAlgo {
     for (int i = 0; i < backtrack_array.length; ++i) {
       this.backtrack_array[i] = it.next();
     }
-    this.connection_items = new LinkedList<ResultItem>();
+    this.connection_items = new LinkedList<>();
     BacktrackElement start_info = this.backtrack_array[backtrack_array.length - 1];
     if (!(start_info.door instanceof TargetItemExpansionDoor)) {
       FRLogger.warn("LocateFoundConnectionAlgo: ItemExpansionDoor expected for start_info.door");
@@ -205,7 +208,7 @@ public abstract class LocateFoundConnectionAlgo {
     if (p_maze_search_result == null) {
       return null;
     }
-    Collection<BacktrackElement> result = new LinkedList<BacktrackElement>();
+    Collection<BacktrackElement> result = new LinkedList<>();
     CompleteExpansionRoom curr_next_room = null;
     ExpandableObject curr_backtrack_door = p_maze_search_result.destination_door;
     MazeSearchElement curr_maze_search_element =
@@ -334,11 +337,11 @@ public abstract class LocateFoundConnectionAlgo {
   }
 
   /**
-   * Calclates the next trace trace of the connection under construction. Returns null, if all
+   * Calculates the next trace of the connection under construction. Returns null, if all
    * traces are returned.
    */
   private ResultItem calculate_next_trace(boolean p_layer_changed, boolean p_at_fanout_end) {
-    Collection<FloatPoint> corner_list = new LinkedList<FloatPoint>();
+    Collection<FloatPoint> corner_list = new LinkedList<>();
     corner_list.add(this.current_from_point);
     if (!p_at_fanout_end) {
       FloatPoint adjusted_start_corner = this.adjust_start_corner();
@@ -358,9 +361,7 @@ public abstract class LocateFoundConnectionAlgo {
       if (next_corners.isEmpty()) {
         break;
       }
-      Iterator<FloatPoint> it = next_corners.iterator();
-      while (it.hasNext()) {
-        FloatPoint curr_next_corner = it.next();
+      for (FloatPoint curr_next_corner : next_corners) {
         if (curr_next_corner != prev_corner) {
           corner_list.add(curr_next_corner);
           this.previous_from_point = this.current_from_point;
@@ -381,11 +382,10 @@ public abstract class LocateFoundConnectionAlgo {
     }
 
     // Round the new trace corners to Integer.
-    Collection<IntPoint> rounded_corner_list = new LinkedList<IntPoint>();
-    Iterator<FloatPoint> it = corner_list.iterator();
+    Collection<IntPoint> rounded_corner_list = new LinkedList<>();
     IntPoint prev_point = null;
-    while (it.hasNext()) {
-      IntPoint curr_point = (it.next()).round();
+    for (FloatPoint corner : corner_list) {
+      IntPoint curr_point = corner.round();
       if (!curr_point.equals(prev_point)) {
         rounded_corner_list.add(curr_point);
         prev_point = curr_point;
@@ -405,14 +405,14 @@ public abstract class LocateFoundConnectionAlgo {
 
   /**
    * Returns the next list of corners for the construction of the trace in calculate_next_trace. If
-   * the result is emppty, the trace is already completed.
+   * the result is empty, the trace is already completed.
    */
   protected abstract Collection<FloatPoint> calculate_next_trace_corners();
 
   /** Test display of the baktrack rooms. */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context) {
     for (int i = 0; i < backtrack_array.length; ++i) {
       CompleteExpansionRoom next_room = backtrack_array[i].next_room;
       if (next_room != null) {

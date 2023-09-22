@@ -4,14 +4,19 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.library.LogicalPart;
 import app.freerouting.library.Package;
+
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Describes board components consisting of an array of pins and other stuff like component
  * keepouts.
  */
 public class Component
-    implements UndoableObjects.Storable, ObjectInfoPanel.Printable, java.io.Serializable {
+    implements UndoableObjects.Storable, ObjectInfoPanel.Printable, Serializable {
   /** The name of the component. */
   public final String name;
   /** Internal generated unique identification number. */
@@ -27,7 +32,7 @@ public class Component
   /** The rotation of the library package of the component in degree */
   private double rotation_in_degree;
   /** Contains information for gate swapping and pin swapping, if != null */
-  private app.freerouting.library.LogicalPart logical_part = null;
+  private LogicalPart logical_part;
   /** If false, the component will be placed on the back side of the board. */
   private boolean on_front;
 
@@ -144,6 +149,7 @@ public class Component
   /**
    * Compares 2 components by name. Useful for example to display components in alphabetic order.
    */
+  @Override
   public int compareTo(Object p_other) {
     if (p_other instanceof Component) {
       return this.name.compareToIgnoreCase(((Component) p_other).name);
@@ -152,6 +158,7 @@ public class Component
   }
 
   /** Creates a copy of this component. */
+  @Override
   public Component clone() {
     Component result =
         new Component(
@@ -167,23 +174,25 @@ public class Component
     return result;
   }
 
+  @Override
   public String toString() {
     return this.name;
   }
 
   /** Returns information for pin swap and gate swap, if != null. */
-  public app.freerouting.library.LogicalPart get_logical_part() {
+  public LogicalPart get_logical_part() {
     return this.logical_part;
   }
 
-  /** Sets the infomation for pin swap and gate swap. */
-  public void set_logical_part(app.freerouting.library.LogicalPart p_logical_part) {
+  /** Sets the information for pin swap and gate swap. */
+  public void set_logical_part(LogicalPart p_logical_part) {
     this.logical_part = p_logical_part;
   }
 
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("component") + " ");
     p_window.append_bold(this.name);
     if (this.location != null) {

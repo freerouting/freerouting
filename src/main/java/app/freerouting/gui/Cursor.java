@@ -45,6 +45,7 @@ public abstract class Cursor {
 
   private static class FortyfiveDegreeCrossHairCursor extends Cursor {
 
+    @Override
     public void draw(Graphics p_graphics) {
 
       if (!location_initialized) {

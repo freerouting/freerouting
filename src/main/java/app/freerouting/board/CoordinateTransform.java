@@ -1,10 +1,16 @@
 package app.freerouting.board;
 
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+import java.util.Locale;
+
 /** Class for transforming objects between user coordinate space and board coordinate space. */
-public class CoordinateTransform implements java.io.Serializable {
+public class CoordinateTransform implements Serializable {
 
   /** The unit used for user coordinates */
   public final Unit user_unit;
@@ -57,14 +63,14 @@ public class CoordinateTransform implements java.io.Serializable {
   }
 
   public PrintableShape board_to_user(
-      app.freerouting.geometry.planar.Shape p_shape, java.util.Locale p_locale) {
+      Shape p_shape, Locale p_locale) {
     PrintableShape result;
     if (p_shape instanceof app.freerouting.geometry.planar.Circle) {
       result = board_to_user((app.freerouting.geometry.planar.Circle) p_shape, p_locale);
-    } else if (p_shape instanceof app.freerouting.geometry.planar.IntBox) {
-      result = board_to_user((app.freerouting.geometry.planar.IntBox) p_shape, p_locale);
-    } else if (p_shape instanceof app.freerouting.geometry.planar.PolylineShape) {
-      result = board_to_user((app.freerouting.geometry.planar.PolylineShape) p_shape, p_locale);
+    } else if (p_shape instanceof IntBox) {
+      result = board_to_user((IntBox) p_shape, p_locale);
+    } else if (p_shape instanceof PolylineShape) {
+      result = board_to_user((PolylineShape) p_shape, p_locale);
     } else {
       FRLogger.warn("CoordinateTransform.board_to_user not yet implemented for p_shape");
       result = null;
@@ -73,19 +79,19 @@ public class CoordinateTransform implements java.io.Serializable {
   }
 
   public PrintableShape.Circle board_to_user(
-      app.freerouting.geometry.planar.Circle p_circle, java.util.Locale p_locale) {
+      app.freerouting.geometry.planar.Circle p_circle, Locale p_locale) {
     return new PrintableShape.Circle(
         board_to_user(p_circle.center.to_float()), board_to_user(p_circle.radius), p_locale);
   }
 
   public PrintableShape.Rectangle board_to_user(
-      app.freerouting.geometry.planar.IntBox p_box, java.util.Locale p_locale) {
+      IntBox p_box, Locale p_locale) {
     return new PrintableShape.Rectangle(
         board_to_user(p_box.ll.to_float()), board_to_user(p_box.ur.to_float()), p_locale);
   }
 
   public PrintableShape.Polygon board_to_user(
-      app.freerouting.geometry.planar.PolylineShape p_shape, java.util.Locale p_locale) {
+      PolylineShape p_shape, Locale p_locale) {
     FloatPoint[] corners = p_shape.corner_approx_arr();
     FloatPoint[] transformed_corners = new FloatPoint[corners.length];
     for (int i = 0; i < corners.length; ++i) {

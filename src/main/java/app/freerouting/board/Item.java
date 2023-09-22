@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
@@ -17,11 +18,13 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -41,14 +44,14 @@ public abstract class Item
   /** the index in the clearance matrix describing the required spacing to other items */
   private int clearance_class;
   /** points to the entries of this item in the ShapeSearchTrees */
-  private transient ItemSearchTreesInfo search_trees_info = null;
+  private transient ItemSearchTreesInfo search_trees_info;
   private FixedState fixed_state;
   /** not 0, if this item belongs to a component */
-  private int component_no = 0;
+  private int component_no;
   /** False, if the item is deleted or not inserted into the board */
   private boolean on_the_board = false;
   /** Temporary data used in the autoroute algorithm. */
-  private transient app.freerouting.autoroute.ItemAutorouteInfo autoroute_info = null;
+  private transient ItemAutorouteInfo autoroute_info;
   public double smallest_clearance;
 
   Item(
@@ -76,6 +79,7 @@ public abstract class Item
   }
 
   /** Implements the comparable interface. */
+  @Override
   public int compareTo(Object p_other) {
     int result;
     if (p_other instanceof Item) {
@@ -86,7 +90,7 @@ public abstract class Item
     return result;
   }
 
-  /** returns the unique idcentification number of this item */
+  /** returns the unique identification number of this item */
   public int get_id_no() {
     return id_no;
   }
@@ -104,10 +108,12 @@ public abstract class Item
     return false;
   }
 
+  @Override
   public boolean is_obstacle(int p_net_no) {
     return !contains_net(p_net_no);
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return !contains_net(p_net_no);
   }
@@ -146,6 +152,7 @@ public abstract class Item
     return get_tree_shape(this.board.search_tree_manager.get_default_tree(), p_index);
   }
 
+  @Override
   public int tree_shape_count(ShapeTree p_tree) {
     if (this.board == null) {
       return 0;
@@ -154,6 +161,7 @@ public abstract class Item
     return precalculated_tree_shapes.length;
   }
 
+  @Override
   public TileShape get_tree_shape(ShapeTree p_tree, int p_index) {
     if (this.board == null) {
       return null;
@@ -175,7 +183,7 @@ public abstract class Item
     return precalculated_tree_shapes;
   }
 
-  /** Caculates the tree shapes for this item for p_search_tree. */
+  /** Calculates the tree shapes for this item for p_search_tree. */
   protected abstract TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree);
 
   /** Returns false, if this item is deleted oor not inserted into the board. */
@@ -193,6 +201,7 @@ public abstract class Item
    */
   public abstract Item copy(int p_id_no);
 
+  @Override
   public Object clone() {
     Item dup = copy(this.get_id_no());
 
@@ -212,7 +221,7 @@ public abstract class Item
   public abstract int last_layer();
 
   /** write this item to an output stream */
-  public abstract boolean write(java.io.ObjectOutputStream p_stream);
+  public abstract boolean write(ObjectOutputStream p_stream);
 
   /** Translates the shapes of this item by p_vector. Does not move the item in the board. */
   public abstract void translate_by(Vector p_vector);
@@ -243,7 +252,7 @@ public abstract class Item
     board.search_tree_manager.remove(this);
     this.translate_by(p_vector);
     board.search_tree_manager.insert(this);
-    // let the observers syncronize the changes
+    // let the observers synchronize the changes
     board.communication.observers.notify_changed(this);
   }
 
@@ -256,7 +265,7 @@ public abstract class Item
 
   /**
    * Returns the first layer, where both this item and p_other have a shape. Returns -1, if such a
-   * layer does not exisr.
+   * layer does not exist.
    */
   public int first_common_layer(Item p_other) {
     int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
@@ -269,7 +278,7 @@ public abstract class Item
 
   /**
    * Returns the last layer, where both this item and p_other have a shape. Returns -1, if such a
-   * layer does not exisr.
+   * layer does not exist.
    */
   public int last_common_layer(Item p_other) {
     int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
@@ -302,7 +311,7 @@ public abstract class Item
    * list are of type ClearanceViolations. The first_item in such an object is always this item.
    */
   public Collection<ClearanceViolation> clearance_violations() {
-    Collection<ClearanceViolation> result = new LinkedList<ClearanceViolation>();
+    Collection<ClearanceViolation> result = new LinkedList<>();
     if (this.board == null) {
       return result;
     }
@@ -312,9 +321,7 @@ public abstract class Item
       Collection<TreeEntry> curr_overlapping_items =
           default_tree.overlapping_tree_entries_with_clearance(
               curr_tile_shape, shape_layer(i), new int[0], clearance_class);
-      Iterator<TreeEntry> it = curr_overlapping_items.iterator();
-      while (it.hasNext()) {
-        TreeEntry curr_entry = it.next();
+      for (TreeEntry curr_entry : curr_overlapping_items) {
         if (!(curr_entry.object instanceof Item) || curr_entry.object == this) {
           continue;
         }
@@ -419,16 +426,14 @@ public abstract class Item
    * this item is not connectable.
    */
   public Set<Item> get_all_contacts() {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (!(this instanceof Connectable)) {
       return result;
     }
     for (int i = 0; i < this.tile_shape_count(); ++i) {
       Collection<SearchTreeObject> overlapping_items =
           board.overlapping_objects(get_tile_shape(i), shape_layer(i));
-      Iterator<SearchTreeObject> it = overlapping_items.iterator();
-      while (it.hasNext()) {
-        SearchTreeObject curr_ob = it.next();
+      for (SearchTreeObject curr_ob : overlapping_items) {
         if (!(curr_ob instanceof Item)) {
           continue;
         }
@@ -446,7 +451,7 @@ public abstract class Item
    * result will be empty, if this item is not connectable.
    */
   public Set<Item> get_all_contacts(int p_layer) {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (!(this instanceof Connectable)) {
       return result;
     }
@@ -456,9 +461,7 @@ public abstract class Item
       }
       Collection<SearchTreeObject> overlapping_items =
           board.overlapping_objects(get_tile_shape(i), p_layer);
-      Iterator<SearchTreeObject> it = overlapping_items.iterator();
-      while (it.hasNext()) {
-        SearchTreeObject curr_ob = it.next();
+      for (SearchTreeObject curr_ob : overlapping_items) {
         if (!(curr_ob instanceof Item)) {
           continue;
         }
@@ -477,7 +480,7 @@ public abstract class Item
    */
   public boolean is_connected() {
     Collection<Item> contacts = this.get_all_contacts();
-    return (contacts.size() > 0);
+    return (!contacts.isEmpty());
   }
 
   /**
@@ -486,12 +489,12 @@ public abstract class Item
    */
   public boolean is_connected_on_layer(int p_layer) {
     Collection<Item> contacts_on_layer = this.get_all_contacts(p_layer);
-    return (contacts_on_layer.size() > 0);
+    return (!contacts_on_layer.isEmpty());
   }
 
   /** default implementation to be overwritten in the Connectable subclasses */
   public Set<Item> get_normal_contacts() {
-    return new TreeSet<Item>();
+    return new TreeSet<>();
   }
 
   /**
@@ -528,7 +531,7 @@ public abstract class Item
    * which does not belong to a component.
    */
   public Set<Item> get_connected_set(int p_net_no, boolean p_stop_at_plane) {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (p_net_no > 0 && !this.contains_net(p_net_no)) {
       return result;
     }
@@ -579,9 +582,7 @@ public abstract class Item
     if (contact_list == null) {
       return false;
     }
-    Iterator<Item> it = contact_list.iterator();
-    while (it.hasNext()) {
-      Item curr_contact = it.next();
+    for (Item curr_contact : contact_list) {
       if (curr_contact == p_come_from_item) {
         continue;
       }
@@ -603,7 +604,7 @@ public abstract class Item
    * in this items are used instead of p_net_no.
    */
   public Set<Item> get_unconnected_set(int p_net_no) {
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (p_net_no > 0 && !this.contains_net(p_net_no)) {
       return result;
     }
@@ -630,13 +631,11 @@ public abstract class Item
    */
   public Set<Item> get_connection_items(StopConnectionOption p_stop_option) {
     Set<Item> contacts = this.get_normal_contacts();
-    Set<Item> result = new TreeSet<Item>();
+    Set<Item> result = new TreeSet<>();
     if (this.is_routable()) {
       result.add(this);
     }
-    Iterator<Item> it = contacts.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : contacts) {
       Point prev_contact_point = this.normal_contact_point(curr_item);
       if (prev_contact_point == null) {
         // no unique contact point
@@ -681,9 +680,7 @@ public abstract class Item
         int next_contact_layer = -1;
         Item next_contact = null;
         boolean fork_found = false;
-        Iterator<Item> curr_it = curr_ob_contacts.iterator();
-        while (curr_it.hasNext()) {
-          Item tmp_contact = curr_it.next();
+        for (Item tmp_contact : curr_ob_contacts) {
           int tmp_contact_layer = curr_item.first_common_layer(tmp_contact);
           if (tmp_contact_layer >= 0) {
             Point tmp_contact_point = curr_item.normal_contact_point(tmp_contact);
@@ -716,7 +713,7 @@ public abstract class Item
     return result;
   }
 
-  /** Function o be overwritten by classes Trace ans Via */
+  /** Function to be overwritten by classes Trace and Via */
   public boolean is_tail() {
     return false;
   }
@@ -729,6 +726,7 @@ public abstract class Item
     return new Point[0];
   }
 
+  @Override
   public void draw(
       Graphics p_g, GraphicsContext p_graphics_context, Color p_color, double p_intensity) {
     Color[] color_arr = new Color[board.get_layer_count()];
@@ -737,7 +735,7 @@ public abstract class Item
   }
 
   /**
-   * Draws this item whith its draw colors from p_graphics_context. p_layer_visibility[i] is
+   * Draws this item with its draw colors from p_graphics_context. p_layer_visibility[i] is
    * expected between 0 and 1 for each layer i.
    */
   public void draw(Graphics p_g, GraphicsContext p_graphics_context) {
@@ -745,7 +743,7 @@ public abstract class Item
     draw(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context));
   }
 
-  /** Test function checking the item for inconsitencies. */
+  /** Test function checking the item for inconsistencies. */
   public boolean validate() {
     boolean result = board.search_tree_manager.validate_entries(this);
     for (int i = 0; i < this.tile_shape_count(); ++i) {
@@ -760,8 +758,9 @@ public abstract class Item
 
   /**
    * Returns for this item the layer of the shape with index p_index. If p_id_no {@literal <}= 0, it
-   * w2ill be generated internally.
+   * will be generated internally.
    */
+  @Override
   public abstract int shape_layer(int p_index);
 
   /** Returns true, if it is not allowed to change this item except shoving the item */
@@ -854,11 +853,15 @@ public abstract class Item
       return false;
     }
     int[] new_net_no_arr = new int[this.net_no_arr.length - 1];
-    for (int i = 0; i < found_index; ++i) {
-      new_net_no_arr[i] = this.net_no_arr[i];
-    }
-    for (int i = found_index; i < new_net_no_arr.length; ++i) {
-      new_net_no_arr[i] = this.net_no_arr[i + 1];
+    System.arraycopy(this.net_no_arr, 0, new_net_no_arr, 0, found_index);
+    if (found_index < new_net_no_arr.length) {
+      // copy remaining elements if present
+      System.arraycopy(
+          this.net_no_arr,
+          found_index + 1,
+          new_net_no_arr,
+          found_index,
+          new_net_no_arr.length - found_index);
     }
     this.net_no_arr = new_net_no_arr;
     return true;
@@ -932,7 +935,7 @@ public abstract class Item
   /** Returns true, if p_item is contained in the input filter. */
   public abstract boolean is_selected_by_filter(ItemSelectionFilter p_filter);
 
-  /** Internally used for implementing the function is_selectrd_by_filter */
+  /** Internally used for implementing the function is_selected_by_filter */
   protected boolean is_selected_by_fixed_filter(ItemSelectionFilter p_filter) {
     boolean result;
     if (this.is_user_fixed()) {
@@ -944,6 +947,7 @@ public abstract class Item
   }
 
   /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  @Override
   public void set_search_tree_entries(ShapeTree.Leaf[] p_tree_entries, ShapeTree p_tree) {
     if (this.board == null) {
       return;
@@ -980,21 +984,21 @@ public abstract class Item
     this.search_trees_info.set_precalculated_tree_shapes(p_shapes, p_tree);
   }
 
-  /** Sets the searh tree entries of this item to null. */
+  /** Sets the search tree entries of this item to null. */
   public void clear_search_tree_entries() {
     this.search_trees_info = null;
   }
 
   /** Gets the information for the autoroute algorithm. Creates it, if it does not yet exist. */
-  public app.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info() {
+  public ItemAutorouteInfo get_autoroute_info() {
     if (autoroute_info == null) {
-      autoroute_info = new app.freerouting.autoroute.ItemAutorouteInfo(this);
+      autoroute_info = new ItemAutorouteInfo(this);
     }
     return autoroute_info;
   }
 
   /** Gets the information for the autoroute algorithm. */
-  public app.freerouting.autoroute.ItemAutorouteInfo get_autoroute_info_pur() {
+  public ItemAutorouteInfo get_autoroute_info_pur() {
     return autoroute_info;
   }
 
@@ -1014,22 +1018,22 @@ public abstract class Item
     autoroute_info = null;
   }
 
-  /** Internal funktion used in the implementation of print_info */
-  protected void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  /** Internal function used in the implementation of print_info */
+  protected void print_net_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     for (int i = 0; i < this.net_count(); ++i) {
       p_window.append(", " + resources.getString("net") + " ");
-      app.freerouting.rules.Net curr_net = board.rules.nets.get(this.get_net_no(i));
+      Net curr_net = board.rules.nets.get(this.get_net_no(i));
       p_window.append(curr_net.name, resources.getString("net_info"), curr_net);
     }
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_clearance_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_clearance_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.clearance_class > 0) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", " + resources.getString("clearance_class") + " ");
       String name = board.rules.clearance_matrix.get_name(this.clearance_class);
       p_window.append(
@@ -1039,43 +1043,42 @@ public abstract class Item
     }
   }
 
-  /** Internal funktion used in the implementation of print_info */
-  protected void print_fixed_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  /** Internal function used in the implementation of print_info */
+  protected void print_fixed_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.fixed_state != FixedState.UNFIXED) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
       p_window.append(", ");
       p_window.append(resources.getString(this.fixed_state.toString()));
     }
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_contact_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_contact_info(ObjectInfoPanel p_window, Locale p_locale) {
     Collection<Item> contacts = this.get_normal_contacts();
     if (!contacts.isEmpty()) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", " + resources.getString("contacts") + " ");
-      Integer contact_count = contacts.size();
+      int contact_count = contacts.size();
       p_window.append_items(
-          contact_count.toString(), resources.getString("contact_info"), contacts);
+          String.valueOf(contact_count), resources.getString("contact_info"), contacts);
     }
   }
 
   /** Internal function used in the implementation of print_info */
   protected void print_clearance_violation_info(
-      ObjectInfoPanel p_window, java.util.Locale p_locale) {
+      ObjectInfoPanel p_window, Locale p_locale) {
     Collection<ClearanceViolation> clearance_violations = this.clearance_violations();
     if (!clearance_violations.isEmpty()) {
-      java.util.ResourceBundle resources =
-          java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources =
+          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", ");
-      Integer violation_count = clearance_violations.size();
+      int violation_count = clearance_violations.size();
       Collection<ObjectInfoPanel.Printable> violations =
-          new java.util.LinkedList<ObjectInfoPanel.Printable>();
-      violations.addAll(clearance_violations);
+          new LinkedList<>(clearance_violations);
       p_window.append_objects(
-          violation_count.toString(), resources.getString("violation_info"), violations);
+          String.valueOf(violation_count), resources.getString("violation_info"), violations);
       if (violation_count == 1) {
         p_window.append(" " + resources.getString("clearance_violation"));
       } else {
@@ -1085,7 +1088,7 @@ public abstract class Item
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_connectable_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_connectable_item_info(ObjectInfoPanel p_window, Locale p_locale) {
     this.print_clearance_info(p_window, p_locale);
     this.print_fixed_info(p_window, p_locale);
     this.print_net_info(p_window, p_locale);
@@ -1094,7 +1097,7 @@ public abstract class Item
   }
 
   /** Internal function used in the implementation of print_info */
-  protected void print_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
+  protected void print_item_info(ObjectInfoPanel p_window, Locale p_locale) {
     this.print_clearance_info(p_window, p_locale);
     this.print_fixed_info(p_window, p_locale);
     this.print_clearance_violation_info(p_window, p_locale);
@@ -1115,7 +1118,7 @@ public abstract class Item
     return nets_equal(p_other.net_no_arr);
   }
 
-  /** Checks, if this item contains exacly the nets in p_net_no_arr */
+  /** Checks, if this item contains exactly the nets in p_net_no_arr */
   public boolean nets_equal(int[] p_net_no_arr) {
     if (this.net_no_arr.length != p_net_no_arr.length) {
       return false;

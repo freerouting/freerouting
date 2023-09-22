@@ -2,8 +2,10 @@ package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.Serializable;
+
 /** Implements functionality of orthogonal rectangles in the plane with integer coordinates. */
-public class IntBox extends RegularTileShape implements java.io.Serializable {
+public class IntBox extends RegularTileShape implements Serializable {
   /** Standard implementation of an empty box. */
   public static final IntBox EMPTY =
       new IntBox(Limits.CRIT_INT, Limits.CRIT_INT, -Limits.CRIT_INT, -Limits.CRIT_INT);
@@ -24,15 +26,18 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     ur = new IntPoint(p_ur_x, p_ur_y);
   }
 
+  @Override
   public boolean is_IntOctagon() {
     return true;
   }
 
   /** Returns true, if the box is empty */
+  @Override
   public boolean is_empty() {
     return (ll.x > ur.x || ll.y > ur.y);
   }
 
+  @Override
   public int border_line_count() {
     return 4;
   }
@@ -47,22 +52,27 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return (ur.y - ll.y);
   }
 
+  @Override
   public double max_width() {
     return Math.max(ur.x - ll.x, ur.y - ll.y);
   }
 
+  @Override
   public double min_width() {
     return Math.min(ur.x - ll.x, ur.y - ll.y);
   }
 
+  @Override
   public double area() {
     return ((double) (ur.x - ll.x)) * ((double) (ur.y - ll.y));
   }
 
+  @Override
   public double circumference() {
     return 2 * ((ur.x - ll.x) + (ur.y - ll.y));
   }
 
+  @Override
   public IntPoint corner(int p_no) {
     if (p_no == 0) {
       return ll;
@@ -79,6 +89,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     throw new IllegalArgumentException("IntBox.corner: p_no out of range");
   }
 
+  @Override
   public int dimension() {
     if (is_empty()) {
       return -1;
@@ -92,7 +103,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return 2;
   }
 
-  /** Chechs, if p_point is located in the interiour of this box. */
+  /** Checks, if p_point is located in the interior of this box. */
   public boolean contains_inside(IntPoint p_point) {
     return p_point.x > this.ll.x
         && p_point.x < this.ur.x
@@ -100,10 +111,12 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
         && p_point.y < this.ur.y;
   }
 
+  @Override
   public boolean is_IntBox() {
     return true;
   }
 
+  @Override
   public TileShape simplify() {
     return this;
   }
@@ -125,7 +138,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
 
   /**
    * Calculates the sorted p_max_result_points nearest points on the border of this box. p_point is
-   * assumed to be located in the interiour of this nox. The funtion is only imoplemented for
+   * assumed to be located in the interior of this nox. The function is only implemented for
    * p_max_result_points {@literal <}= 2;
    */
   public IntPoint[] nearest_border_projections(IntPoint p_point, int p_max_result_points) {
@@ -191,6 +204,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
   }
 
   /** Calculates distance of this box to p_from_point. */
+  @Override
   public double distance(FloatPoint p_from_point) {
     return p_from_point.distance(nearest_point(p_from_point));
   }
@@ -219,30 +233,37 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public IntBox bounding_box() {
     return this;
   }
 
+  @Override
   public IntOctagon bounding_octagon() {
     return to_IntOctagon();
   }
 
+  @Override
   public boolean is_bounded() {
     return true;
   }
 
+  @Override
   public IntBox bounding_tile() {
     return this;
   }
 
+  @Override
   public boolean corner_is_bounded(int p_no) {
     return true;
   }
 
+  @Override
   public RegularTileShape union(RegularTileShape p_other) {
     return p_other.union(this);
   }
 
+  @Override
   public IntBox union(IntBox p_other) {
     int llx = Math.min(ll.x, p_other.ll.x);
     int lly = Math.min(ll.y, p_other.ll.y);
@@ -252,6 +273,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
   }
 
   /** Returns the intersection of this box with an IntBox. */
+  @Override
   public IntBox intersection(IntBox p_other) {
     if (p_other.ll.x > ur.x) {
       return EMPTY;
@@ -273,22 +295,27 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
   }
 
   /** returns the intersection of this box with a ConvexShape */
+  @Override
   public TileShape intersection(TileShape p_other) {
     return p_other.intersection(this);
   }
 
+  @Override
   IntOctagon intersection(IntOctagon p_other) {
     return p_other.intersection(this.to_IntOctagon());
   }
 
+  @Override
   Simplex intersection(Simplex p_other) {
     return p_other.intersection(this.to_Simplex());
   }
 
+  @Override
   public boolean intersects(Shape p_other) {
     return p_other.intersects(this);
   }
 
+  @Override
   public boolean intersects(IntBox p_other) {
     if (p_other.ll.x > this.ur.x) return false;
     if (p_other.ll.y > this.ur.y) return false;
@@ -304,10 +331,12 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return this.ll.y < p_other.ur.y;
   }
 
+  @Override
   public boolean contains(RegularTileShape p_other) {
     return p_other.is_contained_in(this);
   }
 
+  @Override
   public RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs) {
     return p_dirs.bounds(this);
   }
@@ -316,10 +345,12 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
    * Enlarges the box by p_offset. Contrary to the offset() method the result is an IntOctagon, not
    * an IntBox.
    */
+  @Override
   public IntOctagon enlarge(double p_offset) {
     return bounding_octagon().offset(p_offset);
   }
 
+  @Override
   public IntBox translate_by(Vector p_rel_coor) {
     // This function is at the moment only implemented for Vectors
     // with integer coordinates.
@@ -333,6 +364,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return new IntBox(new_ll, new_ur);
   }
 
+  @Override
   public IntBox turn_90_degree(int p_factor, IntPoint p_pole) {
     IntPoint p1 = (IntPoint) ll.turn_90_degree(p_factor, p_pole);
     IntPoint p2 = (IntPoint) ur.turn_90_degree(p_factor, p_pole);
@@ -344,46 +376,48 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return new IntBox(llx, lly, urx, ury);
   }
 
+  @Override
   public Line border_line(int p_no) {
     int a_x;
     int a_y;
     int b_x;
     int b_y;
     switch (p_no) {
-      case 0:
+      case 0 -> {
         // lower boundary line
         a_x = 0;
         a_y = ll.y;
         b_x = 1;
         b_y = ll.y;
-        break;
-      case 1:
+      }
+      case 1 -> {
         // right boundary line
         a_x = ur.x;
         a_y = 0;
         b_x = ur.x;
         b_y = 1;
-        break;
-      case 2:
+      }
+      case 2 -> {
         // upper boundary line
         a_x = 0;
         a_y = ur.y;
         b_x = -1;
         b_y = ur.y;
-        break;
-      case 3:
+      }
+      case 3 -> {
         // left boundary line
         a_x = ll.x;
         a_y = 0;
         b_x = ll.x;
         b_y = -1;
-        break;
-      default:
-        throw new IllegalArgumentException("IntBox.edge_line: p_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntBox.edge_line: p_no out of range");
     }
     return new Line(a_x, a_y, b_x, b_y);
   }
 
+  @Override
   public int border_line_index(Line p_line) {
     FRLogger.warn("edge_index_of_line not yet implemented for IntBoxes");
     return -1;
@@ -393,6 +427,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
    * Returns the box offseted by p_dist. If p_dist {@literal >} 0, the offset is to the outside,
    * else to the inside.
    */
+  @Override
   public IntBox offset(double p_dist) {
     if (p_dist == 0 || is_empty()) {
       return this;
@@ -456,15 +491,17 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return new IntBox(ll_x, ll_y, ur_x, ur_y);
   }
 
+  @Override
   public Side compare(RegularTileShape p_other, int p_edge_no) {
     Side result = p_other.compare(this, p_edge_no);
     return result.negate();
   }
 
+  @Override
   public Side compare(IntBox p_other, int p_edge_no) {
     Side result;
     switch (p_edge_no) {
-      case 0:
+      case 0 -> {
         // compare the lower edge line
         if (ll.y > p_other.ll.y) {
           result = Side.ON_THE_LEFT;
@@ -473,9 +510,8 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 1:
+      }
+      case 1 -> {
         // compare the right edge line
         if (ur.x < p_other.ur.x) {
           result = Side.ON_THE_LEFT;
@@ -484,9 +520,8 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 2:
+      }
+      case 2 -> {
         // compare the upper edge line
         if (ur.y < p_other.ur.y) {
           result = Side.ON_THE_LEFT;
@@ -495,9 +530,8 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-
-      case 3:
+      }
+      case 3 -> {
         // compare the left edge line
         if (ll.x > p_other.ll.x) {
           result = Side.ON_THE_LEFT;
@@ -506,9 +540,9 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
         } else {
           result = Side.COLLINEAR;
         }
-        break;
-      default:
-        throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
+      }
+      default ->
+          throw new IllegalArgumentException("IntBox.compare: p_edge_no out of range");
     }
     return result;
   }
@@ -520,6 +554,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
   }
 
   /** Returns an object of class Simplex defining the same shape */
+  @Override
   public Simplex to_Simplex() {
     Line[] line_arr;
     if (is_empty()) {
@@ -534,6 +569,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return new Simplex(line_arr);
   }
 
+  @Override
   public boolean is_contained_in(IntBox p_other) {
     if (is_empty() || this == p_other) {
       return true;
@@ -544,8 +580,8 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
         && ur.y <= p_other.ur.y;
   }
 
-  /** Return true, if p_other is contained in the interiour of this box. */
-  public boolean contains_in_interiour(IntBox p_other) {
+  /** Return true, if p_other is contained in the interior of this box. */
+  public boolean contains_in_interior(IntBox p_other) {
     if (p_other.is_empty()) {
       return true;
     }
@@ -558,64 +594,54 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
 
     if (p_from_box.ll.x >= this.ll.x) {
       ll_x = p_from_box.ll.x;
-    } else if (p_from_box.ur.x >= this.ll.x) {
-      ll_x = this.ll.x;
-    } else {
-      ll_x = p_from_box.ur.x;
-    }
+    } else ll_x = Math.min(p_from_box.ur.x, this.ll.x);
 
     int ur_x;
 
     if (p_from_box.ur.x <= this.ur.x) {
       ur_x = p_from_box.ur.x;
-    } else if (p_from_box.ll.x <= this.ur.x) {
-      ur_x = this.ur.x;
-    } else {
-      ur_x = p_from_box.ll.x;
-    }
+    } else ur_x = Math.max(p_from_box.ll.x, this.ur.x);
 
     int ll_y;
 
     if (p_from_box.ll.y >= this.ll.y) {
       ll_y = p_from_box.ll.y;
-    } else if (p_from_box.ur.y >= this.ll.y) {
-      ll_y = this.ll.y;
-    } else {
-      ll_y = p_from_box.ur.y;
-    }
+    } else ll_y = Math.min(p_from_box.ur.y, this.ll.y);
 
     int ur_y;
 
     if (p_from_box.ur.y <= this.ur.y) {
       ur_y = p_from_box.ur.y;
-    } else if (p_from_box.ll.y <= this.ur.y) {
-      ur_y = this.ur.y;
-    } else {
-      ur_y = p_from_box.ll.y;
-    }
+    } else ur_y = Math.max(p_from_box.ll.y, this.ur.y);
     return new IntBox(ll_x, ll_y, ur_x, ur_y);
   }
 
+  @Override
   public boolean is_contained_in(IntOctagon p_other) {
     return p_other.contains(to_IntOctagon());
   }
 
+  @Override
   public boolean intersects(IntOctagon p_other) {
     return p_other.intersects(to_IntOctagon());
   }
 
+  @Override
   public boolean intersects(Simplex p_other) {
     return p_other.intersects(to_Simplex());
   }
 
+  @Override
   public boolean intersects(Circle p_other) {
     return p_other.intersects(this);
   }
 
+  @Override
   public IntOctagon union(IntOctagon p_other) {
     return p_other.union(to_IntOctagon());
   }
 
+  @Override
   public Side compare(IntOctagon p_other, int p_edge_no) {
     return to_IntOctagon().compare(p_other, p_edge_no);
   }
@@ -624,6 +650,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
    * Divides this box into sections with width and height at most p_max_section_width of about equal
    * size.
    */
+  @Override
   public IntBox[] divide_into_sections(double p_max_section_width) {
     if (p_max_section_width <= 0) {
       return new IntBox[0];
@@ -659,6 +686,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public TileShape[] cutout(TileShape p_shape) {
     TileShape[] tmp_result = p_shape.cutout_from(this);
     TileShape[] result = new TileShape[tmp_result.length];
@@ -668,6 +696,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return result;
   }
 
+  @Override
   IntBox[] cutout_from(IntBox p_d) {
     IntBox c = this.intersection(p_d);
     if (this.is_empty() || c.dimension() < this.dimension()) {
@@ -690,7 +719,7 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     // now the division will be optimised, so that the cumulative
     // circumference will be minimal.
 
-    IntBox b = null;
+    IntBox b;
 
     if (c.ll.x - p_d.ll.x > c.ll.y - p_d.ll.y) {
       // switch left dividing line to lower
@@ -723,10 +752,12 @@ public class IntBox extends RegularTileShape implements java.io.Serializable {
     return result;
   }
 
+  @Override
   Simplex[] cutout_from(Simplex p_simplex) {
     return this.to_Simplex().cutout_from(p_simplex);
   }
 
+  @Override
   IntOctagon[] cutout_from(IntOctagon p_oct) {
     return this.to_IntOctagon().cutout_from(p_oct);
   }

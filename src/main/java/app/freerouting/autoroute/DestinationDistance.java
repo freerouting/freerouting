@@ -254,7 +254,7 @@ public class DestinationDistance {
 
       result = Math.min(result, tmp_distance);
 
-      if (active_layer_count <= 2) return result;
+      if (active_layer_count == 2) return result;
 
       // calculate two layer distance on component side and an inner side
 
@@ -276,7 +276,7 @@ public class DestinationDistance {
       tmp_distance = component_side_max_delta + component_side_min_delta + 2 * min_normal_via_cost;
       result = Math.min(result, tmp_distance);
 
-      if (active_layer_count <= 3) return result;
+      if (active_layer_count == 3) return result;
 
       tmp_distance = inner_side_max_delta + inner_side_min_delta + 2 * min_normal_via_cost;
 
@@ -291,7 +291,7 @@ public class DestinationDistance {
       return result;
     }
     if (p_layer == layer_count - 1)
-    // calculate shortest distance to solder side box
+    // calculate the shortest distance to solder side box
     {
       // calculate one layer distance
 
@@ -338,7 +338,7 @@ public class DestinationDistance {
       result = Math.min(result, tmp_distance);
       tmp_distance = solder_side_max_delta + solder_side_min_delta + 2 * min_normal_via_cost;
       result = Math.min(result, tmp_distance);
-      if (active_layer_count <= 3) return result;
+      if (active_layer_count == 3) return result;
       tmp_distance = inner_side_max_delta + inner_side_min_delta + 2 * min_normal_via_cost;
       result = Math.min(result, tmp_distance);
 

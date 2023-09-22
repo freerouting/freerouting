@@ -1,6 +1,9 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,7 +12,7 @@ import java.util.LinkedList;
  * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3
  * consecutive points collinear.
  */
-public class Polygon implements java.io.Serializable {
+public class Polygon implements Serializable {
   private final Collection<Point> corners;
 
   /**
@@ -17,13 +20,11 @@ public class Polygon implements java.io.Serializable {
    * previous and next point will be removed.
    */
   public Polygon(Point[] p_point_arr) {
-    corners = new LinkedList<Point>();
+    corners = new LinkedList<>();
     if (p_point_arr.length == 0) {
       return;
     }
-    for (int i = 0; i < p_point_arr.length; ++i) {
-      corners.add(p_point_arr[i]);
-    }
+    corners.addAll(Arrays.asList(p_point_arr));
 
     boolean corner_removed = true;
     while (corner_removed) {
@@ -93,7 +94,7 @@ public class Polygon implements java.io.Serializable {
 
   /**
    * Returns the winding number of this polygon, treated as closed. It will be {@literal >} 0, if
-   * the corners are in countercock sense, and {@literal <} 0, if the corners are in clockwise
+   * the corners are in counterclock sense, and {@literal <} 0, if the corners are in clockwise
    * sense.
    */
   public int winding_number_after_closing() {

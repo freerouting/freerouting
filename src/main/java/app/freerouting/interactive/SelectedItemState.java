@@ -1,6 +1,7 @@
 package app.freerouting.interactive;
 
 import app.freerouting.autoroute.AutorouteEngine;
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Component;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
@@ -21,8 +22,13 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.WindowObjectInfo;
 import app.freerouting.library.Package;
 import app.freerouting.rules.Net;
+
+import javax.swing.JPopupMenu;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -30,7 +36,7 @@ import java.util.TreeSet;
 public class SelectedItemState extends InteractiveState {
 
   private Set<Item> item_list;
-  private ClearanceViolations clearance_violations = null;
+  private ClearanceViolations clearance_violations;
 
   /** Creates a new instance of SelectedItemState */
   private SelectedItemState(
@@ -43,7 +49,7 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Creates a new SelectedItemState with with the items in p_item_list selected. Returns null, if
+   * Creates a new SelectedItemState with the items in p_item_list selected. Returns null, if
    * p_item_list is empty.
    */
   public static SelectedItemState get_instance(
@@ -64,68 +70,52 @@ public class SelectedItemState extends InteractiveState {
     return item_list;
   }
 
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     return toggle_select(p_location);
   }
 
+  @Override
   public InteractiveState mouse_dragged(FloatPoint p_point) {
     return SelectItemsInRegionState.get_instance(
         hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
   }
 
   /** Action to be taken when a key is pressed (Shortcut). */
+  @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState result = this;
 
-    if (p_key_char == 'a') {
-      this.hdlg.autoroute_selected_items();
-    } else if (p_key_char == 'b') {
-      this.extent_to_whole_components();
-    } else if (p_key_char == 'd') {
-      result = this.cutout_items();
-    } else if (p_key_char == 'e') {
-      result = this.extent_to_whole_connections();
-    } else if (p_key_char == 'f') {
-      this.fix_items();
-    } else if (p_key_char == 'i') {
-      result = this.info();
-    } else if (p_key_char == 'm') {
-      result =
-          MoveItemState.get_instance(
+    switch (p_key_char) {
+      case 'a' -> this.hdlg.autoroute_selected_items();
+      case 'b' -> this.extent_to_whole_components();
+      case 'd' -> result = this.cutout_items();
+      case 'e' -> result = this.extent_to_whole_connections();
+      case 'f' -> this.fix_items();
+      case 'i' -> result = this.info();
+      case 'm' -> result = MoveItemState.get_instance(
               hdlg.get_current_mouse_position(),
               item_list,
               this.return_state,
               hdlg,
               activityReplayFile);
-    } else if (p_key_char == 'n') {
-      this.extent_to_whole_nets();
-    } else if (p_key_char == 'p') {
-      this.hdlg.optimize_selected_items();
-    } else if (p_key_char == 'r') {
-      result =
-          ZoomRegionState.get_instance(
+      case 'n' -> this.extent_to_whole_nets();
+      case 'p' -> this.hdlg.optimize_selected_items();
+      case 'r' -> result = ZoomRegionState.get_instance(
               hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
-    } else if (p_key_char == 's') {
-      result = this.extent_to_whole_connected_sets();
-    } else if (p_key_char == 'u') {
-      this.unfix_items();
-    } else if (p_key_char == 'v') {
-      this.toggle_clearance_violations();
-    } else if (p_key_char == 'w') {
-      this.hdlg.zoom_selection();
-    } else if (p_key_char == java.awt.event.KeyEvent.VK_DELETE) {
-      result = delete_items();
-    } else {
-      result = super.key_typed(p_key_char);
+      case 's' -> result = this.extent_to_whole_connected_sets();
+      case 'u' -> this.unfix_items();
+      case 'v' -> this.toggle_clearance_violations();
+      case 'w' -> this.hdlg.zoom_selection();
+      case KeyEvent.VK_DELETE -> result = delete_items();
+      default -> result = super.key_typed(p_key_char);
     }
     return result;
   }
 
   /** fixes all items in this selected set */
   public void fix_items() {
-    java.util.Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : item_list) {
       if (curr_ob.get_fixed_state().ordinal() < FixedState.USER_FIXED.ordinal()) {
         curr_ob.set_fixed_state(FixedState.USER_FIXED);
       }
@@ -137,9 +127,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** unfixes all items in this selected set */
   public void unfix_items() {
-    java.util.Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : item_list) {
       curr_ob.unfix();
     }
     if (this.activityReplayFile != null) {
@@ -154,9 +142,7 @@ public class SelectedItemState extends InteractiveState {
     board.generate_snapshot();
     boolean items_already_connected = false;
     Net new_net = board.rules.nets.new_net(hdlg.get_locale());
-    java.util.Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       if (curr_item instanceof ObstacleArea) {
         board.make_conductive((ObstacleArea) curr_item, new_net.net_number);
       } else if (curr_item instanceof DrillItem) {
@@ -191,7 +177,7 @@ public class SelectedItemState extends InteractiveState {
     double gravity_x = 0;
     double gravity_y = 0;
     int pin_count = 0;
-    java.util.Iterator<Item> it = item_list.iterator();
+    Iterator<Item> it = item_list.iterator();
     while (it.hasNext()) {
       Item curr_ob = it.next();
       if (curr_ob instanceof Via) {
@@ -200,7 +186,7 @@ public class SelectedItemState extends InteractiveState {
         gravity_y += curr_center.y;
         ++pin_count;
       } else {
-        // currently only Vias can be aasigned to a new component
+        // currently only Vias can be assigned to a new component
         it.remove();
       }
     }
@@ -216,7 +202,7 @@ public class SelectedItemState extends InteractiveState {
     for (int i = 0; i < pin_arr.length; ++i) {
       Via curr_via = (Via) it.next();
       Vector rel_coor = curr_via.get_center().difference_by(gravity_point);
-      String pin_name = (Integer.valueOf(i + 1)).toString();
+      String pin_name = String.valueOf(i + 1);
       pin_arr[i] = new Package.Pin(pin_name, curr_via.get_padstack().no, rel_coor, 0);
     }
     Package new_package = board.library.packages.add(pin_arr);
@@ -243,15 +229,13 @@ public class SelectedItemState extends InteractiveState {
     return this.return_state;
   }
 
-  /** Deletes all unfixed items in this selected set and pulls tight the neighour traces. */
+  /** Deletes all unfixed items in this selected set and pulls tight the neighbour traces. */
   public InteractiveState delete_items() {
     hdlg.get_routing_board().generate_snapshot();
 
     // calculate the changed nets for updating the ratsnest
-    Set<Integer> changed_nets = new TreeSet<Integer>();
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    Set<Integer> changed_nets = new TreeSet<>();
+    for (Item curr_item : item_list) {
       if (curr_item instanceof Connectable) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
           changed_nets.add(curr_item.get_net_no(i));
@@ -281,7 +265,7 @@ public class SelectedItemState extends InteractiveState {
     }
 
     for (Integer curr_net_no : changed_nets) {
-      hdlg.update_ratsnest(curr_net_no.intValue());
+      hdlg.update_ratsnest(curr_net_no);
     }
     hdlg.repaint();
     return this.return_state;
@@ -294,7 +278,7 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Autoroutes the selected items. If p_stoppable_thread != null, the algorithm can be requestet to
+   * Autoroutes the selected items. If p_stoppable_thread != null, the algorithm can be requested to
    * terminate.
    */
   public InteractiveState autoroute(Stoppable p_stoppable_thread) {
@@ -305,10 +289,10 @@ public class SelectedItemState extends InteractiveState {
           resources.getString("autoroute") + " " + resources.getString("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
-    Integer not_found_count = 0;
-    Integer found_count = 0;
+    int not_found_count = 0;
+    int found_count = 0;
     boolean interrupted = false;
-    Collection<Item> autoroute_item_list = new java.util.LinkedList<Item>();
+    Collection<Item> autoroute_item_list = new LinkedList<>();
     for (Item curr_item : item_list) {
       if (curr_item instanceof Connectable) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
@@ -321,8 +305,8 @@ public class SelectedItemState extends InteractiveState {
     int items_to_go_count = autoroute_item_list.size();
     hdlg.screen_messages.set_interactive_autoroute_info(
         found_count, not_found_count, items_to_go_count);
-    // Empty this.item_list to avoid displaying the seected items.
-    this.item_list = new TreeSet<Item>();
+    // Empty this.item_list to avoid displaying the selected items.
+    this.item_list = new TreeSet<>();
     boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
     if (!ratsnest_hidden_before) {
       hdlg.get_ratsnest().hide();
@@ -336,7 +320,7 @@ public class SelectedItemState extends InteractiveState {
         continue;
       }
       boolean contains_plane = false;
-      app.freerouting.rules.Net route_net =
+      Net route_net =
           hdlg.get_routing_board().rules.nets.get(curr_item.get_net_no(0));
       if (route_net != null) {
         contains_plane = route_net.contains_plane();
@@ -396,7 +380,7 @@ public class SelectedItemState extends InteractiveState {
 
   /**
    * Fanouts the pins contained in the selected items. If p_stoppable_thread != null, the algorithm
-   * can be requestet to terminate.
+   * can be requested to terminate.
    */
   public InteractiveState fanout(Stoppable p_stoppable_thread) {
     boolean saved_board_read_only = hdlg.is_board_read_only();
@@ -406,11 +390,11 @@ public class SelectedItemState extends InteractiveState {
           resources.getString("fanout") + " " + resources.getString("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
-    Integer not_found_count = 0;
-    Integer found_count = 0;
+    int not_found_count = 0;
+    int found_count = 0;
     int trace_pull_tight_accuracy = hdlg.settings.trace_pull_tight_accuracy;
     boolean interrupted = false;
-    Collection<Pin> fanout_list = new java.util.LinkedList<Pin>();
+    Collection<Pin> fanout_list = new LinkedList<>();
     for (Item curr_item : item_list) {
       if (curr_item instanceof Pin) {
         fanout_list.add((Pin) curr_item);
@@ -419,8 +403,8 @@ public class SelectedItemState extends InteractiveState {
     int items_to_go_count = fanout_list.size();
     hdlg.screen_messages.set_interactive_autoroute_info(
         found_count, not_found_count, items_to_go_count);
-    // Empty this.item_list to avoid displaying the seected items.
-    this.item_list = new TreeSet<Item>();
+    // Empty this.item_list to avoid displaying the selected items.
+    this.item_list = new TreeSet<>();
     boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
     if (!ratsnest_hidden_before) {
       hdlg.get_ratsnest().hide();
@@ -478,7 +462,7 @@ public class SelectedItemState extends InteractiveState {
   }
 
   /**
-   * Optimizes the selected items. If p_stoppable_thread != null, the algorithm can be requestet to
+   * Optimizes the selected items. If p_stoppable_thread != null, the algorithm can be requested to
    * terminate.
    */
   public InteractiveState pull_tight(Stoppable p_stoppable_thread) {
@@ -553,7 +537,7 @@ public class SelectedItemState extends InteractiveState {
 
   /** Assigns the input clearance class to the selected items. */
   public InteractiveState assign_clearance_class(int p_cl_class_index) {
-    app.freerouting.board.BasicBoard routing_board = this.hdlg.get_routing_board();
+    BasicBoard routing_board = this.hdlg.get_routing_board();
     if (p_cl_class_index < 0
         || p_cl_class_index >= routing_board.rules.clearance_matrix.get_class_count()) {
       return this.return_state;
@@ -577,20 +561,16 @@ public class SelectedItemState extends InteractiveState {
   public InteractiveState extent_to_whole_nets() {
 
     // collect all net numbers of the selected items
-    Set<Integer> curr_net_no_set = new TreeSet<Integer>();
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    Set<Integer> curr_net_no_set = new TreeSet<>();
+    for (Item curr_item : item_list) {
       if (curr_item instanceof Connectable) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
           curr_net_no_set.add(curr_item.get_net_no(i));
         }
       }
     }
-    Set<Item> new_selected_items = new TreeSet<Item>();
-    Iterator<Integer> it2 = curr_net_no_set.iterator();
-    while (it2.hasNext()) {
-      int curr_net_no = it2.next();
+    Set<Item> new_selected_items = new TreeSet<>();
+    for (int curr_net_no : curr_net_no_set) {
       new_selected_items.addAll(hdlg.get_routing_board().get_connectable_items(curr_net_no));
     }
     this.item_list = new_selected_items;
@@ -609,19 +589,14 @@ public class SelectedItemState extends InteractiveState {
   public InteractiveState extent_to_whole_components() {
 
     // collect all group numbers of the selected items
-    Set<Integer> curr_group_no_set = new TreeSet<Integer>();
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    Set<Integer> curr_group_no_set = new TreeSet<>();
+    for (Item curr_item : item_list) {
       if (curr_item.get_component_no() > 0) {
         curr_group_no_set.add(curr_item.get_component_no());
       }
     }
-    Set<Item> new_selected_items = new TreeSet<Item>();
-    new_selected_items.addAll(item_list);
-    Iterator<Integer> it2 = curr_group_no_set.iterator();
-    while (it2.hasNext()) {
-      int curr_group_no = it2.next();
+    Set<Item> new_selected_items = new TreeSet<>(item_list);
+    for (int curr_group_no : curr_group_no_set) {
       new_selected_items.addAll(hdlg.get_routing_board().get_component_items(curr_group_no));
     }
     if (new_selected_items.isEmpty()) {
@@ -637,10 +612,8 @@ public class SelectedItemState extends InteractiveState {
 
   /** Select also all items belonging to any connected set of the current selected items. */
   public InteractiveState extent_to_whole_connected_sets() {
-    Set<Item> new_selected_items = new TreeSet<Item>();
-    Iterator<Item> it = this.item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    Set<Item> new_selected_items = new TreeSet<>();
+    for (Item curr_item : this.item_list) {
       if (curr_item instanceof Connectable) {
         new_selected_items.addAll(curr_item.get_connected_set(-1));
       }
@@ -659,10 +632,8 @@ public class SelectedItemState extends InteractiveState {
 
   /** Select also all items belonging to any connection of the current selected items. */
   public InteractiveState extent_to_whole_connections() {
-    Set<Item> new_selected_items = new TreeSet<Item>();
-    Iterator<Item> it = this.item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    Set<Item> new_selected_items = new TreeSet<>();
+    for (Item curr_item : this.item_list) {
       if (curr_item instanceof Connectable) {
         new_selected_items.addAll(curr_item.get_connection_items());
       }
@@ -711,11 +682,11 @@ public class SelectedItemState extends InteractiveState {
     return result;
   }
 
-  /** Shows or hides the clearance violations of the selected items.. */
+  /** Shows or hides the clearance violations of the selected items. */
   public void toggle_clearance_violations() {
     if (clearance_violations == null) {
       clearance_violations = new ClearanceViolations(this.item_list);
-      Integer violation_count = Integer.valueOf(clearance_violations.list.size());
+      Integer violation_count = clearance_violations.list.size();
       String curr_message =
           violation_count + " " + resources.getString("clearance_violations_found");
       hdlg.screen_messages.set_status_message(curr_message);
@@ -747,16 +718,18 @@ public class SelectedItemState extends InteractiveState {
     return this;
   }
 
+  @Override
   public String get_help_id() {
     return "SelectedItemState";
   }
 
-  public void draw(java.awt.Graphics p_graphics) {
+  @Override
+  public void draw(Graphics p_graphics) {
     if (item_list == null) {
       return;
     }
 
-    for (app.freerouting.board.Item curr_item : item_list) {
+    for (Item curr_item : item_list) {
       curr_item.draw(
           p_graphics,
           hdlg.graphics_context,
@@ -768,14 +741,17 @@ public class SelectedItemState extends InteractiveState {
     }
   }
 
-  public javax.swing.JPopupMenu get_popup_menu() {
+  @Override
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_select;
   }
 
+  @Override
   public void set_toolbar() {
     hdlg.get_panel().board_frame.set_select_toolbar();
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("in_select_item_mode"));
   }

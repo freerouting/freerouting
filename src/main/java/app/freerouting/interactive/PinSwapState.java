@@ -6,10 +6,15 @@ import app.freerouting.board.Pin;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Collection;
+import java.util.Set;
+
 public class PinSwapState extends InteractiveState {
   private final Pin from_pin;
-  private Pin to_pin = null;
-  private final java.util.Set<Pin> swappable_pins;
+  private Pin to_pin;
+  private final Set<Pin> swappable_pins;
 
   /** Creates a new instance of PinSwapState */
   private PinSwapState(
@@ -39,10 +44,11 @@ public class PinSwapState extends InteractiveState {
     return new_state;
   }
 
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     ItemSelectionFilter selection_filter =
         new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
-    java.util.Collection<Item> picked_items = hdlg.pick_items(p_location, selection_filter);
+    Collection<Item> picked_items = hdlg.pick_items(p_location, selection_filter);
     if (picked_items.isEmpty()) {
       this.hdlg.screen_messages.set_status_message(resources.getString("no_pin_selected"));
       return this.cancel();
@@ -60,6 +66,7 @@ public class PinSwapState extends InteractiveState {
     return complete();
   }
 
+  @Override
   public InteractiveState complete() {
     if (this.from_pin == null || this.to_pin == null) {
       hdlg.screen_messages.set_status_message(resources.getString("pin_to_swap_missing"));
@@ -104,8 +111,9 @@ public class PinSwapState extends InteractiveState {
     return this.return_state;
   }
 
-  public void draw(java.awt.Graphics p_graphics) {
-    java.awt.Color highlight_color = hdlg.graphics_context.get_hilight_color();
+  @Override
+  public void draw(Graphics p_graphics) {
+    Color highlight_color = hdlg.graphics_context.get_hilight_color();
     double highligt_color_intensity = hdlg.graphics_context.get_hilight_color_intensity();
     from_pin.draw(
         p_graphics, hdlg.graphics_context, highlight_color, 0.5 * highligt_color_intensity);

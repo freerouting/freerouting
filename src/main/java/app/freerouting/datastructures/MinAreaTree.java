@@ -16,16 +16,16 @@ import java.util.TreeSet;
  */
 public class MinAreaTree extends ShapeTree {
 
-  protected ArrayStack<TreeNode> node_stack = new ArrayStack<TreeNode>(10000);
+  protected ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
 
-  /** Constructor with a fixed set of directions defining the keys and and the surrounding shapes */
+  /** Constructor with a fixed set of directions defining the keys and the surrounding shapes */
   public MinAreaTree(ShapeBoundingDirections p_directions) {
     super(p_directions);
   }
 
   /** Calculates the objects in this tree, which overlap with p_shape */
   public Set<Leaf> overlaps(RegularTileShape p_shape) {
-    Set<Leaf> found_overlaps = new TreeSet<Leaf>();
+    Set<Leaf> found_overlaps = new TreeSet<>();
     if (this.root == null) {
       return found_overlaps;
     }
@@ -49,6 +49,7 @@ public class MinAreaTree extends ShapeTree {
     return found_overlaps;
   }
 
+  @Override
   void insert(Leaf p_leaf) {
     ++this.leaf_count;
 
@@ -95,7 +96,7 @@ public class MinAreaTree extends ShapeTree {
       curr_inner_node.bounding_shape =
           p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape);
 
-      // Choose the the child, so that the area increase of that child after taking the union
+      // Choose the child, so that the area increase of that child after taking the union
       // with the shape of p_leaf_to_insert is minimal.
 
       RegularTileShape first_child_shape = curr_inner_node.first_child.bounding_shape;
@@ -119,6 +120,7 @@ public class MinAreaTree extends ShapeTree {
   }
 
   /** removes an entry from this tree */
+  @Override
   public void remove_leaf(Leaf p_leaf) {
     if (p_leaf == null) {
       return;
@@ -172,7 +174,7 @@ public class MinAreaTree extends ShapeTree {
           node_to_recalculate.second_child.bounding_shape.union(
               node_to_recalculate.first_child.bounding_shape);
       if (new_bounds.contains(node_to_recalculate.bounding_shape)) {
-        // the new bounds are not smaller, no further recalculate nessesary
+        // the new bounds are not smaller, no further recalculate necessary
         break;
       }
       node_to_recalculate.bounding_shape = new_bounds;

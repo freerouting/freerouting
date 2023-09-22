@@ -5,13 +5,15 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 
+import java.io.IOException;
+
 /** Describes a rectangle in a Specctra dsn file. */
 public class Rectangle extends Shape {
   public final double[] coor;
 
   /**
    * Creates a new instance of Rectangle p_coor is an array of dimension 4 and contains the
-   * rectangle coordinates in the following order: lower left x, lower left y, upper right x, uppper
+   * rectangle coordinates in the following order: lower left x, lower left y, upper right x, upper
    * right y.
    */
   public Rectangle(Layer p_layer, double[] p_coor) {
@@ -19,6 +21,7 @@ public class Rectangle extends Shape {
     coor = p_coor;
   }
 
+  @Override
   public Rectangle bounding_box() {
     return this;
   }
@@ -33,6 +36,7 @@ public class Rectangle extends Shape {
     return new Rectangle(this.layer, result_coor);
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(
       CoordinateTransform p_coordinate_transform) {
     int[] box_coor = new int[4];
@@ -51,6 +55,7 @@ public class Rectangle extends Shape {
     return result;
   }
 
+  @Override
   public app.freerouting.geometry.planar.Shape transform_to_board(
       CoordinateTransform p_coordinate_transform) {
     double[] curr_point = new double[2];
@@ -64,27 +69,29 @@ public class Rectangle extends Shape {
   }
 
   /** Writes this rectangle as a scope to an output dsn-file. */
+  @Override
   public void write_scope(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; ++i) {
       p_file.write(" ");
-      p_file.write(Double.valueOf(coor[i]).toString());
+      p_file.write(String.valueOf(coor[i]));
     }
     p_file.write(")");
   }
 
+  @Override
   public void write_scope_int(IndentFileWriter p_file, IdentifierType p_identifier)
-      throws java.io.IOException {
+      throws IOException {
     p_file.new_line();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);
     for (int i = 0; i < coor.length; ++i) {
       p_file.write(" ");
-      Integer curr_coor = (int) Math.round(coor[i]);
-      p_file.write(curr_coor.toString());
+      int curr_coor = (int) Math.round(coor[i]);
+      p_file.write(String.valueOf(curr_coor));
     }
     p_file.write(")");
   }

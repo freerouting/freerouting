@@ -9,7 +9,10 @@ import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.rules.BoardRules;
+
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /** Class for interactive construction of a tile shaped obstacle */
 public class TileConstructionState extends CornerItemConstructionState {
@@ -40,6 +43,7 @@ public class TileConstructionState extends CornerItemConstructionState {
   }
 
   /** adds a corner to the tile under construction */
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     super.left_button_clicked(p_location);
     remove_concave_corners();
@@ -47,10 +51,12 @@ public class TileConstructionState extends CornerItemConstructionState {
     return this;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_point) {
     return left_button_clicked(p_point);
   }
 
+  @Override
   public InteractiveState complete() {
     remove_concave_corners_at_close();
     int corner_count = corner_list.size();
@@ -145,11 +151,9 @@ public class TileConstructionState extends CornerItemConstructionState {
       curr_corner = prev_corner;
     }
     if (new_length < corner_arr.length) {
-      // somthing skipped, update corner_list
-      corner_list = new java.util.LinkedList<IntPoint>();
-      for (int i = 0; i < new_length; ++i) {
-        corner_list.add(corner_arr[i]);
-      }
+      // something skipped, update corner_list
+      corner_list =
+          new LinkedList<>(Arrays.asList(corner_arr).subList(0, new_length));
     }
   }
   /**
@@ -180,14 +184,12 @@ public class TileConstructionState extends CornerItemConstructionState {
 
     if (new_length != corner_arr.length) {
       // recalculate the corner_list
-      corner_list = new java.util.LinkedList<IntPoint>();
-      for (int i = 0; i < new_length; ++i) {
-        corner_list.add(corner_arr[i]);
-      }
+      corner_list = new LinkedList<>(Arrays.asList(corner_arr).subList(0, new_length));
       add_corner_for_snap_angle();
     }
   }
 
+  @Override
   public void display_default_message() {
     hdlg.screen_messages.set_status_message(resources.getString("creatig_tile"));
   }

@@ -18,9 +18,13 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
+import app.freerouting.interactive.Settings;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,14 +32,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /** Contains higher level functions of a board */
-public class RoutingBoard extends BasicBoard implements java.io.Serializable {
+public class RoutingBoard extends BasicBoard implements Serializable {
   /** The time limit in milliseconds for the pull tight algorithm */
   private static final int PULL_TIGHT_TIME_LIMIT = 2000;
   /** the area marked for optimizing the route */
   transient ChangedArea changed_area;
   /** Contains the database for the auto-route algorithm. */
-  private transient AutorouteEngine autoroute_engine = null;
-  private transient Item shove_failing_obstacle = null;
+  private transient AutorouteEngine autoroute_engine;
+  private transient Item shove_failing_obstacle;
   private transient int shove_failing_layer = -1;
 
   /**
@@ -62,6 +66,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /** Maintains the auto-router database after p_item is inserted, changed, or deleted. */
+  @Override
   public void additional_update_after_change(Item p_item) {
     if (p_item == null) {
       return;
@@ -107,10 +112,8 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
       calculate_tidy_region = false;
     }
     start_marking_changed_area();
-    Set<Integer> changed_nets = new TreeSet<Integer>();
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    Set<Integer> changed_nets = new TreeSet<>();
+    for (Item curr_item : p_item_list) {
       if (!p_with_delete_fixed && curr_item.is_delete_fixed() || curr_item.is_user_fixed()) {
         result = false;
       } else {
@@ -417,9 +420,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
     clear_shove_failing_obstacle();
     // unfix the connected shove fixed traces.
     Collection<Item> contact_list = p_drill_item.get_normal_contacts();
-    Iterator<Item> it = contact_list.iterator();
-    while (it.hasNext()) {
-      Item curr_contact = it.next();
+    for (Item curr_contact : contact_list) {
       if (curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
         curr_contact.set_fixed_state(FixedState.UNFIXED);
       }
@@ -472,9 +473,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
     double min_dist = Integer.MAX_VALUE;
     Item nearest_item = null;
     Set<Item> ignore_set = null;
-    Iterator<Item> it = found_items.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : found_items) {
       if (!curr_item.is_connectable()) {
         continue;
       }
@@ -511,7 +510,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
       if (candidate_found) {
         if (p_from_item != null) {
           if (ignore_set == null) {
-            // calculated here to avoid unnessery calculations for performance reasoss.
+            // calculated here to avoid unnecessary calculations for performance reasoss.
             ignore_set = p_from_item.get_connected_set(-1);
           }
           if (ignore_set.contains(curr_item)) {
@@ -704,7 +703,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
       return from_corner;
     }
     start_marking_changed_area();
-    // Check, if there ends a item of the same net at p_from_corner.
+    // Check, if there ends an item of the same net at p_from_corner.
     // If so, its geometry will be used to cut off dog ears of the check shape.
     Trace picked_trace = null;
     ItemSelectionFilter filter =
@@ -966,7 +965,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    */
   public AutorouteEngine.AutorouteResult autoroute(
       Item p_item,
-      app.freerouting.interactive.Settings p_settings,
+      Settings p_settings,
       int p_via_costs,
       Stoppable p_stoppable_thread,
       TimeLimit p_time_limit) {
@@ -986,19 +985,19 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
             p_settings.autoroute_settings.get_trace_cost_arr());
     ctrl_settings.remove_unconnected_vias = false;
     Set<Item> route_start_set = p_item.get_connected_set(route_net_no);
-    app.freerouting.rules.Net route_net = rules.nets.get(route_net_no);
+    Net route_net = rules.nets.get(route_net_no);
     if (route_net != null && route_net.contains_plane()) {
       for (Item curr_item : route_start_set) {
-        if (curr_item instanceof app.freerouting.board.ConductionArea) {
+        if (curr_item instanceof ConductionArea) {
           return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // already connected to plane
         }
       }
     }
     Set<Item> route_dest_set = p_item.get_unconnected_set(route_net_no);
-    if (route_dest_set.size() == 0) {
+    if (route_dest_set.isEmpty()) {
       return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // p_item is already routed.
     }
-    SortedSet<Item> ripped_item_list = new TreeSet<Item>();
+    SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine =
         init_autoroute(
             p_item.get_net_no(0),
@@ -1029,7 +1028,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    */
   public AutorouteEngine.AutorouteResult fanout(
       Pin p_pin,
-      app.freerouting.interactive.Settings p_settings,
+      Settings p_settings,
       int p_ripup_costs,
       Stoppable p_stoppable_thread,
       TimeLimit p_time_limit) {
@@ -1055,7 +1054,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
       ctrl_settings.ripup_allowed = true;
       ctrl_settings.ripup_costs = p_ripup_costs;
     }
-    SortedSet<Item> ripped_item_list = new TreeSet<Item>();
+    SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine =
         init_autoroute(
             pin_net_no,
@@ -1142,9 +1141,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    * Trace with net number p_except_net_no are ignored.
    */
   public boolean contains_trace_tails(Collection<Item> p_items, int[] p_except_net_no_arr) {
-    Iterator<Item> it = p_items.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : p_items) {
       if (curr_ob instanceof Trace) {
         Trace curr_trace = (Trace) curr_ob;
         if (!curr_trace.nets_equal(p_except_net_no_arr)) {
@@ -1163,7 +1160,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
    */
   public boolean remove_trace_tails(
       int p_net_no, Item.StopConnectionOption p_stop_connection_option) {
-    SortedSet<Item> stub_set = new TreeSet<Item>();
+    SortedSet<Item> stub_set = new TreeSet<>();
     Collection<Item> board_items = this.get_items();
     for (Item curr_item : board_items) {
       if (!curr_item.is_routable()) {
@@ -1189,7 +1186,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
         stub_set.add(curr_item);
       }
     }
-    SortedSet<Item> stub_connections = new TreeSet<Item>();
+    SortedSet<Item> stub_connections = new TreeSet<>();
     for (Item curr_item : stub_set) {
       int item_contact_count = curr_item.get_normal_contacts().size();
       if (item_contact_count == 1) {
@@ -1222,7 +1219,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   /** Sets, if all conduction areas on the board are obstacles for route of foreign nets. */
   public void change_conduction_is_obstacle(boolean p_value) {
     if (this.rules.get_ignore_conduction() != p_value) {
-      return; // no muultiply
+      return; // no multiply
     }
     boolean something_changed = false;
     // Change the is_obstacle property of all conduction areas of the board.
@@ -1350,7 +1347,7 @@ public class RoutingBoard extends BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * Returns, if the auto-route database is maintained outside the outo-route algorithm while changing
+   * Returns, if the auto-route database is maintained outside the auto-route algorithm while changing
    * items on rhe board.
    */
   boolean is_maintaining_autoroute_database() {

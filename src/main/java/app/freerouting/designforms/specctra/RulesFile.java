@@ -1,8 +1,17 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.interactive.BoardHandling;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.ViaInfo;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collection;
 
 /**
  * File for saving the board rules, so that they can be restored after the Board is creates anew
@@ -11,8 +20,8 @@ import app.freerouting.logger.FRLogger;
 public class RulesFile {
 
   public static void write(
-      app.freerouting.interactive.BoardHandling p_board_handling,
-      java.io.OutputStream p_output_stream,
+      BoardHandling p_board_handling,
+      OutputStream p_output_stream,
       String p_design_name) {
     IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
     BasicBoard routing_board = p_board_handling.get_routing_board();
@@ -26,20 +35,20 @@ public class RulesFile {
             false);
     try {
       write_rules(write_scope_parameter, p_design_name);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to write rules to file", e);
     }
     try {
       output_file.close();
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("unable to close rules file", e);
     }
   }
 
   public static boolean read(
-      java.io.InputStream p_input_stream,
+      InputStream p_input_stream,
       String p_design_name,
-      app.freerouting.interactive.BoardHandling p_board_handling) {
+      BoardHandling p_board_handling) {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
     try {
@@ -63,7 +72,7 @@ public class RulesFile {
       if (!(curr_token instanceof String) || !curr_token.equals(p_design_name)) {
         FRLogger.warn("RulesFile.read: design_name not matching");
       }
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("RulesFile.read: IO error scanning file", e);
       return false;
     }
@@ -74,7 +83,7 @@ public class RulesFile {
       Object prev_token = next_token;
       try {
         next_token = scanner.next_token();
-      } catch (java.io.IOException e) {
+      } catch (IOException e) {
         FRLogger.error("RulesFile.read: IO error scanning file", e);
         return false;
       }
@@ -102,7 +111,7 @@ public class RulesFile {
         } else if (next_token == Keyword.CLASS) {
           read_net_class(scanner, layer_structure, routing_board);
         } else if (next_token == Keyword.SNAP_ANGLE) {
-          app.freerouting.board.AngleRestriction snap_angle = Structure.read_snap_angle(scanner);
+          AngleRestriction snap_angle = Structure.read_snap_angle(scanner);
           if (snap_angle != null) {
             routing_board.rules.set_trace_angle_restriction(snap_angle);
           }
@@ -124,7 +133,7 @@ public class RulesFile {
   }
 
   private static void write_rules(WriteScopeParameter p_par, String p_design_name)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("rules PCB ");
     p_par.file.write(p_design_name);
@@ -135,7 +144,7 @@ public class RulesFile {
     Rule.write_default_rule(p_par, 0);
     // write the via padstacks
     for (int i = 1; i <= p_par.board.library.padstacks.count(); ++i) {
-      app.freerouting.library.Padstack curr_padstack = p_par.board.library.padstacks.get(i);
+      Padstack curr_padstack = p_par.board.library.padstacks.get(i);
       if (p_par.board.library.get_via_padstack(curr_padstack.name) != null) {
         Library.write_padstack_scope(p_par, curr_padstack);
       }
@@ -147,7 +156,7 @@ public class RulesFile {
   }
 
   private static void add_rules(
-      java.util.Collection<Rule> p_rules, BasicBoard p_board, String p_layer_name) {
+      Collection<Rule> p_rules, BasicBoard p_board, String p_layer_name) {
     int layer_no = -1;
     if (p_layer_name != null) {
       layer_no = p_board.layer_structure.get_no(p_layer_name);
@@ -193,7 +202,7 @@ public class RulesFile {
         }
         next_token = p_scanner.next_token();
         if (next_token == Keyword.RULE) {
-          java.util.Collection<Rule> curr_rules = Rule.read_scope(p_scanner);
+          Collection<Rule> curr_rules = Rule.read_scope(p_scanner);
           add_rules(curr_rules, p_board, layer_string);
         } else {
           ScopeKeyword.skip_scope(p_scanner);
@@ -201,18 +210,18 @@ public class RulesFile {
         next_token = p_scanner.next_token();
       }
       return true;
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("RulesFile.add_layer_rules: IO error scanning file", e);
       return false;
     }
   }
 
   private static boolean read_via_info(IJFlexScanner p_scanner, BasicBoard p_board) {
-    app.freerouting.rules.ViaInfo curr_via_info = Network.read_via_info(p_scanner, p_board);
+    ViaInfo curr_via_info = Network.read_via_info(p_scanner, p_board);
     if (curr_via_info == null) {
       return false;
     }
-    app.freerouting.rules.ViaInfo existing_via =
+    ViaInfo existing_via =
         p_board.rules.via_infos.get(curr_via_info.get_name());
     if (existing_via != null) {
       // replace existing via info
@@ -223,7 +232,7 @@ public class RulesFile {
   }
 
   private static boolean read_via_rule(IJFlexScanner p_scanner, BasicBoard p_board) {
-    java.util.Collection<String> via_rule = Network.read_via_rule(p_scanner, p_board);
+    Collection<String> via_rule = Network.read_via_rule(p_scanner, p_board);
     if (via_rule == null) {
       return false;
     }

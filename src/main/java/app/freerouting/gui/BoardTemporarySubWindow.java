@@ -1,5 +1,8 @@
 package app.freerouting.gui;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 /** Class for temporary subwindows of the board frame */
 public class BoardTemporarySubWindow extends BoardSubWindow {
 
@@ -11,8 +14,9 @@ public class BoardTemporarySubWindow extends BoardSubWindow {
     p_board_frame.temporary_subwindows.add(this);
 
     this.addWindowListener(
-        new java.awt.event.WindowAdapter() {
-          public void windowClosing(java.awt.event.WindowEvent evt) {
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent evt) {
             dispose();
           }
         });
@@ -23,6 +27,7 @@ public class BoardTemporarySubWindow extends BoardSubWindow {
     super.dispose();
   }
 
+  @Override
   public void dispose() {
     this.board_frame.temporary_subwindows.remove(this);
     super.dispose();

@@ -1,12 +1,15 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /** Handles the sequencing of the fanout inside the batch autorouter. */
 public class BatchFanout {
@@ -19,7 +22,7 @@ public class BatchFanout {
     this.thread = p_thread;
     this.routing_board = p_thread.hdlg.get_routing_board();
     Collection<app.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
-    this.sorted_components = new java.util.TreeSet<Component>();
+    this.sorted_components = new TreeSet<>();
     for (int i = 1; i <= routing_board.components.count(); ++i) {
       app.freerouting.board.Component curr_board_component = routing_board.components.get(i);
       Component curr_component = new Component(curr_board_component, board_smd_pin_list);
@@ -62,12 +65,10 @@ public class BatchFanout {
                 ripup_costs,
                 this.thread,
                 time_limit);
-        if (curr_result == AutorouteEngine.AutorouteResult.ROUTED) {
-          ++routed_count;
-        } else if (curr_result == AutorouteEngine.AutorouteResult.NOT_ROUTED) {
-          ++not_routed_count;
-        } else if (curr_result == AutorouteEngine.AutorouteResult.INSERT_ERROR) {
-          ++insert_error_count;
+        switch (curr_result) {
+          case ROUTED       -> ++routed_count;
+          case NOT_ROUTED   -> ++not_routed_count;
+          case INSERT_ERROR -> ++insert_error_count;
         }
         if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED) {
           this.thread.hdlg.repaint();
@@ -78,7 +79,7 @@ public class BatchFanout {
       }
       --components_to_go;
     }
-    if (this.routing_board.get_test_level() != app.freerouting.board.TestLevel.RELEASE_VERSION) {
+    if (this.routing_board.get_test_level() != TestLevel.RELEASE_VERSION) {
       FRLogger.warn(
           "fanout pass: "
               + (p_pass_no + 1)
@@ -104,9 +105,9 @@ public class BatchFanout {
         Collection<app.freerouting.board.Pin> p_board_smd_pin_list) {
       this.board_component = p_board_component;
 
-      // calcoulate the center of gravity of all SMD pins of this component.
+      // calculate the center of gravity of all SMD pins of this component.
       Collection<app.freerouting.board.Pin> curr_pin_list =
-          new java.util.LinkedList<app.freerouting.board.Pin>();
+          new LinkedList<>();
       int cmp_no = p_board_component.no;
       for (app.freerouting.board.Pin curr_board_pin : p_board_smd_pin_list) {
         if (curr_board_pin.get_component_no() == cmp_no) {
@@ -126,7 +127,7 @@ public class BatchFanout {
       this.gravity_center_of_smd_pins = new FloatPoint(x, y);
 
       // calculate the sorted SMD pins of this component
-      this.smd_pins = new java.util.TreeSet<Pin>();
+      this.smd_pins = new TreeSet<>();
 
       for (app.freerouting.board.Pin curr_board_pin : curr_pin_list) {
         this.smd_pins.add(new Pin(curr_board_pin));
@@ -134,6 +135,7 @@ public class BatchFanout {
     }
 
     /** Sort the components, so that components with maor pins come first */
+    @Override
     public int compareTo(Component p_other) {
       int compare_value = this.smd_pin_count - p_other.smd_pin_count;
       int result;
@@ -158,6 +160,7 @@ public class BatchFanout {
         this.distance_to_component_center = pin_location.distance(gravity_center_of_smd_pins);
       }
 
+      @Override
       public int compareTo(Pin p_other) {
         int result;
         double delta_dist =

@@ -1,10 +1,15 @@
 package app.freerouting.library;
 
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
+
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Contains information for gate swap and pin swap for a single component. */
 public class LogicalPart
-    implements app.freerouting.board.ObjectInfoPanel.Printable, java.io.Serializable {
+    implements ObjectInfoPanel.Printable, Serializable {
 
   public final String name;
   public final int no;
@@ -33,10 +38,11 @@ public class LogicalPart
     return part_pin_arr[p_no];
   }
 
+  @Override
   public void print_info(
-      app.freerouting.board.ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("logical_part_2") + " ");
     p_window.append_bold(this.name);
     for (int i = 0; i < this.part_pin_arr.length; ++i) {
@@ -48,24 +54,24 @@ public class LogicalPart
       p_window.append(", " + resources.getString("gate") + " ");
       p_window.append(curr_pin.gate_name);
       p_window.append(", " + resources.getString("swap_code") + " ");
-      Integer gate_swap_code = curr_pin.gate_swap_code;
-      p_window.append(gate_swap_code.toString());
+      int gate_swap_code = curr_pin.gate_swap_code;
+      p_window.append(String.valueOf(gate_swap_code));
       p_window.append(", " + resources.getString("gate_pin") + " ");
       p_window.append(curr_pin.gate_pin_name);
       p_window.append(", " + resources.getString("swap_code") + " ");
-      Integer pin_swap_code = curr_pin.gate_pin_swap_code;
-      p_window.append(pin_swap_code.toString());
+      int pin_swap_code = curr_pin.gate_pin_swap_code;
+      p_window.append(String.valueOf(pin_swap_code));
     }
     p_window.newline();
     p_window.newline();
   }
 
-  public static class PartPin implements Comparable<PartPin>, java.io.Serializable {
+  public static class PartPin implements Comparable<PartPin>, Serializable {
     /**
-     * The number of the part pin. Must be the same number as in the componnents library package.
+     * The number of the part pin. Must be the same number as in the components library package.
      */
     public final int pin_no;
-    /** The name of the part pin. Must be the same name as in the componnents library package. */
+    /** The name of the part pin. Must be the same name as in the components library package. */
     public final String pin_name;
     /** The name of the gate this pin belongs to. */
     public final String gate_name;
@@ -97,6 +103,7 @@ public class LogicalPart
       gate_pin_swap_code = p_gate_pin_swap_code;
     }
 
+    @Override
     public int compareTo(PartPin p_other) {
       return this.pin_no - p_other.pin_no;
     }

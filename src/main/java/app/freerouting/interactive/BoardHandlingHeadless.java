@@ -8,6 +8,8 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.rules.DefaultItemClearanceClasses;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -19,18 +21,18 @@ public class BoardHandlingHeadless implements IBoardHandling {
   /** The file used for logging interactive action, so that they can be replayed later */
   public final ActivityReplayFile activityReplayFile = new ActivityReplayFile();
   /** The current settings for interactive actions on the board */
-  public Settings settings = null;
+  public Settings settings;
   /** The board database used in this interactive handling. */
-  protected RoutingBoard board = null;
-  protected java.util.Locale locale;
+  protected RoutingBoard board;
+  protected Locale locale;
   protected boolean save_intermediate_stages;
   protected float optimization_improvement_threshold;
-  private byte[] serializedBoard = null;
+  private byte[] serializedBoard;
   /** The listener for the autorouter thread */
-  public ThreadActionListener autorouter_listener = null;
+  public ThreadActionListener autorouter_listener;
 
   public BoardHandlingHeadless(
-      java.util.Locale p_locale,
+      Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold) {
     this.locale = p_locale;
@@ -126,7 +128,7 @@ public class BoardHandlingHeadless implements IBoardHandling {
             p_rules
                 .get_default_net_class()
                 .default_item_clearance_classes
-                .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.AREA);
+                .get(DefaultItemClearanceClasses.ItemClass.AREA);
       }
     }
     this.board =

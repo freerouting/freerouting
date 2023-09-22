@@ -22,10 +22,10 @@ public class BatchOptRouteMT extends BatchOptRoute {
   private final int thread_pool_size;
   private int num_tasks_finished = 0;
   private int update_count = 0;
-  private final ArrayList<Integer> item_ids = new ArrayList<Integer>();
-  private final HashMap<Integer, ItemRouteResult> result_map = new HashMap<Integer, ItemRouteResult>();
+  private final ArrayList<Integer> item_ids = new ArrayList<>();
+  private final HashMap<Integer, ItemRouteResult> result_map = new HashMap<>();
   private CountDownLatch task_completion_signal = new CountDownLatch(1);
-  private final ArrayList<BoardUpdateStrategy> hybrid_list = new ArrayList<BoardUpdateStrategy>();
+  private final ArrayList<BoardUpdateStrategy> hybrid_list = new ArrayList<>();
   private int hybrid_index = -1;
 
   /**
@@ -73,8 +73,6 @@ public class BatchOptRouteMT extends BatchOptRoute {
         }
       }
     }
-
-    hybrid_index = -1;
   }
 
   public int get_num_tasks() {
@@ -152,7 +150,9 @@ public class BatchOptRouteMT extends BatchOptRoute {
         this.thread.hdlg.coordinate_transform.board_to_user(
             this.routing_board.cumulative_trace_length());
     this.thread.hdlg.screen_messages.set_post_route_info(
-        this.routing_board.get_vias().size(), new_trace_length);
+        this.routing_board.get_vias().size(),
+        new_trace_length,
+        this.thread.hdlg.coordinate_transform.user_unit);
 
     ++update_count;
   }
@@ -167,9 +167,9 @@ public class BatchOptRouteMT extends BatchOptRoute {
     this.sorted_route_items = new ReadSortedRouteItems();
 
     if (current_item_selection_strategy() == ItemSelectionStrategy.PRIORITIZED
-        && result_map.size() > 0) {
-      ArrayList<Integer> new_item_ids = new ArrayList<Integer>();
-      PriorityQueue<ItemRouteResult> pq = new PriorityQueue<ItemRouteResult>();
+        && !result_map.isEmpty()) {
+      ArrayList<Integer> new_item_ids = new ArrayList<>();
+      PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 
       for (Item item = sorted_route_items.next(); item != null; item = sorted_route_items.next()) {
         ItemRouteResult r = result_map.get(item.get_id_no());
@@ -200,7 +200,7 @@ public class BatchOptRouteMT extends BatchOptRoute {
   }
 
   @Override
-  protected float opt_route_pass(int p_pass_no, boolean p_with_prefered_directions) {
+  protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions) {
     long startTime = System.currentTimeMillis();
     update_count = 0;
     num_tasks_finished = 0;
@@ -210,13 +210,14 @@ public class BatchOptRouteMT extends BatchOptRoute {
       winning_candidate = null;
     }
 
-    float route_improved = 0.0f;
     int via_count_before = this.routing_board.get_vias().size();
     double user_trace_length_before =
         this.thread.hdlg.coordinate_transform.board_to_user(
             this.routing_board.cumulative_trace_length());
     this.thread.hdlg.screen_messages.set_post_route_info(
-        via_count_before, user_trace_length_before);
+        via_count_before,
+        user_trace_length_before,
+        this.thread.hdlg.coordinate_transform.user_unit);
     this.min_cumulative_trace_length_before = calc_weighted_trace_length(routing_board);
     // double pass_trace_length_before = this.min_cumulative_trace_length_before;
     String optimizationPassId =
@@ -245,10 +246,8 @@ public class BatchOptRouteMT extends BatchOptRoute {
                 r -> {
                   Thread t = new Thread(r);
                   t.setUncaughtExceptionHandler(
-                      (t1, e) -> {
-                        FRLogger.error(
-                            "Exception in thread pool worker thread: " + t1.toString(), e);
-                      });
+                      (t1, e) -> FRLogger.error(
+                          "Exception in thread pool worker thread: " + t1, e));
                   return t;
                 });
 
@@ -271,7 +270,7 @@ public class BatchOptRouteMT extends BatchOptRoute {
                 this,
                 item_id,
                 p_pass_no,
-                p_with_prefered_directions,
+                p_with_preferred_directions,
                 this.min_cumulative_trace_length_before));
     }
 
@@ -308,13 +307,13 @@ public class BatchOptRouteMT extends BatchOptRoute {
 
     pool = null;
 
-    route_improved = best_route_result.improvement_percentage();
-
     if (!interrupted
         && best_route_result.improved()
         && current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL) {
       update_master_routing_board();
     }
+
+    float route_improved = best_route_result.improvement_percentage();
 
     if (this.use_increased_ripup_costs && !best_route_result.improved()) {
       this.use_increased_ripup_costs = false;

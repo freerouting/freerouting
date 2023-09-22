@@ -16,10 +16,12 @@ public class DragMenuState extends MenuState {
     return new_state;
   }
 
+  @Override
   public InteractiveState mouse_pressed(FloatPoint p_point) {
     return DragState.get_instance(p_point, this, hdlg, activityReplayFile);
   }
 
+  @Override
   public String get_help_id() {
     return "MenuState_DragMenuState";
   }

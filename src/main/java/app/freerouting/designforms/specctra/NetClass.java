@@ -1,6 +1,8 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -55,8 +57,8 @@ public class NetClass {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       String class_name = p_scanner.next_string();
 
-      Object next_token = null;
-      Collection<String> net_list = new LinkedList<String>();
+      Object next_token;
+      Collection<String> net_list = new LinkedList<>();
       boolean rules_missing = false;
       // read the nets belonging to the class
       for (; ; ) {
@@ -75,10 +77,10 @@ public class NetClass {
         }
         net_list.add((String) next_token);
       }
-      Collection<Rule> rules = new LinkedList<Rule>();
-      Collection<Rule.LayerRule> layer_rules = new LinkedList<Rule.LayerRule>();
-      Collection<String> use_via = new LinkedList<String>();
-      Collection<String> use_layer = new LinkedList<String>();
+      Collection<Rule> rules = new LinkedList<>();
+      Collection<Rule.LayerRule> layer_rules = new LinkedList<>();
+      Collection<String> use_via = new LinkedList<>();
+      Collection<String> use_layer = new LinkedList<>();
       String via_rule = null;
       String trace_clearance_class = null;
       boolean pull_tight = true;
@@ -141,7 +143,7 @@ public class NetClass {
           pull_tight,
           min_trace_length,
           max_trace_length);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
     }
@@ -149,9 +151,9 @@ public class NetClass {
 
   public static ClassClass read_class_class_scope(IJFlexScanner p_scanner) {
     try {
-      Collection<String> classes = new LinkedList<String>();
-      Collection<Rule> rules = new LinkedList<Rule>();
-      Collection<Rule.LayerRule> layer_rules = new LinkedList<Rule.LayerRule>();
+      Collection<String> classes = new LinkedList<>();
+      Collection<Rule> rules = new LinkedList<>();
+      Collection<Rule.LayerRule> layer_rules = new LinkedList<>();
       Object prev_token = null;
       for (; ; ) {
         Object next_token = p_scanner.next_token();
@@ -175,7 +177,7 @@ public class NetClass {
         prev_token = next_token;
       }
       return new ClassClass(classes, rules, layer_rules);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("NetClass.read_scope: IO error while scanning file", e);
       return null;
     }

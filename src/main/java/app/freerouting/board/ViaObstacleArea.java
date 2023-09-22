@@ -1,7 +1,12 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
+
+import java.awt.Color;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Describes Areas on the board, where vias are not allowed. */
 public class ViaObstacleArea extends ObstacleArea {
@@ -62,6 +67,7 @@ public class ViaObstacleArea extends ObstacleArea {
         p_board);
   }
 
+  @Override
   public Item copy(int p_id_no) {
     int[] copied_net_nos = new int[net_no_arr.length];
     System.arraycopy(net_no_arr, 0, copied_net_nos, 0, net_no_arr.length);
@@ -80,6 +86,7 @@ public class ViaObstacleArea extends ObstacleArea {
         board);
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other.shares_net(this)) {
       return false;
@@ -87,10 +94,12 @@ public class ViaObstacleArea extends ObstacleArea {
     return p_other instanceof Via;
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return false;
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -98,9 +107,10 @@ public class ViaObstacleArea extends ObstacleArea {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT);
   }
 
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via_keepout"));
     this.print_shape_info(p_window, p_locale);
     this.print_clearance_info(p_window, p_locale);
@@ -108,13 +118,15 @@ public class ViaObstacleArea extends ObstacleArea {
     p_window.newline();
   }
 
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+  @Override
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_via_obstacle_colors();
   }
 
+  @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_via_obstacle_color_intensity();
   }
 }

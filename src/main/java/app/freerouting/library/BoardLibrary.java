@@ -1,19 +1,26 @@
 package app.freerouting.library;
 
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.DrillItem;
+import app.freerouting.datastructures.UndoableObjects;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 /** Describes a board library of packages and padstacks. */
-public class BoardLibrary implements java.io.Serializable {
+public class BoardLibrary implements Serializable {
 
-  public Padstacks padstacks = null;
-  public Packages packages = null;
+  public Padstacks padstacks;
+  public Packages packages;
   /** Contains information for gate swap and pin swap in the Specctra-dsn format. */
   public LogicalParts logical_parts = new LogicalParts();
   /**
    * The subset of padstacks in the board library, which can be used in routing for inserting vias.
    */
-  private List<Padstack> via_padstacks = null;
+  private List<Padstack> via_padstacks;
 
   /** Creates a new instance of BoardLibrary */
   public BoardLibrary(Padstacks p_padstacks, Packages p_packages) {
@@ -72,10 +79,7 @@ public class BoardLibrary implements java.io.Serializable {
    */
   public void set_via_padstacks(Padstack[] p_padstacks) {
 
-    this.via_padstacks = new Vector<Padstack>();
-    for (int i = 0; i < p_padstacks.length; ++i) {
-      this.via_padstacks.add(p_padstacks[i]);
-    }
+    this.via_padstacks = new Vector<>(Arrays.asList(p_padstacks));
   }
 
   /**
@@ -89,7 +93,7 @@ public class BoardLibrary implements java.io.Serializable {
 
     if (this.via_padstacks == null)
     {
-      this.via_padstacks = new Vector<Padstack>();
+      this.via_padstacks = new Vector<>();
     }
 
     this.via_padstacks.add(p_padstack);
@@ -102,9 +106,8 @@ public class BoardLibrary implements java.io.Serializable {
    * padstacks.
    */
   public boolean remove_via_padstack(
-      Padstack p_padstack, app.freerouting.board.BasicBoard p_board) {
-    boolean result = via_padstacks.remove(p_padstack);
-    return result;
+      Padstack p_padstack, BasicBoard p_board) {
+    return via_padstacks.remove(p_padstack);
   }
 
   /**
@@ -128,17 +131,17 @@ public class BoardLibrary implements java.io.Serializable {
   }
 
   /** Looks, if the input padstack is used on p_board in a Package or in drill. */
-  public boolean is_used(Padstack p_padstack, app.freerouting.board.BasicBoard p_board) {
-    java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it =
+  public boolean is_used(Padstack p_padstack, BasicBoard p_board) {
+    Iterator<UndoableObjects.UndoableObjectNode> it =
         p_board.item_list.start_read_object();
     for (; ; ) {
-      app.freerouting.datastructures.UndoableObjects.Storable curr_item =
+      UndoableObjects.Storable curr_item =
           p_board.item_list.read_object(it);
       if (curr_item == null) {
         break;
       }
-      if (curr_item instanceof app.freerouting.board.DrillItem) {
-        if (((app.freerouting.board.DrillItem) curr_item).get_padstack() == p_padstack) {
+      if (curr_item instanceof DrillItem) {
+        if (((DrillItem) curr_item).get_padstack() == p_padstack) {
           return true;
         }
       }

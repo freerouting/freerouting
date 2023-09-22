@@ -5,11 +5,11 @@ import app.freerouting.geometry.planar.TileShape;
 /** An object, which can be expanded by the maze expansion algorithm. */
 public interface ExpandableObject {
 
-  /** Calculates the intersection of the shapes of the 2 objecta belonging to this door. */
+  /** Calculates the intersection of the shapes of the 2 objects belonging to this door. */
   TileShape get_shape();
 
   /**
-   * Returns the dimension ot the intersection of the shapes of the 2 objecta belonging to this
+   * Returns the dimension ot the intersection of the shapes of the 2 objects belonging to this
    * door.
    */
   int get_dimension();

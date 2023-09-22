@@ -1,5 +1,8 @@
 package app.freerouting.board;
 
+import app.freerouting.autoroute.ExpansionDrill;
+import app.freerouting.autoroute.ItemAutorouteInfo;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
@@ -7,20 +10,27 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Class describing the functionality of an electrical Item on the board, which may have a shape on
  * several layer, whose geometry is described by a padstack.
  */
-public class Via extends DrillItem implements java.io.Serializable {
+public class Via extends DrillItem implements Serializable {
   /** True, if coppersharing of this via with smd pins of the same net is allowed. */
   public final boolean attach_allowed;
   private Padstack padstack;
-  private transient Shape[] precalculated_shapes = null;
+  private transient Shape[] precalculated_shapes;
   /** Temporary data used in the autoroute algorithm. */
-  private transient app.freerouting.autoroute.ExpansionDrill autoroute_drill_info = null;
+  private transient ExpansionDrill autoroute_drill_info;
 
   /** Creates a new instance of Via with the input parameters */
   public Via(
@@ -38,6 +48,7 @@ public class Via extends DrillItem implements java.io.Serializable {
     this.attach_allowed = p_attach_allowed;
   }
 
+  @Override
   public Item copy(int p_id_no) {
     return new Via(
         padstack,
@@ -51,6 +62,7 @@ public class Via extends DrillItem implements java.io.Serializable {
         board);
   }
 
+  @Override
   public Shape get_shape(int p_index) {
     if (padstack == null) {
       FRLogger.warn("Via.get_shape: padstack is null");
@@ -73,6 +85,7 @@ public class Via extends DrillItem implements java.io.Serializable {
     return this.precalculated_shapes[p_index];
   }
 
+  @Override
   public Padstack get_padstack() {
     return padstack;
   }
@@ -81,10 +94,12 @@ public class Via extends DrillItem implements java.io.Serializable {
     padstack = p_padstack;
   }
 
+  @Override
   public boolean is_routable() {
     return !is_user_fixed() && (this.net_count() > 0);
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     if (p_other == this || p_other instanceof ComponentObstacleArea) {
       return false;
@@ -102,6 +117,7 @@ public class Via extends DrillItem implements java.io.Serializable {
   }
 
   /** Checks, if the Via has contacts on at most 1 layer. */
+  @Override
   public boolean is_tail() {
     Collection<Item> contact_list = this.get_normal_contacts();
     if (contact_list.size() <= 1) {
@@ -121,6 +137,7 @@ public class Via extends DrillItem implements java.io.Serializable {
     return true;
   }
 
+  @Override
   public void change_placement_side(IntPoint p_pole) {
     if (this.board == null) {
       return;
@@ -134,13 +151,13 @@ public class Via extends DrillItem implements java.io.Serializable {
     clear_derived_data();
   }
 
-  public app.freerouting.autoroute.ExpansionDrill get_autoroute_drill_info(
+  public ExpansionDrill get_autoroute_drill_info(
       ShapeSearchTree p_autoroute_tree) {
     if (this.autoroute_drill_info == null) {
-      app.freerouting.autoroute.ItemAutorouteInfo via_autoroute_info = this.get_autoroute_info();
+      ItemAutorouteInfo via_autoroute_info = this.get_autoroute_info();
       TileShape curr_drill_shape = TileShape.get_instance(this.get_center());
       this.autoroute_drill_info =
-          new app.freerouting.autoroute.ExpansionDrill(
+          new ExpansionDrill(
               curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
       int via_layer_count = this.last_layer() - this.first_layer() + 1;
       for (int i = 0; i < via_layer_count; ++i) {
@@ -151,17 +168,20 @@ public class Via extends DrillItem implements java.io.Serializable {
     return this.autoroute_drill_info;
   }
 
+  @Override
   public void clear_derived_data() {
     super.clear_derived_data();
     this.precalculated_shapes = null;
     this.autoroute_drill_info = null;
   }
 
+  @Override
   public void clear_autoroute_info() {
     super.clear_autoroute_info();
     this.autoroute_drill_info = null;
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -169,9 +189,10 @@ public class Via extends DrillItem implements java.io.Serializable {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.VIAS);
   }
 
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
-    java.awt.Color[] result;
+  @Override
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
+    Color[] result;
     if (this.net_count() == 0) {
       // display unconnected vias as obstacles
       result = p_graphics_context.get_obstacle_colors();
@@ -185,8 +206,9 @@ public class Via extends DrillItem implements java.io.Serializable {
     return result;
   }
 
+  @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     double result;
     if (this.net_count() == 0) {
       // display unconnected vias as obstacles
@@ -201,9 +223,10 @@ public class Via extends DrillItem implements java.io.Serializable {
     return result;
   }
 
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via"));
     p_window.append(" " + resources.getString("at") + " ");
     p_window.append(this.get_center().to_float());
@@ -213,10 +236,11 @@ public class Via extends DrillItem implements java.io.Serializable {
     p_window.newline();
   }
 
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  @Override
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;

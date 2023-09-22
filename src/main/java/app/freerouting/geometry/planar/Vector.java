@@ -1,13 +1,15 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
  * Abstract class describing functionality of Vectors. Vectors are used for translating Points in
  * the plane.
  */
-public abstract class Vector implements java.io.Serializable {
+public abstract class Vector implements Serializable {
 
   /** Standard implementation of the zero vector . */
   public static final IntVector ZERO = new IntVector(0, 0);
@@ -22,7 +24,7 @@ public abstract class Vector implements java.io.Serializable {
   }
 
   /**
-   * Creates a 2-dimensinal Vector from the 3 input values. If p_z != 0 it correspondents to the
+   * Creates a 2-dimensional Vector from the 3 input values. If p_z != 0 it correspondents to the
    * Vector in the plane with rational number coordinates (p_x / p_z, p_y / p_z).
    */
   public static Vector get_instance(BigInteger p_x, BigInteger p_y, BigInteger p_z) {
@@ -97,7 +99,7 @@ public abstract class Vector implements java.io.Serializable {
   /** Mirrors this vector at the y axis. */
   public abstract Vector mirror_at_y_axis();
 
-  /** returns an approximation of the euclidian length of this vector */
+  /** returns an approximation of the Euclidean length of this vector */
   public double length_approx() {
     return this.to_float().size();
   }
@@ -128,7 +130,7 @@ public abstract class Vector implements java.io.Serializable {
   }
 
   /** Returns an approximation vector of this vector with the same direction and length p_length. */
-  public abstract Vector change_length_approx(double p_lenght);
+  public abstract Vector change_length_approx(double p_length);
 
   abstract Direction to_normalized_direction();
 

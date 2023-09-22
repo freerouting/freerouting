@@ -2,9 +2,10 @@ package app.freerouting.gui;
 
 import app.freerouting.rules.ClearanceMatrix;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 /** A Combo Box with an item for each clearance class of the board. */
-public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.ClearanceClass> {
+public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClass> {
 
   private ClearanceClass[] class_arr;
 
@@ -25,7 +26,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
     for (int i = 0; i < this.class_arr.length; ++i) {
       this.class_arr[i] = new ClearanceClass(p_new_clearance_matrix.get_name(i), i);
     }
-    this.setModel(new javax.swing.DefaultComboBoxModel<>(this.class_arr));
+    this.setModel(new DefaultComboBoxModel<>(this.class_arr));
     this.setSelectedIndex(Math.min(old_index, this.class_arr.length - 1));
   }
 
@@ -49,6 +50,7 @@ public class ComboBoxClearance extends javax.swing.JComboBox<ComboBoxClearance.C
       this.index = p_index;
     }
 
+    @Override
     public String toString() {
       return name;
     }

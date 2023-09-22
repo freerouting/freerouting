@@ -1,6 +1,10 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.ConductionArea;
+import app.freerouting.geometry.planar.Area;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 
 /** Class for reading and writing plane scopes from dsn-files. */
 public class Plane extends ScopeKeyword {
@@ -11,15 +15,15 @@ public class Plane extends ScopeKeyword {
   }
 
   public static void write_scope(
-      WriteScopeParameter p_par, app.freerouting.board.ConductionArea p_conduction)
-      throws java.io.IOException {
+      WriteScopeParameter p_par, ConductionArea p_conduction)
+      throws IOException {
     int net_count = p_conduction.net_count();
     if (net_count != 1) {
       FRLogger.warn("Plane.write_scope: unexpected net count");
       return;
     }
     String net_name = p_par.board.rules.nets.get(p_conduction.get_net_no(0)).name;
-    app.freerouting.geometry.planar.Area curr_area = p_conduction.get_area();
+    Area curr_area = p_conduction.get_area();
     int layer_no = p_conduction.get_layer();
     app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[layer_no];
     Layer plane_layer = new Layer(board_layer.name, layer_no, board_layer.is_signal);
@@ -46,14 +50,15 @@ public class Plane extends ScopeKeyword {
     p_par.file.end_scope();
   }
 
+  @Override
   public boolean read_scope(ReadScopeParameter p_par) {
     // read the net name
-    String net_name = null;
+    String net_name;
     boolean skip_window_scopes =
         p_par.host_cad != null && p_par.host_cad.equalsIgnoreCase("allegro");
     // Cadence Allegro cutouts the pins on power planes, which leads to performance problems
     // when dividing a conduction area into convex pieces.
-    Shape.ReadAreaScopeResult conduction_area = null;
+    Shape.ReadAreaScopeResult conduction_area;
     try {
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {
@@ -63,7 +68,7 @@ public class Plane extends ScopeKeyword {
       net_name = (String) next_token;
       conduction_area =
           Shape.read_area_scope(p_par.scanner, p_par.layer_structure, skip_window_scopes);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Plane.read_scope: IO error scanning file", e);
       return false;
     }

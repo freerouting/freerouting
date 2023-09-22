@@ -1,7 +1,10 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.Item;
+import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -44,19 +47,19 @@ public class Package {
   public static Package read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     try {
       boolean is_front = true;
-      Collection<Shape> outline = new LinkedList<Shape>();
-      Collection<Shape.ReadAreaScopeResult> keepouts = new LinkedList<Shape.ReadAreaScopeResult>();
+      Collection<Shape> outline = new LinkedList<>();
+      Collection<Shape.ReadAreaScopeResult> keepouts = new LinkedList<>();
       Collection<Shape.ReadAreaScopeResult> via_keepouts =
-          new LinkedList<Shape.ReadAreaScopeResult>();
+          new LinkedList<>();
       Collection<Shape.ReadAreaScopeResult> place_keepouts =
-          new LinkedList<Shape.ReadAreaScopeResult>();
+          new LinkedList<>();
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
         FRLogger.warn("Package.read_scope: String expected");
         return null;
       }
       String package_name = (String) next_token;
-      Collection<PinInfo> pin_info_list = new LinkedList<PinInfo>();
+      Collection<PinInfo> pin_info_list = new LinkedList<>();
       for (; ; ) {
         Object prev_token = next_token;
         next_token = p_scanner.next_token();
@@ -121,7 +124,7 @@ public class Package {
       }
       return new Package(
           package_name, pin_info_arr, outline, keepouts, via_keepouts, place_keepouts, is_front);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Package.read_scope: IO error scanning file", e);
       return null;
     }
@@ -129,7 +132,7 @@ public class Package {
 
   public static void write_scope(
       WriteScopeParameter p_par, app.freerouting.library.Package p_package)
-      throws java.io.IOException {
+      throws IOException {
     p_par.file.start_scope();
     p_par.file.write("image ");
     p_par.identifier_type.write(p_package.name, p_par.file);
@@ -146,7 +149,7 @@ public class Package {
       app.freerouting.library.Package.Pin curr_pin = p_package.get_pin(i);
       p_par.file.new_line();
       p_par.file.write("(pin ");
-      app.freerouting.library.Padstack curr_padstack =
+      Padstack curr_padstack =
           p_par.board.library.padstacks.get(curr_pin.padstack_no);
       p_par.identifier_type.write(curr_padstack.name, p_par.file);
       p_par.file.write(" ");
@@ -154,12 +157,12 @@ public class Package {
       double[] rel_coor = p_par.coordinate_transform.board_to_dsn(curr_pin.relative_location);
       for (int j = 0; j < rel_coor.length; ++j) {
         p_par.file.write(" ");
-        p_par.file.write((Double.valueOf(rel_coor[j])).toString());
+        p_par.file.write(String.valueOf(rel_coor[j]));
       }
       int rotation = (int) Math.round(curr_pin.rotation_in_degree);
       if (rotation != 0) {
         p_par.file.write("(rotate ");
-        p_par.file.write((Integer.valueOf(rotation)).toString());
+        p_par.file.write(String.valueOf(rotation));
         p_par.file.write(")");
       }
       p_par.file.write(")");
@@ -187,7 +190,7 @@ public class Package {
       app.freerouting.library.Package.Keepout p_keepout,
       WriteScopeParameter p_par,
       boolean p_is_via_keepout)
-      throws java.io.IOException {
+      throws IOException {
     Layer keepout_layer;
     if (p_keepout.layer >= 0) {
       app.freerouting.board.Layer board_layer = p_par.board.layer_structure.arr[p_keepout.layer];
@@ -226,16 +229,12 @@ public class Package {
     try {
       // Read the padstack name.
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-      String padstack_name = null;
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof String) {
-        padstack_name = (String) next_token;
-      } else if (next_token instanceof Integer) {
-        padstack_name = ((Integer) next_token).toString();
-      } else {
+      if (!(next_token instanceof String) && !(next_token instanceof Integer)) {
         FRLogger.warn("Package.read_pin_info: String or Integer expected");
         return null;
       }
+      String padstack_name = next_token.toString();
       double rotation = 0;
 
       p_scanner.yybegin(
@@ -253,23 +252,19 @@ public class Package {
         next_token = p_scanner.next_token();
       }
       // Read the pin name.
-      String pin_name = null;
-      if (next_token instanceof String) {
-        pin_name = (String) next_token;
-      } else if (next_token instanceof Integer) {
-        pin_name = ((Integer) next_token).toString();
-      } else {
+      if (!(next_token instanceof String) && !(next_token instanceof Integer)) {
         FRLogger.warn("Package.read_pin_info: String or Integer expected");
         return null;
       }
+      String pin_name = next_token.toString();
 
       double[] pin_coor = new double[2];
       for (int i = 0; i < 2; ++i) {
         next_token = p_scanner.next_token();
         if (next_token instanceof Double) {
-          pin_coor[i] = ((Double) next_token).doubleValue();
+          pin_coor[i] = (Double) next_token;
         } else if (next_token instanceof Integer) {
-          pin_coor[i] = ((Integer) next_token).intValue();
+          pin_coor[i] = (Integer) next_token;
         } else {
           FRLogger.warn("Package.read_pin_info: number expected");
           return null;
@@ -297,7 +292,7 @@ public class Package {
         }
       }
       return new PinInfo(padstack_name, pin_name, pin_coor, rotation);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Package.read_pin_info: IO error while scanning file", e);
       return null;
     }
@@ -308,9 +303,9 @@ public class Package {
     try {
       Object next_token = p_scanner.next_token();
       if (next_token instanceof Integer) {
-        result = ((Integer) next_token).intValue();
+        result = (Integer) next_token;
       } else if (next_token instanceof Double) {
-        result = ((Double) next_token).doubleValue();
+        result = (Double) next_token;
       } else {
         FRLogger.warn("Package.read_rotation: number expected");
       }
@@ -319,7 +314,7 @@ public class Package {
       if (next_token != Keyword.CLOSED_BRACKET) {
         FRLogger.warn("Package.read_rotation: closing bracket expected");
       }
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       FRLogger.error("Package.read_rotation: IO error while scanning file", e);
     }
     return result;
@@ -328,7 +323,7 @@ public class Package {
   /** Writes the placements of p_package to a Specctra dsn-file. */
   public static void write_placement_scope(
       WriteScopeParameter p_par, app.freerouting.library.Package p_package)
-      throws java.io.IOException {
+      throws IOException {
     Collection<Item> board_items = p_par.board.get_items();
     boolean component_found = false;
     for (int i = 1; i <= p_par.board.components.count(); ++i) {
@@ -336,9 +331,7 @@ public class Package {
       if (curr_component.get_package() == p_package) {
         // check, if not all items of the component are deleted
         boolean undeleted_item_found = false;
-        Iterator<Item> it = board_items.iterator();
-        while (it.hasNext()) {
-          Item curr_item = it.next();
+        for (Item curr_item : board_items) {
           if (curr_item.get_component_no() == curr_component.no) {
             undeleted_item_found = true;
             break;
@@ -361,7 +354,7 @@ public class Package {
     }
   }
 
-  private static boolean read_placement_side(IJFlexScanner p_scanner) throws java.io.IOException {
+  private static boolean read_placement_side(IJFlexScanner p_scanner) throws IOException {
     Object next_token = p_scanner.next_token();
     boolean result = (next_token != Keyword.BACK);
 

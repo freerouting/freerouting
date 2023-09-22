@@ -13,8 +13,10 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.library.Package;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+
+import javax.swing.JPopupMenu;
+import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,16 +38,14 @@ public class CopyItemState extends InteractiveState {
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
-    item_list = new LinkedList<Item>();
+    item_list = new LinkedList<>();
 
     start_position = p_location.round();
     current_layer = p_board_handling.settings.layer;
     layer_changed = false;
     current_position = start_position;
     previous_position = current_position;
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       if (curr_item instanceof DrillItem || curr_item instanceof ObstacleArea) {
         Item new_item = curr_item.copy(0);
         item_list.add(new_item);
@@ -63,7 +63,7 @@ public class CopyItemState extends InteractiveState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    if (p_item_list.size() == 0) {
+    if (p_item_list.isEmpty()) {
       return null;
     }
     p_board_handling.remove_ratsnest(); // copying an item may change the connectivity.
@@ -71,7 +71,7 @@ public class CopyItemState extends InteractiveState {
         p_location, p_item_list, p_parent_state, p_board_handling, p_activityReplayFile);
   }
 
-  /** Creates a new padstack from p_old_pastack with a layer range starting at p_new_layer. */
+  /** Creates a new padstack from p_old_padstack with a layer range starting at p_new_layer. */
   private static Padstack change_padstack_layers(
       Padstack p_old_padstack,
       int p_new_layer,
@@ -100,6 +100,7 @@ public class CopyItemState extends InteractiveState {
     return new_padstack;
   }
 
+  @Override
   public InteractiveState mouse_moved() {
     super.mouse_moved();
     change_position(hdlg.get_current_mouse_position());
@@ -111,9 +112,7 @@ public class CopyItemState extends InteractiveState {
     current_position = p_new_position.round();
     if (!current_position.equals(previous_position)) {
       Vector translate_vector = current_position.difference_by(previous_position);
-      Iterator<app.freerouting.board.Item> it = item_list.iterator();
-      while (it.hasNext()) {
-        app.freerouting.board.Item curr_item = it.next();
+      for (Item curr_item : item_list) {
         curr_item.translate_by(translate_vector);
       }
       previous_position = current_position;
@@ -122,6 +121,7 @@ public class CopyItemState extends InteractiveState {
   }
 
   /** Changes the first layer of the items in the copy list to p_new_layer. */
+  @Override
   public boolean change_layer_action(int p_new_layer) {
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.CHANGE_LAYER, p_new_layer);
@@ -141,14 +141,12 @@ public class CopyItemState extends InteractiveState {
       return;
     }
     Map<Padstack, Padstack> padstack_pairs =
-        new TreeMap<Padstack, Padstack>(); // Contains old and new padstacks after layer change.
+        new TreeMap<>(); // Contains old and new padstacks after layer change.
 
     RoutingBoard board = hdlg.get_routing_board();
     if (layer_changed) {
       // create new via padstacks
-      Iterator<Item> it = item_list.iterator();
-      while (it.hasNext()) {
-        Item curr_ob = it.next();
+      for (Item curr_ob : item_list) {
         if (curr_ob instanceof Via) {
           Via curr_via = (Via) curr_ob;
           Padstack new_padstack =
@@ -160,24 +158,22 @@ public class CopyItemState extends InteractiveState {
     // Copy the components of the old items and assign the new items to the copied components.
 
     // Contains the old and new id no of a copied component.
-    Map<Integer, Integer> cmp_no_pairs = new TreeMap<Integer, Integer>();
+    Map<Integer, Integer> cmp_no_pairs = new TreeMap<>();
 
     // Contains the new created components after copying.
-    Collection<Component> copied_components = new LinkedList<Component>();
+    Collection<Component> copied_components = new LinkedList<>();
 
     Vector translate_vector = current_position.difference_by(start_position);
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       int curr_cmp_no = curr_item.get_component_no();
       if (curr_cmp_no > 0) {
         // This item belongs to a component
         int new_cmp_no;
-        Integer curr_key = Integer.valueOf(curr_cmp_no);
+        Integer curr_key = curr_cmp_no;
         if (cmp_no_pairs.containsKey(curr_key)) {
           // the new component for this pin is already created
           Integer curr_value = cmp_no_pairs.get(curr_key);
-          new_cmp_no = curr_value.intValue();
+          new_cmp_no = curr_value;
         } else {
           Component old_component = board.components.get(curr_cmp_no);
           if (old_component == null) {
@@ -217,16 +213,14 @@ public class CopyItemState extends InteractiveState {
                   new_package);
           copied_components.add(new_component);
           new_cmp_no = new_component.no;
-          cmp_no_pairs.put(Integer.valueOf(curr_cmp_no), Integer.valueOf(new_cmp_no));
+          cmp_no_pairs.put(curr_cmp_no, new_cmp_no);
         }
         curr_item.assign_component_no(new_cmp_no);
       }
     }
     boolean all_items_inserted = true;
-    it = item_list.iterator();
     boolean first_time = true;
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       if (curr_item.board != null && curr_item.clearance_violation_count() == 0) {
         if (first_time) {
           // make the current situation restorable by undo
@@ -252,24 +246,25 @@ public class CopyItemState extends InteractiveState {
     hdlg.repaint();
   }
 
+  @Override
   public InteractiveState left_button_clicked(FloatPoint p_location) {
     insert();
     return this;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_location) {
     change_position(p_location);
     insert();
     return this;
   }
 
-  public void draw(java.awt.Graphics p_graphics) {
+  @Override
+  public void draw(Graphics p_graphics) {
     if (item_list == null) {
       return;
     }
-    Iterator<Item> it = item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : item_list) {
       curr_item.draw(
           p_graphics,
           hdlg.graphics_context,
@@ -278,7 +273,8 @@ public class CopyItemState extends InteractiveState {
     }
   }
 
-  public javax.swing.JPopupMenu get_popup_menu() {
+  @Override
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_copy;
   }
 }

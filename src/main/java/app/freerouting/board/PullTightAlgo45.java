@@ -13,6 +13,8 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 
+import java.util.Collection;
+
 class PullTightAlgo45 extends PullTightAlgo {
 
   /** Creates a new instance of PullTight90 */
@@ -32,13 +34,11 @@ class PullTightAlgo45 extends PullTightAlgo {
         p_keep_point_layer);
   }
 
+  @Override
   Polyline pull_tight(Polyline p_polyline) {
     Polyline new_result = avoid_acid_traps(p_polyline);
     Polyline prev_result = null;
-    while (new_result != prev_result) {
-      if (this.is_stop_requested()) {
-        break;
-      }
+    while (new_result != prev_result && !this.is_stop_requested()) {
       prev_result = new_result;
       Polyline tmp1 = reduce_corners(prev_result);
       Polyline tmp2 = smoothen_corners(tmp1);
@@ -211,13 +211,10 @@ class PullTightAlgo45 extends PullTightAlgo {
       return p_polyline;
     }
     Point[] adjusted_corners = new Point[new_corner_count + 2];
-    for (int i = 0; i < new_corner_count; ++i) {
-      adjusted_corners[i] = new_corners[i];
-    }
+    System.arraycopy(new_corners, 0, adjusted_corners, 0, new_corner_count);
     adjusted_corners[new_corner_count] = curr_corner[1];
     adjusted_corners[new_corner_count + 1] = curr_corner[2];
-    Polyline result = new Polyline(adjusted_corners);
-    return result;
+    return new Polyline(adjusted_corners);
   }
 
   /**
@@ -310,7 +307,7 @@ class PullTightAlgo45 extends PullTightAlgo {
   }
 
   /**
-   * Smoothens with a short axis parrallel line to remove a non integer corner of two intersecting
+   * Smoothens with a short axis parallel line to remove a non integer corner of two intersecting
    * diagonal lines. Returns null, if that is not possible.
    */
   private Line smoothen_non_integer_corner(Line[] p_line_arr, int p_no) {
@@ -325,7 +322,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     FloatPoint curr_corner = prev_line.intersection_approx(next_line);
     FloatPoint prev_corner = prev_line.intersection_approx(p_line_arr[p_no - 1]);
     FloatPoint next_corner = next_line.intersection_approx(p_line_arr[p_no + 2]);
-    Line result = null;
+    Line result;
     int new_x = 0;
     int new_y = 0;
     boolean new_line_is_vertical = false;
@@ -347,7 +344,7 @@ class PullTightAlgo45 extends PullTightAlgo {
       new_y = (int) Math.floor(curr_corner.y);
       new_line_is_horizontal = true;
     }
-    Direction new_line_dir = null;
+    Direction new_line_dir;
     if (new_line_is_vertical) {
       if (prev_corner.y < next_corner.y) {
         new_line_dir = Direction.UP;
@@ -459,6 +456,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     return result;
   }
 
+  @Override
   Polyline smoothen_start_corner_at_trace(PolylineTrace p_trace) {
     boolean acute_angle = false;
     boolean bend = false;
@@ -477,7 +475,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     Direction line_direction = trace_polyline.arr[1].direction();
     Direction prev_line_direction = trace_polyline.arr[2].direction();
 
-    java.util.Collection<Item> contact_list = p_trace.get_start_contacts();
+    Collection<Item> contact_list = p_trace.get_start_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed()) {
         Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();
@@ -541,36 +539,31 @@ class PullTightAlgo45 extends PullTightAlgo {
           translate_dist = -translate_dist;
         }
         Line add_line = translate_line.translate(translate_dist);
-        // constract the new trace polyline.
+        // construct the new trace polyline.
         Line[] new_lines = new Line[trace_polyline.arr.length + 1];
         new_lines[0] = other_trace_line;
         new_lines[1] = add_line;
-        for (int i = 2; i < new_lines.length; ++i) {
-          new_lines[i] = trace_polyline.arr[i - 1];
-        }
+        System.arraycopy(trace_polyline.arr, 1, new_lines, 2, new_lines.length - 2);
         return new Polyline(new_lines);
       }
     } else if (bend) {
       Line[] check_line_arr = new Line[trace_polyline.arr.length + 1];
       check_line_arr[0] = other_prev_trace_line;
       check_line_arr[1] = other_trace_line;
-      for (int i = 2; i < check_line_arr.length; ++i) {
-        check_line_arr[i] = trace_polyline.arr[i - 1];
-      }
+      System.arraycopy(trace_polyline.arr, 1, check_line_arr, 2, check_line_arr.length - 2);
       Line new_line = reposition_line(check_line_arr, 2);
       if (new_line != null) {
         Line[] new_lines = new Line[trace_polyline.arr.length];
         new_lines[0] = other_trace_line;
         new_lines[1] = new_line;
-        for (int i = 2; i < new_lines.length; ++i) {
-          new_lines[i] = trace_polyline.arr[i];
-        }
+        System.arraycopy(trace_polyline.arr, 2, new_lines, 2, new_lines.length - 2);
         return new Polyline(new_lines);
       }
     }
     return null;
   }
 
+  @Override
   Polyline smoothen_end_corner_at_trace(PolylineTrace p_trace) {
     boolean acute_angle = false;
     boolean bend = false;
@@ -591,7 +584,7 @@ class PullTightAlgo45 extends PullTightAlgo {
     Direction prev_line_direction =
         trace_polyline.arr[trace_polyline.arr.length - 3].direction().opposite();
 
-    java.util.Collection<Item> contact_list = p_trace.get_end_contacts();
+    Collection<Item> contact_list = p_trace.get_end_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed()) {
         Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();
@@ -655,28 +648,22 @@ class PullTightAlgo45 extends PullTightAlgo {
           translate_dist = -translate_dist;
         }
         Line add_line = translate_line.translate(translate_dist);
-        // constract the new trace polyline.
+        // construct the new trace polyline.
         Line[] new_lines = new Line[trace_polyline.arr.length + 1];
-        for (int i = 0; i < trace_polyline.arr.length - 1; ++i) {
-          new_lines[i] = trace_polyline.arr[i];
-        }
+        System.arraycopy(trace_polyline.arr, 0, new_lines, 0, trace_polyline.arr.length - 1);
         new_lines[new_lines.length - 2] = add_line;
         new_lines[new_lines.length - 1] = other_trace_line;
         return new Polyline(new_lines);
       }
     } else if (bend) {
       Line[] check_line_arr = new Line[trace_polyline.arr.length + 1];
-      for (int i = 0; i < trace_polyline.arr.length - 1; ++i) {
-        check_line_arr[i] = trace_polyline.arr[i];
-      }
+      System.arraycopy(trace_polyline.arr, 0, check_line_arr, 0, trace_polyline.arr.length - 1);
       check_line_arr[check_line_arr.length - 2] = other_trace_line;
       check_line_arr[check_line_arr.length - 1] = other_prev_trace_line;
       Line new_line = reposition_line(check_line_arr, trace_polyline.arr.length - 2);
       if (new_line != null) {
         Line[] new_lines = new Line[trace_polyline.arr.length];
-        for (int i = 0; i < new_lines.length - 2; ++i) {
-          new_lines[i] = trace_polyline.arr[i];
-        }
+        System.arraycopy(trace_polyline.arr, 0, new_lines, 0, new_lines.length - 2);
         new_lines[new_lines.length - 2] = new_line;
         new_lines[new_lines.length - 1] = other_trace_line;
         return new Polyline(new_lines);

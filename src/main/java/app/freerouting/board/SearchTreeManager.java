@@ -18,7 +18,7 @@ public class SearchTreeManager {
   /** Creates a new instance of SearchTreeManager */
   public SearchTreeManager(BasicBoard p_board) {
     board = p_board;
-    compensated_search_trees = new LinkedList<ShapeSearchTree>();
+    compensated_search_trees = new LinkedList<>();
     default_tree = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, p_board, 0);
     compensated_search_trees.add(default_tree);
     this.clearance_compensation_used = false;
@@ -99,13 +99,8 @@ public class SearchTreeManager {
   /** Actions to be done, when a value in the clearance matrix is changed interactively. */
   public void clearance_value_changed() {
     // delete all trees except the default tree
-    Iterator<ShapeSearchTree> it = this.compensated_search_trees.iterator();
-    while (it.hasNext()) {
-      ShapeSearchTree curr_tree = it.next();
-      if (curr_tree.compensated_clearance_class_no != default_tree.compensated_clearance_class_no) {
-        it.remove();
-      }
-    }
+    this.compensated_search_trees.removeIf(
+        t -> t.compensated_clearance_class_no != default_tree.compensated_clearance_class_no);
     if (this.clearance_compensation_used) {
       remove_all_board_items();
       insert_all_board_items();
@@ -165,19 +160,13 @@ public class SearchTreeManager {
 
   // ********************************************************************************
 
-  // The following functions are used internally for perfomance improvement.
+  // The following functions are used internally for performance improvement.
 
   // ********************************************************************************
 
   /** Clears all compensated trees used in the autoroute algorithm apart from the default tree. */
   public void reset_compensated_trees() {
-    Iterator<ShapeSearchTree> it = this.compensated_search_trees.iterator();
-    while (it.hasNext()) {
-      ShapeSearchTree curr_tree = it.next();
-      if (curr_tree != default_tree) {
-        it.remove();
-      }
-    }
+    this.compensated_search_trees.removeIf(t -> t != default_tree);
   }
 
   /** Reinsert all items into the search trees */
@@ -265,9 +254,9 @@ public class SearchTreeManager {
   }
 
   /**
-   * Trannsfers tree entries from p_from_trace to p_start and p_end_piece after a moddle piece was
+   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a middle piece was
    * cut out. Special implementation for ShapeTraceEntries.fast_cutout_trace for performance
-   * reasoms.
+   * reasons.
    */
   void reuse_entries_after_cutout(
       PolylineTrace p_from_trace, PolylineTrace p_start_piece, PolylineTrace p_end_piece) {

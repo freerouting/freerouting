@@ -1,46 +1,65 @@
 package app.freerouting.gui;
 
+import app.freerouting.interactive.BoardHandling;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
+import java.util.ResourceBundle;
+
 /** Window with the parameters for moving components. */
 public class WindowMoveParameter extends BoardSavableSubWindow {
 
-  private final app.freerouting.interactive.BoardHandling board_handling;
-  private final javax.swing.JFormattedTextField horizontal_grid_field;
-  private final javax.swing.JFormattedTextField vertical_grid_field;
-  private final javax.swing.JRadioButton zoom_button;
-  private final javax.swing.JRadioButton rotate_button;
+  private final BoardHandling board_handling;
+  private final JFormattedTextField horizontal_grid_field;
+  private final JFormattedTextField vertical_grid_field;
+  private final JRadioButton zoom_button;
+  private final JRadioButton rotate_button;
   private boolean key_input_completed = true;
   /** Creates a new instance of WindowMoveParameter */
   public WindowMoveParameter(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle(
+    ResourceBundle resources =
+        ResourceBundle.getBundle(
             "app.freerouting.gui.WindowMoveParameter", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
     // create main panel
 
-    final javax.swing.JPanel main_panel = new javax.swing.JPanel();
+    final JPanel main_panel = new JPanel();
     this.add(main_panel);
-    java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
+    GridBagLayout gridbag = new GridBagLayout();
     main_panel.setLayout(gridbag);
-    java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-    gridbag_constraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridbag_constraints.insets = new java.awt.Insets(1, 10, 1, 10);
+    GridBagConstraints gridbag_constraints = new GridBagConstraints();
+    gridbag_constraints.anchor = GridBagConstraints.WEST;
+    gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
-    // Create label and number field for the horizontal and verical component grid
+    // Create label and number field for the horizontal and vertical component grid
 
     gridbag_constraints.gridwidth = 2;
-    javax.swing.JLabel horizontal_grid_label =
-        new javax.swing.JLabel(resources.getString("horizontal_component_grid"));
+    JLabel horizontal_grid_label =
+        new JLabel(resources.getString("horizontal_component_grid"));
     gridbag.setConstraints(horizontal_grid_label, gridbag_constraints);
     main_panel.add(horizontal_grid_label);
 
-    java.text.NumberFormat number_format =
-        java.text.NumberFormat.getInstance(p_board_frame.get_locale());
+    NumberFormat number_format =
+        NumberFormat.getInstance(p_board_frame.get_locale());
     number_format.setMaximumFractionDigits(7);
-    this.horizontal_grid_field = new javax.swing.JFormattedTextField(number_format);
+    this.horizontal_grid_field = new JFormattedTextField(number_format);
     this.horizontal_grid_field.setColumns(5);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(horizontal_grid_field, gridbag_constraints);
     main_panel.add(horizontal_grid_field);
     set_horizontal_grid_field(this.board_handling.settings.get_horizontal_component_grid());
@@ -48,42 +67,42 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     horizontal_grid_field.addFocusListener(new HorizontalGridFieldFocusListener());
 
     gridbag_constraints.gridwidth = 2;
-    javax.swing.JLabel vertical_grid_label =
-        new javax.swing.JLabel(resources.getString("vertical_component_grid"));
+    JLabel vertical_grid_label =
+        new JLabel(resources.getString("vertical_component_grid"));
     gridbag.setConstraints(vertical_grid_label, gridbag_constraints);
     main_panel.add(vertical_grid_label);
 
-    this.vertical_grid_field = new javax.swing.JFormattedTextField(number_format);
+    this.vertical_grid_field = new JFormattedTextField(number_format);
     this.vertical_grid_field.setColumns(5);
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(vertical_grid_field, gridbag_constraints);
     main_panel.add(vertical_grid_field);
     set_vertical_grid_field(this.board_handling.settings.get_vertical_component_grid());
     vertical_grid_field.addKeyListener(new VerticalGridFieldKeyListener());
     vertical_grid_field.addFocusListener(new VerticalGridFieldFocusListener());
 
-    javax.swing.JLabel separator =
-        new javax.swing.JLabel("  –––––––––––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator =
+        new JLabel("  –––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     // add label and button group for the wheel function.
 
-    javax.swing.JLabel wheel_function_label =
-        new javax.swing.JLabel(resources.getString("wheel_function"));
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
+    JLabel wheel_function_label =
+        new JLabel(resources.getString("wheel_function"));
+    gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(wheel_function_label, gridbag_constraints);
     main_panel.add(wheel_function_label);
     wheel_function_label.setToolTipText(resources.getString("wheel_function_tooltip"));
 
-    this.zoom_button = new javax.swing.JRadioButton(resources.getString("zoom"));
-    this.rotate_button = new javax.swing.JRadioButton(resources.getString("rotate"));
+    this.zoom_button = new JRadioButton(resources.getString("zoom"));
+    this.rotate_button = new JRadioButton(resources.getString("rotate"));
 
     zoom_button.addActionListener(new ZoomButtonListener());
     rotate_button.addActionListener(new RotateButtonListener());
 
-    javax.swing.ButtonGroup button_group = new javax.swing.ButtonGroup();
+    ButtonGroup button_group = new ButtonGroup();
     button_group.add(zoom_button);
     button_group.add(rotate_button);
     if (this.board_handling.settings.get_zoom_with_wheel()) {
@@ -92,7 +111,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
       rotate_button.setSelected(true);
     }
 
-    gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
     gridbag.setConstraints(zoom_button, gridbag_constraints);
     main_panel.add(zoom_button, gridbag_constraints);
@@ -124,8 +143,9 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class HorizontalGridFieldKeyListener extends java.awt.event.KeyAdapter {
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+  private class HorizontalGridFieldKeyListener extends KeyAdapter {
+    @Override
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
         Object input = horizontal_grid_field.getValue();
@@ -146,8 +166,9 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class HorizontalGridFieldFocusListener implements java.awt.event.FocusListener {
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+  private class HorizontalGridFieldFocusListener implements FocusListener {
+    @Override
+    public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
         set_horizontal_grid_field(board_handling.settings.get_horizontal_component_grid());
@@ -155,11 +176,13 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
       }
     }
 
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    @Override
+    public void focusGained(FocusEvent p_evt) {}
   }
 
-  private class VerticalGridFieldKeyListener extends java.awt.event.KeyAdapter {
-    public void keyTyped(java.awt.event.KeyEvent p_evt) {
+  private class VerticalGridFieldKeyListener extends KeyAdapter {
+    @Override
+    public void keyTyped(KeyEvent p_evt) {
       if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
         Object input = vertical_grid_field.getValue();
@@ -180,8 +203,9 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class VerticalGridFieldFocusListener implements java.awt.event.FocusListener {
-    public void focusLost(java.awt.event.FocusEvent p_evt) {
+  private class VerticalGridFieldFocusListener implements FocusListener {
+    @Override
+    public void focusLost(FocusEvent p_evt) {
       if (!key_input_completed) {
         // restore the text field.
         set_vertical_grid_field(board_handling.settings.get_vertical_component_grid());
@@ -189,17 +213,20 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
       }
     }
 
-    public void focusGained(java.awt.event.FocusEvent p_evt) {}
+    @Override
+    public void focusGained(FocusEvent p_evt) {}
   }
 
-  private class ZoomButtonListener implements java.awt.event.ActionListener {
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+  private class ZoomButtonListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_zoom_with_wheel(true);
     }
   }
 
-  private class RotateButtonListener implements java.awt.event.ActionListener {
-    public void actionPerformed(java.awt.event.ActionEvent p_evt) {
+  private class RotateButtonListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_zoom_with_wheel(false);
     }
   }

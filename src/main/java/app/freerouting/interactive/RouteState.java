@@ -4,22 +4,30 @@ import app.freerouting.board.ConductionArea;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
+import app.freerouting.board.Layer;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
+import java.util.TreeSet;
 
 /** Interactive routing state. */
 public class RouteState extends InteractiveState {
 
-  protected Route route = null;
+  protected Route route;
   protected boolean observers_activated = false;
-  private Set<Item> routing_target_set = null;
+  private Set<Item> routing_target_set;
 
   /**
    * Creates a new instance of RouteState If p_logfile != null, the creation of the route is stored
@@ -44,7 +52,7 @@ public class RouteState extends InteractiveState {
     if (!(p_parent_state instanceof MenuState)) {
       FRLogger.warn("RouteState.get_instance: unexpected parent state");
     }
-    p_board_handling.display_layer_messsage();
+    p_board_handling.display_layer_message();
     IntPoint location = p_location.round();
     Item picked_item = start_ok(location, p_board_handling);
     if (picked_item == null) {
@@ -55,21 +63,21 @@ public class RouteState extends InteractiveState {
       return null;
     }
     int[] route_net_no_arr;
-    if (picked_item instanceof app.freerouting.board.Pin && net_count > 1) {
-      // tie pin, remove nets, which are already conneccted to this pin on the current layer.
+    if (picked_item instanceof Pin && net_count > 1) {
+      // tie pin, remove nets, which are already connected to this pin on the current layer.
       route_net_no_arr =
           get_route_net_numbers_at_tie_pin(
-              (app.freerouting.board.Pin) picked_item, p_board_handling.settings.layer);
+              (Pin) picked_item, p_board_handling.settings.layer);
     } else {
       route_net_no_arr = new int[net_count];
       for (int i = 0; i < net_count; ++i) {
         route_net_no_arr[i] = picked_item.get_net_no(i);
       }
     }
-    if (route_net_no_arr.length <= 0) {
+    if (route_net_no_arr.length == 0) {
       return null;
     }
-    app.freerouting.board.RoutingBoard routing_board = p_board_handling.get_routing_board();
+    RoutingBoard routing_board = p_board_handling.get_routing_board();
     int[] trace_half_widths = new int[routing_board.get_layer_count()];
     boolean[] layer_active_arr = new boolean[trace_half_widths.length];
     for (int i = 0; i < trace_half_widths.length; ++i) {
@@ -123,7 +131,7 @@ public class RouteState extends InteractiveState {
       return null;
     }
 
-    app.freerouting.rules.Net curr_net = routing_board.rules.nets.get(route_net_no_arr[0]);
+    Net curr_net = routing_board.rules.nets.get(route_net_no_arr[0]);
     if (curr_net == null) {
       return null;
     }
@@ -165,14 +173,12 @@ public class RouteState extends InteractiveState {
       routing_board.start_notify_observers();
     }
     p_board_handling.repaint();
-    if (new_instance != null) {
-      if (new_instance.activityReplayFile != null) {
-        new_instance.activityReplayFile.start_scope(
-            ActivityReplayFileScope.CREATING_TRACE, p_location);
-        p_board_handling.hide_ratsnest();
-      }
-      new_instance.display_default_message();
+    if (new_instance.activityReplayFile != null) {
+      new_instance.activityReplayFile.start_scope(
+          ActivityReplayFileScope.CREATING_TRACE, p_location);
+      p_board_handling.hide_ratsnest();
     }
+    new_instance.display_default_message();
     return new_instance;
   }
 
@@ -181,7 +187,7 @@ public class RouteState extends InteractiveState {
    * routing at p_location, or null, if no such item was found.
    */
   protected static Item start_ok(IntPoint p_location, BoardHandling p_hdlg) {
-    app.freerouting.board.RoutingBoard routing_board = p_hdlg.get_routing_board();
+    RoutingBoard routing_board = p_hdlg.get_routing_board();
 
     /*
      * look if an already existing trace ends at p_start_corner
@@ -237,11 +243,11 @@ public class RouteState extends InteractiveState {
   }
 
   /**
-   * get nets of p_tie_pin except nets of traces, which are already conneccted to this pin on
+   * get nets of p_tie_pin except nets of traces, which are already connected to this pin on
    * p_layer.
    */
-  static int[] get_route_net_numbers_at_tie_pin(app.freerouting.board.Pin p_pin, int p_layer) {
-    Set<Integer> net_number_list = new java.util.TreeSet<Integer>();
+  static int[] get_route_net_numbers_at_tie_pin(Pin p_pin, int p_layer) {
+    Set<Integer> net_number_list = new TreeSet<>();
     for (int i = 0; i < p_pin.net_count(); ++i) {
       net_number_list.add(p_pin.get_net_no(i));
     }
@@ -262,22 +268,24 @@ public class RouteState extends InteractiveState {
     return result;
   }
 
+  @Override
   public InteractiveState process_logfile_point(FloatPoint p_point) {
     return add_corner(p_point);
   }
 
   /** Action to be taken when a key is pressed (Shortcut). */
+  @Override
   public InteractiveState key_typed(char p_key_char) {
     InteractiveState curr_return_state = this;
     if (Character.isDigit(p_key_char)) {
       // change to the p_key_char-ths signal layer
-      app.freerouting.board.LayerStructure layer_structure =
+      LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int d = Character.digit(p_key_char, 10);
       d = Math.min(d, layer_structure.signal_layer_count());
       // Board layers start at 0, keyboard input for layers starts at 1.
       d = Math.max(d - 1, 0);
-      app.freerouting.board.Layer new_layer = layer_structure.get_signal_layer(d);
+      Layer new_layer = layer_structure.get_signal_layer(d);
       d = layer_structure.get_no(new_layer);
 
       if (d >= 0) {
@@ -285,30 +293,24 @@ public class RouteState extends InteractiveState {
       }
     } else if (p_key_char == '+') {
       // change to the next signal layer
-      app.freerouting.board.LayerStructure layer_structure =
+      LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int current_layer_no = hdlg.settings.layer;
-      for (; ; ) {
+      do {
         ++current_layer_no;
-        if (current_layer_no >= layer_structure.arr.length
-            || layer_structure.arr[current_layer_no].is_signal) {
-          break;
-        }
-      }
+      } while (current_layer_no < layer_structure.arr.length
+          && !layer_structure.arr[current_layer_no].is_signal);
       if (current_layer_no < layer_structure.arr.length) {
         change_layer_action(current_layer_no);
       }
     } else if (p_key_char == '-') {
-      // change to the to the previous signal layer
-      app.freerouting.board.LayerStructure layer_structure =
+      // change to the previous signal layer
+      LayerStructure layer_structure =
           hdlg.get_routing_board().layer_structure;
       int current_layer_no = hdlg.settings.layer;
-      for (; ; ) {
+      do {
         --current_layer_no;
-        if (current_layer_no < 0 || layer_structure.arr[current_layer_no].is_signal) {
-          break;
-        }
-      }
+      } while (current_layer_no >= 0 && !layer_structure.arr[current_layer_no].is_signal);
       if (current_layer_no >= 0) {
         change_layer_action(current_layer_no);
       }
@@ -352,6 +354,7 @@ public class RouteState extends InteractiveState {
     return result;
   }
 
+  @Override
   public InteractiveState cancel() {
     Trace tail =
         hdlg.get_routing_board()
@@ -383,6 +386,7 @@ public class RouteState extends InteractiveState {
     return this.return_state;
   }
 
+  @Override
   public boolean change_layer_action(int p_new_layer) {
     boolean result = true;
     if (p_new_layer >= 0 && p_new_layer < hdlg.get_routing_board().get_layer_count()) {
@@ -472,15 +476,17 @@ public class RouteState extends InteractiveState {
     return result;
   }
 
-  public void draw(java.awt.Graphics p_graphics) {
+  @Override
+  public void draw(Graphics p_graphics) {
     if (route != null) {
       route.draw(p_graphics, hdlg.graphics_context);
     }
   }
 
+  @Override
   public void display_default_message() {
     if (route != null) {
-      app.freerouting.rules.Net curr_net =
+      Net curr_net =
           hdlg.get_routing_board().rules.nets.get(route.net_no_arr[0]);
       hdlg.screen_messages.set_status_message(
           resources.getString("routing_net") + " " + curr_net.name);

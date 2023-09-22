@@ -97,8 +97,9 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
     return result;
   }
 
+  @Override
   protected Collection<FloatPoint> calculate_next_trace_corners() {
-    Collection<FloatPoint> result = new LinkedList<FloatPoint>();
+    Collection<FloatPoint> result = new LinkedList<>();
 
     if (this.current_to_door_index > this.current_target_door_index) {
       return result;
@@ -196,7 +197,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       if (curr_to_info.next_room != null) {
         Simplex next_room_shape = curr_to_info.next_room.get_shape().to_Simplex();
         // with IntBox or IntOctagon the next calculation will not work, because they have
-        // border lines of lenght 0.
+        // border lines of length 0.
         FloatPoint[] nearest_points =
             next_room_shape.nearest_border_points_approx(nearest_to_door_point, 2);
         if (nearest_points.length >= 2) {

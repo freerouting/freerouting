@@ -7,12 +7,15 @@ import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.ShapeSearchTree45Degree;
 import app.freerouting.board.ShapeSearchTree90Degree;
 import app.freerouting.board.TestLevel;
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -46,9 +49,9 @@ public class AutorouteEngine {
   /** To stop the expansion algorithm after a time limit is exceeded. */
   private TimeLimit time_limit;
   /** The list of incomplete expansion rooms on the routing board */
-  private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms = null;
+  private List<IncompleteFreeSpaceExpansionRoom> incomplete_expansion_rooms;
   /** The list of complete expansion rooms on the routing board */
-  private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms = null;
+  private List<CompleteFreeSpaceExpansionRoom> complete_expansion_rooms;
   /** The count of expansion rooms created so far */
   private int expansion_room_instance_count = 0;
 
@@ -98,7 +101,7 @@ public class AutorouteEngine {
     this.time_limit = p_time_limit;
   }
 
-  /* Autoroutes a connection between p_start_set and p_dest_set.
+  /** Autoroutes a connection between p_start_set and p_dest_set.
    * Returns ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
    */
   public AutorouteResult autoroute_connection(
@@ -227,8 +230,8 @@ public class AutorouteEngine {
 
   /** Draws the shapes of the expansion rooms created so far. */
   public void draw(
-      java.awt.Graphics p_graphics,
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context,
+      Graphics p_graphics,
+      GraphicsContext p_graphics_context,
       double p_intensity) {
     if (complete_expansion_rooms == null) {
       return;
@@ -264,7 +267,7 @@ public class AutorouteEngine {
   }
 
   /**
-   * Returns the first elemment in the list of incomplete expansion rooms or null, if the list is
+   * Returns the first element in the list of incomplete expansion rooms or null, if the list is
    * empty.
    */
   public IncompleteFreeSpaceExpansionRoom get_first_incomplete_expansion_room() {
@@ -295,22 +298,23 @@ public class AutorouteEngine {
     Collection<ExpansionDoor> room_doors = p_room.get_doors();
     for (ExpansionDoor curr_door : room_doors) {
       ExpansionRoom curr_neighbour = curr_door.other_room(p_room);
-      if (curr_neighbour != null) {
-        curr_neighbour.remove_door(curr_door);
-        TileShape neighbour_shape = curr_neighbour.get_shape();
-        TileShape intersection = room_shape.intersection(neighbour_shape);
-        if (intersection.dimension() == 1) {
-          // add a new incomplete room to curr_neighbour.
-          int[] touching_sides = room_shape.touching_sides(neighbour_shape);
-          Line[] line_arr = new Line[1];
-          line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
-          Simplex new_incomplete_room_shape = Simplex.get_instance(line_arr);
-          IncompleteFreeSpaceExpansionRoom new_incomplete_room =
-              add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
-          ExpansionDoor new_door = new ExpansionDoor(curr_neighbour, new_incomplete_room, 1);
-          curr_neighbour.add_door(new_door);
-          new_incomplete_room.add_door(new_door);
-        }
+      if (curr_neighbour == null) {
+        continue;
+      }
+      curr_neighbour.remove_door(curr_door);
+      TileShape neighbour_shape = curr_neighbour.get_shape();
+      TileShape intersection = room_shape.intersection(neighbour_shape);
+      if (intersection.dimension() == 1) {
+        // add a new incomplete room to curr_neighbour.
+        int[] touching_sides = room_shape.touching_sides(neighbour_shape);
+        Line[] line_arr = new Line[1];
+        line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
+        Simplex new_incomplete_room_shape = Simplex.get_instance(line_arr);
+        IncompleteFreeSpaceExpansionRoom new_incomplete_room =
+            add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
+        ExpansionDoor new_door = new ExpansionDoor(curr_neighbour, new_incomplete_room, 1);
+        curr_neighbour.add_door(new_door);
+        new_incomplete_room.add_door(new_door);
       }
     }
     this.remove_all_doors(p_room);
@@ -348,10 +352,8 @@ public class AutorouteEngine {
           this.autoroute_search_tree.complete_shape(
               p_room, this.net_no, ignore_object, from_door_shape);
       this.remove_incomplete_expansion_room(p_room);
-      Iterator<IncompleteFreeSpaceExpansionRoom> it = completed_shapes.iterator();
       boolean is_first_completed_room = true;
-      while (it.hasNext()) {
-        IncompleteFreeSpaceExpansionRoom curr_incomplete_room = it.next();
+      for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes) {
         if (curr_incomplete_room.get_shape().dimension() != 2) {
           continue;
         }
@@ -364,14 +366,12 @@ public class AutorouteEngine {
           }
         } else {
           // the shape of the first completed room may have changed and may
-          // intersect now with the other shapes. Therefore the completed shapes
+          // intersect now with the other shapes. Therefore, the completed shapes
           // have to be recalculated.
           Collection<IncompleteFreeSpaceExpansionRoom> curr_completed_shapes =
               this.autoroute_search_tree.complete_shape(
                   curr_incomplete_room, this.net_no, ignore_object, from_door_shape);
-          Iterator<IncompleteFreeSpaceExpansionRoom> it2 = curr_completed_shapes.iterator();
-          while (it2.hasNext()) {
-            IncompleteFreeSpaceExpansionRoom tmp_room = it2.next();
+          for (IncompleteFreeSpaceExpansionRoom tmp_room : curr_completed_shapes) {
             CompleteFreeSpaceExpansionRoom completed_room = this.add_complete_room(tmp_room);
             if (completed_room != null) {
               result.add(completed_room);
@@ -391,18 +391,15 @@ public class AutorouteEngine {
       IncompleteFreeSpaceExpansionRoom p_room) {
     CompleteFreeSpaceExpansionRoom completed_room =
         (CompleteFreeSpaceExpansionRoom) calculate_doors(p_room);
-    CompleteFreeSpaceExpansionRoom result;
-    if (completed_room != null && completed_room.get_shape().dimension() == 2) {
-      if (complete_expansion_rooms == null) {
-        complete_expansion_rooms = new LinkedList<>();
-      }
-      complete_expansion_rooms.add(completed_room);
-      this.autoroute_search_tree.insert(completed_room);
-      result = completed_room;
-    } else {
-      result = null;
+    if (completed_room == null || completed_room.get_shape().dimension() != 2) {
+      return null;
     }
-    return result;
+    if (complete_expansion_rooms == null) {
+      complete_expansion_rooms = new LinkedList<>();
+    }
+    complete_expansion_rooms.add(completed_room);
+    this.autoroute_search_tree.insert(completed_room);
+    return completed_room;
   }
 
   /**
@@ -422,37 +419,38 @@ public class AutorouteEngine {
   }
 
   /**
-   * Completes the shapes of the neigbour rooms of p_room, so that the doors of p_room will not
+   * Completes the shapes of the neighbour rooms of p_room, so that the doors of p_room will not
    * change later on.
    */
-  public void complete_neigbour_rooms(CompleteExpansionRoom p_room) {
+  public void complete_neighbour_rooms(CompleteExpansionRoom p_room) {
     if (p_room.get_doors() == null) {
       return;
     }
     Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
     while (it.hasNext()) {
       ExpansionDoor curr_door = it.next();
-      // cast to ExpansionRoom becaus ExpansionDoor.other_room works differently with
+      // cast to ExpansionRoom because ExpansionDoor.other_room works differently with
       // parameter type CompleteExpansionRoom.
       ExpansionRoom neighbour_room = curr_door.other_room((ExpansionRoom) p_room);
-      if (neighbour_room != null) {
-        if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom) {
-          this.complete_expansion_room((IncompleteFreeSpaceExpansionRoom) neighbour_room);
-          // restart reading because the doors have changed
-          it = p_room.get_doors().iterator();
-        } else if (neighbour_room instanceof ObstacleExpansionRoom) {
-          ObstacleExpansionRoom obstacle_neighbour_room = (ObstacleExpansionRoom) neighbour_room;
-          if (!obstacle_neighbour_room.all_doors_calculated()) {
-            this.calculate_doors(obstacle_neighbour_room);
-            obstacle_neighbour_room.set_doors_calculated(true);
-          }
+      if (neighbour_room == null) {
+        continue;
+      }
+      if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom) {
+        this.complete_expansion_room((IncompleteFreeSpaceExpansionRoom) neighbour_room);
+        // restart reading because the doors have changed
+        it = p_room.get_doors().iterator();
+      } else if (neighbour_room instanceof ObstacleExpansionRoom) {
+        ObstacleExpansionRoom obstacle_neighbour_room = (ObstacleExpansionRoom) neighbour_room;
+        if (!obstacle_neighbour_room.all_doors_calculated()) {
+          this.calculate_doors(obstacle_neighbour_room);
+          obstacle_neighbour_room.set_doors_calculated(true);
         }
       }
     }
   }
 
   /**
-   * Invalidates all drill pages intersecting with p_shape, so the they must be recalculated at the
+   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the
    * next call of get_ddrills()
    */
   public void invalidate_drill_pages(TileShape p_shape) {
@@ -461,16 +459,14 @@ public class AutorouteEngine {
 
   /** Removes all doors from p_room */
   void remove_all_doors(ExpansionRoom p_room) {
-
-    Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
-    while (it.hasNext()) {
-      ExpansionDoor curr_door = it.next();
+    for (ExpansionDoor curr_door : p_room.get_doors()) {
       ExpansionRoom other_room = curr_door.other_room(p_room);
-      if (other_room != null) {
-        other_room.remove_door(curr_door);
-        if (other_room instanceof IncompleteFreeSpaceExpansionRoom) {
-          this.remove_incomplete_expansion_room((IncompleteFreeSpaceExpansionRoom) other_room);
-        }
+      if (other_room == null) {
+        continue;
+      }
+      other_room.remove_door(curr_door);
+      if (other_room instanceof IncompleteFreeSpaceExpansionRoom) {
+        this.remove_incomplete_expansion_room((IncompleteFreeSpaceExpansionRoom) other_room);
       }
     }
     p_room.clear_doors();
@@ -511,7 +507,7 @@ public class AutorouteEngine {
   }
 
   /**
-   * Reset all doors for autorouting the next connnection, in case the autorouting database is
+   * Reset all doors for autorouting the next connection, in case the autorouting database is
    * retained.
    */
   private void reset_all_doors() {
@@ -532,11 +528,10 @@ public class AutorouteEngine {
   }
 
   protected int generate_room_id_no() {
-    ++expansion_room_instance_count;
-    return expansion_room_instance_count;
+    return ++expansion_room_instance_count;
   }
 
-  /** The pussible results of autorouting a connection */
+  /** The possible results of autorouting a connection */
   public enum AutorouteResult {
     ALREADY_CONNECTED,
     ROUTED,

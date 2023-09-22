@@ -20,10 +20,13 @@ import app.freerouting.rules.BoardRules;
 import java.awt.Graphics;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -36,7 +39,7 @@ import java.util.TreeSet;
  * inserting, deleting, modifying and picking items and elementary checking functions. A board may
  * have one or several layers.
  */
-public class BasicBoard implements java.io.Serializable {
+public class BasicBoard implements Serializable {
 
   /** List of items inserted into this board */
   public final UndoableObjects item_list;
@@ -142,6 +145,7 @@ public class BasicBoard implements java.io.Serializable {
     return null;
   }
 
+  @Override
   public BasicBoard clone() {
     return deserialize(this.serialize(false));
   }
@@ -703,7 +707,7 @@ public class BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * Returns the pin with the input component number and pin number, or null, if no such pinn
+   * Returns the pin with the input component number and pin number, or null, if no such pin
    * exists.
    */
   public Pin get_pin(int p_component_no, int p_pin_no) {
@@ -729,9 +733,7 @@ public class BasicBoard implements java.io.Serializable {
    */
   public boolean remove_items(Collection<Item> p_item_list, boolean p_with_delete_fixed) {
     boolean result = true;
-    Iterator<Item> it = p_item_list.iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : p_item_list) {
       if (!p_with_delete_fixed && curr_item.is_delete_fixed() || curr_item.is_user_fixed()) {
         result = false;
       } else {
@@ -873,14 +875,14 @@ public class BasicBoard implements java.io.Serializable {
   public boolean normalize_traces(int p_net_no) throws Exception {
     boolean result = false;
     boolean something_changed = true;
-    Item curr_item = null;
+    Item curr_item;
     while (something_changed) {
       something_changed = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
       for (; ; ) {
         try {
           curr_item = (Item) item_list.read_object(it);
-        } catch (java.util.ConcurrentModificationException e) {
+        } catch (ConcurrentModificationException e) {
           something_changed = true;
           break;
         }
@@ -1150,7 +1152,7 @@ public class BasicBoard implements java.io.Serializable {
           if (curr_item.get_draw_priority() == curr_priority) {
             curr_item.draw(p_graphics, p_graphics_context);
           }
-        } catch (java.util.ConcurrentModificationException e) {
+        } catch (ConcurrentModificationException e) {
           // may happen when window are changed interactively while running a logfile
           return;
         }
@@ -1340,7 +1342,7 @@ public class BasicBoard implements java.io.Serializable {
       communication.observers.notify_deleted(curr_item);
       if (p_changed_nets != null) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
-          p_changed_nets.add(Integer.valueOf(curr_item.get_net_no(i)));
+          p_changed_nets.add(curr_item.get_net_no(i));
         }
       }
     }
@@ -1354,7 +1356,7 @@ public class BasicBoard implements java.io.Serializable {
       communication.observers.notify_new(curr_item);
       if (p_changed_nets != null) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
-          p_changed_nets.add(Integer.valueOf(curr_item.get_net_no(i)));
+          p_changed_nets.add(curr_item.get_net_no(i));
         }
       }
     }
@@ -1375,7 +1377,7 @@ public class BasicBoard implements java.io.Serializable {
     while (it.hasNext()) {
       Item curr_item = (Item) it.next();
       search_tree_manager.remove(curr_item);
-      // let the observers syncronize the deletion
+      // let the observers synchronize the deletion
       communication.observers.notify_deleted(curr_item);
       if (p_changed_nets != null) {
         for (int i = 0; i < curr_item.net_count(); ++i) {
@@ -1421,9 +1423,7 @@ public class BasicBoard implements java.io.Serializable {
   public Trace get_trace_tail(Point p_location, int p_layer, int[] p_net_no_arr) {
     TileShape point_shape = TileShape.get_instance(p_location);
     Collection<SearchTreeObject> found_items = overlapping_objects(point_shape, p_layer);
-    Iterator<SearchTreeObject> it = found_items.iterator();
-    while (it.hasNext()) {
-      SearchTreeObject curr_ob = it.next();
+    for (SearchTreeObject curr_ob : found_items) {
       if (curr_ob instanceof Trace) {
         Trace curr_trace = (Trace) curr_ob;
         if (!curr_trace.nets_equal(p_net_no_arr)) {
@@ -1431,13 +1431,13 @@ public class BasicBoard implements java.io.Serializable {
         }
         if (curr_trace.first_corner().equals(p_location)) {
           Collection<Item> contacts = curr_trace.get_start_contacts();
-          if (contacts.size() == 0) {
+          if (contacts.isEmpty()) {
             return curr_trace;
           }
         }
         if (curr_trace.last_corner().equals(p_location)) {
           Collection<Item> contacts = curr_trace.get_end_contacts();
-          if (contacts.size() == 0) {
+          if (contacts.isEmpty()) {
             return curr_trace;
           }
         }
@@ -1459,8 +1459,8 @@ public class BasicBoard implements java.io.Serializable {
     }
     // Remove tails at the endpoints after removing the cycle,
     // if there was no tail before.
-    boolean[] tail_at_endpoint_before = null;
-    Point[] end_corners = null;
+    boolean[] tail_at_endpoint_before;
+    Point[] end_corners;
     int curr_layer = p_trace.get_layer();
     int[] curr_net_no_arr = p_trace.net_no_arr;
     end_corners = new Point[2];
@@ -1485,7 +1485,7 @@ public class BasicBoard implements java.io.Serializable {
   }
 
   /**
-   * If != RELEASE_VERSION,, some features may be used, which are still in experimental state. Also
+   * If != RELEASE_VERSION, some features may be used, which are still in experimental state. Also,
    * warnings for debugging may be printed depending on the test_level.
    */
   public TestLevel get_test_level() {
@@ -1497,14 +1497,12 @@ public class BasicBoard implements java.io.Serializable {
     this.test_level = p_value;
   }
 
-  private void readObject(java.io.ObjectInputStream p_stream)
-      throws java.io.IOException, java.lang.ClassNotFoundException {
+  private void readObject(ObjectInputStream p_stream)
+      throws IOException, ClassNotFoundException {
     p_stream.defaultReadObject();
     // insert the items on the board into the search trees
     search_tree_manager = new SearchTreeManager(this);
-    Iterator<Item> it = this.get_items().iterator();
-    while (it.hasNext()) {
-      Item curr_item = it.next();
+    for (Item curr_item : this.get_items()) {
       curr_item.board = this;
       search_tree_manager.insert(curr_item);
     }

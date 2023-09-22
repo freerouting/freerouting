@@ -1,7 +1,13 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.Item;
+import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+
+import java.awt.geom.Point2D;
+import java.util.Collection;
 
 /**
  * Enumeration class defining scopes in a logfile, Each Object of the class must implement the
@@ -27,7 +33,7 @@ public abstract class ActivityReplayFileScope {
       new SetManualTraceClearanceClassScope("set_manual_trace_clearance_class");
   public static final ActivityReplayFileScope SET_MANUAL_TRACE_HALF_WIDTH =
       new SetManualTraceHalfWidthScope("set_manual_trace_half_width");
-  public static final ActivityReplayFileScope SET_MANUAL_TRACEWITH_SELECTION =
+  public static final ActivityReplayFileScope SET_MANUAL_TRACEWIDTH_SELECTION =
       new SetManualTraceWidthSelectionScope("set_manual_tracewidth_selection");
   public static final ActivityReplayFileScope SET_PULL_TIGHT_ACCURACY =
       new SetPullTightAccuracyScope("set_pull_tight_accuracy");
@@ -78,7 +84,7 @@ public abstract class ActivityReplayFileScope {
       new DeleteSelectedScope("delete_selected");
   public static final ActivityReplayFileScope CUTOUT_ROUTE = new CutoutRouteScope("cutout_route");
   public static final ActivityReplayFileScope OPTIMIZE_SELECTED =
-      new OptimizeSelectedScope("optmize_selected");
+      new OptimizeSelectedScope("optimize_selected");
   public static final ActivityReplayFileScope AUTOROUTE_SELECTED =
       new AutorouteSelectedScope("autoroute_selected");
   public static final ActivityReplayFileScope FANOUT_SELECTED =
@@ -126,7 +132,7 @@ public abstract class ActivityReplayFileScope {
     SET_LAYER,
     SET_MANUAL_TRACE_CLEARANCE_CLASS,
     SET_MANUAL_TRACE_HALF_WIDTH,
-    SET_MANUAL_TRACEWITH_SELECTION,
+    SET_MANUAL_TRACEWIDTH_SELECTION,
     SET_SNAP_ANGLE,
     SET_SELECTABLE,
     SET_SELECT_ON_ALL_LAYER,
@@ -182,7 +188,7 @@ public abstract class ActivityReplayFileScope {
   /** Returns the LogfileScope with name p_name if it exists, else null. */
   public static ActivityReplayFileScope get_scope(String p_name) {
     for (int i = 0; i < arr.length; ++i) {
-      if (arr[i].name.compareTo(p_name) == 0) {
+      if (arr[i].name.equals(p_name)) {
         return arr[i];
       }
     }
@@ -213,6 +219,7 @@ public abstract class ActivityReplayFileScope {
      * Reads the next corner list scope together with its interior scopes (layer change for example)
      * from the input logfile. Returns the active interactive state after reading the scope.
      */
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -265,6 +272,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       return RouteState.get_instance(p_location, p_return_state, p_board_handling, null);
@@ -276,6 +284,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       return TileConstructionState.get_instance(p_location, p_return_state, p_board_handling, null);
@@ -287,6 +296,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       return CircleConstructionState.get_instance(
@@ -299,6 +309,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       return PolygonShapeConstructionState.get_instance(
@@ -311,6 +322,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       return HoleConstructionState.get_instance(p_location, p_return_state, p_board_handling, null);
@@ -322,6 +334,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       return DragItemState.get_instance(p_location, p_return_state, p_board_handling, null);
@@ -333,6 +346,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       return MakeSpaceState.get_instance(p_location, p_return_state, p_board_handling, null);
@@ -344,11 +358,12 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       InteractiveState result;
       if (p_return_state instanceof SelectedItemState) {
-        java.util.Collection<app.freerouting.board.Item> item_list =
+        Collection<Item> item_list =
             ((SelectedItemState) p_return_state).get_item_list();
         result =
             CopyItemState.get_instance(
@@ -366,11 +381,12 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState start_scope(
         FloatPoint p_location, InteractiveState p_return_state, BoardHandling p_board_handling) {
       InteractiveState result;
       if (p_return_state instanceof SelectedItemState) {
-        java.util.Collection<app.freerouting.board.Item> item_list =
+        Collection<Item> item_list =
             ((SelectedItemState) p_return_state).get_item_list();
         result =
             MoveItemState.get_instance(
@@ -382,6 +398,7 @@ public abstract class ActivityReplayFileScope {
       return result;
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -400,6 +417,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -420,6 +438,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -440,6 +459,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -459,6 +479,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -479,6 +500,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -494,6 +516,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -516,6 +539,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -538,6 +562,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -567,6 +592,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -574,7 +600,7 @@ public abstract class ActivityReplayFileScope {
       if (!(p_return_state instanceof SelectedItemState)) {
         FRLogger.warn("CutoutRouteScope.read_scope: electedItemState expected");
       }
-      java.util.Collection<app.freerouting.board.Item> item_list =
+      Collection<Item> item_list =
           ((SelectedItemState) p_return_state).get_item_list();
       FloatPoint lower_left = p_activityReplayFile.read_corner();
       if (lower_left == null) {
@@ -599,6 +625,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -620,6 +647,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -641,6 +669,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -662,6 +691,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -684,6 +714,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -707,6 +738,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -729,6 +761,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -750,6 +783,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -769,6 +803,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -788,6 +823,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -807,6 +843,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -826,6 +863,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -844,6 +882,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -862,6 +901,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -875,6 +915,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -888,6 +929,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -907,6 +949,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -922,6 +965,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -937,6 +981,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -952,6 +997,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -967,6 +1013,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -982,6 +1029,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -997,6 +1045,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1015,6 +1064,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1031,6 +1081,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1046,6 +1097,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1061,6 +1113,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1070,7 +1123,7 @@ public abstract class ActivityReplayFileScope {
           .get_routing_board()
           .rules
           .set_trace_angle_restriction(
-              app.freerouting.board.AngleRestriction.arr[new_snap_angle_no]);
+              AngleRestriction.valueOf(new_snap_angle_no));
       return p_return_state;
     }
   }
@@ -1080,6 +1133,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1095,6 +1149,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1110,14 +1165,15 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
         BoardHandling p_board_handling) {
       int item_type_no = p_activityReplayFile.read_int();
       int selection = p_activityReplayFile.read_int();
-      app.freerouting.board.ItemSelectionFilter.SelectableChoices item_type =
-          app.freerouting.board.ItemSelectionFilter.SelectableChoices.values()[item_type_no];
+      ItemSelectionFilter.SelectableChoices item_type =
+          ItemSelectionFilter.SelectableChoices.values()[item_type_no];
       if (selection == 0) {
         p_board_handling.settings.item_selection_filter.set_selected(item_type, false);
         if (p_return_state instanceof SelectedItemState) {
@@ -1135,6 +1191,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1150,6 +1207,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1165,6 +1223,7 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
@@ -1179,13 +1238,14 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
         BoardHandling p_board_handling) {
       FloatPoint curr_location = p_activityReplayFile.read_corner();
-      java.awt.geom.Point2D new_center =
-          new java.awt.geom.Point2D.Double(curr_location.x, curr_location.y);
+      Point2D new_center =
+          new Point2D.Double(curr_location.x, curr_location.y);
       p_board_handling.get_panel().center_display(new_center);
       return p_return_state;
     }
@@ -1196,14 +1256,15 @@ public abstract class ActivityReplayFileScope {
       super(p_name);
     }
 
+    @Override
     public InteractiveState read_scope(
         ActivityReplayFile p_activityReplayFile,
         InteractiveState p_return_state,
         BoardHandling p_board_handling) {
-      java.awt.geom.Point2D lower_left =
+      Point2D lower_left =
           p_board_handling.graphics_context.coordinate_transform.board_to_screen(
               p_activityReplayFile.read_corner());
-      java.awt.geom.Point2D upper_right =
+      Point2D upper_right =
           p_board_handling.graphics_context.coordinate_transform.board_to_screen(
               p_activityReplayFile.read_corner());
       p_board_handling.get_panel().zoom_frame(lower_left, upper_right);

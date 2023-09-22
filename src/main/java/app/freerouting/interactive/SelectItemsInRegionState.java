@@ -4,7 +4,7 @@ import app.freerouting.board.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
-import java.util.Iterator;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -36,7 +36,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    p_board_handling.display_layer_messsage();
+    p_board_handling.display_layer_message();
     SelectItemsInRegionState new_instance =
         new SelectItemsInRegionState(p_parent_state, p_board_handling, p_activityReplayFile);
     new_instance.corner1 = p_location;
@@ -48,6 +48,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
     return new_instance;
   }
 
+  @Override
   public InteractiveState complete() {
     if (!hdlg.is_board_read_only()) {
       hdlg.screen_messages.set_status_message("");
@@ -79,10 +80,8 @@ public class SelectItemsInRegionState extends SelectRegionState {
             hdlg.get_routing_board().overlapping_items(b, select_layer));
     if (hdlg.settings.select_on_all_visible_layers) {
       // remove items, which are not visible
-      Set<Item> visible_items = new TreeSet<Item>();
-      Iterator<Item> it = found_items.iterator();
-      while (it.hasNext()) {
-        Item curr_item = it.next();
+      Set<Item> visible_items = new TreeSet<>();
+      for (Item curr_item : found_items) {
         for (int i = curr_item.first_layer(); i <= curr_item.last_layer(); ++i) {
           if (hdlg.graphics_context.get_layer_visibility(i) > 0) {
             visible_items.add(curr_item);
@@ -92,7 +91,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
       }
       found_items = visible_items;
     }
-    boolean something_found = (found_items.size() > 0);
+    boolean something_found = (!found_items.isEmpty());
     if (something_found) {
       if (this.return_state instanceof SelectedItemState) {
         ((SelectedItemState) this.return_state).get_item_list().addAll(found_items);

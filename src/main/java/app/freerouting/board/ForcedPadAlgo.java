@@ -13,6 +13,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Class with functions for checking and inserting pads with eventually shoving aside obstacle
@@ -27,11 +28,11 @@ public class ForcedPadAlgo {
     board = p_board;
   }
 
-  private static TileShape calc_check_chape_for_from_side(
+  private static TileShape calc_check_shape_for_from_side(
       TileShape p_shape, Point p_shape_center, Line p_border_line) {
     FloatPoint shape_center = p_shape_center.to_float();
     FloatPoint offset_projection = shape_center.projection_approx(p_border_line);
-    // Make shure, that direction restrictions are retained.
+    // Make sure, that direction restrictions are retained.
     Line[] line_arr = new Line[3];
     Direction curr_dir = p_border_line.direction();
     line_arr[0] = new Line(p_shape_center, curr_dir);
@@ -41,7 +42,7 @@ public class ForcedPadAlgo {
     return check_line.offset_shape(1, 0);
   }
 
-  /** Checks, if p_line is in frone of p_pad_shape when shoving from p_from_side */
+  /** Checks, if p_line is in front of p_pad_shape when shoving from p_from_side */
   private static boolean in_front_of_pad(
       Line p_line, TileShape p_pad_shape, int p_from_side, int p_width, boolean p_with_sides) {
     if (!p_pad_shape.is_IntOctagon()) {
@@ -60,7 +61,7 @@ public class ForcedPadAlgo {
 
     boolean result;
     switch (p_from_side) {
-      case 0:
+      case 0 -> {
         result =
             Math.min(line_a.y, line_b.y) >= pad_octagon.uy + p_width
                 || Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
@@ -76,8 +77,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
                           >= pad_octagon.urx + diag_width;
         }
-        break;
-      case 1:
+      }
+      case 1 -> {
         result =
             Math.min(line_a.y, line_b.y) >= pad_octagon.uy + p_width
                 || Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
@@ -92,8 +93,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
                           >= pad_octagon.urx + diag_width;
         }
-        break;
-      case 2:
+      }
+      case 2 -> {
         result =
             Math.max(line_a.x, line_b.x) <= pad_octagon.lx - p_width
                 || Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
@@ -109,8 +110,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x - line_a.y, line_b.x - line_b.y)
                           <= pad_octagon.ulx - diag_width;
         }
-        break;
-      case 3:
+      }
+      case 3 -> {
         result =
             Math.max(line_a.x, line_b.x) <= pad_octagon.lx - p_width
                 || Math.max(line_a.y, line_b.y) <= pad_octagon.ly - p_width
@@ -125,8 +126,8 @@ public class ForcedPadAlgo {
                       && Math.max(line_a.x - line_a.y, line_b.x - line_b.y)
                           <= pad_octagon.ulx - diag_width;
         }
-        break;
-      case 4:
+      }
+      case 4 -> {
         result =
             Math.max(line_a.y, line_b.y) <= pad_octagon.ly - p_width
                 || Math.max(line_a.x + line_a.y, line_b.x + line_b.y)
@@ -142,8 +143,8 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
                           <= pad_octagon.llx - diag_width;
         }
-        break;
-      case 5:
+      }
+      case 5 -> {
         result =
             Math.max(line_a.y, line_b.y) <= pad_octagon.ly - p_width
                 || Math.min(line_a.x, line_b.x) >= pad_octagon.rx + p_width
@@ -158,8 +159,8 @@ public class ForcedPadAlgo {
                       && Math.max(line_a.x + line_a.y, line_b.x + line_b.y)
                           <= pad_octagon.llx - diag_width;
         }
-        break;
-      case 6:
+      }
+      case 6 -> {
         result =
             Math.min(line_a.x, line_b.x) >= pad_octagon.rx + p_width
                 || Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
@@ -175,8 +176,8 @@ public class ForcedPadAlgo {
                       && Math.max(line_a.x + line_a.y, line_b.x + line_b.y)
                           >= pad_octagon.urx + diag_width;
         }
-        break;
-      case 7:
+      }
+      case 7 -> {
         result =
             Math.min(line_a.y, line_b.y) >= pad_octagon.uy + p_width
                 || Math.min(line_a.x + line_a.y, line_b.x + line_b.y)
@@ -191,12 +192,11 @@ public class ForcedPadAlgo {
                       && Math.min(line_a.x - line_a.y, line_b.x - line_b.y)
                           >= pad_octagon.lrx + diag_width;
         }
-        break;
-      default:
-        {
-          FRLogger.warn("ForcedPadAlgo.in_front_of_pad: p_from_side out of range");
-          result = true;
-        }
+      }
+      default -> {
+        FRLogger.warn("ForcedPadAlgo.in_front_of_pad: p_from_side out of range");
+        result = true;
+      }
     }
 
     return result;
@@ -252,12 +252,12 @@ public class ForcedPadAlgo {
           MoveDrillItemAlgo.try_shove_via_points(
               p_pad_shape, p_layer, curr_shove_via, p_cl_type, false, board);
 
-      if (new_via_center.length <= 0) {
+      if (new_via_center.length == 0) {
         this.board.set_shove_failing_obstacle(curr_shove_via);
         return CheckDrillResult.NOT_DRILLABLE;
       }
       Vector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
-      Collection<Item> ignore_items = new java.util.LinkedList<Item>();
+      Collection<Item> ignore_items = new LinkedList<>();
       if (!MoveDrillItemAlgo.check(
           curr_shove_via,
           delta,
@@ -337,7 +337,7 @@ public class ForcedPadAlgo {
   /**
    * Shoves aside traces, so that a pad with the input parameters can be inserted without clearance
    * violations. Returns false, if the shove failed. In this case the database may be damaged, so
-   * that an undo becomes necessesary.
+   * that an undo becomes necessary.
    */
   boolean forced_pad(
       TileShape p_pad_shape,
@@ -470,7 +470,7 @@ public class ForcedPadAlgo {
     TileShape offset_shape = (TileShape) p_shape.offset(p_offset);
     for (int i = 0; i < offset_shape.border_line_count(); ++i) {
       TileShape check_shape =
-          calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
+          calc_check_shape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
 
       if (board.check_trace_shape(check_shape, p_layer, empty_arr, p_cl_class, null)) {
         return new CalcFromSide(i, null);
@@ -479,7 +479,7 @@ public class ForcedPadAlgo {
     // try second check without clearance
     for (int i = 0; i < offset_shape.border_line_count(); ++i) {
       TileShape check_shape =
-          calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
+          calc_check_shape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
       if (board.check_trace_shape(check_shape, p_layer, empty_arr, 0, null)) {
         return new CalcFromSide(i, null);
       }

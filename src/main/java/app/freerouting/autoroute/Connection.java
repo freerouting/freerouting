@@ -47,7 +47,7 @@ public class Connection {
       return precalculated_connection;
     }
     Set<Item> contacts = p_item.get_normal_contacts();
-    Set<Item> connection_items = new TreeSet<Item>();
+    Set<Item> connection_items = new TreeSet<>();
     connection_items.add(p_item);
 
     Point start_point = null;

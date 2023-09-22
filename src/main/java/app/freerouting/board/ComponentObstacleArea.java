@@ -1,7 +1,12 @@
 package app.freerouting.board;
 
+import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
+
+import java.awt.Color;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Describes areas of the board, where components are not allowed. */
 public class ComponentObstacleArea extends ObstacleArea {
@@ -36,6 +41,7 @@ public class ComponentObstacleArea extends ObstacleArea {
         p_board);
   }
 
+  @Override
   public Item copy(int p_id_no) {
     return new ComponentObstacleArea(
         get_relative_area(),
@@ -51,16 +57,19 @@ public class ComponentObstacleArea extends ObstacleArea {
         board);
   }
 
+  @Override
   public boolean is_obstacle(Item p_other) {
     return p_other != this
         && p_other instanceof ComponentObstacleArea
         && p_other.get_component_no() != this.get_component_no();
   }
 
+  @Override
   public boolean is_trace_obstacle(int p_net_no) {
     return false;
   }
 
+  @Override
   public boolean is_selected_by_filter(ItemSelectionFilter p_filter) {
     if (!this.is_selected_by_fixed_filter(p_filter)) {
       return false;
@@ -68,26 +77,22 @@ public class ComponentObstacleArea extends ObstacleArea {
     return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
   }
 
-  public java.awt.Color[] get_draw_colors(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+  @Override
+  public Color[] get_draw_colors(
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_place_obstacle_colors();
   }
 
+  @Override
   public double get_draw_intensity(
-      app.freerouting.boardgraphics.GraphicsContext p_graphics_context) {
+      GraphicsContext p_graphics_context) {
     return p_graphics_context.get_place_obstacle_color_intensity();
   }
 
-  public boolean is_selectrd_by_filter(ItemSelectionFilter p_filter) {
-    if (!this.is_selected_by_fixed_filter(p_filter)) {
-      return false;
-    }
-    return p_filter.is_selected(ItemSelectionFilter.SelectableChoices.COMPONENT_KEEPOUT);
-  }
-
-  public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale) {
-    java.util.ResourceBundle resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+  @Override
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    ResourceBundle resources =
+        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("component_keepout"));
     this.print_shape_info(p_window, p_locale);
     this.print_clearance_info(p_window, p_locale);

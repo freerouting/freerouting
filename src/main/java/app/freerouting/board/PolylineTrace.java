@@ -16,14 +16,19 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 /** Objects of class Trace, whose geometry is described by a Polyline */
-public class PolylineTrace extends Trace implements java.io.Serializable {
+public class PolylineTrace extends Trace implements Serializable {
 
   private static final int MAX_NORMALIZATION_DEPTH = 16;
   // primary data
@@ -55,6 +60,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     lines = p_polyline;
   }
 
+  @Override
   public Item copy(int p_id_no) {
     int[] curr_net_no_arr = new int[this.net_count()];
     for (int i = 0; i < curr_net_no_arr.length; ++i) {
@@ -73,6 +79,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
   }
 
   /** checks, if this trace is on layer p_layer */
+  @Override
   public boolean is_on_layer(int p_layer) {
     return get_layer() == p_layer;
   }
@@ -81,6 +88,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
    * returns the first corner of this trace, which is the intersection of the first and second lines
    * of its polyline
    */
+  @Override
   public Point first_corner() {
     return lines.corner(0);
   }
@@ -89,6 +97,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
    * returns the last corner of this trace, which is the intersection of the last two lines of its
    * polyline
    */
+  @Override
   public Point last_corner() {
     return lines.corner(lines.arr.length - 2);
   }
@@ -101,15 +110,18 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     return lines.arr.length - 1;
   }
 
+  @Override
   public double get_length() {
     return lines.length_approx();
   }
 
+  @Override
   public IntBox bounding_box() {
     IntBox result = this.lines.bounding_box();
     return result.offset(this.get_half_width());
   }
 
+  @Override
   public void draw(
       Graphics p_g, GraphicsContext p_graphics_context, Color[] p_color_arr, double p_intensity) {
     if (p_graphics_context == null) {
@@ -127,29 +139,35 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     return lines;
   }
 
+  @Override
   protected TileShape[] calculate_tree_shapes(ShapeSearchTree p_search_tree) {
     return p_search_tree.calculate_tree_shapes(this);
   }
 
   /** returns the count of tile shapes of this polyline */
+  @Override
   public int tile_shape_count() {
     return Math.max(lines.arr.length - 2, 0);
   }
 
+  @Override
   public void translate_by(Vector p_vector) {
     lines = lines.translate_by(p_vector);
     this.clear_derived_data();
   }
 
+  @Override
   public void turn_90_degree(int p_factor, IntPoint p_pole) {
     lines = lines.turn_90_degree(p_factor, p_pole);
     this.clear_derived_data();
   }
 
+  @Override
   public void rotate_approx(double p_angle_in_degree, FloatPoint p_pole) {
     this.lines = this.lines.rotate_approx(Math.toRadians(p_angle_in_degree), p_pole);
   }
 
+  @Override
   public void change_placement_side(IntPoint p_pole) {
     lines = lines.mirror_vertical(p_pole);
 
@@ -163,6 +181,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
    * Checks if other traces can be combined with this trace. Returns true, if something has been
    * combined. This trace will be the combined trace, so that only other traces may be deleted.
    */
+  @Override
   public boolean combine() {
     if (!this.is_on_the_board()) {
       return false;
@@ -186,8 +205,8 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
   }
 
   /**
-   * looks, if this trace can be combined at its first point with an other trace. Returns true, if
-   * something was combined. The corners of the other trace will be inserted in front of thie trace.
+   * looks, if this trace can be combined at its first point with another trace. Returns true, if
+   * something was combined. The corners of the other trace will be inserted in front of this trace.
    * In case of combine the other trace will be deleted and this trace will remain.
    */
   private boolean combine_at_start(boolean p_ignore_areas) {
@@ -195,12 +214,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     Collection<Item> contacts = get_normal_contacts(start_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
-      Iterator<Item> it = contacts.iterator();
-      while (it.hasNext()) {
-        if (it.next() instanceof ConductionArea) {
-          it.remove();
-        }
-      }
+      contacts.removeIf(c -> c instanceof ConductionArea);
     }
     if (contacts.size() != 1) {
       return false;
@@ -208,9 +222,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     PolylineTrace other_trace = null;
     boolean trace_found = false;
     boolean reverse_order = false;
-    Iterator<Item> it = contacts.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : contacts) {
       if (curr_ob instanceof PolylineTrace) {
         other_trace = (PolylineTrace) curr_ob;
         if (other_trace.get_layer() == get_layer()
@@ -259,7 +271,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     Polyline joined_polyline = new Polyline(new_lines);
     if (joined_polyline.arr.length != new_line_count) {
       // consecutive parallel lines where skipped at the join location
-      // combine without performance optimation
+      // combine without performance optimization
       board.search_tree_manager.remove(this);
       this.lines = joined_polyline;
       this.clear_derived_data();
@@ -288,7 +300,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
 
   /**
    * looks, if this trace can be combined at its last point with another trace. Returns true, if
-   * somthing was combined. The corners of the other trace will be inserted at the end of thie
+   * something was combined. The corners of the other trace will be inserted at the end of this
    * trace. In case of combine the other trace will be deleted and this trace will remain.
    */
   private boolean combine_at_end(boolean p_ignore_areas) {
@@ -296,12 +308,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     Collection<Item> contacts = get_normal_contacts(end_corner, false);
     if (p_ignore_areas) {
       // remove conduction areas from the list
-      Iterator<Item> it = contacts.iterator();
-      while (it.hasNext()) {
-        if (it.next() instanceof ConductionArea) {
-          it.remove();
-        }
-      }
+      contacts.removeIf(c -> c instanceof ConductionArea);
     }
     if (contacts.size() != 1) {
       return false;
@@ -309,9 +316,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     PolylineTrace other_trace = null;
     boolean trace_found = false;
     boolean reverse_order = false;
-    Iterator<Item> it = contacts.iterator();
-    while (it.hasNext()) {
-      Item curr_ob = it.next();
+    for (Item curr_ob : contacts) {
       if (curr_ob instanceof PolylineTrace) {
         other_trace = (PolylineTrace) curr_ob;
         if (other_trace.get_layer() == get_layer()
@@ -360,7 +365,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     Polyline joined_polyline = new Polyline(new_lines);
     if (joined_polyline.arr.length != new_line_count) {
       // consecutive parallel lines where skipped at the join location
-      // combine without performance optimation
+      // combine without performance optimization
       board.search_tree_manager.remove(this);
       this.clear_search_tree_entries();
       this.lines = joined_polyline;
@@ -392,11 +397,12 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
    * Looks up traces intersecting with this trace and splits them at the intersection points. In
    * case of an overlaps, the traces are split at their first and their last common point. Returns
    * the pieces resulting from splitting. Found cycles are removed. If nothing is split, the result
-   * will contain just this Trace. If p_clip_shape != null, the split may be resticted to
+   * will contain just this Trace. If p_clip_shape != null, the split may be restricted to
    * p_clip_shape.
    */
+  @Override
   public Collection<PolylineTrace> split(IntOctagon p_clip_shape) {
-    Collection<PolylineTrace> result = new LinkedList<PolylineTrace>();
+    Collection<PolylineTrace> result = new LinkedList<>();
     if (!this.nets_normal()) {
       // only normal nets are split
       result.add(this);
@@ -414,7 +420,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
       TileShape curr_shape = this.get_tree_shape(default_tree, i);
       LineSegment curr_line_segment = new LineSegment(this.lines, i + 1);
       Collection<ShapeSearchTree.TreeEntry> overlapping_tree_entries =
-          new LinkedList<ShapeSearchTree.TreeEntry>();
+          new LinkedList<>();
       // look for intersecting traces with the i-th line segment
       default_tree.overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
       Iterator<ShapeSearchTree.TreeEntry> it = overlapping_tree_entries.iterator();
@@ -440,7 +446,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
             if (lines.corner(i + 1).equals(lines.corner(found_entry.shape_index_in_object))) {
               continue;
             }
-          } else if (found_entry.shape_index_in_object < i) {
+          } else {
             if (lines.corner(found_entry.shape_index_in_object + 1).equals(lines.corner(i))) {
               continue;
             }
@@ -454,7 +460,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
           LineSegment found_line_segment =
               new LineSegment(found_trace.lines, found_entry.shape_index_in_object + 1);
           Line[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
-          Collection<PolylineTrace> split_pieces = new LinkedList<PolylineTrace>();
+          Collection<PolylineTrace> split_pieces = new LinkedList<>();
 
           // try splitting the found trace first
           boolean found_trace_split = false;
@@ -532,7 +538,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
         } else if (!this.is_user_fixed() && (found_item instanceof ConductionArea)) {
           boolean ignore_areas = false;
           if (this.net_no_arr.length > 0) {
-            app.freerouting.rules.Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
+            Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
             if (curr_net != null && curr_net.get_class() != null) {
               ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
             }
@@ -572,7 +578,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
       return false;
     }
     Point intersection = this.lines.arr[p_line_no].intersection(p_line);
-    java.util.Collection<Item> overlap_items =
+    Collection<Item> overlap_items =
         this.board.pick_items(intersection, this.get_layer(), null);
     boolean pad_found = false;
     for (Item curr_item : overlap_items) {
@@ -601,6 +607,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
    * nothing was splitted because for example p_point is not located on a line segment of the
    * p_polyline of this trace.
    */
+  @Override
   public Trace[] split(Point p_point) {
     for (int i = 0; i < this.lines.arr.length - 2; ++i) {
       LineSegment curr_line_segment = new LineSegment(this.lines, i + 1);
@@ -682,9 +689,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     }
     Collection<PolylineTrace> split_pieces = this.split(p_clip_shape);
     boolean result = (split_pieces.size() != 1);
-    Iterator<PolylineTrace> it = split_pieces.iterator();
-    while (it.hasNext()) {
-      PolylineTrace curr_split_trace = it.next();
+    for (PolylineTrace curr_split_trace : split_pieces) {
       if (curr_split_trace.is_on_the_board()) {
         boolean trace_combined = curr_split_trace.combine();
         if (curr_split_trace.corner_count() == 2
@@ -708,6 +713,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
    * Tries to shorten this trace without creating clearance violations Returns true, if the trace
    * was changed.
    */
+  @Override
   public boolean pull_tight(PullTightAlgo p_pull_tight_algo) {
     if (!this.is_on_the_board()) {
       // This trace may have been deleted in a trace split for example
@@ -817,20 +823,21 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     return pull_tight_algo.smoothen_end_corners_at_trace(this);
   }
 
+  @Override
   public TileShape get_trace_connection_shape(ShapeSearchTree p_search_tree, int p_index) {
     if (p_index < 0 || p_index >= this.tile_shape_count()) {
       FRLogger.warn("PolylineTrace.get_trace_connection_shape p_index out of range");
       return null;
     }
     LineSegment curr_line_segment = new LineSegment(this.lines, p_index + 1);
-    TileShape result = curr_line_segment.to_simplex().simplify();
-    return result;
+    return curr_line_segment.to_simplex().simplify();
   }
 
-  public boolean write(java.io.ObjectOutputStream p_stream) {
+  @Override
+  public boolean write(ObjectOutputStream p_stream) {
     try {
       p_stream.writeObject(this);
-    } catch (java.io.IOException e) {
+    } catch (IOException e) {
       return false;
     }
     return true;
@@ -846,7 +853,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
 
     board.additional_update_after_change(this);
 
-    // The precalculated tile shapes must not be cleared here here because they are used and
+    // The precalculated tile shapes must not be cleared here because they are used and
     // modified
     // in ShapeSearchTree.change_entries.
 
@@ -856,7 +863,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     // ShapeTree entries of the old trace in the changed trace
 
     // look for the first line in p_new_polyline different from
-    // the lines of the existung trace
+    // the lines of the existing trace
     int last_index = Math.min(p_new_polyline.arr.length, lines.arr.length);
     int index_of_first_different_line = last_index;
     for (int i = 0; i < last_index; ++i) {
@@ -866,10 +873,10 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
       }
     }
     if (index_of_first_different_line == last_index) {
-      return; // both polylines are equal, no change nessesary
+      return; // both polylines are equal, no change necessary
     }
     // look for the last line in p_new_polyline different from
-    // the lines of the existung trace
+    // the lines of the existing trace
     int index_of_last_different_line = -1;
     for (int i = 1; i <= last_index; ++i) {
       if (p_new_polyline.arr[p_new_polyline.arr.length - i] != lines.arr[lines.arr.length - i]) {
@@ -878,7 +885,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
       }
     }
     if (index_of_last_different_line < 0) {
-      return; // both polylines are equal, no change nessesary
+      return; // both polylines are equal, no change necessary
     }
     int keep_at_start_count = Math.max(index_of_first_different_line - 2, 0);
     int keep_at_end_count =
@@ -887,7 +894,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
         this, p_new_polyline, keep_at_start_count, keep_at_end_count);
     lines = p_new_polyline;
 
-    // let the observers syncronize the changes
+    // let the observers synchronize the changes
     board.communication.observers.notify_changed(this);
 
     IntOctagon clip_shape = null;
@@ -910,6 +917,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
    * start of this trace is checked, else the end. Returns false, if a pin is at that end, where the
    * connection is checked and the connection is not ok.
    */
+  @Override
   public boolean check_connection_to_pin(boolean p_at_start) {
     if (this.board == null) {
       return true;
@@ -1118,9 +1126,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
 
     Line[] cut_lines = new Line[trace_polyline.arr.length - latest_entry_tuple[0] + 1];
     cut_lines[0] = curr_lines[curr_lines.length - 2];
-    for (int i = 1; i < cut_lines.length; ++i) {
-      cut_lines[i] = trace_polyline.arr[latest_entry_tuple[0] + i - 1];
-    }
+    System.arraycopy(trace_polyline.arr, latest_entry_tuple[0], cut_lines, 1, cut_lines.length - 1);
     Polyline cut_polyline = new Polyline(cut_lines);
     Polyline changed_polyline;
     if (cut_polyline.first_corner().equals(cut_polyline.last_corner())) {
@@ -1133,7 +1139,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
     }
     this.change(changed_polyline);
 
-    // create an shove_fixed exit line.
+    // create a shove_fixed exit line.
     curr_lines = new Line[3];
     curr_lines[0] = new Line(pin_center, pin_exit_direction.turn_45_degree(2));
     curr_lines[1] = nearest_pin_exit_ray;
@@ -1150,7 +1156,7 @@ public class PolylineTrace extends Trace implements java.io.Serializable {
   }
 
   /**
-   * Looks, if an other pin connection restriction fits better than the current connection
+   * Looks, if another pin connection restriction fits better than the current connection
    * restriction and changes this trace in this case. If p_at_start, the start of the trace polygon
    * is changed, else the end. Returns true, if this trace was changed.
    */

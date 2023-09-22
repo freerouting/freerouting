@@ -1,17 +1,23 @@
 package app.freerouting.interactive;
 
+import app.freerouting.board.Unit;
+import app.freerouting.geometry.planar.FloatPoint;
+
 import javax.swing.JLabel;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /** Text fields to display messages on the screen. */
 public class ScreenMessages {
 
   private static final String empty_string = "            ";
-  private final java.util.ResourceBundle resources;
-  private final java.util.Locale locale;
+  private final ResourceBundle resources;
+  private final Locale locale;
   private final String active_layer_string;
   private final String target_layer_string;
-  /** The number format for displaying the trace lengtht */
-  private final java.text.NumberFormat number_format;
+  /** The number format for displaying the trace length */
+  private final NumberFormat number_format;
   private final JLabel add_field;
   private final JLabel status_field;
   private final JLabel layer_field;
@@ -25,9 +31,9 @@ public class ScreenMessages {
       JLabel p_add_field,
       JLabel p_layer_field,
       JLabel p_mouse_position,
-      java.util.Locale p_locale) {
+      Locale p_locale) {
     resources =
-        java.util.ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
+        ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
     locale = p_locale;
     active_layer_string = resources.getString("current_layer") + " ";
     target_layer_string = resources.getString("target_layer") + " ";
@@ -37,7 +43,7 @@ public class ScreenMessages {
     mouse_position = p_mouse_position;
     add_field.setText(empty_string);
 
-    this.number_format = java.text.NumberFormat.getInstance(p_locale);
+    this.number_format = NumberFormat.getInstance(p_locale);
     this.number_format.setMinimumFractionDigits(2);
     this.number_format.setMaximumFractionDigits(2);
   }
@@ -57,9 +63,9 @@ public class ScreenMessages {
   }
 
   public void set_interactive_autoroute_info(int p_found, int p_not_found, int p_items_to_go) {
-    Integer found = p_found;
-    Integer failed = p_not_found;
-    Integer items_to_go = p_items_to_go;
+    int found = p_found;
+    int failed = p_not_found;
+    int items_to_go = p_items_to_go;
     add_field.setText(resources.getString("to_route") + " " + items_to_go);
     layer_field.setText(
         resources.getString("found")
@@ -73,10 +79,10 @@ public class ScreenMessages {
 
   public void set_batch_autoroute_info(
       int p_items_to_go, int p_routed, int p_ripped, int p_failed) {
-    Integer ripped = p_ripped;
-    Integer routed = p_routed;
-    Integer items_to_go = p_items_to_go;
-    Integer failed = p_failed;
+    int ripped = p_ripped;
+    int routed = p_routed;
+    int items_to_go = p_items_to_go;
+    int failed = p_failed;
     add_field.setText(
         resources.getString("to_route")
             + " "
@@ -97,8 +103,8 @@ public class ScreenMessages {
   }
 
   public void set_batch_fanout_info(int p_pass_no, int p_components_to_go) {
-    Integer components_to_go = p_components_to_go;
-    Integer pass_no = Integer.valueOf(p_pass_no);
+    int components_to_go = p_components_to_go;
+    int pass_no = p_pass_no;
     add_field.setText(resources.getString("fanout_pass") + " " + pass_no + ": ");
     layer_field.setText(
         resources.getString("still")
@@ -108,11 +114,11 @@ public class ScreenMessages {
             + resources.getString("components"));
   }
 
-  public void set_post_route_info(int p_via_count, double p_trace_length) {
-    Integer via_count = p_via_count;
+  public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
+    int via_count = p_via_count;
     add_field.setText(resources.getString("via_count") + " " + via_count);
     layer_field.setText(
-        resources.getString("trace_length") + " " + this.number_format.format(p_trace_length / 1000.0) + " mm");
+        resources.getString("trace_length") + " " + this.number_format.format(p_trace_length) + " " + unit);
   }
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */
@@ -123,7 +129,7 @@ public class ScreenMessages {
     }
   }
 
-  public void set_mouse_position(app.freerouting.geometry.planar.FloatPoint p_pos) {
+  public void set_mouse_position(FloatPoint p_pos) {
     if (p_pos == null || this.mouse_position == null || this.write_protected) {
       return;
     }
