@@ -1,3 +1,5 @@
+import glob
+import json
 import os
 import platform
 import sys
@@ -14,39 +16,58 @@ import urllib.request
 import urllib.parse
 import tempfile
 
-jre_version = "17.0.7+7"
-
 def detect_os_architecture():
     os_name = platform.system().lower()
     architecture = platform.machine().lower()
-              
+
     # Windows 64-bit
     if (architecture == "amd64"):
         architecture = "x64"
 
     # Windows 32-bit
     if (architecture == "i386"):
-        architecture = "x86-32"
+        architecture = "x86"
 
     # Linux 64-bit
     if (architecture == "x86_64"):
         architecture = "x64"
-        
+
     # macOS 64-bit
     if (os_name == "darwin"):
-        os_name = "mac"        
+        os_name = "mac"
 
     return os_name, architecture
 
+    
+def check_latest_jre_version(os_name, architecture):
+    latest_jre_info_request = urllib.request.Request(
+        # Docs at https://api.adoptium.net/q/swagger-ui/
+        f"https://api.adoptium.net/v3/assets/latest/17/hotspot?image_type=jre&os={os_name}&architecture={architecture}",
+        headers={"User-Agent": ""}  # The server rejects requests with the default UA
+    )
+    jre_version_info = json.loads(urllib.request.urlopen(latest_jre_info_request).read())[0]
+    latest_jre_version = jre_version_info["version"]["semver"]
+    jre_url = jre_version_info['binary']["package"]["link"]
+    return latest_jre_version, jre_url
+    
+
 def get_local_java_executable_path(os_name):
-    # Build the Java executable full path
-    jre_folder = "jdk-"+jre_version+"-jre"  # Change this to the correct extracted folder name
-    jre_folder = os.path.join(tempfile.gettempdir(), jre_folder)
-    jre_path = os.path.abspath(jre_folder)    
-    if (os_name == "windows"):
-        java_exe_path = os.path.join(jre_path, "bin", "java.exe")
+    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-17.*.*+*-jre", "bin", "java")
+    if os_name == "windows":
+        java_exe_path += ".exe"
+        
+    java_found_exes = sorted(
+        [p for p in filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)) if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p)],
+        reverse=True,
+        key=lambda p: re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
+    )
+
+    if len(java_found_exes) >= 1:
+        java_exe_path = java_found_exes[0]
+        print(f"You already have a downloaded JRE ({java_exe_path}), we are going to use that.")        
     else:
-        java_exe_path = os.path.join(jre_path, "bin", "java")
+        java_exe_path = ""
+        
     return java_exe_path
 
 # Remove java offending characters
@@ -341,53 +362,46 @@ def get_java_version(javaPath):
     
 
 def download_progress_hook(count, block_size, total_size):
-    percent = int(count * block_size * 100 / total_size)
+    percent = count * block_size * 100 // total_size
     #sys.stdout.write(f"\rDownloading: {percent}%")
     #sys.stdout.flush()
 
-def download_with_progress_bar(url, output_path):
-    urllib.request.urlretrieve(url, output_path, reporthook=download_progress_hook)
+
+def download_with_progress_bar(url):
+    # Return temp filename
+    return urllib.request.urlretrieve(url, reporthook=download_progress_hook)[0]
 
 def install_java_jre_17():
     # Get platform information and the appropriate URL
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
     print(f"Architecture: {architecture}")
-    
-    java_exe_path = get_local_java_executable_path(os_name)
-    
-    # Don't do anything if we already have the neccessary Java executable
-    if (os.path.exists(java_exe_path)):
-        print(f"You already have a downloaded JRE, we are going to use that.")
-        return java_exe_path
-    
-    # Build the URL to the JRE archive
-    jre_url = "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-"+jre_version+"/OpenJDK17U-jre_"+architecture+"_"+os_name+"_hotspot_"+jre_version.replace("+", "_")
-    
-    if (os_name == "windows"):
-        # Download JRE 17 for Windows
-        jre_url = jre_url + ".zip"
-        file_name = "jre_17.zip"
+
+    local_java_exe = get_local_java_executable_path(os_name)
+
+    try:
+        jre_version, jre_url = check_latest_jre_version(os_name, architecture)
+    except Exception:
+        print("Couldn't connect to the server")
+        # Find all matching JRE 17
+        jre_version = "17.*.*+*"
+        jre_url = None
+        return local_java_exe
         
-    if (os_name == "linux"):
-        # Download JRE 17 for Linux
-        jre_url = jre_url + ".tar.gz"
-        file_name = "jre_17.tar.gz"
-    
-    if (os_name == "mac"):
-        # Download JRE 17 for Mac
-        jre_url = jre_url + ".tar.gz"
-        file_name = "jre_17.tar.gz"
+    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-{jre_version}-jre", "bin", "java")
+    if os_name == "windows":
+        java_exe_path += ".exe"      
+ 
+    if (local_java_exe >= java_exe_path):
+        print(f"You already have the latest Java JRE ({jre_version})")
+        return java_exe_path
+ 
+    if jre_url is None:
+        raise FileNotFoundError("Couldn't find a downloaded JRE")
 
-    file_name = os.path.join(tempfile.gettempdir(), file_name)
-
-    if os.path.exists(file_name):
-        print("We already have the Java JRE archive.")
-    else:
-        jre_url = urllib.parse.quote(jre_url, safe=":/?=")
-        print("Downloading Java JRE from " + jre_url)
-        download_with_progress_bar(jre_url, file_name)
-        print()
+    print("Downloading Java JRE from " + jre_url)
+    file_name = download_with_progress_bar(jre_url)
+    print()
 
     # Unzip the downloaded file
     print("Extracting the downloaded file...")
@@ -397,7 +411,14 @@ def install_java_jre_17():
     # Remove the downloaded zip file
     os.remove(file_name)
 
-    return java_exe_path    
+    java_exe_path = get_local_java_executable_path(os_name)
+
+    # Verify the installation
+    #java_version_command = f"{java_exe_path} -version"
+    #result = subprocess.check_output(java_version_command, shell=True, stderr=subprocess.STDOUT)
+    #print("Installed Java version:", result)
+    
+    return java_exe_path
 
 
 # prompt user to cancel pending action; allow to cancel programmatically
