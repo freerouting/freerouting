@@ -55,12 +55,32 @@ def check_latest_jre_version(os_name, architecture):
     jre_url = jre_version_info['binary']["package"]["link"]
     return latest_jre_version, jre_url
 
+def get_local_java_executable_path(os_name):
+    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-17.*.*+*-jre", "bin", "java")
+    if os_name == "windows":
+        java_exe_path += ".exe"
+        
+    java_found_exes = sorted(
+        [p for p in filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)) if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p)],
+        reverse=True,
+        key=lambda p: re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
+    )
+
+    if len(java_found_exes) >= 1:
+        java_exe_path = java_found_exes[0]
+        print(f"You already have a downloaded JRE ({java_exe_path}), we are going to use that.")        
+    else:
+        java_exe_path = ""
+        
+    return java_exe_path
 
 def install_java_jre_17():
     # Get platform information and the appropriate URL
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
     print(f"Architecture: {architecture}")
+
+    local_java_exe = get_local_java_executable_path(os_name)
 
     try:
         jre_version, jre_url = check_latest_jre_version(os_name, architecture)
@@ -69,23 +89,16 @@ def install_java_jre_17():
         # Find all matching JRE 17
         jre_version = "17.*.*+*"
         jre_url = None
-
-    jre_folder = f"jdk-{jre_version}-jre"
-    java_exe_path = os.path.join(tempfile.gettempdir(), jre_folder, "bin", "java")
-    # java_exe_path = os.path.abspath(java_exe_path)
+        return local_java_exe
+        
+    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-{jre_version}-jre", "bin", "java")
     if os_name == "windows":
-        java_exe_path += ".exe"
-
-    # Don't do anything if we already have the necessary Java executable
-    java_found_exes = sorted(
-        filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)),
-        # Find the latest JRE
-        reverse=True,
-        key=lambda p: re.search(r"jdk-17\.(\d+)\.(\d+)\+(\d+)-jre", p).groups()
-    )
-    if java_found_exes:
-        print(f"You already have a downloaded JRE, we are going to use that.")
-        return java_found_exes[0]
+        java_exe_path += ".exe"      
+ 
+    if (local_java_exe >= java_exe_path):
+        print(f"You already have the latest Java JRE ({jre_version})")
+        return java_exe_path
+ 
     if jre_url is None:
         raise FileNotFoundError("Couldn't find a downloaded JRE")
 
@@ -101,13 +114,14 @@ def install_java_jre_17():
     # Remove the downloaded zip file
     os.remove(file_name)
 
-    return java_exe_path
+    java_exe_path = get_local_java_executable_path(os_name)
 
     # Verify the installation
     #java_version_command = f"{java_exe_path} -version"
     #result = subprocess.check_output(java_version_command, shell=True, stderr=subprocess.STDOUT)
     #print("Installed Java version:", result)
-
+    
+    return java_exe_path
 
 if __name__ == "__main__":
     if (os.name != 'posix') or (os.geteuid() == 0):  # Check if script is running as administrator/root
