@@ -369,4 +369,9 @@ public class DesignFile {
   public boolean is_created_from_text_file() {
     return this.input_file != this.output_file;
   }
+
+  public String get_directory()
+  {
+    return file_chooser.getCurrentDirectory().toString();
+  }
 }

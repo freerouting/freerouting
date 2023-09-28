@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -78,6 +79,7 @@ public class MainApplication extends WindowBase {
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
+  private static StartupOptions options = new StartupOptions();
   /**
    * Creates new form MainApplication It takes the directory of the board designs as optional
    * argument.
@@ -229,52 +231,65 @@ public class MainApplication extends WindowBase {
     FRLogger.debug(" UTC Time: " + Instant.now());
 
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
-    StartupOptions startupOptions = StartupOptions.parse(args);
 
-    FRLogger.debug(" GUI Language: " + startupOptions.current_locale);
+    try {
+      options = StartupOptions.load();
+    } catch (Exception e) {
+      // we don't want to stop if the configuration file doesn't exist
+    }
+
+    if (options == null)
+    {
+      options = new StartupOptions();
+    }
+
+    // let's load the defaults values and parse the arguments
+    options.parseCommandLineArguments(args);
+
+    FRLogger.debug(" GUI Language: " + options.current_locale);
 
     ResourceBundle resources =
         ResourceBundle.getBundle(
-            "app.freerouting.gui.MainApplication", startupOptions.current_locale);
-    if (startupOptions.show_help_option) {
+            "app.freerouting.gui.MainApplication", options.current_locale);
+    if (options.show_help_option) {
       System.out.print(resources.getString("command_line_help"));
       System.exit(0);
       return;
     }
 
-    if (startupOptions.single_design_option) {
+    if (options.single_design_option) {
       BoardFrame.Option board_option;
-      if (startupOptions.session_file_option) {
+      if (options.session_file_option) {
         board_option = BoardFrame.Option.SESSION_FILE;
       } else {
         board_option = BoardFrame.Option.SINGLE_FRAME;
       }
 
-      FRLogger.info("Opening '" + startupOptions.design_input_filename + "'...");
-      DesignFile design_file = DesignFile.get_instance(startupOptions.design_input_filename);
+      FRLogger.info("Opening '" + options.design_input_filename + "'...");
+      DesignFile design_file = DesignFile.get_instance(options.design_input_filename);
       if (design_file == null) {
         FRLogger.warn(
             resources.getString("message_6")
                 + " "
-                + startupOptions.design_input_filename
+                + options.design_input_filename
                 + " "
                 + resources.getString("message_7"));
         return;
       }
       String message =
-          resources.getString("loading_design") + " " + startupOptions.design_input_filename;
+          resources.getString("loading_design") + " " + options.design_input_filename;
       WindowMessage welcome_window = WindowMessage.show(message);
       final BoardFrame new_frame =
           create_board_frame(
               design_file,
               null,
               board_option,
-              startupOptions.test_version_option,
-              startupOptions.current_locale,
-              startupOptions.design_rules_filename,
-              startupOptions.save_intermediate_stages,
-              startupOptions.optimization_improvement_threshold,
-              startupOptions.ignore_net_classes_by_autorouter);
+              options.test_version_option,
+              options.current_locale,
+              options.design_rules_filename,
+              options.save_intermediate_stages,
+              options.optimization_improvement_threshold,
+              options.ignore_net_classes_by_autorouter);
       welcome_window.dispose();
       if (new_frame == null) {
         FRLogger.warn("Couldn't create window frame");
@@ -284,16 +299,16 @@ public class MainApplication extends WindowBase {
 
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(
           new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no()
-              + startupOptions.max_passes
+              + options.max_passes
               - 1);
-      new_frame.board_panel.board_handling.set_num_threads(startupOptions.num_threads);
+      new_frame.board_panel.board_handling.set_num_threads(options.num_threads);
       new_frame.board_panel.board_handling.set_board_update_strategy(
-          startupOptions.board_update_strategy);
-      new_frame.board_panel.board_handling.set_hybrid_ratio(startupOptions.hybrid_ratio);
+          options.board_update_strategy);
+      new_frame.board_panel.board_handling.set_hybrid_ratio(options.hybrid_ratio);
       new_frame.board_panel.board_handling.set_item_selection_strategy(
-          startupOptions.item_selection_strategy);
+          options.item_selection_strategy);
 
-      if (startupOptions.design_output_filename != null)
+      if (options.design_output_filename != null)
       {
         // we need to set up a listener to save the design file when the autorouter is running
         new_frame.board_panel.board_handling.autorouter_listener = new ThreadActionListener() {
@@ -302,12 +317,12 @@ public class MainApplication extends WindowBase {
 
           @Override
           public void autorouterAborted() {
-            ExportBoardToFile(startupOptions.design_output_filename);
+            ExportBoardToFile(options.design_output_filename);
           }
 
           @Override
           public void autorouterFinished() {
-            ExportBoardToFile(startupOptions.design_output_filename);
+            ExportBoardToFile(options.design_output_filename);
           }
 
           private void ExportBoardToFile(String filename) {
@@ -369,8 +384,8 @@ public class MainApplication extends WindowBase {
       }
 
       // start the auto-router automatically if both input and output files were passed as a parameter
-      if ((startupOptions.design_input_filename != null)
-          && (startupOptions.design_output_filename != null)) {
+      if ((options.design_input_filename != null)
+          && (options.design_output_filename != null)) {
 
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
         final int AUTOSTART_TIMEOUT = 20;
@@ -437,7 +452,7 @@ public class MainApplication extends WindowBase {
             }
           });
     } else {
-      new MainApplication(startupOptions).setVisible(true);
+      new MainApplication(options).setVisible(true);
     }
 
     FRLogger.traceExit("MainApplication.main()");
@@ -533,6 +548,20 @@ public class MainApplication extends WindowBase {
   /** opens a board design from a binary file or a specctra dsn file. */
   private void open_board_design_action(ActionEvent evt) {
     DesignFile design_file = DesignFile.open_dialog(this.design_dir_name);
+
+    if (design_file != null) {
+      if (!Objects.equals(this.design_dir_name, design_file.get_directory())) {
+        this.design_dir_name = design_file.get_directory();
+        options.design_input_directory_name = this.design_dir_name;
+
+        try {
+          StartupOptions.save(options);
+        } catch (Exception e) {
+          // it's ok if we can't save the configuration file
+          FRLogger.error("Couldn't save configuration file", e);
+        }
+      }
+    }
 
     if (design_file == null) {
       message_field.setText(resources.getString("message_3"));

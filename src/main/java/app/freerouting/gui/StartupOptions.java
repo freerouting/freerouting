@@ -1,4 +1,8 @@
 package app.freerouting.gui;
+import com.google.gson.*;
+import java.nio.file.*;
+import java.nio.charset.StandardCharsets;
+import java.io.*;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
@@ -8,47 +12,43 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class StartupOptions {
-  boolean single_design_option = false;
-  boolean test_version_option = false;
-  boolean show_help_option = false;
-  boolean session_file_option = false;
-  boolean webstart_option = false;
-  String design_input_filename;
-  String design_output_filename;
-  String design_rules_filename;
-  String design_input_directory_name;
-  int max_passes = 99999;
+  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+  private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
+  transient boolean single_design_option = false;
+  transient boolean test_version_option = false;
+  transient boolean show_help_option = false;
+  transient boolean session_file_option = false;
+  transient boolean webstart_option = false;
+  transient String design_input_filename;
+  transient String design_output_filename;
+  transient String design_rules_filename;
+  public String design_input_directory_name;
+  public int max_passes = 99999;
   //int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-  int num_threads = 1;
-  BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
-  String hybrid_ratio = "1:1";
-  ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
-  String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
-  Locale current_locale = Locale.getDefault();
-  boolean save_intermediate_stages = true;
+  public int num_threads = 1;
+  public BoardUpdateStrategy board_update_strategy = BoardUpdateStrategy.GREEDY;
+  public String hybrid_ratio = "1:1";
+  public ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
+  transient String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
+  transient Locale current_locale = Locale.getDefault();
+  public boolean save_intermediate_stages = true;
   // this value is equivalent to the setting of "-oit 0.001"
-  float optimization_improvement_threshold = 0.00001f;
-  String[] ignore_net_classes_by_autorouter = new String[0];
-  boolean disable_logging_option = false;
+  public float optimization_improvement_threshold = 0.00001f;
+  transient String[] ignore_net_classes_by_autorouter = new String[0];
+  public boolean disable_logging_option = false;
 
-  private StartupOptions() {
+  public StartupOptions() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
       // the fallback language is English
       current_locale = Locale.ENGLISH;
     }
   }
 
-  public static StartupOptions parse(String[] p_args) {
-    StartupOptions result = new StartupOptions();
-    result.process(p_args);
-    return result;
-  }
-
   public Locale getCurrentLocale() {
     return current_locale;
   }
 
-  private void process(String[] p_args) {
+  public void parseCommandLineArguments(String[] p_args) {
     for (int i = 0; i < p_args.length; ++i) {
       try {
         if (p_args[i].startsWith("-de")) {
@@ -212,5 +212,17 @@ public class StartupOptions {
 
   public ItemSelectionStrategy getItemSelectionStrategy() {
     return item_selection_strategy;
+  }
+
+  public static void save(StartupOptions options) throws IOException {
+    try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8)) {
+      GSON.toJson(options, writer);
+    }
+  }
+
+  public static StartupOptions load() throws IOException {
+    try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8)) {
+      return GSON.fromJson(reader, StartupOptions.class);
+    }
   }
 }
