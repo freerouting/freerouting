@@ -54,23 +54,23 @@ public class RulesFile {
     try {
       Object curr_token = scanner.next_token();
       if (curr_token != Keyword.OPEN_BRACKET) {
-        FRLogger.warn("RulesFile.read: open bracket expected");
+        FRLogger.warn("RulesFile.read: open bracket expected at '" + scanner.get_scope_identifier() + "'");
         return false;
       }
       curr_token = scanner.next_token();
       if (curr_token != Keyword.RULES) {
-        FRLogger.warn("RulesFile.read: keyword rules expected");
+        FRLogger.warn("RulesFile.read: keyword rules expected at '" + scanner.get_scope_identifier() + "'");
         return false;
       }
       curr_token = scanner.next_token();
       if (curr_token != Keyword.PCB_SCOPE) {
-        FRLogger.warn("RulesFile.read: keyword pcb expected");
+        FRLogger.warn("RulesFile.read: keyword pcb expected at '" + scanner.get_scope_identifier() + "'");
         return false;
       }
       scanner.yybegin(SpecctraDsnFileReader.NAME);
       curr_token = scanner.next_token();
       if (!(curr_token instanceof String) || !curr_token.equals(p_design_name)) {
-        FRLogger.warn("RulesFile.read: design_name not matching");
+        FRLogger.warn("RulesFile.read: design_name not matching at '" + scanner.get_scope_identifier() + "'");
       }
     } catch (IOException e) {
       FRLogger.error("RulesFile.read: IO error scanning file", e);
@@ -88,7 +88,7 @@ public class RulesFile {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("Structure.read_scope: unexpected end of file");
+        FRLogger.warn("Structure.read_scope: unexpected end of file at '" + scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -161,7 +161,7 @@ public class RulesFile {
     if (p_layer_name != null) {
       layer_no = p_board.layer_structure.get_no(p_layer_name);
       if (layer_no < 0) {
-        FRLogger.warn("RulesFile.add_rules: layer not found");
+        FRLogger.warn("RulesFile.add_rules: layer not found at '" + p_layer_name + "'");
       }
     }
     CoordinateTransform coordinate_transform = p_board.communication.coordinate_transform;
@@ -190,14 +190,14 @@ public class RulesFile {
     try {
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("RulesFile.add_layer_rules: String expected");
+        FRLogger.warn("RulesFile.add_layer_rules: String expected at '" + p_scanner.get_scope_identifier() + "'");
         return false;
       }
       String layer_string = (String) next_token;
       next_token = p_scanner.next_token();
       while (next_token != Keyword.CLOSED_BRACKET) {
         if (next_token != Keyword.OPEN_BRACKET) {
-          FRLogger.warn("RulesFile.add_layer_rules: ( expected");
+          FRLogger.warn("RulesFile.add_layer_rules: ( expected at '" + p_scanner.get_scope_identifier() + "'");
           return false;
         }
         next_token = p_scanner.next_token();

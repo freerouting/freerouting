@@ -27,7 +27,7 @@ public abstract class Rule {
         return null;
       }
       if (current_token == null) {
-        FRLogger.warn("Rule.read_scope: unexpected end of file");
+        FRLogger.warn("Rule.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (current_token == Keyword.CLOSED_BRACKET) {
@@ -69,7 +69,7 @@ public abstract class Rule {
         }
         if (!(next_token instanceof String)) {
 
-          FRLogger.warn("Rule.read_layer_rule_scope: string expected");
+          FRLogger.warn("Rule.read_layer_rule_scope: string expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         layer_names.add((String) next_token);
@@ -81,7 +81,7 @@ public abstract class Rule {
         }
         if (next_token != Keyword.RULE) {
 
-          FRLogger.warn("Rule.read_layer_rule_scope: rule expected");
+          FRLogger.warn("Rule.read_layer_rule_scope: rule expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         rule_list.addAll(read_scope(p_scanner));
@@ -253,12 +253,12 @@ public abstract class Rule {
       if (next_token != Keyword.CLOSED_BRACKET) {
         // look for "(type"
         if (next_token != Keyword.OPEN_BRACKET) {
-          FRLogger.warn("Rule.read_clearance_rule: ( expected");
+          FRLogger.warn("Rule.read_clearance_rule: ( expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         next_token = p_scanner.next_token();
         if (next_token != Keyword.TYPE) {
-          FRLogger.warn("Rule.read_clearance_rule: type expected");
+          FRLogger.warn("Rule.read_clearance_rule: type expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
 
@@ -266,13 +266,13 @@ public abstract class Rule {
 
         // check the closing ")" of "(type"
         if (!p_scanner.next_closing_bracket()) {
-          FRLogger.warn("Rule.read_clearance_rule: closing bracket expected");
+          FRLogger.warn("Rule.read_clearance_rule: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
 
         // check the closing ")" of "(clear"
         if (!p_scanner.next_closing_bracket()) {
-          FRLogger.warn("Rule.read_clearance_rule: closing bracket expected");
+          FRLogger.warn("Rule.read_clearance_rule: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
       }

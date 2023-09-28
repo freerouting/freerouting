@@ -19,19 +19,19 @@ public class Parser extends ScopeKeyword {
     try {
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("Parser.read_write_solution: string expected");
+        FRLogger.warn("Parser.read_write_solution: string expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return null;
       }
       String resolution_string = (String) next_token;
       next_token = p_par.scanner.next_token();
       if (!(next_token instanceof Integer)) {
-        FRLogger.warn("Parser.read_write_solution: integer expected expected");
+        FRLogger.warn("Parser.read_write_solution: integer expected expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return null;
       }
       int resolution_value = (Integer) next_token;
       next_token = p_par.scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Parser.read_write_solution: closing_bracket expected");
+        FRLogger.warn("Parser.read_write_solution: closing_bracket expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return null;
       }
       return new SpecctraParserInfo.WriteResolution(resolution_string, resolution_value);
@@ -47,20 +47,20 @@ public class Parser extends ScopeKeyword {
       p_par.scanner.yybegin(SpecctraDsnFileReader.NAME);
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("Parser.read_constant: string expected");
+        FRLogger.warn("Parser.read_constant: string expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return null;
       }
       result[0] = (String) next_token;
       p_par.scanner.yybegin(SpecctraDsnFileReader.NAME);
       next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("Parser.read_constant: string expected");
+        FRLogger.warn("Parser.read_constant: string expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return null;
       }
       result[1] = (String) next_token;
       next_token = p_par.scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Parser.read_constant: closing_bracket expected");
+        FRLogger.warn("Parser.read_constant: closing_bracket expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return null;
       }
       return result;
@@ -130,13 +130,13 @@ public class Parser extends ScopeKeyword {
     try {
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("Parser.read_quote_char: string expected");
+        FRLogger.warn("Parser.read_quote_char: string expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String result = (String) next_token;
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Parser.read_quote_char: closing bracket expected");
+        FRLogger.warn("Parser.read_quote_char: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       return result;
@@ -154,11 +154,11 @@ public class Parser extends ScopeKeyword {
       try {
         next_token = p_par.scanner.next_token();
       } catch (IOException e) {
-        FRLogger.warn("Parser.read_scope: IO error scanning file");
+        FRLogger.warn("Parser.read_scope: IO error scanning file at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("Parser.read_scope: unexpected end of file");
+        FRLogger.warn("Parser.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {

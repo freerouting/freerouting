@@ -56,8 +56,7 @@ public class DsnFile {
         scanner.yybegin(SpecctraDsnFileReader.NAME); // to overread the name of the pcb for i = 2
       }
       if (!keyword_ok) {
-        FRLogger.warn(
-            "DsnFile.read: the input file is not in a Specctra DSN file format. It must be a text file starting with the '(pcb' character array.");
+        FRLogger.warn("DsnFile.read: the input file is not in a Specctra DSN file format. It must be a text file starting with the '(pcb' character array.");
         return ReadResult.ERROR;
       }
     }
@@ -256,12 +255,12 @@ public class DsnFile {
       if (next_token == Keyword.ON) {
         result = true;
       } else if (next_token != Keyword.OFF) {
-        FRLogger.warn("DsnFile.read_boolean: Keyword.OFF expected");
+        FRLogger.warn("DsnFile.read_boolean: Keyword.OFF expected at '" + p_scanner.get_scope_identifier() + "'");
       }
       ScopeKeyword.skip_scope(p_scanner);
       return result;
     } catch (IOException e) {
-      FRLogger.warn("DsnFile.read_boolean: IO error scanning file");
+      FRLogger.error("DsnFile.read_boolean: IO error scanning file", e);
       return false;
     }
   }
@@ -273,12 +272,12 @@ public class DsnFile {
       if (next_token instanceof Integer) {
         value = (Integer) next_token;
       } else {
-        FRLogger.warn("DsnFile.read_integer_scope: number expected");
+        FRLogger.warn("DsnFile.read_integer_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_integer_scope: closing bracket expected");
+        FRLogger.warn("DsnFile.read_integer_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       return value;
@@ -297,12 +296,12 @@ public class DsnFile {
       } else if (next_token instanceof Integer) {
         value = (Integer) next_token;
       } else {
-        FRLogger.warn("DsnFile.read_float_scope: number expected");
+        FRLogger.warn("DsnFile.read_float_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_float_scope: closing bracket expected");
+        FRLogger.warn("DsnFile.read_float_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       return value;
@@ -318,7 +317,7 @@ public class DsnFile {
       String result = p_scanner.next_string();
       Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_string_scope: closing bracket expected");
+        FRLogger.warn("DsnFile.read_string_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
       }
       return result;
     } catch (IOException e) {

@@ -314,10 +314,11 @@ public class SessionToEagle extends JFrame {
     // read the net name
     Object next_token = this.scanner.next_token();
     if (!(next_token instanceof String)) {
-      FRLogger.warn("SessionToEagle.process_net_scope: String expected");
+      FRLogger.warn("SessionToEagle.process_net_scope: String expected at '" + this.scanner.get_scope_identifier() + "'");
       return false;
     }
     String net_name = (String) next_token;
+    this.scanner.set_scope_identifier(net_name);
 
     // Hier alle nicht gefixten Traces und Vias des Netz mit Namen net_name
     // in der Eagle Datenhaltung loeschen.
@@ -359,7 +360,7 @@ public class SessionToEagle extends JFrame {
       Object prev_token = next_token;
       next_token = this.scanner.next_token();
       if (next_token == null) {
-        FRLogger.warn("SessionToEagle.process_wire_scope: unexpected end of file");
+        FRLogger.warn("SessionToEagle.process_wire_scope: unexpected end of file at '" + this.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -415,10 +416,11 @@ public class SessionToEagle extends JFrame {
     // read the padstack name
     Object next_token = this.scanner.next_token();
     if (!(next_token instanceof String)) {
-      FRLogger.warn("SessionToEagle.process_via_scope: padstack name expected");
+      FRLogger.warn("SessionToEagle.process_via_scope: padstack name expected at '" + this.scanner.get_scope_identifier() + "'");
       return false;
     }
     String padstack_name = (String) next_token;
+    this.scanner.set_scope_identifier(padstack_name);
     // read the location
     double[] location = new double[2];
     for (int i = 0; i < 2; ++i) {
@@ -428,7 +430,7 @@ public class SessionToEagle extends JFrame {
       } else if (next_token instanceof Integer) {
         location[i] = (Integer) next_token;
       } else {
-        FRLogger.warn("SessionToEagle.process_via_scope: number expected");
+        FRLogger.warn("SessionToEagle.process_via_scope: number expected at '" + this.scanner.get_scope_identifier() + "'");
         return false;
       }
     }
@@ -439,14 +441,14 @@ public class SessionToEagle extends JFrame {
       next_token = this.scanner.next_token();
     }
     if (next_token != Keyword.CLOSED_BRACKET) {
-      FRLogger.warn("SessionToEagle.process_via_scope: closing bracket expected");
+      FRLogger.warn("SessionToEagle.process_via_scope: closing bracket expected at '" + this.scanner.get_scope_identifier() + "'");
       return false;
     }
 
     Padstack via_padstack = this.board.library.padstacks.get(padstack_name);
 
     if (via_padstack == null) {
-      FRLogger.warn("SessionToEagle.process_via_scope: via padstack not found");
+      FRLogger.warn("SessionToEagle.process_via_scope: via padstack not found at '" + this.scanner.get_scope_identifier() + "'");
       return false;
     }
 
@@ -548,7 +550,7 @@ public class SessionToEagle extends JFrame {
           }
         }
         if (other_pin_info == null) {
-          FRLogger.warn("SessuinToEagle.process_swapped_pins: other_pin_info not found");
+          FRLogger.warn("SessuinToEagle.process_swapped_pins: other_pin_info not found at '" + this.scanner.get_scope_identifier() + "'");
           return false;
         }
         write_pin_swap(curr_pin_info.pin, other_pin_info.pin);

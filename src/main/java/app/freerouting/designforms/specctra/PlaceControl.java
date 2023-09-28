@@ -22,7 +22,7 @@ public class PlaceControl extends ScopeKeyword {
       }
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("Structure.read_flip_style: closing bracket expected");
+        FRLogger.warn("Structure.read_flip_style: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return false;
       }
       return result;
@@ -46,7 +46,7 @@ public class PlaceControl extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("PlaceControl.read_scope: unexpected end of file");
+        FRLogger.warn("PlaceControl.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {

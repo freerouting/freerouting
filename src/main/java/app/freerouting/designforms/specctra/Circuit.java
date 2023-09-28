@@ -27,7 +27,7 @@ public class Circuit {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("Circuit.read_scope: unexpected end of file");
+        FRLogger.warn("Circuit.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -69,7 +69,7 @@ public class Circuit {
       } else if (next_token instanceof Integer) {
         length_arr[i] = (Integer) next_token;
       } else {
-        FRLogger.warn("Circuit.read_length_scope: number expected");
+        FRLogger.warn("Circuit.read_length_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
     }
@@ -83,7 +83,7 @@ public class Circuit {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("Circuit.read_length_scope: unexpected end of file");
+        FRLogger.warn("Circuit.read_length_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {

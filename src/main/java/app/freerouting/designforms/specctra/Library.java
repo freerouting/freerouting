@@ -54,7 +54,7 @@ public class Library extends ScopeKeyword {
       --last_layer_no;
     }
     if (first_layer_no >= p_par.board.get_layer_count() || last_layer_no < 0) {
-      FRLogger.warn("Library.write_padstack_scope: padstack shape not found");
+      FRLogger.warn("Library.write_padstack_scope: padstack shape not found at '" + p_padstack.name + "'");
       return;
     }
 
@@ -98,8 +98,9 @@ public class Library extends ScopeKeyword {
       Object next_token = p_scanner.next_token();
       if (next_token instanceof String) {
         padstack_name = (String) next_token;
+        p_scanner.set_scope_identifier(padstack_name);
       } else {
-        FRLogger.warn("Library.read_padstack_scope: unexpected padstack identifier");
+        FRLogger.warn("Library.read_padstack_scope: unexpected padstack identifier at '" + p_scanner.get_scope_identifier() + "'");
         return false;
       }
 
@@ -119,7 +120,7 @@ public class Library extends ScopeKeyword {
               curr_next_token = p_scanner.next_token();
             }
             if (curr_next_token != Keyword.CLOSED_BRACKET) {
-              FRLogger.warn("Library.read_padstack_scope: closing bracket expected");
+              FRLogger.warn("Library.read_padstack_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
               return false;
             }
           } else if (next_token == Keyword.ATTACH) {
@@ -160,7 +161,7 @@ public class Library extends ScopeKeyword {
         }
         TileShape[] convex_shapes = curr_shape.split_to_convex();
         if (convex_shapes.length != 1) {
-          FRLogger.warn("Library.read_padstack_scope: convex shape expected");
+          FRLogger.warn("Library.read_padstack_scope: convex shape expected at '" + p_scanner.get_scope_identifier() + "'");
         }
         convex_shape = convex_shapes[0];
         if (convex_shape instanceof Simplex) {
@@ -186,7 +187,7 @@ public class Library extends ScopeKeyword {
       } else {
         int shape_layer = p_layer_structure.get_no(pad_shape.layer.name);
         if (shape_layer < 0 || shape_layer >= padstack_shapes.length) {
-          FRLogger.warn("Library.read_padstack_scope: layer number found");
+          FRLogger.warn("Library.read_padstack_scope: layer number found at '" + p_scanner.get_scope_identifier() + "'");
           return false;
         }
         padstack_shapes[shape_layer] = padstack_shape;
@@ -213,7 +214,7 @@ public class Library extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("Library.read_scope: unexpected end of file");
+        FRLogger.warn("Library.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -254,7 +255,7 @@ public class Library extends ScopeKeyword {
         Padstack board_padstack =
             board.library.padstacks.get(pin_info.padstack_name);
         if (board_padstack == null) {
-          FRLogger.warn("Library.read_scope: app.freerouting.board padstack not found");
+          FRLogger.warn("Library.read_scope: board padstack not found at '" + p_par.scanner.get_scope_identifier() + "'");
           return false;
         }
         pin_arr[i] =
@@ -270,7 +271,7 @@ public class Library extends ScopeKeyword {
         if (curr_shape != null) {
           outline_arr[i] = curr_shape.transform_to_board_rel(p_par.coordinate_transform);
         } else {
-          FRLogger.warn("Library.read_scope: outline shape is null");
+          FRLogger.warn("Library.read_scope: outline shape is null at '" + p_par.scanner.get_scope_identifier() + "'");
         }
       }
       generate_missing_keepout_names("keepout_", curr_package.keepouts);

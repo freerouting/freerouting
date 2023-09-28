@@ -15,7 +15,7 @@ import java.util.Locale;
  * 09:27 from the specification file <tt>SpecctraFileDescription.flex</tt>
  */
 class SpecctraDsnFileReader implements IJFlexScanner {
-
+  public static String scope_identifier = "";
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
   /** lexical states */
@@ -812,6 +812,16 @@ class SpecctraDsnFileReader implements IJFlexScanner {
     if (number > yylength()) zzScanError(ZZ_PUSHBACK_2BIG);
 
     zzMarkedPos -= number;
+  }
+
+  @Override
+  public String get_scope_identifier() {
+    return scope_identifier;
+  }
+
+  @Override
+  public void set_scope_identifier(String identifier) {
+    scope_identifier = identifier;
   }
 
   /**

@@ -55,17 +55,18 @@ public class Package {
           new LinkedList<>();
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("Package.read_scope: String expected");
+        FRLogger.warn("Package.read_scope: String expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String package_name = (String) next_token;
+      p_scanner.set_scope_identifier(package_name);
       Collection<PinInfo> pin_info_list = new LinkedList<>();
       for (; ; ) {
         Object prev_token = next_token;
         next_token = p_scanner.next_token();
 
         if (next_token == null) {
-          FRLogger.warn("Package.read_scope: unexpected end of file");
+          FRLogger.warn("Package.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         if (next_token == Keyword.CLOSED_BRACKET) {
@@ -89,7 +90,7 @@ public class Package {
             // overread closing bracket
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET) {
-              FRLogger.warn("Package.read_scope: closed bracket expected");
+              FRLogger.warn("Package.read_scope: closed bracket expected at '" + p_scanner.get_scope_identifier() + "'");
               return null;
             }
           } else if (next_token == Keyword.KEEPOUT) {
@@ -231,7 +232,7 @@ public class Package {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String) && !(next_token instanceof Integer)) {
-        FRLogger.warn("Package.read_pin_info: String or Integer expected");
+        FRLogger.warn("Package.read_pin_info: String or Integer expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String padstack_name = next_token.toString();
@@ -253,7 +254,7 @@ public class Package {
       }
       // Read the pin name.
       if (!(next_token instanceof String) && !(next_token instanceof Integer)) {
-        FRLogger.warn("Package.read_pin_info: String or Integer expected");
+        FRLogger.warn("Package.read_pin_info: String or Integer expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String pin_name = next_token.toString();
@@ -266,7 +267,7 @@ public class Package {
         } else if (next_token instanceof Integer) {
           pin_coor[i] = (Integer) next_token;
         } else {
-          FRLogger.warn("Package.read_pin_info: number expected");
+          FRLogger.warn("Package.read_pin_info: number expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
       }
@@ -276,7 +277,7 @@ public class Package {
         next_token = p_scanner.next_token();
 
         if (next_token == null) {
-          FRLogger.warn("Package.read_pin_info: unexpected end of file");
+          FRLogger.warn("Package.read_pin_info: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         if (next_token == Keyword.CLOSED_BRACKET) {
@@ -307,12 +308,12 @@ public class Package {
       } else if (next_token instanceof Double) {
         result = (Double) next_token;
       } else {
-        FRLogger.warn("Package.read_rotation: number expected");
+        FRLogger.warn("Package.read_rotation: number expected at '" + p_scanner.get_scope_identifier() + "'");
       }
       // Overread The closing bracket.
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("Package.read_rotation: closing bracket expected");
+        FRLogger.warn("Package.read_rotation: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
       }
     } catch (IOException e) {
       FRLogger.error("Package.read_rotation: IO error while scanning file", e);
@@ -360,7 +361,7 @@ public class Package {
 
     next_token = p_scanner.next_token();
     if (next_token != Keyword.CLOSED_BRACKET) {
-      FRLogger.warn("Package.read_placement_side: closing bracket expected");
+      FRLogger.warn("Package.read_placement_side: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
     }
     return result;
   }

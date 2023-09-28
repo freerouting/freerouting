@@ -25,7 +25,7 @@ public class AutorouteSettings {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("AutorouteSettings.read_scope: unexpected end of file");
+        FRLogger.warn("AutorouteSettings.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -78,12 +78,12 @@ public class AutorouteSettings {
       return null;
     }
     if (!(next_token instanceof String)) {
-      FRLogger.warn("AutorouteSettings.read_layer_rule: String expected");
+      FRLogger.warn("AutorouteSettings.read_layer_rule: String expected at '" + p_scanner.get_scope_identifier() + "'");
       return null;
     }
     int layer_no = p_layer_structure.get_no((String) next_token);
     if (layer_no < 0) {
-      FRLogger.warn("AutorouteSettings.read_layer_rule: layer not found");
+      FRLogger.warn("AutorouteSettings.read_layer_rule: layer not found at '" + p_scanner.get_scope_identifier() + "'");
       return null;
     }
     for (; ; ) {
@@ -95,7 +95,7 @@ public class AutorouteSettings {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected end of file");
+        FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -112,13 +112,13 @@ public class AutorouteSettings {
             if (next_token == Keyword.VERTICAL) {
               pref_dir_is_horizontal = false;
             } else if (next_token != Keyword.HORIZONTAL) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected key word");
+              FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected key word at '" + p_scanner.get_scope_identifier() + "'");
               return null;
             }
             p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
             next_token = p_scanner.next_token();
             if (next_token != Keyword.CLOSED_BRACKET) {
-              FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected");
+              FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
               return null;
             }
           } catch (IOException e) {

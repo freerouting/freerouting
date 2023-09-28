@@ -19,7 +19,7 @@ public class Plane extends ScopeKeyword {
       throws IOException {
     int net_count = p_conduction.net_count();
     if (net_count != 1) {
-      FRLogger.warn("Plane.write_scope: unexpected net count");
+      FRLogger.warn("Plane.write_scope: unexpected net count at '" + p_conduction.name + "'");
       return;
     }
     String net_name = p_par.board.rules.nets.get(p_conduction.get_net_no(0)).name;
@@ -62,10 +62,11 @@ public class Plane extends ScopeKeyword {
     try {
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("Plane.read_scope: String expected");
+        FRLogger.warn("Plane.read_scope: String expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       net_name = (String) next_token;
+      p_par.scanner.set_scope_identifier(net_name);
       conduction_area =
           Shape.read_area_scope(p_par.scanner, p_par.layer_structure, skip_window_scopes);
     } catch (IOException e) {

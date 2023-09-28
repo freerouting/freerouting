@@ -55,13 +55,13 @@ public class Net {
     app.freerouting.board.Component curr_component =
         p_par.board.components.get(p_pin.get_component_no());
     if (curr_component == null) {
-      FRLogger.warn("Net.write_scope: component not found");
+      FRLogger.warn("Net.write_scope: component not found at '" + curr_component.name + "'");
       return;
     }
     app.freerouting.library.Package.Pin lib_pin =
         curr_component.get_package().get_pin(p_pin.get_index_in_package());
     if (lib_pin == null) {
-      FRLogger.warn("Net.write_scope:  pin number out of range");
+      FRLogger.warn("Net.write_scope:  pin number out of range at '" + curr_component.name + "'");
       return;
     }
     p_par.file.new_line();

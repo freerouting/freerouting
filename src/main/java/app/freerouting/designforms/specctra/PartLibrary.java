@@ -87,7 +87,7 @@ public class PartLibrary extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("PartLibrary.read_scope: unexpected end of file");
+        FRLogger.warn("PartLibrary.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -120,18 +120,18 @@ public class PartLibrary extends ScopeKeyword {
     try {
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: string expected");
+        FRLogger.warn("PartLibrary.read_logical_part_mapping: string expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String name = (String) next_token;
       next_token = p_scanner.next_token();
       if (next_token != OPEN_BRACKET) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: open bracket expected");
+        FRLogger.warn("PartLibrary.read_logical_part_mapping: open bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       next_token = p_scanner.next_token();
       if (next_token != COMPONENT_SCOPE) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: Keyword.COMPONENT_SCOPE expected");
+        FRLogger.warn("PartLibrary.read_logical_part_mapping: Keyword.COMPONENT_SCOPE expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       SortedSet<String> result = new TreeSet<>();
@@ -142,14 +142,14 @@ public class PartLibrary extends ScopeKeyword {
           break;
         }
         if (!(next_token instanceof String)) {
-          FRLogger.warn("PartLibrary.read_logical_part_mapping: string expected");
+          FRLogger.warn("PartLibrary.read_logical_part_mapping: string expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         result.add((String) next_token);
       }
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
-        FRLogger.warn("PartLibrary.read_logical_part_mapping: closing bracket expected");
+        FRLogger.warn("PartLibrary.read_logical_part_mapping: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       return new LogicalPartMapping(name, result);
@@ -169,10 +169,11 @@ public class PartLibrary extends ScopeKeyword {
       return null;
     }
     if (!(next_token instanceof String)) {
-      FRLogger.warn("PartLibrary.read_logical_part: string expected");
+      FRLogger.warn("PartLibrary.read_logical_part: string expected at '" + p_scanner.get_scope_identifier() + "'");
       return null;
     }
     String part_name = (String) next_token;
+    p_scanner.set_scope_identifier(part_name);
     for (; ; ) {
       Object prev_token = next_token;
       try {
@@ -182,7 +183,7 @@ public class PartLibrary extends ScopeKeyword {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("PartLibrary.read_logical_part: unexpected end of file");
+        FRLogger.warn("PartLibrary.read_logical_part: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -213,38 +214,41 @@ public class PartLibrary extends ScopeKeyword {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("PartLibrary.read_part_pin: string expected");
+        FRLogger.warn("PartLibrary.read_part_pin: string expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String pin_name = (String) next_token;
+      p_scanner.set_scope_identifier(pin_name);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof Integer)) {
-        FRLogger.warn("PartLibrary.read_part_pin: integer expected");
+        FRLogger.warn("PartLibrary.read_part_pin: integer expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("PartLibrary.read_part_pin: string expected");
+        FRLogger.warn("PartLibrary.read_part_pin: string expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String gate_name = (String) next_token;
+      p_scanner.set_scope_identifier(gate_name);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof Integer)) {
-        FRLogger.warn("PartLibrary.read_part_pin: integer expected");
+        FRLogger.warn("PartLibrary.read_part_pin: integer expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       int gate_swap_code = (Integer) next_token;
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String)) {
-        FRLogger.warn("PartLibrary.read_part_pin: string expected");
+        FRLogger.warn("PartLibrary.read_part_pin: string expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       String gate_pin_name = (String) next_token;
+      p_scanner.set_scope_identifier(gate_pin_name);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof Integer)) {
-        FRLogger.warn("PartLibrary.read_part_pin: integer expected");
+        FRLogger.warn("PartLibrary.read_part_pin: integer expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       int gate_pin_swap_code = (Integer) next_token;

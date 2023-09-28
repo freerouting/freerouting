@@ -146,7 +146,7 @@ class Structure extends ScopeKeyword {
       }
     }
     if (curr_ob == null) {
-      FRLogger.warn("Structure.write_scope; outline not found");
+      FRLogger.warn("Structure.write_scope: board outline not found");
       return;
     }
     BoardOutline outline = (BoardOutline) curr_ob;
@@ -293,19 +293,19 @@ class Structure extends ScopeKeyword {
       return false;
     }
     if (curr_shape == null) {
-      FRLogger.warn("Structure.read_boundary_scope: shape is null");
+      FRLogger.warn("Structure.read_boundary_scope: shape is null at '" + p_scanner.get_scope_identifier() + "'");
       return true;
     }
     if (curr_shape.layer == Layer.PCB) {
       if (p_board_construction_info.bounding_shape == null) {
         p_board_construction_info.bounding_shape = curr_shape;
       } else {
-        FRLogger.warn("Structure.read_boundary_scope: exact 1 bounding_shape expected");
+        FRLogger.warn("Structure.read_boundary_scope: exact 1 bounding_shape expected at '" + p_scanner.get_scope_identifier() + "'");
       }
     } else if (curr_shape.layer == Layer.SIGNAL) {
       p_board_construction_info.outline_shapes.add(curr_shape);
     } else {
-      FRLogger.warn("Structure.read_boundary_scope: unexpected layer");
+      FRLogger.warn("Structure.read_boundary_scope: unexpected layer at '" + p_scanner.get_scope_identifier() + "'");
     }
     return true;
   }
@@ -324,7 +324,7 @@ class Structure extends ScopeKeyword {
       Object next_token = p_scanner.next_token();
       while (next_token != Keyword.CLOSED_BRACKET) {
         if (next_token != Keyword.OPEN_BRACKET) {
-          FRLogger.warn("Structure.read_layer_scope: ( expected");
+          FRLogger.warn("Structure.read_layer_scope: ( expected at '" + p_scanner.get_scope_identifier() + "'");
           return false;
         }
         next_token = p_scanner.next_token();
@@ -336,13 +336,13 @@ class Structure extends ScopeKeyword {
             if (next_token instanceof String) {
               FRLogger.error("Structure.read_layer_scope: the layer '" + layer_string + "' has an unknown layer type '" + next_token + "'", null);
             } else {
-              FRLogger.warn("Structure.read_layer_scope: the layer '" + layer_string + "' has an unknown layer type");
+              FRLogger.warn("Structure.read_layer_scope: the layer '" + layer_string + "' has an unknown layer type at '" + p_scanner.get_scope_identifier() + "'");
             }
             layer_ok = false;
           }
           next_token = p_scanner.next_token();
           if (next_token != Keyword.CLOSED_BRACKET) {
-            FRLogger.warn("Structure.read_layer_scope: ) expected");
+            FRLogger.warn("Structure.read_layer_scope: ) expected at '" + p_scanner.get_scope_identifier() + "'");
             return false;
           }
         } else if (next_token == Keyword.RULE) {
@@ -359,7 +359,7 @@ class Structure extends ScopeKeyword {
             if (next_token instanceof String) {
               net_names.add((String) next_token);
             } else {
-              FRLogger.warn("Structure.read_layer_scope: string expected");
+              FRLogger.warn("Structure.read_layer_scope: string expected at '" + p_scanner.get_scope_identifier() + "'");
             }
           }
         } else {
@@ -400,7 +400,7 @@ class Structure extends ScopeKeyword {
         } else if (next_token instanceof String) {
           normal_vias.add((String) next_token);
         } else {
-          FRLogger.warn("Structure.read_via_padstack: String expected");
+          FRLogger.warn("Structure.read_via_padstack: String expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
       }
@@ -424,7 +424,7 @@ class Structure extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("Structure.read_control_scope: unexpected end of file");
+        FRLogger.warn("Structure.read_control_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -453,12 +453,12 @@ class Structure extends ScopeKeyword {
       } else if (next_token == Keyword.NONE) {
         snap_angle = AngleRestriction.NONE;
       } else {
-        FRLogger.warn("Structure.read_snap_angle_scope: unexpected token");
+        FRLogger.warn("Structure.read_snap_angle_scope: unexpected token at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("Structure.read_selection_layer_scop: closing bracket expected");
+        FRLogger.warn("Structure.read_selection_layer_scop: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       return snap_angle;
@@ -513,7 +513,7 @@ class Structure extends ScopeKeyword {
             p_board.rules.nets.get(curr_net_id.name, curr_net_id.subnet_number);
         {
           if (curr_net == null) {
-            FRLogger.warn("Structure.insert_missing_power_planes: net not found");
+            FRLogger.warn("Structure.insert_missing_power_planes: net not found at '" + curr_net_id.name + "'");
             continue;
           }
         }
@@ -650,9 +650,8 @@ class Structure extends ScopeKeyword {
         curr_string = curr_string.substring(p_string_quote.length());
         curr_pair = curr_string.split(p_string_quote, 2);
         if (curr_pair.length != 2 || !curr_pair[1].startsWith("_")) {
-          FRLogger.warn("Structure.set_clearance_rule: '_' expected");
-          FRLogger.warn(
-              "You probably get this error because your clearance rule name has spaces or special characters in its name. Please change them first, and try again.");
+          FRLogger.warn("Structure.set_clearance_rule: '_' expected at '" + curr_string + "'");
+          FRLogger.warn("You probably get this error because your clearance rule name has spaces or special characters in its name. Please change them first, and try again.");
           continue;
         }
         curr_pair[1] = curr_pair[1].substring(1);
@@ -759,12 +758,12 @@ class Structure extends ScopeKeyword {
     Area keepout_area =
         Shape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
     if (keepout_area.dimension() < 2) {
-      FRLogger.warn("Structure.insert_keepout: keepout is not an area");
+      FRLogger.warn("Structure.insert_keepout: keepout is not an area at '" + p_area.area_name + "'");
       return true;
     }
     BasicBoard board = p_par.board_handling.get_routing_board();
     if (board == null) {
-      FRLogger.warn("Structure.insert_keepout: app.freerouting.board not initialized");
+      FRLogger.warn("Structure.insert_keepout: board not initialized");
       return false;
     }
     Layer curr_layer = (p_area.shape_list.iterator().next()).layer;
@@ -784,7 +783,7 @@ class Structure extends ScopeKeyword {
           p_keepout_type,
           p_fixed_state);
     } else {
-      FRLogger.warn("Structure.insert_keepout: unknown layer name");
+      FRLogger.warn("Structure.insert_keepout: unknown layer name at '" + p_par.scanner.get_scope_identifier() + "'");
       return false;
     }
 
@@ -809,7 +808,7 @@ class Structure extends ScopeKeyword {
     } else {
       clearance_class_no = p_board.rules.clearance_matrix.get_no(p_clearance_class_name);
       if (clearance_class_no < 0) {
-        FRLogger.warn("Keepout.insert_keepout: clearance class not found");
+        FRLogger.warn("Keepout.insert_keepout: clearance class not found at '" + p_clearance_class_name + "'");
         clearance_class_no = BoardRules.clearance_class_none();
       }
     }
@@ -847,7 +846,7 @@ class Structure extends ScopeKeyword {
         return false;
       }
       if (next_token == null) {
-        FRLogger.warn("Structure.read_scope: unexpected end of file");
+        FRLogger.warn("Structure.read_scope: unexpected end of file at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       if (next_token == CLOSED_BRACKET) {
@@ -961,7 +960,7 @@ class Structure extends ScopeKeyword {
       }
       app.freerouting.rules.Net curr_net = board.rules.nets.get(plane_info.net_name, 1);
       if (curr_net == null) {
-        FRLogger.warn("Plane.read_scope: net not found");
+        FRLogger.warn("Plane.read_scope: net not found at '" + p_par.scanner.get_scope_identifier() + "'");
         continue;
       }
       Area plane_area =
@@ -973,7 +972,7 @@ class Structure extends ScopeKeyword {
           clearance_class_no =
               board.rules.clearance_matrix.get_no(plane_info.area.clearance_class_name);
           if (clearance_class_no < 0) {
-            FRLogger.warn("Structure.read_scope: clearance class not found");
+            FRLogger.warn("Structure.read_scope: clearance class not found at '" + p_par.scanner.get_scope_identifier() + "'");
             clearance_class_no = BoardRules.clearance_class_none();
           }
         } else {
@@ -993,7 +992,7 @@ class Structure extends ScopeKeyword {
             false,
             FixedState.SYSTEM_FIXED);
       } else {
-        FRLogger.warn("Plane.read_scope: unexpected layer name");
+        FRLogger.warn("Plane.read_scope: unexpected layer name at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
     }
@@ -1010,13 +1009,13 @@ class Structure extends ScopeKeyword {
       ReadScopeParameter p_par, BoardConstructionInfo p_board_construction_info) {
     int layer_count = p_board_construction_info.layer_info.size();
     if (layer_count == 0) {
-      FRLogger.warn("Structure.create_board: layers missing in structure scope");
+      FRLogger.warn("Structure.create_board: layers missing in structure scope at '" + p_par.scanner.get_scope_identifier() + "'");
       return false;
     }
     if (p_board_construction_info.bounding_shape == null) {
       // happens if the boundary shape with layer pcb is missing
       if (p_board_construction_info.outline_shapes.isEmpty()) {
-        FRLogger.warn("Structure.create_board: outline missing");
+        FRLogger.warn("Structure.create_board: outline missing at '" + p_par.scanner.get_scope_identifier() + "'");
         p_par.board_outline_ok = false;
         return false;
       }
@@ -1034,7 +1033,7 @@ class Structure extends ScopeKeyword {
     for (int i = 0; i < layer_count; ++i) {
       Layer curr_layer = it.next();
       if (curr_layer.no < 0 || curr_layer.no >= layer_count) {
-        FRLogger.warn("Structure.create_board: illegal layer number");
+        FRLogger.warn("Structure.create_board: illegal layer number at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
       board_layer_arr[i] = new app.freerouting.board.Layer(curr_layer.name, curr_layer.is_signal);

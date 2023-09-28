@@ -72,7 +72,7 @@ public class NetClass {
           break;
         }
         if (!(next_token instanceof String)) {
-          FRLogger.warn("NetClass.read_scope: String expected");
+          FRLogger.warn("NetClass.read_scope: String expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         net_list.add((String) next_token);
@@ -92,7 +92,7 @@ public class NetClass {
         for (; ; ) {
           next_token = p_scanner.next_token();
           if (next_token == null) {
-            FRLogger.warn("NetClass.read_scope: unexpected end of file");
+            FRLogger.warn("NetClass.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
             return null;
           }
           if (next_token == Keyword.CLOSED_BRACKET) {
@@ -158,7 +158,7 @@ public class NetClass {
       for (; ; ) {
         Object next_token = p_scanner.next_token();
         if (next_token == null) {
-          FRLogger.warn("ClassClass.read_scope: unexpected end of file");
+          FRLogger.warn("ClassClass.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         if (next_token == Keyword.CLOSED_BRACKET) {

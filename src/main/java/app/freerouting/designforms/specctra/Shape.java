@@ -109,7 +109,7 @@ public abstract class Shape {
         corner_list.add(next_token);
       }
       if (corner_list.size() < 5) {
-        FRLogger.warn("PolylinePath.read_scope: to few numbers in scope");
+        FRLogger.warn("PolylinePath.read_scope: to few numbers in scope at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       Iterator<Object> it = corner_list.iterator();
@@ -120,7 +120,7 @@ public abstract class Shape {
       } else if (next_object instanceof Integer) {
         width = (Integer) next_object;
       } else {
-        FRLogger.warn("PolylinePath.read_scope: number expected");
+        FRLogger.warn("PolylinePath.read_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       double[] corner_arr = new double[corner_list.size() - 1];
@@ -131,7 +131,7 @@ public abstract class Shape {
         } else if (next_object instanceof Integer) {
           corner_arr[i] = (Integer) next_object;
         } else {
-          FRLogger.warn("Shape.read_polygon_path_scope: number expected");
+          FRLogger.warn("Shape.read_polygon_path_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
       }
@@ -157,18 +157,19 @@ public abstract class Shape {
     try {
       next_token = p_scanner.next_token();
     } catch (IOException e) {
-      FRLogger.warn("Shape.read_area_scope: IO error scanning file");
+      FRLogger.warn("Shape.read_area_scope: IO error scanning file at '" + p_scanner.get_scope_identifier() + "'");
       return null;
     }
     if (next_token instanceof String) {
       String curr_name = (String) next_token;
+      p_scanner.set_scope_identifier(curr_name);
       if (!curr_name.isEmpty()) {
         area_name = curr_name;
       }
     }
     Shape curr_shape = Shape.read_scope(p_scanner, p_layer_structure);
     if (curr_shape == null) {
-      FRLogger.warn("Shape.read_area_scope: could not read shape");
+      FRLogger.warn("Shape.read_area_scope: could not read shape at '" + p_scanner.get_scope_identifier() + "'");
       result_ok = false;
     }
     shape_list.add(curr_shape);
@@ -182,7 +183,7 @@ public abstract class Shape {
         return null;
       }
       if (next_token == null) {
-        FRLogger.warn("Shape.read_area_scope: unexpected end of file");
+        FRLogger.warn("Shape.read_area_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (next_token == Keyword.CLOSED_BRACKET) {
@@ -203,7 +204,7 @@ public abstract class Shape {
             return null;
           }
           if (next_token != Keyword.CLOSED_BRACKET) {
-            FRLogger.warn("Shape.read_area_scope: closed bracket expected");
+            FRLogger.warn("Shape.read_area_scope: closed bracket expected at '" + p_scanner.get_scope_identifier() + "'");
             return null;
           }
 
@@ -244,7 +245,7 @@ public abstract class Shape {
         } else if (next_token instanceof Integer) {
           rect_coor[i] = (Integer) next_token;
         } else {
-          FRLogger.warn("Shape.read_rectangle_scope: number expected");
+          FRLogger.warn("Shape.read_rectangle_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
       }
@@ -252,7 +253,7 @@ public abstract class Shape {
 
       next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("Shape.read_rectangle_scope ) expected");
+        FRLogger.warn("Shape.read_rectangle_scope ) expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (rect_layer == null) {
@@ -281,11 +282,11 @@ public abstract class Shape {
         polygon_layer = Layer.SIGNAL;
       } else {
         if (p_layer_structure == null) {
-          FRLogger.warn("Shape.read_polygon_scope: only layer types pcb or signal expected");
+          FRLogger.warn("Shape.read_polygon_scope: only layer types pcb or signal expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         if (!(next_token instanceof String)) {
-          FRLogger.warn("Shape.read_polygon_scope: layer name string expected");
+          FRLogger.warn("Shape.read_polygon_scope: layer name string expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         int layer_no = p_layer_structure.get_no((String) next_token);
@@ -293,7 +294,7 @@ public abstract class Shape {
           FRLogger.warn(
               "Shape.read_polygon_scope: layer name '"
                   + next_token
-                  + "' not found in layer structure ");
+                  + "' not found in layer structure  at '" + p_scanner.get_scope_identifier() + "'");
           layer_ok = false;
         } else {
           polygon_layer = p_layer_structure.arr[layer_no];
@@ -309,7 +310,7 @@ public abstract class Shape {
       for (; ; ) {
         next_token = p_scanner.next_token();
         if (next_token == null) {
-          FRLogger.warn("Shape.read_polygon_scope: unexpected end of file");
+          FRLogger.warn("Shape.read_polygon_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         if (next_token == Keyword.OPEN_BRACKET) {
@@ -334,7 +335,7 @@ public abstract class Shape {
         } else if (next_object instanceof Integer) {
           coor_arr[i] = (Integer) next_object;
         } else {
-          FRLogger.warn("Shape.read_polygon_scope: number expected");
+          FRLogger.warn("Shape.read_polygon_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
       }
@@ -353,8 +354,7 @@ public abstract class Shape {
       Layer circle_layer = get_layer(p_layer_structure, layer_name);
 
       if (circle_layer == null) {
-        FRLogger.warn(
-            "Circle.read_circle_scope: layer with name '"+layer_name+"' not found in layer structure");
+        FRLogger.warn("Circle.read_circle_scope: layer with name '"+layer_name+"' not found in layer structure at '" + p_scanner.get_scope_identifier() + "'");
       }
 
       // fill the coordinates
@@ -367,7 +367,7 @@ public abstract class Shape {
           break;
         }
         if (curr_index > 2) {
-          FRLogger.warn("Shape.read_circle_scope: closed bracket expected");
+          FRLogger.warn("Shape.read_circle_scope: closed bracket expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         if (next_token instanceof Double) {
@@ -375,7 +375,7 @@ public abstract class Shape {
         } else if (next_token instanceof Integer) {
           circle_coor[curr_index] = (Integer) next_token;
         } else {
-          FRLogger.warn("Shape.read_circle_scope: number expected");
+          FRLogger.warn("Shape.read_circle_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
         ++curr_index;
@@ -414,7 +414,7 @@ public abstract class Shape {
         corner_list.add(next_token);
       }
       if (corner_list.size() < 5) {
-        FRLogger.warn("Shape.read_polygon_path_scope: to few numbers in scope");
+        FRLogger.warn("Shape.read_polygon_path_scope: to few numbers in scope at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (layer == null) {
@@ -428,7 +428,7 @@ public abstract class Shape {
       } else if (next_object instanceof Integer) {
         width = (Integer) next_object;
       } else {
-        FRLogger.warn("Shape.read_polygon_path_scope: number expected");
+        FRLogger.warn("Shape.read_polygon_path_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       double[] coordinate_arr = new double[corner_list.size() - 1];
@@ -439,7 +439,7 @@ public abstract class Shape {
         } else if (next_object instanceof Integer) {
           coordinate_arr[i] = (Integer) next_object;
         } else {
-          FRLogger.warn("Shape.read_polygon_path_scope: number expected");
+          FRLogger.warn("Shape.read_polygon_path_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
       }
