@@ -22,7 +22,7 @@ public class StartupOptions {
   transient String design_input_filename;
   transient String design_output_filename;
   transient String design_rules_filename;
-  public String design_input_directory_name;
+  public String input_directory;
   public int max_passes = 99999;
   //int num_threads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   public int num_threads = 1;
@@ -35,7 +35,7 @@ public class StartupOptions {
   // this value is equivalent to the setting of "-oit 0.001"
   public float optimization_improvement_threshold = 0.00001f;
   transient String[] ignore_net_classes_by_autorouter = new String[0];
-  public boolean disable_logging_option = false;
+  public boolean disable_logging = false;
 
   public StartupOptions() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
@@ -60,7 +60,7 @@ public class StartupOptions {
         } else if (p_args[i].startsWith("-di")) {
           // the design directory is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            design_input_directory_name = p_args[i + 1];
+            input_directory = p_args[i + 1];
           }
         } else if (p_args[i].startsWith("-do")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
@@ -169,7 +169,7 @@ public class StartupOptions {
         } else if (p_args[i].startsWith("-test")) {
           test_version_option = true;
         } else if (p_args[i].startsWith("-dl")) {
-          disable_logging_option = true;
+          disable_logging = true;
         } else if (p_args[i].startsWith("-h")) {
           show_help_option = true;
         } else if (p_args[i].startsWith("-inc")) {
@@ -191,7 +191,7 @@ public class StartupOptions {
   }
 
   public String getDesignDir() {
-    return design_input_directory_name;
+    return input_directory;
   }
 
   public int getMaxPasses() {

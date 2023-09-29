@@ -241,9 +241,17 @@ public class MainApplication extends WindowBase {
     if (options == null)
     {
       options = new StartupOptions();
+
+      // save the default values
+      try {
+        StartupOptions.save(options);
+      } catch (Exception e)
+      {
+        // it's ok if we can't save the configuration file
+      }
     }
 
-    // let's load the defaults values and parse the arguments
+    // parse the command line arguments
     options.parseCommandLineArguments(args);
 
     FRLogger.debug(" GUI Language: " + options.current_locale);
@@ -552,7 +560,7 @@ public class MainApplication extends WindowBase {
     if (design_file != null) {
       if (!Objects.equals(this.design_dir_name, design_file.get_directory())) {
         this.design_dir_name = design_file.get_directory();
-        options.design_input_directory_name = this.design_dir_name;
+        options.input_directory = this.design_dir_name;
 
         try {
           StartupOptions.save(options);
