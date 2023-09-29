@@ -528,13 +528,16 @@ public class MainApplication extends WindowBase {
         confirm_import_rules_message = null;
       }
 
-      // load the .rules file
-      DesignFile.read_rules_file(
-          design_name,
-          parent_folder_name,
-          rules_file_name,
-          new_frame.board_panel.board_handling,
-          confirm_import_rules_message);
+      File rules_file = new File(parent_folder_name, rules_file_name);
+      if (rules_file.exists()) {
+        // load the .rules file
+        DesignFile.read_rules_file(
+            design_name,
+            parent_folder_name,
+            rules_file_name,
+            new_frame.board_panel.board_handling,
+            confirm_import_rules_message);
+      }
 
       // ignore net classes if they were defined by a command line argument
       for (String net_class_name : p_ignore_net_classes_by_autorouter) {

@@ -132,7 +132,7 @@ public class DesignFile {
       if (dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message)) {
         return RulesFile.read(input_stream, p_design_name, p_board_handling);
       }
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       FRLogger.error("File '" + rules_file_name + "' was not found.", null);
     }
     return false;
