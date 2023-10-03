@@ -7,6 +7,7 @@ import app.freerouting.constants.Constants;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -256,6 +257,9 @@ public class MainApplication extends WindowBase {
     options.parseCommandLineArguments(args);
 
     FRLogger.debug(" GUI Language: " + options.current_locale);
+
+    VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
+    new Thread(checker).start();  // Non-blocking
 
     ResourceBundle resources =
         ResourceBundle.getBundle(
