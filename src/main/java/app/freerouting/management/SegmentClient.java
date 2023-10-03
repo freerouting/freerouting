@@ -6,8 +6,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class SegmentClient {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
