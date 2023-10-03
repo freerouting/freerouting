@@ -85,7 +85,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
       }
       if (hdlg.get_settings().autoroute_settings.get_with_autoroute()
           && !this.is_stop_auto_router_requested()) {
-        batch_autorouter.autoroute_passes();
+        batch_autorouter.autoroute_passes(hdlg.save_intermediate_stages);
       }
       hdlg.get_routing_board().finish_autoroute();
 

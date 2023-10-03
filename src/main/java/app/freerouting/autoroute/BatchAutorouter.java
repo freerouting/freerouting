@@ -126,7 +126,7 @@ public class BatchAutorouter {
    * Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user.
    * Returns true if the board is completed.
    */
-  public boolean autoroute_passes() {
+  public boolean autoroute_passes(boolean save_intermediate_stages) {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.interactive.InteractiveState", hdlg.get_locale());
@@ -208,7 +208,9 @@ public class BatchAutorouter {
               + "' making {} changes",
           newTraceDifferences);
 
-      this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
+      if (save_intermediate_stages) {
+        this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
+      }
 
       // check if there are still unrouted items
       if (still_unrouted_items && !is_interrupted) {

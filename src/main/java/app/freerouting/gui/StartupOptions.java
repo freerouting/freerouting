@@ -31,7 +31,7 @@ public class StartupOptions {
   public ItemSelectionStrategy item_selection_strategy = ItemSelectionStrategy.PRIORITIZED;
   transient String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   transient Locale current_locale = Locale.getDefault();
-  public boolean save_intermediate_stages = true;
+  public boolean save_intermediate_stages = false;
   // this value is equivalent to the setting of "-oit 0.001"
   public float optimization_improvement_threshold = 0.00001f;
   transient String[] ignore_net_classes_by_autorouter = new String[0];
