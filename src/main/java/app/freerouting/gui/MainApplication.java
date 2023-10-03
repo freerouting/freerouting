@@ -234,6 +234,7 @@ public class MainApplication extends WindowBase {
 
     try {
       options = StartupOptions.load();
+      FRLogger.info("Settings were loaded from freerouting.json");
     } catch (Exception e) {
       // we don't want to stop if the configuration file doesn't exist
     }
