@@ -301,23 +301,20 @@ public class Package {
 
   private static double read_rotation(IJFlexScanner p_scanner) {
     double result = 0;
+
     try {
-      Object next_token = p_scanner.next_token();
-      if (next_token instanceof Integer) {
-        result = (Integer) next_token;
-      } else if (next_token instanceof Double) {
-        result = (Double) next_token;
-      } else {
-        FRLogger.warn("Package.read_rotation: number expected at '" + p_scanner.get_scope_identifier() + "'");
-      }
+      String next_string = p_scanner.next_string();
+      result = Double.parseDouble(next_string);
+
       // Overread The closing bracket.
-      next_token = p_scanner.next_token();
+      Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
         FRLogger.warn("Package.read_rotation: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
       }
     } catch (IOException e) {
       FRLogger.error("Package.read_rotation: IO error while scanning file", e);
     }
+
     return result;
   }
 
