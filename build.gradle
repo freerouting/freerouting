@@ -37,8 +37,10 @@ dependencies {
 
     // https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.10.1'
-}
 
+    // https://segment.com/docs - this one doesn't work because it's missing the Java 9+ module-info.class
+    //implementation 'com.segment.analytics.java:analytics:+'
+}
 
 ext {
     mainClassName = 'app.freerouting.gui.MainApplication'

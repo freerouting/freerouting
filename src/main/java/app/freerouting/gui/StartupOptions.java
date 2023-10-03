@@ -10,6 +10,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
 public class StartupOptions {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -36,12 +37,15 @@ public class StartupOptions {
   public float optimization_improvement_threshold = 0.00001f;
   transient String[] ignore_net_classes_by_autorouter = new String[0];
   public boolean disable_logging = false;
+  public final String user_id;
 
   public StartupOptions() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
       // the fallback language is English
       current_locale = Locale.ENGLISH;
     }
+
+    user_id = UUID.randomUUID().toString();
   }
 
   public Locale getCurrentLocale() {

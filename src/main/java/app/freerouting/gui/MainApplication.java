@@ -7,6 +7,7 @@ import app.freerouting.constants.Constants;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
 import java.awt.Dimension;
@@ -80,7 +81,7 @@ public class MainApplication extends WindowBase {
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
-  private static StartupOptions options = new StartupOptions();
+  private static StartupOptions options;
   /**
    * Creates new form MainApplication It takes the directory of the board designs as optional
    * argument.
@@ -258,8 +259,30 @@ public class MainApplication extends WindowBase {
 
     FRLogger.debug(" GUI Language: " + options.current_locale);
 
+    // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
-    new Thread(checker).start();  // Non-blocking
+    new Thread(checker).start();
+
+    // initialize analytics
+    new Thread(() -> {
+      FRAnalytics.set_writeKey("G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
+      FRAnalytics.set_userId(options.user_id);
+      FRAnalytics.identify();
+      FRAnalytics.app_start(
+          Constants.FREEROUTING_VERSION,
+          Constants.FREEROUTING_BUILD_DATE,
+          String.join(" ", args),
+          System.getProperty("os.name"),
+          System.getProperty("os.arch"),
+          System.getProperty("os.version"),
+          System.getProperty("java.version"),
+          System.getProperty("java.vendor"),
+          Locale.getDefault(), options.current_locale,
+          Runtime.getRuntime().availableProcessors(),
+          (Runtime.getRuntime().maxMemory() / 1024 / 1024),
+          Instant.now()
+      );
+    }).start();
 
     ResourceBundle resources =
         ResourceBundle.getBundle(
