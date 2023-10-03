@@ -43,6 +43,11 @@ public class BatchAutorouterThread extends InteractiveActionThread {
     save_intermediate_stages = p_board_handling.save_intermediate_stages;
     optimization_improvement_threshold = p_board_handling.optimization_improvement_threshold;
 
+    if (num_threads > 1)
+    {
+      FRLogger.warn("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
+    }
+
     this.batch_opt_route =
         num_threads > 1
             ? new BatchOptRouteMT(
