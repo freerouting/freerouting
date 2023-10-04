@@ -264,25 +264,29 @@ public class MainApplication extends WindowBase {
     new Thread(checker).start();
 
     // initialize analytics
-    new Thread(() -> {
-      FRAnalytics.set_writeKey("G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
-      FRAnalytics.set_userId(options.user_id);
-      FRAnalytics.identify();
-      FRAnalytics.app_start(
-          Constants.FREEROUTING_VERSION,
-          Constants.FREEROUTING_BUILD_DATE,
-          String.join(" ", args),
-          System.getProperty("os.name"),
-          System.getProperty("os.arch"),
-          System.getProperty("os.version"),
-          System.getProperty("java.version"),
-          System.getProperty("java.vendor"),
-          Locale.getDefault(), options.current_locale,
-          Runtime.getRuntime().availableProcessors(),
-          (Runtime.getRuntime().maxMemory() / 1024 / 1024),
-          Instant.now()
-      );
-    }).start();
+    FRAnalytics.set_writeKey("G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
+    FRAnalytics.set_userId(options.user_id);
+    if (!options.disable_analytics) {
+      new Thread(
+              () -> {
+                FRAnalytics.identify();
+                FRAnalytics.app_start(
+                    Constants.FREEROUTING_VERSION,
+                    Constants.FREEROUTING_BUILD_DATE,
+                    String.join(" ", args),
+                    System.getProperty("os.name"),
+                    System.getProperty("os.arch"),
+                    System.getProperty("os.version"),
+                    System.getProperty("java.version"),
+                    System.getProperty("java.vendor"),
+                    Locale.getDefault(),
+                    options.current_locale,
+                    Runtime.getRuntime().availableProcessors(),
+                    (Runtime.getRuntime().maxMemory() / 1024 / 1024),
+                    Instant.now());
+              })
+          .start();
+    }
 
     ResourceBundle resources =
         ResourceBundle.getBundle(

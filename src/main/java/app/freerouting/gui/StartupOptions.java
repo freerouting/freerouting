@@ -37,6 +37,7 @@ public class StartupOptions {
   public float optimization_improvement_threshold = 0.00001f;
   transient String[] ignore_net_classes_by_autorouter = new String[0];
   public boolean disable_logging = false;
+  public boolean disable_analytics = false;
   public final String user_id;
 
   public StartupOptions() {
@@ -174,6 +175,8 @@ public class StartupOptions {
           test_version_option = true;
         } else if (p_args[i].startsWith("-dl")) {
           disable_logging = true;
+        } else if (p_args[i].startsWith("-da")) {
+          disable_analytics = true;
         } else if (p_args[i].startsWith("-h")) {
           show_help_option = true;
         } else if (p_args[i].startsWith("-inc")) {
