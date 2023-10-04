@@ -102,28 +102,30 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     // Create buttongroup for the current layer:
 
-    LayerStructure layer_structure =
-        this.board_handling.get_routing_board().layer_structure;
-    int signal_layer_count = layer_structure.signal_layer_count();
     JLabel current_layer_label =
         new JLabel(resources.getString("current_layer"));
     current_layer_label.setToolTipText(resources.getString("current_layer_tooltip"));
     gridbag.setConstraints(current_layer_label, gridbag_constraints);
     main_panel.add(current_layer_label);
 
-    this.layer_name_arr = new JRadioButton[signal_layer_count];
+    LayerStructure layer_structure =
+        this.board_handling.get_routing_board().layer_structure;
+    int layer_count = layer_structure.arr.length;
+    this.layer_name_arr = new JRadioButton[layer_count];
     ButtonGroup current_layer_button_group = new ButtonGroup();
     gridbag_constraints.gridheight = 1;
-    for (int i = 0; i < signal_layer_count; ++i) {
-      Layer curr_signal_layer = layer_structure.get_signal_layer(i);
+    for (int i = 0; i < layer_count; ++i) {
+      Layer curr_layer = layer_structure.arr[i];
       layer_name_arr[i] = new JRadioButton();
-      layer_name_arr[i].setText(curr_signal_layer.name);
+      layer_name_arr[i].setText(curr_layer.name);
+      layer_name_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(layer_name_arr[i], gridbag_constraints);
       main_panel.add(layer_name_arr[i]);
       current_layer_button_group.add(layer_name_arr[i]);
-      int layer_no = layer_structure.get_no(curr_signal_layer);
+      int layer_no = layer_structure.get_no(curr_layer);
       layer_name_arr[i].addActionListener(new CurrentLayerListener(i, layer_no));
     }
+
     JLabel empty_label = new JLabel();
     gridbag.setConstraints(empty_label, gridbag_constraints);
     main_panel.add(empty_label);
@@ -155,11 +157,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
             item_selection_filter.is_selected(filter_values[i]));
       }
     }
-    LayerStructure layer_structure =
-        this.board_handling.get_routing_board().layer_structure;
-    Layer current_layer =
-        layer_structure.arr[this.board_handling.settings.get_layer()];
-    layer_name_arr[layer_structure.get_signal_layer_no(current_layer)].setSelected(true);
+    layer_name_arr[this.board_handling.settings.get_layer()].setSelected(true);
   }
 
   /** Selects the layer with the input signal number. */

@@ -306,9 +306,8 @@ public class BoardHandling extends BoardHandlingHeadless {
     settings.layer = p_layer_no;
 
     // Change the selected layer in the select parameter window.
-    int signal_layer_no = board.layer_structure.get_signal_layer_no(curr_layer);
-    if (!this.board_is_read_only) {
-      this.panel.set_selected_signal_layer(signal_layer_no);
+    if ((!this.board_is_read_only) && (curr_layer.is_signal)) {
+      this.panel.set_selected_signal_layer(p_layer_no);
     }
 
     // make the layer visible, if it is invisible

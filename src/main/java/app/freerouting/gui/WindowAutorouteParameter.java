@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   private final BoardHandling board_handling;
-  private final JLabel[] signal_layer_name_arr;
-  private final JCheckBox[] signal_layer_active_arr;
+  private final JLabel[] layer_name_arr;
+  private final JCheckBox[] layer_active_arr;
   private final JComboBox<String>[] combo_box_arr;
   private final JCheckBox vias_allowed;
   private final JCheckBox fanout_pass_button;
@@ -71,23 +71,34 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.horizontal = resources.getString("horizontal");
     this.vertical = resources.getString("vertical");
 
+    // create the layer list
     LayerStructure layer_structure =
         board_handling.get_routing_board().layer_structure;
-    int signal_layer_count = layer_structure.signal_layer_count();
-    signal_layer_name_arr = new JLabel[signal_layer_count];
-    signal_layer_active_arr = new JCheckBox[signal_layer_count];
-    combo_box_arr = new JComboBox[signal_layer_count];
-    for (int i = 0; i < signal_layer_count; ++i) {
-      signal_layer_name_arr[i] = new JLabel();
-      Layer curr_signal_layer = layer_structure.get_signal_layer(i);
-      signal_layer_name_arr[i].setText(curr_signal_layer.name);
+    int layer_count = layer_structure.arr.length;
+
+    // every layer is a row in the gridbag and has 3 columns: name, active, preferred direction
+    layer_name_arr = new JLabel[layer_count];
+    layer_active_arr = new JCheckBox[layer_count];
+    combo_box_arr = new JComboBox[layer_count];
+
+    for (int i = 0; i < layer_count; ++i) {
       gridbag_constraints.gridwidth = 3;
-      gridbag.setConstraints(signal_layer_name_arr[i], gridbag_constraints);
-      main_panel.add(signal_layer_name_arr[i]);
-      signal_layer_active_arr[i] = new JCheckBox();
-      signal_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
-      gridbag.setConstraints(signal_layer_active_arr[i], gridbag_constraints);
-      main_panel.add(signal_layer_active_arr[i]);
+      Layer curr_layer = layer_structure.arr[i];
+
+      // set the name
+      layer_name_arr[i] = new JLabel();
+      layer_name_arr[i].setText(curr_layer.name);
+      gridbag.setConstraints(layer_name_arr[i], gridbag_constraints);
+      main_panel.add(layer_name_arr[i]);
+
+      // set the active checkbox
+      layer_active_arr[i] = new JCheckBox();
+      layer_active_arr[i].addActionListener(new LayerActiveListener(i));
+      board_handling.settings.autoroute_settings.set_layer_active(i, curr_layer.is_signal);
+      gridbag.setConstraints(layer_active_arr[i], gridbag_constraints);
+      main_panel.add(layer_active_arr[i]);
+
+      // set the preferred direction combobox
       combo_box_arr[i] = new JComboBox<>();
       combo_box_arr[i].addItem(this.horizontal);
       combo_box_arr[i].addItem(this.vertical);
@@ -180,9 +191,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.autoroute_pass_button.setSelected(settings.get_with_autoroute());
     this.postroute_pass_button.setSelected(settings.get_with_postroute());
 
-    for (int i = 0; i < signal_layer_active_arr.length; ++i) {
-      this.signal_layer_active_arr[i].setSelected(
-          settings.get_layer_active(layer_structure.get_layer_no(i)));
+    for (int i = 0; i < layer_active_arr.length; ++i) {
+      this.layer_active_arr[i].setSelected(
+          settings.get_layer_active(i));
     }
 
     for (int i = 0; i < combo_box_arr.length; ++i) {
@@ -238,10 +249,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      int curr_layer_no =
-          board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
+      int curr_layer_no = this.signal_layer_no;
+//      int curr_layer_no =
+//          board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
       board_handling.settings.autoroute_settings.set_layer_active(
-          curr_layer_no, signal_layer_active_arr[this.signal_layer_no].isSelected());
+          curr_layer_no, layer_active_arr[this.signal_layer_no].isSelected());
     }
   }
 
