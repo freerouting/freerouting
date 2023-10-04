@@ -75,19 +75,19 @@ public class FRAnalytics {
       Instant currentUtcTime)
   {
     Map<String, String> properties = new HashMap<>();
-    properties.put("BuildVersion", freeroutingVersion);
-    properties.put("BuildDate", freeroutingBuildDate);
-    properties.put("CommandLineArguments", commandLineArguments);
-    properties.put("OSName", osName);
-    properties.put("OSArchitecture", osArchitecture);
-    properties.put("OSVersion", osVersion);
-    properties.put("JavaVersion", javaVersion);
-    properties.put("JavaVendor", javaVendor);
-    properties.put("LanguageSystem", systemLanguage.toString());
-    properties.put("LanguageGUI", guiLanguage.toString());
-    properties.put("CPUCoreCount", Integer.toString(cpuCoreCount));
-    properties.put("RAMAmount", Long.toString(ramAmount));
-    properties.put("CurrentTimeUTC", currentUtcTime.toString());
+    properties.put("build_version", freeroutingVersion);
+    properties.put("build_date", freeroutingBuildDate);
+    properties.put("command_line_arguments", commandLineArguments);
+    properties.put("os_name", osName);
+    properties.put("os_architecture", osArchitecture);
+    properties.put("os_version", osVersion);
+    properties.put("java_version", javaVersion);
+    properties.put("java_vendor", javaVendor);
+    properties.put("system_language", systemLanguage.toString());
+    properties.put("gui_language", guiLanguage.toString());
+    properties.put("cpu_core_count", Integer.toString(cpuCoreCount));
+    properties.put("ram_amount", Long.toString(ramAmount));
+    properties.put("current_time_utc", currentUtcTime.toString());
     trackAnonymousAction(permanent_user_id, "Application Started", properties);
   }
 }
