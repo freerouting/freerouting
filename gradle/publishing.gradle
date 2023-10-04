@@ -57,6 +57,14 @@ def pomConfig = {
     }
 }
 
+tasks.register('verifyVersion') {
+    doLast {
+        if (version.toString().toUpperCase().contains("SNAPSHOT")) {
+            throw new GradleException("Can't publish a SNAPSHOT version to Maven Central.")
+        }
+    }
+}
+
 publishing {
     publications {
         mavenCustom(MavenPublication) {
@@ -77,4 +85,19 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            name = 'OSSRH'
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+
+            credentials {
+                username = project.findProperty("sonatypeUsername") ?: System.getenv("SONATYPE_USERNAME")
+                password = project.findProperty("sonatypePassword") ?: System.getenv("SONATYPE_PASSWORD")
+            }
+        }
+    }
+}
+
+tasks.named("publish").configure {
+    dependsOn verifyVersion
 }
