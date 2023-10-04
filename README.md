@@ -292,7 +292,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 * Update README
 * Publish the release
 * Check if Windows and Linux installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions)
-* If everything looks good run the `gradle publish` command in the root folder to publish it to Maven Central
+* Set the `SONATYPE_USERNAME` and `SONATYPE_PASSWORD` environment variables, and run the `gradle publish` command in the root folder to publish it to Maven Central
 * Change `ext.publishing.versionId` in `project-info.gradle` again to `2.3.5-SNAPSHOT`
 
 ## Contributing
