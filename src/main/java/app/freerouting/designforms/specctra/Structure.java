@@ -1111,6 +1111,11 @@ class Structure extends ScopeKeyword {
             p_par.item_id_no_generator,
             p_par.observers);
 
+    if (board_communication.host_is_old_kicad())
+    {
+      FRLogger.warn("Structure.create_board: The DSN file was exported from an old KiCad version that has known compatibility issues. Please update KiCad to version 6 or newer.");
+    }
+
     PolylineShape[] outline_shape_arr = new PolylineShape[board_outline_shapes.size()];
     Iterator<PolylineShape> it2 = board_outline_shapes.iterator();
     for (int i = 0; i < outline_shape_arr.length; ++i) {

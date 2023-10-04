@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Communication information to host systems or host design formats. */
 public class Communication implements Serializable {
@@ -55,6 +57,24 @@ public class Communication implements Serializable {
     return specctra_parser_info != null
         && specctra_parser_info.host_cad != null
         && specctra_parser_info.host_cad.equalsIgnoreCase("CadSoft");
+  }
+
+  public boolean host_is_old_kicad() {
+    if ((specctra_parser_info == null) || (specctra_parser_info.host_cad == null) || (specctra_parser_info.host_version == null)) {
+      return false;
+    }
+
+    if (specctra_parser_info.host_cad.toLowerCase().contains("kicad"))
+    {
+      String versionString = specctra_parser_info.host_version;
+      Matcher matcher = Pattern.compile("\\d+").matcher(versionString);
+      if (matcher.find()) {
+        int versionNumber = Integer.parseInt(matcher.group());
+        return versionNumber <= 5;
+      }
+    }
+
+    return false;
   }
 
   public boolean host_cad_exists() {
