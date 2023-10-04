@@ -1,0 +1,11 @@
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-F_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-In1_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-In2_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-B_Cu.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-F_Silkscreen.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-B_Silkscreen.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-F_Mask.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-B_Mask.gbr'.
+Plotted to 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-Edge_Cuts.gbr'.
+Created Gerber job file 'D:\Dad\Documents\Work\CNH\Trison_Designed_Testers\CNH_Functional_Tester_1\Schematics\CNH_Functional_Tester_1_RevB\CNH_Functional_Tester_1-job.gbrjob'.
+Info: Done.
