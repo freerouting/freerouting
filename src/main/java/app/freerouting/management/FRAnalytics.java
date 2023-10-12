@@ -16,6 +16,34 @@ public class FRAnalytics {
   private static String appPreviousLocation = "";
   private static String appCurrentLocation = "";
   private static String appWindowTitle = "";
+  private static final HashMap<String, String> appLocationTable = new HashMap<String, String>()
+  {{
+    put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
+    put("app.freerouting.gui.WindowObjectVisibility", "app.freerouting.gui/Appearance/ObjectTransparency");
+    put("app.freerouting.gui.WindowLayerVisibility", "app.freerouting.gui/Appearance/LayerTransparency");
+    put("app.freerouting.gui.ColorManager", "app.freerouting.gui/Appearance/Colors");
+    put("app.freerouting.gui.WindowDisplayMisc", "app.freerouting.gui/Appearance/Misc");
+    put("app.freerouting.gui.WindowSelectParameter", "app.freerouting.gui/Settings/Selection");
+    put("app.freerouting.gui.WindowRouteParameter", "app.freerouting.gui/Settings/Routing");
+    put("app.freerouting.gui.WindowAutorouteParameter", "app.freerouting.gui/Settings/Auto-router");
+    put("app.freerouting.gui.WindowAutorouteDetailParameter", "app.freerouting.gui/Settings/Auto-router/Details");
+    put("app.freerouting.gui.WindowMoveParameter", "app.freerouting.gui/Settings/Controls");
+    put("app.freerouting.gui.WindowClearanceMatrix", "app.freerouting.gui/Rules/ClearanceMatrix");
+    put("app.freerouting.gui.WindowVia", "app.freerouting.gui/Rules/Vias");
+    put("app.freerouting.gui.WindowNets", "app.freerouting.gui/Rules/Nets");
+    put("app.freerouting.gui.WindowNetClasses", "app.freerouting.gui/Rules/NetClasses");
+    put("app.freerouting.gui.WindowPackages", "app.freerouting.gui/Information/LibraryPackages");
+    put("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui/Information/LibraryPadstacks");
+    put("app.freerouting.gui.WindowComponents", "app.freerouting.gui/Information/PlacedComponents");
+    put("app.freerouting.gui.WindowIncompletes", "app.freerouting.gui/Information/Incompletes");
+    put("app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui/Information/LengthViolations");
+    put("app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui/Information/ClearanceViolations");
+    put("app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui/Information/UnconnectedRoutes");
+    put("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui/Information/RouteStubs");
+    put("app.freerouting.gui.WindowSnapshot", "app.freerouting.gui/Other/Snapshots");
+    put("app.freerouting.gui.WindowSnapshotSettings", "app.freerouting.gui/Other/Snapshots/Settings");
+    put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
+  }};
 
   public static void setWriteKey(String libraryVersion, String writeKey)
   {
@@ -55,7 +83,6 @@ public class FRAnalytics {
     try {
       Properties p = new Properties();
       p.put("app_current_location", appCurrentLocation);
-      p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
       p.putAll(properties);
@@ -70,12 +97,14 @@ public class FRAnalytics {
   {
     Map<String, String> traits = new HashMap<>();
     traits.put("anonymous", "true");
-    //identifyUser(permament_user_id, traits);
+    //identifyUser(permanent_user_id, traits);
     identifyAnonymous(permanent_user_id, traits);
   }
 
   public static void setAppLocation(String appLocation, String windowTitle)
   {
+    appLocation = translateWindowClassToUrl(appLocation);
+
     if (Objects.equals(appPreviousLocation, appLocation))
     {
       return;
@@ -87,6 +116,16 @@ public class FRAnalytics {
 
     Properties p = new Properties();
     trackAnonymousAction(permanent_user_id, "Window Changed", p);
+  }
+
+  private static String translateWindowClassToUrl(String appLocation) {
+    if (appLocationTable.containsKey(appLocation))
+    {
+      return appLocationTable.get(appLocation);
+    } else
+    {
+      return appLocation.replace("app.freerouting.gui.", "app.freerouting.gui/");
+    }
   }
 
   public static void appStart(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
