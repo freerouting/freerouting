@@ -264,7 +264,7 @@ public class MainApplication extends WindowBase {
     new Thread(checker).start();
 
     // initialize analytics
-    FRAnalytics.setWriteKey("G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
+    FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION,"G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
     FRAnalytics.setUserId(startupOptions.user_id);
     if (!startupOptions.disable_analytics) {
       new Thread(

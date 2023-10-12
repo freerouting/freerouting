@@ -11,9 +11,12 @@ public class SegmentClient {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final String SEGMENT_ENDPOINT = "https://api.segment.io/v1/";
   private final String WRITE_KEY;
+  private final String LIBRARY_NAME = "freerouting";
+  private final String LIBRARY_VERSION;
 
-  public SegmentClient(String writeKey)
+  public SegmentClient(String libraryVersion, String writeKey)
   {
+    LIBRARY_VERSION = libraryVersion;
     WRITE_KEY = writeKey;
   }
 
@@ -51,6 +54,10 @@ public class SegmentClient {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
+    payload.context = new Context();
+    payload.context.library = new Library();
+    payload.context.library.name = LIBRARY_NAME;
+    payload.context.library.version = LIBRARY_VERSION;
     payload.traits = traits;
 
     send_payload(SEGMENT_ENDPOINT + "identify", payload);
@@ -60,6 +67,10 @@ public class SegmentClient {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
+    payload.context = new Context();
+    payload.context.library = new Library();
+    payload.context.library.name = LIBRARY_NAME;
+    payload.context.library.version = LIBRARY_VERSION;
     payload.event = event;
     payload.properties = properties;
 

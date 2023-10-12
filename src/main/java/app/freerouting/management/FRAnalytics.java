@@ -17,9 +17,9 @@ public class FRAnalytics {
   private static String appCurrentLocation = "";
   private static String appWindowTitle = "";
 
-  public static void setWriteKey(String writeKey)
+  public static void setWriteKey(String libraryVersion, String writeKey)
   {
-    analytics = new SegmentClient(writeKey);
+    analytics = new SegmentClient(libraryVersion, writeKey);
   }
 
   public static void setUserId(String userId)
@@ -55,6 +55,7 @@ public class FRAnalytics {
     try {
       Properties p = new Properties();
       p.put("app_current_location", appCurrentLocation);
+      p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
       p.putAll(properties);
@@ -87,7 +88,6 @@ public class FRAnalytics {
     Properties p = new Properties();
     trackAnonymousAction(permanent_user_id, "Window Changed", p);
   }
-
 
   public static void appStart(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
       String osName, String osArchitecture, String osVersion,
