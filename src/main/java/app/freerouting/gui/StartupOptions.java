@@ -178,7 +178,7 @@ public class StartupOptions {
           disable_logging = true;
         } else if (p_args[i].startsWith("-da")) {
           disable_analytics = true;
-        } else if (p_args[i].startsWith("-h")) {
+        } else if (p_args[i].startsWith("-help")) {
           show_help_option = true;
         } else if (p_args[i].startsWith("-inc")) {
           // ignore net class(es)
