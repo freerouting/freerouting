@@ -4,6 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.TestLevel;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -53,6 +54,7 @@ public class BoardMenuFile extends JMenu {
                   file_menu.resources.getString("save_message"));
             }
           });
+      save_item.addActionListener(evt -> FRAnalytics.buttonClicked("save_item", save_item.getText()));
 
       file_menu.add(save_item);
     }
@@ -71,6 +73,7 @@ public class BoardMenuFile extends JMenu {
           }
           file_menu.board_frame.dispose();
         });
+    save_and_exit_item.addActionListener(evt -> FRAnalytics.buttonClicked("save_and_exit_item", save_and_exit_item.getText()));
 
     file_menu.add(save_and_exit_item);
 
@@ -78,6 +81,7 @@ public class BoardMenuFile extends JMenu {
     cancel_and_exit_item.setText(file_menu.resources.getString("cancel_and_exit"));
     cancel_and_exit_item.setToolTipText(file_menu.resources.getString("cancel_and_exit_tooltip"));
     cancel_and_exit_item.addActionListener(evt -> file_menu.board_frame.dispose());
+    cancel_and_exit_item.addActionListener(evt -> FRAnalytics.buttonClicked("cancel_and_exit_item", cancel_and_exit_item.getText()));
 
     file_menu.add(cancel_and_exit_item);
 
@@ -86,6 +90,7 @@ public class BoardMenuFile extends JMenu {
       save_as_item.setText(file_menu.resources.getString("save_as"));
       save_as_item.setToolTipText(file_menu.resources.getString("save_as_tooltip"));
       save_as_item.addActionListener(evt -> file_menu.save_as_action());
+      save_as_item.addActionListener(evt -> FRAnalytics.buttonClicked("save_as_item", save_as_item.getText()));
 
       file_menu.add(save_as_item);
 
@@ -95,6 +100,7 @@ public class BoardMenuFile extends JMenu {
       write_logfile_item.setToolTipText(
           file_menu.resources.getString("generate_logfile_tooltip"));
       write_logfile_item.addActionListener(evt -> file_menu.write_logfile_action());
+      write_logfile_item.addActionListener(evt -> FRAnalytics.buttonClicked("write_logfile_item", write_logfile_item.getText()));
 
       file_menu.add(write_logfile_item);
 
@@ -102,6 +108,7 @@ public class BoardMenuFile extends JMenu {
       replay_logfile_item.setText(file_menu.resources.getString("replay_logfile"));
       replay_logfile_item.setToolTipText(file_menu.resources.getString("replay_logfile_tooltip"));
       replay_logfile_item.addActionListener(evt -> file_menu.read_logfile_action());
+      replay_logfile_item.addActionListener(evt -> FRAnalytics.buttonClicked("replay_logfile_item", replay_logfile_item.getText()));
 
       file_menu.add(replay_logfile_item);
     }
@@ -122,9 +129,9 @@ public class BoardMenuFile extends JMenu {
     JMenuItem write_session_file_item = new JMenuItem();
     write_session_file_item.setText(resources.getString("session_file"));
     write_session_file_item.setToolTipText(resources.getString("session_file_tooltip"));
-    write_session_file_item.addActionListener(
-        // The user selected the .SES file export function from the File menu
-        evt -> board_frame.design_file.write_specctra_session_file(board_frame));
+    write_session_file_item.addActionListener(evt -> board_frame.design_file.write_specctra_session_file(board_frame));
+    write_session_file_item.addActionListener(evt -> FRAnalytics.buttonClicked("write_session_file_item", write_session_file_item.getText()));
+
 
     if ((routing_board.get_test_level() != TestLevel.RELEASE_VERSION
         || !host_cad_is_eagle)) {
@@ -134,8 +141,8 @@ public class BoardMenuFile extends JMenu {
     JMenuItem write_eagle_session_script_item = new JMenuItem();
     write_eagle_session_script_item.setText(resources.getString("eagle_script"));
     write_eagle_session_script_item.setToolTipText(resources.getString("eagle_script_tooltip"));
-    write_eagle_session_script_item.addActionListener(
-        evt -> board_frame.design_file.update_eagle(board_frame));
+    write_eagle_session_script_item.addActionListener(evt -> board_frame.design_file.update_eagle(board_frame));
+    write_eagle_session_script_item.addActionListener(evt -> FRAnalytics.buttonClicked("write_eagle_session_script_item", write_eagle_session_script_item.getText()));
 
     if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION
         || host_cad_is_eagle) {
@@ -149,6 +156,7 @@ public class BoardMenuFile extends JMenu {
     save_settings_item.setText(resources.getString("settings"));
     save_settings_item.setToolTipText(resources.getString("settings_tooltip"));
     save_settings_item.addActionListener(evt -> save_defaults_action());
+    save_settings_item.addActionListener(evt -> FRAnalytics.buttonClicked("save_settings_item", save_settings_item.getText()));
     add(save_settings_item);
   }
 

@@ -42,6 +42,25 @@ public class FRAnalytics {
     put("app.freerouting.gui.WindowSnapshot", "app.freerouting.gui/Other/Snapshots");
     put("app.freerouting.gui.WindowSnapshotSettings", "app.freerouting.gui/Other/Snapshots/Settings");
     put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
+    put("select_button", "app.freerouting.gui/Board/Toolbar/Select");
+    put("route_button", "app.freerouting.gui/Board/Toolbar/Route");
+    put("drag_button", "app.freerouting.gui/Board/Toolbar/Drag");
+    put("autoroute_button", "app.freerouting.gui/Board/Toolbar/Autorouter");
+    put("undo_button", "app.freerouting.gui/Board/Toolbar/Undo");
+    put("redo_button", "app.freerouting.gui/Board/Toolbar/Redo");
+    put("incompletes_button", "app.freerouting.gui/Board/Toolbar/Incompletes");
+    put("violation_button", "app.freerouting.gui/Board/Toolbar/Violations");
+    put("display_all_button", "app.freerouting.gui/Board/Toolbar/ZoomAll");
+    put("display_region_button", "app.freerouting.gui/Board/Toolbar/ZoomRegion");
+    put("save_item", "app.freerouting.gui/Board/Menu/File/Save");
+    put("save_and_exit_item", "app.freerouting.gui/Board/Menu/File/SaveAndExit");
+    put("cancel_and_exit_item", "app.freerouting.gui/Board/Menu/File/CancelAndExit");
+    put("save_as_item", "app.freerouting.gui/Board/Menu/File/SaveAs");
+    put("write_logfile_item", "app.freerouting.gui/Board/Menu/File/MacroRecording");
+    put("replay_logfile_item", "app.freerouting.gui/Board/Menu/File/MacroPlayback");
+    put("save_settings_item", "app.freerouting.gui/Board/Menu/File/SaveGUISettings");
+    put("write_session_file_item", "app.freerouting.gui/Board/Menu/File/ExportAsSpecctra");
+    put("write_eagle_session_script_item", "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
   }};
   private static long appStartedAt;
   private static int sessionCount = 0;
@@ -109,24 +128,34 @@ public class FRAnalytics {
     identifyAnonymous(permanent_user_id, traits);
   }
 
-  public static void setAppLocation(String appLocation, String windowTitle)
+  public static void setAppLocation(String windowClassName, String windowTitle)
   {
-    appLocation = translateWindowClassToUrl(appLocation);
+    windowClassName = translateClassNameToUrl(windowClassName);
 
-    if (Objects.equals(appPreviousLocation, appLocation))
+    if (Objects.equals(appPreviousLocation, windowClassName))
     {
       return;
     }
 
     appPreviousLocation = appCurrentLocation;
-    appCurrentLocation = appLocation;
+    appCurrentLocation = windowClassName;
     appWindowTitle = windowTitle;
 
     Properties p = new Properties();
     trackAnonymousAction(permanent_user_id, "Window Changed", p);
   }
 
-  private static String translateWindowClassToUrl(String appLocation) {
+  public static void buttonClicked(String buttonClassName, String buttonText)
+  {
+    buttonClassName = translateClassNameToUrl(buttonClassName);
+
+    Properties p = new Properties();
+    p.put("button_name", buttonClassName);
+    p.put("button_text", buttonText);
+    trackAnonymousAction(permanent_user_id, "Button Clicked", p);
+  }
+
+  private static String translateClassNameToUrl(String appLocation) {
     if (appLocationTable.containsKey(appLocation))
     {
       return appLocationTable.get(appLocation);
