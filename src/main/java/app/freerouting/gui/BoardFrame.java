@@ -10,6 +10,7 @@ import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -739,6 +740,8 @@ public class BoardFrame extends WindowBase {
                 JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        } else {
+          FRAnalytics.appClosed();
         }
       }
     }

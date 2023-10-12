@@ -84,7 +84,9 @@ public class FRAnalytics {
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
-      p.putAll(properties);
+      if (properties != null) {
+        p.putAll(properties);
+      }
 
       analytics.track(null, anonymousId, action, p);
     } catch (Exception e) {
@@ -127,7 +129,7 @@ public class FRAnalytics {
     }
   }
 
-  public static void appStart(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
+  public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
       String osName, String osArchitecture, String osVersion,
       String javaVersion, String javaVendor,
       Locale systemLanguage, Locale guiLanguage,
@@ -155,5 +157,14 @@ public class FRAnalytics {
 
   public static void setEnabled(boolean enabled) {
     analytics.setEnabled(enabled);
+  }
+
+  public static void appClosed() {
+    trackAnonymousAction(permanent_user_id, "Application Closed", null);
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

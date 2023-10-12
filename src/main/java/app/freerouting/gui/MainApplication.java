@@ -269,7 +269,7 @@ public class MainApplication extends WindowBase {
     catch (Exception ignored) {
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStart(
+    FRAnalytics.appStarted(
         Constants.FREEROUTING_VERSION,
         Constants.FREEROUTING_BUILD_DATE,
         String.join(" ", args),
@@ -671,6 +671,7 @@ public class MainApplication extends WindowBase {
 
   /** Exit the Application */
   private void exitForm(WindowEvent evt) {
+    FRAnalytics.appClosed();
     System.exit(0);
   }
 
