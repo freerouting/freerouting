@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class FRAnalytics {
-
   private static SegmentClient analytics;
   private static String permanent_user_id;
   private static String appPreviousLocation = "";
@@ -152,5 +151,9 @@ public class FRAnalytics {
     properties.put("current_time_utc", currentUtcTime.toString());
     properties.put("host", host);
     trackAnonymousAction(permanent_user_id, "Application Started", properties);
+  }
+
+  public static void setEnabled(boolean enabled) {
+    analytics.setEnabled(enabled);
   }
 }

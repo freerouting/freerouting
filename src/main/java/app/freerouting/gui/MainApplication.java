@@ -260,35 +260,30 @@ public class MainApplication extends WindowBase {
 
     // initialize analytics
     FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION,"G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
+    FRAnalytics.setEnabled(!startupOptions.disable_analytics);
     FRAnalytics.setUserId(startupOptions.user_id);
-    if (!startupOptions.disable_analytics) {
-      new Thread(
-              () -> {
-                FRAnalytics.identify();
-                try {
-                  Thread.sleep(1000);
-                }
-                catch (Exception ignored) {
-                }
-                FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-                FRAnalytics.appStart(
-                    Constants.FREEROUTING_VERSION,
-                    Constants.FREEROUTING_BUILD_DATE,
-                    String.join(" ", args),
-                    System.getProperty("os.name"),
-                    System.getProperty("os.arch"),
-                    System.getProperty("os.version"),
-                    System.getProperty("java.version"),
-                    System.getProperty("java.vendor"),
-                    Locale.getDefault(),
-                    startupOptions.current_locale,
-                    Runtime.getRuntime().availableProcessors(),
-                    (Runtime.getRuntime().maxMemory() / 1024 / 1024),
-                    Instant.now(),
-                    startupOptions.host);
-              })
-          .start();
+    FRAnalytics.identify();
+    try {
+      Thread.sleep(1000);
     }
+    catch (Exception ignored) {
+    }
+    FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
+    FRAnalytics.appStart(
+        Constants.FREEROUTING_VERSION,
+        Constants.FREEROUTING_BUILD_DATE,
+        String.join(" ", args),
+        System.getProperty("os.name"),
+        System.getProperty("os.arch"),
+        System.getProperty("os.version"),
+        System.getProperty("java.version"),
+        System.getProperty("java.vendor"),
+        Locale.getDefault(),
+        startupOptions.current_locale,
+        Runtime.getRuntime().availableProcessors(),
+        (Runtime.getRuntime().maxMemory() / 1024 / 1024),
+        Instant.now(),
+        startupOptions.host);
 
     ResourceBundle resources =
         ResourceBundle.getBundle(
