@@ -275,7 +275,7 @@ public class MainApplication extends WindowBase {
                 }
                 catch (Exception ignored) {
                 }
-                FRAnalytics.setAppLocation("MainApplication", "Board Layout - Freerouting");
+                FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
                 FRAnalytics.appStart(
                     Constants.FREEROUTING_VERSION,
                     Constants.FREEROUTING_BUILD_DATE,
@@ -289,7 +289,8 @@ public class MainApplication extends WindowBase {
                     startupOptions.current_locale,
                     Runtime.getRuntime().availableProcessors(),
                     (Runtime.getRuntime().maxMemory() / 1024 / 1024),
-                    Instant.now());
+                    Instant.now(),
+                    startupOptions.host);
               })
           .start();
     }

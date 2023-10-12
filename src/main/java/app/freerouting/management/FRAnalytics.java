@@ -74,6 +74,11 @@ public class FRAnalytics {
 
   public static void setAppLocation(String appLocation, String windowTitle)
   {
+    if (appPreviousLocation == appLocation)
+    {
+      return;
+    }
+
     appPreviousLocation = appCurrentLocation;
     appCurrentLocation = appLocation;
     appWindowTitle = windowTitle;
@@ -88,7 +93,8 @@ public class FRAnalytics {
       String javaVersion, String javaVendor,
       Locale systemLanguage, Locale guiLanguage,
       int cpuCoreCount, long ramAmount,
-      Instant currentUtcTime)
+      Instant currentUtcTime,
+      String host)
   {
     Map<String, String> properties = new HashMap<>();
     properties.put("build_version", freeroutingVersion);
@@ -104,6 +110,7 @@ public class FRAnalytics {
     properties.put("cpu_core_count", Integer.toString(cpuCoreCount));
     properties.put("ram_amount", Long.toString(ramAmount));
     properties.put("current_time_utc", currentUtcTime.toString());
+    properties.put("host", host);
     trackAnonymousAction(permanent_user_id, "Application Started", properties);
   }
 }
