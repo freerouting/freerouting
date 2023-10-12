@@ -24,10 +24,10 @@
   },
   "versions": [    
 	{
-      "version": "1.8.0",
+      "version": "1.9.0",
       "status": "stable",
       "kicad_version": "6.0",
-      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.8.0.zip"
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-1.9.0.zip"
     }
   ]
 }

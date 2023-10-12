@@ -86,12 +86,13 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
     # init in place of constructor
     def defaults(self):
+        self.host = "KiCad"
         self.here_path, self.filename = os.path.split(os.path.abspath(__file__))
         self.name = "Freerouting"
         self.category = "PCB auto routing"
         self.description = "Freerouting for PCB auto routing"
         self.show_toolbar_button = True
-        self.icon_file_name = os.path.join(self.here_path, 'icon_24x24.png')
+        self.icon_file_name = os.path.join(self.here_path, 'icon_24x24.png')        
         
         # Controls KiCAD session file imports (works only in KiCAD nigthly or 6)
         self.SPECCTRA=True
@@ -99,7 +100,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
     # setup execution context
     def update_module_command(self):
         # Run freerouting with logging disabled (-dl) and input (-de) and output (-do) file definition
-        self.module_command = [self.java_path, "-jar", self.module_path, "-dl", "-de", self.module_input, "-do", self.module_output]
+        self.module_command = [self.java_path, "-jar", self.module_path, "-dl", "-de", self.module_input, "-do", self.module_output, "-host", self.host]
 
     # setup execution context
     def prepare(self):
