@@ -270,7 +270,12 @@ public class MainApplication extends WindowBase {
       new Thread(
               () -> {
                 FRAnalytics.identify();
-                FRAnalytics.setAppLocation("MainApplication", "");
+                try {
+                  Thread.sleep(1000);
+                }
+                catch (Exception ignored) {
+                }
+                FRAnalytics.setAppLocation("MainApplication", "Board Layout - Freerouting");
                 FRAnalytics.appStart(
                     Constants.FREEROUTING_VERSION,
                     Constants.FREEROUTING_BUILD_DATE,
