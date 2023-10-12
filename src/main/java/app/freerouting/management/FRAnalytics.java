@@ -11,15 +11,17 @@ import java.util.Map;
 public class FRAnalytics {
 
   private static SegmentClient analytics;
-
   private static String permanent_user_id;
+  private static String appPreviousLocation = "";
+  private static String appCurrentLocation = "";
+  private static String appWindowTitle = "";
 
-  public static void set_writeKey(String writeKey)
+  public static void setWriteKey(String writeKey)
   {
     analytics = new SegmentClient(writeKey);
   }
 
-  public static void set_userId(String userId)
+  public static void setUserId(String userId)
   {
     permanent_user_id = userId;
   }
@@ -51,6 +53,9 @@ public class FRAnalytics {
   {
     try {
       Properties p = new Properties();
+      p.put("app_current_location", appCurrentLocation);
+      p.put("app_previous_location", appPreviousLocation);
+      p.put("app_window_title", appWindowTitle);
       p.putAll(properties);
 
       analytics.track(null, anonymousId, action, p);
@@ -67,7 +72,18 @@ public class FRAnalytics {
     identifyAnonymous(permanent_user_id, traits);
   }
 
-  public static void app_start(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
+  public static void setAppLocation(String appLocation, String windowTitle)
+  {
+    appPreviousLocation = appCurrentLocation;
+    appCurrentLocation = appLocation;
+    appWindowTitle = windowTitle;
+
+    Properties p = new Properties();
+    trackAnonymousAction(permanent_user_id, "Window Changed", p);
+  }
+
+
+  public static void appStart(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
       String osName, String osArchitecture, String osVersion,
       String javaVersion, String javaVendor,
       Locale systemLanguage, Locale guiLanguage,

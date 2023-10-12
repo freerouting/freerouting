@@ -39,6 +39,7 @@ public class StartupOptions {
   public boolean disable_logging = false;
   public boolean disable_analytics = false;
   public final String user_id;
+  public int dialog_confirmation_timeout = 20;
 
   public StartupOptions() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
@@ -182,6 +183,14 @@ public class StartupOptions {
         } else if (p_args[i].startsWith("-inc")) {
           // ignore net class(es)
           ignore_net_classes_by_autorouter = p_args[i + 1].split(",");
+        } else if (p_args[i].startsWith("-dct")) {
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+            dialog_confirmation_timeout = Integer.parseInt(p_args[i + 1]);
+
+            if (dialog_confirmation_timeout <= 0) {
+              dialog_confirmation_timeout = 0;
+            }
+          }
         }
       } catch (Exception e) {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
