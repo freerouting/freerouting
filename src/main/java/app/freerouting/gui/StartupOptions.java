@@ -40,6 +40,7 @@ public class StartupOptions {
   public boolean disable_analytics = false;
   public final String user_id;
   public int dialog_confirmation_timeout = 20;
+  public String host = "N/A";
 
   public StartupOptions() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
@@ -178,6 +179,10 @@ public class StartupOptions {
           disable_logging = true;
         } else if (p_args[i].startsWith("-da")) {
           disable_analytics = true;
+        } else if (p_args[i].startsWith("-host")) {
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
+            host = p_args[i + 1].trim();
+          }
         } else if (p_args[i].startsWith("-help")) {
           show_help_option = true;
         } else if (p_args[i].startsWith("-inc")) {
