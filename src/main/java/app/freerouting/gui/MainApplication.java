@@ -282,7 +282,6 @@ public class MainApplication extends WindowBase {
         startupOptions.current_locale,
         Runtime.getRuntime().availableProcessors(),
         (Runtime.getRuntime().maxMemory() / 1024 / 1024),
-        Instant.now(),
         startupOptions.host);
 
     ResourceBundle resources =

@@ -43,6 +43,12 @@ public class FRAnalytics {
     put("app.freerouting.gui.WindowSnapshotSettings", "app.freerouting.gui/Other/Snapshots/Settings");
     put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
   }};
+  private static long appStartedAt;
+  private static int sessionCount = 0;
+  private static long totalAutorouterRuntime = 0;
+  private static long totalRouteOptimizerRuntime = 0;
+  private static long autorouterStartedAt;
+  private static long routeOptimizerStartedAt;
 
   public static void setWriteKey(String libraryVersion, String writeKey)
   {
@@ -81,6 +87,7 @@ public class FRAnalytics {
   {
     try {
       Properties p = new Properties();
+      p.put("current_time_utc", Instant.now().toString());
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
@@ -129,14 +136,19 @@ public class FRAnalytics {
     }
   }
 
+  public static void setEnabled(boolean enabled) {
+    analytics.setEnabled(enabled);
+  }
+
   public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments,
       String osName, String osArchitecture, String osVersion,
       String javaVersion, String javaVendor,
       Locale systemLanguage, Locale guiLanguage,
       int cpuCoreCount, long ramAmount,
-      Instant currentUtcTime,
       String host)
   {
+    appStartedAt = Instant.now().getEpochSecond();
+
     Map<String, String> properties = new HashMap<>();
     properties.put("build_version", freeroutingVersion);
     properties.put("build_date", freeroutingBuildDate);
@@ -150,21 +162,69 @@ public class FRAnalytics {
     properties.put("gui_language", guiLanguage.toString());
     properties.put("cpu_core_count", Integer.toString(cpuCoreCount));
     properties.put("ram_amount", Long.toString(ramAmount));
-    properties.put("current_time_utc", currentUtcTime.toString());
     properties.put("host", host);
     trackAnonymousAction(permanent_user_id, "Application Started", properties);
   }
 
-  public static void setEnabled(boolean enabled) {
-    analytics.setEnabled(enabled);
-  }
-
   public static void appClosed() {
-    trackAnonymousAction(permanent_user_id, "Application Closed", null);
+    long appClosedAt = Instant.now().getEpochSecond();
+
+    Map<String, String> properties = new HashMap<>();
+    properties.put("session_count", String.valueOf(sessionCount));
+    properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
+    properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
+    properties.put("application_runtime", String.valueOf((appClosedAt - appStartedAt)));
+
+    trackAnonymousAction(permanent_user_id, "Application Closed", properties);
     try {
       Thread.sleep(500);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
   }
+
+  public static void autorouterStarted()
+  {
+    autorouterStartedAt = Instant.now().getEpochSecond();
+    sessionCount++;
+
+    Map<String, String> properties = new HashMap<>();
+    properties.put("session_count", String.valueOf(sessionCount));
+
+    trackAnonymousAction(permanent_user_id, "Auto-router Started", properties);
+  }
+
+  public static void autorouterFinished() {
+    long autorouterFinishedAt = Instant.now().getEpochSecond();
+    long autorouterRuntime = autorouterFinishedAt - autorouterStartedAt;
+    totalAutorouterRuntime += autorouterRuntime;
+
+    Map<String, String> properties = new HashMap<>();
+    properties.put("session_count", String.valueOf(sessionCount));
+    properties.put("autorouter_runtime", String.valueOf(autorouterRuntime));
+
+    trackAnonymousAction(permanent_user_id, "Auto-router Finished", properties);
+  }
+
+  public static void routeOptimizerStarted()
+  {
+    routeOptimizerStartedAt = Instant.now().getEpochSecond();
+
+    Map<String, String> properties = new HashMap<>();
+    properties.put("session_count", String.valueOf(sessionCount));
+    trackAnonymousAction(permanent_user_id, "Route Optimizer Started", properties);
+  }
+
+  public static void routeOptimizerFinished() {
+    long routeOptimizerFinishedAt = Instant.now().getEpochSecond();
+    long routeOptimizerRuntime = routeOptimizerFinishedAt - routeOptimizerStartedAt;
+    totalRouteOptimizerRuntime += routeOptimizerRuntime;
+
+    Map<String, String> properties = new HashMap<>();
+    properties.put("session_count", String.valueOf(sessionCount));
+    properties.put("route_optimizer_runtime", String.valueOf(routeOptimizerRuntime));
+
+    trackAnonymousAction(permanent_user_id, "Route Optimizer Finished", properties);
+  }
+
 }

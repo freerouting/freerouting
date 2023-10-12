@@ -12,6 +12,7 @@ import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.tests.Validate;
 
 import java.awt.Color;
@@ -73,6 +74,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
 
       FRLogger.info("Starting auto-routing...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
+      FRAnalytics.autorouterStarted();
 
       String start_message =
           resources.getString("batch_autorouter") + " " + resources.getString("stop_message");
@@ -95,6 +97,9 @@ public class BatchAutorouterThread extends InteractiveActionThread {
           "Auto-routing was completed in "
               + FRLogger.formatDuration(autoroutingSecondsToComplete)
               + ".");
+      FRAnalytics.autorouterFinished();
+
+      Thread.sleep(100);
 
       int num_threads = hdlg.get_num_threads();
       if (num_threads > 0) {
@@ -103,6 +108,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
                 + (num_threads == 1 ? "1 thread" : num_threads + " threads")
                 + "...");
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
+        FRAnalytics.routeOptimizerStarted();
 
         int via_count_before = hdlg.get_routing_board().get_vias().size();
         double trace_length_before =
@@ -168,6 +174,7 @@ public class BatchAutorouterThread extends InteractiveActionThread {
                         + "%"
                     : "")
                 + ".");
+        FRAnalytics.routeOptimizerFinished();
 
         if (!this.is_stop_requested())
         {
