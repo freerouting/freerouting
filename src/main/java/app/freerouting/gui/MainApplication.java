@@ -200,13 +200,8 @@ public class MainApplication extends WindowBase {
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException ex) {
-      FRLogger.error(ex.getLocalizedMessage(), ex);
-    } catch (InstantiationException ex) {
-      FRLogger.error(ex.getLocalizedMessage(), ex);
-    } catch (IllegalAccessException ex) {
-      FRLogger.error(ex.getLocalizedMessage(), ex);
-    } catch (UnsupportedLookAndFeelException ex) {
+    } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException |
+             IllegalAccessException ex) {
       FRLogger.error(ex.getLocalizedMessage(), ex);
     }
 
