@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class FRAnalytics {
 
@@ -74,7 +75,7 @@ public class FRAnalytics {
 
   public static void setAppLocation(String appLocation, String windowTitle)
   {
-    if (appPreviousLocation == appLocation)
+    if (Objects.equals(appPreviousLocation, appLocation))
     {
       return;
     }
