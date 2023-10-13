@@ -426,13 +426,11 @@ public abstract class PullTightAlgo {
       connection_to_trace_improved = false;
       Polyline adjusted_polyline = smoothen_end_corners_at_trace_2(curr_trace);
       if (adjusted_polyline != null) {
-        result = true;
-        connection_to_trace_improved = true;
         int trace_layer = curr_trace.get_layer();
         int curr_cl_class = curr_trace.clearance_class_no();
         FixedState curr_fixed_state = curr_trace.get_fixed_state();
         board.remove_item(curr_trace);
-        curr_trace =
+        PolylineTrace adj_ins_trace =
             board.insert_trace_without_cleaning(
                 adjusted_polyline,
                 trace_layer,
@@ -440,20 +438,28 @@ public abstract class PullTightAlgo {
                 curr_trace.net_no_arr,
                 curr_cl_class,
                 curr_fixed_state);
-        for (int curr_net_no : curr_trace.net_no_arr) {
-          board.split_traces(adjusted_polyline.first_corner(), trace_layer, curr_net_no);
-          board.split_traces(adjusted_polyline.last_corner(), trace_layer, curr_net_no);
+        if(adj_ins_trace != null) {
+          result = true;
+          connection_to_trace_improved = true;
+          board.remove_item(curr_trace);
+          curr_trace = adj_ins_trace;
+          for (int curr_net_no : curr_trace.net_no_arr) {
+            board.split_traces(adjusted_polyline.first_corner(), trace_layer, curr_net_no);
+            board.split_traces(adjusted_polyline.last_corner(), trace_layer, curr_net_no);
 
-          try {
-            board.normalize_traces(curr_net_no);
-          } catch (Exception e) {
-            FRLogger.error(
-                "The normalization of net '" + board.rules.nets.get(curr_net_no).name + "' failed.",
-                e);
-          }
+            try {
+              board.normalize_traces(curr_net_no);
+            } catch (Exception e) {
+              FRLogger.error(
+                  "The normalization of net '"
+                      + board.rules.nets.get(curr_net_no).name
+                      + "' failed.",
+                  e);
+            }
 
-          if (split_traces_at_keep_point()) {
-            return true;
+            if (split_traces_at_keep_point()) {
+              return true;
+            }
           }
         }
       }
