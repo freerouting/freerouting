@@ -145,8 +145,7 @@ public class MainApplication extends WindowBase {
 
         sample_board_button.setText(resources.getString("sample_designs"));
         sample_board_button.setToolTipText(resources.getString("sample_designs_tooltip"));
-        sample_board_button.addActionListener(
-            evt -> window_net_sample_designs.setVisible(true));
+        sample_board_button.addActionListener(evt -> window_net_sample_designs.setVisible(true));
 
         gridbag.setConstraints(sample_board_button, gridbag_constraints);
         main_panel.add(sample_board_button, gridbag_constraints);
@@ -156,6 +155,7 @@ public class MainApplication extends WindowBase {
     open_board_button.setText(resources.getString("open_own_design"));
     open_board_button.setToolTipText(resources.getString("open_own_design_tooltip"));
     open_board_button.addActionListener(this::open_board_design_action);
+    open_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
 
     gridbag.setConstraints(open_board_button, gridbag_constraints);
     if (add_buttons) {

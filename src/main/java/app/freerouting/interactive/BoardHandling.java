@@ -29,6 +29,7 @@ import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
@@ -846,6 +847,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       FRLogger.error("There was an error while reading DSN file.", e);
     }
     if (read_result == DsnFile.ReadResult.OK) {
+      FRAnalytics.fileLoaded("DSN", this.board.communication.specctra_parser_info.host_cad + "," + this.board.communication.specctra_parser_info.host_version);
       this.board.reduce_nets_of_route_items();
       this.set_layer(0);
       for (int i = 0; i < board.get_layer_count(); ++i) {
