@@ -65,6 +65,10 @@ public class FRAnalytics {
     put("display_layer_visibility_menuitem", "app.freerouting.gui/Board/Menu/Appearance/LayerVisibility");
     put("display_colors_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Colors");
     put("display_miscellaneous_menuitem", "app.freerouting.gui/Board/Menu/Appearance/Miscellaneous");
+    put("settings_selection_menuitem", "app.freerouting.gui/Board/Menu/Settings/Selection");
+    put("settings_routing_menuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
+    put("settings_autorouter_menuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
+    put("settings_controls_menuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
   }};
   private static long appStartedAt;
   private static int sessionCount = 0;
