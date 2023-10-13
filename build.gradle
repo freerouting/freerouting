@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '3.0.0'
-    id 'com.github.ben-manes.versions' version '0.48.0'
+    id 'com.github.ben-manes.versions' version '0.49.0'
 }
 
 java.toolchain {
