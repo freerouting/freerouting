@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
@@ -25,19 +26,18 @@ public class BoardMenuOther extends JMenu {
     other_menu.setText(other_menu.resources.getString("other"));
 
     // Add Snapshots menu item
-    JMenuItem snapshots = new JMenuItem();
-    snapshots.setText(other_menu.resources.getString("snapshots"));
-    snapshots.setToolTipText(other_menu.resources.getString("snapshots_tooltip"));
-    snapshots.addActionListener(
-        evt -> other_menu.board_frame.snapshot_window.setVisible(true));
-
-    other_menu.add(snapshots);
+    JMenuItem other_snapshots_menuitem = new JMenuItem();
+    other_snapshots_menuitem.setText(other_menu.resources.getString("snapshots"));
+    other_snapshots_menuitem.setToolTipText(other_menu.resources.getString("snapshots_tooltip"));
+    other_snapshots_menuitem.addActionListener(evt -> other_menu.board_frame.snapshot_window.setVisible(true));
+    other_snapshots_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_menuitem", other_snapshots_menuitem.getText()));
+    other_menu.add(other_snapshots_menuitem);
 
     // Add Delete All Tracks and Vias menu item
-    JMenuItem delete_all_tracks = new JMenuItem();
-    delete_all_tracks.setText(other_menu.resources.getString("delete_all_tracks_and_vias"));
-    delete_all_tracks.setToolTipText(other_menu.resources.getString("delete_all_tracks_and_vias_tooltip"));
-    delete_all_tracks.addActionListener(
+    JMenuItem other_delete_all_tracks_menuitem = new JMenuItem();
+    other_delete_all_tracks_menuitem.setText(other_menu.resources.getString("delete_all_tracks_and_vias"));
+    other_delete_all_tracks_menuitem.setToolTipText(other_menu.resources.getString("delete_all_tracks_and_vias_tooltip"));
+    other_delete_all_tracks_menuitem.addActionListener(
         evt -> {
           RoutingBoard board = other_menu.board_frame.board_panel.board_handling.get_routing_board();
           // delete all tracks and vias
@@ -53,8 +53,8 @@ public class BoardMenuOther extends JMenu {
           // redraw the board
           other_menu.board_frame.board_panel.board_handling.repaint();
         });
-
-    other_menu.add(delete_all_tracks);
+    other_delete_all_tracks_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("other_delete_all_tracks_menuitem", other_delete_all_tracks_menuitem.getText()));
+    other_menu.add(other_delete_all_tracks_menuitem);
 
     return other_menu;
   }

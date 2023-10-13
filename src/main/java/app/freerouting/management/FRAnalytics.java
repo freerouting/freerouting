@@ -81,6 +81,8 @@ public class FRAnalytics {
     put("info_clearance_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
     put("info_unconnected_routes_menuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
     put("info_route_stubs_menuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
+    put("other_snapshots_menuitem", "app.freerouting.gui/Board/Menu/Other/Snapshots");
+    put("other_delete_all_tracks_menuitem", "app.freerouting.gui/Board/Menu/Other/DeleteAllTracksAndVias");
   }};
   private static long appStartedAt;
   private static int sessionCount = 0;
