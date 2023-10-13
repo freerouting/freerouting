@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
@@ -22,36 +23,36 @@ public class BoardMenuDisplay extends JMenu {
     final BoardMenuDisplay display_menu = new BoardMenuDisplay(p_board_frame);
     display_menu.setText(display_menu.resources.getString("display"));
 
-    JMenuItem itemvisibility = new JMenuItem();
-    itemvisibility.setText(display_menu.resources.getString("object_visibility"));
-    itemvisibility.setToolTipText(display_menu.resources.getString("object_visibility_tooltip"));
-    itemvisibility.addActionListener(
-        evt -> display_menu.board_frame.object_visibility_window.setVisible(true));
+    JMenuItem display_object_visibility_menuitem = new JMenuItem();
+    display_object_visibility_menuitem.setText(display_menu.resources.getString("object_visibility"));
+    display_object_visibility_menuitem.setToolTipText(display_menu.resources.getString("object_visibility_tooltip"));
+    display_object_visibility_menuitem.addActionListener(evt -> display_menu.board_frame.object_visibility_window.setVisible(true));
+    display_object_visibility_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("display_object_visibility_menuitem", display_object_visibility_menuitem.getText()));
 
-    display_menu.add(itemvisibility);
+    display_menu.add(display_object_visibility_menuitem);
 
-    JMenuItem layervisibility = new JMenuItem();
-    layervisibility.setText(display_menu.resources.getString("layer_visibility"));
-    layervisibility.setToolTipText(display_menu.resources.getString("layer_visibility_tooltip"));
-    layervisibility.addActionListener(
-        evt -> display_menu.board_frame.layer_visibility_window.setVisible(true));
+    JMenuItem display_layer_visibility_menuitem = new JMenuItem();
+    display_layer_visibility_menuitem.setText(display_menu.resources.getString("layer_visibility"));
+    display_layer_visibility_menuitem.setToolTipText(display_menu.resources.getString("layer_visibility_tooltip"));
+    display_layer_visibility_menuitem.addActionListener(evt -> display_menu.board_frame.layer_visibility_window.setVisible(true));
+    display_layer_visibility_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("display_layer_visibility_menuitem", display_layer_visibility_menuitem.getText()));
 
-    display_menu.add(layervisibility);
+    display_menu.add(display_layer_visibility_menuitem);
 
-    JMenuItem colors = new JMenuItem();
-    colors.setText(display_menu.resources.getString("colors"));
-    colors.setToolTipText(display_menu.resources.getString("colors_tooltip"));
-    colors.addActionListener(
-        evt -> display_menu.board_frame.color_manager.setVisible(true));
+    JMenuItem display_colors_menuitem = new JMenuItem();
+    display_colors_menuitem.setText(display_menu.resources.getString("colors"));
+    display_colors_menuitem.setToolTipText(display_menu.resources.getString("colors_tooltip"));
+    display_colors_menuitem.addActionListener(evt -> display_menu.board_frame.color_manager.setVisible(true));
+    display_colors_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("display_colors_menuitem", display_colors_menuitem.getText()));
 
-    display_menu.add(colors);
+    display_menu.add(display_colors_menuitem);
 
-    JMenuItem miscellaneous = new JMenuItem();
-    miscellaneous.setText(display_menu.resources.getString("miscellaneous"));
-    miscellaneous.addActionListener(
-        evt -> display_menu.board_frame.display_misc_window.setVisible(true));
+    JMenuItem display_miscellaneous_menuitem = new JMenuItem();
+    display_miscellaneous_menuitem.setText(display_menu.resources.getString("miscellaneous"));
+    display_miscellaneous_menuitem.addActionListener(evt -> display_menu.board_frame.display_misc_window.setVisible(true));
+    display_miscellaneous_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("display_miscellaneous_menuitem", display_miscellaneous_menuitem.getText()));
 
-    display_menu.add(miscellaneous);
+    display_menu.add(display_miscellaneous_menuitem);
 
     return display_menu;
   }
