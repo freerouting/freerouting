@@ -69,6 +69,10 @@ public class FRAnalytics {
     put("settings_routing_menuitem", "app.freerouting.gui/Board/Menu/Settings/Routing");
     put("settings_autorouter_menuitem", "app.freerouting.gui/Board/Menu/Settings/AutoRouter");
     put("settings_controls_menuitem", "app.freerouting.gui/Board/Menu/Settings/Controls");
+    put("rules_clearance_menuitem", "app.freerouting.gui/Board/Menu/Rules/ClearanceMatrix");
+    put("rules_vias_menuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
+    put("rules_nets_menuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
+    put("rules_net_class_menuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
   }};
   private static long appStartedAt;
   private static int sessionCount = 0;
