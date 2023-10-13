@@ -23,7 +23,6 @@ class BoardPanelStatus extends JPanel {
     ResourceBundle resources =
         ResourceBundle.getBundle("app.freerouting.gui.BoardPanelStatus", p_locale);
     this.setLayout(new BorderLayout());
-    this.setPreferredSize(new Dimension(300, 20));
 
     JPanel left_message_panel = new JPanel();
     left_message_panel.setLayout(new BorderLayout());
