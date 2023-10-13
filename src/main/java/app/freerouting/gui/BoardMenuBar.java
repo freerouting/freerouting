@@ -24,7 +24,7 @@ class BoardMenuBar extends JMenuBar {
     menubar.add(info_menu);
     JMenu other_menu = BoardMenuOther.get_instance(p_board_frame);
     menubar.add(other_menu);
-    JMenu help_menu = new BoardMenuHelpReduced(p_board_frame);
+    JMenu help_menu = new BoardMenuHelp(p_board_frame);
     menubar.add(help_menu);
     return menubar;
   }
