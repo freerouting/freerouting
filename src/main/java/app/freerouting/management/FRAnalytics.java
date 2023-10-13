@@ -73,6 +73,14 @@ public class FRAnalytics {
     put("rules_vias_menuitem", "app.freerouting.gui/Board/Menu/Rules/Vias");
     put("rules_nets_menuitem", "app.freerouting.gui/Board/Menu/Rules/Nets");
     put("rules_net_class_menuitem", "app.freerouting.gui/Board/Menu/Rules/NetClasses");
+    put("info_packages_menuitem", "app.freerouting.gui/Board/Menu/Info/Packages");
+    put("info_padstacks_menuitem", "app.freerouting.gui/Board/Menu/Info/Padstacks");
+    put("info_components_menuitem", "app.freerouting.gui/Board/Menu/Info/Components");
+    put("info_incompletes_menuitem", "app.freerouting.gui/Board/Menu/Info/IncompleteRoutes");
+    put("info_length_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/LengthViolations");
+    put("info_clearance_violations_menuitem", "app.freerouting.gui/Board/Menu/Info/ClearanceViolations");
+    put("info_unconnected_routes_menuitem", "app.freerouting.gui/Board/Menu/Info/UnconnectedRoutes");
+    put("info_route_stubs_menuitem", "app.freerouting.gui/Board/Menu/Info/RoutedStubs");
   }};
   private static long appStartedAt;
   private static int sessionCount = 0;
