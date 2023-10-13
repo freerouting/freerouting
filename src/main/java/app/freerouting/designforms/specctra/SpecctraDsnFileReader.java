@@ -1696,7 +1696,7 @@ class SpecctraDsnFileReader implements IJFlexScanner {
       // let's ignore the leading spaces, tabs
       skipLeading = new ArrayList<>(Arrays.asList(stringSkipTrailing));
     }
-    skipLeading.add(new Character(leading));
+    skipLeading.add(Character.valueOf(leading));
 
     while ((zzMarkedPos + i < zzBuffer.length)
         && (skipLeading.contains(zzBuffer[zzMarkedPos + i]))) {
@@ -1711,7 +1711,7 @@ class SpecctraDsnFileReader implements IJFlexScanner {
       skipLastChar = true;
     } else {
       stopAt = new ArrayList<>(Arrays.asList(stringStopAt));
-      stopAt.add(new Character(leading));
+      stopAt.add(Character.valueOf(leading));
     }
 
     // read the actual string until we have a space/tab/new line
