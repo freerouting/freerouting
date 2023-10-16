@@ -190,15 +190,10 @@ class BoardToolbar extends JPanel {
 
     right_toolbar.setAutoscrolls(true);
     unit_label.setText(resources.getString("unit_button"));
-    unit_label.setMaximumSize(new Dimension(100, 30));
-    unit_label.setPreferredSize(new Dimension(65, 30));
     right_toolbar.add(unit_label);
 
     unit_factor_field.setHorizontalAlignment(JTextField.CENTER);
     unit_factor_field.setValue(1);
-    unit_factor_field.setMaximumSize(new Dimension(10, 30));
-    unit_factor_field.setMinimumSize(new Dimension(20, 30));
-    unit_factor_field.setPreferredSize(new Dimension(40, 30));
     unit_factor_field.addKeyListener(
         new KeyAdapter() {
           @Override
@@ -226,10 +221,7 @@ class BoardToolbar extends JPanel {
     unit_combo_box.setModel(new DefaultComboBoxModel<>(Unit.values()));
     unit_combo_box.setFocusTraversalPolicyProvider(true);
     unit_combo_box.setInheritsPopupMenu(true);
-    unit_combo_box.setMaximumSize(new Dimension(80, 30));
-    unit_combo_box.setMinimumSize(new Dimension(80, 30));
     unit_combo_box.setOpaque(false);
-    unit_combo_box.setPreferredSize(new Dimension(80, 30));
     unit_combo_box.addActionListener(
         evt -> {
           Unit new_unit =
