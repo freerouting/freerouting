@@ -849,6 +849,13 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (read_result == DsnFile.ReadResult.OK) {
       FRAnalytics.fileLoaded("DSN", this.board.communication.specctra_parser_info.host_cad + "," + this.board.communication.specctra_parser_info.host_version);
       this.board.reduce_nets_of_route_items();
+      FRAnalytics.boardLoaded(
+          this.board.communication.specctra_parser_info.host_cad,
+          this.board.communication.specctra_parser_info.host_version,
+          this.board.get_layer_count(),
+          this.board.components.count(),
+          this.board.rules.nets.max_net_no()
+      );
       this.set_layer(0);
       for (int i = 0; i < board.get_layer_count(); ++i) {
         if (!settings.autoroute_settings.get_layer_active(i)) {

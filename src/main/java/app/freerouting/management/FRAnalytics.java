@@ -289,6 +289,17 @@ public class FRAnalytics {
     trackAnonymousAction(permanent_user_id, "File Loaded", properties);
   }
 
+  public static void boardLoaded(String hostName, String hostVersion, int layerCount, int componentCount, int netCount) {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("host_name", hostName);
+    properties.put("host_version", hostVersion);
+    properties.put("layer_count", Integer.toString(layerCount));
+    properties.put("component_count", Integer.toString(componentCount));
+    properties.put("net_count", Integer.toString(netCount));
+
+    trackAnonymousAction(permanent_user_id, "Board Loaded", properties);
+  }
+
   public static void fileSaved(String fileFormat, String fileDetails) {
     Map<String, String> properties = new HashMap<>();
     properties.put("file_format", fileFormat);
