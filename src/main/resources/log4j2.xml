@@ -25,7 +25,7 @@
         <Root level="ALL">
             <AppenderRef ref="Console" level="INFO"/>
             <AppenderRef ref="stderr" level="ERROR"/>
-            <AppenderRef ref="File" level="TRACE"/>
+            <AppenderRef ref="File" level="INFO"/>
         </Root>
     </Loggers>
 </Configuration>
