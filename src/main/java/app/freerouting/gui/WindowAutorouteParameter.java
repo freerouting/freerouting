@@ -95,6 +95,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       layer_active_arr[i] = new JCheckBox();
       layer_active_arr[i].addActionListener(new LayerActiveListener(i));
       board_handling.settings.autoroute_settings.set_layer_active(i, curr_layer.is_signal);
+      layer_active_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(layer_active_arr[i], gridbag_constraints);
       main_panel.add(layer_active_arr[i]);
 
@@ -250,8 +251,6 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       int curr_layer_no = this.signal_layer_no;
-//      int curr_layer_no =
-//          board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
       board_handling.settings.autoroute_settings.set_layer_active(
           curr_layer_no, layer_active_arr[this.signal_layer_no].isSelected());
     }
