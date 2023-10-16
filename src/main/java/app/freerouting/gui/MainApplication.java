@@ -12,6 +12,7 @@ import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
@@ -46,6 +47,7 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.FontUIResource;
 
 /** Main application for creating frames with new or existing board designs. */
 public class MainApplication extends WindowBase {
@@ -305,6 +307,25 @@ public class MainApplication extends WindowBase {
         startupOptions.host,
         width, height, dpi
     );
+
+    // Set default font for buttons and labels
+    FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
+    FontUIResource defaultFont = (FontUIResource) UIManager.get("Button.font");
+    Font newFont = new Font(defaultFont.getName(), Font.PLAIN, menuFont.getSize());
+    UIManager.put("Component.font", newFont);
+    UIManager.put("Button.font", newFont);
+    UIManager.put("Label.font", newFont);
+    UIManager.put("ToggleButton.font", newFont);
+    UIManager.put("FormattedTextField.font", newFont);
+    UIManager.put("TextField.font", newFont);
+    UIManager.put("ComboBox.font", newFont);
+    UIManager.put("CheckBox.font", newFont);
+    UIManager.put("RadioButton.font", newFont);
+    UIManager.put("Table.font", newFont);
+    UIManager.put("TableHeader.font", newFont);
+    UIManager.put("List.font", newFont);
+    UIManager.put("Menu.font", newFont);
+    UIManager.put("MenuItem.font", newFont);
 
     ResourceBundle resources =
         ResourceBundle.getBundle(
