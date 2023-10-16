@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
 
@@ -26,19 +27,19 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    JMenuItem insert_item = new JMenuItem();
-    insert_item.setText(resources.getString("insert"));
-    insert_item.addActionListener(
-        evt -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));
+    JMenuItem popup_copy_insert_menuitem = new JMenuItem();
+    popup_copy_insert_menuitem.setText(resources.getString("insert"));
+    popup_copy_insert_menuitem.addActionListener(evt -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));
+    popup_copy_insert_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_copy_insert_menuitem", popup_copy_insert_menuitem.getText()));
 
-    this.add(insert_item, 0);
+    this.add(popup_copy_insert_menuitem, 0);
 
-    JMenuItem done_item = new JMenuItem();
-    done_item.setText(resources.getString("done"));
-    done_item.addActionListener(
-        evt -> board_panel.board_handling.return_from_state());
+    JMenuItem popup_copy_done_menuitem = new JMenuItem();
+    popup_copy_done_menuitem.setText(resources.getString("done"));
+    popup_copy_done_menuitem.addActionListener(evt -> board_panel.board_handling.return_from_state());
+    popup_copy_done_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_copy_done_menuitem", popup_copy_done_menuitem.getText()));
 
-    this.add(done_item, 1);
+    this.add(popup_copy_done_menuitem, 1);
 
     Layer curr_layer =
         layer_structure.arr[board_panel.board_handling.settings.get_layer()];

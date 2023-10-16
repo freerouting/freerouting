@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.management.FRAnalytics;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -73,24 +74,24 @@ public class ColorManager extends BoardSavableSubWindow {
 
   // Set up the editor for the Color cells.
   private static void setUpColorEditor(JTable p_table, Locale p_locale) {
-    // First, set up the button that brings up the dialog.
-    final JButton button =
+    // First, set up the color_editor_button that brings up the dialog.
+    final JButton color_editor_button =
         new JButton("") {
           @Override
           public void setText(String s) {
             // Button never shows text -- only color.
           }
         };
-    button.setBackground(Color.white);
-    button.setBorderPainted(false);
-    button.setMargin(new Insets(0, 0, 0, 0));
+    color_editor_button.setBackground(Color.white);
+    color_editor_button.setBorderPainted(false);
+    color_editor_button.setMargin(new Insets(0, 0, 0, 0));
 
-    // Now create an editor to encapsulate the button, and
+    // Now create an editor to encapsulate the color_editor_button, and
     // set it up as the editor for all Color cells.
-    final ColorEditor colorEditor = new ColorEditor(button);
+    final ColorEditor colorEditor = new ColorEditor(color_editor_button);
     p_table.setDefaultEditor(Color.class, colorEditor);
 
-    // Set up the dialog that the button brings up.
+    // Set up the dialog that the color_editor_button brings up.
     final JColorChooser colorChooser = new JColorChooser();
     ActionListener okListener =
         e -> colorEditor.currentColor = colorChooser.getColor();
@@ -98,18 +99,19 @@ public class ColorManager extends BoardSavableSubWindow {
         ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
     final JDialog dialog =
         JColorChooser.createDialog(
-            button, resources.getString("pick_a_color"), true, colorChooser, okListener, null);
+            color_editor_button, resources.getString("pick_a_color"), true, colorChooser, okListener, null);
 
     // Here's the code that brings up the dialog.
-    button.addActionListener(
+    color_editor_button.addActionListener(
         e -> {
-          button.setBackground(colorEditor.currentColor);
+          color_editor_button.setBackground(colorEditor.currentColor);
           colorChooser.setColor(colorEditor.currentColor);
           // Without the following line, the dialog comes up
           // in the middle of the screen.
-          // dialog.setLocationRelativeTo(button);
+          // dialog.setLocationRelativeTo(color_editor_button);
           dialog.setVisible(true);
         });
+    color_editor_button.addActionListener(evt -> FRAnalytics.buttonClicked("color_editor_button", color_editor_button.getText()));
   }
 
   /** Reassigns the table model variables because they may have changed in p_graphics_context. */
@@ -166,8 +168,7 @@ public class ColorManager extends BoardSavableSubWindow {
 
     public ColorEditor(JButton b) {
       super(new JCheckBox()); // Unfortunately, the constructor
-      // expects a check box, combo box,
-      // or text field.
+      // expects a checkbox, combo-box, or text field.
       editorComponent = b;
       setClickCountToStart(1); // This is usually 1 or 2.
 

@@ -331,7 +331,7 @@ public class BoardFrame extends WindowBase {
     this.hilight_selected_button();
     this.toolbar_panel.unit_factor_field.setValue(
         board_panel.board_handling.coordinate_transform.user_unit_factor);
-    this.toolbar_panel.unit_combo_box.setSelectedItem(
+    this.toolbar_panel.toolbar_unit_combo_box.setSelectedItem(
         board_panel.board_handling.coordinate_transform.user_unit);
     this.setVisible(true);
     if (p_is_import) {

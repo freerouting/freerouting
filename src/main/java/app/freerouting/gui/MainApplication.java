@@ -172,6 +172,7 @@ public class MainApplication extends WindowBase {
       restore_defaults_button.setText(resources.getString("restore_defaults"));
       restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
       restore_defaults_button.addActionListener(evt -> {});
+      restore_defaults_button.addActionListener(evt -> FRAnalytics.buttonClicked("restore_defaults_button", restore_defaults_button.getText()));
       gridbag.setConstraints(restore_defaults_button, gridbag_constraints);
       main_panel.add(restore_defaults_button, gridbag_constraints);
     }
@@ -484,6 +485,7 @@ public class MainApplication extends WindowBase {
         );
 
         startNowButton.addActionListener(event -> optionPane.setValue(options[0]));
+        startNowButton.addActionListener(evt -> FRAnalytics.buttonClicked("startNowButton", startNowButton.getText()));
 
         final String AUTOSTART_TITLE = resources.getString("auto_start_routing_title");
 

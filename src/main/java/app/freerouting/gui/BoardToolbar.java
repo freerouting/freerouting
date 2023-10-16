@@ -29,11 +29,11 @@ import java.util.ResourceBundle;
 class BoardToolbar extends JPanel {
 
   final JFormattedTextField unit_factor_field;
-  final JComboBox<Unit> unit_combo_box;
+  final JComboBox<Unit> toolbar_unit_combo_box;
   private final BoardFrame board_frame;
-  private final JToggleButton select_button;
-  private final JToggleButton route_button;
-  private final JToggleButton drag_button;
+  private final JToggleButton toolbar_select_button;
+  private final JToggleButton toolbar_route_button;
+  private final JToggleButton toolbar_drag_button;
   /** Creates a new instance of BoardToolbarPanel */
   BoardToolbar(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
@@ -48,36 +48,36 @@ class BoardToolbar extends JPanel {
 
     final JToolBar left_toolbar = new JToolBar();
     final ButtonGroup toolbar_button_group = new ButtonGroup();
-    this.select_button = new JToggleButton();
-    this.route_button = new JToggleButton();
-    this.drag_button = new JToggleButton();
+    this.toolbar_select_button = new JToggleButton();
+    this.toolbar_route_button = new JToggleButton();
+    this.toolbar_drag_button = new JToggleButton();
     final JLabel jLabel1 = new JLabel();
 
     left_toolbar.setMaximumSize(new Dimension(1200, 30));
-    toolbar_button_group.add(select_button);
-    select_button.setSelected(true);
-    select_button.setText(resources.getString("select_button"));
-    select_button.setToolTipText(resources.getString("select_button_tooltip"));
-    select_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_select_menu_state());
-    select_button.addActionListener(evt -> FRAnalytics.buttonClicked("select_button", select_button.getText()));
+    toolbar_button_group.add(toolbar_select_button);
+    toolbar_select_button.setSelected(true);
+    toolbar_select_button.setText(resources.getString("select_button"));
+    toolbar_select_button.setToolTipText(resources.getString("select_button_tooltip"));
+    toolbar_select_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_select_menu_state());
+    toolbar_select_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_select_button", toolbar_select_button.getText()));
 
-    left_toolbar.add(select_button);
+    left_toolbar.add(toolbar_select_button);
 
-    toolbar_button_group.add(route_button);
-    route_button.setText(resources.getString("route_button"));
-    route_button.setToolTipText(resources.getString("route_button_tooltip"));
-    route_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_route_menu_state());
-    route_button.addActionListener(evt -> FRAnalytics.buttonClicked("route_button", route_button.getText()));
+    toolbar_button_group.add(toolbar_route_button);
+    toolbar_route_button.setText(resources.getString("route_button"));
+    toolbar_route_button.setToolTipText(resources.getString("route_button_tooltip"));
+    toolbar_route_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_route_menu_state());
+    toolbar_route_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_route_button", toolbar_route_button.getText()));
 
-    left_toolbar.add(route_button);
+    left_toolbar.add(toolbar_route_button);
 
-    toolbar_button_group.add(drag_button);
-    drag_button.setText(resources.getString("drag_button"));
-    drag_button.setToolTipText(resources.getString("drag_button_tooltip"));
-    drag_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_drag_menu_state());
-    drag_button.addActionListener(evt -> FRAnalytics.buttonClicked("drag_button", drag_button.getText()));
+    toolbar_button_group.add(toolbar_drag_button);
+    toolbar_drag_button.setText(resources.getString("drag_button"));
+    toolbar_drag_button.setToolTipText(resources.getString("drag_button_tooltip"));
+    toolbar_drag_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_drag_menu_state());
+    toolbar_drag_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_drag_button", toolbar_drag_button.getText()));
 
-    left_toolbar.add(drag_button);
+    left_toolbar.add(toolbar_drag_button);
 
     jLabel1.setMaximumSize(new Dimension(30, 10));
     jLabel1.setMinimumSize(new Dimension(3, 10));
@@ -90,10 +90,10 @@ class BoardToolbar extends JPanel {
 
     final JToolBar middle_toolbar = new JToolBar();
 
-    final JButton autoroute_button = new JButton();
-    autoroute_button.setText(resources.getString("autoroute_button"));
-    autoroute_button.setToolTipText(resources.getString("autoroute_button_tooltip"));
-    autoroute_button.addActionListener(
+    final JButton toolbar_autoroute_button = new JButton();
+    toolbar_autoroute_button.setText(resources.getString("autoroute_button"));
+    toolbar_autoroute_button.setToolTipText(resources.getString("autoroute_button_tooltip"));
+    toolbar_autoroute_button.addActionListener(
         evt -> {
           InteractiveActionThread thread = board_frame.board_panel.board_handling.start_batch_autorouter();
 
@@ -102,9 +102,9 @@ class BoardToolbar extends JPanel {
             thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
           }
         });
-    autoroute_button.addActionListener(evt -> FRAnalytics.buttonClicked("autoroute_button", autoroute_button.getText()));
+    toolbar_autoroute_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_autoroute_button", toolbar_autoroute_button.getText()));
 
-    middle_toolbar.add(autoroute_button);
+    middle_toolbar.add(toolbar_autoroute_button);
 
     final JLabel separator_2 = new JLabel();
     separator_2.setMaximumSize(new Dimension(10, 10));
@@ -112,47 +112,47 @@ class BoardToolbar extends JPanel {
     separator_2.setRequestFocusEnabled(false);
     middle_toolbar.add(separator_2);
 
-    final JButton undo_button = new JButton();
-    undo_button.setText(resources.getString("undo_button"));
-    undo_button.setToolTipText(resources.getString("undo_button_tooltip"));
-    undo_button.addActionListener(
+    final JButton toolbar_undo_button = new JButton();
+    toolbar_undo_button.setText(resources.getString("undo_button"));
+    toolbar_undo_button.setToolTipText(resources.getString("undo_button_tooltip"));
+    toolbar_undo_button.addActionListener(
         evt -> {
           board_frame.board_panel.board_handling.cancel_state();
           board_frame.board_panel.board_handling.undo();
           board_frame.refresh_windows();
         });
-    undo_button.addActionListener(evt -> FRAnalytics.buttonClicked("undo_button", undo_button.getText()));
+    toolbar_undo_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_undo_button", toolbar_undo_button.getText()));
 
-    middle_toolbar.add(undo_button);
+    middle_toolbar.add(toolbar_undo_button);
 
-    final JButton redo_button = new JButton();
-    redo_button.setText(resources.getString("redo_button"));
-    redo_button.setToolTipText(resources.getString("redo_button_tooltip"));
-    redo_button.addActionListener(evt -> board_frame.board_panel.board_handling.redo());
-    redo_button.addActionListener(evt -> FRAnalytics.buttonClicked("redo_button", redo_button.getText()));
+    final JButton toolbar_redo_button = new JButton();
+    toolbar_redo_button.setText(resources.getString("redo_button"));
+    toolbar_redo_button.setToolTipText(resources.getString("redo_button_tooltip"));
+    toolbar_redo_button.addActionListener(evt -> board_frame.board_panel.board_handling.redo());
+    toolbar_redo_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_redo_button", toolbar_redo_button.getText()));
 
-    middle_toolbar.add(redo_button);
+    middle_toolbar.add(toolbar_redo_button);
 
     final JLabel separator_1 = new JLabel();
     separator_1.setMaximumSize(new Dimension(10, 10));
     separator_1.setPreferredSize(new Dimension(10, 10));
     middle_toolbar.add(separator_1);
 
-    final JButton incompletes_button = new JButton();
-    incompletes_button.setText(resources.getString("incompletes_button"));
-    incompletes_button.setToolTipText(resources.getString("incompletes_button_tooltip"));
-    incompletes_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_ratsnest());
-    incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("incompletes_button", incompletes_button.getText()));
+    final JButton toolbar_incompletes_button = new JButton();
+    toolbar_incompletes_button.setText(resources.getString("incompletes_button"));
+    toolbar_incompletes_button.setToolTipText(resources.getString("incompletes_button_tooltip"));
+    toolbar_incompletes_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_ratsnest());
+    toolbar_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_incompletes_button", toolbar_incompletes_button.getText()));
 
-    middle_toolbar.add(incompletes_button);
+    middle_toolbar.add(toolbar_incompletes_button);
 
-    final JButton violation_button = new JButton();
-    violation_button.setText(resources.getString("violations_button"));
-    violation_button.setToolTipText(resources.getString("violations_button_tooltip"));
-    violation_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_clearance_violations());
-    violation_button.addActionListener(evt -> FRAnalytics.buttonClicked("violation_button", violation_button.getText()));
+    final JButton toolbar_violation_button = new JButton();
+    toolbar_violation_button.setText(resources.getString("violations_button"));
+    toolbar_violation_button.setToolTipText(resources.getString("violations_button_tooltip"));
+    toolbar_violation_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_clearance_violations());
+    toolbar_violation_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_violation_button", toolbar_violation_button.getText()));
 
-    middle_toolbar.add(violation_button);
+    middle_toolbar.add(toolbar_violation_button);
 
     final JLabel separator_3 = new JLabel();
     separator_3.setMaximumSize(new Dimension(10, 10));
@@ -160,21 +160,21 @@ class BoardToolbar extends JPanel {
     separator_3.setRequestFocusEnabled(false);
     middle_toolbar.add(separator_3);
 
-    final JButton display_all_button = new JButton();
-    display_all_button.setText(resources.getString("display_all_button"));
-    display_all_button.setToolTipText(resources.getString("display_all_button_tooltip"));
-    display_all_button.addActionListener(evt -> board_frame.zoom_all());
-    display_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("display_all_button", display_all_button.getText()));
+    final JButton toolbar_display_all_button = new JButton();
+    toolbar_display_all_button.setText(resources.getString("display_all_button"));
+    toolbar_display_all_button.setToolTipText(resources.getString("display_all_button_tooltip"));
+    toolbar_display_all_button.addActionListener(evt -> board_frame.zoom_all());
+    toolbar_display_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
 
-    middle_toolbar.add(display_all_button);
+    middle_toolbar.add(toolbar_display_all_button);
 
-    final JButton display_region_button = new JButton();
-    display_region_button.setText(resources.getString("display_region_button"));
-    display_region_button.setToolTipText(resources.getString("display_region_button_tooltip"));
-    display_region_button.addActionListener(evt -> board_frame.board_panel.board_handling.zoom_region());
-    display_region_button.addActionListener(evt -> FRAnalytics.buttonClicked("display_region_button", display_region_button.getText()));
+    final JButton toolbar_display_region_button = new JButton();
+    toolbar_display_region_button.setText(resources.getString("display_region_button"));
+    toolbar_display_region_button.setToolTipText(resources.getString("display_region_button_tooltip"));
+    toolbar_display_region_button.addActionListener(evt -> board_frame.board_panel.board_handling.zoom_region());
+    toolbar_display_region_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_region_button", toolbar_display_region_button.getText()));
 
-    middle_toolbar.add(display_region_button);
+    middle_toolbar.add(toolbar_display_region_button);
 
     this.add(middle_toolbar, BorderLayout.CENTER);
 
@@ -217,20 +217,21 @@ class BoardToolbar extends JPanel {
 
     right_toolbar.add(unit_factor_field);
 
-    unit_combo_box = new JComboBox<>();
-    unit_combo_box.setModel(new DefaultComboBoxModel<>(Unit.values()));
-    unit_combo_box.setFocusTraversalPolicyProvider(true);
-    unit_combo_box.setInheritsPopupMenu(true);
-    unit_combo_box.setOpaque(false);
-    unit_combo_box.addActionListener(
+    toolbar_unit_combo_box = new JComboBox<>();
+    toolbar_unit_combo_box.setModel(new DefaultComboBoxModel<>(Unit.values()));
+    toolbar_unit_combo_box.setFocusTraversalPolicyProvider(true);
+    toolbar_unit_combo_box.setInheritsPopupMenu(true);
+    toolbar_unit_combo_box.setOpaque(false);
+    toolbar_unit_combo_box.addActionListener(
         evt -> {
           Unit new_unit =
-              (Unit) unit_combo_box.getSelectedItem();
+              (Unit) toolbar_unit_combo_box.getSelectedItem();
           board_frame.board_panel.board_handling.change_user_unit(new_unit);
           board_frame.refresh_windows();
         });
+    toolbar_unit_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_unit_combo_box", ((Unit) toolbar_unit_combo_box.getSelectedItem()).name()));
 
-    right_toolbar.add(unit_combo_box);
+    right_toolbar.add(toolbar_unit_combo_box);
 
     jLabel4.setMaximumSize(new Dimension(30, 14));
     jLabel4.setPreferredSize(new Dimension(30, 14));
@@ -244,11 +245,11 @@ class BoardToolbar extends JPanel {
     InteractiveState interactive_state =
         this.board_frame.board_panel.board_handling.get_interactive_state();
     if (interactive_state instanceof RouteMenuState) {
-      this.route_button.setSelected(true);
+      this.toolbar_route_button.setSelected(true);
     } else if (interactive_state instanceof DragMenuState) {
-      this.drag_button.setSelected(true);
+      this.toolbar_drag_button.setSelected(true);
     } else if (interactive_state instanceof SelectMenuState) {
-      this.select_button.setSelected(true);
+      this.toolbar_select_button.setSelected(true);
     }
   }
 }
