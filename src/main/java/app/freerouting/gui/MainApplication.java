@@ -11,10 +11,14 @@ import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
 import java.awt.Dimension;
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -205,6 +209,7 @@ public class MainApplication extends WindowBase {
       FRLogger.error(ex.getLocalizedMessage(), ex);
     }
 
+    // Log system information
     FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
     FRLogger.debug(
         " Version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
@@ -254,6 +259,21 @@ public class MainApplication extends WindowBase {
 
     FRLogger.debug(" GUI Language: " + startupOptions.current_locale);
 
+    FRLogger.debug(" Host: " + startupOptions.host);
+
+    // Get default screen device
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+    // Get screen resolution
+    Dimension screenSize = toolkit.getScreenSize();
+    int width = screenSize.width;
+    int height = screenSize.height;
+
+    // Get screen DPI
+    int dpi = toolkit.getScreenResolution();
+    FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
+
+
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
     new Thread(checker).start();
@@ -282,7 +302,9 @@ public class MainApplication extends WindowBase {
         startupOptions.current_locale,
         Runtime.getRuntime().availableProcessors(),
         (Runtime.getRuntime().maxMemory() / 1024 / 1024),
-        startupOptions.host);
+        startupOptions.host,
+        width, height, dpi
+    );
 
     ResourceBundle resources =
         ResourceBundle.getBundle(

@@ -198,7 +198,8 @@ public class FRAnalytics {
       Locale guiLanguage,
       int cpuCoreCount,
       long ramAmount,
-      String host) {
+      String host,
+      int width, int height, int dpi) {
     appStartedAt = Instant.now().getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
@@ -215,6 +216,9 @@ public class FRAnalytics {
     properties.put("cpu_core_count", Integer.toString(cpuCoreCount));
     properties.put("ram_amount", Long.toString(ramAmount));
     properties.put("host", host);
+    properties.put("screen_width", Integer.toString(width));
+    properties.put("screen_height", Integer.toString(height));
+    properties.put("screen_dpi", Integer.toString(dpi));
     trackAnonymousAction(permanent_user_id, "Application Started", properties);
   }
 
