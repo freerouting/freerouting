@@ -14,13 +14,13 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
     super(1, p_locale);
     data[0] = new Color[ColumnNames.values().length];
     Object[] curr_row = data[0];
-    curr_row[ColumnNames.BACKGROUND.ordinal()] = new Color(70, 70, 70);
+    curr_row[ColumnNames.BACKGROUND.ordinal()] = new Color(0, 16, 35);
     curr_row[ColumnNames.HIGHLIGHT.ordinal()] = Color.white;
     curr_row[ColumnNames.INCOMPLETES.ordinal()] = Color.white;
     curr_row[ColumnNames.OUTLINE.ordinal()] = new Color(100, 150, 255);
     curr_row[ColumnNames.VIOLATIONS.ordinal()] = Color.magenta;
-    curr_row[ColumnNames.COMPONENT_FRONT.ordinal()] = Color.blue;
-    curr_row[ColumnNames.COMPONENT_BACK.ordinal()] = Color.red;
+    curr_row[ColumnNames.COMPONENT_FRONT.ordinal()] = new Color(255, 38, 226);
+    curr_row[ColumnNames.COMPONENT_BACK.ordinal()] = new Color(38, 233, 255);
     curr_row[ColumnNames.LENGTH_MATCHING_AREA.ordinal()] = Color.green;
   }
 
@@ -46,8 +46,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
   @Override
   public String getColumnName(int p_col) {
     ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.boardgraphics.ColorTableModel", this.locale);
+        ResourceBundle.getBundle("app.freerouting.boardgraphics.ColorTableModel", this.locale);
     return resources.getString(ColumnNames.values()[p_col].toString());
   }
 

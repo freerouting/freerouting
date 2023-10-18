@@ -15,6 +15,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   private transient boolean item_colors_precalculated = false;
   private transient Color[][] precalculated_item_colors;
 
+  // Create the default color table for the layers
   public ItemColorTableModel(
       LayerStructure p_layer_structure, Locale p_locale) {
     super(p_layer_structure.arr.length, p_locale);
@@ -28,31 +29,34 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
       Object[] curr_row = data[layer];
       curr_row[0] = p_layer_structure.arr[layer].name;
       if (layer == 0) {
-        curr_row[ColumnNames.PINS.ordinal()] = new Color(150, 50, 0);
-        curr_row[ColumnNames.TRACES.ordinal()] = Color.red;
+        // F.Cu
+        curr_row[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
+        curr_row[ColumnNames.TRACES.ordinal()] = new Color(200, 52, 52);
         curr_row[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(0, 150, 0);
-        curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(0, 110, 110);
+        curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
         curr_row[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(150, 50, 0);
       } else if (layer == row_count - 1) {
-        curr_row[ColumnNames.PINS.ordinal()] = new Color(160, 80, 0);
-        curr_row[ColumnNames.TRACES.ordinal()] = Color.blue;
+        // B.Cu
+        curr_row[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
+        curr_row[ColumnNames.TRACES.ordinal()] = new Color(77, 127, 196);
         curr_row[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(100, 100, 0);
-        curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(0, 100, 160);
+        curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
         curr_row[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(160, 80, 0);
-      } else // inner layer
+      } else
       {
+        // Inner layers like In1.Cu, In2.Cu, etc.
         if (is_signal_layer) {
           // currently 6 different default colors for traces on the inner layers
           final int different_inner_colors = 6;
           int remainder = signal_layer_no % different_inner_colors;
           curr_row[ColumnNames.TRACES.ordinal()] =
               switch (remainder % different_inner_colors) {
-                case 1  -> Color.GREEN;
-                case 2  -> Color.YELLOW;
-                case 3  -> new Color(200, 100, 255);
-                case 4  -> new Color(255, 150, 150);
-                case 5  -> new Color(100, 150, 0);
-                default -> new Color(0, 200, 255);
+                case 1  -> new Color(127, 200, 127);
+                case 2  -> new Color(206, 125, 44);
+                case 3  -> new Color(79, 203, 203);
+                case 4  -> new Color(219, 98, 139);
+                case 5  -> new Color(167, 165, 198);
+                default -> new Color(40, 204, 217);
               };
         } else // power layer
         {
@@ -60,13 +64,13 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
         }
         curr_row[ColumnNames.PINS.ordinal()] = new Color(255, 150, 0);
         curr_row[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(0, 200, 60);
-        curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(0, 200, 200);
+        curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
         curr_row[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(150, 50, 0);
       }
-      curr_row[ColumnNames.VIAS.ordinal()] = new Color(200, 200, 0);
+      curr_row[ColumnNames.VIAS.ordinal()] = new Color(227, 183, 46);
       curr_row[ColumnNames.FIXED_VIAS.ordinal()] = curr_row[ColumnNames.VIAS.ordinal()];
       curr_row[ColumnNames.FIXED_TRACES.ordinal()] = curr_row[ColumnNames.TRACES.ordinal()];
-      curr_row[ColumnNames.VIA_KEEPOUTS.ordinal()] = new Color(100, 100, 100);
+      curr_row[ColumnNames.VIA_KEEPOUTS.ordinal()] = new Color(236, 236, 236);
       if (is_signal_layer) {
         ++signal_layer_no;
       }
