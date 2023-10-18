@@ -28,15 +28,15 @@ public class PopupMenuDisplay extends JPopupMenu {
 
     JMenuItem popup_zoom_in_menuitem = new JMenuItem();
     popup_zoom_in_menuitem.setText(resources.getString("zoom_in"));
-    popup_zoom_in_menuitem.addActionListener(
-        evt -> board_panel.zoom_in(board_panel.right_button_click_location));
+    popup_zoom_in_menuitem.addActionListener(evt -> board_panel.zoom_in(board_panel.right_button_click_location));
+    popup_zoom_in_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_zoom_in_menuitem", popup_zoom_in_menuitem.getText()));
 
     zoom_menu.add(popup_zoom_in_menuitem);
 
     JMenuItem popup_zoom_out_menuitem = new JMenuItem();
     popup_zoom_out_menuitem.setText(resources.getString("zoom_out"));
-    popup_zoom_out_menuitem.addActionListener(
-        evt -> board_panel.zoom_out(board_panel.right_button_click_location));
+    popup_zoom_out_menuitem.addActionListener(evt -> board_panel.zoom_out(board_panel.right_button_click_location));
+    popup_zoom_out_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_zoom_out_menuitem", popup_zoom_out_menuitem.getText()));
 
     zoom_menu.add(popup_zoom_out_menuitem);
 

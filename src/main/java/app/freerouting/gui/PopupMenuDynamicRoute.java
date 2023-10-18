@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
 
@@ -23,22 +24,22 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
     JMenuItem popup_end_route_menuitem = new JMenuItem();
     popup_end_route_menuitem.setText(resources.getString("end_route"));
-    popup_end_route_menuitem.addActionListener(
-        evt -> board_panel.board_handling.return_from_state());
+    popup_end_route_menuitem.addActionListener(evt -> board_panel.board_handling.return_from_state());
+    popup_end_route_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_end_route_menuitem", popup_end_route_menuitem.getText()));
 
     this.add(popup_end_route_menuitem, 0);
 
     JMenuItem popup_cancel_menuitem = new JMenuItem();
     popup_cancel_menuitem.setText(resources.getString("cancel_route"));
-    popup_cancel_menuitem.addActionListener(
-        evt -> board_panel.board_handling.cancel_state());
+    popup_cancel_menuitem.addActionListener(evt -> board_panel.board_handling.cancel_state());
+    popup_cancel_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
 
     this.add(popup_cancel_menuitem, 1);
 
     JMenuItem popup_snapshot_menuitem = new JMenuItem();
     popup_snapshot_menuitem.setText(resources.getString("generate_snapshot"));
-    popup_snapshot_menuitem.addActionListener(
-        evt -> board_panel.board_handling.generate_snapshot());
+    popup_snapshot_menuitem.addActionListener(evt -> board_panel.board_handling.generate_snapshot());
+    popup_snapshot_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_snapshot_menuitem", popup_snapshot_menuitem.getText()));
 
     this.add(popup_snapshot_menuitem, 2);
 

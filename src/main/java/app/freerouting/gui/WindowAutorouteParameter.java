@@ -120,8 +120,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(vias_allowed_label, gridbag_constraints);
     main_panel.add(vias_allowed_label);
 
-    this.vias_allowed = new JCheckBox();
-    this.vias_allowed.addActionListener(new ViasAllowedListener());
+    vias_allowed = new JCheckBox();
+    vias_allowed.addActionListener(new ViasAllowedListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(vias_allowed, gridbag_constraints);
     main_panel.add(vias_allowed);

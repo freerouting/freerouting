@@ -70,7 +70,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         new ComboBoxLayer(
             board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
     north_panel.add(this.layer_combo_box);
-    this.layer_combo_box.addActionListener(new ComboBoxListener());
+    layer_combo_box.addActionListener(new ComboBoxListener());
 
     main_panel.add(north_panel, BorderLayout.NORTH);
 
