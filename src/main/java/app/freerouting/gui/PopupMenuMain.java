@@ -18,21 +18,21 @@ class PopupMenuMain extends PopupMenuDisplay {
 
     // add the item for selecting items
 
-    JMenuItem select_item_item = new JMenuItem();
-    select_item_item.setText(resources.getString("select_item"));
-    select_item_item.addActionListener(
+    JMenuItem popup_select_item_menuitem = new JMenuItem();
+    popup_select_item_menuitem.setText(resources.getString("select_item"));
+    popup_select_item_menuitem.addActionListener(
         evt -> board_panel.board_handling.select_items(board_panel.right_button_click_location));
 
-    this.add(select_item_item, 0);
+    this.add(popup_select_item_menuitem, 0);
 
     // Insert the start route item.
 
-    JMenuItem start_route_item = new JMenuItem();
-    start_route_item.setText(resources.getString("start_route"));
-    start_route_item.addActionListener(
+    JMenuItem popup_start_route_menuitem = new JMenuItem();
+    popup_start_route_menuitem.setText(resources.getString("start_route"));
+    popup_start_route_menuitem.addActionListener(
         evt -> board_panel.board_handling.start_route(board_panel.right_button_click_location));
 
-    this.add(start_route_item, 1);
+    this.add(popup_start_route_menuitem, 1);
 
     // Insert the create_obstacle_menu.
 
@@ -40,37 +40,37 @@ class PopupMenuMain extends PopupMenuDisplay {
 
     create_obstacle_menu.setText(resources.getString("create_keepout"));
 
-    JMenuItem create_tile_item = new JMenuItem();
-    create_tile_item.setText(resources.getString("tile"));
-    create_tile_item.addActionListener(
+    JMenuItem popup_create_tile_menuitem = new JMenuItem();
+    popup_create_tile_menuitem.setText(resources.getString("tile"));
+    popup_create_tile_menuitem.addActionListener(
         evt -> board_panel.board_handling.start_tile(board_panel.right_button_click_location));
 
     if (board_panel.board_handling.get_routing_board().get_test_level()
         != TestLevel.RELEASE_VERSION) {
-      create_obstacle_menu.add(create_tile_item);
+      create_obstacle_menu.add(popup_create_tile_menuitem);
     }
 
-    JMenuItem create_circle_item = new JMenuItem();
-    create_circle_item.setText(resources.getString("circle"));
-    create_circle_item.addActionListener(
+    JMenuItem popup_create_circle_menuitem = new JMenuItem();
+    popup_create_circle_menuitem.setText(resources.getString("circle"));
+    popup_create_circle_menuitem.addActionListener(
         evt -> board_panel.board_handling.start_circle(board_panel.right_button_click_location));
 
-    create_obstacle_menu.add(create_circle_item);
+    create_obstacle_menu.add(popup_create_circle_menuitem);
 
-    JMenuItem create_polygon_item = new JMenuItem();
-    create_polygon_item.setText(resources.getString("polygon"));
-    create_polygon_item.addActionListener(
+    JMenuItem popup_create_polygon_menuitem = new JMenuItem();
+    popup_create_polygon_menuitem.setText(resources.getString("polygon"));
+    popup_create_polygon_menuitem.addActionListener(
         evt -> board_panel.board_handling.start_polygonshape_item(
             board_panel.right_button_click_location));
 
-    create_obstacle_menu.add(create_polygon_item);
+    create_obstacle_menu.add(popup_create_polygon_menuitem);
 
-    JMenuItem add_hole_item = new JMenuItem();
-    add_hole_item.setText(resources.getString("hole"));
-    add_hole_item.addActionListener(
+    JMenuItem popup_add_hole_menuitem = new JMenuItem();
+    popup_add_hole_menuitem.setText(resources.getString("hole"));
+    popup_add_hole_menuitem.addActionListener(
         evt -> board_panel.board_handling.start_adding_hole(board_panel.right_button_click_location));
 
-    create_obstacle_menu.add(add_hole_item);
+    create_obstacle_menu.add(popup_add_hole_menuitem);
 
     this.add(create_obstacle_menu, 2);
 
@@ -78,12 +78,12 @@ class PopupMenuMain extends PopupMenuDisplay {
 
     if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0) {
       // the board contains swappable gates or pins
-      JMenuItem swap_pin_item = new JMenuItem();
-      swap_pin_item.setText(resources.getString("swap_pin"));
-      swap_pin_item.addActionListener(
+      JMenuItem popup_swap_pin_menuitem = new JMenuItem();
+      popup_swap_pin_menuitem.setText(resources.getString("swap_pin"));
+      popup_swap_pin_menuitem.addActionListener(
           evt -> board_panel.board_handling.swap_pin(board_panel.right_button_click_location));
 
-      this.add(swap_pin_item, 3);
+      this.add(popup_swap_pin_menuitem, 3);
     }
   }
 }

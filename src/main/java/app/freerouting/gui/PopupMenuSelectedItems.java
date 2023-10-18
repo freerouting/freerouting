@@ -14,21 +14,21 @@ class PopupMenuSelectedItems extends PopupMenuDisplay {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    JMenuItem copy_item = new JMenuItem();
-    copy_item.setText(resources.getString("copy"));
-    copy_item.addActionListener(
+    JMenuItem popup_copy_menuitem = new JMenuItem();
+    popup_copy_menuitem.setText(resources.getString("copy"));
+    popup_copy_menuitem.addActionListener(
         evt -> board_panel.board_handling.copy_selected_items(board_panel.right_button_click_location));
 
     if (board_panel.board_handling.get_routing_board().get_test_level()
         != TestLevel.RELEASE_VERSION) {
-      this.add(copy_item);
+      this.add(popup_copy_menuitem);
     }
 
-    JMenuItem move_item = new JMenuItem();
-    move_item.setText(resources.getString("move"));
-    move_item.addActionListener(
+    JMenuItem popup_move_menuitem = new JMenuItem();
+    popup_move_menuitem.setText(resources.getString("move"));
+    popup_move_menuitem.addActionListener(
         evt -> board_panel.board_handling.move_selected_items(board_panel.right_button_click_location));
 
-    this.add(move_item, 0);
+    this.add(popup_move_menuitem, 0);
   }
 }

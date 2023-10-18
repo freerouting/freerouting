@@ -15,18 +15,18 @@ class PopupMenuInsertCancel extends JPopupMenu {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    JMenuItem insert_item = new JMenuItem();
-    insert_item.setText(resources.getString("insert"));
-    insert_item.addActionListener(
+    JMenuItem popup_insert_menuitem = new JMenuItem();
+    popup_insert_menuitem.setText(resources.getString("insert"));
+    popup_insert_menuitem.addActionListener(
         evt -> board_panel.board_handling.return_from_state());
 
-    this.add(insert_item);
+    this.add(popup_insert_menuitem);
 
-    JMenuItem cancel_item = new JMenuItem();
-    cancel_item.setText(resources.getString("cancel"));
-    cancel_item.addActionListener(
+    JMenuItem popup_cancel_menuitem = new JMenuItem();
+    popup_cancel_menuitem.setText(resources.getString("cancel"));
+    popup_cancel_menuitem.addActionListener(
         evt -> board_panel.board_handling.cancel_state());
 
-    this.add(cancel_item);
+    this.add(popup_cancel_menuitem);
   }
 }

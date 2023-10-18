@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -15,29 +16,29 @@ public class PopupMenuDisplay extends JPopupMenu {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    JMenuItem center_display_item = new JMenuItem();
-    center_display_item.setText(resources.getString("center_display"));
-    center_display_item.addActionListener(
-        evt -> board_panel.center_display(board_panel.right_button_click_location));
+    JMenuItem popup_center_display_menuitem = new JMenuItem();
+    popup_center_display_menuitem.setText(resources.getString("center_display"));
+    popup_center_display_menuitem.addActionListener(evt -> board_panel.center_display(board_panel.right_button_click_location));
+    popup_center_display_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_center_display_menuitem", popup_center_display_menuitem.getText()));
 
-    this.add(center_display_item);
+    this.add(popup_center_display_menuitem);
 
     JMenu zoom_menu = new JMenu();
     zoom_menu.setText(resources.getString("zoom"));
 
-    JMenuItem zoom_in_item = new JMenuItem();
-    zoom_in_item.setText(resources.getString("zoom_in"));
-    zoom_in_item.addActionListener(
+    JMenuItem popup_zoom_in_menuitem = new JMenuItem();
+    popup_zoom_in_menuitem.setText(resources.getString("zoom_in"));
+    popup_zoom_in_menuitem.addActionListener(
         evt -> board_panel.zoom_in(board_panel.right_button_click_location));
 
-    zoom_menu.add(zoom_in_item);
+    zoom_menu.add(popup_zoom_in_menuitem);
 
-    JMenuItem zoom_out_item = new JMenuItem();
-    zoom_out_item.setText(resources.getString("zoom_out"));
-    zoom_out_item.addActionListener(
+    JMenuItem popup_zoom_out_menuitem = new JMenuItem();
+    popup_zoom_out_menuitem.setText(resources.getString("zoom_out"));
+    popup_zoom_out_menuitem.addActionListener(
         evt -> board_panel.zoom_out(board_panel.right_button_click_location));
 
-    zoom_menu.add(zoom_out_item);
+    zoom_menu.add(popup_zoom_out_menuitem);
 
     this.add(zoom_menu);
   }

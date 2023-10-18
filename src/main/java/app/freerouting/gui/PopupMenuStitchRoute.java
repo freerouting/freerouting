@@ -25,26 +25,26 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    JMenuItem insert_item = new JMenuItem();
-    insert_item.setText(resources.getString("insert"));
-    insert_item.addActionListener(
+    JMenuItem popup_insert_menuitem = new JMenuItem();
+    popup_insert_menuitem.setText(resources.getString("insert"));
+    popup_insert_menuitem.addActionListener(
         evt -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));
 
-    this.add(insert_item, 0);
+    this.add(popup_insert_menuitem, 0);
 
-    JMenuItem done_item = new JMenuItem();
-    done_item.setText(resources.getString("done"));
-    done_item.addActionListener(
+    JMenuItem popup_done_menuitem = new JMenuItem();
+    popup_done_menuitem.setText(resources.getString("done"));
+    popup_done_menuitem.addActionListener(
         evt -> board_panel.board_handling.return_from_state());
 
-    this.add(done_item, 1);
+    this.add(popup_done_menuitem, 1);
 
-    JMenuItem cancel_item = new JMenuItem();
-    cancel_item.setText(resources.getString("cancel"));
-    cancel_item.addActionListener(
+    JMenuItem popup_cancel_menuitem = new JMenuItem();
+    popup_cancel_menuitem.setText(resources.getString("cancel"));
+    popup_cancel_menuitem.addActionListener(
         evt -> board_panel.board_handling.cancel_state());
 
-    this.add(cancel_item, 2);
+    this.add(popup_cancel_menuitem, 2);
 
     Layer curr_layer =
         layer_structure.arr[board_panel.board_handling.settings.get_layer()];

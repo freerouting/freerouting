@@ -21,26 +21,26 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
     LayerStructure layer_structure =
         board_panel.board_handling.get_routing_board().layer_structure;
 
-    JMenuItem end_route_item = new JMenuItem();
-    end_route_item.setText(resources.getString("end_route"));
-    end_route_item.addActionListener(
+    JMenuItem popup_end_route_menuitem = new JMenuItem();
+    popup_end_route_menuitem.setText(resources.getString("end_route"));
+    popup_end_route_menuitem.addActionListener(
         evt -> board_panel.board_handling.return_from_state());
 
-    this.add(end_route_item, 0);
+    this.add(popup_end_route_menuitem, 0);
 
-    JMenuItem cancel_item = new JMenuItem();
-    cancel_item.setText(resources.getString("cancel_route"));
-    cancel_item.addActionListener(
+    JMenuItem popup_cancel_menuitem = new JMenuItem();
+    popup_cancel_menuitem.setText(resources.getString("cancel_route"));
+    popup_cancel_menuitem.addActionListener(
         evt -> board_panel.board_handling.cancel_state());
 
-    this.add(cancel_item, 1);
+    this.add(popup_cancel_menuitem, 1);
 
-    JMenuItem snapshot_item = new JMenuItem();
-    snapshot_item.setText(resources.getString("generate_snapshot"));
-    snapshot_item.addActionListener(
+    JMenuItem popup_snapshot_menuitem = new JMenuItem();
+    popup_snapshot_menuitem.setText(resources.getString("generate_snapshot"));
+    popup_snapshot_menuitem.addActionListener(
         evt -> board_panel.board_handling.generate_snapshot());
 
-    this.add(snapshot_item, 2);
+    this.add(popup_snapshot_menuitem, 2);
 
     if (layer_structure.arr.length > 0) {
       this.change_layer_menu = new PopupMenuChangeLayer(p_board_frame);
