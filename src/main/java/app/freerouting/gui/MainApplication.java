@@ -277,10 +277,6 @@ public class MainApplication extends WindowBase {
     FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
 
 
-    // check for new version
-    VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
-    new Thread(checker).start();
-
     // initialize analytics
     FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION,"G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
     FRAnalytics.setEnabled(!startupOptions.disable_analytics);
@@ -328,9 +324,14 @@ public class MainApplication extends WindowBase {
     UIManager.put("Menu.font", newFont);
     UIManager.put("MenuItem.font", newFont);
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.MainApplication", startupOptions.current_locale);
+    // check for new version
+    VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
+    new Thread(checker).start();
+
+    // get localization resources
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", startupOptions.current_locale);
+
+    // check if the user wants to see the help only
     if (startupOptions.show_help_option) {
       System.out.print(resources.getString("command_line_help"));
       System.exit(0);

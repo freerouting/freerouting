@@ -307,4 +307,19 @@ public class FRAnalytics {
 
     trackAnonymousAction(permanent_user_id, "File Saved", properties);
   }
+
+  public static void exceptionThrown(String localizedMessage, Throwable e) {
+    StringBuilder sb = new StringBuilder();
+    for (StackTraceElement ste : e.getStackTrace()) {
+      sb.append(ste.toString());
+      sb.append("\n");
+    }
+
+    Map<String, String> properties = new HashMap<>();
+    properties.put("exception_message", localizedMessage);
+    properties.put("exception_details", e.toString());
+    properties.put("exception_stacktrace", sb.toString());
+
+    trackAnonymousAction(permanent_user_id, "Exception Thrown", properties);
+  }
 }
