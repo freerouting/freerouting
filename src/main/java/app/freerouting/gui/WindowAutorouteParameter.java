@@ -5,6 +5,8 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.AutorouteSettings;
 import app.freerouting.interactive.BoardHandling;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -24,7 +26,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final BoardHandling board_handling;
   private final JLabel[] layer_name_arr;
   private final JCheckBox[] layer_active_arr;
-  private final JComboBox<String>[] combo_box_arr;
+  private final List<JComboBox<String>> combo_box_arr;
   private final JCheckBox vias_allowed;
   private final JCheckBox fanout_pass_button;
   private final JCheckBox autoroute_pass_button;
@@ -79,7 +81,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     // every layer is a row in the gridbag and has 3 columns: name, active, preferred direction
     layer_name_arr = new JLabel[layer_count];
     layer_active_arr = new JCheckBox[layer_count];
-    combo_box_arr = new JComboBox[layer_count];
+    combo_box_arr = new ArrayList<>(layer_count);
 
     for (int i = 0; i < layer_count; ++i) {
       gridbag_constraints.gridwidth = 3;
@@ -100,13 +102,13 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       main_panel.add(layer_active_arr[i]);
 
       // set the preferred direction combobox
-      combo_box_arr[i] = new JComboBox<>();
-      combo_box_arr[i].addItem(this.horizontal);
-      combo_box_arr[i].addItem(this.vertical);
-      combo_box_arr[i].addActionListener(new PreferredDirectionListener(i));
+      combo_box_arr.add(new JComboBox<>());
+      combo_box_arr.get(i).addItem(this.horizontal);
+      combo_box_arr.get(i).addItem(this.vertical);
+      combo_box_arr.get(i).addActionListener(new PreferredDirectionListener(i));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(combo_box_arr[i], gridbag_constraints);
-      main_panel.add(combo_box_arr[i]);
+      gridbag.setConstraints(combo_box_arr.get(i), gridbag_constraints);
+      main_panel.add(combo_box_arr.get(i));
     }
 
     JLabel separator =
@@ -197,11 +199,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
           settings.get_layer_active(i));
     }
 
-    for (int i = 0; i < combo_box_arr.length; ++i) {
+    for (int i = 0; i < combo_box_arr.size(); ++i) {
       if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i))) {
-        this.combo_box_arr[i].setSelectedItem(this.horizontal);
+        this.combo_box_arr.get(i).setSelectedItem(this.horizontal);
       } else {
-        this.combo_box_arr[i].setSelectedItem(this.vertical);
+        this.combo_box_arr.get(i).setSelectedItem(this.vertical);
       }
     }
     this.detail_window.refresh();
@@ -269,7 +271,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       int curr_layer_no =
           board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
       board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(
-          curr_layer_no, combo_box_arr[signal_layer_no].getSelectedItem() == horizontal);
+          curr_layer_no, combo_box_arr.get(signal_layer_no).getSelectedItem() == horizontal);
     }
   }
 
