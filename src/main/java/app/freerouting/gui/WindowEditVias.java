@@ -60,15 +60,14 @@ public class WindowEditVias extends BoardSavableSubWindow {
     JPanel via_info_button_panel = new JPanel();
     via_info_button_panel.setLayout(new FlowLayout());
     this.main_panel.add(via_info_button_panel, BorderLayout.SOUTH);
-    final JButton edit_vias_add_via_button = new JButton(resources.getString("add"));
-    edit_vias_add_via_button.setToolTipText(resources.getString("add_tooltip"));
-    edit_vias_add_via_button.addActionListener(new AddViaListener());
-    via_info_button_panel.add(edit_vias_add_via_button);
-    final JButton edit_vias_remove_via_button =
-        new JButton(resources.getString("remove"));
-    edit_vias_remove_via_button.setToolTipText(resources.getString("remove_tooltip"));
-    edit_vias_remove_via_button.addActionListener(new RemoveViaListener());
-    via_info_button_panel.add(edit_vias_remove_via_button);
+    final JButton rules_vias_vias_edit_add_button = new JButton(resources.getString("add"));
+    rules_vias_vias_edit_add_button.setToolTipText(resources.getString("add_tooltip"));
+    rules_vias_vias_edit_add_button.addActionListener(new AddViaListener());
+    via_info_button_panel.add(rules_vias_vias_edit_add_button);
+    final JButton rules_vias_vias_edit_remove_button = new JButton(resources.getString("remove"));
+    rules_vias_vias_edit_remove_button.setToolTipText(resources.getString("remove_tooltip"));
+    rules_vias_vias_edit_remove_button.addActionListener(new RemoveViaListener());
+    via_info_button_panel.add(rules_vias_vias_edit_remove_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowVia_EditVia");
 
