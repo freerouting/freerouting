@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.TestLevel;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -57,6 +58,7 @@ public abstract class WindowNetSamples extends BoardSubWindow {
     // create open button
     JButton net_samples_open_button = new JButton(resources.getString(p_button_name));
     net_samples_open_button.addActionListener(new OpenListener());
+    net_samples_open_button.addActionListener(evt -> FRAnalytics.buttonClicked("net_samples_open_button", net_samples_open_button.getText()));
     main_panel.add(net_samples_open_button, BorderLayout.SOUTH);
 
     // create list with the sample designs

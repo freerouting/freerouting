@@ -8,6 +8,7 @@ import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.library.BoardLibrary;
 import app.freerouting.library.Padstack;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;
@@ -82,18 +83,21 @@ public class WindowVia extends BoardSavableSubWindow {
     final JButton rules_vias_padstacks_info_button = new JButton(resources.getString("info"));
     rules_vias_padstacks_info_button.setToolTipText(resources.getString("info_tooltip"));
     rules_vias_padstacks_info_button.addActionListener(new ShowPadstacksListener());
+    rules_vias_padstacks_info_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_padstacks_info_button", rules_vias_padstacks_info_button.getText()));
     padstack_button_panel.add(rules_vias_padstacks_info_button);
 
     final JButton rules_vias_padstacks_create_button =
         new JButton(resources.getString("create"));
     rules_vias_padstacks_create_button.setToolTipText(resources.getString("create_tooltip"));
     rules_vias_padstacks_create_button.addActionListener(new AddPadstackListener());
+    rules_vias_padstacks_create_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_padstacks_create_button", rules_vias_padstacks_create_button.getText()));
     padstack_button_panel.add(rules_vias_padstacks_create_button);
 
     final JButton rules_vias_padstacks_remove_button =
         new JButton(resources.getString("remove"));
     rules_vias_padstacks_remove_button.setToolTipText(resources.getString("remove_tooltip"));
     rules_vias_padstacks_remove_button.addActionListener(new RemovePadstackListener());
+    rules_vias_padstacks_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_padstacks_remove_button", rules_vias_padstacks_remove_button.getText()));
     padstack_button_panel.add(rules_vias_padstacks_remove_button);
 
     JLabel separator_label =
@@ -117,12 +121,14 @@ public class WindowVia extends BoardSavableSubWindow {
         new JButton(resources.getString("info"));
     rules_vias_vias_info_button.setToolTipText(resources.getString("info_tooltip_2"));
     rules_vias_vias_info_button.addActionListener(new ShowViasListener());
+    rules_vias_vias_info_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_info_button", rules_vias_vias_info_button.getText()));
     via_button_panel.add(rules_vias_vias_info_button);
 
     final JButton rules_vias_vias_edit_button =
         new JButton(resources.getString("edit"));
     rules_vias_vias_edit_button.setToolTipText(resources.getString("edit_tooltip"));
     rules_vias_vias_edit_button.addActionListener(new EditViasListener());
+    rules_vias_vias_edit_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_button", rules_vias_vias_edit_button.getText()));
     via_button_panel.add(rules_vias_vias_edit_button);
 
     separator_label =
@@ -163,24 +169,28 @@ public class WindowVia extends BoardSavableSubWindow {
         new JButton(resources.getString("info"));
     rules_vias_rules_info_button.setToolTipText(resources.getString("info_tooltip_3"));
     rules_vias_rules_info_button.addActionListener(new ShowViaRuleListener());
+    rules_vias_rules_info_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_info_button", rules_vias_rules_info_button.getText()));
     via_rule_button_panel.add(rules_vias_rules_info_button);
 
     final JButton rules_vias_rules_create_button =
         new JButton(resources.getString("create"));
     rules_vias_rules_create_button.setToolTipText(resources.getString("create_tooltip_2"));
     rules_vias_rules_create_button.addActionListener(new AddViaRuleListener());
+    rules_vias_rules_create_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_create_button", rules_vias_rules_create_button.getText()));
     via_rule_button_panel.add(rules_vias_rules_create_button);
 
     final JButton rules_vias_rules_edit_button =
         new JButton(resources.getString("edit"));
     rules_vias_rules_edit_button.setToolTipText(resources.getString("edit_tooltip_2"));
     rules_vias_rules_edit_button.addActionListener(new EditViaRuleListener());
+    rules_vias_rules_edit_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_button", rules_vias_rules_edit_button.getText()));
     via_rule_button_panel.add(rules_vias_rules_edit_button);
 
     final JButton rules_vias_rules_remove_button =
         new JButton(resources.getString("remove"));
     rules_vias_rules_remove_button.setToolTipText(resources.getString("remove_tooltip_2"));
     rules_vias_rules_remove_button.addActionListener(new RemoveViaRuleListener());
+    rules_vias_rules_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_remove_button", rules_vias_rules_remove_button.getText()));
     via_rule_button_panel.add(rules_vias_rules_remove_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowVia");

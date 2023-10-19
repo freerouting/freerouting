@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.interactive.BoardHandling;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.NetClasses;
@@ -36,17 +37,18 @@ public class WindowNets extends WindowObjectListWithFilter {
     JPanel curr_button_panel = new JPanel();
     this.south_panel.add(curr_button_panel, BorderLayout.NORTH);
 
-    final JButton rules_nets_assign_class_button =
-        new JButton(resources.getString("assign_class"));
+    final JButton rules_nets_assign_class_button = new JButton(resources.getString("assign_class"));
     curr_button_panel.add(rules_nets_assign_class_button);
     rules_nets_assign_class_button.setToolTipText(resources.getString("assign_class_tooltip"));
     rules_nets_assign_class_button.addActionListener(new AssignClassListener());
+    rules_nets_assign_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_nets_assign_class_button", rules_nets_assign_class_button.getText()));
 
-    final JButton rules_nets_filter_incompletes_button =
-        new JButton(resources.getString("filter_incompletes"));
+    final JButton rules_nets_filter_incompletes_button = new JButton(resources.getString("filter_incompletes"));
     curr_button_panel.add(rules_nets_filter_incompletes_button);
     rules_nets_filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
     rules_nets_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
+    rules_nets_filter_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_nets_filter_incompletes_button", rules_nets_filter_incompletes_button.getText()));
+
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_Nets");
   }
 

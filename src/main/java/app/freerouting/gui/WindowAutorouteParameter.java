@@ -5,6 +5,7 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.AutorouteSettings;
 import app.freerouting.interactive.BoardHandling;
 
+import app.freerouting.management.FRAnalytics;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -96,6 +97,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       // set the active checkbox
       settings_autorouter_layer_active_arr[i] = new JCheckBox();
       settings_autorouter_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
+      settings_autorouter_layer_active_arr[i].addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
       board_handling.settings.autoroute_settings.set_layer_active(i, curr_layer.is_signal);
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
@@ -106,6 +108,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       settings_autorouter_combo_box_arr.get(i).addItem(this.horizontal);
       settings_autorouter_combo_box_arr.get(i).addItem(this.vertical);
       settings_autorouter_combo_box_arr.get(i).addActionListener(new PreferredDirectionListener(i));
+      settings_autorouter_combo_box_arr.get(i).addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_combo_box_arr", null));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
       main_panel.add(settings_autorouter_combo_box_arr.get(i));
@@ -124,6 +127,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     settings_autorouter_vias_allowed = new JCheckBox();
     settings_autorouter_vias_allowed.addActionListener(new ViasAllowedListener());
+    settings_autorouter_vias_allowed.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_vias_allowed", settings_autorouter_vias_allowed.getText()));
+
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(settings_autorouter_vias_allowed, gridbag_constraints);
     main_panel.add(settings_autorouter_vias_allowed);
@@ -144,8 +149,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.settings_autorouter_postroute_pass_button = new JCheckBox(resources.getString("postroute"));
 
     settings_autorouter_fanout_pass_button.addActionListener(new FanoutListener());
+    settings_autorouter_fanout_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_fanout_pass_button", settings_autorouter_fanout_pass_button.getText()));
     settings_autorouter_autoroute_pass_button.addActionListener(new AutorouteListener());
+    settings_autorouter_autoroute_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button", settings_autorouter_autoroute_pass_button.getText()));
     settings_autorouter_postroute_pass_button.addActionListener(new PostrouteListener());
+    settings_autorouter_postroute_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_postroute_pass_button", settings_autorouter_postroute_pass_button.getText()));
 
     settings_autorouter_fanout_pass_button.setSelected(false);
     settings_autorouter_autoroute_pass_button.setSelected(true);
@@ -166,10 +174,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(separator, gridbag_constraints);
 
     detail_window = new WindowAutorouteDetailParameter(p_board_frame);
-    JButton settings_autorouter_detail_button =
-        new JButton(resources.getString("detail_parameter"));
+    JButton settings_autorouter_detail_button = new JButton(resources.getString("detail_parameter"));
     this.detail_listener = new DetailListener();
     settings_autorouter_detail_button.addActionListener(detail_listener);
+    settings_autorouter_detail_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detail_button", settings_autorouter_detail_button.getText()));
     gridbag.setConstraints(settings_autorouter_detail_button, gridbag_constraints);
 
     main_panel.add(settings_autorouter_detail_button);

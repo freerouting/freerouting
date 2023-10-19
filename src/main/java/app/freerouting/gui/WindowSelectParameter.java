@@ -6,6 +6,7 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -60,7 +61,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     settings_select_current_only_button.setToolTipText(resources.getString("current_only_tooltip"));
 
     settings_select_all_visible_button.addActionListener(new AllVisibleListener());
+    settings_select_all_visible_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_select_all_visible_button", settings_select_all_visible_button.getText()));
     settings_select_current_only_button.addActionListener(new CurrentOnlyListener());
+    settings_select_current_only_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_select_current_only_button", settings_select_current_only_button.getText()));
 
     ButtonGroup selection_layer_button_group = new ButtonGroup();
     selection_layer_button_group.add(settings_select_all_visible_button);
@@ -94,6 +97,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       gridbag.setConstraints(this.settings_select_item_selection_choices[i], gridbag_constraints);
       main_panel.add(this.settings_select_item_selection_choices[i], gridbag_constraints);
       settings_select_item_selection_choices[i].addActionListener(new ItemSelectionListener(i));
+      settings_select_item_selection_choices[i].addActionListener(evt -> FRAnalytics.buttonClicked("settings_select_item_selection_choices", null));
     }
 
     JLabel separator2 = new JLabel("   –––––––––––––––––––––––––––––  ");
@@ -124,6 +128,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       current_layer_button_group.add(settings_select_layer_name_arr[i]);
       int layer_no = layer_structure.get_no(curr_layer);
       settings_select_layer_name_arr[i].addActionListener(new CurrentLayerListener(i, layer_no));
+      settings_select_layer_name_arr[i].addActionListener(evt -> FRAnalytics.buttonClicked("settings_select_layer_name_arr", null));
     }
 
     JLabel empty_label = new JLabel();

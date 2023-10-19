@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.interactive.BoardHandling;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -70,12 +71,15 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
         new JButton(resources.getString("minimum_all"));
     appearance_layer_visibility_min_all_button.setToolTipText(resources.getString("minimum_all_tooltip"));
     appearance_layer_visibility_min_all_button.addActionListener(new MinAllButtonListener());
+    appearance_layer_visibility_min_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_layer_visibility_min_all_button", appearance_layer_visibility_min_all_button.getText()));
     gridbag.setConstraints(appearance_layer_visibility_min_all_button, gridbag_constraints);
     main_panel.add(appearance_layer_visibility_min_all_button);
+
     JButton appearance_layer_visibility_max_all_button =
         new JButton(resources.getString("maximum_all"));
     appearance_layer_visibility_max_all_button.setToolTipText(resources.getString("maximum_all_tooltip"));
     appearance_layer_visibility_max_all_button.addActionListener(new MaxAllButtonListener());
+    appearance_layer_visibility_max_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_layer_visibility_max_all_button", appearance_layer_visibility_max_all_button.getText()));
     gridbag.setConstraints(appearance_layer_visibility_max_all_button, gridbag_constraints);
     main_panel.add(appearance_layer_visibility_max_all_button);
     this.pack();

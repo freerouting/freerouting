@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -70,12 +71,14 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     info_components_show_button.setToolTipText(resources.getString("info_tooltip"));
     ShowListener show_listener = new ShowListener();
     info_components_show_button.addActionListener(show_listener);
+    info_components_show_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
     north_button_panel.add(info_components_show_button);
 
     JButton info_components_instance_button = new JButton(resources.getString("select"));
     info_components_instance_button.setToolTipText(resources.getString("select_tooltip"));
     SelectListener instance_listener = new SelectListener();
     info_components_instance_button.addActionListener(instance_listener);
+    info_components_instance_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
     north_button_panel.add(info_components_instance_button);
 
     JPanel south_button_panel = new JPanel();
@@ -84,6 +87,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     JButton info_components_invert_button = new JButton(resources.getString("invert"));
     info_components_invert_button.setToolTipText(resources.getString("invert_tooltip"));
     info_components_invert_button.addActionListener(new InvertListener());
+    info_components_invert_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
     south_button_panel.add(info_components_invert_button);
 
     JButton info_components_recalculate_button =
@@ -91,6 +95,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     info_components_recalculate_button.setToolTipText(resources.getString("recalculate_tooltip"));
     RecalculateListener recalculate_listener = new RecalculateListener();
     info_components_recalculate_button.addActionListener(recalculate_listener);
+    info_components_recalculate_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
     south_button_panel.add(info_components_recalculate_button);
 
     this.list_empty_message = new JLabel(resources.getString("list_empty"));

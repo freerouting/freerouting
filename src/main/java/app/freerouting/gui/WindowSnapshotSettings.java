@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.SnapShot;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -58,6 +59,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_object_color_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_object_color_check_box, gridbag_constraints);
     other_snapshots_settings_object_color_check_box.addActionListener(new ObjectColorListener());
+    other_snapshots_settings_object_color_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_object_color_check_box", other_snapshots_settings_object_color_check_box.getText()));
 
     // add check box for the object visibility
 
@@ -66,6 +68,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_object_visibility_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_object_visibility_check_box, gridbag_constraints);
     other_snapshots_settings_object_visibility_check_box.addActionListener(new ObjectVisibilityListener());
+    other_snapshots_settings_object_visibility_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_object_visibility_check_box", other_snapshots_settings_object_visibility_check_box.getText()));
 
     // add check box for the layer visibility
 
@@ -74,6 +77,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_layer_visibility_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_layer_visibility_check_box, gridbag_constraints);
     other_snapshots_settings_layer_visibility_check_box.addActionListener(new LayerVisibilityListener());
+    other_snapshots_settings_layer_visibility_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_layer_visibility_check_box", other_snapshots_settings_layer_visibility_check_box.getText()));
 
     // add check box for display region
 
@@ -82,6 +86,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_display_region_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_display_region_check_box, gridbag_constraints);
     other_snapshots_settings_display_region_check_box.addActionListener(new DisplayRegionListener());
+    other_snapshots_settings_display_region_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_display_region_check_box", other_snapshots_settings_display_region_check_box.getText()));
 
     JLabel separator =
         new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
@@ -95,6 +100,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_interactive_state_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_interactive_state_check_box, gridbag_constraints);
     other_snapshots_settings_interactive_state_check_box.addActionListener(new InteractiveStateListener());
+    other_snapshots_settings_interactive_state_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_interactive_state_check_box", other_snapshots_settings_interactive_state_check_box.getText()));
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -107,6 +113,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_selection_layers_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_selection_layers_check_box, gridbag_constraints);
     other_snapshots_settings_selection_layers_check_box.addActionListener(new SelectionLayersListener());
+    other_snapshots_settings_selection_layers_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_selection_layers_check_box", other_snapshots_settings_selection_layers_check_box.getText()));
 
     // add check box for the selectable items
 
@@ -115,6 +122,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_selectable_items_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_selectable_items_check_box, gridbag_constraints);
     other_snapshots_settings_selectable_items_check_box.addActionListener(new SelectableItemsListener());
+    other_snapshots_settings_selectable_items_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_selectable_items_check_box", other_snapshots_settings_selectable_items_check_box.getText()));
 
     // add check box for the current layer
 
@@ -122,6 +130,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_current_layer_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_current_layer_check_box, gridbag_constraints);
     other_snapshots_settings_current_layer_check_box.addActionListener(new CurrentLayerListener());
+    other_snapshots_settings_current_layer_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_current_layer_check_box", other_snapshots_settings_current_layer_check_box.getText()));
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -134,6 +143,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_rule_selection_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_rule_selection_check_box, gridbag_constraints);
     other_snapshots_settings_rule_selection_check_box.addActionListener(new RuleSelectionListener());
+    other_snapshots_settings_rule_selection_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_rule_selection_check_box", other_snapshots_settings_rule_selection_check_box.getText()));
 
     // add check box for the manual rule settings
 
@@ -142,6 +152,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_manual_rule_settings_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_manual_rule_settings_check_box, gridbag_constraints);
     other_snapshots_settings_manual_rule_settings_check_box.addActionListener(new ManualRuleSettingsListener());
+    other_snapshots_settings_manual_rule_settings_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_manual_rule_settings_check_box", other_snapshots_settings_manual_rule_settings_check_box.getText()));
 
     // add check box for push and shove enabled
 
@@ -150,6 +161,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_push_and_shove_enabled_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_push_and_shove_enabled_check_box, gridbag_constraints);
     other_snapshots_settings_push_and_shove_enabled_check_box.addActionListener(new PushAndShoveEnabledListener());
+    other_snapshots_settings_push_and_shove_enabled_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_push_and_shove_enabled_check_box", other_snapshots_settings_push_and_shove_enabled_check_box.getText()));
 
     // add check box for drag components enabled
 
@@ -158,6 +170,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_drag_components_enabled_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_drag_components_enabled_check_box, gridbag_constraints);
     other_snapshots_settings_drag_components_enabled_check_box.addActionListener(new DragComponentsEnabledListener());
+    other_snapshots_settings_drag_components_enabled_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_drag_components_enabled_check_box", other_snapshots_settings_drag_components_enabled_check_box.getText()));
 
     // add check box for the pull tight region
 
@@ -166,6 +179,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_pull_tight_region_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_pull_tight_region_check_box, gridbag_constraints);
     other_snapshots_settings_pull_tight_region_check_box.addActionListener(new PullTightRegionListener());
+    other_snapshots_settings_pull_tight_region_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_pull_tight_region_check_box", other_snapshots_settings_pull_tight_region_check_box.getText()));
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -178,6 +192,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_component_grid_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_component_grid_check_box, gridbag_constraints);
     other_snapshots_settings_component_grid_check_box.addActionListener(new ComponentGridListener());
+    other_snapshots_settings_component_grid_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_component_grid_check_box", other_snapshots_settings_component_grid_check_box.getText()));
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -190,6 +205,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     gridbag.setConstraints(other_snapshots_settings_info_list_filter_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_info_list_filter_check_box, gridbag_constraints);
     other_snapshots_settings_info_list_filter_check_box.addActionListener(new InfoListFilterListener());
+    other_snapshots_settings_info_list_filter_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_info_list_filter_check_box", other_snapshots_settings_info_list_filter_check_box.getText()));
 
     p_board_frame.set_context_sensitive_help(this, "WindowSnapshots_SnapshotSettings");
 

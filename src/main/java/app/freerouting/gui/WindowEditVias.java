@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.NetClass;
@@ -63,10 +64,12 @@ public class WindowEditVias extends BoardSavableSubWindow {
     final JButton rules_vias_vias_edit_add_button = new JButton(resources.getString("add"));
     rules_vias_vias_edit_add_button.setToolTipText(resources.getString("add_tooltip"));
     rules_vias_vias_edit_add_button.addActionListener(new AddViaListener());
+    rules_vias_vias_edit_add_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_add_button", rules_vias_vias_edit_add_button.getText()));
     via_info_button_panel.add(rules_vias_vias_edit_add_button);
     final JButton rules_vias_vias_edit_remove_button = new JButton(resources.getString("remove"));
     rules_vias_vias_edit_remove_button.setToolTipText(resources.getString("remove_tooltip"));
     rules_vias_vias_edit_remove_button.addActionListener(new RemoveViaListener());
+    rules_vias_vias_edit_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_remove_button", rules_vias_vias_edit_remove_button.getText()));
     via_info_button_panel.add(rules_vias_vias_edit_remove_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowVia_EditVia");

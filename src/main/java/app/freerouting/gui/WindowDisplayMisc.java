@@ -4,6 +4,7 @@ import app.freerouting.boardgraphics.CoordinateTransform;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -69,11 +70,13 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     appearance_misc_small_cursor_checkbox = new JRadioButton(resources.getString("small"));
     appearance_misc_small_cursor_checkbox.setToolTipText(resources.getString("cursor_checkbox_tooltip"));
     appearance_misc_small_cursor_checkbox.addActionListener(new SmallCursorListener());
+    appearance_misc_small_cursor_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_small_cursor_checkbox", appearance_misc_small_cursor_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_small_cursor_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_small_cursor_checkbox, gridbag_constraints);
 
     appearance_misc_big_cursor_checkbox = new JRadioButton(resources.getString("big"));
     appearance_misc_big_cursor_checkbox.addActionListener(new BigCursorListener());
+    appearance_misc_big_cursor_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_big_cursor_checkbox", appearance_misc_big_cursor_checkbox.getText()));
     appearance_misc_big_cursor_checkbox.setToolTipText(resources.getString("cursor_checkbox_tooltip"));
     gridbag.setConstraints(appearance_misc_big_cursor_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_big_cursor_checkbox, gridbag_constraints);
@@ -122,9 +125,13 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     rotation_button_group.add(appearance_misc_rotation_270_degree_checkbox);
 
     appearance_misc_rotation_none_checkbox.addActionListener(new RotationNoneListener());
+    appearance_misc_rotation_none_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_rotation_none_checkbox", appearance_misc_rotation_none_checkbox.getText()));
     appearance_misc_rotation_90_degree_checkbox.addActionListener(new Rotation90Listener());
+    appearance_misc_rotation_90_degree_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_rotation_90_degree_checkbox", appearance_misc_rotation_90_degree_checkbox.getText()));
     appearance_misc_rotation_180_degree_checkbox.addActionListener(new Rotation180Listener());
+    appearance_misc_rotation_180_degree_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_rotation_180_degree_checkbox", appearance_misc_rotation_180_degree_checkbox.getText()));
     appearance_misc_rotation_270_degree_checkbox.addActionListener(new Rotation270Listener());
+    appearance_misc_rotation_270_degree_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_rotation_270_degree_checkbox", appearance_misc_rotation_270_degree_checkbox.getText()));
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -144,16 +151,19 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     appearance_misc_mirror_none_checkbox = new JRadioButton(resources.getString("none"));
     appearance_misc_mirror_none_checkbox.addActionListener(new MirrorNoneListener());
+    appearance_misc_mirror_none_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_mirror_none_checkbox", appearance_misc_mirror_none_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_mirror_none_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_mirror_none_checkbox, gridbag_constraints);
 
     appearance_misc_vertical_mirror_checkbox = new JRadioButton(resources.getString("left_right"));
     appearance_misc_vertical_mirror_checkbox.addActionListener(new VerticalMirrorListener());
+    appearance_misc_vertical_mirror_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_vertical_mirror_checkbox", appearance_misc_vertical_mirror_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_vertical_mirror_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_vertical_mirror_checkbox, gridbag_constraints);
 
     appearance_misc_horizontal_mirror_checkbox = new JRadioButton(resources.getString("top_bottom"));
     appearance_misc_horizontal_mirror_checkbox.addActionListener(new HorizontalMirrorListener());
+    appearance_misc_horizontal_mirror_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_horizontal_mirror_checkbox", appearance_misc_horizontal_mirror_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_horizontal_mirror_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_horizontal_mirror_checkbox, gridbag_constraints);
 

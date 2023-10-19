@@ -11,6 +11,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -322,6 +323,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     object_info_button.setForeground(Color.blue);
 
     object_info_button.addActionListener(new InfoButtonListener(p_window_title, p_objects));
+    object_info_button.addActionListener(evt -> FRAnalytics.buttonClicked("object_info_button", object_info_button.getText()));
 
     // Add style for inserting the button  to the document.
     StyledDocument document = this.text_pane.getStyledDocument();

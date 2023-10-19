@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;
 import app.freerouting.rules.ViaRule;
@@ -74,6 +75,7 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_append_button, gridbag_constraints);
     rules_vias_rules_edit_append_button.setToolTipText(resources.getString("append_tooltip"));
     rules_vias_rules_edit_append_button.addActionListener(new AppendListener());
+    rules_vias_rules_edit_append_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_append_button", rules_vias_rules_edit_append_button.getText()));
     button_panel.add(rules_vias_rules_edit_append_button);
 
     final JButton rules_vias_rules_edit_remove_button =
@@ -82,6 +84,7 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_remove_button, gridbag_constraints);
     rules_vias_rules_edit_remove_button.setToolTipText(resources.getString("remove_tooltip"));
     rules_vias_rules_edit_remove_button.addActionListener(new DeleteListener());
+    rules_vias_rules_edit_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_remove_button", rules_vias_rules_edit_remove_button.getText()));
     button_panel.add(rules_vias_rules_edit_remove_button);
 
     final JButton rules_vias_rules_edit_move_up_button =
@@ -90,6 +93,7 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_move_up_button, gridbag_constraints);
     rules_vias_rules_edit_move_up_button.setToolTipText(resources.getString("move_up_tooltip"));
     rules_vias_rules_edit_move_up_button.addActionListener(new MoveUpListener());
+    rules_vias_rules_edit_move_up_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_up_button", rules_vias_rules_edit_move_up_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_up_button);
 
     final JButton rules_vias_rules_edit_move_down_button =
@@ -98,6 +102,7 @@ public class WindowViaRule extends WindowBase {
     gridbag.setConstraints(rules_vias_rules_edit_move_down_button, gridbag_constraints);
     rules_vias_rules_edit_move_down_button.setToolTipText(resources.getString("move_down_tooltip"));
     rules_vias_rules_edit_move_down_button.addActionListener(new MoveDownListener());
+    rules_vias_rules_edit_move_down_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_down_button", rules_vias_rules_edit_move_down_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_down_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowVia_EditViaRule");

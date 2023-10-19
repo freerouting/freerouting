@@ -6,6 +6,7 @@ import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 
 import javax.swing.BorderFactory;
@@ -68,6 +69,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     rules_clearance_layer_combo_box = new ComboBoxLayer(board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
     north_panel.add(this.rules_clearance_layer_combo_box);
     rules_clearance_layer_combo_box.addActionListener(new ComboBoxListener());
+    rules_clearance_layer_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_layer_combo_box", rules_clearance_layer_combo_box.getSelectedItem().toString()));
 
     main_panel.add(north_panel, BorderLayout.NORTH);
 
@@ -84,15 +86,16 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     south_panel.setLayout(new BorderLayout());
     this.add(south_panel);
 
-    final JButton rules_clearance_add_class_button =
-        new JButton(resources.getString("add_class"));
+    final JButton rules_clearance_add_class_button = new JButton(resources.getString("add_class"));
     rules_clearance_add_class_button.setToolTipText(resources.getString("add_class_tooltip"));
     rules_clearance_add_class_button.addActionListener(new AddClassListener());
+    rules_clearance_add_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_add_class_button", rules_clearance_add_class_button.getText()));
     south_panel.add(rules_clearance_add_class_button, BorderLayout.WEST);
 
     final JButton rules_clearance_prune_button = new JButton(resources.getString("prune"));
     rules_clearance_prune_button.setToolTipText(resources.getString("prune_tooltip"));
     rules_clearance_prune_button.addActionListener(new PruneListener());
+    rules_clearance_prune_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_prune_button", rules_clearance_prune_button.getText()));
     south_panel.add(rules_clearance_prune_button, BorderLayout.EAST);
 
     main_panel.add(south_panel, BorderLayout.SOUTH);

@@ -7,6 +7,7 @@ import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.SnapShot;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -62,6 +63,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     other_snapshots_goto_button.setToolTipText(resources.getString("goto_tooltip"));
     GotoListener goto_listener = new GotoListener();
     other_snapshots_goto_button.addActionListener(goto_listener);
+    other_snapshots_goto_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_goto_button", other_snapshots_goto_button.getText()));
     main_panel.add(other_snapshots_goto_button, BorderLayout.NORTH);
 
     // create snapshot list
@@ -100,6 +102,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     JButton other_snapshots_add_button = new JButton(resources.getString("create"));
     AddListener add_listener = new AddListener();
     other_snapshots_add_button.addActionListener(add_listener);
+    other_snapshots_add_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_add_button", other_snapshots_add_button.getText()));
     add_panel.add(other_snapshots_add_button, BorderLayout.WEST);
 
     this.name_field = new JTextField(10);
@@ -110,6 +113,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     JButton other_snapshots_delete_button = new JButton(resources.getString("remove"));
     DeleteListener delete_listener = new DeleteListener();
     other_snapshots_delete_button.addActionListener(delete_listener);
+    other_snapshots_delete_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_delete_button", other_snapshots_delete_button.getText()));
     gridbag.setConstraints(other_snapshots_delete_button, gridbag_constraints);
     south_panel.add(other_snapshots_delete_button);
 
@@ -117,6 +121,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
         new JButton(resources.getString("remove_all"));
     DeleteAllListener delete_all_listener = new DeleteAllListener();
     other_snapshots_delete_all_button.addActionListener(delete_all_listener);
+    other_snapshots_delete_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_delete_all_button", other_snapshots_delete_all_button.getText()));
     gridbag.setConstraints(other_snapshots_delete_all_button, gridbag_constraints);
     south_panel.add(other_snapshots_delete_all_button);
 
@@ -125,6 +130,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     other_snapshots_settings_button.setToolTipText(resources.getString("settings_tooltip"));
     SettingsListener settings_listener = new SettingsListener();
     other_snapshots_settings_button.addActionListener(settings_listener);
+    other_snapshots_settings_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_button", other_snapshots_settings_button.getText()));
     gridbag.setConstraints(other_snapshots_delete_all_button, gridbag_constraints);
     south_panel.add(other_snapshots_settings_button);
 

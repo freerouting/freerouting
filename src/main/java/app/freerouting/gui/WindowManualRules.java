@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.interactive.BoardHandling;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
 
@@ -63,6 +64,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbag.setConstraints(this.settings_routing_manual_rule_selection_via_rule_combo_box, gridbag_constraints);
     main_panel.add(this.settings_routing_manual_rule_selection_via_rule_combo_box);
     settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(new ViaRuleComboBoxListener());
+    settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_via_rule_combo_box", settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedItem().toString()));
 
     JLabel class_label =
         new JLabel(resources.getString("trace_clearance_class"));
@@ -75,6 +77,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbag.setConstraints(this.settings_routing_manual_rule_selection_clearance_combo_box, gridbag_constraints);
     main_panel.add(this.settings_routing_manual_rule_selection_clearance_combo_box);
     settings_routing_manual_rule_selection_clearance_combo_box.addActionListener(new ClearanceComboBoxListener());
+    settings_routing_manual_rule_selection_clearance_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_clearance_combo_box", settings_routing_manual_rule_selection_clearance_combo_box.getSelectedItem().toString()));
 
     JLabel separator =
         new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
@@ -109,6 +112,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbag.setConstraints(this.settings_routing_manual_rule_selection_layer_combo_box, gridbag_constraints);
     main_panel.add(this.settings_routing_manual_rule_selection_layer_combo_box);
     settings_routing_manual_rule_selection_layer_combo_box.addActionListener(new LayerComboBoxListener());
+    settings_routing_manual_rule_selection_layer_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_layer_combo_box", settings_routing_manual_rule_selection_layer_combo_box.getSelectedItem().toString()));
 
     JLabel empty_label = new JLabel();
     gridbag.setConstraints(empty_label, gridbag_constraints);

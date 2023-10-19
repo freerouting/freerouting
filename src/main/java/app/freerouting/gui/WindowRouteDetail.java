@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.interactive.BoardHandling;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -62,7 +63,9 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     route_detail_off_button = new JRadioButton(resources.getString("off"));
 
     route_detail_on_button.addActionListener(new CompensationOnListener());
+    route_detail_on_button.addActionListener(evt -> FRAnalytics.buttonClicked("route_detail_on_button", route_detail_on_button.getText()));
     route_detail_off_button.addActionListener(new CompensationOffListener());
+    route_detail_off_button.addActionListener(evt -> FRAnalytics.buttonClicked("route_detail_off_button", route_detail_off_button.getText()));
 
     ButtonGroup clearance_compensation_button_group = new ButtonGroup();
     clearance_compensation_button_group.add(route_detail_on_button);
@@ -105,6 +108,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     route_detail_outline_keepout_check_box = new JCheckBox(resources.getString("keepout_outside_outline"));
     route_detail_outline_keepout_check_box.setSelected(false);
     route_detail_outline_keepout_check_box.addActionListener(new OutLineKeepoutListener());
+    route_detail_outline_keepout_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("route_detail_outline_keepout_check_box", route_detail_outline_keepout_check_box.getText()));
     gridbag.setConstraints(route_detail_outline_keepout_check_box, gridbag_constraints);
     route_detail_outline_keepout_check_box.setToolTipText(resources.getString("keepout_outside_outline_tooltip"));
     main_panel.add(route_detail_outline_keepout_check_box, gridbag_constraints);
