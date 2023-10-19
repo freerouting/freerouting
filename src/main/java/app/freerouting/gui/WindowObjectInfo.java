@@ -312,16 +312,16 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
       String p_window_title,
       Collection<WindowObjectInfo.Printable> p_objects) {
     // create a button without border and color.
-    JButton button = new JButton();
-    button.setText(p_button_name);
-    button.setBorderPainted(false);
-    button.setContentAreaFilled(false);
-    button.setMargin(new Insets(0, 0, 0, 0));
-    button.setAlignmentY(0.75f);
+    JButton object_info_button = new JButton();
+    object_info_button.setText(p_button_name);
+    object_info_button.setBorderPainted(false);
+    object_info_button.setContentAreaFilled(false);
+    object_info_button.setMargin(new Insets(0, 0, 0, 0));
+    object_info_button.setAlignmentY(0.75f);
     // Display the button name in blue.
-    button.setForeground(Color.blue);
+    object_info_button.setForeground(Color.blue);
 
-    button.addActionListener(new InfoButtonListener(p_window_title, p_objects));
+    object_info_button.addActionListener(new InfoButtonListener(p_window_title, p_objects));
 
     // Add style for inserting the button  to the document.
     StyledDocument document = this.text_pane.getStyledDocument();
@@ -331,7 +331,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     Style button_style = document.addStyle(p_button_name, default_style);
     StyleConstants.setAlignment(
         button_style, StyleConstants.ALIGN_CENTER);
-    StyleConstants.setComponent(button_style, button);
+    StyleConstants.setComponent(button_style, object_info_button);
 
     // Add the button to the document.
     try {

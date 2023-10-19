@@ -37,7 +37,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private static final String[] reserved_name_chars = {"(", ")", " ", "_"};
   private final BoardFrame board_frame;
   private final JPanel main_panel;
-  private final ComboBoxLayer layer_combo_box;
+  private final ComboBoxLayer rules_clearance_layer_combo_box;
   private final ResourceBundle resources;
   private JPanel center_panel;
   private JTable clearance_table;
@@ -64,13 +64,10 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     layer_label.setToolTipText(resources.getString("layer_tooltip"));
     north_panel.add(layer_label);
 
-    BoardHandling board_handling =
-        board_frame.board_panel.board_handling;
-    layer_combo_box =
-        new ComboBoxLayer(
-            board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
-    north_panel.add(this.layer_combo_box);
-    layer_combo_box.addActionListener(new ComboBoxListener());
+    BoardHandling board_handling = board_frame.board_panel.board_handling;
+    rules_clearance_layer_combo_box = new ComboBoxLayer(board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
+    north_panel.add(this.rules_clearance_layer_combo_box);
+    rules_clearance_layer_combo_box.addActionListener(new ComboBoxListener());
 
     main_panel.add(north_panel, BorderLayout.NORTH);
 
@@ -87,16 +84,16 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     south_panel.setLayout(new BorderLayout());
     this.add(south_panel);
 
-    final JButton add_class_button =
+    final JButton rules_clearance_add_class_button =
         new JButton(resources.getString("add_class"));
-    add_class_button.setToolTipText(resources.getString("add_class_tooltip"));
-    add_class_button.addActionListener(new AddClassListener());
-    south_panel.add(add_class_button, BorderLayout.WEST);
+    rules_clearance_add_class_button.setToolTipText(resources.getString("add_class_tooltip"));
+    rules_clearance_add_class_button.addActionListener(new AddClassListener());
+    south_panel.add(rules_clearance_add_class_button, BorderLayout.WEST);
 
-    final JButton prune_button = new JButton(resources.getString("prune"));
-    prune_button.setToolTipText(resources.getString("prune_tooltip"));
-    prune_button.addActionListener(new PruneListener());
-    south_panel.add(prune_button, BorderLayout.EAST);
+    final JButton rules_clearance_prune_button = new JButton(resources.getString("prune"));
+    rules_clearance_prune_button.setToolTipText(resources.getString("prune_tooltip"));
+    rules_clearance_prune_button.addActionListener(new PruneListener());
+    south_panel.add(rules_clearance_prune_button, BorderLayout.EAST);
 
     main_panel.add(south_panel, BorderLayout.SOUTH);
 
@@ -115,7 +112,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         != routing_board.rules.clearance_matrix.get_class_count()) {
       this.adjust_clearance_table();
     }
-    this.clearance_table_model.set_values(this.layer_combo_box.get_selected_layer().index);
+    this.clearance_table_model.set_values(this.rules_clearance_layer_combo_box.get_selected_layer().index);
     this.repaint();
   }
 
@@ -426,7 +423,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
           (int)
               Math.round(
                   board_handling.coordinate_transform.user_to_board((number_value).doubleValue()));
-      int layer_no = layer_combo_box.get_selected_layer().index;
+      int layer_no = rules_clearance_layer_combo_box.get_selected_layer().index;
       if (layer_no == ComboBoxLayer.ALL_LAYER_INDEX) {
         // change the clearance on all layers
         clearance_matrix.set_value(curr_row, curr_column, board_value);

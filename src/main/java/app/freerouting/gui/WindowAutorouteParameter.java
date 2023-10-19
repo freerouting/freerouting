@@ -25,12 +25,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
   private final BoardHandling board_handling;
   private final JLabel[] layer_name_arr;
-  private final JCheckBox[] layer_active_arr;
-  private final List<JComboBox<String>> combo_box_arr;
-  private final JCheckBox vias_allowed;
-  private final JCheckBox fanout_pass_button;
-  private final JCheckBox autoroute_pass_button;
-  private final JCheckBox postroute_pass_button;
+  private final JCheckBox[] settings_autorouter_layer_active_arr;
+  private final List<JComboBox<String>> settings_autorouter_combo_box_arr;
+  private final JCheckBox settings_autorouter_vias_allowed;
+  private final JCheckBox settings_autorouter_fanout_pass_button;
+  private final JCheckBox settings_autorouter_autoroute_pass_button;
+  private final JCheckBox settings_autorouter_postroute_pass_button;
   private final WindowAutorouteDetailParameter detail_window;
   private final DetailListener detail_listener;
   private final String horizontal;
@@ -80,8 +80,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     // every layer is a row in the gridbag and has 3 columns: name, active, preferred direction
     layer_name_arr = new JLabel[layer_count];
-    layer_active_arr = new JCheckBox[layer_count];
-    combo_box_arr = new ArrayList<>(layer_count);
+    settings_autorouter_layer_active_arr = new JCheckBox[layer_count];
+    settings_autorouter_combo_box_arr = new ArrayList<>(layer_count);
 
     for (int i = 0; i < layer_count; ++i) {
       gridbag_constraints.gridwidth = 3;
@@ -94,21 +94,21 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       main_panel.add(layer_name_arr[i]);
 
       // set the active checkbox
-      layer_active_arr[i] = new JCheckBox();
-      layer_active_arr[i].addActionListener(new LayerActiveListener(i));
+      settings_autorouter_layer_active_arr[i] = new JCheckBox();
+      settings_autorouter_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
       board_handling.settings.autoroute_settings.set_layer_active(i, curr_layer.is_signal);
-      layer_active_arr[i].setEnabled(curr_layer.is_signal);
-      gridbag.setConstraints(layer_active_arr[i], gridbag_constraints);
-      main_panel.add(layer_active_arr[i]);
+      settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
+      gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
+      main_panel.add(settings_autorouter_layer_active_arr[i]);
 
       // set the preferred direction combobox
-      combo_box_arr.add(new JComboBox<>());
-      combo_box_arr.get(i).addItem(this.horizontal);
-      combo_box_arr.get(i).addItem(this.vertical);
-      combo_box_arr.get(i).addActionListener(new PreferredDirectionListener(i));
+      settings_autorouter_combo_box_arr.add(new JComboBox<>());
+      settings_autorouter_combo_box_arr.get(i).addItem(this.horizontal);
+      settings_autorouter_combo_box_arr.get(i).addItem(this.vertical);
+      settings_autorouter_combo_box_arr.get(i).addActionListener(new PreferredDirectionListener(i));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(combo_box_arr.get(i), gridbag_constraints);
-      main_panel.add(combo_box_arr.get(i));
+      gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
+      main_panel.add(settings_autorouter_combo_box_arr.get(i));
     }
 
     JLabel separator =
@@ -122,11 +122,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(vias_allowed_label, gridbag_constraints);
     main_panel.add(vias_allowed_label);
 
-    vias_allowed = new JCheckBox();
-    vias_allowed.addActionListener(new ViasAllowedListener());
+    settings_autorouter_vias_allowed = new JCheckBox();
+    settings_autorouter_vias_allowed.addActionListener(new ViasAllowedListener());
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(vias_allowed, gridbag_constraints);
-    main_panel.add(vias_allowed);
+    gridbag.setConstraints(settings_autorouter_vias_allowed, gridbag_constraints);
+    main_panel.add(settings_autorouter_vias_allowed);
 
     separator = new JLabel("––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -139,40 +139,40 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(passes_label, gridbag_constraints);
     main_panel.add(passes_label);
 
-    this.fanout_pass_button = new JCheckBox(resources.getString("fanout"));
-    this.autoroute_pass_button = new JCheckBox(resources.getString("autoroute"));
-    this.postroute_pass_button = new JCheckBox(resources.getString("postroute"));
+    this.settings_autorouter_fanout_pass_button = new JCheckBox(resources.getString("fanout"));
+    this.settings_autorouter_autoroute_pass_button = new JCheckBox(resources.getString("autoroute"));
+    this.settings_autorouter_postroute_pass_button = new JCheckBox(resources.getString("postroute"));
 
-    fanout_pass_button.addActionListener(new FanoutListener());
-    autoroute_pass_button.addActionListener(new AutorouteListener());
-    postroute_pass_button.addActionListener(new PostrouteListener());
+    settings_autorouter_fanout_pass_button.addActionListener(new FanoutListener());
+    settings_autorouter_autoroute_pass_button.addActionListener(new AutorouteListener());
+    settings_autorouter_postroute_pass_button.addActionListener(new PostrouteListener());
 
-    fanout_pass_button.setSelected(false);
-    autoroute_pass_button.setSelected(true);
-    autoroute_pass_button.setSelected(true);
+    settings_autorouter_fanout_pass_button.setSelected(false);
+    settings_autorouter_autoroute_pass_button.setSelected(true);
+    settings_autorouter_autoroute_pass_button.setSelected(true);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
-    gridbag.setConstraints(fanout_pass_button, gridbag_constraints);
-    main_panel.add(fanout_pass_button, gridbag_constraints);
+    gridbag.setConstraints(settings_autorouter_fanout_pass_button, gridbag_constraints);
+    main_panel.add(settings_autorouter_fanout_pass_button, gridbag_constraints);
 
-    gridbag.setConstraints(autoroute_pass_button, gridbag_constraints);
-    main_panel.add(autoroute_pass_button, gridbag_constraints);
-    gridbag.setConstraints(postroute_pass_button, gridbag_constraints);
-    main_panel.add(postroute_pass_button, gridbag_constraints);
+    gridbag.setConstraints(settings_autorouter_autoroute_pass_button, gridbag_constraints);
+    main_panel.add(settings_autorouter_autoroute_pass_button, gridbag_constraints);
+    gridbag.setConstraints(settings_autorouter_postroute_pass_button, gridbag_constraints);
+    main_panel.add(settings_autorouter_postroute_pass_button, gridbag_constraints);
 
     separator = new JLabel("––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     detail_window = new WindowAutorouteDetailParameter(p_board_frame);
-    JButton detail_button =
+    JButton settings_autorouter_detail_button =
         new JButton(resources.getString("detail_parameter"));
     this.detail_listener = new DetailListener();
-    detail_button.addActionListener(detail_listener);
-    gridbag.setConstraints(detail_button, gridbag_constraints);
+    settings_autorouter_detail_button.addActionListener(detail_listener);
+    gridbag.setConstraints(settings_autorouter_detail_button, gridbag_constraints);
 
-    main_panel.add(detail_button);
+    main_panel.add(settings_autorouter_detail_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowAutorouteParameter");
 
@@ -189,21 +189,21 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     LayerStructure layer_structure =
         this.board_handling.get_routing_board().layer_structure;
 
-    this.vias_allowed.setSelected(settings.get_vias_allowed());
-    this.fanout_pass_button.setSelected(settings.get_with_fanout());
-    this.autoroute_pass_button.setSelected(settings.get_with_autoroute());
-    this.postroute_pass_button.setSelected(settings.get_with_postroute());
+    this.settings_autorouter_vias_allowed.setSelected(settings.get_vias_allowed());
+    this.settings_autorouter_fanout_pass_button.setSelected(settings.get_with_fanout());
+    this.settings_autorouter_autoroute_pass_button.setSelected(settings.get_with_autoroute());
+    this.settings_autorouter_postroute_pass_button.setSelected(settings.get_with_postroute());
 
-    for (int i = 0; i < layer_active_arr.length; ++i) {
-      this.layer_active_arr[i].setSelected(
+    for (int i = 0; i < settings_autorouter_layer_active_arr.length; ++i) {
+      this.settings_autorouter_layer_active_arr[i].setSelected(
           settings.get_layer_active(i));
     }
 
-    for (int i = 0; i < combo_box_arr.size(); ++i) {
+    for (int i = 0; i < settings_autorouter_combo_box_arr.size(); ++i) {
       if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i))) {
-        this.combo_box_arr.get(i).setSelectedItem(this.horizontal);
+        this.settings_autorouter_combo_box_arr.get(i).setSelectedItem(this.horizontal);
       } else {
-        this.combo_box_arr.get(i).setSelectedItem(this.vertical);
+        this.settings_autorouter_combo_box_arr.get(i).setSelectedItem(this.vertical);
       }
     }
     this.detail_window.refresh();
@@ -254,7 +254,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       int curr_layer_no = this.signal_layer_no;
       board_handling.settings.autoroute_settings.set_layer_active(
-          curr_layer_no, layer_active_arr[this.signal_layer_no].isSelected());
+          curr_layer_no, settings_autorouter_layer_active_arr[this.signal_layer_no].isSelected());
     }
   }
 
@@ -271,7 +271,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       int curr_layer_no =
           board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
       board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(
-          curr_layer_no, combo_box_arr.get(signal_layer_no).getSelectedItem() == horizontal);
+          curr_layer_no, settings_autorouter_combo_box_arr.get(signal_layer_no).getSelectedItem() == horizontal);
     }
   }
 
@@ -279,7 +279,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      board_handling.settings.autoroute_settings.set_vias_allowed(vias_allowed.isSelected());
+      board_handling.settings.autoroute_settings.set_vias_allowed(settings_autorouter_vias_allowed.isSelected());
     }
   }
 
@@ -289,7 +289,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       AutorouteSettings autoroute_settings =
           board_handling.settings.autoroute_settings;
-      autoroute_settings.set_with_fanout(fanout_pass_button.isSelected());
+      autoroute_settings.set_with_fanout(settings_autorouter_fanout_pass_button.isSelected());
       autoroute_settings.set_start_pass_no(1);
     }
   }
@@ -300,7 +300,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       AutorouteSettings autoroute_settings =
           board_handling.settings.autoroute_settings;
-      autoroute_settings.set_with_autoroute(autoroute_pass_button.isSelected());
+      autoroute_settings.set_with_autoroute(settings_autorouter_autoroute_pass_button.isSelected());
       autoroute_settings.set_start_pass_no(1);
     }
   }
@@ -311,7 +311,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void actionPerformed(ActionEvent p_evt) {
       AutorouteSettings autoroute_settings =
           board_handling.settings.autoroute_settings;
-      autoroute_settings.set_with_postroute(postroute_pass_button.isSelected());
+      autoroute_settings.set_with_postroute(settings_autorouter_postroute_pass_button.isSelected());
       autoroute_settings.set_start_pass_no(1);
     }
   }

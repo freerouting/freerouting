@@ -55,9 +55,9 @@ public abstract class WindowNetSamples extends BoardSubWindow {
     main_panel.setBorder(panel_border);
 
     // create open button
-    JButton open_button = new JButton(resources.getString(p_button_name));
-    open_button.addActionListener(new OpenListener());
-    main_panel.add(open_button, BorderLayout.SOUTH);
+    JButton net_samples_open_button = new JButton(resources.getString(p_button_name));
+    net_samples_open_button.addActionListener(new OpenListener());
+    main_panel.add(net_samples_open_button, BorderLayout.SOUTH);
 
     // create list with the sample designs
     this.list = new JList<>(this.list_model);

@@ -22,10 +22,10 @@ import java.util.ResourceBundle;
 public class WindowSelectParameter extends BoardSavableSubWindow {
 
   private final BoardHandling board_handling;
-  private final JRadioButton[] layer_name_arr;
-  private final JCheckBox[] item_selection_choices;
-  private final JRadioButton all_visible_button;
-  private final JRadioButton current_only_button;
+  private final JRadioButton[] settings_select_layer_name_arr;
+  private final JCheckBox[] settings_select_item_selection_choices;
+  private final JRadioButton settings_select_all_visible_button;
+  private final JRadioButton settings_select_current_only_button;
 
   /** Creates a new instance of SelectWindow */
   public WindowSelectParameter(BoardFrame p_board_frame) {
@@ -54,22 +54,22 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(selection_layer_label, gridbag_constraints);
     main_panel.add(selection_layer_label);
 
-    this.all_visible_button = new JRadioButton(resources.getString("all_visible"));
-    all_visible_button.setToolTipText(resources.getString("all_visible_tooltip"));
-    this.current_only_button = new JRadioButton(resources.getString("current_only"));
-    current_only_button.setToolTipText(resources.getString("current_only_tooltip"));
+    this.settings_select_all_visible_button = new JRadioButton(resources.getString("all_visible"));
+    settings_select_all_visible_button.setToolTipText(resources.getString("all_visible_tooltip"));
+    this.settings_select_current_only_button = new JRadioButton(resources.getString("current_only"));
+    settings_select_current_only_button.setToolTipText(resources.getString("current_only_tooltip"));
 
-    all_visible_button.addActionListener(new AllVisibleListener());
-    current_only_button.addActionListener(new CurrentOnlyListener());
+    settings_select_all_visible_button.addActionListener(new AllVisibleListener());
+    settings_select_current_only_button.addActionListener(new CurrentOnlyListener());
 
     ButtonGroup selection_layer_button_group = new ButtonGroup();
-    selection_layer_button_group.add(all_visible_button);
-    selection_layer_button_group.add(current_only_button);
+    selection_layer_button_group.add(settings_select_all_visible_button);
+    selection_layer_button_group.add(settings_select_current_only_button);
     gridbag_constraints.gridheight = 1;
-    gridbag.setConstraints(all_visible_button, gridbag_constraints);
-    main_panel.add(all_visible_button, gridbag_constraints);
-    gridbag.setConstraints(current_only_button, gridbag_constraints);
-    main_panel.add(current_only_button, gridbag_constraints);
+    gridbag.setConstraints(settings_select_all_visible_button, gridbag_constraints);
+    main_panel.add(settings_select_all_visible_button, gridbag_constraints);
+    gridbag.setConstraints(settings_select_current_only_button, gridbag_constraints);
+    main_panel.add(settings_select_current_only_button, gridbag_constraints);
 
     JLabel separator = new JLabel("   –––––––––––––––––––––––––––––  ");
 
@@ -86,14 +86,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     final ItemSelectionFilter.SelectableChoices[] filter_values =
         ItemSelectionFilter.SelectableChoices.values();
 
-    this.item_selection_choices = new JCheckBox[filter_values.length];
+    this.settings_select_item_selection_choices = new JCheckBox[filter_values.length];
 
     for (int i = 0; i < filter_values.length; ++i) {
-      this.item_selection_choices[i] =
+      this.settings_select_item_selection_choices[i] =
           new JCheckBox(resources.getString(filter_values[i].toString()));
-      gridbag.setConstraints(this.item_selection_choices[i], gridbag_constraints);
-      main_panel.add(this.item_selection_choices[i], gridbag_constraints);
-      this.item_selection_choices[i].addActionListener(new ItemSelectionListener(i));
+      gridbag.setConstraints(this.settings_select_item_selection_choices[i], gridbag_constraints);
+      main_panel.add(this.settings_select_item_selection_choices[i], gridbag_constraints);
+      settings_select_item_selection_choices[i].addActionListener(new ItemSelectionListener(i));
     }
 
     JLabel separator2 = new JLabel("   –––––––––––––––––––––––––––––  ");
@@ -111,19 +111,19 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     LayerStructure layer_structure =
         this.board_handling.get_routing_board().layer_structure;
     int layer_count = layer_structure.arr.length;
-    this.layer_name_arr = new JRadioButton[layer_count];
+    this.settings_select_layer_name_arr = new JRadioButton[layer_count];
     ButtonGroup current_layer_button_group = new ButtonGroup();
     gridbag_constraints.gridheight = 1;
     for (int i = 0; i < layer_count; ++i) {
       Layer curr_layer = layer_structure.arr[i];
-      layer_name_arr[i] = new JRadioButton();
-      layer_name_arr[i].setText(curr_layer.name);
-      layer_name_arr[i].setEnabled(curr_layer.is_signal);
-      gridbag.setConstraints(layer_name_arr[i], gridbag_constraints);
-      main_panel.add(layer_name_arr[i]);
-      current_layer_button_group.add(layer_name_arr[i]);
+      settings_select_layer_name_arr[i] = new JRadioButton();
+      settings_select_layer_name_arr[i].setText(curr_layer.name);
+      settings_select_layer_name_arr[i].setEnabled(curr_layer.is_signal);
+      gridbag.setConstraints(settings_select_layer_name_arr[i], gridbag_constraints);
+      main_panel.add(settings_select_layer_name_arr[i]);
+      current_layer_button_group.add(settings_select_layer_name_arr[i]);
       int layer_no = layer_structure.get_no(curr_layer);
-      layer_name_arr[i].addActionListener(new CurrentLayerListener(i, layer_no));
+      settings_select_layer_name_arr[i].addActionListener(new CurrentLayerListener(i, layer_no));
     }
 
     JLabel empty_label = new JLabel();
@@ -141,9 +141,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   @Override
   public void refresh() {
     if (this.board_handling.settings.get_select_on_all_visible_layers()) {
-      all_visible_button.setSelected(true);
+      settings_select_all_visible_button.setSelected(true);
     } else {
-      current_only_button.setSelected(true);
+      settings_select_current_only_button.setSelected(true);
     }
     ItemSelectionFilter item_selection_filter =
         this.board_handling.settings.get_item_selection_filter();
@@ -153,16 +153,16 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       final ItemSelectionFilter.SelectableChoices[] filter_values =
           ItemSelectionFilter.SelectableChoices.values();
       for (int i = 0; i < filter_values.length; ++i) {
-        this.item_selection_choices[i].setSelected(
+        this.settings_select_item_selection_choices[i].setSelected(
             item_selection_filter.is_selected(filter_values[i]));
       }
     }
-    layer_name_arr[this.board_handling.settings.get_layer()].setSelected(true);
+    settings_select_layer_name_arr[this.board_handling.settings.get_layer()].setSelected(true);
   }
 
   /** Selects the layer with the input signal number. */
   public void select(int p_signal_layer_no) {
-    layer_name_arr[p_signal_layer_no].setSelected(true);
+    settings_select_layer_name_arr[p_signal_layer_no].setSelected(true);
   }
 
   private class CurrentLayerListener implements ActionListener {
@@ -203,7 +203,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent p_evt) {
-      boolean is_selected = item_selection_choices[item_no].isSelected();
+      boolean is_selected = settings_select_item_selection_choices[item_no].isSelected();
 
       ItemSelectionFilter.SelectableChoices item_type =
           ItemSelectionFilter.SelectableChoices.values()[item_no];
@@ -213,14 +213,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       // make sure that from fixed and unfixed items at least one type is selected.
       if (item_type == ItemSelectionFilter.SelectableChoices.FIXED) {
         int unfixed_no = ItemSelectionFilter.SelectableChoices.UNFIXED.ordinal();
-        if (!is_selected && !item_selection_choices[unfixed_no].isSelected()) {
-          item_selection_choices[unfixed_no].setSelected(true);
+        if (!is_selected && !settings_select_item_selection_choices[unfixed_no].isSelected()) {
+          settings_select_item_selection_choices[unfixed_no].setSelected(true);
           board_handling.set_selectable(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
         }
       } else if (item_type == ItemSelectionFilter.SelectableChoices.UNFIXED) {
         int fixed_no = ItemSelectionFilter.SelectableChoices.FIXED.ordinal();
-        if (!is_selected && !item_selection_choices[fixed_no].isSelected()) {
-          item_selection_choices[fixed_no].setSelected(true);
+        if (!is_selected && !settings_select_item_selection_choices[fixed_no].isSelected()) {
+          settings_select_item_selection_choices[fixed_no].setSelected(true);
           board_handling.set_selectable(ItemSelectionFilter.SelectableChoices.FIXED, true);
         }
       }

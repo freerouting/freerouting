@@ -25,8 +25,8 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private final BoardHandling board_handling;
   private final JFormattedTextField horizontal_grid_field;
   private final JFormattedTextField vertical_grid_field;
-  private final JRadioButton zoom_button;
-  private final JRadioButton rotate_button;
+  private final JRadioButton settings_controls_zoom_radiobutton;
+  private final JRadioButton settings_controls_rotate_radiobutton;
   private boolean key_input_completed = true;
   /** Creates a new instance of WindowMoveParameter */
   public WindowMoveParameter(BoardFrame p_board_frame) {
@@ -96,27 +96,27 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     main_panel.add(wheel_function_label);
     wheel_function_label.setToolTipText(resources.getString("wheel_function_tooltip"));
 
-    this.zoom_button = new JRadioButton(resources.getString("zoom"));
-    this.rotate_button = new JRadioButton(resources.getString("rotate"));
+    settings_controls_zoom_radiobutton = new JRadioButton(resources.getString("zoom"));
+    settings_controls_rotate_radiobutton = new JRadioButton(resources.getString("rotate"));
 
-    zoom_button.addActionListener(new ZoomButtonListener());
-    rotate_button.addActionListener(new RotateButtonListener());
+    settings_controls_zoom_radiobutton.addActionListener(new ZoomButtonListener());
+    settings_controls_rotate_radiobutton.addActionListener(new RotateButtonListener());
 
     ButtonGroup button_group = new ButtonGroup();
-    button_group.add(zoom_button);
-    button_group.add(rotate_button);
+    button_group.add(settings_controls_zoom_radiobutton);
+    button_group.add(settings_controls_rotate_radiobutton);
     if (this.board_handling.settings.get_zoom_with_wheel()) {
-      zoom_button.setSelected(true);
+      settings_controls_zoom_radiobutton.setSelected(true);
     } else {
-      rotate_button.setSelected(true);
+      settings_controls_rotate_radiobutton.setSelected(true);
     }
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
-    gridbag.setConstraints(zoom_button, gridbag_constraints);
-    main_panel.add(zoom_button, gridbag_constraints);
-    gridbag.setConstraints(rotate_button, gridbag_constraints);
-    main_panel.add(rotate_button, gridbag_constraints);
+    gridbag.setConstraints(settings_controls_zoom_radiobutton, gridbag_constraints);
+    main_panel.add(settings_controls_zoom_radiobutton, gridbag_constraints);
+    gridbag.setConstraints(settings_controls_rotate_radiobutton, gridbag_constraints);
+    main_panel.add(settings_controls_rotate_radiobutton, gridbag_constraints);
 
     p_board_frame.set_context_sensitive_help(this, "WindowMoveParameter");
 

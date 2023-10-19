@@ -25,9 +25,9 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
   private static final int c_accuracy_scale_factor = 20;
   private final BoardHandling board_handling;
   private final JSlider accuracy_slider;
-  private final JRadioButton on_button;
-  private final JRadioButton off_button;
-  private final JCheckBox outline_keepout_check_box;
+  private final JRadioButton route_detail_on_button;
+  private final JRadioButton route_detail_off_button;
+  private final JCheckBox route_detail_outline_keepout_check_box;
   /** Creates a new instance of RouteDetailWindow */
   public WindowRouteDetail(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
@@ -58,23 +58,23 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     gridbag.setConstraints(clearance_compensation_label, gridbag_constraints);
     main_panel.add(clearance_compensation_label);
 
-    this.on_button = new JRadioButton(resources.getString("on"));
-    this.off_button = new JRadioButton(resources.getString("off"));
+    route_detail_on_button = new JRadioButton(resources.getString("on"));
+    route_detail_off_button = new JRadioButton(resources.getString("off"));
 
-    on_button.addActionListener(new CompensationOnListener());
-    off_button.addActionListener(new CompensationOffListener());
+    route_detail_on_button.addActionListener(new CompensationOnListener());
+    route_detail_off_button.addActionListener(new CompensationOffListener());
 
     ButtonGroup clearance_compensation_button_group = new ButtonGroup();
-    clearance_compensation_button_group.add(on_button);
-    clearance_compensation_button_group.add(off_button);
-    off_button.setSelected(true);
+    clearance_compensation_button_group.add(route_detail_on_button);
+    clearance_compensation_button_group.add(route_detail_off_button);
+    route_detail_off_button.setSelected(true);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
-    gridbag.setConstraints(on_button, gridbag_constraints);
-    main_panel.add(on_button, gridbag_constraints);
-    gridbag.setConstraints(off_button, gridbag_constraints);
-    main_panel.add(off_button, gridbag_constraints);
+    gridbag.setConstraints(route_detail_on_button, gridbag_constraints);
+    main_panel.add(route_detail_on_button, gridbag_constraints);
+    gridbag.setConstraints(route_detail_off_button, gridbag_constraints);
+    main_panel.add(route_detail_off_button, gridbag_constraints);
 
     JLabel separator =
         new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
@@ -102,14 +102,12 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
 
     // add switch to define, if keepout is generated outside the outline.
 
-    this.outline_keepout_check_box =
-        new JCheckBox(resources.getString("keepout_outside_outline"));
-    this.outline_keepout_check_box.setSelected(false);
-    this.outline_keepout_check_box.addActionListener(new OutLineKeepoutListener());
-    gridbag.setConstraints(outline_keepout_check_box, gridbag_constraints);
-    this.outline_keepout_check_box.setToolTipText(
-        resources.getString("keepout_outside_outline_tooltip"));
-    main_panel.add(outline_keepout_check_box, gridbag_constraints);
+    route_detail_outline_keepout_check_box = new JCheckBox(resources.getString("keepout_outside_outline"));
+    route_detail_outline_keepout_check_box.setSelected(false);
+    route_detail_outline_keepout_check_box.addActionListener(new OutLineKeepoutListener());
+    gridbag.setConstraints(route_detail_outline_keepout_check_box, gridbag_constraints);
+    route_detail_outline_keepout_check_box.setToolTipText(resources.getString("keepout_outside_outline_tooltip"));
+    main_panel.add(route_detail_outline_keepout_check_box, gridbag_constraints);
 
     separator = new JLabel();
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -127,13 +125,13 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
         .get_routing_board()
         .search_tree_manager
         .is_clearance_compensation_used()) {
-      this.on_button.setSelected(true);
+      this.route_detail_on_button.setSelected(true);
     } else {
-      this.off_button.setSelected(true);
+      this.route_detail_off_button.setSelected(true);
     }
     BoardOutline outline = this.board_handling.get_routing_board().get_outline();
     if (outline != null) {
-      this.outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
+      this.route_detail_outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
     }
     int accuracy_slider_value =
         c_max_slider_value
@@ -177,7 +175,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
       }
       BoardOutline outline = board_handling.get_routing_board().get_outline();
       if (outline != null) {
-        outline.generate_keepout_outside(outline_keepout_check_box.isSelected());
+        outline.generate_keepout_outside(route_detail_outline_keepout_check_box.isSelected());
       }
     }
   }

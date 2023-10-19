@@ -6,6 +6,7 @@ import app.freerouting.board.TestLevel;
 import app.freerouting.interactive.AutorouteSettings;
 import app.freerouting.interactive.BoardHandling;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -30,7 +31,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
   private final JFormattedTextField plane_via_cost_field;
   private final JFormattedTextField start_ripup_costs;
   private final JFormattedTextField start_pass_no;
-  private final JComboBox<String> speed_combo_box;
+  private final JComboBox<String> settings_autorouter_detailed_speed_combo_box;
   private final String speed_fast;
   private final String speed_slow;
   private final JLabel[] layer_name_arr;
@@ -126,10 +127,11 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     // is used also in the 45 and 90 degree modes.
     this.speed_fast = resources.getString("fast");
     this.speed_slow = resources.getString("slow");
-    speed_combo_box = new JComboBox<>();
-    speed_combo_box.addItem(this.speed_fast);
-    speed_combo_box.addItem(this.speed_slow);
-    speed_combo_box.addActionListener(new SpeedListener());
+    settings_autorouter_detailed_speed_combo_box = new JComboBox<>();
+    settings_autorouter_detailed_speed_combo_box.addItem(this.speed_fast);
+    settings_autorouter_detailed_speed_combo_box.addItem(this.speed_slow);
+    settings_autorouter_detailed_speed_combo_box.addActionListener(new SpeedListener());
+    settings_autorouter_detailed_speed_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box.getSelectedItem().toString()));
 
     if (this.board_handling.get_routing_board().get_test_level()
         != TestLevel.RELEASE_VERSION) {
@@ -140,8 +142,8 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
       main_panel.add(speed_label);
 
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(speed_combo_box, gridbag_constraints);
-      main_panel.add(speed_combo_box);
+      gridbag.setConstraints(settings_autorouter_detailed_speed_combo_box, gridbag_constraints);
+      main_panel.add(settings_autorouter_detailed_speed_combo_box);
     }
 
     JLabel separator =
@@ -420,7 +422,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       boolean old_is_slow = board_handling.get_routing_board().rules.get_slow_autoroute_algorithm();
-      boolean new_is_slow = speed_combo_box.getSelectedItem() == speed_slow;
+      boolean new_is_slow = settings_autorouter_detailed_speed_combo_box.getSelectedItem() == speed_slow;
       if (old_is_slow != new_is_slow) {
         board_handling.get_routing_board().rules.set_slow_autoroute_algorithm(new_is_slow);
         board_handling.get_routing_board().search_tree_manager.reset_compensated_trees();

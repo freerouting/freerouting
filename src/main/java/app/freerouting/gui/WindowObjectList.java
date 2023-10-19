@@ -66,32 +66,32 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     JPanel north_button_panel = new JPanel();
     button_panel.add(north_button_panel, BorderLayout.NORTH);
 
-    JButton show_button = new JButton(resources.getString("info"));
-    show_button.setToolTipText(resources.getString("info_tooltip"));
+    JButton info_components_show_button = new JButton(resources.getString("info"));
+    info_components_show_button.setToolTipText(resources.getString("info_tooltip"));
     ShowListener show_listener = new ShowListener();
-    show_button.addActionListener(show_listener);
-    north_button_panel.add(show_button);
+    info_components_show_button.addActionListener(show_listener);
+    north_button_panel.add(info_components_show_button);
 
-    JButton instance_button = new JButton(resources.getString("select"));
-    instance_button.setToolTipText(resources.getString("select_tooltip"));
+    JButton info_components_instance_button = new JButton(resources.getString("select"));
+    info_components_instance_button.setToolTipText(resources.getString("select_tooltip"));
     SelectListener instance_listener = new SelectListener();
-    instance_button.addActionListener(instance_listener);
-    north_button_panel.add(instance_button);
+    info_components_instance_button.addActionListener(instance_listener);
+    north_button_panel.add(info_components_instance_button);
 
     JPanel south_button_panel = new JPanel();
     button_panel.add(south_button_panel, BorderLayout.SOUTH);
 
-    JButton invert_button = new JButton(resources.getString("invert"));
-    invert_button.setToolTipText(resources.getString("invert_tooltip"));
-    invert_button.addActionListener(new InvertListener());
-    south_button_panel.add(invert_button);
+    JButton info_components_invert_button = new JButton(resources.getString("invert"));
+    info_components_invert_button.setToolTipText(resources.getString("invert_tooltip"));
+    info_components_invert_button.addActionListener(new InvertListener());
+    south_button_panel.add(info_components_invert_button);
 
-    JButton recalculate_button =
+    JButton info_components_recalculate_button =
         new JButton(resources.getString("recalculate"));
-    recalculate_button.setToolTipText(resources.getString("recalculate_tooltip"));
+    info_components_recalculate_button.setToolTipText(resources.getString("recalculate_tooltip"));
     RecalculateListener recalculate_listener = new RecalculateListener();
-    recalculate_button.addActionListener(recalculate_listener);
-    south_button_panel.add(recalculate_button);
+    info_components_recalculate_button.addActionListener(recalculate_listener);
+    south_button_panel.add(info_components_recalculate_button);
 
     this.list_empty_message = new JLabel(resources.getString("list_empty"));
     this.list_empty_message.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

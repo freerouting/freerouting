@@ -58,11 +58,11 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     main_panel.setLayout(new BorderLayout());
 
     // create goto button
-    JButton goto_button = new JButton(resources.getString("goto_snapshot"));
-    goto_button.setToolTipText(resources.getString("goto_tooltip"));
+    JButton other_snapshots_goto_button = new JButton(resources.getString("goto_snapshot"));
+    other_snapshots_goto_button.setToolTipText(resources.getString("goto_tooltip"));
     GotoListener goto_listener = new GotoListener();
-    goto_button.addActionListener(goto_listener);
-    main_panel.add(goto_button, BorderLayout.NORTH);
+    other_snapshots_goto_button.addActionListener(goto_listener);
+    main_panel.add(other_snapshots_goto_button, BorderLayout.NORTH);
 
     // create snapshot list
     this.list = new JList<>(this.list_model);
@@ -97,36 +97,36 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     add_panel.setLayout(new BorderLayout());
     south_panel.add(add_panel);
 
-    JButton add_button = new JButton(resources.getString("create"));
+    JButton other_snapshots_add_button = new JButton(resources.getString("create"));
     AddListener add_listener = new AddListener();
-    add_button.addActionListener(add_listener);
-    add_panel.add(add_button, BorderLayout.WEST);
+    other_snapshots_add_button.addActionListener(add_listener);
+    add_panel.add(other_snapshots_add_button, BorderLayout.WEST);
 
     this.name_field = new JTextField(10);
     name_field.setText(resources.getString("snapshot") + " 1");
     add_panel.add(name_field, BorderLayout.EAST);
 
     // create delete buttons
-    JButton delete_button = new JButton(resources.getString("remove"));
+    JButton other_snapshots_delete_button = new JButton(resources.getString("remove"));
     DeleteListener delete_listener = new DeleteListener();
-    delete_button.addActionListener(delete_listener);
-    gridbag.setConstraints(delete_button, gridbag_constraints);
-    south_panel.add(delete_button);
+    other_snapshots_delete_button.addActionListener(delete_listener);
+    gridbag.setConstraints(other_snapshots_delete_button, gridbag_constraints);
+    south_panel.add(other_snapshots_delete_button);
 
-    JButton delete_all_button =
+    JButton other_snapshots_delete_all_button =
         new JButton(resources.getString("remove_all"));
     DeleteAllListener delete_all_listener = new DeleteAllListener();
-    delete_all_button.addActionListener(delete_all_listener);
-    gridbag.setConstraints(delete_all_button, gridbag_constraints);
-    south_panel.add(delete_all_button);
+    other_snapshots_delete_all_button.addActionListener(delete_all_listener);
+    gridbag.setConstraints(other_snapshots_delete_all_button, gridbag_constraints);
+    south_panel.add(other_snapshots_delete_all_button);
 
     // create button for the snapshot settings
-    JButton settings_button = new JButton(resources.getString("settings"));
-    settings_button.setToolTipText(resources.getString("settings_tooltip"));
+    JButton other_snapshots_settings_button = new JButton(resources.getString("settings"));
+    other_snapshots_settings_button.setToolTipText(resources.getString("settings_tooltip"));
     SettingsListener settings_listener = new SettingsListener();
-    settings_button.addActionListener(settings_listener);
-    gridbag.setConstraints(delete_all_button, gridbag_constraints);
-    south_panel.add(settings_button);
+    other_snapshots_settings_button.addActionListener(settings_listener);
+    gridbag.setConstraints(other_snapshots_delete_all_button, gridbag_constraints);
+    south_panel.add(other_snapshots_settings_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowSnapshots");
 

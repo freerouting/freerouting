@@ -66,18 +66,18 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
     ResourceBundle resources =
         ResourceBundle.getBundle(
             "app.freerouting.gui.Default", p_board_frame.get_locale());
-    JButton min_all_button =
+    JButton appearance_layer_visibility_min_all_button =
         new JButton(resources.getString("minimum_all"));
-    min_all_button.setToolTipText(resources.getString("minimum_all_tooltip"));
-    min_all_button.addActionListener(new MinAllButtonListener());
-    gridbag.setConstraints(min_all_button, gridbag_constraints);
-    main_panel.add(min_all_button);
-    JButton max_all_button =
+    appearance_layer_visibility_min_all_button.setToolTipText(resources.getString("minimum_all_tooltip"));
+    appearance_layer_visibility_min_all_button.addActionListener(new MinAllButtonListener());
+    gridbag.setConstraints(appearance_layer_visibility_min_all_button, gridbag_constraints);
+    main_panel.add(appearance_layer_visibility_min_all_button);
+    JButton appearance_layer_visibility_max_all_button =
         new JButton(resources.getString("maximum_all"));
-    max_all_button.setToolTipText(resources.getString("maximum_all_tooltip"));
-    max_all_button.addActionListener(new MaxAllButtonListener());
-    gridbag.setConstraints(max_all_button, gridbag_constraints);
-    main_panel.add(max_all_button);
+    appearance_layer_visibility_max_all_button.setToolTipText(resources.getString("maximum_all_tooltip"));
+    appearance_layer_visibility_max_all_button.addActionListener(new MaxAllButtonListener());
+    gridbag.setConstraints(appearance_layer_visibility_max_all_button, gridbag_constraints);
+    main_panel.add(appearance_layer_visibility_max_all_button);
     this.pack();
     this.setResizable(false);
   }

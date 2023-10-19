@@ -36,17 +36,17 @@ public class WindowNets extends WindowObjectListWithFilter {
     JPanel curr_button_panel = new JPanel();
     this.south_panel.add(curr_button_panel, BorderLayout.NORTH);
 
-    final JButton assign_class_button =
+    final JButton rules_nets_assign_class_button =
         new JButton(resources.getString("assign_class"));
-    curr_button_panel.add(assign_class_button);
-    assign_class_button.setToolTipText(resources.getString("assign_class_tooltip"));
-    assign_class_button.addActionListener(new AssignClassListener());
+    curr_button_panel.add(rules_nets_assign_class_button);
+    rules_nets_assign_class_button.setToolTipText(resources.getString("assign_class_tooltip"));
+    rules_nets_assign_class_button.addActionListener(new AssignClassListener());
 
-    final JButton filter_incompletes_button =
+    final JButton rules_nets_filter_incompletes_button =
         new JButton(resources.getString("filter_incompletes"));
-    curr_button_panel.add(filter_incompletes_button);
-    filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
-    filter_incompletes_button.addActionListener(new FilterIncompletesListener());
+    curr_button_panel.add(rules_nets_filter_incompletes_button);
+    rules_nets_filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
+    rules_nets_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_Nets");
   }
 

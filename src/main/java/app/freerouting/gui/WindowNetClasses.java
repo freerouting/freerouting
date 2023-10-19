@@ -82,40 +82,40 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     JPanel net_class_button_panel = new JPanel();
     net_class_button_panel.setLayout(new FlowLayout());
     this.main_panel.add(net_class_button_panel, BorderLayout.SOUTH);
-    final JButton add_class_button =
+    final JButton rules_netclasses_add_class_button =
         new JButton(resources.getString("add"));
-    add_class_button.setToolTipText(resources.getString("add_tooltip"));
-    add_class_button.addActionListener(new AddNetClassListener());
-    net_class_button_panel.add(add_class_button);
-    final JButton remove_class_button =
+    rules_netclasses_add_class_button.setToolTipText(resources.getString("add_tooltip"));
+    rules_netclasses_add_class_button.addActionListener(new AddNetClassListener());
+    net_class_button_panel.add(rules_netclasses_add_class_button);
+    final JButton rules_netclasses_remove_class_button =
         new JButton(resources.getString("remove"));
-    remove_class_button.setToolTipText(resources.getString("remove_tooltip"));
-    remove_class_button.addActionListener(new RemoveNetClassListener());
-    net_class_button_panel.add(remove_class_button);
+    rules_netclasses_remove_class_button.setToolTipText(resources.getString("remove_tooltip"));
+    rules_netclasses_remove_class_button.addActionListener(new RemoveNetClassListener());
+    net_class_button_panel.add(rules_netclasses_remove_class_button);
 
-    final JButton assign_button =
+    final JButton rules_netclasses_assign_button =
         new JButton(resources.getString("assign"));
-    assign_button.setToolTipText(resources.getString("assign_tooltip"));
-    assign_button.addActionListener(new AssignClassesListener());
-    net_class_button_panel.add(assign_button);
+    rules_netclasses_assign_button.setToolTipText(resources.getString("assign_tooltip"));
+    rules_netclasses_assign_button.addActionListener(new AssignClassesListener());
+    net_class_button_panel.add(rules_netclasses_assign_button);
 
-    final JButton select_button =
+    final JButton rules_netclasses_select_button =
         new JButton(resources.getString("select"));
-    select_button.setToolTipText(resources.getString("select_tooltip"));
-    select_button.addActionListener(new SelectClassesListener());
-    net_class_button_panel.add(select_button);
+    rules_netclasses_select_button.setToolTipText(resources.getString("select_tooltip"));
+    rules_netclasses_select_button.addActionListener(new SelectClassesListener());
+    net_class_button_panel.add(rules_netclasses_select_button);
 
-    final JButton contained_nets_button =
+    final JButton rules_netclasses_contained_nets_button =
         new JButton(resources.getString("show_nets"));
-    net_class_button_panel.add(contained_nets_button);
-    contained_nets_button.setToolTipText(resources.getString("show_nets_tooltip"));
-    contained_nets_button.addActionListener(new ContainedNetsListener());
+    net_class_button_panel.add(rules_netclasses_contained_nets_button);
+    rules_netclasses_contained_nets_button.setToolTipText(resources.getString("show_nets_tooltip"));
+    rules_netclasses_contained_nets_button.addActionListener(new ContainedNetsListener());
 
-    final JButton filter_incompletes_button =
+    final JButton rules_netclasses_filter_incompletes_button =
         new JButton(resources.getString("filter_incompletes"));
-    net_class_button_panel.add(filter_incompletes_button);
-    filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
-    filter_incompletes_button.addActionListener(new FilterIncompletesListener());
+    net_class_button_panel.add(rules_netclasses_filter_incompletes_button);
+    rules_netclasses_filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
+    rules_netclasses_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
 
     p_board_frame.set_context_sensitive_help(this, "WindowNetClasses");
 

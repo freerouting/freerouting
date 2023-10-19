@@ -69,36 +69,36 @@ public class WindowViaRule extends WindowBase {
     button_panel.setLayout(gridbag);
     GridBagConstraints gridbag_constraints = new GridBagConstraints();
 
-    final JButton add_button = new JButton(resources.getString("append"));
+    final JButton rules_vias_rules_edit_append_button = new JButton(resources.getString("append"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag.setConstraints(add_button, gridbag_constraints);
-    add_button.setToolTipText(resources.getString("append_tooltip"));
-    add_button.addActionListener(new AppendListener());
-    button_panel.add(add_button);
+    gridbag.setConstraints(rules_vias_rules_edit_append_button, gridbag_constraints);
+    rules_vias_rules_edit_append_button.setToolTipText(resources.getString("append_tooltip"));
+    rules_vias_rules_edit_append_button.addActionListener(new AppendListener());
+    button_panel.add(rules_vias_rules_edit_append_button);
 
-    final JButton delete_button =
+    final JButton rules_vias_rules_edit_remove_button =
         new JButton(resources.getString("remove"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(delete_button, gridbag_constraints);
-    delete_button.setToolTipText(resources.getString("remove_tooltip"));
-    delete_button.addActionListener(new DeleteListener());
-    button_panel.add(delete_button);
+    gridbag.setConstraints(rules_vias_rules_edit_remove_button, gridbag_constraints);
+    rules_vias_rules_edit_remove_button.setToolTipText(resources.getString("remove_tooltip"));
+    rules_vias_rules_edit_remove_button.addActionListener(new DeleteListener());
+    button_panel.add(rules_vias_rules_edit_remove_button);
 
-    final JButton move_up_button =
+    final JButton rules_vias_rules_edit_move_up_button =
         new JButton(resources.getString("move_up"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    gridbag.setConstraints(move_up_button, gridbag_constraints);
-    move_up_button.setToolTipText(resources.getString("move_up_tooltip"));
-    move_up_button.addActionListener(new MoveUpListener());
-    button_panel.add(move_up_button);
+    gridbag.setConstraints(rules_vias_rules_edit_move_up_button, gridbag_constraints);
+    rules_vias_rules_edit_move_up_button.setToolTipText(resources.getString("move_up_tooltip"));
+    rules_vias_rules_edit_move_up_button.addActionListener(new MoveUpListener());
+    button_panel.add(rules_vias_rules_edit_move_up_button);
 
-    final JButton move_down_button =
+    final JButton rules_vias_rules_edit_move_down_button =
         new JButton(resources.getString("move_down"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(move_down_button, gridbag_constraints);
-    move_down_button.setToolTipText(resources.getString("move_down_tooltip"));
-    move_down_button.addActionListener(new MoveDownListener());
-    button_panel.add(move_down_button);
+    gridbag.setConstraints(rules_vias_rules_edit_move_down_button, gridbag_constraints);
+    rules_vias_rules_edit_move_down_button.setToolTipText(resources.getString("move_down_tooltip"));
+    rules_vias_rules_edit_move_down_button.addActionListener(new MoveDownListener());
+    button_panel.add(rules_vias_rules_edit_move_down_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowVia_EditViaRule");
 

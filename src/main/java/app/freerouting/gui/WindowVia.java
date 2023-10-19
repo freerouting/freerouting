@@ -79,23 +79,22 @@ public class WindowVia extends BoardSavableSubWindow {
     gridbag.setConstraints(padstack_button_panel, gridbag_constraints);
     north_panel.add(padstack_button_panel, gridbag_constraints);
 
-    final JButton show_padstack_button =
-        new JButton(resources.getString("info"));
-    show_padstack_button.setToolTipText(resources.getString("info_tooltip"));
-    show_padstack_button.addActionListener(new ShowPadstacksListener());
-    padstack_button_panel.add(show_padstack_button);
+    final JButton rules_vias_padstacks_info_button = new JButton(resources.getString("info"));
+    rules_vias_padstacks_info_button.setToolTipText(resources.getString("info_tooltip"));
+    rules_vias_padstacks_info_button.addActionListener(new ShowPadstacksListener());
+    padstack_button_panel.add(rules_vias_padstacks_info_button);
 
-    final JButton add_padstack_button =
+    final JButton rules_vias_padstacks_create_button =
         new JButton(resources.getString("create"));
-    add_padstack_button.setToolTipText(resources.getString("create_tooltip"));
-    add_padstack_button.addActionListener(new AddPadstackListener());
-    padstack_button_panel.add(add_padstack_button);
+    rules_vias_padstacks_create_button.setToolTipText(resources.getString("create_tooltip"));
+    rules_vias_padstacks_create_button.addActionListener(new AddPadstackListener());
+    padstack_button_panel.add(rules_vias_padstacks_create_button);
 
-    final JButton remove_padstack_button =
+    final JButton rules_vias_padstacks_remove_button =
         new JButton(resources.getString("remove"));
-    remove_padstack_button.setToolTipText(resources.getString("remove_tooltip"));
-    remove_padstack_button.addActionListener(new RemovePadstackListener());
-    padstack_button_panel.add(remove_padstack_button);
+    rules_vias_padstacks_remove_button.setToolTipText(resources.getString("remove_tooltip"));
+    rules_vias_padstacks_remove_button.addActionListener(new RemovePadstackListener());
+    padstack_button_panel.add(rules_vias_padstacks_remove_button);
 
     JLabel separator_label =
         new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
@@ -114,17 +113,17 @@ public class WindowVia extends BoardSavableSubWindow {
     gridbag.setConstraints(via_button_panel, gridbag_constraints);
     north_panel.add(via_button_panel, gridbag_constraints);
 
-    final JButton show_vias_button =
+    final JButton rules_vias_vias_info_button =
         new JButton(resources.getString("info"));
-    show_vias_button.setToolTipText(resources.getString("info_tooltip_2"));
-    show_vias_button.addActionListener(new ShowViasListener());
-    via_button_panel.add(show_vias_button);
+    rules_vias_vias_info_button.setToolTipText(resources.getString("info_tooltip_2"));
+    rules_vias_vias_info_button.addActionListener(new ShowViasListener());
+    via_button_panel.add(rules_vias_vias_info_button);
 
-    final JButton edit_vias_button =
+    final JButton rules_vias_vias_edit_button =
         new JButton(resources.getString("edit"));
-    edit_vias_button.setToolTipText(resources.getString("edit_tooltip"));
-    edit_vias_button.addActionListener(new EditViasListener());
-    via_button_panel.add(edit_vias_button);
+    rules_vias_vias_edit_button.setToolTipText(resources.getString("edit_tooltip"));
+    rules_vias_vias_edit_button.addActionListener(new EditViasListener());
+    via_button_panel.add(rules_vias_vias_edit_button);
 
     separator_label =
         new JLabel("–––––––––––––––––––––––––––––––––––––––––––––––––––––––––");
@@ -160,29 +159,29 @@ public class WindowVia extends BoardSavableSubWindow {
     via_rule_button_panel.setLayout(new FlowLayout());
     this.add(via_rule_button_panel, BorderLayout.SOUTH);
 
-    final JButton show_rule_button =
+    final JButton rules_vias_rules_info_button =
         new JButton(resources.getString("info"));
-    show_rule_button.setToolTipText(resources.getString("info_tooltip_3"));
-    show_rule_button.addActionListener(new ShowViaRuleListener());
-    via_rule_button_panel.add(show_rule_button);
+    rules_vias_rules_info_button.setToolTipText(resources.getString("info_tooltip_3"));
+    rules_vias_rules_info_button.addActionListener(new ShowViaRuleListener());
+    via_rule_button_panel.add(rules_vias_rules_info_button);
 
-    final JButton add_rule_button =
+    final JButton rules_vias_rules_create_button =
         new JButton(resources.getString("create"));
-    add_rule_button.setToolTipText(resources.getString("create_tooltip_2"));
-    add_rule_button.addActionListener(new AddViaRuleListener());
-    via_rule_button_panel.add(add_rule_button);
+    rules_vias_rules_create_button.setToolTipText(resources.getString("create_tooltip_2"));
+    rules_vias_rules_create_button.addActionListener(new AddViaRuleListener());
+    via_rule_button_panel.add(rules_vias_rules_create_button);
 
-    final JButton edit_rule_button =
+    final JButton rules_vias_rules_edit_button =
         new JButton(resources.getString("edit"));
-    edit_rule_button.setToolTipText(resources.getString("edit_tooltip_2"));
-    edit_rule_button.addActionListener(new EditViaRuleListener());
-    via_rule_button_panel.add(edit_rule_button);
+    rules_vias_rules_edit_button.setToolTipText(resources.getString("edit_tooltip_2"));
+    rules_vias_rules_edit_button.addActionListener(new EditViaRuleListener());
+    via_rule_button_panel.add(rules_vias_rules_edit_button);
 
-    final JButton remove_rule_button =
+    final JButton rules_vias_rules_remove_button =
         new JButton(resources.getString("remove"));
-    remove_rule_button.setToolTipText(resources.getString("remove_tooltip_2"));
-    remove_rule_button.addActionListener(new RemoveViaRuleListener());
-    via_rule_button_panel.add(remove_rule_button);
+    rules_vias_rules_remove_button.setToolTipText(resources.getString("remove_tooltip_2"));
+    rules_vias_rules_remove_button.addActionListener(new RemoveViaRuleListener());
+    via_rule_button_panel.add(rules_vias_rules_remove_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowVia");
 

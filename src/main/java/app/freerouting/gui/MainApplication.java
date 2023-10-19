@@ -140,8 +140,8 @@ public class MainApplication extends WindowBase {
       if (add_buttons) {
         demonstration_button.setText(resources.getString("router_demonstrations"));
         demonstration_button.setToolTipText(resources.getString("router_demonstrations_tooltip"));
-        demonstration_button.addActionListener(
-            evt -> window_net_demonstrations.setVisible(true));
+        demonstration_button.addActionListener(evt -> window_net_demonstrations.setVisible(true));
+        demonstration_button.addActionListener(evt -> FRAnalytics.buttonClicked("demonstration_button", demonstration_button.getText()));
 
         gridbag.setConstraints(demonstration_button, gridbag_constraints);
         main_panel.add(demonstration_button, gridbag_constraints);
@@ -149,6 +149,7 @@ public class MainApplication extends WindowBase {
         sample_board_button.setText(resources.getString("sample_designs"));
         sample_board_button.setToolTipText(resources.getString("sample_designs_tooltip"));
         sample_board_button.addActionListener(evt -> window_net_sample_designs.setVisible(true));
+        sample_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("sample_board_button", sample_board_button.getText()));
 
         gridbag.setConstraints(sample_board_button, gridbag_constraints);
         main_panel.add(sample_board_button, gridbag_constraints);
