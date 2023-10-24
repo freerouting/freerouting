@@ -223,16 +223,12 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         if (clearance_matrix.is_equal(i, j)) {
           String message =
               resources.getString("confirm_remove") + " " + clearance_matrix.get_name(i);
-          int selected_option =
-              JOptionPane.showConfirmDialog(
-                  this, message, null, JOptionPane.YES_NO_OPTION);
-          if (selected_option == JOptionPane.YES_OPTION) {
-            Collection<Item> board_items =
-                routing_board.get_items();
+          int remove_clearance_class_dialog = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION);
+          if (remove_clearance_class_dialog == JOptionPane.YES_OPTION) {
+            Collection<Item> board_items = routing_board.get_items();
             routing_board.rules.change_clearance_class_no(i, j, board_items);
             if (!routing_board.rules.remove_clearance_class(i, board_items)) {
-              FRLogger.warn(
-                  "WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");
+              FRLogger.warn("WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");
               return;
             }
             routing_board.search_tree_manager.clearance_class_removed(i);
@@ -406,13 +402,12 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
                   + clearance_matrix.get_name(curr_column);
         }
         message += resources.getString("change_anyway");
-        int selected_option =
-            JOptionPane.showConfirmDialog(
+        int clearance_class_already_assigned_dialog = JOptionPane.showConfirmDialog(
                 board_frame.clearance_matrix_window,
                 message,
                 null,
                 JOptionPane.YES_NO_OPTION);
-        if (selected_option != JOptionPane.YES_OPTION) {
+        if (clearance_class_already_assigned_dialog != JOptionPane.YES_OPTION) {
           return;
         }
       }

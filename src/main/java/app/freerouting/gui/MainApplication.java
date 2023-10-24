@@ -474,7 +474,7 @@ public class MainApplication extends WindowBase {
         Object[] options = {startNowButton, CANCEL_TEXT};
 
         final String AUTOSTART_MSG = resources.getString("auto_start_routing_message");
-        JOptionPane optionPane = new JOptionPane(
+        JOptionPane auto_start_routing_dialog = new JOptionPane(
             AUTOSTART_MSG,
             JOptionPane.WARNING_MESSAGE,
             JOptionPane.OK_CANCEL_OPTION,
@@ -483,14 +483,14 @@ public class MainApplication extends WindowBase {
             options[0]
         );
 
-        startNowButton.addActionListener(event -> optionPane.setValue(options[0]));
-        startNowButton.addActionListener(evt -> FRAnalytics.buttonClicked("startNowButton", startNowButton.getText()));
+        startNowButton.addActionListener(event -> auto_start_routing_dialog.setValue(options[0]));
+        startNowButton.addActionListener(evt -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
 
         final String AUTOSTART_TITLE = resources.getString("auto_start_routing_title");
 
         if (startupOptions.dialog_confirmation_timeout > 0) {
           // Add a timer to the dialog
-          JDialog autostartDialog = optionPane.createDialog(AUTOSTART_TITLE);
+          JDialog autostartDialog = auto_start_routing_dialog.createDialog(AUTOSTART_TITLE);
 
           // Update startNowButton text every second
           Timer autostartTimer =
@@ -504,7 +504,8 @@ public class MainApplication extends WindowBase {
                       if (--secondsLeft > 0) {
                         startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
                       } else {
-                        optionPane.setValue(options[0]);
+                        auto_start_routing_dialog.setValue(options[0]);
+                        FRAnalytics.buttonClicked("auto_start_routing_dialog_start_with_timeout", startNowButton.getText());
                       }
                     }
                   });
@@ -516,17 +517,21 @@ public class MainApplication extends WindowBase {
           autostartTimer.stop();
         }
 
-        Object choice = optionPane.getValue();
-        // Start the autorouter if the user didn't cancel the dialog
-        if ((startupOptions.dialog_confirmation_timeout == 0) || (choice == options[0])) {
-          // Start the autorouter
-          InteractiveActionThread thread =
-              new_frame.board_panel.board_handling.start_batch_autorouter();
+        Object choice = auto_start_routing_dialog.getValue();
+        // Start the auto-router if the user didn't cancel the dialog
+        if ((startupOptions.dialog_confirmation_timeout == 0) || (choice == options[0]))
+        {
+          // Start the auto-router
+          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();
 
           if (new_frame.board_panel.board_handling.autorouter_listener != null) {
-            // Add the autorouter listener to save the design file when the autorouter is running
+            // Add the auto-router listener to save the design file when the autorouter is running
             thread.addListener(new_frame.board_panel.board_handling.autorouter_listener);
           }
+        }
+
+        if (choice == options[1]) {
+          FRAnalytics.buttonClicked("auto_start_routing_dialog_cancel", "Cancel");
         }
       }
 
@@ -744,14 +749,15 @@ public class MainApplication extends WindowBase {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       boolean exit_program = true;
       if (!is_test_version && !board_frames.isEmpty()) {
-        int option =
+        int application_confirm_exit_dialog =
             JOptionPane.showConfirmDialog(
                 null,
                 resources.getString("confirm_cancel"),
                 null,
                 JOptionPane.YES_NO_OPTION);
-        if (option == JOptionPane.NO_OPTION) {
+        if (application_confirm_exit_dialog == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+          FRAnalytics.buttonClicked("application_confirm_exit_dialog_no", resources.getString("confirm_cancel"));
           exit_program = false;
         }
       }

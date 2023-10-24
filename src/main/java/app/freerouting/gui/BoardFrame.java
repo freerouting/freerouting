@@ -732,14 +732,14 @@ public class BoardFrame extends WindowBase {
     public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       if (confirm_cancel) {
-        int option =
-            JOptionPane.showConfirmDialog(
-                null,
-                resources.getString("confirm_cancel"),
-                null,
-                JOptionPane.YES_NO_OPTION);
-        if (option == JOptionPane.NO_OPTION) {
+        int board_confirm_exit_dialog = JOptionPane.showConfirmDialog(
+            null,
+            resources.getString("confirm_cancel"),
+            null,
+            JOptionPane.YES_NO_OPTION);
+        if (board_confirm_exit_dialog == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+          FRAnalytics.buttonClicked("board_confirm_exit_dialog_no", resources.getString("confirm_cancel"));
         } else {
           FRAnalytics.appClosed();
         }

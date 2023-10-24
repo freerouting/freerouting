@@ -211,8 +211,7 @@ class BoardToolbarSelectedItem extends JToolBar {
     for (int i = 0; i < class_name_arr.length; ++i) {
       class_name_arr[i] = clearance_matrix.get_name(i);
     }
-    Object selected_value =
-        JOptionPane.showInputDialog(
+    Object assign_clearance_class_dialog = JOptionPane.showInputDialog(
             null,
             resources.getString("select_clearance_class"),
             resources.getString("assign_clearance_class"),
@@ -220,10 +219,10 @@ class BoardToolbarSelectedItem extends JToolBar {
             null,
             class_name_arr,
             class_name_arr[0]);
-    if (!(selected_value instanceof String)) {
+    if (!(assign_clearance_class_dialog instanceof String)) {
       return;
     }
-    int class_index = clearance_matrix.get_no((String) selected_value);
+    int class_index = clearance_matrix.get_no((String) assign_clearance_class_dialog);
     if (class_index < 0) {
       return;
     }

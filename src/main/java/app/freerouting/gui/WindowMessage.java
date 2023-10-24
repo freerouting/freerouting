@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.management.FRAnalytics;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -53,10 +54,17 @@ public class WindowMessage extends WindowBase {
       return true;
     }
 
-    int option =
-        JOptionPane.showConfirmDialog(
-            null, p_message, null, JOptionPane.YES_NO_OPTION);
-    return option == JOptionPane.YES_OPTION;
+    int selected_option = JOptionPane.showConfirmDialog(null, p_message, null, JOptionPane.YES_NO_OPTION);
+
+    if (selected_option == JOptionPane.YES_OPTION)
+    {
+      FRAnalytics.buttonClicked("dialog_yes", p_message);
+      return true;
+    } else
+    {
+      FRAnalytics.buttonClicked("dialog_no", p_message);
+      return false;
+    }
   }
 
   /** Calls a dialog with an ok-button. */

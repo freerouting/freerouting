@@ -112,8 +112,7 @@ public class WindowNets extends WindowObjectListWithFilter {
       for (int i = 0; i < class_arr.length; ++i) {
         class_arr[i] = net_classes.get(i);
       }
-      Object selected_value =
-          JOptionPane.showInputDialog(
+      Object selected_value = JOptionPane.showInputDialog(
               null,
               resources.getString("message_1"),
               resources.getString("message_2"),

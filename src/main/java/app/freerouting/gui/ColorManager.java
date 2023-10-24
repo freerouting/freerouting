@@ -95,9 +95,7 @@ public class ColorManager extends BoardSavableSubWindow {
         e -> colorEditor.currentColor = colorChooser.getColor();
     ResourceBundle resources =
         ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
-    final JDialog dialog =
-        JColorChooser.createDialog(
-            color_editor_button, resources.getString("pick_a_color"), true, colorChooser, okListener, null);
+    final JDialog dialog = JColorChooser.createDialog(color_editor_button, resources.getString("pick_a_color"), true, colorChooser, okListener, null);
 
     // Here's the code that brings up the dialog.
     color_editor_button.addActionListener(
