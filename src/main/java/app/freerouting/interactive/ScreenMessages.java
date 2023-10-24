@@ -133,7 +133,7 @@ public class ScreenMessages {
     if (p_pos == null || this.mouse_position == null || this.write_protected) {
       return;
     }
-    this.mouse_position.setText(p_pos.to_string(this.locale));
+    this.mouse_position.setText(p_pos.to_string(this.locale, 1, 10));
   }
 
   /**

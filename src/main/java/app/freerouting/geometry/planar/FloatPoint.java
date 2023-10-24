@@ -492,6 +492,13 @@ public class FloatPoint implements Serializable {
     return ("(" + nf.format(x) + " , " + nf.format(y) + ")");
   }
 
+  public String to_string(Locale p_locale, int fractionDigits, int padding) {
+    NumberFormat nf = NumberFormat.getInstance(p_locale);
+    nf.setMinimumFractionDigits(fractionDigits);
+    nf.setMaximumFractionDigits(fractionDigits);
+    return ("(" + String.format("%"+padding+"s", nf.format(x)) + " , " + String.format("%"+padding+"s", nf.format(y)) + ")");
+  }
+
   @Override
   public String toString() {
     return to_string(Locale.ENGLISH);
