@@ -130,7 +130,7 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
 
     TileShape shrinked_room_shape = (TileShape) room_shape.offset(-shrink_offset);
     if (!shrinked_room_shape.is_empty()) {
-      // enter the shrinked room shape by a 45 degree angle first
+      // enter the shrunk room shape by a 45-degree angle first
       FloatPoint nearest_room_point =
           shrinked_room_shape.nearest_point_approx(this.current_from_point);
       boolean horizontal_first =

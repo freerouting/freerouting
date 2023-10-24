@@ -78,6 +78,7 @@ public abstract class LocateFoundConnectionAlgo {
     this.start_door = (TargetItemExpansionDoor) start_info.door;
     this.start_item = start_door.item;
     this.start_layer = start_door.room.get_layer();
+
     this.current_from_door_index = 0;
     boolean at_fanout_end = false;
     if (p_maze_search_result.destination_door instanceof TargetItemExpansionDoor) {

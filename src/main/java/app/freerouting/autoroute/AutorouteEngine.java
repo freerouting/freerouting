@@ -101,20 +101,20 @@ public class AutorouteEngine {
     this.time_limit = p_time_limit;
   }
 
-  /** Autoroutes a connection between p_start_set and p_dest_set.
+  /** Auto-routes a connection between p_start_set and p_dest_set.
    * Returns ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
    */
   public AutorouteResult autoroute_connection(
       Set<Item> p_start_set,
       Set<Item> p_dest_set,
       AutorouteControl p_ctrl,
-      SortedSet<Item> p_ripped_item_list) {
+      SortedSet<Item> p_ripped_item_list)
+  {
     MazeSearchAlgo maze_search_algo;
     try {
       maze_search_algo = MazeSearchAlgo.get_instance(p_start_set, p_dest_set, this, p_ctrl);
     } catch (Exception e) {
-      FRLogger.error(
-          "AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance", e);
+      FRLogger.error("AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance", e);
       maze_search_algo = null;
     }
     MazeSearchAlgo.Result search_result = null;
@@ -122,11 +122,10 @@ public class AutorouteEngine {
       try {
         search_result = maze_search_algo.find_connection();
       } catch (Exception e) {
-        FRLogger.error(
-            "AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection",
-            e);
+        FRLogger.error("AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection", e);
       }
     }
+
     LocateFoundConnectionAlgo autoroute_result = null;
     if (search_result != null) {
       try {
@@ -139,26 +138,33 @@ public class AutorouteEngine {
                 p_ripped_item_list,
                 board.get_test_level());
       } catch (Exception e) {
-        FRLogger.error(
-            "AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance",
-            e);
+        FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
       }
     }
+
     if (!this.maintain_database) {
       this.clear();
     } else {
       this.reset_all_doors();
     }
+
     if (autoroute_result == null) {
       return AutorouteResult.NOT_ROUTED;
     }
+
+    if (!p_ctrl.layer_active[autoroute_result.start_layer] || !p_ctrl.layer_active[autoroute_result.target_layer])
+    {
+      return AutorouteResult.NOT_ROUTED;
+    }
+
     if (autoroute_result.connection_items == null) {
       if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal()) {
         FRLogger.warn("AutorouteEngine.autoroute_connection: result_items != null expected");
       }
       return AutorouteResult.ALREADY_CONNECTED;
     }
-    // Delete the ripped  connections.
+
+    // Delete the ripped connections.
     SortedSet<Item> ripped_connections = new TreeSet<>();
     Set<Integer> changed_nets = new TreeSet<>();
     Item.StopConnectionOption stop_connection_option;
@@ -174,6 +180,7 @@ public class AutorouteEngine {
         changed_nets.add(curr_ripped_item.get_net_no(i));
       }
     }
+
     // let the observers know the changes in the board database.
     boolean observers_activated = !this.board.observers_active();
     if (observers_activated) {
@@ -185,8 +192,7 @@ public class AutorouteEngine {
     for (int curr_net_no : changed_nets) {
       this.board.remove_trace_tails(curr_net_no, stop_connection_option);
     }
-    InsertFoundConnectionAlgo insert_found_connection_algo =
-        InsertFoundConnectionAlgo.get_instance(autoroute_result, board, p_ctrl);
+    InsertFoundConnectionAlgo insert_found_connection_algo = InsertFoundConnectionAlgo.get_instance(autoroute_result, board, p_ctrl);
 
     if (observers_activated) {
       this.board.end_notify_observers();

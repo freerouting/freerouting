@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.autoroute.AutorouteControl;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
@@ -41,7 +42,7 @@ import java.util.TreeSet;
  */
 public class BasicBoard implements Serializable {
 
-  /** List of items inserted into this board */
+  /** List of items inserted into this board (eg. Trace classes). Traces are Item classes that implement the Connectable interface. */
   public final UndoableObjects item_list;
   /** List of placed components on the board. */
   public final Components components;
@@ -1523,4 +1524,27 @@ public void delete_all_tracks_and_vias() {
       item_list.delete(curr_item);
     }
   }
-}}
+}
+
+  public void areThereItemsOnInactiveLayer(AutorouteControl p_ctrl) {
+    if (this.get_layer_count() > 2) {
+      boolean hasSomethingOnInactiveLayer = false;
+      Iterator<UndoableObjects.UndoableObjectNode> it = this.item_list.start_read_object();
+      for (; ; ) {
+        UndoableObjects.Storable curr_ob = this.item_list.read_object(it);
+        if (curr_ob == null) {
+          break;
+        }
+        if (curr_ob instanceof PolylineTrace) {
+          // This is a connectable item, like PolylineTrace or Pin
+          PolylineTrace curr_item = (PolylineTrace) curr_ob;
+          if (!p_ctrl.layer_active[curr_item.get_layer()]) {
+            hasSomethingOnInactiveLayer = true;
+            FRLogger.warn("There is an item on an inactive layer.");
+            break;
+          }
+        }
+      }
+    }
+  }
+}

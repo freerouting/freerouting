@@ -16,8 +16,8 @@ public class AutorouteControl {
   public final ExpansionCostFactor[] trace_costs;
   public final boolean with_neckdown;
   final int layer_count;
-  /** Defines for each layer, if it may used for routing. */
-  final boolean[] layer_active;
+  /** Defines for each layer, if it may be used for routing. */
+  final public boolean[] layer_active;
   /** The currently used trace half widths in the autoroute algorithm on each layer */
   final int[] trace_half_width;
   /**

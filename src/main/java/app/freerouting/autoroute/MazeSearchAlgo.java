@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/** Class for autorouting an incomplete connection via a maze search algorithm. */
+/** Class for auto-routing an incomplete connection via a maze search algorithm. */
 public class MazeSearchAlgo {
 
   private static final int ALREADY_RIPPED_COSTS = 1;
