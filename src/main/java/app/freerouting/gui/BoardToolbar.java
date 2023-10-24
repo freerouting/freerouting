@@ -99,14 +99,15 @@ class BoardToolbar extends JPanel {
     toolbar_autoroute_button.setToolTipText(resources.getString("autoroute_button_tooltip"));
     toolbar_autoroute_button.setDefaultCapable(true);
     Font currentFont = toolbar_autoroute_button.getFont();
-    //Font boldFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
-    //toolbar_autoroute_button.setFont(boldFont);
+    Font boldFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
+    toolbar_autoroute_button.setFont(boldFont);
     toolbar_autoroute_button.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
     // Set padding (top, left, bottom, right)
     toolbar_autoroute_button.setBorder(BorderFactory.createCompoundBorder(
         toolbar_autoroute_button.getBorder(),
         BorderFactory.createEmptyBorder(2, 5, 2, 5)
     ));
+    toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     toolbar_autoroute_button.addActionListener(
         evt -> {
           InteractiveActionThread thread = board_frame.board_panel.board_handling.start_batch_autorouter();
