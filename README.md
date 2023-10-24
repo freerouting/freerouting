@@ -26,7 +26,7 @@ Although the software can be used for manual routing in 90 degree, 45 degree and
 
 ### Getting started
 
-If you use [KiCad](#additional-steps-for-users-of-kicad), [Autodesk EAGLE](#additional-steps-for-users-of-autodesk-eagle), [Target3001!](#additional-steps-for-users-of-target-3001) or [pcb-rnd](#additional-steps-for-users-of-pcb-rnd), click on them here for their integrations, otherwise you can run Freerouting as a standalone application:
+You can run Freerouting as a standalone application.
 
 1) After launching freerouting.jar, a window appears prompting you to select your exported .DSN design file.
 ![image](https://user-images.githubusercontent.com/910321/167868226-f046da72-357d-44f6-ba0d-ee27d34725c1.png)
@@ -43,106 +43,7 @@ If you use [KiCad](#additional-steps-for-users-of-kicad), [Autodesk EAGLE](#addi
 5) You can now save your routed board as a .SES file in the File / Export Specctra Session File menu.
 ![image](https://user-images.githubusercontent.com/910321/167869579-fe40c3ff-09ce-4687-9b78-142706cfc342.png)
 
-For more information please use the online help in the board editor.
-
-### Additional steps for users of [KiCad](https://www.kicad.org/)
-
-1. Open KiCad 6.0 or newer
-
-2. Start Tools / Plugin and Content Manager (Ctrl+M)
-
-![image](https://user-images.githubusercontent.com/910321/210979489-9856712b-f5c8-497e-9bfa-3f869dae85bc.png)
-
-3. Search for the Freerouting plugin
-
-![image](https://user-images.githubusercontent.com/910321/210980390-8bfdaeed-ea17-4e3f-b998-b5e52c04b2c0.png)
-
-4. Click on the Install button
-
-![image](https://user-images.githubusercontent.com/910321/210980590-0e006f1c-dfb9-4fd1-994c-8e6e0b4cb56a.png)
-
-5. Open you PCB design in PCB Editor
-
-6. (Optional) Remove routed tracks and via from the design
-
-![image](https://user-images.githubusercontent.com/910321/181244962-ccf3c688-d364-470b-bfca-03dd049919b1.png)
-
-7. Start Freerouting from the Tools / External Plugins menu
-
-![image](https://user-images.githubusercontent.com/910321/181245125-cbf652bf-428a-4648-b455-5ebba78be920.png)
-
-8. Wait until the Freerouting app exits and the plugin loads your routed design
-
-![image](https://user-images.githubusercontent.com/910321/210981925-d32fb974-e3e6-4e65-832e-ed033ef3b3db.png)
-
-### Additional steps for users of [Autodesk EAGLE](https://www.autodesk.com/products/eagle/overview)
-
-1) Download the latest [eagle2freerouter ulp file](https://github.com/freerouting/freerouting/tree/master/integrations/Eagle)
-
-2) Start EAGLE and open in the control panel of Eagle for example the design my_design.brd.
-
-3) Choose in the Files pulldown-menu of Eagle the item "execute ULP" and select the Eagle2freerouter ulp file. A file with name my_design.dsn is generated.
-
-4) Start the router, push the "Open Your Own Design" button and select my_design.dsn in the file chooser.
-
-5) After making some changes to the design with the router select "export Eagle session script" in the Files pulldown-menu. A file with name my_design.scr is generated.
-
-6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
-
-### Additional steps for users of [Target 3001!](https://ibfriedrich.com/)
-
-1) Freerouting is accesible directly from the GUI menu in Actions / Automatisms and assistants / Autorouter / Freerouting autorouter...
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step1_OpenFreeroutingDialogWindow.png" alt="Open Freerouting dialog window" title="Open Freerouting dialog window" align="center">
-
-2) There you can select the signals (=nets) to be routed
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step2_SignalSelection.png" alt="If no special signal is selected, all signals are affected" title="If no special signal is selected, all signals are affected" align="center">
-
-3) Next you can influence the algorithm
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step3_InstallFreeroutingAndJava.png" alt="Most users have to install FreeRouting once, some will also have to install Java first" title="Most users have to install FreeRouting once, some will also have to install Java first" align="center">
-
-4) They will get the Freerouting installer from https://github.com/freerouting/freerouting/releases/
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step4_SelectLayers.png" alt="Select layers and their functions" title="Select layers and their functions" align="center">
-
-5) Normally the user does not have to change the settings and can click directly on the [Start] button. So then it is a one-click solution. After the creation of the session file SES, Target automatically asks, if the results shall be used
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step5_AcceptSES.png" alt="Accept results from SES file" title="Accept results from SES file" align="center">
-
-6) The tracks and vias are imported immediately into the TARGET project file
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step6_ResultsImported.png" alt="Results are imported" title="Results are imported" align="center">
-
-### Additional steps for users of [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
-
-#### Using the standalone freerouting application
-
-1) Download the latest `freerouting-1.8.0.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
-
-2) Start pcb-rnd and load your layout.
-
-3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
-
-4) Start the router by running the `freerouting-1.8.0.jar` file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
-
-5) Do the routing.
-
-5) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
-
-6) Go back to pcb-rnd and import the results (File / Import autorouted dsn/ses file...). Track widths and clearances during autorouting are based on the currently selected route style during DSN export.
-
-
-#### Using freerouting from within pcb-rnd
-
-1) Download the latest freerouting-1.8.0-linux-x64.zip from the [Releases](https://github.com/freerouting/freerouting/releases) page
-
-2) Unzip it and rename the top directory freerouting-1.8.0-linux-x64 to freerouting.net (the default location is /opt/freerouting.net)
-
-3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
-
-4) Load your layout
-
-5) Open the external autorouter window with (Connect / Automatic Routing / External autorouter...)
-
-6) Select the freerouting.net tab, and push the "Route" button.
-
-7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
+If you use [KiCad](#additional-steps-for-users-of-kicad), [Autodesk EAGLE](#additional-steps-for-users-of-autodesk-eagle), [Target3001!](#additional-steps-for-users-of-target-3001) or [pcb-rnd](#additional-steps-for-users-of-pcb-rnd), [click here for their integrations](/docs/integrations.md).
 
 ## Using the command line arguments
 
@@ -178,40 +79,6 @@ java.exe -jar freerouting-1.8.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file.
 
 
-## Multi-threaded implementation of route optimization
-
-After Freerouting completes auto-routing it switches to the next phase, called route optimization to improve the board even further. Multi-threading reduces the time it will take to do this second step.
-
-Besides multi-threading, multiple optimzation strategies were also implemented. Global optimal strategy selects the global optimal update after processing all items in an optimation pass, while greedy
-strategy adopts an update as soon as it is found to be better than current one, so there will be multiple updates in a greedy optimization pass. Hybrid strategy mixes the above two, and there is an
-option to select the mixing ratio.
-
-Sequential, random and prioritized item selection strategies are implemented to determine which item to process next during an optimization pass. Each item is ranked during the optimization pass so that
-it's possible to prioritize items with better scores when selecting items to process in next optimization pass.
-
-Test runs on a 12-core system using freerouting v1.6.2:
-
-| Settings                           | Auto-routing time | Route optimization time | Route opt. improvement |
-|------------------------------------|------------------:|------------------------:|:----------------------:|
-| -mt 0                              |     18.00 seconds |                    N/A  |                    N/A |
-| -mt 1 -us greedy -is prioritized   |     18.50 seconds |              55 minutes |                 51.02% |
-| -mt 11 -us greedy -is prioritized  |     19.95 seconds |              13 minutes |                 50.85% |
-| -mt 11 -us greedy -is sequential   |     19.31 seconds |              20 minutes |                 50.32% |
-| -mt 11 -us greedy -is random       |     18.68 seconds |              14 minutes |                    N/A |
-| -mt 11 -us global -is prioritized  |     18.99 seconds |              93 minutes |                 50.84% |
-| -mt 11 -us hybrid -hr 1:1          |     18.40 seconds |              33 minutes |                 51.08% |
-| -mt 11 -us hybrid -hr 1:3          |     18.48 seconds |              31 minutes |                 50.98% |
-
-| File                         | Settings  | Auto-routing time | Route optimization time | Route optimization improvement |
-|------------------------------|-----------|------------------:|------------------------:|-------------------------------:|
-| zMRETestFixture.dsn          |           |     19.95 seconds |             797 seconds |                         50.85% |
-| zMRETestFixture.dsn          | -oit 0.25 |     18.18 seconds |              49 seconds |                         50.23% |
-| Mars-64-revE.dsn             | -oit 0.25 |     26.27 seconds |              29 seconds |                         51.03% |
-| smoothieboard.dsn            | -oit 0.25 |    488.25 seconds |              60 seconds |                            N/A |
-
-All parameter defaults are set according to these test results, so you don't need to change them unless you have a special need.
-
-
 ## Running Freerouting using Java JRE
 
 There are only installers for Windows x64 and Linux x64. Fortunatelly though the platform independent .JAR files can be run on the other systems, if the matching Java runtime is installed.
@@ -230,76 +97,9 @@ java -jar freerouting-1.8.0.jar
 
 (macOS: please note that you can't start Freerouting from the Mac Finder, you must you the Mac Terminal instead!)
 
-## How to build it from source
-
-### Requirements
-
-- Java >= 17 ([Adoptium Temurin 17 JRE](https://adoptium.net/temurin/releases/))
-- [Gradle 6.x](https://gradle.org/releases/)
-- Internet connection (dependencies are downloaded automatically)
-- For IDE integration: Gradle extension (not necessary for command line usage)
-
-### IDE
-
-Open the `freerouting` [Gradle](http://www.gradle.org/) project in your favourite IDE (NB, IntelliJ, Eclipse etc. with Gradle Plugin) and build it
-by calling the `assemble` task.
-
-### Command Line
-
-Navigate to the [Gradle](http://www.gradle.org/) project (e.g., `path/to/freerouting`) and enter the following command
-
-#### Bash (Linux/OS X/Cygwin/other Unix-like shell)
-
-``` bash
-./gradlew assemble
-```
-
-#### Windows (CMD)
-
-```powershell
-gradlew assemble
-```
-
-![image](https://user-images.githubusercontent.com/910321/143483981-5f1f8473-098e-4cf2-997b-a34d14346853.png)
-
-#### Generated Executables
-
-All four .jar files will be generated in the `build\libs` subfolder. You would typically run the `freerouting-executable.jar` file.
-
-#### Creating a new release
-
-Creating a release takes about half an hour if everything goes according to the plan. Usually it doesn't, so free up ~3 hours for this.
-
-Let's suppose that the new version is `2.3.4`. You need to complete these steps:
-
-* Change `ext.publishing.versionId` in `project-info.gradle` to `2.3.4`
-* Push it to GitHub
-* Check if it was built successfully on GitHub Actions
-* Create a new draft release
-* Run `gradlew.bat assemble` -> this will generate the files in `\build\libs\freerouting*.jar`
-* Rename to `freerouting-executable.jar` to `freerouting-2.3.4.jar` and add it to the release draft
-* Update the `integrations\KiCad`
-	* Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
-	* Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
-	* Update `\integrations\KiCad\kicad-freerouting\metadata.json`
-	* Create a ZIP file from the `kicad-freerouting` folder
-	* Copy this `kicad-freerouting.zip` file to `kicad-freerouting-2.3.4.zip`
-	* Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to get hash and file sizes
-	* Update `\integrations\KiCad\metadata.json` with these values
-	* Delete previous fork at https://gitlab.com/freeroutingapp/metadata
-(Settings / General / Delete this project)
-	* Fork https://gitlab.com/kicad/addons/metadata again
-	* Create a new branch, named `freerouting-2.3.4`
-	* Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json with the new one
-	* Create a megre request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
-* Update README
-* Publish the release
-* Check if Windows and Linux installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions)
-* Set the `SONATYPE_USERNAME` and `SONATYPE_PASSWORD` environment variables, and run the `gradle publish` command in the root folder to publish it to Maven Central
-* Change `ext.publishing.versionId` in `project-info.gradle` again to `2.3.5-SNAPSHOT`
 
 ## Contributing
 
 We ❤️ all our contributors; this project wouldn’t be what it is without you!
 
-If you want to help out, please consider replying to [issues](https://github.com/freerouting/freerouting/issues), creating new ones, or even send your fixes and improvements as [pull requests](https://github.com/freerouting/freerouting/pulls).
+If you want to help out, please consider replying to [issues](https://github.com/freerouting/freerouting/issues), creating new ones, or even send your fixes and improvements as [pull requests](https://github.com/freerouting/freerouting/pulls). [Our developer documention](/docs/developer.md) can help you with the technicalities.
