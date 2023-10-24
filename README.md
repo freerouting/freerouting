@@ -95,7 +95,7 @@ You will need the following steps to make it work:
 java -jar freerouting-1.8.0.jar
 ```
 
-(macOS: please note that you can't start Freerouting from the Mac Finder, you must you the Mac Terminal instead!)
+(macOS: please note that you can't start Freerouting from the Mac Finder, you must use the Mac Terminal instead!)
 
 
 ## Contributing
