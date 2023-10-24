@@ -73,7 +73,7 @@
 6) The tracks and vias are imported immediately into the TARGET project file
 <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/integrations/Target3001!/Target3001_Step6_ResultsImported.png" alt="Results are imported" title="Results are imported" align="center">
 
-## Additional steps for users of [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
+## [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
 
 ### Using the standalone freerouting application
 
