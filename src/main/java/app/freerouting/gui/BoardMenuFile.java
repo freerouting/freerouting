@@ -209,13 +209,10 @@ public class BoardMenuFile extends JMenu {
     OutputStream output_stream;
 
     FRLogger.info("Saving '" + BoardFrame.GUI_DEFAULTS_FILE_NAME + "'...");
-    File defaults_file =
-        new File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
+    File defaults_file = new File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
     if (defaults_file.exists()) {
       // Make a backup copy of the old defaults file.
-      File defaults_file_backup =
-          new File(
-              board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
+      File defaults_file_backup = new File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
       if (defaults_file_backup.exists()) {
         defaults_file_backup.delete();
       }
@@ -231,8 +228,7 @@ public class BoardMenuFile extends JMenu {
     if (output_stream == null) {
       write_ok = false;
     } else {
-      write_ok =
-          GUIDefaultsFile.write(board_frame, board_frame.board_panel.board_handling, output_stream);
+      write_ok = GUIDefaultsFile.write(board_frame, board_frame.board_panel.board_handling, output_stream);
     }
     if (write_ok) {
       board_frame.screen_messages.set_status_message(resources.getString("message_17"));

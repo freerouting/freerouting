@@ -352,6 +352,7 @@ public class DesignFile {
     return this.intermediate_snapshot_file;
   }
 
+  // Returns the directory of the design file
   public String get_parent() {
     if (input_file != null) {
       return input_file.getParent();

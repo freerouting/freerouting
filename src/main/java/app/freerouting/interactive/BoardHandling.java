@@ -857,11 +857,6 @@ public class BoardHandling extends BoardHandlingHeadless {
           this.board.rules.nets.max_net_no()
       );
       this.set_layer(0);
-      for (int i = 0; i < board.get_layer_count(); ++i) {
-        if (!settings.autoroute_settings.get_layer_active(i)) {
-          graphics_context.set_layer_visibility(i, 0);
-        }
-      }
     }
 
     if ((logEntries.getWarningCount() > 0) || (logEntries.getErrorCount() > 0)) {

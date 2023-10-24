@@ -65,9 +65,9 @@ public class GraphicsContext implements Serializable {
     layer_visibility_arr = new double[p_layer_structure.arr.length];
     for (int i = 0; i < layer_visibility_arr.length; ++i) {
       if (p_layer_structure.arr[i].is_signal) {
-        layer_visibility_arr[i] = 1;
+        layer_visibility_arr[i] = 1.00;
       } else {
-        layer_visibility_arr[i] = 0;
+        layer_visibility_arr[i] = 0.25;
       }
     }
   }
@@ -657,7 +657,8 @@ public class GraphicsContext implements Serializable {
     layer_visibility_arr[p_layer_no] = Math.max(0, Math.min(p_value, 1));
   }
 
-  public void set_layer_visibility_arr(double[] p_layer_visibility_arr) {
+  public void set_layer_visibility_arr(double[] p_layer_visibility_arr)
+  {
     this.layer_visibility_arr = p_layer_visibility_arr;
   }
 
