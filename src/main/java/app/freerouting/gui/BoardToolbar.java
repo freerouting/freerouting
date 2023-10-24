@@ -8,6 +8,9 @@ import app.freerouting.interactive.RouteMenuState;
 import app.freerouting.interactive.SelectMenuState;
 
 import app.freerouting.management.FRAnalytics;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -24,6 +27,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.util.ResourceBundle;
+import javax.swing.border.BevelBorder;
 
 /** Implements the toolbar panel of the board frame. */
 class BoardToolbar extends JPanel {
@@ -93,12 +97,22 @@ class BoardToolbar extends JPanel {
     final JButton toolbar_autoroute_button = new JButton();
     toolbar_autoroute_button.setText(resources.getString("autoroute_button"));
     toolbar_autoroute_button.setToolTipText(resources.getString("autoroute_button_tooltip"));
+    toolbar_autoroute_button.setDefaultCapable(true);
+    Font currentFont = toolbar_autoroute_button.getFont();
+    //Font boldFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
+    //toolbar_autoroute_button.setFont(boldFont);
+    toolbar_autoroute_button.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+    // Set padding (top, left, bottom, right)
+    toolbar_autoroute_button.setBorder(BorderFactory.createCompoundBorder(
+        toolbar_autoroute_button.getBorder(),
+        BorderFactory.createEmptyBorder(2, 5, 2, 5)
+    ));
     toolbar_autoroute_button.addActionListener(
         evt -> {
           InteractiveActionThread thread = board_frame.board_panel.board_handling.start_batch_autorouter();
 
           if (board_frame.board_panel.board_handling.autorouter_listener != null) {
-            // Add the autorouter listener to save the design file when the autorouter is running
+            // Add the auto-router listener to save the design file when the auto-router is running
             thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
           }
         });
