@@ -79,4 +79,5 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 * Publish the release
 * Check if Windows and Linux installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions)
 * Set the `SONATYPE_USERNAME` and `SONATYPE_PASSWORD` environment variables, and run the `gradle publish` command in the root folder to publish it to Maven Central
+* Alternatively you can [create a ticket at OSSRH](https://issues.sonatype.org/projects/OSSRH/issues/OSSRH-96278?filter=allopenissues) following [the Sonatype guide](https://central.sonatype.org/publish/publish-guide/)
 * Change `ext.publishing.versionId` in `project-info.gradle` again to `2.3.5-SNAPSHOT`
