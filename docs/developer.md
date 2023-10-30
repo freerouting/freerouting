@@ -51,7 +51,9 @@ Creating a release takes about half an hour if everything goes according to the 
 
 Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 
-* Change `ext.publishing.versionId` in `project-info.gradle` to `2.3.4`
+* Check if there are [updated translations on Crowdin](https://freerouting.crowdin.com/u/projects/1/activity) and merge them if needed
+* Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them as well
+* Change `ext.publishing.versionId` in `\gradle\project-info.gradle` to `2.3.4`
 * Push it to GitHub
 * Check if it was built successfully on GitHub Actions
 * Create a new draft release
