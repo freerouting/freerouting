@@ -6,7 +6,7 @@
 
 <p align="center">
     <a href="https://github.com/freerouting/freerouting/releases"><img src="https://img.shields.io/github/v/release/freerouting/freerouting" alt="Release version" /></a>
-    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v1.8.0/total" alt="Downloads"/>
+    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v1.9.0/total" alt="Downloads"/>
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/total" alt="Downloads"/>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/freerouting/freerouting" alt="License"/></a>
 </p>
@@ -73,7 +73,7 @@ The following command line arguments are supported by freerouter:
 A complete command line looks something like this if your are using PowerShell on Windows:
 
 ```powershell
-java.exe -jar freerouting-1.8.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
+java.exe -jar freerouting-1.9.0.jar -de MyBoard.dsn -do MyBoard.ses -mp 100 -dr MyBoard.rules
 ```
 
 This would read the _MyBoard.dsn_ file, do the auto-routing with the parameters defined in _MyBoard.rules_ for the maximum of 100 passes, and then save the result into the _MyBoard.ses_ file.
@@ -92,7 +92,7 @@ You will need the following steps to make it work:
 4. Run the downloaded JAR file using the installed java
 
 ```powershell
-java -jar freerouting-1.8.0.jar
+java -jar freerouting-1.9.0.jar
 ```
 
 (macOS: please note that you can't start Freerouting from the Mac Finder, you must use the Mac Terminal instead!)
