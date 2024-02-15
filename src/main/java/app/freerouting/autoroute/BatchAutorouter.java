@@ -184,7 +184,7 @@ public class BatchAutorouter {
         if (average.getAsDouble() < 20.0) {
           FRLogger.warn(
               "There were only "
-                  + FRLogger.DefaultFloatFormat.format(average.getAsDouble())
+                  + FRLogger.defaultFloatFormat.format(average.getAsDouble())
                   + " changes in the last "
                   + diffBetweenBoardsCheckSize
                   + " passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.");
