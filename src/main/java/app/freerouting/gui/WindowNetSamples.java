@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.TestLevel;
 
 import app.freerouting.management.FRAnalytics;
+import java.net.URISyntaxException;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -20,9 +21,9 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.AccessControlException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
@@ -91,10 +92,11 @@ public abstract class WindowNetSamples extends BoardSubWindow {
     String archive_path_name = MainApplication.WEB_FILE_BASE_NAME + p_archive_name + ".zip";
     URL archive_url;
     try {
-      archive_url = new URL(archive_path_name);
-    } catch (MalformedURLException e) {
+      archive_url = new URI(archive_path_name).toURL();
+    } catch (MalformedURLException | URISyntaxException e) {
       return null;
     }
+
     InputStream input_stream;
     ZipInputStream zip_input_stream;
     URLConnection net_connection;
