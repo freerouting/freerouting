@@ -16,6 +16,9 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
           cache: 'gradle'
-    - uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: build
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+    
+    - name: Execute Gradle build
+      run: ./gradlew build
