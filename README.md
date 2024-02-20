@@ -88,7 +88,7 @@ You will need the following steps to make it work:
 2. Install [Java JRE](https://adoptium.net/temurin/releases/)
     * Select your operating system and architecture
     * Select `JRE` as package type
-    * Select `17` as version
+    * Select `21` as version
 4. Run the downloaded JAR file using the installed java
 
 ```powershell
