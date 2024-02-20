@@ -19,7 +19,7 @@ jobs:
       uses: actions/setup-java@v3 
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist --no-daemon
@@ -47,7 +47,7 @@ jobs:
       uses: actions/setup-java@v3 
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -77,7 +77,7 @@ jobs:
       uses: actions/setup-java@v3 
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist --no-daemon
@@ -107,7 +107,7 @@ jobs:
       uses: actions/setup-java@v3 
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
