@@ -47,7 +47,7 @@ def download_with_progress_bar(url):
 def check_latest_jre_version(os_name, architecture):
     latest_jre_info_request = urllib.request.Request(
         # Docs at https://api.adoptium.net/q/swagger-ui/
-        f"https://api.adoptium.net/v3/assets/latest/17/hotspot?image_type=jre&os={os_name}&architecture={architecture}",
+        f"https://api.adoptium.net/v3/assets/latest/21/hotspot?image_type=jre&os={os_name}&architecture={architecture}",
         headers={"User-Agent": ""}  # The server rejects requests with the default UA
     )
     jre_version_info = json.loads(urllib.request.urlopen(latest_jre_info_request).read())[0]
@@ -56,14 +56,14 @@ def check_latest_jre_version(os_name, architecture):
     return latest_jre_version, jre_url
 
 def get_local_java_executable_path(os_name):
-    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-17.*.*+*-jre", "bin", "java")
+    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-21.*.*+*-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
         
     java_found_exes = sorted(
-        [p for p in filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)) if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p)],
+        [p for p in filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)) if re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p)],
         reverse=True,
-        key=lambda p: re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
+        key=lambda p: re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
     )
 
     if len(java_found_exes) >= 1:
@@ -74,7 +74,7 @@ def get_local_java_executable_path(os_name):
         
     return java_exe_path
 
-def install_java_jre_17():
+def install_java_jre_21():
     # Get platform information and the appropriate URL
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
@@ -86,8 +86,8 @@ def install_java_jre_17():
         jre_version, jre_url = check_latest_jre_version(os_name, architecture)
     except Exception:
         print("Couldn't connect to the server")
-        # Find all matching JRE 17
-        jre_version = "17.*.*+*"
+        # Find all matching JRE 21
+        jre_version = "21.*.*+*"
         jre_url = None
         return local_java_exe
         
@@ -125,6 +125,6 @@ def install_java_jre_17():
 
 if __name__ == "__main__":
     if (os.name != 'posix') or (os.geteuid() == 0):  # Check if script is running as administrator/root
-        print(install_java_jre_17())
+        print(install_java_jre_21())
     else:
-        print("This script needs to be run as administrator to install Java JRE 17.")
+        print("This script needs to be run as administrator to install Java JRE 21.")
