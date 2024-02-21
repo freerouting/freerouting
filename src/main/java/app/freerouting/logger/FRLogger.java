@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 /// Provides logging functionality.
 /// </summary>
 public class FRLogger {
-  public static DecimalFormat DefaultFloatFormat = new DecimalFormat("0.00");
+  public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00");
   private static Logger logger;
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static boolean enabled = true;
@@ -29,7 +29,7 @@ public class FRLogger {
 
     return (hours > 0 ? (int) hours + " hour(s) " : "")
         + (minutes > 0 ? (int) minutes + " minute(s) " : "")
-        + DefaultFloatFormat.format(seconds)
+        + defaultFloatFormat.format(seconds)
         + " seconds";
   }
 

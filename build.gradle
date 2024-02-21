@@ -2,11 +2,16 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '3.0.0'
-    id 'com.github.ben-manes.versions' version '0.49.0'
+    id 'com.github.ben-manes.versions' version '0.51.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 java.toolchain {
-    languageVersion = JavaLanguageVersion.of 17
+    languageVersion = JavaLanguageVersion.of 21
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -32,7 +37,7 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.help/javahelp
     implementation group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.21.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.22.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.1'
 
     // https://github.com/google/gson

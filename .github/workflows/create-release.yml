@@ -14,12 +14,12 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist --no-daemon
@@ -31,7 +31,7 @@ jobs:
           tagRegexGroup: 1   # Optional. Default is 1.
     - name: Create Distribution   
       run: distribution\create-distribution-jar.bat ${{ steps.tagName.outputs.tag }}   
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}.jar'
           release-tag: v${{ steps.tagName.outputs.tag }}
@@ -42,12 +42,12 @@ jobs:
     runs-on: [ubuntu-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -61,7 +61,7 @@ jobs:
           tagRegexGroup: 1   # Optional. Default is 1.
     - name: Create Distribution   
       run: distribution/create-distribution-linux-x64.sh ${{ steps.tagName.outputs.tag }}
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-linux-x64.zip'
           release-tag: v${{ steps.tagName.outputs.tag }}    
@@ -72,12 +72,12 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist --no-daemon
@@ -91,7 +91,7 @@ jobs:
 #      run: $env:APP_VERSION=${{ steps.tagName.outputs.tag }}
     - name: Create Distribution   
       run: distribution\create-distribution-windows-x64.bat ${{ steps.tagName.outputs.tag }}   
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-windows-x64.msi'
           release-tag: v${{ steps.tagName.outputs.tag }}    
@@ -102,12 +102,12 @@ jobs:
     runs-on: [macos-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -121,7 +121,7 @@ jobs:
           tagRegexGroup: 1   # Optional. Default is 1.     
     - name: Create Distribution   
       run: distribution/create-distribution-macos-x64.sh ${{ steps.tagName.outputs.tag }}   
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
           release-tag: v${{ steps.tagName.outputs.tag }}    

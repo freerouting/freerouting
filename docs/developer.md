@@ -13,7 +13,7 @@
 
 ### Requirements
 
-- Java >= 17 ([Adoptium Temurin 17 JRE](https://adoptium.net/temurin/releases/))
+- Java >= 21 ([Adoptium Temurin 21 JRE](https://adoptium.net/temurin/releases/))
 - [Gradle 6.x](https://gradle.org/releases/)
 - Internet connection (dependencies are downloaded automatically)
 - For IDE integration: Gradle extension (not necessary for command line usage)

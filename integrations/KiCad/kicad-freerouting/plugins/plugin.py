@@ -42,7 +42,7 @@ def detect_os_architecture():
 def check_latest_jre_version(os_name, architecture):
     latest_jre_info_request = urllib.request.Request(
         # Docs at https://api.adoptium.net/q/swagger-ui/
-        f"https://api.adoptium.net/v3/assets/latest/17/hotspot?image_type=jre&os={os_name}&architecture={architecture}",
+        f"https://api.adoptium.net/v3/assets/latest/21/hotspot?image_type=jre&os={os_name}&architecture={architecture}",
         headers={"User-Agent": ""}  # The server rejects requests with the default UA
     )
     jre_version_info = json.loads(urllib.request.urlopen(latest_jre_info_request).read())[0]
@@ -52,14 +52,14 @@ def check_latest_jre_version(os_name, architecture):
     
 
 def get_local_java_executable_path(os_name):
-    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-17.*.*+*-jre", "bin", "java")
+    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-21.*.*+*-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
         
     java_found_exes = sorted(
-        [p for p in filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)) if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p)],
+        [p for p in filter(lambda p: os.path.isfile(p), glob.glob(java_exe_path)) if re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p)],
         reverse=True,
-        key=lambda p: re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-17\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
+        key=lambda p: re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
     )
 
     if len(java_found_exes) >= 1:
@@ -198,16 +198,16 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         if (javaMajorVersion == 0):
             javaInstallNow = wx_show_warning("""
-            Java JRE version 17 or higher is required, but you have no Java installed or you have no access to it because you used Flatpak to install KiCad.
+            Java JRE version 21 or higher is required, but you have no Java installed or you have no access to it because you used Flatpak to install KiCad.
             Would you like to install it now?
             (This can take up to a few minutes.)
             """)
             if (javaInstallNow != wx.ID_YES):
                 return False            
         else:
-            if (javaMajorVersion < 17):
+            if (javaMajorVersion < 21):
                 javaInstallNow = wx_show_warning("""
-                Java JRE version 17 or higher is required, but you have Java version {0} installed.
+                Java JRE version 21 or higher is required, but you have Java version {0} installed.
                 Would you like to install a newer one now?
                 (This can take up to a few minutes.)
                 """.format(javaVersion))
@@ -215,12 +215,12 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                     return False
             
         if (javaInstallNow == wx.ID_YES):
-            self.java_path = install_java_jre_17()
+            self.java_path = install_java_jre_21()
             
         javaVersion = get_java_version(self.java_path)
         javaMajorVersion = int(javaVersion.split(".")[0])            
         
-        if javaMajorVersion < 17:
+        if javaMajorVersion < 21:
             wx_show_error("""
             Java JRE installation failed, so we can't run Freerouting at the moment.
             You can download the latest Java JRE from https://adoptium.net/temurin/releases and install it manually. KiCad must be restarted after the installation.
@@ -372,7 +372,7 @@ def download_with_progress_bar(url):
     # Return temp filename
     return urllib.request.urlretrieve(url, reporthook=download_progress_hook)[0]
 
-def install_java_jre_17():
+def install_java_jre_21():
     # Get platform information and the appropriate URL
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
@@ -384,8 +384,8 @@ def install_java_jre_17():
         jre_version, jre_url = check_latest_jre_version(os_name, architecture)
     except Exception:
         print("Couldn't connect to the server")
-        # Find all matching JRE 17
-        jre_version = "17.*.*+*"
+        # Find all matching JRE 21
+        jre_version = "21.*.*+*"
         jre_url = None
         return local_java_exe
         

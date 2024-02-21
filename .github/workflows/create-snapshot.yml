@@ -14,7 +14,7 @@ jobs:
     runs-on: [ubuntu-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Delete old SNAPSHOT assets
       uses: mknejp/delete-release-assets@v1
       with:
@@ -33,18 +33,18 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist --no-daemon
     - name: Create Distribution   
       run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*.jar'
           release-tag: SNAPSHOT
@@ -57,12 +57,12 @@ jobs:
     runs-on: [ubuntu-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -70,7 +70,7 @@ jobs:
       run: ./gradlew dist
     - name: Create Distribution   
       run: distribution/create-distribution-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
           release-tag: SNAPSHOT
@@ -83,18 +83,18 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Build with Gradle
       run: .\gradlew.bat dist --no-daemon
     - name: Create Distribution   
       run: distribution\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"   
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-windows-x64.msi'
           release-tag: SNAPSHOT 
@@ -107,12 +107,12 @@ jobs:
     runs-on: [macos-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3 
+      uses: actions/setup-java@v4
       with:
           distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -120,7 +120,7 @@ jobs:
       run: ./gradlew dist
     - name: Create Distribution   
       run: distribution/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       with:
           files: './distribution/freerouting-SNAPSHOT-*-macos-x64.dmg'
           release-tag: SNAPSHOT

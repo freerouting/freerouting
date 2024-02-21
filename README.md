@@ -88,7 +88,7 @@ You will need the following steps to make it work:
 2. Install [Java JRE](https://adoptium.net/temurin/releases/)
     * Select your operating system and architecture
     * Select `JRE` as package type
-    * Select `17` as version
+    * Select `21` as version
 4. Run the downloaded JAR file using the installed java
 
 ```powershell
@@ -102,4 +102,4 @@ java -jar freerouting-1.9.0.jar
 
 We ❤️ all our contributors; this project wouldn’t be what it is without you!
 
-If you want to help out, please consider replying to [issues](https://github.com/freerouting/freerouting/issues), creating new ones, or even send your fixes and improvements as [pull requests](https://github.com/freerouting/freerouting/pulls). [Our developer documention](/docs/developer.md) can help you with the technicalities.
+If you want to help out, please consider replying to [issues](https://github.com/freerouting/freerouting/issues), creating new ones, or even send your fixes and improvements as [pull requests](https://github.com/freerouting/freerouting/pulls). [Our developer documentation](/docs/developer.md) can help you with the technicalities.
