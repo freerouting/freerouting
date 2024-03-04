@@ -20,18 +20,21 @@ public class VersionChecker implements Runnable {
 
   @Override
   public void run() {
-    HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create(GITHUB_RELEASES_URL))
-        .build();
+    try (HttpClient client = HttpClient.newHttpClient()) {
+      HttpRequest request = HttpRequest.newBuilder()
+          .uri(URI.create(GITHUB_RELEASES_URL))
+          .build();
 
-    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-        .thenApply(HttpResponse::body)
-        .thenAccept(this::processResponse)
-        .exceptionally(e -> {
-          e.printStackTrace();
-          return null;
-        });
+      client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+          .thenApply(HttpResponse::body)
+          .thenAccept(this::processResponse)
+          .exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+          });
+    } catch (NoClassDefFoundError e) {
+      FRLogger.warn("Failed to check for new version: " + e.getMessage());
+    }
   }
 
   private void processResponse(String responseBody) {
