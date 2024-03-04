@@ -10,10 +10,14 @@ import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.logger.LogEntries;
+import app.freerouting.logger.LogEntry;
+import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import java.awt.BorderLayout;
@@ -165,26 +169,59 @@ public class BoardFrame extends WindowBase {
       curr_menubar = BoardMenuBar.get_instance(this, false, session_file_option);
       FRLogger.warn("Online-Help deactivated because system file jh.jar is missing");
     }
+
+    // Set the menu bar of this frame.
     this.menubar = curr_menubar;
     this.help_system_used = curr_help_system_used;
     setJMenuBar(this.menubar);
 
+    // Set the toolbar panel to the top of the frame, just above the canvas.
     this.toolbar_panel = new BoardToolbar(this);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
+    // Create and move the status bar one-liners (like current layer, cursor position, etc.) below the canvas.
     this.message_panel = new BoardPanelStatus(this.locale);
     this.add(this.message_panel, BorderLayout.SOUTH);
 
+    this.message_panel.addErrorOrWarningLabelClickedListener(
+        () -> {
+          LogEntries logEntries = FRLogger.getLogEntries();
+
+          // Filter the log entries that are not errors or warnings
+          LogEntries filteredLogEntries = new LogEntries();
+          for (LogEntry entry : logEntries.getEntries()) {
+            if (entry.getType() == LogEntryType.Error || entry.getType() == LogEntryType.Warning || entry.getType() == LogEntryType.Info) {
+              filteredLogEntries.add(entry.getType(),entry.getMessage());
+            }
+          }
+
+          // Show a dialog box with the latest log entries
+          JTextArea textArea = new JTextArea(filteredLogEntries.getAsString());
+          JScrollPane scrollPane = new JScrollPane(textArea);
+          scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+          scrollPane.setPreferredSize(new Dimension(1000, 600));
+
+          int messageType = (filteredLogEntries.getErrorCount() > 0) ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+
+          JOptionPane.showMessageDialog(null, scrollPane, resources.getString("logs_window_title"), messageType);
+
+        });
+
+    // DEPRECATED: we don't use this toolbar anymore
     this.select_toolbar = new BoardToolbarSelectedItem(this, p_option == Option.EXTENDED_TOOL_BAR);
 
+    // Screen messages are displayed in the status bar, below the canvas.
     this.screen_messages =
         new ScreenMessages(
+            this.message_panel.errorLabel,
+            this.message_panel.warningLabel,
             this.message_panel.status_message,
             this.message_panel.add_message,
             this.message_panel.current_layer,
             this.message_panel.mouse_position,
             this.locale);
 
+    // The scroll pane for the canvas of the routing board.
     this.scroll_pane = new JScrollPane();
     this.scroll_pane.setPreferredSize(new Dimension(1150, 800));
     this.scroll_pane.setVerifyInputWhenFocusTarget(false);

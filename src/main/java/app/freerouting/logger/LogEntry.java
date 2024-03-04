@@ -33,6 +33,14 @@ public class LogEntry {
     this.exception = exception;
   }
 
+  public LogEntryType getType() {
+    return this.type;
+  }
+
+  public String getMessage() {
+    return this.message;
+  }
+
   @Override
   public String toString() {
     return String.format("%-7s", this.type.toString().toUpperCase()) + " " + this.message;

@@ -44,10 +44,28 @@ public class LogEntries {
   public void add(LogEntryType type, String message)
   {
     this.add(type, message, null);
+
+    // Raise the event
+    for (LogEntryAddedListener listener : listeners)
+    {
+      listener.logEntryAdded(type, message);
+    }
   }
 
   public void add(LogEntryType type, String message, Throwable exception)
   {
     entries.add(new LogEntry(type, message, exception));
+  }
+
+  // Event to be raised when a log entry is added
+  public static interface LogEntryAddedListener {
+    void logEntryAdded(LogEntryType type, String message);
+  }
+
+  private final List<LogEntryAddedListener> listeners = new ArrayList<>();
+
+  public void addLogEntryAddedListener(LogEntryAddedListener listener)
+  {
+    listeners.add(listener);
   }
 }

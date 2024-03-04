@@ -29,6 +29,7 @@ import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
+import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
@@ -107,6 +108,16 @@ public class BoardHandling extends BoardHandlingHeadless {
     this.set_interactive_state(SelectMenuState.get_instance(this, activityReplayFile));
     this.resources =
         ResourceBundle.getBundle("app.freerouting.interactive.BoardHandling", p_locale);
+
+    LogEntries.LogEntryAddedListener listener = this::logEntryAdded;
+    FRLogger.getLogEntries().addLogEntryAddedListener(listener);
+  }
+
+  private void logEntryAdded(LogEntryType logEntryType, String s) {
+    if ((logEntryType == LogEntryType.Error) || (logEntryType == LogEntryType.Warning)) {
+      LogEntries entries = FRLogger.getLogEntries();
+      screen_messages.set_error_and_warning_count(entries.getErrorCount(), entries.getWarningCount());
+    }
   }
 
   /** Return true, if the board is set to read only. */
@@ -836,11 +847,8 @@ public class BoardHandling extends BoardHandlingHeadless {
       return DsnFile.ReadResult.ERROR;
     }
 
-    LogEntries logEntries = FRLogger.getLogEntries();
-
     DsnFile.ReadResult read_result;
     try {
-      logEntries.clear();
       read_result = DsnFile.read(p_design, this, p_observers, p_item_id_no_generator, p_test_level);
     } catch (Exception e) {
       read_result = DsnFile.ReadResult.ERROR;
@@ -858,21 +866,6 @@ public class BoardHandling extends BoardHandlingHeadless {
       );
       this.set_layer(0);
     }
-
-    if ((logEntries.getWarningCount() > 0) || (logEntries.getErrorCount() > 0)) {
-      // Show a dialog box with the latest log entries
-      JTextArea textArea = new JTextArea(logEntries.getAsString());
-      JScrollPane scrollPane = new JScrollPane(textArea);
-      scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-      scrollPane.setPreferredSize(new Dimension(1000, 600));
-
-      if (logEntries.getErrorCount() > 0) {
-        JOptionPane.showMessageDialog(null, scrollPane, resources.getString("dsn_reader_modal_title"), JOptionPane.ERROR_MESSAGE);
-      } else {
-        JOptionPane.showMessageDialog(null, scrollPane, resources.getString("dsn_reader_modal_title"), JOptionPane.WARNING_MESSAGE);
-      }
-    }
-    logEntries.clear();
 
     try {
       p_design.close();

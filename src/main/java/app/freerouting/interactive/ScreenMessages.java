@@ -8,7 +8,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/** Text fields to display messages on the screen. */
+/** Generate language-specific texts for fields at the bottom of the screen, below the PCB frame. */
 public class ScreenMessages {
 
   private static final String empty_string = "            ";
@@ -18,6 +18,8 @@ public class ScreenMessages {
   private final String target_layer_string;
   /** The number format for displaying the trace length */
   private final NumberFormat number_format;
+  final JLabel errorLabel;
+  final JLabel warningLabel;
   private final JLabel add_field;
   private final JLabel status_field;
   private final JLabel layer_field;
@@ -25,8 +27,10 @@ public class ScreenMessages {
   private String prev_target_layer_name = empty_string;
   private boolean write_protected = false;
 
-  /** Creates a new instance of ScreenMessageFields */
+  /** Creates a new instance of ScreenMessages */
   public ScreenMessages(
+      JLabel errorLabel,
+      JLabel warningLabel,
       JLabel p_status_field,
       JLabel p_add_field,
       JLabel p_layer_field,
@@ -37,6 +41,8 @@ public class ScreenMessages {
     locale = p_locale;
     active_layer_string = resources.getString("current_layer") + " ";
     target_layer_string = resources.getString("target_layer") + " ";
+    this.errorLabel = errorLabel;
+    this.warningLabel = warningLabel;
     status_field = p_status_field;
     add_field = p_add_field;
     layer_field = p_layer_field;
@@ -46,6 +52,12 @@ public class ScreenMessages {
     this.number_format = NumberFormat.getInstance(p_locale);
     this.number_format.setMinimumFractionDigits(2);
     this.number_format.setMaximumFractionDigits(2);
+  }
+
+  public void set_error_and_warning_count(int errorsCount, int warningCount)
+  {
+    errorLabel.setText(Integer.toString(errorsCount));
+    warningLabel.setText(Integer.toString(warningCount));
   }
 
   /** Sets the message in the status field. */
