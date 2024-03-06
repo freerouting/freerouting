@@ -1,44 +1,41 @@
 package app.freerouting.gui;
 
-import java.awt.FlowLayout;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 /**
- * Status bar at the lower border of the board frame containing amongst others the message line and the
- * current layer and cursor position.
+ * The `BoardPanelStatus` class represents a status bar at the lower border of the board frame.
+ * It contains components such as message lines, current layer indicator, and cursor position.
  */
 class BoardPanelStatus extends JPanel {
   // An icon for errors and warnings
-  final JLabel errorLabel;
-  final JLabel warningLabel;
-  final JLabel status_message;
-  final JLabel add_message;
-  final JLabel current_layer;
-  final JLabel mouse_position;
-  /** Creates a new instance of BoardStatusPanel */
-  BoardPanelStatus(Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.gui.BoardPanelStatus", p_locale);
-    this.setLayout(new BorderLayout());
+  public final JLabel errorLabel;
+  public final JLabel warningLabel;
+  public final JLabel statusMessage;
+  public final JLabel additionalMessage;
+  public final JLabel currentLayer;
+  public final JLabel mousePosition;
 
-    // The status bar is separated into two parts.
+  // List to hold the listeners for error or warning label clicks
+  private final List<ErrorOrWarningLabelClickedListener> errorOrWarningLabelClickedListeners = new ArrayList<>();
 
-    // The left part contains the warnings and errors icons and status message.
-    JPanel left_message_panel = new JPanel();
-    left_message_panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+  /**
+   * Creates a new instance of the `BoardPanelStatus` class.
+   *
+   * @param locale the locale to use for resource bundles
+   */
+  BoardPanelStatus(Locale locale) {
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.BoardPanelStatus", locale);
+    setLayout(new BorderLayout());
+
+    // Left panel with warnings, errors, and status messages
+    JPanel leftMessagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
     // Get warning and error icons from UIManager
     Icon originalWarningIcon = UIManager.getIcon("OptionPane.warningIcon");
@@ -48,101 +45,123 @@ class BoardPanelStatus extends JPanel {
     Icon warningIcon = new ImageIcon(((ImageIcon) originalWarningIcon).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
     Icon errorIcon = new ImageIcon(((ImageIcon) originalErrorIcon).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
-    // You can then use these icons in your JLabels or other components
+    // Initialize labels with icons
     warningLabel = new JLabel("0", warningIcon, SwingConstants.LEADING);
     errorLabel = new JLabel("0", errorIcon, SwingConstants.LEADING);
 
-    // Add the components to the status bar
-    left_message_panel.add(errorLabel, BorderLayout.WEST);
-    left_message_panel.add(warningLabel, BorderLayout.WEST);
+    // Add error and warning labels
+    leftMessagePanel.add(errorLabel, BorderLayout.WEST);
+    leftMessagePanel.add(warningLabel, BorderLayout.WEST);
 
-    // Raise an event if the user clicks on the error or warning label
-    errorLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-      @Override
-      public void mouseClicked(java.awt.event.MouseEvent e) {
-        // Raise the event
-        for (ErrorOrWarningLabelClickedListener listener : errorOrWarningLabelClickedListeners) {
-          listener.errorOrWarningLabelClicked();
-        }
-      }
-    });
-    warningLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-      @Override
-      public void mouseClicked(java.awt.event.MouseEvent e) {
-        // Raise the event
-        for (ErrorOrWarningLabelClickedListener listener : errorOrWarningLabelClickedListeners) {
-          listener.errorOrWarningLabelClicked();
-        }
-      }
-    });
+    // Add mouse listeners for error and warning labels
+    addErrorOrWarningLabelClickedListener();
 
     // Add margin to the right of the labels
     int top = 0;
     int left = 0;
     int bottom = 0;
-    int right = 10; // Adjust the right margin as needed
+    int right = 10;
     warningLabel.setBorder(new EmptyBorder(top, left, bottom, right));
     errorLabel.setBorder(new EmptyBorder(top, left, bottom, right));
 
-    status_message = new JLabel();
-    status_message.setHorizontalAlignment(SwingConstants.CENTER);
-    status_message.setText(resources.getString("status_line"));
-    left_message_panel.add(status_message, BorderLayout.CENTER);
+    // Initialize status message label
+    statusMessage = new JLabel();
+    statusMessage.setHorizontalAlignment(SwingConstants.CENTER);
+    statusMessage.setText(resources.getString("status_line"));
+    leftMessagePanel.add(statusMessage, BorderLayout.CENTER);
 
-    add_message = new JLabel();
-    add_message.setText(resources.getString("additional_text_field"));
-    add_message.setMaximumSize(new Dimension(300, 14));
-    add_message.setMinimumSize(new Dimension(140, 14));
-    add_message.setPreferredSize(new Dimension(180, 14));
-    left_message_panel.add(add_message, BorderLayout.EAST);
+    // Initialize additional message label
+    additionalMessage = new JLabel();
+    additionalMessage.setText(resources.getString("additional_text_field"));
+    additionalMessage.setMaximumSize(new Dimension(300, 14));
+    additionalMessage.setMinimumSize(new Dimension(140, 14));
+    additionalMessage.setPreferredSize(new Dimension(180, 14));
+    leftMessagePanel.add(additionalMessage, BorderLayout.EAST);
+    add(leftMessagePanel, BorderLayout.CENTER);
 
-    this.add(left_message_panel, BorderLayout.CENTER);
+    // Right panel with current layer and cursor position
+    JPanel rightMessagePanel = new JPanel(new BorderLayout());
+    rightMessagePanel.setMinimumSize(new Dimension(200, 20));
+    rightMessagePanel.setOpaque(false);
+    rightMessagePanel.setPreferredSize(new Dimension(450, 20));
 
-    // The right part contains the current layer and cursor position.
-    JPanel right_message_panel = new JPanel();
-    right_message_panel.setLayout(new BorderLayout());
+    // Initialize current layer label
+    currentLayer = new JLabel();
+    currentLayer.setText(resources.getString("current_layer"));
+    rightMessagePanel.add(currentLayer, BorderLayout.CENTER);
 
-    right_message_panel.setMinimumSize(new Dimension(200, 20));
-    right_message_panel.setOpaque(false);
-    right_message_panel.setPreferredSize(new Dimension(450, 20));
+    // Create cursor panel
+    JPanel cursorPanel = new JPanel(new BorderLayout());
+    cursorPanel.setMinimumSize(new Dimension(220, 14));
+    cursorPanel.setPreferredSize(new Dimension(220, 14));
 
-    current_layer = new JLabel();
-    current_layer.setText(resources.getString("current_layer"));
-    right_message_panel.add(current_layer, BorderLayout.CENTER);
-
-    JPanel cursor_panel = new JPanel();
-    cursor_panel.setLayout(new BorderLayout());
-    cursor_panel.setMinimumSize(new Dimension(220, 14));
-    cursor_panel.setPreferredSize(new Dimension(220, 14));
-
+    // Initialize cursor label
     JLabel cursor = new JLabel();
     cursor.setHorizontalAlignment(SwingConstants.CENTER);
     cursor.setText(resources.getString("cursor"));
     cursor.setMaximumSize(new Dimension(100, 14));
     cursor.setMinimumSize(new Dimension(50, 14));
     cursor.setPreferredSize(new Dimension(50, 14));
-    cursor_panel.add(cursor, BorderLayout.WEST);
+    cursorPanel.add(cursor, BorderLayout.WEST);
 
-    mouse_position = new JLabel();
-    mouse_position.setText("(0,0)");
-    mouse_position.setMaximumSize(new Dimension(170, 14));
-    mouse_position.setPreferredSize(new Dimension(170, 14));
-    cursor_panel.add(mouse_position, BorderLayout.EAST);
+    // Initialize mouse position label
+    mousePosition = new JLabel();
+    mousePosition.setText("(0,0)");
+    mousePosition.setMaximumSize(new Dimension(170, 14));
+    mousePosition.setPreferredSize(new Dimension(170, 14));
+    cursorPanel.add(mousePosition, BorderLayout.EAST);
 
-    right_message_panel.add(cursor_panel, BorderLayout.EAST);
-
-    this.add(right_message_panel, BorderLayout.EAST);
+    rightMessagePanel.add(cursorPanel, BorderLayout.EAST);
+    add(rightMessagePanel, BorderLayout.EAST);
   }
 
-  // Event to be raised when a log entry is added
-  public static interface ErrorOrWarningLabelClickedListener {
-    void errorOrWarningLabelClicked();
+  /**
+   * Adds mouse listeners for error and warning labels to handle click events.
+   */
+  private void addErrorOrWarningLabelClickedListener() {
+    // Raise an event if the user clicks on the error or warning label
+    errorLabel.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        raiseErrorOrWarningLabelClickedEvent();
+      }
+    });
+
+    warningLabel.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        raiseErrorOrWarningLabelClickedEvent();
+      }
+    });
   }
 
-  private final List<ErrorOrWarningLabelClickedListener> errorOrWarningLabelClickedListeners = new ArrayList<>();
+  /**
+   * Raises the `ErrorOrWarningLabelClicked` event for all registered listeners.
+   */
+  private void raiseErrorOrWarningLabelClickedEvent() {
+    for (ErrorOrWarningLabelClickedListener listener : errorOrWarningLabelClickedListeners) {
+      listener.errorOrWarningLabelClicked();
+    }
+  }
 
-  public void addErrorOrWarningLabelClickedListener(ErrorOrWarningLabelClickedListener listener)
-  {
+  /**
+   * Adds an `ErrorOrWarningLabelClickedListener` to the list of listeners.
+   *
+   * @param listener the listener to be added
+   */
+  public void addErrorOrWarningLabelClickedListener(ErrorOrWarningLabelClickedListener listener) {
     errorOrWarningLabelClickedListeners.add(listener);
+  }
+
+  /**
+   * The `ErrorOrWarningLabelClickedListener` interface defines a method to handle
+   * the click event on the error or warning labels.
+   */
+  @FunctionalInterface
+  public interface ErrorOrWarningLabelClickedListener {
+    /**
+     * Invoked when the error or warning label is clicked.
+     */
+    void errorOrWarningLabelClicked();
   }
 }

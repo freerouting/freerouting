@@ -215,10 +215,10 @@ public class BoardFrame extends WindowBase {
         new ScreenMessages(
             this.message_panel.errorLabel,
             this.message_panel.warningLabel,
-            this.message_panel.status_message,
-            this.message_panel.add_message,
-            this.message_panel.current_layer,
-            this.message_panel.mouse_position,
+            this.message_panel.statusMessage,
+            this.message_panel.additionalMessage,
+            this.message_panel.currentLayer,
+            this.message_panel.mousePosition,
             this.locale);
 
     // The scroll pane for the canvas of the routing board.
