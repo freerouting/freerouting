@@ -38,7 +38,7 @@ class BoardToolbar extends JPanel {
   private final JToggleButton toolbar_route_button;
   private final JToggleButton toolbar_drag_button;
   /** Creates a new instance of BoardToolbarPanel */
-  BoardToolbar(BoardFrame p_board_frame) {
+  BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode) {
     this.board_frame = p_board_frame;
 
     ResourceBundle resources =
@@ -57,16 +57,22 @@ class BoardToolbar extends JPanel {
     final JLabel jLabel1 = new JLabel();
 
     left_toolbar.setMaximumSize(new Dimension(1200, 30));
-    toolbar_button_group.add(toolbar_select_button);
-    toolbar_select_button.setSelected(true);
-    toolbar_select_button.setText(resources.getString("select_button"));
-    toolbar_select_button.setToolTipText(resources.getString("select_button_tooltip"));
-    toolbar_select_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_select_menu_state());
-    toolbar_select_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_select_button", toolbar_select_button.getText()));
 
-    left_toolbar.add(toolbar_select_button);
+    if (!p_disable_select_mode) {
+      toolbar_button_group.add(toolbar_select_button);
+      toolbar_select_button.setSelected(true);
+      toolbar_select_button.setText(resources.getString("select_button"));
+      toolbar_select_button.setToolTipText(resources.getString("select_button_tooltip"));
+      toolbar_select_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_select_menu_state());
+      toolbar_select_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_select_button", toolbar_select_button.getText()));
+
+      left_toolbar.add(toolbar_select_button);
+    }
 
     toolbar_button_group.add(toolbar_route_button);
+    if (p_disable_select_mode) {
+      toolbar_route_button.setSelected(true);
+    }
     toolbar_route_button.setText(resources.getString("route_button"));
     toolbar_route_button.setToolTipText(resources.getString("route_button_tooltip"));
     toolbar_route_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_route_menu_state());

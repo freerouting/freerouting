@@ -42,6 +42,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -591,12 +592,19 @@ public class MainApplication extends WindowBase {
             p_locale,
             !p_is_test_version,
             p_save_intermediate_stages,
-            p_optimization_improvement_threshold);
+            p_optimization_improvement_threshold,
+            startupOptions.disable_feature_select_mode);
     boolean read_ok =
         new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
     if (!read_ok) {
       return null;
     }
+
+    if (startupOptions.disable_feature_select_mode)
+    {
+      new_frame.board_panel.board_handling.set_route_menu_state();
+    }
+
     new_frame.menubar.add_design_dependent_items();
     if (p_design_file.is_created_from_text_file()) {
       // Read the file  with the saved rules, if it is existing.

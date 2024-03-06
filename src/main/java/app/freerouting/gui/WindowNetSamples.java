@@ -155,7 +155,8 @@ public abstract class WindowNetSamples extends BoardSubWindow {
             p_locale,
             false,
             p_save_intermediate_stages,
-            p_optimization_improvement_threshold);
+            p_optimization_improvement_threshold,
+            true);
     boolean read_ok = new_frame.read(zip_input_stream, true, null);
     if (!read_ok) {
       return null;

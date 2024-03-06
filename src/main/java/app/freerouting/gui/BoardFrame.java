@@ -122,7 +122,8 @@ public class BoardFrame extends WindowBase {
       Locale p_locale,
       boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
-      float p_optimization_improvement_threshold) {
+      float p_optimization_improvement_threshold,
+      boolean p_disable_select_mode) {
     this(
         p_design,
         p_option,
@@ -132,7 +133,8 @@ public class BoardFrame extends WindowBase {
         p_locale,
         p_confirm_cancel,
         p_save_intermediate_stages,
-        p_optimization_improvement_threshold);
+        p_optimization_improvement_threshold,
+        p_disable_select_mode);
   }
   /**
    * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
@@ -147,7 +149,8 @@ public class BoardFrame extends WindowBase {
       Locale p_locale,
       boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
-      float p_optimization_improvement_threshold) {
+      float p_optimization_improvement_threshold,
+      boolean p_disable_select_mode) {
     super(800, 150);
 
     this.design_file = p_design;
@@ -176,7 +179,7 @@ public class BoardFrame extends WindowBase {
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
-    this.toolbar_panel = new BoardToolbar(this);
+    this.toolbar_panel = new BoardToolbar(this, p_disable_select_mode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     // Create and move the status bar one-liners (like current layer, cursor position, etc.) below the canvas.
