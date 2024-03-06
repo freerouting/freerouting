@@ -496,7 +496,7 @@ public class FloatPoint implements Serializable {
     NumberFormat nf = NumberFormat.getInstance(p_locale);
     nf.setMinimumFractionDigits(fractionDigits);
     nf.setMaximumFractionDigits(fractionDigits);
-    return ("(" + String.format("%"+padding+"s", nf.format(x)) + " , " + String.format("%"+padding+"s", nf.format(y)) + ")");
+    return ("X " + String.format("%"+padding+"s", nf.format(x)) + "   Y " + String.format("%"+padding+"s", nf.format(-y)) + "");
   }
 
   @Override

@@ -34,6 +34,10 @@ public class CoordinateTransform implements Serializable {
     user_unit_factor = p_user_unit_factor;
     board_unit_factor = p_board_unit_factor;
     scale_factor = board_unit_factor / user_unit_factor;
+
+    if (user_unit_factor != 1.0) {
+      throw new RuntimeException("user_unit_factor must be 1.0");
+    }
   }
 
   /** Scale a value from the board to the user coordinate system. */

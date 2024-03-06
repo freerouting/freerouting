@@ -514,19 +514,9 @@ public class BoardHandling extends BoardHandlingHeadless {
         new GraphicsContext(p_bounding_box, panel_size, p_layer_structure, this.locale);
   }
 
-  /** Changes the factor of the user unit. */
-  public void change_user_unit_factor(double p_new_factor) {
-    CoordinateTransform old_transform = this.coordinate_transform;
-    this.coordinate_transform =
-        new CoordinateTransform(
-            p_new_factor,
-            old_transform.user_unit,
-            old_transform.board_unit_factor,
-            old_transform.board_unit);
-  }
-
   /** Changes the user unit. */
   public void change_user_unit(Unit p_unit) {
+    screen_messages.set_unit_label(p_unit.toString());
     CoordinateTransform old_transform = this.coordinate_transform;
     this.coordinate_transform =
         new CoordinateTransform(

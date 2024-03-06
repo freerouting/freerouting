@@ -21,6 +21,7 @@ class BoardPanelStatus extends JPanel {
   public final JLabel additionalMessage;
   public final JLabel currentLayer;
   public final JLabel mousePosition;
+  public final JLabel unitLabel;
 
   // List to hold the listeners for error or warning label clicks
   private final List<ErrorOrWarningLabelClickedListener> errorOrWarningLabelClickedListeners = new ArrayList<>();
@@ -95,23 +96,24 @@ class BoardPanelStatus extends JPanel {
     cursorPanel.setMinimumSize(new Dimension(220, 14));
     cursorPanel.setPreferredSize(new Dimension(220, 14));
 
-    // Initialize cursor label
-    JLabel cursor = new JLabel();
-    cursor.setHorizontalAlignment(SwingConstants.CENTER);
-    cursor.setText(resources.getString("cursor"));
-    cursor.setMaximumSize(new Dimension(100, 14));
-    cursor.setMinimumSize(new Dimension(50, 14));
-    cursor.setPreferredSize(new Dimension(50, 14));
-    cursorPanel.add(cursor, BorderLayout.WEST);
-
     // Initialize mouse position label
     mousePosition = new JLabel();
-    mousePosition.setText("(0,0)");
+    mousePosition.setText("X 0.00   Y 0.00");
     mousePosition.setMaximumSize(new Dimension(170, 14));
     mousePosition.setPreferredSize(new Dimension(170, 14));
-    cursorPanel.add(mousePosition, BorderLayout.EAST);
+    cursorPanel.add(mousePosition, BorderLayout.WEST);
+
+    // Initialize cursor label
+    unitLabel = new JLabel();
+    unitLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    unitLabel.setText("unit");
+    unitLabel.setMaximumSize(new Dimension(100, 14));
+    unitLabel.setMinimumSize(new Dimension(50, 14));
+    unitLabel.setPreferredSize(new Dimension(50, 14));
+    cursorPanel.add(unitLabel, BorderLayout.EAST);
 
     rightMessagePanel.add(cursorPanel, BorderLayout.EAST);
+
     add(rightMessagePanel, BorderLayout.EAST);
   }
 

@@ -24,6 +24,7 @@ public class ScreenMessages {
   private final JLabel status_field;
   private final JLabel layer_field;
   private final JLabel mouse_position;
+  private final JLabel unit_label;
   private String prev_target_layer_name = empty_string;
   private boolean write_protected = false;
 
@@ -35,6 +36,7 @@ public class ScreenMessages {
       JLabel p_add_field,
       JLabel p_layer_field,
       JLabel p_mouse_position,
+      JLabel p_unit_label,
       Locale p_locale) {
     resources =
         ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
@@ -47,6 +49,7 @@ public class ScreenMessages {
     add_field = p_add_field;
     layer_field = p_layer_field;
     mouse_position = p_mouse_position;
+    unit_label = p_unit_label;
     add_field.setText(empty_string);
 
     this.number_format = NumberFormat.getInstance(p_locale);
@@ -145,7 +148,11 @@ public class ScreenMessages {
     if (p_pos == null || this.mouse_position == null || this.write_protected) {
       return;
     }
-    this.mouse_position.setText(p_pos.to_string(this.locale, 1, 10));
+    this.mouse_position.setText(p_pos.to_string(this.locale, 2, 10));
+  }
+
+  public void set_unit_label(String p_unit) {
+    this.unit_label.setText(p_unit);
   }
 
   /**

@@ -32,7 +32,6 @@ import javax.swing.border.BevelBorder;
 /** Implements the toolbar panel of the board frame. */
 class BoardToolbar extends JPanel {
 
-  final JFormattedTextField unit_factor_field;
   final JComboBox<Unit> toolbar_unit_combo_box;
   private final BoardFrame board_frame;
   private final JToggleButton toolbar_select_button;
@@ -196,41 +195,12 @@ class BoardToolbar extends JPanel {
     // create the right toolbar
 
     final JToolBar right_toolbar = new JToolBar();
-    final JLabel unit_label = new JLabel();
-    NumberFormat number_format =
-        NumberFormat.getInstance(p_board_frame.get_locale());
-    number_format.setMaximumFractionDigits(7);
-    this.unit_factor_field = new JFormattedTextField(number_format);
-    final JLabel jLabel4 = new JLabel();
 
     right_toolbar.setAutoscrolls(true);
+
+    final JLabel unit_label = new JLabel();
     unit_label.setText(resources.getString("unit_button"));
     right_toolbar.add(unit_label);
-
-    unit_factor_field.setHorizontalAlignment(JTextField.CENTER);
-    unit_factor_field.setValue(1);
-    unit_factor_field.addKeyListener(
-        new KeyAdapter() {
-          @Override
-          public void keyTyped(KeyEvent evt) {
-            if (evt.getKeyChar() == '\n') {
-              Object input = unit_factor_field.getValue();
-              if (input instanceof Number) {
-                double input_value = ((Number) input).doubleValue();
-                if (input_value > 0) {
-                  board_frame.board_panel.board_handling.change_user_unit_factor(input_value);
-                }
-              }
-              double unit_factor =
-                  board_frame.board_panel.board_handling.coordinate_transform.user_unit_factor;
-              unit_factor_field.setValue(unit_factor);
-
-              board_frame.refresh_windows();
-            }
-          }
-        });
-
-    right_toolbar.add(unit_factor_field);
 
     toolbar_unit_combo_box = new JComboBox<>();
     toolbar_unit_combo_box.setModel(new DefaultComboBoxModel<>(Unit.values()));
@@ -239,8 +209,7 @@ class BoardToolbar extends JPanel {
     toolbar_unit_combo_box.setOpaque(false);
     toolbar_unit_combo_box.addActionListener(
         evt -> {
-          Unit new_unit =
-              (Unit) toolbar_unit_combo_box.getSelectedItem();
+          Unit new_unit = (Unit) toolbar_unit_combo_box.getSelectedItem();
           board_frame.board_panel.board_handling.change_user_unit(new_unit);
           board_frame.refresh_windows();
         });
@@ -248,9 +217,10 @@ class BoardToolbar extends JPanel {
 
     right_toolbar.add(toolbar_unit_combo_box);
 
-    jLabel4.setMaximumSize(new Dimension(30, 14));
-    jLabel4.setPreferredSize(new Dimension(30, 14));
-    right_toolbar.add(jLabel4);
+    final JLabel margin_on_right_label = new JLabel();
+    margin_on_right_label.setMaximumSize(new Dimension(30, 14));
+    margin_on_right_label.setPreferredSize(new Dimension(30, 14));
+    right_toolbar.add(margin_on_right_label);
 
     this.add(right_toolbar, BorderLayout.EAST);
   }

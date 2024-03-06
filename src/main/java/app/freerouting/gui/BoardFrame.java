@@ -219,6 +219,7 @@ public class BoardFrame extends WindowBase {
             this.message_panel.additionalMessage,
             this.message_panel.currentLayer,
             this.message_panel.mousePosition,
+            this.message_panel.unitLabel,
             this.locale);
 
     // The scroll pane for the canvas of the routing board.
@@ -242,41 +243,6 @@ public class BoardFrame extends WindowBase {
     this.pack();
   }
 
-  /** Creates a new board frame with the input design file embedded into a host cad software. */
-  public static BoardFrame get_embedded_instance(
-      String p_design_file_path_name,
-      BoardObservers p_observers,
-      IdNoGenerator p_id_no_generator,
-      Locale p_locale,
-      boolean p_save_intermediate_stages,
-      float p_optimization_improvement_threshold) {
-    final DesignFile design_file = DesignFile.get_instance(p_design_file_path_name);
-    if (design_file == null) {
-      WindowMessage.show("designfile not found");
-      return null;
-    }
-    BoardFrame board_frame =
-        new BoardFrame(
-            design_file,
-            BoardFrame.Option.SINGLE_FRAME,
-            TestLevel.RELEASE_VERSION,
-            p_observers,
-            p_id_no_generator,
-            p_locale,
-            false,
-            p_save_intermediate_stages,
-            p_optimization_improvement_threshold);
-
-    InputStream input_stream = design_file.get_input_stream();
-    boolean read_ok = board_frame.read(input_stream, true, null);
-    if (!read_ok) {
-      String error_message = "Unable to read design file with pathname " + p_design_file_path_name;
-      board_frame.setVisible(true); // to be able to display the status message
-      board_frame.screen_messages.set_status_message(error_message);
-    }
-    return board_frame;
-  }
-
   /** Reads interactive actions from a logfile. */
   void read_logfile(InputStream p_input_stream) {
     board_panel.board_handling.read_logfile(p_input_stream);
@@ -286,10 +252,8 @@ public class BoardFrame extends WindowBase {
    * Reads an existing board design from file. If p_is_import, the design is read from a specctra
    * dsn file. Returns false, if the file is invalid.
    */
-  boolean read(
-      InputStream p_input_stream,
-      boolean p_is_import,
-      JTextField p_message_field) {
+  boolean read(InputStream p_input_stream, boolean p_is_import, JTextField p_message_field)
+  {
     Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
     if (p_is_import) {
@@ -366,8 +330,6 @@ public class BoardFrame extends WindowBase {
     board_panel.init_colors();
     board_panel.board_handling.create_ratsnest();
     this.hilight_selected_button();
-    this.toolbar_panel.unit_factor_field.setValue(
-        board_panel.board_handling.coordinate_transform.user_unit_factor);
     this.toolbar_panel.toolbar_unit_combo_box.setSelectedItem(
         board_panel.board_handling.coordinate_transform.user_unit);
     this.setVisible(true);
@@ -797,9 +759,9 @@ public class BoardFrame extends WindowBase {
 
     @Override
     public void windowDeiconified(WindowEvent evt) {
-      for (int i = 0; i < permanent_subwindows.length; ++i) {
-        if (permanent_subwindows[i] != null) {
-          permanent_subwindows[i].parent_deiconified();
+      for (BoardSavableSubWindow permanentSubwindow : permanent_subwindows) {
+        if (permanentSubwindow != null) {
+          permanentSubwindow.parent_deiconified();
         }
       }
       for (BoardSubWindow curr_subwindow : temporary_subwindows) {
