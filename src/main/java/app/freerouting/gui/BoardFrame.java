@@ -740,6 +740,13 @@ public class BoardFrame extends WindowBase {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
           FRAnalytics.buttonClicked("board_confirm_exit_dialog_no", resources.getString("confirm_cancel"));
         } else {
+          try {
+            MainApplication.saveSettings();
+          }
+          catch (IOException e) {
+            FRLogger.error("Error saving settings to the freerouting.json file.", e);
+          }
+
           FRAnalytics.appClosed();
         }
       }

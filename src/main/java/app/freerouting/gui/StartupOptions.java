@@ -38,6 +38,7 @@ public class StartupOptions {
   transient String[] ignore_net_classes_by_autorouter = new String[0];
   public boolean disable_logging = false;
   public boolean disable_analytics = false;
+  public int analytics_modulo = 16;
   public final String user_id;
   public int dialog_confirmation_timeout = 20;
   public String host = "N/A";

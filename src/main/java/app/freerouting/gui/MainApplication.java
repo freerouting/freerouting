@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Instant;
@@ -277,7 +278,14 @@ public class MainApplication extends WindowBase {
 
     // initialize analytics
     FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION,"G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
-    FRAnalytics.setEnabled(!startupOptions.disable_analytics);
+    int analyticsModulo = Math.max(startupOptions.analytics_modulo, 1);
+    String userIdString = startupOptions.user_id.length() >= 4 ? startupOptions.user_id.substring(0, 4) : "0000";
+    int userIdValue = Integer.parseInt(userIdString, 16);
+    boolean allowAnalytics = !startupOptions.disable_analytics && (userIdValue % analyticsModulo == 0);
+    if (!allowAnalytics) {
+      FRLogger.debug("Analytics are disabled");
+    }
+    FRAnalytics.setEnabled(allowAnalytics);
     FRAnalytics.setUserId(startupOptions.user_id);
     FRAnalytics.identify();
     try {
@@ -637,6 +645,10 @@ public class MainApplication extends WindowBase {
       new_frame.refresh_windows();
     }
     return new_frame;
+  }
+
+  public static void saveSettings() throws IOException {
+    StartupOptions.save(startupOptions);
   }
 
   /** opens a board design from a binary file or a specctra dsn file. */
