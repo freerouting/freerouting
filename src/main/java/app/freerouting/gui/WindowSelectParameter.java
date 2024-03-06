@@ -123,6 +123,10 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       settings_select_layer_name_arr[i] = new JRadioButton();
       settings_select_layer_name_arr[i].setText(curr_layer.name);
       settings_select_layer_name_arr[i].setEnabled(curr_layer.is_signal);
+      // Explain in a tooltip why the layer is disabled
+      if (!curr_layer.is_signal) {
+        settings_select_layer_name_arr[i].setToolTipText(resources.getString("disabled_layer_tooltip"));
+      }
       gridbag.setConstraints(settings_select_layer_name_arr[i], gridbag_constraints);
       main_panel.add(settings_select_layer_name_arr[i]);
       current_layer_button_group.add(settings_select_layer_name_arr[i]);
