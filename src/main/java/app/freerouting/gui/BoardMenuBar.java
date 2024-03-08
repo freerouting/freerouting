@@ -6,14 +6,14 @@ import javax.swing.JMenuBar;
 /** Creates the menu bar of a board frame together with its menu items. */
 class BoardMenuBar extends JMenuBar {
 
-  private BoardMenuFile file_menu;
+  public BoardMenuFile fileMenu;
 
   /** Creates a new BoardMenuBar together with its menus */
   static BoardMenuBar get_instance(
-      BoardFrame p_board_frame, boolean p_help_system_used, boolean p_session_file_option) {
+      BoardFrame p_board_frame, boolean p_help_system_used, boolean p_session_file_option, boolean p_disable_feature_macros) {
     BoardMenuBar menubar = new BoardMenuBar();
-    menubar.file_menu = BoardMenuFile.get_instance(p_board_frame, p_session_file_option);
-    menubar.add(menubar.file_menu);
+    menubar.fileMenu = BoardMenuFile.get_instance(p_board_frame, p_session_file_option, p_disable_feature_macros);
+    menubar.add(menubar.fileMenu);
     JMenu display_menu = BoardMenuDisplay.get_instance(p_board_frame);
     menubar.add(display_menu);
     JMenu parameter_menu = BoardMenuParameter.get_instance(p_board_frame);
@@ -27,9 +27,5 @@ class BoardMenuBar extends JMenuBar {
     JMenu help_menu = new BoardMenuHelp(p_board_frame);
     menubar.add(help_menu);
     return menubar;
-  }
-
-  void add_design_dependent_items() {
-    this.file_menu.add_design_dependent_items();
   }
 }

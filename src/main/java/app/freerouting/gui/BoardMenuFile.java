@@ -5,6 +5,9 @@ import app.freerouting.board.TestLevel;
 import app.freerouting.logger.FRLogger;
 
 import app.freerouting.management.FRAnalytics;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -24,6 +27,9 @@ public class BoardMenuFile extends JMenu {
   private final boolean session_file_option;
   private final ResourceBundle resources;
 
+  private List<Consumer<File>> openEventListeners = new ArrayList<>();
+  private List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
+
   /** Creates a new instance of BoardFileMenu */
   private BoardMenuFile(BoardFrame p_board_frame, boolean p_session_file_option) {
     session_file_option = p_session_file_option;
@@ -35,122 +41,145 @@ public class BoardMenuFile extends JMenu {
 
   /** Returns a new file menu for the board frame. */
   public static BoardMenuFile get_instance(
-      BoardFrame p_board_frame, boolean p_session_file_option) {
+      BoardFrame p_board_frame, boolean p_session_file_option, boolean p_disable_feature_macros) {
     final BoardMenuFile file_menu = new BoardMenuFile(p_board_frame, p_session_file_option);
     file_menu.setText(file_menu.resources.getString("file"));
 
-    // Create the menu items.
-
-    if (!p_session_file_option) {
-      JMenuItem file_save_menuitem = new JMenuItem();
-      file_save_menuitem.setText(file_menu.resources.getString("save"));
-      file_save_menuitem.setToolTipText(file_menu.resources.getString("save_tooltip"));
-      file_save_menuitem.addActionListener(
-          evt -> {
-            boolean save_ok = file_menu.board_frame.save();
-            file_menu.board_frame.board_panel.board_handling.close_files();
-            if (save_ok) {
-              file_menu.board_frame.screen_messages.set_status_message(
-                  file_menu.resources.getString("save_message"));
-            }
-          });
-      file_save_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_menuitem", file_save_menuitem.getText()));
-
-      file_menu.add(file_save_menuitem);
-    }
-
-
-    JMenuItem file_save_and_exit_menuitem = new JMenuItem();
-    file_save_and_exit_menuitem.setText(file_menu.resources.getString("save_and_exit"));
-    file_save_and_exit_menuitem.setToolTipText(file_menu.resources.getString("save_and_exit_tooltip"));
-    file_save_and_exit_menuitem.addActionListener(
+    // File / Open...
+    JMenuItem file_open_menuitem = new JMenuItem();
+    file_open_menuitem.setText(file_menu.resources.getString("open"));
+    file_open_menuitem.setToolTipText(file_menu.resources.getString("open_tooltip"));
+    file_open_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+    file_open_menuitem.addActionListener(
         evt -> {
-          if (file_menu.session_file_option) {
-            file_menu.board_frame.design_file.write_specctra_session_file(
-                file_menu.board_frame);
-          } else {
-            file_menu.board_frame.save();
-          }
-          file_menu.board_frame.dispose();
+          File selected_file = DesignFile.open_dialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
+
+          file_menu.openEventListeners.forEach(listener -> listener.accept(selected_file));
         });
-    file_save_and_exit_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_and_exit_menuitem", file_save_and_exit_menuitem.getText()));
-
-    file_menu.add(file_save_and_exit_menuitem);
-
-    JMenuItem file_cancel_and_exit_menuitem = new JMenuItem();
-    file_cancel_and_exit_menuitem.setText(file_menu.resources.getString("cancel_and_exit"));
-    file_cancel_and_exit_menuitem.setToolTipText(file_menu.resources.getString("cancel_and_exit_tooltip"));
-    file_cancel_and_exit_menuitem.addActionListener(evt -> file_menu.board_frame.dispose());
-    file_cancel_and_exit_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_cancel_and_exit_menuitem", file_cancel_and_exit_menuitem.getText()));
-
-    file_menu.add(file_cancel_and_exit_menuitem);
-
-    if (!file_menu.session_file_option) {
-      JMenuItem file_save_as_menuitem = new JMenuItem();
-      file_save_as_menuitem.setText(file_menu.resources.getString("save_as"));
-      file_save_as_menuitem.setToolTipText(file_menu.resources.getString("save_as_tooltip"));
-      file_save_as_menuitem.addActionListener(evt -> file_menu.save_as_action());
-      file_save_as_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_as_menuitem", file_save_as_menuitem.getText()));
-
-      file_menu.add(file_save_as_menuitem);
+    file_open_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_open_menuitem", file_open_menuitem.getText()));
+    file_menu.add(file_open_menuitem);
 
 
+    // File / Save as .FRB
+//    JMenuItem file_save_menuitem = new JMenuItem();
+//    file_save_menuitem.setText(file_menu.resources.getString("save"));
+//    file_save_menuitem.setToolTipText(file_menu.resources.getString("save_tooltip"));
+//    file_save_menuitem.addActionListener(
+//        evt -> {
+//          boolean save_ok = file_menu.board_frame.save();
+//          file_menu.board_frame.board_panel.board_handling.close_files();
+//          if (save_ok) {
+//            file_menu.board_frame.screen_messages.set_status_message(
+//                file_menu.resources.getString("save_message"));
+//          }
+//        });
+//    file_save_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_menuitem", file_save_menuitem.getText()));
+//
+//    file_menu.add(file_save_menuitem);
+
+
+//    JMenuItem file_save_and_exit_menuitem = new JMenuItem();
+//    file_save_and_exit_menuitem.setText(file_menu.resources.getString("save_and_exit"));
+//    file_save_and_exit_menuitem.setToolTipText(file_menu.resources.getString("save_and_exit_tooltip"));
+//    file_save_and_exit_menuitem.addActionListener(
+//        evt -> {
+//          if (file_menu.session_file_option) {
+//            file_menu.board_frame.design_file.write_specctra_session_file(
+//                file_menu.board_frame);
+//          } else {
+//            file_menu.board_frame.save();
+//          }
+//          file_menu.board_frame.dispose();
+//        });
+//    file_save_and_exit_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_and_exit_menuitem", file_save_and_exit_menuitem.getText()));
+//
+//    file_menu.add(file_save_and_exit_menuitem);
+
+    // File / Save as...
+
+    JMenuItem file_save_as_menuitem = new JMenuItem();
+    file_save_as_menuitem.setText(file_menu.resources.getString("save_as"));
+    file_save_as_menuitem.setToolTipText(file_menu.resources.getString("save_as_tooltip"));
+    file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+    file_save_as_menuitem.addActionListener(evt -> {
+      File selected_file = file_menu.board_frame.design_file.save_as_dialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
+
+      file_menu.saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
+    });
+    file_save_as_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_as_menuitem", file_save_as_menuitem.getText()));
+
+    file_menu.add(file_save_as_menuitem);
+
+    if (!p_disable_feature_macros) {
       JMenuItem file_write_logfile_menuitem = new JMenuItem();
       file_write_logfile_menuitem.setText(file_menu.resources.getString("generate_logfile"));
       file_write_logfile_menuitem.setToolTipText(
           file_menu.resources.getString("generate_logfile_tooltip"));
       file_write_logfile_menuitem.addActionListener(evt -> file_menu.write_logfile_action());
-      file_write_logfile_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_write_logfile_menuitem", file_write_logfile_menuitem.getText()));
+      file_write_logfile_menuitem.addActionListener(
+          evt ->
+              FRAnalytics.buttonClicked(
+                  "file_write_logfile_menuitem", file_write_logfile_menuitem.getText()));
 
       file_menu.add(file_write_logfile_menuitem);
 
       JMenuItem file_replay_logfile_menuitem = new JMenuItem();
       file_replay_logfile_menuitem.setText(file_menu.resources.getString("replay_logfile"));
-      file_replay_logfile_menuitem.setToolTipText(file_menu.resources.getString("replay_logfile_tooltip"));
+      file_replay_logfile_menuitem.setToolTipText(
+          file_menu.resources.getString("replay_logfile_tooltip"));
       file_replay_logfile_menuitem.addActionListener(evt -> file_menu.read_logfile_action());
-      file_replay_logfile_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_replay_logfile_menuitem", file_replay_logfile_menuitem.getText()));
+      file_replay_logfile_menuitem.addActionListener(
+          evt ->
+              FRAnalytics.buttonClicked(
+                  "file_replay_logfile_menuitem", file_replay_logfile_menuitem.getText()));
 
       file_menu.add(file_replay_logfile_menuitem);
     }
 
-    file_menu.add_save_settings_item();
+    // File / Export as Specctra Session File and Export as Eagle Session Script
+    // file_menu.add_design_dependent_items();
+
+    // File / Cancel and Exit
+
+//    JMenuItem file_cancel_and_exit_menuitem = new JMenuItem();
+//    file_cancel_and_exit_menuitem.setText(file_menu.resources.getString("cancel_and_exit"));
+//    file_cancel_and_exit_menuitem.setToolTipText(file_menu.resources.getString("cancel_and_exit_tooltip"));
+//    file_cancel_and_exit_menuitem.addActionListener(evt -> file_menu.board_frame.dispose());
+//    file_cancel_and_exit_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_cancel_and_exit_menuitem", file_cancel_and_exit_menuitem.getText()));
+//
+//    file_menu.add(file_cancel_and_exit_menuitem);
+
+    // File / Exit
+
+    JMenuItem file_exit_menuitem = new JMenuItem();
+    file_exit_menuitem.setText(file_menu.resources.getString("exit"));
+    file_exit_menuitem.setToolTipText(file_menu.resources.getString("exit_tooltip"));
+    file_exit_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
+    file_exit_menuitem.addActionListener(evt -> file_menu.board_frame.dispose());
+    file_exit_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_exit_menuitem", file_exit_menuitem.getText()));
+
+    file_menu.add(file_exit_menuitem);
 
     return file_menu;
   }
 
   public void add_design_dependent_items() {
-    if (this.session_file_option) {
-      return;
-    }
-    BasicBoard routing_board =
-        this.board_frame.board_panel.board_handling.get_routing_board();
-    boolean host_cad_is_eagle = routing_board.communication.host_cad_is_eagle();
-
     JMenuItem file_write_session_file_menuitem = new JMenuItem();
     file_write_session_file_menuitem.setText(resources.getString("session_file"));
     file_write_session_file_menuitem.setToolTipText(resources.getString("session_file_tooltip"));
     file_write_session_file_menuitem.addActionListener(evt -> board_frame.design_file.write_specctra_session_file(board_frame));
     file_write_session_file_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_write_session_file_menuitem", file_write_session_file_menuitem.getText()));
-
-
-    if ((routing_board.get_test_level() != TestLevel.RELEASE_VERSION
-        || !host_cad_is_eagle)) {
-      this.add(file_write_session_file_menuitem);
-    }
+    this.add(file_write_session_file_menuitem);
 
     JMenuItem file_write_eagle_session_script_menuitem = new JMenuItem();
     file_write_eagle_session_script_menuitem.setText(resources.getString("eagle_script"));
     file_write_eagle_session_script_menuitem.setToolTipText(resources.getString("eagle_script_tooltip"));
     file_write_eagle_session_script_menuitem.addActionListener(evt -> board_frame.design_file.update_eagle(board_frame));
     file_write_eagle_session_script_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_write_eagle_session_script_menuitem", file_write_eagle_session_script_menuitem.getText()));
-
-    if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION
-        || host_cad_is_eagle) {
-      this.add(file_write_eagle_session_script_menuitem);
-    }
+    this.add(file_write_eagle_session_script_menuitem);
   }
 
-  /** Adds a menu item for saving the current interactive settings as default. */
+  /** Adds a menu item for saving the current GUI settings as default. */
   private void add_save_settings_item() {
     JMenuItem file_save_settings_menuitem = new JMenuItem();
     file_save_settings_menuitem.setText(resources.getString("settings"));
@@ -158,12 +187,6 @@ public class BoardMenuFile extends JMenu {
     file_save_settings_menuitem.addActionListener(evt -> save_defaults_action());
     file_save_settings_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_settings_menuitem", file_save_settings_menuitem.getText()));
     add(file_save_settings_menuitem);
-  }
-
-  private void save_as_action() {
-    if (this.board_frame.design_file != null) {
-      this.board_frame.design_file.save_as_dialog(this, this.board_frame);
-    }
   }
 
   private void write_logfile_action() {
@@ -236,4 +259,13 @@ public class BoardMenuFile extends JMenu {
       board_frame.screen_messages.set_status_message(resources.getString("message_18"));
     }
   }
+
+  public void addOpenEventListener(Consumer<File> listener) {
+    openEventListeners.add(listener);
+  }
+
+  public void addSaveAsEventListener(Consumer<File> listener) {
+    saveAsEventListeners.add(listener);
+  }
+
 }

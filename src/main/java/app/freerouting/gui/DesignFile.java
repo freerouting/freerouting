@@ -1,6 +1,5 @@
 package app.freerouting.gui;
 
-import app.freerouting.datastructures.FileFilter;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
@@ -11,33 +10,31 @@ import java.awt.Dimension;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
 import java.util.zip.CRC32;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * File functionality with security restrictions used, when the application is opened with Java
  * Webstart
  */
 public class DesignFile {
-  public static final String[] all_file_extensions = {"frb", "dsn"};
-  public static final String text_file_extension = "dsn";
+  public static final String dsn_file_extension = "dsn";
   public static final String binary_file_extension = "frb";
   private static final String RULES_FILE_EXTENSION = "rules";
+  public FileFormat inputFileFormat = FileFormat.DSN;
   private final File input_file;
   private final File intermediate_snapshot_file;
   private File output_file;
-  private JFileChooser file_chooser;
 
   /**
-   * Creates a new instance of DesignFile.
+   * Creates a new instance of DesignFile and prepares the intermediate file handling.
    */
-  private DesignFile(File p_design_file, JFileChooser p_file_chooser) {
-    this.file_chooser = p_file_chooser;
+  public DesignFile(File p_design_file) {
     this.input_file = p_design_file;
     this.output_file = p_design_file;
 
@@ -46,20 +43,32 @@ public class DesignFile {
       return;
     }
 
-    String file_name = p_design_file.getName();
-    String[] name_parts = file_name.split("\\.");
+    String filename = p_design_file.getName();
+    String[] name_parts = filename.split("\\.");
 
     // Check if the file has an extension
     String extension = null;
     if (name_parts.length > 1)
     {
-      extension = name_parts[name_parts.length - 1];
-      file_name = file_name.substring(0, file_name.length() - extension.length() - 1);
+      extension = name_parts[name_parts.length - 1].toLowerCase();
+      filename = filename.substring(0, filename.length() - extension.length() - 1);
+    }
+
+    switch (extension) {
+      case dsn_file_extension:
+        this.inputFileFormat = FileFormat.DSN;
+        break;
+      case binary_file_extension:
+        this.inputFileFormat = FileFormat.FRB;
+        break;
+      default:
+        this.inputFileFormat = FileFormat.UNKNOWN;
+        break;
     }
 
     // Set the binary output file name
-    if (!binary_file_extension.equalsIgnoreCase(extension)) {
-      String binary_output_file_name = file_name + "." + binary_file_extension;
+    if (extension.equals(binary_file_extension)) {
+      String binary_output_file_name = filename + "." + binary_file_extension;
       this.output_file = new File(p_design_file.getParent(), binary_output_file_name);
     }
 
@@ -93,23 +102,29 @@ public class DesignFile {
     if (p_design_file_name == null) {
       return null;
     }
-    return new DesignFile(new File(p_design_file_name), null);
+    return new DesignFile(new File(p_design_file_name));
   }
 
   /**
    * Shows a file chooser for opening a design file.
    */
-  public static DesignFile open_dialog(String p_design_dir_name) {
-    JFileChooser file_chooser = new JFileChooser(p_design_dir_name);
-    FileFilter file_filter = new FileFilter(all_file_extensions);
-    file_chooser.setMinimumSize(new Dimension(500, 250));
-    file_chooser.setFileFilter(file_filter);
-    file_chooser.showOpenDialog(null);
-    File curr_design_file = file_chooser.getSelectedFile();
-    if (curr_design_file == null) {
-      return null;
-    }
-    return new DesignFile(curr_design_file, file_chooser);
+  public static File open_dialog(String p_default_directory, Component p_parent) {
+    JFileChooser fileChooser = new JFileChooser(p_default_directory);
+    fileChooser.setMinimumSize(new Dimension(500, 250));
+
+    // Add the file filter for SPECCTRA Design .DSN files
+    FileNameExtensionFilter dsnFilter = new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
+    fileChooser.addChoosableFileFilter(dsnFilter);
+
+    // Add the file filter for Freerouting binary .FRB files
+    FileNameExtensionFilter frbFilter = new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
+    fileChooser.addChoosableFileFilter(frbFilter);
+
+    // Set a file filter as the default one
+    fileChooser.setFileFilter(dsnFilter);
+
+    fileChooser.showOpenDialog(p_parent);
+    return fileChooser.getSelectedFile();
   }
 
   public static boolean read_rules_file(
@@ -156,73 +171,95 @@ public class DesignFile {
     if (this.input_file != null) {
       return this.input_file.getName();
     }
-    return null;
+    return "";
   }
 
-  public void save_as_dialog(Component p_parent, BoardFrame p_board_frame) {
-    final ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
-
-    if (this.file_chooser == null) {
-      String design_dir_name;
-      if (this.output_file == null) {
-        design_dir_name = null;
-      } else {
-        design_dir_name = this.output_file.getParent();
-      }
-      this.file_chooser = new JFileChooser(design_dir_name);
-      this.file_chooser.setMinimumSize(new Dimension(500, 250));
-      FileFilter file_filter = new FileFilter(all_file_extensions);
-      this.file_chooser.setFileFilter(file_filter);
-    }
-
-    this.file_chooser.showSaveDialog(p_parent);
-    File new_file = file_chooser.getSelectedFile();
-    if (new_file == null) {
-      p_board_frame.screen_messages.set_status_message(resources.getString("message_1"));
-      return;
-    }
-    String new_file_name = new_file.getName();
-    FRLogger.info("Saving '" + new_file_name + "'...");
-    String[] new_name_parts = new_file_name.split("\\.");
-    String found_file_extension = new_name_parts[new_name_parts.length - 1];
-    if (found_file_extension.equalsIgnoreCase(binary_file_extension)) {
-      // Save as binary file
-      p_board_frame.screen_messages.set_status_message(
-          resources.getString("message_2") + " " + new_file.getName());
-      this.output_file = new_file;
-      p_board_frame.save();
+  public File save_as_dialog(String p_default_directory, Component p_parent)
+  {
+    String directoryName;
+    if (this.output_file == null) {
+      directoryName = p_default_directory;
     } else {
-      // Save as text file
-      if (!found_file_extension.equalsIgnoreCase(text_file_extension)) {
-        p_board_frame.screen_messages.set_status_message(resources.getString("message_3"));
-        return;
-      }
-      OutputStream output_stream;
-      try {
-        output_stream = new FileOutputStream(new_file);
-      } catch (Exception e) {
-        output_stream = null;
-      }
-      String design_name = new_file.toString();
-      if (p_board_frame.board_panel.board_handling.export_to_dsn_file(
-          output_stream, design_name, false)) {
-        p_board_frame.screen_messages.set_status_message(
-            resources.getString("message_4")
-                + " "
-                + new_file_name
-                + " "
-                + resources.getString("message_5"));
-      } else {
-        p_board_frame.screen_messages.set_status_message(
-            resources.getString("message_6")
-                + " "
-                + new_file_name
-                + " "
-                + resources.getString("message_7"));
-      }
+      directoryName = this.output_file.getParent();
     }
+
+    JFileChooser fileChooser = new JFileChooser(directoryName);
+    fileChooser.setMinimumSize(new Dimension(500, 250));
+
+    // Add the file filter for SPECCTRA Session .SES files
+    FileNameExtensionFilter sesFilter = new FileNameExtensionFilter("SPECCTRA Session file (*.ses)", "ses");
+    fileChooser.addChoosableFileFilter(sesFilter);
+
+    // Add the file filter for Freerouting binary .FRB files
+    FileNameExtensionFilter frbFilter = new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
+    fileChooser.addChoosableFileFilter(frbFilter);
+
+    // Add the file filter for Eagle script .SCR files
+    FileNameExtensionFilter scrFilter = new FileNameExtensionFilter("Eagle Session Script file (*.scr)", "scr");
+    fileChooser.addChoosableFileFilter(scrFilter);
+
+    // Set a file filter as the default one
+    fileChooser.setFileFilter(sesFilter);
+
+    fileChooser.showSaveDialog(p_parent);
+
+    return fileChooser.getSelectedFile();
+  }
+
+  public void saveAs(File file, BoardFrame p_board_frame)
+  {
+    final ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
+
+//    if (file == null) {
+//      throw new IllegalArgumentException("File must be non-null");
+//      p_board_frame.screen_messages.set_status_message(resources.getString("message_1"));
+//      return;
+//    }
+//
+//    String new_file_name = file.getName();
+//    FRLogger.info("Saving '" + new_file_name + "'...");
+//    String[] new_name_parts = new_file_name.split("\\.");
+//    String found_file_extension = new_name_parts[new_name_parts.length - 1].toLowerCase();
+//
+//    switch (found_file_extension)
+//    {
+//      case binary_file_extension:
+//        // Save as binary file
+//        p_board_frame.screen_messages.set_status_message(resources.getString("message_2") + " " + file.getName());
+//        this.output_file = file;
+//        p_board_frame.saveAsBinary();
+//        break;
+//      case dsn_file_extension:
+//        OutputStream output_stream;
+//        try {
+//          output_stream = new FileOutputStream(file);
+//        } catch (Exception e) {
+//          output_stream = null;
+//        }
+//
+//        String design_name = file.toString();
+//        boolean couldSaveAsDSN = p_board_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
+//
+//        if (couldSaveAsDSN) {
+//          p_board_frame.screen_messages.set_status_message(
+//              resources.getString("message_4")
+//                  + " "
+//                  + new_file_name
+//                  + " "
+//                  + resources.getString("message_5"));
+//        } else {
+//          p_board_frame.screen_messages.set_status_message(
+//              resources.getString("message_6")
+//                  + " "
+//                  + new_file_name
+//                  + " "
+//                  + resources.getString("message_7"));
+//        }
+//        break;
+//      default:
+//        p_board_frame.screen_messages.set_status_message(resources.getString("message_3"));
+//        break;
+//    }
   }
 
   /**
@@ -368,11 +405,16 @@ public class DesignFile {
   }
 
   public boolean is_created_from_text_file() {
-    return this.input_file != this.output_file;
+    return inputFileFormat.equals(FileFormat.DSN);
   }
 
   public String get_directory()
   {
-    return file_chooser.getCurrentDirectory().toString();
+    if (input_file == null) {
+      return "";
+    }
+
+    // Get the absolut path without the filename
+    return input_file.getParent();
   }
 }

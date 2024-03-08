@@ -43,6 +43,7 @@ public class StartupOptions {
   public int dialog_confirmation_timeout = 20;
   public String host = "N/A";
   public boolean disable_feature_select_mode = true;
+  public boolean disable_feature_macros = true;
 
   public StartupOptions() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {

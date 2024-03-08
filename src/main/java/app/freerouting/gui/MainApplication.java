@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,12 +39,12 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -65,10 +67,6 @@ public class MainApplication extends WindowBase {
   private final JButton restore_defaults_button;
   private final JTextField message_field;
   private final JPanel main_panel;
-  /** A Frame with routing demonstrations in the net. */
-  private final WindowNetSamples window_net_demonstrations;
-  /** A Frame with sample board designs in the net. */
-  private final WindowNetSamples window_net_sample_designs;
   /** The list of open board frames */
   private final Collection<BoardFrame> board_frames = new LinkedList<>();
   private final boolean is_test_version;
@@ -86,7 +84,7 @@ public class MainApplication extends WindowBase {
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
-  private static StartupOptions startupOptions;
+  public static StartupOptions startupOptions;
   /**
    * Creates new form MainApplication It takes the directory of the board designs as optional
    * argument.
@@ -126,37 +124,10 @@ public class MainApplication extends WindowBase {
 
     message_field = new JTextField();
     message_field.setText(resources.getString("command_line_missing_input"));
-    this.window_net_demonstrations = new WindowNetDemonstrations(locale);
     Point location = getLocation();
-    this.window_net_demonstrations.setLocation(
-        (int) location.getX() + 50, (int) location.getY() + 50);
-    this.window_net_sample_designs = new WindowNetSampleDesigns(locale);
-    this.window_net_sample_designs.setLocation(
-        (int) location.getX() + 90, (int) location.getY() + 90);
 
     setTitle(resources.getString("title") + " " + VERSION_NUMBER_STRING);
     boolean add_buttons = true;
-
-    if (startupOptions.getWebstartOption()) {
-
-      if (add_buttons) {
-        demonstration_button.setText(resources.getString("router_demonstrations"));
-        demonstration_button.setToolTipText(resources.getString("router_demonstrations_tooltip"));
-        demonstration_button.addActionListener(evt -> window_net_demonstrations.setVisible(true));
-        demonstration_button.addActionListener(evt -> FRAnalytics.buttonClicked("demonstration_button", demonstration_button.getText()));
-
-        gridbag.setConstraints(demonstration_button, gridbag_constraints);
-        main_panel.add(demonstration_button, gridbag_constraints);
-
-        sample_board_button.setText(resources.getString("sample_designs"));
-        sample_board_button.setToolTipText(resources.getString("sample_designs_tooltip"));
-        sample_board_button.addActionListener(evt -> window_net_sample_designs.setVisible(true));
-        sample_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("sample_board_button", sample_board_button.getText()));
-
-        gridbag.setConstraints(sample_board_button, gridbag_constraints);
-        main_panel.add(sample_board_button, gridbag_constraints);
-      }
-    }
 
     open_board_button.setText(resources.getString("open_own_design"));
     open_board_button.setToolTipText(resources.getString("open_own_design_tooltip"));
@@ -571,31 +542,31 @@ public class MainApplication extends WindowBase {
       String p_design_rules_file,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
-      String[] p_ignore_net_classes_by_autorouter) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
+      String[] p_ignore_net_classes_by_autorouter)
+  {
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
 
-    InputStream input_stream = p_design_file.get_input_stream();
-    if (input_stream == null) {
-      if (p_message_field != null) {
-        p_message_field.setText(resources.getString("message_8") + " " + p_design_file.get_name());
+    InputStream input_stream = null;
+    if (p_design_file.get_input_file() == null) {
+      // load a binary file from the resources
+      ClassLoader classLoader = WindowBase.class.getClassLoader();
+      input_stream = classLoader.getResourceAsStream("freerouting_empty_board.dsn");
+    } else {
+      input_stream = p_design_file.get_input_stream();
+      if (input_stream == null) {
+        if (p_message_field != null) {
+          p_message_field.setText(
+              resources.getString("message_8") + " " + p_design_file.get_name());
+        }
+        return null;
       }
-      return null;
     }
 
     TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
-    BoardFrame new_frame =
-        new BoardFrame(
-            p_design_file,
-            p_option,
-            test_level,
-            p_locale,
-            !p_is_test_version,
-            p_save_intermediate_stages,
-            p_optimization_improvement_threshold,
-            startupOptions.disable_feature_select_mode);
-    boolean read_ok =
-        new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
+    BoardFrame new_frame = new BoardFrame(
+        p_design_file, p_option, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages,
+        p_optimization_improvement_threshold, startupOptions.disable_feature_select_mode, startupOptions.disable_feature_macros);
+    boolean read_ok = new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
     if (!read_ok) {
       return null;
     }
@@ -605,9 +576,8 @@ public class MainApplication extends WindowBase {
       new_frame.board_panel.board_handling.set_route_menu_state();
     }
 
-    new_frame.menubar.add_design_dependent_items();
     if (p_design_file.is_created_from_text_file()) {
-      // Read the file  with the saved rules, if it is existing.
+      // Read the file with the saved rules, if it exists.
 
       String file_name = p_design_file.get_name();
       String[] name_parts = file_name.split("\\.");
@@ -640,8 +610,7 @@ public class MainApplication extends WindowBase {
 
       // ignore net classes if they were defined by a command line argument
       for (String net_class_name : p_ignore_net_classes_by_autorouter) {
-        NetClasses netClasses =
-            new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
+        NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 
         for (int i = 0; i < netClasses.count(); i++) {
           if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name)) {
@@ -659,11 +628,13 @@ public class MainApplication extends WindowBase {
     StartupOptions.save(startupOptions);
   }
 
-  /** opens a board design from a binary file or a specctra dsn file. */
+  /** Opens a board design from a binary file or a specctra DSN file after the user chooses a file from the file chooser dialog. */
   private void open_board_design_action(ActionEvent evt) {
-    DesignFile design_file = DesignFile.open_dialog(this.design_dir_name);
 
-    if (design_file != null) {
+    File fileToOpen = DesignFile.open_dialog(this.design_dir_name, null);
+    DesignFile design_file = new DesignFile(fileToOpen);
+
+    if (design_file.get_input_file() != null) {
       if (!Objects.equals(this.design_dir_name, design_file.get_directory())) {
         this.design_dir_name = design_file.get_directory();
         startupOptions.input_directory = this.design_dir_name;
@@ -677,15 +648,17 @@ public class MainApplication extends WindowBase {
       }
     }
 
-    if (design_file == null) {
-      message_field.setText(resources.getString("message_3"));
-      return;
-    }
+//    if (design_file == null) {
+//      // The user didn't choose a file from the file chooser control
+//      message_field.setText(resources.getString("message_3"));
+//      return;
+//    }
 
     FRLogger.info("Opening '" + design_file.get_name() + "'...");
 
-    BoardFrame.Option option;
-    option = BoardFrame.Option.FROM_START_MENU;
+    // The user chose a file from the file chooser control after clicking on the "Select the design file" button
+    BoardFrame.Option option = BoardFrame.Option.FROM_START_MENU;
+
     String message = resources.getString("loading_design") + " " + design_file.get_name();
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
@@ -784,16 +757,6 @@ public class MainApplication extends WindowBase {
       if (exit_program) {
         exitForm(evt);
       }
-    }
-
-    @Override
-    public void windowIconified(WindowEvent evt) {
-      window_net_sample_designs.parent_iconified();
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent evt) {
-      window_net_sample_designs.parent_deiconified();
     }
   }
 }

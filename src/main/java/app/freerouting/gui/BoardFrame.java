@@ -123,7 +123,8 @@ public class BoardFrame extends WindowBase {
       boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
-      boolean p_disable_select_mode) {
+      boolean p_disable_select_mode,
+      boolean p_disable_macros) {
     this(
         p_design,
         p_option,
@@ -134,7 +135,8 @@ public class BoardFrame extends WindowBase {
         p_confirm_cancel,
         p_save_intermediate_stages,
         p_optimization_improvement_threshold,
-        p_disable_select_mode);
+        p_disable_select_mode,
+        p_disable_macros);
   }
   /**
    * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
@@ -150,7 +152,8 @@ public class BoardFrame extends WindowBase {
       boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
-      boolean p_disable_select_mode) {
+      boolean p_disable_select_mode,
+      boolean p_disable_macros) {
     super(800, 150);
 
     this.design_file = p_design;
@@ -165,16 +168,35 @@ public class BoardFrame extends WindowBase {
     boolean session_file_option = (p_option == Option.SESSION_FILE);
     boolean curr_help_system_used = true;
     try {
-      curr_menubar = BoardMenuBar.get_instance(this, curr_help_system_used, session_file_option);
+      curr_menubar = BoardMenuBar.get_instance(this, curr_help_system_used, session_file_option, p_disable_macros);
     } catch (NoClassDefFoundError e) {
       // the system-file jh.jar may be missing
       curr_help_system_used = false;
-      curr_menubar = BoardMenuBar.get_instance(this, false, session_file_option);
+      curr_menubar = BoardMenuBar.get_instance(this, false, session_file_option, p_disable_macros);
       FRLogger.warn("Online-Help deactivated because system file jh.jar is missing");
     }
 
     // Set the menu bar of this frame.
     this.menubar = curr_menubar;
+
+    this.menubar.fileMenu.addOpenEventListener(
+        (File selectedFile) -> {
+          if (selectedFile == null) {
+            return;
+          }
+
+          DesignFile design_file =  new DesignFile(selectedFile);
+
+        });
+
+    this.menubar.fileMenu.addSaveAsEventListener(
+        (File selectedFile) -> {
+          if (selectedFile == null) {
+            return;
+          }
+          this.design_file.saveAs(selectedFile, this);
+        });
+
     this.help_system_used = curr_help_system_used;
     setJMenuBar(this.menubar);
 
@@ -259,6 +281,7 @@ public class BoardFrame extends WindowBase {
   {
     Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
+
     if (p_is_import) {
       read_result =
           board_panel.board_handling.import_design(
@@ -365,8 +388,8 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
-  boolean save() {
-    return save(this.design_file.get_output_file());
+  boolean saveAsBinary() {
+    return saveAsBinary(this.design_file.get_output_file());
   }
 
   public boolean load_intermediate_stage_file() {
@@ -390,7 +413,7 @@ public class BoardFrame extends WindowBase {
     }
 
     intermediate_stage_file_last_saved_at = LocalDateTime.now();
-    return save(this.design_file.get_snapshot_file());
+    return saveAsBinary(this.design_file.get_snapshot_file());
   }
 
   public boolean delete_intermediate_stage_file() {
@@ -407,10 +430,10 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Saves the interactive settings and the design file to disk as a binary file.
+   * Saves the board, GUI settings and subwindows to disk as a binary file.
    * Returns false, if the save failed.
    */
-  private boolean save(File output_file) {
+  private boolean saveAsBinary(File output_file) {
     if (this.design_file == null) {
       return false;
     }
@@ -716,7 +739,6 @@ public class BoardFrame extends WindowBase {
     FROM_START_MENU,
     SINGLE_FRAME,
     SESSION_FILE,
-    WEBSTART,
     EXTENDED_TOOL_BAR
   }
 
