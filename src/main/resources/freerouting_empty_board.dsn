@@ -1,0 +1,26 @@
+(pcb freerouting-empty.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  186690 -107950  129540 -107950  129540 -57150  186690 -57150
+            186690 -107950)
+    )
+  )
+)
