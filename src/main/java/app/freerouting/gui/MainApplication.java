@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,7 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,7 +37,6 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -547,8 +544,8 @@ public class MainApplication extends WindowBase {
     ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
 
     InputStream input_stream = null;
-    if (p_design_file.get_input_file() == null) {
-      // load a binary file from the resources
+    if (p_design_file.getInputFile() == null) {
+      // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
       input_stream = classLoader.getResourceAsStream("freerouting_empty_board.dsn");
     } else {
@@ -566,7 +563,7 @@ public class MainApplication extends WindowBase {
     BoardFrame new_frame = new BoardFrame(
         p_design_file, p_option, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages,
         p_optimization_improvement_threshold, startupOptions.disable_feature_select_mode, startupOptions.disable_feature_macros);
-    boolean read_ok = new_frame.read(input_stream, p_design_file.is_created_from_text_file(), p_message_field);
+    boolean read_ok = new_frame.load(input_stream, p_design_file.isInputFileFormatDsn(), p_message_field);
     if (!read_ok) {
       return null;
     }
@@ -576,7 +573,7 @@ public class MainApplication extends WindowBase {
       new_frame.board_panel.board_handling.set_route_menu_state();
     }
 
-    if (p_design_file.is_created_from_text_file()) {
+    if (p_design_file.isInputFileFormatDsn()) {
       // Read the file with the saved rules, if it exists.
 
       String file_name = p_design_file.get_name();
@@ -589,7 +586,7 @@ public class MainApplication extends WindowBase {
       String confirm_import_rules_message;
       if (p_design_rules_file == null) {
         rules_file_name = design_name + ".rules";
-        parent_folder_name = p_design_file.get_parent();
+        parent_folder_name = p_design_file.getInputFileDirectory2();
         confirm_import_rules_message = resources.getString("confirm_import_rules");
       } else {
         rules_file_name = p_design_rules_file;
@@ -631,12 +628,12 @@ public class MainApplication extends WindowBase {
   /** Opens a board design from a binary file or a specctra DSN file after the user chooses a file from the file chooser dialog. */
   private void open_board_design_action(ActionEvent evt) {
 
-    File fileToOpen = DesignFile.open_dialog(this.design_dir_name, null);
+    File fileToOpen = DesignFile.showOpenDialog(this.design_dir_name, null);
     DesignFile design_file = new DesignFile(fileToOpen);
 
-    if (design_file.get_input_file() != null) {
-      if (!Objects.equals(this.design_dir_name, design_file.get_directory())) {
-        this.design_dir_name = design_file.get_directory();
+    if (design_file.getInputFile() != null) {
+      if (!Objects.equals(this.design_dir_name, design_file.getInputFileDirectory())) {
+        this.design_dir_name = design_file.getInputFileDirectory();
         startupOptions.input_directory = this.design_dir_name;
 
         try {

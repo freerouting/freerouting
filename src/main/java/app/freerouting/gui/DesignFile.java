@@ -26,20 +26,22 @@ public class DesignFile {
   public static final String dsn_file_extension = "dsn";
   public static final String binary_file_extension = "frb";
   private static final String RULES_FILE_EXTENSION = "rules";
-  public FileFormat inputFileFormat = FileFormat.DSN;
-  private final File input_file;
-  private final File intermediate_snapshot_file;
-  private File output_file;
+  private static final String ses_file_extension = "ses";
+  private File inputFile;
+  public FileFormat inputFileFormat = FileFormat.UNKNOWN;
+  private File snapshotFile;
+  private File outputFile;
+  public FileFormat outputFileFormat = FileFormat.UNKNOWN;
 
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
    */
   public DesignFile(File p_design_file) {
-    this.input_file = p_design_file;
-    this.output_file = p_design_file;
+    this.inputFile = p_design_file;
+    this.outputFile = p_design_file;
 
     if (p_design_file == null) {
-      this.intermediate_snapshot_file = null;
+      this.snapshotFile = null;
       return;
     }
 
@@ -47,7 +49,7 @@ public class DesignFile {
     String[] name_parts = filename.split("\\.");
 
     // Check if the file has an extension
-    String extension = null;
+    String extension = "";
     if (name_parts.length > 1)
     {
       extension = name_parts[name_parts.length - 1].toLowerCase();
@@ -67,35 +69,45 @@ public class DesignFile {
     }
 
     // Set the binary output file name
-    if (extension.equals(binary_file_extension)) {
+    if (this.inputFileFormat == FileFormat.FRB)
+    {
+      // The output file will be the same as the input file in the same folder with the .FRB extension
       String binary_output_file_name = filename + "." + binary_file_extension;
-      this.output_file = new File(p_design_file.getParent(), binary_output_file_name);
+      this.outputFile = new File(p_design_file.getParent(), binary_output_file_name);
     }
 
     // Set the intermediate snapshot file name
+    this.snapshotFile = getSnapshotFilename(this.inputFile);
+  }
 
+  private File getSnapshotFilename(File inputFile)
+  {
     // Calculate the CRC32 checksum of the input file
-    long crc32_checksum;
-    try (FileInputStream inputStream = new FileInputStream(this.input_file.getAbsoluteFile())) {
+    long crc32Checksum;
+    try (FileInputStream inputStream = new FileInputStream(inputFile.getAbsoluteFile()))
+    {
       CRC32 crc = new CRC32();
       int cnt;
       while ((cnt = inputStream.read()) != -1) {
         crc.update(cnt);
       }
-      crc32_checksum = crc.getValue();
+      crc32Checksum = crc.getValue();
     } catch (IOException e) {
-      crc32_checksum = 0;
+      crc32Checksum = 0;
     }
 
-    // We have a valid checksum, we can generate the intermediate snapshot file
-    if (crc32_checksum == 0) {
-      this.intermediate_snapshot_file = null;
-      return;
+    if (crc32Checksum == 0)
+    {
+      // We don't have a valid checksum, we can't generate the intermediate snapshot file
+      return null;
     }
 
+    // Get the temporary folder path
     String temp_folder_path = System.getProperty("java.io.tmpdir");
-    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32_checksum) + "." + DesignFile.binary_file_extension;
-    this.intermediate_snapshot_file = new File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
+
+    // Set the intermediate snapshot file name based on the checksum
+    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32Checksum) + "." + DesignFile.binary_file_extension;
+    return new File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
   }
 
   public static DesignFile get_instance(String p_design_file_name) {
@@ -108,7 +120,7 @@ public class DesignFile {
   /**
    * Shows a file chooser for opening a design file.
    */
-  public static File open_dialog(String p_default_directory, Component p_parent) {
+  public static File showOpenDialog(String p_default_directory, Component p_parent) {
     JFileChooser fileChooser = new JFileChooser(p_default_directory);
     fileChooser.setMinimumSize(new Dimension(500, 250));
 
@@ -155,11 +167,11 @@ public class DesignFile {
 
   /** Gets an InputStream from the file. Returns null, if the algorithm failed. */
   public InputStream get_input_stream() {
-    if (this.input_file == null) {
+    if (this.inputFile == null) {
       return null;
     }
     try {
-      return new FileInputStream(this.input_file);
+      return new FileInputStream(this.inputFile);
     } catch (Exception e) {
       FRLogger.error(e.getLocalizedMessage(), e);
     }
@@ -168,19 +180,19 @@ public class DesignFile {
 
   /** Gets the file name as a String. Returns null on failure. */
   public String get_name() {
-    if (this.input_file != null) {
-      return this.input_file.getName();
+    if (this.inputFile != null) {
+      return this.inputFile.getName();
     }
     return "";
   }
 
-  public File save_as_dialog(String p_default_directory, Component p_parent)
+  public File showSaveAsDialog(String p_default_directory, Component p_parent)
   {
     String directoryName;
-    if (this.output_file == null) {
+    if (this.outputFile == null) {
       directoryName = p_default_directory;
     } else {
-      directoryName = this.output_file.getParent();
+      directoryName = this.outputFile.getParent();
     }
 
     JFileChooser fileChooser = new JFileChooser(directoryName);
@@ -198,8 +210,34 @@ public class DesignFile {
     FileNameExtensionFilter scrFilter = new FileNameExtensionFilter("Eagle Session Script file (*.scr)", "scr");
     fileChooser.addChoosableFileFilter(scrFilter);
 
-    // Set a file filter as the default one
-    fileChooser.setFileFilter(sesFilter);
+    // Add the file filter for SPECCTRA Design .DSN files
+    FileNameExtensionFilter dsnFilter = new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
+    fileChooser.addChoosableFileFilter(dsnFilter);
+
+    // Set the file filter based on the output file format
+    switch (this.outputFileFormat) {
+      case SES:
+        fileChooser.setFileFilter(sesFilter);
+        break;
+      case FRB:
+        fileChooser.setFileFilter(frbFilter);
+        break;
+      case SCR:
+        fileChooser.setFileFilter(scrFilter);
+        break;
+      case DSN:
+        fileChooser.setFileFilter(dsnFilter);
+        break;
+      default:
+        fileChooser.setFileFilter(sesFilter);
+        break;
+    }
+
+    // Set the default file name based on the output file name
+    if (this.outputFile != null)
+    {
+      fileChooser.setSelectedFile(this.outputFile);
+    }
 
     fileChooser.showSaveDialog(p_parent);
 
@@ -264,19 +302,17 @@ public class DesignFile {
 
   /**
    * Writes a Specctra Session File to update the design file in the host system. Returns false, if
-   * the write failed
+   * write operation fails
    */
   public boolean write_specctra_session_file(BoardFrame p_board_frame) {
-    final ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
+    final ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
     String design_file_name = this.get_name();
     String[] file_name_parts = design_file_name.split("\\.", 2);
     String design_name = file_name_parts[0];
 
     String output_file_name = design_name + ".ses";
     FRLogger.info("Saving '" + output_file_name + "'...");
-    File curr_output_file = new File(get_parent(), output_file_name);
+    File curr_output_file = new File(getInputFileDirectory2(), output_file_name);
     OutputStream output_stream;
     try {
       output_stream = new FileOutputStream(curr_output_file);
@@ -316,7 +352,7 @@ public class DesignFile {
 
     FRLogger.info("Saving '" + rules_file_name + "'...");
 
-    File rules_file = new File(this.get_parent(), rules_file_name);
+    File rules_file = new File(this.getInputFileDirectory2(), rules_file_name);
     try {
       output_stream = new FileOutputStream(rules_file);
     } catch (IOException e) {
@@ -347,7 +383,7 @@ public class DesignFile {
     FRLogger.info("Saving '" + output_file_name + "'...");
 
     {
-      File curr_output_file = new File(get_parent(), output_file_name);
+      File curr_output_file = new File(getInputFileDirectory2(), output_file_name);
       OutputStream output_stream;
       try {
         output_stream = new FileOutputStream(curr_output_file);
@@ -377,44 +413,132 @@ public class DesignFile {
     }
   }
 
-  public File get_output_file() {
-    return this.output_file;
+  public File getOutputFile() {
+    return this.outputFile;
   }
 
-  public File get_input_file() {
-    return this.input_file;
+  public File getInputFile() {
+    return this.inputFile;
   }
 
-  public File get_snapshot_file() {
-    return this.intermediate_snapshot_file;
+  public File getSnapshotFile() {
+    return this.snapshotFile;
   }
 
-  // Returns the directory of the design file
-  public String get_parent() {
-    if (input_file != null) {
-      return input_file.getParent();
-    }
-    return null;
-  }
-
+  @Deprecated(since = "2.0", forRemoval = true)
   public File get_parent_file() {
-    if (input_file != null) {
-      return input_file.getParentFile();
+    if (inputFile != null) {
+      return inputFile.getParentFile();
     }
     return null;
   }
 
-  public boolean is_created_from_text_file() {
+  @Deprecated(since = "2.0", forRemoval = true)
+  public boolean isInputFileFormatDsn() {
     return inputFileFormat.equals(FileFormat.DSN);
   }
 
-  public String get_directory()
+  // Returns the directory of the design file
+  public String getInputFileDirectory()
   {
-    if (input_file == null) {
+    if (inputFile == null) {
       return "";
     }
 
     // Get the absolut path without the filename
-    return input_file.getParent();
+    return inputFile.getParent();
+  }
+
+  // Returns the directory of the design file
+  @Deprecated(since = "2.0", forRemoval = true)
+  public String getInputFileDirectory2() {
+    if (inputFile != null) {
+      return inputFile.getParent();
+    }
+    return null;
+  }
+
+  public boolean tryToSetInputFile(File selectedFile) {
+    // Open the file as a binary file and read the first 4 bytes
+    try (FileInputStream fileInputStream = new FileInputStream(selectedFile))
+    {
+      byte[] buffer = new byte[4];
+      int bytesRead = fileInputStream.read(buffer, 0, 4);
+      if (bytesRead != 4)
+      {
+        return false;
+      }
+
+      // Check if the file is a binary file
+      if (buffer[0] == (byte)0xAC && buffer[1] == (byte)0xED && buffer[2] == (byte)0x00 && buffer[3] == (byte)0x05)
+      {
+        this.inputFileFormat = FileFormat.FRB;
+      }
+
+      // Check if the file is a DSN file
+      if (buffer[0] == (byte)0x28 && buffer[1] == (byte)0x70 && buffer[2] == (byte)0x63 && buffer[3] == (byte)0x62)
+      {
+        this.inputFileFormat = FileFormat.DSN;
+      }
+
+      if (this.inputFileFormat != FileFormat.UNKNOWN)
+      {
+        this.inputFile = selectedFile;
+        this.outputFile = changeFileExtension(selectedFile, ses_file_extension);
+        this.snapshotFile = getSnapshotFilename(this.inputFile);
+        return true;
+      }
+    } catch (IOException e) {
+      FRLogger.error(e.getLocalizedMessage(), e);
+    }
+
+    return false;
+  }
+
+  // Changes the file extension of the selected file
+  private File changeFileExtension(File selectedFile, String newFileExtension)
+  {
+    String filename = selectedFile.getName();
+    String[] nameParts = filename.split("\\.");
+    if (nameParts.length > 1) {
+      String extension = nameParts[nameParts.length - 1].toLowerCase();
+      if (extension.equals(newFileExtension)) {
+        return selectedFile;
+      }
+      String newFileName = filename.substring(0, filename.length() - extension.length() - 1) + "." + newFileExtension;
+      return new File(selectedFile.getParent(), newFileName);
+    }
+    return new File(selectedFile.getParent(), filename + "." + newFileExtension);
+  }
+
+  public boolean tryToSetOutputFile(File selectedFile) {
+    // Set the output file format based on its extension
+    String filename = selectedFile.getName().toLowerCase();
+    String[] parts = filename.split("\\.");
+    if (parts.length > 1) {
+      String extension = parts[parts.length - 1].toLowerCase();
+      switch (extension) {
+        case dsn_file_extension:
+          this.outputFile = selectedFile;
+          this.outputFileFormat = FileFormat.DSN;
+          return true;
+        case binary_file_extension:
+          this.outputFile = selectedFile;
+          this.outputFileFormat = FileFormat.FRB;
+          return true;
+        case "ses":
+          this.outputFile = selectedFile;
+          this.outputFileFormat = FileFormat.SES;
+          return true;
+        case "scr":
+          this.outputFile = selectedFile;
+          this.outputFileFormat = FileFormat.SCR;
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    return false;
   }
 }

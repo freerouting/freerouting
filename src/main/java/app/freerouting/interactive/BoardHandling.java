@@ -51,10 +51,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 /** Central connection class between the graphical user interface and the board database. */
 public class BoardHandling extends BoardHandlingHeadless {
@@ -807,7 +804,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * Reads an existing board design from the input stream. Returns false, if the input stream does
    * not contain a legal board design.
    */
-  public boolean read_design(ObjectInputStream p_design, TestLevel p_test_level) {
+  public boolean loadFromBinary(ObjectInputStream p_design, TestLevel p_test_level) {
     try {
       board = (RoutingBoard) p_design.readObject();
       settings = (Settings) p_design.readObject();
@@ -828,7 +825,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * p_item_id_no_generator are used, in case the board is embedded into a host system. Returns
    * false, if the dsn-file is corrupted.
    */
-  public DsnFile.ReadResult import_design(
+  public DsnFile.ReadResult loadFromSpecctraDsn(
       InputStream p_design,
       BoardObservers p_observers,
       IdNoGenerator p_item_id_no_generator,

@@ -1,7 +1,5 @@
 package app.freerouting.gui;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.logger.FRLogger;
 
 import app.freerouting.management.FRAnalytics;
@@ -34,9 +32,7 @@ public class BoardMenuFile extends JMenu {
   private BoardMenuFile(BoardFrame p_board_frame, boolean p_session_file_option) {
     session_file_option = p_session_file_option;
     board_frame = p_board_frame;
-    resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
+    resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
   }
 
   /** Returns a new file menu for the board frame. */
@@ -52,7 +48,7 @@ public class BoardMenuFile extends JMenu {
     file_open_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_open_menuitem.addActionListener(
         evt -> {
-          File selected_file = DesignFile.open_dialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
+          File selected_file = DesignFile.showOpenDialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
 
           file_menu.openEventListeners.forEach(listener -> listener.accept(selected_file));
         });
@@ -102,7 +98,7 @@ public class BoardMenuFile extends JMenu {
     file_save_as_menuitem.setToolTipText(file_menu.resources.getString("save_as_tooltip"));
     file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_save_as_menuitem.addActionListener(evt -> {
-      File selected_file = file_menu.board_frame.design_file.save_as_dialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
+      File selected_file = file_menu.board_frame.design_file.showSaveAsDialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
 
       file_menu.saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
     });
@@ -232,10 +228,10 @@ public class BoardMenuFile extends JMenu {
     OutputStream output_stream;
 
     FRLogger.info("Saving '" + BoardFrame.GUI_DEFAULTS_FILE_NAME + "'...");
-    File defaults_file = new File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
+    File defaults_file = new File(board_frame.design_file.getInputFileDirectory2(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
     if (defaults_file.exists()) {
       // Make a backup copy of the old defaults file.
-      File defaults_file_backup = new File(board_frame.design_file.get_parent(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
+      File defaults_file_backup = new File(board_frame.design_file.getInputFileDirectory2(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
       if (defaults_file_backup.exists()) {
         defaults_file_backup.delete();
       }
