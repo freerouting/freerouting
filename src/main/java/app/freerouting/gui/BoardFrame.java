@@ -496,7 +496,7 @@ public class BoardFrame extends WindowBase {
     }
 
     // (1) Save the board as binary file
-    boolean save_ok = board_panel.board_handling.save_design_file(object_stream);
+    boolean save_ok = board_panel.board_handling.saveAsBinary(object_stream);
     if (!save_ok) {
       return false;
     }

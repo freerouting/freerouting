@@ -867,7 +867,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * p_compat_mode is true, only standard specctra dsn scopes are written, so that any host system
    * with a specctra interface can read them.
    */
-  public boolean export_to_dsn_file(
+  public boolean saveAsSpecctraDesignDsn(
       OutputStream p_output_stream, String p_design_name, boolean p_compat_mode) {
     if (board_is_read_only || p_output_stream == null) {
       return false;
@@ -875,8 +875,16 @@ public class BoardHandling extends BoardHandlingHeadless {
     return DsnFile.write(this, p_output_stream, p_design_name, p_compat_mode);
   }
 
-  /** Writes a session file ins the Eagle SCR format. */
-  public boolean export_eagle_session_file(
+  /** Writes a .SES session file in the Specctra ses-format. */
+  public boolean saveAsSpecctraSessionSes(String p_design_name, OutputStream p_output_stream) {
+    if (board_is_read_only) {
+      return false;
+    }
+    return SpecctraSesFileWriter.write(this.get_routing_board(), p_output_stream, p_design_name);
+  }
+
+  /** Writes a session file in the Eagle SCR format. */
+  public boolean saveSpecctraSessionSesAsEagleScriptScr(
       InputStream p_input_stream, OutputStream p_output_stream) {
     if (board_is_read_only) {
       return false;
@@ -884,16 +892,8 @@ public class BoardHandling extends BoardHandlingHeadless {
     return SessionToEagle.get_instance(p_input_stream, p_output_stream, this.board);
   }
 
-  /** Writes a .SES session file in the Specctra ses-format. */
-  public boolean export_specctra_session_file(String p_design_name, OutputStream p_output_stream) {
-    if (board_is_read_only) {
-      return false;
-    }
-    return SpecctraSesFileWriter.write(this.get_routing_board(), p_output_stream, p_design_name);
-  }
-
   /** Saves the currently edited board design to p_design_file. */
-  public boolean save_design_file(ObjectOutputStream p_object_stream) {
+  public boolean saveAsBinary(ObjectOutputStream p_object_stream) {
     boolean result = true;
     try {
       p_object_stream.writeObject(board);
@@ -912,8 +912,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (board_is_read_only || !(interactive_state instanceof MenuState)) {
       return;
     }
-    this.interactive_action_thread =
-        InteractiveActionThread.get_read_logfile_instance(this, p_input_stream);
+    this.interactive_action_thread = InteractiveActionThread.get_read_logfile_instance(this, p_input_stream);
     this.interactive_action_thread.start();
   }
 

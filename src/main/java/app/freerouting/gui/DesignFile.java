@@ -29,55 +29,15 @@ public class DesignFile {
   private static final String ses_file_extension = "ses";
   private File inputFile;
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
-  private File snapshotFile;
-  private File outputFile;
+  private File snapshotFile = null;
+  private File outputFile = null;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
 
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
    */
   public DesignFile(File p_design_file) {
-    this.inputFile = p_design_file;
-    this.outputFile = p_design_file;
-
-    if (p_design_file == null) {
-      this.snapshotFile = null;
-      return;
-    }
-
-    String filename = p_design_file.getName();
-    String[] name_parts = filename.split("\\.");
-
-    // Check if the file has an extension
-    String extension = "";
-    if (name_parts.length > 1)
-    {
-      extension = name_parts[name_parts.length - 1].toLowerCase();
-      filename = filename.substring(0, filename.length() - extension.length() - 1);
-    }
-
-    switch (extension) {
-      case dsn_file_extension:
-        this.inputFileFormat = FileFormat.DSN;
-        break;
-      case binary_file_extension:
-        this.inputFileFormat = FileFormat.FRB;
-        break;
-      default:
-        this.inputFileFormat = FileFormat.UNKNOWN;
-        break;
-    }
-
-    // Set the binary output file name
-    if (this.inputFileFormat == FileFormat.FRB)
-    {
-      // The output file will be the same as the input file in the same folder with the .FRB extension
-      String binary_output_file_name = filename + "." + binary_file_extension;
-      this.outputFile = new File(p_design_file.getParent(), binary_output_file_name);
-    }
-
-    // Set the intermediate snapshot file name
-    this.snapshotFile = getSnapshotFilename(this.inputFile);
+    this.tryToSetInputFile(p_design_file);
   }
 
   private File getSnapshotFilename(File inputFile)
@@ -320,7 +280,7 @@ public class DesignFile {
       output_stream = null;
     }
 
-    if (!p_board_frame.board_panel.board_handling.export_specctra_session_file(
+    if (!p_board_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
         design_file_name, output_stream)) {
       p_board_frame.screen_messages.set_status_message(
           resources.getString("message_13")
@@ -370,7 +330,7 @@ public class DesignFile {
             "app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
     String design_file_name = get_name();
     ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
-    if (!p_board_frame.board_panel.board_handling.export_specctra_session_file(
+    if (!p_board_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
         design_file_name, session_output_stream)) {
       return;
     }
@@ -391,7 +351,7 @@ public class DesignFile {
         output_stream = null;
       }
 
-      if (p_board_frame.board_panel.board_handling.export_eagle_session_file(
+      if (p_board_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(
           input_stream, output_stream)) {
         p_board_frame.screen_messages.set_status_message(
             resources.getString("message_14")
@@ -473,18 +433,19 @@ public class DesignFile {
       if (buffer[0] == (byte)0xAC && buffer[1] == (byte)0xED && buffer[2] == (byte)0x00 && buffer[3] == (byte)0x05)
       {
         this.inputFileFormat = FileFormat.FRB;
+        this.outputFile = changeFileExtension(selectedFile, binary_file_extension);
       }
 
       // Check if the file is a DSN file
       if (buffer[0] == (byte)0x28 && buffer[1] == (byte)0x70 && buffer[2] == (byte)0x63 && buffer[3] == (byte)0x62)
       {
         this.inputFileFormat = FileFormat.DSN;
+        this.outputFile = changeFileExtension(selectedFile, ses_file_extension);
       }
 
       if (this.inputFileFormat != FileFormat.UNKNOWN)
       {
         this.inputFile = selectedFile;
-        this.outputFile = changeFileExtension(selectedFile, ses_file_extension);
         this.snapshotFile = getSnapshotFilename(this.inputFile);
         return true;
       }
