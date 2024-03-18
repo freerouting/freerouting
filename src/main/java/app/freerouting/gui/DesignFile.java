@@ -4,17 +4,13 @@ import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
 
+import java.nio.file.Files;
 import javax.swing.JFileChooser;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ResourceBundle;
 import java.util.zip.CRC32;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -25,8 +21,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class DesignFile {
   public static final String dsn_file_extension = "dsn";
   public static final String binary_file_extension = "frb";
-  private static final String RULES_FILE_EXTENSION = "rules";
+  private static final String rules_file_extension = "rules";
   private static final String ses_file_extension = "ses";
+  private static final String eagle_script_file_extension = "scr";
   private File inputFile;
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   private File snapshotFile = null;
@@ -204,175 +201,6 @@ public class DesignFile {
     return fileChooser.getSelectedFile();
   }
 
-  public void saveAs(File file, BoardFrame p_board_frame)
-  {
-    final ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
-
-//    if (file == null) {
-//      throw new IllegalArgumentException("File must be non-null");
-//      p_board_frame.screen_messages.set_status_message(resources.getString("message_1"));
-//      return;
-//    }
-//
-//    String new_file_name = file.getName();
-//    FRLogger.info("Saving '" + new_file_name + "'...");
-//    String[] new_name_parts = new_file_name.split("\\.");
-//    String found_file_extension = new_name_parts[new_name_parts.length - 1].toLowerCase();
-//
-//    switch (found_file_extension)
-//    {
-//      case binary_file_extension:
-//        // Save as binary file
-//        p_board_frame.screen_messages.set_status_message(resources.getString("message_2") + " " + file.getName());
-//        this.output_file = file;
-//        p_board_frame.saveAsBinary();
-//        break;
-//      case dsn_file_extension:
-//        OutputStream output_stream;
-//        try {
-//          output_stream = new FileOutputStream(file);
-//        } catch (Exception e) {
-//          output_stream = null;
-//        }
-//
-//        String design_name = file.toString();
-//        boolean couldSaveAsDSN = p_board_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false);
-//
-//        if (couldSaveAsDSN) {
-//          p_board_frame.screen_messages.set_status_message(
-//              resources.getString("message_4")
-//                  + " "
-//                  + new_file_name
-//                  + " "
-//                  + resources.getString("message_5"));
-//        } else {
-//          p_board_frame.screen_messages.set_status_message(
-//              resources.getString("message_6")
-//                  + " "
-//                  + new_file_name
-//                  + " "
-//                  + resources.getString("message_7"));
-//        }
-//        break;
-//      default:
-//        p_board_frame.screen_messages.set_status_message(resources.getString("message_3"));
-//        break;
-//    }
-  }
-
-  /**
-   * Writes a Specctra Session File to update the design file in the host system. Returns false, if
-   * write operation fails
-   */
-  public boolean write_specctra_session_file(BoardFrame p_board_frame) {
-    final ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
-    String design_file_name = this.get_name();
-    String[] file_name_parts = design_file_name.split("\\.", 2);
-    String design_name = file_name_parts[0];
-
-    String output_file_name = design_name + ".ses";
-    FRLogger.info("Saving '" + output_file_name + "'...");
-    File curr_output_file = new File(getInputFileDirectory2(), output_file_name);
-    OutputStream output_stream;
-    try {
-      output_stream = new FileOutputStream(curr_output_file);
-    } catch (Exception e) {
-      output_stream = null;
-    }
-
-    if (!p_board_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
-        design_file_name, output_stream)) {
-      p_board_frame.screen_messages.set_status_message(
-          resources.getString("message_13")
-              + " "
-              + output_file_name
-              + " "
-              + resources.getString("message_7"));
-      return false;
-    }
-
-    p_board_frame.screen_messages.set_status_message(
-        resources.getString("message_11")
-            + " "
-            + output_file_name
-            + " "
-            + resources.getString("message_12"));
-
-    if (WindowMessage.confirm(resources.getString("confirm"))) {
-      return write_rules_file(design_name, p_board_frame.board_panel.board_handling);
-    }
-    return true;
-  }
-
-  /** Saves the board rule to file, so that they can be reused later on. */
-  private boolean write_rules_file(
-      String p_design_name, BoardHandling p_board_handling) {
-    String rules_file_name = p_design_name + "." + RULES_FILE_EXTENSION;
-    OutputStream output_stream;
-
-    FRLogger.info("Saving '" + rules_file_name + "'...");
-
-    File rules_file = new File(this.getInputFileDirectory2(), rules_file_name);
-    try {
-      output_stream = new FileOutputStream(rules_file);
-    } catch (IOException e) {
-      FRLogger.error("unable to create rules file", e);
-      return false;
-    }
-
-    RulesFile.write(p_board_handling, output_stream, p_design_name);
-    return true;
-  }
-
-  public void update_eagle(BoardFrame p_board_frame) {
-    final ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
-    String design_file_name = get_name();
-    ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
-    if (!p_board_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
-        design_file_name, session_output_stream)) {
-      return;
-    }
-    InputStream input_stream =
-        new ByteArrayInputStream(session_output_stream.toByteArray());
-
-    String[] file_name_parts = design_file_name.split("\\.", 2);
-    String design_name = file_name_parts[0];
-    String output_file_name = design_name + ".scr";
-    FRLogger.info("Saving '" + output_file_name + "'...");
-
-    {
-      File curr_output_file = new File(getInputFileDirectory2(), output_file_name);
-      OutputStream output_stream;
-      try {
-        output_stream = new FileOutputStream(curr_output_file);
-      } catch (Exception e) {
-        output_stream = null;
-      }
-
-      if (p_board_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(
-          input_stream, output_stream)) {
-        p_board_frame.screen_messages.set_status_message(
-            resources.getString("message_14")
-                + " "
-                + output_file_name
-                + " "
-                + resources.getString("message_15"));
-      } else {
-        p_board_frame.screen_messages.set_status_message(
-            resources.getString("message_16")
-                + " "
-                + output_file_name
-                + " "
-                + resources.getString("message_7"));
-      }
-    }
-    if (WindowMessage.confirm(resources.getString("confirm"))) {
-      write_rules_file(design_name, p_board_frame.board_panel.board_handling);
-    }
-  }
-
   public File getOutputFile() {
     return this.outputFile;
   }
@@ -383,6 +211,14 @@ public class DesignFile {
 
   public File getSnapshotFile() {
     return this.snapshotFile;
+  }
+
+  public File getRulesFile() {
+    return changeFileExtension(this.outputFile, rules_file_extension);
+  }
+
+  public File getEagleScriptFile() {
+    return changeFileExtension(this.outputFile, eagle_script_file_extension);
   }
 
   @Deprecated(since = "2.0", forRemoval = true)
@@ -501,5 +337,60 @@ public class DesignFile {
     }
 
     return false;
+  }
+
+  public String getOutputFileDetails() {
+    StringBuilder sb = new StringBuilder();
+
+    if (this.outputFile == null) {
+      return "";
+    }
+
+    sb.append(outputFileFormat);
+    sb.append(",");
+    sb.append(outputFile.getAbsolutePath());
+    sb.append(",");
+    sb.append(outputFile.getName());
+    sb.append(",");
+    // get the file size of the output file
+    sb.append(outputFile.length());
+
+    if ((outputFileFormat == FileFormat.SES) || (outputFileFormat == FileFormat.DSN))
+    {
+      String content = "";
+      try {
+        // read the content of the output file as text
+        content = Files.readString(outputFile.toPath());
+      } catch (IOException e) {
+        FRLogger.error(e.getLocalizedMessage(), e);
+      }
+
+      if (outputFileFormat == FileFormat.SES)
+      {
+        // get the number of components and nets in the SES file
+        sb.append(",");
+        sb.append(content.split("\\(component").length - 1);
+        sb.append(",");
+        sb.append(content.split("\\(net").length - 1);
+      }
+      else if (outputFileFormat == FileFormat.DSN)
+      {
+        // get the number of layers and nets in the DSN file
+        sb.append(",");
+        sb.append(content.split("\\(layer").length - 1);
+        sb.append(",");
+        sb.append(content.split("\\(component").length - 1);
+        sb.append(",");
+        sb.append(content.split("\\(class").length - 1);
+        sb.append(",");
+        sb.append(content.split("\\(net").length - 1);
+        sb.append(",");
+        sb.append(content.split("\\(wire").length - 1);
+        sb.append(",");
+        sb.append(content.split("\\(via").length - 1);
+      }
+    }
+
+    return sb.toString();
   }
 }

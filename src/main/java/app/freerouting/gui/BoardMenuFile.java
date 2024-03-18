@@ -80,8 +80,7 @@ public class BoardMenuFile extends JMenu {
 //    file_save_and_exit_menuitem.addActionListener(
 //        evt -> {
 //          if (file_menu.session_file_option) {
-//            file_menu.board_frame.design_file.write_specctra_session_file(
-//                file_menu.board_frame);
+//            file_menu.board_frame.design_file.write_specctra_session_file(file_menu.board_frame);
 //          } else {
 //            file_menu.board_frame.save();
 //          }
@@ -135,16 +134,6 @@ public class BoardMenuFile extends JMenu {
     // File / Export as Specctra Session File and Export as Eagle Session Script
     // file_menu.add_design_dependent_items();
 
-    // File / Cancel and Exit
-
-//    JMenuItem file_cancel_and_exit_menuitem = new JMenuItem();
-//    file_cancel_and_exit_menuitem.setText(file_menu.resources.getString("cancel_and_exit"));
-//    file_cancel_and_exit_menuitem.setToolTipText(file_menu.resources.getString("cancel_and_exit_tooltip"));
-//    file_cancel_and_exit_menuitem.addActionListener(evt -> file_menu.board_frame.dispose());
-//    file_cancel_and_exit_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_cancel_and_exit_menuitem", file_cancel_and_exit_menuitem.getText()));
-//
-//    file_menu.add(file_cancel_and_exit_menuitem);
-
     // File / Exit
 
     JMenuItem file_exit_menuitem = new JMenuItem();
@@ -157,22 +146,6 @@ public class BoardMenuFile extends JMenu {
     file_menu.add(file_exit_menuitem);
 
     return file_menu;
-  }
-
-  public void add_design_dependent_items() {
-    JMenuItem file_write_session_file_menuitem = new JMenuItem();
-    file_write_session_file_menuitem.setText(resources.getString("session_file"));
-    file_write_session_file_menuitem.setToolTipText(resources.getString("session_file_tooltip"));
-    file_write_session_file_menuitem.addActionListener(evt -> board_frame.design_file.write_specctra_session_file(board_frame));
-    file_write_session_file_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_write_session_file_menuitem", file_write_session_file_menuitem.getText()));
-    this.add(file_write_session_file_menuitem);
-
-    JMenuItem file_write_eagle_session_script_menuitem = new JMenuItem();
-    file_write_eagle_session_script_menuitem.setText(resources.getString("eagle_script"));
-    file_write_eagle_session_script_menuitem.setToolTipText(resources.getString("eagle_script_tooltip"));
-    file_write_eagle_session_script_menuitem.addActionListener(evt -> board_frame.design_file.update_eagle(board_frame));
-    file_write_eagle_session_script_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_write_eagle_session_script_menuitem", file_write_eagle_session_script_menuitem.getText()));
-    this.add(file_write_eagle_session_script_menuitem);
   }
 
   /** Adds a menu item for saving the current GUI settings as default. */

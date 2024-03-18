@@ -403,19 +403,13 @@ public class MainApplication extends WindowBase {
               OutputStream output_stream = new FileOutputStream(filename);
 
               switch (extension) {
-                case ".dsn" -> new_frame.board_panel.board_handling.saveAsSpecctraDesignDsn(
-                    output_stream, design_name, false);
-                case ".ses" -> new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
-                    design_name, output_stream);
+                case ".dsn" -> new_frame.board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream, design_name, false);
+                case ".ses" -> new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, design_name);
                 case ".scr" -> {
-                  ByteArrayOutputStream session_output_stream =
-                      new ByteArrayOutputStream();
-                  new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(
-                      filename, session_output_stream);
-                  InputStream input_stream =
-                      new ByteArrayInputStream(session_output_stream.toByteArray());
-                  new_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(
-                      input_stream, output_stream);
+                  ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
+                  new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(session_output_stream, filename);
+                  InputStream input_stream = new ByteArrayInputStream(session_output_stream.toByteArray());
+                  new_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(input_stream, output_stream);
                 }
               }
 

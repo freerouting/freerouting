@@ -7,6 +7,8 @@ import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
+import app.freerouting.designforms.specctra.RulesFile;
+import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 
@@ -14,6 +16,8 @@ import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -225,13 +229,30 @@ public class BoardFrame extends WindowBase {
 
           switch (p_design.outputFileFormat)
           {
+            case SES:
+              // Save the file as a Specctra SES file
+              boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.design_file.getOutputFile(), design_file.get_name());
+              // Save the rules file as well, if the user wants to
+              if (sesFileSaved && WindowMessage.confirm(resources.getString("confirm")))
+              {
+                saveRulesAs(design_file.getRulesFile(), design_file.get_name(), board_panel.board_handling);
+              }
+              FRAnalytics.buttonClicked("fileio_saveses", this.design_file.getOutputFileDetails());
+              break;
             case DSN:
-              // TODO: Save the file as a specctra dsn file
-              //board_panel.board_handling.saveToSpecctraDsn(p_design.getOutputFile());
+              // Save the file as a Specctra DSN file
+              this.saveAsSpecctraDesignDsn(this.design_file.getOutputFile(), design_file.get_name(), false);
+              FRAnalytics.buttonClicked("fileio_savedsn", this.design_file.getOutputFileDetails());
               break;
             case FRB:
               // Save the file as a freerouting binary file
               this.saveAsBinary(this.design_file.getOutputFile());
+              FRAnalytics.buttonClicked("fileio_savefrb", this.design_file.getOutputFileDetails());
+              break;
+            case SCR:
+              //  Save the file as an Eagle script file
+              this.saveAsEagleScriptScr(this.design_file.getEagleScriptFile(), design_file.get_name());
+              FRAnalytics.buttonClicked("fileio_savescr", this.design_file.getOutputFileDetails());
               break;
             default:
               // The file format is not supported
@@ -475,17 +496,17 @@ public class BoardFrame extends WindowBase {
    * Saves the board, GUI settings and subwindows to disk as a binary file.
    * Returns false, if the save failed.
    */
-  private boolean saveAsBinary(File output_file) {
-    if (this.design_file == null) {
+  private boolean saveAsBinary(File outputFile) {
+    if (outputFile == null) {
       return false;
     }
 
     OutputStream output_stream;
     ObjectOutputStream object_stream;
     try {
-      FRLogger.info("Saving '" + output_file.getPath() + "'...");
+      FRLogger.info("Saving '" + outputFile.getPath() + "'...");
 
-      output_stream = new FileOutputStream(output_file);
+      output_stream = new FileOutputStream(outputFile);
       object_stream = new ObjectOutputStream(output_stream);
     } catch (IOException e) {
       screen_messages.set_status_message(resources.getString("error_2"));
@@ -525,6 +546,112 @@ public class BoardFrame extends WindowBase {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Writes a Specctra Session File (SES). Returns false, if write operation fails.
+   */
+  public boolean saveAsSpecctraSessionSes(File outputFile, String designName) {
+    if (outputFile == null) {
+      return false;
+    }
+
+    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
+    OutputStream output_stream;
+    try {
+      output_stream = new FileOutputStream(outputFile);
+    } catch (Exception e) {
+      output_stream = null;
+    }
+
+    if (!board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, designName)) {
+      this.screen_messages.set_status_message(
+          resources.getString("message_13")
+              + " "
+              + outputFile.getPath()
+              + " "
+              + resources.getString("message_7"));
+      return false;
+    }
+
+    this.screen_messages.set_status_message(
+        resources.getString("message_11")
+            + " "
+            + outputFile.getPath()
+            + " "
+            + resources.getString("message_12"));
+
+    return true;
+  }
+
+  /** Saves the board rule to file, so that they can be reused later on. */
+  private boolean saveRulesAs(File rulesFile, String designName, BoardHandling p_board_handling)
+  {
+    FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
+
+    OutputStream outputStream;
+    try {
+      outputStream = new FileOutputStream(rulesFile);
+    } catch (IOException e) {
+      FRLogger.error("unable to create rules file", e);
+      return false;
+    }
+
+    RulesFile.write(p_board_handling, outputStream, designName);
+    return true;
+  }
+
+  public void saveAsEagleScriptScr(File outputFile, String design_name) {
+    ByteArrayOutputStream sesOutputStream = new ByteArrayOutputStream();
+    if (!board_panel.board_handling.saveAsSpecctraSessionSes(sesOutputStream, design_name)) {
+      return;
+    }
+    InputStream sesInputStream = new ByteArrayInputStream(sesOutputStream.toByteArray());
+
+    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
+
+    OutputStream output_stream;
+    try {
+      output_stream = new FileOutputStream(outputFile);
+    } catch (Exception e) {
+      output_stream = null;
+    }
+
+    if (board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(sesInputStream, output_stream))
+    {
+      screen_messages.set_status_message(
+          resources.getString("message_14")
+              + " "
+              + outputFile.getPath()
+              + " "
+              + resources.getString("message_15"));
+    } else {
+      screen_messages.set_status_message(
+          resources.getString("message_16")
+              + " "
+              + outputFile.getPath()
+              + " "
+              + resources.getString("message_7"));
+    }
+  }
+
+  /**
+   * Writes a Specctra Design File (DSN). Returns false, if write operation fails.
+   */
+  public boolean saveAsSpecctraDesignDsn(File outputFile, String designName, boolean compatibilityMode) {
+    if (outputFile == null) {
+      return false;
+    }
+
+    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
+    OutputStream output_stream;
+    try {
+      output_stream = new FileOutputStream(outputFile);
+    } catch (Exception e) {
+      output_stream = null;
+    }
+
+    return board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream, designName, compatibilityMode);
   }
 
   /** Sets contexts sensitive help for the input component, if the help system is used. */

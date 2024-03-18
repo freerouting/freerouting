@@ -125,7 +125,7 @@ class Wiring extends ScopeKeyword {
     }
     p_par.file.start_scope();
     p_par.file.write("wire");
-
+    
     if (p_par.compat_mode) {
       Point[] corner_arr = curr_wire.polyline().corner_arr();
       FloatPoint[] float_corner_arr = new FloatPoint[corner_arr.length];

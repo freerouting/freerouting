@@ -86,6 +86,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * True if currently a logfile is being processed. Used to prevent interactive changes of the
    * board database in this case.
    */
+  @Deprecated(since = "2.0", forRemoval = true)
   private boolean board_is_read_only = false;
   /** The current position of the mouse pointer. */
   private FloatPoint current_mouse_position;
@@ -867,8 +868,8 @@ public class BoardHandling extends BoardHandlingHeadless {
    * p_compat_mode is true, only standard specctra dsn scopes are written, so that any host system
    * with a specctra interface can read them.
    */
-  public boolean saveAsSpecctraDesignDsn(
-      OutputStream p_output_stream, String p_design_name, boolean p_compat_mode) {
+  public boolean saveAsSpecctraDesignDsn(OutputStream p_output_stream, String p_design_name, boolean p_compat_mode)
+  {
     if (board_is_read_only || p_output_stream == null) {
       return false;
     }
@@ -876,7 +877,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /** Writes a .SES session file in the Specctra ses-format. */
-  public boolean saveAsSpecctraSessionSes(String p_design_name, OutputStream p_output_stream) {
+  public boolean saveAsSpecctraSessionSes(OutputStream p_output_stream, String p_design_name) {
     if (board_is_read_only) {
       return false;
     }
