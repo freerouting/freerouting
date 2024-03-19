@@ -29,6 +29,10 @@ public class TextManager {
     put("auto-fix", 0xF0068);
     put("undo", 0xF054C);
     put("redo", 0xF044E);
+    put("spider-web", 0xF0BCA);
+    put("order-bool-ascending-variant", 0xF098F);
+    put("magnify-plus-cursor", 0xF0A63);
+    put("magnify-minus", 0xF034A);
     put("alert", 0xF0026);
     put("close-octagon", 0xF015C);
   }};

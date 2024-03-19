@@ -9,6 +9,8 @@ import app.freerouting.interactive.SelectMenuState;
 
 import app.freerouting.management.FRAnalytics;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -31,7 +33,7 @@ import javax.swing.border.BevelBorder;
 
 /** Implements the toolbar panel of the board frame. */
 class BoardToolbar extends JPanel {
-
+  private final float FONT_SIZE = 22;
   final JComboBox<Unit> toolbar_unit_combo_box;
   private final BoardFrame board_frame;
   private final JToggleButton toolbar_select_button;
@@ -48,6 +50,7 @@ class BoardToolbar extends JPanel {
     // create the left toolbar
 
     final JToolBar left_toolbar = new JToolBar();
+
     final ButtonGroup toolbar_button_group = new ButtonGroup();
     this.toolbar_select_button = new JToggleButton();
     this.toolbar_route_button = new JToggleButton();
@@ -170,19 +173,17 @@ class BoardToolbar extends JPanel {
     separator_3.setRequestFocusEnabled(false);
     middle_toolbar.add(separator_3);
 
-    final JButton toolbar_display_all_button = new JButton();
-    tm.setText(toolbar_display_all_button, "display_all_button");
-    toolbar_display_all_button.addActionListener(evt -> board_frame.zoom_all());
-    toolbar_display_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
-
-    middle_toolbar.add(toolbar_display_all_button);
-
     final JButton toolbar_display_region_button = new JButton();
     tm.setText(toolbar_display_region_button, "display_region_button");
     toolbar_display_region_button.addActionListener(evt -> board_frame.board_panel.board_handling.zoom_region());
     toolbar_display_region_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_region_button", toolbar_display_region_button.getText()));
-
     middle_toolbar.add(toolbar_display_region_button);
+
+    final JButton toolbar_display_all_button = new JButton();
+    tm.setText(toolbar_display_all_button, "display_all_button");
+    toolbar_display_all_button.addActionListener(evt -> board_frame.zoom_all());
+    toolbar_display_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
+    middle_toolbar.add(toolbar_display_all_button);
 
     this.add(middle_toolbar, BorderLayout.CENTER);
 
@@ -217,6 +218,8 @@ class BoardToolbar extends JPanel {
     right_toolbar.add(margin_on_right_label);
 
     this.add(right_toolbar, BorderLayout.EAST);
+
+    changeToolbarFontSize(middle_toolbar, FONT_SIZE);
   }
 
   /** Sets the selected button in the menu button group */
@@ -229,6 +232,29 @@ class BoardToolbar extends JPanel {
       this.toolbar_drag_button.setSelected(true);
     } else if (interactive_state instanceof SelectMenuState) {
       this.toolbar_select_button.setSelected(true);
+    }
+  }
+
+  private static void changeToolbarFontSize(JToolBar toolBar, float newSize) {
+    for (Component comp : toolBar.getComponents()) {
+      Font font = comp.getFont();
+      // Create a new font based on the current font but with the new size
+      Font newFont = font.deriveFont(newSize);
+      comp.setFont(newFont);
+
+      // If the component is a container, update its child components recursively
+      if (comp instanceof Container) {
+        updateContainerFont((Container) comp, newFont);
+      }
+    }
+  }
+
+  private static void updateContainerFont(Container container, Font font) {
+    for (Component child : container.getComponents()) {
+      child.setFont(font);
+      if (child instanceof Container) {
+        updateContainerFont((Container) child, font);
+      }
     }
   }
 }
