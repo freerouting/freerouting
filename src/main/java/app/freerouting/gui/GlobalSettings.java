@@ -1,5 +1,8 @@
 package app.freerouting.gui;
 import com.google.gson.*;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.nio.file.*;
 import java.nio.charset.StandardCharsets;
 import java.io.*;
@@ -12,7 +15,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
-public class StartupOptions {
+public class GlobalSettings {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
   transient boolean single_design_option = false;
@@ -45,7 +48,7 @@ public class StartupOptions {
   public boolean disable_feature_select_mode = true;
   public boolean disable_feature_macros = true;
 
-  public StartupOptions() {
+  public GlobalSettings() {
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals)) {
       // the fallback language is English
       current_locale = Locale.ENGLISH;
@@ -238,15 +241,15 @@ public class StartupOptions {
     return item_selection_strategy;
   }
 
-  public static void save(StartupOptions options) throws IOException {
+  public static void save(GlobalSettings options) throws IOException {
     try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8)) {
       GSON.toJson(options, writer);
     }
   }
 
-  public static StartupOptions load() throws IOException {
+  public static GlobalSettings load() throws IOException {
     try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8)) {
-      return GSON.fromJson(reader, StartupOptions.class);
+      return GSON.fromJson(reader, GlobalSettings.class);
     }
   }
 }

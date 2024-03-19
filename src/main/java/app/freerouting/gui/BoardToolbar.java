@@ -41,9 +41,9 @@ class BoardToolbar extends JPanel {
   BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode) {
     this.board_frame = p_board_frame;
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardToolbar", p_board_frame.get_locale());
+//    ResourceBundle resources =
+//        ResourceBundle.getBundle("app.freerouting.gui.BoardToolbar", p_board_frame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
     this.setLayout(new BorderLayout());
 
@@ -61,8 +61,7 @@ class BoardToolbar extends JPanel {
     if (!p_disable_select_mode) {
       toolbar_button_group.add(toolbar_select_button);
       toolbar_select_button.setSelected(true);
-      toolbar_select_button.setText(resources.getString("select_button"));
-      toolbar_select_button.setToolTipText(resources.getString("select_button_tooltip"));
+      tm.setText(toolbar_select_button, "select_button");
       toolbar_select_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_select_menu_state());
       toolbar_select_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_select_button", toolbar_select_button.getText()));
 
@@ -73,16 +72,14 @@ class BoardToolbar extends JPanel {
     if (p_disable_select_mode) {
       toolbar_route_button.setSelected(true);
     }
-    toolbar_route_button.setText(resources.getString("route_button"));
-    toolbar_route_button.setToolTipText(resources.getString("route_button_tooltip"));
+    tm.setText(toolbar_route_button, "route_button");
     toolbar_route_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_route_menu_state());
     toolbar_route_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_route_button", toolbar_route_button.getText()));
 
     left_toolbar.add(toolbar_route_button);
 
     toolbar_button_group.add(toolbar_drag_button);
-    toolbar_drag_button.setText(resources.getString("drag_button"));
-    toolbar_drag_button.setToolTipText(resources.getString("drag_button_tooltip"));
+    tm.setText(toolbar_drag_button, "drag_button");
     toolbar_drag_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_drag_menu_state());
     toolbar_drag_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_drag_button", toolbar_drag_button.getText()));
 
@@ -100,8 +97,7 @@ class BoardToolbar extends JPanel {
     final JToolBar middle_toolbar = new JToolBar();
 
     final JButton toolbar_autoroute_button = new JButton();
-    toolbar_autoroute_button.setText(resources.getString("autoroute_button"));
-    toolbar_autoroute_button.setToolTipText(resources.getString("autoroute_button_tooltip"));
+    tm.setText(toolbar_autoroute_button, "autoroute_button");
     toolbar_autoroute_button.setDefaultCapable(true);
     Font currentFont = toolbar_autoroute_button.getFont();
     Font boldFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
@@ -133,8 +129,7 @@ class BoardToolbar extends JPanel {
     middle_toolbar.add(separator_2);
 
     final JButton toolbar_undo_button = new JButton();
-    toolbar_undo_button.setText(resources.getString("undo_button"));
-    toolbar_undo_button.setToolTipText(resources.getString("undo_button_tooltip"));
+    tm.setText(toolbar_undo_button, "undo_button");
     toolbar_undo_button.addActionListener(
         evt -> {
           board_frame.board_panel.board_handling.cancel_state();
@@ -146,8 +141,7 @@ class BoardToolbar extends JPanel {
     middle_toolbar.add(toolbar_undo_button);
 
     final JButton toolbar_redo_button = new JButton();
-    toolbar_redo_button.setText(resources.getString("redo_button"));
-    toolbar_redo_button.setToolTipText(resources.getString("redo_button_tooltip"));
+    tm.setText(toolbar_redo_button, "redo_button");
     toolbar_redo_button.addActionListener(evt -> board_frame.board_panel.board_handling.redo());
     toolbar_redo_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_redo_button", toolbar_redo_button.getText()));
 
@@ -159,16 +153,14 @@ class BoardToolbar extends JPanel {
     middle_toolbar.add(separator_1);
 
     final JButton toolbar_incompletes_button = new JButton();
-    toolbar_incompletes_button.setText(resources.getString("incompletes_button"));
-    toolbar_incompletes_button.setToolTipText(resources.getString("incompletes_button_tooltip"));
+    tm.setText(toolbar_incompletes_button, "incompletes_button");
     toolbar_incompletes_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_ratsnest());
     toolbar_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_incompletes_button", toolbar_incompletes_button.getText()));
 
     middle_toolbar.add(toolbar_incompletes_button);
 
     final JButton toolbar_violation_button = new JButton();
-    toolbar_violation_button.setText(resources.getString("violations_button"));
-    toolbar_violation_button.setToolTipText(resources.getString("violations_button_tooltip"));
+    tm.setText(toolbar_violation_button, "violations_button");
     toolbar_violation_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_clearance_violations());
     toolbar_violation_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_violation_button", toolbar_violation_button.getText()));
 
@@ -181,16 +173,14 @@ class BoardToolbar extends JPanel {
     middle_toolbar.add(separator_3);
 
     final JButton toolbar_display_all_button = new JButton();
-    toolbar_display_all_button.setText(resources.getString("display_all_button"));
-    toolbar_display_all_button.setToolTipText(resources.getString("display_all_button_tooltip"));
+    tm.setText(toolbar_display_all_button, "display_all_button");
     toolbar_display_all_button.addActionListener(evt -> board_frame.zoom_all());
     toolbar_display_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
 
     middle_toolbar.add(toolbar_display_all_button);
 
     final JButton toolbar_display_region_button = new JButton();
-    toolbar_display_region_button.setText(resources.getString("display_region_button"));
-    toolbar_display_region_button.setToolTipText(resources.getString("display_region_button_tooltip"));
+    tm.setText(toolbar_display_region_button, "display_region_button");
     toolbar_display_region_button.addActionListener(evt -> board_frame.board_panel.board_handling.zoom_region());
     toolbar_display_region_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_region_button", toolbar_display_region_button.getText()));
 
@@ -205,7 +195,7 @@ class BoardToolbar extends JPanel {
     right_toolbar.setAutoscrolls(true);
 
     final JLabel unit_label = new JLabel();
-    unit_label.setText(resources.getString("unit_button"));
+    tm.setText(unit_label, "unit_button");
     right_toolbar.add(unit_label);
 
     toolbar_unit_combo_box = new JComboBox<>();

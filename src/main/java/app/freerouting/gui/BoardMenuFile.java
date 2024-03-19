@@ -48,7 +48,7 @@ public class BoardMenuFile extends JMenu {
     file_open_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_open_menuitem.addActionListener(
         evt -> {
-          File selected_file = DesignFile.showOpenDialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
+          File selected_file = DesignFile.showOpenDialog(MainApplication.globalSettings.input_directory, file_menu.board_frame);
 
           file_menu.openEventListeners.forEach(listener -> listener.accept(selected_file));
         });
@@ -97,7 +97,7 @@ public class BoardMenuFile extends JMenu {
     file_save_as_menuitem.setToolTipText(file_menu.resources.getString("save_as_tooltip"));
     file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_save_as_menuitem.addActionListener(evt -> {
-      File selected_file = file_menu.board_frame.design_file.showSaveAsDialog(MainApplication.startupOptions.input_directory, file_menu.board_frame);
+      File selected_file = file_menu.board_frame.design_file.showSaveAsDialog(MainApplication.globalSettings.input_directory, file_menu.board_frame);
 
       file_menu.saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
     });
