@@ -29,6 +29,8 @@ public class TextManager {
     put("auto-fix", 0xF0068);
     put("undo", 0xF054C);
     put("redo", 0xF044E);
+    put("alert", 0xF0026);
+    put("close-octagon", 0xF015C);
   }};
 
   public TextManager(Class baseClass, Locale locale) {
@@ -62,7 +64,7 @@ public class TextManager {
   public String getText(String key, String... args) {
     // if the key is not found, return an empty string
     if (!messages.containsKey(key)) {
-      return "";
+      return key;
     }
 
     String text = messages.getString(key);
@@ -71,13 +73,13 @@ public class TextManager {
     Pattern pattern = Pattern.compile("\\{\\{(.+?)\\}\\}");
     Matcher matcher = pattern.matcher(text);
 
-    // Find and print all matches
+    // Find and replace all matches
     int argIndex = 0;
     while (matcher.find()) {
-      // entire match including {{ and }}
+      // Entire match including {{ and }}
       String placeholder = matcher.group(0);
 
-      if (!placeholder.startsWith("{{icon:") && argIndex < args.length - 1)
+      if (!placeholder.startsWith("{{icon:") && argIndex < args.length)
       {
         // replace the placeholder with the value
         text = text.replace(placeholder, args[argIndex]);
@@ -85,7 +87,38 @@ public class TextManager {
       }
     }
 
-    return String.format(messages.getString(key), args);
+    return text;
+  }
+
+  private String insertIcons(JComponent component, String text) {
+    // Pattern to match {{variable_name}} placeholders
+    Pattern pattern = Pattern.compile("\\{\\{icon:(.+?)\\}\\}");
+    Matcher matcher = pattern.matcher(text);
+
+    // Find all matches
+    while (matcher.find()) {
+      // Entire match including {{ and }}
+      String placeholder = matcher.group(0);
+
+      // Get the icon name
+      String iconName = matcher.group(1);
+
+      try {
+
+        // Get the unicode code point for the icon
+        int codePoint = iconMap.get(iconName);
+
+        // Convert the code point to a String
+        text = text.replace(placeholder, new String(Character.toChars(codePoint)));
+
+        Font originalFont = component.getFont();
+        component.setFont(materialDesignIcons.deriveFont(Font.PLAIN, originalFont.getSize() * 1.5f));
+      } catch (Exception e) {
+        FRLogger.error("There was a problem setting the icon for the component", e);
+      }
+    }
+
+    return text;
   }
 
   // Add methods to set text for different GUI components
@@ -93,24 +126,11 @@ public class TextManager {
     String text = getText(key, args);
     String tooltip = getText(key + "_tooltip", args);
 
-    // If the text is in the format of {{icon:icon_name}}, set the icon instead
-    if (text.startsWith("{{icon:") && text.endsWith("}}"))
-    {
-      try {
-        String iconName = text.substring(7, text.length() - 2);
-
-        // Get the unicode code point for the icon
-        int codePoint = iconMap.get(iconName);
-
-        // Convert the code point to a String
-        text = new String(Character.toChars(codePoint));
-
-        Font originalFont = component.getFont();
-        component.setFont(materialDesignIcons.deriveFont(Font.PLAIN, originalFont.getSize()));
-      } catch (Exception e) {
-        FRLogger.error("There was a problem setting the icon for the component", e);
-      }
+    if (tooltip == null || tooltip.isEmpty() || tooltip.equals(key + "_tooltip")) {
+      tooltip = null;
     }
+
+    text = insertIcons(component, text);
 
     // Set the text for the component
     if (component instanceof JButton) {
