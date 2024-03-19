@@ -885,8 +885,8 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /** Writes a session file in the Eagle SCR format. */
-  public boolean saveSpecctraSessionSesAsEagleScriptScr(
-      InputStream p_input_stream, OutputStream p_output_stream) {
+  public boolean saveSpecctraSessionSesAsEagleScriptScr(InputStream p_input_stream, OutputStream p_output_stream)
+  {
     if (board_is_read_only) {
       return false;
     }

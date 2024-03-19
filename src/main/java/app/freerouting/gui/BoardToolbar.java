@@ -41,8 +41,6 @@ class BoardToolbar extends JPanel {
   BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode) {
     this.board_frame = p_board_frame;
 
-//    ResourceBundle resources =
-//        ResourceBundle.getBundle("app.freerouting.gui.BoardToolbar", p_board_frame.get_locale());
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
     this.setLayout(new BorderLayout());

@@ -188,27 +188,38 @@ public class BoardFrame extends WindowBase {
     this.menubar = curr_menubar;
 
     this.menubar.fileMenu.addOpenEventListener(
-        (File selectedFile) ->
-        {
-          if (selectedFile == null)
-          {
+        (File selectedFile) -> {
+          if (selectedFile == null) {
             // There was no file selected in the dialog, so we do nothing
             return;
           }
 
           // Let's categorize the file based on its extension
-          if (!p_design.tryToSetInputFile(selectedFile))
-          {
+          if (!p_design.tryToSetInputFile(selectedFile)) {
             // The file is not in a valid format
             return;
           }
 
           // Load the file into the frame based on its recognised format
-          if ((board_panel != null) && (board_panel.board_handling != null) && (p_design.inputFileFormat != FileFormat.UNKNOWN))
+          if ((board_panel != null)
+              && (board_panel.board_handling != null)
+              && (p_design.inputFileFormat != FileFormat.UNKNOWN))
           {
-            this.load(p_design.get_input_stream(), p_design.inputFileFormat == FileFormat.DSN, null);
+            switch (p_design.inputFileFormat) {
+              case DSN:
+                this.load(p_design.get_input_stream(), true, null);
+                FRAnalytics.buttonClicked("fileio_loaddsn", this.design_file.getInputFileDetails());
+                break;
+              case FRB:
+                this.load(p_design.get_input_stream(), false, null);
+                FRAnalytics.buttonClicked("fileio_loadfrb", this.design_file.getInputFileDetails());
+                break;
+              default:
+                // The file format is not supported
+                FRLogger.warn("Loading the board failed, because the selected file format is not supported.");
+                break;
+            }
           }
-
         });
 
     this.menubar.fileMenu.addSaveAsEventListener(

@@ -339,33 +339,33 @@ public class DesignFile {
     return false;
   }
 
-  public String getOutputFileDetails() {
+  private String GetFileDetails(File file, FileFormat fileFormat) {
     StringBuilder sb = new StringBuilder();
 
-    if (this.outputFile == null) {
+    if (file == null) {
       return "";
     }
 
-    sb.append(outputFileFormat);
+    sb.append(fileFormat);
     sb.append(",");
-    sb.append(outputFile.getAbsolutePath());
+    sb.append(file.getAbsolutePath());
     sb.append(",");
-    sb.append(outputFile.getName());
+    sb.append(file.getName());
     sb.append(",");
     // get the file size of the output file
-    sb.append(outputFile.length());
+    sb.append(file.length());
 
-    if ((outputFileFormat == FileFormat.SES) || (outputFileFormat == FileFormat.DSN))
+    if ((fileFormat == FileFormat.SES) || (fileFormat == FileFormat.DSN))
     {
       String content = "";
       try {
         // read the content of the output file as text
-        content = Files.readString(outputFile.toPath());
+        content = Files.readString(file.toPath());
       } catch (IOException e) {
         FRLogger.error(e.getLocalizedMessage(), e);
       }
 
-      if (outputFileFormat == FileFormat.SES)
+      if (fileFormat == FileFormat.SES)
       {
         // get the number of components and nets in the SES file
         sb.append(",");
@@ -373,7 +373,7 @@ public class DesignFile {
         sb.append(",");
         sb.append(content.split("\\(net").length - 1);
       }
-      else if (outputFileFormat == FileFormat.DSN)
+      else if (fileFormat == FileFormat.DSN)
       {
         // get the number of layers and nets in the DSN file
         sb.append(",");
@@ -392,5 +392,13 @@ public class DesignFile {
     }
 
     return sb.toString();
+  }
+
+  public String getInputFileDetails() {
+    return GetFileDetails(this.inputFile, inputFileFormat);
+  }
+
+  public String getOutputFileDetails() {
+    return GetFileDetails(this.outputFile, outputFileFormat);
   }
 }
