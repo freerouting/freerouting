@@ -43,7 +43,7 @@ public class GlobalSettings {
   public boolean disable_analytics = false;
   public int analytics_modulo = 16;
   public final String user_id;
-  public int dialog_confirmation_timeout = 20;
+  public int dialog_confirmation_timeout = 5;
   public String host = "N/A";
   public boolean disable_feature_select_mode = true;
   public boolean disable_feature_macros = true;
