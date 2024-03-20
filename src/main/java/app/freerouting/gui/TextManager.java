@@ -27,6 +27,7 @@ public class TextManager {
   private Map<String, Integer> iconMap = new HashMap<>()
   {{
     put("auto-fix", 0xF0068);
+    put("delete-sweep", 0xF05E9);
     put("undo", 0xF054C);
     put("redo", 0xF044E);
     put("spider-web", 0xF0BCA);
