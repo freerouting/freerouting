@@ -71,6 +71,7 @@ public class DesignFile {
     if (p_design_file_name == null) {
       return null;
     }
+
     return new DesignFile(new File(p_design_file_name));
   }
 
@@ -258,9 +259,9 @@ public class DesignFile {
     // Open the file as a binary file and read the first 4 bytes
     try (FileInputStream fileInputStream = new FileInputStream(selectedFile))
     {
-      byte[] buffer = new byte[4];
-      int bytesRead = fileInputStream.read(buffer, 0, 4);
-      if (bytesRead != 4)
+      byte[] buffer = new byte[6];
+      int bytesRead = fileInputStream.read(buffer, 0, 6);
+      if (bytesRead != 6)
       {
         return false;
       }
@@ -272,8 +273,19 @@ public class DesignFile {
         this.outputFile = changeFileExtension(selectedFile, binary_file_extension);
       }
 
-      // Check if the file is a DSN file
-      if (buffer[0] == (byte)0x28 && buffer[1] == (byte)0x70 && buffer[2] == (byte)0x63 && buffer[3] == (byte)0x62)
+      // If the first few bytes are 0x0A or 0x13, ignore them
+      while (buffer[0] == (byte)0x0A || buffer[0] == (byte)0x0D)
+      {
+        buffer[0] = buffer[1];
+        buffer[1] = buffer[2];
+        buffer[2] = buffer[3];
+        buffer[3] = buffer[4];
+        buffer[4] = buffer[5];
+      }
+
+      // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")
+      if ((buffer[0] == (byte)0x28 && buffer[1] == (byte)0x70 && buffer[2] == (byte)0x63 && buffer[3] == (byte)0x62) ||
+          (buffer[0] == (byte)0x28 && buffer[1] == (byte)0x50 && buffer[2] == (byte)0x43 && buffer[3] == (byte)0x42))
       {
         this.inputFileFormat = FileFormat.DSN;
         this.outputFile = changeFileExtension(selectedFile, ses_file_extension);
