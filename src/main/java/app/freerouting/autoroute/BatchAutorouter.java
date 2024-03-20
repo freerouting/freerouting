@@ -11,8 +11,10 @@ import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.TextManager;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.InteractiveActionThread;
+import app.freerouting.interactive.InteractiveState;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 
@@ -127,9 +129,8 @@ public class BatchAutorouter {
    * Returns true if the board is completed.
    */
   public boolean autoroute_passes(boolean save_intermediate_stages) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.interactive.InteractiveState", hdlg.get_locale());
+    TextManager tm = new TextManager(InteractiveState.class, hdlg.get_locale());
+
     boolean still_unrouted_items = true;
     int diffBetweenBoardsCheckSizeDefault = 20;
     int diffBetweenBoardsCheckSize = diffBetweenBoardsCheckSizeDefault;
@@ -152,13 +153,7 @@ public class BatchAutorouter {
         break;
       }
 
-      String start_message =
-          resources.getString("batch_autorouter")
-              + " "
-              + resources.getString("stop_message")
-              + "        "
-              + resources.getString("autorouter_pass")
-              + curr_pass_no;
+      String start_message = tm.getText("autorouter_started", Integer.toString(curr_pass_no));
       hdlg.screen_messages.set_status_message(start_message);
 
       BasicBoard boardBefore = this.routing_board.clone();

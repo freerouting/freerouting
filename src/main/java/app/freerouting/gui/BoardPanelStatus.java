@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
  */
 class BoardPanelStatus extends JPanel {
   // An icon for errors and warnings
+  private final JPanel errorsWarningsPanel;
   private final JLabel errorIcon;
   public final JLabel errorLabel;
   private final JLabel warningIcon;
@@ -40,7 +41,7 @@ class BoardPanelStatus extends JPanel {
     setLayout(new BorderLayout());
 
     // Left panel with warnings, errors, and status messages
-    JPanel leftMessagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    errorsWarningsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
     // Load the Material Icons for warnings and errors
     warningIcon = new JLabel();
@@ -53,10 +54,10 @@ class BoardPanelStatus extends JPanel {
     errorLabel = new JLabel("0", SwingConstants.LEADING);
 
     // Add error and warning labels
-    leftMessagePanel.add(errorIcon, BorderLayout.WEST);
-    leftMessagePanel.add(errorLabel, BorderLayout.WEST);
-    leftMessagePanel.add(warningIcon, BorderLayout.WEST);
-    leftMessagePanel.add(warningLabel, BorderLayout.WEST);
+    errorsWarningsPanel.add(errorIcon, BorderLayout.WEST);
+    errorsWarningsPanel.add(errorLabel, BorderLayout.WEST);
+    errorsWarningsPanel.add(warningIcon, BorderLayout.WEST);
+    errorsWarningsPanel.add(warningLabel, BorderLayout.WEST);
 
     // Add mouse listeners for error and warning labels
     addErrorOrWarningLabelClickedListener();
@@ -73,7 +74,7 @@ class BoardPanelStatus extends JPanel {
     statusMessage = new JLabel();
     statusMessage.setHorizontalAlignment(SwingConstants.CENTER);
     tm.setText(statusMessage, "status_line");
-    leftMessagePanel.add(statusMessage, BorderLayout.CENTER);
+    errorsWarningsPanel.add(statusMessage, BorderLayout.CENTER);
 
     // Initialize additional message label
     additionalMessage = new JLabel();
@@ -81,8 +82,8 @@ class BoardPanelStatus extends JPanel {
     additionalMessage.setMaximumSize(new Dimension(300, 14));
     additionalMessage.setMinimumSize(new Dimension(140, 14));
     additionalMessage.setPreferredSize(new Dimension(180, 14));
-    leftMessagePanel.add(additionalMessage, BorderLayout.EAST);
-    add(leftMessagePanel, BorderLayout.CENTER);
+    errorsWarningsPanel.add(additionalMessage, BorderLayout.EAST);
+    add(errorsWarningsPanel, BorderLayout.CENTER);
 
     // Right panel with current layer and cursor position
     JPanel rightMessagePanel = new JPanel(new BorderLayout());
@@ -126,26 +127,7 @@ class BoardPanelStatus extends JPanel {
    */
   private void addErrorOrWarningLabelClickedListener() {
     // Raise an event if the user clicks on the error or warning label
-    errorIcon.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        raiseErrorOrWarningLabelClickedEvent();
-      }
-    });
-    errorLabel.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        raiseErrorOrWarningLabelClickedEvent();
-      }
-    });
-
-    warningIcon.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        raiseErrorOrWarningLabelClickedEvent();
-      }
-    });
-    warningLabel.addMouseListener(new MouseAdapter() {
+    errorsWarningsPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         raiseErrorOrWarningLabelClickedEvent();
@@ -153,10 +135,7 @@ class BoardPanelStatus extends JPanel {
     });
 
     // Change the mouse cursor to a hand when hovering over these labels
-    errorIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    errorLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    warningIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    warningLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    errorsWarningsPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
   }
 
   /**
