@@ -281,15 +281,11 @@ class Wiring extends ScopeKeyword {
   private static Net.Id read_net_id(IJFlexScanner p_scanner) {
     try {
       int subnet_number = 0;
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-      Object next_token = p_scanner.next_token();
-      if (!(next_token instanceof String)) {
-        FRLogger.warn("Wiring:read_net_id: String expected at '" + p_scanner.get_scope_identifier() + "'");
-        return null;
-      }
-      String net_name = (String) next_token;
+
+      String net_name = p_scanner.next_string();
       p_scanner.set_scope_identifier(net_name);
-      next_token = p_scanner.next_token();
+
+      Object next_token = p_scanner.next_token();
       if (next_token instanceof Integer) {
         subnet_number = (Integer) next_token;
         next_token = p_scanner.next_token();

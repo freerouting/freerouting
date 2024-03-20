@@ -1758,6 +1758,9 @@ class SpecctraDsnFileReader implements IJFlexScanner {
       result.add(next_string);
     }
 
+    zzStartRead = zzMarkedPos - 1;
+    zzCurrentPos = zzMarkedPos - 1;
+
     return result.toArray(new String[result.size()]);
   }
 
