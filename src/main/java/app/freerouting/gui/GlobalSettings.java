@@ -36,8 +36,8 @@ public class GlobalSettings {
   transient String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   transient Locale current_locale = Locale.getDefault();
   public boolean save_intermediate_stages = false;
-  // this value is equivalent to the setting of "-oit 0.001"
-  public float optimization_improvement_threshold = 0.00001f;
+  // this value is equivalent to the setting of "-oit 1.0"
+  public float optimization_improvement_threshold = 0.01f;
   transient String[] ignore_net_classes_by_autorouter = new String[0];
   public boolean disable_logging = false;
   public boolean disable_analytics = false;

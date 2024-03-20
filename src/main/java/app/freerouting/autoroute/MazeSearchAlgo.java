@@ -27,8 +27,10 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
@@ -42,7 +44,8 @@ public class MazeSearchAlgo {
   public final AutorouteEngine autoroute_engine;
   final AutorouteControl ctrl;
   /** The queue of expanded elements used in this search algorithm. */
-  final SortedSet<MazeListElement> maze_expansion_list;
+  final PriorityQueue<MazeListElement> maze_expansion_list;
+
   /**
    * Used for calculating of a good lower bound for the distance between a new MazeExpansionElement
    * and the destination set of the expansion.
@@ -62,7 +65,7 @@ public class MazeSearchAlgo {
     random_generator.setSeed(
         p_ctrl.ripup_costs); // To get reproducible random numbers in the ripup algorithm.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
-    maze_expansion_list = new TreeSet<>();
+    maze_expansion_list = new PriorityQueue<>(Comparator.comparingDouble(o -> o.sorting_value));
     destination_distance =
         new DestinationDistance(
             ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost, ctrl.min_cheap_via_cost);

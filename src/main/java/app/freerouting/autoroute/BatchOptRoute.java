@@ -167,10 +167,7 @@ public class BatchOptRoute {
         route_improved =
             (float)
                 ((via_count_before != 0 && trace_length_before != 0)
-                    ? 1.0
-                        - ((((via_count_after / via_count_before)
-                                + (trace_length_after / trace_length_before))
-                            / 2))
+                    ? 1.0 - (((((float)via_count_after / via_count_before) + (trace_length_after / trace_length_before))/ 2))
                     : 0);
       }
     }
