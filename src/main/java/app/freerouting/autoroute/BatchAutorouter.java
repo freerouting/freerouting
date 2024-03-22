@@ -168,6 +168,7 @@ public class BatchAutorouter {
       still_unrouted_items = autoroute_pass(curr_pass_no, true);
 
       // let's check if there was enough change in the last pass, because if it was too little we should probably stop
+      // TODO: score the board based on the costs settings of trace length, corner and via count, unconnected ratsnets
       int newTraceDifferences = this.routing_board.diff_traces(boardBefore);
       diffBetweenBoards.add(newTraceDifferences);
 
