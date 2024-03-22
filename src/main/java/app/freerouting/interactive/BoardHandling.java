@@ -27,6 +27,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
+import app.freerouting.gui.MainApplication;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntryType;
@@ -1146,12 +1147,12 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /** Start the batch autorouter on the whole Board */
-  public InteractiveActionThread start_batch_autorouter() {
+  public InteractiveActionThread start_autorouter_and_route_optimizer() {
     if (board_is_read_only) {
       return null;
     }
     board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_batch_autorouter_instance(this);
+    this.interactive_action_thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(this);
 
     this.interactive_action_thread.start();
 
@@ -1391,7 +1392,14 @@ public class BoardHandling extends BoardHandlingHeadless {
     item_selection_strategy = p_item_selection_strategy;
   }
 
-  public int get_num_threads() {
+  public int get_num_threads()
+  {
+    if ((num_threads > 1) && (MainApplication.globalSettings.disabledFeatures.multi_threading))
+    {
+      FRLogger.info("Multi-threading is disabled in the settings. Using single thread.");
+      num_threads = 1;
+    }
+
     return num_threads;
   }
 

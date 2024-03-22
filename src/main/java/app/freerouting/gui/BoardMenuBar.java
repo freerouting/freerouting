@@ -22,7 +22,7 @@ class BoardMenuBar extends JMenuBar {
     menubar.add(rules_menu);
     JMenu info_menu = BoardMenuInfo.get_instance(p_board_frame);
     menubar.add(info_menu);
-    if (!MainApplication.globalSettings.disable_feature_snapshots)
+    if (!MainApplication.globalSettings.disabledFeatures.other_menu)
     {
       JMenu other_menu = BoardMenuOther.get_instance(p_board_frame);
       menubar.add(other_menu);

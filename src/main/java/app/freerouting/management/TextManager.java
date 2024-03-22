@@ -1,5 +1,6 @@
-package app.freerouting.gui;
+package app.freerouting.management;
 
+import app.freerouting.settings.GlobalSettings;
 import app.freerouting.logger.FRLogger;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -11,7 +12,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;

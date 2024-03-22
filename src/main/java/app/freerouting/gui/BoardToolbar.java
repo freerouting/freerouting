@@ -9,6 +9,7 @@ import app.freerouting.interactive.RouteMenuState;
 import app.freerouting.interactive.SelectMenuState;
 
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -18,7 +19,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -90,7 +90,7 @@ class BoardToolbar extends JPanel {
 
     final JToolBar middle_toolbar = new JToolBar();
 
-    // Add Settings icon to the toolbar
+    // Add "Settings" button to the toolbar
     final JButton settings_button = new JButton();
     tm.setText(settings_button, "settings_button");
     settings_button.addActionListener(
@@ -116,7 +116,7 @@ class BoardToolbar extends JPanel {
     toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     toolbar_autoroute_button.addActionListener(
         evt -> {
-          InteractiveActionThread thread = board_frame.board_panel.board_handling.start_batch_autorouter();
+          InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer();
 
           if (board_frame.board_panel.board_handling.autorouter_listener != null) {
             // Add the auto-router listener to save the design file when the auto-router is running

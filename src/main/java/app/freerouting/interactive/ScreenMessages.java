@@ -3,7 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatPoint;
 
-import app.freerouting.gui.TextManager;
+import app.freerouting.management.TextManager;
 import javax.swing.JLabel;
 import java.text.NumberFormat;
 import java.util.Locale;

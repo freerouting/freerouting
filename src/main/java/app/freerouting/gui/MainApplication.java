@@ -10,6 +10,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
+import app.freerouting.settings.GlobalSettings;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -100,11 +101,11 @@ public class MainApplication extends WindowBase {
     this.item_selection_strategy = globalSettings.getItemSelectionStrategy();
     this.is_test_version = globalSettings.isTestVersion();
     this.locale = globalSettings.getCurrentLocale();
-    this.save_intermediate_stages = globalSettings.save_intermediate_stages;
-    this.optimization_improvement_threshold = globalSettings.optimization_improvement_threshold;
-    this.ignore_net_classes_by_autorouter = globalSettings.ignore_net_classes_by_autorouter;
-    this.resources =
-        ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
+    this.save_intermediate_stages = !globalSettings.disabledFeatures.snapshots;
+    this.optimization_improvement_threshold = globalSettings.autoRouterSettings.optimization_improvement_threshold;
+    this.ignore_net_classes_by_autorouter = globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter;
+
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
 
     main_panel = new JPanel();
     getContentPane().add(main_panel);
@@ -248,15 +249,15 @@ public class MainApplication extends WindowBase {
 
     // initialize analytics
     FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION,"G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
-    int analyticsModulo = Math.max(globalSettings.analytics_modulo, 1);
-    String userIdString = globalSettings.user_id.length() >= 4 ? globalSettings.user_id.substring(0, 4) : "0000";
+    int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analytics_modulo, 1);
+    String userIdString = globalSettings.usageAndDiagnosticData.user_id.length() >= 4 ? globalSettings.usageAndDiagnosticData.user_id.substring(0, 4) : "0000";
     int userIdValue = Integer.parseInt(userIdString, 16);
-    boolean allowAnalytics = !globalSettings.disable_analytics && (userIdValue % analyticsModulo == 0);
+    boolean allowAnalytics = !globalSettings.usageAndDiagnosticData.disable_analytics && (userIdValue % analyticsModulo == 0);
     if (!allowAnalytics) {
       FRLogger.debug("Analytics are disabled");
     }
     FRAnalytics.setEnabled(allowAnalytics);
-    FRAnalytics.setUserId(globalSettings.user_id);
+    FRAnalytics.setUserId(globalSettings.usageAndDiagnosticData.user_id);
     FRAnalytics.identify();
     try {
       Thread.sleep(1000);
@@ -344,9 +345,9 @@ public class MainApplication extends WindowBase {
               globalSettings.test_version_option,
               globalSettings.current_locale,
               globalSettings.design_rules_filename,
-              globalSettings.save_intermediate_stages,
-              globalSettings.optimization_improvement_threshold,
-              globalSettings.ignore_net_classes_by_autorouter);
+              !globalSettings.disabledFeatures.snapshots,
+              globalSettings.autoRouterSettings.optimization_improvement_threshold,
+              globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter);
       welcome_window.dispose();
       if (new_frame == null) {
         FRLogger.warn("Couldn't create window frame");
@@ -356,14 +357,12 @@ public class MainApplication extends WindowBase {
 
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(
           new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no()
-              + globalSettings.max_passes
+              + globalSettings.autoRouterSettings.max_passes
               - 1);
-      new_frame.board_panel.board_handling.set_num_threads(globalSettings.num_threads);
-      new_frame.board_panel.board_handling.set_board_update_strategy(
-          globalSettings.board_update_strategy);
-      new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.hybrid_ratio);
-      new_frame.board_panel.board_handling.set_item_selection_strategy(
-          globalSettings.item_selection_strategy);
+      new_frame.board_panel.board_handling.set_num_threads(globalSettings.autoRouterSettings.num_threads);
+      new_frame.board_panel.board_handling.set_board_update_strategy(globalSettings.autoRouterSettings.board_update_strategy);
+      new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.autoRouterSettings.hybrid_ratio);
+      new_frame.board_panel.board_handling.set_item_selection_strategy(globalSettings.autoRouterSettings.item_selection_strategy);
 
       if (globalSettings.design_output_filename != null)
       {
@@ -494,7 +493,7 @@ public class MainApplication extends WindowBase {
         if ((globalSettings.dialog_confirmation_timeout == 0) || (choice == options[0]))
         {
           // Start the auto-router
-          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();
+          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer();
 
           if (new_frame.board_panel.board_handling.autorouter_listener != null) {
             // Add the auto-router listener to save the design file when the autorouter is running
@@ -557,13 +556,13 @@ public class MainApplication extends WindowBase {
     TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
     BoardFrame new_frame = new BoardFrame(
         p_design_file, p_option, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages,
-        p_optimization_improvement_threshold, globalSettings.disable_feature_select_mode, globalSettings.disable_feature_macros);
+        p_optimization_improvement_threshold, globalSettings.disabledFeatures.select_mode, globalSettings.disabledFeatures.macros);
     boolean read_ok = new_frame.load(input_stream, p_design_file.isInputFileFormatDsn(), p_message_field);
     if (!read_ok) {
       return null;
     }
 
-    if (globalSettings.disable_feature_select_mode)
+    if (globalSettings.disabledFeatures.select_mode)
     {
       new_frame.board_panel.board_handling.set_route_menu_state();
     }
