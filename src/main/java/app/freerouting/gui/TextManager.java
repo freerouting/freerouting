@@ -26,6 +26,7 @@ public class TextManager {
   // A key-value pair for icon names and their corresponding unicode characters
   private Map<String, Integer> iconMap = new HashMap<>()
   {{
+    put("cog", 0xF0493);
     put("auto-fix", 0xF0068);
     put("delete-sweep", 0xF05E9);
     put("undo", 0xF054C);

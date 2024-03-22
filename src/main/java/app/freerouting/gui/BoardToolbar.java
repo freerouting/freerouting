@@ -71,14 +71,12 @@ class BoardToolbar extends JPanel {
     tm.setText(toolbar_route_button, "route_button");
     toolbar_route_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_route_menu_state());
     toolbar_route_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_route_button", toolbar_route_button.getText()));
-
     left_toolbar.add(toolbar_route_button);
 
     toolbar_button_group.add(toolbar_drag_button);
     tm.setText(toolbar_drag_button, "drag_button");
     toolbar_drag_button.addActionListener(evt -> board_frame.board_panel.board_handling.set_drag_menu_state());
     toolbar_drag_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_drag_button", toolbar_drag_button.getText()));
-
     left_toolbar.add(toolbar_drag_button);
 
     jLabel1.setMaximumSize(new Dimension(30, 10));
@@ -92,6 +90,17 @@ class BoardToolbar extends JPanel {
 
     final JToolBar middle_toolbar = new JToolBar();
 
+    // Add Settings icon to the toolbar
+    final JButton settings_button = new JButton();
+    tm.setText(settings_button, "settings_button");
+    settings_button.addActionListener(
+        evt -> {
+          board_frame.autoroute_parameter_window.setVisible(true);
+        });
+    settings_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_button", settings_button.getText()));
+    middle_toolbar.add(settings_button);
+
+    // Add "Autoroute" button to the toolbar
     final JButton toolbar_autoroute_button = new JButton();
     tm.setText(toolbar_autoroute_button, "autoroute_button");
     toolbar_autoroute_button.setDefaultCapable(true);
@@ -117,7 +126,7 @@ class BoardToolbar extends JPanel {
     toolbar_autoroute_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_autoroute_button", toolbar_autoroute_button.getText()));
     middle_toolbar.add(toolbar_autoroute_button);
 
-    // Add Delete All Tracks and Vias menu item
+    // Add "Delete All Tracks and Vias" button to the toolbar
     final JButton delete_all_tracks_button = new JButton();
     tm.setText(delete_all_tracks_button, "delete_all_tracks_button");
     delete_all_tracks_button.addActionListener(
