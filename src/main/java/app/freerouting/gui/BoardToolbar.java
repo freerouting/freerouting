@@ -79,6 +79,10 @@ class BoardToolbar extends JPanel {
     toolbar_drag_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_drag_button", toolbar_drag_button.getText()));
     left_toolbar.add(toolbar_drag_button);
 
+    SegmentedButtons segmentedPanel = new SegmentedButtons(tm, "Mode", "select_button", "route_button", "drag_button");
+    left_toolbar.add(segmentedPanel, BorderLayout.CENTER);
+
+
     jLabel1.setMaximumSize(new Dimension(30, 10));
     jLabel1.setMinimumSize(new Dimension(3, 10));
     jLabel1.setPreferredSize(new Dimension(30, 10));
