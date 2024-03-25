@@ -1,4 +1,5 @@
 package app.freerouting.settings;
+import app.freerouting.constants.Constants;
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import java.nio.file.*;
@@ -27,7 +28,7 @@ public class GlobalSettings {
   public transient Locale current_locale = Locale.getDefault();
   public transient String host = "N/A";
   public String input_directory = "";
-  public final String version = "2.0.0";
+  public final String version = Constants.FREEROUTING_VERSION;
   public int dialog_confirmation_timeout = 5;
   @SerializedName("autorouter_settings")
   public final AutoRouterSettings autoRouterSettings = new AutoRouterSettings();

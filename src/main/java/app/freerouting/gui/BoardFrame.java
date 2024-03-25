@@ -337,7 +337,7 @@ public class BoardFrame extends WindowBase {
             p_optimization_improvement_threshold);
     this.scroll_pane.setViewportView(board_panel);
 
-    this.setTitle(resources.getString("title"));
+    this.setTitle(resources.getString("title") +  " v" + MainApplication.globalSettings.version);
     this.addWindowListener(new WindowStateListener());
 
     this.pack();
