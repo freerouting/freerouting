@@ -907,7 +907,14 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (board_is_read_only || p_output_stream == null) {
       return false;
     }
-    return DsnFile.write(this, p_output_stream, p_design_name, p_compat_mode);
+
+    boolean wasSaveSuccessful = DsnFile.write(this, p_output_stream, p_design_name, p_compat_mode);
+
+    if (wasSaveSuccessful) {
+      originalBoardChecksum = calculateCrc32();
+    }
+
+    return wasSaveSuccessful;
   }
 
   /** Writes a .SES session file in the Specctra ses-format. */
@@ -915,7 +922,13 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (board_is_read_only) {
       return false;
     }
-    return SpecctraSesFileWriter.write(this.get_routing_board(), p_output_stream, p_design_name);
+    boolean wasSaveSuccessful =  SpecctraSesFileWriter.write(this.get_routing_board(), p_output_stream, p_design_name);
+
+    if (wasSaveSuccessful) {
+      originalBoardChecksum = calculateCrc32();
+    }
+
+    return wasSaveSuccessful;
   }
 
   /** Writes a session file in the Eagle SCR format. */
@@ -935,6 +948,8 @@ public class BoardHandling extends BoardHandlingHeadless {
       p_object_stream.writeObject(settings);
       p_object_stream.writeObject(coordinate_transform);
       p_object_stream.writeObject(graphics_context);
+
+      originalBoardChecksum = calculateCrc32();
     } catch (Exception e) {
       screen_messages.set_status_message(resources.getString("save_error"));
       result = false;
