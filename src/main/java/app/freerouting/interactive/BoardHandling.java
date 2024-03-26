@@ -47,11 +47,14 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import javax.swing.JPopupMenu;
 
 /** Central connection class between the graphical user interface and the board database. */
@@ -87,13 +90,14 @@ public class BoardHandling extends BoardHandlingHeadless {
    * True if currently a logfile is being processed. Used to prevent interactive changes of the
    * board database in this case.
    */
-  @Deprecated(since = "2.0", forRemoval = true)
   private boolean board_is_read_only = false;
   /** The current position of the mouse pointer. */
   private FloatPoint current_mouse_position;
 
   private static long last_repainted_time = 0;
   private static long repaint_interval = 1000;
+
+  private List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
 
   /** Creates a new BoardHandling */
   public BoardHandling(
@@ -131,6 +135,9 @@ public class BoardHandling extends BoardHandlingHeadless {
   public void set_board_read_only(boolean p_value) {
     this.board_is_read_only = p_value;
     this.settings.set_read_only(p_value);
+
+    // Raise an event to notify the observers that the board read only property changed
+    this.readOnlyEventListeners.forEach(listener -> listener.accept(p_value));
   }
 
   /** Return the current language for the GUI messages. */
@@ -648,10 +655,8 @@ public class BoardHandling extends BoardHandlingHeadless {
   /** Actions to be taken in the current interactive state when the left mouse button is clicked. */
   public void left_button_clicked(Point2D p_point) {
     if (board_is_read_only) {
-      if (this.interactive_action_thread != null) {
-        // The left button is used to stop the interactive action thread.
-        this.interactive_action_thread.request_stop();
-      }
+      // We are currently busy working on the board and the user clicked on the canvas with the left mouse button.
+      this.stop_autorouter_and_route_optimizer();
       return;
     }
     if (interactive_state != null && graphics_context != null) {
@@ -930,8 +935,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       return;
     }
     FloatPoint location = graphics_context.coordinate_transform.screen_to_board(p_point);
-    InteractiveState new_state =
-        RouteState.get_instance(location, this.interactive_state, this, activityReplayFile);
+    InteractiveState new_state = RouteState.get_instance(location, this.interactive_state, this, activityReplayFile);
     set_interactive_state(new_state);
   }
 
@@ -1146,7 +1150,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     this.interactive_action_thread.start();
   }
 
-  /** Start the batch autorouter on the whole Board */
+  /** Start the auto-router and route optimizer on the whole board */
   public InteractiveActionThread start_autorouter_and_route_optimizer() {
     if (board_is_read_only) {
       return null;
@@ -1157,6 +1161,16 @@ public class BoardHandling extends BoardHandlingHeadless {
     this.interactive_action_thread.start();
 
     return this.interactive_action_thread;
+  }
+
+  /** Stops the auto-router and route optimizer */
+  public void stop_autorouter_and_route_optimizer() {
+    if (this.interactive_action_thread != null) {
+      // The left button is used to stop the interactive action thread.
+      this.interactive_action_thread.request_stop();
+    }
+
+    this.set_board_read_only(false);
   }
 
   /** Selects also all items belonging to a net of a currently selected item. */
@@ -1406,4 +1420,9 @@ public class BoardHandling extends BoardHandlingHeadless {
   public void set_num_threads(int p_value) {
     num_threads = p_value;
   }
+
+  public void addReadOnlyEventListener(Consumer<Boolean> listener) {
+    readOnlyEventListeners.add(listener);
+  }
+
 }

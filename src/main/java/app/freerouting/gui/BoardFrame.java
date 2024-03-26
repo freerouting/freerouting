@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdNoGenerator;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.datastructures.IdNoGenerator;
@@ -18,6 +19,9 @@ import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -105,11 +109,13 @@ public class BoardFrame extends WindowBase {
   WindowSnapshot snapshot_window;
   ColorManager color_manager;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
-  Collection<BoardTemporarySubWindow> temporary_subwindows =
-      new LinkedList<>();
+  Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
   private LocalDateTime intermediate_stage_file_last_saved_at;
   DesignFile design_file;
   private final Locale locale;
+  private List<Consumer<RoutingBoard>> boardLoadedEventListeners = new ArrayList<>();
+  private List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
+
   /**
    * Creates a new BoardFrame that is the GUI element containing the Menu, Toolbar, Canvas and Status bar.
    * If p_option = FROM_START_MENU this frame is created from a start
@@ -364,6 +370,9 @@ public class BoardFrame extends WindowBase {
       if (read_result == DsnFile.ReadResult.OK) {
         viewport_position = new Point(0, 0);
         initialize_windows();
+
+        // Raise an event to notify the observers that a new board has been loaded
+        this.boardLoadedEventListeners.forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
       }
     } else {
       ObjectInputStream object_stream;
@@ -376,6 +385,9 @@ public class BoardFrame extends WindowBase {
       if (!read_ok) {
         return false;
       }
+
+      // Raise an event to notify the observers that a new board has been loaded
+      this.boardLoadedEventListeners.forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
 
       // Read and set the GUI settings from the binary file
       Point frame_location;
@@ -982,5 +994,13 @@ public class BoardFrame extends WindowBase {
         }
       }
     }
+  }
+
+  public void addBoardLoadedEventListener(Consumer<RoutingBoard> listener) {
+    boardLoadedEventListeners.add(listener);
+  }
+
+  public void addReadOnlyEventListener(Consumer<RoutingBoard> listener) {
+    boardSavedEventListeners.add(listener);
   }
 }

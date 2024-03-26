@@ -28,6 +28,7 @@ public class TextManager {
   {{
     put("cog", 0xF0493);
     put("auto-fix", 0xF0068);
+    put("cancel", 0xF073A);
     put("delete-sweep", 0xF05E9);
     put("undo", 0xF054C);
     put("redo", 0xF044E);

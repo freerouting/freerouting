@@ -178,6 +178,14 @@ public class SegmentedButtons extends JPanel {
     return button;
   }
 
+  @Override
+  public void setEnabled(boolean enabled) {
+    super.setEnabled(enabled);
+    for (JToggleButton button : buttonValues.keySet()) {
+      button.setEnabled(enabled);
+    }
+  }
+
   public void setValueChangeListener(ValueChangeListener listener) {
     this.valueChangeListener = listener;
   }
