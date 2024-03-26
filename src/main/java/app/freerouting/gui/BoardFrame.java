@@ -255,7 +255,7 @@ public class BoardFrame extends WindowBase {
               // Save the file as a Specctra SES file
               boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.design_file.getOutputFile(), design_file.get_name());
               // Save the rules file as well, if the user wants to
-              if (sesFileSaved && WindowMessage.confirm(tm.getText("confirm")))
+              if (sesFileSaved && WindowMessage.confirm(tm.getText("confirm_rules_save"), JOptionPane.NO_OPTION))
               {
                 saveRulesAs(design_file.getRulesFile(), design_file.get_name(), board_panel.board_handling);
               }
