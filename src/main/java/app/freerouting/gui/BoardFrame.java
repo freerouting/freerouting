@@ -19,11 +19,13 @@ import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -83,7 +85,7 @@ public class BoardFrame extends WindowBase {
   @Deprecated
   private final boolean help_system_used;
   private final boolean confirm_cancel;
-  private final ResourceBundle resources;
+  private final TextManager tm;
   private final BoardObservers board_observers;
   private final IdNoGenerator item_id_no_generator;
   WindowAbout about_window;
@@ -177,7 +179,8 @@ public class BoardFrame extends WindowBase {
     this.board_observers = p_observers;
     this.item_id_no_generator = p_item_id_no_generator;
     this.locale = p_locale;
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.BoardFrame", p_locale);
+    this.tm = new TextManager(BoardFrame.class, p_locale);
+
     BoardMenuBar curr_menubar;
     @Deprecated
     boolean session_file_option = (p_option == Option.SESSION_FILE);
@@ -252,7 +255,7 @@ public class BoardFrame extends WindowBase {
               // Save the file as a Specctra SES file
               boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.design_file.getOutputFile(), design_file.get_name());
               // Save the rules file as well, if the user wants to
-              if (sesFileSaved && WindowMessage.confirm(resources.getString("confirm")))
+              if (sesFileSaved && WindowMessage.confirm(tm.getText("confirm")))
               {
                 saveRulesAs(design_file.getRulesFile(), design_file.get_name(), board_panel.board_handling);
               }
@@ -311,7 +314,7 @@ public class BoardFrame extends WindowBase {
 
           int messageType = (filteredLogEntries.getErrorCount() > 0) ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
 
-          JOptionPane.showMessageDialog(null, scrollPane, resources.getString("logs_window_title"), messageType);
+          JOptionPane.showMessageDialog(null, scrollPane, tm.getText("logs_window_title"), messageType);
 
         });
 
@@ -345,7 +348,7 @@ public class BoardFrame extends WindowBase {
             p_optimization_improvement_threshold);
     this.scroll_pane.setViewportView(board_panel);
 
-    this.setTitle(resources.getString("title") +  " v" + MainApplication.globalSettings.version);
+    this.setTitle(tm.getText("title", MainApplication.globalSettings.version));
     this.addWindowListener(new WindowStateListener());
 
     this.pack();
@@ -429,9 +432,9 @@ public class BoardFrame extends WindowBase {
       if (read_result != DsnFile.ReadResult.OK) {
         if (p_message_field != null) {
           if (read_result == DsnFile.ReadResult.OUTLINE_MISSING) {
-            p_message_field.setText(resources.getString("error_7"));
+            p_message_field.setText(tm.getText("error_7"));
           } else {
-            p_message_field.setText(resources.getString("error_6"));
+            p_message_field.setText(tm.getText("error_6"));
           }
         }
         return false;
@@ -466,7 +469,7 @@ public class BoardFrame extends WindowBase {
       if (defaults_file_found) {
         boolean read_ok = GUIDefaultsFile.read(this, board_panel.board_handling, input_stream);
         if (!read_ok) {
-          screen_messages.set_status_message(resources.getString("error_1"));
+          screen_messages.set_status_message(tm.getText("error_1"));
         }
         try {
           input_stream.close();
@@ -484,10 +487,10 @@ public class BoardFrame extends WindowBase {
       FileInputStream input_stream = new FileInputStream(this.design_file.getSnapshotFile());
       return this.load(input_stream, false, null);
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_2"));
+      screen_messages.set_status_message(tm.getText("error_2"));
       return false;
     } catch (Exception e) {
-      screen_messages.set_status_message(resources.getString("error_3"));
+      screen_messages.set_status_message(tm.getText("error_3"));
       return false;
     }
   }
@@ -533,10 +536,10 @@ public class BoardFrame extends WindowBase {
       output_stream = new FileOutputStream(outputFile);
       object_stream = new ObjectOutputStream(output_stream);
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_2"));
+      screen_messages.set_status_message(tm.getText("error_2"));
       return false;
     } catch (Exception e) {
-      screen_messages.set_status_message(resources.getString("error_3"));
+      screen_messages.set_status_message(tm.getText("error_3"));
       return false;
     }
 
@@ -552,7 +555,9 @@ public class BoardFrame extends WindowBase {
       object_stream.writeObject(this.getLocation());
       object_stream.writeObject(this.getBounds());
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_4"));
+      screen_messages.set_status_message(
+        tm.getText("message_gui_settings_save_failed", outputFile.getPath())
+      );
       return false;
     }
 
@@ -566,7 +571,9 @@ public class BoardFrame extends WindowBase {
       object_stream.flush();
       output_stream.close();
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_5"));
+      screen_messages.set_status_message(
+          tm.getText("message_binary_file_save_failed", outputFile.getPath())
+      );
       return false;
     }
     return true;
@@ -589,21 +596,16 @@ public class BoardFrame extends WindowBase {
     }
 
     if (!board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, designName)) {
+
       this.screen_messages.set_status_message(
-          resources.getString("message_13")
-              + " "
-              + outputFile.getPath()
-              + " "
-              + resources.getString("message_7"));
+          tm.getText("message_specctra_ses_save_failed", outputFile.getPath())
+      );
       return false;
     }
 
     this.screen_messages.set_status_message(
-        resources.getString("message_11")
-            + " "
-            + outputFile.getPath()
-            + " "
-            + resources.getString("message_12"));
+        tm.getText("message_specctra_ses_saved", outputFile.getPath())
+    );
 
     return true;
   }
@@ -644,18 +646,12 @@ public class BoardFrame extends WindowBase {
     if (board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(sesInputStream, output_stream))
     {
       screen_messages.set_status_message(
-          resources.getString("message_14")
-              + " "
-              + outputFile.getPath()
-              + " "
-              + resources.getString("message_15"));
+          tm.getText("message_eagle_saved", outputFile.getPath())
+      );
     } else {
       screen_messages.set_status_message(
-          resources.getString("message_16")
-              + " "
-              + outputFile.getPath()
-              + " "
-              + resources.getString("message_7"));
+          tm.getText("message_eagle_save_failed", outputFile.getPath())
+      );
     }
   }
 
@@ -953,15 +949,26 @@ public class BoardFrame extends WindowBase {
     @Override
     public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-      if (confirm_cancel) {
-        int board_confirm_exit_dialog = JOptionPane.showConfirmDialog(
+      boolean wasBoardChanged = board_panel.board_handling.isBoardChanged();
+      if ((confirm_cancel) && (wasBoardChanged)) {
+        // Create a JOptionPane with a warning icon and set the default option to NO
+        Object[] options = {tm.getText("confirm_exit_yes"), tm.getText("confirm_exit_no")};
+        JOptionPane optionPane = new JOptionPane(
+            tm.getText("confirm_cancel"),
+            JOptionPane.WARNING_MESSAGE,
+            JOptionPane.YES_NO_OPTION,
             null,
-            resources.getString("confirm_cancel"),
-            null,
-            JOptionPane.YES_NO_OPTION);
-        if (board_confirm_exit_dialog == JOptionPane.NO_OPTION) {
+            options,
+            options[1] // Default to "No"
+        );
+        JDialog dialog = optionPane.createDialog(null, "Warning");
+        dialog.setVisible(true);
+
+        // Check the user's choice
+        Object selectedValue = optionPane.getValue();
+        if (selectedValue == null || ((String)selectedValue).equals(tm.getText("confirm_exit_no"))) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-          FRAnalytics.buttonClicked("board_confirm_exit_dialog_no", resources.getString("confirm_cancel"));
+          FRAnalytics.buttonClicked("board_confirm_exit_dialog_no", tm.getText("confirm_cancel"));
         } else {
           try {
             MainApplication.saveSettings();

@@ -195,19 +195,18 @@ public class DsnFile {
       OutputStream p_file,
       String p_design_name,
       boolean p_compat_mode) {
-    // app.freerouting.tests.Validate.check("before writing dsn", p_board);
     IndentFileWriter output_file = new IndentFileWriter(p_file);
 
     try {
       write_pcb_scope(p_board_handling, output_file, p_design_name, p_compat_mode);
     } catch (IOException e) {
-      FRLogger.error("unable to write dsn file", e);
+      FRLogger.error("unable to write Specctra DSN file", e);
       return false;
     }
     try {
       output_file.close();
     } catch (IOException e) {
-      FRLogger.error("unable to close dsn file", e);
+      FRLogger.error("unable to close Specctra DSN file", e);
       return false;
     }
     return true;

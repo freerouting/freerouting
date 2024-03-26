@@ -8,7 +8,8 @@ import java.nio.file.Files;
 import javax.swing.JFileChooser;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.io.File;import java.io.FileInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.CRC32;
@@ -37,18 +38,27 @@ public class DesignFile {
     this.tryToSetInputFile(p_design_file);
   }
 
+  public static CRC32 CalculateCrc32(InputStream inputStream)
+  {
+    CRC32 crc = new CRC32();
+    try {
+      int cnt;
+      while ((cnt = inputStream.read()) != -1) {
+        crc.update(cnt);
+      }
+    } catch (IOException e) {
+      FRLogger.error(e.getLocalizedMessage(), e);
+    }
+    return crc;
+  }
+
   private File getSnapshotFilename(File inputFile)
   {
     // Calculate the CRC32 checksum of the input file
     long crc32Checksum;
     try (FileInputStream inputStream = new FileInputStream(inputFile.getAbsoluteFile()))
     {
-      CRC32 crc = new CRC32();
-      int cnt;
-      while ((cnt = inputStream.read()) != -1) {
-        crc.update(cnt);
-      }
-      crc32Checksum = crc.getValue();
+      crc32Checksum = DesignFile.CalculateCrc32(inputStream).getValue();
     } catch (IOException e) {
       crc32Checksum = 0;
     }

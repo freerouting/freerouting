@@ -27,6 +27,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
+import app.freerouting.gui.DesignFile;
 import app.freerouting.gui.MainApplication;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
@@ -41,6 +42,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,8 +97,12 @@ public class BoardHandling extends BoardHandlingHeadless {
   /** The current position of the mouse pointer. */
   private FloatPoint current_mouse_position;
 
+  // The time of the last repaint of the board panel
   private static long last_repainted_time = 0;
+  // The interval in milliseconds between two repaints of the board panel
   private static long repaint_interval = 1000;
+  // The board checksum is used to detect changes in the board database
+  private long originalBoardChecksum = 0;
 
   private List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
 
@@ -807,6 +814,25 @@ public class BoardHandling extends BoardHandlingHeadless {
     screen_messages.set_status_message(resources.getString("drag_menu"));
   }
 
+  public long calculateCrc32(InputStream inputStream) {
+    return DesignFile.CalculateCrc32(inputStream).getValue();
+  }
+
+  public long calculateCrc32() {
+    // Create a memory stream
+    ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
+    DsnFile.write(this, memoryStream, "N/A", false);
+
+    // Transform the output stream to an input stream
+    InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
+
+    return calculateCrc32(inputStream);
+  }
+
+  public boolean isBoardChanged() {
+    return calculateCrc32() != originalBoardChecksum;
+  }
+
   /**
    * Reads an existing board design from the input stream. Returns false, if the input stream does
    * not contain a legal board design.
@@ -818,6 +844,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       settings.set_logfile(this.activityReplayFile);
       coordinate_transform = (CoordinateTransform) p_design.readObject();
       graphics_context = (GraphicsContext) p_design.readObject();
+      originalBoardChecksum = calculateCrc32();
     } catch (Exception e) {
       FRLogger.error("Couldn't read design file", e);
       return false;
@@ -851,6 +878,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (read_result == DsnFile.ReadResult.OK) {
       FRAnalytics.fileLoaded("DSN", this.board.communication.specctra_parser_info.host_cad + "," + this.board.communication.specctra_parser_info.host_version);
       this.board.reduce_nets_of_route_items();
+      originalBoardChecksum = calculateCrc32();
       FRAnalytics.boardLoaded(
           this.board.communication.specctra_parser_info.host_cad,
           this.board.communication.specctra_parser_info.host_version,
@@ -870,7 +898,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   }
 
   /**
-   * Writes the currently edited board design to a text file in the Specctra dsn format. If
+   * Writes the currently edited board design to a text file in the Specctra DSN format. If
    * p_compat_mode is true, only standard specctra dsn scopes are written, so that any host system
    * with a specctra interface can read them.
    */
