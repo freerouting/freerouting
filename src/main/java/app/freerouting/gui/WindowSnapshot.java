@@ -225,7 +225,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
       }
 
       board_frame.refresh_windows();
-      board_frame.hilight_selected_button();
+      board_frame.setToolbarModeSelectionPanelValue(this.board_frame.board_panel.board_handling.get_interactive_state());
       board_frame.setVisible(true);
       board_frame.repaint();
     }

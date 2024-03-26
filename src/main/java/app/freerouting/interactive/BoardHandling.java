@@ -108,7 +108,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     super(p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
-    this.set_interactive_state(SelectMenuState.get_instance(this, activityReplayFile));
+    this.set_interactive_state(RouteMenuState.get_instance(this, activityReplayFile));
     this.resources =
         ResourceBundle.getBundle("app.freerouting.interactive.BoardHandling", p_locale);
 
@@ -740,7 +740,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     InteractiveState return_state = interactive_state.key_typed(p_key_char);
     if (return_state != null && return_state != interactive_state) {
       set_interactive_state(return_state);
-      panel.board_frame.hilight_selected_button();
+      panel.board_frame.setToolbarModeSelectionPanelValue(get_interactive_state());
       repaint();
     }
   }
@@ -1336,7 +1336,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     }
   }
 
-  /** Gets the current interactive state. */
+  /** Gets the current interactive mode: select, route or drag. */
   public InteractiveState get_interactive_state() {
     return this.interactive_state;
   }

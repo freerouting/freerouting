@@ -5,11 +5,13 @@ import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdNoGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
+import app.freerouting.board.Unit;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 
@@ -445,9 +447,8 @@ public class BoardFrame extends WindowBase {
     board_panel.create_popup_menus();
     board_panel.init_colors();
     board_panel.board_handling.create_ratsnest();
-    this.hilight_selected_button();
-    this.toolbar_panel.toolbar_unit_combo_box.setSelectedItem(
-        board_panel.board_handling.coordinate_transform.user_unit);
+    this.setToolbarModeSelectionPanelValue(board_panel.board_handling.get_interactive_state());
+    this.setToolbarUnitSelectionPanelValue(board_panel.board_handling.coordinate_transform.user_unit);
     this.setVisible(true);
     if (isSpecctraDsn) {
       // Read the default gui settings, if gui default file exists.
@@ -867,10 +868,15 @@ public class BoardFrame extends WindowBase {
     }
   }
 
-  /** Sets the selected button in the menu button group */
-  public void hilight_selected_button() {
-    this.toolbar_panel.hilight_selected_button();
+  /** Sets the mode value on mode selection component of the toolbar */
+  public void setToolbarModeSelectionPanelValue(InteractiveState interactiveState) {
+    this.toolbar_panel.setModeSelectionPanelValue(interactiveState);
   }
+
+  private void setToolbarUnitSelectionPanelValue(Unit unit) {
+    this.toolbar_panel.setUnitSelectionPanelValue(unit);
+  }
+
 
   /** Restore the selected snapshot in the snapshot window. */
   public void goto_selected_snapshot() {
