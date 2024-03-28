@@ -240,12 +240,7 @@ public class DesignFile {
     return null;
   }
 
-  @Deprecated(since = "2.0", forRemoval = true)
-  public boolean isInputFileFormatDsn() {
-    return inputFileFormat.equals(FileFormat.DSN);
-  }
-
-  // Returns the directory of the design file
+  // Returns the directory of the design file, or "" if the file is null
   public String getInputFileDirectory()
   {
     if (inputFile == null) {
@@ -256,9 +251,9 @@ public class DesignFile {
     return inputFile.getParent();
   }
 
-  // Returns the directory of the design file
+  // Returns the directory of the design file, or null if the file is null
   @Deprecated(since = "2.0", forRemoval = true)
-  public String getInputFileDirectory2() {
+  public String getInputFileDirectoryOrNull() {
     if (inputFile != null) {
       return inputFile.getParent();
     }

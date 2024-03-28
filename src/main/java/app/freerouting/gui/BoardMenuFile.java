@@ -199,10 +199,10 @@ public class BoardMenuFile extends JMenu {
     OutputStream output_stream;
 
     FRLogger.info("Saving '" + BoardFrame.GUI_DEFAULTS_FILE_NAME + "'...");
-    File defaults_file = new File(board_frame.design_file.getInputFileDirectory2(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
+    File defaults_file = new File(board_frame.design_file.getInputFileDirectoryOrNull(), BoardFrame.GUI_DEFAULTS_FILE_NAME);
     if (defaults_file.exists()) {
       // Make a backup copy of the old defaults file.
-      File defaults_file_backup = new File(board_frame.design_file.getInputFileDirectory2(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
+      File defaults_file_backup = new File(board_frame.design_file.getInputFileDirectoryOrNull(), BoardFrame.GUI_DEFAULTS_FILE_BACKUP_NAME);
       if (defaults_file_backup.exists()) {
         defaults_file_backup.delete();
       }

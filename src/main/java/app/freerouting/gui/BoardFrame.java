@@ -427,7 +427,7 @@ public class BoardFrame extends WindowBase {
       InputStream input_stream = null;
       boolean defaults_file_found;
 
-      File defaults_file = new File(this.design_file.getInputFileDirectory2(), GUI_DEFAULTS_FILE_NAME);
+      File defaults_file = new File(this.design_file.getInputFileDirectoryOrNull(), GUI_DEFAULTS_FILE_NAME);
       defaults_file_found = true;
       try {
         input_stream = new FileInputStream(defaults_file);
