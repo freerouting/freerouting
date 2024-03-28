@@ -16,7 +16,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,8 +58,6 @@ public class MainApplication extends WindowBase {
           + ")";
   private static final TestLevel DEBUG_LEVEL = TestLevel.CRITICAL_DEBUGGING_OUTPUT;
   private final ResourceBundle resources;
-  private final JButton demonstration_button;
-  private final JButton sample_board_button;
   private final JButton open_board_button;
   private final JButton restore_defaults_button;
   private final JTextField message_field;
@@ -116,14 +113,11 @@ public class MainApplication extends WindowBase {
     gridbag_constraints.insets = new Insets(10, 10, 10, 10);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
 
-    demonstration_button = new JButton();
-    sample_board_button = new JButton();
     open_board_button = new JButton();
     restore_defaults_button = new JButton();
 
     message_field = new JTextField();
     message_field.setText(resources.getString("command_line_missing_input"));
-    Point location = getLocation();
 
     setTitle(resources.getString("title") + " " + VERSION_NUMBER_STRING);
     boolean add_buttons = true;
@@ -162,7 +156,7 @@ public class MainApplication extends WindowBase {
   }
 
   /**
-   * Main function of the Application
+   * The entry point of the Freerouting application
    *
    * @param args
    */
@@ -315,14 +309,7 @@ public class MainApplication extends WindowBase {
       return;
     }
 
-    if (globalSettings.single_design_option) {
-      BoardFrame.Option board_option;
-      if (globalSettings.session_file_option) {
-        board_option = BoardFrame.Option.SESSION_FILE;
-      } else {
-        board_option = BoardFrame.Option.SINGLE_FRAME;
-      }
-
+    if (globalSettings.design_input_filename != null) {
       FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
       DesignFile design_file = DesignFile.get_instance(globalSettings.design_input_filename);
       if (design_file == null) {
@@ -341,7 +328,6 @@ public class MainApplication extends WindowBase {
           create_board_frame(
               design_file,
               null,
-              board_option,
               globalSettings.test_version_option,
               globalSettings.current_locale,
               globalSettings.design_rules_filename,
@@ -527,7 +513,6 @@ public class MainApplication extends WindowBase {
   private static BoardFrame create_board_frame(
       DesignFile p_design_file,
       JTextField p_message_field,
-      BoardFrame.Option p_option,
       boolean p_is_test_version,
       Locale p_locale,
       String p_design_rules_file,
@@ -555,7 +540,7 @@ public class MainApplication extends WindowBase {
 
     TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
     BoardFrame new_frame = new BoardFrame(
-        p_design_file, p_option, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages,
+        p_design_file, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages,
         p_optimization_improvement_threshold, globalSettings.disabledFeatures.select_mode, globalSettings.disabledFeatures.macros);
     boolean read_ok = new_frame.load(input_stream, p_design_file.isInputFileFormatDsn(), p_message_field);
     if (!read_ok) {
@@ -647,9 +632,6 @@ public class MainApplication extends WindowBase {
 
     FRLogger.info("Opening '" + design_file.get_name() + "'...");
 
-    // The user chose a file from the file chooser control after clicking on the "Select the design file" button
-    BoardFrame.Option option = BoardFrame.Option.FROM_START_MENU;
-
     String message = resources.getString("loading_design") + " " + design_file.get_name();
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
@@ -658,7 +640,6 @@ public class MainApplication extends WindowBase {
         create_board_frame(
             design_file,
             message_field,
-            option,
             this.is_test_version,
             this.locale,
             null,

@@ -22,23 +22,21 @@ import java.util.ResourceBundle;
 public class BoardMenuFile extends JMenu {
 
   private final BoardFrame board_frame;
-  private final boolean session_file_option;
   private final ResourceBundle resources;
 
   private List<Consumer<File>> openEventListeners = new ArrayList<>();
   private List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
 
   /** Creates a new instance of BoardFileMenu */
-  private BoardMenuFile(BoardFrame p_board_frame, boolean p_session_file_option) {
-    session_file_option = p_session_file_option;
+  private BoardMenuFile(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
     resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
   }
 
   /** Returns a new file menu for the board frame. */
-  public static BoardMenuFile get_instance(
-      BoardFrame p_board_frame, boolean p_session_file_option, boolean p_disable_feature_macros) {
-    final BoardMenuFile file_menu = new BoardMenuFile(p_board_frame, p_session_file_option);
+  public static BoardMenuFile get_instance(BoardFrame p_board_frame, boolean p_disable_feature_macros)
+  {
+    final BoardMenuFile file_menu = new BoardMenuFile(p_board_frame);
     file_menu.setText(file_menu.resources.getString("file"));
 
     // File / Open...

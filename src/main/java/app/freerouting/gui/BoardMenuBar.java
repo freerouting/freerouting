@@ -9,10 +9,9 @@ class BoardMenuBar extends JMenuBar {
   public BoardMenuFile fileMenu;
 
   /** Creates a new BoardMenuBar together with its menus */
-  static BoardMenuBar get_instance(
-      BoardFrame p_board_frame, boolean p_help_system_used, boolean p_session_file_option, boolean p_disable_feature_macros) {
+  static BoardMenuBar get_instance(BoardFrame p_board_frame, boolean p_disable_feature_macros) {
     BoardMenuBar menubar = new BoardMenuBar();
-    menubar.fileMenu = BoardMenuFile.get_instance(p_board_frame, p_session_file_option, p_disable_feature_macros);
+    menubar.fileMenu = BoardMenuFile.get_instance(p_board_frame, p_disable_feature_macros);
     menubar.add(menubar.fileMenu);
     JMenu display_menu = BoardMenuDisplay.get_instance(p_board_frame);
     menubar.add(display_menu);

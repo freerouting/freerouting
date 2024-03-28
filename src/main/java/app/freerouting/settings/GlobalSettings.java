@@ -16,10 +16,8 @@ import java.util.Objects;
 public class GlobalSettings {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
-  public transient boolean single_design_option = false;
   public transient boolean test_version_option = false;
   public transient boolean show_help_option = false;
-  public transient boolean session_file_option = false;
   public transient boolean webstart_option = false;
   public transient String design_input_filename;
   public transient String design_output_filename;
@@ -54,7 +52,6 @@ public class GlobalSettings {
         if (p_args[i].startsWith("-de")) {
           // the design file is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
-            single_design_option = true;
             design_input_filename = p_args[i + 1];
           }
         } else if (p_args[i].startsWith("-di")) {
@@ -157,8 +154,6 @@ public class GlobalSettings {
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ko")) {
             current_locale = Locale.KOREAN;
           }
-        } else if (p_args[i].startsWith("-s")) {
-          session_file_option = true;
         } else if (p_args[i].startsWith("-im")) {
           disabledFeatures.snapshots = false;
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {

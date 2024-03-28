@@ -20,7 +20,7 @@ class BoardToolbarSelectedItem extends JToolBar {
    * Creates a new instance of BoardSelectedItemToolbar. If p_extended, some additional buttons are
    * generated.
    */
-  BoardToolbarSelectedItem(BoardFrame p_board_frame, boolean p_extended) {
+  BoardToolbarSelectedItem(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
 
     this.resources =
@@ -142,23 +142,21 @@ class BoardToolbarSelectedItem extends JToolBar {
 
     this.add(toolbar_whole_groups_button);
 
-    if (p_extended) {
-      JButton toolbar_new_net_button = new JButton();
-      toolbar_new_net_button.setText(resources.getString("new_net"));
-      toolbar_new_net_button.setToolTipText(resources.getString("new_net_tooltip"));
-      toolbar_new_net_button.addActionListener(evt -> board_frame.board_panel.board_handling.assign_selected_to_new_net());
-      toolbar_new_net_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_new_net_button", toolbar_new_net_button.getText()));
+    JButton toolbar_new_net_button = new JButton();
+    toolbar_new_net_button.setText(resources.getString("new_net"));
+    toolbar_new_net_button.setToolTipText(resources.getString("new_net_tooltip"));
+    toolbar_new_net_button.addActionListener(evt -> board_frame.board_panel.board_handling.assign_selected_to_new_net());
+    toolbar_new_net_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_new_net_button", toolbar_new_net_button.getText()));
 
-      this.add(toolbar_new_net_button);
+    this.add(toolbar_new_net_button);
 
-      JButton toolbar_new_group_button = new JButton();
-      toolbar_new_group_button.setText(resources.getString("new_component"));
-      toolbar_new_group_button.setToolTipText(resources.getString("new_component_tooltip"));
-      toolbar_new_group_button.addActionListener(evt -> board_frame.board_panel.board_handling.assign_selected_to_new_group());
-      toolbar_new_group_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_new_group_button", toolbar_new_group_button.getText()));
+    JButton toolbar_new_group_button = new JButton();
+    toolbar_new_group_button.setText(resources.getString("new_component"));
+    toolbar_new_group_button.setToolTipText(resources.getString("new_component_tooltip"));
+    toolbar_new_group_button.addActionListener(evt -> board_frame.board_panel.board_handling.assign_selected_to_new_group());
+    toolbar_new_group_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_new_group_button", toolbar_new_group_button.getText()));
 
-      this.add(toolbar_new_group_button);
-    }
+    this.add(toolbar_new_group_button);
 
     JLabel jLabel6 = new JLabel();
     jLabel6.setMaximumSize(new Dimension(10, 10));

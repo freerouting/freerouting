@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -58,7 +57,6 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /** Graphical frame containing the Menu, Toolbar, Canvas and Status bar. */
 public class BoardFrame extends WindowBase {
@@ -133,7 +131,6 @@ public class BoardFrame extends WindowBase {
    */
   public BoardFrame(
       DesignFile p_design,
-      Option p_option,
       TestLevel p_test_level,
       Locale p_locale,
       boolean p_confirm_cancel,
@@ -143,7 +140,6 @@ public class BoardFrame extends WindowBase {
       boolean p_disable_macros) {
     this(
         p_design,
-        p_option,
         p_test_level,
         new BoardObserverAdaptor(),
         new ItemIdNoGenerator(),
@@ -160,7 +156,6 @@ public class BoardFrame extends WindowBase {
    */
   BoardFrame(
       DesignFile p_design,
-      Option p_option,
       TestLevel p_test_level,
       BoardObservers p_observers,
       IdNoGenerator p_item_id_no_generator,
@@ -183,17 +178,8 @@ public class BoardFrame extends WindowBase {
 
     BoardMenuBar curr_menubar;
     @Deprecated
-    boolean session_file_option = (p_option == Option.SESSION_FILE);
-    @Deprecated
-    boolean curr_help_system_used = true;
-    try {
-      curr_menubar = BoardMenuBar.get_instance(this, curr_help_system_used, session_file_option, p_disable_macros);
-    } catch (NoClassDefFoundError e) {
-      // the system-file jh.jar may be missing
-      curr_help_system_used = false;
-      curr_menubar = BoardMenuBar.get_instance(this, false, session_file_option, p_disable_macros);
-      FRLogger.warn("Online-Help deactivated because system file jh.jar is missing");
-    }
+    boolean curr_help_system_used = false;
+    curr_menubar = BoardMenuBar.get_instance(this, p_disable_macros);
 
     // Set the menu bar of this frame.
     this.menubar = curr_menubar;
@@ -319,7 +305,7 @@ public class BoardFrame extends WindowBase {
         });
 
     // DEPRECATED: we don't use this toolbar anymore
-    this.select_toolbar = new BoardToolbarSelectedItem(this, p_option == Option.EXTENDED_TOOL_BAR);
+    this.select_toolbar = new BoardToolbarSelectedItem(this);
 
     // Screen messages are displayed in the status bar, below the canvas.
     this.screen_messages =
@@ -678,21 +664,7 @@ public class BoardFrame extends WindowBase {
   public void set_context_sensitive_help(Component p_component, String p_help_id) {
     if (p_component == null) throw new NullPointerException("p_component");
 
-    if (this.help_system_used) {
-      Component curr_component;
-      if (p_component instanceof JFrame) {
-        curr_component = ((JFrame) p_component).getRootPane();
-      } else {
-        curr_component = p_component;
-      }
-      String help_id = "html_files." + p_help_id;
-      //            javax.help.CSH.setHelpIDString(curr_component, help_id);
-      //            if (help_broker==null) {
-      //                FRLogger.warn("help_broker is null");
-      //                return;
-      //            }
-      //            help_broker.enableHelpKey(curr_component, help_id, help_set);
-    }
+    throw new UnsupportedOperationException("Context sensitive help is disabled.");
   }
 
   /** Sets the toolbar to the buttons of the selected item state. */
@@ -928,14 +900,7 @@ public class BoardFrame extends WindowBase {
       permanent_subwindows[i].repaint();
     }
   }
-
-  public enum Option {
-    FROM_START_MENU,
-    SINGLE_FRAME,
-    SESSION_FILE,
-    EXTENDED_TOOL_BAR
-  }
-
+  
   /** Used for storing the subwindow filters in a snapshot. */
   public static class SubwindowSelections implements Serializable {
     private WindowObjectListWithFilter.SnapshotInfo incompletes_selection;
