@@ -23,7 +23,7 @@ public class Validate {
    * false, if problems were detected.
    */
   public static boolean check(String p_s, BasicBoard p_board) {
-    if (p_board.get_test_level() == TestLevel.RELEASE_VERSION) {
+    if (p_board.get_test_level() == TestLevel.RELEASE_IWE) {
       return true;
     }
     boolean result = true;

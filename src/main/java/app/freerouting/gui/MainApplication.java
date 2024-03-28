@@ -56,7 +56,6 @@ public class MainApplication extends WindowBase {
           + " (build-date: "
           + Constants.FREEROUTING_BUILD_DATE
           + ")";
-  private static final TestLevel DEBUG_LEVEL = TestLevel.CRITICAL_DEBUGGING_OUTPUT;
   private final ResourceBundle resources;
   private final JButton open_board_button;
   private final JButton restore_defaults_button;
@@ -527,7 +526,7 @@ public class MainApplication extends WindowBase {
       }
     }
 
-    TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
+    TestLevel test_level = p_is_test_version ? TestLevel.EXPERIMENTAL_DIWE : TestLevel.RELEASE_IWE;
     BoardFrame new_frame = new BoardFrame(
         p_design_file, test_level, p_locale, p_save_intermediate_stages,
         p_optimization_improvement_threshold, globalSettings.disabledFeatures.select_mode, globalSettings.disabledFeatures.macros);

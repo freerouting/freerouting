@@ -242,8 +242,7 @@ public class SelectedItemState extends InteractiveState {
         }
       }
     }
-    boolean with_delete_fixed =
-        hdlg.get_routing_board().get_test_level() != TestLevel.RELEASE_VERSION;
+    boolean with_delete_fixed = hdlg.get_routing_board().get_test_level() != TestLevel.RELEASE_IWE;
     boolean all_items_removed;
     if (hdlg.settings.push_enabled) {
       all_items_removed =

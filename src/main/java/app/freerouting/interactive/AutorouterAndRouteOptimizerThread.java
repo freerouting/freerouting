@@ -185,12 +185,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       }
 
       hdlg.get_panel().board_frame.refresh_windows();
-      if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
-              == AngleRestriction.FORTYFIVE_DEGREE
-          && hdlg.get_routing_board().get_test_level()
-              != TestLevel.RELEASE_VERSION) {
-        Validate.multiple_of_45_degree(
-            "after autoroute: ", hdlg.get_routing_board());
+      if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE
+          && hdlg.get_routing_board().get_test_level() != TestLevel.RELEASE_IWE)
+      {
+        Validate.multiple_of_45_degree("after autoroute: ", hdlg.get_routing_board());
       }
     } catch (Exception e) {
       FRLogger.error(e.getLocalizedMessage(), e);

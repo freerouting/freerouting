@@ -3,7 +3,6 @@ package app.freerouting.autoroute;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Item;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -23,15 +22,13 @@ public class LocateFoundConnectionAlgo45Degree extends LocateFoundConnectionAlgo
       AutorouteControl p_ctrl,
       ShapeSearchTree p_search_tree,
       AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list,
-      TestLevel p_test_level) {
+      SortedSet<Item> p_ripped_item_list) {
     super(
         p_maze_search_result,
         p_ctrl,
         p_search_tree,
         p_angle_restriction,
-        p_ripped_item_list,
-        p_test_level);
+        p_ripped_item_list);
   }
 
   private static FloatPoint round_to_integer(FloatPoint p_point) {

@@ -11,7 +11,6 @@ import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -33,7 +32,6 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 /** Class for auto-routing an incomplete connection via a maze search algorithm. */
@@ -602,10 +600,7 @@ public class MazeSearchAlgo {
             && p_door.second_room instanceof CompleteFreeSpaceExpansionRoom) {
       TileShape door_shape = p_door.get_shape();
       if (door_shape.is_empty()) {
-        if (this.autoroute_engine.board.get_test_level().ordinal()
-            >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
-          FRLogger.warn("MazeSearchAlgo:check_door_width door_shape is empty");
-        }
+        FRLogger.trace("MazeSearchAlgo:check_door_width door_shape is empty");
         return true;
       }
 

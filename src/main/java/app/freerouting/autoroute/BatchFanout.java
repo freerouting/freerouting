@@ -1,7 +1,6 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
@@ -79,17 +78,15 @@ public class BatchFanout {
       }
       --components_to_go;
     }
-    if (this.routing_board.get_test_level() != TestLevel.RELEASE_VERSION) {
-      FRLogger.warn(
-          "fanout pass: "
-              + (p_pass_no + 1)
-              + ", routed: "
-              + routed_count
-              + ", not routed: "
-              + not_routed_count
-              + ", errors: "
-              + insert_error_count);
-    }
+    FRLogger.debug(
+        "fanout pass: "
+            + (p_pass_no + 1)
+            + ", routed: "
+            + routed_count
+            + ", not routed: "
+            + not_routed_count
+            + ", errors: "
+            + insert_error_count);
     return routed_count;
   }
 

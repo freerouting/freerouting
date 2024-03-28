@@ -61,8 +61,7 @@ public class DsnFile {
       }
     }
     ReadScopeParameter read_scope_par =
-        new ReadScopeParameter(
-            scanner, p_board_handling, p_observers, p_item_id_no_generator, p_test_level);
+        new ReadScopeParameter(scanner, p_board_handling, p_observers, p_item_id_no_generator, p_test_level);
     boolean read_ok = Keyword.PCB_SCOPE.read_scope(read_scope_par);
     ReadResult result;
     if (read_ok) {

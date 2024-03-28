@@ -6,7 +6,6 @@ import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
 import app.freerouting.board.ShapeSearchTree45Degree;
 import app.freerouting.board.ShapeSearchTree90Degree;
-import app.freerouting.board.TestLevel;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
@@ -135,8 +134,7 @@ public class AutorouteEngine {
                 p_ctrl,
                 this.autoroute_search_tree,
                 board.rules.get_trace_angle_restriction(),
-                p_ripped_item_list,
-                board.get_test_level());
+                p_ripped_item_list);
       } catch (Exception e) {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in LocateFoundConnectionAlgo.get_instance", e);
       }
@@ -158,9 +156,7 @@ public class AutorouteEngine {
     }
 
     if (autoroute_result.connection_items == null) {
-      if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal()) {
-        FRLogger.warn("AutorouteEngine.autoroute_connection: result_items != null expected");
-      }
+      FRLogger.debug("AutorouteEngine.autoroute_connection: result_items != null expected");
       return AutorouteResult.ALREADY_CONNECTED;
     }
 

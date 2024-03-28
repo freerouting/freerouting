@@ -3,7 +3,6 @@ package app.freerouting.autoroute;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.UndoableObjects;
@@ -95,13 +94,11 @@ public class BatchOptRoute {
       boolean save_intermediate_stages,
       float optimization_improvement_threshold,
       InteractiveActionThread isStopRequested) {
-    if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION) {
-      FRLogger.warn(
-          "Before optimize: Via count: "
-              + routing_board.get_vias().size()
-              + ", trace length: "
-              + Math.round(routing_board.cumulative_trace_length()));
-    }
+    FRLogger.debug(
+        "Before optimize: Via count: "
+            + routing_board.get_vias().size()
+            + ", trace length: "
+            + Math.round(routing_board.cumulative_trace_length()));
     double route_improved = -1;
     int curr_pass_no = 0;
     use_increased_ripup_costs = true;

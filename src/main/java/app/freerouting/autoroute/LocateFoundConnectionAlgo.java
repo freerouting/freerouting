@@ -4,7 +4,6 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.board.TestLevel;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
@@ -36,7 +35,6 @@ public abstract class LocateFoundConnectionAlgo {
   protected final BacktrackElement[] backtrack_array;
   protected final AutorouteControl ctrl;
   protected final AngleRestriction angle_restriction;
-  protected final TestLevel test_level;
   protected final TargetItemExpansionDoor start_door;
   protected FloatPoint current_from_point;
   protected FloatPoint previous_from_point;
@@ -52,11 +50,9 @@ public abstract class LocateFoundConnectionAlgo {
       AutorouteControl p_ctrl,
       ShapeSearchTree p_search_tree,
       AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list,
-      TestLevel p_test_level) {
+      SortedSet<Item> p_ripped_item_list) {
     this.ctrl = p_ctrl;
     this.angle_restriction = p_angle_restriction;
-    this.test_level = p_test_level;
     Collection<BacktrackElement> backtrack_list =
         backtrack(p_maze_search_result, p_ripped_item_list);
     this.backtrack_array = new BacktrackElement[backtrack_list.size()];
@@ -158,8 +154,7 @@ public abstract class LocateFoundConnectionAlgo {
       AutorouteControl p_ctrl,
       ShapeSearchTree p_search_tree,
       AngleRestriction p_angle_restriction,
-      SortedSet<Item> p_ripped_item_list,
-      TestLevel p_test_level) {
+      SortedSet<Item> p_ripped_item_list) {
     if (p_maze_search_result == null) {
       return null;
     }
@@ -172,8 +167,7 @@ public abstract class LocateFoundConnectionAlgo {
               p_ctrl,
               p_search_tree,
               p_angle_restriction,
-              p_ripped_item_list,
-              p_test_level);
+              p_ripped_item_list);
     } else {
       result =
           new LocateFoundConnectionAlgoAnyAngle(
@@ -181,8 +175,7 @@ public abstract class LocateFoundConnectionAlgo {
               p_ctrl,
               p_search_tree,
               p_angle_restriction,
-              p_ripped_item_list,
-              p_test_level);
+              p_ripped_item_list);
     }
     return result;
   }

@@ -1389,7 +1389,6 @@ public class BoardHandling extends BoardHandlingHeadless {
       this.interactive_state = p_state;
       if (!this.board_is_read_only) {
         p_state.set_toolbar();
-        this.panel.board_frame.set_context_sensitive_help(this.panel, p_state.get_help_id());
       }
     }
   }

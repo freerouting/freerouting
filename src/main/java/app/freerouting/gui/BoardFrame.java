@@ -650,10 +650,11 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Sets contexts sensitive help for the input component, if the help system is used. */
+  @Deprecated
   public void set_context_sensitive_help(Component p_component, String p_help_id) {
     if (p_component == null) throw new NullPointerException("p_component");
 
-    throw new UnsupportedOperationException("Context sensitive help is disabled.");
+    //throw new UnsupportedOperationException("Context sensitive help is disabled.");
   }
 
   /** Sets the toolbar to the buttons of the selected item state. */

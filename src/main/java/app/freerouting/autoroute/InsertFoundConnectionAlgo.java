@@ -6,7 +6,6 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
@@ -50,9 +49,7 @@ public class InsertFoundConnectionAlgo {
       }
       curr_layer = curr_new_item.layer;
       if (!new_instance.insert_trace(curr_new_item)) {
-        if (p_board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal()) {
-          FRLogger.warn("InsertFoundConnectionAlgo: insert trace failed for net #" + p_ctrl.net_no);
-        }
+        FRLogger.debug("InsertFoundConnectionAlgo: insert trace failed for net #" + p_ctrl.net_no);
         return null;
       }
     }
@@ -171,22 +168,20 @@ public class InsertFoundConnectionAlgo {
             --from_corner_no;
           }
         }
-        if (board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
-          FRLogger.warn("InsertFoundConnectionAlgo: violation corrected");
-        }
+        FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
       } else {
         result = false;
         break;
       }
     }
-    if (board.get_test_level().ordinal() < TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
-      for (int i = 0; i < p_trace.corners.length - 1; ++i) {
-        Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
-        if (trace_stub != null) {
-          board.remove_item(trace_stub);
-        }
+
+    for (int i = 0; i < p_trace.corners.length - 1; ++i) {
+      Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
+      if (trace_stub != null) {
+        board.remove_item(trace_stub);
       }
     }
+
     board.rules.set_pin_edge_to_turn_dist(saved_edge_to_turn_dist);
     if (this.first_corner == null) {
       this.first_corner = p_trace.corners[0];
@@ -401,9 +396,7 @@ public class InsertFoundConnectionAlgo {
       }
     }
     if (via_info == null) {
-      if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal()) {
-        FRLogger.warn("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no);
-      }
+      FRLogger.debug("InsertFoundConnectionAlgo: via mask not found for net #" + ctrl.net_no);
       return false;
     }
     // insert the via
@@ -416,9 +409,7 @@ public class InsertFoundConnectionAlgo {
         this.ctrl.max_shove_trace_recursion_depth,
         this.ctrl.max_shove_via_recursion_depth,
         this.board)) {
-      if (this.board.get_test_level().ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal()) {
-        FRLogger.warn("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.net_no);
-      }
+      FRLogger.debug("InsertFoundConnectionAlgo: forced via failed for net #" + ctrl.net_no);
       return false;
     }
     return true;

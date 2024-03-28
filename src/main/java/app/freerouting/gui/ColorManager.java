@@ -54,7 +54,6 @@ public class ColorManager extends BoardSavableSubWindow {
     JScrollPane other_scroll_pane = init_color_table(general_color_table, p_board_frame.get_locale());
     panel.add(other_scroll_pane, BorderLayout.SOUTH);
     getContentPane().add(panel, BorderLayout.CENTER);
-    p_board_frame.set_context_sensitive_help(this, "WindowDisplay_Colors");
     this.pack();
     this.setResizable(false);
   }

@@ -925,7 +925,7 @@ class Structure extends ScopeKeyword {
       board.components.set_flip_style_rotate_first(true);
     }
     FixedState fixed_state;
-    if (board.get_test_level() == TestLevel.RELEASE_VERSION) {
+    if (board.get_test_level() == TestLevel.RELEASE_IWE) {
       fixed_state = FixedState.SYSTEM_FIXED;
     } else {
       fixed_state = FixedState.USER_FIXED;

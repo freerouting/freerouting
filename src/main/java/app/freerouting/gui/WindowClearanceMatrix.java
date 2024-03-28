@@ -202,7 +202,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       return;
     }
     clearance_matrix.append_class(new_name);
-    if (routing_board.get_test_level() == TestLevel.RELEASE_VERSION) {
+    if (routing_board.get_test_level() == TestLevel.RELEASE_IWE) {
       // clearance compensation is only used, if there are only the clearance classes default and
       // null.
       routing_board.search_tree_manager.set_clearance_compensation_used(false);

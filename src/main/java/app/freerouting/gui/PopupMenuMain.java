@@ -1,7 +1,5 @@
 package app.freerouting.gui;
 
-import app.freerouting.board.TestLevel;
-
 import app.freerouting.management.FRAnalytics;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -46,10 +44,7 @@ class PopupMenuMain extends PopupMenuDisplay {
     popup_create_tile_menuitem.addActionListener(evt -> board_panel.board_handling.start_tile(board_panel.right_button_click_location));
     popup_create_tile_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_create_tile_menuitem", popup_create_tile_menuitem.getText()));
 
-    if (board_panel.board_handling.get_routing_board().get_test_level()
-        != TestLevel.RELEASE_VERSION) {
-      create_obstacle_menu.add(popup_create_tile_menuitem);
-    }
+    create_obstacle_menu.add(popup_create_tile_menuitem);
 
     JMenuItem popup_create_circle_menuitem = new JMenuItem();
     popup_create_circle_menuitem.setText(resources.getString("circle"));

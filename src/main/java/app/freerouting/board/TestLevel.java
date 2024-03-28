@@ -5,9 +5,10 @@ package app.freerouting.board;
  * warnings for debugging may be printed depending on the test_level.
  * DEPRECATED: TestLevel was mainly used for debugging purposes. We should use FRLogger for debugging related logging instead.
  */
+@Deprecated
 public enum TestLevel {
-  RELEASE_VERSION,
-  TEST_VERSION,
-  CRITICAL_DEBUGGING_OUTPUT,
-  ALL_DEBUGGING_OUTPUT
+  // Info, warning and error messages should be logged.
+  RELEASE_IWE,
+  // Debug, info, warning and error messages should be logged.
+  EXPERIMENTAL_DIWE
 }

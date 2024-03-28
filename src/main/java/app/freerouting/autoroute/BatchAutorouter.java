@@ -6,7 +6,6 @@ import app.freerouting.board.Connectable;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
@@ -312,15 +311,10 @@ public class BatchAutorouter {
         }
       }
 
-      // This is only for testing and debugging
-      if (routing_board.get_test_level() != TestLevel.ALL_DEBUGGING_OUTPUT) {
-        Item.StopConnectionOption stop_connection_option;
-        if (this.remove_unconnected_vias) {
-          stop_connection_option = Item.StopConnectionOption.NONE;
-        } else {
-          stop_connection_option = Item.StopConnectionOption.FANOUT_VIA;
-        }
-        remove_tails(stop_connection_option);
+      if (this.remove_unconnected_vias) {
+        remove_tails(Item.StopConnectionOption.NONE);
+      } else {
+        remove_tails(Item.StopConnectionOption.FANOUT_VIA);
       }
 
       // We are done with this pass

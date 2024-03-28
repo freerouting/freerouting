@@ -133,8 +133,8 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     settings_autorouter_detailed_speed_combo_box.addActionListener(new SpeedListener());
     settings_autorouter_detailed_speed_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box.getSelectedItem().toString()));
 
-    if (this.board_handling.get_routing_board().get_test_level()
-        != TestLevel.RELEASE_VERSION) {
+    if (this.board_handling.get_routing_board().get_test_level() != TestLevel.RELEASE_IWE)
+    {
       gridbag_constraints.gridwidth = 2;
       JLabel speed_label = new JLabel();
       speed_label.setText(resources.getString("speed"));

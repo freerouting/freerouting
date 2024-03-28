@@ -667,9 +667,7 @@ public class ShapeSearchTree extends MinAreaTree {
                              // as an octagon
     }
     if (shape_to_be_contained == null || shape_to_be_contained.is_empty()) {
-      if (this.board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
-        FRLogger.warn("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
-      }
+      FRLogger.trace("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
       return result;
     }
     Line cut_line = null;
