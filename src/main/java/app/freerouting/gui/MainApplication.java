@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
-import app.freerouting.board.TestLevel;
 import app.freerouting.constants.Constants;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
@@ -526,9 +525,8 @@ public class MainApplication extends WindowBase {
       }
     }
 
-    TestLevel test_level = p_is_test_version ? TestLevel.EXPERIMENTAL_DIWE : TestLevel.RELEASE_IWE;
     BoardFrame new_frame = new BoardFrame(
-        p_design_file, test_level, p_locale, p_save_intermediate_stages,
+        p_design_file, p_locale, p_save_intermediate_stages,
         p_optimization_improvement_threshold, globalSettings.disabledFeatures.select_mode, globalSettings.disabledFeatures.macros);
     boolean read_ok = new_frame.load(input_stream, p_design_file.isInputFileFormatDsn(), p_message_field);
     if (!read_ok) {

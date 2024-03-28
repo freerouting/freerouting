@@ -42,7 +42,7 @@ import java.util.TreeSet;
  */
 public class BasicBoard implements Serializable {
 
-  /** List of items inserted into this board (eg. Trace classes). Traces are Item classes that implement the Connectable interface. */
+  /** List of items inserted into this board (eg. trace classes). Traces are Item classes that implement the Connectable interface. */
   public final UndoableObjects item_list;
   /** List of placed components on the board. */
   public final Components components;
@@ -61,11 +61,6 @@ public class BasicBoard implements Serializable {
   public final IntBox bounding_box;
   /** Handles the search trees pointing into the items of this board */
   public transient SearchTreeManager search_tree_manager;
-  /**
-   * If test_level != RELEASE_VERSION, some features may be used, which are still in experimental
-   * state. Warnings for debugging may be printed depending on the size of test_level.
-   */
-  private transient TestLevel test_level;
   /** the rectangle, where the graphics may be not up-to-date */
   private transient IntBox update_box = IntBox.EMPTY;
   /** the biggest half width of all traces on the board */
@@ -87,8 +82,7 @@ public class BasicBoard implements Serializable {
       PolylineShape[] p_outline_shapes,
       int p_outline_cl_class_no,
       BoardRules p_rules,
-      Communication p_communication,
-      TestLevel p_test_level) {
+      Communication p_communication) {
     layer_structure = p_layer_structure;
     rules = p_rules;
     library = new BoardLibrary();
@@ -96,7 +90,6 @@ public class BasicBoard implements Serializable {
     components = new Components();
     communication = p_communication;
     bounding_box = p_bounding_box;
-    this.test_level = p_test_level;
     search_tree_manager = new SearchTreeManager(this);
     p_rules.nets.set_board(this);
     insert_outline(p_outline_shapes, p_outline_cl_class_no);
@@ -1484,19 +1477,6 @@ public class BasicBoard implements Serializable {
       }
     }
     return true;
-  }
-
-  /**
-   * If != RELEASE_VERSION, some features may be used, which are still in experimental state. Also,
-   * warnings for debugging may be printed depending on the test_level.
-   */
-  public TestLevel get_test_level() {
-    return this.test_level;
-  }
-
-  /** Only to be used in BoardHandling.read_design. */
-  public void set_test_level(TestLevel p_value) {
-    this.test_level = p_value;
   }
 
   private void readObject(ObjectInputStream p_stream)

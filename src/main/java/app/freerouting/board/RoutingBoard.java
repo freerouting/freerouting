@@ -53,16 +53,14 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       PolylineShape[] p_outline_shapes,
       int p_outline_cl_class_no,
       BoardRules p_rules,
-      Communication p_board_communication,
-      TestLevel p_test_level) {
+      Communication p_board_communication) {
     super(
         p_bounding_box,
         p_layer_structure,
         p_outline_shapes,
         p_outline_cl_class_no,
         p_rules,
-        p_board_communication,
-        p_test_level);
+        p_board_communication);
   }
 
   /** Maintains the auto-router database after p_item is inserted, changed, or deleted. */

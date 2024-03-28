@@ -14,7 +14,6 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.IdNoGenerator;
@@ -496,7 +495,7 @@ public class BoardHandling extends BoardHandlingHeadless {
     }
   }
 
-  /** Creates the Routingboard, the graphic context and the interactive settings. */
+  /** Creates the routing board, the graphic context and the interactive settings. */
   @Override
   public void create_board(
       IntBox p_bounding_box,
@@ -504,16 +503,14 @@ public class BoardHandling extends BoardHandlingHeadless {
       PolylineShape[] p_outline_shapes,
       String p_outline_clearance_class_name,
       BoardRules p_rules,
-      Communication p_board_communication,
-      TestLevel p_test_level) {
+      Communication p_board_communication) {
     super.create_board(
         p_bounding_box,
         p_layer_structure,
         p_outline_shapes,
         p_outline_clearance_class_name,
         p_rules,
-        p_board_communication,
-        p_test_level);
+        p_board_communication);
 
     // create the interactive settings with default
     double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
@@ -837,7 +834,7 @@ public class BoardHandling extends BoardHandlingHeadless {
    * Reads an existing board design from the input stream. Returns false, if the input stream does
    * not contain a legal board design.
    */
-  public boolean loadFromBinary(ObjectInputStream p_design, TestLevel p_test_level) {
+  public boolean loadFromBinary(ObjectInputStream p_design) {
     try {
       board = (RoutingBoard) p_design.readObject();
       settings = (Settings) p_design.readObject();
@@ -849,7 +846,6 @@ public class BoardHandling extends BoardHandlingHeadless {
       FRLogger.error("Couldn't read design file", e);
       return false;
     }
-    board.set_test_level(p_test_level);
     screen_messages.set_layer(board.layer_structure.arr[settings.layer].name);
     return true;
   }
@@ -862,15 +858,14 @@ public class BoardHandling extends BoardHandlingHeadless {
   public DsnFile.ReadResult loadFromSpecctraDsn(
       InputStream p_design,
       BoardObservers p_observers,
-      IdNoGenerator p_item_id_no_generator,
-      TestLevel p_test_level) {
+      IdNoGenerator p_item_id_no_generator) {
     if (p_design == null) {
       return DsnFile.ReadResult.ERROR;
     }
 
     DsnFile.ReadResult read_result;
     try {
-      read_result = DsnFile.read(p_design, this, p_observers, p_item_id_no_generator, p_test_level);
+      read_result = DsnFile.read(p_design, this, p_observers, p_item_id_no_generator);
     } catch (Exception e) {
       read_result = DsnFile.ReadResult.ERROR;
       FRLogger.error("There was an error while reading DSN file.", e);

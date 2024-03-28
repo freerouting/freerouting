@@ -8,7 +8,6 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
 import app.freerouting.boardgraphics.GraphicsContext;

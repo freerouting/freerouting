@@ -5,7 +5,6 @@ import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.board.ShapeSearchTree;
-import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.Direction;
@@ -52,21 +51,19 @@ public class SortedRoomNeighbours {
   public static CompleteExpansionRoom calculate(
       ExpansionRoom p_room, AutorouteEngine p_autoroute_engine) {
     int net_no = p_autoroute_engine.get_net_no();
-    TestLevel test_level = p_autoroute_engine.board.get_test_level();
+
     SortedRoomNeighbours room_neighbours =
         calculate_neighbours(
             p_room,
             net_no,
             p_autoroute_engine.autoroute_search_tree,
-            p_autoroute_engine.generate_room_id_no(),
-            test_level);
+            p_autoroute_engine.generate_room_id_no());
 
     // Check, that each side of the room shape has at least one touching neighbour.
     // Otherwise, improve the room shape by enlarging.
 
     boolean edge_removed =
-        room_neighbours.try_remove_edge(
-            net_no, p_autoroute_engine.autoroute_search_tree, test_level);
+        room_neighbours.try_remove_edge(net_no, p_autoroute_engine.autoroute_search_tree);
     CompleteExpansionRoom result = room_neighbours.completed_room;
     if (edge_removed) {
       p_autoroute_engine.remove_all_doors(result);
@@ -151,8 +148,7 @@ public class SortedRoomNeighbours {
       ExpansionRoom p_room,
       int p_net_no,
       ShapeSearchTree p_autoroute_search_tree,
-      int p_room_id_no,
-      TestLevel p_test_level) {
+      int p_room_id_no) {
     TileShape room_shape = p_room.get_shape();
     CompleteExpansionRoom completed_room;
     if (p_room instanceof IncompleteFreeSpaceExpansionRoom) {
@@ -363,7 +359,7 @@ public class SortedRoomNeighbours {
    * shape will be improved the by enlarging. Returns true, if the room shape was changed.
    */
   private boolean try_remove_edge(
-      int p_net_no, ShapeSearchTree p_autoroute_search_tree, TestLevel p_test_level) {
+      int p_net_no, ShapeSearchTree p_autoroute_search_tree) {
     if (!(this.from_room instanceof IncompleteFreeSpaceExpansionRoom)) {
       return false;
     }

@@ -4,7 +4,6 @@ import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdNoGenerator;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Unit;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.datastructures.IdNoGenerator;
@@ -79,7 +78,6 @@ public class BoardFrame extends WindowBase {
   private final JToolBar select_toolbar;
   /** The panel with the message line */
   private final BoardPanelStatus message_panel;
-  private final TestLevel test_level;
   private final TextManager tm;
   private final BoardObservers board_observers;
   private final IdNoGenerator item_id_no_generator;
@@ -128,7 +126,6 @@ public class BoardFrame extends WindowBase {
    */
   public BoardFrame(
       DesignFile p_design,
-      TestLevel p_test_level,
       Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
@@ -136,7 +133,6 @@ public class BoardFrame extends WindowBase {
       boolean p_disable_macros) {
     this(
         p_design,
-        p_test_level,
         new BoardObserverAdaptor(),
         new ItemIdNoGenerator(),
         p_locale,
@@ -151,7 +147,6 @@ public class BoardFrame extends WindowBase {
    */
   BoardFrame(
       DesignFile p_design,
-      TestLevel p_test_level,
       BoardObservers p_observers,
       IdNoGenerator p_item_id_no_generator,
       Locale p_locale,
@@ -162,7 +157,6 @@ public class BoardFrame extends WindowBase {
     super(800, 150);
 
     this.design_file = p_design;
-    this.test_level = p_test_level;
 
     this.board_observers = p_observers;
     this.item_id_no_generator = p_item_id_no_generator;
@@ -344,7 +338,7 @@ public class BoardFrame extends WindowBase {
     DsnFile.ReadResult read_result = null;
 
     if (isSpecctraDsn) {
-      read_result = board_panel.board_handling.loadFromSpecctraDsn(p_input_stream, this.board_observers, this.item_id_no_generator, this.test_level);
+      read_result = board_panel.board_handling.loadFromSpecctraDsn(p_input_stream, this.board_observers, this.item_id_no_generator);
 
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK) {
@@ -361,7 +355,7 @@ public class BoardFrame extends WindowBase {
       } catch (IOException e) {
         return false;
       }
-      boolean read_ok = board_panel.board_handling.loadFromBinary(object_stream, this.test_level);
+      boolean read_ok = board_panel.board_handling.loadFromBinary(object_stream);
       if (!read_ok) {
         return false;
       }

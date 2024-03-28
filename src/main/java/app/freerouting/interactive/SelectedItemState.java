@@ -12,7 +12,6 @@ import app.freerouting.board.OptViaAlgo;
 import app.freerouting.board.Pin;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.FloatPoint;

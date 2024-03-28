@@ -3,7 +3,6 @@ package app.freerouting.interactive;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
@@ -72,8 +71,6 @@ public class BoardHandlingHeadless implements IBoardHandling {
 
       RoutingBoard board_copy = (RoutingBoard) ois.readObject();
 
-      board_copy.set_test_level(this.board.get_test_level()); // test_level is transient
-
       // board_copy.clear_autoroute_database();
       board_copy.clear_all_item_temporary_autoroute_data();
       board_copy.finish_autoroute();
@@ -112,8 +109,7 @@ public class BoardHandlingHeadless implements IBoardHandling {
       PolylineShape[] p_outline_shapes,
       String p_outline_clearance_class_name,
       BoardRules p_rules,
-      Communication p_board_communication,
-      TestLevel p_test_level) {
+      Communication p_board_communication) {
     if (this.board != null) {
       FRLogger.warn(" BoardHandling.create_board: app.freerouting.board already created");
     }
@@ -138,8 +134,7 @@ public class BoardHandlingHeadless implements IBoardHandling {
             p_outline_shapes,
             outline_cl_class_no,
             p_rules,
-            p_board_communication,
-            p_test_level);
+            p_board_communication);
 
     this.settings = new Settings(this.board, this.activityReplayFile);
   }

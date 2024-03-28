@@ -3,7 +3,6 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
-import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.interactive.IBoardHandling;
 
@@ -18,7 +17,6 @@ public class ReadScopeParameter {
   final NetList netlist = new NetList();
   final BoardObservers observers;
   final IdNoGenerator item_id_no_generator;
-  final TestLevel test_level;
   /**
    * Collection of elements of class PlaneInfo. The plane cannot be inserted directly into the
    * boards, because the layers may not be read completely.
@@ -68,13 +66,11 @@ public class ReadScopeParameter {
       IJFlexScanner p_scanner,
       IBoardHandling p_board_handling,
       BoardObservers p_observers,
-      IdNoGenerator p_item_id_no_generator,
-      TestLevel p_test_level) {
+      IdNoGenerator p_item_id_no_generator) {
     scanner = p_scanner;
     board_handling = p_board_handling;
     observers = p_observers;
     item_id_no_generator = p_item_id_no_generator;
-    test_level = p_test_level;
   }
 
   /** Information for inserting a plane */

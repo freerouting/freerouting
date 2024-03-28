@@ -6,7 +6,6 @@ import app.freerouting.board.BoardOutline;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.Item;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.datastructures.IndentFileWriter;
@@ -37,8 +36,7 @@ public class DsnFile {
       InputStream p_input_stream,
       IBoardHandling p_board_handling,
       BoardObservers p_observers,
-      IdNoGenerator p_item_id_no_generator,
-      TestLevel p_test_level) {
+      IdNoGenerator p_item_id_no_generator) {
     IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
     Object curr_token;
     for (int i = 0; i < 3; ++i) {
@@ -61,7 +59,7 @@ public class DsnFile {
       }
     }
     ReadScopeParameter read_scope_par =
-        new ReadScopeParameter(scanner, p_board_handling, p_observers, p_item_id_no_generator, p_test_level);
+        new ReadScopeParameter(scanner, p_board_handling, p_observers, p_item_id_no_generator);
     boolean read_ok = Keyword.PCB_SCOPE.read_scope(read_scope_par);
     ReadResult result;
     if (read_ok) {

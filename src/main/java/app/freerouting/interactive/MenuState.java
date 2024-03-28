@@ -4,7 +4,6 @@ import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Pin;
-import app.freerouting.board.TestLevel;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 

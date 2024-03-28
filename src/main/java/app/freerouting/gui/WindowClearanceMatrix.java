@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
-import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;

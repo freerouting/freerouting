@@ -8,7 +8,6 @@ import app.freerouting.board.ConductionArea;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.ViaObstacleArea;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
@@ -1000,8 +999,7 @@ class Structure extends ScopeKeyword {
     return result;
   }
 
-  private boolean create_board(
-      ReadScopeParameter p_par, BoardConstructionInfo p_board_construction_info) {
+  private boolean create_board(ReadScopeParameter p_par, BoardConstructionInfo p_board_construction_info) {
     int layer_count = p_board_construction_info.layer_info.size();
     if (layer_count == 0) {
       FRLogger.warn("Structure.create_board: layers missing in structure scope at '" + p_par.scanner.get_scope_identifier() + "'");
@@ -1124,8 +1122,7 @@ class Structure extends ScopeKeyword {
         outline_shape_arr,
         p_board_construction_info.outline_clearance_class_name,
         board_rules,
-        board_communication,
-        p_par.test_level);
+        board_communication);
 
     BasicBoard board = p_par.board_handling.get_routing_board();
 

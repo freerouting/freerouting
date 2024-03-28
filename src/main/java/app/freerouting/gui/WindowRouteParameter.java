@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.management.FRAnalytics;
