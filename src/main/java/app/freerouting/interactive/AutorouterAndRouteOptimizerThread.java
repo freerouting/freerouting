@@ -7,13 +7,12 @@ import app.freerouting.autoroute.BatchOptRouteMT;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
-import app.freerouting.tests.Validate;
+import app.freerouting.tests.BoardValidator;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -187,7 +186,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       hdlg.get_panel().board_frame.refresh_windows();
       if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
       {
-        Validate.multiple_of_45_degree("after autoroute: ", hdlg.get_routing_board());
+        BoardValidator.doAllTracesHaveAnglesThatAreMultiplesOfFortyFiveDegrees("after autoroute: ", hdlg.get_routing_board());
       }
     } catch (Exception e) {
       FRLogger.error(e.getLocalizedMessage(), e);
