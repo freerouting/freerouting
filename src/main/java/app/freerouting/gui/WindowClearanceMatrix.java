@@ -202,18 +202,16 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       return;
     }
     clearance_matrix.append_class(new_name);
-    if (routing_board.get_test_level() == TestLevel.RELEASE_IWE) {
-      // clearance compensation is only used, if there are only the clearance classes default and
-      // null.
-      routing_board.search_tree_manager.set_clearance_compensation_used(false);
-    }
+
+    // clearance compensation is only used, if there are only the clearance classes "default" and "null".
+    routing_board.search_tree_manager.set_clearance_compensation_used(false);
+
     adjust_clearance_table();
   }
 
-  /** Removes clearance classs, whose clearance values are all equal to a previous class. */
+  /** Removes clearance class, whose clearance values are all equal to a previous class. */
   private void prune_clearance_matrix() {
-    final BasicBoard routing_board =
-        this.board_frame.board_panel.board_handling.get_routing_board();
+    final BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
     ClearanceMatrix clearance_matrix = routing_board.rules.clearance_matrix;
     for (int i = clearance_matrix.get_class_count() - 1; i >= 2; --i) {
       for (int j = clearance_matrix.get_class_count() - 1; j >= 0; --j) {

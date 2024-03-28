@@ -75,11 +75,7 @@ public class MenuState extends InteractiveState {
     switch (p_key_char) {
       case 'b' -> hdlg.redo();
       case 'd' -> curr_return_state = DragMenuState.get_instance(hdlg, activityReplayFile);
-      case 'e' -> {
-        if (hdlg.get_routing_board().get_test_level() != TestLevel.RELEASE_IWE) {
-          curr_return_state = ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
-        }
-      }
+      case 'e' -> curr_return_state = ExpandTestState.get_instance(hdlg.get_current_mouse_position(), this, hdlg);
       case 'g' -> hdlg.toggle_ratsnest();
       case 'i' -> curr_return_state = this.select_items(hdlg.get_current_mouse_position());
       case 'p' -> {

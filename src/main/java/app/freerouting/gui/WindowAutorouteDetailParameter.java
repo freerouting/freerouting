@@ -133,30 +133,24 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     settings_autorouter_detailed_speed_combo_box.addActionListener(new SpeedListener());
     settings_autorouter_detailed_speed_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box.getSelectedItem().toString()));
 
-    if (this.board_handling.get_routing_board().get_test_level() != TestLevel.RELEASE_IWE)
-    {
-      gridbag_constraints.gridwidth = 2;
-      JLabel speed_label = new JLabel();
-      speed_label.setText(resources.getString("speed"));
-      gridbag.setConstraints(speed_label, gridbag_constraints);
-      main_panel.add(speed_label);
+    gridbag_constraints.gridwidth = 2;
+    JLabel speed_label = new JLabel();
+    speed_label.setText(resources.getString("speed"));
+    gridbag.setConstraints(speed_label, gridbag_constraints);
+    main_panel.add(speed_label);
 
-      gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(settings_autorouter_detailed_speed_combo_box, gridbag_constraints);
-      main_panel.add(settings_autorouter_detailed_speed_combo_box);
-    }
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(settings_autorouter_detailed_speed_combo_box, gridbag_constraints);
+    main_panel.add(settings_autorouter_detailed_speed_combo_box);
 
-    JLabel separator =
-        new JLabel(
-            "––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     // add label and number field for the trace costs on each layer.
 
     gridbag_constraints.gridwidth = 3;
-    JLabel layer_label =
-        new JLabel(resources.getString("trace_costs_on_layer"));
+    JLabel layer_label = new JLabel(resources.getString("trace_costs_on_layer"));
     gridbag.setConstraints(layer_label, gridbag_constraints);
     main_panel.add(layer_label);
 

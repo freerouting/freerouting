@@ -924,15 +924,10 @@ class Structure extends ScopeKeyword {
     if (flip_style_rotate_first) {
       board.components.set_flip_style_rotate_first(true);
     }
-    FixedState fixed_state;
-    if (board.get_test_level() == TestLevel.RELEASE_IWE) {
-      fixed_state = FixedState.SYSTEM_FIXED;
-    } else {
-      fixed_state = FixedState.USER_FIXED;
-    }
+
     // insert the keepouts
     for (Shape.ReadAreaScopeResult curr_area : keepout_list) {
-      if (!insert_keepout(curr_area, p_par, KeepoutType.keepout, fixed_state)) {
+      if (!insert_keepout(curr_area, p_par, KeepoutType.keepout, FixedState.SYSTEM_FIXED)) {
         return false;
       }
     }

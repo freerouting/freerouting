@@ -313,10 +313,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_detail_button.addActionListener(detail_listener);
     settings_routing_detail_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_detail_button", settings_routing_detail_button.getText()));
     gridbag.setConstraints(settings_routing_detail_button, gridbag_constraints);
-    if (this.board_handling.get_routing_board().get_test_level() != TestLevel.RELEASE_IWE)
-    {
-      main_panel.add(settings_routing_detail_button);
-    }
+    main_panel.add(settings_routing_detail_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowRouteParameter");
 

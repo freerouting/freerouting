@@ -119,11 +119,8 @@ public class Route {
     with_neckdown = p_with_neckdown;
     via_snap_to_smd_center = p_via_snap_to_smd_center;
     hilight_shove_failing_obstacle = p_hilight_shove_failing_obstacle;
-    if (p_board.get_test_level() == TestLevel.RELEASE_IWE) {
-      this.pull_tight_time_limit = PULL_TIGHT_TIME_LIMIT;
-    } else {
-      this.pull_tight_time_limit = 0;
-    }
+    pull_tight_time_limit = PULL_TIGHT_TIME_LIMIT;
+
     calculate_target_points_and_areas();
     swap_pin_infos = calculate_swap_pin_infos();
   }
@@ -167,7 +164,7 @@ public class Route {
     nearest_target_item =
         board.pick_nearest_routing_item(curr_corner, this.layer, end_routing_item);
     TimeLimit check_forced_trace_time_limit;
-    if (is_stitch_mode || this.board.get_test_level() != TestLevel.RELEASE_IWE) {
+    if (is_stitch_mode) {
       // because no check before inserting in this case
       check_forced_trace_time_limit = null;
     } else {
