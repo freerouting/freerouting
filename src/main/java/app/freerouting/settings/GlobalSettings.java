@@ -18,7 +18,6 @@ public class GlobalSettings {
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
   public transient boolean test_version_option = false;
   public transient boolean show_help_option = false;
-  public transient boolean webstart_option = false;
   public transient String design_input_filename;
   public transient String design_output_filename;
   public transient String design_rules_filename;
@@ -159,8 +158,6 @@ public class GlobalSettings {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             disabledFeatures.snapshots = (Objects.equals(p_args[i + 1],"0"));
           }
-        } else if (p_args[i].startsWith("-w")) {
-          webstart_option = true;
         } else if (p_args[i].startsWith("-test")) {
           test_version_option = true;
         } else if (p_args[i].startsWith("-dl")) {
@@ -189,10 +186,6 @@ public class GlobalSettings {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
       }
     }
-  }
-
-  public boolean getWebstartOption() {
-    return webstart_option;
   }
 
   public boolean isTestVersion() {

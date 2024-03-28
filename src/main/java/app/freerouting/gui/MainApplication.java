@@ -128,18 +128,7 @@ public class MainApplication extends WindowBase {
     open_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
 
     gridbag.setConstraints(open_board_button, gridbag_constraints);
-    if (add_buttons) {
-      main_panel.add(open_board_button, gridbag_constraints);
-    }
-
-    if (globalSettings.getWebstartOption() && add_buttons) {
-      restore_defaults_button.setText(resources.getString("restore_defaults"));
-      restore_defaults_button.setToolTipText(resources.getString("restore_defaults_tooltip"));
-      restore_defaults_button.addActionListener(evt -> {});
-      restore_defaults_button.addActionListener(evt -> FRAnalytics.buttonClicked("restore_defaults_button", restore_defaults_button.getText()));
-      gridbag.setConstraints(restore_defaults_button, gridbag_constraints);
-      main_panel.add(restore_defaults_button, gridbag_constraints);
-    }
+    main_panel.add(open_board_button, gridbag_constraints);
 
     int window_width = 620;
     int window_height = 300;
