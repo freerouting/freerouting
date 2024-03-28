@@ -99,8 +99,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public boolean remove_items_and_pull_tight(
       Collection<Item> p_item_list,
       int p_tidy_width,
-      int p_pull_tight_accuracy,
-      boolean p_with_delete_fixed) {
+      int p_pull_tight_accuracy) {
     boolean result = true;
     IntOctagon tidy_region;
     boolean calculate_tidy_region;
@@ -114,7 +113,8 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     start_marking_changed_area();
     Set<Integer> changed_nets = new TreeSet<>();
     for (Item curr_item : p_item_list) {
-      if (!p_with_delete_fixed && curr_item.is_delete_fixed() || curr_item.is_user_fixed()) {
+      if (curr_item.isDeletionForbidden() || curr_item.is_user_fixed()) {
+        // We are not allowed to delete this item.
         result = false;
       } else {
         for (int i = 0; i < curr_item.tile_shape_count(); ++i) {
@@ -422,7 +422,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     Collection<Item> contact_list = p_drill_item.get_normal_contacts();
     for (Item curr_contact : contact_list) {
       if (curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
-        curr_contact.set_fixed_state(FixedState.UNFIXED);
+        curr_contact.set_fixed_state(FixedState.NOT_FIXED);
       }
     }
 
@@ -875,7 +875,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
             p_half_width,
             p_net_no_arr,
             p_clearance_class_no,
-            FixedState.UNFIXED);
+            FixedState.NOT_FIXED);
     new_trace.combine();
 
     IntOctagon tidy_region = null;
@@ -1119,7 +1119,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
 
     this.insert_trace(
-        connection_line, trace_layer, p_pen_half_width, net_no_arr, p_cl_type, FixedState.UNFIXED);
+        connection_line, trace_layer, p_pen_half_width, net_no_arr, p_cl_type, FixedState.NOT_FIXED);
 
     if (!p_from_point.equals(first_corner)) {
       Trace tail = this.get_trace_tail(first_corner, trace_layer, net_no_arr);
@@ -1200,7 +1200,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (stub_connections.isEmpty()) {
       return false;
     }
-    this.remove_items(stub_connections, false);
+    this.remove_items(stub_connections);
     this.combine_traces(p_net_no);
     return true;
   }

@@ -87,7 +87,7 @@ public class ShapeTraceEntries {
             p_trace.get_half_width(),
             p_trace.net_no_arr,
             p_trace.clearance_class_no(),
-            FixedState.UNFIXED);
+            FixedState.NOT_FIXED);
       }
     }
   }
@@ -107,7 +107,7 @@ public class ShapeTraceEntries {
             p_trace.clearance_class_no(),
             0,
             0,
-            FixedState.UNFIXED,
+            FixedState.NOT_FIXED,
             board);
     start_piece.board = board;
     board.item_list.insert(start_piece);
@@ -122,7 +122,7 @@ public class ShapeTraceEntries {
             p_trace.clearance_class_no(),
             0,
             0,
-            FixedState.UNFIXED,
+            FixedState.NOT_FIXED,
             board);
     end_piece.board = board;
     board.item_list.insert(end_piece);
@@ -264,7 +264,7 @@ public class ShapeTraceEntries {
         curr_trace.clearance_class_no(),
         0,
         0,
-        FixedState.UNFIXED,
+        FixedState.NOT_FIXED,
         this.board);
   }
 

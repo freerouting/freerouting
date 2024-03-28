@@ -89,7 +89,7 @@ public class MakeSpaceState extends DragState {
   public InteractiveState button_released() {
     int delete_net_no = Nets.hidden_net_no;
     BasicBoard board = hdlg.get_routing_board();
-    board.remove_items(board.get_connectable_items(delete_net_no), false);
+    board.remove_items(board.get_connectable_items(delete_net_no));
     if (this.observers_activated) {
       hdlg.get_routing_board().end_notify_observers();
       this.observers_activated = false;

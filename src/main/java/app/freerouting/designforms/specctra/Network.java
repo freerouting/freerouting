@@ -960,7 +960,7 @@ public class Network extends ScopeKeyword {
     if (p_location.position_fixed) {
       fixed_state = FixedState.SYSTEM_FIXED;
     } else {
-      fixed_state = FixedState.UNFIXED;
+      fixed_state = FixedState.NOT_FIXED;
     }
     app.freerouting.library.Package curr_package = new_component.get_package();
     for (int i = 0; i < curr_package.pin_count(); ++i) {

@@ -484,7 +484,7 @@ public class ShoveTraceAlgo {
         for (int i = 0; i < 2; ++i) {
           Trace tail = board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
           if (tail != null) {
-            board.remove_items(tail.get_connection_items(Item.StopConnectionOption.VIA), false);
+            board.remove_items(tail.get_connection_items(Item.StopConnectionOption.VIA));
             for (int curr_net_no : curr_net_no_arr) {
               board.combine_traces(curr_net_no);
             }

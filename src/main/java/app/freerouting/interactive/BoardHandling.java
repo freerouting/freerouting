@@ -196,7 +196,7 @@ public class BoardHandling extends BoardHandlingHeadless {
             if ((curr_contact instanceof PolylineTrace)
                 && curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED) {
               if (((PolylineTrace) curr_contact).corner_count() == 2) {
-                curr_contact.set_fixed_state(FixedState.UNFIXED);
+                curr_contact.set_fixed_state(FixedState.NOT_FIXED);
               }
             }
           }

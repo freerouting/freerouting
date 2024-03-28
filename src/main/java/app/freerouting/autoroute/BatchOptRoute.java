@@ -70,7 +70,7 @@ public class BatchOptRoute {
       if (curr_item instanceof Trace) {
         Trace curr_trace = (Trace) curr_item;
         FixedState fixed_state = curr_trace.get_fixed_state();
-        if (fixed_state == FixedState.UNFIXED || fixed_state == FixedState.SHOVE_FIXED) {
+        if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED) {
           double weighted_trace_length =
               curr_trace.get_length()
                   * (curr_trace.get_half_width()
@@ -237,7 +237,7 @@ public class BatchOptRoute {
     }
     // no need to undo for cloned board which is either promoted to master or discarded
 
-    this.routing_board.remove_items(ripped_connections, false);
+    this.routing_board.remove_items(ripped_connections);
     for (int i = 0; i < p_item.net_count(); ++i) {
       this.routing_board.combine_traces(p_item.get_net_no(i));
     }

@@ -366,10 +366,9 @@ public class RouteState extends InteractiveState {
             .remove_items_and_pull_tight(
                 remove_items,
                 hdlg.settings.trace_pull_tight_region_width,
-                hdlg.settings.trace_pull_tight_accuracy,
-                false);
+                hdlg.settings.trace_pull_tight_accuracy);
       } else {
-        hdlg.get_routing_board().remove_items(remove_items, false);
+        hdlg.get_routing_board().remove_items(remove_items);
       }
     }
     if (this.observers_activated) {

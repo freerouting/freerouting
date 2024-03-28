@@ -200,7 +200,7 @@ public class ExpandTestState extends InteractiveState {
         ripped_connections.addAll(
             curr_ripped_item.get_connection_items(Item.StopConnectionOption.VIA));
       }
-      hdlg.get_routing_board().remove_items(ripped_connections, false);
+      hdlg.get_routing_board().remove_items(ripped_connections);
       InsertFoundConnectionAlgo.get_instance(
           autoroute_result, hdlg.get_routing_board(), control_settings);
     }

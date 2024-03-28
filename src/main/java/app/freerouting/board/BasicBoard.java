@@ -732,10 +732,11 @@ public class BasicBoard implements Serializable {
    * Removes the items in p_item_list. Returns false, if some items could not be removed, because
    * they are fixed.
    */
-  public boolean remove_items(Collection<Item> p_item_list, boolean p_with_delete_fixed) {
+  public boolean remove_items(Collection<Item> p_item_list) {
     boolean result = true;
     for (Item curr_item : p_item_list) {
-      if (!p_with_delete_fixed && curr_item.is_delete_fixed() || curr_item.is_user_fixed()) {
+      if (curr_item.isDeletionForbidden() || curr_item.is_user_fixed()) {
+        // We are not allowed to delete this item
         result = false;
       } else {
         remove_item(curr_item);
@@ -1112,7 +1113,7 @@ public class BasicBoard implements Serializable {
             p_clearance_class,
             0,
             0,
-            FixedState.UNFIXED,
+            FixedState.NOT_FIXED,
             this);
     Set<Pin> contact_pins = tmp_trace.touching_pins_at_end_corners();
     for (int i = 0; i < tmp_trace.tile_shape_count(); ++i) {
@@ -1473,12 +1474,12 @@ public class BasicBoard implements Serializable {
       tail_at_endpoint_before[i] = (tail != null);
     }
     Set<Item> connection_items = p_trace.get_connection_items();
-    this.remove_items(connection_items, false);
+    this.remove_items(connection_items);
     for (int i = 0; i < 2; ++i) {
       if (!tail_at_endpoint_before[i]) {
         Trace tail = get_trace_tail(end_corners[i], curr_layer, curr_net_no_arr);
         if (tail != null) {
-          remove_items(tail.get_connection_items(), false);
+          remove_items(tail.get_connection_items());
         }
       }
     }

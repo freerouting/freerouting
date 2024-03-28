@@ -137,7 +137,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
           curr_trace_info.half_width,
           this.net_no_arr,
           curr_trace_info.clearance_type,
-          FixedState.UNFIXED);
+          FixedState.NOT_FIXED);
     }
   }
 

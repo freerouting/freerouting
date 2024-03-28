@@ -242,18 +242,14 @@ public class SelectedItemState extends InteractiveState {
         }
       }
     }
-    boolean with_delete_fixed = hdlg.get_routing_board().get_test_level() != TestLevel.RELEASE_IWE;
+
     boolean all_items_removed;
     if (hdlg.settings.push_enabled) {
       all_items_removed =
           hdlg.get_routing_board()
-              .remove_items_and_pull_tight(
-                  item_list,
-                  hdlg.settings.trace_pull_tight_region_width,
-                  hdlg.settings.trace_pull_tight_accuracy,
-                  with_delete_fixed);
+              .remove_items_and_pull_tight(item_list, hdlg.settings.trace_pull_tight_region_width, hdlg.settings.trace_pull_tight_accuracy);
     } else {
-      all_items_removed = hdlg.get_routing_board().remove_items(item_list, with_delete_fixed);
+      all_items_removed = hdlg.get_routing_board().remove_items(item_list);
     }
     if (!all_items_removed) {
       hdlg.screen_messages.set_status_message(

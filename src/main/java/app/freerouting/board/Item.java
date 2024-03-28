@@ -769,7 +769,7 @@ public abstract class Item
   }
 
   /** Returns true, if it is not allowed to delete this item. */
-  boolean is_delete_fixed() {
+  boolean isDeletionForbidden() {
     // Items belonging to a component are delete_fixed.
     if (this.component_no > 0 || is_user_fixed()) {
       return true;
@@ -806,7 +806,7 @@ public abstract class Item
   /** Unfixes the item, if it is not fixed by the system. */
   public void unfix() {
     if (fixed_state != FixedState.SYSTEM_FIXED) {
-      fixed_state = FixedState.UNFIXED;
+      fixed_state = FixedState.NOT_FIXED;
     }
   }
 
@@ -1045,7 +1045,7 @@ public abstract class Item
 
   /** Internal function used in the implementation of print_info */
   protected void print_fixed_info(ObjectInfoPanel p_window, Locale p_locale) {
-    if (this.fixed_state != FixedState.UNFIXED) {
+    if (this.fixed_state != FixedState.NOT_FIXED) {
       ResourceBundle resources =
           ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
       p_window.append(", ");
