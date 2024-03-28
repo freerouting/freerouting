@@ -529,7 +529,7 @@ public class MainApplication extends WindowBase {
 
     TestLevel test_level = p_is_test_version ? DEBUG_LEVEL : TestLevel.RELEASE_VERSION;
     BoardFrame new_frame = new BoardFrame(
-        p_design_file, test_level, p_locale, !p_is_test_version, p_save_intermediate_stages,
+        p_design_file, test_level, p_locale, p_save_intermediate_stages,
         p_optimization_improvement_threshold, globalSettings.disabledFeatures.select_mode, globalSettings.disabledFeatures.macros);
     boolean read_ok = new_frame.load(input_stream, p_design_file.isInputFileFormatDsn(), p_message_field);
     if (!read_ok) {

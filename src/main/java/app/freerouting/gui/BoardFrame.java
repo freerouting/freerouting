@@ -80,9 +80,6 @@ public class BoardFrame extends WindowBase {
   /** The panel with the message line */
   private final BoardPanelStatus message_panel;
   private final TestLevel test_level;
-  @Deprecated
-  private final boolean help_system_used;
-  private final boolean confirm_cancel;
   private final TextManager tm;
   private final BoardObservers board_observers;
   private final IdNoGenerator item_id_no_generator;
@@ -133,7 +130,6 @@ public class BoardFrame extends WindowBase {
       DesignFile p_design,
       TestLevel p_test_level,
       Locale p_locale,
-      boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
       boolean p_disable_select_mode,
@@ -144,7 +140,6 @@ public class BoardFrame extends WindowBase {
         new BoardObserverAdaptor(),
         new ItemIdNoGenerator(),
         p_locale,
-        p_confirm_cancel,
         p_save_intermediate_stages,
         p_optimization_improvement_threshold,
         p_disable_select_mode,
@@ -160,7 +155,6 @@ public class BoardFrame extends WindowBase {
       BoardObservers p_observers,
       IdNoGenerator p_item_id_no_generator,
       Locale p_locale,
-      boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
       boolean p_disable_select_mode,
@@ -170,16 +164,12 @@ public class BoardFrame extends WindowBase {
     this.design_file = p_design;
     this.test_level = p_test_level;
 
-    this.confirm_cancel = p_confirm_cancel;
     this.board_observers = p_observers;
     this.item_id_no_generator = p_item_id_no_generator;
     this.locale = p_locale;
     this.tm = new TextManager(BoardFrame.class, p_locale);
 
-    BoardMenuBar curr_menubar;
-    @Deprecated
-    boolean curr_help_system_used = false;
-    curr_menubar = BoardMenuBar.get_instance(this, p_disable_macros);
+    BoardMenuBar curr_menubar = BoardMenuBar.get_instance(this, p_disable_macros);
 
     // Set the menu bar of this frame.
     this.menubar = curr_menubar;
@@ -269,7 +259,6 @@ public class BoardFrame extends WindowBase {
           }
         });
 
-    this.help_system_used = curr_help_system_used;
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
@@ -900,7 +889,7 @@ public class BoardFrame extends WindowBase {
       permanent_subwindows[i].repaint();
     }
   }
-  
+
   /** Used for storing the subwindow filters in a snapshot. */
   public static class SubwindowSelections implements Serializable {
     private WindowObjectListWithFilter.SnapshotInfo incompletes_selection;
@@ -915,7 +904,7 @@ public class BoardFrame extends WindowBase {
     public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       boolean wasBoardChanged = board_panel.board_handling.isBoardChanged();
-      if ((confirm_cancel) && (wasBoardChanged)) {
+      if (wasBoardChanged) {
         // Create a JOptionPane with a warning icon and set the default option to NO
         Object[] options = {tm.getText("confirm_exit_yes"), tm.getText("confirm_exit_no")};
         JOptionPane optionPane = new JOptionPane(
