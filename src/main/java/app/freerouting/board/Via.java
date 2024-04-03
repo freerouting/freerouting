@@ -225,8 +225,7 @@ public class Via extends DrillItem implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via"));
     p_window.append(" " + resources.getString("at") + " ");
     p_window.append(this.get_center().to_float());

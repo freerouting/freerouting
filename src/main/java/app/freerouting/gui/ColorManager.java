@@ -32,9 +32,7 @@ public class ColorManager extends BoardSavableSubWindow {
   /** Creates a new instance of ColorManager */
   public ColorManager(BoardFrame p_board_frame) {
     GraphicsContext graphics_context = p_board_frame.board_panel.board_handling.graphics_context;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
     this.setTitle(resources.getString("color_manager"));
     final JPanel panel = new JPanel();
     final int textfield_height = 20;
@@ -92,8 +90,7 @@ public class ColorManager extends BoardSavableSubWindow {
     final JColorChooser colorChooser = new JColorChooser();
     ActionListener okListener =
         e -> colorEditor.currentColor = colorChooser.getColor();
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
     final JDialog dialog = JColorChooser.createDialog(color_editor_button, resources.getString("pick_a_color"), true, colorChooser, okListener, null);
 
     // Here's the code that brings up the dialog.

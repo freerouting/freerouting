@@ -314,8 +314,7 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("keepout"));
     int cmp_no = this.get_component_no();
     if (cmp_no > 0) {
@@ -330,8 +329,7 @@ public class ObstacleArea extends Item implements Serializable {
 
   /** Used in the implementation of print_info for this class and derived classes. */
   protected final void print_shape_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append(" " + resources.getString("at") + " ");
     FloatPoint center =
         this.get_area().get_border().centre_of_gravity();

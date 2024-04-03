@@ -13,9 +13,7 @@ public class BoardMenuParameter extends JMenu {
   /** Creates a new instance of BoardSelectMenu */
   private BoardMenuParameter(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
-    resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardMenuParameter", p_board_frame.get_locale());
+    resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuParameter", p_board_frame.get_locale());
   }
 
   /** Returns a new windows menu for the board frame. */

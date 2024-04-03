@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.logger.FRLogger;
 
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,13 +17,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ResourceBundle;
 
 /** Creates the file menu of a board frame. */
 public class BoardMenuFile extends JMenu {
 
   private final BoardFrame board_frame;
-  private final ResourceBundle resources;
+  private final TextManager tm;
 
   private List<Consumer<File>> openEventListeners = new ArrayList<>();
   private List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
@@ -30,19 +30,19 @@ public class BoardMenuFile extends JMenu {
   /** Creates a new instance of BoardFileMenu */
   private BoardMenuFile(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
-    resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuFile", p_board_frame.get_locale());
+    tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
 
   /** Returns a new file menu for the board frame. */
   public static BoardMenuFile get_instance(BoardFrame p_board_frame, boolean p_disable_feature_macros)
   {
     final BoardMenuFile file_menu = new BoardMenuFile(p_board_frame);
-    file_menu.setText(file_menu.resources.getString("file"));
+    file_menu.setText(file_menu.tm.getText("file"));
 
     // File / Open...
     JMenuItem file_open_menuitem = new JMenuItem();
-    file_open_menuitem.setText(file_menu.resources.getString("open"));
-    file_open_menuitem.setToolTipText(file_menu.resources.getString("open_tooltip"));
+    file_open_menuitem.setText(file_menu.tm.getText("open"));
+    file_open_menuitem.setToolTipText(file_menu.tm.getText("open_tooltip"));
     file_open_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_open_menuitem.addActionListener(
         evt -> {
@@ -91,8 +91,8 @@ public class BoardMenuFile extends JMenu {
     // File / Save as...
 
     JMenuItem file_save_as_menuitem = new JMenuItem();
-    file_save_as_menuitem.setText(file_menu.resources.getString("save_as"));
-    file_save_as_menuitem.setToolTipText(file_menu.resources.getString("save_as_tooltip"));
+    file_save_as_menuitem.setText(file_menu.tm.getText("save_as"));
+    file_save_as_menuitem.setToolTipText(file_menu.tm.getText("save_as_tooltip"));
     file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_save_as_menuitem.addActionListener(evt -> {
       File selected_file = file_menu.board_frame.design_file.showSaveAsDialog(MainApplication.globalSettings.input_directory, file_menu.board_frame);
@@ -105,26 +105,22 @@ public class BoardMenuFile extends JMenu {
 
     if (!p_disable_feature_macros) {
       JMenuItem file_write_logfile_menuitem = new JMenuItem();
-      file_write_logfile_menuitem.setText(file_menu.resources.getString("generate_logfile"));
-      file_write_logfile_menuitem.setToolTipText(
-          file_menu.resources.getString("generate_logfile_tooltip"));
+      file_write_logfile_menuitem.setText(file_menu.tm.getText("generate_logfile"));
+      file_write_logfile_menuitem.setToolTipText(file_menu.tm.getText("generate_logfile_tooltip"));
       file_write_logfile_menuitem.addActionListener(evt -> file_menu.write_logfile_action());
       file_write_logfile_menuitem.addActionListener(
-          evt ->
-              FRAnalytics.buttonClicked(
-                  "file_write_logfile_menuitem", file_write_logfile_menuitem.getText()));
+          evt -> FRAnalytics.buttonClicked("file_write_logfile_menuitem", file_write_logfile_menuitem.getText())
+      );
 
       file_menu.add(file_write_logfile_menuitem);
 
       JMenuItem file_replay_logfile_menuitem = new JMenuItem();
-      file_replay_logfile_menuitem.setText(file_menu.resources.getString("replay_logfile"));
-      file_replay_logfile_menuitem.setToolTipText(
-          file_menu.resources.getString("replay_logfile_tooltip"));
+      file_replay_logfile_menuitem.setText(file_menu.tm.getText("replay_logfile"));
+      file_replay_logfile_menuitem.setToolTipText(file_menu.tm.getText("replay_logfile_tooltip"));
       file_replay_logfile_menuitem.addActionListener(evt -> file_menu.read_logfile_action());
       file_replay_logfile_menuitem.addActionListener(
-          evt ->
-              FRAnalytics.buttonClicked(
-                  "file_replay_logfile_menuitem", file_replay_logfile_menuitem.getText()));
+          evt -> FRAnalytics.buttonClicked("file_replay_logfile_menuitem", file_replay_logfile_menuitem.getText())
+      );
 
       file_menu.add(file_replay_logfile_menuitem);
     }
@@ -135,8 +131,8 @@ public class BoardMenuFile extends JMenu {
     // File / Exit
 
     JMenuItem file_exit_menuitem = new JMenuItem();
-    file_exit_menuitem.setText(file_menu.resources.getString("exit"));
-    file_exit_menuitem.setToolTipText(file_menu.resources.getString("exit_tooltip"));
+    file_exit_menuitem.setText(file_menu.tm.getText("exit"));
+    file_exit_menuitem.setToolTipText(file_menu.tm.getText("exit_tooltip"));
     file_exit_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
     file_exit_menuitem.addActionListener(evt -> file_menu.board_frame.dispose());
     file_exit_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_exit_menuitem", file_exit_menuitem.getText()));
@@ -149,8 +145,8 @@ public class BoardMenuFile extends JMenu {
   /** Adds a menu item for saving the current GUI settings as default. */
   private void add_save_settings_item() {
     JMenuItem file_save_settings_menuitem = new JMenuItem();
-    file_save_settings_menuitem.setText(resources.getString("settings"));
-    file_save_settings_menuitem.setToolTipText(resources.getString("settings_tooltip"));
+    file_save_settings_menuitem.setText(tm.getText("settings"));
+    file_save_settings_menuitem.setToolTipText(tm.getText("settings_tooltip"));
     file_save_settings_menuitem.addActionListener(evt -> save_defaults_action());
     file_save_settings_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("file_save_settings_menuitem", file_save_settings_menuitem.getText()));
     add(file_save_settings_menuitem);
@@ -165,10 +161,10 @@ public class BoardMenuFile extends JMenu {
     file_chooser.showOpenDialog(this);
     File filename = file_chooser.getSelectedFile();
     if (filename == null) {
-      board_frame.screen_messages.set_status_message(resources.getString("message_8"));
+      board_frame.screen_messages.set_status_message(tm.getText("message_8"));
     } else {
 
-      board_frame.screen_messages.set_status_message(resources.getString("message_9"));
+      board_frame.screen_messages.set_status_message(tm.getText("message_9"));
       board_frame.board_panel.board_handling.start_logfile(filename);
     }
   }
@@ -183,7 +179,7 @@ public class BoardMenuFile extends JMenu {
 
     File filename = file_chooser.getSelectedFile();
     if (filename == null) {
-      board_frame.screen_messages.set_status_message(resources.getString("message_10"));
+      board_frame.screen_messages.set_status_message(tm.getText("message_10"));
     } else {
       InputStream input_stream;
       try {
@@ -221,9 +217,9 @@ public class BoardMenuFile extends JMenu {
       write_ok = GUIDefaultsFile.write(board_frame, board_frame.board_panel.board_handling, output_stream);
     }
     if (write_ok) {
-      board_frame.screen_messages.set_status_message(resources.getString("message_17"));
+      board_frame.screen_messages.set_status_message(tm.getText("message_17"));
     } else {
-      board_frame.screen_messages.set_status_message(resources.getString("message_18"));
+      board_frame.screen_messages.set_status_message(tm.getText("message_18"));
     }
   }
 

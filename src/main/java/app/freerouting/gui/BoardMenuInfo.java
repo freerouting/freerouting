@@ -12,9 +12,7 @@ public class BoardMenuInfo extends JMenu {
   /** Creates a new instance of BoardLibraryMenu */
   private BoardMenuInfo(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
-    resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardMenuInfo", p_board_frame.get_locale());
+    resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuInfo", p_board_frame.get_locale());
   }
 
   /** Returns a new info menu for the board frame. */

@@ -12,6 +12,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
@@ -233,8 +234,7 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("board_outline"));
     print_clearance_info(p_window, p_locale);
     p_window.newline();

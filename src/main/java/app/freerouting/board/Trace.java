@@ -389,8 +389,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("trace"));
     p_window.append(" " + resources.getString("from") + " ");
     p_window.append(this.first_corner().to_float());
@@ -432,8 +431,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
   public abstract Collection<PolylineTrace> split(IntOctagon p_clip_shape);
 
   /**
-   * Splits this trace into two at p_point. Returns the 2 pieces of the splitted trace, or null if
-   * nothing was splitted because for example p_point is not located on this trace.
+   * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
+   * nothing was split because for example p_point is not located on this trace.
    */
   public abstract Trace[] split(Point p_point);
 

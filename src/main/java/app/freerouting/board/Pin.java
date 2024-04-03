@@ -550,8 +550,7 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("pin") + ": ");
     p_window.append(resources.getString("component_2") + " ");
     Component component = board.components.get(this.get_component_no());

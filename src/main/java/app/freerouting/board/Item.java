@@ -1020,8 +1020,7 @@ public abstract class Item
 
   /** Internal function used in the implementation of print_info */
   protected void print_net_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     for (int i = 0; i < this.net_count(); ++i) {
       p_window.append(", " + resources.getString("net") + " ");
       Net curr_net = board.rules.nets.get(this.get_net_no(i));
@@ -1032,8 +1031,7 @@ public abstract class Item
   /** Internal function used in the implementation of print_info */
   protected void print_clearance_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.clearance_class > 0) {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", " + resources.getString("clearance_class") + " ");
       String name = board.rules.clearance_matrix.get_name(this.clearance_class);
       p_window.append(
@@ -1046,8 +1044,7 @@ public abstract class Item
   /** Internal function used in the implementation of print_info */
   protected void print_fixed_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.fixed_state != FixedState.NOT_FIXED) {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
       p_window.append(", ");
       p_window.append(resources.getString(this.fixed_state.toString()));
     }
@@ -1057,8 +1054,7 @@ public abstract class Item
   protected void print_contact_info(ObjectInfoPanel p_window, Locale p_locale) {
     Collection<Item> contacts = this.get_normal_contacts();
     if (!contacts.isEmpty()) {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", " + resources.getString("contacts") + " ");
       int contact_count = contacts.size();
       p_window.append_items(
@@ -1071,8 +1067,7 @@ public abstract class Item
       ObjectInfoPanel p_window, Locale p_locale) {
     Collection<ClearanceViolation> clearance_violations = this.clearance_violations();
     if (!clearance_violations.isEmpty()) {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
       p_window.append(", ");
       int violation_count = clearance_violations.size();
       Collection<ObjectInfoPanel.Printable> violations =

@@ -14,9 +14,7 @@ public class BoardMenuOther extends JMenu {
   /** Creates a new instance of BoardMenuOther */
   private BoardMenuOther(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
-    resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardMenuOther", p_board_frame.get_locale());
+    resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuOther", p_board_frame.get_locale());
   }
 
   /** Returns a new other menu for the board frame. */

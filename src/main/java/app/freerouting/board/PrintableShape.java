@@ -35,8 +35,7 @@ public abstract class PrintableShape {
 
     @Override
     public String toString() {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
       String result = resources.getString("circle") + ": ";
       if (center.x != 0 || center.y != 0) {
         String center_string = resources.getString("center") + " =" + center.to_string(this.locale);
@@ -63,8 +62,7 @@ public abstract class PrintableShape {
 
     @Override
     public String toString() {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
       return resources.getString("rectangle")
               + ": "
               + resources.getString("lower_left")
@@ -87,8 +85,7 @@ public abstract class PrintableShape {
 
     @Override
     public String toString() {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
       return resources.getString("polygon") + ": " + Arrays.stream(corner_arr)
           .map(c -> c.to_string(this.locale))
           .collect(Collectors.joining(", "));

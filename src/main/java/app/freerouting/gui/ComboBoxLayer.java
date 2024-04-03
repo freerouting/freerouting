@@ -17,8 +17,7 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
 
   /** Creates a new instance of LayerComboBox */
   public ComboBoxLayer(LayerStructure p_layer_structure, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
     int signal_layer_count = p_layer_structure.signal_layer_count();
     int item_count = signal_layer_count + 1;
 

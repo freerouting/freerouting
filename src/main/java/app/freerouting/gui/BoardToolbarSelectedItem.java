@@ -23,9 +23,7 @@ class BoardToolbarSelectedItem extends JToolBar {
   BoardToolbarSelectedItem(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
 
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.BoardToolbarSelectedItem", p_board_frame.get_locale());
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.BoardToolbarSelectedItem", p_board_frame.get_locale());
 
     JButton toolbar_cancel_button = new JButton();
     toolbar_cancel_button.setText(resources.getString("cancel"));

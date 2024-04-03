@@ -15,8 +15,7 @@ public class BoardMenuHelp extends JMenu {
    */
   public BoardMenuHelp(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
-    this.resources =
-        ResourceBundle.getBundle("app.freerouting.gui.BoardMenuHelp", p_board_frame.get_locale());
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.BoardMenuHelp", p_board_frame.get_locale());
     this.setText(this.resources.getString("help"));
 
     JMenuItem help_about_menuitem = new JMenuItem();

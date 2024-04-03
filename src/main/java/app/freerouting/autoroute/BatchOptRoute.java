@@ -10,6 +10,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.BoardRules;
 
 import java.util.Collection;
@@ -190,9 +191,7 @@ public class BatchOptRoute {
   /** Try to improve the route by re-routing the connections containing p_item. */
   protected ItemRouteResult opt_route_item(
       Item p_item, int p_pass_no, boolean p_with_preferred_directions) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
     String start_message =
         resources.getString("batch_optimizer")
             + " "

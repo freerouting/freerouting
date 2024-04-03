@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.management.TextManager;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
@@ -8,12 +9,11 @@ import java.awt.Insets;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/** Displays general information about the freeroute software. */
+/** Displays general information about the Freerouting software. */
 public class WindowAbout extends BoardSavableSubWindow {
   public WindowAbout(Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.gui.WindowAbout", p_locale);
-    this.setTitle(resources.getString("title"));
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+    this.setTitle(tm.getText("title"));
 
     final JPanel window_panel = new JPanel();
     this.add(window_panel);
@@ -26,26 +26,24 @@ public class WindowAbout extends BoardSavableSubWindow {
     gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
 
-    JLabel description_label =
-        new JLabel(resources.getString("description"));
+    JLabel description_label = new JLabel(tm.getText("description"));
     gridbag.setConstraints(description_label, gridbag_constraints);
     window_panel.add(description_label, gridbag_constraints);
 
-    String version_string =
-        resources.getString("version") + " " + MainApplication.VERSION_NUMBER_STRING;
+    String version_string = tm.getText("version") + " " + MainApplication.VERSION_NUMBER_STRING;
     JLabel version_label = new JLabel(version_string);
     gridbag.setConstraints(version_label, gridbag_constraints);
     window_panel.add(version_label, gridbag_constraints);
 
-    JLabel warrenty_label = new JLabel(resources.getString("warranty"));
+    JLabel warrenty_label = new JLabel(tm.getText("warranty"));
     gridbag.setConstraints(warrenty_label, gridbag_constraints);
     window_panel.add(warrenty_label, gridbag_constraints);
 
-    JLabel homepage_label = new JLabel(resources.getString("homepage"));
+    JLabel homepage_label = new JLabel(tm.getText("homepage"));
     gridbag.setConstraints(homepage_label, gridbag_constraints);
     window_panel.add(homepage_label, gridbag_constraints);
 
-    JLabel support_label = new JLabel(resources.getString("support"));
+    JLabel support_label = new JLabel(tm.getText("support"));
     gridbag.setConstraints(support_label, gridbag_constraints);
     window_panel.add(support_label, gridbag_constraints);
 
