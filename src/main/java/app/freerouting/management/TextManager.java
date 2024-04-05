@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -60,7 +61,38 @@ public class TextManager {
 
   private void loadResourceBundle(String baseName) {
     this.currentBaseName = baseName;
-    this.messages = ResourceBundle.getBundle(currentBaseName, currentLocale);
+    try
+    {
+      ResourceBundle classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
+
+      ResourceBundle defaultMessages = ResourceBundle.getBundle("app.freerouting.gui.Default", currentLocale);
+
+      // merge the default messages with the current class' messages
+      this.messages = new ResourceBundle() {
+        @Override
+        protected Object handleGetObject(String key) {
+          if (classMessages.containsKey(key)) {
+            return classMessages.getObject(key);
+          } else {
+            return defaultMessages.getObject(key);
+          }
+        }
+
+        @Override
+        public boolean containsKey(String key) {
+          return classMessages.containsKey(key) || defaultMessages.containsKey(key);
+        }
+
+        @Override
+        public Enumeration<String> getKeys() {
+          return classMessages.getKeys();
+        }
+      };
+
+    } catch (Exception e)
+    {
+      FRLogger.error("There was a problem loading the resource bundle", e);
+    }
   }
 
   public void setLocale(Locale locale) {
@@ -70,7 +102,8 @@ public class TextManager {
 
   public String getText(String key, String... args) {
     // if the key is not found, return an empty string
-    if (!messages.containsKey(key)) {
+    if ((messages == null) || (!messages.containsKey(key)))
+    {
       return key;
     }
 
