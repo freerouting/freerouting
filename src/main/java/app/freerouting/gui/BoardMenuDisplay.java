@@ -9,11 +9,12 @@ import java.util.ResourceBundle;
 /** Creates the display menu of a board frame. */
 public class BoardMenuDisplay extends JMenu {
   private final BoardFrame board_frame;
+  private final TextManager tm;
 
   /** Creates a new instance of BoardDisplayMenu */
   private BoardMenuDisplay(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
-    setLocale(p_board_frame.get_locale());
+    tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
 
   /** Returns a new display menu for the board frame. */

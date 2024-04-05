@@ -19,6 +19,7 @@ import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
+import app.freerouting.settings.DisabledFeaturesSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -128,8 +129,7 @@ public class BoardFrame extends WindowBase {
       Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
-      boolean p_disable_select_mode,
-      boolean p_disable_macros) {
+      DisabledFeaturesSettings disabledFeatures) {
     this(
         p_design,
         new BoardObserverAdaptor(),
@@ -137,8 +137,7 @@ public class BoardFrame extends WindowBase {
         p_locale,
         p_save_intermediate_stages,
         p_optimization_improvement_threshold,
-        p_disable_select_mode,
-        p_disable_macros);
+        disabledFeatures);
   }
   /**
    * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
@@ -151,8 +150,7 @@ public class BoardFrame extends WindowBase {
       Locale p_locale,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
-      boolean p_disable_select_mode,
-      boolean p_disable_macros) {
+      DisabledFeaturesSettings disabledFeatures) {
     super(800, 150);
 
     this.design_file = p_design;
@@ -162,10 +160,8 @@ public class BoardFrame extends WindowBase {
     this.locale = p_locale;
     this.setLanguage(p_locale);
 
-    BoardMenuBar curr_menubar = BoardMenuBar.get_instance(this, p_disable_macros);
-
     // Set the menu bar of this frame.
-    this.menubar = curr_menubar;
+    this.menubar = new BoardMenuBar(this, disabledFeatures);
 
     this.menubar.fileMenu.addOpenEventListener(
         (File selectedFile) -> {
@@ -255,7 +251,7 @@ public class BoardFrame extends WindowBase {
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
-    this.toolbar_panel = new BoardToolbar(this, p_disable_select_mode);
+    this.toolbar_panel = new BoardToolbar(this, disabledFeatures.select_mode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     // Create and move the status bar one-liners (like current layer, cursor position, etc.) below the canvas.

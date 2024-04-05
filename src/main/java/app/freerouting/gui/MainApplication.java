@@ -526,7 +526,7 @@ public class MainApplication extends WindowBase {
 
     BoardFrame new_frame = new BoardFrame(
         p_design_file, p_locale, p_save_intermediate_stages,
-        p_optimization_improvement_threshold, globalSettings.disabledFeatures.select_mode, globalSettings.disabledFeatures.macros);
+        p_optimization_improvement_threshold, globalSettings.disabledFeatures);
     boolean read_ok = new_frame.load(input_stream, p_design_file.inputFileFormat.equals(FileFormat.DSN), p_message_field);
     if (!read_ok) {
       return null;
