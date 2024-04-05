@@ -13,9 +13,7 @@ class PopupMenuInsertCancel extends JPopupMenu {
   /** Creates a new instance of CompleteCancelPopupMenu */
   PopupMenuInsertCancel(BoardFrame p_board_frame) {
     this.board_panel = p_board_frame.board_panel;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
     JMenuItem popup_insert_menuitem = new JMenuItem();
     popup_insert_menuitem.setText(resources.getString("insert"));
     popup_insert_menuitem.addActionListener(evt -> board_panel.board_handling.return_from_state());

@@ -12,14 +12,13 @@ import java.util.ResourceBundle;
 /** Displays general information about the Freerouting software. */
 public class WindowAbout extends BoardSavableSubWindow {
   public WindowAbout(Locale p_locale) {
-    TextManager tm = new TextManager(this.getClass(), p_locale);
+    setLanguage(p_locale);
     this.setTitle(tm.getText("title"));
 
     final JPanel window_panel = new JPanel();
     this.add(window_panel);
 
     // Initialize gridbag layout.
-
     GridBagLayout gridbag = new GridBagLayout();
     window_panel.setLayout(gridbag);
     GridBagConstraints gridbag_constraints = new GridBagConstraints();

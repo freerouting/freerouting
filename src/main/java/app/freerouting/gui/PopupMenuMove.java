@@ -13,9 +13,7 @@ public class PopupMenuMove extends PopupMenuDisplay {
   /** Creates a new instance of PopupMenuMove */
   public PopupMenuMove(BoardFrame p_board_frame) {
     super(p_board_frame);
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.PopupMenuMove", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.PopupMenuMove", p_board_frame.get_locale());
 
     // Add menu for turning the items by a multiple of 90 degree
 

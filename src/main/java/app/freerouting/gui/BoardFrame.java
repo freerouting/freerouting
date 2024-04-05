@@ -78,7 +78,6 @@ public class BoardFrame extends WindowBase {
   private final JToolBar select_toolbar;
   /** The panel with the message line */
   private final BoardPanelStatus message_panel;
-  private final TextManager tm;
   private final BoardObservers board_observers;
   private final IdNoGenerator item_id_no_generator;
   WindowAbout about_window;
@@ -161,7 +160,7 @@ public class BoardFrame extends WindowBase {
     this.board_observers = p_observers;
     this.item_id_no_generator = p_item_id_no_generator;
     this.locale = p_locale;
-    this.tm = new TextManager(BoardFrame.class, p_locale);
+    this.setLanguage(p_locale);
 
     BoardMenuBar curr_menubar = BoardMenuBar.get_instance(this, p_disable_macros);
 
@@ -317,10 +316,16 @@ public class BoardFrame extends WindowBase {
             p_optimization_improvement_threshold);
     this.scroll_pane.setViewportView(board_panel);
 
-    this.setTitle(tm.getText("title", MainApplication.globalSettings.version));
     this.addWindowListener(new WindowStateListener());
 
+    this.updateTexts();
     this.pack();
+  }
+
+  @Override
+  public void updateTexts()
+  {
+    this.setTitle(tm.getText("title", MainApplication.globalSettings.version));
   }
 
   /** Reads interactive actions from a logfile. */

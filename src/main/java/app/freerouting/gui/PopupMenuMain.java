@@ -11,9 +11,7 @@ class PopupMenuMain extends PopupMenuDisplay {
   /** Creates a new instance of MainPopupMenu */
   PopupMenuMain(BoardFrame p_board_frame) {
     super(p_board_frame);
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.PopupMenuMain", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.PopupMenuMain", p_board_frame.get_locale());
 
     // add the item for selecting items
 

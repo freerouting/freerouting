@@ -7,6 +7,7 @@ import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
@@ -55,7 +56,6 @@ public class MainApplication extends WindowBase {
           + " (build-date: "
           + Constants.FREEROUTING_BUILD_DATE
           + ")";
-  private final ResourceBundle resources;
   private final JButton open_board_button;
   private final JButton restore_defaults_button;
   private final JTextField message_field;
@@ -100,7 +100,7 @@ public class MainApplication extends WindowBase {
     this.optimization_improvement_threshold = globalSettings.autoRouterSettings.optimization_improvement_threshold;
     this.ignore_net_classes_by_autorouter = globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter;
 
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", locale);
+    this.setLanguage(locale);
 
     main_panel = new JPanel();
     getContentPane().add(main_panel);
@@ -115,13 +115,12 @@ public class MainApplication extends WindowBase {
     restore_defaults_button = new JButton();
 
     message_field = new JTextField();
-    message_field.setText(resources.getString("command_line_missing_input"));
+    message_field.setText(tm.getText("command_line_missing_input"));
 
-    setTitle(resources.getString("title") + " " + VERSION_NUMBER_STRING);
-    boolean add_buttons = true;
+    setTitle(tm.getText("title") + " " + VERSION_NUMBER_STRING);
 
-    open_board_button.setText(resources.getString("open_own_design"));
-    open_board_button.setToolTipText(resources.getString("open_own_design_tooltip"));
+    open_board_button.setText(tm.getText("open_own_design"));
+    open_board_button.setToolTipText(tm.getText("open_own_design_tooltip"));
     open_board_button.addActionListener(this::open_board_design_action);
     open_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
 
@@ -287,11 +286,11 @@ public class MainApplication extends WindowBase {
     new Thread(checker).start();
 
     // get localization resources
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", globalSettings.current_locale);
+    TextManager tm = new TextManager(MainApplication.class, globalSettings.current_locale);
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option) {
-      System.out.print(resources.getString("command_line_help"));
+      System.out.print(tm.getText("command_line_help"));
       System.exit(0);
       return;
     }
@@ -301,15 +300,15 @@ public class MainApplication extends WindowBase {
       DesignFile design_file = DesignFile.get_instance(globalSettings.design_input_filename);
       if (design_file == null) {
         FRLogger.warn(
-            resources.getString("message_6")
+            tm.getText("message_6")
                 + " "
                 + globalSettings.design_input_filename
                 + " "
-                + resources.getString("message_7"));
+                + tm.getText("message_7"));
         return;
       }
       String message =
-          resources.getString("loading_design") + " " + globalSettings.design_input_filename;
+          tm.getText("loading_design") + " " + globalSettings.design_input_filename;
       WindowMessage welcome_window = WindowMessage.show(message);
       final BoardFrame new_frame =
           create_board_frame(
@@ -398,7 +397,7 @@ public class MainApplication extends WindowBase {
       {
         LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"), modification_time.format(formatter));
+        String load_snapshot_confirmation = String.format(tm.getText("load_snapshot_confirmation"), modification_time.format(formatter));
 
         if (WindowMessage.confirm(load_snapshot_confirmation))
         {
@@ -411,13 +410,13 @@ public class MainApplication extends WindowBase {
           && (globalSettings.design_output_filename != null)) {
 
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
-        final String START_NOW_TEXT = resources.getString("auto_start_routing_startnow_button");
+        final String START_NOW_TEXT = tm.getText("auto_start_routing_startnow_button");
         JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.dialog_confirmation_timeout + ")");
 
-        final String CANCEL_TEXT = resources.getString("auto_start_routing_cancel_button");
+        final String CANCEL_TEXT = tm.getText("auto_start_routing_cancel_button");
         Object[] options = {startNowButton, CANCEL_TEXT};
 
-        final String AUTOSTART_MSG = resources.getString("auto_start_routing_message");
+        final String AUTOSTART_MSG = tm.getText("auto_start_routing_message");
         JOptionPane auto_start_routing_dialog = new JOptionPane(
             AUTOSTART_MSG,
             JOptionPane.WARNING_MESSAGE,
@@ -430,7 +429,7 @@ public class MainApplication extends WindowBase {
         startNowButton.addActionListener(event -> auto_start_routing_dialog.setValue(options[0]));
         startNowButton.addActionListener(evt -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
 
-        final String AUTOSTART_TITLE = resources.getString("auto_start_routing_title");
+        final String AUTOSTART_TITLE = tm.getText("auto_start_routing_title");
 
         if (globalSettings.dialog_confirmation_timeout > 0) {
           // Add a timer to the dialog
@@ -507,7 +506,7 @@ public class MainApplication extends WindowBase {
       float p_optimization_improvement_threshold,
       String[] p_ignore_net_classes_by_autorouter)
   {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.MainApplication", p_locale);
+    TextManager tm = new TextManager(MainApplication.class, p_locale);
 
     InputStream input_stream = null;
     if (p_design_file.getInputFile() == null) {
@@ -519,7 +518,7 @@ public class MainApplication extends WindowBase {
       if (input_stream == null) {
         if (p_message_field != null) {
           p_message_field.setText(
-              resources.getString("message_8") + " " + p_design_file.get_name());
+              tm.getText("message_8") + " " + p_design_file.get_name());
         }
         return null;
       }
@@ -552,7 +551,7 @@ public class MainApplication extends WindowBase {
       if (p_design_rules_file == null) {
         rules_file_name = design_name + ".rules";
         parent_folder_name = p_design_file.getInputFileDirectoryOrNull();
-        confirm_import_rules_message = resources.getString("confirm_import_rules");
+        confirm_import_rules_message = tm.getText("confirm_import_rules");
       } else {
         rules_file_name = p_design_rules_file;
         parent_folder_name = null;
@@ -618,7 +617,7 @@ public class MainApplication extends WindowBase {
 
     FRLogger.info("Opening '" + design_file.get_name() + "'...");
 
-    String message = resources.getString("loading_design") + " " + design_file.get_name();
+    String message = tm.getText("loading_design") + " " + design_file.get_name();
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
     welcome_window.setTitle(message);
@@ -650,7 +649,7 @@ public class MainApplication extends WindowBase {
     {
       LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      String load_snapshot_confirmation = String.format(resources.getString("load_snapshot_confirmation"), modification_time.format(formatter));
+      String load_snapshot_confirmation = String.format(tm.getText("load_snapshot_confirmation"), modification_time.format(formatter));
 
       if (WindowMessage.confirm(load_snapshot_confirmation))
       {
@@ -659,11 +658,11 @@ public class MainApplication extends WindowBase {
     }
 
     message_field.setText(
-        resources.getString("message_4")
+        tm.getText("message_4")
             + " "
             + design_file.get_name()
             + " "
-            + resources.getString("message_5"));
+            + tm.getText("message_5"));
     board_frames.add(new_frame);
     new_frame.addWindowListener(new BoardFrameWindowListener(new_frame));
   }
@@ -703,12 +702,12 @@ public class MainApplication extends WindowBase {
         int application_confirm_exit_dialog =
             JOptionPane.showConfirmDialog(
                 null,
-                resources.getString("confirm_cancel"),
+                tm.getText("confirm_cancel"),
                 null,
                 JOptionPane.YES_NO_OPTION);
         if (application_confirm_exit_dialog == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-          FRAnalytics.buttonClicked("application_confirm_exit_dialog_no", resources.getString("confirm_cancel"));
+          FRAnalytics.buttonClicked("application_confirm_exit_dialog_no", tm.getText("confirm_cancel"));
           exit_program = false;
         }
       }

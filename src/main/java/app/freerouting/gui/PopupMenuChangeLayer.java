@@ -19,9 +19,7 @@ class PopupMenuChangeLayer extends JMenu {
     LayerStructure layer_structure =
         board_frame.board_panel.board_handling.get_routing_board().layer_structure;
     this.item_arr = new LayermenuItem[layer_structure.signal_layer_count()];
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
 
     this.setText(resources.getString("change_layer"));
     this.setToolTipText(resources.getString("change_layer_tooltip"));

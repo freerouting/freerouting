@@ -16,11 +16,8 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
   PopupMenuDynamicRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
-    LayerStructure layer_structure =
-        board_panel.board_handling.get_routing_board().layer_structure;
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+    LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
 
     JMenuItem popup_end_route_menuitem = new JMenuItem();
     popup_end_route_menuitem.setText(resources.getString("end_route"));

@@ -13,9 +13,7 @@ public class PopupMenuDisplay extends JPopupMenu {
   /** Creates a new instance of PopupMenuDisplay */
   public PopupMenuDisplay(BoardFrame p_board_frame) {
     this.board_panel = p_board_frame.board_panel;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
     JMenuItem popup_center_display_menuitem = new JMenuItem();
     popup_center_display_menuitem.setText(resources.getString("center_display"));
     popup_center_display_menuitem.addActionListener(evt -> board_panel.center_display(board_panel.right_button_click_location));
