@@ -39,9 +39,9 @@ public class WindowViaRule extends WindowBase {
     this.via_rule = p_via_rule;
     this.via_list = p_via_list;
 
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowViaRule", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowViaRule", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title") + " " + p_via_rule.name);
 
     this.main_panel = new JPanel();

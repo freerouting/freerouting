@@ -12,7 +12,7 @@ class BoardMenuBar extends JMenuBar {
   /** Creates a new BoardMenuBar together with its menus */
   public BoardMenuBar(BoardFrame boardFrame, DisabledFeaturesSettings disabledFeatures)
   {
-    fileMenu = BoardMenuFile.get_instance(boardFrame, disabledFeatures.macros);
+    fileMenu = new BoardMenuFile(boardFrame, disabledFeatures.macros);
     add(fileMenu);
     JMenu display_menu = BoardMenuDisplay.get_instance(boardFrame);
     add(display_menu);

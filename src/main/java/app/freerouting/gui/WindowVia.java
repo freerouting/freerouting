@@ -50,9 +50,9 @@ public class WindowVia extends BoardSavableSubWindow {
 
   /** Creates a new instance of ViaWindow */
   public WindowVia(BoardFrame p_board_frame) {
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowVia", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowVia", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
 
     this.board_frame = p_board_frame;

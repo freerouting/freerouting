@@ -1,6 +1,8 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
+import app.freerouting.management.TextManager;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import java.util.Locale;
@@ -17,7 +19,8 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
 
   /** Creates a new instance of LayerComboBox */
   public ComboBoxLayer(LayerStructure p_layer_structure, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
     int signal_layer_count = p_layer_structure.signal_layer_count();
     int item_count = signal_layer_count + 1;
 
@@ -27,10 +30,10 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer> {
     }
 
     this.layer_arr = new Layer[item_count];
-    this.layer_arr[0] = new Layer(resources.getString("all"), ALL_LAYER_INDEX);
+    this.layer_arr[0] = new Layer(tm.getText("all"), ALL_LAYER_INDEX);
     int curr_layer_no = 0;
     if (add_inner_layer_item) {
-      this.layer_arr[1] = new Layer(resources.getString("inner"), INNER_LAYER_INDEX);
+      this.layer_arr[1] = new Layer(tm.getText("inner"), INNER_LAYER_INDEX);
       ++curr_layer_no;
     }
     for (int i = 0; i < signal_layer_count; ++i) {

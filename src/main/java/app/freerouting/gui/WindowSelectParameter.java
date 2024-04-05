@@ -32,9 +32,9 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   public WindowSelectParameter(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowSelectParameter", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowSelectParameter", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
 
     // create main panel

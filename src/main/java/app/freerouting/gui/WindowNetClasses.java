@@ -48,7 +48,6 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private final BoardFrame board_frame;
   private final JPanel main_panel;
   private final ComboBoxLayer layer_combo_box;
-  private final ResourceBundle resources;
   /** The subwindows created inside this window */
   private final Collection<JFrame> subwindows =
       new LinkedList<>();
@@ -59,10 +58,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private final JComboBox<String> via_rule_combo_box;
   /** Creates a new instance of NetClassesWindow */
   public WindowNetClasses(BoardFrame p_board_frame) {
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowNetClasses", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+    setLanguage(p_board_frame.get_locale());
+
+    this.setTitle(tm.getText("title"));
 
     this.board_frame = p_board_frame;
 
@@ -85,39 +83,39 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.main_panel.add(net_class_button_panel, BorderLayout.SOUTH);
 
     final JButton rules_netclasses_add_class_button =
-        new JButton(resources.getString("add"));
-    rules_netclasses_add_class_button.setToolTipText(resources.getString("add_tooltip"));
+        new JButton(tm.getText("add"));
+    rules_netclasses_add_class_button.setToolTipText(tm.getText("add_tooltip"));
     rules_netclasses_add_class_button.addActionListener(new AddNetClassListener());
     rules_netclasses_add_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_add_class_button", rules_netclasses_add_class_button.getText()));
     net_class_button_panel.add(rules_netclasses_add_class_button);
 
-    final JButton rules_netclasses_remove_class_button = new JButton(resources.getString("remove"));
-    rules_netclasses_remove_class_button.setToolTipText(resources.getString("remove_tooltip"));
+    final JButton rules_netclasses_remove_class_button = new JButton(tm.getText("remove"));
+    rules_netclasses_remove_class_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_netclasses_remove_class_button.addActionListener(new RemoveNetClassListener());
     rules_netclasses_remove_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_remove_class_button", rules_netclasses_remove_class_button.getText()));
     net_class_button_panel.add(rules_netclasses_remove_class_button);
 
-    final JButton rules_netclasses_assign_button = new JButton(resources.getString("assign"));
-    rules_netclasses_assign_button.setToolTipText(resources.getString("assign_tooltip"));
+    final JButton rules_netclasses_assign_button = new JButton(tm.getText("assign"));
+    rules_netclasses_assign_button.setToolTipText(tm.getText("assign_tooltip"));
     rules_netclasses_assign_button.addActionListener(new AssignClassesListener());
     rules_netclasses_assign_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_assign_button", rules_netclasses_assign_button.getText()));
     net_class_button_panel.add(rules_netclasses_assign_button);
 
-    final JButton rules_netclasses_select_button = new JButton(resources.getString("select"));
-    rules_netclasses_select_button.setToolTipText(resources.getString("select_tooltip"));
+    final JButton rules_netclasses_select_button = new JButton(tm.getText("select"));
+    rules_netclasses_select_button.setToolTipText(tm.getText("select_tooltip"));
     rules_netclasses_select_button.addActionListener(new SelectClassesListener());
     rules_netclasses_select_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_select_button", rules_netclasses_select_button.getText()));
     net_class_button_panel.add(rules_netclasses_select_button);
 
-    final JButton rules_netclasses_contained_nets_button = new JButton(resources.getString("show_nets"));
+    final JButton rules_netclasses_contained_nets_button = new JButton(tm.getText("show_nets"));
     net_class_button_panel.add(rules_netclasses_contained_nets_button);
-    rules_netclasses_contained_nets_button.setToolTipText(resources.getString("show_nets_tooltip"));
+    rules_netclasses_contained_nets_button.setToolTipText(tm.getText("show_nets_tooltip"));
     rules_netclasses_contained_nets_button.addActionListener(new ContainedNetsListener());
     rules_netclasses_contained_nets_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_contained_nets_button", rules_netclasses_contained_nets_button.getText()));
 
-    final JButton rules_netclasses_filter_incompletes_button = new JButton(resources.getString("filter_incompletes"));
+    final JButton rules_netclasses_filter_incompletes_button = new JButton(tm.getText("filter_incompletes"));
     net_class_button_panel.add(rules_netclasses_filter_incompletes_button);
-    rules_netclasses_filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
+    rules_netclasses_filter_incompletes_button.setToolTipText(tm.getText("filter_incompletes_tooltip"));
     rules_netclasses_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
     rules_netclasses_filter_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_filter_incompletes_button", rules_netclasses_filter_incompletes_button.getText()));
 
@@ -258,7 +256,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       if (table_model.getRowCount() <= 1) {
-        board_frame.screen_messages.set_status_message(resources.getString("message_1"));
+        board_frame.screen_messages.set_status_message(tm.getText("message_1"));
         return;
       }
       int selected_row = table.getSelectedRow();
@@ -275,7 +273,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       for (int i = 1; i < board_rules.nets.max_net_no(); ++i) {
         Net curr_net = board_rules.nets.get(i);
         if (curr_net.get_class() == net_rule) {
-          String message = resources.getString("message_2") + " " + curr_net.name;
+          String message = tm.getText("message_2") + " " + curr_net.name;
           board_frame.screen_messages.set_status_message(message);
           return;
         }
@@ -283,11 +281,11 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       if (board_rules.net_classes.remove(net_rule)) {
         adjust_table();
         String message =
-            resources.getString("net_class")
+            tm.getText("net_class")
                 + " "
                 + net_rule.get_name()
                 + " "
-                + resources.getString("removed");
+                + tm.getText("removed");
         board_frame.screen_messages.set_status_message(message);
       }
     }
@@ -413,7 +411,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window =
           WindowObjectInfo.display(
-              resources.getString("contained_nets"),
+              tm.getText("contained_nets"),
               contained_nets,
               board_frame,
               coordinate_transform);
@@ -432,15 +430,15 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       super(p_table_model);
       column_tool_tips = new String[10];
       column_tool_tips[0] = null;
-      column_tool_tips[1] = resources.getString("column_tool_tip_1");
-      column_tool_tips[2] = resources.getString("column_tool_tip_2");
-      column_tool_tips[3] = resources.getString("column_tool_tip_3");
-      column_tool_tips[4] = resources.getString("column_tool_tip_4");
-      column_tool_tips[5] = resources.getString("column_tool_tip_5");
-      column_tool_tips[6] = resources.getString("column_tool_tip_6");
-      column_tool_tips[7] = resources.getString("column_tool_tip_7");
-      column_tool_tips[8] = resources.getString("column_tool_tip_8");
-      column_tool_tips[9] = resources.getString("column_tool_tip_9");
+      column_tool_tips[1] = tm.getText("column_tool_tip_1");
+      column_tool_tips[2] = tm.getText("column_tool_tip_2");
+      column_tool_tips[3] = tm.getText("column_tool_tip_3");
+      column_tool_tips[4] = tm.getText("column_tool_tip_4");
+      column_tool_tips[5] = tm.getText("column_tool_tip_5");
+      column_tool_tips[6] = tm.getText("column_tool_tip_6");
+      column_tool_tips[7] = tm.getText("column_tool_tip_7");
+      column_tool_tips[8] = tm.getText("column_tool_tip_8");
+      column_tool_tips[9] = tm.getText("column_tool_tip_9");
     }
 
     // Implement table header tool tips.
@@ -468,7 +466,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       column_names = new String[ColumnName.values().length];
 
       for (int i = 0; i < column_names.length; ++i) {
-        column_names[i] = resources.getString(ColumnName.values()[i].toString());
+        column_names[i] = tm.getText(ColumnName.values()[i].toString());
       }
       set_values();
     }

@@ -31,10 +31,9 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
   private final JCheckBox route_detail_outline_keepout_check_box;
   /** Creates a new instance of RouteDetailWindow */
   public WindowRouteDetail(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowRouteDetail", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteDetail", p_board_frame.get_locale());
     this.setTitle(resources.getString("title"));
 
     // create main panel

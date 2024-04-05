@@ -38,17 +38,14 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
       new LinkedList<>();
 
   private final JPanel main_panel;
-  private final ResourceBundle resources;
   protected JLabel list_empty_message;
   protected JList<Object> list;
   private JScrollPane list_scroll_pane;
   private DefaultListModel<Object> list_model;
   /** Creates a new instance of ObjectListWindow */
   public WindowObjectList(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
     this.board_frame = p_board_frame;
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowObjectList", p_board_frame.get_locale());
 
     // create main panel
     this.main_panel = new JPanel();
@@ -67,15 +64,15 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     JPanel north_button_panel = new JPanel();
     button_panel.add(north_button_panel, BorderLayout.NORTH);
 
-    JButton info_components_show_button = new JButton(resources.getString("info"));
-    info_components_show_button.setToolTipText(resources.getString("info_tooltip"));
+    JButton info_components_show_button = new JButton(tm.getText("info"));
+    info_components_show_button.setToolTipText(tm.getText("info_tooltip"));
     ShowListener show_listener = new ShowListener();
     info_components_show_button.addActionListener(show_listener);
     info_components_show_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
     north_button_panel.add(info_components_show_button);
 
-    JButton info_components_instance_button = new JButton(resources.getString("select"));
-    info_components_instance_button.setToolTipText(resources.getString("select_tooltip"));
+    JButton info_components_instance_button = new JButton(tm.getText("select"));
+    info_components_instance_button.setToolTipText(tm.getText("select_tooltip"));
     SelectListener instance_listener = new SelectListener();
     info_components_instance_button.addActionListener(instance_listener);
     info_components_instance_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
@@ -84,21 +81,21 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
     JPanel south_button_panel = new JPanel();
     button_panel.add(south_button_panel, BorderLayout.SOUTH);
 
-    JButton info_components_invert_button = new JButton(resources.getString("invert"));
-    info_components_invert_button.setToolTipText(resources.getString("invert_tooltip"));
+    JButton info_components_invert_button = new JButton(tm.getText("invert"));
+    info_components_invert_button.setToolTipText(tm.getText("invert_tooltip"));
     info_components_invert_button.addActionListener(new InvertListener());
     info_components_invert_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
     south_button_panel.add(info_components_invert_button);
 
     JButton info_components_recalculate_button =
-        new JButton(resources.getString("recalculate"));
-    info_components_recalculate_button.setToolTipText(resources.getString("recalculate_tooltip"));
+        new JButton(tm.getText("recalculate"));
+    info_components_recalculate_button.setToolTipText(tm.getText("recalculate_tooltip"));
     RecalculateListener recalculate_listener = new RecalculateListener();
     info_components_recalculate_button.addActionListener(recalculate_listener);
     info_components_recalculate_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
     south_button_panel.add(info_components_recalculate_button);
 
-    this.list_empty_message = new JLabel(resources.getString("list_empty"));
+    this.list_empty_message = new JLabel(tm.getText("list_empty"));
     this.list_empty_message.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
     // Dispose this window and all subwindows when closing the window.
@@ -219,7 +216,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow {
           board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window =
           WindowObjectInfo.display(
-              resources.getString("window_title"), object_list, board_frame, coordinate_transform);
+              tm.getText("window_title"), object_list, board_frame, coordinate_transform);
       Point loc = getLocation();
       Point new_window_location =
           new Point(

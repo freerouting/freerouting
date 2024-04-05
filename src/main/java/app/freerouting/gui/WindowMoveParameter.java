@@ -31,11 +31,10 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
   private boolean key_input_completed = true;
   /** Creates a new instance of WindowMoveParameter */
   public WindowMoveParameter(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowMoveParameter", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+
+    this.setTitle(tm.getText("title"));
 
     // create main panel
 
@@ -51,7 +50,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel horizontal_grid_label =
-        new JLabel(resources.getString("horizontal_component_grid"));
+        new JLabel(tm.getText("horizontal_component_grid"));
     gridbag.setConstraints(horizontal_grid_label, gridbag_constraints);
     main_panel.add(horizontal_grid_label);
 
@@ -69,7 +68,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel vertical_grid_label =
-        new JLabel(resources.getString("vertical_component_grid"));
+        new JLabel(tm.getText("vertical_component_grid"));
     gridbag.setConstraints(vertical_grid_label, gridbag_constraints);
     main_panel.add(vertical_grid_label);
 
@@ -90,15 +89,15 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     // add label and button group for the wheel function.
 
     JLabel wheel_function_label =
-        new JLabel(resources.getString("wheel_function"));
+        new JLabel(tm.getText("wheel_function"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(wheel_function_label, gridbag_constraints);
     main_panel.add(wheel_function_label);
-    wheel_function_label.setToolTipText(resources.getString("wheel_function_tooltip"));
+    wheel_function_label.setToolTipText(tm.getText("wheel_function_tooltip"));
 
-    settings_controls_zoom_radiobutton = new JRadioButton(resources.getString("zoom"));
-    settings_controls_rotate_radiobutton = new JRadioButton(resources.getString("rotate"));
+    settings_controls_zoom_radiobutton = new JRadioButton(tm.getText("zoom"));
+    settings_controls_rotate_radiobutton = new JRadioButton(tm.getText("rotate"));
 
     settings_controls_zoom_radiobutton.addActionListener(new ZoomButtonListener());
     settings_controls_zoom_radiobutton.addActionListener(evt -> FRAnalytics.buttonClicked("settings_controls_zoom_radiobutton", settings_controls_zoom_radiobutton.getText()));

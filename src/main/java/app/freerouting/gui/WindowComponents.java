@@ -18,9 +18,9 @@ public class WindowComponents extends WindowObjectListWithFilter {
   /** Creates a new instance of ComponentsWindow */
   public WindowComponents(BoardFrame p_board_frame) {
     super(p_board_frame);
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
     this.setTitle(resources.getString("components"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_BoardComponents");
   }
@@ -28,8 +28,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
   /** Fills the list with the board components. */
   @Override
   protected void fill_list() {
-    Components components =
-        this.board_frame.board_panel.board_handling.get_routing_board().components;
+    Components components = this.board_frame.board_panel.board_handling.get_routing_board().components;
     Component[] sorted_arr = new Component[components.count()];
     for (int i = 0; i < sorted_arr.length; ++i) {
       sorted_arr[i] = components.get(i + 1);

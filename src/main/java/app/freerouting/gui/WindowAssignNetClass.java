@@ -27,7 +27,6 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
   private static final int TEXTFIELD_WIDTH = 100;
   private final BoardFrame board_frame;
   private final JPanel main_panel;
-  private final ResourceBundle resources;
   private final JScrollPane scroll_pane;
   private final AssignRuleTable table;
   private final AssignRuleTableModel table_model;
@@ -36,8 +35,9 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   /** Creates a new instance of AssignNetRulesWindow */
   public WindowAssignNetClass(BoardFrame p_board_frame) {
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowAssignNetClass", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+    setLanguage(p_board_frame.get_locale());
+
+    this.setTitle(tm.getText("title"));
 
     this.board_frame = p_board_frame;
 
@@ -87,7 +87,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   private class AssignRuleTable extends JTable {
     private final String[] column_tool_tips = {
-      resources.getString("net_name_tooltip"), resources.getString("class_name_tooltip")
+      tm.getText("net_name_tooltip"), tm.getText("class_name_tooltip")
     };
     public AssignRuleTable(AssignRuleTableModel p_table_model) {
       super(p_table_model);
@@ -116,8 +116,8 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
     public AssignRuleTableModel() {
       column_names = new String[2];
 
-      column_names[0] = resources.getString("net_name");
-      column_names[1] = resources.getString("class_name");
+      column_names[0] = tm.getText("net_name");
+      column_names[1] = tm.getText("class_name");
 
       BoardRules board_rules =
           board_frame.board_panel.board_handling.get_routing_board().rules;

@@ -3,30 +3,29 @@ package app.freerouting.gui;
 import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.boardgraphics.ColorIntensityTable.ObjectNames;
 
+import app.freerouting.management.TextManager;
 import java.util.ResourceBundle;
 
 /** Interactive Frame to adjust the visibility of the individual board items */
 public class WindowObjectVisibility extends WindowVisibility {
   /** Creates a new instance of ItemVisibilityFrame */
-  private WindowObjectVisibility(
-      BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr) {
-
+  private WindowObjectVisibility(BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr)
+  {
     super(p_board_frame, p_title, p_header_message, p_message_arr);
+    setLanguage(p_board_frame.get_locale());
   }
 
   /** Returns a new instance of ItemVisibilityFrame */
   public static WindowObjectVisibility get_instance(BoardFrame p_board_frame) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowObjectVisibility", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowObjectVisibility", p_board_frame.get_locale());
+
     String title = resources.getString("title");
     String header_message = resources.getString("header_message");
     String[] message_arr = new String[ObjectNames.values().length];
     for (int i = 0; i < message_arr.length; ++i) {
       message_arr[i] = resources.getString(ObjectNames.values()[i].toString());
     }
-    WindowObjectVisibility result =
-        new WindowObjectVisibility(p_board_frame, title, header_message, message_arr);
+    WindowObjectVisibility result = new WindowObjectVisibility(p_board_frame, title, header_message, message_arr);
     p_board_frame.set_context_sensitive_help(result, "WindowDisplay_ObjectVisibility");
     result.refresh();
     return result;

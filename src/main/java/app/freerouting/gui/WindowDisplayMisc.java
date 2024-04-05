@@ -36,11 +36,10 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
   private final JSlider auto_layer_dim_slider;
   /** Creates a new instance of DisplayMiscWindow */
   public WindowDisplayMisc(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
+    
     this.panel = p_board_frame.board_panel;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.DisplayMisc", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     // Create main panel
 
@@ -55,10 +54,9 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     gridbag_constraints.anchor = GridBagConstraints.WEST;
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
 
-    // add label and buttongroup for the appearance of the cross hair cursor.
+    // add label and buttongroup for the appearance of the cross-hair cursor.
 
-    JLabel cursor_label =
-        new JLabel("   " + resources.getString("cross_hair_cursor"));
+    JLabel cursor_label = new JLabel("   " + tm.getText("cross_hair_cursor"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(cursor_label, gridbag_constraints);
@@ -67,17 +65,17 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
 
-    appearance_misc_small_cursor_checkbox = new JRadioButton(resources.getString("small"));
-    appearance_misc_small_cursor_checkbox.setToolTipText(resources.getString("cursor_checkbox_tooltip"));
+    appearance_misc_small_cursor_checkbox = new JRadioButton(tm.getText("small"));
+    appearance_misc_small_cursor_checkbox.setToolTipText(tm.getText("cursor_checkbox_tooltip"));
     appearance_misc_small_cursor_checkbox.addActionListener(new SmallCursorListener());
     appearance_misc_small_cursor_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_small_cursor_checkbox", appearance_misc_small_cursor_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_small_cursor_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_small_cursor_checkbox, gridbag_constraints);
 
-    appearance_misc_big_cursor_checkbox = new JRadioButton(resources.getString("big"));
+    appearance_misc_big_cursor_checkbox = new JRadioButton(tm.getText("big"));
     appearance_misc_big_cursor_checkbox.addActionListener(new BigCursorListener());
     appearance_misc_big_cursor_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_big_cursor_checkbox", appearance_misc_big_cursor_checkbox.getText()));
-    appearance_misc_big_cursor_checkbox.setToolTipText(resources.getString("cursor_checkbox_tooltip"));
+    appearance_misc_big_cursor_checkbox.setToolTipText(tm.getText("cursor_checkbox_tooltip"));
     gridbag.setConstraints(appearance_misc_big_cursor_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_big_cursor_checkbox, gridbag_constraints);
 
@@ -93,7 +91,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     // Add label and buttongroup for the rotation of the board.
 
     JLabel rotation_label =
-        new JLabel("   " + resources.getString("rotation"));
+        new JLabel("   " + tm.getText("rotation"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 4;
     gridbag.setConstraints(rotation_label, gridbag_constraints);
@@ -102,19 +100,19 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
 
-    appearance_misc_rotation_none_checkbox = new JRadioButton(resources.getString("none"));
+    appearance_misc_rotation_none_checkbox = new JRadioButton(tm.getText("none"));
     gridbag.setConstraints(appearance_misc_rotation_none_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_rotation_none_checkbox, gridbag_constraints);
 
-    appearance_misc_rotation_90_degree_checkbox = new JRadioButton(resources.getString("90_degree"));
+    appearance_misc_rotation_90_degree_checkbox = new JRadioButton(tm.getText("90_degree"));
     gridbag.setConstraints(appearance_misc_rotation_90_degree_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_rotation_90_degree_checkbox, gridbag_constraints);
 
-    appearance_misc_rotation_180_degree_checkbox = new JRadioButton(resources.getString("180_degree"));
+    appearance_misc_rotation_180_degree_checkbox = new JRadioButton(tm.getText("180_degree"));
     gridbag.setConstraints(appearance_misc_rotation_180_degree_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_rotation_180_degree_checkbox, gridbag_constraints);
 
-    appearance_misc_rotation_270_degree_checkbox = new JRadioButton(resources.getString("-90_degree"));
+    appearance_misc_rotation_270_degree_checkbox = new JRadioButton(tm.getText("-90_degree"));
     gridbag.setConstraints(appearance_misc_rotation_270_degree_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_rotation_270_degree_checkbox, gridbag_constraints);
 
@@ -140,7 +138,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     // add label and buttongroup for the mirroring of the board.
 
     JLabel mirroring_label =
-        new JLabel("   " + resources.getString("board_mirroring"));
+        new JLabel("   " + tm.getText("board_mirroring"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 3;
     gridbag.setConstraints(mirroring_label, gridbag_constraints);
@@ -149,19 +147,19 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
 
-    appearance_misc_mirror_none_checkbox = new JRadioButton(resources.getString("none"));
+    appearance_misc_mirror_none_checkbox = new JRadioButton(tm.getText("none"));
     appearance_misc_mirror_none_checkbox.addActionListener(new MirrorNoneListener());
     appearance_misc_mirror_none_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_mirror_none_checkbox", appearance_misc_mirror_none_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_mirror_none_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_mirror_none_checkbox, gridbag_constraints);
 
-    appearance_misc_vertical_mirror_checkbox = new JRadioButton(resources.getString("left_right"));
+    appearance_misc_vertical_mirror_checkbox = new JRadioButton(tm.getText("left_right"));
     appearance_misc_vertical_mirror_checkbox.addActionListener(new VerticalMirrorListener());
     appearance_misc_vertical_mirror_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_vertical_mirror_checkbox", appearance_misc_vertical_mirror_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_vertical_mirror_checkbox, gridbag_constraints);
     main_panel.add(appearance_misc_vertical_mirror_checkbox, gridbag_constraints);
 
-    appearance_misc_horizontal_mirror_checkbox = new JRadioButton(resources.getString("top_bottom"));
+    appearance_misc_horizontal_mirror_checkbox = new JRadioButton(tm.getText("top_bottom"));
     appearance_misc_horizontal_mirror_checkbox.addActionListener(new HorizontalMirrorListener());
     appearance_misc_horizontal_mirror_checkbox.addActionListener(evt -> FRAnalytics.buttonClicked("appearance_misc_horizontal_mirror_checkbox", appearance_misc_horizontal_mirror_checkbox.getText()));
     gridbag.setConstraints(appearance_misc_horizontal_mirror_checkbox, gridbag_constraints);
@@ -180,8 +178,8 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
     gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     JLabel auto_layer_dim_label =
-        new JLabel(resources.getString("layer_dimming"));
-    auto_layer_dim_label.setToolTipText(resources.getString("layer_dimming_tooltip"));
+        new JLabel(tm.getText("layer_dimming"));
+    auto_layer_dim_label.setToolTipText(tm.getText("layer_dimming_tooltip"));
     gridbag.setConstraints(auto_layer_dim_label, gridbag_constraints);
     main_panel.add(auto_layer_dim_label);
     this.auto_layer_dim_slider = new JSlider(0, MAX_SLIDER_VALUE);

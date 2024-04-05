@@ -70,9 +70,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.detail_window = new WindowRouteDetail(p_board_frame);
     this.manual_rule_window = new WindowManualRules(p_board_frame);
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowRouteParameter", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteParameter", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

@@ -14,9 +14,9 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
   /** Creates a new instance of IncompletesWindow */
   public WindowIncompletes(BoardFrame p_board_frame) {
     super(p_board_frame);
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("incompletes"));
     this.list_empty_message.setText(resources.getString("route_completed"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_Incompletes");

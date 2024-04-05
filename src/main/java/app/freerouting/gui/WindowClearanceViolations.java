@@ -27,16 +27,13 @@ import java.util.TreeSet;
 
 public class WindowClearanceViolations extends WindowObjectListWithFilter {
 
-  private final ResourceBundle resources;
-
   /** Creates a new instance of clearance violations window */
   public WindowClearanceViolations(BoardFrame p_board_frame) {
     super(p_board_frame);
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowClearanceViolations", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
-    this.list_empty_message.setText(resources.getString("list_empty_message"));
+    setLanguage(p_board_frame.get_locale());
+
+    this.setTitle(tm.getText("title"));
+    this.list_empty_message.setText(tm.getText("list_empty_message"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_ClearanceViolations");
   }
 
@@ -87,25 +84,25 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
   private String item_info(Item p_item) {
     String result;
     if (p_item instanceof Pin) {
-      result = resources.getString("pin");
+      result = tm.getText("pin");
     } else if (p_item instanceof Via via) {
       Net curr_net = p_item.board.rules.nets.get(via.get_net_no(0));
-      result = resources.getString("via") + " [" + curr_net.name + "]";
+      result = tm.getText("via") + " [" + curr_net.name + "]";
     } else if (p_item instanceof Trace trace) {
       Net curr_net = p_item.board.rules.nets.get(trace.get_net_no(0));
-      result = resources.getString("trace") + " [" + curr_net.name + "]";
+      result = tm.getText("trace") + " [" + curr_net.name + "]";
     } else if (p_item instanceof ConductionArea) {
-      result = resources.getString("conduction_area");
+      result = tm.getText("conduction_area");
     } else if (p_item instanceof ObstacleArea) {
-      result = resources.getString("keepout");
+      result = tm.getText("keepout");
     } else if (p_item instanceof ViaObstacleArea) {
-      result = resources.getString("via_keepout");
+      result = tm.getText("via_keepout");
     } else if (p_item instanceof ComponentObstacleArea) {
-      result = resources.getString("component_keepout");
+      result = tm.getText("component_keepout");
     } else if (p_item instanceof BoardOutline) {
-      result = resources.getString("board_outline");
+      result = tm.getText("board_outline");
     } else {
-      result = resources.getString("unknown");
+      result = tm.getText("unknown");
     }
     return result;
   }
@@ -128,7 +125,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
       LayerStructure layer_structure =
           board_frame.board_panel.board_handling.get_routing_board().layer_structure;
 
-      String clearance_violation_message_template = resources.getString("clearance_violation_message_template");
+      String clearance_violation_message_template = tm.getText("clearance_violation_message_template");
       return String.format(
           clearance_violation_message_template,
           delta,

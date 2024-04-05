@@ -38,11 +38,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final String vertical;
   /** Creates a new instance of WindowAutorouteParameter */
   public WindowAutorouteParameter(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
+
     this.board_handling = p_board_frame.board_panel.board_handling;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowAutorouteParameter", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -57,22 +56,22 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag_constraints.insets = new Insets(1, 10, 1, 10);
 
     gridbag_constraints.gridwidth = 3;
-    JLabel layer_label = new JLabel(resources.getString("layer"));
+    JLabel layer_label = new JLabel(tm.getText("layer"));
     gridbag.setConstraints(layer_label, gridbag_constraints);
     main_panel.add(layer_label);
 
-    JLabel active_label = new JLabel(resources.getString("active"));
+    JLabel active_label = new JLabel(tm.getText("active"));
     gridbag.setConstraints(active_label, gridbag_constraints);
     main_panel.add(active_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     JLabel preferred_direction_label =
-        new JLabel(resources.getString("preferred_direction"));
+        new JLabel(tm.getText("preferred_direction"));
     gridbag.setConstraints(preferred_direction_label, gridbag_constraints);
     main_panel.add(preferred_direction_label);
 
-    this.horizontal = resources.getString("horizontal");
-    this.vertical = resources.getString("vertical");
+    this.horizontal = tm.getText("horizontal");
+    this.vertical = tm.getText("vertical");
 
     // create the layer list
     LayerStructure layer_structure =
@@ -121,7 +120,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     JLabel vias_allowed_label =
-        new JLabel(resources.getString("vias_allowed"));
+        new JLabel(tm.getText("vias_allowed"));
     gridbag.setConstraints(vias_allowed_label, gridbag_constraints);
     main_panel.add(vias_allowed_label);
 
@@ -137,16 +136,16 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
-    JLabel passes_label = new JLabel(resources.getString("passes"));
+    JLabel passes_label = new JLabel(tm.getText("passes"));
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 3;
     gridbag.setConstraints(passes_label, gridbag_constraints);
     main_panel.add(passes_label);
 
-    this.settings_autorouter_fanout_pass_button = new JCheckBox(resources.getString("fanout"));
-    this.settings_autorouter_autoroute_pass_button = new JCheckBox(resources.getString("autoroute"));
-    this.settings_autorouter_postroute_pass_button = new JCheckBox(resources.getString("postroute"));
+    this.settings_autorouter_fanout_pass_button = new JCheckBox(tm.getText("fanout"));
+    this.settings_autorouter_autoroute_pass_button = new JCheckBox(tm.getText("autoroute"));
+    this.settings_autorouter_postroute_pass_button = new JCheckBox(tm.getText("postroute"));
 
     settings_autorouter_fanout_pass_button.addActionListener(new FanoutListener());
     settings_autorouter_fanout_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_fanout_pass_button", settings_autorouter_fanout_pass_button.getText()));
@@ -174,7 +173,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     main_panel.add(separator, gridbag_constraints);
 
     detail_window = new WindowAutorouteDetailParameter(p_board_frame);
-    JButton settings_autorouter_detail_button = new JButton(resources.getString("detail_parameter"));
+    JButton settings_autorouter_detail_button = new JButton(tm.getText("detail_parameter"));
     this.detail_listener = new DetailListener();
     settings_autorouter_detail_button.addActionListener(detail_listener);
     settings_autorouter_detail_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detail_button", settings_autorouter_detail_button.getText()));

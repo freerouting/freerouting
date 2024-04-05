@@ -12,14 +12,14 @@ public class WindowLayerVisibility extends WindowVisibility {
       BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr) {
 
     super(p_board_frame, p_title, p_header_message, p_message_arr);
+    setLanguage(p_board_frame.get_locale());
   }
 
   /** Returns a new instance of LayerVisibilityFrame */
   public static WindowLayerVisibility get_instance(BoardFrame p_board_frame) {
     BoardPanel board_panel = p_board_frame.board_panel;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+
     String title = resources.getString("layer_visibility");
     String header_message = resources.getString("layer_visibility_header");
     LayerStructure layer_structure =
