@@ -155,10 +155,10 @@ public class SelectedItemState extends InteractiveState {
     }
     if (items_already_connected) {
       hdlg.screen_messages.set_status_message(
-          resources.getString("some_items_are_not_changed_because_they_are_already_connected"));
+          tm.getText("some_items_are_not_changed_because_they_are_already_connected"));
     } else {
       hdlg.screen_messages.set_status_message(
-          resources.getString("new_net_created_from_selected_items"));
+          tm.getText("new_net_created_from_selected_items"));
     }
     if (this.activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.ASSIGN_SELECTED_TO_NEW_NET);
@@ -252,7 +252,7 @@ public class SelectedItemState extends InteractiveState {
     }
     if (!all_items_removed) {
       hdlg.screen_messages.set_status_message(
-          resources.getString("some_items_are_fixed_and_could_therefore_not_be_removed"));
+          tm.getText("some_items_are_fixed_and_could_therefore_not_be_removed"));
     }
     if (this.activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.DELETE_SELECTED);
@@ -280,7 +280,7 @@ public class SelectedItemState extends InteractiveState {
     hdlg.set_board_read_only(true);
     if (p_stoppable_thread != null) {
       String start_message =
-          resources.getString("autoroute") + " " + resources.getString("stop_message");
+          tm.getText("autoroute") + " " + tm.getText("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
     int not_found_count = 0;
@@ -343,22 +343,22 @@ public class SelectedItemState extends InteractiveState {
       hdlg.screen_messages.clear();
       String curr_message;
       if (interrupted) {
-        curr_message = resources.getString("interrupted");
+        curr_message = tm.getText("interrupted");
       } else {
-        curr_message = resources.getString("completed");
+        curr_message = tm.getText("completed");
       }
       String end_message =
-          resources.getString("autoroute")
+          tm.getText("autoroute")
               + " "
               + curr_message
               + ": "
               + found_count
               + " "
-              + resources.getString("connections_found")
+              + tm.getText("connections_found")
               + ", "
               + not_found_count
               + " "
-              + resources.getString("connections_not_found");
+              + tm.getText("connections_not_found");
       hdlg.screen_messages.set_status_message(end_message);
     }
     hdlg.set_board_read_only(saved_board_read_only);
@@ -381,7 +381,7 @@ public class SelectedItemState extends InteractiveState {
     hdlg.set_board_read_only(true);
     if (p_stoppable_thread != null) {
       String start_message =
-          resources.getString("fanout") + " " + resources.getString("stop_message");
+          tm.getText("fanout") + " " + tm.getText("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
     int not_found_count = 0;
@@ -426,22 +426,22 @@ public class SelectedItemState extends InteractiveState {
       hdlg.screen_messages.clear();
       String curr_message;
       if (interrupted) {
-        curr_message = resources.getString("interrupted");
+        curr_message = tm.getText("interrupted");
       } else {
-        curr_message = resources.getString("completed");
+        curr_message = tm.getText("completed");
       }
       String end_message =
-          resources.getString("fanout")
+          tm.getText("fanout")
               + " "
               + curr_message
               + ": "
               + found_count
               + " "
-              + resources.getString("connections_found")
+              + tm.getText("connections_found")
               + ", "
               + not_found_count
               + " "
-              + resources.getString("connections_not_found");
+              + tm.getText("connections_not_found");
       hdlg.screen_messages.set_status_message(end_message);
     }
     hdlg.set_board_read_only(saved_board_read_only);
@@ -464,7 +464,7 @@ public class SelectedItemState extends InteractiveState {
     hdlg.set_board_read_only(true);
     if (p_stoppable_thread != null) {
       String start_message =
-          resources.getString("pull_tight") + " " + resources.getString("stop_message");
+          tm.getText("pull_tight") + " " + tm.getText("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
     hdlg.get_routing_board().start_marking_changed_area();
@@ -514,11 +514,11 @@ public class SelectedItemState extends InteractiveState {
 
     if (p_stoppable_thread != null) {
       if (interrupted) {
-        curr_message = resources.getString("interrupted");
+        curr_message = tm.getText("interrupted");
       } else {
-        curr_message = resources.getString("completed");
+        curr_message = tm.getText("completed");
       }
-      String end_message = resources.getString("pull_tight") + " " + curr_message;
+      String end_message = tm.getText("pull_tight") + " " + curr_message;
       hdlg.screen_messages.set_status_message(end_message);
     }
     hdlg.set_board_read_only(saved_board_read_only);
@@ -682,7 +682,7 @@ public class SelectedItemState extends InteractiveState {
       clearance_violations = new ClearanceViolations(this.item_list);
       Integer violation_count = clearance_violations.list.size();
       String curr_message =
-          violation_count + " " + resources.getString("clearance_violations_found");
+          violation_count + " " + tm.getText("clearance_violations_found");
       hdlg.screen_messages.set_status_message(curr_message);
     } else {
       clearance_violations = null;
@@ -747,6 +747,6 @@ public class SelectedItemState extends InteractiveState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(resources.getString("in_select_item_mode"));
+    hdlg.screen_messages.set_status_message(tm.getText("in_select_item_mode"));
   }
 }

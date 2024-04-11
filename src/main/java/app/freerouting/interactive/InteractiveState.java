@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
 
+import app.freerouting.management.TextManager;
 import javax.swing.JPopupMenu;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -16,7 +17,7 @@ public class InteractiveState {
   /** if logfile != null, the interactive actions are stored in a logfile */
   protected final ActivityReplayFile activityReplayFile;
   /** Contains the files with the language dependent messages */
-  protected final ResourceBundle resources;
+  protected final TextManager tm;
   /** The intended state after this state is finished */
   protected InteractiveState return_state;
 
@@ -28,7 +29,8 @@ public class InteractiveState {
     this.return_state = p_return_state;
     this.hdlg = p_board_handling;
     this.activityReplayFile = p_activityReplayFile;
-    this.resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
+
+    this.tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());
   }
 
   /** default draw function to be overwritten in derived classes */

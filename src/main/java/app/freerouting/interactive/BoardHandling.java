@@ -32,6 +32,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
@@ -67,7 +68,7 @@ public class BoardHandling extends BoardHandlingHeadless {
   /** The graphical panel used for displaying the board. */
   private final BoardPanel panel;
 
-  private final ResourceBundle resources;
+  private final TextManager tm;
   /** The graphical context for drawing the board. */
   public GraphicsContext graphics_context;
   /** For transforming coordinates between the user and the board coordinate space */
@@ -115,8 +116,8 @@ public class BoardHandling extends BoardHandlingHeadless {
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
     this.set_interactive_state(RouteMenuState.get_instance(this, activityReplayFile));
-    this.resources =
-        ResourceBundle.getBundle("app.freerouting.interactive.BoardHandling", p_locale);
+
+    this.tm = new TextManager(this.getClass(), p_locale);
 
     LogEntries.LogEntryAddedListener listener = this::logEntryAdded;
     FRLogger.getLogEntries().addLogEntryAddedListener(listener);
@@ -397,7 +398,7 @@ public class BoardHandling extends BoardHandlingHeadless {
       clearance_violations = new ClearanceViolations(this.board.get_items());
       Integer violation_count = (clearance_violations.list.size() + 1) / 2;
       String curr_message =
-          violation_count + " " + resources.getString("clearance_violations_found");
+          violation_count + " " + tm.getText("clearance_violations_found");
       screen_messages.set_status_message(curr_message);
     } else {
       clearance_violations = null;
@@ -414,16 +415,16 @@ public class BoardHandling extends BoardHandlingHeadless {
     String curr_message;
     if (length_violation_count == 0) {
       curr_message =
-          incomplete_count + " " + resources.getString("incomplete_connections_to_route");
+          incomplete_count + " " + tm.getText("incomplete_connections_to_route");
     } else {
       curr_message =
           incomplete_count
               + " "
-              + resources.getString("incompletes")
+              + tm.getText("incompletes")
               + " "
               + length_violation_count
               + " "
-              + resources.getString("length_violations");
+              + tm.getText("length_violations");
     }
     screen_messages.set_status_message(curr_message);
   }
@@ -630,9 +631,9 @@ public class BoardHandling extends BoardHandlingHeadless {
         // a batch autorouter is undone.
         this.settings.autoroute_settings.set_start_pass_no(1);
       }
-      screen_messages.set_status_message(resources.getString("undo"));
+      screen_messages.set_status_message(tm.getText("undo"));
     } else {
-      screen_messages.set_status_message(resources.getString("no_more_undo_possible"));
+      screen_messages.set_status_message(tm.getText("no_more_undo_possible"));
     }
     activityReplayFile.start_scope(ActivityReplayFileScope.UNDO);
     repaint();
@@ -648,9 +649,9 @@ public class BoardHandling extends BoardHandlingHeadless {
       for (Integer changed_net : changed_nets) {
         this.update_ratsnest(changed_net);
       }
-      screen_messages.set_status_message(resources.getString("redo"));
+      screen_messages.set_status_message(tm.getText("redo"));
     } else {
-      screen_messages.set_status_message(resources.getString("no_more_redo_possible"));
+      screen_messages.set_status_message(tm.getText("no_more_redo_possible"));
     }
     activityReplayFile.start_scope(ActivityReplayFileScope.REDO);
     repaint();
@@ -803,19 +804,19 @@ public class BoardHandling extends BoardHandlingHeadless {
   /** Sets the interactive state to SelectMenuState */
   public void set_select_menu_state() {
     this.interactive_state = SelectMenuState.get_instance(this, activityReplayFile);
-    screen_messages.set_status_message(resources.getString("select_menu"));
+    screen_messages.set_status_message(tm.getText("select_menu"));
   }
 
   /** Sets the interactive state to RouteMenuState */
   public void set_route_menu_state() {
     this.interactive_state = RouteMenuState.get_instance(this, activityReplayFile);
-    screen_messages.set_status_message(resources.getString("route_menu"));
+    screen_messages.set_status_message(tm.getText("route_menu"));
   }
 
   /** Sets the interactive state to DragMenuState */
   public void set_drag_menu_state() {
     this.interactive_state = DragMenuState.get_instance(this, activityReplayFile);
-    screen_messages.set_status_message(resources.getString("drag_menu"));
+    screen_messages.set_status_message(tm.getText("drag_menu"));
   }
 
   public long calculateCrc32(InputStream inputStream) {
@@ -953,7 +954,7 @@ public class BoardHandling extends BoardHandlingHeadless {
 
       originalBoardChecksum = calculateCrc32();
     } catch (Exception e) {
-      screen_messages.set_status_message(resources.getString("save_error"));
+      screen_messages.set_status_message(tm.getText("save_error"));
       result = false;
     }
     return result;

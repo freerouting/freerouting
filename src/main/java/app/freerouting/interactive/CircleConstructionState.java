@@ -85,7 +85,7 @@ public class CircleConstructionState extends InteractiveState {
       construction_succeeded = board.check_shape(obstacle_shape, layer, new int[0], cl_class);
     }
     if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
+      hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
 
       // insert the new shape as keepout
       this.observers_activated = !hdlg.get_routing_board().observers_active();
@@ -100,7 +100,7 @@ public class CircleConstructionState extends InteractiveState {
       }
     } else {
       hdlg.screen_messages.set_status_message(
-          resources.getString("keepout_cancelled_because_of_overlaps"));
+          tm.getText("keepout_cancelled_because_of_overlaps"));
     }
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
@@ -138,6 +138,6 @@ public class CircleConstructionState extends InteractiveState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(resources.getString("creating_circle"));
+    hdlg.screen_messages.set_status_message(tm.getText("creating_circle"));
   }
 }

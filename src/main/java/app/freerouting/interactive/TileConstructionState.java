@@ -94,10 +94,10 @@ public class TileConstructionState extends CornerItemConstructionState {
       }
     }
     if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
+      hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
     } else {
       hdlg.screen_messages.set_status_message(
-          resources.getString("keepout_cancelled_because_of_overlaps"));
+          tm.getText("keepout_cancelled_because_of_overlaps"));
     }
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
@@ -191,6 +191,6 @@ public class TileConstructionState extends CornerItemConstructionState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(resources.getString("creatig_tile"));
+    hdlg.screen_messages.set_status_message(tm.getText("creatig_tile"));
   }
 }

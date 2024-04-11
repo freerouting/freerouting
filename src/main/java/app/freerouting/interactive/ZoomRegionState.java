@@ -34,7 +34,7 @@ public class ZoomRegionState extends SelectRegionState {
         new ZoomRegionState(p_parent_state, p_board_handling, p_activityReplayFile);
     new_instance.corner1 = p_location;
     new_instance.hdlg.screen_messages.set_status_message(
-        new_instance.resources.getString("drag_left_mouse_button_to_create_region_to_display"));
+        new_instance.tm.getText("drag_left_mouse_button_to_create_region_to_display"));
     return new_instance;
   }
 

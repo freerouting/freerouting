@@ -57,19 +57,19 @@ public class HoleConstructionState extends CornerItemConstructionState {
     Collection<Item> found_items =
         hdlg.get_routing_board().pick_items(pick_location, hdlg.settings.layer, selection_filter);
     if (found_items.size() != 1) {
-      hdlg.screen_messages.set_status_message(resources.getString("no_item_found_for_adding_hole"));
+      hdlg.screen_messages.set_status_message(tm.getText("no_item_found_for_adding_hole"));
       return false;
     }
     Item found_item = found_items.iterator().next();
     if (!(found_item instanceof ObstacleArea)) {
       hdlg.screen_messages.set_status_message(
-          resources.getString("no_obstacle_area_found_for_adding_hole"));
+          tm.getText("no_obstacle_area_found_for_adding_hole"));
       return false;
     }
     this.item_to_modify = (ObstacleArea) found_item;
     if (item_to_modify.get_area() instanceof Circle) {
       hdlg.screen_messages.set_status_message(
-          resources.getString("adding_hole_to_circle_not_yet_implemented"));
+          tm.getText("adding_hole_to_circle_not_yet_implemented"));
       return false;
     }
     if (this.activityReplayFile != null) {
@@ -155,9 +155,9 @@ public class HoleConstructionState extends CornerItemConstructionState {
       }
     }
     if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(resources.getString("adding_hole_completed"));
+      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_completed"));
     } else {
-      hdlg.screen_messages.set_status_message(resources.getString("adding_hole_failed"));
+      hdlg.screen_messages.set_status_message(tm.getText("adding_hole_failed"));
     }
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
@@ -167,6 +167,6 @@ public class HoleConstructionState extends CornerItemConstructionState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(resources.getString("adding_hole_to_obstacle_area"));
+    hdlg.screen_messages.set_status_message(tm.getText("adding_hole_to_obstacle_area"));
   }
 }

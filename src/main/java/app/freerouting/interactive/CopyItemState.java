@@ -233,10 +233,10 @@ public class CopyItemState extends InteractiveState {
       }
     }
     if (all_items_inserted) {
-      hdlg.screen_messages.set_status_message(resources.getString("all_items_inserted"));
+      hdlg.screen_messages.set_status_message(tm.getText("all_items_inserted"));
     } else {
       hdlg.screen_messages.set_status_message(
-          resources.getString("some_items_not_inserted_because_of_obstacles"));
+          tm.getText("some_items_not_inserted_because_of_obstacles"));
     }
     if (activityReplayFile != null) {
       activityReplayFile.add_corner(this.current_position.to_float());

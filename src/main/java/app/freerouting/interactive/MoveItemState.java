@@ -15,6 +15,7 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.library.BoardLibrary;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import javax.swing.JPopupMenu;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -86,10 +87,12 @@ public class MoveItemState extends InteractiveState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
+
+    TextManager tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());
+
     if (p_item_list.isEmpty()) {
       p_board_handling.screen_messages.set_status_message(
-          resources.getString("move_component_failed_because_no_item_selected"));
+          tm.getText("move_component_failed_because_no_item_selected"));
       return null;
     }
     // extend p_item_list to full  components
@@ -128,7 +131,7 @@ public class MoveItemState extends InteractiveState {
     for (Item curr_item : item_list) {
       if (curr_item.is_user_fixed()) {
         p_board_handling.screen_messages.set_status_message(
-            resources.getString("some_items_cannot_be_moved_because_they_are_fixed"));
+            tm.getText("some_items_cannot_be_moved_because_they_are_fixed"));
         move_ok = false;
         obstacle_items.add(curr_item);
         fixed_items.add(curr_item);
@@ -172,11 +175,11 @@ public class MoveItemState extends InteractiveState {
         if (!fixed_items.isEmpty()) {
           ((SelectedItemState) p_parent_state).get_item_list().addAll(fixed_items);
           p_board_handling.screen_messages.set_status_message(
-              resources.getString("please_unfix_selected_items_before_moving"));
+              tm.getText("please_unfix_selected_items_before_moving"));
         } else {
           ((SelectedItemState) p_parent_state).get_item_list().addAll(obstacle_items);
           p_board_handling.screen_messages.set_status_message(
-              resources.getString("please_unroute_or_extend_selection_before_moving"));
+              tm.getText("please_unroute_or_extend_selection_before_moving"));
         }
       }
       return null;
@@ -232,7 +235,7 @@ public class MoveItemState extends InteractiveState {
     for (Item curr_item : this.item_list) {
       if (curr_item.clearance_violation_count() > 0) {
         hdlg.screen_messages.set_status_message(
-            resources.getString("insertion_failed_because_of_obstacles"));
+            tm.getText("insertion_failed_because_of_obstacles"));
         return this;
       }
     }
@@ -253,7 +256,7 @@ public class MoveItemState extends InteractiveState {
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
     }
-    hdlg.screen_messages.set_status_message(resources.getString("move_completed"));
+    hdlg.screen_messages.set_status_message(tm.getText("move_completed"));
     hdlg.repaint();
     return this.return_state;
   }
@@ -394,7 +397,7 @@ public class MoveItemState extends InteractiveState {
       }
     }
     if (!placement_side_changable) {
-      hdlg.screen_messages.set_status_message(resources.getString("cannot_change_placement_side"));
+      hdlg.screen_messages.set_status_message(tm.getText("cannot_change_placement_side"));
       return;
     }
 
@@ -424,7 +427,7 @@ public class MoveItemState extends InteractiveState {
       } else if (component_to_reset.get_rotation_in_degree()
           != curr_component.get_rotation_in_degree()) {
         hdlg.screen_messages.set_status_message(
-            resources.getString("unable_to_reset_components_with_different_rotations"));
+            tm.getText("unable_to_reset_components_with_different_rotations"));
         return;
       }
     }

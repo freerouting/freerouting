@@ -44,7 +44,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
       new_instance.activityReplayFile.add_corner(p_location);
     }
     new_instance.hdlg.screen_messages.set_status_message(
-        new_instance.resources.getString("drag_left_mouse_button_to_selects_items_in_region"));
+        new_instance.tm.getText("drag_left_mouse_button_to_selects_items_in_region"));
     return new_instance;
   }
 
@@ -101,7 +101,7 @@ public class SelectItemsInRegionState extends SelectRegionState {
                 found_items, this.return_state, hdlg, activityReplayFile);
       }
     } else {
-      hdlg.screen_messages.set_status_message(resources.getString("nothing_selected"));
+      hdlg.screen_messages.set_status_message(tm.getText("nothing_selected"));
     }
   }
 }

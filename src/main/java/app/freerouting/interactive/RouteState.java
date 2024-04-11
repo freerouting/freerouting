@@ -392,11 +392,11 @@ public class RouteState extends InteractiveState {
       if (this.route != null && !this.route.is_layer_active(p_new_layer)) {
         String layer_name = hdlg.get_routing_board().layer_structure.arr[p_new_layer].name;
         hdlg.screen_messages.set_status_message(
-            resources.getString("layer_not_changed_because_layer")
+            tm.getText("layer_not_changed_because_layer")
                 + " "
                 + layer_name
                 + " "
-                + resources.getString("is_not_active_for_the_current_net"));
+                + tm.getText("is_not_active_for_the_current_net"));
       }
       boolean change_layer_succeeded = route.change_layer(p_new_layer);
       if (change_layer_succeeded) {
@@ -446,7 +446,7 @@ public class RouteState extends InteractiveState {
           hdlg.set_layer(p_new_layer);
           String layer_name = hdlg.get_routing_board().layer_structure.arr[p_new_layer].name;
           hdlg.screen_messages.set_status_message(
-              resources.getString("layer_changed_to") + " " + layer_name);
+              tm.getText("layer_changed_to") + " " + layer_name);
           // make the current situation restorable by undo
           hdlg.get_routing_board().generate_snapshot();
         }
@@ -462,7 +462,7 @@ public class RouteState extends InteractiveState {
                   .arr[hdlg.get_routing_board().get_shove_failing_layer()]
                   .name;
           hdlg.screen_messages.set_status_message(
-              resources.getString("layer_not_changed_because_of_obstacle_on_layer")
+              tm.getText("layer_not_changed_because_of_obstacle_on_layer")
                   + " "
                   + layer_name);
         } else {
@@ -488,7 +488,7 @@ public class RouteState extends InteractiveState {
       Net curr_net =
           hdlg.get_routing_board().rules.nets.get(route.net_no_arr[0]);
       hdlg.screen_messages.set_status_message(
-          resources.getString("routing_net") + " " + curr_net.name);
+          tm.getText("routing_net") + " " + curr_net.name);
     }
   }
 }

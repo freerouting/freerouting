@@ -77,10 +77,10 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
       }
     }
     if (construction_succeeded) {
-      hdlg.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
+      hdlg.screen_messages.set_status_message(tm.getText("keepout_successful_completed"));
     } else {
       hdlg.screen_messages.set_status_message(
-          resources.getString("keepout_cancelled_because_of_overlaps"));
+          tm.getText("keepout_cancelled_because_of_overlaps"));
     }
     if (activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
@@ -90,6 +90,6 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(resources.getString("creating_polygonshape"));
+    hdlg.screen_messages.set_status_message(tm.getText("creating_polygonshape"));
   }
 }

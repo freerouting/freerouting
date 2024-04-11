@@ -8,6 +8,7 @@ import app.freerouting.board.Via;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
+import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
@@ -191,13 +192,15 @@ public class BatchOptRoute {
   /** Try to improve the route by re-routing the connections containing p_item. */
   protected ItemRouteResult opt_route_item(
       Item p_item, int p_pass_no, boolean p_with_preferred_directions) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
+
+    TextManager tm = new TextManager(InteractiveState.class, this.thread.hdlg.get_locale());
+
     String start_message =
-        resources.getString("batch_optimizer")
+        tm.getText("batch_optimizer")
             + " "
-            + resources.getString("stop_message")
+            + tm.getText("stop_message")
             + "        "
-            + resources.getString("routeoptimizer_pass")
+            + tm.getText("routeoptimizer_pass")
             + p_pass_no;
     this.thread.hdlg.screen_messages.set_status_message(
         start_message); // assume overwriting messages is harmless

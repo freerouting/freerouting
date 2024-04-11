@@ -32,7 +32,7 @@ public class SelectMenuState extends MenuState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(resources.getString("in_select_menu"));
+    hdlg.screen_messages.set_status_message(tm.getText("in_select_menu"));
   }
 
   @Override

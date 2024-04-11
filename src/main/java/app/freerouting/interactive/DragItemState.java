@@ -28,7 +28,7 @@ public class DragItemState extends DragState {
 
   @Override
   public void display_default_message() {
-    hdlg.screen_messages.set_status_message(resources.getString("dragging_item"));
+    hdlg.screen_messages.set_status_message(tm.getText("dragging_item"));
   }
 
   /**

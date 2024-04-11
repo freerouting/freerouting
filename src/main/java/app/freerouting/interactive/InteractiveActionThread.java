@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.awt.Graphics;
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,11 +140,12 @@ public abstract class InteractiveActionThread extends Thread
     @Override
     protected void thread_action() {
 
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", hdlg.get_locale());
+      TextManager tm = new TextManager(InteractiveState.class, hdlg.get_locale());
+
       boolean saved_board_read_only = hdlg.is_board_read_only();
       hdlg.set_board_read_only(true);
       String start_message =
-          resources.getString("logfile") + " " + resources.getString("stop_message");
+          tm.getText("logfile") + " " + tm.getText("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
       hdlg.screen_messages.set_write_protected(true);
       boolean done = false;
@@ -190,11 +192,11 @@ public abstract class InteractiveActionThread extends Thread
       hdlg.screen_messages.set_write_protected(false);
       String curr_message;
       if (interrupted) {
-        curr_message = resources.getString("interrupted");
+        curr_message = tm.getText("interrupted");
       } else {
-        curr_message = resources.getString("completed");
+        curr_message = tm.getText("completed");
       }
-      String end_message = resources.getString("logfile") + " " + curr_message;
+      String end_message = tm.getText("logfile") + " " + curr_message;
       hdlg.screen_messages.set_status_message(end_message);
       hdlg.set_board_read_only(saved_board_read_only);
       hdlg.get_panel().board_frame.repaint_all();

@@ -63,7 +63,7 @@ public class CutoutRouteState extends SelectRegionState {
       new_instance.activityReplayFile.add_corner(p_location);
     }
     new_instance.hdlg.screen_messages.set_status_message(
-        new_instance.resources.getString("drag_left_mouse_button_to_select_cutout_rectangle"));
+        new_instance.tm.getText("drag_left_mouse_button_to_select_cutout_rectangle"));
     return new_instance;
   }
 

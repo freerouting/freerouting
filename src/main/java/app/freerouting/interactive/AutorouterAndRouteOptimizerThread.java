@@ -12,6 +12,7 @@ import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.Color;
@@ -61,7 +62,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
     FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
     try {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", hdlg.get_locale());
+      TextManager tm = new TextManager(InteractiveState.class, hdlg.get_locale());
+
       boolean saved_board_read_only = hdlg.is_board_read_only();
       hdlg.set_board_read_only(true);
       boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
@@ -73,8 +75,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
       FRAnalytics.autorouterStarted();
 
-      String start_message =
-          resources.getString("batch_autorouter") + " " + resources.getString("stop_message");
+      String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
       boolean fanout_first =
           hdlg.get_settings().autoroute_settings.get_with_fanout()
@@ -115,35 +116,35 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         if (hdlg.get_settings().autoroute_settings.get_with_postroute()
             && !this.is_stop_requested()) {
           String opt_message =
-              resources.getString("batch_optimizer") + " " + resources.getString("stop_message");
+              tm.getText("batch_optimizer") + " " + tm.getText("stop_message");
           hdlg.screen_messages.set_status_message(opt_message);
           this.batch_opt_route.optimize_board(
               this.save_intermediate_stages, this.optimization_improvement_threshold, this);
           String curr_message;
           if (this.is_stop_requested()) {
-            curr_message = resources.getString("interrupted");
+            curr_message = tm.getText("interrupted");
           } else {
-            curr_message = resources.getString("completed");
+            curr_message = tm.getText("completed");
           }
-          String end_message = resources.getString("postroute") + " " + curr_message;
+          String end_message = tm.getText("postroute") + " " + curr_message;
           hdlg.screen_messages.set_status_message(end_message);
         } else {
           hdlg.screen_messages.clear();
           String curr_message;
           if (this.is_stop_requested()) {
-            curr_message = resources.getString("interrupted");
+            curr_message = tm.getText("interrupted");
           } else {
-            curr_message = resources.getString("completed");
+            curr_message = tm.getText("completed");
           }
           int incomplete_count = hdlg.get_ratsnest().incomplete_count();
           String end_message =
-              resources.getString("autoroute")
+              tm.getText("autoroute")
                   + " "
                   + curr_message
                   + ", "
                   + incomplete_count
                   + " "
-                  + resources.getString("connections_not_found");
+                  + tm.getText("connections_not_found");
           hdlg.screen_messages.set_status_message(end_message);
         }
 
