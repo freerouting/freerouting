@@ -3,6 +3,7 @@ package app.freerouting.rules;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -73,10 +74,9 @@ public class Nets implements Serializable {
 
   /** Generates a new net number. */
   public Net new_net(Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
-    String net_name =
-        resources.getString("net#") + (net_arr.size() + 1);
+    TextManager tm = new TextManager(NetClasses.class, p_locale);
+
+    String net_name = tm.getText("net#") + (net_arr.size() + 1);
     return add(net_name, 1, false);
   }
 

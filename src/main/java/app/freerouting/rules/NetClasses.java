@@ -2,6 +2,7 @@ package app.freerouting.rules;
 
 import app.freerouting.board.LayerStructure;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -49,8 +50,10 @@ public class NetClasses implements Serializable {
       LayerStructure p_layer_structure,
       ClearanceMatrix p_clearance_matrix,
       Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
-    String name_front = resources.getString("class");
+
+    TextManager tm = new TextManager(NetClasses.class, p_locale);
+
+    String name_front = tm.getText("class");
     String new_name;
     int index = 0;
     do {
