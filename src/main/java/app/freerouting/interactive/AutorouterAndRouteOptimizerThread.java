@@ -61,9 +61,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
     FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
     try {
-      ResourceBundle resources =
-          ResourceBundle.getBundle(
-              "app.freerouting.interactive.InteractiveState", hdlg.get_locale());
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", hdlg.get_locale());
       boolean saved_board_read_only = hdlg.is_board_read_only();
       hdlg.set_board_read_only(true);
       boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();

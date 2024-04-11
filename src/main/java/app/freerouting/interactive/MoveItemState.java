@@ -86,9 +86,7 @@ public class MoveItemState extends InteractiveState {
       InteractiveState p_parent_state,
       BoardHandling p_board_handling,
       ActivityReplayFile p_activityReplayFile) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
     if (p_item_list.isEmpty()) {
       p_board_handling.screen_messages.set_status_message(
           resources.getString("move_component_failed_because_no_item_selected"));

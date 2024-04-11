@@ -45,9 +45,7 @@ class PopupMenuChangeLayer extends JMenu {
     private final int layer_no;
     private final String message1;
     LayermenuItem(int p_layer_no) {
-      ResourceBundle resources =
-          ResourceBundle.getBundle(
-              "app.freerouting.gui.Default", board_frame.get_locale());
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", board_frame.get_locale());
       message1 = resources.getString("layer_changed_to") + " ";
       layer_no = p_layer_no;
       addActionListener(

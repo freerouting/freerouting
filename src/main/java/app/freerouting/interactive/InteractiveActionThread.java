@@ -139,9 +139,7 @@ public abstract class InteractiveActionThread extends Thread
     @Override
     protected void thread_action() {
 
-      ResourceBundle resources =
-          ResourceBundle.getBundle(
-              "app.freerouting.interactive.InteractiveState", hdlg.get_locale());
+      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", hdlg.get_locale());
       boolean saved_board_read_only = hdlg.is_board_read_only();
       hdlg.set_board_read_only(true);
       String start_message =

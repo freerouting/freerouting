@@ -28,9 +28,7 @@ public class InteractiveState {
     this.return_state = p_return_state;
     this.hdlg = p_board_handling;
     this.activityReplayFile = p_activityReplayFile;
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
+    this.resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", p_board_handling.get_locale());
   }
 
   /** default draw function to be overwritten in derived classes */
