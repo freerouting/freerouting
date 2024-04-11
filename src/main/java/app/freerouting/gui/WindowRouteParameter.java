@@ -42,7 +42,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   final WindowManualRules manual_rule_window;
   final WindowRouteDetail detail_window;
   private final BoardHandling board_handling;
-  private final Locale current_locale;
   private final JSlider region_slider;
   private final JFormattedTextField region_width_field;
   private final JFormattedTextField edge_to_turn_dist_field;
@@ -66,14 +65,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   /** Creates a new instance of RouteParameterWindow */
   public WindowRouteParameter(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
-    this.current_locale = p_board_frame.get_locale();
     this.detail_window = new WindowRouteDetail(p_board_frame);
     this.manual_rule_window = new WindowManualRules(p_board_frame);
 
     setLanguage(p_board_frame.get_locale());
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteParameter", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -89,17 +86,17 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     // add label and button group for the route snap angle.
 
-    JLabel snap_angle_label = new JLabel(resources.getString("snap_angle"));
-    snap_angle_label.setToolTipText(resources.getString("snap_angle_tooltip"));
+    JLabel snap_angle_label = new JLabel(tm.getText("snap_angle"));
+    snap_angle_label.setToolTipText(tm.getText("snap_angle_tooltip"));
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 3;
     gridbag.setConstraints(snap_angle_label, gridbag_constraints);
     main_panel.add(snap_angle_label);
 
-    settings_routing_snap_angle_90_button = new JRadioButton(resources.getString("90_degree"));
-    settings_routing_snap_angle_45_button = new JRadioButton(resources.getString("45_degree"));
-    settings_routing_snap_angle_none_button = new JRadioButton(resources.getString("none"));
+    settings_routing_snap_angle_90_button = new JRadioButton(tm.getText("90_degree"));
+    settings_routing_snap_angle_45_button = new JRadioButton(tm.getText("45_degree"));
+    settings_routing_snap_angle_none_button = new JRadioButton(tm.getText("none"));
 
     settings_routing_snap_angle_90_button.addActionListener(new SnapAngle90Listener());
     settings_routing_snap_angle_90_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_snap_angle_90_button", settings_routing_snap_angle_90_button.getText()));
@@ -131,14 +128,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     // add label and button group for the route mode.
 
-    JLabel route_mode_label = new JLabel(resources.getString("route_mode"));
+    JLabel route_mode_label = new JLabel(tm.getText("route_mode"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(route_mode_label, gridbag_constraints);
     main_panel.add(route_mode_label);
 
-    this.settings_routing_dynamic_button = new JRadioButton(resources.getString("dynamic"));
-    this.settings_routing_stitch_button = new JRadioButton(resources.getString("stitching"));
+    this.settings_routing_dynamic_button = new JRadioButton(tm.getText("dynamic"));
+    this.settings_routing_stitch_button = new JRadioButton(tm.getText("stitching"));
 
     settings_routing_dynamic_button.addActionListener(new DynamicRouteListener());
     settings_routing_dynamic_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_dynamic_button", settings_routing_dynamic_button.getText()));
@@ -163,15 +160,14 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     // add label and buttongroup for automatic or manual trace width selection.
 
-    JLabel trace_widths_label =
-        new JLabel(resources.getString("rule_selection"));
+    JLabel trace_widths_label = new JLabel(tm.getText("rule_selection"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(trace_widths_label, gridbag_constraints);
     main_panel.add(trace_widths_label);
 
-    settings_routing_automatic_button = new JRadioButton(resources.getString("automatic"));
-    settings_routing_manual_button = new JRadioButton(resources.getString("manual"));
+    settings_routing_automatic_button = new JRadioButton(tm.getText("automatic"));
+    settings_routing_manual_button = new JRadioButton(tm.getText("manual"));
 
     settings_routing_automatic_button.addActionListener(new AutomaticTraceWidthListener());
     settings_routing_automatic_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_automatic_button", settings_routing_automatic_button.getText()));
@@ -196,56 +192,56 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     // add check box for push enabled
 
-    settings_routing_shove_check_box = new JCheckBox(resources.getString("push&shove_enabled"));
+    settings_routing_shove_check_box = new JCheckBox(tm.getText("push&shove_enabled"));
     settings_routing_shove_check_box.addActionListener(new ShoveListener());
     settings_routing_shove_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_shove_check_box", settings_routing_shove_check_box.getText()));
     gridbag.setConstraints(settings_routing_shove_check_box, gridbag_constraints);
-    settings_routing_shove_check_box.setToolTipText(resources.getString("push&shove_enabled_tooltip"));
+    settings_routing_shove_check_box.setToolTipText(tm.getText("push&shove_enabled_tooltip"));
     main_panel.add(settings_routing_shove_check_box, gridbag_constraints);
 
     // add check box for drag components enabled
 
-    settings_routing_drag_component_check_box = new JCheckBox(resources.getString("drag_components_enabled"));
+    settings_routing_drag_component_check_box = new JCheckBox(tm.getText("drag_components_enabled"));
     settings_routing_drag_component_check_box.addActionListener(new DragComponentListener());
     settings_routing_drag_component_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_drag_component_check_box", settings_routing_drag_component_check_box.getText()));
     gridbag.setConstraints(settings_routing_drag_component_check_box, gridbag_constraints);
-    settings_routing_drag_component_check_box.setToolTipText(resources.getString("drag_components_enabled_tooltip"));
+    settings_routing_drag_component_check_box.setToolTipText(tm.getText("drag_components_enabled_tooltip"));
     main_panel.add(settings_routing_drag_component_check_box, gridbag_constraints);
 
     // add check box for via snap to smd center
 
-    settings_routing_via_snap_to_smd_center_check_box = new JCheckBox(resources.getString("via_snap_to_smd_center"));
+    settings_routing_via_snap_to_smd_center_check_box = new JCheckBox(tm.getText("via_snap_to_smd_center"));
     settings_routing_via_snap_to_smd_center_check_box.addActionListener(new ViaSnapToSMDCenterListener());
     settings_routing_via_snap_to_smd_center_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_via_snap_to_smd_center_check_box", settings_routing_via_snap_to_smd_center_check_box.getText()));
     gridbag.setConstraints(settings_routing_via_snap_to_smd_center_check_box, gridbag_constraints);
-    settings_routing_via_snap_to_smd_center_check_box.setToolTipText(resources.getString("via_snap_to_smd_center_tooltip"));
+    settings_routing_via_snap_to_smd_center_check_box.setToolTipText(tm.getText("via_snap_to_smd_center_tooltip"));
     main_panel.add(settings_routing_via_snap_to_smd_center_check_box, gridbag_constraints);
 
     // add check box for highlighting the routing obstacle
 
-    settings_routing_hilight_routing_obstacle_check_box = new JCheckBox(resources.getString("hilight_routing_obstacle"));
+    settings_routing_hilight_routing_obstacle_check_box = new JCheckBox(tm.getText("hilight_routing_obstacle"));
     settings_routing_hilight_routing_obstacle_check_box.addActionListener(new HilightObstacleListener());
     settings_routing_hilight_routing_obstacle_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_hilight_routing_obstacle_check_box", settings_routing_hilight_routing_obstacle_check_box.getText()));
     gridbag.setConstraints(settings_routing_hilight_routing_obstacle_check_box, gridbag_constraints);
-    settings_routing_hilight_routing_obstacle_check_box.setToolTipText(resources.getString("hilight_routing_obstacle_tooltip"));
+    settings_routing_hilight_routing_obstacle_check_box.setToolTipText(tm.getText("hilight_routing_obstacle_tooltip"));
     main_panel.add(settings_routing_hilight_routing_obstacle_check_box, gridbag_constraints);
 
     // add check box for ignore_conduction_areas
 
-    settings_routing_ignore_conduction_check_box = new JCheckBox(resources.getString("ignore_conduction_areas"));
+    settings_routing_ignore_conduction_check_box = new JCheckBox(tm.getText("ignore_conduction_areas"));
     settings_routing_ignore_conduction_check_box.addActionListener(new IgnoreConductionListener());
     settings_routing_ignore_conduction_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_ignore_conduction_check_box", settings_routing_ignore_conduction_check_box.getText()));
     gridbag.setConstraints(settings_routing_ignore_conduction_check_box, gridbag_constraints);
-    settings_routing_ignore_conduction_check_box.setToolTipText(resources.getString("ignore_conduction_areas_tooltip"));
+    settings_routing_ignore_conduction_check_box.setToolTipText(tm.getText("ignore_conduction_areas_tooltip"));
     main_panel.add(settings_routing_ignore_conduction_check_box, gridbag_constraints);
 
     // add check box for automatic neckdown
 
-    settings_routing_neckdown_check_box = new JCheckBox(resources.getString("automatic_neckdown"));
+    settings_routing_neckdown_check_box = new JCheckBox(tm.getText("automatic_neckdown"));
     settings_routing_neckdown_check_box.addActionListener(new NeckDownListener());
     settings_routing_neckdown_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_neckdown_check_box", settings_routing_neckdown_check_box.getText()));
     gridbag.setConstraints(settings_routing_neckdown_check_box, gridbag_constraints);
-    settings_routing_neckdown_check_box.setToolTipText(resources.getString("automatic_neckdown_tooltip"));
+    settings_routing_neckdown_check_box.setToolTipText(tm.getText("automatic_neckdown_tooltip"));
     main_panel.add(settings_routing_neckdown_check_box, gridbag_constraints);
 
     // add labels and text field for restricting pin exit directions
@@ -253,15 +249,15 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
-    settings_routing_restrict_pin_exit_directions_check_box = new JCheckBox(resources.getString("restrict_pin_exit_directions"));
+    settings_routing_restrict_pin_exit_directions_check_box = new JCheckBox(tm.getText("restrict_pin_exit_directions"));
     settings_routing_restrict_pin_exit_directions_check_box.addActionListener(new RestrictPinExitDirectionsListener());
     settings_routing_restrict_pin_exit_directions_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_restrict_pin_exit_directions_check_box", settings_routing_restrict_pin_exit_directions_check_box.getText()));
     gridbag.setConstraints(settings_routing_restrict_pin_exit_directions_check_box, gridbag_constraints);
-    settings_routing_restrict_pin_exit_directions_check_box.setToolTipText(resources.getString("restrict_pin_exit_directions_tooltip"));
+    settings_routing_restrict_pin_exit_directions_check_box.setToolTipText(tm.getText("restrict_pin_exit_directions_tooltip"));
     main_panel.add(settings_routing_restrict_pin_exit_directions_check_box, gridbag_constraints);
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    JLabel pin_exit_edge_to_turn_label = new JLabel(resources.getString("pin_pad_to_turn_gap"));
+    JLabel pin_exit_edge_to_turn_label = new JLabel(tm.getText("pin_pad_to_turn_gap"));
     pin_exit_edge_to_turn_label.setToolTipText("pin_pad_to_turn_gap_tooltip");
     gridbag.setConstraints(pin_exit_edge_to_turn_label, gridbag_constraints);
     main_panel.add(pin_exit_edge_to_turn_label);
@@ -284,8 +280,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     JLabel pull_tight_region_label =
-        new JLabel(resources.getString("pull_tight_region"));
-    pull_tight_region_label.setToolTipText(resources.getString("pull_tight_region_tooltip"));
+        new JLabel(tm.getText("pull_tight_region"));
+    pull_tight_region_label.setToolTipText(tm.getText("pull_tight_region_tooltip"));
     gridbag.setConstraints(pull_tight_region_label, gridbag_constraints);
     main_panel.add(pull_tight_region_label);
 
@@ -307,7 +303,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
-    JButton settings_routing_detail_button = new JButton(resources.getString("detail_parameter"));
+    JButton settings_routing_detail_button = new JButton(tm.getText("detail_parameter"));
     this.detail_listener = new DetailListener();
     settings_routing_detail_button.addActionListener(detail_listener);
     settings_routing_detail_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_detail_button", settings_routing_detail_button.getText()));
@@ -466,8 +462,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (free_angle_traces_found) {
-        ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteParameter", current_locale);
-        String curr_message = resources.getString("change_snap_angle_90");
+        String curr_message = tm.getText("change_snap_angle_90");
         if (!WindowMessage.confirm(curr_message)) {
           refresh();
           return;
@@ -498,8 +493,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (free_angle_traces_found) {
-        ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteParameter", current_locale);
-        String curr_message = resources.getString("change_snap_angle_45");
+        String curr_message = tm.getText("change_snap_angle_45");
         if (!WindowMessage.confirm(curr_message)) {
           refresh();
           return;

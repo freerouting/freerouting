@@ -13,8 +13,6 @@ import java.util.ResourceBundle;
 public class ScreenMessages {
 
   private static final String empty_string = "            ";
-  private final ResourceBundle resources;
-  private final Locale locale;
   private final String active_layer_string;
   private final String target_layer_string;
   /** The number format for displaying the trace length */
@@ -40,11 +38,10 @@ public class ScreenMessages {
       JLabel p_mouse_position,
       JLabel p_unit_label,
       Locale p_locale) {
-    resources = ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
+
     tm = new TextManager(this.getClass(), p_locale);
-    locale = p_locale;
-    active_layer_string = resources.getString("current_layer") + " ";
-    target_layer_string = resources.getString("target_layer") + " ";
+    active_layer_string = tm.getText("current_layer") + " ";
+    target_layer_string = tm.getText("target_layer") + " ";
     this.errorLabel = errorLabel;
     this.warningLabel = warningLabel;
     status_field = p_status_field;
@@ -83,13 +80,13 @@ public class ScreenMessages {
     int found = p_found;
     int failed = p_not_found;
     int items_to_go = p_items_to_go;
-    add_field.setText(resources.getString("to_route") + " " + items_to_go);
+    add_field.setText(tm.getText("to_route") + " " + items_to_go);
     layer_field.setText(
-        resources.getString("found")
+        tm.getText("found")
             + " "
             + found
             + ", "
-            + resources.getString("failed")
+            + tm.getText("failed")
             + " "
             + failed);
   }
@@ -101,20 +98,20 @@ public class ScreenMessages {
     int items_to_go = p_items_to_go;
     int failed = p_failed;
     add_field.setText(
-        resources.getString("to_route")
+        tm.getText("to_route")
             + " "
             + items_to_go
             + ", "
-            + resources.getString("routed")
+            + tm.getText("routed")
             + " "
             + routed
             + ", ");
     layer_field.setText(
-        resources.getString("ripped")
+        tm.getText("ripped")
             + " "
             + ripped
             + ", "
-            + resources.getString("failed")
+            + tm.getText("failed")
             + " "
             + failed);
   }
@@ -122,20 +119,20 @@ public class ScreenMessages {
   public void set_batch_fanout_info(int p_pass_no, int p_components_to_go) {
     int components_to_go = p_components_to_go;
     int pass_no = p_pass_no;
-    add_field.setText(resources.getString("fanout_pass") + " " + pass_no + ": ");
+    add_field.setText(tm.getText("fanout_pass") + " " + pass_no + ": ");
     layer_field.setText(
-        resources.getString("still")
+        tm.getText("still")
             + " "
             + components_to_go
             + " "
-            + resources.getString("components"));
+            + tm.getText("components"));
   }
 
   public void set_post_route_info(int p_via_count, double p_trace_length, Unit unit) {
     int via_count = p_via_count;
-    add_field.setText(resources.getString("via_count") + " " + via_count);
+    add_field.setText(tm.getText("via_count") + " " + via_count);
     layer_field.setText(
-        resources.getString("trace_length") + " " + this.number_format.format(p_trace_length) + " " + unit);
+        tm.getText("trace_length") + " " + this.number_format.format(p_trace_length) + " " + unit);
   }
 
   /** Sets the displayed layer of the nearest target item in interactive routing. */
@@ -150,7 +147,7 @@ public class ScreenMessages {
     if (p_pos == null || this.mouse_position == null || this.write_protected) {
       return;
     }
-    this.mouse_position.setText(p_pos.to_string(this.locale, 2, 10));
+    this.mouse_position.setText(p_pos.to_string(this.tm.getLocale(), 2, 10));
   }
 
   public void set_unit_label(String p_unit) {

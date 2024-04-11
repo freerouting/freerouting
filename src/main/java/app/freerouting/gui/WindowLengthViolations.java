@@ -14,17 +14,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class WindowLengthViolations extends WindowObjectListWithFilter {
-
-  private final ResourceBundle resources;
-
+  
   /** Creates a new instance of WindowLengthViolations */
   public WindowLengthViolations(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowLengthViolations", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title"));
-    this.list_empty_message.setText(resources.getString("list_empty"));
+    this.setTitle(tm.getText("title"));
+    this.list_empty_message.setText(tm.getText("list_empty"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LengthViolations");
   }
 
@@ -90,17 +87,17 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
       if (violation_length > 0) {
         allowed_length =
             (float) coordinate_transform.board_to_user(net_class.get_maximum_trace_length());
-        allowed_string = " " + resources.getString("maximum_allowed") + " ";
+        allowed_string = " " + tm.getText("maximum_allowed") + " ";
       } else {
         allowed_length =
             (float) coordinate_transform.board_to_user(net_class.get_minimum_trace_length());
-        allowed_string = " " + resources.getString("minimum_allowed") + " ";
+        allowed_string = " " + tm.getText("minimum_allowed") + " ";
       }
       float length = (float) coordinate_transform.board_to_user(this.net.get_trace_length());
-      return resources.getString("net")
+      return tm.getText("net")
               + " "
               + this.net.name
-              + resources.getString("trace_length")
+              + tm.getText("trace_length")
               + " "
               + length
               + allowed_string

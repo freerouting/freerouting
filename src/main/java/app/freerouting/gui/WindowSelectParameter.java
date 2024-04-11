@@ -33,9 +33,8 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.board_handling = p_board_frame.board_panel.board_handling;
 
     setLanguage(p_board_frame.get_locale());
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowSelectParameter", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     // create main panel
 
@@ -51,14 +50,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     // Create buttongroup for the selection layers
 
     JLabel selection_layer_label =
-        new JLabel(resources.getString("selection_layers"));
+        new JLabel(tm.getText("selection_layers"));
     gridbag.setConstraints(selection_layer_label, gridbag_constraints);
     main_panel.add(selection_layer_label);
 
-    this.settings_select_all_visible_button = new JRadioButton(resources.getString("all_visible"));
-    settings_select_all_visible_button.setToolTipText(resources.getString("all_visible_tooltip"));
-    this.settings_select_current_only_button = new JRadioButton(resources.getString("current_only"));
-    settings_select_current_only_button.setToolTipText(resources.getString("current_only_tooltip"));
+    this.settings_select_all_visible_button = new JRadioButton(tm.getText("all_visible"));
+    settings_select_all_visible_button.setToolTipText(tm.getText("all_visible_tooltip"));
+    this.settings_select_current_only_button = new JRadioButton(tm.getText("current_only"));
+    settings_select_current_only_button.setToolTipText(tm.getText("current_only_tooltip"));
 
     settings_select_all_visible_button.addActionListener(new AllVisibleListener());
     settings_select_all_visible_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_select_all_visible_button", settings_select_all_visible_button.getText()));
@@ -82,7 +81,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     // Create check boxes for selectable items:
 
     JLabel selectable_items_label =
-        new JLabel(resources.getString("selectable_items"));
+        new JLabel(tm.getText("selectable_items"));
     gridbag.setConstraints(selectable_items_label, gridbag_constraints);
     main_panel.add(selectable_items_label);
 
@@ -93,7 +92,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     for (int i = 0; i < filter_values.length; ++i) {
       this.settings_select_item_selection_choices[i] =
-          new JCheckBox(resources.getString(filter_values[i].toString()));
+          new JCheckBox(tm.getText(filter_values[i].toString()));
       gridbag.setConstraints(this.settings_select_item_selection_choices[i], gridbag_constraints);
       main_panel.add(this.settings_select_item_selection_choices[i], gridbag_constraints);
       settings_select_item_selection_choices[i].addActionListener(new ItemSelectionListener(i));
@@ -107,8 +106,8 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     // Create buttongroup for the current layer:
 
     JLabel current_layer_label =
-        new JLabel(resources.getString("current_layer"));
-    current_layer_label.setToolTipText(resources.getString("current_layer_tooltip"));
+        new JLabel(tm.getText("current_layer"));
+    current_layer_label.setToolTipText(tm.getText("current_layer_tooltip"));
     gridbag.setConstraints(current_layer_label, gridbag_constraints);
     main_panel.add(current_layer_label);
 
@@ -125,7 +124,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       settings_select_layer_name_arr[i].setEnabled(curr_layer.is_signal);
       // Explain in a tooltip why the layer is disabled
       if (!curr_layer.is_signal) {
-        settings_select_layer_name_arr[i].setToolTipText(resources.getString("disabled_layer_tooltip"));
+        settings_select_layer_name_arr[i].setToolTipText(tm.getText("disabled_layer_tooltip"));
       }
       gridbag.setConstraints(settings_select_layer_name_arr[i], gridbag_constraints);
       main_panel.add(settings_select_layer_name_arr[i]);

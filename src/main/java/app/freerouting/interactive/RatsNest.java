@@ -11,6 +11,7 @@ import app.freerouting.board.Via;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -204,36 +205,37 @@ public class RatsNest {
       return this.net.name + ": " + item_info(from_item) + " - " + item_info(to_item);
     }
 
-    private String item_info(Item p_item) {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.interactive.RatsNest", this.locale);
+    private String item_info(Item p_item)
+    {
+      TextManager tm = new TextManager(this.getClass(), this.locale);
+      
       String result;
       if (p_item instanceof Pin) {
         Pin curr_pin = (Pin) p_item;
         result = curr_pin.component_name() + ", " + curr_pin.name();
       } else if (p_item instanceof Via) {
-        result = resources.getString("via");
+        result = tm.getText("via");
       } else if (p_item instanceof Trace) {
-        result = resources.getString("trace");
+        result = tm.getText("trace");
       } else if (p_item instanceof ConductionArea) {
-        result = resources.getString("conduction_area");
+        result = tm.getText("conduction_area");
       } else {
-        result = resources.getString("unknown");
+        result = tm.getText("unknown");
       }
       return result;
     }
 
     @Override
-    public void print_info(
-        ObjectInfoPanel p_window, Locale p_locale) {
-      ResourceBundle resources =
-          ResourceBundle.getBundle("app.freerouting.interactive.RatsNest", p_locale);
-      p_window.append_bold(resources.getString("incomplete"));
-      p_window.append(" " + resources.getString("net") + " ");
+    public void print_info(ObjectInfoPanel p_window, Locale p_locale)
+    {
+      TextManager tm = new TextManager(this.getClass(), p_locale);
+      
+      p_window.append_bold(tm.getText("incomplete"));
+      p_window.append(" " + tm.getText("net") + " ");
       p_window.append(net.name);
-      p_window.append(" " + resources.getString("from") + " ", "Incomplete Start Item", from_item);
+      p_window.append(" " + tm.getText("from") + " ", "Incomplete Start Item", from_item);
       p_window.append(from_corner);
-      p_window.append(" " + resources.getString("to") + " ", "Incomplete End Item", to_item);
+      p_window.append(" " + tm.getText("to") + " ", "Incomplete End Item", to_item);
       p_window.append(to_corner);
       p_window.newline();
     }

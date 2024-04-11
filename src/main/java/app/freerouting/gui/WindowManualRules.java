@@ -39,9 +39,9 @@ public class WindowManualRules extends BoardSavableSubWindow {
   public WindowManualRules(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowManualRule", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     // create main panel
 
@@ -53,7 +53,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag_constraints.anchor = GridBagConstraints.WEST;
 
-    JLabel via_rule_label = new JLabel(resources.getString("via_rule"));
+    JLabel via_rule_label = new JLabel(tm.getText("via_rule"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(via_rule_label, gridbag_constraints);
     main_panel.add(via_rule_label);
@@ -67,7 +67,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_via_rule_combo_box", settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedItem().toString()));
 
     JLabel class_label =
-        new JLabel(resources.getString("trace_clearance_class"));
+        new JLabel(tm.getText("trace_clearance_class"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(class_label, gridbag_constraints);
     main_panel.add(class_label);
@@ -85,7 +85,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
-    JLabel width_label = new JLabel(resources.getString("trace_width"));
+    JLabel width_label = new JLabel(tm.getText("trace_width"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(width_label, gridbag_constraints);
     main_panel.add(width_label);
@@ -102,7 +102,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     trace_width_field.addKeyListener(new TraceWidthFieldKeyListener());
     trace_width_field.addFocusListener(new TraceWidthFieldFocusListener());
 
-    JLabel layer_label = new JLabel(resources.getString("on_layer"));
+    JLabel layer_label = new JLabel(tm.getText("on_layer"));
     gridbag_constraints.gridwidth = 2;
     gridbag.setConstraints(layer_label, gridbag_constraints);
     main_panel.add(layer_label);

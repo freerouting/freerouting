@@ -37,20 +37,20 @@ public class WindowSnapshot extends BoardSavableSubWindow {
   private final BoardFrame board_frame;
   private final JList<SnapShot> list;
   private final JTextField name_field;
-  private final ResourceBundle resources;
   private DefaultListModel<SnapShot> list_model =
       new DefaultListModel<>();
   private int snapshot_count = 0;
 
   /** Creates a new instance of SnapshotFrame */
   public WindowSnapshot(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
+
     this.board_frame = p_board_frame;
     this.settings_window = new WindowSnapshotSettings(p_board_frame);
 
     setLanguage(p_board_frame.get_locale());
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowSnapshot", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -60,8 +60,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     main_panel.setLayout(new BorderLayout());
 
     // create goto button
-    JButton other_snapshots_goto_button = new JButton(resources.getString("goto_snapshot"));
-    other_snapshots_goto_button.setToolTipText(resources.getString("goto_tooltip"));
+    JButton other_snapshots_goto_button = new JButton(tm.getText("goto_snapshot"));
+    other_snapshots_goto_button.setToolTipText(tm.getText("goto_tooltip"));
     GotoListener goto_listener = new GotoListener();
     other_snapshots_goto_button.addActionListener(goto_listener);
     other_snapshots_goto_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_goto_button", other_snapshots_goto_button.getText()));
@@ -100,18 +100,18 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     add_panel.setLayout(new BorderLayout());
     south_panel.add(add_panel);
 
-    JButton other_snapshots_add_button = new JButton(resources.getString("create"));
+    JButton other_snapshots_add_button = new JButton(tm.getText("create"));
     AddListener add_listener = new AddListener();
     other_snapshots_add_button.addActionListener(add_listener);
     other_snapshots_add_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_add_button", other_snapshots_add_button.getText()));
     add_panel.add(other_snapshots_add_button, BorderLayout.WEST);
 
     this.name_field = new JTextField(10);
-    name_field.setText(resources.getString("snapshot") + " 1");
+    name_field.setText(tm.getText("snapshot") + " 1");
     add_panel.add(name_field, BorderLayout.EAST);
 
     // create delete buttons
-    JButton other_snapshots_delete_button = new JButton(resources.getString("remove"));
+    JButton other_snapshots_delete_button = new JButton(tm.getText("remove"));
     DeleteListener delete_listener = new DeleteListener();
     other_snapshots_delete_button.addActionListener(delete_listener);
     other_snapshots_delete_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_delete_button", other_snapshots_delete_button.getText()));
@@ -119,7 +119,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     south_panel.add(other_snapshots_delete_button);
 
     JButton other_snapshots_delete_all_button =
-        new JButton(resources.getString("remove_all"));
+        new JButton(tm.getText("remove_all"));
     DeleteAllListener delete_all_listener = new DeleteAllListener();
     other_snapshots_delete_all_button.addActionListener(delete_all_listener);
     other_snapshots_delete_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_delete_all_button", other_snapshots_delete_all_button.getText()));
@@ -127,8 +127,8 @@ public class WindowSnapshot extends BoardSavableSubWindow {
     south_panel.add(other_snapshots_delete_all_button);
 
     // create button for the snapshot settings
-    JButton other_snapshots_settings_button = new JButton(resources.getString("settings"));
-    other_snapshots_settings_button.setToolTipText(resources.getString("settings_tooltip"));
+    JButton other_snapshots_settings_button = new JButton(tm.getText("settings"));
+    other_snapshots_settings_button.setToolTipText(tm.getText("settings_tooltip"));
     SettingsListener settings_listener = new SettingsListener();
     other_snapshots_settings_button.addActionListener(settings_listener);
     other_snapshots_settings_button.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_button", other_snapshots_settings_button.getText()));
@@ -297,7 +297,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
         ++snapshot_count;
         list_model.addElement(new_snapshot);
         String next_default_name =
-            resources.getString("snapshot")
+            tm.getText("snapshot")
                 + " "
                 + (snapshot_count + 1);
         name_field.setText(next_default_name);

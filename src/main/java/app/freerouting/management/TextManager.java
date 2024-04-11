@@ -204,5 +204,9 @@ public class TextManager {
 
     // Handle other components like JLabel, JTextArea, etc.
   }
+
+  public Locale getLocale() {
+    return currentLocale;
+  }
 }
 

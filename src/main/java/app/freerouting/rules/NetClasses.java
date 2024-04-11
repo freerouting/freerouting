@@ -49,8 +49,7 @@ public class NetClasses implements Serializable {
       LayerStructure p_layer_structure,
       ClearanceMatrix p_clearance_matrix,
       Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.rules.Rules", p_locale);
     String name_front = resources.getString("class");
     String new_name;
     int index = 0;

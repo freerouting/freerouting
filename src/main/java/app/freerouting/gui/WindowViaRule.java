@@ -31,7 +31,7 @@ public class WindowViaRule extends WindowBase {
   private final JPanel main_panel;
   private final JList<ViaInfo> rule_list;
   private final DefaultListModel<ViaInfo> rule_list_model;
-  private final ResourceBundle resources;
+
   /** Creates a new instance of ViaRuleWindow */
   public WindowViaRule(ViaRule p_via_rule, ViaInfos p_via_list, BoardFrame p_board_frame) {
     super(300, 150);
@@ -40,9 +40,8 @@ public class WindowViaRule extends WindowBase {
     this.via_list = p_via_list;
 
     setLanguage(p_board_frame.get_locale());
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowViaRule", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title") + " " + p_via_rule.name);
+    this.setTitle(tm.getText("title") + " " + p_via_rule.name);
 
     this.main_panel = new JPanel();
     main_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -70,37 +69,37 @@ public class WindowViaRule extends WindowBase {
     button_panel.setLayout(gridbag);
     GridBagConstraints gridbag_constraints = new GridBagConstraints();
 
-    final JButton rules_vias_rules_edit_append_button = new JButton(resources.getString("append"));
+    final JButton rules_vias_rules_edit_append_button = new JButton(tm.getText("append"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag.setConstraints(rules_vias_rules_edit_append_button, gridbag_constraints);
-    rules_vias_rules_edit_append_button.setToolTipText(resources.getString("append_tooltip"));
+    rules_vias_rules_edit_append_button.setToolTipText(tm.getText("append_tooltip"));
     rules_vias_rules_edit_append_button.addActionListener(new AppendListener());
     rules_vias_rules_edit_append_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_append_button", rules_vias_rules_edit_append_button.getText()));
     button_panel.add(rules_vias_rules_edit_append_button);
 
     final JButton rules_vias_rules_edit_remove_button =
-        new JButton(resources.getString("remove"));
+        new JButton(tm.getText("remove"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(rules_vias_rules_edit_remove_button, gridbag_constraints);
-    rules_vias_rules_edit_remove_button.setToolTipText(resources.getString("remove_tooltip"));
+    rules_vias_rules_edit_remove_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_vias_rules_edit_remove_button.addActionListener(new DeleteListener());
     rules_vias_rules_edit_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_remove_button", rules_vias_rules_edit_remove_button.getText()));
     button_panel.add(rules_vias_rules_edit_remove_button);
 
     final JButton rules_vias_rules_edit_move_up_button =
-        new JButton(resources.getString("move_up"));
+        new JButton(tm.getText("move_up"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag.setConstraints(rules_vias_rules_edit_move_up_button, gridbag_constraints);
-    rules_vias_rules_edit_move_up_button.setToolTipText(resources.getString("move_up_tooltip"));
+    rules_vias_rules_edit_move_up_button.setToolTipText(tm.getText("move_up_tooltip"));
     rules_vias_rules_edit_move_up_button.addActionListener(new MoveUpListener());
     rules_vias_rules_edit_move_up_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_up_button", rules_vias_rules_edit_move_up_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_up_button);
 
     final JButton rules_vias_rules_edit_move_down_button =
-        new JButton(resources.getString("move_down"));
+        new JButton(tm.getText("move_down"));
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(rules_vias_rules_edit_move_down_button, gridbag_constraints);
-    rules_vias_rules_edit_move_down_button.setToolTipText(resources.getString("move_down_tooltip"));
+    rules_vias_rules_edit_move_down_button.setToolTipText(tm.getText("move_down_tooltip"));
     rules_vias_rules_edit_move_down_button.addActionListener(new MoveDownListener());
     rules_vias_rules_edit_move_down_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_down_button", rules_vias_rules_edit_move_down_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_down_button);
@@ -148,8 +147,8 @@ public class WindowViaRule extends WindowBase {
       Object selected_value =
           JOptionPane.showInputDialog(
               null,
-              resources.getString("choose_via_to_append"),
-              resources.getString("append_via_to_rule"),
+              tm.getText("choose_via_to_append"),
+              tm.getText("append_via_to_rule"),
               JOptionPane.INFORMATION_MESSAGE,
               null,
               possible_values,
@@ -168,11 +167,11 @@ public class WindowViaRule extends WindowBase {
       ViaInfo selected_via = rule_list.getSelectedValue();
       if (selected_via != null) {
         String message =
-            resources.getString("remove_2")
+            tm.getText("remove_2")
                 + " "
                 + selected_via.get_name()
                 + " "
-                + resources.getString("from_the_rule")
+                + tm.getText("from_the_rule")
                 + " "
                 + via_rule.name
                 + "?";

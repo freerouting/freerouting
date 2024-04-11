@@ -17,13 +17,13 @@ public class WindowObjectVisibility extends WindowVisibility {
 
   /** Returns a new instance of ItemVisibilityFrame */
   public static WindowObjectVisibility get_instance(BoardFrame p_board_frame) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowObjectVisibility", p_board_frame.get_locale());
+    TextManager tm = new TextManager(WindowObjectVisibility.class, p_board_frame.get_locale());
 
-    String title = resources.getString("title");
-    String header_message = resources.getString("header_message");
+    String title = tm.getText("title");
+    String header_message = tm.getText("header_message");
     String[] message_arr = new String[ObjectNames.values().length];
     for (int i = 0; i < message_arr.length; ++i) {
-      message_arr[i] = resources.getString(ObjectNames.values()[i].toString());
+      message_arr[i] = tm.getText(ObjectNames.values()[i].toString());
     }
     WindowObjectVisibility result = new WindowObjectVisibility(p_board_frame, title, header_message, message_arr);
     p_board_frame.set_context_sensitive_help(result, "WindowDisplay_ObjectVisibility");

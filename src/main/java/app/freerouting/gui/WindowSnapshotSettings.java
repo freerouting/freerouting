@@ -38,9 +38,8 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     this.board_handling = p_board_frame.board_panel.board_handling;
 
     setLanguage(p_board_frame.get_locale());
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowSnapshotSettings", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     // create main panel
 
@@ -55,7 +54,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
 
     // add check box for the object colors
 
-    this.other_snapshots_settings_object_color_check_box = new JCheckBox(resources.getString("object_colors"));
+    this.other_snapshots_settings_object_color_check_box = new JCheckBox(tm.getText("object_colors"));
     gridbag.setConstraints(other_snapshots_settings_object_color_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_object_color_check_box, gridbag_constraints);
     other_snapshots_settings_object_color_check_box.addActionListener(new ObjectColorListener());
@@ -64,7 +63,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the object visibility
 
     this.other_snapshots_settings_object_visibility_check_box =
-        new JCheckBox(resources.getString("object_visibility"));
+        new JCheckBox(tm.getText("object_visibility"));
     gridbag.setConstraints(other_snapshots_settings_object_visibility_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_object_visibility_check_box, gridbag_constraints);
     other_snapshots_settings_object_visibility_check_box.addActionListener(new ObjectVisibilityListener());
@@ -73,7 +72,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the layer visibility
 
     this.other_snapshots_settings_layer_visibility_check_box =
-        new JCheckBox(resources.getString("layer_visibility"));
+        new JCheckBox(tm.getText("layer_visibility"));
     gridbag.setConstraints(other_snapshots_settings_layer_visibility_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_layer_visibility_check_box, gridbag_constraints);
     other_snapshots_settings_layer_visibility_check_box.addActionListener(new LayerVisibilityListener());
@@ -82,7 +81,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for display region
 
     this.other_snapshots_settings_display_region_check_box =
-        new JCheckBox(resources.getString("display_region"));
+        new JCheckBox(tm.getText("display_region"));
     gridbag.setConstraints(other_snapshots_settings_display_region_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_display_region_check_box, gridbag_constraints);
     other_snapshots_settings_display_region_check_box.addActionListener(new DisplayRegionListener());
@@ -96,7 +95,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the interactive state
 
     this.other_snapshots_settings_interactive_state_check_box =
-        new JCheckBox(resources.getString("interactive_state"));
+        new JCheckBox(tm.getText("interactive_state"));
     gridbag.setConstraints(other_snapshots_settings_interactive_state_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_interactive_state_check_box, gridbag_constraints);
     other_snapshots_settings_interactive_state_check_box.addActionListener(new InteractiveStateListener());
@@ -109,7 +108,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the selection layers
 
     this.other_snapshots_settings_selection_layers_check_box =
-        new JCheckBox(resources.getString("selection_layers"));
+        new JCheckBox(tm.getText("selection_layers"));
     gridbag.setConstraints(other_snapshots_settings_selection_layers_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_selection_layers_check_box, gridbag_constraints);
     other_snapshots_settings_selection_layers_check_box.addActionListener(new SelectionLayersListener());
@@ -118,7 +117,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the selectable items
 
     this.other_snapshots_settings_selectable_items_check_box =
-        new JCheckBox(resources.getString("selectable_items"));
+        new JCheckBox(tm.getText("selectable_items"));
     gridbag.setConstraints(other_snapshots_settings_selectable_items_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_selectable_items_check_box, gridbag_constraints);
     other_snapshots_settings_selectable_items_check_box.addActionListener(new SelectableItemsListener());
@@ -126,7 +125,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
 
     // add check box for the current layer
 
-    this.other_snapshots_settings_current_layer_check_box = new JCheckBox(resources.getString("current_layer"));
+    this.other_snapshots_settings_current_layer_check_box = new JCheckBox(tm.getText("current_layer"));
     gridbag.setConstraints(other_snapshots_settings_current_layer_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_current_layer_check_box, gridbag_constraints);
     other_snapshots_settings_current_layer_check_box.addActionListener(new CurrentLayerListener());
@@ -139,7 +138,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the rule selection
 
     this.other_snapshots_settings_rule_selection_check_box =
-        new JCheckBox(resources.getString("rule_selection"));
+        new JCheckBox(tm.getText("rule_selection"));
     gridbag.setConstraints(other_snapshots_settings_rule_selection_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_rule_selection_check_box, gridbag_constraints);
     other_snapshots_settings_rule_selection_check_box.addActionListener(new RuleSelectionListener());
@@ -148,7 +147,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the manual rule settings
 
     this.other_snapshots_settings_manual_rule_settings_check_box =
-        new JCheckBox(resources.getString("manual_rule_settings"));
+        new JCheckBox(tm.getText("manual_rule_settings"));
     gridbag.setConstraints(other_snapshots_settings_manual_rule_settings_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_manual_rule_settings_check_box, gridbag_constraints);
     other_snapshots_settings_manual_rule_settings_check_box.addActionListener(new ManualRuleSettingsListener());
@@ -157,7 +156,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for push and shove enabled
 
     this.other_snapshots_settings_push_and_shove_enabled_check_box =
-        new JCheckBox(resources.getString("push&shove_enabled"));
+        new JCheckBox(tm.getText("push&shove_enabled"));
     gridbag.setConstraints(other_snapshots_settings_push_and_shove_enabled_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_push_and_shove_enabled_check_box, gridbag_constraints);
     other_snapshots_settings_push_and_shove_enabled_check_box.addActionListener(new PushAndShoveEnabledListener());
@@ -166,7 +165,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for drag components enabled
 
     this.other_snapshots_settings_drag_components_enabled_check_box =
-        new JCheckBox(resources.getString("drag_components_enabled"));
+        new JCheckBox(tm.getText("drag_components_enabled"));
     gridbag.setConstraints(other_snapshots_settings_drag_components_enabled_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_drag_components_enabled_check_box, gridbag_constraints);
     other_snapshots_settings_drag_components_enabled_check_box.addActionListener(new DragComponentsEnabledListener());
@@ -175,7 +174,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the pull tight region
 
     this.other_snapshots_settings_pull_tight_region_check_box =
-        new JCheckBox(resources.getString("pull_tight_region"));
+        new JCheckBox(tm.getText("pull_tight_region"));
     gridbag.setConstraints(other_snapshots_settings_pull_tight_region_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_pull_tight_region_check_box, gridbag_constraints);
     other_snapshots_settings_pull_tight_region_check_box.addActionListener(new PullTightRegionListener());
@@ -188,7 +187,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the component grid
 
     this.other_snapshots_settings_component_grid_check_box =
-        new JCheckBox(resources.getString("component_grid"));
+        new JCheckBox(tm.getText("component_grid"));
     gridbag.setConstraints(other_snapshots_settings_component_grid_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_component_grid_check_box, gridbag_constraints);
     other_snapshots_settings_component_grid_check_box.addActionListener(new ComponentGridListener());
@@ -201,7 +200,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
     // add check box for the info list filters
 
     this.other_snapshots_settings_info_list_filter_check_box =
-        new JCheckBox(resources.getString("info_list_selections"));
+        new JCheckBox(tm.getText("info_list_selections"));
     gridbag.setConstraints(other_snapshots_settings_info_list_filter_check_box, gridbag_constraints);
     main_panel.add(other_snapshots_settings_info_list_filter_check_box, gridbag_constraints);
     other_snapshots_settings_info_list_filter_check_box.addActionListener(new InfoListFilterListener());

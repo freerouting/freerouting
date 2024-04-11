@@ -33,8 +33,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
   public WindowRouteDetail(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteDetail", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     // create main panel
 
@@ -49,17 +48,17 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     // add label and button group for the clearance compensation.
 
     JLabel clearance_compensation_label =
-        new JLabel(resources.getString("clearance_compensation"));
+        new JLabel(tm.getText("clearance_compensation"));
     clearance_compensation_label.setToolTipText(
-        resources.getString("clearance_compensation_tooltip"));
+        tm.getText("clearance_compensation_tooltip"));
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(clearance_compensation_label, gridbag_constraints);
     main_panel.add(clearance_compensation_label);
 
-    route_detail_on_button = new JRadioButton(resources.getString("on"));
-    route_detail_off_button = new JRadioButton(resources.getString("off"));
+    route_detail_on_button = new JRadioButton(tm.getText("on"));
+    route_detail_off_button = new JRadioButton(tm.getText("off"));
 
     route_detail_on_button.addActionListener(new CompensationOnListener());
     route_detail_on_button.addActionListener(evt -> FRAnalytics.buttonClicked("route_detail_on_button", route_detail_on_button.getText()));
@@ -86,8 +85,8 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     // add label and slider for the pull tight accuracy.
 
     JLabel pull_tight_accuracy_label =
-        new JLabel(resources.getString("pull_tight_accuracy"));
-    pull_tight_accuracy_label.setToolTipText(resources.getString("pull_tight_accuracy_tooltip"));
+        new JLabel(tm.getText("pull_tight_accuracy"));
+    pull_tight_accuracy_label.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
     gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag.setConstraints(pull_tight_accuracy_label, gridbag_constraints);
     main_panel.add(pull_tight_accuracy_label);
@@ -104,12 +103,12 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
 
     // add switch to define, if keepout is generated outside the outline.
 
-    route_detail_outline_keepout_check_box = new JCheckBox(resources.getString("keepout_outside_outline"));
+    route_detail_outline_keepout_check_box = new JCheckBox(tm.getText("keepout_outside_outline"));
     route_detail_outline_keepout_check_box.setSelected(false);
     route_detail_outline_keepout_check_box.addActionListener(new OutLineKeepoutListener());
     route_detail_outline_keepout_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("route_detail_outline_keepout_check_box", route_detail_outline_keepout_check_box.getText()));
     gridbag.setConstraints(route_detail_outline_keepout_check_box, gridbag_constraints);
-    route_detail_outline_keepout_check_box.setToolTipText(resources.getString("keepout_outside_outline_tooltip"));
+    route_detail_outline_keepout_check_box.setToolTipText(tm.getText("keepout_outside_outline_tooltip"));
     main_panel.add(route_detail_outline_keepout_check_box, gridbag_constraints);
 
     separator = new JLabel();
