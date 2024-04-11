@@ -404,7 +404,7 @@ public class ShapeTraceEntries {
               int projection_side = offset_shape.contains_on_border_line_no(projection);
               int trace_line_segment_no;
               // the following may not be correct because the trace may not contain a suitable
-              // line for the construction oof the end line of the substitute trace.
+              // line for the construction of the end line of the substitute trace.
               if (i == 0) {
                 trace_line_segment_no = 0;
               } else {
@@ -725,7 +725,7 @@ public class ShapeTraceEntries {
     }
     --trace_piece_count;
     if (first.trace.nets_equal(this.own_net_nos)) {
-      // own net is ignored and nay occur only at the lowest level
+      // own net is ignored and may occur only at the lowest level
       result = pop_piece();
     }
     return result;
