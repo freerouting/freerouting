@@ -7,6 +7,7 @@ import app.freerouting.board.Via;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.BoardHandling;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
 
 import java.util.Collection;
@@ -17,18 +18,17 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class WindowRouteStubs extends WindowObjectListWithFilter {
-
-  private final ResourceBundle resources;
-
+public class WindowRouteStubs extends CleanupWindows {
+  
   /** Creates a new instance of WindowRouteStubs */
   public WindowRouteStubs(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.CleanupWindows", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("route_stubs"));
-    this.list_empty_message.setText(resources.getString("no_route_stubs_found"));
+    this.tm = new TextManager(CleanupWindows.class, p_board_frame.get_locale());
+
+    this.setTitle(tm.getText("route_stubs"));
+    this.list_empty_message.setText(tm.getText("no_route_stubs_found"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_RouteStubs");
   }
 
@@ -138,9 +138,9 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
     public String toString() {
       String item_string;
       if (this.stub_item instanceof Trace) {
-        item_string = resources.getString("trace");
+        item_string = tm.getText("trace");
       } else {
-        item_string = resources.getString("via");
+        item_string = tm.getText("via");
       }
       String layer_name =
           board_frame.board_panel.board_handling.get_routing_board()
@@ -149,15 +149,15 @@ public class WindowRouteStubs extends WindowObjectListWithFilter {
               .name;
       return item_string
               + " "
-              + resources.getString("stub_net")
+              + tm.getText("stub_net")
               + " "
               + this.net.name
               + " "
-              + resources.getString("at")
+              + tm.getText("at")
               + " "
               + this.location.to_string(board_frame.get_locale())
               + " "
-              + resources.getString("on_layer")
+              + tm.getText("on_layer")
               + " "
               + layer_name;
     }

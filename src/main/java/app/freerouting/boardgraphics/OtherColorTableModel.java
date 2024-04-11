@@ -1,5 +1,6 @@
 package app.freerouting.boardgraphics;
 
+import app.freerouting.management.TextManager;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,8 +46,8 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
 
   @Override
   public String getColumnName(int p_col) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.boardgraphics.ColorTableModel", this.locale);
-    return resources.getString(ColumnNames.values()[p_col].toString());
+    TextManager tm = new TextManager(ColorTableModel.class, this.locale);
+    return tm.getText(ColumnNames.values()[p_col].toString());
   }
 
   @Override

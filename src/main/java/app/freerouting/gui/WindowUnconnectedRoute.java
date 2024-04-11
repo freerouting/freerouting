@@ -6,6 +6,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
 
 import java.util.Collection;
@@ -15,19 +16,19 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
+public class WindowUnconnectedRoute extends CleanupWindows {
 
-  private final ResourceBundle resources;
   private int max_unconnected_route_info_id_no = 0;
 
   /** Creates a new instance of WindowUnconnectedRoute */
   public WindowUnconnectedRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.CleanupWindows", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("unconnected_route"));
-    this.list_empty_message.setText(resources.getString("no_unconnected_route_found"));
+    this.tm = new TextManager(CleanupWindows.class, p_board_frame.get_locale());
+
+    this.setTitle(tm.getText("unconnected_route"));
+    this.list_empty_message.setText(tm.getText("no_unconnected_route_found"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_UnconnectedRoute");
   }
 
@@ -125,15 +126,15 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter {
 
     @Override
     public String toString() {
-      return resources.getString("net")
+      return tm.getText("net")
               + " "
               + this.net.name
               + ": "
-              + resources.getString("trace_count")
+              + tm.getText("trace_count")
               + " "
               + this.trace_count
               + ", "
-              + resources.getString("via_count")
+              + tm.getText("via_count")
               + " "
               + this.via_count;
     }
