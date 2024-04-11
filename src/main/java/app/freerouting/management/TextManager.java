@@ -22,7 +22,8 @@ import javax.swing.JToggleButton;
 public class TextManager {
   private Locale currentLocale;
   private String currentBaseName;
-  private ResourceBundle messages;
+  private ResourceBundle defaultMessages;
+  private ResourceBundle classMessages;
   private Font materialDesignIcons = null;
   // A key-value pair for icon names and their corresponding unicode characters
   private Map<String, Integer> iconMap = new HashMap<>()
@@ -64,35 +65,33 @@ public class TextManager {
 
     try
     {
-      ResourceBundle defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", currentLocale);
-
-      ResourceBundle classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
-
-      // merge the default messages with the current class' messages
-      this.messages = new ResourceBundle() {
-        @Override
-        protected Object handleGetObject(String key) {
-          if (classMessages.containsKey(key)) {
-            return classMessages.getObject(key);
-          } else {
-            return defaultMessages.getObject(key);
-          }
-        }
-
-        @Override
-        public boolean containsKey(String key) {
-          return classMessages.containsKey(key) || defaultMessages.containsKey(key);
-        }
-
-        @Override
-        public Enumeration<String> getKeys() {
-          return classMessages.getKeys();
-        }
-      };
-
+      defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", currentLocale);
     } catch (Exception e)
     {
-      FRLogger.error("There was a problem loading the resource bundle '" + currentBaseName + "' of locale '" + currentLocale + "'", null);
+      FRLogger.warn("There was a problem loading the resource bundle 'app.freerouting.Common' of locale '" + currentLocale + "'");
+      try {
+        defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", Locale.forLanguageTag("en-US"));
+      } catch (Exception ex)
+      {
+        defaultMessages = null;
+        FRLogger.error("There was a problem loading the resource bundle 'app.freerouting.Common' of locale 'en-US'",null);
+      }
+    }
+
+    try
+    {
+      classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
+    } catch (Exception e)
+    {
+      //FRLogger.warn("There was a problem loading the resource bundle '" + currentBaseName + "' of locale '" + currentLocale + "'");
+      try
+      {
+        classMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en-US"));
+      } catch (Exception ex)
+      {
+        classMessages = null;
+        //FRLogger.error("There was a problem loading the resource bundle '" + currentBaseName + "' of locale 'en-US'",null);
+      }
     }
   }
 
@@ -102,13 +101,16 @@ public class TextManager {
   }
 
   public String getText(String key, String... args) {
-    // if the key is not found, return an empty string
-    if ((messages == null) || (!messages.containsKey(key)))
+    String text;
+    if ((classMessages != null) && (classMessages.containsKey(key)))
     {
+      text = classMessages.getString(key);
+    } else if ((defaultMessages != null) && (defaultMessages.containsKey(key)))
+    {
+      text = defaultMessages.getString(key);
+    } else {
       return key;
     }
-
-    String text = messages.getString(key);
 
     // Pattern to match {{variable_name}} placeholders
     Pattern pattern = Pattern.compile("\\{\\{(.+?)\\}\\}");
@@ -201,7 +203,6 @@ public class TextManager {
       String componentType = component.getClass().getName();
       FRLogger.warn("The component type '" + componentType + "' is not supported");
     }
-
 
     // Handle other components like JLabel, JTextArea, etc.
   }
