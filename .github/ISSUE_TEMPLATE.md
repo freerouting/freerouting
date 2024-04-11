@@ -5,7 +5,7 @@
 
 * What EDA do you use? KiCad, KiCad with freerouting plugin, EAGLE, EasyEDA, other? What is its exact version?
 
-* What types of files are you working with? Can you attach the project files (.pro, .kicad_pcb, etc) or the exported DSN file?
+* What types of files are you working with? Can you attach the project files (.pro, .kicad_pcb, etc) or the exported DSN file? (Please note that GitHub doesn't allow DSN file uploads, so you need to ZIP it before uploading.)
 
 * Did you use any command line arguments?
 

@@ -7,27 +7,26 @@ import app.freerouting.autoroute.BatchOptRouteMT;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
-import app.freerouting.tests.Validate;
+import app.freerouting.tests.BoardValidator;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ResourceBundle;
 
-/** GUI interactive thread for the batch autorouter. */
-public class BatchAutorouterThread extends InteractiveActionThread {
+/** GUI interactive thread for the batch auto-router + route optimizer. */
+public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
   private final BatchAutorouter batch_autorouter;
   private final BatchOptRoute batch_opt_route;
   boolean save_intermediate_stages;
   float optimization_improvement_threshold;
 
-  /** Creates a new instance of BatchAutorouterThread */
-  protected BatchAutorouterThread(BoardHandling p_board_handling) {
+  /** Creates a new instance of AutorouterAndRouteOptimizerThread */
+  protected AutorouterAndRouteOptimizerThread(BoardHandling p_board_handling) {
     super(p_board_handling);
     AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
     this.batch_autorouter =
@@ -157,14 +156,10 @@ public class BatchAutorouterThread extends InteractiveActionThread {
 
         double percentage_improvement =
             (via_count_before != 0 && trace_length_before != 0)
-                ? 1.0
-                    - ((((via_count_after / via_count_before)
-                            + (trace_length_after / trace_length_before))
-                        / 2))
+                ? 1.0 - (((((float)via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2))
                 : 0;
 
-        double routeOptimizationSecondsToComplete =
-            FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
+        double routeOptimizationSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
         FRLogger.info(
             "Route optimization was completed in "
                 + FRLogger.formatDuration(routeOptimizationSecondsToComplete)
@@ -189,12 +184,9 @@ public class BatchAutorouterThread extends InteractiveActionThread {
       }
 
       hdlg.get_panel().board_frame.refresh_windows();
-      if (hdlg.get_routing_board().rules.get_trace_angle_restriction()
-              == AngleRestriction.FORTYFIVE_DEGREE
-          && hdlg.get_routing_board().get_test_level()
-              != TestLevel.RELEASE_VERSION) {
-        Validate.multiple_of_45_degree(
-            "after autoroute: ", hdlg.get_routing_board());
+      if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
+      {
+        BoardValidator.doAllTracesHaveAnglesThatAreMultiplesOfFortyFiveDegrees("after autoroute: ", hdlg.get_routing_board());
       }
     } catch (Exception e) {
       FRLogger.error(e.getLocalizedMessage(), e);

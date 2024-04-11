@@ -213,7 +213,7 @@ public class ForcedViaAlgo {
         p_location,
         p_net_no_arr,
         p_via_info.get_clearance_class(),
-        FixedState.UNFIXED,
+        FixedState.NOT_FIXED,
         p_via_info.attach_smd_allowed());
     return true;
   }

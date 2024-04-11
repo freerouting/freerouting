@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatPoint;
 
+import app.freerouting.management.TextManager;
 import javax.swing.JLabel;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -27,6 +28,7 @@ public class ScreenMessages {
   private final JLabel unit_label;
   private String prev_target_layer_name = empty_string;
   private boolean write_protected = false;
+  private final TextManager tm;
 
   /** Creates a new instance of ScreenMessages */
   public ScreenMessages(
@@ -38,8 +40,8 @@ public class ScreenMessages {
       JLabel p_mouse_position,
       JLabel p_unit_label,
       Locale p_locale) {
-    resources =
-        ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
+    resources = ResourceBundle.getBundle("app.freerouting.interactive.ScreenMessages", p_locale);
+    tm = new TextManager(this.getClass(), p_locale);
     locale = p_locale;
     active_layer_string = resources.getString("current_layer") + " ";
     target_layer_string = resources.getString("target_layer") + " ";

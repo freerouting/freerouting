@@ -31,8 +31,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("clearance_violation_2"));
     p_window.append(" " + resources.getString("at") + " ");
     p_window.append(shape.centre_of_gravity());

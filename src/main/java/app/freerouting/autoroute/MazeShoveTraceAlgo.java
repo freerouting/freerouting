@@ -5,7 +5,6 @@ import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.ShoveTraceAlgo;
-import app.freerouting.board.TestLevel;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -258,9 +257,7 @@ public class MazeShoveTraceAlgo {
         // check, that curr_door is on the same border_line as p_from_door.
         FloatLine curr_door_segment = curr_door_shape.diagonal_corner_segment();
         if (curr_door_segment == null) {
-          if (p_board.get_test_level() == TestLevel.ALL_DEBUGGING_OUTPUT) {
-            FRLogger.warn("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
-          }
+          FRLogger.trace("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
           continue;
         }
         Side start_corner_side_of_trace_line = shove_line.side_of(curr_door_segment.a, 0);

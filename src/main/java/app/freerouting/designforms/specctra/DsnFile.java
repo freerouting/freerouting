@@ -6,7 +6,6 @@ import app.freerouting.board.BoardOutline;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.Item;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.datastructures.IndentFileWriter;
@@ -37,8 +36,7 @@ public class DsnFile {
       InputStream p_input_stream,
       IBoardHandling p_board_handling,
       BoardObservers p_observers,
-      IdNoGenerator p_item_id_no_generator,
-      TestLevel p_test_level) {
+      IdNoGenerator p_item_id_no_generator) {
     IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
     Object curr_token;
     for (int i = 0; i < 3; ++i) {
@@ -61,8 +59,7 @@ public class DsnFile {
       }
     }
     ReadScopeParameter read_scope_par =
-        new ReadScopeParameter(
-            scanner, p_board_handling, p_observers, p_item_id_no_generator, p_test_level);
+        new ReadScopeParameter(scanner, p_board_handling, p_observers, p_item_id_no_generator);
     boolean read_ok = Keyword.PCB_SCOPE.read_scope(read_scope_par);
     ReadResult result;
     if (read_ok) {
@@ -195,19 +192,18 @@ public class DsnFile {
       OutputStream p_file,
       String p_design_name,
       boolean p_compat_mode) {
-    // app.freerouting.tests.Validate.check("before writing dsn", p_board);
     IndentFileWriter output_file = new IndentFileWriter(p_file);
 
     try {
       write_pcb_scope(p_board_handling, output_file, p_design_name, p_compat_mode);
     } catch (IOException e) {
-      FRLogger.error("unable to write dsn file", e);
+      FRLogger.error("unable to write Specctra DSN file", e);
       return false;
     }
     try {
       output_file.close();
     } catch (IOException e) {
-      FRLogger.error("unable to close dsn file", e);
+      FRLogger.error("unable to close Specctra DSN file", e);
       return false;
     }
     return true;

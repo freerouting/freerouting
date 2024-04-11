@@ -225,8 +225,7 @@ public class Via extends DrillItem implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via"));
     p_window.append(" " + resources.getString("at") + " ");
     p_window.append(this.get_center().to_float());
@@ -234,6 +233,21 @@ public class Via extends DrillItem implements Serializable {
     p_window.append(padstack.name, resources.getString("padstack_info"), padstack);
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
+  }
+  @Override
+  public String get_hover_info(Locale p_locale) {
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    String hover_info = 
+        resources.getString("via") + " " + 
+        resources.getString("padstack") + " : " + padstack.name + " " +
+        resources.getString("layer") + " " +
+        padstack.from_layer() + " " +
+        resources.getString("to") + " " +
+        resources.getString("layer") + " " +
+        padstack.to_layer() + " " + 
+        this.get_connectable_item_hover_info(p_locale);
+         
+    return hover_info;
   }
 
   @Override

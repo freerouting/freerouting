@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /** Contains the information of a Specctra Class scope. */
 public class NetClass {
@@ -57,26 +58,12 @@ public class NetClass {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
       String class_name = p_scanner.next_string();
 
-      Object next_token;
       Collection<String> net_list = new LinkedList<>();
       boolean rules_missing = false;
       // read the nets belonging to the class
-      for (; ; ) {
-        p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-        next_token = p_scanner.next_token();
-        if (next_token == Keyword.OPEN_BRACKET) {
-          break;
-        }
-        if (next_token == Keyword.CLOSED_BRACKET) {
-          rules_missing = true;
-          break;
-        }
-        if (!(next_token instanceof String)) {
-          FRLogger.warn("NetClass.read_scope: String expected at '" + p_scanner.get_scope_identifier() + "'");
-          return null;
-        }
-        net_list.add((String) next_token);
-      }
+      String[] netsInTheClass = p_scanner.next_string_list();
+      net_list.addAll(List.of(netsInTheClass));
+
       Collection<Rule> rules = new LinkedList<>();
       Collection<Rule.LayerRule> layer_rules = new LinkedList<>();
       Collection<String> use_via = new LinkedList<>();
@@ -87,6 +74,8 @@ public class NetClass {
       boolean shove_fixed = false;
       double min_trace_length = 0;
       double max_trace_length = 0;
+
+      Object next_token = p_scanner.next_token();
       if (!rules_missing) {
         Object prev_token = next_token;
         for (; ; ) {

@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.TestLevel;
 import app.freerouting.interactive.AutorouteSettings;
 import app.freerouting.interactive.BoardHandling;
 
@@ -44,11 +43,10 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
   private boolean start_ripup_cost_input_completed = true;
   /** Creates a new instance of WindowAutorouteDetailParameter */
   public WindowAutorouteDetailParameter(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
+
     this.board_handling = p_board_frame.board_panel.board_handling;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowAutorouteParameter", p_board_frame.get_locale());
-    this.setTitle(resources.getString("detail_autoroute_parameter"));
+    this.setTitle(tm.getText("detail_autoroute_parameter"));
 
     // create main panel
 
@@ -63,7 +61,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     // add label and number field for the via costs.
 
     gridbag_constraints.gridwidth = 2;
-    JLabel via_cost_label = new JLabel(resources.getString("via_costs"));
+    JLabel via_cost_label = new JLabel(tm.getText("via_costs"));
     gridbag.setConstraints(via_cost_label, gridbag_constraints);
     main_panel.add(via_cost_label);
 
@@ -84,7 +82,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel plane_via_cost_label =
-        new JLabel(resources.getString("plane_via_costs"));
+        new JLabel(tm.getText("plane_via_costs"));
     gridbag.setConstraints(plane_via_cost_label, gridbag_constraints);
     main_panel.add(plane_via_cost_label);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -94,7 +92,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     // add label and number field for the start pass no.
 
     gridbag_constraints.gridwidth = 2;
-    JLabel start_pass_label = new JLabel(resources.getString("start_pass"));
+    JLabel start_pass_label = new JLabel(tm.getText("start_pass"));
     gridbag.setConstraints(start_pass_label, gridbag_constraints);
     main_panel.add(start_pass_label);
 
@@ -110,7 +108,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
 
     gridbag_constraints.gridwidth = 2;
     JLabel start_ripup_costs_label = new JLabel();
-    start_ripup_costs_label.setText(resources.getString("start_ripup_costs"));
+    start_ripup_costs_label.setText(tm.getText("start_ripup_costs"));
     gridbag.setConstraints(start_ripup_costs_label, gridbag_constraints);
     main_panel.add(start_ripup_costs_label);
 
@@ -125,49 +123,43 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow {
     // add label and combo box for the router speed if the speed is set to slow, free angle
     // geometry
     // is used also in the 45 and 90 degree modes.
-    this.speed_fast = resources.getString("fast");
-    this.speed_slow = resources.getString("slow");
+    this.speed_fast = tm.getText("fast");
+    this.speed_slow = tm.getText("slow");
     settings_autorouter_detailed_speed_combo_box = new JComboBox<>();
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_fast);
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_slow);
     settings_autorouter_detailed_speed_combo_box.addActionListener(new SpeedListener());
     settings_autorouter_detailed_speed_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box.getSelectedItem().toString()));
 
-    if (this.board_handling.get_routing_board().get_test_level()
-        != TestLevel.RELEASE_VERSION) {
-      gridbag_constraints.gridwidth = 2;
-      JLabel speed_label = new JLabel();
-      speed_label.setText(resources.getString("speed"));
-      gridbag.setConstraints(speed_label, gridbag_constraints);
-      main_panel.add(speed_label);
+    gridbag_constraints.gridwidth = 2;
+    JLabel speed_label = new JLabel();
+    speed_label.setText(tm.getText("speed"));
+    gridbag.setConstraints(speed_label, gridbag_constraints);
+    main_panel.add(speed_label);
 
-      gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(settings_autorouter_detailed_speed_combo_box, gridbag_constraints);
-      main_panel.add(settings_autorouter_detailed_speed_combo_box);
-    }
+    gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
+    gridbag.setConstraints(settings_autorouter_detailed_speed_combo_box, gridbag_constraints);
+    main_panel.add(settings_autorouter_detailed_speed_combo_box);
 
-    JLabel separator =
-        new JLabel(
-            "––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator = new JLabel("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     // add label and number field for the trace costs on each layer.
 
     gridbag_constraints.gridwidth = 3;
-    JLabel layer_label =
-        new JLabel(resources.getString("trace_costs_on_layer"));
+    JLabel layer_label = new JLabel(tm.getText("trace_costs_on_layer"));
     gridbag.setConstraints(layer_label, gridbag_constraints);
     main_panel.add(layer_label);
 
     JLabel pref_dir_label =
-        new JLabel(resources.getString("in_preferred_direction"));
+        new JLabel(tm.getText("in_preferred_direction"));
     gridbag.setConstraints(pref_dir_label, gridbag_constraints);
     main_panel.add(pref_dir_label);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     JLabel against_pref_dir_label =
-        new JLabel(resources.getString("against_preferred_direction"));
+        new JLabel(tm.getText("against_preferred_direction"));
     gridbag.setConstraints(against_pref_dir_label, gridbag_constraints);
     main_panel.add(against_pref_dir_label);
 

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import javax.swing.UIManager;
 
 /** Startup window visible when the program is loading. */
 public class WindowMessage extends WindowBase {
@@ -49,20 +50,38 @@ public class WindowMessage extends WindowBase {
   /**
    * Calls a confirm dialog. Returns true, if the user confirmed the action or if p_message is null.
    */
-  public static boolean confirm(String p_message) {
-    if (p_message == null) {
+  public static boolean confirm(String message) {
+    return confirm(message, JOptionPane.YES_OPTION);
+  }
+
+  /**
+   * Calls a confirm dialog with a default option. Returns true, if the user confirmed the action or if message is null.
+   */
+  public static boolean confirm(String message, int defaultOption) {
+    if (message == null) {
       return true;
     }
+    String yesOption = UIManager.getString("OptionPane.yesButtonText");
+    String noOption = UIManager.getString("OptionPane.noButtonText");
+    Object[] options = {yesOption, noOption};
+    JOptionPane optionPane = new JOptionPane(
+        message,
+        JOptionPane.QUESTION_MESSAGE,
+        JOptionPane.YES_NO_OPTION,
+        null,
+        options,
+        options[defaultOption]
+    );
+    optionPane.createDialog(null, "").setVisible(true);
+    String selected_option = (String) optionPane.getValue();
 
-    int selected_option = JOptionPane.showConfirmDialog(null, p_message, null, JOptionPane.YES_NO_OPTION);
-
-    if (selected_option == JOptionPane.YES_OPTION)
+    if (selected_option.equals(yesOption))
     {
-      FRAnalytics.buttonClicked("dialog_yes", p_message);
+      FRAnalytics.buttonClicked("dialog_yes", message);
       return true;
     } else
     {
-      FRAnalytics.buttonClicked("dialog_no", p_message);
+      FRAnalytics.buttonClicked("dialog_no", message);
       return false;
     }
   }

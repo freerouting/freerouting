@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.logger.FRLogger;
 
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Dimension;
@@ -11,14 +12,18 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.util.Locale;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class WindowBase extends JFrame {
   private Instant gotFocusAt = null;
+  protected TextManager tm = null;
+
   WindowBase(int minWidth, int minHeight) {
     super();
+
     try {
       URL resource = this.getClass().getResource("/freerouting_icon_256x256_v3.png");
       BufferedImage image = ImageIO.read(resource);
@@ -71,5 +76,23 @@ public class WindowBase extends JFrame {
         FRLogger.trace("Window '"+className+"' with title of '"+title+"' lost focus.");
       }
     });
+  }
+
+  /** Sets the language of the window and updates texts on it if needed. */
+  public void setLanguage(Locale locale)
+  {
+    if (this.tm != null)
+    {
+      this.tm.setLocale(locale);
+      this.updateTexts();
+    } else {
+      this.tm = new TextManager(this.getClass(), locale);
+    }
+  }
+
+  /** Updates the language-specific texts in the window. It must be overridden in the inherited class. */
+  public void updateTexts()
+  {
+    // This method must be overridden in the inherited class if there is at least one language-specific text in the window.
   }
 }

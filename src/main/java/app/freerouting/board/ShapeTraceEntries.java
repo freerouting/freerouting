@@ -87,7 +87,7 @@ public class ShapeTraceEntries {
             p_trace.get_half_width(),
             p_trace.net_no_arr,
             p_trace.clearance_class_no(),
-            FixedState.UNFIXED);
+            FixedState.NOT_FIXED);
       }
     }
   }
@@ -107,7 +107,7 @@ public class ShapeTraceEntries {
             p_trace.clearance_class_no(),
             0,
             0,
-            FixedState.UNFIXED,
+            FixedState.NOT_FIXED,
             board);
     start_piece.board = board;
     board.item_list.insert(start_piece);
@@ -122,7 +122,7 @@ public class ShapeTraceEntries {
             p_trace.clearance_class_no(),
             0,
             0,
-            FixedState.UNFIXED,
+            FixedState.NOT_FIXED,
             board);
     end_piece.board = board;
     board.item_list.insert(end_piece);
@@ -264,7 +264,7 @@ public class ShapeTraceEntries {
         curr_trace.clearance_class_no(),
         0,
         0,
-        FixedState.UNFIXED,
+        FixedState.NOT_FIXED,
         this.board);
   }
 
@@ -404,7 +404,7 @@ public class ShapeTraceEntries {
               int projection_side = offset_shape.contains_on_border_line_no(projection);
               int trace_line_segment_no;
               // the following may not be correct because the trace may not contain a suitable
-              // line for the construction oof the end line of the substitute trace.
+              // line for the construction of the end line of the substitute trace.
               if (i == 0) {
                 trace_line_segment_no = 0;
               } else {
@@ -725,7 +725,7 @@ public class ShapeTraceEntries {
     }
     --trace_piece_count;
     if (first.trace.nets_equal(this.own_net_nos)) {
-      // own net is ignored and nay occur only at the lowest level
+      // own net is ignored and may occur only at the lowest level
       result = pop_piece();
     }
     return result;

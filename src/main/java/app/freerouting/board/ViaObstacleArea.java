@@ -109,8 +109,7 @@ public class ViaObstacleArea extends ObstacleArea {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("via_keepout"));
     this.print_shape_info(p_window, p_locale);
     this.print_clearance_info(p_window, p_locale);

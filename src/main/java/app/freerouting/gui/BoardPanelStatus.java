@@ -1,11 +1,12 @@
 package app.freerouting.gui;
 
+import app.freerouting.management.TextManager;
 import java.awt.*;
+import java.awt.Cursor;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -15,7 +16,10 @@ import javax.swing.border.EmptyBorder;
  */
 class BoardPanelStatus extends JPanel {
   // An icon for errors and warnings
+  private final JPanel errorsWarningsPanel;
+  private final JLabel errorIcon;
   public final JLabel errorLabel;
+  private final JLabel warningIcon;
   public final JLabel warningLabel;
   public final JLabel statusMessage;
   public final JLabel additionalMessage;
@@ -32,27 +36,28 @@ class BoardPanelStatus extends JPanel {
    * @param locale the locale to use for resource bundles
    */
   BoardPanelStatus(Locale locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.BoardPanelStatus", locale);
+    TextManager tm = new TextManager(this.getClass(), locale);
+
     setLayout(new BorderLayout());
 
     // Left panel with warnings, errors, and status messages
-    JPanel leftMessagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    errorsWarningsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-    // Get warning and error icons from UIManager
-    Icon originalWarningIcon = UIManager.getIcon("OptionPane.warningIcon");
-    Icon originalErrorIcon = UIManager.getIcon("OptionPane.errorIcon");
-
-    // Resize icons to 16x16 pixels
-    Icon warningIcon = new ImageIcon(((ImageIcon) originalWarningIcon).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-    Icon errorIcon = new ImageIcon(((ImageIcon) originalErrorIcon).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+    // Load the Material Icons for warnings and errors
+    warningIcon = new JLabel();
+    tm.setText(warningIcon, "{{icon:alert}}");
+    errorIcon = new JLabel();
+    tm.setText(errorIcon, "{{icon:close-octagon}}");
 
     // Initialize labels with icons
-    warningLabel = new JLabel("0", warningIcon, SwingConstants.LEADING);
-    errorLabel = new JLabel("0", errorIcon, SwingConstants.LEADING);
+    warningLabel = new JLabel("0", SwingConstants.LEADING);
+    errorLabel = new JLabel("0", SwingConstants.LEADING);
 
     // Add error and warning labels
-    leftMessagePanel.add(errorLabel, BorderLayout.WEST);
-    leftMessagePanel.add(warningLabel, BorderLayout.WEST);
+    errorsWarningsPanel.add(errorIcon, BorderLayout.WEST);
+    errorsWarningsPanel.add(errorLabel, BorderLayout.WEST);
+    errorsWarningsPanel.add(warningIcon, BorderLayout.WEST);
+    errorsWarningsPanel.add(warningLabel, BorderLayout.WEST);
 
     // Add mouse listeners for error and warning labels
     addErrorOrWarningLabelClickedListener();
@@ -68,17 +73,17 @@ class BoardPanelStatus extends JPanel {
     // Initialize status message label
     statusMessage = new JLabel();
     statusMessage.setHorizontalAlignment(SwingConstants.CENTER);
-    statusMessage.setText(resources.getString("status_line"));
-    leftMessagePanel.add(statusMessage, BorderLayout.CENTER);
+    tm.setText(statusMessage, "status_line");
+    errorsWarningsPanel.add(statusMessage, BorderLayout.CENTER);
 
     // Initialize additional message label
     additionalMessage = new JLabel();
-    additionalMessage.setText(resources.getString("additional_text_field"));
+    tm.setText(additionalMessage, "additional_text_field");
     additionalMessage.setMaximumSize(new Dimension(300, 14));
     additionalMessage.setMinimumSize(new Dimension(140, 14));
     additionalMessage.setPreferredSize(new Dimension(180, 14));
-    leftMessagePanel.add(additionalMessage, BorderLayout.EAST);
-    add(leftMessagePanel, BorderLayout.CENTER);
+    errorsWarningsPanel.add(additionalMessage, BorderLayout.EAST);
+    add(errorsWarningsPanel, BorderLayout.CENTER);
 
     // Right panel with current layer and cursor position
     JPanel rightMessagePanel = new JPanel(new BorderLayout());
@@ -88,7 +93,7 @@ class BoardPanelStatus extends JPanel {
 
     // Initialize current layer label
     currentLayer = new JLabel();
-    currentLayer.setText(resources.getString("current_layer"));
+    tm.setText(currentLayer, "current_layer");
     rightMessagePanel.add(currentLayer, BorderLayout.CENTER);
 
     // Create cursor panel
@@ -122,19 +127,15 @@ class BoardPanelStatus extends JPanel {
    */
   private void addErrorOrWarningLabelClickedListener() {
     // Raise an event if the user clicks on the error or warning label
-    errorLabel.addMouseListener(new MouseAdapter() {
+    errorsWarningsPanel.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         raiseErrorOrWarningLabelClickedEvent();
       }
     });
 
-    warningLabel.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        raiseErrorOrWarningLabelClickedEvent();
-      }
-    });
+    // Change the mouse cursor to a hand when hovering over these labels
+    errorsWarningsPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
   }
 
   /**

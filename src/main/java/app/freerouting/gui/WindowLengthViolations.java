@@ -20,9 +20,9 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
   /** Creates a new instance of WindowLengthViolations */
   public WindowLengthViolations(BoardFrame p_board_frame) {
     super(p_board_frame);
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowLengthViolations", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowLengthViolations", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
     this.list_empty_message.setText(resources.getString("list_empty"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LengthViolations");

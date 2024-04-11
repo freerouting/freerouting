@@ -35,17 +35,15 @@ public class WindowEditVias extends BoardSavableSubWindow {
   private final JPanel main_panel;
   private final JComboBox<String> cl_class_combo_box;
   private final JComboBox<String> padstack_combo_box;
-  private final ResourceBundle resources;
   private JScrollPane scroll_pane;
   private JTable table;
   private ViaTableModel table_model;
 
   /** Creates a new instance of ViaTablePanel */
-  public WindowEditVias(BoardFrame p_board_frame) {
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowEditVias", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+  public WindowEditVias(BoardFrame p_board_frame)
+  {
+    setLanguage(p_board_frame.get_locale());
+    this.setTitle(tm.getText("title"));
 
     this.board_frame = p_board_frame;
 
@@ -61,13 +59,13 @@ public class WindowEditVias extends BoardSavableSubWindow {
     JPanel via_info_button_panel = new JPanel();
     via_info_button_panel.setLayout(new FlowLayout());
     this.main_panel.add(via_info_button_panel, BorderLayout.SOUTH);
-    final JButton rules_vias_vias_edit_add_button = new JButton(resources.getString("add"));
-    rules_vias_vias_edit_add_button.setToolTipText(resources.getString("add_tooltip"));
+    final JButton rules_vias_vias_edit_add_button = new JButton(tm.getText("add"));
+    rules_vias_vias_edit_add_button.setToolTipText(tm.getText("add_tooltip"));
     rules_vias_vias_edit_add_button.addActionListener(new AddViaListener());
     rules_vias_vias_edit_add_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_add_button", rules_vias_vias_edit_add_button.getText()));
     via_info_button_panel.add(rules_vias_vias_edit_add_button);
-    final JButton rules_vias_vias_edit_remove_button = new JButton(resources.getString("remove"));
-    rules_vias_vias_edit_remove_button.setToolTipText(resources.getString("remove_tooltip"));
+    final JButton rules_vias_vias_edit_remove_button = new JButton(tm.getText("remove"));
+    rules_vias_vias_edit_remove_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_vias_vias_edit_remove_button.addActionListener(new RemoveViaListener());
     rules_vias_vias_edit_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_remove_button", rules_vias_vias_edit_remove_button.getText()));
     via_info_button_panel.add(rules_vias_vias_edit_remove_button);
@@ -147,7 +145,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
       ViaInfos via_infos = routing_board.rules.via_infos;
       int no = 1;
       String new_name;
-      final String name_start = resources.getString("new_via");
+      final String name_start = tm.getText("new_via");
       for (; ; ) {
         new_name = name_start + no;
         if (!via_infos.name_exists(new_name)) {
@@ -174,7 +172,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent p_evt) {
       if (table_model.getRowCount() <= 1) {
-        board_frame.screen_messages.set_status_message(resources.getString("message_1"));
+        board_frame.screen_messages.set_status_message(tm.getText("message_1"));
         return;
       }
       int selected_row = table.getSelectedRow();
@@ -190,7 +188,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
       // Check, if via_info is used in a via rule.
       for (ViaRule curr_rule : board_rules.via_rules) {
         if (curr_rule.contains(via_info)) {
-          String message = resources.getString("message_2") + " " + curr_rule.name;
+          String message = tm.getText("message_2") + " " + curr_rule.name;
           board_frame.screen_messages.set_status_message(message);
           return;
         }
@@ -198,11 +196,11 @@ public class WindowEditVias extends BoardSavableSubWindow {
       if (board_rules.via_infos.remove(via_info)) {
         adjust_table();
         String message =
-            resources.getString("via")
+            tm.getText("via")
                 + "via "
                 + via_info.get_name()
                 + " "
-                + resources.getString("removed");
+                + tm.getText("removed");
         board_frame.screen_messages.set_status_message(message);
       }
     }
@@ -217,7 +215,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
       column_names = new String[ColumnName.values().length];
 
       for (int i = 0; i < column_names.length; ++i) {
-        column_names[i] = resources.getString((ColumnName.values()[i]).toString());
+        column_names[i] = tm.getText((ColumnName.values()[i]).toString());
       }
       BoardRules board_rules =
           board_frame.board_panel.board_handling.get_routing_board().rules;

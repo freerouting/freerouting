@@ -125,7 +125,7 @@ class Wiring extends ScopeKeyword {
     }
     p_par.file.start_scope();
     p_par.file.write("wire");
-
+    
     if (p_par.compat_mode) {
       Point[] corner_arr = curr_wire.polyline().corner_arr();
       FloatPoint[] float_corner_arr = new FloatPoint[corner_arr.length];
@@ -201,7 +201,7 @@ class Wiring extends ScopeKeyword {
 
   private static void write_fixed_state(IndentFileWriter p_file, FixedState p_fixed_state)
       throws IOException {
-    if (p_fixed_state == FixedState.UNFIXED) {
+    if (p_fixed_state == FixedState.NOT_FIXED) {
       return;
     }
     p_file.new_line();
@@ -256,7 +256,7 @@ class Wiring extends ScopeKeyword {
 
   static FixedState calc_fixed(IJFlexScanner p_scanner) {
     try {
-      FixedState result = FixedState.UNFIXED;
+      FixedState result = FixedState.NOT_FIXED;
       Object next_token = p_scanner.next_token();
       if (next_token == SHOVE_FIXED) {
         result = FixedState.SHOVE_FIXED;
@@ -268,12 +268,12 @@ class Wiring extends ScopeKeyword {
       next_token = p_scanner.next_token();
       if (next_token != CLOSED_BRACKET) {
         FRLogger.warn("Wiring.is_fixed: ) expected at '" + p_scanner.get_scope_identifier() + "'");
-        return FixedState.UNFIXED;
+        return FixedState.NOT_FIXED;
       }
       return result;
     } catch (IOException e) {
       FRLogger.error("Wiring.is_fixed: IO error scanning file", e);
-      return FixedState.UNFIXED;
+      return FixedState.NOT_FIXED;
     }
   }
 
@@ -281,15 +281,11 @@ class Wiring extends ScopeKeyword {
   private static Net.Id read_net_id(IJFlexScanner p_scanner) {
     try {
       int subnet_number = 0;
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-      Object next_token = p_scanner.next_token();
-      if (!(next_token instanceof String)) {
-        FRLogger.warn("Wiring:read_net_id: String expected at '" + p_scanner.get_scope_identifier() + "'");
-        return null;
-      }
-      String net_name = (String) next_token;
+
+      String net_name = p_scanner.next_string();
       p_scanner.set_scope_identifier(net_name);
-      next_token = p_scanner.next_token();
+
+      Object next_token = p_scanner.next_token();
       if (next_token instanceof Integer) {
         subnet_number = (Integer) next_token;
         next_token = p_scanner.next_token();
@@ -351,7 +347,7 @@ class Wiring extends ScopeKeyword {
   private Item read_wire_scope(ReadScopeParameter p_par) {
     Net.Id net_id = null;
     String clearance_class_name = null;
-    FixedState fixed = FixedState.UNFIXED;
+    FixedState fixed = FixedState.NOT_FIXED;
     Path path = null; // Used, if a trace is read.
     Shape border_shape = null; // Used, if a conduction area is read.
     Collection<Shape> hole_list = new LinkedList<>();
@@ -551,7 +547,7 @@ class Wiring extends ScopeKeyword {
 
   private boolean read_via_scope(ReadScopeParameter p_par) {
     try {
-      FixedState fixed = FixedState.UNFIXED;
+      FixedState fixed = FixedState.NOT_FIXED;
       // read the padstack name
       Object next_token = p_par.scanner.next_token();
       if (!(next_token instanceof String)) {

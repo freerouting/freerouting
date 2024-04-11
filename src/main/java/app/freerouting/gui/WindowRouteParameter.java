@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.management.FRAnalytics;
@@ -71,9 +70,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.detail_window = new WindowRouteDetail(p_board_frame);
     this.manual_rule_window = new WindowManualRules(p_board_frame);
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowRouteParameter", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteParameter", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -313,10 +312,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     settings_routing_detail_button.addActionListener(detail_listener);
     settings_routing_detail_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_detail_button", settings_routing_detail_button.getText()));
     gridbag.setConstraints(settings_routing_detail_button, gridbag_constraints);
-    if (this.board_handling.get_routing_board().get_test_level()
-        != TestLevel.RELEASE_VERSION) {
-      main_panel.add(settings_routing_detail_button);
-    }
+    main_panel.add(settings_routing_detail_button);
 
     p_board_frame.set_context_sensitive_help(this, "WindowRouteParameter");
 
@@ -470,9 +466,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (free_angle_traces_found) {
-        ResourceBundle resources =
-            ResourceBundle.getBundle(
-                "app.freerouting.gui.WindowRouteParameter", current_locale);
+        ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteParameter", current_locale);
         String curr_message = resources.getString("change_snap_angle_90");
         if (!WindowMessage.confirm(curr_message)) {
           refresh();

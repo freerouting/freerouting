@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
-import app.freerouting.board.TestLevel;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
@@ -39,7 +38,6 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private final BoardFrame board_frame;
   private final JPanel main_panel;
   private final ComboBoxLayer rules_clearance_layer_combo_box;
-  private final ResourceBundle resources;
   private JPanel center_panel;
   private JTable clearance_table;
   private ClearanceTableModel clearance_table_model;
@@ -47,11 +45,9 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   /** Creates a new instance of ClearanceMatrixWindow */
   public WindowClearanceMatrix(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowClearanceMatrix", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("title"));
+    this.setTitle(tm.getText("title"));
 
     this.main_panel = new JPanel();
     main_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -61,8 +57,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     final JPanel north_panel = new JPanel();
     north_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-    JLabel layer_label = new JLabel(resources.getString("layer") + " ");
-    layer_label.setToolTipText(resources.getString("layer_tooltip"));
+    JLabel layer_label = new JLabel(tm.getText("layer") + " ");
+    layer_label.setToolTipText(tm.getText("layer_tooltip"));
     north_panel.add(layer_label);
 
     BoardHandling board_handling = board_frame.board_panel.board_handling;
@@ -86,14 +82,14 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     south_panel.setLayout(new BorderLayout());
     this.add(south_panel);
 
-    final JButton rules_clearance_add_class_button = new JButton(resources.getString("add_class"));
-    rules_clearance_add_class_button.setToolTipText(resources.getString("add_class_tooltip"));
+    final JButton rules_clearance_add_class_button = new JButton(tm.getText("add_class"));
+    rules_clearance_add_class_button.setToolTipText(tm.getText("add_class_tooltip"));
     rules_clearance_add_class_button.addActionListener(new AddClassListener());
     rules_clearance_add_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_add_class_button", rules_clearance_add_class_button.getText()));
     south_panel.add(rules_clearance_add_class_button, BorderLayout.WEST);
 
-    final JButton rules_clearance_prune_button = new JButton(resources.getString("prune"));
-    rules_clearance_prune_button.setToolTipText(resources.getString("prune_tooltip"));
+    final JButton rules_clearance_prune_button = new JButton(tm.getText("prune"));
+    rules_clearance_prune_button.setToolTipText(tm.getText("prune_tooltip"));
     rules_clearance_prune_button.addActionListener(new PruneListener());
     rules_clearance_prune_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_prune_button", rules_clearance_prune_button.getText()));
     south_panel.add(rules_clearance_prune_button, BorderLayout.EAST);
@@ -178,7 +174,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     String new_name;
     // Ask for the name of the new class.
     do {
-      new_name = JOptionPane.showInputDialog(resources.getString("new_name"));
+      new_name = JOptionPane.showInputDialog(tm.getText("new_name"));
       if (new_name == null) {
         return;
       }
@@ -202,18 +198,16 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       return;
     }
     clearance_matrix.append_class(new_name);
-    if (routing_board.get_test_level() == TestLevel.RELEASE_VERSION) {
-      // clearance compensation is only used, if there are only the clearance classes default and
-      // null.
-      routing_board.search_tree_manager.set_clearance_compensation_used(false);
-    }
+
+    // clearance compensation is only used, if there are only the clearance classes "default" and "null".
+    routing_board.search_tree_manager.set_clearance_compensation_used(false);
+
     adjust_clearance_table();
   }
 
-  /** Removes clearance classs, whose clearance values are all equal to a previous class. */
+  /** Removes clearance class, whose clearance values are all equal to a previous class. */
   private void prune_clearance_matrix() {
-    final BasicBoard routing_board =
-        this.board_frame.board_panel.board_handling.get_routing_board();
+    final BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
     ClearanceMatrix clearance_matrix = routing_board.rules.clearance_matrix;
     for (int i = clearance_matrix.get_class_count() - 1; i >= 2; --i) {
       for (int j = clearance_matrix.get_class_count() - 1; j >= 0; --j) {
@@ -222,7 +216,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         }
         if (clearance_matrix.is_equal(i, j)) {
           String message =
-              resources.getString("confirm_remove") + " " + clearance_matrix.get_name(i);
+              tm.getText("confirm_remove") + " " + clearance_matrix.get_name(i);
           int remove_clearance_class_dialog = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION);
           if (remove_clearance_class_dialog == JOptionPane.YES_OPTION) {
             Collection<Item> board_items = routing_board.get_items();
@@ -310,7 +304,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
           p_board_handling.get_routing_board().rules.clearance_matrix;
 
       column_names = new String[clearance_matrix.get_class_count() + 1];
-      column_names[0] = resources.getString("class");
+      column_names[0] = tm.getText("class");
 
       data = new Object[clearance_matrix.get_class_count()][];
       for (int i = 0; i < clearance_matrix.get_class_count(); ++i) {
@@ -388,20 +382,20 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
       boolean items_already_assigned = items_already_assigned_row && items_already_assigned_column;
       if (items_already_assigned) {
-        String message = resources.getString("already_assigned") + " ";
+        String message = tm.getText("already_assigned") + " ";
         if (curr_row == curr_column) {
-          message += resources.getString("the_class") + " " + clearance_matrix.get_name(curr_row);
+          message += tm.getText("the_class") + " " + clearance_matrix.get_name(curr_row);
         } else {
           message +=
-              resources.getString("the_classes")
+              tm.getText("the_classes")
                   + " "
                   + clearance_matrix.get_name(curr_row)
                   + " "
-                  + resources.getString("and")
+                  + tm.getText("and")
                   + " "
                   + clearance_matrix.get_name(curr_column);
         }
-        message += resources.getString("change_anyway");
+        message += tm.getText("change_anyway");
         int clearance_class_already_assigned_dialog = JOptionPane.showConfirmDialog(
                 board_frame.clearance_matrix_window,
                 message,

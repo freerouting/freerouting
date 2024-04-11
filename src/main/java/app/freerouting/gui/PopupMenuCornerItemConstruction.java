@@ -13,9 +13,7 @@ class PopupMenuCornerItemConstruction extends JPopupMenu {
   /** Creates a new instance of CornerItemConstructionPopupMenu */
   PopupMenuCornerItemConstruction(BoardFrame p_board_frame) {
     this.board_panel = p_board_frame.board_panel;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
     JMenuItem popup_add_corner_menuitem = new JMenuItem();
     popup_add_corner_menuitem.setText(resources.getString("add_corner"));
     popup_add_corner_menuitem.addActionListener(

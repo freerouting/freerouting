@@ -44,7 +44,6 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   private static final int SCROLLBAR_ADD = 30;
   private final JTextPane text_pane;
   private final CoordinateTransform coordinate_transform;
-  private final ResourceBundle resources;
   private final NumberFormat number_format;
   /**
    * The new created windows by pushing buttons inside this window. Used when closing this window to
@@ -53,12 +52,10 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
   private final Collection<WindowObjectInfo> subwindows = new LinkedList<>();
 
   /** Creates a new instance of ItemInfoWindow */
-  private WindowObjectInfo(
-      BoardFrame p_board_frame, CoordinateTransform p_coordinate_transform) {
+  private WindowObjectInfo(BoardFrame p_board_frame, CoordinateTransform p_coordinate_transform)
+  {
     super(p_board_frame);
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowObjectInfo", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
     this.coordinate_transform = p_coordinate_transform;
 
     // create the text pane
@@ -103,7 +100,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
       CoordinateTransform p_coordinate_transform,
       Point p_location) {
     WindowObjectInfo new_instance = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
-    new_instance.setTitle(new_instance.resources.getString("title"));
+    new_instance.setTitle(new_instance.tm.getText("title"));
     Integer pin_count = 0;
     Integer via_count = 0;
     Integer trace_count = 0;
@@ -119,15 +116,15 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
         cumulative_trace_length += ((Trace) curr_object).get_length();
       }
     }
-    new_instance.append_bold(new_instance.resources.getString("summary") + " ");
+    new_instance.append_bold(new_instance.tm.getText("summary") + " ");
     NumberFormat number_format =
         NumberFormat.getInstance(p_board_frame.get_locale());
     if (pin_count > 0) {
       new_instance.append(number_format.format(pin_count));
       if (pin_count == 1) {
-        new_instance.append(" " + new_instance.resources.getString("pin"));
+        new_instance.append(" " + new_instance.tm.getText("pin"));
       } else {
-        new_instance.append(" " + new_instance.resources.getString("pins"));
+        new_instance.append(" " + new_instance.tm.getText("pins"));
       }
       if (via_count + trace_count > 0) {
         new_instance.append(", ");
@@ -136,9 +133,9 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     if (via_count > 0) {
       new_instance.append(number_format.format(via_count));
       if (via_count == 1) {
-        new_instance.append(" " + new_instance.resources.getString("via"));
+        new_instance.append(" " + new_instance.tm.getText("via"));
       } else {
-        new_instance.append(" " + new_instance.resources.getString("vias"));
+        new_instance.append(" " + new_instance.tm.getText("vias"));
       }
       if (trace_count > 0) {
         new_instance.append(", ");
@@ -147,9 +144,9 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     if (trace_count > 0) {
       new_instance.append(number_format.format(trace_count));
       if (trace_count == 1) {
-        new_instance.append(" " + new_instance.resources.getString("trace") + " ");
+        new_instance.append(" " + new_instance.tm.getText("trace") + " ");
       } else {
-        new_instance.append(" " + new_instance.resources.getString("traces") + " ");
+        new_instance.append(" " + new_instance.tm.getText("traces") + " ");
       }
       new_instance.append(cumulative_trace_length);
     }
@@ -179,7 +176,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow
     WindowObjectInfo new_window = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
     new_window.setTitle(p_title);
     if (p_object_list.isEmpty()) {
-      new_window.append(new_window.resources.getString("list_empty"));
+      new_window.append(new_window.tm.getText("list_empty"));
     }
     for (Printable curr_object : p_object_list) {
       curr_object.print_info(new_window, p_board_frame.get_locale());

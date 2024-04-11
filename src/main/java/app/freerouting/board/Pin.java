@@ -550,8 +550,7 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
     p_window.append_bold(resources.getString("pin") + ": ");
     p_window.append(resources.getString("component_2") + " ");
     Component component = board.components.get(this.get_component_no());
@@ -565,6 +564,21 @@ public class Pin extends DrillItem implements Serializable {
     p_window.append(this.get_center().to_float());
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
+  }
+  @Override
+  public String get_hover_info(Locale p_locale) {
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    Component component = board.components.get(this.get_component_no());
+    Padstack padstack = this.get_padstack();
+    String hover_info = resources.getString("pin") + " : " + 
+    resources.getString("component_2") + " " +
+    component.name + " " +
+    resources.getString("pin_2") + " " +
+    component.get_package().get_pin(this.pin_no).name + " " +
+    resources.getString("padstack") + " " +
+    padstack.name + " " +
+    this.get_connectable_item_hover_info(p_locale);
+    return hover_info;
   }
 
   /**

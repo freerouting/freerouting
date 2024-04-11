@@ -103,9 +103,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
 
   @Override
   public String getColumnName(int p_col) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.boardgraphics.ColorTableModel", this.locale);
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.boardgraphics.ColorTableModel", this.locale);
     return resources.getString(ColumnNames.values()[p_col].toString());
   }
 

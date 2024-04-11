@@ -68,7 +68,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState {
                 obstacle_shape,
                 hdlg.settings.layer,
                 cl_class,
-                FixedState.UNFIXED);
+                FixedState.NOT_FIXED);
         hdlg.get_routing_board().end_notify_observers();
         if (this.observers_activated) {
           hdlg.get_routing_board().end_notify_observers();

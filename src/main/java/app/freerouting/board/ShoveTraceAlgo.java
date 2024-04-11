@@ -31,7 +31,7 @@ public class ShoveTraceAlgo {
   /**
    * Checks if a shove with the input parameters is possible without clearance violations The result
    * is the maximum length of a trace from the start of the line segment to the end of the line
-   * segment, for which the algorithm succeeds. If the algorithm succeedes completely, the result
+   * segment, for which the algorithm succeeds. If the algorithm succeeds completely, the result
    * will be equal to Integer.MAX_VALUE.
    */
   public static double check(
@@ -153,6 +153,7 @@ public class ShoveTraceAlgo {
           // in case it is smaller than the length of the whole line segment.
           curr_line_segment = curr_line_segment.opposite();
         }
+
         boolean is_in_front = curr_line_segment.get_line().direction().equals(line_direction);
         if (is_in_front) {
           double shove_ok_length =
@@ -483,7 +484,7 @@ public class ShoveTraceAlgo {
         for (int i = 0; i < 2; ++i) {
           Trace tail = board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
           if (tail != null) {
-            board.remove_items(tail.get_connection_items(Item.StopConnectionOption.VIA), false);
+            board.remove_items(tail.get_connection_items(Item.StopConnectionOption.VIA));
             for (int curr_net_no : curr_net_no_arr) {
               board.combine_traces(curr_net_no);
             }

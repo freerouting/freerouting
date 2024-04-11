@@ -46,9 +46,10 @@ public class WindowSnapshot extends BoardSavableSubWindow {
   public WindowSnapshot(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
     this.settings_window = new WindowSnapshotSettings(p_board_frame);
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowSnapshot", p_board_frame.get_locale());
+
+    setLanguage(p_board_frame.get_locale());
+    this.resources = ResourceBundle.getBundle("app.freerouting.gui.WindowSnapshot", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
 
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -225,7 +226,7 @@ public class WindowSnapshot extends BoardSavableSubWindow {
       }
 
       board_frame.refresh_windows();
-      board_frame.hilight_selected_button();
+      board_frame.setToolbarModeSelectionPanelValue(this.board_frame.board_panel.board_handling.get_interactive_state());
       board_frame.setVisible(true);
       board_frame.repaint();
     }

@@ -26,9 +26,12 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
   private final JSlider[] slider_arr;
 
   /** Creates a new instance of VisibilityFrame */
-  public WindowVisibility(
-      BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr) {
+  public WindowVisibility(BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr) {
     this.board_panel = p_board_frame.board_panel;
+
+    setLanguage(p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+
     this.setTitle(p_title);
 
     // create main panel
@@ -67,8 +70,6 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
     gridbag.setConstraints(empty_label, gridbag_constraints);
     main_panel.add(empty_label);
     gridbag_constraints.gridwidth = 2;
-
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
 
     JButton appearance_layer_visibility_min_all_button = new JButton(resources.getString("minimum_all"));
     appearance_layer_visibility_min_all_button.setToolTipText(resources.getString("minimum_all_tooltip"));

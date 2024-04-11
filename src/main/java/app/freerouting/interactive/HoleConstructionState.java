@@ -147,7 +147,7 @@ public class HoleConstructionState extends CornerItemConstructionState {
                 new_obs_area,
                 item_to_modify.get_layer(),
                 item_to_modify.clearance_class_no(),
-                FixedState.UNFIXED);
+                FixedState.NOT_FIXED);
         if (this.observers_activated) {
           hdlg.get_routing_board().end_notify_observers();
           this.observers_activated = false;

@@ -3,7 +3,6 @@ package app.freerouting.autoroute;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.UndoableObjects;
@@ -11,6 +10,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.BoardRules;
 
 import java.util.Collection;
@@ -71,7 +71,7 @@ public class BatchOptRoute {
       if (curr_item instanceof Trace) {
         Trace curr_trace = (Trace) curr_item;
         FixedState fixed_state = curr_trace.get_fixed_state();
-        if (fixed_state == FixedState.UNFIXED || fixed_state == FixedState.SHOVE_FIXED) {
+        if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED) {
           double weighted_trace_length =
               curr_trace.get_length()
                   * (curr_trace.get_half_width()
@@ -95,13 +95,11 @@ public class BatchOptRoute {
       boolean save_intermediate_stages,
       float optimization_improvement_threshold,
       InteractiveActionThread isStopRequested) {
-    if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION) {
-      FRLogger.warn(
-          "Before optimize: Via count: "
-              + routing_board.get_vias().size()
-              + ", trace length: "
-              + Math.round(routing_board.cumulative_trace_length()));
-    }
+    FRLogger.debug(
+        "Before optimize: Via count: "
+            + routing_board.get_vias().size()
+            + ", trace length: "
+            + Math.round(routing_board.cumulative_trace_length()));
     double route_improved = -1;
     int curr_pass_no = 0;
     use_increased_ripup_costs = true;
@@ -167,10 +165,7 @@ public class BatchOptRoute {
         route_improved =
             (float)
                 ((via_count_before != 0 && trace_length_before != 0)
-                    ? 1.0
-                        - ((((via_count_after / via_count_before)
-                                + (trace_length_after / trace_length_before))
-                            / 2))
+                    ? 1.0 - (((((float)via_count_after / via_count_before) + (trace_length_after / trace_length_before))/ 2))
                     : 0);
       }
     }
@@ -196,9 +191,7 @@ public class BatchOptRoute {
   /** Try to improve the route by re-routing the connections containing p_item. */
   protected ItemRouteResult opt_route_item(
       Item p_item, int p_pass_no, boolean p_with_preferred_directions) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.interactive.InteractiveState", this.thread.hdlg.get_locale());
     String start_message =
         resources.getString("batch_optimizer")
             + " "
@@ -243,7 +236,7 @@ public class BatchOptRoute {
     }
     // no need to undo for cloned board which is either promoted to master or discarded
 
-    this.routing_board.remove_items(ripped_connections, false);
+    this.routing_board.remove_items(ripped_connections);
     for (int i = 0; i < p_item.net_count(); ++i) {
       this.routing_board.combine_traces(p_item.get_net_no(i));
     }

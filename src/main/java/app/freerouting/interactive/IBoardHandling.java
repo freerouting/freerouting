@@ -3,7 +3,6 @@ package app.freerouting.interactive;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.TestLevel;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.rules.BoardRules;
@@ -23,8 +22,7 @@ public interface IBoardHandling {
       PolylineShape[] p_outline_shapes,
       String p_outline_clearance_class_name,
       BoardRules p_rules,
-      Communication p_board_communication,
-      TestLevel p_test_level);
+      Communication p_board_communication);
 
   Settings get_settings();
 }

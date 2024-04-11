@@ -24,28 +24,25 @@ import java.util.TreeSet;
 
 public class WindowNets extends WindowObjectListWithFilter {
 
-  private final ResourceBundle resources;
-
   /** Creates a new instance of NetsWindow */
   public WindowNets(BoardFrame p_board_frame) {
     super(p_board_frame);
-    this.resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowNets", p_board_frame.get_locale());
-    this.setTitle(resources.getString("title"));
+    setLanguage(p_board_frame.get_locale());
+
+    this.setTitle(tm.getText("title"));
 
     JPanel curr_button_panel = new JPanel();
     this.south_panel.add(curr_button_panel, BorderLayout.NORTH);
 
-    final JButton rules_nets_assign_class_button = new JButton(resources.getString("assign_class"));
+    final JButton rules_nets_assign_class_button = new JButton(tm.getText("assign_class"));
     curr_button_panel.add(rules_nets_assign_class_button);
-    rules_nets_assign_class_button.setToolTipText(resources.getString("assign_class_tooltip"));
+    rules_nets_assign_class_button.setToolTipText(tm.getText("assign_class_tooltip"));
     rules_nets_assign_class_button.addActionListener(new AssignClassListener());
     rules_nets_assign_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_nets_assign_class_button", rules_nets_assign_class_button.getText()));
 
-    final JButton rules_nets_filter_incompletes_button = new JButton(resources.getString("filter_incompletes"));
+    final JButton rules_nets_filter_incompletes_button = new JButton(tm.getText("filter_incompletes"));
     curr_button_panel.add(rules_nets_filter_incompletes_button);
-    rules_nets_filter_incompletes_button.setToolTipText(resources.getString("filter_incompletes_tooltip"));
+    rules_nets_filter_incompletes_button.setToolTipText(tm.getText("filter_incompletes_tooltip"));
     rules_nets_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
     rules_nets_filter_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_nets_filter_incompletes_button", rules_nets_filter_incompletes_button.getText()));
 
@@ -114,8 +111,8 @@ public class WindowNets extends WindowObjectListWithFilter {
       }
       Object selected_value = JOptionPane.showInputDialog(
               null,
-              resources.getString("message_1"),
-              resources.getString("message_2"),
+              tm.getText("message_1"),
+              tm.getText("message_2"),
               JOptionPane.INFORMATION_MESSAGE,
               null,
               class_arr,

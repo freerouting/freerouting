@@ -37,9 +37,9 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow {
   public WindowSnapshotSettings(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowSnapshotSettings", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowSnapshotSettings", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
 
     // create main panel

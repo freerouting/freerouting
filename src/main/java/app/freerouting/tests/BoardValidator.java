@@ -4,7 +4,6 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.SearchTreeObject;
-import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
@@ -12,8 +11,8 @@ import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.Collection;
 
-/** Some consistency checking on a routing board. */
-public class Validate {
+/** Does a few validations of the routing board. */
+public class BoardValidator {
   private static int[] last_violation_count;
   private static boolean first_time = true;
   private static int prev_stub_count = 0;
@@ -23,9 +22,6 @@ public class Validate {
    * false, if problems were detected.
    */
   public static boolean check(String p_s, BasicBoard p_board) {
-    if (p_board.get_test_level() == TestLevel.RELEASE_VERSION) {
-      return true;
-    }
     boolean result = true;
 
     IntOctagon surr_oct = p_board.bounding_box.to_IntOctagon();
@@ -137,7 +133,7 @@ public class Validate {
   }
 
   /** check, that all traces on p_board are multiples of 45 degree */
-  public static void multiple_of_45_degree(String p_s, BasicBoard p_board) {
+  public static void doAllTracesHaveAnglesThatAreMultiplesOfFortyFiveDegrees(String p_s, BasicBoard p_board) {
     int count = 0;
     for (Item curr_ob : p_board.get_items()) {
       if (curr_ob instanceof PolylineTrace) {

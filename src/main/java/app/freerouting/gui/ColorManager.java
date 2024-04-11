@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -31,11 +32,10 @@ public class ColorManager extends BoardSavableSubWindow {
 
   /** Creates a new instance of ColorManager */
   public ColorManager(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
     GraphicsContext graphics_context = p_board_frame.board_panel.board_handling.graphics_context;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.Default", p_board_frame.get_locale());
-    this.setTitle(resources.getString("color_manager"));
+
+    this.setTitle(tm.getText("color_manager"));
     final JPanel panel = new JPanel();
     final int textfield_height = 20;
     final int table_width = 1100;
@@ -54,7 +54,6 @@ public class ColorManager extends BoardSavableSubWindow {
     JScrollPane other_scroll_pane = init_color_table(general_color_table, p_board_frame.get_locale());
     panel.add(other_scroll_pane, BorderLayout.SOUTH);
     getContentPane().add(panel, BorderLayout.CENTER);
-    p_board_frame.set_context_sensitive_help(this, "WindowDisplay_Colors");
     this.pack();
     this.setResizable(false);
   }
@@ -91,11 +90,10 @@ public class ColorManager extends BoardSavableSubWindow {
 
     // Set up the dialog that the color_editor_button brings up.
     final JColorChooser colorChooser = new JColorChooser();
-    ActionListener okListener =
-        e -> colorEditor.currentColor = colorChooser.getColor();
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.gui.Default", p_locale);
-    final JDialog dialog = JColorChooser.createDialog(color_editor_button, resources.getString("pick_a_color"), true, colorChooser, okListener, null);
+    ActionListener okListener = e -> colorEditor.currentColor = colorChooser.getColor();
+
+    TextManager tm = new TextManager(ColorManager.class, p_locale);
+    final JDialog dialog = JColorChooser.createDialog(color_editor_button, tm.getText("pick_a_color"), true, colorChooser, okListener, null);
 
     // Here's the code that brings up the dialog.
     color_editor_button.addActionListener(

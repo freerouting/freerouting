@@ -37,10 +37,10 @@ public class WindowManualRules extends BoardSavableSubWindow {
   private boolean key_input_completed = true;
   /** Creates a new instance of TraceWidthWindow */
   public WindowManualRules(BoardFrame p_board_frame) {
+    setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowManualRule", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowManualRule", p_board_frame.get_locale());
+
     this.setTitle(resources.getString("title"));
 
     // create main panel

@@ -23,13 +23,12 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   /** Creates a new instance of ObjectListWindowWithFilter */
   public WindowObjectListWithFilter(BoardFrame p_board_frame) {
     super(p_board_frame);
-    ResourceBundle resources =
-        ResourceBundle.getBundle(
-            "app.freerouting.gui.WindowObjectList", p_board_frame.get_locale());
+    setLanguage(p_board_frame.get_locale());
+
     JPanel input_panel = new JPanel();
     this.south_panel.add(input_panel, BorderLayout.SOUTH);
 
-    JLabel filter_label = new JLabel(resources.getString("filter"));
+    JLabel filter_label = new JLabel(tm.getText("filter"));
     input_panel.add(filter_label, BorderLayout.WEST);
 
     this.filter_string = new JTextField(10);

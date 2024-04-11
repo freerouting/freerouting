@@ -27,9 +27,9 @@ public abstract class InteractiveActionThread extends Thread
     return new AutorouteThread(p_board_handling);
   }
 
-  public static InteractiveActionThread get_batch_autorouter_instance(
-      BoardHandling p_board_handling) {
-    return new BatchAutorouterThread(p_board_handling);
+  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(BoardHandling p_board_handling)
+  {
+    return new AutorouterAndRouteOptimizerThread(p_board_handling);
   }
 
   public static InteractiveActionThread get_fanout_instance(BoardHandling p_board_handling) {

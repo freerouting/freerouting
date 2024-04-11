@@ -3,10 +3,14 @@ package app.freerouting.gui;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.ItemIdNoGenerator;
-import app.freerouting.board.TestLevel;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Unit;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
+import app.freerouting.designforms.specctra.RulesFile;
+import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 
@@ -14,7 +18,14 @@ import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
-import javax.swing.JFrame;
+import app.freerouting.management.TextManager;
+import app.freerouting.settings.DisabledFeaturesSettings;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -46,9 +57,8 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
-/** Graphical frame of for interactive editing of a routing board. */
+/** Graphical frame containing the Menu, Toolbar, Canvas and Status bar. */
 public class BoardFrame extends WindowBase {
   /** The windows above stored in an array */
   static final int SUBWINDOW_COUNT = 24;
@@ -61,7 +71,7 @@ public class BoardFrame extends WindowBase {
   /** The menubar of this frame */
   final BoardMenuBar menubar;
   /** The panel with the graphical representation of the board. */
-  final BoardPanel board_panel;
+  BoardPanel board_panel = null;
   final ScreenMessages screen_messages;
   /** The panel with the toolbars */
   private final BoardToolbar toolbar_panel;
@@ -69,10 +79,6 @@ public class BoardFrame extends WindowBase {
   private final JToolBar select_toolbar;
   /** The panel with the message line */
   private final BoardPanelStatus message_panel;
-  private final TestLevel test_level;
-  private final boolean help_system_used;
-  private final boolean confirm_cancel;
-  private final ResourceBundle resources;
   private final BoardObservers board_observers;
   private final IdNoGenerator item_id_no_generator;
   WindowAbout about_window;
@@ -100,13 +106,16 @@ public class BoardFrame extends WindowBase {
   WindowSnapshot snapshot_window;
   ColorManager color_manager;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
-  Collection<BoardTemporarySubWindow> temporary_subwindows =
-      new LinkedList<>();
+  Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
   private LocalDateTime intermediate_stage_file_last_saved_at;
   DesignFile design_file;
   private final Locale locale;
+  private List<Consumer<RoutingBoard>> boardLoadedEventListeners = new ArrayList<>();
+  private List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
+
   /**
-   * Creates new form BoardFrame. If p_option = FROM_START_MENU this frame is created from a start
+   * Creates a new BoardFrame that is the GUI element containing the Menu, Toolbar, Canvas and Status bar.
+   * If p_option = FROM_START_MENU this frame is created from a start
    * menu frame. If p_option = SINGLE_FRAME, this frame is created directly a single frame. If
    * p_option = Option.IN_SAND_BOX, no security sensitive actions like for example choosing If
    * p_option = Option.WEBSTART, the application has been started with Java Webstart. files are
@@ -117,26 +126,18 @@ public class BoardFrame extends WindowBase {
    */
   public BoardFrame(
       DesignFile p_design,
-      Option p_option,
-      TestLevel p_test_level,
       Locale p_locale,
-      boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
-      boolean p_disable_select_mode,
-      boolean p_disable_macros) {
+      DisabledFeaturesSettings disabledFeatures) {
     this(
         p_design,
-        p_option,
-        p_test_level,
         new BoardObserverAdaptor(),
         new ItemIdNoGenerator(),
         p_locale,
-        p_confirm_cancel,
         p_save_intermediate_stages,
         p_optimization_improvement_threshold,
-        p_disable_select_mode,
-        p_disable_macros);
+        disabledFeatures);
   }
   /**
    * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
@@ -144,64 +145,113 @@ public class BoardFrame extends WindowBase {
    */
   BoardFrame(
       DesignFile p_design,
-      Option p_option,
-      TestLevel p_test_level,
       BoardObservers p_observers,
       IdNoGenerator p_item_id_no_generator,
       Locale p_locale,
-      boolean p_confirm_cancel,
       boolean p_save_intermediate_stages,
       float p_optimization_improvement_threshold,
-      boolean p_disable_select_mode,
-      boolean p_disable_macros) {
+      DisabledFeaturesSettings disabledFeatures) {
     super(800, 150);
 
     this.design_file = p_design;
-    this.test_level = p_test_level;
 
-    this.confirm_cancel = p_confirm_cancel;
     this.board_observers = p_observers;
     this.item_id_no_generator = p_item_id_no_generator;
     this.locale = p_locale;
-    this.resources = ResourceBundle.getBundle("app.freerouting.gui.BoardFrame", p_locale);
-    BoardMenuBar curr_menubar;
-    boolean session_file_option = (p_option == Option.SESSION_FILE);
-    boolean curr_help_system_used = true;
-    try {
-      curr_menubar = BoardMenuBar.get_instance(this, curr_help_system_used, session_file_option, p_disable_macros);
-    } catch (NoClassDefFoundError e) {
-      // the system-file jh.jar may be missing
-      curr_help_system_used = false;
-      curr_menubar = BoardMenuBar.get_instance(this, false, session_file_option, p_disable_macros);
-      FRLogger.warn("Online-Help deactivated because system file jh.jar is missing");
-    }
+    this.setLanguage(p_locale);
 
     // Set the menu bar of this frame.
-    this.menubar = curr_menubar;
+    this.menubar = new BoardMenuBar(this, disabledFeatures);
 
     this.menubar.fileMenu.addOpenEventListener(
         (File selectedFile) -> {
           if (selectedFile == null) {
+            // There was no file selected in the dialog, so we do nothing
             return;
           }
 
-          DesignFile design_file =  new DesignFile(selectedFile);
+          // Let's categorize the file based on its extension
+          if (!p_design.tryToSetInputFile(selectedFile)) {
+            // The file is not in a valid format
+            return;
+          }
 
+          // Load the file into the frame based on its recognised format
+          if ((board_panel != null)
+              && (board_panel.board_handling != null)
+              && (p_design.inputFileFormat != FileFormat.UNKNOWN))
+          {
+            switch (p_design.inputFileFormat) {
+              case DSN:
+                this.load(p_design.get_input_stream(), true, null);
+                FRAnalytics.buttonClicked("fileio_loaddsn", this.design_file.getInputFileDetails());
+                break;
+              case FRB:
+                this.load(p_design.get_input_stream(), false, null);
+                FRAnalytics.buttonClicked("fileio_loadfrb", this.design_file.getInputFileDetails());
+                break;
+              default:
+                // The file format is not supported
+                FRLogger.warn("Loading the board failed, because the selected file format is not supported.");
+                break;
+            }
+          }
         });
 
     this.menubar.fileMenu.addSaveAsEventListener(
-        (File selectedFile) -> {
-          if (selectedFile == null) {
+        (File selectedFile) ->
+        {
+          if (selectedFile == null)
+          {
+            // There was no file selected in the dialog, so we do nothing
             return;
           }
-          this.design_file.saveAs(selectedFile, this);
+
+          // Let's categorize the file based on its extension
+          if (!p_design.tryToSetOutputFile(selectedFile))
+          {
+            // The file is not in a valid format
+            return;
+          }
+
+          switch (p_design.outputFileFormat)
+          {
+            case SES:
+              // Save the file as a Specctra SES file
+              boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.design_file.getOutputFile(), design_file.get_name());
+              // Save the rules file as well, if the user wants to
+              if (sesFileSaved && WindowMessage.confirm(tm.getText("confirm_rules_save"), JOptionPane.NO_OPTION))
+              {
+                saveRulesAs(design_file.getRulesFile(), design_file.get_name(), board_panel.board_handling);
+              }
+              FRAnalytics.buttonClicked("fileio_saveses", this.design_file.getOutputFileDetails());
+              break;
+            case DSN:
+              // Save the file as a Specctra DSN file
+              this.saveAsSpecctraDesignDsn(this.design_file.getOutputFile(), design_file.get_name(), false);
+              FRAnalytics.buttonClicked("fileio_savedsn", this.design_file.getOutputFileDetails());
+              break;
+            case FRB:
+              // Save the file as a freerouting binary file
+              this.saveAsBinary(this.design_file.getOutputFile());
+              FRAnalytics.buttonClicked("fileio_savefrb", this.design_file.getOutputFileDetails());
+              break;
+            case SCR:
+              //  Save the file as an Eagle script file
+              this.saveAsEagleScriptScr(this.design_file.getEagleScriptFile(), design_file.get_name());
+              FRAnalytics.buttonClicked("fileio_savescr", this.design_file.getOutputFileDetails());
+              break;
+            default:
+              // The file format is not supported
+              FRLogger.warn("Saving the board failed, because the selected file format is not supported.");
+              break;
+          }
         });
 
-    this.help_system_used = curr_help_system_used;
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
-    this.toolbar_panel = new BoardToolbar(this, p_disable_select_mode);
+    this.toolbar_panel = new BoardToolbar(this, disabledFeatures.select_mode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     // Create and move the status bar one-liners (like current layer, cursor position, etc.) below the canvas.
@@ -228,12 +278,12 @@ public class BoardFrame extends WindowBase {
 
           int messageType = (filteredLogEntries.getErrorCount() > 0) ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
 
-          JOptionPane.showMessageDialog(null, scrollPane, resources.getString("logs_window_title"), messageType);
+          JOptionPane.showMessageDialog(null, scrollPane, tm.getText("logs_window_title"), messageType);
 
         });
 
     // DEPRECATED: we don't use this toolbar anymore
-    this.select_toolbar = new BoardToolbarSelectedItem(this, p_option == Option.EXTENDED_TOOL_BAR);
+    this.select_toolbar = new BoardToolbarSelectedItem(this);
 
     // Screen messages are displayed in the status bar, below the canvas.
     this.screen_messages =
@@ -262,10 +312,16 @@ public class BoardFrame extends WindowBase {
             p_optimization_improvement_threshold);
     this.scroll_pane.setViewportView(board_panel);
 
-    this.setTitle(resources.getString("title"));
     this.addWindowListener(new WindowStateListener());
 
+    this.updateTexts();
     this.pack();
+  }
+
+  @Override
+  public void updateTexts()
+  {
+    this.setTitle(tm.getText("title", MainApplication.globalSettings.version));
   }
 
   /** Reads interactive actions from a logfile. */
@@ -274,21 +330,24 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Reads an existing board design from file. If p_is_import, the design is read from a specctra
+   * Reads an existing board design from file. If isSpecctraDsn, the design is read from a specctra
    * dsn file. Returns false, if the file is invalid.
    */
-  boolean read(InputStream p_input_stream, boolean p_is_import, JTextField p_message_field)
+  boolean load(InputStream p_input_stream, boolean isSpecctraDsn, JTextField p_message_field)
   {
     Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
 
-    if (p_is_import) {
-      read_result =
-          board_panel.board_handling.import_design(
-              p_input_stream, this.board_observers, this.item_id_no_generator, this.test_level);
+    if (isSpecctraDsn) {
+      read_result = board_panel.board_handling.loadFromSpecctraDsn(p_input_stream, this.board_observers, this.item_id_no_generator);
+
+      // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK) {
         viewport_position = new Point(0, 0);
         initialize_windows();
+
+        // Raise an event to notify the observers that a new board has been loaded
+        this.boardLoadedEventListeners.forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
       }
     } else {
       ObjectInputStream object_stream;
@@ -297,10 +356,15 @@ public class BoardFrame extends WindowBase {
       } catch (IOException e) {
         return false;
       }
-      boolean read_ok = board_panel.board_handling.read_design(object_stream, this.test_level);
+      boolean read_ok = board_panel.board_handling.loadFromBinary(object_stream);
       if (!read_ok) {
         return false;
       }
+
+      // Raise an event to notify the observers that a new board has been loaded
+      this.boardLoadedEventListeners.forEach(listener -> listener.accept(board_panel.board_handling.get_routing_board()));
+
+      // Read and set the GUI settings from the binary file
       Point frame_location;
       Rectangle frame_bounds;
       try {
@@ -319,27 +383,28 @@ public class BoardFrame extends WindowBase {
         this.permanent_subwindows[i].read(object_stream);
       }
     }
+
     try {
       p_input_stream.close();
     } catch (IOException e) {
       return false;
     }
 
-    return update_gui(p_is_import, read_result, viewport_position, p_message_field);
+    return update_gui(isSpecctraDsn, read_result, viewport_position, p_message_field);
   }
 
   private boolean update_gui(
-      boolean p_is_import,
+      boolean isSpecctraDsn,
       DsnFile.ReadResult read_result,
       Point viewport_position,
       JTextField p_message_field) {
-    if (p_is_import) {
+    if (isSpecctraDsn) {
       if (read_result != DsnFile.ReadResult.OK) {
         if (p_message_field != null) {
           if (read_result == DsnFile.ReadResult.OUTLINE_MISSING) {
-            p_message_field.setText(resources.getString("error_7"));
+            p_message_field.setText(tm.getText("error_7"));
           } else {
-            p_message_field.setText(resources.getString("error_6"));
+            p_message_field.setText(tm.getText("error_6"));
           }
         }
         return false;
@@ -355,16 +420,15 @@ public class BoardFrame extends WindowBase {
     board_panel.create_popup_menus();
     board_panel.init_colors();
     board_panel.board_handling.create_ratsnest();
-    this.hilight_selected_button();
-    this.toolbar_panel.toolbar_unit_combo_box.setSelectedItem(
-        board_panel.board_handling.coordinate_transform.user_unit);
+    this.setToolbarModeSelectionPanelValue(board_panel.board_handling.get_interactive_state());
+    this.setToolbarUnitSelectionPanelValue(board_panel.board_handling.coordinate_transform.user_unit);
     this.setVisible(true);
-    if (p_is_import) {
+    if (isSpecctraDsn) {
       // Read the default gui settings, if gui default file exists.
       InputStream input_stream = null;
       boolean defaults_file_found;
 
-      File defaults_file = new File(this.design_file.get_parent(), GUI_DEFAULTS_FILE_NAME);
+      File defaults_file = new File(this.design_file.getInputFileDirectoryOrNull(), GUI_DEFAULTS_FILE_NAME);
       defaults_file_found = true;
       try {
         input_stream = new FileInputStream(defaults_file);
@@ -375,7 +439,7 @@ public class BoardFrame extends WindowBase {
       if (defaults_file_found) {
         boolean read_ok = GUIDefaultsFile.read(this, board_panel.board_handling, input_stream);
         if (!read_ok) {
-          screen_messages.set_status_message(resources.getString("error_1"));
+          screen_messages.set_status_message(tm.getText("error_1"));
         }
         try {
           input_stream.close();
@@ -388,19 +452,15 @@ public class BoardFrame extends WindowBase {
     return true;
   }
 
-  boolean saveAsBinary() {
-    return saveAsBinary(this.design_file.get_output_file());
-  }
-
   public boolean load_intermediate_stage_file() {
     try {
-      FileInputStream input_stream = new FileInputStream(this.design_file.get_snapshot_file());
-      return this.read(input_stream, false, null);
+      FileInputStream input_stream = new FileInputStream(this.design_file.getSnapshotFile());
+      return this.load(input_stream, false, null);
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_2"));
+      screen_messages.set_status_message(tm.getText("error_2"));
       return false;
     } catch (Exception e) {
-      screen_messages.set_status_message(resources.getString("error_3"));
+      screen_messages.set_status_message(tm.getText("error_3"));
       return false;
     }
   }
@@ -413,19 +473,19 @@ public class BoardFrame extends WindowBase {
     }
 
     intermediate_stage_file_last_saved_at = LocalDateTime.now();
-    return saveAsBinary(this.design_file.get_snapshot_file());
+    return saveAsBinary(this.design_file.getSnapshotFile());
   }
 
   public boolean delete_intermediate_stage_file() {
-    return this.design_file.get_snapshot_file().delete();
+    return this.design_file.getSnapshotFile().delete();
   }
 
   public boolean is_intermediate_stage_file_available() {
-    return (this.design_file.get_snapshot_file().exists() && this.design_file.get_snapshot_file().canRead());
+    return (this.design_file.getSnapshotFile().exists() && this.design_file.getSnapshotFile().canRead());
   }
 
   public LocalDateTime get_intermediate_stage_file_modification_time() {
-    long lastModified = this.design_file.get_snapshot_file().lastModified();
+    long lastModified = this.design_file.getSnapshotFile().lastModified();
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
   }
 
@@ -433,28 +493,28 @@ public class BoardFrame extends WindowBase {
    * Saves the board, GUI settings and subwindows to disk as a binary file.
    * Returns false, if the save failed.
    */
-  private boolean saveAsBinary(File output_file) {
-    if (this.design_file == null) {
+  private boolean saveAsBinary(File outputFile) {
+    if (outputFile == null) {
       return false;
     }
 
     OutputStream output_stream;
     ObjectOutputStream object_stream;
     try {
-      FRLogger.info("Saving '" + output_file.getPath() + "'...");
+      FRLogger.info("Saving '" + outputFile.getPath() + "'...");
 
-      output_stream = new FileOutputStream(output_file);
+      output_stream = new FileOutputStream(outputFile);
       object_stream = new ObjectOutputStream(output_stream);
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_2"));
+      screen_messages.set_status_message(tm.getText("error_2"));
       return false;
     } catch (Exception e) {
-      screen_messages.set_status_message(resources.getString("error_3"));
+      screen_messages.set_status_message(tm.getText("error_3"));
       return false;
     }
 
     // (1) Save the board as binary file
-    boolean save_ok = board_panel.board_handling.save_design_file(object_stream);
+    boolean save_ok = board_panel.board_handling.saveAsBinary(object_stream);
     if (!save_ok) {
       return false;
     }
@@ -465,7 +525,9 @@ public class BoardFrame extends WindowBase {
       object_stream.writeObject(this.getLocation());
       object_stream.writeObject(this.getBounds());
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_4"));
+      screen_messages.set_status_message(
+        tm.getText("message_gui_settings_save_failed", outputFile.getPath())
+      );
       return false;
     }
 
@@ -479,31 +541,115 @@ public class BoardFrame extends WindowBase {
       object_stream.flush();
       output_stream.close();
     } catch (IOException e) {
-      screen_messages.set_status_message(resources.getString("error_5"));
+      screen_messages.set_status_message(
+          tm.getText("message_binary_file_save_failed", outputFile.getPath())
+      );
       return false;
     }
     return true;
   }
 
+  /**
+   * Writes a Specctra Session File (SES). Returns false, if write operation fails.
+   */
+  public boolean saveAsSpecctraSessionSes(File outputFile, String designName) {
+    if (outputFile == null) {
+      return false;
+    }
+
+    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
+    OutputStream output_stream;
+    try {
+      output_stream = new FileOutputStream(outputFile);
+    } catch (Exception e) {
+      output_stream = null;
+    }
+
+    if (!board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, designName)) {
+
+      this.screen_messages.set_status_message(
+          tm.getText("message_specctra_ses_save_failed", outputFile.getPath())
+      );
+      return false;
+    }
+
+    this.screen_messages.set_status_message(
+        tm.getText("message_specctra_ses_saved", outputFile.getPath())
+    );
+
+    return true;
+  }
+
+  /** Saves the board rule to file, so that they can be reused later on. */
+  private boolean saveRulesAs(File rulesFile, String designName, BoardHandling p_board_handling)
+  {
+    FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
+
+    OutputStream outputStream;
+    try {
+      outputStream = new FileOutputStream(rulesFile);
+    } catch (IOException e) {
+      FRLogger.error("unable to create rules file", e);
+      return false;
+    }
+
+    RulesFile.write(p_board_handling, outputStream, designName);
+    return true;
+  }
+
+  public void saveAsEagleScriptScr(File outputFile, String design_name) {
+    ByteArrayOutputStream sesOutputStream = new ByteArrayOutputStream();
+    if (!board_panel.board_handling.saveAsSpecctraSessionSes(sesOutputStream, design_name)) {
+      return;
+    }
+    InputStream sesInputStream = new ByteArrayInputStream(sesOutputStream.toByteArray());
+
+    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
+
+    OutputStream output_stream;
+    try {
+      output_stream = new FileOutputStream(outputFile);
+    } catch (Exception e) {
+      output_stream = null;
+    }
+
+    if (board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(sesInputStream, output_stream))
+    {
+      screen_messages.set_status_message(
+          tm.getText("message_eagle_saved", outputFile.getPath())
+      );
+    } else {
+      screen_messages.set_status_message(
+          tm.getText("message_eagle_save_failed", outputFile.getPath())
+      );
+    }
+  }
+
+  /**
+   * Writes a Specctra Design File (DSN). Returns false, if write operation fails.
+   */
+  public boolean saveAsSpecctraDesignDsn(File outputFile, String designName, boolean compatibilityMode) {
+    if (outputFile == null) {
+      return false;
+    }
+
+    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
+    OutputStream output_stream;
+    try {
+      output_stream = new FileOutputStream(outputFile);
+    } catch (Exception e) {
+      output_stream = null;
+    }
+
+    return board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream, designName, compatibilityMode);
+  }
+
   /** Sets contexts sensitive help for the input component, if the help system is used. */
+  @Deprecated
   public void set_context_sensitive_help(Component p_component, String p_help_id) {
     if (p_component == null) throw new NullPointerException("p_component");
 
-    if (this.help_system_used) {
-      Component curr_component;
-      if (p_component instanceof JFrame) {
-        curr_component = ((JFrame) p_component).getRootPane();
-      } else {
-        curr_component = p_component;
-      }
-      String help_id = "html_files." + p_help_id;
-      //            javax.help.CSH.setHelpIDString(curr_component, help_id);
-      //            if (help_broker==null) {
-      //                FRLogger.warn("help_broker is null");
-      //                return;
-      //            }
-      //            help_broker.enableHelpKey(curr_component, help_id, help_set);
-    }
+    //throw new UnsupportedOperationException("Context sensitive help is disabled.");
   }
 
   /** Sets the toolbar to the buttons of the selected item state. */
@@ -675,10 +821,15 @@ public class BoardFrame extends WindowBase {
     }
   }
 
-  /** Sets the selected button in the menu button group */
-  public void hilight_selected_button() {
-    this.toolbar_panel.hilight_selected_button();
+  /** Sets the mode value on mode selection component of the toolbar */
+  public void setToolbarModeSelectionPanelValue(InteractiveState interactiveState) {
+    this.toolbar_panel.setModeSelectionPanelValue(interactiveState);
   }
+
+  private void setToolbarUnitSelectionPanelValue(Unit unit) {
+    this.toolbar_panel.setUnitSelectionPanelValue(unit);
+  }
+
 
   /** Restore the selected snapshot in the snapshot window. */
   public void goto_selected_snapshot() {
@@ -735,13 +886,6 @@ public class BoardFrame extends WindowBase {
     }
   }
 
-  public enum Option {
-    FROM_START_MENU,
-    SINGLE_FRAME,
-    SESSION_FILE,
-    EXTENDED_TOOL_BAR
-  }
-
   /** Used for storing the subwindow filters in a snapshot. */
   public static class SubwindowSelections implements Serializable {
     private WindowObjectListWithFilter.SnapshotInfo incompletes_selection;
@@ -755,15 +899,26 @@ public class BoardFrame extends WindowBase {
     @Override
     public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-      if (confirm_cancel) {
-        int board_confirm_exit_dialog = JOptionPane.showConfirmDialog(
+      boolean wasBoardChanged = board_panel.board_handling.isBoardChanged();
+      if (wasBoardChanged) {
+        // Create a JOptionPane with a warning icon and set the default option to NO
+        Object[] options = {tm.getText("confirm_exit_yes"), tm.getText("confirm_exit_no")};
+        JOptionPane optionPane = new JOptionPane(
+            tm.getText("confirm_cancel"),
+            JOptionPane.WARNING_MESSAGE,
+            JOptionPane.YES_NO_OPTION,
             null,
-            resources.getString("confirm_cancel"),
-            null,
-            JOptionPane.YES_NO_OPTION);
-        if (board_confirm_exit_dialog == JOptionPane.NO_OPTION) {
+            options,
+            options[1] // Default to "No"
+        );
+        JDialog dialog = optionPane.createDialog(null, "Warning");
+        dialog.setVisible(true);
+
+        // Check the user's choice
+        Object selectedValue = optionPane.getValue();
+        if (selectedValue == null || ((String)selectedValue).equals(tm.getText("confirm_exit_no"))) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-          FRAnalytics.buttonClicked("board_confirm_exit_dialog_no", resources.getString("confirm_cancel"));
+          FRAnalytics.buttonClicked("board_confirm_exit_dialog_no", tm.getText("confirm_cancel"));
         } else {
           try {
             MainApplication.saveSettings();
@@ -802,5 +957,13 @@ public class BoardFrame extends WindowBase {
         }
       }
     }
+  }
+
+  public void addBoardLoadedEventListener(Consumer<RoutingBoard> listener) {
+    boardLoadedEventListeners.add(listener);
+  }
+
+  public void addReadOnlyEventListener(Consumer<RoutingBoard> listener) {
+    boardSavedEventListeners.add(listener);
   }
 }

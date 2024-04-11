@@ -93,9 +93,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       int p_net_no,
       SearchTreeObject p_ignore_object,
       TileShape p_ignore_shape) {
-    if (!(p_room.get_contained_shape().is_IntOctagon())
-        && this.board.get_test_level() != TestLevel.RELEASE_VERSION) {
-      FRLogger.warn("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
+    if (!(p_room.get_contained_shape().is_IntOctagon()))
+    {
+      FRLogger.debug("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
       return new LinkedList<>();
     }
     IntOctagon shape_to_be_contained = p_room.get_contained_shape().bounding_octagon();
@@ -223,9 +223,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
 
     TileShape contained_shape = p_incomplete_room.get_contained_shape();
     if (contained_shape == null || contained_shape.is_empty()) {
-      if (this.board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal()) {
-        FRLogger.warn("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
-      }
+      FRLogger.trace("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
       return result;
     }
     IntOctagon room_shape = p_incomplete_room.get_shape().bounding_octagon();
