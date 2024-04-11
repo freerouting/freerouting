@@ -121,7 +121,7 @@ public class LineSegment implements Serializable {
     return end;
   }
 
-  /** Returns the line segment with tje opposite direction. */
+  /** Returns the line segment with the opposite direction. */
   public LineSegment opposite() {
     return new LineSegment(end.opposite(), middle.opposite(), start.opposite());
   }

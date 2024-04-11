@@ -339,7 +339,7 @@ public abstract class PullTightAlgo {
       boolean try_skip;
       if (i == 1 || i == curr_polyline.arr.length - 2)
       // the position of the first corner and the last corner
-      //  must be retaimed exactly
+      //  must be retained exactly
       {
         Point prev_corner = curr_polyline.corner(i - 1);
         Point curr_corner = curr_polyline.corner(i);

@@ -570,7 +570,7 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the
    * pad of a pin. In this case the trace will be split only, if the intersection is at the center
-   * of the pin. Extending the function to vias leaded to broken connection problems wenn the
+   * of the pin. Extending the function to vias leaded to broken connection problems when the
    * autorouter connected to a trace.
    */
   private boolean split_inside_drill_pad_prohibited(int p_line_no, Line p_line) {

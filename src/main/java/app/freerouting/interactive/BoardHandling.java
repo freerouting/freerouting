@@ -682,6 +682,13 @@ public class BoardHandling extends BoardHandlingHeadless {
     if (interactive_state != null && graphics_context != null) {
       this.current_mouse_position = graphics_context.coordinate_transform.screen_to_board(p_point);
       InteractiveState return_state = interactive_state.mouse_moved();
+      Set<Item> hover_item = pick_items(this.current_mouse_position);
+      if (hover_item.size() == 1) {
+        String hover_info = hover_item.iterator().next().get_hover_info(locale);
+        this.panel.setToolTipText(hover_info);
+      } else {
+        this.panel.setToolTipText(null);
+      }
       // An automatic repaint here would slow down the display
       // performance in interactive route.
       // If a repaint is necessary, it should be done in the individual mouse_moved

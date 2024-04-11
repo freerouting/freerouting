@@ -565,6 +565,21 @@ public class Pin extends DrillItem implements Serializable {
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
   }
+  @Override
+  public String get_hover_info(Locale p_locale) {
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    Component component = board.components.get(this.get_component_no());
+    Padstack padstack = this.get_padstack();
+    String hover_info = resources.getString("pin") + " : " + 
+    resources.getString("component_2") + " " +
+    component.name + " " +
+    resources.getString("pin_2") + " " +
+    component.get_package().get_pin(this.pin_no).name + " " +
+    resources.getString("padstack") + " " +
+    padstack.name + " " +
+    this.get_connectable_item_hover_info(p_locale);
+    return hover_info;
+  }
 
   /**
    * Calculates the nearest exit restriction direction for changing p_trace_polyline.

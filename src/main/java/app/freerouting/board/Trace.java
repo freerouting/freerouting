@@ -404,6 +404,19 @@ public abstract class Trace extends Item implements Connectable, Serializable {
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
   }
+  @Override
+  public String get_hover_info(Locale p_locale) {
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    String hover_info = resources.getString("trace") + " " +
+        resources.getString("on_layer") + " : " +
+        this.board.layer_structure.arr[this.layer].name + " " +
+        resources.getString("width") + " : " +
+        2 * this.half_width + " " + 
+        resources.getString("length") + " : " +
+        (int)this.get_length() + " " +
+        this.get_connectable_item_hover_info(p_locale);
+    return hover_info;
+  }
 
   @Override
   public boolean validate() {
