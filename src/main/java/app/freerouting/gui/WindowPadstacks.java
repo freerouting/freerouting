@@ -7,6 +7,7 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.library.Padstack;
 import app.freerouting.library.Padstacks;
 
+import app.freerouting.management.TextManager;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,9 +24,8 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
   public WindowPadstacks(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("padstacks"));
+    this.setTitle(tm.getText("padstacks"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LibraryPadstacks");
   }
 

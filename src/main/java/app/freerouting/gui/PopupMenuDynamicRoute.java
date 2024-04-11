@@ -4,6 +4,7 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
 
@@ -16,25 +17,26 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
   PopupMenuDynamicRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
 
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+
     LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
 
     JMenuItem popup_end_route_menuitem = new JMenuItem();
-    popup_end_route_menuitem.setText(resources.getString("end_route"));
+    popup_end_route_menuitem.setText(tm.getText("end_route"));
     popup_end_route_menuitem.addActionListener(evt -> board_panel.board_handling.return_from_state());
     popup_end_route_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_end_route_menuitem", popup_end_route_menuitem.getText()));
 
     this.add(popup_end_route_menuitem, 0);
 
     JMenuItem popup_cancel_menuitem = new JMenuItem();
-    popup_cancel_menuitem.setText(resources.getString("cancel_route"));
+    popup_cancel_menuitem.setText(tm.getText("cancel_route"));
     popup_cancel_menuitem.addActionListener(evt -> board_panel.board_handling.cancel_state());
     popup_cancel_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
 
     this.add(popup_cancel_menuitem, 1);
 
     JMenuItem popup_snapshot_menuitem = new JMenuItem();
-    popup_snapshot_menuitem.setText(resources.getString("generate_snapshot"));
+    popup_snapshot_menuitem.setText(tm.getText("generate_snapshot"));
     popup_snapshot_menuitem.addActionListener(evt -> board_panel.board_handling.generate_snapshot());
     popup_snapshot_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_snapshot_menuitem", popup_snapshot_menuitem.getText()));
 

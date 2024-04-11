@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.LayerStructure;
 
+import app.freerouting.management.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
@@ -16,13 +17,12 @@ class PopupMenuChangeLayer extends JMenu {
   PopupMenuChangeLayer(BoardFrame p_board_frame) {
     this.board_frame = p_board_frame;
 
-    LayerStructure layer_structure =
-        board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+    LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
     this.item_arr = new LayermenuItem[layer_structure.signal_layer_count()];
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), board_frame.get_locale());
 
-    this.setText(resources.getString("change_layer"));
-    this.setToolTipText(resources.getString("change_layer_tooltip"));
+    this.setText(tm.getText("change_layer"));
+    this.setToolTipText(tm.getText("change_layer_tooltip"));
     int curr_signal_layer_no = 0;
     for (int i = 0; i < layer_structure.arr.length; ++i) {
       if (layer_structure.arr[i].is_signal) {
@@ -45,8 +45,9 @@ class PopupMenuChangeLayer extends JMenu {
     private final int layer_no;
     private final String message1;
     LayermenuItem(int p_layer_no) {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", board_frame.get_locale());
-      message1 = resources.getString("layer_changed_to") + " ";
+      TextManager tm = new TextManager(this.getClass(), board_frame.get_locale());
+
+      message1 = tm.getText("layer_changed_to") + " ";
       layer_no = p_layer_no;
       addActionListener(
           evt -> {

@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.Item;
 import app.freerouting.interactive.RatsNest;
 
+import app.freerouting.management.TextManager;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -15,10 +16,9 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
   public WindowIncompletes(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
 
-    this.setTitle(resources.getString("incompletes"));
-    this.list_empty_message.setText(resources.getString("route_completed"));
+    this.setTitle(tm.getText("incompletes"));
+    this.list_empty_message.setText(tm.getText("route_completed"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_Incompletes");
   }
 

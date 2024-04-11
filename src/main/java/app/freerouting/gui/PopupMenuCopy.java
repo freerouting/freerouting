@@ -4,6 +4,7 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import javax.swing.JMenuItem;
 import java.util.ResourceBundle;
 
@@ -24,16 +25,18 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     } else {
       change_layer_menu = null;
     }
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
+
+    TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
+
     JMenuItem popup_copy_insert_menuitem = new JMenuItem();
-    popup_copy_insert_menuitem.setText(resources.getString("insert"));
+    popup_copy_insert_menuitem.setText(tm.getText("insert"));
     popup_copy_insert_menuitem.addActionListener(evt -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));
     popup_copy_insert_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_copy_insert_menuitem", popup_copy_insert_menuitem.getText()));
 
     this.add(popup_copy_insert_menuitem, 0);
 
     JMenuItem popup_copy_done_menuitem = new JMenuItem();
-    popup_copy_done_menuitem.setText(resources.getString("done"));
+    popup_copy_done_menuitem.setText(tm.getText("done"));
     popup_copy_done_menuitem.addActionListener(evt -> board_panel.board_handling.return_from_state());
     popup_copy_done_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_copy_done_menuitem", popup_copy_done_menuitem.getText()));
 
