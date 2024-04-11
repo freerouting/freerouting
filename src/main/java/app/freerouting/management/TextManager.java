@@ -61,11 +61,12 @@ public class TextManager {
 
   private void loadResourceBundle(String baseName) {
     this.currentBaseName = baseName;
+
     try
     {
-      ResourceBundle classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
+      ResourceBundle defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", currentLocale);
 
-      ResourceBundle defaultMessages = ResourceBundle.getBundle("app.freerouting.gui.Default", currentLocale);
+      ResourceBundle classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
 
       // merge the default messages with the current class' messages
       this.messages = new ResourceBundle() {
@@ -91,7 +92,7 @@ public class TextManager {
 
     } catch (Exception e)
     {
-      FRLogger.error("There was a problem loading the resource bundle", e);
+      FRLogger.error("There was a problem loading the resource bundle '" + currentBaseName + "' of locale '" + currentLocale + "'", null);
     }
   }
 

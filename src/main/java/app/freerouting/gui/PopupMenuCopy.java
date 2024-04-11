@@ -24,7 +24,7 @@ public class PopupMenuCopy extends PopupMenuDisplay {
     } else {
       change_layer_menu = null;
     }
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
     JMenuItem popup_copy_insert_menuitem = new JMenuItem();
     popup_copy_insert_menuitem.setText(resources.getString("insert"));
     popup_copy_insert_menuitem.addActionListener(evt -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));

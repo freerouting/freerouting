@@ -15,7 +15,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
   public WindowIncompletes(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
 
     this.setTitle(resources.getString("incompletes"));
     this.list_empty_message.setText(resources.getString("route_completed"));

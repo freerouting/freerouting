@@ -20,7 +20,7 @@ public class WindowComponents extends WindowObjectListWithFilter {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
 
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
     this.setTitle(resources.getString("components"));
     p_board_frame.set_context_sensitive_help(this, "WindowObjectList_BoardComponents");
   }

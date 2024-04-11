@@ -30,7 +30,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow {
     this.board_panel = p_board_frame.board_panel;
 
     setLanguage(p_board_frame.get_locale());
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.Default", p_board_frame.get_locale());
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.Common", p_board_frame.get_locale());
 
     this.setTitle(p_title);
 
