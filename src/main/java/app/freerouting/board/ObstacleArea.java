@@ -10,6 +10,7 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.TextManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
@@ -314,13 +315,14 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("keepout"));
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("keepout"));
     int cmp_no = this.get_component_no();
     if (cmp_no > 0) {
-      p_window.append(" " + resources.getString("of_component") + " ");
+      p_window.append(" " + tm.getText("of_component") + " ");
       Component component = board.components.get(cmp_no);
-      p_window.append(component.name, resources.getString("component_info"), component);
+      p_window.append(component.name, tm.getText("component_info"), component);
     }
     this.print_shape_info(p_window, p_locale);
     this.print_item_info(p_window, p_locale);
@@ -329,23 +331,24 @@ public class ObstacleArea extends Item implements Serializable {
 
   /** Used in the implementation of print_info for this class and derived classes. */
   protected final void print_shape_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append(" " + resources.getString("at") + " ");
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append(" " + tm.getText("at") + " ");
     FloatPoint center =
         this.get_area().get_border().centre_of_gravity();
     p_window.append(center);
     Integer hole_count = this.relative_area.get_holes().length;
     if (hole_count > 0) {
-      p_window.append(" " + resources.getString("with") + " ");
+      p_window.append(" " + tm.getText("with") + " ");
       NumberFormat nf = NumberFormat.getInstance(p_locale);
       p_window.append(nf.format(hole_count));
       if (hole_count == 1) {
-        p_window.append(" " + resources.getString("hole"));
+        p_window.append(" " + tm.getText("hole"));
       } else {
-        p_window.append(" " + resources.getString("holes"));
+        p_window.append(" " + tm.getText("holes"));
       }
     }
-    p_window.append(" " + resources.getString("on_layer") + " ");
+    p_window.append(" " + tm.getText("on_layer") + " ");
     p_window.append(this.board.layer_structure.arr[this.get_layer()].name);
   }
 

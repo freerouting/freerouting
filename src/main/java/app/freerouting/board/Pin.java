@@ -17,6 +17,7 @@ import app.freerouting.library.Package;
 import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -550,32 +551,34 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("pin") + ": ");
-    p_window.append(resources.getString("component_2") + " ");
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("pin") + ": ");
+    p_window.append(tm.getText("component_2") + " ");
     Component component = board.components.get(this.get_component_no());
-    p_window.append(component.name, resources.getString("component_info"), component);
-    p_window.append(", " + resources.getString("pin_2") + " ");
+    p_window.append(component.name, tm.getText("component_info"), component);
+    p_window.append(", " + tm.getText("pin_2") + " ");
     p_window.append(component.get_package().get_pin(this.pin_no).name);
-    p_window.append(", " + resources.getString("padstack") + " ");
+    p_window.append(", " + tm.getText("padstack") + " ");
     Padstack padstack = this.get_padstack();
-    p_window.append(padstack.name, resources.getString("padstack_info"), padstack);
-    p_window.append(" " + resources.getString("at") + " ");
+    p_window.append(padstack.name, tm.getText("padstack_info"), padstack);
+    p_window.append(" " + tm.getText("at") + " ");
     p_window.append(this.get_center().to_float());
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
   }
   @Override
   public String get_hover_info(Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
     Component component = board.components.get(this.get_component_no());
     Padstack padstack = this.get_padstack();
-    String hover_info = resources.getString("pin") + " : " + 
-    resources.getString("component_2") + " " +
+    String hover_info = tm.getText("pin") + " : " + 
+    tm.getText("component_2") + " " +
     component.name + " " +
-    resources.getString("pin_2") + " " +
+    tm.getText("pin_2") + " " +
     component.get_package().get_pin(this.pin_no).name + " " +
-    resources.getString("padstack") + " " +
+    tm.getText("padstack") + " " +
     padstack.name + " " +
     this.get_connectable_item_hover_info(p_locale);
     return hover_info;

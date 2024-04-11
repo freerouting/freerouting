@@ -2,6 +2,7 @@ package app.freerouting.rules;
 
 import app.freerouting.board.ObjectInfoPanel;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,11 +68,10 @@ public class ViaInfos
   }
 
   @Override
-  public void print_info(
-      ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("vias") + ": ");
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("vias") + ": ");
     int counter = 0;
     boolean first_time = true;
     final int max_vias_per_row = 5;
@@ -85,7 +85,7 @@ public class ViaInfos
         p_window.newline();
         p_window.indent();
       }
-      p_window.append(curr_via.get_name(), resources.getString("via_info"), curr_via);
+      p_window.append(curr_via.get_name(), tm.getText("via_info"), curr_via);
       counter = (counter + 1) % max_vias_per_row;
     }
   }

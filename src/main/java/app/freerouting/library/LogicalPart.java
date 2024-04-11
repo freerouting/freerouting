@@ -3,6 +3,7 @@ package app.freerouting.library;
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -39,26 +40,25 @@ public class LogicalPart
   }
 
   @Override
-  public void print_info(
-      ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("logical_part_2") + " ");
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("logical_part_2") + " ");
     p_window.append_bold(this.name);
     for (int i = 0; i < this.part_pin_arr.length; ++i) {
       PartPin curr_pin = this.part_pin_arr[i];
       p_window.newline();
       p_window.indent();
-      p_window.append(resources.getString("pin") + " ");
+      p_window.append(tm.getText("pin") + " ");
       p_window.append(curr_pin.pin_name);
-      p_window.append(", " + resources.getString("gate") + " ");
+      p_window.append(", " + tm.getText("gate") + " ");
       p_window.append(curr_pin.gate_name);
-      p_window.append(", " + resources.getString("swap_code") + " ");
+      p_window.append(", " + tm.getText("swap_code") + " ");
       int gate_swap_code = curr_pin.gate_swap_code;
       p_window.append(String.valueOf(gate_swap_code));
-      p_window.append(", " + resources.getString("gate_pin") + " ");
+      p_window.append(", " + tm.getText("gate_pin") + " ");
       p_window.append(curr_pin.gate_pin_name);
-      p_window.append(", " + resources.getString("swap_code") + " ");
+      p_window.append(", " + tm.getText("swap_code") + " ");
       int pin_swap_code = curr_pin.gate_pin_swap_code;
       p_window.append(String.valueOf(pin_swap_code));
     }

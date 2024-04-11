@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.geometry.planar.FloatPoint;
 
+import app.freerouting.management.TextManager;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
@@ -35,15 +36,16 @@ public abstract class PrintableShape {
 
     @Override
     public String toString() {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
-      String result = resources.getString("circle") + ": ";
+      TextManager tm = new TextManager(this.getClass(), this.locale);
+
+      String result = tm.getText("circle") + ": ";
       if (center.x != 0 || center.y != 0) {
-        String center_string = resources.getString("center") + " =" + center.to_string(this.locale);
+        String center_string = tm.getText("center") + " =" + center.to_string(this.locale);
         result += center_string;
       }
       NumberFormat nf = NumberFormat.getInstance(this.locale);
       nf.setMaximumFractionDigits(4);
-      String radius_string = resources.getString("radius") + " = " + nf.format((float) radius);
+      String radius_string = tm.getText("radius") + " = " + nf.format((float) radius);
       result += radius_string;
       return result;
     }
@@ -62,14 +64,15 @@ public abstract class PrintableShape {
 
     @Override
     public String toString() {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
-      return resources.getString("rectangle")
+      TextManager tm = new TextManager(this.getClass(), this.locale);
+
+      return tm.getText("rectangle")
               + ": "
-              + resources.getString("lower_left")
+              + tm.getText("lower_left")
               + " = "
               + lower_left.to_string(this.locale)
               + ", "
-              + resources.getString("upper_right")
+              + tm.getText("upper_right")
               + " = "
               + upper_right.to_string(this.locale);
     }
@@ -85,8 +88,9 @@ public abstract class PrintableShape {
 
     @Override
     public String toString() {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", this.locale);
-      return resources.getString("polygon") + ": " + Arrays.stream(corner_arr)
+      TextManager tm = new TextManager(this.getClass(), this.locale);
+
+      return tm.getText("polygon") + ": " + Arrays.stream(corner_arr)
           .map(c -> c.to_string(this.locale))
           .collect(Collectors.joining(", "));
     }

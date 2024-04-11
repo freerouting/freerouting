@@ -7,6 +7,7 @@ import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 
@@ -389,30 +390,32 @@ public abstract class Trace extends Item implements Connectable, Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("trace"));
-    p_window.append(" " + resources.getString("from") + " ");
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("trace"));
+    p_window.append(" " + tm.getText("from") + " ");
     p_window.append(this.first_corner().to_float());
-    p_window.append(" " + resources.getString("to") + " ");
+    p_window.append(" " + tm.getText("to") + " ");
     p_window.append(this.last_corner().to_float());
-    p_window.append(" " + resources.getString("on_layer") + " ");
+    p_window.append(" " + tm.getText("on_layer") + " ");
     p_window.append(this.board.layer_structure.arr[this.layer].name);
-    p_window.append(", " + resources.getString("width") + " ");
+    p_window.append(", " + tm.getText("width") + " ");
     p_window.append(2 * this.half_width);
-    p_window.append(", " + resources.getString("length") + " ");
+    p_window.append(", " + tm.getText("length") + " ");
     p_window.append(this.get_length());
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
   }
   @Override
   public String get_hover_info(Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    String hover_info = resources.getString("trace") + " " +
-        resources.getString("on_layer") + " : " +
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    String hover_info = tm.getText("trace") + " " +
+        tm.getText("on_layer") + " : " +
         this.board.layer_structure.arr[this.layer].name + " " +
-        resources.getString("width") + " : " +
+        tm.getText("width") + " : " +
         2 * this.half_width + " " + 
-        resources.getString("length") + " : " +
+        tm.getText("length") + " : " +
         (int)this.get_length() + " " +
         this.get_connectable_item_hover_info(p_locale);
     return hover_info;

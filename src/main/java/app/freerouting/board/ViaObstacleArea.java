@@ -4,6 +4,7 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Vector;
 
+import app.freerouting.management.TextManager;
 import java.awt.Color;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -109,8 +110,9 @@ public class ViaObstacleArea extends ObstacleArea {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("via_keepout"));
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("via_keepout"));
     this.print_shape_info(p_window, p_locale);
     this.print_clearance_info(p_window, p_locale);
     this.print_clearance_violation_info(p_window, p_locale);

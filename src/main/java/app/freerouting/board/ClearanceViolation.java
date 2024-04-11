@@ -2,6 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.geometry.planar.ConvexShape;
 
+import app.freerouting.management.TextManager;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -31,15 +32,16 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("clearance_violation_2"));
-    p_window.append(" " + resources.getString("at") + " ");
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("clearance_violation_2"));
+    p_window.append(" " + tm.getText("at") + " ");
     p_window.append(shape.centre_of_gravity());
-    p_window.append(", " + resources.getString("width") + " ");
+    p_window.append(", " + tm.getText("width") + " ");
     p_window.append(2 * this.shape.smallest_radius());
-    p_window.append(", " + resources.getString("layer") + " ");
+    p_window.append(", " + tm.getText("layer") + " ");
     p_window.append(first_item.board.layer_structure.arr[this.layer].name);
-    p_window.append(", " + resources.getString("between"));
+    p_window.append(", " + tm.getText("between"));
     p_window.newline();
     p_window.indent();
     first_item.print_info(p_window, p_locale);
@@ -47,7 +49,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
     second_item.print_info(p_window, p_locale);
     p_window.newline();
     p_window.indent();
-    String clearance_violation_info_expected_clearance = String.format(resources.getString("clearance_violation_info_expected_clearance"), (this.expected_clearance / 10000.0), (this.actual_clearance / 10000.0));
+    String clearance_violation_info_expected_clearance = String.format(tm.getText("clearance_violation_info_expected_clearance"), (this.expected_clearance / 10000.0), (this.actual_clearance / 10000.0));
     p_window.append(clearance_violation_info_expected_clearance);
   }
 }

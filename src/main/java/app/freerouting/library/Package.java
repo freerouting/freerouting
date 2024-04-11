@@ -6,6 +6,7 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -98,24 +99,23 @@ public class Package
   }
 
   @Override
-  public void print_info(
-      ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("package") + " ");
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("package") + " ");
     p_window.append_bold(this.name);
     for (int i = 0; i < this.pin_arr.length; ++i) {
       Pin curr_pin = this.pin_arr[i];
       p_window.newline();
       p_window.indent();
-      p_window.append(resources.getString("pin") + " ");
+      p_window.append(tm.getText("pin") + " ");
       p_window.append(curr_pin.name);
-      p_window.append(", " + resources.getString("padstack") + " ");
+      p_window.append(", " + tm.getText("padstack") + " ");
       Padstack curr_padstack = this.package_list.padstack_list.get(curr_pin.padstack_no);
-      p_window.append(curr_padstack.name, resources.getString("padstack_info"), curr_padstack);
-      p_window.append(" " + resources.getString("at") + " ");
+      p_window.append(curr_padstack.name, tm.getText("padstack_info"), curr_padstack);
+      p_window.append(" " + tm.getText("at") + " ");
       p_window.append(curr_pin.relative_location.to_float());
-      p_window.append(", " + resources.getString("rotation") + " ");
+      p_window.append(", " + tm.getText("rotation") + " ");
       p_window.append_without_transforming(curr_pin.rotation_in_degree);
     }
     p_window.newline();

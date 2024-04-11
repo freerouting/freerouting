@@ -7,6 +7,7 @@ import app.freerouting.geometry.planar.Vector;
 import app.freerouting.library.LogicalPart;
 import app.freerouting.library.Package;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -191,31 +192,32 @@ public class Component
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("component") + " ");
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("component") + " ");
     p_window.append_bold(this.name);
     if (this.location != null) {
-      p_window.append(" " + resources.getString("at") + " ");
+      p_window.append(" " + tm.getText("at") + " ");
       p_window.append(this.location.to_float());
 
-      p_window.append(", " + resources.getString("rotation") + " ");
+      p_window.append(", " + tm.getText("rotation") + " ");
       p_window.append_without_transforming(rotation_in_degree);
 
       if (this.on_front) {
-        p_window.append(", " + resources.getString("front"));
+        p_window.append(", " + tm.getText("front"));
       } else {
-        p_window.append(", " + resources.getString("back"));
+        p_window.append(", " + tm.getText("back"));
       }
     } else {
-      p_window.append(" " + resources.getString("not_yet_placed"));
+      p_window.append(" " + tm.getText("not_yet_placed"));
     }
-    p_window.append(", " + resources.getString("package"));
+    p_window.append(", " + tm.getText("package"));
     Package lib_package = this.get_package();
-    p_window.append(lib_package.name, resources.getString("package_info"), lib_package);
+    p_window.append(lib_package.name, tm.getText("package_info"), lib_package);
     if (this.logical_part != null) {
-      p_window.append(", " + resources.getString("logical_part") + " ");
+      p_window.append(", " + tm.getText("logical_part") + " ");
       p_window.append(
-          this.logical_part.name, resources.getString("logical_part_info"), this.logical_part);
+          this.logical_part.name, tm.getText("logical_part_info"), this.logical_part);
     }
     p_window.newline();
   }

@@ -234,8 +234,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("board_outline"));
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+    p_window.append_bold(tm.getText("board_outline"));
     print_clearance_info(p_window, p_locale);
     p_window.newline();
   }

@@ -4,6 +4,7 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Locale;
@@ -207,35 +208,34 @@ public class NetClass
   }
 
   @Override
-  public void print_info(
-      ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("net_class_2") + " ");
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("net_class_2") + " ");
     p_window.append_bold(this.name);
     p_window.append_bold(":");
-    p_window.append(" " + resources.getString("trace_clearance_class") + " ");
+    p_window.append(" " + tm.getText("trace_clearance_class") + " ");
     String cl_name = clearance_matrix.get_name(this.trace_clearance_class);
     p_window.append(
         cl_name,
-        resources.getString("trace_clearance_class_2"),
+        tm.getText("trace_clearance_class_2"),
         clearance_matrix.get_row(this.trace_clearance_class));
     if (this.shove_fixed) {
-      p_window.append(", " + resources.getString("shove_fixed"));
+      p_window.append(", " + tm.getText("shove_fixed"));
     }
-    p_window.append(", " + resources.getString("via_rule") + " ");
-    p_window.append(via_rule.name, resources.getString("via_rule_2"), via_rule);
+    p_window.append(", " + tm.getText("via_rule") + " ");
+    p_window.append(via_rule.name, tm.getText("via_rule_2"), via_rule);
     if (trace_width_is_layer_dependent()) {
       for (int i = 0; i < trace_half_width_arr.length; ++i) {
         p_window.newline();
         p_window.indent();
-        p_window.append(resources.getString("trace_width") + " ");
+        p_window.append(tm.getText("trace_width") + " ");
         p_window.append(2 * trace_half_width_arr[i]);
-        p_window.append(" " + resources.getString("on_layer") + " ");
+        p_window.append(" " + tm.getText("on_layer") + " ");
         p_window.append(this.board_layer_structure.arr[i].name);
       }
     } else {
-      p_window.append(", " + resources.getString("trace_width") + " ");
+      p_window.append(", " + tm.getText("trace_width") + " ");
       p_window.append(2 * trace_half_width_arr[0]);
     }
     p_window.newline();

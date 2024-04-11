@@ -7,6 +7,7 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -130,18 +131,17 @@ public class Padstack
   }
 
   @Override
-  public void print_info(
-      ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("padstack") + " ");
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("padstack") + " ");
     p_window.append_bold(this.name);
     for (int i = 0; i < shapes.length; ++i) {
       if (shapes[i] != null) {
         p_window.newline();
         p_window.indent();
         p_window.append(shapes[i], p_locale);
-        p_window.append(" " + resources.getString("on_layer") + " ");
+        p_window.append(" " + tm.getText("on_layer") + " ");
         p_window.append(padstack_list.board_layer_structure.arr[i].name);
       }
     }

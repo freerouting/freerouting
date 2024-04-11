@@ -13,6 +13,7 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.TextManager;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
@@ -1033,10 +1034,11 @@ public abstract class Item
   }
   /** Internal function used in the implementation of get_hover_info */
   public String get_net_hover_info(Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
     String net_hover_info = ""; 
     for (int i = 0; i < this.net_count(); ++i) {
-        net_hover_info += resources.getString("net") + " : ";
+        net_hover_info += tm.getText("net") + " : ";
         Net curr_net = board.rules.nets.get(this.get_net_no(i));
         net_hover_info += curr_net.name;
     }
@@ -1045,23 +1047,25 @@ public abstract class Item
 
   /** Internal function used in the implementation of print_info */
   protected void print_net_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
     for (int i = 0; i < this.net_count(); ++i) {
-      p_window.append(", " + resources.getString("net") + " ");
+      p_window.append(", " + tm.getText("net") + " ");
       Net curr_net = board.rules.nets.get(this.get_net_no(i));
-      p_window.append(curr_net.name, resources.getString("net_info"), curr_net);
+      p_window.append(curr_net.name, tm.getText("net_info"), curr_net);
     }
   }
 
   /** Internal function used in the implementation of print_info */
   protected void print_clearance_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.clearance_class > 0) {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-      p_window.append(", " + resources.getString("clearance_class") + " ");
+      TextManager tm = new TextManager(this.getClass(), p_locale);
+
+      p_window.append(", " + tm.getText("clearance_class") + " ");
       String name = board.rules.clearance_matrix.get_name(this.clearance_class);
       p_window.append(
           name,
-          resources.getString("clearance_info"),
+          tm.getText("clearance_info"),
           board.rules.clearance_matrix.get_row(this.clearance_class));
     }
   }
@@ -1069,9 +1073,10 @@ public abstract class Item
   /** Internal function used in the implementation of print_info */
   protected void print_fixed_info(ObjectInfoPanel p_window, Locale p_locale) {
     if (this.fixed_state != FixedState.NOT_FIXED) {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.FixedState", p_locale);
+      TextManager tm = new TextManager(this.getClass(), p_locale);
+
       p_window.append(", ");
-      p_window.append(resources.getString(this.fixed_state.toString()));
+      p_window.append(tm.getText(this.fixed_state.toString()));
     }
   }
 
@@ -1079,11 +1084,12 @@ public abstract class Item
   protected void print_contact_info(ObjectInfoPanel p_window, Locale p_locale) {
     Collection<Item> contacts = this.get_normal_contacts();
     if (!contacts.isEmpty()) {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-      p_window.append(", " + resources.getString("contacts") + " ");
+      TextManager tm = new TextManager(this.getClass(), p_locale);
+
+      p_window.append(", " + tm.getText("contacts") + " ");
       int contact_count = contacts.size();
       p_window.append_items(
-          String.valueOf(contact_count), resources.getString("contact_info"), contacts);
+          String.valueOf(contact_count), tm.getText("contact_info"), contacts);
     }
   }
 
@@ -1092,17 +1098,18 @@ public abstract class Item
       ObjectInfoPanel p_window, Locale p_locale) {
     Collection<ClearanceViolation> clearance_violations = this.clearance_violations();
     if (!clearance_violations.isEmpty()) {
-      ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+      TextManager tm = new TextManager(this.getClass(), p_locale);
+
       p_window.append(", ");
       int violation_count = clearance_violations.size();
       Collection<ObjectInfoPanel.Printable> violations =
           new LinkedList<>(clearance_violations);
       p_window.append_objects(
-          String.valueOf(violation_count), resources.getString("violation_info"), violations);
+          String.valueOf(violation_count), tm.getText("violation_info"), violations);
       if (violation_count == 1) {
-        p_window.append(" " + resources.getString("clearance_violation"));
+        p_window.append(" " + tm.getText("clearance_violation"));
       } else {
-        p_window.append(" " + resources.getString("clearance_violations"));
+        p_window.append(" " + tm.getText("clearance_violations"));
       }
     }
   }

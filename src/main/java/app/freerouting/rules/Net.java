@@ -10,6 +10,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.UndoableObjects;
 
+import app.freerouting.management.TextManager;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -177,20 +178,20 @@ public class Net
     Collection<Printable> terminals = new LinkedList<>(terminal_items);
     int terminal_item_count = terminals.size();
 
-    ResourceBundle resources =
-        ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("net") + " ");
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("net") + " ");
     p_window.append_bold(this.name);
     p_window.append_bold(": ");
-    p_window.append(resources.getString("class") + " ");
-    p_window.append(net_class.get_name(), resources.getString("net_class"), net_class);
+    p_window.append(tm.getText("class") + " ");
+    p_window.append(net_class.get_name(), tm.getText("net_class"), net_class);
     p_window.append(", ");
     p_window.append_objects(
-        String.valueOf(terminal_item_count), resources.getString("terminal_items_2"), terminals);
-    p_window.append(" " + resources.getString("terminal_items"));
-    p_window.append(", " + resources.getString("via_count") + " ");
+        String.valueOf(terminal_item_count), tm.getText("terminal_items_2"), terminals);
+    p_window.append(" " + tm.getText("terminal_items"));
+    p_window.append(", " + tm.getText("via_count") + " ");
     p_window.append(String.valueOf(via_count));
-    p_window.append(", " + resources.getString("trace_length") + " ");
+    p_window.append(", " + tm.getText("trace_length") + " ");
     p_window.append(cumulative_trace_length);
     p_window.newline();
   }

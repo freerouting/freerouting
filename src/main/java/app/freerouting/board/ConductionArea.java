@@ -8,6 +8,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 
+import app.freerouting.management.TextManager;
 import java.awt.Color;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -173,8 +174,9 @@ public class ConductionArea extends ObstacleArea implements Connectable {
 
   @Override
   public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
-    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
-    p_window.append_bold(resources.getString("conduction_area"));
+    TextManager tm = new TextManager(this.getClass(), p_locale);
+
+    p_window.append_bold(tm.getText("conduction_area"));
     this.print_shape_info(p_window, p_locale);
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
