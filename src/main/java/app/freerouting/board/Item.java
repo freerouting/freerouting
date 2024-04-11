@@ -1018,6 +1018,31 @@ public abstract class Item
     autoroute_info = null;
   }
 
+  /**
+   * Gets the information for hover event to display
+   */
+  public String get_hover_info(Locale p_locale) {
+    String hover_info = "";
+    return hover_info;
+  }
+  /** Internal function used in the implementation of get_hover_info */
+  public String get_connectable_item_hover_info(Locale p_locale) {
+    String connectable_item_hover_info = 
+    this.get_net_hover_info(p_locale);
+    return connectable_item_hover_info;
+  }
+  /** Internal function used in the implementation of get_hover_info */
+  public String get_net_hover_info(Locale p_locale) {
+    ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
+    String net_hover_info = ""; 
+    for (int i = 0; i < this.net_count(); ++i) {
+        net_hover_info += resources.getString("net") + " : ";
+        Net curr_net = board.rules.nets.get(this.get_net_no(i));
+        net_hover_info += curr_net.name;
+    }
+    return net_hover_info;
+  }
+
   /** Internal function used in the implementation of print_info */
   protected void print_net_info(ObjectInfoPanel p_window, Locale p_locale) {
     ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.board.ObjectInfoPanel", p_locale);
