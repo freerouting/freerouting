@@ -466,9 +466,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (free_angle_traces_found) {
-        ResourceBundle resources =
-            ResourceBundle.getBundle(
-                "app.freerouting.gui.WindowRouteParameter", current_locale);
+        ResourceBundle resources = ResourceBundle.getBundle("app.freerouting.gui.WindowRouteParameter", current_locale);
         String curr_message = resources.getString("change_snap_angle_90");
         if (!WindowMessage.confirm(curr_message)) {
           refresh();
