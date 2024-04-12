@@ -1,15 +1,20 @@
 package app.freerouting.gui;
 
 import app.freerouting.settings.DisabledFeaturesSettings;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 
-/** Creates the menu bar of a board frame together with its menu items. */
-class BoardMenuBar extends JMenuBar {
+import javax.swing.*;
+
+/**
+ * Creates the menu bar of a board frame together with its menu items.
+ */
+class BoardMenuBar extends JMenuBar
+{
 
   public BoardMenuFile fileMenu;
 
-  /** Creates a new BoardMenuBar together with its menus */
+  /**
+   * Creates a new BoardMenuBar together with its menus
+   */
   public BoardMenuBar(BoardFrame boardFrame, DisabledFeaturesSettings disabledFeatures)
   {
     fileMenu = new BoardMenuFile(boardFrame, disabledFeatures.macros);
@@ -22,7 +27,7 @@ class BoardMenuBar extends JMenuBar {
     add(rules_menu);
     JMenu info_menu = BoardMenuInfo.get_instance(boardFrame);
     add(info_menu);
-    if (!disabledFeatures.other_menu)
+    if (!disabledFeatures.otherMenu)
     {
       JMenu other_menu = BoardMenuOther.get_instance(boardFrame);
       add(other_menu);
