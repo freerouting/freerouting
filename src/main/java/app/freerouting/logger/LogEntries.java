@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LogEntries {
+public class LogEntries
+{
   private final List<LogEntry> entries = new ArrayList<>();
+  private final List<LogEntryAddedListener> listeners = new ArrayList<>();
 
   public int getWarningCount()
   {
-    return (int)entries.stream().filter(e -> e.type == LogEntryType.Warning).count();
+    return (int) entries.stream().filter(e -> e.type == LogEntryType.Warning).count();
   }
 
   public int getErrorCount()
   {
-    return (int)entries.stream().filter(e -> e.type == LogEntryType.Error).count();
+    return (int) entries.stream().filter(e -> e.type == LogEntryType.Error).count();
   }
 
   public void clear()
@@ -24,16 +26,12 @@ public class LogEntries {
 
   public String getAsString()
   {
-    return entries.stream()
-        .map(LogEntry::toString)
-        .collect(Collectors.joining("\n", "", "\n"));
+    return entries.stream().map(LogEntry::toString).collect(Collectors.joining("\n", "", "\n"));
   }
 
   public String[] get()
   {
-    return entries.stream()
-        .map(LogEntry::toString)
-        .toArray(String[]::new);
+    return entries.stream().map(LogEntry::toString).toArray(String[]::new);
   }
 
   public LogEntry[] getEntries()
@@ -57,15 +55,14 @@ public class LogEntries {
     entries.add(new LogEntry(type, message, exception));
   }
 
-  // Event to be raised when a log entry is added
-  public static interface LogEntryAddedListener {
-    void logEntryAdded(LogEntryType type, String message);
-  }
-
-  private final List<LogEntryAddedListener> listeners = new ArrayList<>();
-
   public void addLogEntryAddedListener(LogEntryAddedListener listener)
   {
     listeners.add(listener);
+  }
+
+  // Event to be raised when a log entry is added
+  public interface LogEntryAddedListener
+  {
+    void logEntryAdded(LogEntryType type, String message);
   }
 }

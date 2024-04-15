@@ -1,3 +1,5 @@
 package app.freerouting;
 
-public class Freerouting {}
+public class Freerouting
+{
+}

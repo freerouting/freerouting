@@ -2,15 +2,20 @@ package app.freerouting.gui;
 
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.util.ResourceBundle;
 
-/** Popup Menu used in the interactive select state. */
-class PopupMenuMain extends PopupMenuDisplay {
+import javax.swing.*;
 
-  /** Creates a new instance of MainPopupMenu */
-  PopupMenuMain(BoardFrame p_board_frame) {
+/**
+ * Popup Menu used in the interactive select state.
+ */
+class PopupMenuMain extends PopupMenuDisplay
+{
+
+  /**
+   * Creates a new instance of MainPopupMenu
+   */
+  PopupMenuMain(BoardFrame p_board_frame)
+  {
     super(p_board_frame);
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
@@ -70,7 +75,8 @@ class PopupMenuMain extends PopupMenuDisplay {
 
     // Insert the pin swap item.
 
-    if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0) {
+    if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0)
+    {
       // the board contains swappable gates or pins
       JMenuItem popup_swap_pin_menuitem = new JMenuItem();
       popup_swap_pin_menuitem.setText(tm.getText("swap_pin"));

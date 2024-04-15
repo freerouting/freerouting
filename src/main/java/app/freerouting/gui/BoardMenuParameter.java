@@ -2,23 +2,31 @@ package app.freerouting.gui;
 
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.util.ResourceBundle;
 
-/** Creates the parameter menu of a board frame. */
-public class BoardMenuParameter extends JMenu {
+import javax.swing.*;
+
+/**
+ * Creates the parameter menu of a board frame.
+ */
+public class BoardMenuParameter extends JMenu
+{
   private final BoardFrame board_frame;
   private final TextManager tm;
 
-  /** Creates a new instance of BoardSelectMenu */
-  private BoardMenuParameter(BoardFrame p_board_frame) {
+  /**
+   * Creates a new instance of BoardSelectMenu
+   */
+  private BoardMenuParameter(BoardFrame p_board_frame)
+  {
     board_frame = p_board_frame;
     tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
 
-  /** Returns a new windows menu for the board frame. */
-  public static BoardMenuParameter get_instance(BoardFrame p_board_frame) {
+  /**
+   * Returns a new windows menu for the board frame.
+   */
+  public static BoardMenuParameter get_instance(BoardFrame p_board_frame)
+  {
     final BoardMenuParameter parameter_menu = new BoardMenuParameter(p_board_frame);
 
     parameter_menu.setText(parameter_menu.tm.getText("parameter"));

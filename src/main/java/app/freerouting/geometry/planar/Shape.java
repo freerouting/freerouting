@@ -4,7 +4,8 @@ package app.freerouting.geometry.planar;
  * Interface describing functionality for connected 2-dimensional shapes in the plane. A Shape
  * object is expected to be simply connected, that means, it may not contain holes.
  */
-public interface Shape extends Area {
+public interface Shape extends Area
+{
 
   /**
    * Returns the length of the border of this shape. If the shape is unbounded, Integer.MAX_VALUE is
@@ -18,16 +19,24 @@ public interface Shape extends Area {
    */
   double area();
 
-  /** Returns the gravity point of this shape */
+  /**
+   * Returns the gravity point of this shape
+   */
   FloatPoint centre_of_gravity();
 
-  /** Returns true, if p_point is not contained in the inside or the boundary of the shape */
+  /**
+   * Returns true, if p_point is not contained in the inside or the boundary of the shape
+   */
   boolean is_outside(Point p_point);
 
-  /** Returns true, if p_point is contained in this shape, but not on the border. */
+  /**
+   * Returns true, if p_point is contained in this shape, but not on the border.
+   */
   boolean contains_inside(Point p_point);
 
-  /** Returns true, if p_point lies exact on the boundary of the shape */
+  /**
+   * Returns true, if p_point lies exact on the boundary of the shape
+   */
   boolean contains_on_border(Point p_point);
 
   /**
@@ -36,16 +45,24 @@ public interface Shape extends Area {
    */
   double distance(FloatPoint p_point);
 
-  /** Return a bounding TileShape of this shape. */
+  /**
+   * Return a bounding TileShape of this shape.
+   */
   TileShape bounding_tile();
 
-  /** Returns the bounding RegularTileShape with the fixed directions p_dirs */
+  /**
+   * Returns the bounding RegularTileShape with the fixed directions p_dirs
+   */
   RegularTileShape bounding_shape(ShapeBoundingDirections p_dirs);
 
-  /** Returns the distance between p_point and its nearest point on the border of the shape. */
+  /**
+   * Returns the distance between p_point and its nearest point on the border of the shape.
+   */
   double border_distance(FloatPoint p_point);
 
-  /** Returns the smallest distance from the centre of gravity to the border of the shape. */
+  /**
+   * Returns the smallest distance from the centre of gravity to the border of the shape.
+   */
   double smallest_radius();
 
   /**
@@ -55,7 +72,9 @@ public interface Shape extends Area {
    */
   Shape enlarge(double p_offset);
 
-  /** Checks, if  this shape and p_other have a nonempty intersection. */
+  /**
+   * Checks, if  this shape and p_other have a nonempty intersection.
+   */
   boolean intersects(Shape p_other);
 
   /**
@@ -65,12 +84,23 @@ public interface Shape extends Area {
    */
   Polyline[] cutout(Polyline p_polyline);
 
-  /** Auxiliary function to implement the same function with parameter type Shape. */
+  /**
+   * Auxiliary function to implement the same function with parameter type Shape.
+   */
   boolean intersects(IntBox p_other);
-  /** Auxiliary function to implement the same function with parameter type Shape. */
+
+  /**
+   * Auxiliary function to implement the same function with parameter type Shape.
+   */
   boolean intersects(IntOctagon p_other);
-  /** Auxiliary function to implement the same function with parameter type Shape. */
+
+  /**
+   * Auxiliary function to implement the same function with parameter type Shape.
+   */
   boolean intersects(Simplex p_other);
-  /** Auxiliary function to implement the same function with parameter type Shape. */
+
+  /**
+   * Auxiliary function to implement the same function with parameter type Shape.
+   */
   boolean intersects(Circle p_other);
 }

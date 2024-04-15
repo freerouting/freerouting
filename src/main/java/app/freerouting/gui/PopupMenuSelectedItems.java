@@ -2,14 +2,20 @@ package app.freerouting.gui;
 
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenuItem;
-import java.util.ResourceBundle;
 
-/** Popup menu used in the interactive selected item state. */
-class PopupMenuSelectedItems extends PopupMenuDisplay {
+import javax.swing.*;
 
-  /** Creates a new instance of SelectedItemPopupMenu */
-  PopupMenuSelectedItems(BoardFrame p_board_frame) {
+/**
+ * Popup menu used in the interactive selected item state.
+ */
+class PopupMenuSelectedItems extends PopupMenuDisplay
+{
+
+  /**
+   * Creates a new instance of SelectedItemPopupMenu
+   */
+  PopupMenuSelectedItems(BoardFrame p_board_frame)
+  {
     super(p_board_frame);
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());

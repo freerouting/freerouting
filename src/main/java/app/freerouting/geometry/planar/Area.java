@@ -4,11 +4,16 @@ package app.freerouting.geometry.planar;
  * An Area is a not necessarily simply connected Shape, which means, that it may contain holes. The
  * border and the holes of an Area are of class Shape.
  */
-public interface Area {
-  /** returns true, if the area is empty */
+public interface Area
+{
+  /**
+   * returns true, if the area is empty
+   */
   boolean is_empty();
 
-  /** returns true, if the area is contained in a sufficiently large box */
+  /**
+   * returns true, if the area is contained in a sufficiently large box
+   */
   boolean is_bounded();
 
   /**
@@ -17,13 +22,19 @@ public interface Area {
    */
   int dimension();
 
-  /** Checks, if this area is completely contained in p_box. */
+  /**
+   * Checks, if this area is completely contained in p_box.
+   */
   boolean is_contained_in(IntBox p_box);
 
-  /** returns the border shape of this area */
+  /**
+   * returns the border shape of this area
+   */
   Shape get_border();
 
-  /** Returns the array of holes, of this area. */
+  /**
+   * Returns the array of holes, of this area.
+   */
   Shape[] get_holes();
 
   /**
@@ -44,30 +55,48 @@ public interface Area {
    */
   boolean contains(FloatPoint p_point);
 
-  /** Returns true, if p_point is inside or on the border of this area, but not inside a hole. */
+  /**
+   * Returns true, if p_point is inside or on the border of this area, but not inside a hole.
+   */
   boolean contains(Point p_point);
 
-  /** Calculates an approximation of the nearest point of the shape to p_from_point */
+  /**
+   * Calculates an approximation of the nearest point of the shape to p_from_point
+   */
   FloatPoint nearest_point_approx(FloatPoint p_from_point);
 
-  /** Turns this area by p_factor times 90 degree around p_pole. */
+  /**
+   * Turns this area by p_factor times 90 degree around p_pole.
+   */
   Area turn_90_degree(int p_factor, IntPoint p_pole);
 
-  /** Rotates the area around p_pole by p_angle. The result may be not exact. */
+  /**
+   * Rotates the area around p_pole by p_angle. The result may be not exact.
+   */
   Area rotate_approx(double p_angle, FloatPoint p_pole);
 
-  /** Returns the affine translation of the area by p_vector */
+  /**
+   * Returns the affine translation of the area by p_vector
+   */
   Area translate_by(Vector p_vector);
 
-  /** Mirrors this area at the horizontal line through p_pole. */
+  /**
+   * Mirrors this area at the horizontal line through p_pole.
+   */
   Area mirror_horizontal(IntPoint p_pole);
 
-  /** Mirrors this area at the vertical line through p_pole. */
+  /**
+   * Mirrors this area at the vertical line through p_pole.
+   */
   Area mirror_vertical(IntPoint p_pole);
 
-  /** Returns an approximation of the corners of this area. */
+  /**
+   * Returns an approximation of the corners of this area.
+   */
   FloatPoint[] corner_approx_arr();
 
-  /** Returns a division of this area into convex pieces. */
+  /**
+   * Returns a division of this area into convex pieces.
+   */
   TileShape[] split_to_convex();
 }

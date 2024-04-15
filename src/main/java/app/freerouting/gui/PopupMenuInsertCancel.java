@@ -2,17 +2,22 @@ package app.freerouting.gui;
 
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import java.util.ResourceBundle;
 
-/** Popup menu containing the 2 items complete and cancel. */
-class PopupMenuInsertCancel extends JPopupMenu {
+import javax.swing.*;
+
+/**
+ * Popup menu containing the 2 items complete and cancel.
+ */
+class PopupMenuInsertCancel extends JPopupMenu
+{
 
   private final BoardPanel board_panel;
 
-  /** Creates a new instance of CompleteCancelPopupMenu */
-  PopupMenuInsertCancel(BoardFrame p_board_frame) {
+  /**
+   * Creates a new instance of CompleteCancelPopupMenu
+   */
+  PopupMenuInsertCancel(BoardFrame p_board_frame)
+  {
     this.board_panel = p_board_frame.board_panel;
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());

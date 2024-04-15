@@ -2,8 +2,11 @@ package app.freerouting.geometry.planar;
 
 import java.math.BigInteger;
 
-/** Some numerical limits and values are stored here. */
-public class Limits {
+/**
+ * Some numerical limits and values are stored here.
+ */
+public class Limits
+{
 
   /**
    * An upper bound (2^25) so that the product of two integers with absolut value at most CRIT_COOR
@@ -22,5 +25,6 @@ public class Limits {
   public static final double sqrt2 = Math.sqrt(2);
 
   private Limits() // disallow instantiation
-      {}
+  {
+  }
 }

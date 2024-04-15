@@ -2,18 +2,20 @@ package app.freerouting.gui;
 
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.util.ResourceBundle;
 
-public class BoardMenuHelp extends JMenu {
+import javax.swing.*;
+
+public class BoardMenuHelp extends JMenu
+{
   protected final BoardFrame board_frame;
+
   /**
    * Creates a new instance of BoardMenuHelpReduced Separated from BoardMenuHelp to avoid
    * ClassNotFound exception when the library jh.jar is not found, which is only used in the
    * extended help menu.
    */
-  public BoardMenuHelp(BoardFrame p_board_frame) {
+  public BoardMenuHelp(BoardFrame p_board_frame)
+  {
     this.board_frame = p_board_frame;
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
     this.setText(tm.getText("help"));

@@ -3,6 +3,7 @@ package app.freerouting.datastructures;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.logger.FRLogger;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -14,33 +15,47 @@ import java.util.TreeSet;
  * historical reasons (coming from a Kd-Tree). Instead, any algorithm to calculate a bounding shape
  * of two input shapes can be used. The algorithm would of course also work for higher dimensions.
  */
-public class MinAreaTree extends ShapeTree {
+public class MinAreaTree extends ShapeTree
+{
 
   protected ArrayStack<TreeNode> node_stack = new ArrayStack<>(10000);
 
-  /** Constructor with a fixed set of directions defining the keys and the surrounding shapes */
-  public MinAreaTree(ShapeBoundingDirections p_directions) {
+  /**
+   * Constructor with a fixed set of directions defining the keys and the surrounding shapes
+   */
+  public MinAreaTree(ShapeBoundingDirections p_directions)
+  {
     super(p_directions);
   }
 
-  /** Calculates the objects in this tree, which overlap with p_shape */
-  public Set<Leaf> overlaps(RegularTileShape p_shape) {
+  /**
+   * Calculates the objects in this tree, which overlap with p_shape
+   */
+  public Set<Leaf> overlaps(RegularTileShape p_shape)
+  {
     Set<Leaf> found_overlaps = new TreeSet<>();
-    if (this.root == null) {
+    if (this.root == null)
+    {
       return found_overlaps;
     }
     this.node_stack.reset();
     this.node_stack.push(this.root);
     TreeNode curr_node;
-    for (; ; ) {
+    for (; ; )
+    {
       curr_node = this.node_stack.pop();
-      if (curr_node == null) {
+      if (curr_node == null)
+      {
         break;
       }
-      if (curr_node.bounding_shape.intersects(p_shape)) {
-        if (curr_node instanceof Leaf) {
+      if (curr_node.bounding_shape.intersects(p_shape))
+      {
+        if (curr_node instanceof Leaf)
+        {
           found_overlaps.add((Leaf) curr_node);
-        } else {
+        }
+        else
+        {
           this.node_stack.push(((InnerNode) curr_node).first_child);
           this.node_stack.push(((InnerNode) curr_node).second_child);
         }
@@ -50,11 +65,13 @@ public class MinAreaTree extends ShapeTree {
   }
 
   @Override
-  void insert(Leaf p_leaf) {
+  void insert(Leaf p_leaf)
+  {
     ++this.leaf_count;
 
     // Tree is empty - just insert the new leaf
-    if (root == null) {
+    if (root == null)
+    {
       root = p_leaf;
       return;
     }
@@ -67,11 +84,15 @@ public class MinAreaTree extends ShapeTree {
     InnerNode curr_parent = leaf_to_replace.parent;
     InnerNode new_node = new InnerNode(new_bounds, curr_parent);
 
-    if (leaf_to_replace.parent != null) {
+    if (leaf_to_replace.parent != null)
+    {
       // Replace the pointer from the parent to the leaf with our new node
-      if (leaf_to_replace == curr_parent.first_child) {
+      if (leaf_to_replace == curr_parent.first_child)
+      {
         curr_parent.first_child = new_node;
-      } else {
+      }
+      else
+      {
         curr_parent.second_child = new_node;
       }
     }
@@ -83,46 +104,52 @@ public class MinAreaTree extends ShapeTree {
     new_node.first_child = leaf_to_replace;
     new_node.second_child = p_leaf;
 
-    if (root == leaf_to_replace) {
+    if (root == leaf_to_replace)
+    {
       root = new_node;
     }
   }
 
-  private Leaf position_locate(TreeNode p_curr_node, Leaf p_leaf_to_insert) {
+  private Leaf position_locate(TreeNode p_curr_node, Leaf p_leaf_to_insert)
+  {
     TreeNode curr_node = p_curr_node;
 
-    while (!(curr_node instanceof Leaf)) {
+    while (!(curr_node instanceof Leaf))
+    {
       InnerNode curr_inner_node = (InnerNode) curr_node;
-      curr_inner_node.bounding_shape =
-          p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape);
+      curr_inner_node.bounding_shape = p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape);
 
       // Choose the child, so that the area increase of that child after taking the union
       // with the shape of p_leaf_to_insert is minimal.
 
       RegularTileShape first_child_shape = curr_inner_node.first_child.bounding_shape;
-      RegularTileShape union_with_first_child_shape =
-          p_leaf_to_insert.bounding_shape.union(first_child_shape);
+      RegularTileShape union_with_first_child_shape = p_leaf_to_insert.bounding_shape.union(first_child_shape);
       double first_area_increase = union_with_first_child_shape.area() - first_child_shape.area();
 
       RegularTileShape second_child_shape = curr_inner_node.second_child.bounding_shape;
-      RegularTileShape union_with_second_child_shape =
-          p_leaf_to_insert.bounding_shape.union(second_child_shape);
-      double second_area_increase =
-          union_with_second_child_shape.area() - second_child_shape.area();
+      RegularTileShape union_with_second_child_shape = p_leaf_to_insert.bounding_shape.union(second_child_shape);
+      double second_area_increase = union_with_second_child_shape.area() - second_child_shape.area();
 
-      if (first_area_increase <= second_area_increase) {
+      if (first_area_increase <= second_area_increase)
+      {
         curr_node = curr_inner_node.first_child;
-      } else {
+      }
+      else
+      {
         curr_node = curr_inner_node.second_child;
       }
     }
     return (Leaf) curr_node;
   }
 
-  /** removes an entry from this tree */
+  /**
+   * removes an entry from this tree
+   */
   @Override
-  public void remove_leaf(Leaf p_leaf) {
-    if (p_leaf == null) {
+  public void remove_leaf(Leaf p_leaf)
+  {
+    if (p_leaf == null)
+    {
       return;
     }
     // remove the leaf node
@@ -131,33 +158,47 @@ public class MinAreaTree extends ShapeTree {
     p_leaf.parent = null;
     p_leaf.object = null;
     --this.leaf_count;
-    if (parent == null) {
+    if (parent == null)
+    {
       // tree gets empty
       root = null;
       return;
     }
     // find the other leaf of the parent
     TreeNode other_leaf;
-    if (parent.second_child == p_leaf) {
+    if (parent.second_child == p_leaf)
+    {
       other_leaf = parent.first_child;
-    } else if (parent.first_child == p_leaf) {
+    }
+    else if (parent.first_child == p_leaf)
+    {
       other_leaf = parent.second_child;
-    } else {
+    }
+    else
+    {
       FRLogger.warn("MinAreaTree.remove_leaf: parent inconsistent");
       other_leaf = null;
     }
     // link the other leaf to the grand_parent and remove the parent node
     InnerNode grand_parent = parent.parent;
     other_leaf.parent = grand_parent;
-    if (grand_parent == null) {
+    if (grand_parent == null)
+    {
       // only one leaf left in the tree
       root = other_leaf;
-    } else {
-      if (grand_parent.second_child == parent) {
+    }
+    else
+    {
+      if (grand_parent.second_child == parent)
+      {
         grand_parent.second_child = other_leaf;
-      } else if (grand_parent.first_child == parent) {
+      }
+      else if (grand_parent.first_child == parent)
+      {
         grand_parent.first_child = other_leaf;
-      } else {
+      }
+      else
+      {
         FRLogger.warn("MinAreaTree.remove_leaf: grand_parent inconsistent");
       }
     }
@@ -169,11 +210,11 @@ public class MinAreaTree extends ShapeTree {
     // recalculate the bounding shapes of the ancestors
     // as long as it gets smaller after removing p_leaf
     InnerNode node_to_recalculate = grand_parent;
-    while (node_to_recalculate != null) {
-      RegularTileShape new_bounds =
-          node_to_recalculate.second_child.bounding_shape.union(
-              node_to_recalculate.first_child.bounding_shape);
-      if (new_bounds.contains(node_to_recalculate.bounding_shape)) {
+    while (node_to_recalculate != null)
+    {
+      RegularTileShape new_bounds = node_to_recalculate.second_child.bounding_shape.union(node_to_recalculate.first_child.bounding_shape);
+      if (new_bounds.contains(node_to_recalculate.bounding_shape))
+      {
         // the new bounds are not smaller, no further recalculate necessary
         break;
       }

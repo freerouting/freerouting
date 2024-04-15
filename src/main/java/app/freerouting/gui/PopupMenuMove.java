@@ -2,17 +2,19 @@ package app.freerouting.gui;
 
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.MoveItemState;
-
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.util.ResourceBundle;
 
-public class PopupMenuMove extends PopupMenuDisplay {
+import javax.swing.*;
 
-  /** Creates a new instance of PopupMenuMove */
-  public PopupMenuMove(BoardFrame p_board_frame) {
+public class PopupMenuMove extends PopupMenuDisplay
+{
+
+  /**
+   * Creates a new instance of PopupMenuMove
+   */
+  public PopupMenuMove(BoardFrame p_board_frame)
+  {
     super(p_board_frame);
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
@@ -73,14 +75,14 @@ public class PopupMenuMove extends PopupMenuDisplay {
 
     JMenuItem popup_reset_rotation_menuitem = new JMenuItem();
     popup_reset_rotation_menuitem.setText(tm.getText("reset_rotation"));
-    popup_reset_rotation_menuitem.addActionListener(
-        evt -> {
-          InteractiveState interactive_state =
-              board_panel.board_handling.get_interactive_state();
-          if (interactive_state instanceof MoveItemState) {
-            ((MoveItemState) interactive_state).reset_rotation();
-          }
-        });
+    popup_reset_rotation_menuitem.addActionListener(evt ->
+    {
+      InteractiveState interactive_state = board_panel.board_handling.get_interactive_state();
+      if (interactive_state instanceof MoveItemState)
+      {
+        ((MoveItemState) interactive_state).reset_rotation();
+      }
+    });
     popup_reset_rotation_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_reset_rotation_menuitem", popup_reset_rotation_menuitem.getText()));
 
     this.add(popup_reset_rotation_menuitem, 2);
@@ -100,7 +102,8 @@ public class PopupMenuMove extends PopupMenuDisplay {
     this.add(popup_cancel_menuitem, 4);
   }
 
-  private void turn_45_degree(int p_factor) {
+  private void turn_45_degree(int p_factor)
+  {
     board_panel.board_handling.turn_45_degree(p_factor);
     board_panel.move_mouse(board_panel.right_button_click_location);
   }

@@ -2,24 +2,32 @@ package app.freerouting.gui;
 
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.util.ResourceBundle;
 
-/** Creates the rules menu of a board frame. */
-public class BoardMenuRules extends JMenu {
+import javax.swing.*;
+
+/**
+ * Creates the rules menu of a board frame.
+ */
+public class BoardMenuRules extends JMenu
+{
 
   private final BoardFrame board_frame;
   private final TextManager tm;
 
-  /** Creates a new instance of BoardRulesMenu */
-  private BoardMenuRules(BoardFrame p_board_frame) {
+  /**
+   * Creates a new instance of BoardRulesMenu
+   */
+  private BoardMenuRules(BoardFrame p_board_frame)
+  {
     board_frame = p_board_frame;
     tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
 
-  /** Returns a new windows menu for the board frame. */
-  public static BoardMenuRules get_instance(BoardFrame p_board_frame) {
+  /**
+   * Returns a new windows menu for the board frame.
+   */
+  public static BoardMenuRules get_instance(BoardFrame p_board_frame)
+  {
     final BoardMenuRules rules_menu = new BoardMenuRules(p_board_frame);
 
     rules_menu.setText(rules_menu.tm.getText("rules"));

@@ -40,10 +40,10 @@ import java.util.function.Consumer;
 public class BoardHandling extends BoardHandlingHeadless
 {
 
-  // The time of the last repaint of the board panel
-  private static long last_repainted_time = 0;
   // The interval in milliseconds between two repaints of the board panel
   private static final long repaint_interval = 1000;
+  // The time of the last repaint of the board panel
+  private static long last_repainted_time = 0;
   /**
    * The text message fields displayed on the screen
    */
@@ -53,6 +53,7 @@ public class BoardHandling extends BoardHandlingHeadless
    */
   private final BoardPanel panel;
   private final TextManager tm;
+  private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
   /**
    * The graphical context for drawing the board.
    */
@@ -99,8 +100,6 @@ public class BoardHandling extends BoardHandlingHeadless
   private FloatPoint current_mouse_position;
   // The board checksum is used to detect changes in the board database
   private long originalBoardChecksum = 0;
-
-  private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
 
   /**
    * Creates a new BoardHandling

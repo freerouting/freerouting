@@ -5,11 +5,14 @@ import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.gui.BoardFrame;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.Serializable;
 
-/** Snapshot of the client situation in an interactive session. */
-public class SnapShot implements Serializable {
+/**
+ * Snapshot of the client situation in an interactive session.
+ */
+public class SnapShot implements Serializable
+{
   public final Settings settings;
   public final GraphicsContext graphics_context;
   public final BoardFrame.SubwindowSelections subwindow_filters;
@@ -17,26 +20,28 @@ public class SnapShot implements Serializable {
   private final int interactive_state_no;
   private final Point viewport_position;
 
-  /** Creates a SnapShot of the display region and the interactive settings */
-  private SnapShot(String p_name, BoardHandling p_board_handling) {
+  /**
+   * Creates a SnapShot of the display region and the interactive settings
+   */
+  private SnapShot(String p_name, BoardHandling p_board_handling)
+  {
     this.name = p_name;
     this.settings = new Settings(p_board_handling.settings);
     this.interactive_state_no = get_no(p_board_handling.interactive_state);
-    this.graphics_context =
-        new GraphicsContext(p_board_handling.graphics_context);
-    this.viewport_position =
-        new Point(p_board_handling.get_panel().get_viewport_position());
-    this.subwindow_filters =
-        p_board_handling.get_panel().board_frame.get_snapshot_subwindow_selections();
+    this.graphics_context = new GraphicsContext(p_board_handling.graphics_context);
+    this.viewport_position = new Point(p_board_handling.get_panel().get_viewport_position());
+    this.subwindow_filters = p_board_handling.get_panel().board_frame.get_snapshot_subwindow_selections();
   }
 
   /**
    * Returns a new snapshot or null, if the current interactive state is not suitable to generate a
    * snapshot.
    */
-  public static SnapShot get_instance(String p_name, BoardHandling p_board_handling) {
+  public static SnapShot get_instance(String p_name, BoardHandling p_board_handling)
+  {
     InteractiveState interactive_state = p_board_handling.interactive_state;
-    if (!(interactive_state instanceof MenuState)) {
+    if (!(interactive_state instanceof MenuState))
+    {
       return null;
     }
     return new SnapShot(p_name, p_board_handling);
@@ -46,112 +51,130 @@ public class SnapShot implements Serializable {
    * Create a number for writing an interactive state to disk. Only MenuStates are saved. The
    * default is SelectState.
    */
-  private static int get_no(InteractiveState p_interactive_state) {
+  private static int get_no(InteractiveState p_interactive_state)
+  {
     int result;
-    if (p_interactive_state instanceof RouteMenuState) {
+    if (p_interactive_state instanceof RouteMenuState)
+    {
       result = 1;
-    } else if (p_interactive_state instanceof DragMenuState) {
+    }
+    else if (p_interactive_state instanceof DragMenuState)
+    {
       result = 2;
-    } else {
+    }
+    else
+    {
       result = 0;
     }
     return result;
   }
 
   @Override
-  public String toString() {
+  public String toString()
+  {
     return this.name;
   }
 
-  public Point copy_viewport_position() {
-    if (this.viewport_position == null) {
+  public Point copy_viewport_position()
+  {
+    if (this.viewport_position == null)
+    {
       return null;
     }
     return new Point(this.viewport_position);
   }
 
-  /** Goes to this snapshot in interactive board editing. */
-  public void go_to(BoardHandling p_board_handling) {
-    SnapShot.Attributes snapshot_attributes =
-        this.settings.snapshot_attributes;
+  /**
+   * Goes to this snapshot in interactive board editing.
+   */
+  public void go_to(BoardHandling p_board_handling)
+  {
+    SnapShot.Attributes snapshot_attributes = this.settings.snapshot_attributes;
 
-    if (snapshot_attributes.object_visibility) {
-      p_board_handling.graphics_context.color_intensity_table =
-          new ColorIntensityTable(
-              this.graphics_context.color_intensity_table);
+    if (snapshot_attributes.object_visibility)
+    {
+      p_board_handling.graphics_context.color_intensity_table = new ColorIntensityTable(this.graphics_context.color_intensity_table);
     }
-    if (snapshot_attributes.layer_visibility) {
-      p_board_handling.graphics_context.set_layer_visibility_arr(
-          this.graphics_context.copy_layer_visibility_arr());
+    if (snapshot_attributes.layer_visibility)
+    {
+      p_board_handling.graphics_context.set_layer_visibility_arr(this.graphics_context.copy_layer_visibility_arr());
     }
 
-    if (snapshot_attributes.interactive_state) {
-      p_board_handling.set_interactive_state(
-          this.get_interactive_state(p_board_handling, p_board_handling.activityReplayFile));
+    if (snapshot_attributes.interactive_state)
+    {
+      p_board_handling.set_interactive_state(this.get_interactive_state(p_board_handling, p_board_handling.activityReplayFile));
     }
-    if (snapshot_attributes.selection_layers) {
-      p_board_handling.settings.select_on_all_visible_layers =
-          this.settings.select_on_all_visible_layers;
+    if (snapshot_attributes.selection_layers)
+    {
+      p_board_handling.settings.select_on_all_visible_layers = this.settings.select_on_all_visible_layers;
     }
-    if (snapshot_attributes.selectable_items) {
-      p_board_handling.settings.item_selection_filter =
-          new ItemSelectionFilter(this.settings.item_selection_filter);
+    if (snapshot_attributes.selectable_items)
+    {
+      p_board_handling.settings.item_selection_filter = new ItemSelectionFilter(this.settings.item_selection_filter);
     }
-    if (snapshot_attributes.current_layer) {
+    if (snapshot_attributes.current_layer)
+    {
       p_board_handling.settings.layer = this.settings.layer;
     }
-    if (snapshot_attributes.rule_selection) {
+    if (snapshot_attributes.rule_selection)
+    {
       p_board_handling.settings.manual_rule_selection = this.settings.manual_rule_selection;
     }
-    if (snapshot_attributes.manual_rule_settings) {
-      p_board_handling.settings.manual_trace_clearance_class =
-          this.settings.manual_trace_clearance_class;
+    if (snapshot_attributes.manual_rule_settings)
+    {
+      p_board_handling.settings.manual_trace_clearance_class = this.settings.manual_trace_clearance_class;
       p_board_handling.settings.manual_via_rule_index = this.settings.manual_via_rule_index;
-      System.arraycopy(
-          this.settings.manual_trace_half_width_arr,
-          0,
-          p_board_handling.settings.manual_trace_half_width_arr,
-          0,
-          p_board_handling.settings.manual_trace_half_width_arr.length);
+      System.arraycopy(this.settings.manual_trace_half_width_arr, 0, p_board_handling.settings.manual_trace_half_width_arr, 0, p_board_handling.settings.manual_trace_half_width_arr.length);
     }
-    if (snapshot_attributes.push_and_shove_enabled) {
+    if (snapshot_attributes.push_and_shove_enabled)
+    {
       p_board_handling.settings.push_enabled = this.settings.push_enabled;
     }
-    if (snapshot_attributes.drag_components_enabled) {
+    if (snapshot_attributes.drag_components_enabled)
+    {
       p_board_handling.settings.drag_components_enabled = this.settings.drag_components_enabled;
     }
-    if (snapshot_attributes.pull_tight_region) {
-      p_board_handling.settings.trace_pull_tight_region_width =
-          this.settings.trace_pull_tight_region_width;
+    if (snapshot_attributes.pull_tight_region)
+    {
+      p_board_handling.settings.trace_pull_tight_region_width = this.settings.trace_pull_tight_region_width;
     }
-    if (snapshot_attributes.component_grid) {
+    if (snapshot_attributes.component_grid)
+    {
       p_board_handling.settings.horizontal_component_grid = this.settings.horizontal_component_grid;
       p_board_handling.settings.vertical_component_grid = this.settings.vertical_component_grid;
     }
-    if (snapshot_attributes.info_list_selections) {
-      p_board_handling
-          .get_panel()
-          .board_frame
-          .set_snapshot_subwindow_selections(this.subwindow_filters);
+    if (snapshot_attributes.info_list_selections)
+    {
+      p_board_handling.get_panel().board_frame.set_snapshot_subwindow_selections(this.subwindow_filters);
     }
   }
 
-  /** Returns a new InteractiveState from the data of this instance. */
-  public InteractiveState get_interactive_state(
-      BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile) {
+  /**
+   * Returns a new InteractiveState from the data of this instance.
+   */
+  public InteractiveState get_interactive_state(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  {
     InteractiveState result;
-    if (this.interactive_state_no == 1) {
+    if (this.interactive_state_no == 1)
+    {
       result = RouteMenuState.get_instance(p_board_handling, p_activityReplayFile);
-    } else if (this.interactive_state_no == 2) {
+    }
+    else if (this.interactive_state_no == 2)
+    {
       result = DragMenuState.get_instance(p_board_handling, p_activityReplayFile);
-    } else {
+    }
+    else
+    {
       result = SelectMenuState.get_instance(p_board_handling, p_activityReplayFile);
     }
     return result;
   }
 
-  /** Defines the data of the snapshot selected for restoring. */
-  public static class Attributes implements Serializable {
+  /**
+   * Defines the data of the snapshot selected for restoring.
+   */
+  public static class Attributes implements Serializable
+  {
     public boolean object_colors;
     public boolean object_visibility;
     public boolean layer_visibility;
@@ -167,7 +190,9 @@ public class SnapShot implements Serializable {
     public boolean pull_tight_region;
     public boolean component_grid;
     public boolean info_list_selections;
-    Attributes() {
+
+    Attributes()
+    {
       object_colors = true;
       object_visibility = true;
       layer_visibility = true;
@@ -184,8 +209,12 @@ public class SnapShot implements Serializable {
       component_grid = true;
       info_list_selections = true;
     }
-    /** Copy constructor */
-    Attributes(Attributes p_attributes) {
+
+    /**
+     * Copy constructor
+     */
+    Attributes(Attributes p_attributes)
+    {
       object_colors = p_attributes.object_colors;
       object_visibility = p_attributes.object_visibility;
       layer_visibility = p_attributes.layer_visibility;

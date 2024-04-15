@@ -66,6 +66,8 @@ public class BoardFrame extends WindowBase
   private final BoardObservers board_observers;
   private final IdNoGenerator item_id_no_generator;
   private final Locale locale;
+  private final List<Consumer<RoutingBoard>> boardLoadedEventListeners = new ArrayList<>();
+  private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
   /**
    * The panel with the graphical representation of the board.
    */
@@ -98,8 +100,6 @@ public class BoardFrame extends WindowBase
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
   DesignFile design_file;
   private LocalDateTime intermediate_stage_file_last_saved_at;
-  private final List<Consumer<RoutingBoard>> boardLoadedEventListeners = new ArrayList<>();
-  private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
 
   /**
    * Creates a new BoardFrame that is the GUI element containing the Menu, Toolbar, Canvas and Status bar.

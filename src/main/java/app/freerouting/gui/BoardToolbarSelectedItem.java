@@ -4,15 +4,14 @@ import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.ClearanceMatrix;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JToolBar;
-import java.awt.Dimension;
-import java.util.ResourceBundle;
+import javax.swing.*;
+import java.awt.*;
 
-/** Describes the toolbar of the board frame, when it is in the selected item state. */
-class BoardToolbarSelectedItem extends JToolBar {
+/**
+ * Describes the toolbar of the board frame, when it is in the selected item state.
+ */
+class BoardToolbarSelectedItem extends JToolBar
+{
 
   private final BoardFrame board_frame;
   private final TextManager tm;
@@ -21,7 +20,8 @@ class BoardToolbarSelectedItem extends JToolBar {
    * Creates a new instance of BoardSelectedItemToolbar. If p_extended, some additional buttons are
    * generated.
    */
-  BoardToolbarSelectedItem(BoardFrame p_board_frame) {
+  BoardToolbarSelectedItem(BoardFrame p_board_frame)
+  {
     this.board_frame = p_board_frame;
 
     this.tm = new TextManager(this.getClass(), p_board_frame.get_locale());
@@ -198,29 +198,26 @@ class BoardToolbarSelectedItem extends JToolBar {
     this.add(toolbar_display_region_button);
   }
 
-  private void assign_clearance_class() {
-    if (board_frame.board_panel.board_handling.is_board_read_only()) {
+  private void assign_clearance_class()
+  {
+    if (board_frame.board_panel.board_handling.is_board_read_only())
+    {
       return;
     }
-    ClearanceMatrix clearance_matrix =
-        board_frame.board_panel.board_handling.get_routing_board().rules.clearance_matrix;
+    ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().rules.clearance_matrix;
     Object[] class_name_arr = new Object[clearance_matrix.get_class_count()];
-    for (int i = 0; i < class_name_arr.length; ++i) {
+    for (int i = 0; i < class_name_arr.length; ++i)
+    {
       class_name_arr[i] = clearance_matrix.get_name(i);
     }
-    Object assign_clearance_class_dialog = JOptionPane.showInputDialog(
-            null,
-            tm.getText("select_clearance_class"),
-            tm.getText("assign_clearance_class"),
-            JOptionPane.INFORMATION_MESSAGE,
-            null,
-            class_name_arr,
-            class_name_arr[0]);
-    if (!(assign_clearance_class_dialog instanceof String)) {
+    Object assign_clearance_class_dialog = JOptionPane.showInputDialog(null, tm.getText("select_clearance_class"), tm.getText("assign_clearance_class"), JOptionPane.INFORMATION_MESSAGE, null, class_name_arr, class_name_arr[0]);
+    if (!(assign_clearance_class_dialog instanceof String))
+    {
       return;
     }
     int class_index = clearance_matrix.get_no((String) assign_clearance_class_dialog);
-    if (class_index < 0) {
+    if (class_index < 0)
+    {
       return;
     }
     board_frame.board_panel.board_handling.assign_clearance_classs_to_selected_items(class_index);

@@ -7,35 +7,21 @@ import app.freerouting.interactive.BoardHandling;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.Collection;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
-/** Window handling parameters of the interactive routing. */
-public class WindowRouteParameter extends BoardSavableSubWindow {
+/**
+ * Window handling parameters of the interactive routing.
+ */
+public class WindowRouteParameter extends BoardSavableSubWindow
+{
 
   private static final int c_max_slider_value = 999;
   private static final int c_region_scale_factor = 200;
@@ -62,8 +48,12 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private final DetailListener detail_listener;
   private final ManualTraceWidthListener manual_trace_width_listener;
   private boolean key_input_completed = true;
-  /** Creates a new instance of RouteParameterWindow */
-  public WindowRouteParameter(BoardFrame p_board_frame) {
+
+  /**
+   * Creates a new instance of RouteParameterWindow
+   */
+  public WindowRouteParameter(BoardFrame p_board_frame)
+  {
     this.board_handling = p_board_frame.board_panel.board_handling;
     this.detail_window = new WindowRouteDetail(p_board_frame);
     this.manual_rule_window = new WindowManualRules(p_board_frame);
@@ -120,8 +110,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     main_panel.add(settings_routing_snap_angle_45_button, gridbag_constraints);
     gridbag.setConstraints(settings_routing_snap_angle_none_button, gridbag_constraints);
     main_panel.add(settings_routing_snap_angle_none_button, gridbag_constraints);
-    JLabel separator =
-        new JLabel("   –––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator = new JLabel("   –––––––––––––––––––––––––––––––––––––––  ");
 
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
@@ -279,8 +268,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     // add label and slider for the pull tight region around the cursor.
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
-    JLabel pull_tight_region_label =
-        new JLabel(tm.getText("pull_tight_region"));
+    JLabel pull_tight_region_label = new JLabel(tm.getText("pull_tight_region"));
     pull_tight_region_label.setToolTipText(tm.getText("pull_tight_region_tooltip"));
     gridbag.setConstraints(pull_tight_region_label, gridbag_constraints);
     main_panel.add(pull_tight_region_label);
@@ -318,26 +306,33 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   @Override
-  public void dispose() {
+  public void dispose()
+  {
     detail_window.dispose();
     manual_rule_window.dispose();
     super.dispose();
   }
 
-  /** Reads the data of this frame from disk. Returns false, if the reading failed. */
+  /**
+   * Reads the data of this frame from disk. Returns false, if the reading failed.
+   */
   @Override
-  public boolean read(ObjectInputStream p_object_stream) {
+  public boolean read(ObjectInputStream p_object_stream)
+  {
 
     boolean read_ok = super.read(p_object_stream);
-    if (!read_ok) {
+    if (!read_ok)
+    {
       return false;
     }
     read_ok = manual_rule_window.read(p_object_stream);
-    if (!read_ok) {
+    if (!read_ok)
+    {
       return false;
     }
     read_ok = detail_window.read(p_object_stream);
-    if (!read_ok) {
+    if (!read_ok)
+    {
       return false;
     }
     this.manual_trace_width_listener.first_time = false;
@@ -346,96 +341,115 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     return true;
   }
 
-  /** Saves this frame to disk. */
+  /**
+   * Saves this frame to disk.
+   */
   @Override
-  public void save(ObjectOutputStream p_object_stream) {
+  public void save(ObjectOutputStream p_object_stream)
+  {
     super.save(p_object_stream);
     manual_rule_window.save(p_object_stream);
     detail_window.save(p_object_stream);
   }
 
-  /** Recalculates all displayed values */
+  /**
+   * Recalculates all displayed values
+   */
   @Override
-  public void refresh() {
-    AngleRestriction snap_angle =
-        this.board_handling.get_routing_board().rules.get_trace_angle_restriction();
+  public void refresh()
+  {
+    AngleRestriction snap_angle = this.board_handling.get_routing_board().rules.get_trace_angle_restriction();
 
-    if (snap_angle == AngleRestriction.NINETY_DEGREE) {
+    if (snap_angle == AngleRestriction.NINETY_DEGREE)
+    {
       settings_routing_snap_angle_90_button.setSelected(true);
-    } else if (snap_angle == AngleRestriction.FORTYFIVE_DEGREE) {
+    }
+    else if (snap_angle == AngleRestriction.FORTYFIVE_DEGREE)
+    {
       settings_routing_snap_angle_45_button.setSelected(true);
-    } else {
+    }
+    else
+    {
       settings_routing_snap_angle_none_button.setSelected(true);
     }
 
-    if (this.board_handling.settings.get_is_stitch_route()) {
+    if (this.board_handling.settings.get_is_stitch_route())
+    {
       settings_routing_stitch_button.setSelected(true);
-    } else {
+    }
+    else
+    {
       settings_routing_dynamic_button.setSelected(true);
     }
 
-    if (this.board_handling.settings.get_manual_rule_selection()) {
+    if (this.board_handling.settings.get_manual_rule_selection())
+    {
       settings_routing_manual_button.setSelected(true);
-      if (this.manual_rule_window != null) {
+      if (this.manual_rule_window != null)
+      {
         this.manual_rule_window.setVisible(true);
       }
-    } else {
+    }
+    else
+    {
       settings_routing_automatic_button.setSelected(true);
     }
 
     this.settings_routing_shove_check_box.setSelected(this.board_handling.settings.get_push_enabled());
-    this.settings_routing_drag_component_check_box.setSelected(
-        this.board_handling.settings.get_drag_components_enabled());
-    this.settings_routing_via_snap_to_smd_center_check_box.setSelected(
-        this.board_handling.settings.get_via_snap_to_smd_center());
-    this.settings_routing_ignore_conduction_check_box.setSelected(
-        this.board_handling.get_routing_board().rules.get_ignore_conduction());
-    this.settings_routing_hilight_routing_obstacle_check_box.setSelected(
-        this.board_handling.settings.get_hilight_routing_obstacle());
+    this.settings_routing_drag_component_check_box.setSelected(this.board_handling.settings.get_drag_components_enabled());
+    this.settings_routing_via_snap_to_smd_center_check_box.setSelected(this.board_handling.settings.get_via_snap_to_smd_center());
+    this.settings_routing_ignore_conduction_check_box.setSelected(this.board_handling.get_routing_board().rules.get_ignore_conduction());
+    this.settings_routing_hilight_routing_obstacle_check_box.setSelected(this.board_handling.settings.get_hilight_routing_obstacle());
     this.settings_routing_neckdown_check_box.setSelected(this.board_handling.settings.get_automatic_neckdown());
 
-    double edge_to_turn_dist =
-        this.board_handling.get_routing_board().rules.get_pin_edge_to_turn_dist();
+    double edge_to_turn_dist = this.board_handling.get_routing_board().rules.get_pin_edge_to_turn_dist();
     edge_to_turn_dist = this.board_handling.coordinate_transform.board_to_user(edge_to_turn_dist);
     this.edge_to_turn_dist_field.setValue(edge_to_turn_dist);
     this.settings_routing_restrict_pin_exit_directions_check_box.setSelected(edge_to_turn_dist > 0);
 
-    int region_slider_value =
-        this.board_handling.settings.get_trace_pull_tight_region_width() / c_region_scale_factor;
+    int region_slider_value = this.board_handling.settings.get_trace_pull_tight_region_width() / c_region_scale_factor;
     region_slider_value = Math.min(region_slider_value, c_max_slider_value);
     region_slider.setValue(region_slider_value);
     region_width_field.setValue(region_slider_value);
 
-    if (this.manual_rule_window != null) {
+    if (this.manual_rule_window != null)
+    {
       this.manual_rule_window.refresh();
     }
-    if (this.detail_window != null) {
+    if (this.detail_window != null)
+    {
       this.detail_window.refresh();
     }
   }
 
   @Override
-  public void parent_iconified() {
+  public void parent_iconified()
+  {
     manual_rule_window.parent_iconified();
     detail_window.parent_iconified();
     super.parent_iconified();
   }
 
   @Override
-  public void parent_deiconified() {
+  public void parent_deiconified()
+  {
     manual_rule_window.parent_deiconified();
     detail_window.parent_deiconified();
     super.parent_deiconified();
   }
 
-  private void set_pull_tight_region_width(int p_slider_value) {
+  private void set_pull_tight_region_width(int p_slider_value)
+  {
     int slider_value = Math.max(p_slider_value, 0);
     slider_value = Math.min(p_slider_value, c_max_slider_value);
     int new_tidy_width;
-    if (slider_value >= 0.9 * c_max_slider_value) {
+    if (slider_value >= 0.9 * c_max_slider_value)
+    {
       p_slider_value = c_max_slider_value;
       new_tidy_width = Integer.MAX_VALUE;
-    } else {
+    }
+    else
+    {
       new_tidy_width = slider_value * c_region_scale_factor;
     }
     region_slider.setValue(slider_value);
@@ -443,27 +457,33 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     board_handling.settings.set_current_pull_tight_region_width(new_tidy_width);
   }
 
-  private class SnapAngle90Listener implements ActionListener {
+  private class SnapAngle90Listener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (board_handling.get_routing_board().rules.get_trace_angle_restriction()
-          == AngleRestriction.NINETY_DEGREE) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      if (board_handling.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
+      {
         return;
       }
-      Collection<Trace> trace_list =
-          board_handling.get_routing_board().get_traces();
+      Collection<Trace> trace_list = board_handling.get_routing_board().get_traces();
       boolean free_angle_traces_found = false;
-      for (Trace curr_trace : trace_list) {
-        if (curr_trace instanceof PolylineTrace) {
-          if (!((PolylineTrace) curr_trace).polyline().is_orthogonal()) {
+      for (Trace curr_trace : trace_list)
+      {
+        if (curr_trace instanceof PolylineTrace)
+        {
+          if (!((PolylineTrace) curr_trace).polyline().is_orthogonal())
+          {
             free_angle_traces_found = true;
             break;
           }
         }
       }
-      if (free_angle_traces_found) {
+      if (free_angle_traces_found)
+      {
         String curr_message = tm.getText("change_snap_angle_90");
-        if (!WindowMessage.confirm(curr_message)) {
+        if (!WindowMessage.confirm(curr_message))
+        {
           refresh();
           return;
         }
@@ -472,65 +492,77 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class SnapAngle45Listener implements ActionListener {
+  private class SnapAngle45Listener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (board_handling.get_routing_board().rules.get_trace_angle_restriction()
-          == AngleRestriction.FORTYFIVE_DEGREE) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      if (board_handling.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
+      {
         return;
       }
-      Collection<Trace> trace_list =
-          board_handling.get_routing_board().get_traces();
+      Collection<Trace> trace_list = board_handling.get_routing_board().get_traces();
       boolean free_angle_traces_found = false;
-      for (Trace curr_trace : trace_list) {
-        if (curr_trace instanceof PolylineTrace) {
-          if (!((PolylineTrace) curr_trace)
-              .polyline()
-              .is_multiple_of_45_degree()) {
+      for (Trace curr_trace : trace_list)
+      {
+        if (curr_trace instanceof PolylineTrace)
+        {
+          if (!((PolylineTrace) curr_trace).polyline().is_multiple_of_45_degree())
+          {
             free_angle_traces_found = true;
             break;
           }
         }
       }
-      if (free_angle_traces_found) {
+      if (free_angle_traces_found)
+      {
         String curr_message = tm.getText("change_snap_angle_45");
-        if (!WindowMessage.confirm(curr_message)) {
+        if (!WindowMessage.confirm(curr_message))
+        {
           refresh();
           return;
         }
       }
-      board_handling.set_current_snap_angle(
-          AngleRestriction.FORTYFIVE_DEGREE);
+      board_handling.set_current_snap_angle(AngleRestriction.FORTYFIVE_DEGREE);
     }
   }
 
-  private class SnapAngleNoneListener implements ActionListener {
+  private class SnapAngleNoneListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.set_current_snap_angle(AngleRestriction.NONE);
     }
   }
 
-  private class DynamicRouteListener implements ActionListener {
+  private class DynamicRouteListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.settings.set_stitch_route(false);
     }
   }
 
-  private class StitchRouteListener implements ActionListener {
+  private class StitchRouteListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.settings.set_stitch_route(true);
     }
   }
 
-  private class DetailListener implements ActionListener {
+  private class DetailListener implements ActionListener
+  {
     private boolean first_time = true;
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (first_time) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      if (first_time)
+      {
         Point location = getLocation();
         detail_window.setLocation((int) location.getX() + 200, (int) location.getY() + 300);
         first_time = false;
@@ -539,20 +571,25 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class AutomaticTraceWidthListener implements ActionListener {
+  private class AutomaticTraceWidthListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       manual_rule_window.setVisible(false);
       board_handling.settings.set_manual_tracewidth_selection(false);
     }
   }
 
-  private class ManualTraceWidthListener implements ActionListener {
+  private class ManualTraceWidthListener implements ActionListener
+  {
     boolean first_time = true;
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (first_time) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      if (first_time)
+      {
         Point location = getLocation();
         manual_rule_window.setLocation((int) location.getX() + 200, (int) location.getY() + 200);
         first_time = false;
@@ -562,94 +599,115 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
   }
 
-  private class ShoveListener implements ActionListener {
+  private class ShoveListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.settings.set_push_enabled(settings_routing_shove_check_box.isSelected());
       refresh();
     }
   }
 
-  private class ViaSnapToSMDCenterListener implements ActionListener {
+  private class ViaSnapToSMDCenterListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      board_handling.settings.set_via_snap_to_smd_center(
-          settings_routing_via_snap_to_smd_center_check_box.isSelected());
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      board_handling.settings.set_via_snap_to_smd_center(settings_routing_via_snap_to_smd_center_check_box.isSelected());
     }
   }
 
-  private class IgnoreConductionListener implements ActionListener {
+  private class IgnoreConductionListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.set_ignore_conduction(settings_routing_ignore_conduction_check_box.isSelected());
     }
   }
 
-  private class HilightObstacleListener implements ActionListener {
+  private class HilightObstacleListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      board_handling.settings.set_hilight_routing_obstacle(
-          settings_routing_hilight_routing_obstacle_check_box.isSelected());
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      board_handling.settings.set_hilight_routing_obstacle(settings_routing_hilight_routing_obstacle_check_box.isSelected());
     }
   }
 
-  private class DragComponentListener implements ActionListener {
+  private class DragComponentListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.settings.set_drag_components_enabled(settings_routing_drag_component_check_box.isSelected());
       refresh();
     }
   }
 
-  private class NeckDownListener implements ActionListener {
+  private class NeckDownListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.settings.set_automatic_neckdown(settings_routing_neckdown_check_box.isSelected());
     }
   }
 
-  private class RestrictPinExitDirectionsListener implements ActionListener {
+  private class RestrictPinExitDirectionsListener implements ActionListener
+  {
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (settings_routing_restrict_pin_exit_directions_check_box.isSelected()) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      if (settings_routing_restrict_pin_exit_directions_check_box.isSelected())
+      {
         BoardRules board_rules = board_handling.get_routing_board().rules;
-        double edge_to_turn_dist =
-            board_handling.coordinate_transform.board_to_user(
-                board_rules.get_min_trace_half_width());
+        double edge_to_turn_dist = board_handling.coordinate_transform.board_to_user(board_rules.get_min_trace_half_width());
         board_handling.set_pin_edge_to_turn_dist(edge_to_turn_dist);
-      } else {
+      }
+      else
+      {
         board_handling.set_pin_edge_to_turn_dist(0);
       }
       refresh();
     }
   }
 
-  private class EdgeToTurnDistFieldKeyListener extends KeyAdapter {
+  private class EdgeToTurnDistFieldKeyListener extends KeyAdapter
+  {
     @Override
-    public void keyTyped(KeyEvent p_evt) {
-      if (p_evt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent p_evt)
+    {
+      if (p_evt.getKeyChar() == '\n')
+      {
         key_input_completed = true;
         Object input = edge_to_turn_dist_field.getValue();
-        if (!(input instanceof Number)) {
+        if (!(input instanceof Number))
+        {
           return;
         }
         float input_value = ((Number) input).floatValue();
         board_handling.set_pin_edge_to_turn_dist(input_value);
         settings_routing_restrict_pin_exit_directions_check_box.setSelected(input_value > 0);
         refresh();
-      } else {
+      }
+      else
+      {
         key_input_completed = false;
       }
     }
   }
 
-  private class EdgeToTurnDistFieldFocusListener implements FocusListener {
+  private class EdgeToTurnDistFieldFocusListener implements FocusListener
+  {
     @Override
-    public void focusLost(FocusEvent p_evt) {
-      if (!key_input_completed) {
+    public void focusLost(FocusEvent p_evt)
+    {
+      if (!key_input_completed)
+      {
         // restore the text field.
-        double edge_to_turn_dist =
-            board_handling.get_routing_board().rules.get_pin_edge_to_turn_dist();
+        double edge_to_turn_dist = board_handling.get_routing_board().rules.get_pin_edge_to_turn_dist();
         edge_to_turn_dist = board_handling.coordinate_transform.board_to_user(edge_to_turn_dist);
         edge_to_turn_dist_field.setValue(edge_to_turn_dist);
         key_input_completed = true;
@@ -657,30 +715,41 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt)
+    {
+    }
   }
 
-  private class RegionWidthFieldKeyListener extends KeyAdapter {
+  private class RegionWidthFieldKeyListener extends KeyAdapter
+  {
     @Override
-    public void keyTyped(KeyEvent p_evt) {
-      if (p_evt.getKeyChar() == '\n') {
+    public void keyTyped(KeyEvent p_evt)
+    {
+      if (p_evt.getKeyChar() == '\n')
+      {
         key_input_completed = true;
         Object input = region_width_field.getValue();
-        if (!(input instanceof Number)) {
+        if (!(input instanceof Number))
+        {
           return;
         }
         int input_value = ((Number) input).intValue();
         set_pull_tight_region_width(input_value);
-      } else {
+      }
+      else
+      {
         key_input_completed = false;
       }
     }
   }
 
-  private class RegionWidthFieldFocusListener implements FocusListener {
+  private class RegionWidthFieldFocusListener implements FocusListener
+  {
     @Override
-    public void focusLost(FocusEvent p_evt) {
-      if (!key_input_completed) {
+    public void focusLost(FocusEvent p_evt)
+    {
+      if (!key_input_completed)
+      {
         // restore the text field.
         region_width_field.setValue(region_slider.getValue());
         key_input_completed = true;
@@ -688,12 +757,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt) {}
+    public void focusGained(FocusEvent p_evt)
+    {
+    }
   }
 
-  private class SliderChangeListener implements ChangeListener {
+  private class SliderChangeListener implements ChangeListener
+  {
     @Override
-    public void stateChanged(ChangeEvent evt) {
+    public void stateChanged(ChangeEvent evt)
+    {
       set_pull_tight_region_width(region_slider.getValue());
     }
   }

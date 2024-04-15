@@ -1,17 +1,16 @@
 package app.freerouting.gui;
 
-import app.freerouting.management.TextManager;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
-/** Displays general information about the Freerouting software. */
-public class WindowAbout extends BoardSavableSubWindow {
-  public WindowAbout(Locale p_locale) {
+/**
+ * Displays general information about the Freerouting software.
+ */
+public class WindowAbout extends BoardSavableSubWindow
+{
+  public WindowAbout(Locale p_locale)
+  {
     setLanguage(p_locale);
     this.setTitle(tm.getText("title"));
 

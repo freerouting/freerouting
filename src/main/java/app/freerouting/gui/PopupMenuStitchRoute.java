@@ -2,26 +2,31 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenuItem;
-import java.util.ResourceBundle;
 
-public class PopupMenuStitchRoute extends PopupMenuDisplay {
+import javax.swing.*;
+
+public class PopupMenuStitchRoute extends PopupMenuDisplay
+{
 
   private final PopupMenuChangeLayer change_layer_menu;
 
-  /** Creates a new instance of PopupMenuStitchRoute */
-  public PopupMenuStitchRoute(BoardFrame p_board_frame) {
+  /**
+   * Creates a new instance of PopupMenuStitchRoute
+   */
+  public PopupMenuStitchRoute(BoardFrame p_board_frame)
+  {
     super(p_board_frame);
-    LayerStructure layer_structure =
-        board_panel.board_handling.get_routing_board().layer_structure;
+    LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
 
-    if (layer_structure.arr.length > 0) {
+    if (layer_structure.arr.length > 0)
+    {
       change_layer_menu = new PopupMenuChangeLayer(p_board_frame);
       this.add(change_layer_menu, 0);
-    } else {
+    }
+    else
+    {
       change_layer_menu = null;
     }
 
@@ -48,14 +53,17 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay {
 
     this.add(popup_cancel_menuitem, 2);
 
-    Layer curr_layer =
-        layer_structure.arr[board_panel.board_handling.settings.get_layer()];
+    Layer curr_layer = layer_structure.arr[board_panel.board_handling.settings.get_layer()];
     disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
   }
 
-  /** Disables the p_no-th item in the change_layer_menu. */
-  void disable_layer_item(int p_no) {
-    if (this.change_layer_menu != null) {
+  /**
+   * Disables the p_no-th item in the change_layer_menu.
+   */
+  void disable_layer_item(int p_no)
+  {
+    if (this.change_layer_menu != null)
+    {
       this.change_layer_menu.disable_item(p_no);
     }
   }

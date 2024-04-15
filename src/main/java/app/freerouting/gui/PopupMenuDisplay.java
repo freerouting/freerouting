@@ -2,17 +2,19 @@ package app.freerouting.gui;
 
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import java.util.ResourceBundle;
 
-public class PopupMenuDisplay extends JPopupMenu {
+import javax.swing.*;
+
+public class PopupMenuDisplay extends JPopupMenu
+{
 
   protected final BoardPanel board_panel;
 
-  /** Creates a new instance of PopupMenuDisplay */
-  public PopupMenuDisplay(BoardFrame p_board_frame) {
+  /**
+   * Creates a new instance of PopupMenuDisplay
+   */
+  public PopupMenuDisplay(BoardFrame p_board_frame)
+  {
     this.board_panel = p_board_frame.board_panel;
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());

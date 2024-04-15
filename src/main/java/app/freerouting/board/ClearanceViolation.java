@@ -3,25 +3,40 @@ package app.freerouting.board;
 import app.freerouting.geometry.planar.ConvexShape;
 
 import app.freerouting.management.TextManager;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/** Information of a clearance violation between 2 items. */
-public class ClearanceViolation implements ObjectInfoPanel.Printable {
+/**
+ * Information of a clearance violation between 2 items.
+ */
+public class ClearanceViolation implements ObjectInfoPanel.Printable
+{
 
-  /** The first item of the clearance violation */
+  /**
+   * The first item of the clearance violation
+   */
   public final Item first_item;
-  /** The second item of the clearance violation */
+  /**
+   * The second item of the clearance violation
+   */
   public final Item second_item;
-  /** The shape of the clearance violation */
+  /**
+   * The shape of the clearance violation
+   */
   public final ConvexShape shape;
-  /** The layer of the clearance violation */
+  /**
+   * The layer of the clearance violation
+   */
   public final int layer;
   public final double expected_clearance;
   public final double actual_clearance;
 
-  /** Creates a new instance of ClearanceViolation */
-  public ClearanceViolation(Item p_first_item, Item p_second_item, ConvexShape p_shape, int p_layer, double p_expected_clearance, double p_actual_clearance) {
+  /**
+   * Creates a new instance of ClearanceViolation
+   */
+  public ClearanceViolation(Item p_first_item, Item p_second_item, ConvexShape p_shape, int p_layer, double p_expected_clearance, double p_actual_clearance)
+  {
     first_item = p_first_item;
     second_item = p_second_item;
     shape = p_shape;
@@ -31,7 +46,8 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale)
+  {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
     p_window.append_bold(tm.getText("clearance_violation_2"));

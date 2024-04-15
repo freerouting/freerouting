@@ -1,7 +1,10 @@
 package app.freerouting.designforms.specctra;
 
-/** Enumeration class for keywords of the specctra dsn file format */
-public class Keyword {
+/**
+ * Enumeration class for keywords of the specctra dsn file format
+ */
+public class Keyword
+{
 
   /**
    * The only instances of the internal classes:
@@ -11,8 +14,7 @@ public class Keyword {
   public static final Keyword ABSOLUTE = new Keyword("absolute");
 
   public static final Keyword ACTIVE = new Keyword("active");
-  public static final Keyword AGAINST_PREFERRED_DIRECTION_TRACE_COSTS =
-      new Keyword("against_preferred_direction_trace_costs");
+  public static final Keyword AGAINST_PREFERRED_DIRECTION_TRACE_COSTS = new Keyword("against_preferred_direction_trace_costs");
   public static final Keyword ATTACH = new Keyword("attach");
   public static final Keyword AUTOROUTE = new Keyword("autoroute");
   public static final Keyword AUTOROUTE_SETTINGS = new Keyword("autoroute_settings");
@@ -73,8 +75,7 @@ public class Keyword {
   public static final ScopeKeyword PLANE_SCOPE = new Plane();
   public static final Keyword PLANE_VIA_COSTS = new Keyword("plane_via_costs");
   public static final Keyword PREFERRED_DIRECTION = new Keyword("preferred_direction");
-  public static final Keyword PREFERRED_DIRECTION_TRACE_COSTS =
-      new Keyword("preferred_direction_trace_costs");
+  public static final Keyword PREFERRED_DIRECTION_TRACE_COSTS = new Keyword("preferred_direction_trace_costs");
   public static final Keyword SNAP_ANGLE = new Keyword("snap_angle");
   public static final Keyword POLYGON = new Keyword("polygon");
   public static final Keyword POLYGON_PATH = new Keyword("polygon_path");
@@ -118,13 +119,19 @@ public class Keyword {
   public static final Keyword WRITE_RESOLUTION = new Keyword("write_resolution");
   private final String name;
 
-  /** prevents creating more instances */
-  protected Keyword(String p_name) {
+  /**
+   * prevents creating more instances
+   */
+  protected Keyword(String p_name)
+  {
     name = p_name;
   }
 
-  /** Returns the name string of this Keyword. The name is used for debugging purposes. */
-  public String get_name() {
+  /**
+   * Returns the name string of this Keyword. The name is used for debugging purposes.
+   */
+  public String get_name()
+  {
     return name;
   }
 }

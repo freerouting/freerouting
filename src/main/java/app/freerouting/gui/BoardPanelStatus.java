@@ -1,32 +1,34 @@
 package app.freerouting.gui;
 
 import app.freerouting.management.TextManager;
-import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.Cursor;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 /**
  * The `BoardPanelStatus` class represents a status bar at the lower border of the board frame.
  * It contains components such as message lines, current layer indicator, and cursor position.
  */
-class BoardPanelStatus extends JPanel {
-  // An icon for errors and warnings
-  private final JPanel errorsWarningsPanel;
-  private final JLabel errorIcon;
+class BoardPanelStatus extends JPanel
+{
   public final JLabel errorLabel;
-  private final JLabel warningIcon;
   public final JLabel warningLabel;
   public final JLabel statusMessage;
   public final JLabel additionalMessage;
   public final JLabel currentLayer;
   public final JLabel mousePosition;
   public final JLabel unitLabel;
-
+  // An icon for errors and warnings
+  private final JPanel errorsWarningsPanel;
+  private final JLabel errorIcon;
+  private final JLabel warningIcon;
   // List to hold the listeners for error or warning label clicks
   private final List<ErrorOrWarningLabelClickedListener> errorOrWarningLabelClickedListeners = new ArrayList<>();
 
@@ -35,7 +37,8 @@ class BoardPanelStatus extends JPanel {
    *
    * @param locale the locale to use for resource bundles
    */
-  BoardPanelStatus(Locale locale) {
+  BoardPanelStatus(Locale locale)
+  {
     TextManager tm = new TextManager(this.getClass(), locale);
 
     setLayout(new BorderLayout());
@@ -125,11 +128,14 @@ class BoardPanelStatus extends JPanel {
   /**
    * Adds mouse listeners for error and warning labels to handle click events.
    */
-  private void addErrorOrWarningLabelClickedListener() {
+  private void addErrorOrWarningLabelClickedListener()
+  {
     // Raise an event if the user clicks on the error or warning label
-    errorsWarningsPanel.addMouseListener(new MouseAdapter() {
+    errorsWarningsPanel.addMouseListener(new MouseAdapter()
+    {
       @Override
-      public void mouseClicked(MouseEvent e) {
+      public void mouseClicked(MouseEvent e)
+      {
         raiseErrorOrWarningLabelClickedEvent();
       }
     });
@@ -141,8 +147,10 @@ class BoardPanelStatus extends JPanel {
   /**
    * Raises the `ErrorOrWarningLabelClicked` event for all registered listeners.
    */
-  private void raiseErrorOrWarningLabelClickedEvent() {
-    for (ErrorOrWarningLabelClickedListener listener : errorOrWarningLabelClickedListeners) {
+  private void raiseErrorOrWarningLabelClickedEvent()
+  {
+    for (ErrorOrWarningLabelClickedListener listener : errorOrWarningLabelClickedListeners)
+    {
       listener.errorOrWarningLabelClicked();
     }
   }
@@ -152,7 +160,8 @@ class BoardPanelStatus extends JPanel {
    *
    * @param listener the listener to be added
    */
-  public void addErrorOrWarningLabelClickedListener(ErrorOrWarningLabelClickedListener listener) {
+  public void addErrorOrWarningLabelClickedListener(ErrorOrWarningLabelClickedListener listener)
+  {
     errorOrWarningLabelClickedListeners.add(listener);
   }
 
@@ -161,7 +170,8 @@ class BoardPanelStatus extends JPanel {
    * the click event on the error or warning labels.
    */
   @FunctionalInterface
-  public interface ErrorOrWarningLabelClickedListener {
+  public interface ErrorOrWarningLabelClickedListener
+  {
     /**
      * Invoked when the error or warning label is clicked.
      */

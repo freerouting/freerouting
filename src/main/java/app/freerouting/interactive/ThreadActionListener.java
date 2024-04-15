@@ -1,6 +1,7 @@
 package app.freerouting.interactive;
 
-public interface ThreadActionListener {
+public interface ThreadActionListener
+{
   void autorouterStarted();
 
   void autorouterAborted();

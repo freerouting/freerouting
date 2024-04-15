@@ -89,7 +89,7 @@ public class SpecctraSesFileWriter
         write_components(p_board, p_identifier_type, p_coordinate_transform, p_file, p_board.library.packages.get(i));
       }
     }
-    
+
     p_file.end_scope();
   }
 

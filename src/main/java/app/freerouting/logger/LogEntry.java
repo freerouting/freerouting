@@ -5,7 +5,8 @@ import java.time.Instant;
 /// <summary>
 /// Represents a log entry.
 /// </summary>
-public class LogEntry {
+public class LogEntry
+{
   /// <summary>
   /// Timestamp of the log entry.
   /// </summary>
@@ -26,23 +27,27 @@ public class LogEntry {
   /// <summary>
   /// Initializes a new instance of the <see cref="LogEntry"/> class.
   /// </summary>
-  public LogEntry(LogEntryType type, String message, Throwable exception) {
+  public LogEntry(LogEntryType type, String message, Throwable exception)
+  {
     this.timestamp = Instant.now();
     this.type = type;
     this.message = message;
     this.exception = exception;
   }
 
-  public LogEntryType getType() {
+  public LogEntryType getType()
+  {
     return this.type;
   }
 
-  public String getMessage() {
+  public String getMessage()
+  {
     return this.message;
   }
 
   @Override
-  public String toString() {
+  public String toString()
+  {
     return String.format("%-7s", this.type.toString().toUpperCase()) + " " + this.message;
   }
 }

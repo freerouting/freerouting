@@ -2,25 +2,20 @@ package app.freerouting.gui;
 
 import app.freerouting.board.BoardOutline;
 import app.freerouting.interactive.BoardHandling;
-
 import app.freerouting.management.FRAnalytics;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSlider;
+
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ResourceBundle;
 
-/** Window handling detail parameters of the interactive routing. */
-public class WindowRouteDetail extends BoardSavableSubWindow {
+/**
+ * Window handling detail parameters of the interactive routing.
+ */
+public class WindowRouteDetail extends BoardSavableSubWindow
+{
 
   private static final int c_max_slider_value = 100;
   private static final int c_accuracy_scale_factor = 20;
@@ -29,8 +24,12 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
   private final JRadioButton route_detail_on_button;
   private final JRadioButton route_detail_off_button;
   private final JCheckBox route_detail_outline_keepout_check_box;
-  /** Creates a new instance of RouteDetailWindow */
-  public WindowRouteDetail(BoardFrame p_board_frame) {
+
+  /**
+   * Creates a new instance of RouteDetailWindow
+   */
+  public WindowRouteDetail(BoardFrame p_board_frame)
+  {
     setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
     this.setTitle(tm.getText("title"));
@@ -47,10 +46,8 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
 
     // add label and button group for the clearance compensation.
 
-    JLabel clearance_compensation_label =
-        new JLabel(tm.getText("clearance_compensation"));
-    clearance_compensation_label.setToolTipText(
-        tm.getText("clearance_compensation_tooltip"));
+    JLabel clearance_compensation_label = new JLabel(tm.getText("clearance_compensation"));
+    clearance_compensation_label.setToolTipText(tm.getText("clearance_compensation_tooltip"));
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
@@ -77,15 +74,13 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     gridbag.setConstraints(route_detail_off_button, gridbag_constraints);
     main_panel.add(route_detail_off_button, gridbag_constraints);
 
-    JLabel separator =
-        new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
+    JLabel separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
     main_panel.add(separator, gridbag_constraints);
 
     // add label and slider for the pull tight accuracy.
 
-    JLabel pull_tight_accuracy_label =
-        new JLabel(tm.getText("pull_tight_accuracy"));
+    JLabel pull_tight_accuracy_label = new JLabel(tm.getText("pull_tight_accuracy"));
     pull_tight_accuracy_label.setToolTipText(tm.getText("pull_tight_accuracy_tooltip"));
     gridbag_constraints.insets = new Insets(5, 10, 5, 10);
     gridbag.setConstraints(pull_tight_accuracy_label, gridbag_constraints);
@@ -120,63 +115,73 @@ public class WindowRouteDetail extends BoardSavableSubWindow {
     this.setResizable(false);
   }
 
-  /** Recalculates all displayed values */
+  /**
+   * Recalculates all displayed values
+   */
   @Override
-  public void refresh() {
-    if (this.board_handling
-        .get_routing_board()
-        .search_tree_manager
-        .is_clearance_compensation_used()) {
+  public void refresh()
+  {
+    if (this.board_handling.get_routing_board().search_tree_manager.is_clearance_compensation_used())
+    {
       this.route_detail_on_button.setSelected(true);
-    } else {
+    }
+    else
+    {
       this.route_detail_off_button.setSelected(true);
     }
     BoardOutline outline = this.board_handling.get_routing_board().get_outline();
-    if (outline != null) {
+    if (outline != null)
+    {
       this.route_detail_outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
     }
-    int accuracy_slider_value =
-        c_max_slider_value
-            - this.board_handling.settings.get_trace_pull_tight_accuracy() / c_accuracy_scale_factor
-            + 1;
+    int accuracy_slider_value = c_max_slider_value - this.board_handling.settings.get_trace_pull_tight_accuracy() / c_accuracy_scale_factor + 1;
     accuracy_slider.setValue(accuracy_slider_value);
   }
 
-  private class CompensationOnListener implements ActionListener {
+  private class CompensationOnListener implements ActionListener
+  {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.set_clearance_compensation(true);
     }
   }
 
-  private class CompensationOffListener implements ActionListener {
+  private class CompensationOffListener implements ActionListener
+  {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
       board_handling.set_clearance_compensation(false);
     }
   }
 
-  private class SliderChangeListener implements ChangeListener {
+  private class SliderChangeListener implements ChangeListener
+  {
 
     @Override
-    public void stateChanged(ChangeEvent evt) {
-      int new_accuracy =
-          (c_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
+    public void stateChanged(ChangeEvent evt)
+    {
+      int new_accuracy = (c_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
       board_handling.settings.set_current_pull_tight_accuracy(new_accuracy);
     }
   }
 
-  private class OutLineKeepoutListener implements ActionListener {
+  private class OutLineKeepoutListener implements ActionListener
+  {
 
     @Override
-    public void actionPerformed(ActionEvent p_evt) {
-      if (board_handling.is_board_read_only()) {
+    public void actionPerformed(ActionEvent p_evt)
+    {
+      if (board_handling.is_board_read_only())
+      {
         return;
       }
       BoardOutline outline = board_handling.get_routing_board().get_outline();
-      if (outline != null) {
+      if (outline != null)
+      {
         outline.generate_keepout_outside(route_detail_outline_keepout_check_box.isSelected());
       }
     }
