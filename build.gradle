@@ -56,16 +56,16 @@ ext {
 }
 
 def manifestAttributes = [
-    'Automatic-Module-Name': 'app.freerouting',
-    'Built-By': System.properties['user.name'],
-    'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-    'Build-Date': project.buildDate,
-    'Build-Time': project.buildTime,
-    'Build-Revision': versioning.info.commit,
-    'Specification-Title': project.name,
-    'Specification-Version': project.version,
-    'Implementation-Title': project.name,
-    'Implementation-Version': project.version
+        'Automatic-Module-Name' : 'app.freerouting',
+        'Built-By'              : System.properties['user.name'],
+        'Created-By'            : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+        'Build-Date'            : project.buildDate,
+        'Build-Time'            : project.buildTime,
+        'Build-Revision'        : versioning.info.commit,
+        'Specification-Title'   : project.name,
+        'Specification-Version' : project.version,
+        'Implementation-Title'  : project.name,
+        'Implementation-Version': project.version
 ].asImmutable()
 
 jar {
@@ -96,7 +96,7 @@ tasks.register('writeVersionInfo') {
         def buildInfoCode = file("${project.buildDir}/generated-src/app/freerouting/constants/Constants.java")
         buildInfoCode.getParentFile().mkdirs()
         buildInfoCode.write(
-            """
+                """
             package app.freerouting.constants;
             public final class Constants {
               public static final String FREEROUTING_VERSION = \"${publishing.versionId}\";
@@ -129,3 +129,7 @@ tasks.register('run', JavaExec) {
     // jvmArgs 'arg1'
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xmaxerrs" << "1000"  // Increase maximum error messages
+    options.compilerArgs << "-Xmaxwarns" << "1000" // Increase maximum warning messages
+}
