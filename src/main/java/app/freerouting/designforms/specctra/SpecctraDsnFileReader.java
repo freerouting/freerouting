@@ -1411,6 +1411,14 @@ class SpecctraDsnFileReader implements IJFlexScanner
   {
     java.util.Collection<String> result = new java.util.LinkedList<String>();
 
+    // Every string list must have at least one item, but the first item can be empty. In this case we ignore that and continue reading the next item.
+    // This is extra step is also needed to handle the bug KiCad 8 introduced in the netlist definition, when it started the list of nets with a "" string.
+    String first_string = next_string(true, separator);
+    if (first_string.length() > 0)
+    {
+      result.add(first_string);
+    }
+
     for (; ; )
     {
       String next_string = next_string(true, separator);
