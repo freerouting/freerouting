@@ -94,7 +94,7 @@ class BoardToolbar extends JPanel
     {
       InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer();
 
-      if (board_frame.board_panel.board_handling.autorouter_listener != null)
+      if ((thread != null) && (board_frame.board_panel.board_handling.autorouter_listener != null))
       {
         // Add the auto-router listener to save the design file when the auto-router is running
         thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
