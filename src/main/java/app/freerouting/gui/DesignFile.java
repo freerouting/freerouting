@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.board.BoardDetails;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.zip.CRC32;
 
 /**
@@ -108,6 +108,66 @@ public class DesignFile
       FRLogger.error("File '" + rules_file_name + "' was not found.", null);
     }
     return false;
+  }
+
+  public static FileFormat getFileFormat(File file)
+  {
+    // Open the file as a binary file and read the first 6 bytes to determine the file format
+    try (FileInputStream fileInputStream = new FileInputStream(file))
+    {
+      byte[] buffer = new byte[6];
+      int bytesRead = fileInputStream.read(buffer, 0, 6);
+      if (bytesRead == 6)
+      {
+        // Check if the file is a binary file
+        if (buffer[0] == (byte) 0xAC && buffer[1] == (byte) 0xED && buffer[2] == (byte) 0x00 && buffer[3] == (byte) 0x05)
+        {
+          return FileFormat.FRB;
+        }
+
+        // If the first few bytes are 0x0A or 0x13, ignore them
+        while (buffer[0] == (byte) 0x0A || buffer[0] == (byte) 0x0D)
+        {
+          buffer[0] = buffer[1];
+          buffer[1] = buffer[2];
+          buffer[2] = buffer[3];
+          buffer[3] = buffer[4];
+          buffer[4] = buffer[5];
+        }
+
+        // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")
+        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x70 && buffer[2] == (byte) 0x63 && buffer[3] == (byte) 0x62) || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x50 && buffer[2] == (byte) 0x43 && buffer[3] == (byte) 0x42))
+        {
+          return FileFormat.DSN;
+        }
+      }
+    } catch (IOException e)
+    {
+      FRLogger.error(e.getLocalizedMessage(), e);
+    }
+
+    // As a fallback method, set the file format based on its extension
+    String filename = file.getName().toLowerCase();
+    String[] parts = filename.split("\\.");
+    if (parts.length > 1)
+    {
+      String extension = parts[parts.length - 1].toLowerCase();
+      switch (extension)
+      {
+        case dsn_file_extension:
+          return FileFormat.DSN;
+        case binary_file_extension:
+          return FileFormat.FRB;
+        case "ses":
+          return FileFormat.SES;
+        case "scr":
+          return FileFormat.SCR;
+        default:
+          return FileFormat.UNKNOWN;
+      }
+    }
+
+    return FileFormat.UNKNOWN;
   }
 
   private File getSnapshotFilename(File inputFile)
@@ -294,6 +354,7 @@ public class DesignFile
       this.inputFileFormat = FileFormat.DSN;
       this.inputFile = new File(filename);
       this.snapshotFile = getSnapshotFilename(this.inputFile);
+      this.outputFileFormat = FileFormat.SES;
       this.outputFile = changeFileExtension(this.inputFile, ses_file_extension);
     }
     else
@@ -312,49 +373,23 @@ public class DesignFile
       return false;
     }
 
-    // Open the file as a binary file and read the first 4 bytes
-    try (FileInputStream fileInputStream = new FileInputStream(selectedFile))
+    this.inputFileFormat = getFileFormat(selectedFile);
+
+    if (this.inputFileFormat == FileFormat.FRB)
     {
-      byte[] buffer = new byte[6];
-      int bytesRead = fileInputStream.read(buffer, 0, 6);
-      if (bytesRead != 6)
-      {
-        return false;
-      }
+      this.outputFile = changeFileExtension(selectedFile, binary_file_extension);
+    }
 
-      // Check if the file is a binary file
-      if (buffer[0] == (byte) 0xAC && buffer[1] == (byte) 0xED && buffer[2] == (byte) 0x00 && buffer[3] == (byte) 0x05)
-      {
-        this.inputFileFormat = FileFormat.FRB;
-        this.outputFile = changeFileExtension(selectedFile, binary_file_extension);
-      }
-
-      // If the first few bytes are 0x0A or 0x13, ignore them
-      while (buffer[0] == (byte) 0x0A || buffer[0] == (byte) 0x0D)
-      {
-        buffer[0] = buffer[1];
-        buffer[1] = buffer[2];
-        buffer[2] = buffer[3];
-        buffer[3] = buffer[4];
-        buffer[4] = buffer[5];
-      }
-
-      // Check if the file is a DSN file (it starts with "(pcb" or "(PCB")
-      if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x70 && buffer[2] == (byte) 0x63 && buffer[3] == (byte) 0x62) || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x50 && buffer[2] == (byte) 0x43 && buffer[3] == (byte) 0x42))
-      {
-        this.inputFileFormat = FileFormat.DSN;
-        this.outputFile = changeFileExtension(selectedFile, ses_file_extension);
-      }
-
-      if (this.inputFileFormat != FileFormat.UNKNOWN)
-      {
-        this.inputFile = selectedFile;
-        this.snapshotFile = getSnapshotFilename(this.inputFile);
-        return true;
-      }
-    } catch (IOException e)
+    if (this.inputFileFormat == FileFormat.DSN)
     {
-      FRLogger.error(e.getLocalizedMessage(), e);
+      this.outputFile = changeFileExtension(selectedFile, ses_file_extension);
+    }
+
+    if (this.inputFileFormat != FileFormat.UNKNOWN)
+    {
+      this.inputFile = selectedFile;
+      this.snapshotFile = getSnapshotFilename(this.inputFile);
+      return true;
     }
 
     return false;
@@ -380,104 +415,32 @@ public class DesignFile
 
   public boolean tryToSetOutputFile(File selectedFile)
   {
-    // Set the output file format based on its extension
-    String filename = selectedFile.getName().toLowerCase();
-    String[] parts = filename.split("\\.");
-    if (parts.length > 1)
+    if (selectedFile == null)
     {
-      String extension = parts[parts.length - 1].toLowerCase();
-      switch (extension)
-      {
-        case dsn_file_extension:
-          this.outputFile = selectedFile;
-          this.outputFileFormat = FileFormat.DSN;
-          return true;
-        case binary_file_extension:
-          this.outputFile = selectedFile;
-          this.outputFileFormat = FileFormat.FRB;
-          return true;
-        case "ses":
-          this.outputFile = selectedFile;
-          this.outputFileFormat = FileFormat.SES;
-          return true;
-        case "scr":
-          this.outputFile = selectedFile;
-          this.outputFileFormat = FileFormat.SCR;
-          return true;
-        default:
-          return false;
-      }
+      return false;
     }
 
-    return false;
-  }
+    FileFormat ff = getFileFormat(selectedFile);
 
-  private String GetFileDetails(File file, FileFormat fileFormat)
-  {
-    StringBuilder sb = new StringBuilder();
-
-    if (file == null)
+    if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR))
     {
-      return "";
+      this.outputFile = selectedFile;
+      this.outputFileFormat = ff;
+      return true;
     }
-
-    sb.append(fileFormat);
-    sb.append(",");
-    sb.append(file.getAbsolutePath());
-    sb.append(",");
-    sb.append(file.getName());
-    sb.append(",");
-    // get the file size of the output file
-    sb.append(file.length());
-
-    if ((fileFormat == FileFormat.SES) || (fileFormat == FileFormat.DSN))
+    else
     {
-      String content = "";
-      try
-      {
-        // read the content of the output file as text
-        content = Files.readString(file.toPath());
-      } catch (IOException e)
-      {
-        FRLogger.error(e.getLocalizedMessage(), e);
-      }
-
-      if (fileFormat == FileFormat.SES)
-      {
-        // get the number of components and nets in the SES file
-        sb.append(",");
-        sb.append(content.split("\\(component").length - 1);
-        sb.append(",");
-        sb.append(content.split("\\(net").length - 1);
-      }
-      else if (fileFormat == FileFormat.DSN)
-      {
-        // get the number of layers and nets in the DSN file
-        sb.append(",");
-        sb.append(content.split("\\(layer").length - 1);
-        sb.append(",");
-        sb.append(content.split("\\(component").length - 1);
-        sb.append(",");
-        sb.append(content.split("\\(class").length - 1);
-        sb.append(",");
-        sb.append(content.split("\\(net").length - 1);
-        sb.append(",");
-        sb.append(content.split("\\(wire").length - 1);
-        sb.append(",");
-        sb.append(content.split("\\(via").length - 1);
-      }
+      return false;
     }
-
-    return sb.toString();
   }
 
   public String getInputFileDetails()
   {
-    return GetFileDetails(this.inputFile, inputFileFormat);
+    return new BoardDetails(this.inputFile).toString();
   }
 
   public String getOutputFileDetails()
   {
-    return GetFileDetails(this.outputFile, outputFileFormat);
+    return new BoardDetails(this.outputFile).toString();
   }
 }

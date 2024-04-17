@@ -196,7 +196,7 @@ public class BoardFrame extends WindowBase
           {
             saveRulesAs(design_file.getRulesFile(), design_file.get_name(), board_panel.board_handling);
           }
-          FRAnalytics.buttonClicked("fileio_saveses", this.design_file.getOutputFileDetails());
+          FRAnalytics.buttonClicked("fileio_saveses", new BoardDetails(design_file.getRulesFile()).toString());
           break;
         case DSN:
           // Save the file as a Specctra DSN file
@@ -211,7 +211,7 @@ public class BoardFrame extends WindowBase
         case SCR:
           //  Save the file as an Eagle script file
           this.saveAsEagleScriptScr(this.design_file.getEagleScriptFile(), design_file.get_name());
-          FRAnalytics.buttonClicked("fileio_savescr", this.design_file.getOutputFileDetails());
+          FRAnalytics.buttonClicked("fileio_savescr", new BoardDetails(design_file.getEagleScriptFile()).toString());
           break;
         default:
           // The file format is not supported

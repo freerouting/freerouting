@@ -502,6 +502,8 @@ public class MainApplication extends WindowBase
       return null;
     }
 
+    FRAnalytics.buttonClicked("fileio_loaddsn", p_design_file.getInputFileDetails());
+
     if (globalSettings.disabledFeatures.selectMode)
     {
       new_frame.board_panel.board_handling.set_route_menu_state();
