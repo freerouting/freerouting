@@ -238,6 +238,23 @@ class BoardToolbar extends JPanel
     // Add listeners to enable/disable buttons based on the board read-only state
     board_frame.addBoardLoadedEventListener((RoutingBoard board) ->
     {
+      if ((board == null) || (board.components.count() == 0))
+      {
+        // disable all buttons if the board is empty
+        modeSelectionPanel.setEnabled(false);
+        settings_button.setEnabled(false);
+        toolbar_autoroute_button.setEnabled(false);
+        cancel_button.setEnabled(false);
+        toolbar_undo_button.setEnabled(false);
+        toolbar_redo_button.setEnabled(false);
+        toolbar_incompletes_button.setEnabled(false);
+        toolbar_violation_button.setEnabled(false);
+        toolbar_display_region_button.setEnabled(false);
+        toolbar_display_all_button.setEnabled(false);
+        unitSelectionPanel.setEnabled(false);
+        delete_all_tracks_button.setEnabled(false);
+      }
+
       board_frame.board_panel.board_handling.addReadOnlyEventListener((Boolean isBoardReadOnly) ->
       {
         modeSelectionPanel.setEnabled(!isBoardReadOnly);

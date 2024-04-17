@@ -143,7 +143,7 @@ public class DesignFile
       }
     } catch (IOException e)
     {
-      FRLogger.error(e.getLocalizedMessage(), e);
+      // Ignore the exception, it can happen with the build-in template or if the user doesn't choose any file in the file dialog
     }
 
     // As a fallback method, set the file format based on its extension
@@ -349,20 +349,20 @@ public class DesignFile
 
   public void setDummyInputFile(String filename)
   {
+    this.outputFileFormat = FileFormat.UNKNOWN;
+    this.outputFile = null;
+
     if ((filename != null) && (filename.toLowerCase().endsWith(dsn_file_extension)))
     {
       this.inputFileFormat = FileFormat.DSN;
       this.inputFile = new File(filename);
       this.snapshotFile = getSnapshotFilename(this.inputFile);
-      this.outputFileFormat = FileFormat.SES;
-      this.outputFile = changeFileExtension(this.inputFile, ses_file_extension);
     }
     else
     {
       this.inputFileFormat = FileFormat.UNKNOWN;
       this.inputFile = null;
       this.snapshotFile = null;
-      this.outputFile = null;
     }
   }
 

@@ -280,7 +280,14 @@ public class BoardFrame extends WindowBase
   @Override
   public void updateTexts()
   {
-    this.setTitle(tm.getText("title", MainApplication.globalSettings.version));
+    if ((this.design_file == null) || (this.design_file.getOutputFile() == null))
+    {
+      this.setTitle(tm.getText("title", MainApplication.globalSettings.version));
+    }
+    else
+    {
+      this.setTitle(design_file.get_name() + " - " + tm.getText("title", MainApplication.globalSettings.version));
+    }
   }
 
   /**

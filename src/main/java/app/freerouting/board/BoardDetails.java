@@ -2,7 +2,6 @@ package app.freerouting.board;
 
 import app.freerouting.gui.DesignFile;
 import app.freerouting.gui.FileFormat;
-import app.freerouting.logger.FRLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -59,7 +58,7 @@ public class BoardDetails
         content = Files.readString(file.toPath());
       } catch (IOException e)
       {
-        FRLogger.error(e.getLocalizedMessage(), e);
+        // Ignore the exception and continue with the default values
       }
 
       if (this.format == FileFormat.SES)
