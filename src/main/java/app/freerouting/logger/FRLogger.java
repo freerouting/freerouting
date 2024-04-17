@@ -1,14 +1,13 @@
 package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /// <summary>
 /// Provides logging functionality.
@@ -73,7 +72,14 @@ public class FRLogger
       logger = LogManager.getLogger(Freerouting.class);
     }
 
-    long timeElapsed = Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
+    long timeElapsed = 0;
+    try
+    {
+      timeElapsed = Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
+    } catch (Exception e)
+    {
+      // we can ignore this exception
+    }
 
     perfData.remove(perfId.hashCode());
     if (timeElapsed < 0)
