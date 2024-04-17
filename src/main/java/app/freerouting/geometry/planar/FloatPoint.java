@@ -344,6 +344,7 @@ public class FloatPoint implements Serializable
     {
       return this;
     }
+
     double dx = x - p_pole.x;
     double dy = y - p_pole.y;
     double sin_angle = Math.sin(p_angle);

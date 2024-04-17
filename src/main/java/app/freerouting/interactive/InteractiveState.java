@@ -107,8 +107,12 @@ public class InteractiveState
    */
   public InteractiveState mouse_wheel_moved(int p_rotation)
   {
-    Point2D screen_mouse_pos = hdlg.graphics_context.coordinate_transform.board_to_screen(hdlg.get_current_mouse_position());
-    hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
+    FloatPoint mousePosition = hdlg.get_current_mouse_position();
+    if (mousePosition != null)
+    {
+      Point2D screen_mouse_pos = hdlg.graphics_context.coordinate_transform.board_to_screen(mousePosition);
+      hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
+    }
     return this;
   }
 

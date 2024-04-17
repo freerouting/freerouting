@@ -96,6 +96,11 @@ public class CoordinateTransform implements Serializable
    */
   public Point2D board_to_screen(FloatPoint p_point)
   {
+    if (p_point == null)
+    {
+      return null;
+    }
+    
     FloatPoint rotated_point = p_point.rotate(this.rotation, this.rotation_pole);
 
     double x, y;
