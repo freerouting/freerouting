@@ -273,6 +273,15 @@ public class BoardFrame extends WindowBase
 
     this.addWindowListener(new WindowStateListener());
 
+    this.addBoardLoadedEventListener((RoutingBoard board) ->
+    {
+      boolean isBoardEmpty = (board == null) || (board.components.count() == 0);
+      this.menubar.appereanceMenu.setEnabled(!isBoardEmpty);
+      this.menubar.settingsMenu.setEnabled(!isBoardEmpty);
+      this.menubar.rulesMenu.setEnabled(!isBoardEmpty);
+      this.menubar.infoMenu.setEnabled(!isBoardEmpty);
+    });
+
     this.updateTexts();
     this.pack();
   }
