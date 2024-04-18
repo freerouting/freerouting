@@ -105,7 +105,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
       settings_autorouter_combo_box_arr.get(i).addItem(this.horizontal);
       settings_autorouter_combo_box_arr.get(i).addItem(this.vertical);
       settings_autorouter_combo_box_arr.get(i).addActionListener(new PreferredDirectionListener(i));
-      settings_autorouter_combo_box_arr.get(i).addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_combo_box_arr", null));
+      //settings_autorouter_combo_box_arr.get(i).addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_combo_box_arr", null));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
       main_panel.add(settings_autorouter_combo_box_arr.get(i));

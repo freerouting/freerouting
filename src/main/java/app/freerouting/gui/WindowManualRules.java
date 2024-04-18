@@ -58,7 +58,7 @@ public class WindowManualRules extends BoardSavableSubWindow
     gridbag.setConstraints(this.settings_routing_manual_rule_selection_via_rule_combo_box, gridbag_constraints);
     main_panel.add(this.settings_routing_manual_rule_selection_via_rule_combo_box);
     settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(new ViaRuleComboBoxListener());
-    settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_via_rule_combo_box", settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedItem().toString()));
+    //settings_routing_manual_rule_selection_via_rule_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_via_rule_combo_box", settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedItem().toString()));
 
     JLabel class_label = new JLabel(tm.getText("trace_clearance_class"));
     gridbag_constraints.gridwidth = 2;
@@ -70,7 +70,7 @@ public class WindowManualRules extends BoardSavableSubWindow
     gridbag.setConstraints(this.settings_routing_manual_rule_selection_clearance_combo_box, gridbag_constraints);
     main_panel.add(this.settings_routing_manual_rule_selection_clearance_combo_box);
     settings_routing_manual_rule_selection_clearance_combo_box.addActionListener(new ClearanceComboBoxListener());
-    settings_routing_manual_rule_selection_clearance_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_clearance_combo_box", settings_routing_manual_rule_selection_clearance_combo_box.getSelectedItem().toString()));
+    //settings_routing_manual_rule_selection_clearance_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_clearance_combo_box", settings_routing_manual_rule_selection_clearance_combo_box.getSelectedItem().toString()));
 
     JLabel separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
