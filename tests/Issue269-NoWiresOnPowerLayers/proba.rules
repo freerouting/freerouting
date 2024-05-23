@@ -1,0 +1,155 @@
+
+(rules PCB proba
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (app.freerouting.autoroute off)
+    (postroute on)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 1)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.8)
+      (against_preferred_direction_trace_costs 3.1)
+    )
+    (layer_rule GND
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 1.8)
+    )
+    (layer_rule PWR
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 2.3)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.8)
+      (against_preferred_direction_trace_costs 2.6)
+    )
+  )
+  (rule
+    (width 150.0)
+    (clear 150.2)
+    (clear 75.0 (type smd_to_turn_gap))
+    (clear 37.6 (type smd_smd))
+  )
+  (padstack "Via[0-3]_300:100_um"
+    (shape
+      (circle F.Cu 300.0 0.0 0.0)
+    )
+    (shape
+      (circle GND 300.0 0.0 0.0)
+    )
+    (shape
+      (circle PWR 300.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 300.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-3]_300:100_um" "Via[0-3]_300:100_um" default
+  )
+  (via 
+    "Via[0-3]_300:100_um-kicad_default" "Via[0-3]_300:100_um" "kicad_default"
+  )
+  (via 
+    "Via[0-3]_300:100_um-GND" "Via[0-3]_300:100_um" GND
+  )
+  (via 
+    "Via[0-3]_300:100_um-PWR" "Via[0-3]_300:100_um" PWR
+  )
+  (via_rule
+    default "Via[0-3]_300:100_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-3]_300:100_um-kicad_default"
+  )
+  (via_rule
+    GND "Via[0-3]_300:100_um-GND"
+  )
+  (via_rule
+    PWR "Via[0-3]_300:100_um-PWR"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 150.0)
+    )
+    (circuit 
+      (use_layer F.Cu GND PWR B.Cu)
+    )
+  )
+  (class "kicad_default"
+    /R11 /E4 /F4 /F5 /F6 /G5 /G6 /H4
+    /H5 /J6 /K5 /K6 /L5 /L8 /L10 /M2
+    /M5 /M12 /N4 /N11 /N12 /P7 /P8 /R7
+    /R9 /T3 /T8 /T9 /T11 /E12 /B16 /B15
+    /E13 /T10 /TMS /TDI /TCK /TDO /K3 /K2
+    /L4 /M3 "/FPGA_DONE" /A3 /A2 /B3 /B2 /C3
+    /C2 /D3 /E3 /F3 /G3 /H3 /J4 /J3
+    /L3 /M4 /N3 /R2 /R1 /P2 /P1 /N1
+    /M1 /L1 /K1 /J1 /H1 /H2 /G1 /F1
+    /F2 /E1 /E2 /D1 /C1 /B1 /C15 /C16
+    /D14 /D16 /E15 /E16 /F15 /F16 /G11 /F12
+    /F14 /F13 /G16 /G14 /H15 /H16 /G12 /H11
+    /H13 /H14 /J14 /J16 /J11 /J12 /K14 /J13
+    /K15 /K16 /L16 /L14 /K11 /K12 /M15 /M16
+    /N14 /N16 /M13 /M14 /L12 /L13 /P15 /P16
+    /R15 /R16 /R14 /T15 /T13 /T14 /T12 /R12
+    /A14 /B14 /C13 /A13 /B12 /A12 /C11 /A11
+    /B10 /A9 /C9 /A8 /B8 /A7 /C7 /A6
+    /B6 /A5 /B5 /A4 /E10 /C10 /E11 /F10
+    /F9 /D9 /C8 /D8 /E7 /E6 /F7 /C6
+    /D6 /M6 /P4 /N5 /P5 /N6 /M7 /P6
+    /N8 /L7 /P9 /T4 /T5 /R5 /T6 /T7
+    /N9 /M9 /M10 /P11 /P12 /M11 "Net-(D1-A)" "Net-(D2-A)"
+    "Net-(D3-A)" "Net-(D4-A)" "/PROG_B" /C4 /A10 /C5 /D5 /D11
+    /D12 /E8 /R3 P10 "Net-(U5-IO2)" "Net-(U5-IO3)" "Net-(X1-EN)" "unconnected-(U1-NC-Pad40)"
+    "unconnected-(U2A-VCCO_0-PadB4)" "unconnected-(U2A-VCCO_0-PadB9)" "unconnected-(U2A-VCCO_0-PadB13)" "unconnected-(U2B-VCCO_3-PadD2)" "unconnected-(U2A-VCCO_0-PadD7)" "unconnected-(U2A-VCCO_0-PadD10)" "unconnected-(U2A-VCCO_1-PadD15)" "unconnected-(U2B-VCCO_3-PadG4)"
+    "unconnected-(U2A-VCCO_1-PadG13)" "unconnected-(U2B-VCCO_3-PadJ2)" "unconnected-(U2A-VCCO_1-PadJ15)" "unconnected-(U2B-VCCO_3-PadK4)" "unconnected-(U2A-VCCO_1-PadK13)" "unconnected-(U2C-CMPCS_B_2-PadL11)" "unconnected-(U2B-VCCO_3-PadN2)" "unconnected-(U2B-VCCO_2-PadN7)"
+    "unconnected-(U2B-VCCO_2-PadN10)" "unconnected-(U2A-VCCO_1-PadN15)" "unconnected-(U2B-VCCO_2-PadR4)" "unconnected-(U2B-VCCO_2-PadR8)" "unconnected-(U2A-VCCO_1-PadR13)"
+    (clearance_class "kicad_default")
+    (via_rule kicad_default)
+    (rule
+      (width 150.0)
+    )
+    (circuit 
+      (use_layer F.Cu GND PWR B.Cu)
+    )
+  )
+  (class GND
+    GNDREF
+    (clearance_class GND)
+    (via_rule GND)
+    (rule
+      (width 200.0)
+    )
+    (circuit 
+      (use_layer F.Cu GND PWR B.Cu)
+    )
+  )
+  (class PWR
+    +1V2 +3V3 +5V
+    (clearance_class PWR)
+    (via_rule PWR)
+    (rule
+      (width 200.0)
+    )
+    (circuit 
+      (use_layer F.Cu GND PWR B.Cu)
+    )
+  )
+)
