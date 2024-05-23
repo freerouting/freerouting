@@ -333,6 +333,15 @@ public class BoardFrame extends WindowBase
     DsnFile.ReadResult read_result = null;
 
     board_panel.reset_board_handling();
+    // close all previous windows
+    for (int i = 0; i < this.permanent_subwindows.length; ++i)
+    {
+      if (this.permanent_subwindows[i] != null)
+      {
+        this.permanent_subwindows[i].dispose();
+        this.permanent_subwindows[i] = null;
+      }
+    }
 
     if (isSpecctraDsn)
     {
