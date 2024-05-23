@@ -14,6 +14,7 @@ import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.settings.DisabledFeaturesSettings;
+import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -148,6 +149,21 @@ public class BoardFrame extends WindowBase
       {
         // The file is not in a valid format
         return;
+      }
+
+      // Set the input directory in the global settings
+      if (p_design.getInputFile() != null)
+      {
+        MainApplication.globalSettings.input_directory = design_file.getInputFileDirectory();
+
+        try
+        {
+          GlobalSettings.save(MainApplication.globalSettings);
+        } catch (Exception e)
+        {
+          // it's ok if we can't save the configuration file
+          FRLogger.error("Couldn't update the input directory in the configuration file", e);
+        }
       }
 
       // Load the file into the frame based on its recognised format
