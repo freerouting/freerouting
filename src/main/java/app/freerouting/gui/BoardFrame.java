@@ -276,6 +276,7 @@ public class BoardFrame extends WindowBase
     this.addBoardLoadedEventListener((RoutingBoard board) ->
     {
       boolean isBoardEmpty = (board == null) || (board.components.count() == 0);
+      this.menubar.fileMenu.file_save_as_menuitem.setEnabled(!isBoardEmpty);
       this.menubar.appereanceMenu.setEnabled(!isBoardEmpty);
       this.menubar.settingsMenu.setEnabled(!isBoardEmpty);
       this.menubar.rulesMenu.setEnabled(!isBoardEmpty);
