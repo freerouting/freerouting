@@ -41,6 +41,9 @@ public class BoardPanel extends JPanel
    * custom_cursor is used.
    */
   private Cursor custom_cursor;
+  private boolean save_intermediate_stages;
+  private float optimization_improvement_threshold;
+  private Locale default_locale;
 
   /**
    * Creates a new BoardPanel in an Application
@@ -63,6 +66,10 @@ public class BoardPanel extends JPanel
 
   private void default_init(Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
   {
+    this.default_locale = p_locale;
+    this.save_intermediate_stages = p_save_intermediate_stages;
+    this.optimization_improvement_threshold = p_optimization_improvement_threshold;
+
     setLayout(new BorderLayout());
 
     setBackground(new Color(0, 0, 0));
@@ -113,9 +120,14 @@ public class BoardPanel extends JPanel
       }
     });
     addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
-    board_handling = new BoardHandling(this, p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
+    board_handling = new BoardHandling(this, this.default_locale, this.save_intermediate_stages, this.optimization_improvement_threshold);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+  }
+
+  public void reset_board_handling()
+  {
+    board_handling = new BoardHandling(this, this.default_locale, this.save_intermediate_stages, this.optimization_improvement_threshold);
   }
 
   void create_popup_menus()
