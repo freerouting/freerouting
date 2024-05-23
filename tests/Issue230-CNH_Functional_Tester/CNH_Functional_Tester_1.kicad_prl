@@ -67,6 +67,12 @@
     "visible_layers": "fff1f03_fffffff9",
     "zone_display_mode": 0
   },
+  "git": {
+    "repo_password": "",
+    "repo_type": "",
+    "repo_username": "",
+    "ssh_key": ""
+  },
   "meta": {
     "filename": "CNH_Functional_Tester_1.kicad_prl",
     "version": 3
