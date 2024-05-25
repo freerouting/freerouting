@@ -169,7 +169,7 @@ public class MainApplication extends WindowBase
       // we don't want to stop if the configuration file doesn't exist
     }
 
-    if (globalSettings == null)
+    if ((globalSettings == null) || (globalSettings.version != Constants.FREEROUTING_VERSION))
     {
       globalSettings = new GlobalSettings();
 

@@ -2,7 +2,6 @@ package app.freerouting.gui;
 
 import app.freerouting.board.*;
 import app.freerouting.datastructures.FileFilter;
-import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.BoardHandling;
@@ -14,6 +13,7 @@ import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.settings.DisabledFeaturesSettings;
+import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -63,11 +63,10 @@ public class BoardFrame extends WindowBase
    * The panel with the message line
    */
   private final BoardPanelStatus message_panel;
-  private final BoardObservers board_observers;
-  private final IdNoGenerator item_id_no_generator;
   private final Locale locale;
   private final List<Consumer<RoutingBoard>> boardLoadedEventListeners = new ArrayList<>();
   private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
+  private final BoardObservers board_observers;
   /**
    * The panel with the graphical representation of the board.
    */
@@ -114,21 +113,20 @@ public class BoardFrame extends WindowBase
    */
   public BoardFrame(DesignFile p_design, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
   {
-    this(p_design, new BoardObserverAdaptor(), new ItemIdNoGenerator(), p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold, disabledFeatures);
+    this(p_design, new BoardObserverAdaptor(), p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold, disabledFeatures);
   }
 
   /**
    * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
    * used for synchronizing purposes, if the frame is embedded into a host system,
    */
-  BoardFrame(DesignFile p_design, BoardObservers p_observers, IdNoGenerator p_item_id_no_generator, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
+  BoardFrame(DesignFile p_design, BoardObservers p_observers, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
   {
     super(800, 150);
 
     this.design_file = p_design;
 
     this.board_observers = p_observers;
-    this.item_id_no_generator = p_item_id_no_generator;
     this.locale = p_locale;
     this.setLanguage(p_locale);
 
@@ -148,6 +146,21 @@ public class BoardFrame extends WindowBase
       {
         // The file is not in a valid format
         return;
+      }
+
+      // Set the input directory in the global settings
+      if (p_design.getInputFile() != null)
+      {
+        MainApplication.globalSettings.input_directory = design_file.getInputFileDirectory();
+
+        try
+        {
+          GlobalSettings.save(MainApplication.globalSettings);
+        } catch (Exception e)
+        {
+          // it's ok if we can't save the configuration file
+          FRLogger.error("Couldn't update the input directory in the configuration file", e);
+        }
       }
 
       // Load the file into the frame based on its recognised format
@@ -276,10 +289,13 @@ public class BoardFrame extends WindowBase
     this.addBoardLoadedEventListener((RoutingBoard board) ->
     {
       boolean isBoardEmpty = (board == null) || (board.components.count() == 0);
+      this.menubar.fileMenu.file_save_as_menuitem.setEnabled(!isBoardEmpty);
       this.menubar.appereanceMenu.setEnabled(!isBoardEmpty);
       this.menubar.settingsMenu.setEnabled(!isBoardEmpty);
       this.menubar.rulesMenu.setEnabled(!isBoardEmpty);
       this.menubar.infoMenu.setEnabled(!isBoardEmpty);
+
+      this.toolbar_panel.setEnabled(!isBoardEmpty);
     });
 
     this.updateTexts();
@@ -316,9 +332,20 @@ public class BoardFrame extends WindowBase
     Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
 
+    board_panel.reset_board_handling();
+    // close all previous windows
+    for (int i = 0; i < this.permanent_subwindows.length; ++i)
+    {
+      if (this.permanent_subwindows[i] != null)
+      {
+        this.permanent_subwindows[i].dispose();
+        this.permanent_subwindows[i] = null;
+      }
+    }
+
     if (isSpecctraDsn)
     {
-      read_result = board_panel.board_handling.loadFromSpecctraDsn(p_input_stream, this.board_observers, this.item_id_no_generator);
+      read_result = board_panel.board_handling.loadFromSpecctraDsn(p_input_stream, this.board_observers, new ItemIdNoGenerator());
 
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK)

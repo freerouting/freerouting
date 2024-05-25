@@ -18,9 +18,8 @@ import java.util.function.Consumer;
  */
 public class BoardMenuFile extends JMenu
 {
-
+  public final JMenuItem file_save_as_menuitem;
   private final TextManager tm;
-
   private final List<Consumer<File>> openEventListeners = new ArrayList<>();
   private final List<Consumer<File>> saveAsEventListeners = new ArrayList<>();
 
@@ -48,7 +47,7 @@ public class BoardMenuFile extends JMenu
     add(file_open_menuitem);
 
     // File / Save as...
-    JMenuItem file_save_as_menuitem = new JMenuItem();
+    file_save_as_menuitem = new JMenuItem();
     file_save_as_menuitem.setText(tm.getText("save_as"));
     file_save_as_menuitem.setToolTipText(tm.getText("save_as_tooltip"));
     file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
