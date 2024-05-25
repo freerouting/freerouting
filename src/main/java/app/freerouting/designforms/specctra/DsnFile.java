@@ -81,8 +81,6 @@ public class DsnFile
     {
       result = ReadResult.ERROR;
     }
-    // app.freerouting.tests.Validate.check("after reading dsn",
-    // read_scope_par.board_handling.get_routing_board());
     return result;
   }
 

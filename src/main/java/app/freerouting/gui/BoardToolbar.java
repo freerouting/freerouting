@@ -15,9 +15,19 @@ import java.awt.*;
  */
 class BoardToolbar extends JPanel
 {
-  private final SegmentedButtons modeSelectionPanel;
   private final float ICON_FONT_SIZE = 26.0f;
+  private final SegmentedButtons modeSelectionPanel;
+  private final JButton settings_button;
+  private final JButton toolbar_autoroute_button;
+  private final JButton cancel_button;
+  private final JButton toolbar_undo_button;
+  private final JButton toolbar_redo_button;
+  private final JButton toolbar_incompletes_button;
+  private final JButton toolbar_violation_button;
+  private final JButton toolbar_display_region_button;
+  private final JButton toolbar_display_all_button;
   private final SegmentedButtons unitSelectionPanel;
+  private final JButton delete_all_tracks_button;
   private final BoardFrame board_frame;
 
   /**
@@ -70,7 +80,7 @@ class BoardToolbar extends JPanel
     final JToolBar middle_toolbar = new JToolBar();
 
     // Add "Settings" button to the toolbar
-    final JButton settings_button = new JButton();
+    settings_button = new JButton();
     tm.setText(settings_button, "settings_button");
     settings_button.addActionListener(evt ->
     {
@@ -80,7 +90,7 @@ class BoardToolbar extends JPanel
     middle_toolbar.add(settings_button);
 
     // Add "Autoroute" button to the toolbar
-    final JButton toolbar_autoroute_button = new JButton();
+    toolbar_autoroute_button = new JButton();
     tm.setText(toolbar_autoroute_button, "autoroute_button");
     toolbar_autoroute_button.setDefaultCapable(true);
     Font currentFont = toolbar_autoroute_button.getFont();
@@ -104,7 +114,7 @@ class BoardToolbar extends JPanel
     middle_toolbar.add(toolbar_autoroute_button);
 
     // Add "Cancel" button to the toolbar
-    final JButton cancel_button = new JButton();
+    cancel_button = new JButton();
     tm.setText(cancel_button, "cancel_button");
     cancel_button.addActionListener(evt ->
     {
@@ -115,7 +125,7 @@ class BoardToolbar extends JPanel
     middle_toolbar.add(cancel_button);
 
     // Add "Delete All Tracks and Vias" button to the toolbar
-    final JButton delete_all_tracks_button = new JButton();
+    delete_all_tracks_button = new JButton();
     tm.setText(delete_all_tracks_button, "delete_all_tracks_button");
     delete_all_tracks_button.addActionListener(evt ->
     {
@@ -142,7 +152,7 @@ class BoardToolbar extends JPanel
     separator_2.setRequestFocusEnabled(false);
     middle_toolbar.add(separator_2);
 
-    final JButton toolbar_undo_button = new JButton();
+    toolbar_undo_button = new JButton();
     tm.setText(toolbar_undo_button, "undo_button");
     toolbar_undo_button.addActionListener(evt ->
     {
@@ -154,7 +164,7 @@ class BoardToolbar extends JPanel
 
     middle_toolbar.add(toolbar_undo_button);
 
-    final JButton toolbar_redo_button = new JButton();
+    toolbar_redo_button = new JButton();
     tm.setText(toolbar_redo_button, "redo_button");
     toolbar_redo_button.addActionListener(evt -> board_frame.board_panel.board_handling.redo());
     toolbar_redo_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_redo_button", toolbar_redo_button.getText()));
@@ -166,14 +176,14 @@ class BoardToolbar extends JPanel
     separator_1.setPreferredSize(new Dimension(10, 10));
     middle_toolbar.add(separator_1);
 
-    final JButton toolbar_incompletes_button = new JButton();
+    toolbar_incompletes_button = new JButton();
     tm.setText(toolbar_incompletes_button, "incompletes_button");
     toolbar_incompletes_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_ratsnest());
     toolbar_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_incompletes_button", toolbar_incompletes_button.getText()));
 
     middle_toolbar.add(toolbar_incompletes_button);
 
-    final JButton toolbar_violation_button = new JButton();
+    toolbar_violation_button = new JButton();
     tm.setText(toolbar_violation_button, "violations_button");
     toolbar_violation_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_clearance_violations());
     toolbar_violation_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_violation_button", toolbar_violation_button.getText()));
@@ -186,13 +196,13 @@ class BoardToolbar extends JPanel
     separator_3.setRequestFocusEnabled(false);
     middle_toolbar.add(separator_3);
 
-    final JButton toolbar_display_region_button = new JButton();
+    toolbar_display_region_button = new JButton();
     tm.setText(toolbar_display_region_button, "display_region_button");
     toolbar_display_region_button.addActionListener(evt -> board_frame.board_panel.board_handling.zoom_region());
     toolbar_display_region_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_region_button", toolbar_display_region_button.getText()));
     middle_toolbar.add(toolbar_display_region_button);
 
-    final JButton toolbar_display_all_button = new JButton();
+    toolbar_display_all_button = new JButton();
     tm.setText(toolbar_display_all_button, "display_all_button");
     toolbar_display_all_button.addActionListener(evt -> board_frame.zoom_all());
     toolbar_display_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
@@ -241,34 +251,13 @@ class BoardToolbar extends JPanel
       if ((board == null) || (board.components.count() == 0))
       {
         // disable all buttons if the board is empty
-        modeSelectionPanel.setEnabled(false);
-        settings_button.setEnabled(false);
-        toolbar_autoroute_button.setEnabled(false);
-        cancel_button.setEnabled(false);
-        toolbar_undo_button.setEnabled(false);
-        toolbar_redo_button.setEnabled(false);
-        toolbar_incompletes_button.setEnabled(false);
-        toolbar_violation_button.setEnabled(false);
-        toolbar_display_region_button.setEnabled(false);
-        toolbar_display_all_button.setEnabled(false);
-        unitSelectionPanel.setEnabled(false);
-        delete_all_tracks_button.setEnabled(false);
+        setEnabled(false);
       }
 
       board_frame.board_panel.board_handling.addReadOnlyEventListener((Boolean isBoardReadOnly) ->
       {
-        modeSelectionPanel.setEnabled(!isBoardReadOnly);
-        settings_button.setEnabled(!isBoardReadOnly);
-        toolbar_autoroute_button.setEnabled(!isBoardReadOnly);
+        setEnabled(!isBoardReadOnly);
         cancel_button.setEnabled(isBoardReadOnly);
-        toolbar_undo_button.setEnabled(!isBoardReadOnly);
-        toolbar_redo_button.setEnabled(!isBoardReadOnly);
-        toolbar_incompletes_button.setEnabled(!isBoardReadOnly);
-        toolbar_violation_button.setEnabled(!isBoardReadOnly);
-        toolbar_display_region_button.setEnabled(!isBoardReadOnly);
-        toolbar_display_all_button.setEnabled(!isBoardReadOnly);
-        unitSelectionPanel.setEnabled(!isBoardReadOnly);
-        delete_all_tracks_button.setEnabled(!isBoardReadOnly);
       });
     });
   }
@@ -300,6 +289,22 @@ class BoardToolbar extends JPanel
         updateContainerFont((Container) child, font);
       }
     }
+  }
+
+  public void setEnabled(boolean enabled)
+  {
+    modeSelectionPanel.setEnabled(enabled);
+    settings_button.setEnabled(enabled);
+    toolbar_autoroute_button.setEnabled(enabled);
+    cancel_button.setEnabled(!enabled);
+    toolbar_undo_button.setEnabled(enabled);
+    toolbar_redo_button.setEnabled(enabled);
+    toolbar_incompletes_button.setEnabled(enabled);
+    toolbar_violation_button.setEnabled(enabled);
+    toolbar_display_region_button.setEnabled(enabled);
+    toolbar_display_all_button.setEnabled(enabled);
+    unitSelectionPanel.setEnabled(enabled);
+    delete_all_tracks_button.setEnabled(enabled);
   }
 
   /**
