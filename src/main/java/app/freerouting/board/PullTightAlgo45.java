@@ -247,15 +247,7 @@ class PullTightAlgo45 extends PullTightAlgo
         Direction d2 = line_arr[i + 1].direction();
         if (d1.is_multiple_of_45_degree() && d2.is_multiple_of_45_degree() && d1.projection(d2) != Signum.POSITIVE)
         {
-        //   // there is a 90 degree or sharper angle
-        //   Line new_line = smoothen_corner(line_arr, i);
-        //   if (new_line == null)
-        //   {
-        //     // the greedy smoothening couldn't change the polyline
-        //     new_line = smoothen_sharp_corner(line_arr, i);
-        //   }
-        // @Djzhan : the smoothen_corner function does not contribute to the final result and wastes a lot
-        // of time in many situations, so just use this function is enough.
+          //trying to bend a 90° corner
           Line new_line = smoothen_sharp_corner(line_arr, i);
           if (new_line != null)
           {
