@@ -6,17 +6,17 @@ import platform
 # check the installed java version
 def get_java_version():
     
+    # get the JAVA_HOME environment variable
+    javaHome = os.environ.get('JAVA_HOME')
+
     # check if the operating system is macOS
-    if platform.system() != 'Darwin':
-        # get the JAVA_HOME environment variable
-        javaHome = os.environ.get('JAVA_HOME')
-    else:
+    if not javaHome and platform.system() == 'Darwin':
         # get the JAVA_HOME environment variable using the java_home command
         javaHomeCommand = '/usr/libexec/java_home'
         javaHome = subprocess.check_output(javaHomeCommand, shell=True).decode().strip()
         
     if javaHome:
-        print(f"JAVA_HOME={javaHome}")        
+        print(f"JAVA_HOME={javaHome}")
         javaPath = os.path.join(javaHome, 'bin')
         
         # check if the java directory exists
