@@ -1,0 +1,219 @@
+(session "Issue269-NoViasOnPowerPlanes"
+  (base_design "Issue269-NoViasOnPowerPlanes")
+  (placement
+    (resolution um 10)
+    (component Capacitor_SMD:C_1206_3216Metric
+      (place C3 1509250 -990600 front 0)
+    )
+    (component Connector_BarrelJack:BarrelJack_Horizontal
+      (place J1 1166805 -761315 front 0)
+    )
+    (component Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder
+      (place R9 1197864 -934212 front 0)
+      (place R1 1833532 -991108 front 0)
+      (place R10 1270000 -838200 front 0)
+    )
+    (component Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical
+      (place J2 1676400 -762000 front 0)
+    )
+    (component LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder
+      (place D2 1285150 -990600 front 0)
+    )
+    (component Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder::1
+      (place R6 1143000 -1158400 back 270)
+    )
+  )
+  (was_is
+  )
+  (routes 
+    (resolution um 10)
+    (parser
+      (host_cad "KiCad's Pcbnew")
+      (host_version 8.0.0)
+    )
+    (library_out 
+      (padstack "Via[0-3]_300:100_um"
+        (shape
+          (circle F.Cu 3000 0 0)
+        )
+        (shape
+          (circle GND 3000 0 0)
+        )
+        (shape
+          (circle PWR 3000 0 0)
+        )
+        (shape
+          (circle B.Cu 3000 0 0)
+        )
+        (attach off)
+      )
+      (padstack "Via[0-3]_300:100_um"
+        (shape
+          (circle F.Cu 3000 0 0)
+        )
+        (shape
+          (circle GND 3000 0 0)
+        )
+        (shape
+          (circle PWR 3000 0 0)
+        )
+        (shape
+          (circle B.Cu 3000 0 0)
+        )
+        (attach off)
+      )
+      (padstack "Via[0-3]_300:100_um"
+        (shape
+          (circle F.Cu 3000 0 0)
+        )
+        (shape
+          (circle GND 3000 0 0)
+        )
+        (shape
+          (circle PWR 3000 0 0)
+        )
+        (shape
+          (circle B.Cu 3000 0 0)
+        )
+        (attach off)
+      )
+      (padstack "Via[0-3]_300:100_um"
+        (shape
+          (circle F.Cu 3000 0 0)
+        )
+        (shape
+          (circle GND 3000 0 0)
+        )
+        (shape
+          (circle PWR 3000 0 0)
+        )
+        (shape
+          (circle B.Cu 3000 0 0)
+        )
+        (attach off)
+      )
+    )
+    (network_out 
+      (net GNDREF
+        (wire
+          (path F.Cu 2000
+            1524000 -990600
+            1509784 -1004816
+            1133348 -1004816
+          )
+        )
+        (wire
+          (path B.Cu 2000
+            1143000 -1168400
+            1133348 -1158748
+            1133348 -1004816
+          )
+        )
+        (wire
+          (path B.Cu 2000
+            1136805 -808315
+            1133349 -811771
+            1133349 -1004816
+            1133348 -1004816
+          )
+        )
+        (via "Via[0-3]_300:100_um" 1133348 -1004816
+        )
+        (wire
+          (path B.Cu 2000
+            1136805 -808315
+            1106805 -778315
+            1106805 -761315
+          )
+        )
+        (wire
+          (path F.Cu 2000
+            1843532 -991108
+            1812381 -959957
+            1663363 -959957
+          )
+        )
+        (wire
+          (path B.Cu 2000
+            1676400 -787400
+            1676400 -798417
+          )
+        )
+        (wire
+          (path F.Cu 2000
+            1524000 -990600
+            1554643 -959957
+            1663363 -959957
+          )
+        )
+        (wire
+          (path B.Cu 2000
+            1676400 -798417
+            1675023 -798417
+            1663363 -810077
+            1663363 -959957
+          )
+        )
+        (via "Via[0-3]_300:100_um" 1663363 -959957
+        )
+      )
+      (net +3V3
+        (wire
+          (path F.Cu 2000
+            1434592 -934212
+            1438112 -934212
+            1494500 -990600
+          )
+        )
+        (wire
+          (path F.Cu 2000
+            1207864 -934212
+            1434592 -934212
+          )
+        )
+        (wire
+          (path F.Cu 2000
+            1434592 -838200
+            1434592 -934212
+          )
+        )
+        (wire
+          (path F.Cu 2000
+            1434592 -838200
+            1280000 -838200
+          )
+        )
+        (wire
+          (path F.Cu 2000
+            1665383 -762000
+            1589183 -838200
+            1434592 -838200
+          )
+        )
+        (wire
+          (path F.Cu 2000
+            1676400 -762000
+            1665383 -762000
+          )
+        )
+      )
+      (net /FPGA_DONE
+        (wire
+          (path F.Cu 1500
+            1191982 -990600
+            1274900 -990600
+          )
+        )
+        (wire
+          (path B.Cu 1500
+            1143000 -1148400
+            1191982 -1099418
+            1191982 -990600
+          )
+        )
+        (via "Via[0-3]_300:100_um" 1191982 -990600
+        )
+      )
+    )
+  )
+)
