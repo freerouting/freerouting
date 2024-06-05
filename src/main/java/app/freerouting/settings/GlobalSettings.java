@@ -35,7 +35,7 @@ public class GlobalSettings
   public transient String design_input_filename;
   public transient String design_output_filename;
   public transient String design_rules_filename;
-  public transient String[] supported_languages = {"en", "de", "zh", "hi", "es", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
+  public transient String[] supported_languages = {"en", "de", "zh", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   public transient Locale current_locale = Locale.getDefault();
   public transient String host = "N/A";
   public String input_directory = "";
@@ -198,6 +198,11 @@ public class GlobalSettings
           {
             //current_locale = Locale.SPANISH;
             current_locale = Locale.forLanguageTag("es-ES");
+          }
+          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("it"))
+          {
+            //current_locale = Locale.ITALIAN;
+            current_locale = Locale.forLanguageTag("it-IT");
           }
           else if (p_args.length > i + 1 && p_args[i + 1].startsWith("fr"))
           {
