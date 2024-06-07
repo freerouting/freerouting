@@ -1,0 +1,100 @@
+(pcb C:\freerouting_test1\min_fr_test\min_fr_test.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "8.0.1")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer In1.Cu
+      (type power)
+      (property
+        (index 1)
+      )
+    )
+    (layer In2.Cu
+      (type power)
+      (property
+        (index 2)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (boundary
+      (path pcb 0  179000 -101000  149000 -101000  149000 -79000  179000 -79000
+            179000 -101000)
+    )
+    (plane GND (polygon In2.Cu 0  150000 -80000  178000 -80000  178000 -100000  150000 -100000
+            150000 -80000))
+    (via "Via[0-3]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 200 (type default_smd))
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component TestPoint:TestPoint_Pad_1.0x1.0mm
+      (place J4 162900.000000 -92000.000000 front 0.000000 (PN Conn_01x01_Pin))
+      (place J8 171000.000000 -90000.000000 front 0.000000 (PN Conn_01x01_Pin))
+      (place J7 159000.000000 -85000.000000 front 0.000000 (PN Conn_01x01_Pin))
+      (place J1 155000.000000 -85000.000000 front 0.000000 (PN Conn_01x01_Pin))
+    )
+  )
+  (library
+    (image TestPoint:TestPoint_Pad_1.0x1.0mm
+      (outline (path signal 120  -700 700  700 700))
+      (outline (path signal 120  -700 -700  -700 700))
+      (outline (path signal 120  700 700  700 -700))
+      (outline (path signal 120  700 -700  -700 -700))
+      (outline (path signal 50  -1000 1000  -1000 -1000))
+      (outline (path signal 50  -1000 1000  1000 1000))
+      (outline (path signal 50  1000 -1000  -1000 -1000))
+      (outline (path signal 50  1000 -1000  1000 1000))
+      (pin Rect[T]Pad_1000x1000_um 1 0 0)
+    )
+    (padstack Rect[T]Pad_1000x1000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack "Via[0-3]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle In1.Cu 600))
+      (shape (circle In2.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(J1-Pin_1)"
+      (pins J8-1 J1-1)
+    )
+    (net GND
+      (pins J4-1 J7-1)
+    )
+    (class kicad_default "" GND "Net-(J1-Pin_1)"
+      (circuit
+        (use_via Via[0-3]_600:300_um)
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)
