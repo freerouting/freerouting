@@ -41,7 +41,7 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.23.1'
 
     // https://github.com/google/gson
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.code.gson:gson:2.11.0'
 
     // https://segment.com/docs - this one doesn't work because it's missing the Java 9+ module-info.class
     //implementation 'com.segment.analytics.java:analytics:+'
