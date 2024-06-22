@@ -28,3 +28,7 @@ bin/
 freerouting.dsn
 temp-freerouting.dsn
 freerouting.ses
+
+# Freerouting Daemon
+scripts/freeroutingp
+scripts/freeroutingp.exe

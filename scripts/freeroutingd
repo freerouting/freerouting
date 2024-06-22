@@ -1,0 +1,22 @@
+#!/bin/bash
+args="java -Djava.awt.headless=false $*"
+if !([ $ARG_GUI ]); then
+    noFound="Error: Command Xvfb not found. Try 'sudo apt install xvfb' to install it."
+    which Xvfb >/dev/null 2>&1 || { echo $noFound; exit 1; }
+    if [ $FAKEX ] && [ -n $FAKEX ]; then
+        Xvfb :$FAKEX &
+    else
+        Xvfb :95 &
+        FAKEX=95
+    fi
+    display="DISPLAY=:$FAKEX"
+    trap 'kill $!' EXIT
+else
+    display=""
+fi
+cmd="$display $args -dct 0 | ./freeroutingp 2>/dev/null"
+sleep 0.2s
+bash -c "$cmd"
+if !([ $ARG_GUI ]); then
+    kill $!
+fi
