@@ -1,5 +1,8 @@
 #!/bin/bash
-args="java -Djava.awt.headless=false $*"
+if !([ "$JAVA" ]); then
+    JAVA="java"
+fi
+args="'$JAVA' -Djava.awt.headless=false $*"
 if !([ $ARG_GUI ]); then
     noFound="Error: Command Xvfb not found. Try 'sudo apt install xvfb' to install it."
     which Xvfb >/dev/null 2>&1 || { echo $noFound; exit 1; }
