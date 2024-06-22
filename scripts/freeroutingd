@@ -17,7 +17,7 @@ if !([ $ARG_GUI ]); then
 else
     display=""
 fi
-cmd="$display $args -dct 0 | ./freeroutingp 2>/dev/null"
+cmd="$display $args -dct 0 | ./freeroutingp"
 sleep 0.2s
 bash -c "$cmd"
 if !([ $ARG_GUI ]); then
