@@ -137,6 +137,15 @@ public class MainApplication extends WindowBase
       // disable logging
       FRLogger.disableLogging();
     }
+    else if (args.length > 0 && Arrays.asList(args).contains("-ll"))
+    {
+      // get the log level from the command line arguments
+      int logLevelIndex = Arrays.asList(args).indexOf("-ll") + 1;
+      if (logLevelIndex < args.length)
+      {
+        FRLogger.changeFileLogLevel(args[logLevelIndex]);
+      }
+    }
 
     FRLogger.traceEntry("MainApplication.main()");
 

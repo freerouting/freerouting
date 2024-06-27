@@ -4,6 +4,7 @@ module app.freerouting {
   requires org.apache.logging.log4j;
   requires com.google.gson;
   requires java.net.http;
+  requires org.apache.logging.log4j.core;
   opens app.freerouting.gui to com.google.gson;
   opens app.freerouting.autoroute to com.google.gson;
   opens app.freerouting.board to com.google.gson;
