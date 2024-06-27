@@ -177,67 +177,73 @@ public class GlobalSettings
         }
         else if (p_args[i].startsWith("-l"))
         {
+          String localeString = "";
+          if (p_args.length > i + 1)
+          {
+            localeString = p_args[i + 1].toLowerCase().replace("-", "_");
+          }
+
           // the locale is provided
-          if (p_args.length > i + 1 && p_args[i + 1].startsWith("en"))
+          if (localeString.startsWith("en"))
           {
             current_locale = Locale.ENGLISH;
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("de"))
+          else if (localeString.startsWith("de"))
           {
             current_locale = Locale.GERMAN;
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh_TW"))
+          else if (localeString.startsWith("zh_tw"))
           {
             current_locale = Locale.TRADITIONAL_CHINESE;
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh"))
+          else if (localeString.startsWith("zh"))
           {
             current_locale = Locale.SIMPLIFIED_CHINESE;
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("hi"))
+          else if (localeString.startsWith("hi"))
           {
             //current_locale = Locale.HINDI;
             current_locale = Locale.forLanguageTag("hi-IN");
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("es"))
+          else if (localeString.startsWith("es"))
           {
             //current_locale = Locale.SPANISH;
             current_locale = Locale.forLanguageTag("es-ES");
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("it"))
+          else if (localeString.startsWith("it"))
           {
             //current_locale = Locale.ITALIAN;
             current_locale = Locale.forLanguageTag("it-IT");
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("fr"))
+          else if (localeString.startsWith("fr"))
           {
             current_locale = Locale.FRENCH;
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ar"))
+          else if (localeString.startsWith("ar"))
           {
             //current_locale = Locale.ARABIC;
             current_locale = Locale.forLanguageTag("ar-EG");
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("bn"))
+          else if (localeString.startsWith("bn"))
           {
             //current_locale = Locale.BENGALI;
             current_locale = Locale.forLanguageTag("bn-BD");
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ru"))
+          else if (localeString.startsWith("ru"))
           {
             //current_locale = Locale.RUSSIAN;
             current_locale = Locale.forLanguageTag("ru-RU");
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("pt"))
+          else if (localeString.startsWith("pt"))
           {
             //current_locale = Locale.PORTUGUESE;
             current_locale = Locale.forLanguageTag("pt-PT");
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ja"))
+          else if (localeString.startsWith("ja"))
           {
             current_locale = Locale.JAPANESE;
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ko"))
+          else if (localeString.startsWith("ko"))
           {
             current_locale = Locale.KOREAN;
           }
