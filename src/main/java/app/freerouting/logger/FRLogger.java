@@ -1,13 +1,19 @@
 package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.AppenderRef;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 
 /// <summary>
 /// Provides logging functionality.
@@ -193,5 +199,76 @@ public class FRLogger
   public static LogEntries getLogEntries()
   {
     return logEntries;
+  }
+
+  public static void changeFileLogLevel(Level level)
+  {
+    // Obtain the LoggerContext
+    LoggerContext context = (LoggerContext) LogManager.getContext(false);
+    Configuration config = context.getConfiguration();
+
+    // Get the Root LoggerConfig
+    LoggerConfig rootLoggerConfig = config.getRootLogger();
+
+    // Create a new AppenderRef with the desired level
+    List<AppenderRef> refList = rootLoggerConfig.getAppenderRefs();
+    var refs = refList.toArray(new AppenderRef[0]);
+    for (int i = 0; i < refs.length; i++)
+    {
+      if (refs[i].getRef().equals("File"))
+      {
+        refs[i] = AppenderRef.createAppenderRef("File", level, null);
+      }
+    }
+
+    // Remove the existing AppenderRefs
+    rootLoggerConfig.removeAppender("File");
+
+    // Add the modified AppenderRef back to the LoggerConfig
+    for (AppenderRef ref : refs)
+    {
+      rootLoggerConfig.addAppender(config.getAppender(ref.getRef()), ref.getLevel(), ref.getFilter());
+    }
+
+    // Update the configuration
+    context.updateLoggers();
+  }
+
+  public static void changeFileLogLevel(String level)
+  {
+    String logLevel = level.toUpperCase();
+
+    if (logLevel.equals("OFF") || logLevel.equals("0"))
+    {
+      FRLogger.disableLogging();
+    }
+    else if (logLevel.equals("FATAL") || logLevel.equals("1"))
+    {
+      FRLogger.changeFileLogLevel(Level.FATAL);
+    }
+    else if (logLevel.equals("ERROR") || logLevel.equals("2"))
+    {
+      FRLogger.changeFileLogLevel(Level.ERROR);
+    }
+    else if (logLevel.equals("WARN") || logLevel.equals("3"))
+    {
+      FRLogger.changeFileLogLevel(Level.WARN);
+    }
+    else if (logLevel.equals("INFO") || logLevel.equals("4"))
+    {
+      FRLogger.changeFileLogLevel(Level.INFO);
+    }
+    else if (logLevel.equals("DEBUG") || logLevel.equals("5"))
+    {
+      FRLogger.changeFileLogLevel(Level.DEBUG);
+    }
+    else if (logLevel.equals("TRACE") || logLevel.equals("6"))
+    {
+      FRLogger.changeFileLogLevel(Level.TRACE);
+    }
+    else if (logLevel.equals("ALL") || logLevel.equals("7"))
+    {
+      FRLogger.changeFileLogLevel(Level.ALL);
+    }
   }
 }
