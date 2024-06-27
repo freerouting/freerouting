@@ -204,7 +204,16 @@ public class FRLogger
   public static void changeFileLogLevel(Level level)
   {
     // Obtain the LoggerContext
-    LoggerContext context = (LoggerContext) LogManager.getContext(false);
+    var contextObject = LogManager.getContext(false);
+
+    // Check if the contextObject is an instance of org.apache.logging.log4j.core.LoggerContext
+    if (!(contextObject instanceof LoggerContext context))
+    {
+      FRLogger.warn("Failed to change the log level. The context object is not an instance of org.apache.logging.log4j.core.LoggerContext.");
+      return;
+    }
+
+    // Get the Configuration
     Configuration config = context.getConfiguration();
 
     // Get the Root LoggerConfig
@@ -215,14 +224,14 @@ public class FRLogger
     var refs = refList.toArray(new AppenderRef[0]);
     for (int i = 0; i < refs.length; i++)
     {
-      if (refs[i].getRef().equals("File"))
+      if (refs[i].getRef().equals("Console"))
       {
-        refs[i] = AppenderRef.createAppenderRef("File", level, null);
+        refs[i] = AppenderRef.createAppenderRef("Console", level, null);
       }
     }
 
     // Remove the existing AppenderRefs
-    rootLoggerConfig.removeAppender("File");
+    rootLoggerConfig.removeAppender("Console");
 
     // Add the modified AppenderRef back to the LoggerConfig
     for (AppenderRef ref : refs)
@@ -270,5 +279,15 @@ public class FRLogger
     {
       FRLogger.changeFileLogLevel(Level.ALL);
     }
+  }
+
+  public static Logger getLogger()
+  {
+    if (logger == null)
+    {
+      logger = LogManager.getLogger(Freerouting.class);
+    }
+
+    return logger;
   }
 }
