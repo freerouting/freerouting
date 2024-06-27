@@ -2,17 +2,14 @@
 
 ## Summary
 
-This PR will upload a folder named `scripts` to save all scripts.
-
-Updated:
+The 'scripts' folder contains the following tools:
 
 - Bash Script `freeroutingd` (Freerouting Daemon) to automatically make a fake X11 desktop to run headless freerouting.
 - C++ program `freeroutingp` (Freerouting Progress) translate the log of freerouting to `stderr` stream by pipe.
-- A fast test dsn file as `tests/FastTest.dsn`
 
-Set environment variable `JAVA`, you can set the jre what freerouting uses.
-
-Set environment variable `ARG_GUI` can enable GUI (for OS like Windows)
+You need to set the following environment variables:
+`JAVA` - path to the JRE executable what freerouting uses (optional)
+`ARG_GUI` - set it to "TRUE" to enable GUI (for OS like Windows)
 
 Now we only can write `{"status": "startRoute"}`, `{"status": "routeProgress"}`, `{"status": "routeResult"}`, `{"status": "startOptimize"}` and `{"status": "optimizeResult"}`.
 
