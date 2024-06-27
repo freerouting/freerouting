@@ -36,7 +36,7 @@ public class GlobalSettings
   public transient String design_output_filename;
   public transient String design_rules_filename;
   // add taiwnese language
-  public transient String[] supported_languages = {"en", "de", "zh","zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
+  public transient String[] supported_languages = {"en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   public transient Locale current_locale = Locale.getDefault();
   public transient String host = "N/A";
   public String input_directory = "";
@@ -186,13 +186,13 @@ public class GlobalSettings
           {
             current_locale = Locale.GERMAN;
           }
-          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh"))
-          {
-            current_locale = Locale.SIMPLIFIED_CHINESE;
-          }
           else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh_TW"))
           {
             current_locale = Locale.TRADITIONAL_CHINESE;
+          }
+          else if (p_args.length > i + 1 && p_args[i + 1].startsWith("zh"))
+          {
+            current_locale = Locale.SIMPLIFIED_CHINESE;
           }
           else if (p_args.length > i + 1 && p_args[i + 1].startsWith("hi"))
           {
