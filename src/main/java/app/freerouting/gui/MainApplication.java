@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.Freerouting;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
@@ -233,6 +234,39 @@ public class MainApplication extends WindowBase
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
     FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE, String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.current_locale, Runtime.getRuntime().availableProcessors(), (Runtime.getRuntime().maxMemory() / 1024 / 1024), globalSettings.host, width, height, dpi);
 
+    // check for new version
+    VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
+    new Thread(checker).start();
+
+    // Initialize the GUI
+    if (!InitializeGUI())
+    {
+      // Couldn't initialize the GUI
+      return;
+    }
+
+    InitializeAPI(args);
+
+    FRLogger.traceExit("MainApplication.main()");
+  }
+
+  private static void InitializeAPI(String[] args)
+  {
+    Freerouting.main(args);
+
+    // Start the Spring Boot application to host the API
+    //    SpringApplication apiHostApp = new SpringApplication(Freerouting.class);
+    //
+    //    // Start the Spring Boot application and get the context
+    //    ConfigurableApplicationContext context = apiHostApp.run(args);
+    //
+    //    // Log the port the API is running on
+    //    String serverPort = context.getEnvironment().getProperty("server.port");
+    //    FRLogger.info("API started on port: " + serverPort);
+  }
+
+  private static boolean InitializeGUI()
+  {
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
     FontUIResource defaultFont = (FontUIResource) UIManager.get("Button.font");
@@ -252,10 +286,6 @@ public class MainApplication extends WindowBase
     UIManager.put("Menu.font", newFont);
     UIManager.put("MenuItem.font", newFont);
 
-    // check for new version
-    VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
-    new Thread(checker).start();
-
     // get localization resources
     TextManager tm = new TextManager(MainApplication.class, globalSettings.current_locale);
 
@@ -264,7 +294,7 @@ public class MainApplication extends WindowBase
     {
       System.out.print(tm.getText("command_line_help"));
       System.exit(0);
-      return;
+      return false;
     }
 
     if (globalSettings.design_input_filename != null)
@@ -274,7 +304,7 @@ public class MainApplication extends WindowBase
       if (design_file == null)
       {
         FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
-        return;
+        return false;
       }
       String message = tm.getText("loading_design") + " " + globalSettings.design_input_filename;
       WindowMessage welcome_window = WindowMessage.show(message);
@@ -284,7 +314,7 @@ public class MainApplication extends WindowBase
       {
         FRLogger.warn("Couldn't create window frame");
         System.exit(1);
-        return;
+        return false;
       }
 
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + globalSettings.autoRouterSettings.max_passes - 1);
@@ -462,7 +492,7 @@ public class MainApplication extends WindowBase
         {
           FRLogger.warn("Couldn't create window frame");
           System.exit(1);
-          return;
+          return false;
         }
       }
       else
@@ -470,8 +500,7 @@ public class MainApplication extends WindowBase
         new MainApplication(globalSettings).setVisible(true);
       }
     }
-
-    FRLogger.traceExit("MainApplication.main()");
+    return true;
   }
 
   /**
