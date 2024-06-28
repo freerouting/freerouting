@@ -1,6 +1,5 @@
 package app.freerouting.gui;
 
-import app.freerouting.Freerouting;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
@@ -252,8 +251,6 @@ public class MainApplication extends WindowBase
 
   private static void InitializeAPI(String[] args)
   {
-    Freerouting.main(args);
-
     // Start the Spring Boot application to host the API
     //    SpringApplication apiHostApp = new SpringApplication(Freerouting.class);
     //

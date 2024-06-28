@@ -3,8 +3,6 @@ plugins {
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'org.springframework.boot' version '3.3.1'
-    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 java {
@@ -44,24 +42,11 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.23.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.23.1'
 
-    // Log4j2 SLF4J implementation
-    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.23.1'
-
     // https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.11.0'
 
     // https://segment.com/docs - this one doesn't work because it's missing the Java 9+ module-info.class
     //implementation 'com.segment.analytics.java:analytics:+'
-
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    implementation 'org.apache.commons:commons-lang3:3.14.0'
-
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.1'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.1'
-
-    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }
 
 test {
