@@ -1,0 +1,31 @@
+{
+  "name": "frl",
+  "version": "1.0.0",
+  "description": "Freerouting Laucher",
+  "main": "frl.js",
+  "scripts": {
+    "test": "node frl.js -jar ../../build/libs/freerouting-executable.jar -de ../../tests/FastTest.dsn -do test.ses"
+  },
+  "bin": {
+    "frl": "frl.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freerouting/freerouting.git"
+  },
+  "author": "L1uTongwei",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/freerouting/freerouting/issues"
+  },
+  "homepage": "https://github.com/freerouting/freerouting#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "http-proxy-middleware": "^3.0.0",
+    "node-progress": "^0.1.0",
+    "progress": "^2.0.3",
+    "readline": "^1.3.0",
+    "ws": "^8.17.1",
+    "yargs": "^17.7.2"
+  }
+}
