@@ -32,11 +32,13 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/junit/junit
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 
     // https://mvnrepository.com/artifact/javax.help/javahelp
     implementation group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.23.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.23.1'
 
@@ -45,6 +47,10 @@ dependencies {
 
     // https://segment.com/docs - this one doesn't work because it's missing the Java 9+ module-info.class
     //implementation 'com.segment.analytics.java:analytics:+'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 ext {
