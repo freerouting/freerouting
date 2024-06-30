@@ -30,4 +30,6 @@ temp-freerouting.dsn
 freerouting.ses
 
 # Freerouting Laucher
-scripts/node_modules
+integrations/FRL/node_modules
+integrations/FRL/logs
+integrations/FRL/test.ses
