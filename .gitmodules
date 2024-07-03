@@ -1,0 +1,3 @@
+[submodule "integrations/EasyEDA/freerouting-launcher"]
+	path = integrations/EasyEDA/freerouting-launcher
+	url = https://github.com/L1uTongweiNewAccount/freerouting-launcher.git
