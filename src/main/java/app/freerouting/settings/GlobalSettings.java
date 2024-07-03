@@ -175,7 +175,7 @@ public class GlobalSettings
             autoRouterSettings.hybrid_ratio = p_args[i + 1].trim();
           }
         }
-        else if (p_args[i].startsWith("-l"))
+        else if (p_args[i].equals("-l"))
         {
           String localeString = "";
           if (p_args.length > i + 1)
