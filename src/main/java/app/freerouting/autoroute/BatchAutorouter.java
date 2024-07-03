@@ -165,7 +165,8 @@ public class BatchAutorouter
           numberOfPassesToAverage = minimumPassCountBeforeImprovementCheck;
         }
       }
-      FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes", traceLengthDifferences);
+      double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes", traceLengthDifferences);
+      FRLogger.info("Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration));
 
       if (save_intermediate_stages)
       {

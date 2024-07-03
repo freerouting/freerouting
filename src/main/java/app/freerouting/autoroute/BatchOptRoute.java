@@ -165,7 +165,8 @@ public class BatchOptRoute
       route_improved = -1; // to keep the optimizer going with lower ripup costs
     }
 
-    FRLogger.traceExit(optimizationPassId);
+    double routeoptimizer_pass_duration = FRLogger.traceExit(optimizationPassId);
+    FRLogger.info("Route optimizer pass #" + p_pass_no + " was completed in " + FRLogger.formatDuration(routeoptimizer_pass_duration));
     return route_improved;
   }
 
