@@ -89,8 +89,8 @@ The following command line arguments are supported by freerouter:
   20 seconds by default.
 * -da: disable anonymous analytics.
 * -dl: disable logging.
-* -ll: set file logging level. Valid values are: OFF, ERROR, WARN, INFO, DEBUG, TRACE. Numberical
-  values between 0 (OFF) and 7 (ALL) are also accepted. Default is INFO.
+* -ll: set console logging level. Valid values are: OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL. Numerical
+  values between 0 (OFF) and 7 (ALL) are also accepted. Default is INFO (4).
 * -help: shows help.
 
 A complete command line looks something like this if you are using PowerShell on Windows:
