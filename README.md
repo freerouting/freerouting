@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v1.9.0/total" alt="Downloads"/>
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/total" alt="Downloads"/>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/freerouting/freerouting" alt="License"/></a>
-	<a href="https://github.com/freerouting/freerouting/docs/code_of_conduct.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Contributor Covenant" /></a>
+	<a href="/docs/code_of_conduct.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Contributor Covenant" /></a>
 </p>
 
 <h3 align="center">:point_right: This project needs JAVA and UI/UX volunteers! Contact @andrasfuchs for details! :
