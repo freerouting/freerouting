@@ -129,5 +129,5 @@ We ❤️ all our contributors; this project wouldn’t be what it is without yo
 
 If you want to help out, please consider replying to [issues](https://github.com/freerouting/freerouting/issues),
 creating new ones, or even send your fixes and improvements
-as [pull requests](https://github.com/freerouting/freerouting/pulls). [Our developer documentation](/docs/developer.md)
+as [pull requests](https://github.com/freerouting/freerouting/pulls). [Our contribution guide](/docs/CONTRIBUTING.md) and [developer documentation](/docs/developer.md)
 can help you with the technicalities.
