@@ -14,4 +14,16 @@ module app.freerouting {
   opens app.freerouting.settings to com.google.gson;
 
   opens app.freerouting.api.v1 to jakarta.ws.rs;
+  opens app.freerouting.api.v1.controller to jakarta.ws.rs;
+
+  requires jakarta.ws.rs;
+  requires jakarta.inject;
+  requires jakarta.annotation;
+  requires jakarta.json.bind;
+  requires jakarta.validation;
+
+  requires org.eclipse.jetty.servlet;
+
+  requires org.glassfish.jersey.containers.jersey.container.servlet;
+  requires org.glassfish.jersey.containers.jersey.container.servlet.core;
 }

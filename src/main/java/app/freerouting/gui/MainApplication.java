@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.api.AppContextListener;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
@@ -10,7 +11,13 @@ import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
+import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.swing.Timer;
 import javax.swing.*;
@@ -21,10 +28,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 
 /**
  * Main application for creating frames with new or existing board designs.
@@ -244,22 +253,74 @@ public class MainApplication extends WindowBase
       return;
     }
 
-    InitializeAPI(args);
+    if (globalSettings.apiServerSettings.isEnabled)
+    {
+      InitializeAPI(globalSettings.apiServerSettings);
+    }
+
+    try
+    {
+      GlobalSettings.save(globalSettings);
+    } catch (Exception e)
+    {
+      // it's ok if we can't update the configuration file, it's just optional
+    }
 
     FRLogger.traceExit("MainApplication.main()");
   }
 
-  private static void InitializeAPI(String[] args)
+  private static void InitializeAPI(ApiServerSettings apiServerSettings)
   {
-    // Start the Spring Boot application to host the API
-    //    SpringApplication apiHostApp = new SpringApplication(Freerouting.class);
-    //
-    //    // Start the Spring Boot application and get the context
-    //    ConfigurableApplicationContext context = apiHostApp.run(args);
-    //
-    //    // Log the port the API is running on
-    //    String serverPort = context.getEnvironment().getProperty("server.port");
-    //    FRLogger.info("API started on port: " + serverPort);
+    // Check if there are any endpoints defined
+    if (apiServerSettings.endpoints.length == 0)
+    {
+      FRLogger.warn("Can't start API server, because no endpoints are defined in ApiServerSettings.");
+      return;
+    }
+
+    // Convert the first endpoint (e.g. "https://localhost:8080") in ApiServerSettings to InetSocketAddress
+    String endpoint = apiServerSettings.endpoints[0].toLowerCase();
+    // Endpoints following the following format: "protocol://host:port" (although the protocol is not used in this case, because only HTTP/HTTPS is supported)
+    String[] endpointParts = endpoint.split("://");
+    String protocol = endpointParts[0];
+    String hostAndPort = endpointParts[1];
+    String[] hostAndPortParts = hostAndPort.split(":");
+    String host = hostAndPortParts[0];
+    int port = Integer.parseInt(hostAndPortParts[1]);
+
+    // Check if the protocol is HTTP or HTTPS
+    if (!protocol.equals("http") && !protocol.equals("https"))
+    {
+      FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS.".formatted(endpoint));
+      return;
+    }
+
+    // Start the Jetty server
+    InetSocketAddress address = new InetSocketAddress(host, port);
+    Server server = new Server(address);
+    ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+    context.setContextPath("/");
+    server.setHandler(context);
+
+    // Set up Jersey Servlet
+    ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/api/*");
+    jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+
+    // Add the DefaultServlet to handle static content
+    ServletHolder defaultServlet = new ServletHolder("defaultServlet", DefaultServlet.class);
+    context.addServlet(defaultServlet, "/");
+
+    // Add Context Listeners
+    context.addEventListener(new AppContextListener());
+
+    try
+    {
+      server.start();
+      server.join();
+    } catch (Exception e)
+    {
+      throw new RuntimeException(e);
+    }
   }
 
   private static boolean InitializeGUI()

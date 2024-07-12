@@ -1,4 +1,4 @@
-package app.freerouting.api.v1;
+package app.freerouting.api.v1.controller;
 
 public class SessionControllerV1
 {

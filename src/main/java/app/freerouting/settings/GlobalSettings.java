@@ -30,6 +30,8 @@ public class GlobalSettings
   public final UsageAndDiagnosticDataSettings usageAndDiagnosticData = new UsageAndDiagnosticDataSettings();
   @SerializedName("disabled_features")
   public final DisabledFeaturesSettings disabledFeatures = new DisabledFeaturesSettings();
+  @SerializedName("api_server_settings")
+  public final ApiServerSettings apiServerSettings = new ApiServerSettings();
   public transient boolean test_version_option = false;
   public transient boolean show_help_option = false;
   public transient String design_input_filename;

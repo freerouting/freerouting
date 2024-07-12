@@ -27,7 +27,17 @@ tasks.withType(Javadoc).configureEach {
 }
 
 repositories {
+    flatDir {
+        dirs 'libs'
+    }
+
     mavenCentral()
+    // Adding mirror repositories
+    maven {
+        name = 'MirrorRepo1'
+        url = 'https://repo1.maven.org/maven2' // Replace with actual mirror URL
+    }
+
     google()
 }
 
@@ -47,6 +57,23 @@ dependencies {
 
     // https://segment.com/docs - this one doesn't work because it's missing the Java 9+ module-info.class
     //implementation 'com.segment.analytics.java:analytics:+'
+
+    // Add Jakarta Inject API dependency
+    implementation 'jakarta.inject:jakarta.inject-api:2.0.1'
+    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+
+    // Add Jersey dependencies
+    implementation 'org.glassfish.jersey.core:jersey-server:3.1.7'
+    implementation 'org.glassfish.jersey.inject:jersey-hk2:3.1.7'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-binding:3.1.7'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.7-mod'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:3.1.7-mod'
+
+    // Add Jetty dependencies
+    implementation 'org.eclipse.jetty:jetty-servlet:11.0.22-mod'
+    implementation 'org.eclipse.jetty:jetty-server:11.0.22'
+    implementation 'org.eclipse.jetty:jetty-util:11.0.22'
+    implementation 'org.eclipse.jetty:jetty-security:11.0.22'
 }
 
 test {
