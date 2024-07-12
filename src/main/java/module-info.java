@@ -13,7 +13,7 @@ module app.freerouting {
   opens app.freerouting.management to com.google.gson;
   opens app.freerouting.settings to com.google.gson;
 
-  opens app.freerouting.api.v1 to jakarta.ws.rs;
+  opens app.freerouting.api to jakarta.ws.rs;
   opens app.freerouting.api.v1.controller to jakarta.ws.rs;
 
   requires jakarta.ws.rs;
