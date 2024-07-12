@@ -38,6 +38,7 @@ public class TextManager
   private String currentBaseName;
   private ResourceBundle defaultMessages;
   private ResourceBundle classMessages;
+  private ResourceBundle englishClassMessages;
   private Font materialDesignIcons = null;
 
   public TextManager(Class baseClass, Locale locale)
@@ -63,6 +64,7 @@ public class TextManager
   {
     this.currentBaseName = baseName;
 
+    // Load the default messages that are common to all classes
     try
     {
       defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", currentLocale);
@@ -79,6 +81,7 @@ public class TextManager
       }
     }
 
+    // Load the class-specific messages
     try
     {
       classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
@@ -94,6 +97,15 @@ public class TextManager
         //FRLogger.error("There was a problem loading the resource bundle '" + currentBaseName + "' of locale 'en-US'",null);
       }
     }
+
+    // Load the fallback English messages
+    try
+    {
+      englishClassMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en"));
+    } catch (Exception e)
+    {
+      //FRLogger.warn("There was a problem loading the resource bundle '" + currentBaseName + "' of locale 'en'");
+    }
   }
 
   public String getText(String key, String... args)
@@ -106,6 +118,10 @@ public class TextManager
     else if ((defaultMessages != null) && (defaultMessages.containsKey(key)))
     {
       text = defaultMessages.getString(key);
+    }
+    else if ((englishClassMessages != null) && (englishClassMessages.containsKey(key)))
+    {
+      text = englishClassMessages.getString(key);
     }
     else
     {
