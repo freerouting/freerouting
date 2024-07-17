@@ -304,7 +304,9 @@ public class MainApplication extends WindowBase
 
     // Set up Jersey Servlet
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/api/*");
+    jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+    jerseyServlet.setInitParameter("javax.ws.rs.Application", "app.freerouting.JerseyConfig");
 
     // Add the DefaultServlet to handle static content
     ServletHolder defaultServlet = new ServletHolder("defaultServlet", DefaultServlet.class);
