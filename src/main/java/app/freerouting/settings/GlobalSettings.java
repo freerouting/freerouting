@@ -24,13 +24,13 @@ public class GlobalSettings
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
   public final String version = Constants.FREEROUTING_VERSION;
-  @SerializedName("autorouter_settings")
+  @SerializedName("autorouter")
   public final AutoRouterSettings autoRouterSettings = new AutoRouterSettings();
   @SerializedName("usage_and_diagnostic_data")
   public final UsageAndDiagnosticDataSettings usageAndDiagnosticData = new UsageAndDiagnosticDataSettings();
   @SerializedName("disabled_features")
   public final DisabledFeaturesSettings disabledFeatures = new DisabledFeaturesSettings();
-  @SerializedName("api_server_settings")
+  @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
   public transient boolean test_version_option = false;
   public transient boolean show_help_option = false;
