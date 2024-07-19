@@ -23,6 +23,7 @@ module app.freerouting {
   requires jakarta.ws.rs;
   requires jakarta.inject;
   requires jakarta.annotation;
+  requires jakarta.activation;
   requires jakarta.json.bind;
   requires jakarta.validation;
 
@@ -31,4 +32,9 @@ module app.freerouting {
   requires jersey.container.servlet;
   requires jersey.container.servlet.core;
   requires jersey.server;
+  requires org.glassfish.jaxb.core;
+
+  requires io.swagger.v3.jaxrs2;
+  requires io.swagger.v3.oas.integration;
+  requires io.swagger.v3.oas.models;
 }
