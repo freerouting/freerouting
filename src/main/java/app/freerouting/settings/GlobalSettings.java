@@ -24,6 +24,8 @@ public class GlobalSettings
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
   public final String version = Constants.FREEROUTING_VERSION;
+  @SerializedName("gui")
+  public final GuiSettings guiSettings = new GuiSettings();
   @SerializedName("autorouter")
   public final AutoRouterSettings autoRouterSettings = new AutoRouterSettings();
   @SerializedName("usage_and_diagnostic_data")
@@ -41,8 +43,6 @@ public class GlobalSettings
   public transient String[] supported_languages = {"en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   public transient Locale current_locale = Locale.getDefault();
   public transient String host = "N/A";
-  public String input_directory = "";
-  public int dialog_confirmation_timeout = 5;
 
   public GlobalSettings()
   {
@@ -93,7 +93,7 @@ public class GlobalSettings
           // the design directory is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            input_directory = p_args[i + 1];
+            guiSettings.input_directory = p_args[i + 1];
           }
         }
         else if (p_args[i].startsWith("-do"))
@@ -290,11 +290,11 @@ public class GlobalSettings
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            dialog_confirmation_timeout = Integer.parseInt(p_args[i + 1]);
+            guiSettings.dialog_confirmation_timeout = Integer.parseInt(p_args[i + 1]);
 
-            if (dialog_confirmation_timeout <= 0)
+            if (guiSettings.dialog_confirmation_timeout <= 0)
             {
-              dialog_confirmation_timeout = 0;
+              guiSettings.dialog_confirmation_timeout = 0;
             }
           }
         }
@@ -312,7 +312,7 @@ public class GlobalSettings
 
   public String getDesignDir()
   {
-    return input_directory;
+    return guiSettings.input_directory;
   }
 
   public int getMaxPasses()

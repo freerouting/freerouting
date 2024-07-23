@@ -27,7 +27,7 @@ public class BoardMenuFile extends JMenu
   /**
    * Creates a new instance of BoardFileMenu
    */
-  public BoardMenuFile(BoardFrame board_frame, boolean p_disable_feature_macros)
+  public BoardMenuFile(BoardFrame board_frame, String input_directory, boolean p_disable_feature_macros)
   {
     tm = new TextManager(this.getClass(), board_frame.get_locale());
 
@@ -40,7 +40,7 @@ public class BoardMenuFile extends JMenu
     file_open_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_open_menuitem.addActionListener(evt ->
     {
-      File selected_file = RoutingJob.showOpenDialog(MainApplication.globalSettings.input_directory, board_frame);
+      File selected_file = RoutingJob.showOpenDialog(input_directory, board_frame);
 
       openEventListeners.forEach(listener -> listener.accept(selected_file));
     });
@@ -54,7 +54,7 @@ public class BoardMenuFile extends JMenu
     file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_save_as_menuitem.addActionListener(evt ->
     {
-      File selected_file = board_frame.design_file.showSaveAsDialog(MainApplication.globalSettings.input_directory, board_frame);
+      File selected_file = board_frame.design_file.showSaveAsDialog(input_directory, board_frame);
 
       saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
     });

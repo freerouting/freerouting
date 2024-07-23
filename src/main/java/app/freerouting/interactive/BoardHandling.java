@@ -14,7 +14,6 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
-import app.freerouting.gui.MainApplication;
 import app.freerouting.library.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
@@ -25,6 +24,7 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
+import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,6 +54,7 @@ public class BoardHandling extends BoardHandlingHeadless
   private final BoardPanel panel;
   private final TextManager tm;
   private final List<Consumer<Boolean>> readOnlyEventListeners = new ArrayList<>();
+  private final GlobalSettings globalSettings;
   /**
    * The graphical context for drawing the board.
    */
@@ -104,14 +105,15 @@ public class BoardHandling extends BoardHandlingHeadless
   /**
    * Creates a new BoardHandling
    */
-  public BoardHandling(BoardPanel p_panel, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
+  public BoardHandling(BoardPanel p_panel, GlobalSettings globalSettings)
   {
-    super(p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
+    super(globalSettings.current_locale, !globalSettings.disabledFeatures.snapshots, globalSettings.autoRouterSettings.optimization_improvement_threshold);
+    this.globalSettings = globalSettings;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
     this.set_interactive_state(RouteMenuState.get_instance(this, activityReplayFile));
 
-    this.tm = new TextManager(this.getClass(), p_locale);
+    this.tm = new TextManager(this.getClass(), globalSettings.current_locale);
 
     LogEntries.LogEntryAddedListener listener = this::logEntryAdded;
     FRLogger.getLogEntries().addLogEntryAddedListener(listener);
@@ -1833,7 +1835,7 @@ public class BoardHandling extends BoardHandlingHeadless
 
   public int get_num_threads()
   {
-    if ((num_threads > 1) && (MainApplication.globalSettings.disabledFeatures.multiThreading))
+    if ((num_threads > 1) && (globalSettings.disabledFeatures.multiThreading))
     {
       FRLogger.info("Multi-threading is disabled in the settings. Using single thread.");
       num_threads = 1;

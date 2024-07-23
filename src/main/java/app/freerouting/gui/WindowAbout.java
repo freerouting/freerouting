@@ -9,7 +9,7 @@ import java.util.Locale;
  */
 public class WindowAbout extends BoardSavableSubWindow
 {
-  public WindowAbout(Locale p_locale)
+  public WindowAbout(Locale p_locale, String freerouting_version)
   {
     setLanguage(p_locale);
     this.setTitle(tm.getText("title"));
@@ -28,7 +28,7 @@ public class WindowAbout extends BoardSavableSubWindow
     gridbag.setConstraints(description_label, gridbag_constraints);
     window_panel.add(description_label, gridbag_constraints);
 
-    String version_string = tm.getText("version") + " " + MainApplication.VERSION_NUMBER_STRING;
+    String version_string = tm.getText("version") + " " + freerouting_version;
     JLabel version_label = new JLabel(version_string);
     gridbag.setConstraints(version_label, gridbag_constraints);
     window_panel.add(version_label, gridbag_constraints);

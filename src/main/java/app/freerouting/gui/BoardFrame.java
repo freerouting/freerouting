@@ -13,7 +13,6 @@ import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
-import app.freerouting.settings.DisabledFeaturesSettings;
 import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
@@ -68,6 +67,7 @@ public class BoardFrame extends WindowBase
   private final List<Consumer<RoutingBoard>> boardLoadedEventListeners = new ArrayList<>();
   private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
   private final BoardObservers board_observers;
+  private final String freerouting_version;
   /**
    * The panel with the graphical representation of the board.
    */
@@ -103,36 +103,29 @@ public class BoardFrame extends WindowBase
 
   /**
    * Creates a new BoardFrame that is the GUI element containing the Menu, Toolbar, Canvas and Status bar.
-   * If p_option = FROM_START_MENU this frame is created from a start
-   * menu frame. If p_option = SINGLE_FRAME, this frame is created directly a single frame. If
-   * p_option = Option.IN_SAND_BOX, no security sensitive actions like for example choosing If
-   * p_option = Option.WEBSTART, the application has been started with Java Webstart. files are
-   * allowed, so that the frame can be used in an applet. Currently, Option.EXTENDED_TOOL_BAR is used
-   * only if a new board is created by the application from scratch. If p_test_level {@literal >}
-   * RELEASE_VERSION, functionality not yet ready for release is included. Also, the warning output
-   * depends on p_test_level.
    */
-  public BoardFrame(RoutingJob p_design, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
+  public BoardFrame(RoutingJob p_design, GlobalSettings globalSettings)
   {
-    this(p_design, new BoardObserverAdaptor(), p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold, disabledFeatures);
+    this(p_design, new BoardObserverAdaptor(), globalSettings);
   }
 
   /**
    * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
    * used for synchronizing purposes, if the frame is embedded into a host system,
    */
-  BoardFrame(RoutingJob p_design, BoardObservers p_observers, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
+  BoardFrame(RoutingJob p_design, BoardObservers p_observers, GlobalSettings globalSettings)
   {
     super(800, 150);
 
     this.design_file = p_design;
 
     this.board_observers = p_observers;
-    this.locale = p_locale;
-    this.setLanguage(p_locale);
+    this.locale = globalSettings.current_locale;
+    this.setLanguage(this.locale);
+    this.freerouting_version = globalSettings.version;
 
     // Set the menu bar of this frame.
-    this.menubar = new BoardMenuBar(this, disabledFeatures);
+    this.menubar = new BoardMenuBar(this, globalSettings.guiSettings, globalSettings.disabledFeatures);
 
     this.menubar.fileMenu.addOpenEventListener((File selectedFile) ->
     {
@@ -152,11 +145,11 @@ public class BoardFrame extends WindowBase
       // Set the input directory in the global settings
       if (p_design.getInputFile() != null)
       {
-        MainApplication.globalSettings.input_directory = design_file.getInputFileDirectory();
+        globalSettings.guiSettings.input_directory = design_file.getInputFileDirectory();
 
         try
         {
-          GlobalSettings.save(MainApplication.globalSettings);
+          GlobalSettings.save(globalSettings);
         } catch (Exception e)
         {
           // it's ok if we can't save the configuration file
@@ -237,7 +230,7 @@ public class BoardFrame extends WindowBase
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
-    this.toolbar_panel = new BoardToolbar(this, disabledFeatures.selectMode);
+    this.toolbar_panel = new BoardToolbar(this, globalSettings.disabledFeatures.selectMode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     // Create and move the status bar one-liners (like current layer, cursor position, etc.) below the canvas.
@@ -282,7 +275,7 @@ public class BoardFrame extends WindowBase
     this.scroll_pane.setVerifyInputWhenFocusTarget(false);
     this.add(scroll_pane, BorderLayout.CENTER);
 
-    this.board_panel = new BoardPanel(screen_messages, this, p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold);
+    this.board_panel = new BoardPanel(screen_messages, this, globalSettings);
     this.scroll_pane.setViewportView(board_panel);
 
     this.addWindowListener(new WindowStateListener());
@@ -308,11 +301,11 @@ public class BoardFrame extends WindowBase
   {
     if ((this.design_file == null) || (this.design_file.getOutputFile() == null))
     {
-      this.setTitle(tm.getText("title", MainApplication.globalSettings.version));
+      this.setTitle(tm.getText("title", this.freerouting_version));
     }
     else
     {
-      this.setTitle(design_file.get_name() + " - " + tm.getText("title", MainApplication.globalSettings.version));
+      this.setTitle(design_file.get_name() + " - " + tm.getText("title", this.freerouting_version));
     }
   }
 
@@ -836,7 +829,7 @@ public class BoardFrame extends WindowBase
     this.permanent_subwindows[17] = this.assign_net_classes_window;
     this.length_violations_window = new WindowLengthViolations(this);
     this.permanent_subwindows[18] = this.length_violations_window;
-    this.about_window = new WindowAbout(this.locale);
+    this.about_window = new WindowAbout(this.locale, this.freerouting_version);
     this.permanent_subwindows[19] = this.about_window;
     this.move_parameter_window = new WindowMoveParameter(this);
     this.permanent_subwindows[20] = this.move_parameter_window;
@@ -1051,7 +1044,7 @@ public class BoardFrame extends WindowBase
         {
           try
           {
-            MainApplication.saveSettings();
+            WindowWelcome.saveSettings();
           } catch (IOException e)
           {
             FRLogger.error("Error saving settings to the freerouting.json file.", e);

@@ -19,15 +19,20 @@ import java.util.zip.CRC32;
  */
 public class RoutingJob implements Serializable
 {
-  public static final String dsn_file_extension = "dsn";
-  public static final String binary_file_extension = "frb";
-  private static final String rules_file_extension = "rules";
-  private static final String ses_file_extension = "ses";
-  private static final String eagle_script_file_extension = "scr";
+  public static final String DSN_FILE_EXTENSION = "dsn";
+  public static final String BINARY_FILE_EXTENSION = "frb";
+  private static final String RULES_FILE_EXTENSION = "rules";
+  private static final String SES_FILE_EXTENSION = "ses";
+  private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
 
   public final UUID id = UUID.randomUUID();
+  public String name = "N/A";
+
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
+
+  public RoutingJobState state = RoutingJobState.INVALID;
+  public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
 
   private File inputFile;
   private File snapshotFile = null;
@@ -156,9 +161,9 @@ public class RoutingJob implements Serializable
       String extension = parts[parts.length - 1].toLowerCase();
       switch (extension)
       {
-        case dsn_file_extension:
+        case DSN_FILE_EXTENSION:
           return FileFormat.DSN;
-        case binary_file_extension:
+        case BINARY_FILE_EXTENSION:
           return FileFormat.FRB;
         case "ses":
           return FileFormat.SES;
@@ -194,7 +199,7 @@ public class RoutingJob implements Serializable
     String temp_folder_path = System.getProperty("java.io.tmpdir");
 
     // Set the intermediate snapshot file name based on the checksum
-    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.binary_file_extension;
+    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.BINARY_FILE_EXTENSION;
     return new File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
   }
 
@@ -308,12 +313,12 @@ public class RoutingJob implements Serializable
 
   public File getRulesFile()
   {
-    return changeFileExtension(this.outputFile, rules_file_extension);
+    return changeFileExtension(this.outputFile, RULES_FILE_EXTENSION);
   }
 
   public File getEagleScriptFile()
   {
-    return changeFileExtension(this.outputFile, eagle_script_file_extension);
+    return changeFileExtension(this.outputFile, EAGLE_SCRIPT_FILE_EXTENSION);
   }
 
   @Deprecated(since = "2.0", forRemoval = true)
@@ -354,7 +359,7 @@ public class RoutingJob implements Serializable
     this.outputFileFormat = FileFormat.UNKNOWN;
     this.outputFile = null;
 
-    if ((filename != null) && (filename.toLowerCase().endsWith(dsn_file_extension)))
+    if ((filename != null) && (filename.toLowerCase().endsWith(DSN_FILE_EXTENSION)))
     {
       this.inputFileFormat = FileFormat.DSN;
       this.inputFile = new File(filename);
@@ -379,12 +384,12 @@ public class RoutingJob implements Serializable
 
     if (this.inputFileFormat == FileFormat.FRB)
     {
-      this.outputFile = changeFileExtension(selectedFile, binary_file_extension);
+      this.outputFile = changeFileExtension(selectedFile, BINARY_FILE_EXTENSION);
     }
 
     if (this.inputFileFormat == FileFormat.DSN)
     {
-      this.outputFile = changeFileExtension(selectedFile, ses_file_extension);
+      this.outputFile = changeFileExtension(selectedFile, SES_FILE_EXTENSION);
     }
 
     if (this.inputFileFormat != FileFormat.UNKNOWN)

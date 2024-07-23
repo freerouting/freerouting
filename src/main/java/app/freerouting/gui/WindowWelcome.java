@@ -1,16 +1,15 @@
 package app.freerouting.gui;
 
+import app.freerouting.Freerouting;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
-import app.freerouting.constants.Constants;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.library.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import app.freerouting.management.VersionChecker;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
@@ -20,7 +19,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
@@ -30,20 +28,20 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Objects;
 
 
 /**
- * Main application for creating frames with new or existing board designs.
+ * The first GUI window that is shown for creating frames with new or existing board designs.
+ * DEPRECATED: This class is deprecated and will be removed in the future. It was a welcome window in the past, but it got replaced by the BoardFrame class.
  */
-public class MainApplication extends WindowBase
+public class WindowWelcome extends WindowBase
 {
-  static final String WEB_FILE_BASE_NAME = "http://www.freerouting.app";
-  static final String VERSION_NUMBER_STRING = "v" + Constants.FREEROUTING_VERSION + " (build-date: " + Constants.FREEROUTING_BUILD_DATE + ")";
-  public static GlobalSettings globalSettings;
   private final JButton open_board_button;
   private final JButton restore_defaults_button;
   private final JTextField message_field;
@@ -68,6 +66,7 @@ public class MainApplication extends WindowBase
   private final String hybrid_ratio;
   private final ItemSelectionStrategy item_selection_strategy;
   private final int num_threads;
+  private final GlobalSettings globalSettings;
   private String design_dir_name;
 
   /**
@@ -76,10 +75,11 @@ public class MainApplication extends WindowBase
    *
    * @param globalSettings
    */
-  public MainApplication(GlobalSettings globalSettings)
+  public WindowWelcome(GlobalSettings globalSettings)
   {
     super(600, 300);
 
+    this.globalSettings = globalSettings;
     this.design_dir_name = globalSettings.getDesignDir();
     this.max_passes = globalSettings.getMaxPasses();
     this.num_threads = globalSettings.getNumThreads();
@@ -109,7 +109,7 @@ public class MainApplication extends WindowBase
     message_field = new JTextField();
     message_field.setText(tm.getText("command_line_missing_input"));
 
-    setTitle(tm.getText("title") + " " + VERSION_NUMBER_STRING);
+    setTitle(tm.getText("title") + " " + Freerouting.VERSION_NUMBER_STRING);
 
     open_board_button.setText(tm.getText("open_own_design"));
     open_board_button.setToolTipText(tm.getText("open_own_design_tooltip"));
@@ -133,144 +133,7 @@ public class MainApplication extends WindowBase
     setResizable(false);
   }
 
-  /**
-   * The entry point of the Freerouting application
-   *
-   * @param args
-   */
-  public static void main(String[] args)
-  {
-    // we have a special case if logging must be disabled before the general command line arguments
-    // are parsed
-    if (args.length > 0 && Arrays.asList(args).contains("-dl"))
-    {
-      // disable logging
-      FRLogger.disableLogging();
-    }
-    else if (args.length > 0 && Arrays.asList(args).contains("-ll"))
-    {
-      // get the log level from the command line arguments
-      int logLevelIndex = Arrays.asList(args).indexOf("-ll") + 1;
-      if (logLevelIndex < args.length)
-      {
-        FRLogger.changeFileLogLevel(args[logLevelIndex]);
-      }
-    }
-
-    FRLogger.traceEntry("MainApplication.main()");
-
-    try
-    {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException ex)
-    {
-      FRLogger.error(ex.getLocalizedMessage(), ex);
-    }
-
-    // Log system information
-    FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
-    FRLogger.debug(" Version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
-    FRLogger.debug(" Command line arguments: '" + String.join(" ", args) + "'");
-    FRLogger.debug(" Architecture: " + System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version"));
-    FRLogger.debug(" Java: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
-    FRLogger.debug(" System Language: " + Locale.getDefault().getLanguage() + "," + Locale.getDefault());
-    FRLogger.debug(" Hardware: " + Runtime.getRuntime().availableProcessors() + " CPU cores," + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB RAM");
-    FRLogger.debug(" UTC Time: " + Instant.now());
-
-    Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
-
-    try
-    {
-      globalSettings = GlobalSettings.load();
-      FRLogger.info("Settings were loaded from freerouting.json");
-    } catch (Exception e)
-    {
-      // we don't want to stop if the configuration file doesn't exist
-    }
-
-    if ((globalSettings == null) || (globalSettings.version != Constants.FREEROUTING_VERSION))
-    {
-      globalSettings = new GlobalSettings();
-
-      // save the default values
-      try
-      {
-        GlobalSettings.save(globalSettings);
-      } catch (Exception e)
-      {
-        // it's ok if we can't save the configuration file
-      }
-    }
-
-    // parse the command line arguments
-    globalSettings.parseCommandLineArguments(args);
-
-    FRLogger.debug(" GUI Language: " + globalSettings.current_locale);
-
-    FRLogger.debug(" Host: " + globalSettings.host);
-
-    // Get default screen device
-    Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-    // Get screen resolution
-    Dimension screenSize = toolkit.getScreenSize();
-    int width = screenSize.width;
-    int height = screenSize.height;
-
-    // Get screen DPI
-    int dpi = toolkit.getScreenResolution();
-    FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
-
-    // initialize analytics
-    FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, "G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
-    int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analytics_modulo, 1);
-    String userIdString = globalSettings.usageAndDiagnosticData.user_id.length() >= 4 ? globalSettings.usageAndDiagnosticData.user_id.substring(0, 4) : "0000";
-    int userIdValue = Integer.parseInt(userIdString, 16);
-    boolean allowAnalytics = !globalSettings.usageAndDiagnosticData.disable_analytics && (userIdValue % analyticsModulo == 0);
-    if (!allowAnalytics)
-    {
-      FRLogger.debug("Analytics are disabled");
-    }
-    FRAnalytics.setEnabled(allowAnalytics);
-    FRAnalytics.setUserId(globalSettings.usageAndDiagnosticData.user_id);
-    FRAnalytics.identify();
-    try
-    {
-      Thread.sleep(1000);
-    } catch (Exception ignored)
-    {
-    }
-    FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE, String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.current_locale, Runtime.getRuntime().availableProcessors(), (Runtime.getRuntime().maxMemory() / 1024 / 1024), globalSettings.host, width, height, dpi);
-
-    // check for new version
-    VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
-    new Thread(checker).start();
-
-    // Initialize the GUI
-    if (!InitializeGUI())
-    {
-      // Couldn't initialize the GUI
-      return;
-    }
-
-    if (globalSettings.apiServerSettings.isEnabled)
-    {
-      InitializeAPI(globalSettings.apiServerSettings);
-    }
-
-    try
-    {
-      GlobalSettings.save(globalSettings);
-    } catch (Exception e)
-    {
-      // it's ok if we can't update the configuration file, it's just optional
-    }
-
-    FRLogger.traceExit("MainApplication.main()");
-  }
-
-  private static void InitializeAPI(ApiServerSettings apiServerSettings)
+  public static void InitializeAPI(ApiServerSettings apiServerSettings)
   {
     // Check if there are any endpoints defined
     if (apiServerSettings.endpoints.length == 0)
@@ -327,7 +190,7 @@ public class MainApplication extends WindowBase
     }
   }
 
-  private static boolean InitializeGUI()
+  public static boolean InitializeGUI(GlobalSettings globalSettings)
   {
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
@@ -349,7 +212,7 @@ public class MainApplication extends WindowBase
     UIManager.put("MenuItem.font", newFont);
 
     // get localization resources
-    TextManager tm = new TextManager(MainApplication.class, globalSettings.current_locale);
+    TextManager tm = new TextManager(WindowWelcome.class, globalSettings.current_locale);
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option)
@@ -370,7 +233,7 @@ public class MainApplication extends WindowBase
       }
       String message = tm.getText("loading_design") + " " + globalSettings.design_input_filename;
       WindowMessage welcome_window = WindowMessage.show(message);
-      final BoardFrame new_frame = create_board_frame(design_file, null, globalSettings.test_version_option, globalSettings.current_locale, globalSettings.design_rules_filename, !globalSettings.disabledFeatures.snapshots, globalSettings.autoRouterSettings.optimization_improvement_threshold, globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter);
+      final BoardFrame new_frame = create_board_frame(design_file, null, globalSettings);
       welcome_window.dispose();
       if (new_frame == null)
       {
@@ -471,7 +334,7 @@ public class MainApplication extends WindowBase
 
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
         final String START_NOW_TEXT = tm.getText("auto_start_routing_startnow_button");
-        JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.dialog_confirmation_timeout + ")");
+        JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.guiSettings.dialog_confirmation_timeout + ")");
 
         final String CANCEL_TEXT = tm.getText("auto_start_routing_cancel_button");
         Object[] options = {startNowButton, CANCEL_TEXT};
@@ -484,7 +347,7 @@ public class MainApplication extends WindowBase
 
         final String AUTOSTART_TITLE = tm.getText("auto_start_routing_title");
 
-        if (globalSettings.dialog_confirmation_timeout > 0)
+        if (globalSettings.guiSettings.dialog_confirmation_timeout > 0)
         {
           // Add a timer to the dialog
           JDialog autostartDialog = auto_start_routing_dialog.createDialog(AUTOSTART_TITLE);
@@ -492,7 +355,7 @@ public class MainApplication extends WindowBase
           // Update startNowButton text every second
           Timer autostartTimer = new Timer(1000, new ActionListener()
           {
-            private int secondsLeft = globalSettings.dialog_confirmation_timeout;
+            private int secondsLeft = globalSettings.guiSettings.dialog_confirmation_timeout;
 
             @Override
             public void actionPerformed(ActionEvent e)
@@ -518,7 +381,7 @@ public class MainApplication extends WindowBase
 
         Object choice = auto_start_routing_dialog.getValue();
         // Start the auto-router if the user didn't cancel the dialog
-        if ((globalSettings.dialog_confirmation_timeout == 0) || (choice == options[0]))
+        if ((globalSettings.guiSettings.dialog_confirmation_timeout == 0) || (choice == options[0]))
         {
           // Start the auto-router
           InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer();
@@ -549,7 +412,7 @@ public class MainApplication extends WindowBase
     {
       if (globalSettings.disabledFeatures.fileLoadDialogAtStartup)
       {
-        final BoardFrame new_frame = create_board_frame(null, null, globalSettings.test_version_option, globalSettings.current_locale, globalSettings.design_rules_filename, !globalSettings.disabledFeatures.snapshots, globalSettings.autoRouterSettings.optimization_improvement_threshold, globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter);
+        final BoardFrame new_frame = create_board_frame(null, null, globalSettings);
         if (new_frame == null)
         {
           FRLogger.warn("Couldn't create window frame");
@@ -559,7 +422,7 @@ public class MainApplication extends WindowBase
       }
       else
       {
-        new MainApplication(globalSettings).setVisible(true);
+        new WindowWelcome(globalSettings).setVisible(true);
       }
     }
     return true;
@@ -569,9 +432,9 @@ public class MainApplication extends WindowBase
    * Creates a new board frame containing the data of the input design file. Returns null, if an
    * error occurred.
    */
-  private static BoardFrame create_board_frame(RoutingJob p_design_file, JTextField p_message_field, boolean p_is_test_version, Locale p_locale, String p_design_rules_file, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, String[] p_ignore_net_classes_by_autorouter)
+  private static BoardFrame create_board_frame(RoutingJob p_design_file, JTextField p_message_field, GlobalSettings globalSettings)
   {
-    TextManager tm = new TextManager(MainApplication.class, p_locale);
+    TextManager tm = new TextManager(WindowWelcome.class, globalSettings.current_locale);
 
     InputStream input_stream = null;
     if ((p_design_file == null) || (p_design_file.getInputFile() == null))
@@ -595,7 +458,7 @@ public class MainApplication extends WindowBase
       }
     }
 
-    BoardFrame new_frame = new BoardFrame(p_design_file, p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold, globalSettings.disabledFeatures);
+    BoardFrame new_frame = new BoardFrame(p_design_file, globalSettings);
     boolean read_ok = new_frame.load(input_stream, p_design_file.inputFileFormat.equals(FileFormat.DSN), p_message_field);
     if (!read_ok)
     {
@@ -621,7 +484,7 @@ public class MainApplication extends WindowBase
       String rules_file_name;
       String parent_folder_name;
       String confirm_import_rules_message;
-      if (p_design_rules_file == null)
+      if (globalSettings.design_rules_filename == null)
       {
         rules_file_name = design_name + ".rules";
         parent_folder_name = p_design_file.getInputFileDirectoryOrNull();
@@ -629,7 +492,7 @@ public class MainApplication extends WindowBase
       }
       else
       {
-        rules_file_name = p_design_rules_file;
+        rules_file_name = globalSettings.design_rules_filename;
         parent_folder_name = null;
         confirm_import_rules_message = null;
       }
@@ -642,7 +505,7 @@ public class MainApplication extends WindowBase
       }
 
       // ignore net classes if they were defined by a command line argument
-      for (String net_class_name : p_ignore_net_classes_by_autorouter)
+      for (String net_class_name : globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter)
       {
         NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 
@@ -662,7 +525,7 @@ public class MainApplication extends WindowBase
 
   public static void saveSettings() throws IOException
   {
-    GlobalSettings.save(globalSettings);
+    GlobalSettings.save(Freerouting.globalSettings);
   }
 
   /**
@@ -671,7 +534,6 @@ public class MainApplication extends WindowBase
    */
   private void open_board_design_action(ActionEvent evt)
   {
-
     File fileToOpen = RoutingJob.showOpenDialog(this.design_dir_name, null);
     RoutingJob design_file = new RoutingJob(fileToOpen);
 
@@ -680,11 +542,11 @@ public class MainApplication extends WindowBase
       if (!Objects.equals(this.design_dir_name, design_file.getInputFileDirectory()))
       {
         this.design_dir_name = design_file.getInputFileDirectory();
-        globalSettings.input_directory = this.design_dir_name;
+        this.globalSettings.guiSettings.input_directory = this.design_dir_name;
 
         try
         {
-          GlobalSettings.save(globalSettings);
+          GlobalSettings.save(this.globalSettings);
         } catch (Exception e)
         {
           // it's ok if we can't save the configuration file
@@ -705,7 +567,7 @@ public class MainApplication extends WindowBase
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
     welcome_window.setTitle(message);
-    BoardFrame new_frame = create_board_frame(design_file, message_field, this.is_test_version, this.locale, null, this.save_intermediate_stages, this.optimization_improvement_threshold, this.ignore_net_classes_by_autorouter);
+    BoardFrame new_frame = create_board_frame(design_file, message_field, globalSettings);
     welcome_window.dispose();
     if (new_frame == null)
     {
