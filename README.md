@@ -12,8 +12,7 @@
 	<a href="https://github.com/freerouting/freerouting/blob/master/docs/code_of_conduct.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Contributor Covenant" /></a>
 </p>
 
-<h3 align="center">:point_right: This project needs JAVA and UI/UX volunteers! Contact @andrasfuchs for details! :
-point_left:</h3>
+<h3 align="center">:point_right: This project needs JAVA and UI/UX volunteers! Contact @andrasfuchs for details! :point_left:</h3>
 
 <br/>
 <br/>
