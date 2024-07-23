@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
+import java.util.UUID;
 import java.util.zip.CRC32;
 
 /**
@@ -23,8 +24,11 @@ public class RoutingJob implements Serializable
   private static final String rules_file_extension = "rules";
   private static final String ses_file_extension = "ses";
   private static final String eagle_script_file_extension = "scr";
+
+  public final UUID id = UUID.randomUUID();
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
+
   private File inputFile;
   private File snapshotFile = null;
   private File outputFile = null;
