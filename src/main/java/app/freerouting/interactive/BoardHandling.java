@@ -14,8 +14,8 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
-import app.freerouting.gui.DesignFile;
 import app.freerouting.gui.MainApplication;
+import app.freerouting.library.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntryType;
@@ -1041,7 +1041,7 @@ public class BoardHandling extends BoardHandlingHeadless
 
   public long calculateCrc32(InputStream inputStream)
   {
-    return DesignFile.CalculateCrc32(inputStream).getValue();
+    return RoutingJob.CalculateCrc32(inputStream).getValue();
   }
 
   public long calculateCrc32()

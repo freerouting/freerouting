@@ -7,6 +7,7 @@ import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;
+import app.freerouting.library.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
@@ -97,7 +98,7 @@ public class BoardFrame extends WindowBase
   ColorManager color_manager;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
-  DesignFile design_file;
+  RoutingJob design_file;
   private LocalDateTime intermediate_stage_file_last_saved_at;
 
   /**
@@ -111,7 +112,7 @@ public class BoardFrame extends WindowBase
    * RELEASE_VERSION, functionality not yet ready for release is included. Also, the warning output
    * depends on p_test_level.
    */
-  public BoardFrame(DesignFile p_design, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
+  public BoardFrame(RoutingJob p_design, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
   {
     this(p_design, new BoardObserverAdaptor(), p_locale, p_save_intermediate_stages, p_optimization_improvement_threshold, disabledFeatures);
   }
@@ -120,7 +121,7 @@ public class BoardFrame extends WindowBase
    * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
    * used for synchronizing purposes, if the frame is embedded into a host system,
    */
-  BoardFrame(DesignFile p_design, BoardObservers p_observers, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
+  BoardFrame(RoutingJob p_design, BoardObservers p_observers, Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, DisabledFeaturesSettings disabledFeatures)
   {
     super(800, 150);
 

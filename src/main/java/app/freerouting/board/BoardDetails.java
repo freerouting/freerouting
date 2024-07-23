@@ -1,7 +1,7 @@
 package app.freerouting.board;
 
-import app.freerouting.gui.DesignFile;
 import app.freerouting.gui.FileFormat;
+import app.freerouting.library.RoutingJob;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -47,7 +47,7 @@ public class BoardDetails
     this.path = file.getAbsolutePath();
     this.filename = file.getName();
     this.filesize = file.length();
-    this.format = DesignFile.getFileFormat(file);
+    this.format = RoutingJob.getFileFormat(file);
 
     if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
     {

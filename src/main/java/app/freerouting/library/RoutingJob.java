@@ -1,24 +1,22 @@
-package app.freerouting.gui;
+package app.freerouting.library;
 
 import app.freerouting.board.BoardDetails;
 import app.freerouting.designforms.specctra.RulesFile;
+import app.freerouting.gui.FileFormat;
+import app.freerouting.gui.WindowMessage;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.zip.CRC32;
 
 /**
- * File functionality with security restrictions used, when the application is opened with Java
- * Webstart
+ * Represents a job that needs to be processed by the router.
  */
-public class DesignFile
+public class RoutingJob implements Serializable
 {
   public static final String dsn_file_extension = "dsn";
   public static final String binary_file_extension = "frb";
@@ -34,7 +32,7 @@ public class DesignFile
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
    */
-  public DesignFile(File p_design_file)
+  public RoutingJob(File p_design_file)
   {
     this.tryToSetInputFile(p_design_file);
   }
@@ -56,14 +54,14 @@ public class DesignFile
     return crc;
   }
 
-  public static DesignFile get_instance(String p_design_file_name)
+  public static RoutingJob get_instance(String p_design_file_name)
   {
     if (p_design_file_name == null)
     {
       return null;
     }
 
-    return new DesignFile(new File(p_design_file_name));
+    return new RoutingJob(new File(p_design_file_name));
   }
 
   /**
@@ -176,7 +174,7 @@ public class DesignFile
     long crc32Checksum;
     try (FileInputStream inputStream = new FileInputStream(inputFile.getAbsoluteFile()))
     {
-      crc32Checksum = DesignFile.CalculateCrc32(inputStream).getValue();
+      crc32Checksum = RoutingJob.CalculateCrc32(inputStream).getValue();
     } catch (IOException e)
     {
       crc32Checksum = 0;
@@ -192,7 +190,7 @@ public class DesignFile
     String temp_folder_path = System.getProperty("java.io.tmpdir");
 
     // Set the intermediate snapshot file name based on the checksum
-    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32Checksum) + "." + DesignFile.binary_file_extension;
+    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.binary_file_extension;
     return new File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
   }
 

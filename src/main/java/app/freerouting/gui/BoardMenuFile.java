@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.library.RoutingJob;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
 
@@ -39,7 +40,7 @@ public class BoardMenuFile extends JMenu
     file_open_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_open_menuitem.addActionListener(evt ->
     {
-      File selected_file = DesignFile.showOpenDialog(MainApplication.globalSettings.input_directory, board_frame);
+      File selected_file = RoutingJob.showOpenDialog(MainApplication.globalSettings.input_directory, board_frame);
 
       openEventListeners.forEach(listener -> listener.accept(selected_file));
     });

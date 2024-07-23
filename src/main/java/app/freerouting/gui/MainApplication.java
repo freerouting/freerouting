@@ -6,6 +6,7 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
+import app.freerouting.library.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
@@ -361,7 +362,7 @@ public class MainApplication extends WindowBase
     if (globalSettings.design_input_filename != null)
     {
       FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
-      DesignFile design_file = DesignFile.get_instance(globalSettings.design_input_filename);
+      RoutingJob design_file = RoutingJob.get_instance(globalSettings.design_input_filename);
       if (design_file == null)
       {
         FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
@@ -568,14 +569,14 @@ public class MainApplication extends WindowBase
    * Creates a new board frame containing the data of the input design file. Returns null, if an
    * error occurred.
    */
-  private static BoardFrame create_board_frame(DesignFile p_design_file, JTextField p_message_field, boolean p_is_test_version, Locale p_locale, String p_design_rules_file, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, String[] p_ignore_net_classes_by_autorouter)
+  private static BoardFrame create_board_frame(RoutingJob p_design_file, JTextField p_message_field, boolean p_is_test_version, Locale p_locale, String p_design_rules_file, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold, String[] p_ignore_net_classes_by_autorouter)
   {
     TextManager tm = new TextManager(MainApplication.class, p_locale);
 
     InputStream input_stream = null;
     if ((p_design_file == null) || (p_design_file.getInputFile() == null))
     {
-      p_design_file = new DesignFile(null);
+      p_design_file = new RoutingJob(null);
       p_design_file.setDummyInputFile("freerouting_empty_board.dsn");
       // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
@@ -637,7 +638,7 @@ public class MainApplication extends WindowBase
       if (rules_file.exists())
       {
         // load the .rules file
-        DesignFile.read_rules_file(design_name, parent_folder_name, rules_file_name, new_frame.board_panel.board_handling, confirm_import_rules_message);
+        RoutingJob.read_rules_file(design_name, parent_folder_name, rules_file_name, new_frame.board_panel.board_handling, confirm_import_rules_message);
       }
 
       // ignore net classes if they were defined by a command line argument
@@ -671,8 +672,8 @@ public class MainApplication extends WindowBase
   private void open_board_design_action(ActionEvent evt)
   {
 
-    File fileToOpen = DesignFile.showOpenDialog(this.design_dir_name, null);
-    DesignFile design_file = new DesignFile(fileToOpen);
+    File fileToOpen = RoutingJob.showOpenDialog(this.design_dir_name, null);
+    RoutingJob design_file = new RoutingJob(fileToOpen);
 
     if (design_file.getInputFile() != null)
     {
