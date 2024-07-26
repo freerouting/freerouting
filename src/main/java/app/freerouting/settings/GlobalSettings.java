@@ -26,7 +26,7 @@ public class GlobalSettings
   public final String version = Constants.FREEROUTING_VERSION;
   @SerializedName("gui")
   public final GuiSettings guiSettings = new GuiSettings();
-  @SerializedName("autorouter")
+  @SerializedName("router")
   public final AutoRouterSettings autoRouterSettings = new AutoRouterSettings();
   @SerializedName("usage_and_diagnostic_data")
   public final UsageAndDiagnosticDataSettings usageAndDiagnosticData = new UsageAndDiagnosticDataSettings();
@@ -39,13 +39,13 @@ public class GlobalSettings
   public transient String design_input_filename;
   public transient String design_output_filename;
   public transient String design_rules_filename;
-  // add taiwnese language
   public transient String[] supported_languages = {"en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   public transient Locale current_locale = Locale.getDefault();
   public transient String host = "N/A";
 
   public GlobalSettings()
   {
+    // validate and set the current locale
     if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals))
     {
       // the fallback language is English
@@ -53,6 +53,11 @@ public class GlobalSettings
     }
   }
 
+  /*
+   * Saves the settings to a file
+   * Use save(String propertyName, String newValue) instead which only updates one particular property and saves the settings to a file.
+   */
+  @Deprecated(since = "2.0.0", forRemoval = true)
   public static void save(GlobalSettings options) throws IOException
   {
     try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8))
@@ -67,6 +72,17 @@ public class GlobalSettings
     {
       return GSON.fromJson(reader, GlobalSettings.class);
     }
+  }
+
+  /*
+   * Sets a property value in the settings for the current process, but it does so without permanently saving it into the settings file.
+   * For scenarios where the settings also needs to be saved in the settings file, use the save() method instead.
+   * Property names are in the format of "section.property" (eg. "router.max_passes" or "gui.input_directory").
+   */
+  public Boolean setValue(String propertyName, String newValue)
+  {
+    // TODO: set the property value (eg. "router.max_passes", "10")
+    return false;
   }
 
   public Locale getCurrentLocale()
