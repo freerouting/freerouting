@@ -57,14 +57,6 @@ public class Freerouting
 
     // Log system information
     FRLogger.info("Freerouting " + VERSION_NUMBER_STRING);
-    FRLogger.debug(" Version: " + Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE);
-    FRLogger.debug(" Command line arguments: '" + String.join(" ", args) + "'");
-    FRLogger.debug(" Architecture: " + System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version"));
-    FRLogger.debug(" Java: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
-    FRLogger.debug(" System Language: " + Locale.getDefault().getLanguage() + "," + Locale.getDefault());
-    FRLogger.debug(" Hardware: " + Runtime.getRuntime().availableProcessors() + " CPU cores," + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB RAM");
-    FRLogger.debug(" UTC Time: " + Instant.now());
-
     Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
     try
@@ -90,6 +82,23 @@ public class Freerouting
       }
     }
 
+    // get environment parameters and save them in the settings
+    globalSettings.environmentSettings.freeroutingVersion = Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
+    globalSettings.environmentSettings.appStartedAt = Instant.now();
+    globalSettings.environmentSettings.commandLineArguments = String.join(" ", args);
+    globalSettings.environmentSettings.architecture = System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version");
+    globalSettings.environmentSettings.java = System.getProperty("java.version") + "," + System.getProperty("java.vendor");
+    globalSettings.environmentSettings.systemLanguage = Locale.getDefault().getLanguage() + "," + Locale.getDefault();
+    globalSettings.environmentSettings.cpuCores = Runtime.getRuntime().availableProcessors();
+    globalSettings.environmentSettings.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
+    FRLogger.debug(" Version: " + globalSettings.environmentSettings.freeroutingVersion);
+    FRLogger.debug(" Command line arguments: '" + globalSettings.environmentSettings.commandLineArguments + "'");
+    FRLogger.debug(" Architecture: " + globalSettings.environmentSettings.architecture);
+    FRLogger.debug(" Java: " + globalSettings.environmentSettings.java);
+    FRLogger.debug(" System Language: " + globalSettings.environmentSettings.systemLanguage);
+    FRLogger.debug(" Hardware: " + globalSettings.environmentSettings.cpuCores + " CPU cores," + globalSettings.environmentSettings.ram + " MB RAM");
+    FRLogger.debug(" UTC Time: " + globalSettings.environmentSettings.appStartedAt);
+
     // parse the command line arguments
     globalSettings.parseCommandLineArguments(args);
 
@@ -112,7 +121,7 @@ public class Freerouting
     // initialize analytics
     FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, "G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
     int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analytics_modulo, 1);
-    String userIdString = globalSettings.usageAndDiagnosticData.user_id.length() >= 4 ? globalSettings.usageAndDiagnosticData.user_id.substring(0, 4) : "0000";
+    String userIdString = globalSettings.userProfileSettings.user_id.length() >= 4 ? globalSettings.userProfileSettings.user_id.substring(0, 4) : "0000";
     int userIdValue = Integer.parseInt(userIdString, 16);
     boolean allowAnalytics = !globalSettings.usageAndDiagnosticData.disable_analytics && (userIdValue % analyticsModulo == 0);
     if (!allowAnalytics)
@@ -120,7 +129,7 @@ public class Freerouting
       FRLogger.debug("Analytics are disabled");
     }
     FRAnalytics.setEnabled(allowAnalytics);
-    FRAnalytics.setUserId(globalSettings.usageAndDiagnosticData.user_id);
+    FRAnalytics.setUserId(globalSettings.userProfileSettings.user_id);
     FRAnalytics.identify();
     try
     {

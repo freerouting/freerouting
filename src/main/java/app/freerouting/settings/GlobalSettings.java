@@ -24,6 +24,9 @@ public class GlobalSettings
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
   public final String version = Constants.FREEROUTING_VERSION;
+  public transient final EnvironmentSettings environmentSettings = new EnvironmentSettings();
+  @SerializedName("profile")
+  public final UserProfileSettings userProfileSettings = new UserProfileSettings();
   @SerializedName("gui")
   public final GuiSettings guiSettings = new GuiSettings();
   @SerializedName("router")
