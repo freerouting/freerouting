@@ -62,6 +62,7 @@ public class Freerouting
     try
     {
       globalSettings = GlobalSettings.load();
+      globalSettings.applyEnvironmentVariables();
       FRLogger.info("Settings were loaded from freerouting.json");
     } catch (Exception e)
     {
@@ -80,6 +81,8 @@ public class Freerouting
       {
         // it's ok if we can't save the configuration file
       }
+
+      globalSettings.applyEnvironmentVariables();
     }
 
     // get environment parameters and save them in the settings
@@ -118,12 +121,17 @@ public class Freerouting
     int dpi = toolkit.getScreenResolution();
     FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
 
-    // initialize analytics
-    FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, "G24pcCv4BmnqwBa8LsdODYRE6k9IAlqR");
-    int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analytics_modulo, 1);
-    String userIdString = globalSettings.userProfileSettings.user_id.length() >= 4 ? globalSettings.userProfileSettings.user_id.substring(0, 4) : "0000";
-    int userIdValue = Integer.parseInt(userIdString, 16);
-    boolean allowAnalytics = !globalSettings.usageAndDiagnosticData.disable_analytics && (userIdValue % analyticsModulo == 0);
+    boolean allowAnalytics = false;
+    if (globalSettings.usageAndDiagnosticData.segment_write_key != null && !globalSettings.usageAndDiagnosticData.segment_write_key.isEmpty())
+    {
+      // initialize analytics
+      FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.segment_write_key);
+      int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analytics_modulo, 1);
+      String userIdString = globalSettings.userProfileSettings.user_id.length() >= 4 ? globalSettings.userProfileSettings.user_id.substring(0, 4) : "0000";
+      int userIdValue = Integer.parseInt(userIdString, 16);
+      allowAnalytics = !globalSettings.usageAndDiagnosticData.disable_analytics && (userIdValue % analyticsModulo == 0);
+    }
+
     if (!allowAnalytics)
     {
       FRLogger.debug("Analytics are disabled");

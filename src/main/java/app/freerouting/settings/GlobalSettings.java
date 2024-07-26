@@ -38,7 +38,6 @@ public class GlobalSettings
   public final DisabledFeaturesSettings disabledFeatures = new DisabledFeaturesSettings();
   @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
-  public transient boolean test_version_option = false;
   public transient boolean show_help_option = false;
   public transient String design_input_filename;
   public transient String design_output_filename;
@@ -95,6 +94,22 @@ public class GlobalSettings
     {
       FRLogger.error("Failed to save property value for: " + propertyName, e);
       return false;
+    }
+  }
+
+  /*
+   * Applies the environment variables to the settings
+   */
+  public void applyEnvironmentVariables()
+  {
+    // Read all the environment variables that begins with "FREEROUTING__"
+    for (var entry : System.getenv().entrySet())
+    {
+      if (entry.getKey().startsWith("FREEROUTING__"))
+      {
+        String propertyName = entry.getKey().substring("FREEROUTING__".length()).toLowerCase().replace("__", ".");
+        setValue(propertyName, entry.getValue());
+      }
     }
   }
 
@@ -314,10 +329,6 @@ public class GlobalSettings
             disabledFeatures.snapshots = (Objects.equals(p_args[i + 1], "0"));
           }
         }
-        else if (p_args[i].startsWith("-test"))
-        {
-          test_version_option = true;
-        }
         else if (p_args[i].startsWith("-dl"))
         {
           disabledFeatures.logging = true;
@@ -359,11 +370,6 @@ public class GlobalSettings
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);
       }
     }
-  }
-
-  public boolean isTestVersion()
-  {
-    return test_version_option;
   }
 
   public String getDesignDir()

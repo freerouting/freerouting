@@ -52,7 +52,6 @@ public class WindowWelcome extends WindowBase
    */
   private final Collection<BoardFrame> board_frames = new LinkedList<>();
 
-  private final boolean is_test_version;
   private final Locale locale;
   private final boolean save_intermediate_stages;
   private final float optimization_improvement_threshold;
@@ -86,7 +85,6 @@ public class WindowWelcome extends WindowBase
     this.board_update_strategy = globalSettings.getBoardUpdateStrategy();
     this.hybrid_ratio = globalSettings.getHybridRatio();
     this.item_selection_strategy = globalSettings.getItemSelectionStrategy();
-    this.is_test_version = globalSettings.isTestVersion();
     this.locale = globalSettings.getCurrentLocale();
     this.save_intermediate_stages = !globalSettings.disabledFeatures.snapshots;
     this.optimization_improvement_threshold = globalSettings.autoRouterSettings.optimization_improvement_threshold;
@@ -637,7 +635,7 @@ public class WindowWelcome extends WindowBase
     {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       boolean exit_program = true;
-      if (!is_test_version && !board_frames.isEmpty())
+      if (!board_frames.isEmpty())
       {
         int application_confirm_exit_dialog = JOptionPane.showConfirmDialog(null, tm.getText("confirm_cancel"), null, JOptionPane.YES_NO_OPTION);
         if (application_confirm_exit_dialog == JOptionPane.NO_OPTION)

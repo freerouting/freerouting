@@ -9,7 +9,7 @@ public class UserProfileSettings
   @SerializedName("id")
   public final String user_id;
   @SerializedName("email")
-  public String user_email;
+  public String user_email = "";
 
   public UserProfileSettings()
   {
