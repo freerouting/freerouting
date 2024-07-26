@@ -23,7 +23,7 @@ import java.util.Objects;
 public class GlobalSettings
 {
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-  private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting.json");
+  private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting", "freerouting.json");
   public final String version = Constants.FREEROUTING_VERSION;
   public transient final EnvironmentSettings environmentSettings = new EnvironmentSettings();
   @SerializedName("profile")
@@ -72,6 +72,10 @@ public class GlobalSettings
    */
   public static void save(GlobalSettings options) throws IOException
   {
+    // Make sure that we have the directory structure in place, and create it if it doesn't exist
+    Files.createDirectories(PATH.getParent());
+
+    // Write the settings to the file
     try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8))
     {
       GSON.toJson(options, writer);
