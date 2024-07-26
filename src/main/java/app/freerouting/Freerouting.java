@@ -100,7 +100,7 @@ public class Freerouting
     FRLogger.debug(" UTC Time: " + globalSettings.environmentSettings.appStartedAt);
 
     // parse the command line arguments
-    globalSettings.parseCommandLineArguments(args);
+    globalSettings.applyCommandLineArguments(args);
 
     FRLogger.debug(" GUI Language: " + globalSettings.current_locale);
 

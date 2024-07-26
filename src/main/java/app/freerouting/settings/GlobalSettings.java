@@ -57,6 +57,9 @@ public class GlobalSettings
     }
   }
 
+  /*
+   * Loads the settings from the default JSON settings file
+   */
   public static GlobalSettings load() throws IOException
   {
     try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8))
@@ -66,7 +69,7 @@ public class GlobalSettings
   }
 
   /*
-   * Saves the settings to a file
+   * Saves the settings to the default JSON settings file
    */
   public static void save(GlobalSettings options) throws IOException
   {
@@ -76,6 +79,10 @@ public class GlobalSettings
     }
   }
 
+  /*
+   * Sets a property value in the settings, and it permanently saves it into the settings file.
+   * Property names are in the format of "section.property" (eg. "router.max_passes" or "gui.input_directory").
+   */
   public static Boolean setDefaultValue(String propertyName, String newValue)
   {
     try
@@ -114,13 +121,22 @@ public class GlobalSettings
     return current_locale;
   }
 
-  public void parseCommandLineArguments(String[] p_args)
+  public void applyCommandLineArguments(String[] p_args)
   {
     for (int i = 0; i < p_args.length; ++i)
     {
       try
       {
-        if (p_args[i].startsWith("-de"))
+        if (p_args[i].startsWith("--"))
+        {
+          // it's a general settings value setter
+          String[] parts = p_args[i].substring(2).split("=");
+          if (parts.length == 2)
+          {
+            setValue(parts[0], parts[1]);
+          }
+        }
+        else if (p_args[i].startsWith("-de"))
         {
           // the design file is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
