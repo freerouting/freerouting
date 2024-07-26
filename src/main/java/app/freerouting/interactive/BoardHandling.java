@@ -107,7 +107,7 @@ public class BoardHandling extends BoardHandlingHeadless
    */
   public BoardHandling(BoardPanel p_panel, GlobalSettings globalSettings)
   {
-    super(globalSettings.current_locale, !globalSettings.disabledFeatures.snapshots, globalSettings.autoRouterSettings.optimization_improvement_threshold);
+    super(globalSettings.current_locale, !globalSettings.disabledFeatures.snapshots, globalSettings.routerSettings.optimizationImprovementThreshold);
     this.globalSettings = globalSettings;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;

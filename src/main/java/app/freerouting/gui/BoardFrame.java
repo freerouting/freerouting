@@ -145,7 +145,7 @@ public class BoardFrame extends WindowBase
       // Set the input directory in the global settings
       if (p_design.getInputFile() != null)
       {
-        globalSettings.guiSettings.input_directory = design_file.getInputFileDirectory();
+        globalSettings.guiSettings.inputDirectory = design_file.getInputFileDirectory();
 
         try
         {

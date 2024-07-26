@@ -2,7 +2,9 @@ package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DisabledFeaturesSettings
+import java.io.Serializable;
+
+public class DisabledFeaturesSettings implements Serializable
 {
   @SerializedName("logging")
   public boolean logging = false;

@@ -107,7 +107,7 @@ public class Freerouting
 
     FRLogger.debug(" GUI Language: " + globalSettings.current_locale);
 
-    FRLogger.debug(" Host: " + globalSettings.host);
+    FRLogger.debug(" Host: " + globalSettings.environmentSettings.host);
 
     // Get default screen device
     Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -122,14 +122,14 @@ public class Freerouting
     FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
 
     boolean allowAnalytics = false;
-    if (globalSettings.usageAndDiagnosticData.segment_write_key != null && !globalSettings.usageAndDiagnosticData.segment_write_key.isEmpty())
+    if (globalSettings.usageAndDiagnosticData.segmentWriteKey != null && !globalSettings.usageAndDiagnosticData.segmentWriteKey.isEmpty())
     {
       // initialize analytics
-      FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.segment_write_key);
-      int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analytics_modulo, 1);
-      String userIdString = globalSettings.userProfileSettings.user_id.length() >= 4 ? globalSettings.userProfileSettings.user_id.substring(0, 4) : "0000";
+      FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.segmentWriteKey);
+      int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analyticsModulo, 1);
+      String userIdString = globalSettings.userProfileSettings.userId.length() >= 4 ? globalSettings.userProfileSettings.userId.substring(0, 4) : "0000";
       int userIdValue = Integer.parseInt(userIdString, 16);
-      allowAnalytics = !globalSettings.usageAndDiagnosticData.disable_analytics && (userIdValue % analyticsModulo == 0);
+      allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0);
     }
 
     if (!allowAnalytics)
@@ -137,7 +137,7 @@ public class Freerouting
       FRLogger.debug("Analytics are disabled");
     }
     FRAnalytics.setEnabled(allowAnalytics);
-    FRAnalytics.setUserId(globalSettings.userProfileSettings.user_id);
+    FRAnalytics.setUserId(globalSettings.userProfileSettings.userId);
     FRAnalytics.identify();
     try
     {
@@ -146,7 +146,7 @@ public class Freerouting
     {
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE, String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.current_locale, Runtime.getRuntime().availableProcessors(), (Runtime.getRuntime().maxMemory() / 1024 / 1024), globalSettings.host, width, height, dpi);
+    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE, String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.current_locale, globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram, globalSettings.environmentSettings.host, width, height, dpi);
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);

@@ -87,8 +87,8 @@ public class WindowWelcome extends WindowBase
     this.item_selection_strategy = globalSettings.getItemSelectionStrategy();
     this.locale = globalSettings.getCurrentLocale();
     this.save_intermediate_stages = !globalSettings.disabledFeatures.snapshots;
-    this.optimization_improvement_threshold = globalSettings.autoRouterSettings.optimization_improvement_threshold;
-    this.ignore_net_classes_by_autorouter = globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter;
+    this.optimization_improvement_threshold = globalSettings.routerSettings.optimizationImprovementThreshold;
+    this.ignore_net_classes_by_autorouter = globalSettings.routerSettings.ignoreNetClassesByAutorouter;
 
     this.setLanguage(locale);
 
@@ -240,11 +240,11 @@ public class WindowWelcome extends WindowBase
         return false;
       }
 
-      new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + globalSettings.autoRouterSettings.max_passes - 1);
-      new_frame.board_panel.board_handling.set_num_threads(globalSettings.autoRouterSettings.num_threads);
-      new_frame.board_panel.board_handling.set_board_update_strategy(globalSettings.autoRouterSettings.board_update_strategy);
-      new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.autoRouterSettings.hybrid_ratio);
-      new_frame.board_panel.board_handling.set_item_selection_strategy(globalSettings.autoRouterSettings.item_selection_strategy);
+      new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + globalSettings.routerSettings.maxPasses - 1);
+      new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.maxThreads);
+      new_frame.board_panel.board_handling.set_board_update_strategy(globalSettings.routerSettings.boardUpdateStrategy);
+      new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.routerSettings.hybridRatio);
+      new_frame.board_panel.board_handling.set_item_selection_strategy(globalSettings.routerSettings.itemSelectionStrategy);
 
       if (globalSettings.design_output_filename != null)
       {
@@ -332,7 +332,7 @@ public class WindowWelcome extends WindowBase
 
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
         final String START_NOW_TEXT = tm.getText("auto_start_routing_startnow_button");
-        JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.guiSettings.dialog_confirmation_timeout + ")");
+        JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.guiSettings.dialogConfirmationTimeout + ")");
 
         final String CANCEL_TEXT = tm.getText("auto_start_routing_cancel_button");
         Object[] options = {startNowButton, CANCEL_TEXT};
@@ -345,7 +345,7 @@ public class WindowWelcome extends WindowBase
 
         final String AUTOSTART_TITLE = tm.getText("auto_start_routing_title");
 
-        if (globalSettings.guiSettings.dialog_confirmation_timeout > 0)
+        if (globalSettings.guiSettings.dialogConfirmationTimeout > 0)
         {
           // Add a timer to the dialog
           JDialog autostartDialog = auto_start_routing_dialog.createDialog(AUTOSTART_TITLE);
@@ -353,7 +353,7 @@ public class WindowWelcome extends WindowBase
           // Update startNowButton text every second
           Timer autostartTimer = new Timer(1000, new ActionListener()
           {
-            private int secondsLeft = globalSettings.guiSettings.dialog_confirmation_timeout;
+            private int secondsLeft = globalSettings.guiSettings.dialogConfirmationTimeout;
 
             @Override
             public void actionPerformed(ActionEvent e)
@@ -379,7 +379,7 @@ public class WindowWelcome extends WindowBase
 
         Object choice = auto_start_routing_dialog.getValue();
         // Start the auto-router if the user didn't cancel the dialog
-        if ((globalSettings.guiSettings.dialog_confirmation_timeout == 0) || (choice == options[0]))
+        if ((globalSettings.guiSettings.dialogConfirmationTimeout == 0) || (choice == options[0]))
         {
           // Start the auto-router
           InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer();
@@ -503,7 +503,7 @@ public class WindowWelcome extends WindowBase
       }
 
       // ignore net classes if they were defined by a command line argument
-      for (String net_class_name : globalSettings.autoRouterSettings.ignore_net_classes_by_autorouter)
+      for (String net_class_name : globalSettings.routerSettings.ignoreNetClassesByAutorouter)
       {
         NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 
@@ -540,7 +540,7 @@ public class WindowWelcome extends WindowBase
       if (!Objects.equals(this.design_dir_name, design_file.getInputFileDirectory()))
       {
         this.design_dir_name = design_file.getInputFileDirectory();
-        this.globalSettings.guiSettings.input_directory = this.design_dir_name;
+        this.globalSettings.guiSettings.inputDirectory = this.design_dir_name;
 
         try
         {

@@ -2,7 +2,9 @@ package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ApiServerSettings
+import java.io.Serializable;
+
+public class ApiServerSettings implements Serializable
 {
   @SerializedName("enabled")
   public Boolean isEnabled = false;

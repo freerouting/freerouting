@@ -2,17 +2,18 @@ package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class UserProfileSettings
+public class UserProfileSettings implements Serializable
 {
   @SerializedName("id")
-  public final String user_id;
+  public final String userId;
   @SerializedName("email")
-  public String user_email = "";
+  public String userEmail = "";
 
   public UserProfileSettings()
   {
-    this.user_id = UUID.randomUUID().toString();
+    this.userId = UUID.randomUUID().toString();
   }
 }

@@ -2,9 +2,10 @@ package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.time.Instant;
 
-public class EnvironmentSettings
+public class EnvironmentSettings implements Serializable
 {
   @SerializedName("freerouting_version")
   public String freeroutingVersion;
@@ -22,4 +23,6 @@ public class EnvironmentSettings
   public int cpuCores;
   @SerializedName("ram")
   public int ram;
+  @SerializedName("host")
+  public transient String host = "N/A";
 }
