@@ -20,6 +20,7 @@ module app.freerouting {
   exports app.freerouting.api.v1 to org.glassfish.hk2.locator, jersey.server;
   exports app.freerouting.api.v2 to org.glassfish.hk2.locator, jersey.server;
   opens app.freerouting.library to com.google.gson;
+  opens app.freerouting.management.gson to com.google.gson;
 
   requires jakarta.ws.rs;
   requires jakarta.inject;

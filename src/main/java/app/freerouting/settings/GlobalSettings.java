@@ -5,8 +5,7 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
@@ -22,7 +21,6 @@ import java.util.Objects;
 
 public class GlobalSettings
 {
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting", "freerouting.json");
   public final String version = Constants.FREEROUTING_VERSION;
   public transient final EnvironmentSettings environmentSettings = new EnvironmentSettings();
@@ -63,7 +61,7 @@ public class GlobalSettings
   {
     try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8))
     {
-      return GSON.fromJson(reader, GlobalSettings.class);
+      return GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
     }
   }
 
@@ -78,7 +76,7 @@ public class GlobalSettings
     // Write the settings to the file
     try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8))
     {
-      GSON.toJson(options, writer);
+      GsonProvider.GSON.toJson(options, writer);
     }
   }
 
