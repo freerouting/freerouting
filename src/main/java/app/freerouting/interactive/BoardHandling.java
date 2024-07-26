@@ -107,13 +107,13 @@ public class BoardHandling extends BoardHandlingHeadless
    */
   public BoardHandling(BoardPanel p_panel, GlobalSettings globalSettings)
   {
-    super(globalSettings.current_locale, !globalSettings.disabledFeatures.snapshots, globalSettings.routerSettings.optimizationImprovementThreshold);
+    super(globalSettings.currentLocale, !globalSettings.disabledFeatures.snapshots, globalSettings.routerSettings.optimizationImprovementThreshold);
     this.globalSettings = globalSettings;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
     this.set_interactive_state(RouteMenuState.get_instance(this, activityReplayFile));
 
-    this.tm = new TextManager(this.getClass(), globalSettings.current_locale);
+    this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
 
     LogEntries.LogEntryAddedListener listener = this::logEntryAdded;
     FRLogger.getLogEntries().addLogEntryAddedListener(listener);

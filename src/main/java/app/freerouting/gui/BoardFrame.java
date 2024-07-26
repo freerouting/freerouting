@@ -120,7 +120,7 @@ public class BoardFrame extends WindowBase
     this.design_file = p_design;
 
     this.board_observers = p_observers;
-    this.locale = globalSettings.current_locale;
+    this.locale = globalSettings.currentLocale;
     this.setLanguage(this.locale);
     this.freerouting_version = globalSettings.version;
 

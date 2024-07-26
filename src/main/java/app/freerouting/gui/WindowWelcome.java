@@ -9,6 +9,7 @@ import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.library.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.ApiServerSettings;
@@ -190,6 +191,9 @@ public class WindowWelcome extends WindowBase
 
   public static boolean InitializeGUI(GlobalSettings globalSettings)
   {
+    // Start a new Freerouting session
+    var guiSession = SessionManager.createSession();
+
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
     FontUIResource defaultFont = (FontUIResource) UIManager.get("Button.font");
@@ -210,18 +214,12 @@ public class WindowWelcome extends WindowBase
     UIManager.put("MenuItem.font", newFont);
 
     // get localization resources
-    TextManager tm = new TextManager(WindowWelcome.class, globalSettings.current_locale);
+    TextManager tm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
 
-    // check if the user wants to see the help only
-    if (globalSettings.show_help_option)
-    {
-      System.out.print(tm.getText("command_line_help"));
-      System.exit(0);
-      return false;
-    }
-
+    // check if we can load a file instantly at startup
     if (globalSettings.design_input_filename != null)
     {
+      // let's create a job in our session and queue it
       FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
       RoutingJob design_file = RoutingJob.get_instance(globalSettings.design_input_filename);
       if (design_file == null)
@@ -229,6 +227,8 @@ public class WindowWelcome extends WindowBase
         FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
         return false;
       }
+      guiSession.queue(design_file);
+
       String message = tm.getText("loading_design") + " " + globalSettings.design_input_filename;
       WindowMessage welcome_window = WindowMessage.show(message);
       final BoardFrame new_frame = create_board_frame(design_file, null, globalSettings);
@@ -408,8 +408,10 @@ public class WindowWelcome extends WindowBase
     }
     else
     {
+      // we didn't have any input file passed as a parameter
       if (globalSettings.disabledFeatures.fileLoadDialogAtStartup)
       {
+        // we don't use the file load dialog at startup anymore, we load a blank board instead
         final BoardFrame new_frame = create_board_frame(null, null, globalSettings);
         if (new_frame == null)
         {
@@ -420,6 +422,7 @@ public class WindowWelcome extends WindowBase
       }
       else
       {
+        // we show the file load dialog (deprecated)
         new WindowWelcome(globalSettings).setVisible(true);
       }
     }
@@ -432,7 +435,7 @@ public class WindowWelcome extends WindowBase
    */
   private static BoardFrame create_board_frame(RoutingJob p_design_file, JTextField p_message_field, GlobalSettings globalSettings)
   {
-    TextManager tm = new TextManager(WindowWelcome.class, globalSettings.current_locale);
+    TextManager tm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
 
     InputStream input_stream = null;
     if ((p_design_file == null) || (p_design_file.getInputFile() == null))

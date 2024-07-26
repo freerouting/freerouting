@@ -5,6 +5,7 @@ import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.settings.GlobalSettings;
 
@@ -105,7 +106,7 @@ public class Freerouting
     // parse the command line arguments
     globalSettings.applyCommandLineArguments(args);
 
-    FRLogger.debug(" GUI Language: " + globalSettings.current_locale);
+    FRLogger.debug(" GUI Language: " + globalSettings.currentLocale);
 
     FRLogger.debug(" Host: " + globalSettings.environmentSettings.host);
 
@@ -146,11 +147,21 @@ public class Freerouting
     {
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE, String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.current_locale, globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram, globalSettings.environmentSettings.host, width, height, dpi);
+    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE, String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.currentLocale, globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram, globalSettings.environmentSettings.host, width, height, dpi);
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
     new Thread(checker).start();
+
+    // get localization resources
+    TextManager tm = new TextManager(Freerouting.class, globalSettings.currentLocale);
+
+    // check if the user wants to see the help only
+    if (globalSettings.show_help_option)
+    {
+      System.out.print(tm.getText("command_line_help"));
+      System.exit(0);
+    }
 
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled)

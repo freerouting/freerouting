@@ -24,7 +24,7 @@ public class GlobalSettings implements Serializable
 {
   private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting", "freerouting.json");
   public final String version = Constants.FREEROUTING_VERSION;
-  public transient final EnvironmentSettings environmentSettings = new EnvironmentSettings();
+  public final transient EnvironmentSettings environmentSettings = new EnvironmentSettings();
   @SerializedName("profile")
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
   @SerializedName("gui")
@@ -37,20 +37,20 @@ public class GlobalSettings implements Serializable
   public final DisabledFeaturesSettings disabledFeatures = new DisabledFeaturesSettings();
   @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
+  private final transient String[] supportedLanguages = {"en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
   public transient boolean show_help_option = false;
   public transient String design_input_filename;
   public transient String design_output_filename;
   public transient String design_rules_filename;
-  public transient String[] supported_languages = {"en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
-  public transient Locale current_locale = Locale.getDefault();
+  public transient Locale currentLocale = Locale.getDefault();
 
   public GlobalSettings()
   {
     // validate and set the current locale
-    if (Arrays.stream(supported_languages).noneMatch(current_locale.getLanguage()::equals))
+    if (Arrays.stream(supportedLanguages).noneMatch(currentLocale.getLanguage()::equals))
     {
       // the fallback language is English
-      current_locale = Locale.ENGLISH;
+      currentLocale = Locale.ENGLISH;
     }
   }
 
@@ -135,7 +135,7 @@ public class GlobalSettings implements Serializable
 
   public Locale getCurrentLocale()
   {
-    return current_locale;
+    return currentLocale;
   }
 
   public void applyCommandLineArguments(String[] p_args)
@@ -261,66 +261,66 @@ public class GlobalSettings implements Serializable
           // the locale is provided
           if (localeString.startsWith("en"))
           {
-            current_locale = Locale.ENGLISH;
+            currentLocale = Locale.ENGLISH;
           }
           else if (localeString.startsWith("de"))
           {
-            current_locale = Locale.GERMAN;
+            currentLocale = Locale.GERMAN;
           }
           else if (localeString.startsWith("zh_tw"))
           {
-            current_locale = Locale.TRADITIONAL_CHINESE;
+            currentLocale = Locale.TRADITIONAL_CHINESE;
           }
           else if (localeString.startsWith("zh"))
           {
-            current_locale = Locale.SIMPLIFIED_CHINESE;
+            currentLocale = Locale.SIMPLIFIED_CHINESE;
           }
           else if (localeString.startsWith("hi"))
           {
             //current_locale = Locale.HINDI;
-            current_locale = Locale.forLanguageTag("hi-IN");
+            currentLocale = Locale.forLanguageTag("hi-IN");
           }
           else if (localeString.startsWith("es"))
           {
             //current_locale = Locale.SPANISH;
-            current_locale = Locale.forLanguageTag("es-ES");
+            currentLocale = Locale.forLanguageTag("es-ES");
           }
           else if (localeString.startsWith("it"))
           {
             //current_locale = Locale.ITALIAN;
-            current_locale = Locale.forLanguageTag("it-IT");
+            currentLocale = Locale.forLanguageTag("it-IT");
           }
           else if (localeString.startsWith("fr"))
           {
-            current_locale = Locale.FRENCH;
+            currentLocale = Locale.FRENCH;
           }
           else if (localeString.startsWith("ar"))
           {
             //current_locale = Locale.ARABIC;
-            current_locale = Locale.forLanguageTag("ar-EG");
+            currentLocale = Locale.forLanguageTag("ar-EG");
           }
           else if (localeString.startsWith("bn"))
           {
             //current_locale = Locale.BENGALI;
-            current_locale = Locale.forLanguageTag("bn-BD");
+            currentLocale = Locale.forLanguageTag("bn-BD");
           }
           else if (localeString.startsWith("ru"))
           {
             //current_locale = Locale.RUSSIAN;
-            current_locale = Locale.forLanguageTag("ru-RU");
+            currentLocale = Locale.forLanguageTag("ru-RU");
           }
           else if (localeString.startsWith("pt"))
           {
             //current_locale = Locale.PORTUGUESE;
-            current_locale = Locale.forLanguageTag("pt-PT");
+            currentLocale = Locale.forLanguageTag("pt-PT");
           }
           else if (localeString.startsWith("ja"))
           {
-            current_locale = Locale.JAPANESE;
+            currentLocale = Locale.JAPANESE;
           }
           else if (localeString.startsWith("ko"))
           {
-            current_locale = Locale.KOREAN;
+            currentLocale = Locale.KOREAN;
           }
         }
         else if (p_args[i].startsWith("-im"))
