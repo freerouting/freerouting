@@ -4,6 +4,7 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.ReflectionUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -56,11 +57,17 @@ public class GlobalSettings
     }
   }
 
+  public static GlobalSettings load() throws IOException
+  {
+    try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8))
+    {
+      return GSON.fromJson(reader, GlobalSettings.class);
+    }
+  }
+
   /*
    * Saves the settings to a file
-   * Use save(String propertyName, String newValue) instead which only updates one particular property and saves the settings to a file.
    */
-  @Deprecated(since = "2.0.0", forRemoval = true)
   public static void save(GlobalSettings options) throws IOException
   {
     try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8))
@@ -69,11 +76,18 @@ public class GlobalSettings
     }
   }
 
-  public static GlobalSettings load() throws IOException
+  public static Boolean setDefaultValue(String propertyName, String newValue)
   {
-    try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8))
+    try
     {
-      return GSON.fromJson(reader, GlobalSettings.class);
+      var gs = load();
+      gs.setValue(propertyName, newValue);
+      save(gs);
+      return true;
+    } catch (Exception e)
+    {
+      FRLogger.error("Failed to save property value for: " + propertyName, e);
+      return false;
     }
   }
 
@@ -84,8 +98,15 @@ public class GlobalSettings
    */
   public Boolean setValue(String propertyName, String newValue)
   {
-    // TODO: set the property value (eg. "router.max_passes", "10")
-    return false;
+    try
+    {
+      ReflectionUtil.setFieldValue(this, propertyName, newValue);
+      return true;
+    } catch (Exception e)
+    {
+      FRLogger.error("Failed to set property value for: " + propertyName, e);
+      return false;
+    }
   }
 
   public Locale getCurrentLocale()

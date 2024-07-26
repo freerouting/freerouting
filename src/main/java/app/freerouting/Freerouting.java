@@ -159,14 +159,6 @@ public class Freerouting
       WindowWelcome.InitializeAPI(globalSettings.apiServerSettings);
     }
 
-    try
-    {
-      GlobalSettings.save(globalSettings);
-    } catch (Exception e)
-    {
-      // it's ok if we can't update the configuration file, it's just optional
-    }
-
     FRLogger.traceExit("MainApplication.main()");
   }
 }

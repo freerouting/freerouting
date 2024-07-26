@@ -149,7 +149,7 @@ public class BoardFrame extends WindowBase
 
         try
         {
-          GlobalSettings.save(globalSettings);
+          GlobalSettings.setDefaultValue("gui.input_directory", design_file.getInputFileDirectory());
         } catch (Exception e)
         {
           // it's ok if we can't save the configuration file
