@@ -6,6 +6,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -26,14 +27,14 @@ public class RoutingJob implements Serializable
   private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
 
   public final UUID id = UUID.randomUUID();
+  // TODO: pass the router settings as an input and forward it to the router
+  private final RouterSettings routerSettings = new RouterSettings();
   public String name = "N/A";
-
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
-
   public RoutingJobState state = RoutingJobState.INVALID;
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
-
+  // TODO: change File type to BinaryStream or byte[] to support both file inputs and web API uploads
   private File inputFile;
   private File snapshotFile = null;
   private File outputFile = null;
