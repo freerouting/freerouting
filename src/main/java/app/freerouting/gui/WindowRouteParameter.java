@@ -118,6 +118,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
     // add label and button group for the route mode.
 
     JLabel route_mode_label = new JLabel(tm.getText("route_mode"));
+    route_mode_label.setToolTipText(tm.getText("route_mode_tooltip"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(route_mode_label, gridbag_constraints);
@@ -150,6 +151,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
     // add label and buttongroup for automatic or manual trace width selection.
 
     JLabel trace_widths_label = new JLabel(tm.getText("rule_selection"));
+    trace_widths_label.setToolTipText(tm.getText("rule_selection_tooltip"));
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     gridbag_constraints.gridheight = 2;
     gridbag.setConstraints(trace_widths_label, gridbag_constraints);
