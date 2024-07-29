@@ -4,20 +4,20 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class DisabledFeaturesSettings implements Serializable
+public class FeatureFlagsSettings implements Serializable
 {
   @SerializedName("logging")
-  public boolean logging = false;
+  public boolean logging = true;
   @SerializedName("multi_threading")
-  public boolean multiThreading = true;
+  public boolean multiThreading = false;
   @SerializedName("select_mode")
-  public boolean selectMode = true;
+  public boolean selectMode = false;
   @SerializedName("macros")
-  public boolean macros = true;
+  public boolean macros = false;
   @SerializedName("other_menu")
-  public boolean otherMenu = true;
+  public boolean otherMenu = false;
   @SerializedName("snapshots")
-  public boolean snapshots = true;
+  public boolean snapshots = false;
   @SerializedName("file_load_dialog_at_startup")
-  public boolean fileLoadDialogAtStartup = true;
+  public boolean fileLoadDialogAtStartup = false;
 }

@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.settings.DisabledFeaturesSettings;
+import app.freerouting.settings.FeatureFlagsSettings;
 import app.freerouting.settings.GuiSettings;
 
 import javax.swing.*;
@@ -20,9 +20,9 @@ class BoardMenuBar extends JMenuBar
   /**
    * Creates a new BoardMenuBar together with its menus
    */
-  public BoardMenuBar(BoardFrame boardFrame, GuiSettings guiSettings, DisabledFeaturesSettings disabledFeatures)
+  public BoardMenuBar(BoardFrame boardFrame, GuiSettings guiSettings, FeatureFlagsSettings featureFlags)
   {
-    fileMenu = new BoardMenuFile(boardFrame, guiSettings.inputDirectory, disabledFeatures.macros);
+    fileMenu = new BoardMenuFile(boardFrame, guiSettings.inputDirectory, !featureFlags.macros);
     add(fileMenu);
     appereanceMenu = BoardMenuDisplay.get_instance(boardFrame);
     add(appereanceMenu);
@@ -32,7 +32,7 @@ class BoardMenuBar extends JMenuBar
     add(rulesMenu);
     infoMenu = BoardMenuInfo.get_instance(boardFrame);
     add(infoMenu);
-    if (!disabledFeatures.otherMenu)
+    if (featureFlags.otherMenu)
     {
       JMenu other_menu = BoardMenuOther.get_instance(boardFrame);
       add(other_menu);

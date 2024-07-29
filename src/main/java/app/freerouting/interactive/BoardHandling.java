@@ -107,7 +107,7 @@ public class BoardHandling extends BoardHandlingHeadless
    */
   public BoardHandling(BoardPanel p_panel, GlobalSettings globalSettings)
   {
-    super(globalSettings.currentLocale, !globalSettings.disabledFeatures.snapshots, globalSettings.routerSettings.optimizationImprovementThreshold);
+    super(globalSettings.currentLocale, globalSettings.featureFlags.snapshots, globalSettings.routerSettings.optimizationImprovementThreshold);
     this.globalSettings = globalSettings;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
@@ -1835,7 +1835,7 @@ public class BoardHandling extends BoardHandlingHeadless
 
   public int get_num_threads()
   {
-    if ((num_threads > 1) && (globalSettings.disabledFeatures.multiThreading))
+    if ((num_threads > 1) && (!globalSettings.featureFlags.multiThreading))
     {
       FRLogger.info("Multi-threading is disabled in the settings. Using single thread.");
       num_threads = 1;

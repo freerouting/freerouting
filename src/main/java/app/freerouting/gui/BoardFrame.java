@@ -125,7 +125,7 @@ public class BoardFrame extends WindowBase
     this.freerouting_version = globalSettings.version;
 
     // Set the menu bar of this frame.
-    this.menubar = new BoardMenuBar(this, globalSettings.guiSettings, globalSettings.disabledFeatures);
+    this.menubar = new BoardMenuBar(this, globalSettings.guiSettings, globalSettings.featureFlags);
 
     this.menubar.fileMenu.addOpenEventListener((File selectedFile) ->
     {
@@ -230,7 +230,7 @@ public class BoardFrame extends WindowBase
     setJMenuBar(this.menubar);
 
     // Set the toolbar panel to the top of the frame, just above the canvas.
-    this.toolbar_panel = new BoardToolbar(this, globalSettings.disabledFeatures.selectMode);
+    this.toolbar_panel = new BoardToolbar(this, !globalSettings.featureFlags.selectMode);
     this.add(this.toolbar_panel, BorderLayout.NORTH);
 
     // Create and move the status bar one-liners (like current layer, cursor position, etc.) below the canvas.

@@ -33,8 +33,8 @@ public class GlobalSettings implements Serializable
   public final RouterSettings routerSettings = new RouterSettings();
   @SerializedName("usage_and_diagnostic_data")
   public final UsageAndDiagnosticDataSettings usageAndDiagnosticData = new UsageAndDiagnosticDataSettings();
-  @SerializedName("disabled_features")
-  public final DisabledFeaturesSettings disabledFeatures = new DisabledFeaturesSettings();
+  @SerializedName("feature_flags")
+  public final FeatureFlagsSettings featureFlags = new FeatureFlagsSettings();
   @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
   private final transient String[] supportedLanguages = {"en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
@@ -325,15 +325,15 @@ public class GlobalSettings implements Serializable
         }
         else if (p_args[i].startsWith("-im"))
         {
-          disabledFeatures.snapshots = false;
+          featureFlags.snapshots = true;
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            disabledFeatures.snapshots = (Objects.equals(p_args[i + 1], "0"));
+            featureFlags.snapshots = !(Objects.equals(p_args[i + 1], "0"));
           }
         }
         else if (p_args[i].startsWith("-dl"))
         {
-          disabledFeatures.logging = true;
+          featureFlags.logging = false;
         }
         else if (p_args[i].startsWith("-da"))
         {

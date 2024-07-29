@@ -54,9 +54,6 @@ public class WindowWelcome extends WindowBase
   private final Collection<BoardFrame> board_frames = new LinkedList<>();
 
   private final Locale locale;
-  private final boolean save_intermediate_stages;
-  private final float optimization_improvement_threshold;
-  private final String[] ignore_net_classes_by_autorouter;
   private final int max_passes;
   private final BoardUpdateStrategy board_update_strategy;
   // Issue: adding a new field into AutorouteSettings caused exception when loading
@@ -87,9 +84,6 @@ public class WindowWelcome extends WindowBase
     this.hybrid_ratio = globalSettings.getHybridRatio();
     this.item_selection_strategy = globalSettings.getItemSelectionStrategy();
     this.locale = globalSettings.getCurrentLocale();
-    this.save_intermediate_stages = !globalSettings.disabledFeatures.snapshots;
-    this.optimization_improvement_threshold = globalSettings.routerSettings.optimizationImprovementThreshold;
-    this.ignore_net_classes_by_autorouter = globalSettings.routerSettings.ignoreNetClassesByAutorouter;
 
     this.setLanguage(locale);
 
@@ -409,7 +403,7 @@ public class WindowWelcome extends WindowBase
     else
     {
       // we didn't have any input file passed as a parameter
-      if (globalSettings.disabledFeatures.fileLoadDialogAtStartup)
+      if (!globalSettings.featureFlags.fileLoadDialogAtStartup)
       {
         // we don't use the file load dialog at startup anymore, we load a blank board instead
         final BoardFrame new_frame = create_board_frame(null, null, globalSettings);
@@ -468,7 +462,7 @@ public class WindowWelcome extends WindowBase
 
     FRAnalytics.buttonClicked("fileio_loaddsn", p_design_file.getInputFileDetails());
 
-    if (globalSettings.disabledFeatures.selectMode)
+    if (!globalSettings.featureFlags.selectMode)
     {
       new_frame.board_panel.board_handling.set_route_menu_state();
     }
