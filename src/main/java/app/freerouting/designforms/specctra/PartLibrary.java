@@ -1,6 +1,6 @@
 package app.freerouting.designforms.specctra;
 
-import app.freerouting.library.LogicalParts;
+import app.freerouting.core.LogicalParts;
 import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class PartLibrary extends ScopeKeyword
 
     for (int i = 1; i <= logical_parts.count(); ++i)
     {
-      app.freerouting.library.LogicalPart curr_part = logical_parts.get(i);
+      app.freerouting.core.LogicalPart curr_part = logical_parts.get(i);
       p_par.file.start_scope();
       p_par.file.write("logical_part_mapping ");
       p_par.identifier_type.write(curr_part.name, p_par.file);
@@ -57,7 +57,7 @@ public class PartLibrary extends ScopeKeyword
 
     for (int i = 1; i <= logical_parts.count(); ++i)
     {
-      app.freerouting.library.LogicalPart curr_part = logical_parts.get(i);
+      app.freerouting.core.LogicalPart curr_part = logical_parts.get(i);
 
       p_par.file.start_scope();
       p_par.file.write("logical_part ");
@@ -66,7 +66,7 @@ public class PartLibrary extends ScopeKeyword
       for (int j = 0; j < curr_part.pin_count(); ++j)
       {
         p_par.file.new_line();
-        app.freerouting.library.LogicalPart.PartPin curr_pin = curr_part.get_pin(j);
+        app.freerouting.core.LogicalPart.PartPin curr_pin = curr_part.get_pin(j);
         p_par.file.write("(pin ");
         p_par.identifier_type.write(curr_pin.pin_name, p_par.file);
         p_par.file.write(" 0 ");

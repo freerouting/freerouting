@@ -3,12 +3,12 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.FixedState;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.*;
 import app.freerouting.rules.DefaultItemClearanceClasses.ItemClass;
@@ -911,12 +911,12 @@ public class Network extends ScopeKeyword
     BasicBoard routing_board = p_par.board_handling.get_routing_board();
     for (PartLibrary.LogicalPart next_part : p_par.logical_parts)
     {
-      app.freerouting.library.Package lib_package = search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
+      app.freerouting.core.Package lib_package = search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
       if (lib_package == null)
       {
         return false;
       }
-      app.freerouting.library.LogicalPart.PartPin[] board_part_pins = new app.freerouting.library.LogicalPart.PartPin[next_part.part_pins.size()];
+      app.freerouting.core.LogicalPart.PartPin[] board_part_pins = new app.freerouting.core.LogicalPart.PartPin[next_part.part_pins.size()];
       int curr_index = 0;
       for (PartLibrary.PartPin curr_part_pin : next_part.part_pins)
       {
@@ -926,7 +926,7 @@ public class Network extends ScopeKeyword
           FRLogger.warn("Network.insert_logical_parts: package pin not found at '" + curr_part_pin.pin_name + "'");
           return false;
         }
-        board_part_pins[curr_index] = new app.freerouting.library.LogicalPart.PartPin(pin_no, curr_part_pin.pin_name, curr_part_pin.gate_name, curr_part_pin.gate_swap_code, curr_part_pin.gate_pin_name, curr_part_pin.gate_pin_swap_code);
+        board_part_pins[curr_index] = new app.freerouting.core.LogicalPart.PartPin(pin_no, curr_part_pin.pin_name, curr_part_pin.gate_name, curr_part_pin.gate_swap_code, curr_part_pin.gate_pin_name, curr_part_pin.gate_pin_swap_code);
         ++curr_index;
       }
       routing_board.library.logical_parts.add(next_part.name, board_part_pins);
@@ -934,7 +934,7 @@ public class Network extends ScopeKeyword
 
     for (PartLibrary.LogicalPartMapping next_mapping : p_par.logical_part_mappings)
     {
-      app.freerouting.library.LogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
+      app.freerouting.core.LogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
       {
         if (curr_logical_part == null)
         {
@@ -961,7 +961,7 @@ public class Network extends ScopeKeyword
    * Calculates the library package belonging to the logical part with name p_part_name. Returns
    * null, if the package was not found.
    */
-  private static app.freerouting.library.Package search_lib_package(String p_part_name, Collection<PartLibrary.LogicalPartMapping> p_logical_part_mappings, BasicBoard p_board)
+  private static app.freerouting.core.Package search_lib_package(String p_part_name, Collection<PartLibrary.LogicalPartMapping> p_logical_part_mappings, BasicBoard p_board)
   {
     for (PartLibrary.LogicalPartMapping curr_mapping : p_logical_part_mappings)
     {
@@ -997,8 +997,8 @@ public class Network extends ScopeKeyword
   private static void insert_component(ComponentPlacement.ComponentLocation p_location, String p_lib_key, ReadScopeParameter p_par)
   {
     RoutingBoard routing_board = p_par.board_handling.get_routing_board();
-    app.freerouting.library.Package curr_front_package = routing_board.library.packages.get(p_lib_key, true);
-    app.freerouting.library.Package curr_back_package = routing_board.library.packages.get(p_lib_key, false);
+    app.freerouting.core.Package curr_front_package = routing_board.library.packages.get(p_lib_key, true);
+    app.freerouting.core.Package curr_back_package = routing_board.library.packages.get(p_lib_key, false);
     if (curr_front_package == null || curr_back_package == null)
     {
       FRLogger.warn("Network.insert_component: component package not found at '" + p_par.scanner.get_scope_identifier() + "'");
@@ -1032,10 +1032,10 @@ public class Network extends ScopeKeyword
     {
       fixed_state = FixedState.NOT_FIXED;
     }
-    app.freerouting.library.Package curr_package = new_component.get_package();
+    app.freerouting.core.Package curr_package = new_component.get_package();
     for (int i = 0; i < curr_package.pin_count(); ++i)
     {
-      app.freerouting.library.Package.Pin curr_pin = curr_package.get_pin(i);
+      app.freerouting.core.Package.Pin curr_pin = curr_package.get_pin(i);
       Padstack curr_padstack = routing_board.library.padstacks.get(curr_pin.padstack_no);
       if (curr_padstack == null)
       {
@@ -1104,7 +1104,7 @@ public class Network extends ScopeKeyword
     // insert the keepouts belonging to the package (k = 1 for via keepouts)
     for (int k = 0; k <= 2; ++k)
     {
-      app.freerouting.library.Package.Keepout[] keepout_arr;
+      app.freerouting.core.Package.Keepout[] keepout_arr;
       Map<String, ComponentPlacement.ItemClearanceInfo> curr_keepout_infos;
       if (k == 0)
       {
@@ -1123,7 +1123,7 @@ public class Network extends ScopeKeyword
       }
       for (int i = 0; i < keepout_arr.length; ++i)
       {
-        app.freerouting.library.Package.Keepout curr_keepout = keepout_arr[i];
+        app.freerouting.core.Package.Keepout curr_keepout = keepout_arr[i];
         int layer = curr_keepout.layer;
         if (layer >= routing_board.get_layer_count())
         {

@@ -2,10 +2,10 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Pin;
+import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
 import javax.swing.*;

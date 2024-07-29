@@ -3,13 +3,13 @@ package app.freerouting.interactive;
 import app.freerouting.autoroute.AutorouteEngine;
 import app.freerouting.board.Component;
 import app.freerouting.board.*;
+import app.freerouting.core.Package;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.WindowObjectInfo;
-import app.freerouting.library.Package;
 import app.freerouting.rules.Net;
 
 import javax.swing.*;

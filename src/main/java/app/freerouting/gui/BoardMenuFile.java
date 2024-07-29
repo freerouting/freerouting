@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.library.RoutingJob;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
 

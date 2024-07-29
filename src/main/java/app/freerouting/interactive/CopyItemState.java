@@ -2,12 +2,12 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.Component;
 import app.freerouting.board.*;
+import app.freerouting.core.Package;
+import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.library.Package;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
 import javax.swing.*;

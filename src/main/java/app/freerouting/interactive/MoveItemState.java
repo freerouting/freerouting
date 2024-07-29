@@ -2,11 +2,11 @@ package app.freerouting.interactive;
 
 import app.freerouting.board.Component;
 import app.freerouting.board.*;
+import app.freerouting.core.BoardLibrary;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.library.BoardLibrary;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 
@@ -26,10 +26,10 @@ public class MoveItemState extends InteractiveState
    */
   private final Component grid_snap_component;
   private final Collection<NetItems> net_items_list;
+  private final boolean observers_activated;
   private IntPoint current_position;
   private IntPoint previous_position;
   private Collection<ClearanceViolation> clearance_violations;
-  private final boolean observers_activated;
 
   /**
    * Creates a new instance of MoveComponentState

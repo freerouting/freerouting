@@ -1,10 +1,10 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.Packages;
+import app.freerouting.core.Padstack;
+import app.freerouting.core.Padstacks;
 import app.freerouting.geometry.planar.*;
-import app.freerouting.library.Packages;
-import app.freerouting.library.Padstack;
-import app.freerouting.library.Padstacks;
 import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
@@ -293,7 +293,7 @@ public class Library extends ScopeKeyword
     board.library.packages = new Packages(board.library.padstacks);
     for (Package curr_package : package_list)
     {
-      app.freerouting.library.Package.Pin[] pin_arr = new app.freerouting.library.Package.Pin[curr_package.pin_info_arr.length];
+      app.freerouting.core.Package.Pin[] pin_arr = new app.freerouting.core.Package.Pin[curr_package.pin_info_arr.length];
       for (int i = 0; i < pin_arr.length; ++i)
       {
         Package.PinInfo pin_info = curr_package.pin_info_arr[i];
@@ -306,7 +306,7 @@ public class Library extends ScopeKeyword
           FRLogger.warn("Library.read_scope: board padstack not found at '" + p_par.scanner.get_scope_identifier() + "'");
           return false;
         }
-        pin_arr[i] = new app.freerouting.library.Package.Pin(pin_info.pin_name, board_padstack.no, rel_coor, pin_info.rotation);
+        pin_arr[i] = new app.freerouting.core.Package.Pin(pin_info.pin_name, board_padstack.no, rel_coor, pin_info.rotation);
       }
       app.freerouting.geometry.planar.Shape[] outline_arr = new app.freerouting.geometry.planar.Shape[curr_package.outline.size()];
 
@@ -326,32 +326,32 @@ public class Library extends ScopeKeyword
       generate_missing_keepout_names("keepout_", curr_package.keepouts);
       generate_missing_keepout_names("via_keepout_", curr_package.via_keepouts);
       generate_missing_keepout_names("place_keepout_", curr_package.place_keepouts);
-      app.freerouting.library.Package.Keepout[] keepout_arr = new app.freerouting.library.Package.Keepout[curr_package.keepouts.size()];
+      app.freerouting.core.Package.Keepout[] keepout_arr = new app.freerouting.core.Package.Keepout[curr_package.keepouts.size()];
       Iterator<Shape.ReadAreaScopeResult> it2 = curr_package.keepouts.iterator();
       for (int i = 0; i < keepout_arr.length; ++i)
       {
         Shape.ReadAreaScopeResult curr_keepout = it2.next();
         Layer curr_layer = curr_keepout.shape_list.iterator().next().layer;
         Area curr_area = Shape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
-        keepout_arr[i] = new app.freerouting.library.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
+        keepout_arr[i] = new app.freerouting.core.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
       }
-      app.freerouting.library.Package.Keepout[] via_keepout_arr = new app.freerouting.library.Package.Keepout[curr_package.via_keepouts.size()];
+      app.freerouting.core.Package.Keepout[] via_keepout_arr = new app.freerouting.core.Package.Keepout[curr_package.via_keepouts.size()];
       it2 = curr_package.via_keepouts.iterator();
       for (int i = 0; i < via_keepout_arr.length; ++i)
       {
         Shape.ReadAreaScopeResult curr_keepout = it2.next();
         Layer curr_layer = (curr_keepout.shape_list.iterator().next()).layer;
         Area curr_area = Shape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
-        via_keepout_arr[i] = new app.freerouting.library.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
+        via_keepout_arr[i] = new app.freerouting.core.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
       }
-      app.freerouting.library.Package.Keepout[] place_keepout_arr = new app.freerouting.library.Package.Keepout[curr_package.place_keepouts.size()];
+      app.freerouting.core.Package.Keepout[] place_keepout_arr = new app.freerouting.core.Package.Keepout[curr_package.place_keepouts.size()];
       it2 = curr_package.place_keepouts.iterator();
       for (int i = 0; i < place_keepout_arr.length; ++i)
       {
         Shape.ReadAreaScopeResult curr_keepout = it2.next();
         Layer curr_layer = (curr_keepout.shape_list.iterator().next()).layer;
         Area curr_area = Shape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
-        place_keepout_arr[i] = new app.freerouting.library.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
+        place_keepout_arr[i] = new app.freerouting.core.Package.Keepout(curr_keepout.area_name, curr_area, curr_layer.no);
       }
       board.library.packages.add(curr_package.name, pin_arr, outline_arr, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
     }

@@ -3,8 +3,8 @@ package app.freerouting.gui;
 import app.freerouting.board.Component;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.library.Package;
-import app.freerouting.library.Packages;
+import app.freerouting.core.Package;
+import app.freerouting.core.Packages;
 
 import java.util.*;
 

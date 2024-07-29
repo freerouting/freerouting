@@ -1,13 +1,11 @@
 package app.freerouting.rules;
 
 import app.freerouting.board.ObjectInfoPanel;
-import app.freerouting.library.Padstack;
-
+import app.freerouting.core.Padstack;
 import app.freerouting.management.TextManager;
 
 import java.io.Serializable;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed

@@ -1,7 +1,7 @@
 package app.freerouting.board;
 
+import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.*;
-import app.freerouting.library.Padstack;
 import app.freerouting.rules.ViaInfo;
 
 /**

@@ -1,4 +1,4 @@
-package app.freerouting.library;
+package app.freerouting.core;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.ConvexShape;

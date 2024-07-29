@@ -1,13 +1,13 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.*;
+import app.freerouting.core.BoardLibrary;
+import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.datastructures.UndoableObjects.Storable;
 import app.freerouting.geometry.planar.*;
-import app.freerouting.library.BoardLibrary;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;

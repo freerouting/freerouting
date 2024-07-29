@@ -1,7 +1,7 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.Item;
-import app.freerouting.library.Padstack;
+import app.freerouting.core.Padstack;
 import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
@@ -165,7 +165,7 @@ public class Package
     }
   }
 
-  public static void write_scope(WriteScopeParameter p_par, app.freerouting.library.Package p_package) throws IOException
+  public static void write_scope(WriteScopeParameter p_par, app.freerouting.core.Package p_package) throws IOException
   {
     p_par.file.start_scope();
     p_par.file.write("image ");
@@ -184,7 +184,7 @@ public class Package
     // write the pins of the package
     for (int i = 0; i < p_package.pin_count(); ++i)
     {
-      app.freerouting.library.Package.Pin curr_pin = p_package.get_pin(i);
+      app.freerouting.core.Package.Pin curr_pin = p_package.get_pin(i);
       p_par.file.new_line();
       p_par.file.write("(pin ");
       Padstack curr_padstack = p_par.board.library.padstacks.get(curr_pin.padstack_no);
@@ -227,7 +227,7 @@ public class Package
     p_par.file.end_scope();
   }
 
-  private static void write_package_keepout(app.freerouting.library.Package.Keepout p_keepout, WriteScopeParameter p_par, boolean p_is_via_keepout) throws IOException
+  private static void write_package_keepout(app.freerouting.core.Package.Keepout p_keepout, WriteScopeParameter p_par, boolean p_is_via_keepout) throws IOException
   {
     Layer keepout_layer;
     if (p_keepout.layer >= 0)
@@ -396,7 +396,7 @@ public class Package
   /**
    * Writes the placements of p_package to a Specctra dsn-file.
    */
-  public static void write_placement_scope(WriteScopeParameter p_par, app.freerouting.library.Package p_package) throws IOException
+  public static void write_placement_scope(WriteScopeParameter p_par, app.freerouting.core.Package p_package) throws IOException
   {
     Collection<Item> board_items = p_par.board.get_items();
     boolean component_found = false;

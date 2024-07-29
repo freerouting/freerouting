@@ -1,12 +1,12 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.*;
+import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
@@ -96,7 +96,7 @@ public class SpecctraSesFileWriter
   /**
    * Writes all components with the package p_package to the session file.
    */
-  private static void write_components(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform, IndentFileWriter p_file, app.freerouting.library.Package p_package) throws IOException
+  private static void write_components(BasicBoard p_board, IdentifierType p_identifier_type, CoordinateTransform p_coordinate_transform, IndentFileWriter p_file, app.freerouting.core.Package p_package) throws IOException
   {
     Collection<Item> board_items = p_board.get_items();
     boolean component_found = false;
@@ -182,7 +182,7 @@ public class SpecctraSesFileWriter
         {
           p_identifier_type.write(curr_cmp.name, p_file);
           p_file.write("-");
-          app.freerouting.library.Package.Pin package_pin = curr_cmp.get_package().get_pin(curr_pin.get_index_in_package());
+          app.freerouting.core.Package.Pin package_pin = curr_cmp.get_package().get_pin(curr_pin.get_index_in_package());
           p_identifier_type.write(package_pin.name, p_file);
         }
         else
@@ -195,7 +195,7 @@ public class SpecctraSesFileWriter
         {
           p_identifier_type.write(swap_cmp.name, p_file);
           p_file.write("-");
-          app.freerouting.library.Package.Pin package_pin = swap_cmp.get_package().get_pin(swapped_with.get_index_in_package());
+          app.freerouting.core.Package.Pin package_pin = swap_cmp.get_package().get_pin(swapped_with.get_index_in_package());
           p_identifier_type.write(package_pin.name, p_file);
         }
         else

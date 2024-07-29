@@ -100,7 +100,7 @@ public class Component extends ScopeKeyword
     {
       return;
     }
-    app.freerouting.library.Package.Pin package_pin = p_component.get_package().get_pin(p_pin_no);
+    app.freerouting.core.Package.Pin package_pin = p_component.get_package().get_pin(p_pin_no);
     if (package_pin == null)
     {
       FRLogger.warn("Component.write_pin_info: package pin not found at '" + p_component.name + "'");
@@ -132,7 +132,7 @@ public class Component extends ScopeKeyword
     {
       return;
     }
-    app.freerouting.library.Package.Keepout[] curr_keepout_arr;
+    app.freerouting.core.Package.Keepout[] curr_keepout_arr;
     String keepout_type;
     for (int j = 0; j < 3; ++j)
     {
@@ -153,7 +153,7 @@ public class Component extends ScopeKeyword
       }
       for (int i = 0; i < curr_keepout_arr.length; ++i)
       {
-        app.freerouting.library.Package.Keepout curr_keepout = curr_keepout_arr[i];
+        app.freerouting.core.Package.Keepout curr_keepout = curr_keepout_arr[i];
         ObstacleArea curr_obstacle_area = get_keepout(p_par.board, p_component.no, curr_keepout.name);
         if (curr_obstacle_area == null || curr_obstacle_area.clearance_class_no() == 0)
         {

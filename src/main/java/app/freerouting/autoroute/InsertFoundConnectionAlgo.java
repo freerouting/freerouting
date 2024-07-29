@@ -1,11 +1,11 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.*;
+import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
 

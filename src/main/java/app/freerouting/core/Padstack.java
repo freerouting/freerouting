@@ -1,4 +1,4 @@
-package app.freerouting.library;
+package app.freerouting.core;
 
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -6,14 +6,12 @@ import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.logger.FRLogger;
-
 import app.freerouting.management.TextManager;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Describes padstack masks for pins or vias located at the origin.

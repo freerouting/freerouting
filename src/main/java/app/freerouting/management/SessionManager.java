@@ -1,6 +1,6 @@
 package app.freerouting.management;
 
-import app.freerouting.library.Session;
+import app.freerouting.core.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class SessionManager
 {
   private static final Map<String, Session> sessions = new HashMap<>();
-  
+
   public static Session getSession(String sessionId)
   {
     return sessions.get(sessionId);

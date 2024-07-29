@@ -1,15 +1,13 @@
 package app.freerouting.rules;
 
 import app.freerouting.board.ObjectInfoPanel;
-import app.freerouting.library.Padstack;
-
+import app.freerouting.core.Padstack;
 import app.freerouting.management.TextManager;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Contains an array of vias used for routing. Vias at the beginning of the array are preferred to

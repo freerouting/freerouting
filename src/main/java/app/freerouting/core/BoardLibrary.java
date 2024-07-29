@@ -1,4 +1,4 @@
-package app.freerouting.library;
+package app.freerouting.core;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.DrillItem;

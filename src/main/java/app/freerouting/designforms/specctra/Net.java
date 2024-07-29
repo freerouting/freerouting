@@ -64,7 +64,7 @@ public class Net
       FRLogger.warn("Net.write_scope: component not found at '" + curr_component.name + "'");
       return;
     }
-    app.freerouting.library.Package.Pin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
+    app.freerouting.core.Package.Pin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
     if (lib_pin == null)
     {
       FRLogger.warn("Net.write_scope:  pin number out of range at '" + curr_component.name + "'");

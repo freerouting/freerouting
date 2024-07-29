@@ -2,9 +2,9 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
+import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.interactive.BoardHandling;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
 

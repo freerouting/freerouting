@@ -3,9 +3,9 @@ package app.freerouting.gui;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.Padstack;
+import app.freerouting.core.Padstacks;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.library.Padstack;
-import app.freerouting.library.Padstacks;
 
 import java.util.*;
 

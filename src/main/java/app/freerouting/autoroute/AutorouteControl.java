@@ -1,9 +1,9 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.interactive.Settings;
-import app.freerouting.library.Padstack;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;

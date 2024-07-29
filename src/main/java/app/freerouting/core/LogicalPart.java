@@ -1,13 +1,11 @@
-package app.freerouting.library;
+package app.freerouting.core;
 
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
-
 import app.freerouting.management.TextManager;
 
 import java.io.Serializable;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Contains information for gate swap and pin swap for a single component.

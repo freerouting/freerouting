@@ -1,8 +1,8 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.*;
+import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.*;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
 import java.util.*;

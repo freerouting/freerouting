@@ -1,16 +1,14 @@
-package app.freerouting.library;
+package app.freerouting.core;
 
 import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
-
 import app.freerouting.management.TextManager;
 
 import java.io.Serializable;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Component package templates describing the padstacks and relative locations of the package pins,

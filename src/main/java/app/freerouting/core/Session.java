@@ -1,4 +1,4 @@
-package app.freerouting.library;
+package app.freerouting.core;
 
 import java.io.Serializable;
 import java.util.UUID;

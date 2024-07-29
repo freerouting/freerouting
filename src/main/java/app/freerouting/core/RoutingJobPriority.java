@@ -1,4 +1,4 @@
-package app.freerouting.library;
+package app.freerouting.core;
 
 public enum RoutingJobPriority
 {

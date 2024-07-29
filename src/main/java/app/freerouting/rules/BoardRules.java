@@ -3,8 +3,8 @@ package app.freerouting.rules;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Item;
 import app.freerouting.board.LayerStructure;
+import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.library.Padstack;
 import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;

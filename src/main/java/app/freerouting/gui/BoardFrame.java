@@ -1,13 +1,13 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.*;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;
-import app.freerouting.library.RoutingJob;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
