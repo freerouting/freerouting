@@ -1,5 +1,6 @@
 package app.freerouting.core;
 
+/* The different states a routing job can be in. */
 public enum RoutingJobState
 {
   INVALID, // The job is in an invalid state

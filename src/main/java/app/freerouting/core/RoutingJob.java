@@ -34,6 +34,7 @@ public class RoutingJob implements Serializable
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
   public RoutingJobState state = RoutingJobState.INVALID;
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
+  public RoutingStage stage = RoutingStage.IDLE;
   // TODO: change File type to BinaryStream or byte[] to support both file inputs and web API uploads
   private File inputFile;
   private File snapshotFile = null;
