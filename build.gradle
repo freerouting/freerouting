@@ -93,7 +93,7 @@ test {
 }
 
 ext {
-    mainClassName = 'app.freerouting.gui.MainApplication'
+    mainClassName = 'app.freerouting.Freerouting'
 
     def buildDateTime = new Date()
     buildDate = buildDateTime.format('yyyy-MM-dd')
