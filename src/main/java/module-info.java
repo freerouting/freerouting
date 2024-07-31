@@ -39,4 +39,5 @@ module app.freerouting {
   requires io.swagger.v3.jaxrs2;
   requires io.swagger.v3.oas.integration;
   requires io.swagger.v3.oas.models;
+  requires io.swagger.v3.oas.annotations;
 }

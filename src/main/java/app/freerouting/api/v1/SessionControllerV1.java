@@ -15,20 +15,24 @@ public class SessionControllerV1
   }
 
   @GET
-  @Path("/")
+  @Path("/list")
   @Produces(MediaType.APPLICATION_JSON)
   public Response listSessions()
   {
     // Return a list of 5 sessions with random data
-    return Response.ok("[{\"id\":1,\"name\":\"Session 1\"},{\"id\":2,\"name\":\"Session 2\"},{\"id\":3,\"name\":\"Session 3\"},{\"id\":4,\"name\":\"Session 4\"},{\"id\":5,\"name\":\"Session 5\"}]").build();
+    return Response.ok("[{\"id\":1,\"name\":\"Session 1\"},{\"id\":2,\"name\":\"Session 2\"},{\"id\":3,\"name\":\"Session 3\"},{\"id\":4,\"name\":\"Session 4\"},{\"id\":5,\"name\":\"Session 5\"}]")
+                   .build();
   }
 
   @GET
   @Path("/{sessionId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getSession(@PathParam("sessionId") String sessionId)
+  public Response getSession(
+      @PathParam("sessionId")
+      String sessionId)
   {
     // Return one session with the id of sessionId
-    return Response.ok("{\"id\":" + sessionId + ",\"name\":\"Session " + sessionId + "\"}").build();
+    return Response.ok("{\"id\":" + sessionId + ",\"name\":\"Session " + sessionId + "\"}")
+                   .build();
   }
 }

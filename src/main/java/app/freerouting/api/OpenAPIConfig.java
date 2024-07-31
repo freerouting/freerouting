@@ -15,13 +15,24 @@ import java.util.stream.Stream;
 @ApplicationPath("/api")
 public class OpenAPIConfig extends Application
 {
+  @Override
+  public Set<Class<?>> getClasses()
+  {
+    return Stream.of(OpenApiResource.class)
+                 .collect(Collectors.toSet());
+  }
 
   @Override
   public Set<Object> getSingletons()
   {
-    OpenAPI openAPI = new OpenAPI().info(new Info().title("API Documentation").description("OpenAPI documentation for our API").version("v1"));
+    OpenAPI openAPI = new OpenAPI().info(new Info().title("API Documentation")
+                                                   .description("OpenAPI documentation for Freerouting API")
+                                                   .version("v1"));
 
-    SwaggerConfiguration oasConfig = new SwaggerConfiguration().openAPI(openAPI).prettyPrint(true).resourcePackages(Stream.of("app.freerouting.api.v1").collect(Collectors.toSet()));
+    SwaggerConfiguration oasConfig = new SwaggerConfiguration().openAPI(openAPI)
+                                                               .prettyPrint(true)
+                                                               .resourcePackages(Stream.of("app.freerouting.api.v1")
+                                                                                       .collect(Collectors.toSet()));
 
     OpenApiResource openApiResource = new OpenApiResource();
     openApiResource.setOpenApiConfiguration(oasConfig);

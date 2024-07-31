@@ -163,7 +163,6 @@ public class WindowWelcome extends WindowBase
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/api/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
-    jerseyServlet.setInitParameter("javax.ws.rs.Application", "app.freerouting.JerseyConfig");
     jerseyServlet.setInitParameter("javax.ws.rs.Application", "app.freerouting.api.OpenAPIConfig");
 
     // Add the DefaultServlet to handle static content
@@ -270,7 +269,9 @@ public class WindowWelcome extends WindowBase
               return;
             }
 
-            if (!(filename.toLowerCase().endsWith(".dsn") || filename.toLowerCase().endsWith(".ses") || filename.toLowerCase().endsWith(".scr")))
+            var filenameLowerCase = filename.toLowerCase();
+
+            if (!(filenameLowerCase.endsWith(".dsn") || filenameLowerCase.endsWith(".ses") || filenameLowerCase.endsWith(".scr")))
             {
               FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
               return;
@@ -329,7 +330,10 @@ public class WindowWelcome extends WindowBase
         JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.guiSettings.dialogConfirmationTimeout + ")");
 
         final String CANCEL_TEXT = tm.getText("auto_start_routing_cancel_button");
-        Object[] options = {startNowButton, CANCEL_TEXT};
+        Object[] options = {
+            startNowButton,
+            CANCEL_TEXT
+        };
 
         final String AUTOSTART_MSG = tm.getText("auto_start_routing_message");
         JOptionPane auto_start_routing_dialog = new JOptionPane(AUTOSTART_MSG, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
@@ -506,7 +510,9 @@ public class WindowWelcome extends WindowBase
 
         for (int i = 0; i < netClasses.count(); i++)
         {
-          if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name))
+          if (netClasses.get(i)
+                        .get_name()
+                        .equalsIgnoreCase(net_class_name))
           {
             netClasses.get(i).is_ignored_by_autorouter = true;
           }
