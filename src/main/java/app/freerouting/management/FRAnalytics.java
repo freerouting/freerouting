@@ -111,6 +111,11 @@ public class FRAnalytics
 
   private static void identifyUser(String userId, Map<String, String> traits)
   {
+    if (analytics == null)
+    {
+      return;
+    }
+
     try
     {
       Traits t = new Traits();
@@ -125,6 +130,11 @@ public class FRAnalytics
 
   private static void identifyAnonymous(String anonymousId, Map<String, String> traits)
   {
+    if (analytics == null)
+    {
+      return;
+    }
+
     try
     {
       Traits t = new Traits();
@@ -139,6 +149,11 @@ public class FRAnalytics
 
   private static void trackAnonymousAction(String anonymousId, String action, Map<String, String> properties)
   {
+    if (analytics == null)
+    {
+      return;
+    }
+
     try
     {
       Properties p = new Properties();
@@ -207,6 +222,11 @@ public class FRAnalytics
 
   public static void setEnabled(boolean enabled)
   {
+    if (analytics == null)
+    {
+      return;
+    }
+
     analytics.setEnabled(enabled);
   }
 
