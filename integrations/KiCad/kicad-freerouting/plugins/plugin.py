@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+import shutil
 import platform
 import sys
 import wx
@@ -15,6 +16,8 @@ import re
 import urllib.request
 import urllib.parse
 import tempfile
+
+freerouting_temp_folder = os.path.join(tempfile.gettempdir(), "freerouting")
 
 def detect_os_architecture():
     os_name = platform.system().lower()
@@ -52,7 +55,7 @@ def check_latest_jre_version(os_name, architecture):
     
 
 def get_local_java_executable_path(os_name):
-    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-21.*.*+*-jre", "bin", "java")
+    java_exe_path = os.path.join(freerouting_temp_folder, f"jdk-21.*.*+*-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
         
@@ -197,13 +200,27 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         javaInstallNow = wx.ID_NO
 
         if (javaMajorVersion == 0):
-            javaInstallNow = wx_show_warning("""
-            Java JRE version 21 or higher is required, but you have no Java installed or you have no access to it because you used Flatpak to install KiCad.
+            # No Java installation found
+            javaInstallationWarningMessage = """
+            Java JRE version 21 or higher is required, but no Java installation was found.{flatpakNote}
             Would you like to install it now?
             (This can take up to a few minutes.)
-            """)
+            """
+            flatpakNote = " If you believe that you have a working Java installation, double-check if you installed KiCad Flatpak. If you did that could be a reason why we can't access the Java runtime as plugins run in a very limited environment."
+            
+            # Replace the {flatpakNote} string with the flatpakNote string if the operating system is Linux
+            os_name, architecture = detect_os_architecture()
+            if (os_name == "linux"):
+                javaInstallationWarningMessage = javaInstallationWarningMessage.format(flatpakNote=flatpakNote)
+            else:
+                javaInstallationWarningMessage = javaInstallationWarningMessage.format(flatpakNote="")
+
+            # Ask the user if they want to install Java
+            javaInstallNow = wx_show_warning(javaInstallationWarningMessage)
+            
+            # If the user doesn't want to install Java, return False
             if (javaInstallNow != wx.ID_YES):
-                return False            
+                return False           
         else:
             if (javaMajorVersion < 21):
                 javaInstallNow = wx_show_warning("""
@@ -215,6 +232,16 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                     return False
             
         if (javaInstallNow == wx.ID_YES):
+            # If the user wants to install Java, clean up the previous JRE installations in the temp folder first
+            for file in os.listdir(freerouting_temp_folder):
+                if file.startswith("jdk-") and file.endswith("-jre"):
+                    file_path = os.path.join(freerouting_temp_folder, file)
+                    if os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                    else:
+                        os.remove(file_path)
+
+            # Install Java JRE 21
             self.java_path = install_java_jre_21()
             
         javaVersion = get_java_version(self.java_path)
@@ -389,7 +416,7 @@ def install_java_jre_21():
         jre_url = None
         return local_java_exe
         
-    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-{jre_version}-jre", "bin", "java")
+    java_exe_path = os.path.join(freerouting_temp_folder, f"jdk-{jre_version}-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"      
  
@@ -406,7 +433,7 @@ def install_java_jre_21():
 
     # Unzip the downloaded file
     print("Extracting the downloaded file...")
-    unzip_command = f"tar -xf {file_name} -C {tempfile.gettempdir()}"
+    unzip_command = f"tar -xf {file_name} -C {freerouting_temp_folder}"
     os.system(unzip_command)
 
     # Remove the downloaded zip file
