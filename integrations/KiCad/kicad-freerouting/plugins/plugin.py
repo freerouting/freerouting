@@ -126,12 +126,15 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         self.module_file = config['artifact']['location']
         self.module_path = os.path.join(self.here_path, self.module_file)
+
+        # Convert dirpath to Path object
+        self.dirpath = Path(self.dirpath)
         
-        # Set temp filename
-        self.module_input = os.path.join(self.dirpath,'freerouting.dsn')
-        self.temp_input =  os.path.join(self.dirpath,'temp-freerouting.dsn')
-        self.module_output =  os.path.join(self.dirpath,'freerouting.ses')
-        self.module_rules =  os.path.join(self.dirpath,'freerouting.rules')
+        # Set temp filename using pathlib
+        self.module_input = self.dirpath / 'freerouting.dsn'
+        self.temp_input = self.dirpath / 'temp-freerouting.dsn'
+        self.module_output = self.dirpath / 'freerouting.ses'
+        self.module_rules = self.dirpath / 'freerouting.rules'
        
         # Remove previous temp files
         try:
@@ -148,6 +151,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             os.remove(self.module_rules)
         except:
             pass
+        
         # Create DSN file and remove java offending characters
         if not self.RunExport() :
             raise Exception("Failed to generate DSN file!")
