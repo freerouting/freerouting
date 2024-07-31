@@ -55,6 +55,7 @@ def check_latest_jre_version(os_name, architecture):
     
 
 def get_local_java_executable_path(os_name):
+    # Find the latest Java JRE 21 in the temp folder (that we installed earlier)
     java_exe_path = os.path.join(freerouting_temp_folder, f"jdk-21.*.*+*-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
@@ -70,6 +71,24 @@ def get_local_java_executable_path(os_name):
         print(f"You already have a downloaded JRE ({java_exe_path}), we are going to use that.")        
     else:
         java_exe_path = ""
+        
+    # We don't have a downloaded JRE, so we need to check the Homebrew Java path on macOS and the $JAVA_HOME environment variable
+    if java_exe_path == "":
+        # The Homebrew Java path on macOS and use it if the Java version is 21 or higher
+        if os_name == "mac":
+            java_exe_path = "/opt/homebrew/opt/openjdk/bin/java"
+            javaVersion = get_java_version(self.java_path)
+            javaMajorVersion = int(javaVersion.split(".")[0])
+            if (javaMajorVersion < 21):
+                java_exe_path = ""
+          
+        # Check $JAVA_HOME environment variable and use it if it's set and the Java version is 21 or higher
+        if java_exe_path == "":
+            java_exe_path = os.path.join(os.environ.get("JAVA_HOME", ""), "bin", "java")
+            javaVersion = get_java_version(self.java_path)
+            javaMajorVersion = int(javaVersion.split(".")[0])
+            if (javaMajorVersion < 21):
+                java_exe_path = ""
         
     return java_exe_path
 
