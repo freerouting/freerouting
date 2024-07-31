@@ -9,7 +9,7 @@ public class ReflectionUtil
 
   public static void setFieldValue(Object obj, String propertyName, Object newValue) throws NoSuchFieldException, IllegalAccessException
   {
-    String[] propertyPath = propertyName.split("\\.");
+    String[] propertyPath = propertyName.split("[.:\\-]");
     Object currentObject = obj;
     Field field = null;
 

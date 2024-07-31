@@ -37,7 +37,22 @@ public class GlobalSettings implements Serializable
   public final FeatureFlagsSettings featureFlags = new FeatureFlagsSettings();
   @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
-  private final transient String[] supportedLanguages = {"en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko"};
+  private final transient String[] supportedLanguages = {
+      "en",
+      "de",
+      "zh",
+      "zh_TW",
+      "hi",
+      "es",
+      "it",
+      "fr",
+      "ar",
+      "bn",
+      "ru",
+      "pt",
+      "ja",
+      "ko"
+  };
   public transient boolean show_help_option = false;
   public transient String design_input_filename;
   public transient String design_output_filename;
@@ -82,7 +97,7 @@ public class GlobalSettings implements Serializable
 
   /*
    * Sets a property value in the settings, and it permanently saves it into the settings file.
-   * Property names are in the format of "section.property" (eg. "router.max_passes" or "gui.input_directory").
+   * Property names are in the format of "section.property" (eg. "router.max_passes", "gui:input_directory" or "profile-email").
    */
   public static Boolean setDefaultValue(String propertyName, String newValue)
   {
@@ -118,7 +133,7 @@ public class GlobalSettings implements Serializable
   /*
    * Sets a property value in the settings for the current process, but it does so without permanently saving it into the settings file.
    * For scenarios where the settings also needs to be saved in the settings file, use the save() method instead.
-   * Property names are in the format of "section.property" (eg. "router.max_passes" or "gui.input_directory").
+   * Property names are in the format of "section.property" (eg. "router.max_passes", "gui:input_directory" or "profile-email").
    */
   public Boolean setValue(String propertyName, String newValue)
   {
