@@ -85,7 +85,7 @@ dependencies {
     // Add Jetty dependencies
     implementation 'org.eclipse.jetty:jetty-servlet:11.0.22-mod'
     implementation 'org.eclipse.jetty:jetty-server:11.0.22'
-    implementation 'org.eclipse.jetty:jetty-util:11.0.22'
+    implementation 'org.eclipse.jetty:jetty-util:12.0.12'
     implementation 'org.eclipse.jetty:jetty-security:11.0.22'
 
     // Add Swagger (OpenAPI) dependencies
