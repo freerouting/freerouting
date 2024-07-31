@@ -18,7 +18,7 @@ import java.util.zip.CRC32;
 /**
  * Represents a job that needs to be processed by the router.
  */
-public class RoutingJob implements Serializable
+public class RoutingJob implements Serializable, Comparable<RoutingJob>
 {
   public static final String DSN_FILE_EXTENSION = "dsn";
   public static final String BINARY_FILE_EXTENSION = "frb";
@@ -451,5 +451,22 @@ public class RoutingJob implements Serializable
   public String getOutputFileDetails()
   {
     return new BoardDetails(this.outputFile).toString();
+  }
+
+  @Override
+  public int compareTo(RoutingJob o)
+  {
+    if (this.priority.ordinal() < o.priority.ordinal())
+    {
+      return -1;
+    }
+    else if (this.priority.ordinal() > o.priority.ordinal())
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
   }
 }
