@@ -52,6 +52,12 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.23.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.23.1'
 
+    // Add SLF4J API dependency
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+    
+    // Add SLF4J binding dependency
+    implementation 'org.slf4j:slf4j-log4j12:2.0.13'
+
     // https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.11.0'
 
