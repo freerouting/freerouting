@@ -2,7 +2,7 @@
 ### help
 
 ```
-java -jar FreeRouting.jar -h
+java -jar freerouting.jar -h
 ```
 
 ```

@@ -16,6 +16,7 @@ import re
 import urllib.request
 import urllib.parse
 import tempfile
+from pathlib import Path
 
 freerouting_temp_folder = os.path.join(tempfile.gettempdir(), "freerouting")
 
@@ -77,7 +78,7 @@ def get_local_java_executable_path(os_name):
         # The Homebrew Java path on macOS and use it if the Java version is 21 or higher
         if os_name == "mac":
             java_exe_path = "/opt/homebrew/opt/openjdk/bin/java"
-            javaVersion = get_java_version(self.java_path)
+            javaVersion = get_java_version(java_exe_path)
             javaMajorVersion = int(javaVersion.split(".")[0])
             if (javaMajorVersion < 21):
                 java_exe_path = ""
@@ -85,7 +86,7 @@ def get_local_java_executable_path(os_name):
         # Check $JAVA_HOME environment variable and use it if it's set and the Java version is 21 or higher
         if java_exe_path == "":
             java_exe_path = os.path.join(os.environ.get("JAVA_HOME", ""), "bin", "java")
-            javaVersion = get_java_version(self.java_path)
+            javaVersion = get_java_version(java_exe_path)
             javaMajorVersion = int(javaVersion.split(".")[0])
             if (javaMajorVersion < 21):
                 java_exe_path = ""
@@ -180,7 +181,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         fr = open(self.temp_input , "r", encoding="utf-8")
         for l in fr:
             if self.bFirstLine:
-                fw.writelines('(pcb ' + self.module_input + '\n')
+                fw.writelines('(pcb ' + self.module_input.name + '\n')
                 self.bFirstLine = False
             elif self.bEatNextLine:
                 self.bEatNextLine = l.rstrip()[-2:]!="))" 
@@ -217,6 +218,11 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
     # auto route by invoking freerouting.jar
     def RunRouter(self):
+        # Check if the freerouting temp folder exists, if not create it
+        if not os.path.exists(freerouting_temp_folder):
+            os.makedirs(freerouting_temp_folder)
+
+        # Check if Java is installed and if it's version 21 or higher
         javaVersion = get_java_version(self.java_path)
         javaMajorVersion = int(javaVersion.split(".")[0])
 
