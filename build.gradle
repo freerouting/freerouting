@@ -78,7 +78,7 @@ dependencies {
     implementation 'org.glassfish.jersey.media:jersey-media-json-binding:3.1.7'
     implementation 'org.glassfish.jersey.core:jersey-common:3.1.7-mod'
     implementation 'org.glassfish.jersey.core:jersey-client:3.1.7'
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.7-mod'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.8'
     implementation 'org.glassfish.jersey.containers:jersey-container-servlet:3.1.7-mod'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
 
