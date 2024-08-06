@@ -22,7 +22,9 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           days-before-stale: 120
           stale-issue-message: |
-            Hey there!👋 This issue is stale because it has been inactive for 120 days.
+            Hey there!👋
+            
+            This issue is stale because it has been inactive for 120 days.
             If this matter is still relevant, feel free to remove the stale label or add a comment.
             Otherwise, it will be closed in 7 days.
 
@@ -32,10 +34,10 @@ jobs:
             If the issue is critical for your work, consider contributing a fix yourself or hiring someone to help.
             I'm here to support your efforts and will review and merge pull requests as quickly as I can.
 
-            Let's collaborate to keep improving our project! 🚀 Your involvement is invaluable,
-            and together, we can ensure the continuous growth and success of our community.
+            Let's collaborate to keep improving our project! 🚀 Your involvement is invaluable, and together, we can ensure the continuous growth and success of our community.
 
-            Thank you for being an integral part of this journey. Your engagement is what drives our project forward!
+            Thank you for being an integral part of this journey.
+            Your engagement is what drives our project forward!
           stale-pr-message: |
             This pull request is stale because it has been inactive for 120 days.
             Remove stale label or comment or this will be closed in 7 days.
