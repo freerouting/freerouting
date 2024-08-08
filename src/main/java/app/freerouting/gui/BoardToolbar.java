@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.interactive.*;
@@ -102,7 +103,7 @@ class BoardToolbar extends JPanel
     toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     toolbar_autoroute_button.addActionListener(evt ->
     {
-      InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer();
+      InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(Freerouting.globalSettings.routerSettings);
 
       if ((thread != null) && (board_frame.board_panel.board_handling.autorouter_listener != null))
       {

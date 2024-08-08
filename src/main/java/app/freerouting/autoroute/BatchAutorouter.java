@@ -20,7 +20,9 @@ import java.util.*;
 public class BatchAutorouter
 {
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
+  // TODO: change the type from InteractiveActionThread to Thread to support headless mode
   private final InteractiveActionThread thread;
+  // TODO: make having a BoardHandling instance optional
   private final BoardHandling hdlg;
   private final RoutingBoard routing_board;
   private final boolean remove_unconnected_vias;

@@ -380,7 +380,7 @@ public class WindowWelcome extends WindowBase
         if ((globalSettings.guiSettings.dialogConfirmationTimeout == 0) || (choice == options[0]))
         {
           // Start the auto-router
-          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer();
+          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(Freerouting.globalSettings.routerSettings);
 
           if (new_frame.board_panel.board_handling.autorouter_listener != null)
           {
@@ -510,9 +510,7 @@ public class WindowWelcome extends WindowBase
 
         for (int i = 0; i < netClasses.count(); i++)
         {
-          if (netClasses.get(i)
-                        .get_name()
-                        .equalsIgnoreCase(net_class_name))
+          if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name))
           {
             netClasses.get(i).is_ignored_by_autorouter = true;
           }

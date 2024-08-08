@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.AutorouteSettings;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

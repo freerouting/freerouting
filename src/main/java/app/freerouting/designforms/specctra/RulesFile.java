@@ -137,7 +137,7 @@ public class RulesFile
         }
         else if (next_token == Keyword.AUTOROUTE_SETTINGS)
         {
-          app.freerouting.interactive.AutorouteSettings autoroute_settings = AutorouteSettings.read_scope(scanner, layer_structure);
+          app.freerouting.settings.AutorouteSettings autoroute_settings = AutorouteSettings.read_scope(scanner, layer_structure);
           if (autoroute_settings != null)
           {
             p_board_handling.settings.autoroute_settings = autoroute_settings;

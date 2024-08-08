@@ -5,6 +5,7 @@ import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.interactive.IBoardHandling;
+import app.freerouting.settings.AutorouteSettings;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -64,7 +65,7 @@ public class ReadScopeParameter
    */
   CoordinateTransform coordinate_transform;
   LayerStructure layer_structure;
-  app.freerouting.interactive.AutorouteSettings autoroute_settings;
+  AutorouteSettings autoroute_settings;
   app.freerouting.board.Unit unit = app.freerouting.board.Unit.MIL;
   int resolution = 100; // default resolution
 

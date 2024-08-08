@@ -16,7 +16,7 @@ import java.util.TreeSet;
  */
 public class BatchFanout
 {
-
+  // TODO: change the type from InteractiveActionThread to Thread to support headless mode
   private final InteractiveActionThread thread;
   private final RoutingBoard routing_board;
   private final SortedSet<Component> sorted_components;

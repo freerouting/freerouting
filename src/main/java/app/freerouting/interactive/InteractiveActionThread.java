@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
+import app.freerouting.settings.RouterSettings;
 
 import java.awt.*;
 import java.io.IOException;
@@ -33,9 +34,11 @@ public abstract class InteractiveActionThread extends Thread implements Stoppabl
     return new AutorouteThread(p_board_handling);
   }
 
-  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(BoardHandling p_board_handling)
+  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
-    return new AutorouterAndRouteOptimizerThread(p_board_handling);
+    routerSettings.autorouterSettings = p_board_handling.get_settings().autoroute_settings;
+
+    return new AutorouterAndRouteOptimizerThread(p_board_handling, routerSettings);
   }
 
   public static InteractiveActionThread get_fanout_instance(BoardHandling p_board_handling)

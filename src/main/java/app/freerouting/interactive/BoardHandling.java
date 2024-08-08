@@ -25,6 +25,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.RouterSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -1514,15 +1515,20 @@ public class BoardHandling extends BoardHandlingHeadless
   /**
    * Start the auto-router and route optimizer on the whole board
    */
-  public InteractiveActionThread start_autorouter_and_route_optimizer()
+  public InteractiveActionThread start_autorouter_and_route_optimizer(RouterSettings routerSettings)
   {
+    // The auto-router and route optimizer can only be started if the board is not read only
     if (board_is_read_only)
     {
       return null;
     }
-    board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(this);
 
+    // Generate a snapshot of the board before starting the autorouter
+    board.generate_snapshot();
+
+    // Start the auto-router and route optimizer
+    // TODO: ideally we should only pass the board and the routerSettings to the thread, and let the thread create the router and optimizer
+    this.interactive_action_thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(this, routerSettings);
     this.interactive_action_thread.start();
 
     return this.interactive_action_thread;

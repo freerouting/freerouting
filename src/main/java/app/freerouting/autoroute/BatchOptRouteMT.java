@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.Item;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,13 +36,13 @@ public class BatchOptRouteMT extends BatchOptRoute
   /**
    * @param p_thread
    */
-  public BatchOptRouteMT(InteractiveActionThread p_thread, int p_thread_pool_size, BoardUpdateStrategy p_board_update_strategy, ItemSelectionStrategy p_item_selection_strategy, String p_hrid_ratio)
+  public BatchOptRouteMT(InteractiveActionThread p_thread, RouterSettings routerSettings)
   {
     super(p_thread);
 
-    this.thread_pool_size = p_thread_pool_size;
-    this.board_update_strategy = p_board_update_strategy;
-    this.item_selection_strategy = p_board_update_strategy == BoardUpdateStrategy.GLOBAL_OPTIMAL ? ItemSelectionStrategy.SEQUENTIAL : p_item_selection_strategy;
+    this.thread_pool_size = routerSettings.maxThreads;
+    this.board_update_strategy = routerSettings.boardUpdateStrategy;
+    this.item_selection_strategy = routerSettings.boardUpdateStrategy == BoardUpdateStrategy.GLOBAL_OPTIMAL ? ItemSelectionStrategy.SEQUENTIAL : routerSettings.itemSelectionStrategy;
 
     best_route_result = new ItemRouteResult(-1);
     winning_candidate = null;
@@ -50,9 +51,9 @@ public class BatchOptRouteMT extends BatchOptRoute
     {
       int num_optimal = 1, num_prioritized = 1;
 
-      if (p_hrid_ratio != null && p_hrid_ratio.indexOf(":") > 0)
+      if (routerSettings.hybridRatio != null && routerSettings.hybridRatio.indexOf(":") > 0)
       {
-        String[] ratio = p_hrid_ratio.split(":");
+        String[] ratio = routerSettings.hybridRatio.split(":");
 
         try
         {

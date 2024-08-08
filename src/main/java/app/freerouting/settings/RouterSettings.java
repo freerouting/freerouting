@@ -19,4 +19,5 @@ public class RouterSettings implements Serializable
   public transient ItemSelectionStrategy itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
   @SerializedName("ignore_net_classes")
   public transient String[] ignoreNetClassesByAutorouter = new String[0];
+  public transient AutorouteSettings autorouterSettings = new AutorouteSettings(0);
 }

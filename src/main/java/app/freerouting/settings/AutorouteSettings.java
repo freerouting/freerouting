@@ -1,4 +1,4 @@
-package app.freerouting.interactive;
+package app.freerouting.settings;
 
 import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.board.RoutingBoard;

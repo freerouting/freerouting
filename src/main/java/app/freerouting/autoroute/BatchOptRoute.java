@@ -20,9 +20,9 @@ import java.util.TreeSet;
  */
 public class BatchOptRoute
 {
-
   protected static int MAX_AUTOROUTE_PASSES = 6;
   protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
+  // TODO: change the type from InteractiveActionThread to Thread to support headless mode
   protected final InteractiveActionThread thread;
   protected boolean clone_board;
   protected RoutingBoard routing_board;

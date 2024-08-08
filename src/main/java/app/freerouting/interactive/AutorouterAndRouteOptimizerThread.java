@@ -1,6 +1,9 @@
 package app.freerouting.interactive;
 
-import app.freerouting.autoroute.*;
+import app.freerouting.autoroute.BatchAutorouter;
+import app.freerouting.autoroute.BatchFanout;
+import app.freerouting.autoroute.BatchOptRoute;
+import app.freerouting.autoroute.BatchOptRouteMT;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatLine;
@@ -8,6 +11,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
+import app.freerouting.settings.RouterSettings;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
@@ -25,25 +29,21 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   /**
    * Creates a new instance of AutorouterAndRouteOptimizerThread
    */
-  protected AutorouterAndRouteOptimizerThread(BoardHandling p_board_handling)
+  protected AutorouterAndRouteOptimizerThread(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
     super(p_board_handling);
-    AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
-    this.batch_autorouter = new BatchAutorouter(this, !autoroute_settings.get_with_fanout(), true, autoroute_settings.get_start_ripup_costs());
+    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs());
 
-    BoardUpdateStrategy update_strategy = p_board_handling.get_board_update_strategy();
-    String hybrid_ratio = p_board_handling.get_hybrid_ratio();
-    ItemSelectionStrategy item_selection_strategy = p_board_handling.get_item_selection_strategy();
-    int num_threads = p_board_handling.get_num_threads();
+    int num_threads = routerSettings.maxThreads;
     save_intermediate_stages = p_board_handling.save_intermediate_stages;
-    optimization_improvement_threshold = p_board_handling.optimization_improvement_threshold;
+    optimization_improvement_threshold = routerSettings.optimizationImprovementThreshold;
 
     if (num_threads > 1)
     {
       FRLogger.warn("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
     }
 
-    this.batch_opt_route = num_threads > 1 ? new BatchOptRouteMT(this, num_threads, update_strategy, item_selection_strategy, hybrid_ratio) : new BatchOptRoute(this);
+    this.batch_opt_route = num_threads > 1 ? new BatchOptRouteMT(this, routerSettings) : new BatchOptRoute(this);
   }
 
   @Override
