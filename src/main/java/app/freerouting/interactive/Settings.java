@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * Contains the values of the interactive settings of the board handling.
+ * Contains the values of the interactive/GUI settings of the board handling.
  */
 public class Settings implements Serializable
 {

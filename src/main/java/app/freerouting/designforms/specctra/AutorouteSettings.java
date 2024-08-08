@@ -93,7 +93,7 @@ public class AutorouteSettings
 
   static app.freerouting.interactive.AutorouteSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure, app.freerouting.interactive.AutorouteSettings p_settings)
   {
-    p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+    p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object next_token;
     try
     {

@@ -33,7 +33,7 @@ public class BoardHandlingHeadless implements IBoardHandling
    */
   public ThreadActionListener autorouter_listener;
   /**
-   * The board database used in this interactive handling.
+   * The board object that contains all the data for the board
    */
   protected RoutingBoard board;
   protected Locale locale;
@@ -136,7 +136,7 @@ public class BoardHandlingHeadless implements IBoardHandling
   {
     if (this.board != null)
     {
-      FRLogger.warn(" BoardHandling.create_board: app.freerouting.board already created");
+      FRLogger.warn(" BoardHandling.create_board: board already created");
     }
     int outline_cl_class_no = 0;
 

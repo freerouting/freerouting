@@ -629,7 +629,7 @@ public class BoardHandling extends BoardHandlingHeadless
   {
     super.create_board(p_bounding_box, p_layer_structure, p_outline_shapes, p_outline_clearance_class_name, p_rules, p_board_communication);
 
-    // create the interactive settings with default
+    // create the interactive/GUI settings with default values
     double unit_factor = p_board_communication.coordinate_transform.board_to_dsn(1);
     this.coordinate_transform = new CoordinateTransform(1, p_board_communication.unit, unit_factor, p_board_communication.unit);
 
@@ -1101,6 +1101,8 @@ public class BoardHandling extends BoardHandlingHeadless
     DsnFile.ReadResult read_result;
     try
     {
+      // TODO: we should have a returned object that represent the DSN file, and we should create a RoutingBoard/BasicBoard based on that as a next step
+      // we create the board inside the DSN file reader instead at the moment, and save it in the board field of the BoardHandling class
       read_result = DsnFile.read(p_design, this, p_observers, p_item_id_no_generator);
     } catch (Exception e)
     {

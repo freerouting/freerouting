@@ -168,7 +168,7 @@ public class PartLibrary extends ScopeKeyword
       SortedSet<String> result = new TreeSet<>();
       for (; ; )
       {
-        p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+        p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
         next_token = p_scanner.next_token();
         if (next_token == CLOSED_BRACKET)
         {
@@ -263,7 +263,7 @@ public class PartLibrary extends ScopeKeyword
   {
     try
     {
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String pin_name))
       {
@@ -277,7 +277,7 @@ public class PartLibrary extends ScopeKeyword
         FRLogger.warn("PartLibrary.read_part_pin: integer expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String gate_name))
       {
@@ -292,7 +292,7 @@ public class PartLibrary extends ScopeKeyword
         return null;
       }
       int gate_swap_code = (Integer) next_token;
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String gate_pin_name))
       {

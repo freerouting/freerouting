@@ -388,7 +388,7 @@ class Structure extends ScopeKeyword
         {
           for (; ; )
           {
-            p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+            p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
             next_token = p_scanner.next_token();
             if (next_token == Keyword.CLOSED_BRACKET)
             {
@@ -1072,6 +1072,7 @@ class Structure extends ScopeKeyword
       }
     }
 
+    // let's create a board based on the data we read (TODO: move this method somewhere outside of the designforms.specctra package)
     boolean result = true;
     if (p_par.board_handling.get_routing_board() == null)
     {

@@ -281,7 +281,7 @@ public class Package
     try
     {
       // Read the padstack name.
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String) && !(next_token instanceof Integer))
       {
@@ -291,7 +291,7 @@ public class Package
       String padstack_name = next_token.toString();
       double rotation = 0;
 
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME); // to be able to handle pin names starting with a digit.
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME); // to be able to handle pin names starting with a digit.
       next_token = p_scanner.next_token();
       if (next_token == Keyword.OPEN_BRACKET)
       {
@@ -305,7 +305,7 @@ public class Package
         {
           ScopeKeyword.skip_scope(p_scanner);
         }
-        p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+        p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
         next_token = p_scanner.next_token();
       }
       // Read the pin name.

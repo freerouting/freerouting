@@ -110,16 +110,15 @@ public class BoardFrame extends WindowBase
   }
 
   /**
-   * Creates new form BoardFrame. The parameters p_item_observers and p_item_id_no_generator are
-   * used for synchronizing purposes, if the frame is embedded into a host system,
+   * Creates new form BoardFrame.
    */
-  BoardFrame(RoutingJob p_design, BoardObservers p_observers, GlobalSettings globalSettings)
+  BoardFrame(RoutingJob routingJob, BoardObservers boardObservers, GlobalSettings globalSettings)
   {
     super(800, 150);
 
-    this.design_file = p_design;
+    this.design_file = routingJob;
 
-    this.board_observers = p_observers;
+    this.board_observers = boardObservers;
     this.locale = globalSettings.currentLocale;
     this.setLanguage(this.locale);
     this.freerouting_version = globalSettings.version;
@@ -136,14 +135,14 @@ public class BoardFrame extends WindowBase
       }
 
       // Let's categorize the file based on its extension
-      if (!p_design.tryToSetInputFile(selectedFile))
+      if (!routingJob.tryToSetInputFile(selectedFile))
       {
         // The file is not in a valid format
         return;
       }
 
       // Set the input directory in the global settings
-      if (p_design.getInputFile() != null)
+      if (routingJob.getInputFile() != null)
       {
         globalSettings.guiSettings.inputDirectory = design_file.getInputFileDirectory();
 
@@ -158,16 +157,16 @@ public class BoardFrame extends WindowBase
       }
 
       // Load the file into the frame based on its recognised format
-      if ((board_panel != null) && (board_panel.board_handling != null) && (p_design.inputFileFormat != FileFormat.UNKNOWN))
+      if ((board_panel != null) && (board_panel.board_handling != null) && (routingJob.inputFileFormat != FileFormat.UNKNOWN))
       {
-        switch (p_design.inputFileFormat)
+        switch (routingJob.inputFileFormat)
         {
           case DSN:
-            this.load(p_design.get_input_stream(), true, null);
+            this.load(routingJob.get_input_stream(), true, null);
             FRAnalytics.buttonClicked("fileio_loaddsn", this.design_file.getInputFileDetails());
             break;
           case FRB:
-            this.load(p_design.get_input_stream(), false, null);
+            this.load(routingJob.get_input_stream(), false, null);
             FRAnalytics.buttonClicked("fileio_loadfrb", this.design_file.getInputFileDetails());
             break;
           default:
@@ -187,13 +186,13 @@ public class BoardFrame extends WindowBase
       }
 
       // Let's categorize the file based on its extension
-      if (!p_design.tryToSetOutputFile(selectedFile))
+      if (!routingJob.tryToSetOutputFile(selectedFile))
       {
         // The file is not in a valid format
         return;
       }
 
-      switch (p_design.outputFileFormat)
+      switch (routingJob.outputFileFormat)
       {
         case SES:
           // Save the file as a Specctra SES file
@@ -321,7 +320,7 @@ public class BoardFrame extends WindowBase
    * Reads an existing board design from file. If isSpecctraDsn, the design is read from a specctra
    * dsn file. Returns false, if the file is invalid.
    */
-  boolean load(InputStream p_input_stream, boolean isSpecctraDsn, JTextField p_message_field)
+  boolean load(InputStream inputStream, boolean isSpecctraDsn, JTextField p_message_field)
   {
     Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
@@ -339,7 +338,7 @@ public class BoardFrame extends WindowBase
 
     if (isSpecctraDsn)
     {
-      read_result = board_panel.board_handling.loadFromSpecctraDsn(p_input_stream, this.board_observers, new ItemIdNoGenerator());
+      read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers, new ItemIdNoGenerator());
 
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK)
@@ -356,7 +355,7 @@ public class BoardFrame extends WindowBase
       ObjectInputStream object_stream;
       try
       {
-        object_stream = new ObjectInputStream(p_input_stream);
+        object_stream = new ObjectInputStream(inputStream);
       } catch (IOException e)
       {
         return false;
@@ -395,7 +394,7 @@ public class BoardFrame extends WindowBase
 
     try
     {
-      p_input_stream.close();
+      inputStream.close();
     } catch (IOException e)
     {
       return false;
@@ -1027,7 +1026,10 @@ public class BoardFrame extends WindowBase
       if (wasBoardChanged)
       {
         // Create a JOptionPane with a warning icon and set the default option to NO
-        Object[] options = {tm.getText("confirm_exit_yes"), tm.getText("confirm_exit_no")};
+        Object[] options = {
+            tm.getText("confirm_exit_yes"),
+            tm.getText("confirm_exit_no")
+        };
         JOptionPane optionPane = new JOptionPane(tm.getText("confirm_cancel"), JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[1] // Default to "No"
         );
         JDialog dialog = optionPane.createDialog(null, "Warning");

@@ -68,7 +68,7 @@ public class SessionToEagle extends JFrame
 
     // create a scanner for reading the session_file.
 
-    IJFlexScanner scanner = new SpecctraDsnFileReader(p_session);
+    IJFlexScanner scanner = new SpecctraDsnStreamReader(p_session);
 
     // create a file_writer for the eagle script file.
     OutputStreamWriter file_writer = new OutputStreamWriter(p_output_stream);
@@ -117,7 +117,7 @@ public class SessionToEagle extends JFrame
       else if (i == 1)
       {
         keyword_ok = (next_token == Keyword.SESSION);
-        this.scanner.yybegin(SpecctraDsnFileReader.NAME); // to overread the name of the pcb for i = 2
+        this.scanner.yybegin(SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
       }
       if (!keyword_ok)
       {

@@ -323,7 +323,7 @@ public class Component extends ScopeKeyword
 
   private static ComponentPlacement.ItemClearanceInfo read_item_clearance_info(IJFlexScanner p_scanner) throws IOException
   {
-    p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+    p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object next_token = p_scanner.next_token();
     if (!(next_token instanceof String name))
     {

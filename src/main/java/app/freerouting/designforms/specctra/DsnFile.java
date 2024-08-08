@@ -33,7 +33,9 @@ public class DsnFile
    */
   public static ReadResult read(InputStream p_input_stream, IBoardHandling p_board_handling, BoardObservers p_observers, IdNoGenerator p_item_id_no_generator)
   {
-    IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
+    IJFlexScanner scanner = new SpecctraDsnStreamReader(p_input_stream);
+
+    // first, check if the file is a Specctra DSN file by looking for the first keywords "(pcb "
     Object curr_token;
     for (int i = 0; i < 3; ++i)
     {
@@ -53,7 +55,7 @@ public class DsnFile
       else if (i == 1)
       {
         keyword_ok = (curr_token == Keyword.PCB_SCOPE);
-        scanner.yybegin(SpecctraDsnFileReader.NAME); // to overread the name of the pcb for i = 2
+        scanner.yybegin(SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
       }
       if (!keyword_ok)
       {
@@ -61,7 +63,10 @@ public class DsnFile
         return ReadResult.ERROR;
       }
     }
+
+    // create an empty object with some default values
     ReadScopeParameter read_scope_par = new ReadScopeParameter(scanner, p_board_handling, p_observers, p_item_id_no_generator);
+    // read the rest of the file, and create a board from it
     boolean read_ok = Keyword.PCB_SCOPE.read_scope(read_scope_par);
     ReadResult result;
     if (read_ok)
@@ -338,7 +343,7 @@ public class DsnFile
   {
     try
     {
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       String result = p_scanner.next_string();
       Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET)

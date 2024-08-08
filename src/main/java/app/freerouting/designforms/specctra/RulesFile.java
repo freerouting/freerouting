@@ -44,7 +44,7 @@ public class RulesFile
   public static boolean read(InputStream p_input_stream, String p_design_name, BoardHandling p_board_handling)
   {
     BasicBoard routing_board = p_board_handling.get_routing_board();
-    IJFlexScanner scanner = new SpecctraDsnFileReader(p_input_stream);
+    IJFlexScanner scanner = new SpecctraDsnStreamReader(p_input_stream);
     try
     {
       Object curr_token = scanner.next_token();
@@ -65,7 +65,7 @@ public class RulesFile
         FRLogger.warn("RulesFile.read: keyword pcb expected at '" + scanner.get_scope_identifier() + "'");
         return false;
       }
-      scanner.yybegin(SpecctraDsnFileReader.NAME);
+      scanner.yybegin(SpecctraDsnStreamReader.NAME);
       curr_token = scanner.next_token();
       if (!(curr_token instanceof String) || !curr_token.equals(p_design_name))
       {

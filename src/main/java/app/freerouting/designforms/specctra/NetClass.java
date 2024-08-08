@@ -52,7 +52,7 @@ public class NetClass
     try
     {
       // read the class name
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       String class_name = p_scanner.next_string();
 
       Collection<String> net_list = new LinkedList<>();

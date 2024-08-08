@@ -20,7 +20,8 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Contains higher level functions of a board
+ * The class that represents the board that is being routed.
+ * It contains all the data for the board and the methods to manipulate it.
  */
 public class RoutingBoard extends BasicBoard implements Serializable
 {

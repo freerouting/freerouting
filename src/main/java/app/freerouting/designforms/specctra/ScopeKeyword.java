@@ -22,7 +22,7 @@ public class ScopeKeyword extends Keyword
     int open_bracked_count = 1;
     while (open_bracked_count > 0)
     {
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object curr_token;
       try
       {
@@ -82,6 +82,7 @@ public class ScopeKeyword extends Keyword
         // a new scope is expected
         if (next_token instanceof ScopeKeyword)
         {
+          // read the next scope, which is the "structure" part of the DSN file
           next_scope = (ScopeKeyword) next_token;
           if (!next_scope.read_scope(p_par))
           {

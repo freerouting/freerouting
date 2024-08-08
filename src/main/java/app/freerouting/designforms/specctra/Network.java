@@ -224,12 +224,12 @@ public class Network extends ScopeKeyword
   {
     Object next_token;
     String component_name, pin_name;
-    while (!(component_name = ((SpecctraDsnFileReader) p_scanner).next_string(true, '-')).isEmpty())
+    while (!(component_name = ((SpecctraDsnStreamReader) p_scanner).next_string(true, '-')).isEmpty())
     {
 
       try
       {
-        p_scanner.yybegin(SpecctraDsnFileReader.SPEC_CHAR);
+        p_scanner.yybegin(SpecctraDsnStreamReader.SPEC_CHAR);
         next_token = p_scanner.next_token(); // overread the hyphen
       } catch (IOException e)
       {
@@ -268,14 +268,14 @@ public class Network extends ScopeKeyword
   {
     try
     {
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object next_token = p_scanner.next_token();
       if (!(next_token instanceof String name))
       {
         FRLogger.warn("Network.read_via_info: string expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String padstack_name))
       {
@@ -295,7 +295,7 @@ public class Network extends ScopeKeyword
         }
         p_board.library.add_via_padstack(via_padstack);
       }
-      p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+      p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       next_token = p_scanner.next_token();
       if (!(next_token instanceof String))
       {
@@ -340,7 +340,7 @@ public class Network extends ScopeKeyword
       Collection<String> result = new LinkedList<>();
       for (; ; )
       {
-        p_scanner.yybegin(SpecctraDsnFileReader.NAME);
+        p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
         Object next_token = p_scanner.next_token();
         if (next_token == Keyword.CLOSED_BRACKET)
         {
