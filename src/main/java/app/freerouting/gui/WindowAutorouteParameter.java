@@ -140,8 +140,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     main_panel.add(passes_label);
 
     this.settings_autorouter_fanout_pass_button = new JCheckBox(tm.getText("fanout"));
+    this.settings_autorouter_fanout_pass_button.setToolTipText(tm.getText("fanout_tooltip"));
     this.settings_autorouter_autoroute_pass_button = new JCheckBox(tm.getText("autoroute"));
+    this.settings_autorouter_autoroute_pass_button.setToolTipText(tm.getText("autoroute_tooltip"));
     this.settings_autorouter_postroute_pass_button = new JCheckBox(tm.getText("postroute"));
+    this.settings_autorouter_postroute_pass_button.setToolTipText(tm.getText("postroute_tooltip"));
 
     settings_autorouter_fanout_pass_button.addActionListener(new FanoutListener());
     settings_autorouter_fanout_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_fanout_pass_button", settings_autorouter_fanout_pass_button.getText()));
