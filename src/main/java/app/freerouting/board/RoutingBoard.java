@@ -1292,4 +1292,45 @@ public class RoutingBoard extends BasicBoard implements Serializable
       this.autoroute_engine = null;
     }
   }
+
+  public BoardStatistics get_statistics()
+  {
+    BoardStatistics statistics = new BoardStatistics();
+
+    Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
+    for (; ; )
+    {
+      Item curr_item = (Item) item_list.read_object(it);
+      if (curr_item == null)
+      {
+        break;
+      }
+      if (curr_item instanceof Trace)
+      {
+        statistics.traceCount++;
+      }
+      else if (curr_item instanceof Via)
+      {
+        statistics.viaCount++;
+      }
+      else if (curr_item instanceof ConductionArea)
+      {
+        statistics.conductionAreaCount++;
+      }
+      else if (curr_item instanceof DrillItem)
+      {
+        statistics.drillItemCount++;
+      }
+      else if (curr_item instanceof Pin)
+      {
+        statistics.pinCount++;
+      }
+      else
+      {
+        statistics.otherCount++;
+      }
+    }
+
+    return statistics;
+  }
 }

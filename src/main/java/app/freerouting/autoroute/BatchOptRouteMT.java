@@ -38,7 +38,7 @@ public class BatchOptRouteMT extends BatchOptRoute
    */
   public BatchOptRouteMT(InteractiveActionThread p_thread, RouterSettings routerSettings)
   {
-    super(p_thread);
+    super(p_thread, false, routerSettings);
 
     this.thread_pool_size = routerSettings.maxThreads;
     this.board_update_strategy = routerSettings.boardUpdateStrategy;
@@ -263,7 +263,7 @@ public class BatchOptRouteMT extends BatchOptRoute
       int item_id = item_ids.get(t);
       FRLogger.debug("Scheduling task #" + (t + 1) + " of " + item_ids.size() + " for item #" + item_id + ".");
 
-      pool.execute(new OptimizeRouteTask(this, item_id, p_pass_no, p_with_preferred_directions, this.min_cumulative_trace_length_before));
+      pool.execute(new OptimizeRouteTask(this, item_id, p_pass_no, p_with_preferred_directions, this.min_cumulative_trace_length_before, settings));
     }
 
     FRLogger.debug("All items are queued for execution, waiting for the tasks to finish.");

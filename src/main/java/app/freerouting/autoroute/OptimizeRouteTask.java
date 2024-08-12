@@ -5,6 +5,7 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.datastructures.UndoableObjects.UndoableObjectNode;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 
 import java.util.Iterator;
 
@@ -16,9 +17,9 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable
   private Item curr_item;
   private ItemRouteResult route_result;
 
-  public OptimizeRouteTask(BatchOptRouteMT p_optimizer, int item_id, int p_pass_no, boolean p_with_preferred_directions, double p_min_cumulative_trace_length)
+  public OptimizeRouteTask(BatchOptRouteMT p_optimizer, int item_id, int p_pass_no, boolean p_with_preferred_directions, double p_min_cumulative_trace_length, RouterSettings routerSettings)
   {
-    super(p_optimizer.thread, true);
+    super(p_optimizer.thread, true, routerSettings);
 
     optimizer = p_optimizer;
 

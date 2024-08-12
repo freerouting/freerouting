@@ -1,6 +1,5 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.board.RoutingBoard;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
@@ -14,17 +13,14 @@ import java.util.TreeSet;
 /**
  * Handles the sequencing of the fanout inside the batch autorouter.
  */
-public class BatchFanout
+public class BatchFanout extends NamedAlgorithm
 {
-  // TODO: change the type from InteractiveActionThread to Thread to support headless mode
-  private final InteractiveActionThread thread;
-  private final RoutingBoard routing_board;
   private final SortedSet<Component> sorted_components;
 
   private BatchFanout(InteractiveActionThread p_thread)
   {
-    this.thread = p_thread;
-    this.routing_board = p_thread.hdlg.get_routing_board();
+    super(p_thread, p_thread.hdlg.get_routing_board(), null);
+
     Collection<app.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
     this.sorted_components = new TreeSet<>();
     for (int i = 1; i <= routing_board.components.count(); ++i)
@@ -90,6 +86,36 @@ public class BatchFanout
     }
     FRLogger.debug("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count + ", not routed: " + not_routed_count + ", errors: " + insert_error_count);
     return routed_count;
+  }
+
+  @Override
+  protected String getId()
+  {
+    return "fanout-classic";
+  }
+
+  @Override
+  protected String getName()
+  {
+    return "Freerouting Classic Fanout";
+  }
+
+  @Override
+  protected String getVersion()
+  {
+    return "1.0";
+  }
+
+  @Override
+  protected String getDescription()
+  {
+    return "Freerouting Classic Fanout algorithm v1.0";
+  }
+
+  @Override
+  protected NamedAlgorithmType getType()
+  {
+    return NamedAlgorithmType.FANOUT;
   }
 
   private static class Component implements Comparable<Component>

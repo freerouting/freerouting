@@ -9,6 +9,7 @@ import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.RouterSettings;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,14 +19,11 @@ import java.util.TreeSet;
 /**
  * Optimizes routes using a single thread on a board that has completed auto-routing.
  */
-public class BatchOptRoute
+public class BatchOptRoute extends NamedAlgorithm
 {
   protected static int MAX_AUTOROUTE_PASSES = 6;
   protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
-  // TODO: change the type from InteractiveActionThread to Thread to support headless mode
-  protected final InteractiveActionThread thread;
   protected boolean clone_board;
-  protected RoutingBoard routing_board;
   protected ReadSortedRouteItems sorted_route_items;
   protected boolean use_increased_ripup_costs; // in the first passes the ripup costs are increased for better
   // performance.
@@ -34,17 +32,10 @@ public class BatchOptRoute
   /**
    * To optimize the route on the board after the autoroute task is finished.
    */
-  public BatchOptRoute(InteractiveActionThread p_thread)
+  public BatchOptRoute(InteractiveActionThread p_thread, boolean p_clone_board, RouterSettings settings)
   {
-    this(p_thread, false);
-  }
-
-  public BatchOptRoute(InteractiveActionThread p_thread, boolean p_clone_board)
-  {
-    this.thread = p_thread;
+    super(p_thread, p_clone_board ? p_thread.hdlg.deep_copy_routing_board() : p_thread.hdlg.get_routing_board(), settings);
     this.clone_board = p_clone_board;
-
-    this.routing_board = p_clone_board ? p_thread.hdlg.deep_copy_routing_board() : p_thread.hdlg.get_routing_board();
   }
 
   static boolean contains_only_unfixed_traces(Collection<Item> p_item_list)
@@ -247,7 +238,7 @@ public class BatchOptRoute
       ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
     }
 
-    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, p_with_preferred_directions, this.clone_board ? this.routing_board : null);
+    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, p_with_preferred_directions, this.clone_board ? this.routing_board : null, settings);
 
     this.remove_ratsnest();
     int incomplete_count_after = this.get_ratsnest().incomplete_count();
@@ -303,6 +294,36 @@ public class BatchOptRoute
       return null;
     }
     return sorted_route_items.get_current_position();
+  }
+
+  @Override
+  protected String getId()
+  {
+    return "optimizer-classic";
+  }
+
+  @Override
+  protected String getName()
+  {
+    return "Freerouting Classic Route Optimizer";
+  }
+
+  @Override
+  protected String getVersion()
+  {
+    return "1.0";
+  }
+
+  @Override
+  protected String getDescription()
+  {
+    return "Freerouting Classic Optimizer v1.0";
+  }
+
+  @Override
+  protected NamedAlgorithmType getType()
+  {
+    return NamedAlgorithmType.OPTIMIZER;
   }
   /*
   protected class RouteResult

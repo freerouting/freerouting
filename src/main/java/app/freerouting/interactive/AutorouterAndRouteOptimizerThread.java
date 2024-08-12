@@ -5,6 +5,7 @@ import app.freerouting.autoroute.BatchFanout;
 import app.freerouting.autoroute.BatchOptRoute;
 import app.freerouting.autoroute.BatchOptRouteMT;
 import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -15,6 +16,7 @@ import app.freerouting.settings.RouterSettings;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * GUI interactive thread for the batch auto-router + route optimizer.
@@ -32,7 +34,16 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   protected AutorouterAndRouteOptimizerThread(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
     super(p_board_handling);
-    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs());
+    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs(), this.hdlg.get_routing_board(), routerSettings);
+    this.batch_autorouter.addBoardUpdatedEventListener(new Consumer<BoardStatistics>()
+    {
+      @Override
+      public void accept(BoardStatistics boardStatistics)
+      {
+        hdlg.screen_messages.set_batch_autoroute_info(boardStatistics.unrouted_item_count, boardStatistics.routed_item_count, boardStatistics.ripped_item_count, boardStatistics.not_found_item_count);
+        hdlg.repaint();
+      }
+    });
 
     int num_threads = routerSettings.maxThreads;
     save_intermediate_stages = p_board_handling.save_intermediate_stages;
@@ -43,7 +54,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       FRLogger.warn("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
     }
 
-    this.batch_opt_route = num_threads > 1 ? new BatchOptRouteMT(this, routerSettings) : new BatchOptRoute(this);
+    this.batch_opt_route = num_threads > 1 ? new BatchOptRouteMT(this, routerSettings) : new BatchOptRoute(this, false, routerSettings);
   }
 
   @Override
