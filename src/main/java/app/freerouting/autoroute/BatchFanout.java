@@ -21,11 +21,11 @@ public class BatchFanout extends NamedAlgorithm
   {
     super(p_thread, p_thread.hdlg.get_routing_board(), null);
 
-    Collection<app.freerouting.board.Pin> board_smd_pin_list = routing_board.get_smd_pins();
+    Collection<app.freerouting.board.Pin> board_smd_pin_list = board.get_smd_pins();
     this.sorted_components = new TreeSet<>();
-    for (int i = 1; i <= routing_board.components.count(); ++i)
+    for (int i = 1; i <= board.components.count(); ++i)
     {
-      app.freerouting.board.Component curr_board_component = routing_board.components.get(i);
+      app.freerouting.board.Component curr_board_component = board.components.get(i);
       Component curr_component = new Component(curr_board_component, board_smd_pin_list);
       if (curr_component.smd_pin_count > 0)
       {
@@ -65,8 +65,8 @@ public class BatchFanout extends NamedAlgorithm
       {
         double max_milliseconds = 10000 * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
-        this.routing_board.start_marking_changed_area();
-        AutorouteEngine.AutorouteResult curr_result = this.routing_board.fanout(curr_pin.board_pin, this.thread.hdlg.get_settings(), ripup_costs, this.thread, time_limit);
+        this.board.start_marking_changed_area();
+        AutorouteEngine.AutorouteResult curr_result = this.board.fanout(curr_pin.board_pin, this.thread.hdlg.get_settings(), ripup_costs, this.thread, time_limit);
         switch (curr_result)
         {
           case ROUTED -> ++routed_count;

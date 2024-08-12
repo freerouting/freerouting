@@ -158,13 +158,13 @@ public class BatchOptRouteMT extends BatchOptRoute
 
   private void update_master_routing_board()
   {
-    this.thread.hdlg.update_routing_board(winning_candidate.routing_board);
-    this.routing_board = this.thread.hdlg.get_routing_board();
+    this.thread.hdlg.update_routing_board(winning_candidate.board);
+    this.board = this.thread.hdlg.get_routing_board();
 
-    this.min_cumulative_trace_length_before = calc_weighted_trace_length(this.routing_board);
+    this.min_cumulative_trace_length_before = calc_weighted_trace_length(this.board);
 
-    double new_trace_length = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
-    this.thread.hdlg.screen_messages.set_post_route_info(this.routing_board.get_vias().size(), new_trace_length, this.thread.hdlg.coordinate_transform.user_unit);
+    double new_trace_length = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
+    this.thread.hdlg.screen_messages.set_post_route_info(this.board.get_vias().size(), new_trace_length, this.thread.hdlg.coordinate_transform.user_unit);
 
     ++update_count;
   }
@@ -235,10 +235,10 @@ public class BatchOptRouteMT extends BatchOptRoute
       winning_candidate = null;
     }
 
-    int via_count_before = this.routing_board.get_vias().size();
-    double user_trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+    int via_count_before = this.board.get_vias().size();
+    double user_trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
     this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, user_trace_length_before, this.thread.hdlg.coordinate_transform.user_unit);
-    this.min_cumulative_trace_length_before = calc_weighted_trace_length(routing_board);
+    this.min_cumulative_trace_length_before = calc_weighted_trace_length(board);
     // double pass_trace_length_before = this.min_cumulative_trace_length_before;
     String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + via_count_before + " vias and " + String.format("%(,.2f", user_trace_length_before) + " trace length running on " + thread_pool_size + " threads.";
     FRLogger.traceEntry(optimizationPassId);
@@ -315,7 +315,7 @@ public class BatchOptRouteMT extends BatchOptRoute
 
     String us = current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL ? "Global Optimal" : "Greedy";
     String is = current_item_selection_strategy() == ItemSelectionStrategy.SEQUENTIAL ? "Sequential" : (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM ? "Random" : "Prioritized");
-    double user_trace_length_after = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+    double user_trace_length_after = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
 
     FRLogger.debug("Finished pass #" + p_pass_no + " in " + minutes + " minutes " + sec + " seconds with " + update_count + " board updates using " + thread_pool_size + " thread(s) with '" + us + "' strategy and '" + is + "' item selection strategy.");
     FRLogger.debug("Route optimizer pass summary - Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + ", via count: " + best_route_result.via_count() + ", trace length: " + (int) user_trace_length_after + ", via count delta: " + (via_count_before - best_route_result.via_count()) + ", trace length delta: " + (int) (user_trace_length_before - user_trace_length_after) + ".");

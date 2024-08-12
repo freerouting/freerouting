@@ -180,7 +180,7 @@ public class ExpandTestState extends InteractiveState
         }
       }
     }
-    this.control_settings = new AutorouteControl(hdlg.get_routing_board(), route_net_no, hdlg.settings);
+    this.control_settings = new AutorouteControl(hdlg.get_routing_board(), route_net_no, hdlg.settings.autoroute_settings);
     // this.control_settings.ripup_allowed = true;
     // this.control_settings.is_fanout = true;
     this.control_settings.ripup_pass_no = hdlg.settings.autoroute_settings.get_start_pass_no();

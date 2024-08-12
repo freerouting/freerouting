@@ -35,11 +35,11 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable
   {
     boolean found = false;
 
-    Iterator<UndoableObjectNode> it = this.routing_board.item_list.start_read_object();
+    Iterator<UndoableObjectNode> it = this.board.item_list.start_read_object();
 
     while (it.hasNext())
     {
-      UndoableObjects.Storable curr_ob = routing_board.item_list.read_object(it);
+      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
 
       if (curr_ob instanceof Item item)
       {
@@ -103,7 +103,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable
     curr_item = null;
 
     this.sorted_route_items = null;
-    this.routing_board = null;
+    this.board = null;
   }
 
   @Override
@@ -116,6 +116,6 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable
   @Override
   protected RatsNest get_ratsnest()
   {
-    return new RatsNest(this.routing_board, this.thread.hdlg.get_locale());
+    return new RatsNest(this.board, this.thread.hdlg.get_locale());
   }
 }

@@ -89,7 +89,7 @@ public class BatchOptRoute extends NamedAlgorithm
    */
   public void optimize_board(boolean save_intermediate_stages, float optimization_improvement_threshold, InteractiveActionThread isStopRequested)
   {
-    FRLogger.debug("Before optimize: Via count: " + routing_board.get_vias().size() + ", trace length: " + Math.round(routing_board.cumulative_trace_length()));
+    FRLogger.debug("Before optimize: Via count: " + board.get_vias().size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
     double route_improved = -1;
     int curr_pass_no = 0;
     use_increased_ripup_costs = true;
@@ -119,11 +119,11 @@ public class BatchOptRoute extends NamedAlgorithm
   protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions)
   {
     float route_improved = 0.0f;
-    int via_count_before = this.routing_board.get_vias().size();
-    double trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+    int via_count_before = this.board.get_vias().size();
+    double trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
     this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before, this.thread.hdlg.coordinate_transform.user_unit);
     this.sorted_route_items = new ReadSortedRouteItems();
-    this.min_cumulative_trace_length_before = calc_weighted_trace_length(routing_board);
+    this.min_cumulative_trace_length_before = calc_weighted_trace_length(board);
     String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + via_count_before + " vias and " + String.format("%(,.2f", trace_length_before) + " trace length.";
 
     FRLogger.traceEntry(optimizationPassId);
@@ -142,8 +142,8 @@ public class BatchOptRoute extends NamedAlgorithm
       }
       if (opt_route_item(curr_item, p_pass_no, p_with_preferred_directions).improved())
       {
-        int via_count_after = this.routing_board.get_vias().size();
-        double trace_length_after = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+        int via_count_after = this.board.get_vias().size();
+        double trace_length_after = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
 
         route_improved = (float) ((via_count_before != 0 && trace_length_before != 0) ? 1.0 - (((((float) via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2)) : 0);
       }
@@ -186,7 +186,7 @@ public class BatchOptRoute extends NamedAlgorithm
     // as a new instance is needed every time, i.e., remove/get ratsnest are called in pair
     int incomplete_count_before = this.get_ratsnest().incomplete_count();
 
-    int via_count_before = this.routing_board.get_vias().size();
+    int via_count_before = this.board.get_vias().size();
     Set<Item> ripped_items = new TreeSet<>();
     ripped_items.add(p_item);
     if (p_item instanceof Trace curr_trace)
@@ -218,14 +218,14 @@ public class BatchOptRoute extends NamedAlgorithm
 
     if (!this.clone_board)
     {
-      routing_board.generate_snapshot();
+      board.generate_snapshot();
     }
     // no need to undo for cloned board which is either promoted to master or discarded
 
-    this.routing_board.remove_items(ripped_connections);
+    this.board.remove_items(ripped_connections);
     for (int i = 0; i < p_item.net_count(); ++i)
     {
-      this.routing_board.combine_traces(p_item.get_net_no(i));
+      this.board.combine_traces(p_item.get_net_no(i));
     }
     int ripup_costs = this.thread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs();
     if (this.use_increased_ripup_costs)
@@ -238,13 +238,13 @@ public class BatchOptRoute extends NamedAlgorithm
       ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
     }
 
-    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, p_with_preferred_directions, this.clone_board ? this.routing_board : null, settings);
+    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, p_with_preferred_directions, this.clone_board ? this.board : null, settings);
 
     this.remove_ratsnest();
     int incomplete_count_after = this.get_ratsnest().incomplete_count();
 
-    int via_count_after = this.routing_board.get_vias().size();
-    double trace_length_after = calc_weighted_trace_length(routing_board);
+    int via_count_after = this.board.get_vias().size();
+    double trace_length_after = calc_weighted_trace_length(board);
 
     ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), via_count_before, via_count_after, this.min_cumulative_trace_length_before, trace_length_after, incomplete_count_before, incomplete_count_after);
     boolean route_improved = !this.thread.is_stop_requested() && result.improved();
@@ -266,17 +266,17 @@ public class BatchOptRoute extends NamedAlgorithm
 
       if (!this.clone_board)
       {
-        routing_board.pop_snapshot();
+        board.pop_snapshot();
       }
 
-      double new_trace_length = this.thread.hdlg.coordinate_transform.board_to_user(this.routing_board.cumulative_trace_length());
+      double new_trace_length = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
       this.thread.hdlg.screen_messages.set_post_route_info(via_count_after, new_trace_length, this.thread.hdlg.coordinate_transform.user_unit);
     }
     else
     {
       if (!this.clone_board)
       {
-        routing_board.undo(null);
+        board.undo(null);
       }
     }
 
@@ -377,10 +377,10 @@ public class BatchOptRoute extends NamedAlgorithm
       Item result = null;
       FloatPoint curr_min_coor = new FloatPoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
       int curr_min_layer = Integer.MAX_VALUE;
-      Iterator<UndoableObjects.UndoableObjectNode> it = routing_board.item_list.start_read_object();
+      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
       for (; ; )
       {
-        UndoableObjects.Storable curr_item = routing_board.item_list.read_object(it);
+        UndoableObjects.Storable curr_item = board.item_list.read_object(it);
         if (curr_item == null)
         {
           break;
@@ -404,10 +404,10 @@ public class BatchOptRoute extends NamedAlgorithm
         }
       }
       // Read traces last to prefer vias to traces at the same location
-      it = routing_board.item_list.start_read_object();
+      it = board.item_list.start_read_object();
       for (; ; )
       {
-        UndoableObjects.Storable curr_item = routing_board.item_list.read_object(it);
+        UndoableObjects.Storable curr_item = board.item_list.read_object(it);
         if (curr_item == null)
         {
           break;

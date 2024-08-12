@@ -17,14 +17,14 @@ public abstract class NamedAlgorithm
   // TODO: change the type from InteractiveActionThread to Thread to support headless mode
   protected final InteractiveActionThread thread;
   protected final List<Consumer<BoardStatistics>> boardUpdatedEventListeners = new ArrayList<>();
-  protected final List<Consumer<TaskState>> taskStateEventListeners = new ArrayList<>();
+  protected final List<Consumer<TaskState>> taskStateChangedEventListeners = new ArrayList<>();
   protected final RouterSettings settings;
-  protected RoutingBoard routing_board;
+  protected RoutingBoard board;
 
   protected NamedAlgorithm(InteractiveActionThread thread, RoutingBoard board, RouterSettings settings)
   {
     this.thread = thread;
-    this.routing_board = board;
+    this.board = board;
     this.settings = settings;
   }
 
@@ -66,5 +66,10 @@ public abstract class NamedAlgorithm
   public void addBoardUpdatedEventListener(Consumer<BoardStatistics> listener)
   {
     boardUpdatedEventListeners.add(listener);
+  }
+
+  public void addTaskStateChangedEventListener(Consumer<TaskState> listener)
+  {
+    taskStateChangedEventListeners.add(listener);
   }
 }

@@ -3,11 +3,11 @@ package app.freerouting.autoroute;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.interactive.Settings;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
+import app.freerouting.settings.AutorouteSettings;
 
 /**
  * Structure for controlling the autoroute algorithm.
@@ -119,16 +119,16 @@ public class AutorouteControl
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
-  public AutorouteControl(RoutingBoard p_board, int p_net_no, Settings p_settings)
+  public AutorouteControl(RoutingBoard p_board, int p_net_no, AutorouteSettings p_settings)
   {
-    this(p_board, p_settings, p_settings.autoroute_settings.get_trace_cost_arr());
-    init_net(p_net_no, p_board, p_settings.autoroute_settings.get_via_costs());
+    this(p_board, p_settings, p_settings.get_trace_cost_arr());
+    init_net(p_net_no, p_board, p_settings.get_via_costs());
   }
 
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
-  public AutorouteControl(RoutingBoard p_board, int p_net_no, Settings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr)
+  public AutorouteControl(RoutingBoard p_board, int p_net_no, AutorouteSettings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr)
   {
     this(p_board, p_settings, p_trace_cost_arr);
     init_net(p_net_no, p_board, p_via_costs);
@@ -137,20 +137,20 @@ public class AutorouteControl
   /**
    * Creates a new instance of AutorouteControl
    */
-  private AutorouteControl(RoutingBoard p_board, Settings p_settings, ExpansionCostFactor[] p_trace_costs_arr)
+  private AutorouteControl(RoutingBoard p_board, AutorouteSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr)
   {
     layer_count = p_board.get_layer_count();
     trace_half_width = new int[layer_count];
     compensated_trace_half_width = new int[layer_count];
     layer_active = new boolean[layer_count];
-    vias_allowed = p_settings.autoroute_settings.get_vias_allowed();
+    vias_allowed = p_settings.get_vias_allowed();
     via_radius_arr = new double[layer_count];
     add_via_costs = new ViaCost[layer_count];
 
     for (int i = 0; i < layer_count; ++i)
     {
       add_via_costs[i] = new ViaCost(layer_count);
-      layer_active[i] = p_settings.autoroute_settings.get_layer_active(i);
+      layer_active[i] = p_settings.get_layer_active(i);
     }
     is_fanout = false;
     remove_unconnected_vias = true;

@@ -150,7 +150,7 @@ public class RouteState extends InteractiveState
     }
     new_instance.routing_target_set = picked_item.get_unconnected_set(-1);
 
-    new_instance.route = new Route(location, p_board_handling.settings.layer, trace_half_widths, layer_active_arr, route_net_no_arr, trace_clearance_class, p_board_handling.get_via_rule(route_net_no_arr[0]), p_board_handling.settings.push_enabled, p_board_handling.settings.trace_pull_tight_region_width, p_board_handling.settings.trace_pull_tight_accuracy, picked_item, new_instance.routing_target_set, routing_board, is_stitch_route, p_board_handling.settings.automatic_neckdown, p_board_handling.settings.via_snap_to_smd_center, p_board_handling.settings.hilight_routing_obstacle);
+    new_instance.route = new Route(location, p_board_handling.settings.layer, trace_half_widths, layer_active_arr, route_net_no_arr, trace_clearance_class, p_board_handling.get_via_rule(route_net_no_arr[0]), p_board_handling.settings.push_enabled, p_board_handling.settings.trace_pull_tight_region_width, p_board_handling.settings.trace_pull_tight_accuracy, picked_item, new_instance.routing_target_set, routing_board, is_stitch_route, p_board_handling.settings.autoroute_settings.get_automatic_neckdown(), p_board_handling.settings.via_snap_to_smd_center, p_board_handling.settings.hilight_routing_obstacle);
     new_instance.observers_activated = !routing_board.observers_active();
     if (new_instance.observers_activated)
     {

@@ -402,7 +402,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
     this.settings_routing_via_snap_to_smd_center_check_box.setSelected(this.board_handling.settings.get_via_snap_to_smd_center());
     this.settings_routing_ignore_conduction_check_box.setSelected(this.board_handling.get_routing_board().rules.get_ignore_conduction());
     this.settings_routing_hilight_routing_obstacle_check_box.setSelected(this.board_handling.settings.get_hilight_routing_obstacle());
-    this.settings_routing_neckdown_check_box.setSelected(this.board_handling.settings.get_automatic_neckdown());
+    this.settings_routing_neckdown_check_box.setSelected(this.board_handling.settings.autoroute_settings.get_automatic_neckdown());
 
     double edge_to_turn_dist = this.board_handling.get_routing_board().rules.get_pin_edge_to_turn_dist();
     edge_to_turn_dist = this.board_handling.coordinate_transform.board_to_user(edge_to_turn_dist);
@@ -653,7 +653,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
     @Override
     public void actionPerformed(ActionEvent p_evt)
     {
-      board_handling.settings.set_automatic_neckdown(settings_routing_neckdown_check_box.isSelected());
+      board_handling.settings.autoroute_settings.set_automatic_neckdown(settings_routing_neckdown_check_box.isSelected());
     }
   }
 

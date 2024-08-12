@@ -25,6 +25,11 @@ public class AutorouteSettings implements Serializable
   private int start_ripup_costs;
   private int start_pass_no;
   private int stop_pass_no;
+  /**
+   * If true, the trace width at static pins smaller the trace width will be lowered
+   * automatically to the pin with, if necessary.
+   */
+  private boolean automatic_neckdown = true;
 
   /**
    * Creates a new instance of AutorouteSettings
@@ -344,4 +349,23 @@ public class AutorouteSettings implements Serializable
     }
     return result;
   }
+
+  /**
+   * If true, the trace width at static pins smaller the trace width will be lowered
+   * automatically to the pin with, if necessary.
+   */
+  public boolean get_automatic_neckdown()
+  {
+    return this.automatic_neckdown;
+  }
+
+  /**
+   * If true, the trace width at static pins smaller the trace width will be lowered
+   * automatically to the pin with, if necessary.
+   */
+  public void set_automatic_neckdown(boolean p_value)
+  {
+    this.automatic_neckdown = p_value;
+  }
+
 }

@@ -61,11 +61,6 @@ public class Settings implements Serializable
    */
   int vertical_component_grid;
   /**
-   * If true, the trace width at static pins smaller the trace width will be lowered
-   * automatically to the pin with, if necessary.
-   */
-  boolean automatic_neckdown;
-  /**
    * Indicates if the routing rule selection is manual by the user or automatic by the net rules.
    */
   boolean manual_rule_selection;
@@ -122,7 +117,6 @@ public class Settings implements Serializable
     via_snap_to_smd_center = true;
     horizontal_component_grid = 0;
     vertical_component_grid = 0;
-    automatic_neckdown = true;
     manual_rule_selection = false;
     hilight_routing_obstacle = false;
     manual_trace_clearance_class = 1;
@@ -152,7 +146,6 @@ public class Settings implements Serializable
     this.via_snap_to_smd_center = p_settings.via_snap_to_smd_center;
     this.horizontal_component_grid = p_settings.horizontal_component_grid;
     this.vertical_component_grid = p_settings.vertical_component_grid;
-    this.automatic_neckdown = p_settings.automatic_neckdown;
     this.manual_rule_selection = p_settings.manual_rule_selection;
     this.hilight_routing_obstacle = p_settings.hilight_routing_obstacle;
     this.zoom_with_wheel = p_settings.zoom_with_wheel;
@@ -288,28 +281,6 @@ public class Settings implements Serializable
       return;
     }
     this.hilight_routing_obstacle = p_value;
-  }
-
-  /**
-   * If true, the trace width at static pins smaller the trace width will be lowered
-   * automatically to the pin with, if necessary.
-   */
-  public boolean get_automatic_neckdown()
-  {
-    return this.automatic_neckdown;
-  }
-
-  /**
-   * If true, the trace width at static pins smaller the trace width will be lowered
-   * automatically to the pin with, if necessary.
-   */
-  public void set_automatic_neckdown(boolean p_value)
-  {
-    if (read_only)
-    {
-      return;
-    }
-    this.automatic_neckdown = p_value;
   }
 
   /**
