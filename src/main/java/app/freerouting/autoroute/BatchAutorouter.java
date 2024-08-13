@@ -1,15 +1,13 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.*;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.InteractiveActionThread;
-import app.freerouting.interactive.InteractiveState;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
 
@@ -21,25 +19,23 @@ import java.util.*;
 public class BatchAutorouter extends NamedAlgorithm
 {
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
-  // TODO: make having a BoardHandling instance optional
-  private final BoardHandling hdlg;
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
   private final boolean retain_autoroute_database;
   private final int start_ripup_costs;
   private final HashSet<String> already_checked_board_hashes = new HashSet<>();
   private final LinkedList<Integer> traceLengthDifferenceBetweenPasses = new LinkedList<>();
+  private final int trace_pull_tight_accuracy;
   private boolean is_interrupted = false;
   /**
    * Used to draw the airline of the current routed incomplete.
    */
   private FloatLine air_line;
 
-  public BatchAutorouter(InteractiveActionThread p_thread, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, RoutingBoard board, RouterSettings settings)
+  public BatchAutorouter(InteractiveActionThread p_thread, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy, RoutingBoard board, RouterSettings settings)
   {
     super(p_thread, board, settings);
 
-    this.hdlg = p_thread.hdlg;
     this.remove_unconnected_vias = p_remove_unconnected_vias;
     if (p_with_preferred_directions)
     {
@@ -57,6 +53,7 @@ public class BatchAutorouter extends NamedAlgorithm
     }
 
     this.start_ripup_costs = p_start_ripup_costs;
+    this.trace_pull_tight_accuracy = p_pull_tight_accuracy;
     this.retain_autoroute_database = false;
   }
 
@@ -66,9 +63,9 @@ public class BatchAutorouter extends NamedAlgorithm
    * the number of passes to complete the board or p_max_pass_count + 1, if the board is not
    * completed.
    */
-  public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread, int p_max_pass_count, int p_ripup_costs, boolean p_with_preferred_directions, RoutingBoard updated_routing_board, RouterSettings routerSettings)
+  public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread, int p_max_pass_count, int p_ripup_costs, int trace_pull_tight_accuracy, boolean p_with_preferred_directions, RoutingBoard updated_routing_board, RouterSettings routerSettings)
   {
-    BatchAutorouter router_instance = new BatchAutorouter(p_thread, true, p_with_preferred_directions, p_ripup_costs, updated_routing_board, routerSettings);
+    BatchAutorouter router_instance = new BatchAutorouter(p_thread, true, p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy, updated_routing_board, routerSettings);
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items && !router_instance.is_interrupted && curr_pass_no <= p_max_pass_count)
@@ -128,7 +125,7 @@ public class BatchAutorouter extends NamedAlgorithm
    */
   public boolean autoroute_passes(boolean save_intermediate_stages)
   {
-    this.taskStateChangedEventListeners.forEach(listener -> listener.accept(TaskState.STARTED));
+    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     boolean still_unrouted_items = true;
     int minimumPassCountBeforeImprovementCheck = 5;
@@ -156,11 +153,7 @@ public class BatchAutorouter extends NamedAlgorithm
         break;
       }
 
-      this.taskStateChangedEventListeners.forEach(listener -> listener.accept(TaskState.RUNNING));
-
-      TextManager tm = new TextManager(InteractiveState.class, hdlg.get_locale());
-      String start_message = tm.getText("autorouter_started", Integer.toString(curr_pass_no));
-      hdlg.screen_messages.set_status_message(start_message);
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
 
       BasicBoard boardBefore = this.board.clone();
 
@@ -214,11 +207,11 @@ public class BatchAutorouter extends NamedAlgorithm
 
     if (!this.is_interrupted)
     {
-      this.taskStateChangedEventListeners.forEach(listener -> listener.accept(TaskState.FINISHED));
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, this.settings.autorouterSettings.get_start_pass_no(), this.board.get_hash()));
     }
     else
     {
-      this.taskStateChangedEventListeners.forEach(listener -> listener.accept(TaskState.CANCELLED));
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, this.settings.autorouterSettings.get_start_pass_no(), this.board.get_hash()));
     }
 
     return !this.is_interrupted;
@@ -289,7 +282,7 @@ public class BatchAutorouter extends NamedAlgorithm
       BoardStatistics stats = board.get_statistics();
       stats.unrouted_item_count = items_to_go_count;
 
-      this.boardUpdatedEventListeners.forEach(listener -> listener.accept(stats));
+      this.fireBoardUpdatedEvent(stats);
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list)
@@ -331,7 +324,7 @@ public class BatchAutorouter extends NamedAlgorithm
           updatedStats.ripped_item_count = ripped_item_count;
           updatedStats.not_found_item_count = not_found;
           updatedStats.routed_item_count = routed;
-          this.boardUpdatedEventListeners.forEach(listener -> listener.accept(updatedStats));
+          this.fireBoardUpdatedEvent(updatedStats);
         }
       }
 
@@ -359,7 +352,7 @@ public class BatchAutorouter extends NamedAlgorithm
   {
     board.start_marking_changed_area();
     board.remove_trace_tails(-1, p_stop_connection_option);
-    board.opt_changed_area(new int[0], null, this.hdlg.get_settings().get_trace_pull_tight_accuracy(), this.trace_cost_arr, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+    board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, this.trace_cost_arr, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is routed.
@@ -388,7 +381,7 @@ public class BatchAutorouter extends NamedAlgorithm
       }
 
       // Get and calculate the auto-router settings based on the board and net we are working on
-      AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, hdlg.get_settings().autoroute_settings, curr_via_costs, this.trace_cost_arr);
+      AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, settings.autorouterSettings, curr_via_costs, this.trace_cost_arr);
       autoroute_control.ripup_allowed = true;
       autoroute_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
       autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;
@@ -441,7 +434,7 @@ public class BatchAutorouter extends NamedAlgorithm
       // Update the changed area of the board
       if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED)
       {
-        board.opt_changed_area(new int[0], null, this.hdlg.get_settings().get_trace_pull_tight_accuracy(), autoroute_control.trace_costs, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, autoroute_control.trace_costs, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
       }
 
       // Return true, if the item is routed

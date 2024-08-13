@@ -1,9 +1,10 @@
 package app.freerouting.interactive;
 
-import app.freerouting.autoroute.BatchAutorouter;
-import app.freerouting.autoroute.BatchFanout;
-import app.freerouting.autoroute.BatchOptRoute;
-import app.freerouting.autoroute.BatchOptRouteMT;
+import app.freerouting.autoroute.*;
+import app.freerouting.autoroute.events.BoardUpdatedEvent;
+import app.freerouting.autoroute.events.BoardUpdatedEventListener;
+import app.freerouting.autoroute.events.TaskStateChangedEvent;
+import app.freerouting.autoroute.events.TaskStateChangedEventListener;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
@@ -16,7 +17,6 @@ import app.freerouting.settings.RouterSettings;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
-import java.util.function.Consumer;
 
 /**
  * GUI interactive thread for the batch auto-router + route optimizer.
@@ -34,14 +34,30 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   protected AutorouterAndRouteOptimizerThread(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
     super(p_board_handling);
-    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs(), this.hdlg.get_routing_board(), routerSettings);
-    this.batch_autorouter.addBoardUpdatedEventListener(new Consumer<BoardStatistics>()
+    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs(), this.hdlg.settings.trace_pull_tight_accuracy, this.hdlg.get_routing_board(), routerSettings);
+    this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override
-      public void accept(BoardStatistics boardStatistics)
+      public void onBoardUpdatedEvent(BoardUpdatedEvent event)
       {
+        BoardStatistics boardStatistics = event.getBoardStatistics();
         hdlg.screen_messages.set_batch_autoroute_info(boardStatistics.unrouted_item_count, boardStatistics.routed_item_count, boardStatistics.ripped_item_count, boardStatistics.not_found_item_count);
         hdlg.repaint();
+      }
+    });
+
+    this.batch_autorouter.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
+    {
+      @Override
+      public void onTaskStateChangedEvent(TaskStateChangedEvent event)
+      {
+        TaskState taskState = event.getTaskState();
+        if (taskState == TaskState.RUNNING)
+        {
+          TextManager tm = new TextManager(InteractiveState.class, hdlg.get_locale());
+          String start_message = tm.getText("autorouter_started", Integer.toString(event.getPassNumber()));
+          hdlg.screen_messages.set_status_message(start_message);
+        }
       }
     });
 

@@ -65,7 +65,7 @@ public class Settings implements Serializable
    */
   boolean manual_rule_selection;
   /**
-   * If true, the current routing obstacle is hilightet in dynamic routing.
+   * If true, the current routing obstacle is highlighted in dynamic routing.
    */
   boolean hilight_routing_obstacle;
   /**
