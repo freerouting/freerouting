@@ -3,15 +3,16 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 
 import java.io.IOException;
 
 public class AutorouteSettings
 {
 
-  static app.freerouting.settings.AutorouteSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
+  static RouterSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
   {
-    app.freerouting.settings.AutorouteSettings result = new app.freerouting.settings.AutorouteSettings(p_layer_structure.arr.length);
+    RouterSettings result = new RouterSettings(p_layer_structure.arr.length);
     boolean with_fanout = false;
     boolean with_autoroute = true;
     boolean with_postroute = true;
@@ -91,7 +92,7 @@ public class AutorouteSettings
     return result;
   }
 
-  static app.freerouting.settings.AutorouteSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure, app.freerouting.settings.AutorouteSettings p_settings)
+  static RouterSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure, RouterSettings p_settings)
   {
     p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object next_token;
@@ -186,7 +187,7 @@ public class AutorouteSettings
     return p_settings;
   }
 
-  static void write_scope(IndentFileWriter p_file, app.freerouting.settings.AutorouteSettings p_settings, app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException
+  static void write_scope(IndentFileWriter p_file, RouterSettings p_settings, app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException
   {
     p_file.start_scope();
     p_file.write("autoroute_settings");

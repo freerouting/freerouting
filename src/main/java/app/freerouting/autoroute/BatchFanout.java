@@ -1,9 +1,11 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.RouterSettings;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -17,9 +19,9 @@ public class BatchFanout extends NamedAlgorithm
 {
   private final SortedSet<Component> sorted_components;
 
-  private BatchFanout(InteractiveActionThread p_thread)
+  private BatchFanout(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings settings)
   {
-    super(p_thread, p_thread.hdlg.get_routing_board(), null);
+    super(p_thread, board, settings);
 
     Collection<app.freerouting.board.Pin> board_smd_pin_list = board.get_smd_pins();
     this.sorted_components = new TreeSet<>();
@@ -34,9 +36,9 @@ public class BatchFanout extends NamedAlgorithm
     }
   }
 
-  public static void fanout_board(InteractiveActionThread p_thread)
+  public static void fanout_board(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings routerSettings)
   {
-    BatchFanout fanout_instance = new BatchFanout(p_thread);
+    BatchFanout fanout_instance = new BatchFanout(p_thread, board, routerSettings);
     final int MAX_PASS_COUNT = 20;
     for (int i = 0; i < MAX_PASS_COUNT; ++i)
     {
@@ -57,7 +59,7 @@ public class BatchFanout extends NamedAlgorithm
     int routed_count = 0;
     int not_routed_count = 0;
     int insert_error_count = 0;
-    int ripup_costs = settings.autorouterSettings.get_start_ripup_costs() * (p_pass_no + 1);
+    int ripup_costs = settings.get_start_ripup_costs() * (p_pass_no + 1);
     for (Component curr_component : this.sorted_components)
     {
       this.thread.hdlg.screen_messages.set_batch_fanout_info(p_pass_no + 1, components_to_go);
@@ -66,7 +68,7 @@ public class BatchFanout extends NamedAlgorithm
         double max_milliseconds = 10000 * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
         this.board.start_marking_changed_area();
-        AutorouteEngine.AutorouteResult curr_result = this.board.fanout(curr_pin.board_pin, settings.autorouterSettings, ripup_costs, this.thread, time_limit);
+        AutorouteEngine.AutorouteResult curr_result = this.board.fanout(curr_pin.board_pin, settings, ripup_costs, this.thread, time_limit);
         switch (curr_result)
         {
           case ROUTED -> ++routed_count;

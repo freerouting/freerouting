@@ -4,7 +4,7 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.management.FRAnalytics;
-import app.freerouting.settings.AutorouteSettings;
+import app.freerouting.settings.RouterSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -206,7 +206,7 @@ public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
   @Override
   public void refresh()
   {
-    AutorouteSettings settings = this.board_handling.settings.autoroute_settings;
+    RouterSettings settings = this.board_handling.settings.autoroute_settings;
     LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
     this.via_cost_field.setValue(settings.get_via_costs());
     this.plane_via_cost_field.setValue(settings.get_plane_via_costs());

@@ -7,7 +7,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.IBoardHandling;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.settings.AutorouteSettings;
+import app.freerouting.settings.RouterSettings;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -189,7 +189,7 @@ public class DsnFile
     }
     // Adjust the layer preferred directions in the autoroute settings.
     // and deactivate the changed layers.
-    AutorouteSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
+    RouterSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
     int layer_count = routing_board.get_layer_count();
     boolean curr_preferred_direction_is_horizontal = autoroute_settings.get_preferred_direction_is_horizontal(0);
     for (int i = 0; i < layer_count; ++i)

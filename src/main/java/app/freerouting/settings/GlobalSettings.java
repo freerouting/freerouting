@@ -30,7 +30,7 @@ public class GlobalSettings implements Serializable
   @SerializedName("gui")
   public final GuiSettings guiSettings = new GuiSettings();
   @SerializedName("router")
-  public final RouterSettings routerSettings = new RouterSettings();
+  public final RouterSettings routerSettings = new RouterSettings(0);
   @SerializedName("usage_and_diagnostic_data")
   public final UsageAndDiagnosticDataSettings usageAndDiagnosticData = new UsageAndDiagnosticDataSettings();
   @SerializedName("feature_flags")

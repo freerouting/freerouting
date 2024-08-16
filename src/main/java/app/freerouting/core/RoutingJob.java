@@ -28,7 +28,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public final UUID id = UUID.randomUUID();
   // TODO: pass the router settings as an input and forward it to the router
-  private final RouterSettings routerSettings = new RouterSettings();
+  private final RouterSettings routerSettings = new RouterSettings(0);
   public String name = "N/A";
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;

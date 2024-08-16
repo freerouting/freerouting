@@ -34,7 +34,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   protected AutorouterAndRouteOptimizerThread(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
     super(p_board_handling);
-    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, this.hdlg.get_routing_board(), routerSettings);
+    this.batch_autorouter = new BatchAutorouter(this, this.hdlg.get_routing_board(), routerSettings, !routerSettings.get_with_fanout(), true, routerSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
     this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override
@@ -103,7 +103,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       boolean fanout_first = hdlg.get_settings().autoroute_settings.get_with_fanout() && hdlg.get_settings().autoroute_settings.get_start_pass_no() <= 1;
       if (fanout_first)
       {
-        BatchFanout.fanout_board(this);
+        BatchFanout.fanout_board(this, hdlg.get_routing_board(), hdlg.get_settings().autoroute_settings);
       }
       if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_auto_router_requested())
       {

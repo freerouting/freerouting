@@ -7,7 +7,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
-import app.freerouting.settings.AutorouteSettings;
+import app.freerouting.settings.RouterSettings;
 
 /**
  * Structure for controlling the autoroute algorithm.
@@ -119,7 +119,7 @@ public class AutorouteControl
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
-  public AutorouteControl(RoutingBoard p_board, int p_net_no, AutorouteSettings p_settings)
+  public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings)
   {
     this(p_board, p_settings, p_settings.get_trace_cost_arr());
     init_net(p_net_no, p_board, p_settings.get_via_costs());
@@ -128,7 +128,7 @@ public class AutorouteControl
   /**
    * Creates a new instance of AutorouteControl for the input net
    */
-  public AutorouteControl(RoutingBoard p_board, int p_net_no, AutorouteSettings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr)
+  public AutorouteControl(RoutingBoard p_board, int p_net_no, RouterSettings p_settings, int p_via_costs, ExpansionCostFactor[] p_trace_cost_arr)
   {
     this(p_board, p_settings, p_trace_cost_arr);
     init_net(p_net_no, p_board, p_via_costs);
@@ -137,7 +137,7 @@ public class AutorouteControl
   /**
    * Creates a new instance of AutorouteControl
    */
-  private AutorouteControl(RoutingBoard p_board, AutorouteSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr)
+  private AutorouteControl(RoutingBoard p_board, RouterSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr)
   {
     layer_count = p_board.get_layer_count();
     trace_half_width = new int[layer_count];

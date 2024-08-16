@@ -32,14 +32,14 @@ public class BatchAutorouter extends NamedAlgorithm
    */
   private FloatLine air_line;
 
-  public BatchAutorouter(InteractiveActionThread p_thread, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy, RoutingBoard board, RouterSettings settings)
+  public BatchAutorouter(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
   {
     super(p_thread, board, settings);
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
     if (p_with_preferred_directions)
     {
-      this.trace_cost_arr = this.settings.autorouterSettings.get_trace_cost_arr();
+      this.trace_cost_arr = this.settings.get_trace_cost_arr();
     }
     else
     {
@@ -47,7 +47,7 @@ public class BatchAutorouter extends NamedAlgorithm
       this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
       for (int i = 0; i < this.trace_cost_arr.length; ++i)
       {
-        double curr_min_cost = this.settings.autorouterSettings.get_preferred_direction_trace_costs(i);
+        double curr_min_cost = this.settings.get_preferred_direction_trace_costs(i);
         this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
       }
     }
@@ -65,7 +65,7 @@ public class BatchAutorouter extends NamedAlgorithm
    */
   public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread, int p_max_pass_count, int p_ripup_costs, int trace_pull_tight_accuracy, boolean p_with_preferred_directions, RoutingBoard updated_routing_board, RouterSettings routerSettings)
   {
-    BatchAutorouter router_instance = new BatchAutorouter(p_thread, true, p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy, updated_routing_board, routerSettings);
+    BatchAutorouter router_instance = new BatchAutorouter(p_thread, updated_routing_board, routerSettings, true, p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items && !router_instance.is_interrupted && curr_pass_no <= p_max_pass_count)
@@ -146,8 +146,8 @@ public class BatchAutorouter extends NamedAlgorithm
         break;
       }
 
-      int curr_pass_no = this.settings.autorouterSettings.get_start_pass_no();
-      if (curr_pass_no > this.settings.autorouterSettings.get_stop_pass_no())
+      int curr_pass_no = this.settings.get_start_pass_no();
+      if (curr_pass_no > this.settings.get_stop_pass_no())
       {
         thread.request_stop_auto_router();
         break;
@@ -194,7 +194,7 @@ public class BatchAutorouter extends NamedAlgorithm
       // check if there are still unrouted items
       if (still_unrouted_items && !is_interrupted)
       {
-        this.settings.autorouterSettings.increment_pass_no();
+        this.settings.increment_pass_no();
       }
     }
     if (!(this.remove_unconnected_vias || still_unrouted_items || this.is_interrupted))
@@ -207,11 +207,11 @@ public class BatchAutorouter extends NamedAlgorithm
 
     if (!this.is_interrupted)
     {
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, this.settings.autorouterSettings.get_start_pass_no(), this.board.get_hash()));
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, this.settings.get_start_pass_no(), this.board.get_hash()));
     }
     else
     {
-      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, this.settings.autorouterSettings.get_start_pass_no(), this.board.get_hash()));
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, this.settings.get_start_pass_no(), this.board.get_hash()));
     }
 
     return !this.is_interrupted;
@@ -373,15 +373,15 @@ public class BatchAutorouter extends NamedAlgorithm
       int curr_via_costs;
       if (contains_plane)
       {
-        curr_via_costs = this.settings.autorouterSettings.get_plane_via_costs();
+        curr_via_costs = this.settings.get_plane_via_costs();
       }
       else
       {
-        curr_via_costs = this.settings.autorouterSettings.get_via_costs();
+        curr_via_costs = this.settings.get_via_costs();
       }
 
       // Get and calculate the auto-router settings based on the board and net we are working on
-      AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, settings.autorouterSettings, curr_via_costs, this.trace_cost_arr);
+      AutorouteControl autoroute_control = new AutorouteControl(this.board, p_route_net_no, settings, curr_via_costs, this.trace_cost_arr);
       autoroute_control.ripup_allowed = true;
       autoroute_control.ripup_costs = this.start_ripup_costs * p_ripup_pass_no;
       autoroute_control.remove_unconnected_vias = this.remove_unconnected_vias;

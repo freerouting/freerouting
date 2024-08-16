@@ -14,7 +14,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
-import app.freerouting.settings.AutorouteSettings;
+import app.freerouting.settings.RouterSettings;
 
 import java.io.Serializable;
 import java.util.*;
@@ -850,7 +850,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
    * Routes automatically p_item to another item of the same net, to which it is not yet
    * electrically connected. Returns an enum of type AutorouteEngine.AutorouteResult
    */
-  public AutorouteEngine.AutorouteResult autoroute(Item p_item, AutorouteSettings routerSettings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+  public AutorouteEngine.AutorouteResult autoroute(Item p_item, RouterSettings routerSettings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
   {
     if (!(p_item instanceof Connectable) || p_item.net_count() == 0)
     {
@@ -896,7 +896,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
    * only 1 layer. Ripup is allowed if p_ripup_costs is {@literal >}= 0. Returns an enum of type
    * AutorouteEngine.AutorouteResult
    */
-  public AutorouteEngine.AutorouteResult fanout(Pin p_pin, AutorouteSettings routerSettings, int p_ripup_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+  public AutorouteEngine.AutorouteResult fanout(Pin p_pin, RouterSettings routerSettings, int p_ripup_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
   {
     if (p_pin.first_layer() != p_pin.last_layer() || p_pin.net_count() != 1)
     {

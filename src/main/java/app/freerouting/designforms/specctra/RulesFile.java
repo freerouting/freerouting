@@ -7,6 +7,7 @@ import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.interactive.BoardHandling;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
+import app.freerouting.settings.RouterSettings;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,7 +138,7 @@ public class RulesFile
         }
         else if (next_token == Keyword.AUTOROUTE_SETTINGS)
         {
-          app.freerouting.settings.AutorouteSettings autoroute_settings = AutorouteSettings.read_scope(scanner, layer_structure);
+          RouterSettings autoroute_settings = AutorouteSettings.read_scope(scanner, layer_structure);
           if (autoroute_settings != null)
           {
             p_board_handling.settings.autoroute_settings = autoroute_settings;

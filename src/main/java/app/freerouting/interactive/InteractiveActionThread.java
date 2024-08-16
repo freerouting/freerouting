@@ -36,7 +36,7 @@ public abstract class InteractiveActionThread extends Thread implements Stoppabl
 
   public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
-    routerSettings.autorouterSettings = p_board_handling.get_settings().autoroute_settings;
+    routerSettings = p_board_handling.get_settings().autoroute_settings;
 
     return new AutorouterAndRouteOptimizerThread(p_board_handling, routerSettings);
   }

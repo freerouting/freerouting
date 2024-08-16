@@ -3,7 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.settings.AutorouteSettings;
+import app.freerouting.settings.RouterSettings;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,7 +19,7 @@ public class Settings implements Serializable
    * The array of manual trace half widths, initially equal to the automatic trace half widths.
    */
   final int[] manual_trace_half_width_arr;
-  public AutorouteSettings autoroute_settings;
+  public RouterSettings autoroute_settings;
   /**
    * the current layer
    */
@@ -119,7 +119,7 @@ public class Settings implements Serializable
     zoom_with_wheel = true;
     manual_trace_half_width_arr = new int[p_board.get_layer_count()];
     Arrays.fill(manual_trace_half_width_arr, 1000);
-    autoroute_settings = new AutorouteSettings(p_board);
+    autoroute_settings = new RouterSettings(p_board);
     item_selection_filter = new ItemSelectionFilter();
     snapshot_attributes = new SnapShot.Attributes();
   }
@@ -147,7 +147,7 @@ public class Settings implements Serializable
     this.manual_via_rule_index = p_settings.manual_via_rule_index;
     this.manual_trace_half_width_arr = new int[p_settings.manual_trace_half_width_arr.length];
     System.arraycopy(p_settings.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr, 0, this.manual_trace_half_width_arr.length);
-    this.autoroute_settings = new AutorouteSettings(p_settings.autoroute_settings);
+    this.autoroute_settings = p_settings.autoroute_settings.clone();
     this.item_selection_filter = new ItemSelectionFilter(p_settings.item_selection_filter);
     this.snapshot_attributes = new SnapShot.Attributes(p_settings.snapshot_attributes);
   }
@@ -464,7 +464,7 @@ public class Settings implements Serializable
     trace_pull_tight_region_width = p_value;
     activityReplayFile.start_scope(ActivityReplayFileScope.SET_PULL_TIGHT_REGION_WIDTH, p_value);
   }
-  
+
   /**
    * Sets the current trace width selection to manual or automatic.
    */
