@@ -14,7 +14,11 @@ public class RouterSettings implements Serializable
   private final boolean[] isLayerActive;
   private final boolean[] isPreferredDirectionHorizontalOnLayer;
   private final double[] preferredDirectionTraceCost;
-  private final double[] nonPreferredDirectionTraceCost;
+  private final double[] undesiredDirectionTraceCost;
+  @SerializedName("default_preferred_direction_trace_cost")
+  public double defaultPreferredDirectionTraceCost = 1;
+  @SerializedName("default_undesired_direction_trace_cost")
+  public double defaultUndesiredDirectionTraceCost = 1;
   @SerializedName("max_passes")
   public int maxPasses = 100;
   @SerializedName("max_threads")
@@ -29,21 +33,27 @@ public class RouterSettings implements Serializable
   /**
    * The accuracy of the pull tight algorithm.
    */
+  @SerializedName("trace_pull_tight_accuracy")
   public int trace_pull_tight_accuracy = 500;
-  private transient boolean runFanout;
-  private transient boolean runRouter;
-  private transient boolean runOptimizer;
-  private boolean vias_allowed;
-  private int via_costs;
-  private int plane_via_costs;
-  private int start_ripup_costs;
-  private transient int start_pass_no;
-  private transient int stop_pass_no;
+  @SerializedName("allowed_via_types")
+  public boolean vias_allowed = true;
+  @SerializedName("via_costs")
+  public int via_costs = 50;
+  @SerializedName("plane_via_costs")
+  public int plane_via_costs = 5;
+  @SerializedName("start_ripup_costs")
+  public int start_ripup_costs = 100;
   /**
    * If true, the trace width at static pins smaller the trace width will be lowered
    * automatically to the pin with, if necessary.
    */
-  private boolean automatic_neckdown = true;
+  @SerializedName("automatic_neckdown")
+  public boolean automatic_neckdown = true;
+  private transient boolean runFanout = false;
+  private transient boolean runRouter = true;
+  private transient boolean runOptimizer = true;
+  private transient int start_pass_no = 1;
+  private transient int stop_pass_no = 999;
 
   /**
    * Creates a new instance of AutorouteSettings with default values and @p_layer_count layers.
@@ -53,7 +63,7 @@ public class RouterSettings implements Serializable
     isLayerActive = new boolean[p_layer_count];
     isPreferredDirectionHorizontalOnLayer = new boolean[p_layer_count];
     preferredDirectionTraceCost = new double[p_layer_count];
-    nonPreferredDirectionTraceCost = new double[p_layer_count];
+    undesiredDirectionTraceCost = new double[p_layer_count];
   }
 
   /**
@@ -62,18 +72,6 @@ public class RouterSettings implements Serializable
   public RouterSettings(RoutingBoard p_board)
   {
     this(p_board.get_layer_count());
-
-    // set default values
-
-    start_ripup_costs = 100;
-    set_start_pass_no(1);
-    set_stop_pass_no(Integer.MAX_VALUE);
-    vias_allowed = true;
-    runFanout = false;
-    runRouter = true;
-    runOptimizer = true;
-    via_costs = 50;
-    plane_via_costs = 5;
 
     double horizontal_width = p_board.bounding_box.width();
     double vertical_width = p_board.bounding_box.height();
@@ -96,15 +94,15 @@ public class RouterSettings implements Serializable
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
       isPreferredDirectionHorizontalOnLayer[i] = curr_preferred_direction_is_horizontal;
-      preferredDirectionTraceCost[i] = 1;
-      nonPreferredDirectionTraceCost[i] = 1;
+      preferredDirectionTraceCost[i] = defaultPreferredDirectionTraceCost;
+      undesiredDirectionTraceCost[i] = defaultUndesiredDirectionTraceCost;
       if (curr_preferred_direction_is_horizontal)
       {
-        nonPreferredDirectionTraceCost[i] += horizontal_add_costs_against_preferred_dir;
+        undesiredDirectionTraceCost[i] += horizontal_add_costs_against_preferred_dir;
       }
       else
       {
-        nonPreferredDirectionTraceCost[i] += vertical_add_costs_against_preferred_dir;
+        undesiredDirectionTraceCost[i] += vertical_add_costs_against_preferred_dir;
       }
     }
     int signal_layer_count = p_board.layer_structure.signal_layer_count();
@@ -114,8 +112,8 @@ public class RouterSettings implements Serializable
       // increase costs on the outer layers.
       preferredDirectionTraceCost[0] += outer_add_costs;
       preferredDirectionTraceCost[layer_count - 1] += outer_add_costs;
-      nonPreferredDirectionTraceCost[0] += outer_add_costs;
-      nonPreferredDirectionTraceCost[layer_count - 1] += outer_add_costs;
+      undesiredDirectionTraceCost[0] += outer_add_costs;
+      undesiredDirectionTraceCost[layer_count - 1] += outer_add_costs;
     }
   }
 
@@ -136,7 +134,7 @@ public class RouterSettings implements Serializable
     System.arraycopy(this.isLayerActive, 0, result.isLayerActive, 0, isLayerActive.length);
     System.arraycopy(this.isPreferredDirectionHorizontalOnLayer, 0, result.isPreferredDirectionHorizontalOnLayer, 0, isPreferredDirectionHorizontalOnLayer.length);
     System.arraycopy(this.preferredDirectionTraceCost, 0, result.preferredDirectionTraceCost, 0, preferredDirectionTraceCost.length);
-    System.arraycopy(this.nonPreferredDirectionTraceCost, 0, result.nonPreferredDirectionTraceCost, 0, nonPreferredDirectionTraceCost.length);
+    System.arraycopy(this.undesiredDirectionTraceCost, 0, result.undesiredDirectionTraceCost, 0, undesiredDirectionTraceCost.length);
     result.runFanout = this.runFanout;
     result.runRouter = this.runRouter;
     result.runOptimizer = this.runOptimizer;
@@ -314,7 +312,7 @@ public class RouterSettings implements Serializable
       FRLogger.warn("AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
-    return nonPreferredDirectionTraceCost[p_layer];
+    return undesiredDirectionTraceCost[p_layer];
   }
 
   public double get_horizontal_trace_costs(int p_layer)
@@ -331,7 +329,7 @@ public class RouterSettings implements Serializable
     }
     else
     {
-      result = nonPreferredDirectionTraceCost[p_layer];
+      result = undesiredDirectionTraceCost[p_layer];
     }
     return result;
   }
@@ -343,7 +341,7 @@ public class RouterSettings implements Serializable
       FRLogger.warn("AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
-    nonPreferredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
+    undesiredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
   }
 
   public double get_vertical_trace_costs(int p_layer)
@@ -356,7 +354,7 @@ public class RouterSettings implements Serializable
     double result;
     if (isPreferredDirectionHorizontalOnLayer[p_layer])
     {
-      result = nonPreferredDirectionTraceCost[p_layer];
+      result = undesiredDirectionTraceCost[p_layer];
     }
     else
     {
