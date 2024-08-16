@@ -1375,7 +1375,7 @@ public class GUIDefaultsFile
       FRLogger.warn("GUIDefaultsFile.read_pull_tight_accuracy_scope: closing bracket expected");
       return false;
     }
-    this.board_handling.settings.set_current_pull_tight_accuracy(pull_tight_accuracy);
+    this.board_handling.settings.autoroute_settings.trace_pull_tight_accuracy = pull_tight_accuracy;
     return true;
   }
 
@@ -1384,7 +1384,7 @@ public class GUIDefaultsFile
     out_file.start_scope();
     out_file.write("pull_tight_accuracy ");
     out_file.new_line();
-    int pull_tight_accuracy = this.board_handling.settings.get_trace_pull_tight_accuracy();
+    int pull_tight_accuracy = this.board_handling.settings.autoroute_settings.trace_pull_tight_accuracy;
     out_file.write(String.valueOf(pull_tight_accuracy));
     out_file.end_scope();
   }

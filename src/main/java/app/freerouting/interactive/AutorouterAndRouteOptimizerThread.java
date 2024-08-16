@@ -34,7 +34,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   protected AutorouterAndRouteOptimizerThread(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
     super(p_board_handling);
-    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs(), this.hdlg.settings.trace_pull_tight_accuracy, this.hdlg.get_routing_board(), routerSettings);
+    this.batch_autorouter = new BatchAutorouter(this, !routerSettings.autorouterSettings.get_with_fanout(), true, routerSettings.autorouterSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, this.hdlg.get_routing_board(), routerSettings);
     this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override

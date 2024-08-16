@@ -45,10 +45,6 @@ public class Settings implements Serializable
    */
   int trace_pull_tight_region_width;
   /**
-   * The accuracy of the pull tight algorithm.
-   */
-  int trace_pull_tight_accuracy;
-  /**
    * Via snaps to smd center, if attach smd is allowed.
    */
   boolean via_snap_to_smd_center;
@@ -113,7 +109,6 @@ public class Settings implements Serializable
     select_on_all_visible_layers = true; // else selection is only on the current layer
     is_stitch_route = false; // else interactive routing is dynamic
     trace_pull_tight_region_width = Integer.MAX_VALUE;
-    trace_pull_tight_accuracy = 500;
     via_snap_to_smd_center = true;
     horizontal_component_grid = 0;
     vertical_component_grid = 0;
@@ -142,7 +137,6 @@ public class Settings implements Serializable
     this.select_on_all_visible_layers = p_settings.select_on_all_visible_layers;
     this.is_stitch_route = p_settings.is_stitch_route;
     this.trace_pull_tight_region_width = p_settings.trace_pull_tight_region_width;
-    this.trace_pull_tight_accuracy = p_settings.trace_pull_tight_accuracy;
     this.via_snap_to_smd_center = p_settings.via_snap_to_smd_center;
     this.horizontal_component_grid = p_settings.horizontal_component_grid;
     this.vertical_component_grid = p_settings.vertical_component_grid;
@@ -424,14 +418,6 @@ public class Settings implements Serializable
   }
 
   /**
-   * The accuracy of the pull tight algorithm.
-   */
-  public int get_trace_pull_tight_accuracy()
-  {
-    return this.trace_pull_tight_accuracy;
-  }
-
-  /**
    * Defines the data of the snapshot selected for restoring.
    */
   public SnapShot.Attributes get_snapshot_attributes()
@@ -478,20 +464,7 @@ public class Settings implements Serializable
     trace_pull_tight_region_width = p_value;
     activityReplayFile.start_scope(ActivityReplayFileScope.SET_PULL_TIGHT_REGION_WIDTH, p_value);
   }
-
-  /**
-   * Changes the current width of the pull tight accuracy for traces.
-   */
-  public void set_current_pull_tight_accuracy(int p_value)
-  {
-    if (read_only)
-    {
-      return;
-    }
-    trace_pull_tight_accuracy = p_value;
-    activityReplayFile.start_scope(ActivityReplayFileScope.SET_PULL_TIGHT_ACCURACY, p_value);
-  }
-
+  
   /**
    * Sets the current trace width selection to manual or automatic.
    */

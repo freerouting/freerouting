@@ -10,11 +10,11 @@ import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.geometry.planar.*;
-import app.freerouting.interactive.Settings;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
+import app.freerouting.settings.AutorouteSettings;
 
 import java.io.Serializable;
 import java.util.*;
@@ -850,7 +850,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
    * Routes automatically p_item to another item of the same net, to which it is not yet
    * electrically connected. Returns an enum of type AutorouteEngine.AutorouteResult
    */
-  public AutorouteEngine.AutorouteResult autoroute(Item p_item, Settings p_settings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+  public AutorouteEngine.AutorouteResult autoroute(Item p_item, AutorouteSettings routerSettings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
   {
     if (!(p_item instanceof Connectable) || p_item.net_count() == 0)
     {
@@ -861,7 +861,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
       FRLogger.warn("RoutingBoard.autoroute: net_count > 1 not yet implemented");
     }
     int route_net_no = p_item.get_net_no(0);
-    AutorouteControl ctrl_settings = new AutorouteControl(this, route_net_no, p_settings.autoroute_settings, p_via_costs, p_settings.autoroute_settings.get_trace_cost_arr());
+    AutorouteControl ctrl_settings = new AutorouteControl(this, route_net_no, routerSettings, p_via_costs, routerSettings.get_trace_cost_arr());
     ctrl_settings.remove_unconnected_vias = false;
     Set<Item> route_start_set = p_item.get_connected_set(route_net_no);
     Net route_net = rules.nets.get(route_net_no);
@@ -886,7 +886,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     if (result == AutorouteEngine.AutorouteResult.ROUTED)
     {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, p_settings.get_trace_pull_tight_accuracy(), ctrl_settings.trace_costs, p_stoppable_thread, time_limit_to_prevent_endless_loop);
+      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;
   }
@@ -896,7 +896,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
    * only 1 layer. Ripup is allowed if p_ripup_costs is {@literal >}= 0. Returns an enum of type
    * AutorouteEngine.AutorouteResult
    */
-  public AutorouteEngine.AutorouteResult fanout(Pin p_pin, Settings p_settings, int p_ripup_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+  public AutorouteEngine.AutorouteResult fanout(Pin p_pin, AutorouteSettings routerSettings, int p_ripup_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
   {
     if (p_pin.first_layer() != p_pin.last_layer() || p_pin.net_count() != 1)
     {
@@ -917,7 +917,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     {
       return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
     }
-    AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, p_settings.autoroute_settings);
+    AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
     ctrl_settings.remove_unconnected_vias = false;
     if (p_ripup_costs >= 0)
@@ -931,7 +931,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     if (result == AutorouteEngine.AutorouteResult.ROUTED)
     {
       final int time_limit_to_prevent_endless_loop = 1000;
-      opt_changed_area(new int[0], null, p_settings.get_trace_pull_tight_accuracy(), ctrl_settings.trace_costs, p_stoppable_thread, time_limit_to_prevent_endless_loop);
+      opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, p_stoppable_thread, time_limit_to_prevent_endless_loop);
     }
     return result;
   }

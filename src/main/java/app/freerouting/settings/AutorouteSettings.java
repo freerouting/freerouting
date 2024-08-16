@@ -16,6 +16,10 @@ public class AutorouteSettings implements Serializable
   private final boolean[] preferred_direction_is_horizontal_arr;
   private final double[] preferred_direction_trace_cost_arr;
   private final double[] against_preferred_direction_trace_cost_arr;
+  /**
+   * The accuracy of the pull tight algorithm.
+   */
+  public int trace_pull_tight_accuracy = 500;
   private boolean with_fanout;
   private boolean with_autoroute;
   private boolean with_postroute;
@@ -123,6 +127,12 @@ public class AutorouteSettings implements Serializable
     System.arraycopy(p_settings.preferred_direction_trace_cost_arr, 0, preferred_direction_trace_cost_arr, 0, preferred_direction_trace_cost_arr.length);
     against_preferred_direction_trace_cost_arr = new double[p_settings.against_preferred_direction_trace_cost_arr.length];
     System.arraycopy(p_settings.against_preferred_direction_trace_cost_arr, 0, against_preferred_direction_trace_cost_arr, 0, against_preferred_direction_trace_cost_arr.length);
+    with_fanout = p_settings.with_fanout;
+    with_autoroute = p_settings.with_autoroute;
+    with_postroute = p_settings.with_postroute;
+    vias_allowed = p_settings.vias_allowed;
+    automatic_neckdown = p_settings.automatic_neckdown;
+    trace_pull_tight_accuracy = p_settings.trace_pull_tight_accuracy;
   }
 
   public int get_start_ripup_costs()

@@ -134,7 +134,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow
     {
       this.route_detail_outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
     }
-    int accuracy_slider_value = c_max_slider_value - this.board_handling.settings.get_trace_pull_tight_accuracy() / c_accuracy_scale_factor + 1;
+    int accuracy_slider_value = c_max_slider_value - this.board_handling.settings.autoroute_settings.trace_pull_tight_accuracy / c_accuracy_scale_factor + 1;
     accuracy_slider.setValue(accuracy_slider_value);
   }
 
@@ -165,7 +165,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow
     public void stateChanged(ChangeEvent evt)
     {
       int new_accuracy = (c_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
-      board_handling.settings.set_current_pull_tight_accuracy(new_accuracy);
+      board_handling.settings.autoroute_settings.trace_pull_tight_accuracy = new_accuracy;
     }
   }
 

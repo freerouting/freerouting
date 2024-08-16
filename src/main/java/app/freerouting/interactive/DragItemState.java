@@ -105,7 +105,7 @@ public class DragItemState extends DragState
         }
         this.something_dragged = true;
       }
-      if (!move_component.insert(hdlg.settings.trace_pull_tight_region_width, hdlg.settings.trace_pull_tight_accuracy))
+      if (!move_component.insert(hdlg.settings.trace_pull_tight_region_width, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy))
       {
         // an insert error occurred, end the drag state
         return this.return_state;

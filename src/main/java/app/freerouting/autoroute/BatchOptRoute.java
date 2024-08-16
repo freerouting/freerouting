@@ -238,7 +238,7 @@ public class BatchOptRoute extends NamedAlgorithm
       ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
     }
 
-    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, this.thread.hdlg.get_settings().get_trace_pull_tight_accuracy(), p_with_preferred_directions, this.clone_board ? this.board : null, settings);
+    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, settings.autorouterSettings.trace_pull_tight_accuracy, p_with_preferred_directions, this.clone_board ? this.board : null, settings);
 
     this.remove_ratsnest();
     int incomplete_count_after = this.get_ratsnest().incomplete_count();
