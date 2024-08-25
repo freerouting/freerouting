@@ -33,7 +33,6 @@ public class BoardHandlingHeadless implements IBoardHandling
    */
   protected RoutingBoard board;
   protected Locale locale;
-  private byte[] serializedBoard;
 
   public BoardHandlingHeadless(Locale p_locale)
   {
@@ -52,7 +51,6 @@ public class BoardHandlingHeadless implements IBoardHandling
   public synchronized void update_routing_board(RoutingBoard routing_board)
   {
     this.board = routing_board;
-    serializedBoard = null;
   }
 
   @Override

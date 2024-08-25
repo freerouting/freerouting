@@ -74,7 +74,7 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         router_instance.is_interrupted = true;
       }
-      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no, false);
+      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
       if (still_unrouted_items && !router_instance.is_interrupted && updated_routing_board == null)
       {
         p_thread.hdlg.get_settings().autoroute_settings.increment_pass_no();
@@ -159,7 +159,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
       FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes");
       already_checked_board_hashes.add(this.board.get_hash());
-      still_unrouted_items = autoroute_pass(curr_pass_no, true);
+      still_unrouted_items = autoroute_pass(curr_pass_no);
 
       // let's check if there was enough track length change in the last few passes, because if it was too little we should stop
       // TODO: score the board based on the costs settings of trace length, corner and via count, unconnected ratsnets, etc.
@@ -221,7 +221,7 @@ public class BatchAutorouter extends NamedAlgorithm
    * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
    * completely routed.
    */
-  private boolean autoroute_pass(int p_pass_no, boolean p_with_screen_message)
+  private boolean autoroute_pass(int p_pass_no)
   {
     try
     {

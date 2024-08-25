@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interface for named algorithms, eg. "Freerouting Classic Fast Auto-router v1.0" for auto-router, "Freerouting Classic Optimizer v1.0" for route-optimization.
+ * Interface for named algorithms, e.g. "Freerouting Classic Fast Auto-router v1.0" for auto-router, "Freerouting Classic Optimizer v1.0" for route-optimization.
  */
 public abstract class NamedAlgorithm
 {
-  // TODO: change the type from InteractiveActionThread to Thread to support headless mode
+  // TODO: change the type from InteractiveActionThread to StoppableThread to support headless mode
   protected final InteractiveActionThread thread;
   protected final List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
   protected final List<TaskStateChangedEventListener> taskStateChangedEventListeners = new ArrayList<>();
@@ -65,7 +65,7 @@ public abstract class NamedAlgorithm
    * @return The type of the algorithm.
    */
   protected abstract NamedAlgorithmType getType();
-  
+
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener)
   {
     boardUpdatedEventListeners.add(listener);

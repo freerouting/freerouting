@@ -11,10 +11,10 @@ import java.io.Serializable;
 
 public class RouterSettings implements Serializable
 {
-  private final boolean[] isLayerActive;
-  private final boolean[] isPreferredDirectionHorizontalOnLayer;
-  private final double[] preferredDirectionTraceCost;
-  private final double[] undesiredDirectionTraceCost;
+  public transient boolean[] isLayerActive;
+  public transient boolean[] isPreferredDirectionHorizontalOnLayer;
+  public transient double[] preferredDirectionTraceCost;
+  public transient double[] undesiredDirectionTraceCost;
   @SerializedName("default_preferred_direction_trace_cost")
   public double defaultPreferredDirectionTraceCost = 1;
   @SerializedName("default_undesired_direction_trace_cost")

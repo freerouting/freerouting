@@ -1,6 +1,6 @@
 package app.freerouting.interactive;
 
-import app.freerouting.datastructures.Stoppable;
+import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.settings.RouterSettings;
@@ -14,12 +14,10 @@ import java.util.List;
 /**
  * Used for running an interactive action in a separate thread, that can be stopped by the user.
  */
-public abstract class InteractiveActionThread extends Thread implements Stoppable
+public abstract class InteractiveActionThread extends StoppableThread
 {
   public final BoardHandling hdlg;
   protected List<ThreadActionListener> listeners = new ArrayList<>();
-  private boolean stop_requested = false;
-  private boolean stop_auto_router = false;
 
   /**
    * Creates a new instance of InteractiveActionThread
@@ -36,7 +34,11 @@ public abstract class InteractiveActionThread extends Thread implements Stoppabl
 
   public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(BoardHandling p_board_handling, RouterSettings routerSettings)
   {
-    routerSettings = p_board_handling.get_settings().autoroute_settings;
+    // TODO: we should not need this, but if we don't do this, the following values in routerSettings are not set properly
+    routerSettings.isLayerActive = p_board_handling.settings.autoroute_settings.isLayerActive.clone();
+    routerSettings.isPreferredDirectionHorizontalOnLayer = p_board_handling.settings.autoroute_settings.isPreferredDirectionHorizontalOnLayer.clone();
+    routerSettings.preferredDirectionTraceCost = p_board_handling.settings.autoroute_settings.preferredDirectionTraceCost.clone();
+    routerSettings.undesiredDirectionTraceCost = p_board_handling.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
 
     return new AutorouterAndRouteOptimizerThread(p_board_handling, routerSettings);
   }
@@ -61,35 +63,11 @@ public abstract class InteractiveActionThread extends Thread implements Stoppabl
     listeners.add(toAdd);
   }
 
-  protected abstract void thread_action();
-
   @Override
   public void run()
   {
     thread_action();
     hdlg.repaint();
-  }
-
-  @Override
-  public synchronized void requestStop()
-  {
-    stop_requested = true;
-  }
-
-  @Override
-  public synchronized boolean isStopRequested()
-  {
-    return stop_requested;
-  }
-
-  public synchronized void request_stop_auto_router()
-  {
-    stop_auto_router = true;
-  }
-
-  public synchronized boolean is_stop_auto_router_requested()
-  {
-    return stop_auto_router;
   }
 
   public synchronized void draw(Graphics p_graphics)

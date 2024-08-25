@@ -2,7 +2,6 @@ package app.freerouting.datastructures;
 
 /**
  * Interface for stoppable threads.
- * TODO: Replace this interface with the java-native Runnable
  */
 public interface Stoppable
 {
