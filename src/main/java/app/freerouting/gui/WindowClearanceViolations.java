@@ -2,8 +2,8 @@ package app.freerouting.gui;
 
 import app.freerouting.board.*;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.BoardHandling;
 import app.freerouting.interactive.ClearanceViolations;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 
@@ -28,7 +28,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
   @Override
   protected void fill_list()
   {
-    BoardHandling board_handling = this.board_frame.board_panel.board_handling;
+    GuiBoardManager board_handling = this.board_frame.board_panel.board_handling;
 
     ClearanceViolations clearance_violations = new ClearanceViolations(board_handling.get_routing_board().get_items());
     SortedSet<ViolationInfo> sorted_set = new TreeSet<>();
@@ -63,7 +63,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
       selected_items.add(curr_violation.first_item);
       selected_items.add(curr_violation.second_item);
     }
-    BoardHandling board_handling = board_frame.board_panel.board_handling;
+    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
     board_handling.select_items(selected_items);
     board_handling.toggle_selected_item_violations();
     board_handling.zoom_selection();

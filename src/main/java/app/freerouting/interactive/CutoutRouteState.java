@@ -21,7 +21,7 @@ public class CutoutRouteState extends SelectRegionState
   /**
    * Creates a new instance of CutoutRouteState
    */
-  private CutoutRouteState(Collection<PolylineTrace> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private CutoutRouteState(Collection<PolylineTrace> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     if (activityReplayFile != null)
@@ -34,7 +34,7 @@ public class CutoutRouteState extends SelectRegionState
   /**
    * Returns a new instance of this class.
    */
-  public static CutoutRouteState get_instance(Collection<Item> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static CutoutRouteState get_instance(Collection<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     return get_instance(p_item_list, null, p_parent_state, p_board_handling, p_activityReplayFile);
   }
@@ -42,7 +42,7 @@ public class CutoutRouteState extends SelectRegionState
   /**
    * Returns a new instance of this class.
    */
-  public static CutoutRouteState get_instance(Collection<Item> p_item_list, FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static CutoutRouteState get_instance(Collection<Item> p_item_list, FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     p_board_handling.display_layer_message();
     // filter items, which cannot be cutout

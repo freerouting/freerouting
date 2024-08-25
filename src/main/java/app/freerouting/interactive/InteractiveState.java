@@ -17,7 +17,7 @@ public class InteractiveState
   /**
    * board setting access handler for the derived classes
    */
-  protected final BoardHandling hdlg;
+  protected final GuiBoardManager hdlg;
   /**
    * if logfile != null, the interactive actions are stored in a logfile
    */
@@ -34,7 +34,7 @@ public class InteractiveState
   /**
    * Creates a new instance of InteractiveState
    */
-  protected InteractiveState(InteractiveState p_return_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  protected InteractiveState(InteractiveState p_return_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     this.return_state = p_return_state;
     this.hdlg = p_board_handling;

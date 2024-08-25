@@ -9,7 +9,7 @@ import app.freerouting.rules.BoardRules;
 
 import java.util.Locale;
 
-public interface IBoardHandling
+public interface IBoardManager
 {
   Locale get_locale();
 

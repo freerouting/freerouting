@@ -20,7 +20,7 @@ public class MenuState extends InteractiveState
   /**
    * Creates a new instance of MenuState
    */
-  MenuState(BoardHandling p_board_handle, ActivityReplayFile p_activityReplayFile)
+  MenuState(GuiBoardManager p_board_handle, ActivityReplayFile p_activityReplayFile)
   {
     super(null, p_board_handle, p_activityReplayFile);
     this.return_state = this;

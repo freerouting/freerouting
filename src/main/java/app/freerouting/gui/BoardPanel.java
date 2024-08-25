@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.ActivityReplayFileScope;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
@@ -33,7 +33,7 @@ public class BoardPanel extends JPanel
   public PopupMenuDynamicRoute popup_menu_dynamic_route;
   public PopupMenuStitchRoute popup_menu_stitch_route;
   public JPopupMenu popup_menu_select;
-  BoardHandling board_handling;
+  GuiBoardManager board_handling;
   Point2D right_button_click_location;
   private Robot robot;
   private Point middle_drag_position;
@@ -116,14 +116,14 @@ public class BoardPanel extends JPanel
     });
     addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
     globalSettings.routerSettings.save_intermediate_stages = globalSettings.featureFlags.snapshots && globalSettings.routerSettings.save_intermediate_stages;
-    board_handling = new BoardHandling(this, globalSettings);
+    board_handling = new GuiBoardManager(this, globalSettings);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
   }
 
   public void reset_board_handling()
   {
-    board_handling = new BoardHandling(this, globalSettings);
+    board_handling = new GuiBoardManager(this, globalSettings);
   }
 
   void create_popup_menus()

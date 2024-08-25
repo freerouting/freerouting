@@ -21,7 +21,7 @@ public abstract class DragState extends InteractiveState
   /**
    * Creates a new instance of DragState
    */
-  protected DragState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  protected DragState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     previous_location = p_location;
@@ -31,7 +31,7 @@ public abstract class DragState extends InteractiveState
    * Returns a new instance of this state, if an item to drag was found at the input location; null
    * otherwise.
    */
-  public static DragState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static DragState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     p_board_handling.display_layer_message();
     Item item_to_move = null;

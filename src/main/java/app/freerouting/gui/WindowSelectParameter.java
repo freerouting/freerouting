@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 public class WindowSelectParameter extends BoardSavableSubWindow
 {
 
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
   private final JRadioButton[] settings_select_layer_name_arr;
   private final JCheckBox[] settings_select_item_selection_choices;
   private final JRadioButton settings_select_all_visible_button;

@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.boardgraphics.CoordinateTransform;
 import app.freerouting.boardgraphics.ItemColorTableModel;
 import app.freerouting.boardgraphics.OtherColorTableModel;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.SnapShot;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
@@ -203,7 +203,7 @@ public class WindowSnapshot extends BoardSavableSubWindow
     int index = list.getSelectedIndex();
     if (index >= 0 && list_model.getSize() > index)
     {
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       SnapShot curr_snapshot = list_model.elementAt(index);
 
       curr_snapshot.go_to(board_handling);

@@ -26,7 +26,7 @@ public class RouteState extends InteractiveState
    * Creates a new instance of RouteState If p_logfile != null, the creation of the route is stored
    * in the logfile.
    */
-  protected RouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  protected RouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
   }
@@ -35,7 +35,7 @@ public class RouteState extends InteractiveState
    * Returns a new instance of this class or null, if starting a new route was not possible at
    * p_location. If p_logfile != null, the creation of the route is stored in the logfile.
    */
-  public static RouteState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static RouteState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     if (!(p_parent_state instanceof MenuState))
     {
@@ -170,7 +170,7 @@ public class RouteState extends InteractiveState
    * Checks starting an interactive route at p_location. Returns the picked start item of the
    * routing at p_location, or null, if no such item was found.
    */
-  protected static Item start_ok(IntPoint p_location, BoardHandling p_hdlg)
+  protected static Item start_ok(IntPoint p_location, GuiBoardManager p_hdlg)
   {
     RoutingBoard routing_board = p_hdlg.get_routing_board();
 
@@ -222,7 +222,7 @@ public class RouteState extends InteractiveState
     return picked_item;
   }
 
-  private static Item pick_routing_item(IntPoint p_location, int p_layer_no, BoardHandling p_hdlg)
+  private static Item pick_routing_item(IntPoint p_location, int p_layer_no, GuiBoardManager p_hdlg)
   {
 
     if (p_layer_no == p_hdlg.settings.layer || (p_hdlg.graphics_context.get_layer_visibility(p_layer_no) <= 0))

@@ -22,7 +22,7 @@ public class DragItemState extends DragState
   /**
    * Creates a new instance of MoveItemState
    */
-  protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  protected DragItemState(Item p_item_to_move, FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
     item_to_move = p_item_to_move;

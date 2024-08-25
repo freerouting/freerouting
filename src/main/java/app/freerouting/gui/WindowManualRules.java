@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
@@ -19,7 +19,7 @@ public class WindowManualRules extends BoardSavableSubWindow
 
   private static final int max_slider_value = 15000;
   private static final double scale_factor = 1;
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
   private final ComboBoxLayer settings_routing_manual_rule_selection_layer_combo_box;
   private final ComboBoxClearance settings_routing_manual_rule_selection_clearance_combo_box;
   private final JComboBox<ViaRule> settings_routing_manual_rule_selection_via_rule_combo_box;

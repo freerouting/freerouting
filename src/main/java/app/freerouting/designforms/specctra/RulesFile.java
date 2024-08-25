@@ -4,7 +4,7 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IndentFileWriter;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.settings.RouterSettings;
@@ -21,7 +21,7 @@ import java.util.Collection;
 public class RulesFile
 {
 
-  public static void write(BoardHandling p_board_handling, OutputStream p_output_stream, String p_design_name)
+  public static void write(GuiBoardManager p_board_handling, OutputStream p_output_stream, String p_design_name)
   {
     IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
     BasicBoard routing_board = p_board_handling.get_routing_board();
@@ -42,7 +42,7 @@ public class RulesFile
     }
   }
 
-  public static boolean read(InputStream p_input_stream, String p_design_name, BoardHandling p_board_handling)
+  public static boolean read(InputStream p_input_stream, String p_design_name, GuiBoardManager p_board_handling)
   {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     IJFlexScanner scanner = new SpecctraDsnStreamReader(p_input_stream);

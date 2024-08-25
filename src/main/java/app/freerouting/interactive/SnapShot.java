@@ -23,7 +23,7 @@ public class SnapShot implements Serializable
   /**
    * Creates a SnapShot of the display region and the interactive settings
    */
-  private SnapShot(String p_name, BoardHandling p_board_handling)
+  private SnapShot(String p_name, GuiBoardManager p_board_handling)
   {
     this.name = p_name;
     this.settings = new Settings(p_board_handling.settings);
@@ -37,7 +37,7 @@ public class SnapShot implements Serializable
    * Returns a new snapshot or null, if the current interactive state is not suitable to generate a
    * snapshot.
    */
-  public static SnapShot get_instance(String p_name, BoardHandling p_board_handling)
+  public static SnapShot get_instance(String p_name, GuiBoardManager p_board_handling)
   {
     InteractiveState interactive_state = p_board_handling.interactive_state;
     if (!(interactive_state instanceof MenuState))
@@ -87,7 +87,7 @@ public class SnapShot implements Serializable
   /**
    * Goes to this snapshot in interactive board editing.
    */
-  public void go_to(BoardHandling p_board_handling)
+  public void go_to(GuiBoardManager p_board_handling)
   {
     SnapShot.Attributes snapshot_attributes = this.settings.snapshot_attributes;
 
@@ -152,7 +152,7 @@ public class SnapShot implements Serializable
   /**
    * Returns a new InteractiveState from the data of this instance.
    */
-  public InteractiveState get_interactive_state(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public InteractiveState get_interactive_state(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     InteractiveState result;
     if (this.interactive_state_no == 1)

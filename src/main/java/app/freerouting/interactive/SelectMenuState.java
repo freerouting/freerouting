@@ -11,7 +11,7 @@ public class SelectMenuState extends MenuState
   /**
    * Creates a new instance of SelectMenuState
    */
-  private SelectMenuState(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private SelectMenuState(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_board_handling, p_activityReplayFile);
   }
@@ -19,7 +19,7 @@ public class SelectMenuState extends MenuState
   /**
    * Returns a new instance of SelectMenuState
    */
-  public static SelectMenuState get_instance(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static SelectMenuState get_instance(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     SelectMenuState new_state = new SelectMenuState(p_board_handling, p_activityReplayFile);
     return new_state;

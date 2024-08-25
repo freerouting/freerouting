@@ -16,7 +16,7 @@ public class StitchRouteState extends RouteState
   /**
    * Creates a new instance of StitchRouteState
    */
-  protected StitchRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  protected StitchRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
   }

@@ -19,7 +19,7 @@ public class HoleConstructionState extends CornerItemConstructionState
   /**
    * Creates a new instance of HoleConstructionState
    */
-  private HoleConstructionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private HoleConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
   }
@@ -28,7 +28,7 @@ public class HoleConstructionState extends CornerItemConstructionState
    * Returns a new instance of this class or null, if that was not possible with the input
    * parameters. If p_logfile != null, the construction of this hole is stored in a logfile.
    */
-  public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static HoleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     HoleConstructionState new_instance = new HoleConstructionState(p_parent_state, p_board_handling, p_activityReplayFile);
     if (!new_instance.start_ok(p_location))
@@ -44,7 +44,11 @@ public class HoleConstructionState extends CornerItemConstructionState
   private boolean start_ok(FloatPoint p_location)
   {
     IntPoint pick_location = p_location.round();
-    ItemSelectionFilter.SelectableChoices[] selectable_choices = {ItemSelectionFilter.SelectableChoices.KEEPOUT, ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT, ItemSelectionFilter.SelectableChoices.CONDUCTION};
+    ItemSelectionFilter.SelectableChoices[] selectable_choices = {
+        ItemSelectionFilter.SelectableChoices.KEEPOUT,
+        ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT,
+        ItemSelectionFilter.SelectableChoices.CONDUCTION
+    };
     ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
     Collection<Item> found_items = hdlg.get_routing_board().pick_items(pick_location, hdlg.settings.layer, selection_filter);
     if (found_items.size() != 1)

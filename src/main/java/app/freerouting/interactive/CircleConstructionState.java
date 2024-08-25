@@ -24,7 +24,7 @@ public class CircleConstructionState extends InteractiveState
   /**
    * Creates a new instance of CircleConstructionState
    */
-  private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private CircleConstructionState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     circle_center = p_location;
@@ -38,7 +38,7 @@ public class CircleConstructionState extends InteractiveState
    * Returns a new instance of this class. If p_logfile != null; the creation of this item is stored
    * in a logfile
    */
-  public static CircleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static CircleConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     p_board_handling.remove_ratsnest(); // inserting a circle may change the connectivity.
     return new CircleConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);

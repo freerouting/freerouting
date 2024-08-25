@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.FRAnalytics;
 
 import javax.swing.*;
@@ -100,7 +100,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
     slider_arr[p_no].setValue(visibility);
   }
 
-  protected BoardHandling get_board_handling()
+  protected GuiBoardManager get_board_handling()
   {
     return board_panel.board_handling;
   }

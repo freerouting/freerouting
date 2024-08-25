@@ -25,7 +25,7 @@ public class CornerItemConstructionState extends InteractiveState
   /**
    * Creates a new instance of CornerItemConstructionState
    */
-  protected CornerItemConstructionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  protected CornerItemConstructionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     p_board_handling.remove_ratsnest(); // Constructing an item may change the connectivity.

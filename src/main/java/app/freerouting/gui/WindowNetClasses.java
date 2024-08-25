@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.*;
 import app.freerouting.board.ObjectInfoPanel.Printable;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.*;
@@ -337,7 +337,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
       {
         return;
       }
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       BoardRules board_rules = board_handling.get_routing_board().rules;
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
       for (int i = 0; i < selected_class_arr.length; ++i)
@@ -373,7 +373,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
       {
         return;
       }
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       BoardRules board_rules = board_handling.get_routing_board().rules;
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
       for (int i = 0; i < selected_class_arr.length; ++i)
@@ -448,8 +448,8 @@ public class WindowNetClasses extends BoardSavableSubWindow
   private class NetClassTableModel extends AbstractTableModel
   {
 
-    private Object[][] data;
     private final String[] column_names;
+    private Object[][] data;
 
     public NetClassTableModel()
     {
@@ -506,7 +506,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
     void set_trace_width_field(int p_rule_no, ComboBoxLayer.Layer p_layer)
     {
       float trace_width;
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       BoardRules board_rules = board_handling.get_routing_board().rules;
       NetClass curr_net_class = board_rules.net_classes.get(p_rule_no);
       if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX)

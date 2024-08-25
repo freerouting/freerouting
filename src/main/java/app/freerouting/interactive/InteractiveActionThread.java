@@ -16,23 +16,23 @@ import java.util.List;
  */
 public abstract class InteractiveActionThread extends StoppableThread
 {
-  public final BoardHandling hdlg;
+  public final GuiBoardManager hdlg;
   protected List<ThreadActionListener> listeners = new ArrayList<>();
 
   /**
    * Creates a new instance of InteractiveActionThread
    */
-  protected InteractiveActionThread(BoardHandling p_board_handling)
+  protected InteractiveActionThread(GuiBoardManager p_board_handling)
   {
     this.hdlg = p_board_handling;
   }
 
-  public static InteractiveActionThread get_autoroute_instance(BoardHandling p_board_handling)
+  public static InteractiveActionThread get_autoroute_instance(GuiBoardManager p_board_handling)
   {
     return new AutorouteThread(p_board_handling);
   }
 
-  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(BoardHandling p_board_handling, RouterSettings routerSettings)
+  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager p_board_handling, RouterSettings routerSettings)
   {
     // TODO: we should not need this, but if we don't do this, the following values in routerSettings are not set properly
     routerSettings.isLayerActive = p_board_handling.settings.autoroute_settings.isLayerActive.clone();
@@ -43,17 +43,17 @@ public abstract class InteractiveActionThread extends StoppableThread
     return new AutorouterAndRouteOptimizerThread(p_board_handling, routerSettings);
   }
 
-  public static InteractiveActionThread get_fanout_instance(BoardHandling p_board_handling)
+  public static InteractiveActionThread get_fanout_instance(GuiBoardManager p_board_handling)
   {
     return new FanoutThread(p_board_handling);
   }
 
-  public static InteractiveActionThread get_pull_tight_instance(BoardHandling p_board_handling)
+  public static InteractiveActionThread get_pull_tight_instance(GuiBoardManager p_board_handling)
   {
     return new PullTightThread(p_board_handling);
   }
 
-  public static InteractiveActionThread get_read_logfile_instance(BoardHandling p_board_handling, InputStream p_input_stream)
+  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager p_board_handling, InputStream p_input_stream)
   {
     return new ReadLogfileThread(p_board_handling, p_input_stream);
   }
@@ -78,7 +78,7 @@ public abstract class InteractiveActionThread extends StoppableThread
   private static class AutorouteThread extends InteractiveActionThread
   {
 
-    private AutorouteThread(BoardHandling p_board_handling)
+    private AutorouteThread(GuiBoardManager p_board_handling)
     {
       super(p_board_handling);
     }
@@ -98,7 +98,7 @@ public abstract class InteractiveActionThread extends StoppableThread
   private static class FanoutThread extends InteractiveActionThread
   {
 
-    private FanoutThread(BoardHandling p_board_handling)
+    private FanoutThread(GuiBoardManager p_board_handling)
     {
       super(p_board_handling);
     }
@@ -118,7 +118,7 @@ public abstract class InteractiveActionThread extends StoppableThread
   private static class PullTightThread extends InteractiveActionThread
   {
 
-    private PullTightThread(BoardHandling p_board_handling)
+    private PullTightThread(GuiBoardManager p_board_handling)
     {
       super(p_board_handling);
     }
@@ -140,7 +140,7 @@ public abstract class InteractiveActionThread extends StoppableThread
 
     private final InputStream input_stream;
 
-    private ReadLogfileThread(BoardHandling p_board_handling, InputStream p_input_stream)
+    private ReadLogfileThread(GuiBoardManager p_board_handling, InputStream p_input_stream)
     {
       super(p_board_handling);
       this.input_stream = p_input_stream;

@@ -4,8 +4,8 @@ import app.freerouting.board.*;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.interactive.BoardHandling;
-import app.freerouting.interactive.IBoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
+import app.freerouting.interactive.IBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 
@@ -32,7 +32,7 @@ public class DsnFile
    * p_item_id_no_generator are used, in case the board is embedded into a host system. Returns
    * false, if an error occurred.
    */
-  public static ReadResult read(InputStream p_input_stream, IBoardHandling p_board_handling, BoardObservers p_observers, IdNoGenerator p_item_id_no_generator)
+  public static ReadResult read(InputStream p_input_stream, IBoardManager p_board_handling, BoardObservers p_observers, IdNoGenerator p_item_id_no_generator)
   {
     IJFlexScanner scanner = new SpecctraDsnStreamReader(p_input_stream);
 
@@ -95,7 +95,7 @@ public class DsnFile
    * layer, if that layer does not contain any traces This is useful in case the layer type was not
    * set correctly to plane in the dsn-file. Returns true, if something was changed.
    */
-  private static boolean adjust_plane_autoroute_settings(IBoardHandling p_board_handling)
+  private static boolean adjust_plane_autoroute_settings(IBoardManager p_board_handling)
   {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     app.freerouting.board.LayerStructure board_layer_structure = routing_board.layer_structure;
@@ -212,7 +212,7 @@ public class DsnFile
    * If p_compat_mode is true, only standard specctra dsn scopes are written, so that any host
    * system with a specctra interface can read them.
    */
-  public static boolean write(BoardHandling p_board_handling, OutputStream p_file, String p_design_name, boolean p_compat_mode)
+  public static boolean write(GuiBoardManager p_board_handling, OutputStream p_file, String p_design_name, boolean p_compat_mode)
   {
     IndentFileWriter output_file = new IndentFileWriter(p_file);
 
@@ -235,7 +235,7 @@ public class DsnFile
     return true;
   }
 
-  private static void write_pcb_scope(BoardHandling p_board_handling, IndentFileWriter p_file, String p_design_name, boolean p_compat_mode) throws IOException
+  private static void write_pcb_scope(GuiBoardManager p_board_handling, IndentFileWriter p_file, String p_design_name, boolean p_compat_mode) throws IOException
   {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, p_board_handling.settings.autoroute_settings, p_file, routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform, p_compat_mode);

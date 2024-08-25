@@ -19,6 +19,7 @@ public abstract class NamedAlgorithm
 {
   // TODO: change the type from InteractiveActionThread to StoppableThread to support headless mode
   protected final InteractiveActionThread thread;
+  //protected final StoppableThread thread;
   protected final List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
   protected final List<TaskStateChangedEventListener> taskStateChangedEventListeners = new ArrayList<>();
   protected final RouterSettings settings;

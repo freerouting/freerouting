@@ -6,7 +6,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
 
@@ -130,7 +130,7 @@ public class WindowRouteStubs extends CleanupWindows
     {
       selected_items.add(((RouteStubInfo) selected_list_values.get(i)).stub_item);
     }
-    BoardHandling board_handling = board_frame.board_panel.board_handling;
+    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
     board_handling.select_items(selected_items);
     board_handling.zoom_selection();
   }
@@ -147,7 +147,7 @@ public class WindowRouteStubs extends CleanupWindows
 
     public RouteStubInfo(Item p_stub, FloatPoint p_location, int p_layer_no)
     {
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       this.stub_item = p_stub;
       this.location = board_handling.coordinate_transform.board_to_user(p_location);
       this.layer_no = p_layer_no;

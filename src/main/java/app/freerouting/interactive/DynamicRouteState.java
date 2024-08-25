@@ -13,7 +13,7 @@ public class DynamicRouteState extends RouteState
   /**
    * Creates a new instance of DynamicRouteState
    */
-  protected DynamicRouteState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  protected DynamicRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
   }

@@ -17,7 +17,7 @@ public class SelectItemsInRegionState extends SelectRegionState
   /**
    * Creates a new instance of SelectItemsInRegionState
    */
-  private SelectItemsInRegionState(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private SelectItemsInRegionState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     if (activityReplayFile != null)
@@ -29,7 +29,7 @@ public class SelectItemsInRegionState extends SelectRegionState
   /**
    * Returns a new instance of this class.
    */
-  public static SelectItemsInRegionState get_instance(InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static SelectItemsInRegionState get_instance(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     return get_instance(null, p_parent_state, p_board_handling, p_activityReplayFile);
   }
@@ -37,7 +37,7 @@ public class SelectItemsInRegionState extends SelectRegionState
   /**
    * Returns a new instance of this class with first point p_location.
    */
-  public static SelectItemsInRegionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static SelectItemsInRegionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     p_board_handling.display_layer_message();
     SelectItemsInRegionState new_instance = new SelectItemsInRegionState(p_parent_state, p_board_handling, p_activityReplayFile);

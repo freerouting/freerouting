@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Trace;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 
@@ -27,7 +27,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
   private static final int c_region_scale_factor = 200;
   final WindowManualRules manual_rule_window;
   final WindowRouteDetail detail_window;
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
   private final JSlider region_slider;
   private final JFormattedTextField region_width_field;
   private final JFormattedTextField edge_to_turn_dist_field;

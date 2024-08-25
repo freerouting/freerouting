@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.SnapShot;
 import app.freerouting.management.FRAnalytics;
 
@@ -30,7 +30,7 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
   final JCheckBox other_snapshots_settings_pull_tight_region_check_box;
   final JCheckBox other_snapshots_settings_component_grid_check_box;
   final JCheckBox other_snapshots_settings_info_list_filter_check_box;
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
 
   /**
    * Creates a new instance of WindowSnapshotSettings

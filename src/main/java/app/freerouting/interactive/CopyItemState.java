@@ -32,7 +32,7 @@ public class CopyItemState extends InteractiveState
   /**
    * Creates a new instance of CopyItemState
    */
-  private CopyItemState(FloatPoint p_location, Collection<Item> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private CopyItemState(FloatPoint p_location, Collection<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     item_list = new LinkedList<>();
@@ -59,7 +59,7 @@ public class CopyItemState extends InteractiveState
   /**
    * Returns a new instance of CopyItemState or null, if p_item_list is empty.
    */
-  public static CopyItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static CopyItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     if (p_item_list.isEmpty())
     {

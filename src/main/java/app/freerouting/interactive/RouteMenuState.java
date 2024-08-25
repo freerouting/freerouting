@@ -11,7 +11,7 @@ public class RouteMenuState extends MenuState
   /**
    * Creates a new instance of RouteMenuState
    */
-  private RouteMenuState(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private RouteMenuState(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_board_handling, p_activityReplayFile);
   }
@@ -19,7 +19,7 @@ public class RouteMenuState extends MenuState
   /**
    * Returns a new instance of RouteMenuState
    */
-  public static RouteMenuState get_instance(BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static RouteMenuState get_instance(GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     RouteMenuState new_state = new RouteMenuState(p_board_handling, p_activityReplayFile);
     return new_state;

@@ -12,9 +12,10 @@ import app.freerouting.rules.DefaultItemClearanceClasses;
 import java.util.Locale;
 
 /**
- * Base implementation for headless mode
+ * Manages the routing board operations in a headless mode, where no graphical user interface is involved.
+ * This class handles the core logic and interactions required for auto-routing and other board-related tasks in a non-interactive environment.
  */
-public class BoardHandlingHeadless implements IBoardHandling
+public class HeadlessBoardManager implements IBoardManager
 {
   /**
    * The file used for logging interactive action, so that they can be replayed later
@@ -34,7 +35,7 @@ public class BoardHandlingHeadless implements IBoardHandling
   protected RoutingBoard board;
   protected Locale locale;
 
-  public BoardHandlingHeadless(Locale p_locale)
+  public HeadlessBoardManager(Locale p_locale)
   {
     this.locale = p_locale;
   }

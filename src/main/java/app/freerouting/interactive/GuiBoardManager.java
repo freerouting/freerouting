@@ -36,9 +36,10 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Central connection class between the graphical user interface and the board database.
+ * Manages the routing board operations with a graphical user interface.
+ * This class extends the functionality of HeadlessBoardManager by adding GUI-specific interactions and logic, enabling users to visually interact with the routing board and perform tasks such as auto-routing, item selection, and more.
  */
-public class BoardHandling extends BoardHandlingHeadless
+public class GuiBoardManager extends HeadlessBoardManager
 {
 
   // The interval in milliseconds between two repaints of the board panel
@@ -106,7 +107,7 @@ public class BoardHandling extends BoardHandlingHeadless
   /**
    * Creates a new BoardHandling
    */
-  public BoardHandling(BoardPanel p_panel, GlobalSettings globalSettings)
+  public GuiBoardManager(BoardPanel p_panel, GlobalSettings globalSettings)
   {
     super(globalSettings.currentLocale);
     this.globalSettings = globalSettings;

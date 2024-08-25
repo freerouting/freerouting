@@ -29,7 +29,7 @@ public class SelectedItemState extends InteractiveState
   /**
    * Creates a new instance of SelectedItemState
    */
-  private SelectedItemState(Set<Item> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private SelectedItemState(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     item_list = p_item_list;
@@ -39,7 +39,7 @@ public class SelectedItemState extends InteractiveState
    * Creates a new SelectedItemState with the items in p_item_list selected. Returns null, if
    * p_item_list is empty.
    */
-  public static SelectedItemState get_instance(Set<Item> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static SelectedItemState get_instance(Set<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     if (p_item_list.isEmpty())
     {

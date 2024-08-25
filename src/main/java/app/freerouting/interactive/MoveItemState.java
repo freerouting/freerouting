@@ -34,7 +34,7 @@ public class MoveItemState extends InteractiveState
   /**
    * Creates a new instance of MoveComponentState
    */
-  private MoveItemState(FloatPoint p_location, Set<Item> p_item_list, Set<Component> p_component_list, Component p_first_component, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private MoveItemState(FloatPoint p_location, Set<Item> p_item_list, Set<Component> p_component_list, Component p_first_component, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     this.component_list = p_component_list;
@@ -77,7 +77,7 @@ public class MoveItemState extends InteractiveState
    * Returns a new instance of MoveComponentState, or null, if the items of p_itemlist do not belong
    * to a single component.
    */
-  public static MoveItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static MoveItemState get_instance(FloatPoint p_location, Collection<Item> p_item_list, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
 
     TextManager tm = new TextManager(InteractiveState.class, p_board_handling.get_locale());

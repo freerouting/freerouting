@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.BoardOutline;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.FRAnalytics;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class WindowRouteDetail extends BoardSavableSubWindow
 
   private static final int c_max_slider_value = 100;
   private static final int c_accuracy_scale_factor = 20;
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
   private final JSlider accuracy_slider;
   private final JRadioButton route_detail_on_button;
   private final JRadioButton route_detail_off_button;

@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.settings.RouterSettings;
 
@@ -15,7 +15,7 @@ import java.text.NumberFormat;
 public class WindowAutorouteDetailParameter extends BoardSavableSubWindow
 {
 
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
   private final JFormattedTextField via_cost_field;
   private final JFormattedTextField plane_via_cost_field;
   private final JFormattedTextField start_ripup_costs;

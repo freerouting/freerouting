@@ -4,7 +4,7 @@ import app.freerouting.board.BoardDetails;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 
@@ -98,7 +98,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     return fileChooser.getSelectedFile();
   }
 
-  public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name, BoardHandling p_board_handling, String p_confirm_message)
+  public static boolean read_rules_file(String p_design_name, String p_parent_name, String rules_file_name, GuiBoardManager p_board_handling, String p_confirm_message)
   {
 
     boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;

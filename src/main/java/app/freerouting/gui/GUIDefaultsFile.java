@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.IndentFileWriter;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.SnapShot;
 import app.freerouting.logger.FRLogger;
 
@@ -22,7 +22,7 @@ import java.util.LinkedList;
 public class GUIDefaultsFile
 {
   private final BoardFrame board_frame;
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
   /**
    * Used, when reading a defaults file, null otherwise.
    */
@@ -32,7 +32,7 @@ public class GUIDefaultsFile
    */
   private final IndentFileWriter out_file;
 
-  private GUIDefaultsFile(BoardFrame p_board_frame, BoardHandling p_board_handling, GUIDefaultsScanner p_scanner, IndentFileWriter p_output_file)
+  private GUIDefaultsFile(BoardFrame p_board_frame, GuiBoardManager p_board_handling, GUIDefaultsScanner p_scanner, IndentFileWriter p_output_file)
   {
     board_frame = p_board_frame;
     board_handling = p_board_handling;
@@ -44,7 +44,7 @@ public class GUIDefaultsFile
    * Writes the GUI setting of p_board_frame as default to p_file. Returns false, if an error
    * occurred.
    */
-  public static boolean write(BoardFrame p_board_frame, BoardHandling p_board_handling, OutputStream p_output_stream)
+  public static boolean write(BoardFrame p_board_frame, GuiBoardManager p_board_handling, OutputStream p_output_stream)
   {
     if (p_output_stream == null)
     {
@@ -78,7 +78,7 @@ public class GUIDefaultsFile
    * Reads the GUI setting of p_board_frame from file. Returns false, if an error occurred while
    * reading the file.
    */
-  public static boolean read(BoardFrame p_board_frame, BoardHandling p_board_handling, InputStream p_input_stream)
+  public static boolean read(BoardFrame p_board_frame, GuiBoardManager p_board_handling, InputStream p_input_stream)
   {
     if (p_input_stream == null)
     {

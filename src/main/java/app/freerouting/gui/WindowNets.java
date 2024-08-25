@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
@@ -142,7 +142,7 @@ public class WindowNets extends WindowObjectListWithFilter
       {
         return;
       }
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       int max_net_no = board_handling.get_routing_board().rules.nets.max_net_no();
       for (int i = 1; i <= max_net_no; ++i)
       {

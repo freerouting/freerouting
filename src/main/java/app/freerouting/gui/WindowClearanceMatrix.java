@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
@@ -29,7 +29,12 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
   /**
    * Characters, which are not allowed in the name of a clearance class.
    */
-  private static final String[] reserved_name_chars = {"(", ")", " ", "_"};
+  private static final String[] reserved_name_chars = {
+      "(",
+      ")",
+      " ",
+      "_"
+  };
   private final BoardFrame board_frame;
   private final JPanel main_panel;
   private final ComboBoxLayer rules_clearance_layer_combo_box;
@@ -59,7 +64,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     layer_label.setToolTipText(tm.getText("layer_tooltip"));
     north_panel.add(layer_label);
 
-    BoardHandling board_handling = board_frame.board_panel.board_handling;
+    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
     rules_clearance_layer_combo_box = new ComboBoxLayer(board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
     north_panel.add(this.rules_clearance_layer_combo_box);
     rules_clearance_layer_combo_box.addActionListener(new ComboBoxListener());
@@ -322,7 +327,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     private final Object[][] data;
     private final String[] column_names;
 
-    public ClearanceTableModel(BoardHandling p_board_handling)
+    public ClearanceTableModel(GuiBoardManager p_board_handling)
     {
       ClearanceMatrix clearance_matrix = p_board_handling.get_routing_board().rules.clearance_matrix;
 
@@ -393,7 +398,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
 
       // check, if there are items on the board assigned to clearance class i or j.
 
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       UndoableObjects item_list = board_handling.get_routing_board().item_list;
       boolean items_already_assigned_row = false;
       boolean items_already_assigned_column = false;
@@ -491,7 +496,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
      */
     private void set_values(int p_layer)
     {
-      BoardHandling board_handling = board_frame.board_panel.board_handling;
+      GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
 
       for (int i = 0; i < clearance_matrix.get_class_count(); ++i)

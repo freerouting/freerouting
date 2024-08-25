@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.settings.RouterSettings;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class WindowAutorouteParameter extends BoardSavableSubWindow
 {
 
-  private final BoardHandling board_handling;
+  private final GuiBoardManager board_handling;
   private final JLabel[] layer_name_arr;
   private final JCheckBox[] settings_autorouter_layer_active_arr;
   private final List<JComboBox<String>> settings_autorouter_combo_box_arr;

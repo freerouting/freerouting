@@ -5,7 +5,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.RulesFile;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.ScreenMessages;
 import app.freerouting.logger.FRLogger;
@@ -620,7 +620,7 @@ public class BoardFrame extends WindowBase
   /**
    * Saves the board rule to file, so that they can be reused later on.
    */
-  private boolean saveRulesAs(File rulesFile, String designName, BoardHandling p_board_handling)
+  private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager p_board_handling)
   {
     FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
 

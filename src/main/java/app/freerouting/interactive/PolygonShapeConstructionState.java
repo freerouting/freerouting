@@ -16,7 +16,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
   /**
    * Creates a new instance of PolygonShapeConstructionState
    */
-  private PolygonShapeConstructionState(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  private PolygonShapeConstructionState(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
     if (this.activityReplayFile != null)
@@ -30,7 +30,7 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
    * Returns a new instance of this class If p_logfile != null; the creation of this item is stored
    * in a logfile
    */
-  public static PolygonShapeConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, BoardHandling p_board_handling, ActivityReplayFile p_activityReplayFile)
+  public static PolygonShapeConstructionState get_instance(FloatPoint p_location, InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
   {
     return new PolygonShapeConstructionState(p_location, p_parent_state, p_board_handling, p_activityReplayFile);
   }

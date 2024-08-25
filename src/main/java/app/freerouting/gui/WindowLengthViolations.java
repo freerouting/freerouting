@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
@@ -66,7 +66,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter
       LengthViolation curr_violation = ((LengthViolation) selected_violations.get(i));
       selected_items.addAll(curr_violation.net.get_items());
     }
-    BoardHandling board_handling = board_frame.board_panel.board_handling;
+    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
     board_handling.select_items(selected_items);
     board_handling.zoom_selection();
   }

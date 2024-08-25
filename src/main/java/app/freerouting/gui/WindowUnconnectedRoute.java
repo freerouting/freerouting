@@ -4,7 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
-import app.freerouting.interactive.BoardHandling;
+import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
@@ -100,7 +100,7 @@ public class WindowUnconnectedRoute extends CleanupWindows
     {
       selected_items.addAll(((UnconnectedRouteInfo) selected_list_values.get(i)).item_list);
     }
-    BoardHandling board_handling = board_frame.board_panel.board_handling;
+    GuiBoardManager board_handling = board_frame.board_panel.board_handling;
     board_handling.select_items(selected_items);
     board_handling.zoom_selection();
   }
