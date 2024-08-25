@@ -88,7 +88,7 @@ public class BatchOptRoute extends NamedAlgorithm
   /**
    * Optimize the route on the board.
    */
-  public void optimize_board(boolean save_intermediate_stages, float optimization_improvement_threshold, InteractiveActionThread isStopRequested)
+  public void runBatchLoop()
   {
     FRLogger.debug("Before optimize: Via count: " + board.get_vias().size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
     double route_improved = -1;
@@ -97,7 +97,7 @@ public class BatchOptRoute extends NamedAlgorithm
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    while (((route_improved >= optimization_improvement_threshold) || (route_improved < 0)) && (!isStopRequested.is_stop_requested()))
+    while (((route_improved >= this.settings.optimizationImprovementThreshold) || (route_improved < 0)) && (!this.thread.is_stop_requested()))
     {
       ++curr_pass_no;
       String current_board_hash = this.board.get_hash();
@@ -106,7 +106,7 @@ public class BatchOptRoute extends NamedAlgorithm
       boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
       route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
 
-      if ((route_improved > optimization_improvement_threshold) && (save_intermediate_stages))
+      if ((route_improved > this.settings.optimizationImprovementThreshold) && (this.settings.save_intermediate_stages))
       {
         // Save intermediate optimization results:
         // 1. To save the result in case the program is terminated unexpectedly,

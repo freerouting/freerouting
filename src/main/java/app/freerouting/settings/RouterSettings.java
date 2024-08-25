@@ -27,11 +27,12 @@ public class RouterSettings implements Serializable
   public int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   @SerializedName("improvement_threshold")
   public float optimizationImprovementThreshold = 0.01f;
+  public transient boolean save_intermediate_stages = false;
   public transient BoardUpdateStrategy boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
   public transient String hybridRatio = "1:1";
   public transient ItemSelectionStrategy itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
   @SerializedName("ignore_net_classes")
-  public transient String[] ignoreNetClassesByAutorouter = new String[0];
+  public transient String[] ignoreNetClasses = new String[0];
   /**
    * The accuracy of the pull tight algorithm.
    */
@@ -131,7 +132,7 @@ public class RouterSettings implements Serializable
     result.boardUpdateStrategy = this.boardUpdateStrategy;
     result.hybridRatio = this.hybridRatio;
     result.itemSelectionStrategy = this.itemSelectionStrategy;
-    result.ignoreNetClassesByAutorouter = this.ignoreNetClassesByAutorouter.clone();
+    result.ignoreNetClasses = this.ignoreNetClasses.clone();
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     System.arraycopy(this.isLayerActive, 0, result.isLayerActive, 0, isLayerActive.length);
     System.arraycopy(this.isPreferredDirectionHorizontalOnLayer, 0, result.isPreferredDirectionHorizontalOnLayer, 0, isPreferredDirectionHorizontalOnLayer.length);

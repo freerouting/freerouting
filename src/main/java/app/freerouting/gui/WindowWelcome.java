@@ -504,7 +504,7 @@ public class WindowWelcome extends WindowBase
       }
 
       // ignore net classes if they were defined by a command line argument
-      for (String net_class_name : globalSettings.routerSettings.ignoreNetClassesByAutorouter)
+      for (String net_class_name : globalSettings.routerSettings.ignoreNetClasses)
       {
         NetClasses netClasses = new_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
 

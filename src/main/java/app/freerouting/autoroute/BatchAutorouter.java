@@ -123,7 +123,7 @@ public class BatchAutorouter extends NamedAlgorithm
    * Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user.
    * Returns true if the board is completed.
    */
-  public boolean autoroute_passes(boolean save_intermediate_stages)
+  public boolean runBatchLoop()
   {
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
@@ -186,7 +186,7 @@ public class BatchAutorouter extends NamedAlgorithm
       double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes", traceLengthDifferences);
       FRLogger.info("Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration));
 
-      if (save_intermediate_stages)
+      if (this.settings.save_intermediate_stages)
       {
         this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
       }

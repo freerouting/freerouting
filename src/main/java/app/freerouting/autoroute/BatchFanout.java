@@ -37,7 +37,7 @@ public class BatchFanout extends NamedAlgorithm
     }
   }
 
-  public void fanout_board()
+  public void runBatchLoop()
   {
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 

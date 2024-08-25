@@ -70,4 +70,38 @@ public class ReflectionUtil
     // Add more type conversions as needed
     return value;
   }
+
+  /* Copy all non-null fields from one object to another recursively */
+  public static void copyFields(Object source, Object target)
+  {
+    for (Field field : source.getClass().getDeclaredFields())
+    {
+      try
+      {
+        field.setAccessible(true);
+        Object value = field.get(source);
+        if (value != null)
+        {
+          if (field.getType().isPrimitive() || field.getType() == String.class)
+          {
+            field.set(target, value);
+          }
+          else
+          {
+            Object targetField = field.get(target);
+            if (targetField == null)
+            {
+              targetField = field.getType().newInstance();
+              field.set(target, targetField);
+            }
+            copyFields(value, targetField);
+          }
+        }
+      } catch (IllegalAccessException | InstantiationException e)
+      {
+        e.printStackTrace();
+      }
+    }
+
+  }
 }

@@ -25,8 +25,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 {
   private final BatchAutorouter batch_autorouter;
   private final BatchOptRoute batch_opt_route;
-  boolean save_intermediate_stages;
-  float optimization_improvement_threshold;
 
   /**
    * Creates a new instance of AutorouterAndRouteOptimizerThread
@@ -61,16 +59,12 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       }
     });
 
-    int num_threads = routerSettings.maxThreads;
-    save_intermediate_stages = p_board_handling.save_intermediate_stages;
-    optimization_improvement_threshold = routerSettings.optimizationImprovementThreshold;
-
-    if (num_threads > 1)
+    if (routerSettings.maxThreads > 1)
     {
       FRLogger.warn("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
     }
 
-    this.batch_opt_route = num_threads > 1 ? new BatchOptRouteMT(this, routerSettings) : new BatchOptRoute(this, false, routerSettings);
+    this.batch_opt_route = routerSettings.maxThreads > 1 ? new BatchOptRouteMT(this, routerSettings) : new BatchOptRoute(this, false, routerSettings);
   }
 
   @Override
@@ -120,11 +114,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             hdlg.repaint();
           }
         });
-        fanout.fanout_board();
+        fanout.runBatchLoop();
       }
       if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_auto_router_requested())
       {
-        batch_autorouter.autoroute_passes(hdlg.save_intermediate_stages);
+        batch_autorouter.runBatchLoop();
       }
       hdlg.get_routing_board().finish_autoroute();
 
@@ -148,7 +142,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         {
           String opt_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message");
           hdlg.screen_messages.set_status_message(opt_message);
-          this.batch_opt_route.optimize_board(this.save_intermediate_stages, this.optimization_improvement_threshold, this);
+          this.batch_opt_route.runBatchLoop();
           String curr_message;
           if (this.is_stop_requested())
           {

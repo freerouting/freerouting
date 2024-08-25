@@ -37,15 +37,11 @@ public class BoardHandlingHeadless implements IBoardHandling
    */
   protected RoutingBoard board;
   protected Locale locale;
-  protected boolean save_intermediate_stages;
-  protected float optimization_improvement_threshold;
   private byte[] serializedBoard;
 
-  public BoardHandlingHeadless(Locale p_locale, boolean p_save_intermediate_stages, float p_optimization_improvement_threshold)
+  public BoardHandlingHeadless(Locale p_locale)
   {
     this.locale = p_locale;
-    this.save_intermediate_stages = p_save_intermediate_stages;
-    this.optimization_improvement_threshold = p_optimization_improvement_threshold;
   }
 
   /**

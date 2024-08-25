@@ -115,6 +115,7 @@ public class BoardPanel extends JPanel
       }
     });
     addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
+    globalSettings.routerSettings.save_intermediate_stages = globalSettings.featureFlags.snapshots && globalSettings.routerSettings.save_intermediate_stages;
     board_handling = new BoardHandling(this, globalSettings);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));

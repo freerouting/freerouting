@@ -74,10 +74,20 @@ public class GlobalSettings implements Serializable
    */
   public static GlobalSettings load() throws IOException
   {
+    GlobalSettings loadedSettings = null;
     try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8))
     {
-      return GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
+      loadedSettings = GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
     }
+
+    GlobalSettings result = new GlobalSettings();
+    if (loadedSettings != null)
+    {
+      // Apply all the loaded settings to the result if they are not null
+      ReflectionUtil.copyFields(loadedSettings, result);
+    }
+
+    return result;
   }
 
   /*
@@ -368,7 +378,7 @@ public class GlobalSettings implements Serializable
         else if (p_args[i].startsWith("-inc"))
         {
           // ignore net class(es)
-          routerSettings.ignoreNetClassesByAutorouter = p_args[i + 1].split(",");
+          routerSettings.ignoreNetClasses = p_args[i + 1].split(",");
         }
         else if (p_args[i].startsWith("-dct"))
         {
