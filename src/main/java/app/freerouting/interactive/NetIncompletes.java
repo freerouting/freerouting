@@ -36,7 +36,7 @@ public class NetIncompletes
   /**
    * Creates a new instance of NetIncompletes
    */
-  public NetIncompletes(int p_net_no, Collection<Item> p_net_items, BasicBoard p_board, Locale p_locale)
+  public NetIncompletes(int p_net_no, Collection<Item> p_net_items, BasicBoard p_board)
   {
     this.draw_marker_radius = p_board.rules.get_min_trace_half_width() * 2;
     this.incompletes = new LinkedList<>();
@@ -73,7 +73,7 @@ public class NetIncompletes
       {
         continue; // airline exists already
       }
-      this.incompletes.add(new RatsNest.AirLine(curr_net, curr_edge.from_item.item, curr_edge.from_corner, curr_edge.to_item.item, curr_edge.to_corner, p_locale));
+      this.incompletes.add(new RatsNest.AirLine(curr_net, curr_edge.from_item.item, curr_edge.from_corner, curr_edge.to_item.item, curr_edge.to_corner));
       join_connected_sets(net_items, curr_edge.from_item.connected_set, curr_edge.to_item.connected_set);
     }
     calc_length_violation();

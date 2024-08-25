@@ -18,15 +18,13 @@ public class RatsNest
 
   private final NetIncompletes[] net_incompletes;
   private final boolean[] is_filtered;
-  private final Locale locale;
   public boolean hidden = false;
 
   /**
    * Creates a new instance of RatsNest
    */
-  public RatsNest(BasicBoard p_board, Locale p_locale)
+  public RatsNest(BasicBoard p_board)
   {
-    this.locale = p_locale;
     int max_net_no = p_board.rules.nets.max_net_no();
     // Create the net item lists at once for performance reasons.
     Vector<Collection<Item>> net_item_lists = new Vector<>(max_net_no);
@@ -54,7 +52,7 @@ public class RatsNest
     this.is_filtered = new boolean[max_net_no];
     for (int i = 0; i < net_incompletes.length; ++i)
     {
-      net_incompletes[i] = new NetIncompletes(i + 1, net_item_lists.get(i), p_board, p_locale);
+      net_incompletes[i] = new NetIncompletes(i + 1, net_item_lists.get(i), p_board);
       is_filtered[i] = false;
     }
   }
@@ -67,7 +65,7 @@ public class RatsNest
     if (p_net_no >= 1 && p_net_no <= net_incompletes.length)
     {
       Collection<Item> item_list = p_board.get_connectable_items(p_net_no);
-      net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board, locale);
+      net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board);
     }
   }
 
@@ -80,7 +78,7 @@ public class RatsNest
     {
       // copy p_item_list, because it will be changed inside the constructor of NetIncompletes
       Collection<Item> item_list = new LinkedList<>(p_item_list);
-      net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board, locale);
+      net_incompletes[p_net_no - 1] = new NetIncompletes(p_net_no, item_list, p_board);
     }
   }
 
@@ -219,16 +217,14 @@ public class RatsNest
     public final FloatPoint from_corner;
     public final Item to_item;
     public final FloatPoint to_corner;
-    private final Locale locale;
 
-    AirLine(Net p_net, Item p_from_item, FloatPoint p_from_corner, Item p_to_item, FloatPoint p_to_corner, Locale p_locale)
+    AirLine(Net p_net, Item p_from_item, FloatPoint p_from_corner, Item p_to_item, FloatPoint p_to_corner)
     {
       net = p_net;
       from_item = p_from_item;
       from_corner = p_from_corner;
       to_item = p_to_item;
       to_corner = p_to_corner;
-      this.locale = p_locale;
     }
 
     @Override
@@ -240,33 +236,41 @@ public class RatsNest
     @Override
     public String toString()
     {
-      return this.net.name + ": " + item_info(from_item) + " - " + item_info(to_item);
+      return this.net.name + ": " + getItemInfo(from_item).text + " - " + getItemInfo(to_item).text;
     }
 
-    private String item_info(Item p_item)
+    private RatsNestItemInfo getItemInfo(Item p_item)
     {
-      TextManager tm = new TextManager(this.getClass(), this.locale);
-
-      String result;
-      if (p_item instanceof Pin curr_pin)
+      RatsNestItemInfo result = new RatsNestItemInfo();
+      if (p_item instanceof Pin pin)
       {
-        result = curr_pin.component_name() + ", " + curr_pin.name();
+        result.type = RatsNestItemType.PIN;
+        result.componentName = pin.component_name();
+        result.name = pin.name();
+        result.text = pin.component_name() + ", " + pin.name();
       }
-      else if (p_item instanceof Via)
+      else if (p_item instanceof Via via)
       {
-        result = tm.getText("via");
+        result.type = RatsNestItemType.VIA;
+        result.componentName = via.component_name();
+        result.text = "Via";
       }
-      else if (p_item instanceof Trace)
+      else if (p_item instanceof Trace trace)
       {
-        result = tm.getText("trace");
+        result.type = RatsNestItemType.TRACE;
+        result.componentName = trace.component_name();
+        result.text = "Trace";
       }
-      else if (p_item instanceof ConductionArea)
+      else if (p_item instanceof ConductionArea conductionArea)
       {
-        result = tm.getText("conduction_area");
+        result.type = RatsNestItemType.CONDUCTION_AREA;
+        result.componentName = conductionArea.component_name();
+        result.text = "Conduction Area";
       }
       else
       {
-        result = tm.getText("unknown");
+        result.type = RatsNestItemType.UNKNOWN;
+        result.text = "Unknown";
       }
       return result;
     }
