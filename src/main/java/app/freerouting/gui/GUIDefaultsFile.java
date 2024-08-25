@@ -255,7 +255,6 @@ public class GUIDefaultsFile
     write_frame_scope(this.board_frame.select_parameter_window, "select_parameter");
     write_frame_scope(this.board_frame.route_parameter_window, "route_parameter");
     write_frame_scope(this.board_frame.route_parameter_window.manual_rule_window, "manual_rules");
-    write_frame_scope(this.board_frame.route_parameter_window.detail_window, "route_details");
     write_frame_scope(this.board_frame.move_parameter_window, "move_parameter");
     write_frame_scope(this.board_frame.clearance_matrix_window, "clearance_matrix");
     write_frame_scope(this.board_frame.via_window, "via_rules");
@@ -326,7 +325,6 @@ public class GUIDefaultsFile
       case SELECT_PARAMETER -> curr_frame = this.board_frame.select_parameter_window;
       case ROUTE_PARAMETER -> curr_frame = this.board_frame.route_parameter_window;
       case MANUAL_RULES -> curr_frame = this.board_frame.route_parameter_window.manual_rule_window;
-      case ROUTE_DETAILS -> curr_frame = this.board_frame.route_parameter_window.detail_window;
       case MOVE_PARAMETER -> curr_frame = this.board_frame.move_parameter_window;
       case CLEARANCE_MATRIX -> curr_frame = this.board_frame.clearance_matrix_window;
       case VIA_RULES -> curr_frame = this.board_frame.via_window;
