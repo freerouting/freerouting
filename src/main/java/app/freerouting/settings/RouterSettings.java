@@ -126,6 +126,12 @@ public class RouterSettings implements Serializable
   public RouterSettings clone()
   {
     RouterSettings result = new RouterSettings(this.isLayerActive.length);
+    result.isLayerActive = this.isLayerActive.clone();
+    result.isPreferredDirectionHorizontalOnLayer = this.isPreferredDirectionHorizontalOnLayer.clone();
+    result.preferredDirectionTraceCost = this.preferredDirectionTraceCost.clone();
+    result.undesiredDirectionTraceCost = this.undesiredDirectionTraceCost.clone();
+    result.defaultPreferredDirectionTraceCost = this.defaultPreferredDirectionTraceCost;
+    result.defaultUndesiredDirectionTraceCost = this.defaultUndesiredDirectionTraceCost;
     result.maxPasses = this.maxPasses;
     result.maxThreads = this.maxThreads;
     result.optimizationImprovementThreshold = this.optimizationImprovementThreshold;
