@@ -104,6 +104,22 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       if (fanout_first)
       {
         BatchFanout fanout = new BatchFanout(this, hdlg.get_routing_board(), hdlg.get_settings().autoroute_settings);
+        fanout.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
+        {
+          @Override
+          public void onTaskStateChangedEvent(TaskStateChangedEvent event)
+          {
+            hdlg.screen_messages.set_batch_fanout_info(event.getPassNumber(), 0);
+          }
+        });
+        fanout.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+        {
+          @Override
+          public void onBoardUpdatedEvent(BoardUpdatedEvent event)
+          {
+            hdlg.repaint();
+          }
+        });
         fanout.fanout_board();
       }
       if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_auto_router_requested())

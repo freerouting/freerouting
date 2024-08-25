@@ -69,7 +69,6 @@ public class BatchFanout extends NamedAlgorithm
     int ripup_costs = settings.get_start_ripup_costs() * (p_pass_no + 1);
     for (Component curr_component : this.sorted_components)
     {
-      this.thread.hdlg.screen_messages.set_batch_fanout_info(p_pass_no + 1, components_to_go);
       for (Component.Pin curr_pin : curr_component.smd_pins)
       {
         double max_milliseconds = 10000 * (p_pass_no + 1);
@@ -84,7 +83,7 @@ public class BatchFanout extends NamedAlgorithm
         }
         if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED)
         {
-          this.thread.hdlg.repaint();
+          fireBoardUpdatedEvent(this.board.get_statistics());
         }
         if (this.thread.is_stop_requested())
         {
