@@ -85,7 +85,7 @@ public class BatchFanout extends NamedAlgorithm
         {
           fireBoardUpdatedEvent(this.board.get_statistics());
         }
-        if (this.thread.is_stop_requested())
+        if (this.thread.isStopRequested())
         {
           return routed_count;
         }

@@ -1542,7 +1542,7 @@ public class BoardHandling extends BoardHandlingHeadless
     if (this.interactive_action_thread != null)
     {
       // The left button is used to stop the interactive action thread.
-      this.interactive_action_thread.request_stop();
+      this.interactive_action_thread.requestStop();
     }
 
     this.set_board_read_only(false);

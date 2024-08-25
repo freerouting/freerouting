@@ -136,7 +136,7 @@ class BoardToolbar extends JPanel
       // update the board
       board_frame.board_panel.board_handling.update_routing_board(board);
       // create a deep copy of the routing board
-      board = board_frame.board_panel.board_handling.get_routing_board().deep_copy_routing_board();
+      board = board_frame.board_panel.board_handling.get_routing_board().deepCopy();
       // update the board again
       board_frame.board_panel.board_handling.update_routing_board(board);
       // create ratsnest

@@ -97,7 +97,7 @@ public class BatchOptRoute extends NamedAlgorithm
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    while (((route_improved >= this.settings.optimizationImprovementThreshold) || (route_improved < 0)) && (!this.thread.is_stop_requested()))
+    while (((route_improved >= this.settings.optimizationImprovementThreshold) || (route_improved < 0)) && (!this.thread.isStopRequested()))
     {
       ++curr_pass_no;
       String current_board_hash = this.board.get_hash();
@@ -138,7 +138,7 @@ public class BatchOptRoute extends NamedAlgorithm
 
     while (true)
     {
-      if (this.thread.is_stop_requested())
+      if (this.thread.isStopRequested())
       {
         FRLogger.traceExit(optimizationPassId);
         return route_improved;
@@ -254,7 +254,7 @@ public class BatchOptRoute extends NamedAlgorithm
     double trace_length_after = calc_weighted_trace_length(board);
 
     ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), via_count_before, via_count_after, this.min_cumulative_trace_length_before, trace_length_after, incomplete_count_before, incomplete_count_after);
-    boolean route_improved = !this.thread.is_stop_requested() && result.improved();
+    boolean route_improved = !this.thread.isStopRequested() && result.improved();
     result.update_improved(route_improved);
 
     if (route_improved)

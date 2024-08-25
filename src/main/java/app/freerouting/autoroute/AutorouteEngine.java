@@ -253,7 +253,7 @@ public class AutorouteEngine
     {
       return false;
     }
-    return this.stoppable_thread.is_stop_requested();
+    return this.stoppable_thread.isStopRequested();
   }
 
   /**

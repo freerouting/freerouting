@@ -340,7 +340,7 @@ public class SelectedItemState extends InteractiveState
     }
     for (Item curr_item : autoroute_item_list)
     {
-      if (p_stoppable_thread != null && p_stoppable_thread.is_stop_requested())
+      if (p_stoppable_thread != null && p_stoppable_thread.isStopRequested())
       {
         interrupted = true;
         break;
@@ -442,7 +442,7 @@ public class SelectedItemState extends InteractiveState
     }
     for (Pin curr_pin : fanout_list)
     {
-      if (p_stoppable_thread != null && p_stoppable_thread.is_stop_requested())
+      if (p_stoppable_thread != null && p_stoppable_thread.isStopRequested())
       {
         interrupted = true;
         break;
@@ -507,7 +507,7 @@ public class SelectedItemState extends InteractiveState
     boolean interrupted = false;
     for (Item curr_item : item_list)
     {
-      if (p_stoppable_thread != null && p_stoppable_thread.is_stop_requested())
+      if (p_stoppable_thread != null && p_stoppable_thread.isStopRequested())
       {
         interrupted = true;
         break;

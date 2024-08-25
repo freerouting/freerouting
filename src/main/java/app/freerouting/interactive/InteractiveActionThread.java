@@ -71,13 +71,13 @@ public abstract class InteractiveActionThread extends Thread implements Stoppabl
   }
 
   @Override
-  public synchronized void request_stop()
+  public synchronized void requestStop()
   {
     stop_requested = true;
   }
 
   @Override
-  public synchronized boolean is_stop_requested()
+  public synchronized boolean isStopRequested()
   {
     return stop_requested;
   }
@@ -191,7 +191,7 @@ public abstract class InteractiveActionThread extends Thread implements Stoppabl
       hdlg.paint_immediately = true;
       while (!done)
       {
-        if (is_stop_requested())
+        if (isStopRequested())
         {
           interrupted = true;
           done = true;

@@ -175,7 +175,7 @@ public abstract class PullTightAlgo
    */
   protected boolean is_stop_requested()
   {
-    if (this.stoppable_thread != null && this.stoppable_thread.is_stop_requested())
+    if (this.stoppable_thread != null && this.stoppable_thread.isStopRequested())
     {
       return true;
     }

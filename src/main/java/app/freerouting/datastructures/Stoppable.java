@@ -9,10 +9,10 @@ public interface Stoppable
   /**
    * Requests this thread to be stopped.
    */
-  void request_stop();
+  void requestStop();
 
   /**
    * Returns true, if this thread is requested to be stopped.
    */
-  boolean is_stop_requested();
+  boolean isStopRequested();
 }

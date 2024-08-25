@@ -227,7 +227,7 @@ public class PolylineArea implements Area, Serializable
           Collection<TileShape> new_piece_list = new LinkedList<>();
           for (TileShape curr_divide_piece : curr_piece_list)
           {
-            if (p_stoppable_thread != null && p_stoppable_thread.is_stop_requested())
+            if (p_stoppable_thread != null && p_stoppable_thread.isStopRequested())
             {
               return null;
             }

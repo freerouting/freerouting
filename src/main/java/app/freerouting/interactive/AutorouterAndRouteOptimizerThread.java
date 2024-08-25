@@ -138,13 +138,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         int via_count_before = hdlg.get_routing_board().get_vias().size();
         double trace_length_before = hdlg.coordinate_transform.board_to_user(hdlg.get_routing_board().cumulative_trace_length());
 
-        if (hdlg.get_settings().autoroute_settings.get_with_postroute() && !this.is_stop_requested())
+        if (hdlg.get_settings().autoroute_settings.get_with_postroute() && !this.isStopRequested())
         {
           String opt_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message");
           hdlg.screen_messages.set_status_message(opt_message);
           this.batch_opt_route.runBatchLoop();
           String curr_message;
-          if (this.is_stop_requested())
+          if (this.isStopRequested())
           {
             curr_message = tm.getText("interrupted");
           }
@@ -159,7 +159,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         {
           hdlg.screen_messages.clear();
           String curr_message;
-          if (this.is_stop_requested())
+          if (this.isStopRequested())
           {
             curr_message = tm.getText("interrupted");
           }
@@ -181,7 +181,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         FRLogger.info("Route optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + (percentage_improvement > 0 ? " and it improved the design by ~" + String.format("%(,.2f", percentage_improvement * 100.0) + "%" : "") + ".");
         FRAnalytics.routeOptimizerFinished();
 
-        if (!this.is_stop_requested())
+        if (!this.isStopRequested())
         {
           hdlg.get_panel().board_frame.delete_intermediate_stage_file();
         }
@@ -208,7 +208,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
     for (ThreadActionListener hl : this.listeners)
     {
-      if (this.is_stop_requested())
+      if (this.isStopRequested())
       {
         hl.autorouterAborted();
       }

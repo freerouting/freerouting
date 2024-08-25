@@ -279,7 +279,7 @@ public class BatchOptRouteMT extends BatchOptRoute
       {
         FRLogger.debug("Running route optimizer on " + pool.getActiveCount() + " thread(s). Completed " + pool.getCompletedTaskCount() + " of " + pool.getTaskCount() + " tasks.");
 
-        if (this.thread.is_stop_requested())
+        if (this.thread.isStopRequested())
         {
           pool.shutdownNow();
           return best_route_result.improvement_percentage();

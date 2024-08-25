@@ -1338,7 +1338,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
    * Create a deep copy of the routing board.
    * TODO: check if this method is the same as the BasicBoard.clone method
    */
-  public synchronized RoutingBoard deep_copy_routing_board()
+  public synchronized RoutingBoard deepCopy()
   {
     ObjectOutputStream oos = null;
     ObjectInputStream ois = null;
@@ -1350,7 +1350,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
 
       oos.writeObject(this); // serialize this.board
       oos.flush();
-      
+
       ByteArrayInputStream bin = new ByteArrayInputStream(bos.toByteArray());
       ois = new ObjectInputStream(bin);
 

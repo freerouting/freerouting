@@ -19,7 +19,7 @@ public class OptimizeRouteTask extends BatchOptRoute implements Runnable
 
   public OptimizeRouteTask(BatchOptRouteMT p_optimizer, int item_id, int p_pass_no, boolean p_with_preferred_directions, double p_min_cumulative_trace_length, RouterSettings routerSettings)
   {
-    super(p_optimizer.thread, true, p_optimizer.thread.hdlg.get_routing_board().deep_copy_routing_board(), routerSettings);
+    super(p_optimizer.thread, true, p_optimizer.thread.hdlg.get_routing_board().deepCopy(), routerSettings);
 
     optimizer = p_optimizer;
 
