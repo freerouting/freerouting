@@ -64,7 +64,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       FRLogger.warn("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
     }
 
-    this.batch_opt_route = routerSettings.maxThreads > 1 ? new BatchOptRouteMT(this, routerSettings) : new BatchOptRoute(this, false, routerSettings);
+    this.batch_opt_route = routerSettings.maxThreads > 1 ? new BatchOptRouteMT(this, hdlg.get_routing_board(), routerSettings) : new BatchOptRoute(this, false, hdlg.get_routing_board(), routerSettings);
   }
 
   @Override

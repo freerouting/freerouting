@@ -16,7 +16,7 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.settings.RouterSettings;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -1332,5 +1332,54 @@ public class RoutingBoard extends BasicBoard implements Serializable
     }
 
     return statistics;
+  }
+
+  /**
+   * Create a deep copy of the routing board.
+   * TODO: check if this method is the same as the BasicBoard.clone method
+   */
+  public synchronized RoutingBoard deep_copy_routing_board()
+  {
+    ObjectOutputStream oos = null;
+    ObjectInputStream ois = null;
+
+    try
+    {
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      oos = new ObjectOutputStream(bos);
+
+      oos.writeObject(this); // serialize this.board
+      oos.flush();
+      
+      ByteArrayInputStream bin = new ByteArrayInputStream(bos.toByteArray());
+      ois = new ObjectInputStream(bin);
+
+      RoutingBoard board_copy = (RoutingBoard) ois.readObject();
+
+      // board_copy.clear_autoroute_database();
+      board_copy.clear_all_item_temporary_autoroute_data();
+      board_copy.finish_autoroute();
+
+      return board_copy;
+    } catch (Exception e)
+    {
+      FRLogger.error("Exception in deep_copy_routing_board" + e, e);
+      return null;
+    } finally
+    {
+      try
+      {
+        if (oos != null)
+        {
+          oos.close();
+        }
+        if (ois != null)
+        {
+          ois.close();
+        }
+      } catch (Exception e)
+      {
+      }
+    }
   }
 }

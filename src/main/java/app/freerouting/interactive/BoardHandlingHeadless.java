@@ -9,10 +9,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Locale;
 
 /**
@@ -57,56 +53,6 @@ public class BoardHandlingHeadless implements IBoardHandling
   {
     this.board = routing_board;
     serializedBoard = null;
-  }
-
-  public synchronized RoutingBoard deep_copy_routing_board()
-  {
-    ObjectOutputStream oos = null;
-    ObjectInputStream ois = null;
-
-    try
-    {
-      if (serializedBoard == null) // cache the board byte array
-      {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        oos = new ObjectOutputStream(bos);
-
-        oos.writeObject(this.board); // serialize this.board
-        oos.flush();
-
-        serializedBoard = bos.toByteArray();
-      }
-
-      ByteArrayInputStream bin = new ByteArrayInputStream(serializedBoard);
-      ois = new ObjectInputStream(bin);
-
-      RoutingBoard board_copy = (RoutingBoard) ois.readObject();
-
-      // board_copy.clear_autoroute_database();
-      board_copy.clear_all_item_temporary_autoroute_data();
-      board_copy.finish_autoroute();
-
-      return board_copy;
-    } catch (Exception e)
-    {
-      System.err.println("Exception in deep_copy_routing_board = " + e);
-      return null;
-    } finally
-    {
-      try
-      {
-        if (oos != null)
-        {
-          oos.close();
-        }
-        if (ois != null)
-        {
-          ois.close();
-        }
-      } catch (Exception e)
-      {
-      }
-    }
   }
 
   @Override

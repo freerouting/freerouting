@@ -33,9 +33,9 @@ public class BatchOptRoute extends NamedAlgorithm
   /**
    * To optimize the route on the board after the autoroute task is finished.
    */
-  public BatchOptRoute(InteractiveActionThread p_thread, boolean p_clone_board, RouterSettings settings)
+  public BatchOptRoute(InteractiveActionThread p_thread, boolean p_clone_board, RoutingBoard board, RouterSettings settings)
   {
-    super(p_thread, p_clone_board ? p_thread.hdlg.deep_copy_routing_board() : p_thread.hdlg.get_routing_board(), settings);
+    super(p_thread, board, settings);
     this.clone_board = p_clone_board;
   }
 

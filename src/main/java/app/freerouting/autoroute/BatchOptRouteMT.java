@@ -1,6 +1,7 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.board.Item;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
@@ -36,9 +37,9 @@ public class BatchOptRouteMT extends BatchOptRoute
   /**
    * @param p_thread
    */
-  public BatchOptRouteMT(InteractiveActionThread p_thread, RouterSettings routerSettings)
+  public BatchOptRouteMT(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings routerSettings)
   {
-    super(p_thread, false, routerSettings);
+    super(p_thread, false, board, routerSettings);
 
     this.thread_pool_size = routerSettings.maxThreads;
     this.board_update_strategy = routerSettings.boardUpdateStrategy;
