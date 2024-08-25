@@ -169,7 +169,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
 
     settings_autorouter_fanout_pass_button.setSelected(false);
     settings_autorouter_autoroute_pass_button.setSelected(true);
-    settings_autorouter_autoroute_pass_button.setSelected(true);
+    settings_autorouter_postroute_pass_button.setSelected(false);
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag_constraints.gridheight = 1;
