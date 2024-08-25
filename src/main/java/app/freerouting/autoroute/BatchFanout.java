@@ -1,5 +1,6 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -19,7 +20,7 @@ public class BatchFanout extends NamedAlgorithm
 {
   private final SortedSet<Component> sorted_components;
 
-  private BatchFanout(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings settings)
+  public BatchFanout(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings settings)
   {
     super(p_thread, board, settings);
 
@@ -36,18 +37,24 @@ public class BatchFanout extends NamedAlgorithm
     }
   }
 
-  public static void fanout_board(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings routerSettings)
+  public void fanout_board()
   {
-    BatchFanout fanout_instance = new BatchFanout(p_thread, board, routerSettings);
-    final int MAX_PASS_COUNT = 20;
-    for (int i = 0; i < MAX_PASS_COUNT; ++i)
+    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
+
+    int curr_pass_no;
+    for (curr_pass_no = 0; curr_pass_no < this.settings.maxFanoutPasses; ++curr_pass_no)
     {
-      int routed_count = fanout_instance.fanout_pass(i);
+      String current_board_hash = this.board.get_hash();
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
+
+      int routed_count = this.fanout_pass(curr_pass_no);
       if (routed_count == 0)
       {
         break;
       }
     }
+
+    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, curr_pass_no, this.board.get_hash()));
   }
 
   /**

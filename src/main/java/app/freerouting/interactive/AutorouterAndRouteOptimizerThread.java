@@ -103,7 +103,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       boolean fanout_first = hdlg.get_settings().autoroute_settings.get_with_fanout() && hdlg.get_settings().autoroute_settings.get_start_pass_no() <= 1;
       if (fanout_first)
       {
-        BatchFanout.fanout_board(this, hdlg.get_routing_board(), hdlg.get_settings().autoroute_settings);
+        BatchFanout fanout = new BatchFanout(this, hdlg.get_routing_board(), hdlg.get_settings().autoroute_settings);
+        fanout.fanout_board();
       }
       if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_auto_router_requested())
       {

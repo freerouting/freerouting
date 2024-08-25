@@ -21,6 +21,8 @@ public class RouterSettings implements Serializable
   public double defaultUndesiredDirectionTraceCost = 1;
   @SerializedName("max_passes")
   public int maxPasses = 100;
+  @SerializedName("fanout_max_passes")
+  public int maxFanoutPasses = 20;
   @SerializedName("max_threads")
   public int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   @SerializedName("improvement_threshold")
