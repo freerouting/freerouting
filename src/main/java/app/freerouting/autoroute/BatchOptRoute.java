@@ -1,5 +1,6 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.*;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -94,9 +95,14 @@ public class BatchOptRoute extends NamedAlgorithm
     int curr_pass_no = 0;
     use_increased_ripup_costs = true;
 
+    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
+
     while (((route_improved >= optimization_improvement_threshold) || (route_improved < 0)) && (!isStopRequested.is_stop_requested()))
     {
       ++curr_pass_no;
+      String current_board_hash = this.board.get_hash();
+      this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
+
       boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
       route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
 
@@ -109,6 +115,8 @@ public class BatchOptRoute extends NamedAlgorithm
         this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
       }
     }
+
+    this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, curr_pass_no, this.board.get_hash()));
   }
 
   /**
@@ -176,7 +184,6 @@ public class BatchOptRoute extends NamedAlgorithm
    */
   protected ItemRouteResult opt_route_item(Item p_item, int p_pass_no, boolean p_with_preferred_directions)
   {
-
     TextManager tm = new TextManager(InteractiveState.class, this.thread.hdlg.get_locale());
 
     String start_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message") + "        " + tm.getText("routeoptimizer_pass") + p_pass_no;
