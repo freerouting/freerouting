@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.zip.CRC32;
@@ -471,14 +470,5 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     {
       return 0;
     }
-  }
-
-  /**
-   * Saves the job as a JSON file.
-   */
-  public void saveAsJson(Path filename)
-  {
-
-
   }
 }
