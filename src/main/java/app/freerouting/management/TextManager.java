@@ -6,6 +6,10 @@ import app.freerouting.settings.GlobalSettings;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -58,6 +62,13 @@ public class TextManager
     {
       FRLogger.error("There was a problem loading the Material Design Icons font", e);
     }
+  }
+
+  public static String convertInstantToString(Instant instant)
+  {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    return localDateTime.format(formatter);
   }
 
   private void loadResourceBundle(String baseName)
@@ -249,4 +260,5 @@ public class TextManager
     this.currentLocale = locale;
     loadResourceBundle(currentBaseName);
   }
+
 }

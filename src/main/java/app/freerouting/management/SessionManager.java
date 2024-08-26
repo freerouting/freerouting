@@ -4,6 +4,7 @@ import app.freerouting.core.Session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /*
  * This class is responsible for maintaining the list of active sessions.
@@ -20,9 +21,9 @@ public class SessionManager
     return sessions.get(sessionId);
   }
 
-  public static Session createSession()
+  public static Session createSession(UUID userId)
   {
-    Session session = new Session();
+    Session session = new Session(userId);
     sessions.put(session.id.toString(), session);
     return session;
   }

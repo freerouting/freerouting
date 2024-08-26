@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Path;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.zip.CRC32;
 
@@ -27,6 +29,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
 
   public final UUID id = UUID.randomUUID();
+  public final Instant createdAt = Instant.now();
   // TODO: pass the router settings as an input and forward it to the router
   private final RouterSettings routerSettings = new RouterSettings(0);
   public String name = "N/A";
@@ -36,9 +39,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
   public RoutingStage stage = RoutingStage.IDLE;
   // TODO: change File type to BinaryStream or byte[] to support both file inputs and web API uploads
-  private File inputFile;
-  private File snapshotFile = null;
-  private File outputFile = null;
+  private transient File inputFile;
+  private transient File snapshotFile = null;
+  private transient File outputFile = null;
 
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
@@ -468,5 +471,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     {
       return 0;
     }
+  }
+
+  /**
+   * Saves the job as a JSON file.
+   */
+  public void saveAsJson(Path filename)
+  {
+
+
   }
 }

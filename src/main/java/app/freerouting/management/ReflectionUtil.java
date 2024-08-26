@@ -1,5 +1,6 @@
 package app.freerouting.management;
 
+import app.freerouting.logger.FRLogger;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Field;
@@ -65,6 +66,16 @@ public class ReflectionUtil
     }
     if (targetType == boolean.class || targetType == Boolean.class)
     {
+      // convert "0" and "1" into their boolean values
+      if (value.toString().equals("0"))
+      {
+        value = "false";
+      }
+      else if (value.toString().equals("1"))
+      {
+        value = "true";
+      }
+
       return Boolean.parseBoolean(value.toString());
     }
     // Add more type conversions as needed
@@ -78,6 +89,18 @@ public class ReflectionUtil
     {
       try
       {
+        // check if the field is static and skip it if it is
+        if (java.lang.reflect.Modifier.isStatic(field.getModifiers()))
+        {
+          continue;
+        }
+
+        // check if the field is final or private and skip it if it is
+        if (java.lang.reflect.Modifier.isFinal(field.getModifiers()) || !java.lang.reflect.Modifier.isPublic(field.getModifiers()))
+        {
+          continue;
+        }
+
         field.setAccessible(true);
         Object value = field.get(source);
         if (value != null)
@@ -97,10 +120,11 @@ public class ReflectionUtil
             copyFields(value, targetField);
           }
         }
-      } catch (IllegalAccessException | InstantiationException e)
+      } catch (Exception e)
       {
-        e.printStackTrace();
+        FRLogger.error("Error copying fields", e);
       }
+
     }
 
   }

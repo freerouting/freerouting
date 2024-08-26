@@ -20,4 +20,6 @@ public class FeatureFlagsSettings implements Serializable
   public boolean snapshots = false;
   @SerializedName("file_load_dialog_at_startup")
   public boolean fileLoadDialogAtStartup = false;
+  @SerializedName("save_jobs")
+  public boolean saveJobs = false;
 }

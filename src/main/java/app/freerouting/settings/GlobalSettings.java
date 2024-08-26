@@ -22,7 +22,8 @@ import java.util.Objects;
 
 public class GlobalSettings implements Serializable
 {
-  private static final Path PATH = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting", "freerouting.json");
+  public static final Path userdataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
+  private static final Path configurationFilePath = userdataPath.resolve("freerouting.json");
   public final String version = Constants.FREEROUTING_VERSION;
   public final transient EnvironmentSettings environmentSettings = new EnvironmentSettings();
   @SerializedName("profile")
@@ -75,7 +76,7 @@ public class GlobalSettings implements Serializable
   public static GlobalSettings load() throws IOException
   {
     GlobalSettings loadedSettings = null;
-    try (Reader reader = Files.newBufferedReader(PATH, StandardCharsets.UTF_8))
+    try (Reader reader = Files.newBufferedReader(configurationFilePath, StandardCharsets.UTF_8))
     {
       loadedSettings = GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
     }
@@ -93,15 +94,15 @@ public class GlobalSettings implements Serializable
   /*
    * Saves the settings to the default JSON settings file
    */
-  public static void save(GlobalSettings options) throws IOException
+  public static void saveAsJson(GlobalSettings globalSettings) throws IOException
   {
     // Make sure that we have the directory structure in place, and create it if it doesn't exist
-    Files.createDirectories(PATH.getParent());
+    Files.createDirectories(configurationFilePath.getParent());
 
     // Write the settings to the file
-    try (Writer writer = Files.newBufferedWriter(PATH, StandardCharsets.UTF_8))
+    try (Writer writer = Files.newBufferedWriter(configurationFilePath, StandardCharsets.UTF_8))
     {
-      GsonProvider.GSON.toJson(options, writer);
+      GsonProvider.GSON.toJson(globalSettings, writer);
     }
   }
 
@@ -115,7 +116,7 @@ public class GlobalSettings implements Serializable
     {
       var gs = load();
       gs.setValue(propertyName, newValue);
-      save(gs);
+      saveAsJson(gs);
       return true;
     } catch (Exception e)
     {

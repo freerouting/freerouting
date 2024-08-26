@@ -63,7 +63,6 @@ public class Freerouting
     try
     {
       globalSettings = GlobalSettings.load();
-      globalSettings.applyEnvironmentVariables();
       FRLogger.info("Settings were loaded from freerouting.json");
     } catch (Exception e)
     {
@@ -77,14 +76,15 @@ public class Freerouting
       // save the default values
       try
       {
-        GlobalSettings.save(globalSettings);
+        GlobalSettings.saveAsJson(globalSettings);
       } catch (Exception e)
       {
         // it's ok if we can't save the configuration file
       }
-
-      globalSettings.applyEnvironmentVariables();
     }
+
+    // apply environment variables to the settings
+    globalSettings.applyEnvironmentVariables();
 
     // get environment parameters and save them in the settings
     globalSettings.environmentSettings.freeroutingVersion = Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;

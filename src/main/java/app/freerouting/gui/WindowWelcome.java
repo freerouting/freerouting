@@ -20,6 +20,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
@@ -31,10 +32,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -185,7 +183,7 @@ public class WindowWelcome extends WindowBase
   public static boolean InitializeGUI(GlobalSettings globalSettings)
   {
     // Start a new Freerouting session
-    var guiSession = SessionManager.createSession();
+    var guiSession = SessionManager.createSession(UUID.fromString(globalSettings.userProfileSettings.userId));
 
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
@@ -214,17 +212,17 @@ public class WindowWelcome extends WindowBase
     {
       // let's create a job in our session and queue it
       FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
-      RoutingJob design_file = RoutingJob.get_instance(globalSettings.design_input_filename);
-      if (design_file == null)
+      RoutingJob routingJob = RoutingJob.get_instance(globalSettings.design_input_filename);
+      if (routingJob == null)
       {
         FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
         return false;
       }
-      guiSession.queue(design_file);
+      guiSession.addJob(routingJob);
 
       String message = tm.getText("loading_design") + " " + globalSettings.design_input_filename;
       WindowMessage welcome_window = WindowMessage.show(message);
-      final BoardFrame new_frame = create_board_frame(design_file, null, globalSettings);
+      final BoardFrame new_frame = create_board_frame(routingJob, null, globalSettings);
       welcome_window.dispose();
       if (new_frame == null)
       {
@@ -524,7 +522,7 @@ public class WindowWelcome extends WindowBase
 
   public static void saveSettings() throws IOException
   {
-    GlobalSettings.save(Freerouting.globalSettings);
+    GlobalSettings.saveAsJson(Freerouting.globalSettings);
   }
 
   /**
@@ -545,7 +543,7 @@ public class WindowWelcome extends WindowBase
 
         try
         {
-          GlobalSettings.save(this.globalSettings);
+          GlobalSettings.saveAsJson(this.globalSettings);
         } catch (Exception e)
         {
           // it's ok if we can't save the configuration file
