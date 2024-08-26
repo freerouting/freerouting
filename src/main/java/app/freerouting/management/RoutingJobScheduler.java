@@ -3,9 +3,8 @@ package app.freerouting.management;
 import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -22,7 +21,6 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class RoutingJobScheduler
 {
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
   public final PriorityBlockingQueue<RoutingJob> jobs = new PriorityBlockingQueue<>();
 
@@ -83,7 +81,7 @@ public class RoutingJobScheduler
 
     try (Writer writer = Files.newBufferedWriter(jobFilePath, StandardCharsets.UTF_8))
     {
-      GSON.toJson(job, writer);
+      GsonProvider.GSON.toJson(job, writer);
     } catch (Exception e)
     {
       FRLogger.error(String.format("Failed to save job '%s' to disk.", job.id), e);

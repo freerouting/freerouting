@@ -31,6 +31,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public final Instant createdAt = Instant.now();
   // TODO: pass the router settings as an input and forward it to the router
   private final RouterSettings routerSettings = new RouterSettings(0);
+  private final byte[] snapshotFileData = null;
+  private final byte[] outputFileData = null;
   public String name = "N/A";
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
@@ -41,6 +43,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   private transient File inputFile;
   private transient File snapshotFile = null;
   private transient File outputFile = null;
+  private byte[] inputFileData = null;
 
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
@@ -399,6 +402,15 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if (this.inputFileFormat != FileFormat.UNKNOWN)
     {
       this.inputFile = selectedFile;
+      // read the data in the file and store it in the inputFileData field
+      try (FileInputStream fileInputStream = new FileInputStream(selectedFile))
+      {
+        this.inputFileData = fileInputStream.readAllBytes();
+      } catch (IOException e)
+      {
+        FRLogger.error(e.getLocalizedMessage(), e);
+      }
+
       this.snapshotFile = getSnapshotFilename(this.inputFile);
       return true;
     }

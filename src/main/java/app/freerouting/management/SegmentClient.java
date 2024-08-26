@@ -1,8 +1,7 @@
 package app.freerouting.management;
 
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.management.segment.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +17,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class SegmentClient
 {
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static final String SEGMENT_ENDPOINT = "https://api.segment.io/v1/";
   private final String WRITE_KEY;
   private final String LIBRARY_NAME = "freerouting";
@@ -43,7 +41,7 @@ public class SegmentClient
       try
       {
         // Serialize to JSON using GSON
-        String jsonPayload = GSON.toJson(payload);
+        String jsonPayload = GsonProvider.GSON.toJson(payload);
 
         // Create and configure HTTP connection
         URL url = new URI(endpoint).toURL();

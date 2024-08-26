@@ -2,8 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.FileFormat;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
@@ -15,7 +14,6 @@ import java.nio.file.Path;
 
 public class BoardDetails
 {
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   @SerializedName("path")
   public String path;
   @SerializedName("filename")
@@ -130,6 +128,6 @@ public class BoardDetails
    */
   public String toString()
   {
-    return GSON.toJson(this);
+    return GsonProvider.GSON.toJson(this);
   }
 }
