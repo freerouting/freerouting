@@ -2,10 +2,12 @@ package app.freerouting.board;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.FileFormat;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -45,45 +47,55 @@ public class BoardDetails
     this.path = file.getAbsolutePath();
     this.filename = file.getName();
     this.filesize = file.length();
-    this.format = RoutingJob.getFileFormat(file);
 
-    if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
+    try (FileInputStream fis = new FileInputStream(file))
     {
-      String content = "";
-      try
-      {
-        // read the content of the output file as text
-        content = Files.readString(file.toPath());
-      } catch (IOException e)
-      {
-        // Ignore the exception and continue with the default values
-      }
+      // read the file contents to determine the file format
+      this.format = RoutingJob.getFileFormat(fis.readAllBytes());
 
-      if (this.format == FileFormat.SES)
+      if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
       {
-        // get the number of components and nets in the SES file
-        this.layerCount = 0;
-        this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = 0;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = 0;
-        this.traceCount = 0;
-        this.viaCount = 0;
-        return;
+        String content = "";
+        try
+        {
+          // read the content of the output file as text
+          content = Files.readString(file.toPath());
+        } catch (IOException e)
+        {
+          // Ignore the exception and continue with the default values
+        }
+
+        if (this.format == FileFormat.SES)
+        {
+          // get the number of components and nets in the SES file
+          this.layerCount = 0;
+          this.componentCount = content.split("\\(component").length - 1;
+          this.netclassCount = 0;
+          this.netCount = content.split("\\(net").length - 1;
+          this.trackCount = 0;
+          this.traceCount = 0;
+          this.viaCount = 0;
+          return;
+        }
+        else if (this.format == FileFormat.DSN)
+        {
+          // get the number of layers and nets in the DSN file
+          this.layerCount = content.split("\\(layer").length - 1;
+          this.componentCount = content.split("\\(component").length - 1;
+          this.netclassCount = content.split("\\(class").length - 1;
+          this.netCount = content.split("\\(net").length - 1;
+          this.trackCount = content.split("\\(wire").length - 1;
+          this.traceCount = 0;
+          this.viaCount = content.split("\\(via").length - 1;
+          return;
+        }
       }
-      else if (this.format == FileFormat.DSN)
-      {
-        // get the number of layers and nets in the DSN file
-        this.layerCount = content.split("\\(layer").length - 1;
-        this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = content.split("\\(class").length - 1;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = content.split("\\(wire").length - 1;
-        this.traceCount = 0;
-        this.viaCount = content.split("\\(via").length - 1;
-        return;
-      }
+    } catch (IOException e)
+    {
+      // Ignore the exception and continue with the default values
+      FRLogger.error("Failed to read file contents.", e);
     }
+
     this.layerCount = 0;
     this.componentCount = 0;
     this.netclassCount = 0;

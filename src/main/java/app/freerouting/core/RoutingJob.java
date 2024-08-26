@@ -6,12 +6,15 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.zip.CRC32;
@@ -29,11 +32,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public final UUID id = UUID.randomUUID();
   public final Instant createdAt = Instant.now();
+  public final String name;
   // TODO: pass the router settings as an input and forward it to the router
   private final RouterSettings routerSettings = new RouterSettings(0);
   private final byte[] snapshotFileData = null;
   private final byte[] outputFileData = null;
-  public String name = "N/A";
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
   public RoutingJobState state = RoutingJobState.INVALID;
@@ -43,14 +46,17 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   private transient File inputFile;
   private transient File snapshotFile = null;
   private transient File outputFile = null;
+  private transient Path inputFilePath = null;
+  private transient Path outputFilePath = null;
+  private transient Path snapshotFilePath = null;
   private byte[] inputFileData = null;
 
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
    */
-  public RoutingJob(File p_design_file)
+  public RoutingJob()
   {
-    this.tryToSetInputFile(p_design_file);
+    this.name = "J-" + this.id.toString().substring(0, 6).toUpperCase();
   }
 
   public static CRC32 CalculateCrc32(InputStream inputStream)
@@ -68,16 +74,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       FRLogger.error(e.getLocalizedMessage(), e);
     }
     return crc;
-  }
-
-  public static RoutingJob get_instance(String p_design_file_name)
-  {
-    if (p_design_file_name == null)
-    {
-      return null;
-    }
-
-    return new RoutingJob(new File(p_design_file_name));
   }
 
   /**
@@ -124,10 +120,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     return false;
   }
 
-  public static FileFormat getFileFormat(File file)
+  public static FileFormat getFileFormat(byte[] content)
   {
     // Open the file as a binary file and read the first 6 bytes to determine the file format
-    try (FileInputStream fileInputStream = new FileInputStream(file))
+    try (InputStream fileInputStream = new ByteArrayInputStream(content))
     {
       byte[] buffer = new byte[6];
       int bytesRead = fileInputStream.read(buffer, 0, 6);
@@ -160,8 +156,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       // Ignore the exception, it can happen with the build-in template or if the user doesn't choose any file in the file dialog
     }
 
-    // As a fallback method, set the file format based on its extension
-    String filename = file.getName().toLowerCase();
+    return FileFormat.UNKNOWN;
+  }
+
+  public static FileFormat getFileFormat(Path path)
+  {
+    String filename = path.toString().toLowerCase();
     String[] parts = filename.split("\\.");
     if (parts.length > 1)
     {
@@ -184,6 +184,49 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     return FileFormat.UNKNOWN;
   }
 
+  public void setInput(String inputFilePath) throws IOException
+  {
+    setInput(new File(inputFilePath));
+  }
+
+  public void setInput(byte[] inputFileContent)
+  {
+    this.inputFilePath = null;
+    this.tryToSetInput(inputFileContent);
+  }
+
+  public void setInput(File inputFile) throws IOException
+  {
+    // Read the file contents into a byte array and initialize the RoutingJob object with it
+    FileInputStream fileInputStream = new FileInputStream(inputFile);
+    byte[] content = fileInputStream.readAllBytes();
+
+    setInput(content);
+    inputFilePath = inputFile.toPath();
+    if (inputFileFormat == FileFormat.UNKNOWN)
+    {
+      // As a fallback method, set the file format based on its extension
+      inputFileFormat = getFileFormat(inputFilePath);
+    }
+
+    if (this.inputFileFormat == FileFormat.FRB)
+    {
+      this.outputFilePath = changeFileExtension(inputFilePath, BINARY_FILE_EXTENSION);
+    }
+
+    if (this.inputFileFormat == FileFormat.DSN)
+    {
+      this.outputFilePath = changeFileExtension(inputFilePath, SES_FILE_EXTENSION);
+    }
+
+    if (this.inputFileFormat != FileFormat.UNKNOWN)
+    {
+      this.inputFile = inputFile;
+      this.snapshotFile = getSnapshotFilename(this.inputFile);
+      this.snapshotFilePath = this.snapshotFile.toPath();
+    }
+  }
+
   private File getSnapshotFilename(File inputFile)
   {
     // Calculate the CRC32 checksum of the input file
@@ -203,11 +246,20 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
 
     // Get the temporary folder path
-    String temp_folder_path = System.getProperty("java.io.tmpdir");
+    Path snapshotsFolderPath = GlobalSettings.userdataPath.resolve("snapshots");
+
+    try
+    {
+      // Make sure that we have the directory structure in place, and create it if it doesn't exist
+      Files.createDirectories(snapshotsFolderPath);
+    } catch (IOException e)
+    {
+      FRLogger.error("Failed to create the snapshots directory.", e);
+    }
 
     // Set the intermediate snapshot file name based on the checksum
-    String intermediate_snapshot_file_name = "freerouting-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.BINARY_FILE_EXTENSION;
-    return new File(temp_folder_path + File.separator + intermediate_snapshot_file_name);
+    String intermediate_snapshot_file_name = "snapshot-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.BINARY_FILE_EXTENSION;
+    return new File(snapshotsFolderPath + File.separator + intermediate_snapshot_file_name);
   }
 
   /**
@@ -315,17 +367,17 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public File getSnapshotFile()
   {
-    return this.snapshotFile;
+    return this.snapshotFilePath.toFile();
   }
 
   public File getRulesFile()
   {
-    return changeFileExtension(this.outputFile, RULES_FILE_EXTENSION);
+    return changeFileExtension(this.outputFilePath, RULES_FILE_EXTENSION).toFile();
   }
 
   public File getEagleScriptFile()
   {
-    return changeFileExtension(this.outputFile, EAGLE_SCRIPT_FILE_EXTENSION);
+    return changeFileExtension(this.outputFilePath, EAGLE_SCRIPT_FILE_EXTENSION).toFile();
   }
 
   @Deprecated(since = "2.0", forRemoval = true)
@@ -380,38 +432,18 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
   }
 
-  public boolean tryToSetInputFile(File selectedFile)
+  private boolean tryToSetInput(byte[] fileContent)
   {
-    if (selectedFile == null)
+    if (fileContent == null)
     {
       return false;
     }
 
-    this.inputFileFormat = getFileFormat(selectedFile);
-
-    if (this.inputFileFormat == FileFormat.FRB)
-    {
-      this.outputFile = changeFileExtension(selectedFile, BINARY_FILE_EXTENSION);
-    }
-
-    if (this.inputFileFormat == FileFormat.DSN)
-    {
-      this.outputFile = changeFileExtension(selectedFile, SES_FILE_EXTENSION);
-    }
+    this.inputFileFormat = getFileFormat(fileContent);
 
     if (this.inputFileFormat != FileFormat.UNKNOWN)
     {
-      this.inputFile = selectedFile;
-      // read the data in the file and store it in the inputFileData field
-      try (FileInputStream fileInputStream = new FileInputStream(selectedFile))
-      {
-        this.inputFileData = fileInputStream.readAllBytes();
-      } catch (IOException e)
-      {
-        FRLogger.error(e.getLocalizedMessage(), e);
-      }
-
-      this.snapshotFile = getSnapshotFilename(this.inputFile);
+      this.inputFileData = fileContent;
       return true;
     }
 
@@ -419,35 +451,39 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   }
 
   // Changes the file extension of the selected file
-  private File changeFileExtension(File selectedFile, String newFileExtension)
+  private Path changeFileExtension(Path filePath, String newFileExtension)
   {
-    String filename = selectedFile.getName();
-    String[] nameParts = filename.split("\\.");
+    // Get the filename and split it into parts
+    String originalFullPathWithoutFilename = filePath.getParent().toAbsolutePath().toString();
+    String originalFilename = filePath.getFileName().toString();
+    String[] nameParts = originalFilename.split("\\.");
     if (nameParts.length > 1)
     {
       String extension = nameParts[nameParts.length - 1].toLowerCase();
       if (extension.equals(newFileExtension))
       {
-        return selectedFile;
+        return filePath;
       }
-      String newFileName = filename.substring(0, filename.length() - extension.length() - 1) + "." + newFileExtension;
-      return new File(selectedFile.getParent(), newFileName);
+      String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "." + newFileExtension;
+
+      return Path.of(originalFullPathWithoutFilename, newFilename);
     }
-    return new File(selectedFile.getParent(), filename + "." + newFileExtension);
+
+    return Path.of(originalFullPathWithoutFilename, originalFilename + "." + newFileExtension);
   }
 
-  public boolean tryToSetOutputFile(File selectedFile)
+  public boolean tryToSetOutputFile(File outputFile)
   {
-    if (selectedFile == null)
+    if (outputFile == null)
     {
       return false;
     }
 
-    FileFormat ff = getFileFormat(selectedFile);
+    FileFormat ff = getFileFormat(outputFile.toPath());
 
     if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR))
     {
-      this.outputFile = selectedFile;
+      this.outputFile = outputFile;
       this.outputFileFormat = ff;
       return true;
     }

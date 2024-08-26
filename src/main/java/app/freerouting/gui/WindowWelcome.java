@@ -212,8 +212,16 @@ public class WindowWelcome extends WindowBase
     {
       // let's create a job in our session and queue it
       FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
-      RoutingJob routingJob = RoutingJob.get_instance(globalSettings.design_input_filename);
-      if (routingJob == null)
+      RoutingJob routingJob = new RoutingJob();
+      try
+      {
+        routingJob.setInput(globalSettings.design_input_filename);
+      } catch (Exception e)
+      {
+        FRLogger.error("Couldn't read the file", e);
+      }
+
+      if (routingJob.inputFileFormat == FileFormat.UNKNOWN)
       {
         FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
         return false;
@@ -436,7 +444,7 @@ public class WindowWelcome extends WindowBase
     InputStream input_stream = null;
     if ((p_design_file == null) || (p_design_file.getInputFile() == null))
     {
-      p_design_file = new RoutingJob(null);
+      p_design_file = new RoutingJob();
       p_design_file.setDummyInputFile("freerouting_empty_board.dsn");
       // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
@@ -532,24 +540,32 @@ public class WindowWelcome extends WindowBase
   private void open_board_design_action(ActionEvent evt)
   {
     File fileToOpen = RoutingJob.showOpenDialog(this.design_dir_name, null);
-    RoutingJob design_file = new RoutingJob(fileToOpen);
-
-    if (design_file.getInputFile() != null)
+    RoutingJob routingJob = new RoutingJob();
+    try
     {
-      if (!Objects.equals(this.design_dir_name, design_file.getInputFileDirectory()))
-      {
-        this.design_dir_name = design_file.getInputFileDirectory();
-        this.globalSettings.guiSettings.inputDirectory = this.design_dir_name;
+      routingJob.setInput(fileToOpen);
 
-        try
+      if (routingJob.getInputFile() != null)
+      {
+        if (!Objects.equals(this.design_dir_name, routingJob.getInputFileDirectory()))
         {
-          GlobalSettings.saveAsJson(this.globalSettings);
-        } catch (Exception e)
-        {
-          // it's ok if we can't save the configuration file
-          FRLogger.error("Couldn't save configuration file", e);
+          this.design_dir_name = routingJob.getInputFileDirectory();
+          this.globalSettings.guiSettings.inputDirectory = this.design_dir_name;
+
+          try
+          {
+            GlobalSettings.saveAsJson(this.globalSettings);
+          } catch (Exception e)
+          {
+            // it's ok if we can't save the configuration file
+            FRLogger.error("Couldn't save configuration file", e);
+          }
         }
       }
+    } catch (Exception e)
+    {
+      FRLogger.error("Couldn't read the file", e);
+      return;
     }
 
     //    if (design_file == null) {
@@ -558,13 +574,13 @@ public class WindowWelcome extends WindowBase
     //      return;
     //    }
 
-    FRLogger.info("Opening '" + design_file.get_name() + "'...");
+    FRLogger.info("Opening '" + routingJob.get_name() + "'...");
 
-    String message = tm.getText("loading_design") + " " + design_file.get_name();
+    String message = tm.getText("loading_design") + " " + routingJob.get_name();
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
     welcome_window.setTitle(message);
-    BoardFrame new_frame = create_board_frame(design_file, message_field, globalSettings);
+    BoardFrame new_frame = create_board_frame(routingJob, message_field, globalSettings);
     welcome_window.dispose();
     if (new_frame == null)
     {
@@ -589,7 +605,7 @@ public class WindowWelcome extends WindowBase
       }
     }
 
-    message_field.setText(tm.getText("message_4") + " " + design_file.get_name() + " " + tm.getText("message_5"));
+    message_field.setText(tm.getText("message_4") + " " + routingJob.get_name() + " " + tm.getText("message_5"));
     board_frames.add(new_frame);
     new_frame.addWindowListener(new BoardFrameWindowListener(new_frame));
   }

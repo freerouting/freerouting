@@ -135,9 +135,18 @@ public class BoardFrame extends WindowBase
       }
 
       // Let's categorize the file based on its extension
-      if (!routingJob.tryToSetInputFile(selectedFile))
+      try
       {
-        // The file is not in a valid format
+        routingJob.setInput(selectedFile);
+        if (routingJob.inputFileFormat == FileFormat.UNKNOWN)
+        {
+          // The file is not in a valid format
+          FRLogger.warn("The input file format was not recognised.");
+          return;
+        }
+      } catch (Exception e)
+      {
+        FRLogger.error("There was an error while reading the input file.", e);
         return;
       }
 
@@ -202,7 +211,7 @@ public class BoardFrame extends WindowBase
           {
             saveRulesAs(this.routingJob.getRulesFile(), this.routingJob.get_name(), board_panel.board_handling);
           }
-          FRAnalytics.buttonClicked("fileio_saveses", new BoardDetails(this.routingJob.getRulesFile()).toString());
+          FRAnalytics.buttonClicked("fileio_saveses", this.routingJob.getOutputFileDetails());
           break;
         case DSN:
           // Save the file as a Specctra DSN file
@@ -217,7 +226,7 @@ public class BoardFrame extends WindowBase
         case SCR:
           //  Save the file as an Eagle script file
           this.saveAsEagleScriptScr(this.routingJob.getEagleScriptFile(), this.routingJob.get_name());
-          FRAnalytics.buttonClicked("fileio_savescr", new BoardDetails(this.routingJob.getEagleScriptFile()).toString());
+          FRAnalytics.buttonClicked("fileio_savescr", "");
           break;
         default:
           // The file format is not supported
@@ -509,7 +518,7 @@ public class BoardFrame extends WindowBase
 
   public boolean is_intermediate_stage_file_available()
   {
-    return (this.routingJob.getSnapshotFile().exists() && this.routingJob.getSnapshotFile().canRead());
+    return (this.routingJob.getSnapshotFile() != null && this.routingJob.getSnapshotFile().exists() && this.routingJob.getSnapshotFile().canRead());
   }
 
   public LocalDateTime get_intermediate_stage_file_modification_time()
