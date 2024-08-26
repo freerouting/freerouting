@@ -1,10 +1,7 @@
 package app.freerouting.interactive;
 
 import app.freerouting.autoroute.*;
-import app.freerouting.autoroute.events.BoardUpdatedEvent;
-import app.freerouting.autoroute.events.BoardUpdatedEventListener;
-import app.freerouting.autoroute.events.TaskStateChangedEvent;
-import app.freerouting.autoroute.events.TaskStateChangedEventListener;
+import app.freerouting.autoroute.events.*;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
@@ -56,6 +53,15 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
           String start_message = tm.getText("autorouter_started", Integer.toString(event.getPassNumber()));
           hdlg.screen_messages.set_status_message(start_message);
         }
+      }
+    });
+
+    this.batch_autorouter.addBoardSnapshotEventListener(new BoardSnapshotEventListener()
+    {
+      @Override
+      public void onBoardSnapshotEvent(BoardSnapshotEvent event)
+      {
+        hdlg.get_panel().board_frame.save_intermediate_stage_file();
       }
     });
 

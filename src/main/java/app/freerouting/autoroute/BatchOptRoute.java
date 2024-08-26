@@ -24,6 +24,7 @@ public class BatchOptRoute extends NamedAlgorithm
 {
   protected static int MAX_AUTOROUTE_PASSES = 6;
   protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
+  protected final InteractiveActionThread guiThread;
   protected boolean clone_board;
   protected ReadSortedRouteItems sorted_route_items;
   protected boolean use_increased_ripup_costs; // in the first passes the ripup costs are increased for better
@@ -37,6 +38,7 @@ public class BatchOptRoute extends NamedAlgorithm
   {
     super(p_thread, board, settings);
     this.clone_board = p_clone_board;
+    this.guiThread = p_thread;
   }
 
   static boolean contains_only_unfixed_traces(Collection<Item> p_item_list)
@@ -112,7 +114,7 @@ public class BatchOptRoute extends NamedAlgorithm
         // 1. To save the result in case the program is terminated unexpectedly,
         //    e.g., Windows OS update automatically reboots machine
         // 2. To provide a way to check intermediate results for a long-running optimization
-        this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
+        this.guiThread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
       }
     }
 
@@ -128,8 +130,8 @@ public class BatchOptRoute extends NamedAlgorithm
   {
     float route_improved = 0.0f;
     int via_count_before = this.board.get_vias().size();
-    double trace_length_before = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
-    this.thread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before, this.thread.hdlg.coordinate_transform.user_unit);
+    double trace_length_before = this.guiThread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
+    this.guiThread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before, this.guiThread.hdlg.coordinate_transform.user_unit);
     this.sorted_route_items = new ReadSortedRouteItems();
     this.min_cumulative_trace_length_before = calc_weighted_trace_length(board);
     String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + via_count_before + " vias and " + String.format("%(,.2f", trace_length_before) + " trace length.";
@@ -151,7 +153,7 @@ public class BatchOptRoute extends NamedAlgorithm
       if (opt_route_item(curr_item, p_pass_no, p_with_preferred_directions).improved())
       {
         int via_count_after = this.board.get_vias().size();
-        double trace_length_after = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
+        double trace_length_after = this.guiThread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
 
         route_improved = (float) ((via_count_before != 0 && trace_length_before != 0) ? 1.0 - (((((float) via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2)) : 0);
       }
@@ -171,12 +173,12 @@ public class BatchOptRoute extends NamedAlgorithm
 
   protected void remove_ratsnest()
   {
-    this.thread.hdlg.remove_ratsnest();
+    this.guiThread.hdlg.remove_ratsnest();
   }
 
   protected RatsNest get_ratsnest()
   {
-    return this.thread.hdlg.get_ratsnest();
+    return this.guiThread.hdlg.get_ratsnest();
   }
 
   /**
@@ -184,10 +186,10 @@ public class BatchOptRoute extends NamedAlgorithm
    */
   protected ItemRouteResult opt_route_item(Item p_item, int p_pass_no, boolean p_with_preferred_directions)
   {
-    TextManager tm = new TextManager(InteractiveState.class, this.thread.hdlg.get_locale());
+    TextManager tm = new TextManager(InteractiveState.class, this.guiThread.hdlg.get_locale());
 
     String start_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message") + "        " + tm.getText("routeoptimizer_pass") + p_pass_no;
-    this.thread.hdlg.screen_messages.set_status_message(start_message); // assume overwriting messages is harmless
+    this.guiThread.hdlg.screen_messages.set_status_message(start_message); // assume overwriting messages is harmless
 
     this.remove_ratsnest(); // looks like caching the ratsnest is not necessary
     // as a new instance is needed every time, i.e., remove/get ratsnest are called in pair
@@ -234,7 +236,7 @@ public class BatchOptRoute extends NamedAlgorithm
     {
       this.board.combine_traces(p_item.get_net_no(i));
     }
-    int ripup_costs = this.thread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs();
+    int ripup_costs = this.guiThread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs();
     if (this.use_increased_ripup_costs)
     {
       ripup_costs *= ADDITIONAL_RIPUP_COST_FACTOR_AT_START;
@@ -276,8 +278,8 @@ public class BatchOptRoute extends NamedAlgorithm
         board.pop_snapshot();
       }
 
-      double new_trace_length = this.thread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
-      this.thread.hdlg.screen_messages.set_post_route_info(via_count_after, new_trace_length, this.thread.hdlg.coordinate_transform.user_unit);
+      double new_trace_length = this.guiThread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
+      this.guiThread.hdlg.screen_messages.set_post_route_info(via_count_after, new_trace_length, this.guiThread.hdlg.coordinate_transform.user_unit);
     }
     else
     {

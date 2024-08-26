@@ -8,10 +8,10 @@ public class BoardUpdatedEvent extends EventObject
 {
   private final BoardStatistics boardStatistics;
 
-  public BoardUpdatedEvent(Object source, BoardStatistics message)
+  public BoardUpdatedEvent(Object source, BoardStatistics statistics)
   {
     super(source);
-    this.boardStatistics = message;
+    this.boardStatistics = statistics;
   }
 
   public BoardStatistics getBoardStatistics()

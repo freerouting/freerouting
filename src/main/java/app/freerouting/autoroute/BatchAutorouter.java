@@ -2,11 +2,11 @@ package app.freerouting.autoroute;
 
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.*;
+import app.freerouting.core.StoppableThread;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -32,7 +32,7 @@ public class BatchAutorouter extends NamedAlgorithm
    */
   private FloatLine air_line;
 
-  public BatchAutorouter(InteractiveActionThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
+  public BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
   {
     super(p_thread, board, settings);
 
@@ -63,7 +63,7 @@ public class BatchAutorouter extends NamedAlgorithm
    * the number of passes to complete the board or p_max_pass_count + 1, if the board is not
    * completed.
    */
-  public static int autoroute_passes_for_optimizing_item(InteractiveActionThread p_thread, int p_max_pass_count, int p_ripup_costs, int trace_pull_tight_accuracy, boolean p_with_preferred_directions, RoutingBoard updated_routing_board, RouterSettings routerSettings)
+  public static int autoroute_passes_for_optimizing_item(StoppableThread p_thread, int p_max_pass_count, int p_ripup_costs, int trace_pull_tight_accuracy, boolean p_with_preferred_directions, RoutingBoard updated_routing_board, RouterSettings routerSettings)
   {
     BatchAutorouter router_instance = new BatchAutorouter(p_thread, updated_routing_board, routerSettings, true, p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
     boolean still_unrouted_items = true;
@@ -77,7 +77,7 @@ public class BatchAutorouter extends NamedAlgorithm
       still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
       if (still_unrouted_items && !router_instance.is_interrupted && updated_routing_board == null)
       {
-        p_thread.hdlg.get_settings().autoroute_settings.increment_pass_no();
+        routerSettings.increment_pass_no();
       }
       ++curr_pass_no;
     }
@@ -188,7 +188,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
       if (this.settings.save_intermediate_stages)
       {
-        this.thread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
+        fireBoardSnapshotEvent(this.board);
       }
 
       // check if there are still unrouted items

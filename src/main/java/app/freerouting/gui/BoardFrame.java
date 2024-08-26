@@ -98,7 +98,7 @@ public class BoardFrame extends WindowBase
   ColorManager color_manager;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
-  RoutingJob design_file;
+  RoutingJob routingJob;
   private LocalDateTime intermediate_stage_file_last_saved_at;
 
   /**
@@ -116,7 +116,7 @@ public class BoardFrame extends WindowBase
   {
     super(800, 150);
 
-    this.design_file = routingJob;
+    this.routingJob = routingJob;
 
     this.board_observers = boardObservers;
     this.locale = globalSettings.currentLocale;
@@ -144,11 +144,11 @@ public class BoardFrame extends WindowBase
       // Set the input directory in the global settings
       if (routingJob.getInputFile() != null)
       {
-        globalSettings.guiSettings.inputDirectory = design_file.getInputFileDirectory();
+        globalSettings.guiSettings.inputDirectory = this.routingJob.getInputFileDirectory();
 
         try
         {
-          GlobalSettings.setDefaultValue("gui.input_directory", design_file.getInputFileDirectory());
+          GlobalSettings.setDefaultValue("gui.input_directory", this.routingJob.getInputFileDirectory());
         } catch (Exception e)
         {
           // it's ok if we can't save the configuration file
@@ -163,11 +163,11 @@ public class BoardFrame extends WindowBase
         {
           case DSN:
             this.load(routingJob.get_input_stream(), true, null);
-            FRAnalytics.buttonClicked("fileio_loaddsn", this.design_file.getInputFileDetails());
+            FRAnalytics.buttonClicked("fileio_loaddsn", this.routingJob.getInputFileDetails());
             break;
           case FRB:
             this.load(routingJob.get_input_stream(), false, null);
-            FRAnalytics.buttonClicked("fileio_loadfrb", this.design_file.getInputFileDetails());
+            FRAnalytics.buttonClicked("fileio_loadfrb", this.routingJob.getInputFileDetails());
             break;
           default:
             // The file format is not supported
@@ -196,28 +196,28 @@ public class BoardFrame extends WindowBase
       {
         case SES:
           // Save the file as a Specctra SES file
-          boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.design_file.getOutputFile(), design_file.get_name());
+          boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.routingJob.getOutputFile(), this.routingJob.get_name());
           // Save the rules file as well, if the user wants to
           if (sesFileSaved && WindowMessage.confirm(tm.getText("confirm_rules_save"), JOptionPane.NO_OPTION))
           {
-            saveRulesAs(design_file.getRulesFile(), design_file.get_name(), board_panel.board_handling);
+            saveRulesAs(this.routingJob.getRulesFile(), this.routingJob.get_name(), board_panel.board_handling);
           }
-          FRAnalytics.buttonClicked("fileio_saveses", new BoardDetails(design_file.getRulesFile()).toString());
+          FRAnalytics.buttonClicked("fileio_saveses", new BoardDetails(this.routingJob.getRulesFile()).toString());
           break;
         case DSN:
           // Save the file as a Specctra DSN file
-          this.saveAsSpecctraDesignDsn(this.design_file.getOutputFile(), design_file.get_name(), false);
-          FRAnalytics.buttonClicked("fileio_savedsn", this.design_file.getOutputFileDetails());
+          this.saveAsSpecctraDesignDsn(this.routingJob.getOutputFile(), this.routingJob.get_name(), false);
+          FRAnalytics.buttonClicked("fileio_savedsn", this.routingJob.getOutputFileDetails());
           break;
         case FRB:
           // Save the file as a freerouting binary file
-          this.saveAsBinary(this.design_file.getOutputFile());
-          FRAnalytics.buttonClicked("fileio_savefrb", this.design_file.getOutputFileDetails());
+          this.saveAsBinary(this.routingJob.getOutputFile());
+          FRAnalytics.buttonClicked("fileio_savefrb", this.routingJob.getOutputFileDetails());
           break;
         case SCR:
           //  Save the file as an Eagle script file
-          this.saveAsEagleScriptScr(this.design_file.getEagleScriptFile(), design_file.get_name());
-          FRAnalytics.buttonClicked("fileio_savescr", new BoardDetails(design_file.getEagleScriptFile()).toString());
+          this.saveAsEagleScriptScr(this.routingJob.getEagleScriptFile(), this.routingJob.get_name());
+          FRAnalytics.buttonClicked("fileio_savescr", new BoardDetails(this.routingJob.getEagleScriptFile()).toString());
           break;
         default:
           // The file format is not supported
@@ -298,13 +298,13 @@ public class BoardFrame extends WindowBase
   @Override
   public void updateTexts()
   {
-    if ((this.design_file == null) || (this.design_file.getOutputFile() == null))
+    if ((this.routingJob == null) || (this.routingJob.getOutputFile() == null))
     {
       this.setTitle(tm.getText("title", this.freerouting_version));
     }
     else
     {
-      this.setTitle(design_file.get_name() + " - " + tm.getText("title", this.freerouting_version));
+      this.setTitle(routingJob.get_name() + " - " + tm.getText("title", this.freerouting_version));
     }
   }
 
@@ -443,7 +443,7 @@ public class BoardFrame extends WindowBase
       InputStream input_stream = null;
       boolean defaults_file_found;
 
-      File defaults_file = new File(this.design_file.getInputFileDirectoryOrNull(), GUI_DEFAULTS_FILE_NAME);
+      File defaults_file = new File(this.routingJob.getInputFileDirectoryOrNull(), GUI_DEFAULTS_FILE_NAME);
       defaults_file_found = true;
       try
       {
@@ -477,7 +477,7 @@ public class BoardFrame extends WindowBase
   {
     try
     {
-      FileInputStream input_stream = new FileInputStream(this.design_file.getSnapshotFile());
+      FileInputStream input_stream = new FileInputStream(this.routingJob.getSnapshotFile());
       return this.load(input_stream, false, null);
     } catch (IOException e)
     {
@@ -499,22 +499,22 @@ public class BoardFrame extends WindowBase
     }
 
     intermediate_stage_file_last_saved_at = LocalDateTime.now();
-    return saveAsBinary(this.design_file.getSnapshotFile());
+    return saveAsBinary(this.routingJob.getSnapshotFile());
   }
 
   public boolean delete_intermediate_stage_file()
   {
-    return this.design_file.getSnapshotFile().delete();
+    return this.routingJob.getSnapshotFile().delete();
   }
 
   public boolean is_intermediate_stage_file_available()
   {
-    return (this.design_file.getSnapshotFile().exists() && this.design_file.getSnapshotFile().canRead());
+    return (this.routingJob.getSnapshotFile().exists() && this.routingJob.getSnapshotFile().canRead());
   }
 
   public LocalDateTime get_intermediate_stage_file_modification_time()
   {
-    long lastModified = this.design_file.getSnapshotFile().lastModified();
+    long lastModified = this.routingJob.getSnapshotFile().lastModified();
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
   }
 

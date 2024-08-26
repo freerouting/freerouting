@@ -1,12 +1,9 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.autoroute.events.BoardUpdatedEvent;
-import app.freerouting.autoroute.events.BoardUpdatedEventListener;
-import app.freerouting.autoroute.events.TaskStateChangedEvent;
-import app.freerouting.autoroute.events.TaskStateChangedEventListener;
+import app.freerouting.autoroute.events.*;
 import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.interactive.InteractiveActionThread;
+import app.freerouting.core.StoppableThread;
 import app.freerouting.settings.RouterSettings;
 
 import java.util.ArrayList;
@@ -17,15 +14,14 @@ import java.util.List;
  */
 public abstract class NamedAlgorithm
 {
-  // TODO: change the type from InteractiveActionThread to StoppableThread to support headless mode
-  protected final InteractiveActionThread thread;
-  //protected final StoppableThread thread;
+  protected final StoppableThread thread;
+  protected final List<BoardSnapshotEventListener> boardSnapshotEventListeners = new ArrayList<>();
   protected final List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
   protected final List<TaskStateChangedEventListener> taskStateChangedEventListeners = new ArrayList<>();
   protected final RouterSettings settings;
   protected RoutingBoard board;
 
-  protected NamedAlgorithm(InteractiveActionThread thread, RoutingBoard board, RouterSettings settings)
+  protected NamedAlgorithm(StoppableThread thread, RoutingBoard board, RouterSettings settings)
   {
     this.thread = thread;
     this.board = board;
@@ -66,6 +62,20 @@ public abstract class NamedAlgorithm
    * @return The type of the algorithm.
    */
   protected abstract NamedAlgorithmType getType();
+
+  public void addBoardSnapshotEventListener(BoardSnapshotEventListener listener)
+  {
+    boardSnapshotEventListeners.add(listener);
+  }
+
+  public void fireBoardSnapshotEvent(RoutingBoard board)
+  {
+    BoardSnapshotEvent event = new BoardSnapshotEvent(this, board);
+    for (BoardSnapshotEventListener listener : boardSnapshotEventListeners)
+    {
+      listener.onBoardSnapshotEvent(event);
+    }
+  }
 
   public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener)
   {
