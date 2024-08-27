@@ -32,11 +32,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public final UUID id = UUID.randomUUID();
   public final Instant createdAt = Instant.now();
-  public final String name;
+  public final Instant finishedAt = null;
   // TODO: pass the router settings as an input and forward it to the router
   private final RouterSettings routerSettings = new RouterSettings(0);
   private final byte[] snapshotFileData = null;
   private final byte[] outputFileData = null;
+  public String name;
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
   public RoutingJobState state = RoutingJobState.INVALID;
@@ -222,6 +223,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if (this.inputFileFormat != FileFormat.UNKNOWN)
     {
       this.inputFile = inputFile;
+      this.name = inputFile.getName();
       this.snapshotFile = getSnapshotFilename(this.inputFile);
       this.snapshotFilePath = this.snapshotFile.toPath();
     }

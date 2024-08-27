@@ -108,4 +108,9 @@ public class RoutingJobScheduler
   {
     return (int) (this.jobs.size() - this.jobs.stream().filter(j -> j != job).count());
   }
+
+  public RoutingJob[] getJobs()
+  {
+    return this.jobs.toArray(new RoutingJob[0]);
+  }
 }

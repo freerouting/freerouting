@@ -15,6 +15,7 @@ import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -29,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -133,31 +133,47 @@ public class WindowWelcome extends WindowBase
       return;
     }
 
-    // Convert the first endpoint (e.g. "https://localhost:8080") in ApiServerSettings to InetSocketAddress
-    String endpoint = apiServerSettings.endpoints[0].toLowerCase();
-    // Endpoints following the following format: "protocol://host:port" (although the protocol is not used in this case, because only HTTP/HTTPS is supported)
-    String[] endpointParts = endpoint.split("://");
-    String protocol = endpointParts[0];
-    String hostAndPort = endpointParts[1];
-    String[] hostAndPortParts = hostAndPort.split(":");
-    String host = hostAndPortParts[0];
-    int port = Integer.parseInt(hostAndPortParts[1]);
-
-    // Check if the protocol is HTTP or HTTPS
-    if (!protocol.equals("http") && !protocol.equals("https"))
-    {
-      FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS.".formatted(endpoint));
-      return;
-    }
 
     // Start the Jetty server
-    InetSocketAddress address = new InetSocketAddress(host, port);
-    Server server = new Server(address);
+    Server apiServer = new Server();
+
+    // Add all endpoints as connectors
+    for (String endpointUrl : apiServerSettings.endpoints)
+    {
+      endpointUrl = endpointUrl.toLowerCase();
+      String[] endpointParts = endpointUrl.split("://");
+      String protocol = endpointParts[0];
+      String hostAndPort = endpointParts[1];
+      String[] hostAndPortParts = hostAndPort.split(":");
+      String host = hostAndPortParts[0];
+      int port = Integer.parseInt(hostAndPortParts[1]);
+
+      // Check if the protocol is HTTP or HTTPS
+      if (!protocol.equals("http") && !protocol.equals("https"))
+      {
+        FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS.".formatted(endpointUrl));
+        continue;
+      }
+
+      // Check if the http is allowed
+      if (!apiServerSettings.isHttpAllowed && protocol.equals("http"))
+      {
+        FRLogger.warn("Can't use the endpoint '%s' for the API server, because HTTP is not allowed.".formatted(endpointUrl));
+        continue;
+      }
+
+      ServerConnector connector = new ServerConnector(apiServer);
+      connector.setHost(host);
+      connector.setPort(port);
+      apiServer.addConnector(connector);
+    }
+
+    // Set up the Servlet Context Handler
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
     context.setContextPath("/");
-    server.setHandler(context);
+    apiServer.setHandler(context);
 
-    // Set up Jersey Servlet
+    // Set up Jersey Servlet that handles the API
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/api/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
@@ -172,8 +188,8 @@ public class WindowWelcome extends WindowBase
 
     try
     {
-      server.start();
-      server.join();
+      apiServer.start();
+      apiServer.join();
     } catch (Exception e)
     {
       throw new RuntimeException(e);

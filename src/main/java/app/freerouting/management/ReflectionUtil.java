@@ -121,11 +121,19 @@ public class ReflectionUtil
               // Check if the field is an array
               if (field.getType().isArray())
               {
+
+
                 // Is the array of primitive types or strings?
                 if (field.getType().getComponentType().isPrimitive() || field.getType().getComponentType() == String.class)
                 {
-                  // The field is an array of primitive types or strings, so we can copy it directly
-                  field.set(target, value);
+                  // Only set the field if it is not null on the source object
+                  Object targetValue = field.get(target);
+
+                  if (targetValue == null)
+                  {
+                    // The field is an array of primitive types or strings, so we can copy it directly
+                    field.set(target, value);
+                  }
                 }
                 else
                 {
