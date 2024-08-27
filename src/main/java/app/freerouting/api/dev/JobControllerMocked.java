@@ -5,15 +5,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/dev/jobs")
-public class JobControllerDev
+public class JobControllerMocked
 {
-  public JobControllerDev()
+  public JobControllerMocked()
   {
   }
 
   /* Get a list of all jobs in the session with the given id, returning only basic details about them. */
   @GET
-  @Path("/{sessionId}")
+  @Path("/{sessionId}/list")
   @Produces(MediaType.APPLICATION_JSON)
   public Response listJobs(
       @PathParam("sessionId")

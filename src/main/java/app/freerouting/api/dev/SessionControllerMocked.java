@@ -8,9 +8,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/dev/sessions")
-public class SessionControllerDev
+public class SessionControllerMocked
 {
-  public SessionControllerDev()
+  public SessionControllerMocked()
   {
   }
 

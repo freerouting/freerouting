@@ -12,9 +12,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/dev/system")
-public class SystemControllerDev
+public class SystemControllerMocked
 {
-  public SystemControllerDev()
+  public SystemControllerMocked()
   {
   }
 
@@ -35,6 +35,15 @@ public class SystemControllerDev
       String jobId)
   {
     // Return a random system status JSON object with status, cpu, memory, session count, etc. fields
-    return Response.ok("{\"status\":\"OK\",\"cpu\":0.5,\"memory\":1855,\"sessions\":5}").build();
+    return Response.ok("""
+                       {
+                           "status": "OK",
+                           "cpu_load": 6.8121539802289295,
+                           "ram_used": 36,
+                           "ram_available": 59,
+                           "storage_available": 1897,
+                           "session_count": 1
+                       }
+                       """).build();
   }
 }

@@ -47,4 +47,9 @@ public class SessionManager
   {
     return sessions.size();
   }
+
+  public String[] listSessionIds()
+  {
+    return sessions.keySet().toArray(new String[0]);
+  }
 }

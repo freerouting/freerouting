@@ -15,7 +15,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 @Path("/v1/system")
-public class SystemControllerV2
+public class SystemControllerV1
 {
   public static double getCpuLoad()
   {
@@ -41,7 +41,6 @@ public class SystemControllerV2
     status.ramAvailable = (int) runtime.freeMemory() / 1024 / 1024;
     status.storageAvailable = (int) GlobalSettings.userdataPath.toFile().getFreeSpace() / 1024 / 1024;
     status.sessionCount = SessionManager.getInstance().getActiveSessionsCount();
-    status.environment = Freerouting.globalSettings.environmentSettings;
 
     return Response.ok(GsonProvider.GSON.toJson(status)).build();
   }

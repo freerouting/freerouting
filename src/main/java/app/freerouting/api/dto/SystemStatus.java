@@ -1,6 +1,5 @@
 package app.freerouting.api.dto;
 
-import app.freerouting.settings.EnvironmentSettings;
 import com.google.gson.annotations.SerializedName;
 
 public class SystemStatus
@@ -17,6 +16,4 @@ public class SystemStatus
   public int storageAvailable;
   @SerializedName("session_count")
   public int sessionCount;
-  @SerializedName("environment")
-  public EnvironmentSettings environment;
 }
