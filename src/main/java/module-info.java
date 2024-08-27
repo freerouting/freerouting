@@ -14,11 +14,11 @@ module app.freerouting {
   opens app.freerouting.settings to com.google.gson;
 
   opens app.freerouting.api to jakarta.ws.rs;
+  opens app.freerouting.api.dev to jakarta.ws.rs;
   opens app.freerouting.api.v1 to jakarta.ws.rs;
-  opens app.freerouting.api.v2 to jakarta.ws.rs;
 
+  exports app.freerouting.api.dev to org.glassfish.hk2.locator, jersey.server;
   exports app.freerouting.api.v1 to org.glassfish.hk2.locator, jersey.server;
-  exports app.freerouting.api.v2 to org.glassfish.hk2.locator, jersey.server;
   opens app.freerouting.core to com.google.gson;
   opens app.freerouting.management.gson to com.google.gson;
 
@@ -40,4 +40,5 @@ module app.freerouting {
   requires io.swagger.v3.oas.integration;
   requires io.swagger.v3.oas.models;
   requires io.swagger.v3.oas.annotations;
+  requires jdk.management;
 }

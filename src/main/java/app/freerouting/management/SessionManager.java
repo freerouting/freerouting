@@ -14,26 +14,36 @@ import java.util.UUID;
  */
 public class SessionManager
 {
+  private static final SessionManager instance = new SessionManager();
   private static final Map<String, Session> sessions = new HashMap<>();
 
-  public static Session getSession(String sessionId)
+  private SessionManager()
+  {
+  }
+
+  public static SessionManager getInstance()
+  {
+    return instance;
+  }
+
+  public Session getSession(String sessionId)
   {
     return sessions.get(sessionId);
   }
 
-  public static Session createSession(UUID userId)
+  public Session createSession(UUID userId)
   {
     Session session = new Session(userId);
     sessions.put(session.id.toString(), session);
     return session;
   }
 
-  public static void removeSession(String sessionId)
+  public void removeSession(String sessionId)
   {
     sessions.remove(sessionId);
   }
 
-  public static int getActiveSessionsCount()
+  public int getActiveSessionsCount()
   {
     return sessions.size();
   }

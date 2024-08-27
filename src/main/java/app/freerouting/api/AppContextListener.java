@@ -15,7 +15,7 @@ public class AppContextListener implements ServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent sce)
   {
-    String fullUrl = "http://localhost:8080";
+    String fullUrl = "http://localhost:37864";
 
     // Try to get the Jetty server instance from the ServletContext and extract the host and port
     Server server = (Server) sce.getServletContext().getAttribute("org.eclipse.jetty.server.Server");

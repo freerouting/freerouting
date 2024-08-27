@@ -162,6 +162,12 @@ public class WindowWelcome extends WindowBase
         continue;
       }
 
+      // Warn the user that HTTPS is not implemented yet
+      if (protocol.equals("https"))
+      {
+        FRLogger.warn("HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+      }
+
       ServerConnector connector = new ServerConnector(apiServer);
       connector.setHost(host);
       connector.setPort(port);
@@ -199,7 +205,7 @@ public class WindowWelcome extends WindowBase
   public static boolean InitializeGUI(GlobalSettings globalSettings)
   {
     // Start a new Freerouting session
-    var guiSession = SessionManager.createSession(UUID.fromString(globalSettings.userProfileSettings.userId));
+    var guiSession = SessionManager.getInstance().createSession(UUID.fromString(globalSettings.userProfileSettings.userId));
 
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");

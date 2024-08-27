@@ -1,13 +1,13 @@
-package app.freerouting.api.v1;
+package app.freerouting.api.dev;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/v1/jobs")
-public class JobControllerV1
+@Path("/dev/jobs")
+public class JobControllerDev
 {
-  public JobControllerV1()
+  public JobControllerDev()
   {
   }
 
@@ -15,7 +15,9 @@ public class JobControllerV1
   @GET
   @Path("/{sessionId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response listJobs(@PathParam("sessionId") String sessionId)
+  public Response listJobs(
+      @PathParam("sessionId")
+      String sessionId)
   {
     // Return a list of 3 jobs with random data
     return Response.ok("[{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "},{\"id\":2,\"name\":\"Job 2\",\"session\":" + sessionId + "},{\"id\":3,\"name\":\"Job 3\",\"session\":" + sessionId + "}]").build();
@@ -25,7 +27,11 @@ public class JobControllerV1
   @GET
   @Path("/{sessionId}/{jobId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getJob(@PathParam("sessionId") String sessionId, @PathParam("jobId") String jobId)
+  public Response getJob(
+      @PathParam("sessionId")
+      String sessionId,
+      @PathParam("jobId")
+      String jobId)
   {
     // Return a random job with the id of jobId
     return Response.ok("{\"id\":" + jobId + ",\"name\":\"Job " + jobId + "\",\"session\":" + sessionId + "}").build();
@@ -35,7 +41,9 @@ public class JobControllerV1
   @POST
   @Path("/{sessionId}/queue")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response queueJob(@PathParam("sessionId") String sessionId)
+  public Response queueJob(
+      @PathParam("sessionId")
+      String sessionId)
   {
     // Return a random job object with the session id of sessionId
     return Response.ok("{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "}").build();
@@ -45,7 +53,11 @@ public class JobControllerV1
   @PUT
   @Path("/{sessionId}/{jobId}/start")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response startJob(@PathParam("sessionId") String sessionId, @PathParam("jobId") String jobId)
+  public Response startJob(
+      @PathParam("sessionId")
+      String sessionId,
+      @PathParam("jobId")
+      String jobId)
   {
     // Return a random job object with the session id of sessionId
     return Response.ok("{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "}").build();
@@ -55,7 +67,11 @@ public class JobControllerV1
   @PUT
   @Path("/{sessionId}/{jobId}/pause")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response pauseJob(@PathParam("sessionId") String sessionId, @PathParam("jobId") String jobId)
+  public Response pauseJob(
+      @PathParam("sessionId")
+      String sessionId,
+      @PathParam("jobId")
+      String jobId)
   {
     // Return a random job object with the session id of sessionId
     return Response.ok("{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "}").build();
@@ -65,7 +81,11 @@ public class JobControllerV1
   @PUT
   @Path("/{sessionId}/{jobId}/stop")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response stopJob(@PathParam("sessionId") String sessionId, @PathParam("jobId") String jobId)
+  public Response stopJob(
+      @PathParam("sessionId")
+      String sessionId,
+      @PathParam("jobId")
+      String jobId)
   {
     // Return a random job object with the session id of sessionId
     return Response.ok("{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "}").build();
@@ -75,7 +95,11 @@ public class JobControllerV1
   @POST
   @Path("/{sessionId}/{jobId}/changeSettings")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response changeSettings(@PathParam("sessionId") String sessionId, @PathParam("jobId") String jobId)
+  public Response changeSettings(
+      @PathParam("sessionId")
+      String sessionId,
+      @PathParam("jobId")
+      String jobId)
   {
     // Return a random job object with the session id of sessionId
     return Response.ok("{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "}").build();
@@ -85,7 +109,11 @@ public class JobControllerV1
   @POST
   @Path("/{sessionId}/{jobId}/uploadInput")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response uploadInput(@PathParam("sessionId") String sessionId, @PathParam("jobId") String jobId)
+  public Response uploadInput(
+      @PathParam("sessionId")
+      String sessionId,
+      @PathParam("jobId")
+      String jobId)
   {
     // Return a random job object with the session id of sessionId
     return Response.ok("{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "}").build();
@@ -95,7 +123,11 @@ public class JobControllerV1
   @GET
   @Path("/{sessionId}/{jobId}/downloadOutput")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response downloadOutput(@PathParam("sessionId") String sessionId, @PathParam("jobId") String jobId)
+  public Response downloadOutput(
+      @PathParam("sessionId")
+      String sessionId,
+      @PathParam("jobId")
+      String jobId)
   {
     // Return a random job object with the session id of sessionId
     return Response.ok("{\"id\":1,\"name\":\"Job 1\",\"session\":" + sessionId + "}").build();
