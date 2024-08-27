@@ -95,8 +95,8 @@ public class ReflectionUtil
           continue;
         }
 
-        // check if the field is final or private and skip it if it is
-        if (java.lang.reflect.Modifier.isFinal(field.getModifiers()) || !java.lang.reflect.Modifier.isPublic(field.getModifiers()))
+        // check if the field is private and skip it if it is
+        if (!java.lang.reflect.Modifier.isPublic(field.getModifiers()))
         {
           continue;
         }
@@ -105,20 +105,52 @@ public class ReflectionUtil
         Object value = field.get(source);
         if (value != null)
         {
+          // Check if the field is a primitive or a string
           if (field.getType().isPrimitive() || field.getType() == String.class)
           {
             field.set(target, value);
           }
           else
-          {
-            Object targetField = field.get(target);
-            if (targetField == null)
+            // Check if the field is an enum
+            if (field.getType().isEnum())
             {
-              targetField = field.getType().newInstance();
-              field.set(target, targetField);
+              // Copy the enum value
+              field.set(target, Enum.valueOf((Class<Enum>) field.getType(), value.toString()));
             }
-            copyFields(value, targetField);
-          }
+            else
+              // Check if the field is an array
+              if (field.getType().isArray())
+              {
+                // Is the array of primitive types or strings?
+                if (field.getType().getComponentType().isPrimitive() || field.getType().getComponentType() == String.class)
+                {
+                  // The field is an array of primitive types or strings, so we can copy it directly
+                  field.set(target, value);
+                }
+                else
+                {
+                  // The field is an array, so we need to copy its elements
+                  Object[] sourceArray = (Object[]) value;
+                  Object[] targetArray = (Object[]) field.get(target);
+                  if (targetArray == null)
+                  {
+                    targetArray = new Object[sourceArray.length];
+                    field.set(target, targetArray);
+                  }
+                  System.arraycopy(sourceArray, 0, targetArray, 0, sourceArray.length);
+                }
+              }
+              else
+              {
+                // The field is an object, so we need to copy its fields
+                Object targetField = field.get(target);
+                if (targetField == null)
+                {
+                  targetField = field.getType().newInstance();
+                  field.set(target, targetField);
+                }
+                copyFields(value, targetField);
+              }
         }
       } catch (Exception e)
       {
