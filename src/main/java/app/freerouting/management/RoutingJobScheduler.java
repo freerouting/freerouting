@@ -70,9 +70,19 @@ public class RoutingJobScheduler
   private void saveJob(String userFolder, String sessionFolder, RoutingJob job) throws IOException
   {
     // Create the user's folder if it doesn't exist
-    Path sessionFolderPath = GlobalSettings.userdataPath.resolve("data").resolve(userFolder).resolve(sessionFolder);
+    Path userFolderPath = GlobalSettings.userdataPath.resolve("data").resolve(userFolder);
 
     // Make sure that we have the directory structure in place, and create it if it doesn't exist
+    Files.createDirectories(userFolderPath);
+
+    // List all directories in the user folder and check if they start with a number
+    // If they do, then they are job folders, and we can get the highest number and increment it
+    int jobFolderCount = Files.list(userFolderPath).filter(Files::isDirectory).map(Path::getFileName).map(Path::toString).map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
+                              .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+                              .mapToInt(Integer::parseInt).max().orElse(0);
+
+    // Create the session's folder if it doesn't exist
+    Path sessionFolderPath = userFolderPath.resolve(String.format("%04d", jobFolderCount + 1) + "_" + sessionFolder);
     Files.createDirectories(sessionFolderPath);
 
     // Save the job to the session's folder using ISO standard date and time format
