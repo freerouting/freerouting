@@ -81,14 +81,14 @@ public class GlobalSettings implements Serializable
       loadedSettings = GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
     }
 
-    GlobalSettings result = new GlobalSettings();
+    GlobalSettings defaultSettings = new GlobalSettings();
     if (loadedSettings != null)
     {
       // Apply all the loaded settings to the result if they are not null
-      ReflectionUtil.copyFields(loadedSettings, result);
+      ReflectionUtil.copyFields(defaultSettings, loadedSettings);
     }
 
-    return result;
+    return loadedSettings;
   }
 
   /*
