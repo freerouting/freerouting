@@ -1,10 +1,13 @@
 package app.freerouting.api.v1;
 
+import app.freerouting.api.dto.BoardFilePayload;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.settings.RouterSettings;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -15,6 +18,30 @@ public class JobControllerV1
 {
   public JobControllerV1()
   {
+  }
+
+  /* Enqueue a new job with the given session id. In order to start the job, both an input file and its settings must be uploaded first. */
+  @POST
+  @Path("/{sessionId}/enqueue")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response queueJob(
+      @PathParam("sessionId")
+      String sessionId,
+      @RequestBody()
+      RoutingJob job)
+  {
+    // Check if the sessionId in the job object matches the path parameter
+    if (!job.sessionId.toString().equals(sessionId))
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+    }
+
+    // Enqueue the job
+    job = RoutingJobScheduler.getInstance().enqueueJob(job);
+
+    // Return the job object
+    return Response.ok(GsonProvider.GSON.toJson(job)).build();
+
   }
 
   /* Get a list of all jobs in the session with the given id, returning only basic details about them. */
@@ -48,31 +75,22 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
-    return Response.ok(GsonProvider.GSON.toJson(RoutingJobScheduler.getInstance().getJob(jobId))).build();
-  }
+    // Enqueue the job
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
-  /* Queue a new job with the given session id. In order to start the job, both an input file and its settings must be uploaded first. */
-  @POST
-  @Path("/{sessionId}/enqueue")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response queueJob(
-      @PathParam("sessionId")
-      String sessionId,
-      @RequestBody()
-      RoutingJob job)
-  {
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
     // Check if the sessionId in the job object matches the path parameter
     if (!job.sessionId.toString().equals(sessionId))
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
     }
 
-    // Enqueue the job
-    job = RoutingJobScheduler.getInstance().enqueueJob(job);
-
-    // Return the job object
     return Response.ok(GsonProvider.GSON.toJson(job)).build();
-
   }
 
   /* Start or continue the job with the given id. */
@@ -125,13 +143,42 @@ public class JobControllerV1
       @PathParam("sessionId")
       String sessionId,
       @PathParam("jobId")
-      String jobId)
+      String jobId,
+      @RequestBody()
+      RouterSettings routerSettings)
   {
-    // Return an error that this method is not implemented yet
-    return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    // Check if the sessionId in the job object matches the path parameter
+    if (!job.sessionId.toString().equals(sessionId))
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+    }
+
+    // Check if the job is queued and have not started yet
+    if (job.state != RoutingJobState.QUEUED)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is already started and cannot be changed.\"}").build();
+    }
+
+    // Change the settings of the job
+    job.routerSettings = routerSettings;
+
+    // Return the job object
+    return Response.ok(GsonProvider.GSON.toJson(job)).build();
   }
 
-  /* Upload the input of the job, typically in Specctra DSN format. */
+  /**
+   * Upload the input of the job, typically in Specctra DSN format.
+   * Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core web server.
+   */
   @POST
   @Path("/{sessionId}/{jobId}/uploadInput")
   @Produces(MediaType.APPLICATION_JSON)
@@ -139,10 +186,53 @@ public class JobControllerV1
       @PathParam("sessionId")
       String sessionId,
       @PathParam("jobId")
-      String jobId)
+      String jobId,
+      @RequestBody()
+      BoardFilePayload input)
   {
-    // Return an error that this method is not implemented yet
-    return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    // Check if the sessionId in the job object matches the path parameter
+    if (!job.sessionId.toString().equals(sessionId))
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+    }
+
+    // Check if the job is queued and have not started yet
+    if (job.state != RoutingJobState.QUEUED)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is already started and cannot be changed.\"}").build();
+    }
+
+    // Decode the base64 encoded input data to a byte array
+    byte[] inputByteArray = java.util.Base64.getDecoder().decode(input.dataBase64);
+    if (job.setInput(inputByteArray))
+    {
+      if (input.filename == null || input.filename.isEmpty())
+      {
+        input.setFilename(job.id.toString());
+      }
+
+      var inputDetails = job.getInput();
+
+      input.jobId = job.id;
+      input.filename = inputDetails.filename;
+      input.size = inputDetails.size;
+      input.crc32 = inputDetails.crc32;
+
+      return Response.ok(GsonProvider.GSON.toJson(inputByteArray)).build();
+    }
+    else
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data is invalid.\"}").build();
+    }
   }
 
   /* Download the output of the job, typically in Specctra SES format. */
@@ -155,7 +245,31 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
-    // Return an error that this method is not implemented yet
-    return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    // Check if the sessionId in the job object matches the path parameter
+    if (!job.sessionId.toString().equals(sessionId))
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+    }
+
+    // Check if the job is completed
+    if (job.state != RoutingJobState.COMPLETED)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is not completed yet.\"}").build();
+    }
+
+    var result = new BoardFilePayload();
+    result.jobId = job.id;
+    // TODO: set the filename, size, crc32, and dataBase64 properties of the result object
+
+    return Response.ok(GsonProvider.GSON.toJson(result)).build();
   }
 }

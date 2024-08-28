@@ -1,6 +1,6 @@
 package app.freerouting.core;
 
-import app.freerouting.board.BoardDetails;
+import app.freerouting.board.BoardFileDetails;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.UUID;
-import java.util.zip.CRC32;
 
 /**
  * Represents a job that needs to be processed by the router.
@@ -33,10 +32,13 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public final UUID id = UUID.randomUUID();
   public final Instant createdAt = Instant.now();
   public final Instant finishedAt = null;
-  // TODO: pass the router settings as an input and forward it to the router
-  private final RouterSettings routerSettings = new RouterSettings(0);
   private final byte[] snapshotFileData = null;
   private final byte[] outputFileData = null;
+  private final BoardFileDetails input = null;
+  private final BoardFileDetails snapshot = null;
+  private final BoardFileDetails output = null;
+  // TODO: pass the router settings as an input and forward it to the router
+  public RouterSettings routerSettings = new RouterSettings(0);
   public UUID sessionId;
   public String name;
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
@@ -44,7 +46,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public RoutingJobState state = RoutingJobState.INVALID;
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
   public RoutingStage stage = RoutingStage.IDLE;
-  // TODO: change File type to BinaryStream or byte[] to support both file inputs and web API uploads
+  // TODO: change File type to BoardFileDetails to support both file inputs and web API uploads
   private transient File inputFile;
   private transient File snapshotFile = null;
   private transient File outputFile = null;
@@ -60,23 +62,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   {
     this.sessionId = sessionId;
     this.name = "J-" + this.id.toString().substring(0, 6).toUpperCase();
-  }
-
-  public static CRC32 CalculateCrc32(InputStream inputStream)
-  {
-    CRC32 crc = new CRC32();
-    try
-    {
-      int cnt;
-      while ((cnt = inputStream.read()) != -1)
-      {
-        crc.update(cnt);
-      }
-    } catch (IOException e)
-    {
-      FRLogger.error(e.getLocalizedMessage(), e);
-    }
-    return crc;
   }
 
   /**
@@ -187,48 +172,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     return FileFormat.UNKNOWN;
   }
 
-  public void setInput(String inputFilePath) throws IOException
-  {
-    setInput(new File(inputFilePath));
-  }
-
-  public void setInput(byte[] inputFileContent)
+  public boolean setInput(byte[] inputFileContent)
   {
     this.inputFilePath = null;
-    this.tryToSetInput(inputFileContent);
-  }
-
-  public void setInput(File inputFile) throws IOException
-  {
-    // Read the file contents into a byte array and initialize the RoutingJob object with it
-    FileInputStream fileInputStream = new FileInputStream(inputFile);
-    byte[] content = fileInputStream.readAllBytes();
-
-    setInput(content);
-    inputFilePath = inputFile.toPath();
-    if (inputFileFormat == FileFormat.UNKNOWN)
-    {
-      // As a fallback method, set the file format based on its extension
-      inputFileFormat = getFileFormat(inputFilePath);
-    }
-
-    if (this.inputFileFormat == FileFormat.FRB)
-    {
-      this.outputFilePath = changeFileExtension(inputFilePath, BINARY_FILE_EXTENSION);
-    }
-
-    if (this.inputFileFormat == FileFormat.DSN)
-    {
-      this.outputFilePath = changeFileExtension(inputFilePath, SES_FILE_EXTENSION);
-    }
-
-    if (this.inputFileFormat != FileFormat.UNKNOWN)
-    {
-      this.inputFile = inputFile;
-      this.name = inputFile.getName();
-      this.snapshotFile = getSnapshotFilename(this.inputFile);
-      this.snapshotFilePath = this.snapshotFile.toPath();
-    }
+    return this.tryToSetInput(inputFileContent);
   }
 
   private File getSnapshotFilename(File inputFile)
@@ -237,7 +184,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     long crc32Checksum;
     try (FileInputStream inputStream = new FileInputStream(inputFile.getAbsoluteFile()))
     {
-      crc32Checksum = RoutingJob.CalculateCrc32(inputStream).getValue();
+      crc32Checksum = BoardFileDetails.calculateCrc32(inputStream).getValue();
     } catch (IOException e)
     {
       crc32Checksum = 0;
@@ -267,7 +214,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   }
 
   /**
-   * Gets an InputStream from the file. Returns null, if the algorithm failed.
+   * Gets an InputStream from the file.
    */
   public InputStream get_input_stream()
   {
@@ -499,12 +446,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public String getInputFileDetails()
   {
-    return new BoardDetails(this.inputFile).toString();
+    return new BoardFileDetails(this.inputFile).toString();
   }
 
   public String getOutputFileDetails()
   {
-    return new BoardDetails(this.outputFile).toString();
+    return new BoardFileDetails(this.outputFile).toString();
   }
 
   @Override
@@ -521,6 +468,49 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     else
     {
       return 0;
+    }
+  }
+
+  public BoardFileDetails getInput()
+  {
+    return input;
+  }
+
+  public void setInput(String inputFilePath) throws IOException
+  {
+    setInput(new File(inputFilePath));
+  }
+
+  public void setInput(File inputFile) throws IOException
+  {
+    // Read the file contents into a byte array and initialize the RoutingJob object with it
+    FileInputStream fileInputStream = new FileInputStream(inputFile);
+    byte[] content = fileInputStream.readAllBytes();
+
+    setInput(content);
+    inputFilePath = inputFile.toPath();
+    if (inputFileFormat == FileFormat.UNKNOWN)
+    {
+      // As a fallback method, set the file format based on its extension
+      inputFileFormat = getFileFormat(inputFilePath);
+    }
+
+    if (this.inputFileFormat == FileFormat.FRB)
+    {
+      this.outputFilePath = changeFileExtension(inputFilePath, BINARY_FILE_EXTENSION);
+    }
+
+    if (this.inputFileFormat == FileFormat.DSN)
+    {
+      this.outputFilePath = changeFileExtension(inputFilePath, SES_FILE_EXTENSION);
+    }
+
+    if (this.inputFileFormat != FileFormat.UNKNOWN)
+    {
+      this.inputFile = inputFile;
+      this.name = inputFile.getName();
+      this.snapshotFile = getSnapshotFilename(this.inputFile);
+      this.snapshotFilePath = this.snapshotFile.toPath();
     }
   }
 }

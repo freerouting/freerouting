@@ -4,7 +4,6 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.*;
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SessionToEagle;
@@ -1043,11 +1042,6 @@ public class GuiBoardManager extends HeadlessBoardManager
     screen_messages.set_status_message(tm.getText("drag_menu"));
   }
 
-  public long calculateCrc32(InputStream inputStream)
-  {
-    return RoutingJob.CalculateCrc32(inputStream).getValue();
-  }
-
   public long calculateCrc32()
   {
     // Create a memory stream
@@ -1057,7 +1051,7 @@ public class GuiBoardManager extends HeadlessBoardManager
     // Transform the output stream to an input stream
     InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
 
-    return calculateCrc32(inputStream);
+    return BoardFileDetails.calculateCrc32(inputStream).getValue();
   }
 
   public boolean isBoardChanged()
