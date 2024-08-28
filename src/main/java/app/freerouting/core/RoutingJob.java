@@ -41,8 +41,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public RouterSettings routerSettings = new RouterSettings(0);
   public UUID sessionId;
   public String name;
-  public FileFormat inputFileFormat = FileFormat.UNKNOWN;
-  public FileFormat outputFileFormat = FileFormat.UNKNOWN;
+  public FileFormat inputFormat = FileFormat.UNKNOWN;
+  public FileFormat outputFormat = FileFormat.UNKNOWN;
   public RoutingJobState state = RoutingJobState.INVALID;
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
   public RoutingStage stage = RoutingStage.IDLE;
@@ -50,10 +50,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   private transient File inputFile;
   private transient File snapshotFile = null;
   private transient File outputFile = null;
-  private transient Path inputFilePath = null;
-  private transient Path outputFilePath = null;
-  private transient Path snapshotFilePath = null;
-  private byte[] inputFileData = null;
+  private transient Path inputPath = null;
+  private transient Path outputPath = null;
+  private transient Path snapshotPath = null;
+  private byte[] inputData = null;
 
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
@@ -174,7 +174,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public boolean setInput(byte[] inputFileContent)
   {
-    this.inputFilePath = null;
+    this.inputPath = null;
     return this.tryToSetInput(inputFileContent);
   }
 
@@ -276,7 +276,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     fileChooser.addChoosableFileFilter(dsnFilter);
 
     // Set the file filter based on the output file format
-    switch (this.outputFileFormat)
+    switch (this.outputFormat)
     {
       case SES:
         fileChooser.setFileFilter(sesFilter);
@@ -318,17 +318,17 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public File getSnapshotFile()
   {
-    return this.snapshotFilePath.toFile();
+    return this.snapshotPath.toFile();
   }
 
   public File getRulesFile()
   {
-    return changeFileExtension(this.outputFilePath, RULES_FILE_EXTENSION).toFile();
+    return changeFileExtension(this.outputPath, RULES_FILE_EXTENSION).toFile();
   }
 
   public File getEagleScriptFile()
   {
-    return changeFileExtension(this.outputFilePath, EAGLE_SCRIPT_FILE_EXTENSION).toFile();
+    return changeFileExtension(this.outputPath, EAGLE_SCRIPT_FILE_EXTENSION).toFile();
   }
 
   @Deprecated(since = "2.0", forRemoval = true)
@@ -366,18 +366,18 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public void setDummyInputFile(String filename)
   {
-    this.outputFileFormat = FileFormat.UNKNOWN;
+    this.outputFormat = FileFormat.UNKNOWN;
     this.outputFile = null;
 
     if ((filename != null) && (filename.toLowerCase().endsWith(DSN_FILE_EXTENSION)))
     {
-      this.inputFileFormat = FileFormat.DSN;
+      this.inputFormat = FileFormat.DSN;
       this.inputFile = new File(filename);
       this.snapshotFile = getSnapshotFilename(this.inputFile);
     }
     else
     {
-      this.inputFileFormat = FileFormat.UNKNOWN;
+      this.inputFormat = FileFormat.UNKNOWN;
       this.inputFile = null;
       this.snapshotFile = null;
     }
@@ -390,11 +390,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       return false;
     }
 
-    this.inputFileFormat = getFileFormat(fileContent);
+    this.inputFormat = getFileFormat(fileContent);
 
-    if (this.inputFileFormat != FileFormat.UNKNOWN)
+    if (this.inputFormat != FileFormat.UNKNOWN)
     {
-      this.inputFileData = fileContent;
+      this.inputData = fileContent;
       return true;
     }
 
@@ -435,7 +435,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR))
     {
       this.outputFile = outputFile;
-      this.outputFileFormat = ff;
+      this.outputFormat = ff;
       return true;
     }
     else
@@ -488,29 +488,29 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     byte[] content = fileInputStream.readAllBytes();
 
     setInput(content);
-    inputFilePath = inputFile.toPath();
-    if (inputFileFormat == FileFormat.UNKNOWN)
+    inputPath = inputFile.toPath();
+    if (inputFormat == FileFormat.UNKNOWN)
     {
       // As a fallback method, set the file format based on its extension
-      inputFileFormat = getFileFormat(inputFilePath);
+      inputFormat = getFileFormat(inputPath);
     }
 
-    if (this.inputFileFormat == FileFormat.FRB)
+    if (this.inputFormat == FileFormat.FRB)
     {
-      this.outputFilePath = changeFileExtension(inputFilePath, BINARY_FILE_EXTENSION);
+      this.outputPath = changeFileExtension(inputPath, BINARY_FILE_EXTENSION);
     }
 
-    if (this.inputFileFormat == FileFormat.DSN)
+    if (this.inputFormat == FileFormat.DSN)
     {
-      this.outputFilePath = changeFileExtension(inputFilePath, SES_FILE_EXTENSION);
+      this.outputPath = changeFileExtension(inputPath, SES_FILE_EXTENSION);
     }
 
-    if (this.inputFileFormat != FileFormat.UNKNOWN)
+    if (this.inputFormat != FileFormat.UNKNOWN)
     {
       this.inputFile = inputFile;
       this.name = inputFile.getName();
       this.snapshotFile = getSnapshotFilename(this.inputFile);
-      this.snapshotFilePath = this.snapshotFile.toPath();
+      this.snapshotPath = this.snapshotFile.toPath();
     }
   }
 }

@@ -244,7 +244,7 @@ public class WindowWelcome extends WindowBase
         FRLogger.error("Couldn't read the file", e);
       }
 
-      if (routingJob.inputFileFormat == FileFormat.UNKNOWN)
+      if (routingJob.inputFormat == FileFormat.UNKNOWN)
       {
         FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
         return false;
@@ -487,7 +487,7 @@ public class WindowWelcome extends WindowBase
     }
 
     BoardFrame new_frame = new BoardFrame(p_design_file, globalSettings);
-    boolean read_ok = new_frame.load(input_stream, p_design_file.inputFileFormat.equals(FileFormat.DSN), p_message_field);
+    boolean read_ok = new_frame.load(input_stream, p_design_file.inputFormat.equals(FileFormat.DSN), p_message_field);
     if (!read_ok)
     {
       return null;
@@ -500,7 +500,7 @@ public class WindowWelcome extends WindowBase
       new_frame.board_panel.board_handling.set_route_menu_state();
     }
 
-    if (p_design_file.inputFileFormat.equals(FileFormat.DSN))
+    if (p_design_file.inputFormat.equals(FileFormat.DSN))
     {
       // Read the file with the saved rules, if it exists.
 

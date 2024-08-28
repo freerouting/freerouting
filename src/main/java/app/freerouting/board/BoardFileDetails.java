@@ -16,34 +16,34 @@ public class BoardFileDetails
 {
   // The absolute path to the file
   @SerializedName("path")
-  public Path path;
+  public String path = "";
   // The filename only without the path
   @SerializedName("filename")
-  public String filename;
+  public String filename = "";
   // The size of the file in bytes
   @SerializedName("size")
-  public long size;
-  // The CRC32 checksum of the file
+  public long size = 0;
+  // The CRC32 checksum of the data
   @SerializedName("crc32")
-  public CRC32 crc32;
+  public long crc32 = 0;
   // The format of the file
   @SerializedName("format")
-  public FileFormat format;
+  public FileFormat format = FileFormat.UNKNOWN;
   @SerializedName("layer_count")
-  public int layerCount;
+  public int layerCount = 0;
   @SerializedName("component_count")
-  public int componentCount;
+  public int componentCount = 0;
   @SerializedName("netclass_count")
-  public int netclassCount;
+  public int netclassCount = 0;
   @SerializedName("net_count")
-  public int netCount;
+  public int netCount = 0;
   @SerializedName("track_count")
-  public int trackCount;
+  public int trackCount = 0;
   @SerializedName("trace_count")
-  public int traceCount;
+  public int traceCount = 0;
   @SerializedName("via_count")
-  public int viaCount;
-  public transient byte[] data;
+  public int viaCount = 0;
+  protected transient byte[] data = new byte[];
 
   public BoardFileDetails()
   {
@@ -54,9 +54,7 @@ public class BoardFileDetails
    */
   public BoardFileDetails(File file)
   {
-    this.path = Path.of(file.getAbsolutePath());
-    this.filename = file.getName();
-    this.size = file.length();
+    this.setFilename(file.getAbsolutePath());
 
     try (FileInputStream fis = new FileInputStream(file))
     {
@@ -67,8 +65,9 @@ public class BoardFileDetails
       FRLogger.error("Failed to read file contents.", e);
     }
 
+    this.size = data.length;
     InputStream inputStream = new ByteArrayInputStream(this.data);
-    this.crc32 = BoardFileDetails.calculateCrc32(inputStream);
+    this.crc32 = BoardFileDetails.calculateCrc32(inputStream).getValue();
 
     // read the file contents to determine the file format
     this.format = RoutingJob.getFileFormat(this.data);
@@ -159,9 +158,9 @@ public class BoardFileDetails
   /**
    * Saves this object to a UTF-8 JSON file.
    */
-  public void saveAs(String file) throws IOException
+  public void saveAs(String filename) throws IOException
   {
-    try (Writer writer = Files.newBufferedWriter(Path.of(file), StandardCharsets.UTF_8))
+    try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8))
     {
       writer.write(this.toString());
     }
@@ -175,8 +174,8 @@ public class BoardFileDetails
   public void setFilename(String filename)
   {
     // separate the filename into its absolute path and its filename only
-    this.filename = filename;
-    this.path = Path.of(filename).toAbsolutePath();
+    this.path = Path.of(filename).toAbsolutePath().toString();
+    this.filename = new File(filename).getName();
   }
 
 
