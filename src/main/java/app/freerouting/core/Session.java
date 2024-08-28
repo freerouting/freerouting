@@ -12,6 +12,7 @@ public class Session implements Serializable
 {
   public final UUID id = UUID.randomUUID();
   private final UUID userId;
+  public boolean isGuiSession = false;
 
   /**
    * Creates a new session.

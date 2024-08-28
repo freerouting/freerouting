@@ -33,8 +33,7 @@ public class JobControllerV1
     }
 
     // Return a list of jobs in the session
-    // TODO: filter the list of jobs to only include the ones that belong to the session
-    return Response.ok(GsonProvider.GSON.toJson(RoutingJobScheduler.getInstance().getJobs())).build();
+    return Response.ok(GsonProvider.GSON.toJson(RoutingJobScheduler.getInstance().listJobs(sessionId))).build();
   }
 
   /* Get the current detailed status of the job with id, including statistical data about the (partially) completed board is the process already started. */
@@ -47,8 +46,7 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
-    // Return a random job with the id of jobId
-    return Response.ok("{\"id\":" + jobId + ",\"name\":\"Job " + jobId + "\",\"session\":" + sessionId + "}").build();
+    return Response.ok(GsonProvider.GSON.toJson(RoutingJobScheduler.getInstance().getJob(jobId))).build();
   }
 
   /* Queue a new job with the given session id. In order to start the job, both an input file and its settings must be uploaded first. */

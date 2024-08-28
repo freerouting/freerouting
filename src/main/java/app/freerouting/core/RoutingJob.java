@@ -37,6 +37,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   private final RouterSettings routerSettings = new RouterSettings(0);
   private final byte[] snapshotFileData = null;
   private final byte[] outputFileData = null;
+  public UUID sessionId;
   public String name;
   public FileFormat inputFileFormat = FileFormat.UNKNOWN;
   public FileFormat outputFileFormat = FileFormat.UNKNOWN;
@@ -55,8 +56,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
    */
-  public RoutingJob()
+  public RoutingJob(UUID sessionId)
   {
+    this.sessionId = sessionId;
     this.name = "J-" + this.id.toString().substring(0, 6).toUpperCase();
   }
 

@@ -206,6 +206,7 @@ public class WindowWelcome extends WindowBase
   {
     // Start a new Freerouting session
     var guiSession = SessionManager.getInstance().createSession(UUID.fromString(globalSettings.userProfileSettings.userId));
+    SessionManager.getInstance().setGuiSession(guiSession.id);
 
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
@@ -234,7 +235,7 @@ public class WindowWelcome extends WindowBase
     {
       // let's create a job in our session and queue it
       FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
-      RoutingJob routingJob = new RoutingJob();
+      RoutingJob routingJob = new RoutingJob(guiSession.id);
       try
       {
         routingJob.setInput(globalSettings.design_input_filename);
@@ -466,7 +467,7 @@ public class WindowWelcome extends WindowBase
     InputStream input_stream = null;
     if ((p_design_file == null) || (p_design_file.getInputFile() == null))
     {
-      p_design_file = new RoutingJob();
+      p_design_file = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
       p_design_file.setDummyInputFile("freerouting_empty_board.dsn");
       // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
@@ -562,9 +563,10 @@ public class WindowWelcome extends WindowBase
   private void open_board_design_action(ActionEvent evt)
   {
     File fileToOpen = RoutingJob.showOpenDialog(this.design_dir_name, null);
-    RoutingJob routingJob = new RoutingJob();
+    RoutingJob routingJob = null;
     try
     {
+      routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
       routingJob.setInput(fileToOpen);
 
       if (routingJob.getInputFile() != null)

@@ -52,4 +52,39 @@ public class SessionManager
   {
     return sessions.keySet().toArray(new String[0]);
   }
+
+  public Session getGuiSession() throws IllegalArgumentException
+  {
+    for (Session session : sessions.values())
+    {
+      if (session.isGuiSession)
+      {
+        return session;
+      }
+    }
+
+    throw new IllegalArgumentException("There is no GUI session.");
+  }
+
+  public void setGuiSession(UUID sessionId) throws IllegalArgumentException
+  {
+    // Check if there are any other GUI sessions and if so, throw an exception because only one GUI session is allowed
+    for (Session session : sessions.values())
+    {
+      if (session.isGuiSession)
+      {
+        throw new IllegalArgumentException("There is already a GUI session.");
+      }
+    }
+
+    Session session = sessions.get(sessionId.toString());
+    if (session != null)
+    {
+      session.isGuiSession = true;
+    }
+    else
+    {
+      throw new IllegalArgumentException("Session with id " + sessionId + " does not exist.");
+    }
+  }
 }

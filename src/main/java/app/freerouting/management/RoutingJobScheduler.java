@@ -52,6 +52,12 @@ public class RoutingJobScheduler
    */
   public RoutingJob enqueueJob(UUID userId, UUID sessionId, RoutingJob job)
   {
+    // Check if the job is null or the sessionId doesn't match the job's sessionId and then return an error
+    if (job == null || !job.sessionId.equals(sessionId))
+    {
+      return null;
+    }
+
     this.jobs.add(job);
 
     if (Freerouting.globalSettings.featureFlags.saveJobs)
@@ -109,8 +115,18 @@ public class RoutingJobScheduler
     return (int) (this.jobs.size() - this.jobs.stream().filter(j -> j != job).count());
   }
 
-  public RoutingJob[] getJobs()
+  public RoutingJob[] listJobs()
   {
     return this.jobs.toArray(new RoutingJob[0]);
+  }
+
+  public RoutingJob[] listJobs(String sessionId)
+  {
+    return this.jobs.stream().filter(j -> j.sessionId.toString().equals(sessionId)).toArray(RoutingJob[]::new);
+  }
+
+  public RoutingJob getJob(String jobId)
+  {
+    return this.jobs.stream().filter(j -> j.id.toString().equals(jobId)).findFirst().orElse(null);
   }
 }
