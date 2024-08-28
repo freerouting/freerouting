@@ -32,28 +32,16 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public final UUID id = UUID.randomUUID();
   public final Instant createdAt = Instant.now();
   public final Instant finishedAt = null;
-  private final byte[] snapshotFileData = null;
-  private final byte[] outputFileData = null;
-  private final BoardFileDetails input = null;
-  private final BoardFileDetails snapshot = null;
-  private final BoardFileDetails output = null;
+  public BoardFileDetails input = null;
+  public BoardFileDetails snapshot = null;
+  public BoardFileDetails output = null;
   // TODO: pass the router settings as an input and forward it to the router
   public RouterSettings routerSettings = new RouterSettings(0);
   public UUID sessionId;
   public String name;
-  public FileFormat inputFormat = FileFormat.UNKNOWN;
-  public FileFormat outputFormat = FileFormat.UNKNOWN;
   public RoutingJobState state = RoutingJobState.INVALID;
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
   public RoutingStage stage = RoutingStage.IDLE;
-  // TODO: change File type to BoardFileDetails to support both file inputs and web API uploads
-  private transient File inputFile;
-  private transient File snapshotFile = null;
-  private transient File outputFile = null;
-  private transient Path inputPath = null;
-  private transient Path outputPath = null;
-  private transient Path snapshotPath = null;
-  private byte[] inputData = null;
 
   /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
@@ -174,11 +162,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public boolean setInput(byte[] inputFileContent)
   {
-    this.inputPath = null;
+    this.input = new BoardFileDetails();
     return this.tryToSetInput(inputFileContent);
   }
 
-  private File getSnapshotFilename(File inputFile)
+  private String getSnapshotFilename(File inputFile)
   {
     // Calculate the CRC32 checksum of the input file
     long crc32Checksum;
@@ -210,50 +198,20 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
     // Set the intermediate snapshot file name based on the checksum
     String intermediate_snapshot_file_name = "snapshot-" + Long.toHexString(crc32Checksum) + "." + RoutingJob.BINARY_FILE_EXTENSION;
-    return new File(snapshotsFolderPath + File.separator + intermediate_snapshot_file_name);
-  }
-
-  /**
-   * Gets an InputStream from the file.
-   */
-  public InputStream get_input_stream()
-  {
-    if (this.inputFile == null)
-    {
-      return null;
-    }
-    try
-    {
-      return new FileInputStream(this.inputFile);
-    } catch (Exception e)
-    {
-      FRLogger.error(e.getLocalizedMessage(), e);
-    }
-    return null;
-  }
-
-  /**
-   * Gets the file name as a String. Returns null on failure.
-   */
-  public String get_name()
-  {
-    if (this.inputFile != null)
-    {
-      return this.inputFile.getName();
-    }
-    return "";
+    return snapshotsFolderPath + File.separator + intermediate_snapshot_file_name;
   }
 
   public File showSaveAsDialog(String p_default_directory, Component p_parent)
   {
     String directoryName;
-    if (this.outputFile == null)
+    var outputFile = this.output.getFile();
+    if (outputFile == null)
     {
       directoryName = p_default_directory;
     }
     else
     {
-      directoryName = this.outputFile.getParent();
+      directoryName = outputFile.getParent();
     }
 
     JFileChooser fileChooser = new JFileChooser(directoryName);
@@ -276,7 +234,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     fileChooser.addChoosableFileFilter(dsnFilter);
 
     // Set the file filter based on the output file format
-    switch (this.outputFormat)
+    switch (this.output.format)
     {
       case SES:
         fileChooser.setFileFilter(sesFilter);
@@ -296,9 +254,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
 
     // Set the default file name based on the output file name
-    if (this.outputFile != null)
+    if (!this.output.getFilename().isEmpty())
     {
-      fileChooser.setSelectedFile(this.outputFile);
+      fileChooser.setSelectedFile(this.output.getFile());
     }
 
     fileChooser.showSaveDialog(p_parent);
@@ -306,80 +264,30 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     return fileChooser.getSelectedFile();
   }
 
-  public File getOutputFile()
-  {
-    return this.outputFile;
-  }
-
-  public File getInputFile()
-  {
-    return this.inputFile;
-  }
-
-  public File getSnapshotFile()
-  {
-    return this.snapshotPath.toFile();
-  }
-
   public File getRulesFile()
   {
-    return changeFileExtension(this.outputPath, RULES_FILE_EXTENSION).toFile();
+    return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
   }
 
   public File getEagleScriptFile()
   {
-    return changeFileExtension(this.outputPath, EAGLE_SCRIPT_FILE_EXTENSION).toFile();
-  }
-
-  @Deprecated(since = "2.0", forRemoval = true)
-  public File get_parent_file()
-  {
-    if (inputFile != null)
-    {
-      return inputFile.getParentFile();
-    }
-    return null;
-  }
-
-  // Returns the directory of the design file, or "" if the file is null
-  public String getInputFileDirectory()
-  {
-    if (inputFile == null)
-    {
-      return "";
-    }
-
-    // Get the absolut path without the filename
-    return inputFile.getParent();
-  }
-
-  // Returns the directory of the design file, or null if the file is null
-  @Deprecated(since = "2.0", forRemoval = true)
-  public String getInputFileDirectoryOrNull()
-  {
-    if (inputFile != null)
-    {
-      return inputFile.getParent();
-    }
-    return null;
+    return new File(changeFileExtension(this.output.getAbsolutePath(), EAGLE_SCRIPT_FILE_EXTENSION));
   }
 
   public void setDummyInputFile(String filename)
   {
-    this.outputFormat = FileFormat.UNKNOWN;
-    this.outputFile = null;
+    this.output = new BoardFileDetails();
 
     if ((filename != null) && (filename.toLowerCase().endsWith(DSN_FILE_EXTENSION)))
     {
-      this.inputFormat = FileFormat.DSN;
-      this.inputFile = new File(filename);
-      this.snapshotFile = getSnapshotFilename(this.inputFile);
+      this.input.format = FileFormat.DSN;
+      this.input.setFilename(filename);
+      this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
     }
     else
     {
-      this.inputFormat = FileFormat.UNKNOWN;
-      this.inputFile = null;
-      this.snapshotFile = null;
+      this.input = new BoardFileDetails();
+      this.snapshot = new BoardFileDetails();
     }
   }
 
@@ -390,11 +298,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       return false;
     }
 
-    this.inputFormat = getFileFormat(fileContent);
+    this.input.format = getFileFormat(fileContent);
 
-    if (this.inputFormat != FileFormat.UNKNOWN)
+    if (this.input.format != FileFormat.UNKNOWN)
     {
-      this.inputData = fileContent;
+      this.input.setData(fileContent);
       return true;
     }
 
@@ -402,8 +310,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   }
 
   // Changes the file extension of the selected file
-  private Path changeFileExtension(Path filePath, String newFileExtension)
+  private String changeFileExtension(String filename, String newFileExtension)
   {
+    Path filePath = Path.of(filename);
+
     // Get the filename and split it into parts
     String originalFullPathWithoutFilename = filePath.getParent().toAbsolutePath().toString();
     String originalFilename = filePath.getFileName().toString();
@@ -413,14 +323,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       String extension = nameParts[nameParts.length - 1].toLowerCase();
       if (extension.equals(newFileExtension))
       {
-        return filePath;
+        return filePath.toString();
       }
       String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "." + newFileExtension;
 
-      return Path.of(originalFullPathWithoutFilename, newFilename);
+      return Path.of(originalFullPathWithoutFilename, newFilename).toString();
     }
 
-    return Path.of(originalFullPathWithoutFilename, originalFilename + "." + newFileExtension);
+    return Path.of(originalFullPathWithoutFilename, originalFilename + "." + newFileExtension).toString();
   }
 
   public boolean tryToSetOutputFile(File outputFile)
@@ -434,8 +344,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
     if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR))
     {
-      this.outputFile = outputFile;
-      this.outputFormat = ff;
+      this.output = new BoardFileDetails(outputFile);
       return true;
     }
     else
@@ -446,12 +355,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public String getInputFileDetails()
   {
-    return new BoardFileDetails(this.inputFile).toString();
+    return new BoardFileDetails(this.input.getFile()).toString();
   }
 
   public String getOutputFileDetails()
   {
-    return new BoardFileDetails(this.outputFile).toString();
+    return new BoardFileDetails(this.output.getFile()).toString();
   }
 
   @Override
@@ -488,29 +397,31 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     byte[] content = fileInputStream.readAllBytes();
 
     setInput(content);
-    inputPath = inputFile.toPath();
-    if (inputFormat == FileFormat.UNKNOWN)
+    input.setFilename(inputFile.getAbsolutePath());
+    if (input.format == FileFormat.UNKNOWN)
     {
       // As a fallback method, set the file format based on its extension
-      inputFormat = getFileFormat(inputPath);
+      input.format = getFileFormat(Path.of(input.getAbsolutePath()));
     }
 
-    if (this.inputFormat == FileFormat.FRB)
+    if (this.input.format == FileFormat.FRB)
     {
-      this.outputPath = changeFileExtension(inputPath, BINARY_FILE_EXTENSION);
+      this.output = new BoardFileDetails();
+      this.output.setFilename(changeFileExtension(input.getAbsolutePath(), BINARY_FILE_EXTENSION));
     }
 
-    if (this.inputFormat == FileFormat.DSN)
+    if (this.input.format == FileFormat.DSN)
     {
-      this.outputPath = changeFileExtension(inputPath, SES_FILE_EXTENSION);
+      this.output = new BoardFileDetails();
+      this.output.setFilename(changeFileExtension(input.getAbsolutePath(), SES_FILE_EXTENSION));
     }
 
-    if (this.inputFormat != FileFormat.UNKNOWN)
+    if (this.input.format != FileFormat.UNKNOWN)
     {
-      this.inputFile = inputFile;
-      this.name = inputFile.getName();
-      this.snapshotFile = getSnapshotFilename(this.inputFile);
-      this.snapshotPath = this.snapshotFile.toPath();
+      this.input = new BoardFileDetails(inputFile);
+      this.name = input.getFilenameWithoutExtension();
+      this.snapshot = new BoardFileDetails();
+      this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
     }
   }
 }

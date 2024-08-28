@@ -244,7 +244,7 @@ public class WindowWelcome extends WindowBase
         FRLogger.error("Couldn't read the file", e);
       }
 
-      if (routingJob.inputFormat == FileFormat.UNKNOWN)
+      if (routingJob.input.format == FileFormat.UNKNOWN)
       {
         FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
         return false;
@@ -460,54 +460,50 @@ public class WindowWelcome extends WindowBase
    * Creates a new board frame containing the data of the input design file. Returns null, if an
    * error occurred.
    */
-  private static BoardFrame create_board_frame(RoutingJob p_design_file, JTextField p_message_field, GlobalSettings globalSettings)
+  private static BoardFrame create_board_frame(RoutingJob routingJob, JTextField p_message_field, GlobalSettings globalSettings)
   {
     TextManager tm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
 
     InputStream input_stream = null;
-    if ((p_design_file == null) || (p_design_file.getInputFile() == null))
+    if ((routingJob == null) || (routingJob.input.getFile() == null))
     {
-      p_design_file = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
-      p_design_file.setDummyInputFile("freerouting_empty_board.dsn");
+      routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
+      routingJob.setDummyInputFile("freerouting_empty_board.dsn");
       // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
       input_stream = classLoader.getResourceAsStream("freerouting_empty_board.dsn");
     }
     else
     {
-      input_stream = p_design_file.get_input_stream();
+      input_stream = routingJob.input.getData();
       if (input_stream == null)
       {
         if (p_message_field != null)
         {
-          p_message_field.setText(tm.getText("message_8") + " " + p_design_file.get_name());
+          p_message_field.setText(tm.getText("message_8") + " " + routingJob.input.getFilename());
         }
         return null;
       }
     }
 
-    BoardFrame new_frame = new BoardFrame(p_design_file, globalSettings);
-    boolean read_ok = new_frame.load(input_stream, p_design_file.inputFormat.equals(FileFormat.DSN), p_message_field);
+    BoardFrame new_frame = new BoardFrame(routingJob, globalSettings);
+    boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field);
     if (!read_ok)
     {
       return null;
     }
 
-    FRAnalytics.buttonClicked("fileio_loaddsn", p_design_file.getInputFileDetails());
+    FRAnalytics.buttonClicked("fileio_loaddsn", routingJob.getInputFileDetails());
 
     if (!globalSettings.featureFlags.selectMode)
     {
       new_frame.board_panel.board_handling.set_route_menu_state();
     }
 
-    if (p_design_file.inputFormat.equals(FileFormat.DSN))
+    if (routingJob.input.format.equals(FileFormat.DSN))
     {
       // Read the file with the saved rules, if it exists.
-
-      String file_name = p_design_file.get_name();
-      String[] name_parts = file_name.split("\\.");
-
-      String design_name = name_parts[0];
+      String design_name = routingJob.name;
 
       String rules_file_name;
       String parent_folder_name;
@@ -515,7 +511,7 @@ public class WindowWelcome extends WindowBase
       if (globalSettings.design_rules_filename == null)
       {
         rules_file_name = design_name + ".rules";
-        parent_folder_name = p_design_file.getInputFileDirectoryOrNull();
+        parent_folder_name = routingJob.input.getDirectoryPath();
         confirm_import_rules_message = tm.getText("confirm_import_rules");
       }
       else
@@ -569,11 +565,11 @@ public class WindowWelcome extends WindowBase
       routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
       routingJob.setInput(fileToOpen);
 
-      if (routingJob.getInputFile() != null)
+      if (routingJob.input.getFile() != null)
       {
-        if (!Objects.equals(this.design_dir_name, routingJob.getInputFileDirectory()))
+        if (!Objects.equals(this.design_dir_name, routingJob.input.getDirectoryPath()))
         {
-          this.design_dir_name = routingJob.getInputFileDirectory();
+          this.design_dir_name = routingJob.input.getDirectoryPath();
           this.globalSettings.guiSettings.inputDirectory = this.design_dir_name;
 
           try
@@ -598,9 +594,9 @@ public class WindowWelcome extends WindowBase
     //      return;
     //    }
 
-    FRLogger.info("Opening '" + routingJob.get_name() + "'...");
+    FRLogger.info("Opening '" + routingJob.input.getFilename() + "'...");
 
-    String message = tm.getText("loading_design") + " " + routingJob.get_name();
+    String message = tm.getText("loading_design") + " " + routingJob.input.getFilename();
     message_field.setText(message);
     WindowMessage welcome_window = WindowMessage.show(message);
     welcome_window.setTitle(message);
@@ -629,7 +625,7 @@ public class WindowWelcome extends WindowBase
       }
     }
 
-    message_field.setText(tm.getText("message_4") + " " + routingJob.get_name() + " " + tm.getText("message_5"));
+    message_field.setText(tm.getText("message_4") + " " + routingJob.input.getFilename() + " " + tm.getText("message_5"));
     board_frames.add(new_frame);
     new_frame.addWindowListener(new BoardFrameWindowListener(new_frame));
   }

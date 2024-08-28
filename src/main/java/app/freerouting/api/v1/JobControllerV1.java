@@ -215,7 +215,7 @@ public class JobControllerV1
     byte[] inputByteArray = java.util.Base64.getDecoder().decode(input.dataBase64);
     if (job.setInput(inputByteArray))
     {
-      if (input.filename == null || input.filename.isEmpty())
+      if (input.getFilename().isEmpty())
       {
         input.setFilename(job.id.toString());
       }
@@ -223,7 +223,7 @@ public class JobControllerV1
       var inputDetails = job.getInput();
 
       input.jobId = job.id;
-      input.filename = inputDetails.filename;
+      input.setFilename(inputDetails.getFilename());
       input.size = inputDetails.size;
       input.crc32 = inputDetails.crc32;
 

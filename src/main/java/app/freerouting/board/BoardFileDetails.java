@@ -14,12 +14,6 @@ import java.util.zip.CRC32;
 
 public class BoardFileDetails
 {
-  // The absolute path to the file
-  @SerializedName("path")
-  public String path = "";
-  // The filename only without the path
-  @SerializedName("filename")
-  public String filename = "";
   // The size of the file in bytes
   @SerializedName("size")
   public long size = 0;
@@ -43,7 +37,13 @@ public class BoardFileDetails
   public int traceCount = 0;
   @SerializedName("via_count")
   public int viaCount = 0;
-  protected transient byte[] data = new byte[];
+  // The filename only without the path
+  @SerializedName("filename")
+  protected String filename = "";
+  // The absolute path to the directory of the file
+  @SerializedName("path")
+  protected String directoryPath = "";
+  protected transient byte[] data = new byte[0];
 
   public BoardFileDetails()
   {
@@ -58,19 +58,12 @@ public class BoardFileDetails
 
     try (FileInputStream fis = new FileInputStream(file))
     {
-      this.data = fis.readAllBytes();
+      this.setData(fis.readAllBytes());
     } catch (IOException e)
     {
       // Ignore the exception and continue with the default values
       FRLogger.error("Failed to read file contents.", e);
     }
-
-    this.size = data.length;
-    InputStream inputStream = new ByteArrayInputStream(this.data);
-    this.crc32 = BoardFileDetails.calculateCrc32(inputStream).getValue();
-
-    // read the file contents to determine the file format
-    this.format = RoutingJob.getFileFormat(this.data);
 
     if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
     {
@@ -124,11 +117,6 @@ public class BoardFileDetails
    */
   public BoardFileDetails(BasicBoard board)
   {
-    this.path = null;
-    this.filename = null;
-    this.size = 0;
-    this.format = null;
-
     this.layerCount = board.get_layer_count();
     this.componentCount = board.components.count();
     this.netclassCount = 0;
@@ -166,18 +154,25 @@ public class BoardFileDetails
     }
   }
 
-  /**
-   * Sets both the filename and the path.*
-   *
-   * @param filename The filename to set, optionally with its path.
-   */
-  public void setFilename(String filename)
+  public String getAbsolutePath()
   {
-    // separate the filename into its absolute path and its filename only
-    this.path = Path.of(filename).toAbsolutePath().toString();
-    this.filename = new File(filename).getName();
+    return Path.of(this.directoryPath, this.filename).toString();
   }
 
+  public ByteArrayInputStream getData()
+  {
+    return new ByteArrayInputStream(this.data);
+  }
+
+  public void setData(byte[] data)
+  {
+    this.size = data.length;
+    InputStream inputStream = new ByteArrayInputStream(this.data);
+    this.crc32 = BoardFileDetails.calculateCrc32(inputStream).getValue();
+
+    // read the file contents to determine the file format
+    this.format = RoutingJob.getFileFormat(this.data);
+  }
 
   /**
    * Returns a JSON representation of this object.
@@ -185,5 +180,69 @@ public class BoardFileDetails
   public String toString()
   {
     return GsonProvider.GSON.toJson(this);
+  }
+
+  public File getFile()
+  {
+    if (!this.filename.isEmpty())
+    {
+      return new File(Path.of(this.directoryPath, this.filename).toString());
+    }
+    return null;
+  }
+
+  public String getDirectoryPath()
+  {
+    return this.directoryPath;
+  }
+
+  public String getFilename()
+  {
+    return this.filename;
+  }
+
+  /**
+   * Sets both the filename and the path.*
+   *
+   * @param filename The filename to set, optionally with its path.
+   */
+  public void setFilename(String filename)
+  {
+    if (filename == null)
+    {
+      this.directoryPath = "";
+      this.filename = "";
+      return;
+    }
+
+    var path = Path.of(filename).toAbsolutePath();
+
+    if (filename.contains(File.separator))
+    {
+      // separate the filename into its absolute path and its filename only
+      this.directoryPath = path.getParent().toString();
+      // replace the redundant "\.\" with a simple "\"
+      this.directoryPath = this.directoryPath.replace("\\.\\", "\\");
+      // remove the "/", "\" from the end of the directory path
+      this.directoryPath = this.directoryPath.replaceAll("[/\\\\]+$", "");
+      // remove the "\." from the end of the directory path
+      this.directoryPath = this.directoryPath.replaceAll("\\\\.$", "");
+    }
+    else
+    {
+      this.directoryPath = "";
+    }
+
+    // set the filename only
+    this.filename = path.getFileName().toString();
+  }
+
+  public String getFilenameWithoutExtension()
+  {
+    if (this.filename.contains("."))
+    {
+      return this.filename.substring(0, this.filename.lastIndexOf('.'));
+    }
+    return this.filename;
   }
 }

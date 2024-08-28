@@ -138,7 +138,7 @@ public class BoardFrame extends WindowBase
       try
       {
         routingJob.setInput(selectedFile);
-        if (routingJob.inputFormat == FileFormat.UNKNOWN)
+        if (routingJob.input.format == FileFormat.UNKNOWN)
         {
           // The file is not in a valid format
           FRLogger.warn("The input file format was not recognised.");
@@ -151,13 +151,13 @@ public class BoardFrame extends WindowBase
       }
 
       // Set the input directory in the global settings
-      if (routingJob.getInputFile() != null)
+      if (routingJob.input.getFile() != null)
       {
-        globalSettings.guiSettings.inputDirectory = this.routingJob.getInputFileDirectory();
+        globalSettings.guiSettings.inputDirectory = this.routingJob.input.getDirectoryPath();
 
         try
         {
-          GlobalSettings.setDefaultValue("gui.input_directory", this.routingJob.getInputFileDirectory());
+          GlobalSettings.setDefaultValue("gui.input_directory", this.routingJob.input.getDirectoryPath());
         } catch (Exception e)
         {
           // it's ok if we can't save the configuration file
@@ -166,16 +166,16 @@ public class BoardFrame extends WindowBase
       }
 
       // Load the file into the frame based on its recognised format
-      if ((board_panel != null) && (board_panel.board_handling != null) && (routingJob.inputFormat != FileFormat.UNKNOWN))
+      if ((board_panel != null) && (board_panel.board_handling != null) && (routingJob.input.format != FileFormat.UNKNOWN))
       {
-        switch (routingJob.inputFormat)
+        switch (routingJob.input.format)
         {
           case DSN:
-            this.load(routingJob.get_input_stream(), true, null);
+            this.load(routingJob.input.getData(), true, null);
             FRAnalytics.buttonClicked("fileio_loaddsn", this.routingJob.getInputFileDetails());
             break;
           case FRB:
-            this.load(routingJob.get_input_stream(), false, null);
+            this.load(routingJob.input.getData(), false, null);
             FRAnalytics.buttonClicked("fileio_loadfrb", this.routingJob.getInputFileDetails());
             break;
           default:
@@ -201,31 +201,31 @@ public class BoardFrame extends WindowBase
         return;
       }
 
-      switch (routingJob.outputFormat)
+      switch (routingJob.output.format)
       {
         case SES:
           // Save the file as a Specctra SES file
-          boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.routingJob.getOutputFile(), this.routingJob.get_name());
+          boolean sesFileSaved = this.saveAsSpecctraSessionSes(this.routingJob.output.getFile(), this.routingJob.input.getFilename());
           // Save the rules file as well, if the user wants to
           if (sesFileSaved && WindowMessage.confirm(tm.getText("confirm_rules_save"), JOptionPane.NO_OPTION))
           {
-            saveRulesAs(this.routingJob.getRulesFile(), this.routingJob.get_name(), board_panel.board_handling);
+            saveRulesAs(this.routingJob.getRulesFile(), this.routingJob.input.getFilename(), board_panel.board_handling);
           }
           FRAnalytics.buttonClicked("fileio_saveses", this.routingJob.getOutputFileDetails());
           break;
         case DSN:
           // Save the file as a Specctra DSN file
-          this.saveAsSpecctraDesignDsn(this.routingJob.getOutputFile(), this.routingJob.get_name(), false);
+          this.saveAsSpecctraDesignDsn(this.routingJob.output.getFile(), this.routingJob.input.getFilename(), false);
           FRAnalytics.buttonClicked("fileio_savedsn", this.routingJob.getOutputFileDetails());
           break;
         case FRB:
           // Save the file as a freerouting binary file
-          this.saveAsBinary(this.routingJob.getOutputFile());
+          this.saveAsBinary(this.routingJob.output.getFile());
           FRAnalytics.buttonClicked("fileio_savefrb", this.routingJob.getOutputFileDetails());
           break;
         case SCR:
           //  Save the file as an Eagle script file
-          this.saveAsEagleScriptScr(this.routingJob.getEagleScriptFile(), this.routingJob.get_name());
+          this.saveAsEagleScriptScr(this.routingJob.getEagleScriptFile(), this.routingJob.input.getFilename());
           FRAnalytics.buttonClicked("fileio_savescr", "");
           break;
         default:
@@ -307,13 +307,13 @@ public class BoardFrame extends WindowBase
   @Override
   public void updateTexts()
   {
-    if ((this.routingJob == null) || (this.routingJob.getOutputFile() == null))
+    if ((this.routingJob == null) || (this.routingJob.output.getFile() == null))
     {
       this.setTitle(tm.getText("title", this.freerouting_version));
     }
     else
     {
-      this.setTitle(routingJob.get_name() + " - " + tm.getText("title", this.freerouting_version));
+      this.setTitle(routingJob.input.getFilename() + " - " + tm.getText("title", this.freerouting_version));
     }
   }
 
@@ -452,7 +452,7 @@ public class BoardFrame extends WindowBase
       InputStream input_stream = null;
       boolean defaults_file_found;
 
-      File defaults_file = new File(this.routingJob.getInputFileDirectoryOrNull(), GUI_DEFAULTS_FILE_NAME);
+      File defaults_file = new File(this.routingJob.input.getAbsolutePath(), GUI_DEFAULTS_FILE_NAME);
       defaults_file_found = true;
       try
       {
@@ -486,7 +486,7 @@ public class BoardFrame extends WindowBase
   {
     try
     {
-      FileInputStream input_stream = new FileInputStream(this.routingJob.getSnapshotFile());
+      FileInputStream input_stream = new FileInputStream(this.routingJob.snapshot.getFile());
       return this.load(input_stream, false, null);
     } catch (IOException e)
     {
@@ -508,22 +508,22 @@ public class BoardFrame extends WindowBase
     }
 
     intermediate_stage_file_last_saved_at = LocalDateTime.now();
-    return saveAsBinary(this.routingJob.getSnapshotFile());
+    return saveAsBinary(this.routingJob.snapshot.getFile());
   }
 
   public boolean delete_intermediate_stage_file()
   {
-    return this.routingJob.getSnapshotFile().delete();
+    return this.routingJob.snapshot.getFile().delete();
   }
 
   public boolean is_intermediate_stage_file_available()
   {
-    return (this.routingJob.getSnapshotFile() != null && this.routingJob.getSnapshotFile().exists() && this.routingJob.getSnapshotFile().canRead());
+    return (this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot.getFile().exists() && this.routingJob.snapshot.getFile().canRead());
   }
 
   public LocalDateTime get_intermediate_stage_file_modification_time()
   {
-    long lastModified = this.routingJob.getSnapshotFile().lastModified();
+    long lastModified = this.routingJob.snapshot.getFile().lastModified();
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
   }
 

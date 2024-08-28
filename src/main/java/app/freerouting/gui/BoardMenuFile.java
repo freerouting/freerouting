@@ -95,7 +95,7 @@ public class BoardMenuFile extends JMenu
   private void write_logfile_action(BoardFrame board_frame)
   {
     JFileChooser file_chooser = new JFileChooser();
-    File logfile_dir = board_frame.routingJob.get_parent_file();
+    File logfile_dir = new File(board_frame.routingJob.input.getDirectoryPath());
     file_chooser.setMinimumSize(new Dimension(500, 250));
     file_chooser.setCurrentDirectory(logfile_dir);
     file_chooser.setFileFilter(BoardFrame.logfile_filter);
@@ -116,7 +116,7 @@ public class BoardMenuFile extends JMenu
   private void read_logfile_action(BoardFrame board_frame)
   {
     JFileChooser file_chooser = new JFileChooser();
-    File logfile_dir = board_frame.routingJob.get_parent_file();
+    File logfile_dir = new File(board_frame.routingJob.input.getDirectoryPath());
     file_chooser.setMinimumSize(new Dimension(500, 250));
     file_chooser.setCurrentDirectory(logfile_dir);
     file_chooser.setFileFilter(BoardFrame.logfile_filter);

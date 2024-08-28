@@ -55,8 +55,11 @@ public class GlobalSettings implements Serializable
       "ko"
   };
   public transient boolean show_help_option = false;
+  @Deprecated
   public transient String design_input_filename;
+  @Deprecated
   public transient String design_output_filename;
+  @Deprecated
   public transient String design_rules_filename;
   public transient Locale currentLocale = Locale.getDefault();
 
