@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Session implements Serializable
 {
   public final UUID id = UUID.randomUUID();
-  private final UUID userId;
+  public final UUID userId;
   public boolean isGuiSession = false;
 
   /**
@@ -31,6 +31,6 @@ public class Session implements Serializable
    */
   public void addJob(RoutingJob routingJob)
   {
-    RoutingJobScheduler.getInstance().enqueueJob(userId, id, routingJob);
+    RoutingJobScheduler.getInstance().enqueueJob(routingJob);
   }
 }

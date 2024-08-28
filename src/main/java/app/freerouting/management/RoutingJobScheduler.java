@@ -50,12 +50,25 @@ public class RoutingJobScheduler
    * @param job The job to enqueue.
    * @return The job that was enqueued.
    */
-  public RoutingJob enqueueJob(UUID userId, UUID sessionId, RoutingJob job)
+  public RoutingJob enqueueJob(RoutingJob job)
   {
-    // Check if the job is null or the sessionId doesn't match the job's sessionId and then return an error
-    if (job == null || !job.sessionId.equals(sessionId))
+    // Get the session object from the SessionManager and user ID from the job
+    UUID sessionId = job.sessionId;
+    if (sessionId == null)
     {
-      return null;
+      throw new IllegalArgumentException("The job must have a session ID.");
+    }
+
+    var session = SessionManager.getInstance().getSession(sessionId.toString());
+    if (session == null)
+    {
+      throw new IllegalArgumentException("The session does not exist.");
+    }
+
+    UUID userId = session.userId;
+    if (userId == null)
+    {
+      throw new IllegalArgumentException("The session must have a user ID.");
     }
 
     this.jobs.add(job);
