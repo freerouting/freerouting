@@ -1,8 +1,12 @@
 package app.freerouting.management;
 
 import app.freerouting.Freerouting;
+import app.freerouting.autoroute.BatchAutorouter;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.RoutingStage;
+import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
@@ -28,6 +32,75 @@ public class RoutingJobScheduler
   // Private constructor to prevent instantiation
   private RoutingJobScheduler()
   {
+    // start a loop to process the jobs on another thread
+    Thread thread = new Thread(() ->
+    {
+      while (true)
+      {
+        try
+        {
+          // take the next job with the READY_TO_START state from the queue and process it
+          RoutingJob job = jobs.take();
+          if (job.state == RoutingJobState.READY_TO_START)
+          {
+            RoutingBoard board = null;
+
+            if ((job.input == null) || (job.input.getData() == null))
+            {
+              FRLogger.warn("RoutingJob input is null, it is skipped.");
+              job.state = RoutingJobState.INVALID;
+              continue;
+            }
+
+            // TODO: load the board from the input into a RoutingBoard object
+            if (job.input.format == FileFormat.DSN)
+            {
+              //board = RoutingBoard.loadFromDsn(job.input.getData());
+            }
+            else
+            {
+              FRLogger.warn("Only DSN format is supported as an input.");
+              job.state = RoutingJobState.INVALID;
+              continue;
+            }
+
+            // start the fanout, routing, optimizer task(s) if needed
+            if (job.routerSettings.getRunFanout())
+            {
+              job.stage = RoutingStage.FANOUT;
+              // TODO: start the fanout task
+              job.stage = RoutingStage.IDLE;
+            }
+
+            if (job.routerSettings.getRunRouter())
+            {
+              job.stage = RoutingStage.ROUTING;
+              // TODO: start the routing task
+              BatchAutorouter router = new BatchAutorouter(null, board, job.routerSettings, !job.routerSettings.getRunFanout(), true, job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
+              router.runBatchLoop();
+              job.stage = RoutingStage.IDLE;
+            }
+
+            if (job.routerSettings.getRunOptimizer())
+            {
+              job.stage = RoutingStage.OPTIMIZATION;
+              // TODO: start the optimizer task
+              job.stage = RoutingStage.IDLE;
+            }
+          }
+          else
+          {
+            // put the job back in the queue if it is not in the READY_TO_START state
+            jobs.put(job);
+          }
+          // wait for a short time before checking the queue again
+          Thread.sleep(250);
+        } catch (InterruptedException e)
+        {
+          FRLogger.error("RoutingJobScheduler thread was interrupted.", e);
+        }
+      }
+    });
   }
 
   /**

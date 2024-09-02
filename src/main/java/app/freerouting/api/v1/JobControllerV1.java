@@ -110,29 +110,37 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
-    // Return an error that this method is not implemented yet
-    return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
-  }
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
-  /* Pause the job with the given id, and keeps it in the job queue for later. */
-  @PUT
-  @Path("/{sessionId}/{jobId}/pause")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response pauseJob(
-      @PathParam("sessionId")
-      String sessionId,
-      @PathParam("jobId")
-      String jobId)
-  {
-    // Return an error that this method is not implemented yet
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    // Check if the sessionId in the job object matches the path parameter
+    if (!job.sessionId.toString().equals(sessionId))
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+    }
+
+    // Check if the job is queued and have not started yet
+    if (job.state != RoutingJobState.QUEUED)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is already started and cannot be changed.\"}").build();
+    }
+
+    job.state = RoutingJobState.READY_TO_START;
+
     return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
   }
 
   /* Stop the job with the given id, and cancels the job. */
   @PUT
-  @Path("/{sessionId}/{jobId}/stop")
+  @Path("/{sessionId}/{jobId}/cancel")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response stopJob(
+  public Response cancelJob(
       @PathParam("sessionId")
       String sessionId,
       @PathParam("jobId")

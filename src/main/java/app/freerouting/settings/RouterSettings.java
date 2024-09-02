@@ -202,32 +202,32 @@ public class RouterSettings implements Serializable
     ++start_pass_no;
   }
 
-  public boolean get_with_fanout()
+  public boolean getRunFanout()
   {
     return runFanout;
   }
 
-  public void set_with_fanout(boolean p_value)
+  public void setRunFanout(boolean p_value)
   {
     runFanout = p_value;
   }
 
-  public boolean get_with_autoroute()
+  public boolean getRunRouter()
   {
     return runRouter;
   }
 
-  public void set_with_autoroute(boolean p_value)
+  public void setRunRouter(boolean p_value)
   {
     runRouter = p_value;
   }
 
-  public boolean get_with_postroute()
+  public boolean getRunOptimizer()
   {
     return runOptimizer;
   }
 
-  public void set_with_postroute(boolean p_value)
+  public void setRunOptimizer(boolean p_value)
   {
     runOptimizer = p_value;
   }

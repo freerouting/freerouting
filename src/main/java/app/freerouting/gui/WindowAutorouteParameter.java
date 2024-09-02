@@ -342,9 +342,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     LayerStructure layer_structure = this.board_handling.get_routing_board().layer_structure;
 
     this.settings_autorouter_vias_allowed.setSelected(settings.get_vias_allowed());
-    this.settings_autorouter_fanout_pass_button.setSelected(settings.get_with_fanout());
-    this.settings_autorouter_autoroute_pass_button.setSelected(settings.get_with_autoroute());
-    this.settings_autorouter_postroute_pass_button.setSelected(settings.get_with_postroute());
+    this.settings_autorouter_fanout_pass_button.setSelected(settings.getRunFanout());
+    this.settings_autorouter_autoroute_pass_button.setSelected(settings.getRunRouter());
+    this.settings_autorouter_postroute_pass_button.setSelected(settings.getRunOptimizer());
 
     for (int i = 0; i < settings_autorouter_layer_active_arr.length; ++i)
     {
@@ -459,7 +459,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     public void actionPerformed(ActionEvent p_evt)
     {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
-      autoroute_settings.set_with_fanout(settings_autorouter_fanout_pass_button.isSelected());
+      autoroute_settings.setRunFanout(settings_autorouter_fanout_pass_button.isSelected());
       autoroute_settings.set_start_pass_no(1);
     }
   }
@@ -471,7 +471,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     public void actionPerformed(ActionEvent p_evt)
     {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
-      autoroute_settings.set_with_autoroute(settings_autorouter_autoroute_pass_button.isSelected());
+      autoroute_settings.setRunRouter(settings_autorouter_autoroute_pass_button.isSelected());
       autoroute_settings.set_start_pass_no(1);
     }
   }
@@ -483,7 +483,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     public void actionPerformed(ActionEvent p_evt)
     {
       RouterSettings autoroute_settings = board_handling.settings.autoroute_settings;
-      autoroute_settings.set_with_postroute(settings_autorouter_postroute_pass_button.isSelected());
+      autoroute_settings.setRunOptimizer(settings_autorouter_postroute_pass_button.isSelected());
       autoroute_settings.set_start_pass_no(1);
     }
   }

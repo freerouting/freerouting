@@ -34,7 +34,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   {
     super(p_board_handling, routingJob);
 
-    this.batch_autorouter = new BatchAutorouter(this, this.hdlg.get_routing_board(), routingJob.routerSettings, !routingJob.routerSettings.get_with_fanout(), true, routingJob.routerSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
+    this.batch_autorouter = new BatchAutorouter(this, this.hdlg.get_routing_board(), routingJob.routerSettings, !routingJob.routerSettings.getRunFanout(), true, routingJob.routerSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
     this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override
@@ -108,7 +108,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
       String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
-      boolean fanout_first = hdlg.get_settings().autoroute_settings.get_with_fanout() && hdlg.get_settings().autoroute_settings.get_start_pass_no() <= 1;
+      boolean fanout_first = hdlg.get_settings().autoroute_settings.getRunFanout() && hdlg.get_settings().autoroute_settings.get_start_pass_no() <= 1;
       if (fanout_first)
       {
         BatchFanout fanout = new BatchFanout(this, hdlg.get_routing_board(), hdlg.get_settings().autoroute_settings);
@@ -130,7 +130,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         });
         fanout.runBatchLoop();
       }
-      if (hdlg.get_settings().autoroute_settings.get_with_autoroute() && !this.is_stop_auto_router_requested())
+      if (hdlg.get_settings().autoroute_settings.getRunRouter() && !this.is_stop_auto_router_requested())
       {
         batch_autorouter.runBatchLoop();
       }
@@ -152,7 +152,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         int via_count_before = hdlg.get_routing_board().get_vias().size();
         double trace_length_before = hdlg.coordinate_transform.board_to_user(hdlg.get_routing_board().cumulative_trace_length());
 
-        if (hdlg.get_settings().autoroute_settings.get_with_postroute() && !this.isStopRequested())
+        if (hdlg.get_settings().autoroute_settings.getRunOptimizer() && !this.isStopRequested())
         {
           String opt_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message");
           hdlg.screen_messages.set_status_message(opt_message);

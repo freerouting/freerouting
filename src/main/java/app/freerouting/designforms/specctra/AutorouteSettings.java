@@ -86,9 +86,9 @@ public class AutorouteSettings
         }
       }
     }
-    result.set_with_fanout(with_fanout);
-    result.set_with_autoroute(with_autoroute);
-    result.set_with_postroute(with_postroute);
+    result.setRunFanout(with_fanout);
+    result.setRunRouter(with_autoroute);
+    result.setRunOptimizer(with_postroute);
     return result;
   }
 
@@ -193,7 +193,7 @@ public class AutorouteSettings
     p_file.write("autoroute_settings");
     p_file.new_line();
     p_file.write("(fanout ");
-    if (p_settings.get_with_fanout())
+    if (p_settings.getRunFanout())
     {
       p_file.write("on)");
     }
@@ -203,7 +203,7 @@ public class AutorouteSettings
     }
     p_file.new_line();
     p_file.write("(autoroute ");
-    if (p_settings.get_with_autoroute())
+    if (p_settings.getRunRouter())
     {
       p_file.write("on)");
     }
@@ -213,7 +213,7 @@ public class AutorouteSettings
     }
     p_file.new_line();
     p_file.write("(postroute ");
-    if (p_settings.get_with_postroute())
+    if (p_settings.getRunOptimizer())
     {
       p_file.write("on)");
     }
