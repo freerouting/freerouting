@@ -31,7 +31,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public final UUID id = UUID.randomUUID();
   public final Instant createdAt = Instant.now();
-  public final Instant finishedAt = null;
+  public Instant startedAt = null;
+  public Instant finishedAt = null;
   public BoardFileDetails input = null;
   public BoardFileDetails snapshot = null;
   public BoardFileDetails output = null;
@@ -44,12 +45,20 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public RoutingStage stage = RoutingStage.IDLE;
 
   /**
+   * We need a parameterless constructor for the serialization.
+   */
+  public RoutingJob()
+  {
+    this.name = "J-" + this.id.toString().substring(0, 6).toUpperCase();
+  }
+
+  /**
    * Creates a new instance of DesignFile and prepares the intermediate file handling.
    */
   public RoutingJob(UUID sessionId)
   {
+    this();
     this.sessionId = sessionId;
-    this.name = "J-" + this.id.toString().substring(0, 6).toUpperCase();
   }
 
   /**

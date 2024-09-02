@@ -17,6 +17,7 @@ import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
+import java.time.Instant;
 
 /**
  * GUI interactive thread for the batch auto-router + route optimizer.
@@ -80,6 +81,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   @Override
   protected void thread_action()
   {
+    routingJob.startedAt = Instant.now();
     routingJob.state = RoutingJobState.RUNNING;
 
     for (ThreadActionListener hl : this.listeners)
@@ -239,11 +241,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       if (this.isStopRequested())
       {
         hl.autorouterAborted();
+        routingJob.finishedAt = Instant.now();
         routingJob.state = RoutingJobState.CANCELLED;
       }
       else
       {
         hl.autorouterFinished();
+        routingJob.finishedAt = Instant.now();
         routingJob.state = RoutingJobState.COMPLETED;
       }
     }
