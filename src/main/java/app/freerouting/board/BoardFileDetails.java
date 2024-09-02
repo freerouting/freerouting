@@ -237,7 +237,42 @@ public class BoardFileDetails
     // set the filename only
     this.filename = path.getFileName().toString();
 
-    this.format = RoutingJob.getFileFormat(Path.of(this.filename));
+    if (this.format == FileFormat.UNKNOWN)
+    {
+      // try to read the file contents to determine the file format
+      this.format = RoutingJob.getFileFormat(Path.of(this.filename));
+    }
+
+    // add the default file extension if it is missing
+    if ((this.format != FileFormat.UNKNOWN) && (!this.filename.contains(".")))
+    {
+      String extension = "";
+      switch (this.format)
+      {
+        case SES:
+          extension = "ses";
+          break;
+        case DSN:
+          extension = "dsn";
+          break;
+        case FRB:
+          extension = "frb";
+          break;
+        case RULES:
+          extension = "rules";
+          break;
+        case SCR:
+          extension = "scr";
+          break;
+        default:
+          break;
+      }
+
+      if (!extension.isEmpty())
+      {
+        this.filename = this.filename + "." + extension;
+      }
+    }
   }
 
   public String getFilenameWithoutExtension()

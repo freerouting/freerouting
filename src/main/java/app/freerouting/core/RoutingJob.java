@@ -37,7 +37,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public BoardFileDetails snapshot = null;
   public BoardFileDetails output = null;
   // TODO: pass the router settings as an input and forward it to the router
-  public RouterSettings routerSettings = new RouterSettings(0);
+  public RouterSettings routerSettings = new RouterSettings();
   public UUID sessionId;
   public String name;
   public RoutingJobState state = RoutingJobState.INVALID;

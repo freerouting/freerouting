@@ -59,6 +59,14 @@ public class RouterSettings implements Serializable
   private transient int stop_pass_no = 999;
 
   /**
+   * We need a parameterless constructor for the serialization.
+   */
+  public RouterSettings()
+  {
+    this(0);
+  }
+
+  /**
    * Creates a new instance of AutorouteSettings with default values and @p_layer_count layers.
    */
   public RouterSettings(int p_layer_count)

@@ -220,23 +220,26 @@ public class JobControllerV1
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is already started and cannot be changed.\"}").build();
     }
 
+    if (input == null)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data is invalid.\"}").build();
+    }
+
+    if ((input.dataBase64 == null) || (input.dataBase64.isEmpty()))
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data must be encoded and put into the dataBase64 field.\"}").build();
+    }
+
     // Decode the base64 encoded input data to a byte array
     byte[] inputByteArray = java.util.Base64.getDecoder().decode(input.dataBase64);
     if (job.setInput(inputByteArray))
     {
-      if (input.getFilename().isEmpty())
+      if (job.input.getFilename().isEmpty())
       {
-        input.setFilename(job.id.toString());
+        job.input.setFilename(job.name);
       }
 
-      var inputDetails = job.getInput();
-
-      input.jobId = job.id;
-      input.setFilename(inputDetails.getFilename());
-      input.size = inputDetails.size;
-      input.crc32 = inputDetails.crc32;
-
-      return Response.ok(GsonProvider.GSON.toJson(inputByteArray)).build();
+      return Response.ok(GsonProvider.GSON.toJson(job)).build();
     }
     else
     {
@@ -272,7 +275,7 @@ public class JobControllerV1
     // Check if the job is completed
     if (job.state != RoutingJobState.COMPLETED)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is still running.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job hasn't finished yet.\"}").build();
     }
 
     var result = new BoardFilePayload();
