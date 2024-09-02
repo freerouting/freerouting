@@ -6,6 +6,7 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.FileFormat;
@@ -31,6 +32,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   protected AutorouterAndRouteOptimizerThread(GuiBoardManager p_board_handling, RoutingJob routingJob)
   {
     super(p_board_handling, routingJob);
+
     this.batch_autorouter = new BatchAutorouter(this, this.hdlg.get_routing_board(), routingJob.routerSettings, !routingJob.routerSettings.get_with_fanout(), true, routingJob.routerSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
     this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
@@ -78,6 +80,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   @Override
   protected void thread_action()
   {
+    routingJob.state = RoutingJobState.RUNNING;
+
     for (ThreadActionListener hl : this.listeners)
     {
       hl.autorouterStarted();
@@ -235,10 +239,12 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       if (this.isStopRequested())
       {
         hl.autorouterAborted();
+        routingJob.state = RoutingJobState.CANCELLED;
       }
       else
       {
         hl.autorouterFinished();
+        routingJob.state = RoutingJobState.COMPLETED;
       }
     }
   }

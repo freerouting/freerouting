@@ -263,7 +263,7 @@ public class JobControllerV1
     // Check if the job is completed
     if (job.state != RoutingJobState.COMPLETED)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is not completed yet.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is still running.\"}").build();
     }
 
     var result = new BoardFilePayload();
