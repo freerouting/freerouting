@@ -2,6 +2,7 @@ package app.freerouting.management;
 
 import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
@@ -71,6 +72,7 @@ public class RoutingJobScheduler
       throw new IllegalArgumentException("The session must have a user ID.");
     }
 
+    job.state = RoutingJobState.QUEUED;
     this.jobs.add(job);
 
     if (Freerouting.globalSettings.featureFlags.saveJobs)

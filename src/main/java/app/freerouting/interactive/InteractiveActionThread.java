@@ -1,9 +1,9 @@
 package app.freerouting.interactive;
 
+import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
-import app.freerouting.settings.RouterSettings;
 
 import java.awt.*;
 import java.io.IOException;
@@ -32,15 +32,15 @@ public abstract class InteractiveActionThread extends StoppableThread
     return new AutorouteThread(p_board_handling);
   }
 
-  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager p_board_handling, RouterSettings routerSettings)
+  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager p_board_handling, RoutingJob job)
   {
     // TODO: we should not need this, but if we don't do this, the following values in routerSettings are not set properly
-    routerSettings.isLayerActive = p_board_handling.settings.autoroute_settings.isLayerActive.clone();
-    routerSettings.isPreferredDirectionHorizontalOnLayer = p_board_handling.settings.autoroute_settings.isPreferredDirectionHorizontalOnLayer.clone();
-    routerSettings.preferredDirectionTraceCost = p_board_handling.settings.autoroute_settings.preferredDirectionTraceCost.clone();
-    routerSettings.undesiredDirectionTraceCost = p_board_handling.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
+    job.routerSettings.isLayerActive = p_board_handling.settings.autoroute_settings.isLayerActive.clone();
+    job.routerSettings.isPreferredDirectionHorizontalOnLayer = p_board_handling.settings.autoroute_settings.isPreferredDirectionHorizontalOnLayer.clone();
+    job.routerSettings.preferredDirectionTraceCost = p_board_handling.settings.autoroute_settings.preferredDirectionTraceCost.clone();
+    job.routerSettings.undesiredDirectionTraceCost = p_board_handling.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
 
-    return new AutorouterAndRouteOptimizerThread(p_board_handling, routerSettings);
+    return new AutorouterAndRouteOptimizerThread(p_board_handling, job.routerSettings);
   }
 
   public static InteractiveActionThread get_fanout_instance(GuiBoardManager p_board_handling)

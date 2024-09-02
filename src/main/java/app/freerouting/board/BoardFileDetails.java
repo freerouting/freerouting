@@ -166,6 +166,7 @@ public class BoardFileDetails
 
   public void setData(byte[] data)
   {
+    this.data = data;
     this.size = data.length;
     InputStream inputStream = new ByteArrayInputStream(this.data);
     this.crc32 = BoardFileDetails.calculateCrc32(inputStream).getValue();
@@ -235,6 +236,8 @@ public class BoardFileDetails
 
     // set the filename only
     this.filename = path.getFileName().toString();
+
+    this.format = RoutingJob.getFileFormat(Path.of(this.filename));
   }
 
   public String getFilenameWithoutExtension()

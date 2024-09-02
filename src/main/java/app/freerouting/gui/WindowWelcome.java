@@ -230,12 +230,14 @@ public class WindowWelcome extends WindowBase
     // get localization resources
     TextManager tm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
 
+    RoutingJob routingJob = null;
+
     // check if we can load a file instantly at startup
     if (globalSettings.design_input_filename != null)
     {
       // let's create a job in our session and queue it
       FRLogger.info("Opening '" + globalSettings.design_input_filename + "'...");
-      RoutingJob routingJob = new RoutingJob(guiSession.id);
+      routingJob = new RoutingJob(guiSession.id);
       try
       {
         routingJob.setInput(globalSettings.design_input_filename);
@@ -270,6 +272,8 @@ public class WindowWelcome extends WindowBase
 
       if (globalSettings.design_output_filename != null)
       {
+        routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
+
         // we need to set up a listener to save the design file when the autorouter is running
         new_frame.board_panel.board_handling.autorouter_listener = new ThreadActionListener()
         {
@@ -349,11 +353,9 @@ public class WindowWelcome extends WindowBase
         }
       }
 
-      // start the auto-router automatically if both input and output files were passed as a
-      // parameter
+      // start the auto-router automatically if both input and output files were passed as a parameter
       if ((globalSettings.design_input_filename != null) && (globalSettings.design_output_filename != null))
       {
-
         // Add a model dialog with timeout to confirm the autorouter start with the default settings
         final String START_NOW_TEXT = tm.getText("auto_start_routing_startnow_button");
         JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.guiSettings.dialogConfirmationTimeout + ")");
@@ -409,7 +411,8 @@ public class WindowWelcome extends WindowBase
         if ((globalSettings.guiSettings.dialogConfirmationTimeout == 0) || (choice == options[0]))
         {
           // Start the auto-router
-          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(Freerouting.globalSettings.routerSettings);
+          routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(routingJob);
 
           if (new_frame.board_panel.board_handling.autorouter_listener != null)
           {

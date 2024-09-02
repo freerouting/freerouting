@@ -5,11 +5,14 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.interactive.*;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.RoutingJobScheduler;
+import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * Implements the toolbar panel of the board frame.
@@ -103,7 +106,9 @@ class BoardToolbar extends JPanel
     toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     toolbar_autoroute_button.addActionListener(evt ->
     {
-      InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(Freerouting.globalSettings.routerSettings);
+      var guiRoutingJob = Arrays.stream(RoutingJobScheduler.getInstance().listJobs(SessionManager.getInstance().getGuiSession().id.toString())).findFirst().get();
+      guiRoutingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+      InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(guiRoutingJob);
 
       if ((thread != null) && (board_frame.board_panel.board_handling.autorouter_listener != null))
       {

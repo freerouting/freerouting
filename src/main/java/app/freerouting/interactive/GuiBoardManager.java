@@ -4,6 +4,8 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.*;
 import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
 import app.freerouting.datastructures.IdNoGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SessionToEagle;
@@ -24,7 +26,6 @@ import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.ViaRule;
 import app.freerouting.settings.GlobalSettings;
-import app.freerouting.settings.RouterSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -1510,7 +1511,7 @@ public class GuiBoardManager extends HeadlessBoardManager
   /**
    * Start the auto-router and route optimizer on the whole board
    */
-  public InteractiveActionThread start_autorouter_and_route_optimizer(RouterSettings routerSettings)
+  public InteractiveActionThread start_autorouter_and_route_optimizer(RoutingJob job)
   {
     // The auto-router and route optimizer can only be started if the board is not read only
     if (board_is_read_only)
@@ -1523,7 +1524,8 @@ public class GuiBoardManager extends HeadlessBoardManager
 
     // Start the auto-router and route optimizer
     // TODO: ideally we should only pass the board and the routerSettings to the thread, and let the thread create the router and optimizer
-    this.interactive_action_thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(this, routerSettings);
+    this.interactive_action_thread = InteractiveActionThread.get_autorouter_and_route_optimizer_instance(this, job);
+    job.state = RoutingJobState.RUNNING;
     this.interactive_action_thread.start();
 
     return this.interactive_action_thread;
