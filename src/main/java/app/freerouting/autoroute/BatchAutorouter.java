@@ -204,7 +204,7 @@ public class BatchAutorouter extends NamedAlgorithm
     }
 
     already_checked_board_hashes.clear();
-
+    
     if (!this.is_interrupted)
     {
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, this.settings.get_start_pass_no(), this.board.get_hash()));

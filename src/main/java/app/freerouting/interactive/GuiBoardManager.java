@@ -107,9 +107,9 @@ public class GuiBoardManager extends HeadlessBoardManager
   /**
    * Creates a new BoardHandling
    */
-  public GuiBoardManager(BoardPanel p_panel, GlobalSettings globalSettings)
+  public GuiBoardManager(BoardPanel p_panel, GlobalSettings globalSettings, RoutingJob routingJob)
   {
-    super(globalSettings.currentLocale);
+    super(globalSettings.currentLocale, routingJob);
     this.globalSettings = globalSettings;
     this.panel = p_panel;
     this.screen_messages = p_panel.screen_messages;
@@ -1209,7 +1209,7 @@ public class GuiBoardManager extends HeadlessBoardManager
     {
       return;
     }
-    this.interactive_action_thread = InteractiveActionThread.get_read_logfile_instance(this, p_input_stream);
+    this.interactive_action_thread = InteractiveActionThread.get_read_logfile_instance(this, routingJob, p_input_stream);
     this.interactive_action_thread.start();
   }
 
@@ -1476,7 +1476,7 @@ public class GuiBoardManager extends HeadlessBoardManager
       return;
     }
     board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_pull_tight_instance(this);
+    this.interactive_action_thread = InteractiveActionThread.get_pull_tight_instance(this, routingJob);
     this.interactive_action_thread.start();
   }
 
@@ -1490,7 +1490,7 @@ public class GuiBoardManager extends HeadlessBoardManager
       return;
     }
     board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_autoroute_instance(this);
+    this.interactive_action_thread = InteractiveActionThread.get_autoroute_instance(this, routingJob);
     this.interactive_action_thread.start();
   }
 
@@ -1504,7 +1504,7 @@ public class GuiBoardManager extends HeadlessBoardManager
       return;
     }
     board.generate_snapshot();
-    this.interactive_action_thread = InteractiveActionThread.get_fanout_instance(this);
+    this.interactive_action_thread = InteractiveActionThread.get_fanout_instance(this, routingJob);
     this.interactive_action_thread.start();
   }
 

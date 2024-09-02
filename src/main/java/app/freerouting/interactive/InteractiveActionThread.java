@@ -17,19 +17,21 @@ import java.util.List;
 public abstract class InteractiveActionThread extends StoppableThread
 {
   public final GuiBoardManager hdlg;
+  protected final RoutingJob routingJob;
   protected List<ThreadActionListener> listeners = new ArrayList<>();
 
   /**
    * Creates a new instance of InteractiveActionThread
    */
-  protected InteractiveActionThread(GuiBoardManager p_board_handling)
+  protected InteractiveActionThread(GuiBoardManager p_board_handling, RoutingJob job)
   {
     this.hdlg = p_board_handling;
+    this.routingJob = job;
   }
 
-  public static InteractiveActionThread get_autoroute_instance(GuiBoardManager p_board_handling)
+  public static InteractiveActionThread get_autoroute_instance(GuiBoardManager p_board_handling, RoutingJob job)
   {
-    return new AutorouteThread(p_board_handling);
+    return new AutorouteThread(p_board_handling, job);
   }
 
   public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager p_board_handling, RoutingJob job)
@@ -40,22 +42,22 @@ public abstract class InteractiveActionThread extends StoppableThread
     job.routerSettings.preferredDirectionTraceCost = p_board_handling.settings.autoroute_settings.preferredDirectionTraceCost.clone();
     job.routerSettings.undesiredDirectionTraceCost = p_board_handling.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
 
-    return new AutorouterAndRouteOptimizerThread(p_board_handling, job.routerSettings);
+    return new AutorouterAndRouteOptimizerThread(p_board_handling, job);
   }
 
-  public static InteractiveActionThread get_fanout_instance(GuiBoardManager p_board_handling)
+  public static InteractiveActionThread get_fanout_instance(GuiBoardManager p_board_handling, RoutingJob job)
   {
-    return new FanoutThread(p_board_handling);
+    return new FanoutThread(p_board_handling, job);
   }
 
-  public static InteractiveActionThread get_pull_tight_instance(GuiBoardManager p_board_handling)
+  public static InteractiveActionThread get_pull_tight_instance(GuiBoardManager p_board_handling, RoutingJob job)
   {
-    return new PullTightThread(p_board_handling);
+    return new PullTightThread(p_board_handling, job);
   }
 
-  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager p_board_handling, InputStream p_input_stream)
+  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager p_board_handling, RoutingJob job, InputStream p_input_stream)
   {
-    return new ReadLogfileThread(p_board_handling, p_input_stream);
+    return new ReadLogfileThread(p_board_handling, job, p_input_stream);
   }
 
   public void addListener(ThreadActionListener toAdd)
@@ -78,9 +80,9 @@ public abstract class InteractiveActionThread extends StoppableThread
   private static class AutorouteThread extends InteractiveActionThread
   {
 
-    private AutorouteThread(GuiBoardManager p_board_handling)
+    private AutorouteThread(GuiBoardManager p_board_handling, RoutingJob job)
     {
-      super(p_board_handling);
+      super(p_board_handling, job);
     }
 
     @Override
@@ -98,9 +100,9 @@ public abstract class InteractiveActionThread extends StoppableThread
   private static class FanoutThread extends InteractiveActionThread
   {
 
-    private FanoutThread(GuiBoardManager p_board_handling)
+    private FanoutThread(GuiBoardManager p_board_handling, RoutingJob job)
     {
-      super(p_board_handling);
+      super(p_board_handling, job);
     }
 
     @Override
@@ -118,9 +120,9 @@ public abstract class InteractiveActionThread extends StoppableThread
   private static class PullTightThread extends InteractiveActionThread
   {
 
-    private PullTightThread(GuiBoardManager p_board_handling)
+    private PullTightThread(GuiBoardManager p_board_handling, RoutingJob job)
     {
-      super(p_board_handling);
+      super(p_board_handling, job);
     }
 
     @Override
@@ -140,9 +142,9 @@ public abstract class InteractiveActionThread extends StoppableThread
 
     private final InputStream input_stream;
 
-    private ReadLogfileThread(GuiBoardManager p_board_handling, InputStream p_input_stream)
+    private ReadLogfileThread(GuiBoardManager p_board_handling, RoutingJob job, InputStream p_input_stream)
     {
-      super(p_board_handling);
+      super(p_board_handling, job);
       this.input_stream = p_input_stream;
     }
 

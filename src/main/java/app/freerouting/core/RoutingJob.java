@@ -126,6 +126,12 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
         {
           return FileFormat.DSN;
         }
+
+        // Check if the file is a SES file (it starts with "(ses" or "(SES")
+        if ((buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x73 && buffer[2] == (byte) 0x65 && buffer[3] == (byte) 0x73) || (buffer[0] == (byte) 0x28 && buffer[1] == (byte) 0x53 && buffer[2] == (byte) 0x45 && buffer[3] == (byte) 0x53))
+        {
+          return FileFormat.SES;
+        }
       }
     } catch (IOException e)
     {
@@ -345,6 +351,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR))
     {
       this.output = new BoardFileDetails(outputFile);
+      this.output.format = ff;
       return true;
     }
     else

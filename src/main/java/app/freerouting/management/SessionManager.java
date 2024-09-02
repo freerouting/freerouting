@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.UUID;
 
 /*
- * This class is responsible for maintaining the list of active sessions.
+ * This class is responsible for maintaining the list of active and past sessions.
  * If the user start the GUI, they will be assigned to a new session until they close the GUI.
  * API users will be assigned to a new session when they authenticate by providing their e-mail address.
- * One Freerouting process can have multiple sessions at the same time.
+ * One Freerouting process can have multiple active sessions at the same time.
  */
 public class SessionManager
 {

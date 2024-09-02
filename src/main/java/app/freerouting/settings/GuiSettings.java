@@ -12,4 +12,5 @@ public class GuiSettings implements Serializable
   public String inputDirectory = "";
   @SerializedName("dialog_confirmation_timeout")
   public int dialogConfirmationTimeout = 5;
+  public transient boolean exitWhenFinished;
 }

@@ -171,11 +171,11 @@ public class BoardFrame extends WindowBase
         switch (routingJob.input.format)
         {
           case DSN:
-            this.load(routingJob.input.getData(), true, null);
+            this.load(routingJob.input.getData(), true, null, routingJob);
             FRAnalytics.buttonClicked("fileio_loaddsn", this.routingJob.getInputFileDetails());
             break;
           case FRB:
-            this.load(routingJob.input.getData(), false, null);
+            this.load(routingJob.input.getData(), false, null, routingJob);
             FRAnalytics.buttonClicked("fileio_loadfrb", this.routingJob.getInputFileDetails());
             break;
           default:
@@ -220,6 +220,7 @@ public class BoardFrame extends WindowBase
           break;
         case FRB:
           // Save the file as a freerouting binary file
+          // TODO: it should be enough to save the binary data that we already have in the routingJob.output.data
           this.saveAsBinary(this.routingJob.output.getFile());
           FRAnalytics.buttonClicked("fileio_savefrb", this.routingJob.getOutputFileDetails());
           break;
@@ -283,7 +284,7 @@ public class BoardFrame extends WindowBase
     this.scroll_pane.setVerifyInputWhenFocusTarget(false);
     this.add(scroll_pane, BorderLayout.CENTER);
 
-    this.board_panel = new BoardPanel(screen_messages, this, globalSettings);
+    this.board_panel = new BoardPanel(screen_messages, this, globalSettings, routingJob);
     this.scroll_pane.setViewportView(board_panel);
 
     this.addWindowListener(new WindowStateListener());
@@ -329,12 +330,12 @@ public class BoardFrame extends WindowBase
    * Reads an existing board design from file. If isSpecctraDsn, the design is read from a specctra
    * dsn file. Returns false, if the file is invalid.
    */
-  boolean load(InputStream inputStream, boolean isSpecctraDsn, JTextField p_message_field)
+  boolean load(InputStream inputStream, boolean isSpecctraDsn, JTextField p_message_field, RoutingJob routingJob)
   {
     Point viewport_position = null;
     DsnFile.ReadResult read_result = null;
 
-    board_panel.reset_board_handling();
+    board_panel.reset_board_handling(routingJob);
     // close all previous windows
     for (int i = 0; i < this.permanent_subwindows.length; ++i)
     {
@@ -487,7 +488,7 @@ public class BoardFrame extends WindowBase
     try
     {
       FileInputStream input_stream = new FileInputStream(this.routingJob.snapshot.getFile());
-      return this.load(input_stream, false, null);
+      return this.load(input_stream, false, null, this.routingJob);
     } catch (IOException e)
     {
       screen_messages.set_status_message(tm.getText("error_2"));
@@ -508,7 +509,7 @@ public class BoardFrame extends WindowBase
     }
 
     intermediate_stage_file_last_saved_at = LocalDateTime.now();
-    return saveAsBinary(this.routingJob.snapshot.getFile());
+    return saveAsBinary(this.routingJob.snapshot);
   }
 
   public boolean delete_intermediate_stage_file()
@@ -528,6 +529,38 @@ public class BoardFrame extends WindowBase
   }
 
   /**
+   * Saves the board, GUI settings and subwindows to disk as a version-specific binary stream.
+   * Returns false, if the save failed.
+   */
+  private boolean saveAsBinary(OutputStream outputStream) throws Exception
+  {
+    ObjectOutputStream objectStream;
+    objectStream = new ObjectOutputStream(outputStream);
+
+    // (1) Save the board as binary file
+    boolean save_ok = board_panel.board_handling.saveAsBinary(objectStream);
+    if (!save_ok)
+    {
+      return false;
+    }
+
+    // (2) Save the GUI settings as binary file
+    objectStream.writeObject(board_panel.get_viewport_position());
+    objectStream.writeObject(this.getLocation());
+    objectStream.writeObject(this.getBounds());
+
+    // (3) Save the permanent subwindows as binary file
+    for (int i = 0; i < this.permanent_subwindows.length; ++i)
+    {
+      this.permanent_subwindows[i].save(objectStream);
+    }
+
+    // (4) Flush the binary file
+    objectStream.flush();
+    return true;
+  }
+
+  /**
    * Saves the board, GUI settings and subwindows to disk as a binary file.
    * Returns false, if the save failed.
    */
@@ -539,58 +572,57 @@ public class BoardFrame extends WindowBase
     }
 
     OutputStream output_stream;
-    ObjectOutputStream object_stream;
     try
     {
       FRLogger.info("Saving '" + outputFile.getPath() + "'...");
 
       output_stream = new FileOutputStream(outputFile);
-      object_stream = new ObjectOutputStream(output_stream);
+      saveAsBinary(output_stream);
     } catch (IOException e)
     {
-      screen_messages.set_status_message(tm.getText("error_2"));
+      screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
     } catch (Exception e)
     {
-      screen_messages.set_status_message(tm.getText("error_3"));
+      screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
-    }
-
-    // (1) Save the board as binary file
-    boolean save_ok = board_panel.board_handling.saveAsBinary(object_stream);
-    if (!save_ok)
-    {
-      return false;
-    }
-
-    // (2) Save the GUI settings as binary file
-    try
-    {
-      object_stream.writeObject(board_panel.get_viewport_position());
-      object_stream.writeObject(this.getLocation());
-      object_stream.writeObject(this.getBounds());
-    } catch (IOException e)
-    {
-      screen_messages.set_status_message(tm.getText("message_gui_settings_save_failed", outputFile.getPath()));
-      return false;
-    }
-
-    // (3) Save the permanent subwindows as binary file
-    for (int i = 0; i < this.permanent_subwindows.length; ++i)
-    {
-      this.permanent_subwindows[i].save(object_stream);
     }
 
     // (4) Flush the binary file
     try
     {
-      object_stream.flush();
       output_stream.close();
     } catch (IOException e)
     {
       screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
     }
+    return true;
+  }
+
+  /**
+   * Saves the board, GUI settings and subwindows to disk as a binary file.
+   * Returns false, if the save failed.
+   */
+  private boolean saveAsBinary(BoardFileDetails output)
+  {
+    if (output == null)
+    {
+      return false;
+    }
+
+    try
+    {
+      ByteArrayOutputStream output_stream = new ByteArrayOutputStream();
+      saveAsBinary(output_stream);
+      output.format = FileFormat.FRB;
+      output.setData(output_stream.toByteArray());
+      output_stream.close();
+    } catch (Exception e)
+    {
+      return false;
+    }
+
     return true;
   }
 
@@ -625,6 +657,7 @@ public class BoardFrame extends WindowBase
 
     return true;
   }
+
 
   /**
    * Saves the board rule to file, so that they can be reused later on.

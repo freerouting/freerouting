@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
@@ -34,10 +35,12 @@ public class HeadlessBoardManager implements IBoardManager
    */
   protected RoutingBoard board;
   protected Locale locale;
+  protected RoutingJob routingJob;
 
-  public HeadlessBoardManager(Locale p_locale)
+  public HeadlessBoardManager(Locale p_locale, RoutingJob routingJob)
   {
     this.locale = p_locale;
+    this.routingJob = routingJob;
   }
 
   /**

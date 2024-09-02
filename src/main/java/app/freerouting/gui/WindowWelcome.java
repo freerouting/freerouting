@@ -272,6 +272,16 @@ public class WindowWelcome extends WindowBase
 
       if (globalSettings.design_output_filename != null)
       {
+        // if the design_output_filename file exists we need to delete it before setting it
+        var desiredOutputFile = new File(globalSettings.design_output_filename);
+        if ((desiredOutputFile != null) && desiredOutputFile.exists())
+        {
+          if (!desiredOutputFile.delete())
+          {
+            FRLogger.warn("Couldn't delete the file '" + globalSettings.design_output_filename + "'");
+          }
+        }
+
         routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
 
         // we need to set up a listener to save the design file when the autorouter is running
@@ -332,7 +342,10 @@ public class WindowWelcome extends WindowBase
                 }
               }
 
-              System.exit(0);
+              if (globalSettings.guiSettings.exitWhenFinished)
+              {
+                System.exit(0);
+              }
             } catch (Exception e)
             {
               FRLogger.error("Couldn't export board to file", e);
@@ -419,10 +432,13 @@ public class WindowWelcome extends WindowBase
             // Add the auto-router listener to save the design file when the autorouter is running
             thread.addListener(new_frame.board_panel.board_handling.autorouter_listener);
           }
+
+          globalSettings.guiSettings.exitWhenFinished = true;
         }
 
         if (choice == options[1])
         {
+          globalSettings.guiSettings.exitWhenFinished = false;
           FRAnalytics.buttonClicked("auto_start_routing_dialog_cancel", "Cancel");
         }
       }
@@ -490,7 +506,7 @@ public class WindowWelcome extends WindowBase
     }
 
     BoardFrame new_frame = new BoardFrame(routingJob, globalSettings);
-    boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field);
+    boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field, routingJob);
     if (!read_ok)
     {
       return null;

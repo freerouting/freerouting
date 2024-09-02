@@ -268,7 +268,9 @@ public class JobControllerV1
 
     var result = new BoardFilePayload();
     result.jobId = job.id;
-    // TODO: set the filename, size, crc32, and dataBase64 properties of the result object
+    result.setFilename(job.output.getFilename());
+    result.setData(job.output.getData().readAllBytes());
+    result.dataBase64 = java.util.Base64.getEncoder().encodeToString(result.getData().readAllBytes());
 
     return Response.ok(GsonProvider.GSON.toJson(result)).build();
   }

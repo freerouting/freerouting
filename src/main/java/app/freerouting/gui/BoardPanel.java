@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.ActivityReplayFileScope;
 import app.freerouting.interactive.GuiBoardManager;
@@ -46,7 +47,7 @@ public class BoardPanel extends JPanel
   /**
    * Creates a new BoardPanel in an Application
    */
-  public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame, GlobalSettings globalSettings)
+  public BoardPanel(ScreenMessages p_screen_messages, BoardFrame p_board_frame, GlobalSettings globalSettings, RoutingJob routingJob)
   {
     this.screen_messages = p_screen_messages;
     try
@@ -60,10 +61,10 @@ public class BoardPanel extends JPanel
     this.board_frame = p_board_frame;
     this.globalSettings = globalSettings;
     this.scroll_pane = board_frame.scroll_pane;
-    default_init(globalSettings);
+    default_init(globalSettings, routingJob);
   }
 
-  private void default_init(GlobalSettings globalSettings)
+  private void default_init(GlobalSettings globalSettings, RoutingJob routingJob)
   {
     setLayout(new BorderLayout());
 
@@ -116,14 +117,14 @@ public class BoardPanel extends JPanel
     });
     addMouseWheelListener(evt -> board_handling.mouse_wheel_moved(evt.getWheelRotation()));
     globalSettings.routerSettings.save_intermediate_stages = globalSettings.featureFlags.snapshots && globalSettings.routerSettings.save_intermediate_stages;
-    board_handling = new GuiBoardManager(this, globalSettings);
+    board_handling = new GuiBoardManager(this, globalSettings, routingJob);
     setAutoscrolls(true);
     this.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
   }
 
-  public void reset_board_handling()
+  public void reset_board_handling(RoutingJob routingJob)
   {
-    board_handling = new GuiBoardManager(this, globalSettings);
+    board_handling = new GuiBoardManager(this, globalSettings, routingJob);
   }
 
   void create_popup_menus()

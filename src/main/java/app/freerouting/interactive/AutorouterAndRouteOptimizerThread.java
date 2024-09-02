@@ -5,15 +5,17 @@ import app.freerouting.autoroute.events.*;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
-import app.freerouting.settings.RouterSettings;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
 
 /**
  * GUI interactive thread for the batch auto-router + route optimizer.
@@ -26,10 +28,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   /**
    * Creates a new instance of AutorouterAndRouteOptimizerThread
    */
-  protected AutorouterAndRouteOptimizerThread(GuiBoardManager p_board_handling, RouterSettings routerSettings)
+  protected AutorouterAndRouteOptimizerThread(GuiBoardManager p_board_handling, RoutingJob routingJob)
   {
-    super(p_board_handling);
-    this.batch_autorouter = new BatchAutorouter(this, this.hdlg.get_routing_board(), routerSettings, !routerSettings.get_with_fanout(), true, routerSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
+    super(p_board_handling, routingJob);
+    this.batch_autorouter = new BatchAutorouter(this, this.hdlg.get_routing_board(), routingJob.routerSettings, !routingJob.routerSettings.get_with_fanout(), true, routingJob.routerSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
     this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override
@@ -65,12 +67,12 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       }
     });
 
-    if (routerSettings.maxThreads > 1)
+    if (routingJob.routerSettings.maxThreads > 1)
     {
       FRLogger.warn("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
     }
 
-    this.batch_opt_route = routerSettings.maxThreads > 1 ? new BatchOptRouteMT(this, hdlg.get_routing_board(), routerSettings) : new BatchOptRoute(this, false, hdlg.get_routing_board(), routerSettings);
+    this.batch_opt_route = routingJob.routerSettings.maxThreads > 1 ? new BatchOptRouteMT(this, hdlg.get_routing_board(), routingJob.routerSettings) : new BatchOptRoute(this, false, hdlg.get_routing_board(), routingJob.routerSettings);
   }
 
   @Override
@@ -194,6 +196,22 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       }
 
       hdlg.set_board_read_only(saved_board_read_only);
+
+      if (routingJob.output.format == FileFormat.SES)
+      {
+        // Save the SES file after the auto-router has finished
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream())
+        {
+          if (hdlg.saveAsSpecctraSessionSes(baos, routingJob.name))
+          {
+            routingJob.output.setData(baos.toByteArray());
+          }
+        } catch (Exception e)
+        {
+          FRLogger.error("Couldn't save the output into the job object.", e);
+        }
+      }
+
       hdlg.update_ratsnest();
       if (!ratsnest_hidden_before)
       {
