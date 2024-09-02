@@ -24,10 +24,11 @@ public class JobControllerV1
   @POST
   @Path("/{sessionId}/enqueue")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response queueJob(
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response enqueueJob(
       @PathParam("sessionId")
       String sessionId,
-      @RequestBody()
+      @RequestBody
       RoutingJob job)
   {
     // Check if the sessionId in the job object matches the path parameter
@@ -36,8 +37,14 @@ public class JobControllerV1
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
     }
 
-    // Enqueue the job
-    job = RoutingJobScheduler.getInstance().enqueueJob(job);
+    try
+    {
+      // Enqueue the job
+      job = RoutingJobScheduler.getInstance().enqueueJob(job);
+    } catch (Exception e)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"" + e.getMessage() + "\"}").build();
+    }
 
     // Return the job object
     return Response.ok(GsonProvider.GSON.toJson(job)).build();
@@ -139,6 +146,7 @@ public class JobControllerV1
   @POST
   @Path("/{sessionId}/{jobId}/changeSettings")
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public Response changeSettings(
       @PathParam("sessionId")
       String sessionId,
@@ -182,6 +190,7 @@ public class JobControllerV1
   @POST
   @Path("/{sessionId}/{jobId}/uploadInput")
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public Response uploadInput(
       @PathParam("sessionId")
       String sessionId,
