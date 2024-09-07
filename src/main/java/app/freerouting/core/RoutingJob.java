@@ -291,6 +291,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public void setDummyInputFile(String filename)
   {
+    this.input = new BoardFileDetails();
+    this.snapshot = new BoardFileDetails();
     this.output = new BoardFileDetails();
 
     if ((filename != null) && (filename.toLowerCase().endsWith(DSN_FILE_EXTENSION)))
@@ -298,11 +300,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       this.input.format = FileFormat.DSN;
       this.input.setFilename(filename);
       this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
-    }
-    else
-    {
-      this.input = new BoardFileDetails();
-      this.snapshot = new BoardFileDetails();
     }
   }
 
