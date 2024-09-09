@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Used for running an interactive action in a separate thread, that can be stopped by the user.
+ * This typically represents an action that is triggered by the user on the GUI, such as autorouting, fanout, etc.
  */
 public abstract class InteractiveActionThread extends StoppableThread
 {
@@ -23,41 +24,41 @@ public abstract class InteractiveActionThread extends StoppableThread
   /**
    * Creates a new instance of InteractiveActionThread
    */
-  protected InteractiveActionThread(GuiBoardManager p_board_handling, RoutingJob job)
+  protected InteractiveActionThread(GuiBoardManager boardManager, RoutingJob job)
   {
-    this.hdlg = p_board_handling;
+    this.hdlg = boardManager;
     this.routingJob = job;
   }
 
-  public static InteractiveActionThread get_autoroute_instance(GuiBoardManager p_board_handling, RoutingJob job)
+  public static InteractiveActionThread get_autoroute_instance(GuiBoardManager boardManager, RoutingJob job)
   {
-    return new AutorouteThread(p_board_handling, job);
+    return new AutorouteThread(boardManager, job);
   }
 
-  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager p_board_handling, RoutingJob job)
+  public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager boardManager, RoutingJob job)
   {
     // TODO: we should not need this, but if we don't do this, the following values in routerSettings are not set properly
-    job.routerSettings.isLayerActive = p_board_handling.settings.autoroute_settings.isLayerActive.clone();
-    job.routerSettings.isPreferredDirectionHorizontalOnLayer = p_board_handling.settings.autoroute_settings.isPreferredDirectionHorizontalOnLayer.clone();
-    job.routerSettings.preferredDirectionTraceCost = p_board_handling.settings.autoroute_settings.preferredDirectionTraceCost.clone();
-    job.routerSettings.undesiredDirectionTraceCost = p_board_handling.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
+    job.routerSettings.isLayerActive = boardManager.settings.autoroute_settings.isLayerActive.clone();
+    job.routerSettings.isPreferredDirectionHorizontalOnLayer = boardManager.settings.autoroute_settings.isPreferredDirectionHorizontalOnLayer.clone();
+    job.routerSettings.preferredDirectionTraceCost = boardManager.settings.autoroute_settings.preferredDirectionTraceCost.clone();
+    job.routerSettings.undesiredDirectionTraceCost = boardManager.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
 
-    return new AutorouterAndRouteOptimizerThread(p_board_handling, job);
+    return new AutorouterAndRouteOptimizerThread(boardManager, job);
   }
 
-  public static InteractiveActionThread get_fanout_instance(GuiBoardManager p_board_handling, RoutingJob job)
+  public static InteractiveActionThread get_fanout_instance(GuiBoardManager boardManager, RoutingJob job)
   {
-    return new FanoutThread(p_board_handling, job);
+    return new FanoutThread(boardManager, job);
   }
 
-  public static InteractiveActionThread get_pull_tight_instance(GuiBoardManager p_board_handling, RoutingJob job)
+  public static InteractiveActionThread get_pull_tight_instance(GuiBoardManager boardManager, RoutingJob job)
   {
-    return new PullTightThread(p_board_handling, job);
+    return new PullTightThread(boardManager, job);
   }
 
-  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager p_board_handling, RoutingJob job, InputStream p_input_stream)
+  public static InteractiveActionThread get_read_logfile_instance(GuiBoardManager boardManager, RoutingJob job, InputStream p_input_stream)
   {
-    return new ReadLogfileThread(p_board_handling, job, p_input_stream);
+    return new ReadLogfileThread(boardManager, job, p_input_stream);
   }
 
   public void addListener(ThreadActionListener toAdd)
@@ -151,7 +152,6 @@ public abstract class InteractiveActionThread extends StoppableThread
     @Override
     protected void thread_action()
     {
-
       TextManager tm = new TextManager(InteractiveState.class, hdlg.get_locale());
 
       boolean saved_board_read_only = hdlg.is_board_read_only();

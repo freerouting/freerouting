@@ -1,12 +1,10 @@
 package app.freerouting.management;
 
 import app.freerouting.Freerouting;
-import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.RoutingStage;
+import app.freerouting.core.StoppableThread;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
@@ -18,8 +16,9 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.UUID;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.Vector;
 
 /**
  * This singleton class is responsible for managing the jobs that will be processed by the router.
@@ -29,74 +28,69 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class RoutingJobScheduler
 {
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
-  public final PriorityBlockingQueue<RoutingJob> jobs = new PriorityBlockingQueue<>();
+  public final Vector<RoutingJob> jobs = new Vector<>();
+  private final int maxParallelJobs = 5;
 
   // Private constructor to prevent instantiation
   private RoutingJobScheduler()
   {
     // start a loop to process the jobs on another thread
-    Thread thread = new Thread(() ->
+    Thread loopThread = new Thread(() ->
     {
       while (true)
       {
         try
         {
-          // take the next job with the READY_TO_START state from the queue and process it
-          RoutingJob job = jobs.take();
-          if (job.state == RoutingJobState.READY_TO_START)
+          // loop through jobs with the READY_TO_START state, order them according to their priority and start them up to the maximum number of parallel jobs
+          while (jobs.stream().filter(j -> j.state == RoutingJobState.READY_TO_START).count() > 0)
           {
-            RoutingBoard board = null;
+            // sort the jobs by priority
+            Collections.sort(jobs);
 
-            if ((job.input == null) || (job.input.getData() == null))
+            // start the jobs up to the maximum number of parallel jobs
+            for (RoutingJob job : jobs)
             {
-              FRLogger.warn("RoutingJob input is null, it is skipped.");
-              job.state = RoutingJobState.INVALID;
-              continue;
-            }
+              if (job.state == RoutingJobState.READY_TO_START)
+              {
+                int parallelJobs = (int) jobs.stream().filter(j -> j.state == RoutingJobState.RUNNING).count();
 
-            // load the board from the input into a RoutingBoard object
-            if (job.input.format == FileFormat.DSN)
-            {
-              HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
-              boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
-              board = boardManager.get_routing_board();
-            }
-            else
-            {
-              FRLogger.warn("Only DSN format is supported as an input.");
-              job.state = RoutingJobState.INVALID;
-              continue;
-            }
+                if (parallelJobs < maxParallelJobs)
+                {
+                  if ((job.input == null) || (job.input.getData() == null))
+                  {
+                    FRLogger.warn("RoutingJob input is null, it is skipped.");
+                    job.state = RoutingJobState.INVALID;
+                    continue;
+                  }
 
-            // start the fanout, routing, optimizer task(s) if needed
-            if (job.routerSettings.getRunFanout())
-            {
-              job.stage = RoutingStage.FANOUT;
-              // TODO: start the fanout task
-              job.stage = RoutingStage.IDLE;
-            }
+                  // load the board from the input into a RoutingBoard object
+                  if (job.input.format == FileFormat.DSN)
+                  {
+                    HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+                    boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+                    job.board = boardManager.get_routing_board();
+                  }
+                  else
+                  {
+                    FRLogger.warn("Only DSN format is supported as an input.");
+                    job.state = RoutingJobState.INVALID;
+                    continue;
+                  }
 
-            if (job.routerSettings.getRunRouter())
-            {
-              job.stage = RoutingStage.ROUTING;
-              // TODO: start the routing task
-              BatchAutorouter router = new BatchAutorouter(null, board, job.routerSettings, !job.routerSettings.getRunFanout(), true, job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
-              router.runBatchLoop();
-              job.stage = RoutingStage.IDLE;
-            }
-
-            if (job.routerSettings.getRunOptimizer())
-            {
-              job.stage = RoutingStage.OPTIMIZATION;
-              // TODO: start the optimizer task
-              job.stage = RoutingStage.IDLE;
+                  // All pre-checks look fine, start the routing process on a new thread
+                  StoppableThread routerThread = new RoutingJobSchedulerActionThread(job);
+                  job.thread = routerThread;
+                  job.thread.start();
+                  job.state = RoutingJobState.RUNNING;
+                }
+                else
+                {
+                  break;
+                }
+              }
             }
           }
-          else
-          {
-            // put the job back in the queue if it is not in the READY_TO_START state
-            jobs.put(job);
-          }
+
           // wait for a short time before checking the queue again
           Thread.sleep(250);
         } catch (InterruptedException e)
@@ -106,7 +100,7 @@ public class RoutingJobScheduler
       }
     });
 
-    thread.start();
+    loopThread.start();
   }
 
   /**
@@ -211,7 +205,7 @@ public class RoutingJobScheduler
 
   public RoutingJob[] listJobs()
   {
-    return this.jobs.toArray(new RoutingJob[0]);
+    return this.jobs.toArray(RoutingJob[]::new);
   }
 
   public RoutingJob[] listJobs(String sessionId)

@@ -63,7 +63,7 @@ public class JobControllerV1
 
     RoutingJob[] result;
     // If the session does not exist, list all jobs
-    if (session == null)
+    if ((session == null) || (sessionId.isEmpty()) || (sessionId.equals("all")))
     {
       result = RoutingJobScheduler.getInstance().listJobs();
     }

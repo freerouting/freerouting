@@ -1,6 +1,7 @@
 package app.freerouting.core;
 
 import app.freerouting.board.BoardFileDetails;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
@@ -43,6 +44,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public RoutingJobState state = RoutingJobState.INVALID;
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
   public RoutingStage stage = RoutingStage.IDLE;
+  public transient StoppableThread thread = null;
+  public transient RoutingBoard board = null;
 
   /**
    * We need a parameterless constructor for the serialization.

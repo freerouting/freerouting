@@ -8,6 +8,7 @@ import app.freerouting.datastructures.Stoppable;
 public abstract class StoppableThread extends Thread implements Stoppable
 {
   private boolean stop_requested = false;
+  // TODO: why do we need this, can't we use stop_requested?
   private boolean stop_auto_router = false;
 
   /**

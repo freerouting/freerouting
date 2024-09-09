@@ -41,4 +41,5 @@ module app.freerouting {
   requires io.swagger.v3.oas.models;
   requires io.swagger.v3.oas.annotations;
   requires jdk.management;
+  requires org.glassfish.hk2.api;
 }
