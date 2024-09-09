@@ -110,17 +110,32 @@ public class Freerouting
 
     FRLogger.debug(" Host: " + globalSettings.environmentSettings.host);
 
-    // Get default screen device
-    Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-    // Get screen resolution
-    Dimension screenSize = toolkit.getScreenSize();
-    int width = screenSize.width;
-    int height = screenSize.height;
+    // Get some headful information if we are running in a GUI
+    int width = 0;
+    int height = 0;
+    int dpi = 0;
+    if (globalSettings.guiSettings.isEnabled)
+    {
+      try
+      {
+        // Get default screen device
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-    // Get screen DPI
-    int dpi = toolkit.getScreenResolution();
-    FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
+        // Get screen resolution
+        Dimension screenSize = toolkit.getScreenSize();
+        width = screenSize.width;
+        height = screenSize.height;
+
+        // Get screen DPI
+        dpi = toolkit.getScreenResolution();
+        FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
+      } catch (Exception e)
+      {
+        FRLogger.warn("Couldn't get screen resolution. If you are running in a headless environment, disable the GUI be settings the gui.enabled to false.");
+        globalSettings.guiSettings.isEnabled = false;
+      }
+    }
 
     boolean allowAnalytics = false;
     if (globalSettings.usageAndDiagnosticData.segmentWriteKey != null && !globalSettings.usageAndDiagnosticData.segmentWriteKey.isEmpty())
