@@ -11,5 +11,5 @@ public class ApiServerSettings implements Serializable
   @SerializedName("http_allowed")
   public Boolean isHttpAllowed = false;
   @SerializedName("endpoints")
-  public String[] endpoints = {"https://localhost:8080"};
+  public String[] endpoints = {"https://localhost:37864"};
 }

@@ -2,11 +2,13 @@ package app.freerouting.management;
 
 import app.freerouting.Freerouting;
 import app.freerouting.autoroute.BatchAutorouter;
+import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.RoutingStage;
 import app.freerouting.gui.FileFormat;
+import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
@@ -52,10 +54,12 @@ public class RoutingJobScheduler
               continue;
             }
 
-            // TODO: load the board from the input into a RoutingBoard object
+            // load the board from the input into a RoutingBoard object
             if (job.input.format == FileFormat.DSN)
             {
-              //board = RoutingBoard.loadFromDsn(job.input.getData());
+              HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+              boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
+              board = boardManager.get_routing_board();
             }
             else
             {
@@ -101,6 +105,8 @@ public class RoutingJobScheduler
         }
       }
     });
+
+    thread.start();
   }
 
   /**

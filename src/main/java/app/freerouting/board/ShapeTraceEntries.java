@@ -1,11 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.geometry.planar.Line;
-import app.freerouting.geometry.planar.Point;
-import app.freerouting.geometry.planar.Polyline;
-import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 
 import java.util.Collection;
@@ -112,8 +107,11 @@ public class ShapeTraceEntries
     board.search_tree_manager.reuse_entries_after_cutout(p_trace, start_piece, end_piece);
     board.remove_item(p_trace);
 
-    board.communication.observers.notify_new(start_piece);
-    board.communication.observers.notify_new(end_piece);
+    if ((board.communication != null) && (board.communication.observers != null))
+    {
+      board.communication.observers.notify_new(start_piece);
+      board.communication.observers.notify_new(end_piece);
+    }
   }
 
   private static boolean net_nos_equal(int[] p_net_nos_1, int[] p_net_nos_2)

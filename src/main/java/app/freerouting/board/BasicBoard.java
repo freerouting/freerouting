@@ -1346,7 +1346,10 @@ public class BasicBoard implements Serializable
     p_item.board = this;
     item_list.insert(p_item);
     search_tree_manager.insert(p_item);
-    communication.observers.notify_new(p_item);
+    if ((communication != null) && (communication.observers != null))
+    {
+      communication.observers.notify_new(p_item);
+    }
     additional_update_after_change(p_item);
   }
 
@@ -1393,7 +1396,10 @@ public class BasicBoard implements Serializable
       search_tree_manager.insert(curr_item);
       curr_item.clear_autoroute_info();
       // let the observers know the insertion
-      communication.observers.notify_new(curr_item);
+      if ((communication != null) && (communication.observers != null))
+      {
+        communication.observers.notify_new(curr_item);
+      }
       if (p_changed_nets != null)
       {
         for (int i = 0; i < curr_item.net_count(); ++i)
@@ -1439,7 +1445,10 @@ public class BasicBoard implements Serializable
       search_tree_manager.insert(curr_item);
       curr_item.clear_autoroute_info();
       // let the observers know the insertion
-      communication.observers.notify_new(curr_item);
+      if ((communication != null) && (communication.observers != null))
+      {
+        communication.observers.notify_new(curr_item);
+      }
       if (p_changed_nets != null)
       {
         for (int i = 0; i < curr_item.net_count(); ++i)

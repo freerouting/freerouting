@@ -22,19 +22,18 @@ public class JobControllerV1
 
   /* Enqueue a new job with the given session id. In order to start the job, both an input file and its settings must be uploaded first. */
   @POST
-  @Path("/{sessionId}/enqueue")
+  @Path("/enqueue")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response enqueueJob(
-      @PathParam("sessionId")
-      String sessionId,
       @RequestBody
       RoutingJob job)
   {
-    // Check if the sessionId in the job object matches the path parameter
-    if (!job.sessionId.toString().equals(sessionId))
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
     try
@@ -53,7 +52,7 @@ public class JobControllerV1
 
   /* Get a list of all jobs in the session with the given id, returning only basic details about them. */
   @GET
-  @Path("/{sessionId}/list")
+  @Path("/list/{sessionId}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response listJobs(
       @PathParam("sessionId")
@@ -62,23 +61,26 @@ public class JobControllerV1
     // Get the session with the id of sessionId
     Session session = SessionManager.getInstance().getSession(sessionId);
 
-    // If the session does not exist, return a 404 response
+    RoutingJob[] result;
+    // If the session does not exist, list all jobs
     if (session == null)
     {
-      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+      result = RoutingJobScheduler.getInstance().listJobs();
+    }
+    else
+    {
+      result = RoutingJobScheduler.getInstance().listJobs(sessionId);
     }
 
     // Return a list of jobs in the session
-    return Response.ok(GsonProvider.GSON.toJson(RoutingJobScheduler.getInstance().listJobs(sessionId))).build();
+    return Response.ok(GsonProvider.GSON.toJson(result)).build();
   }
 
   /* Get the current detailed status of the job with id, including statistical data about the (partially) completed board is the process already started. */
   @GET
-  @Path("/{sessionId}/{jobId}")
+  @Path("/{jobId}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getJob(
-      @PathParam("sessionId")
-      String sessionId,
       @PathParam("jobId")
       String jobId)
   {
@@ -91,10 +93,11 @@ public class JobControllerV1
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
     }
 
-    // Check if the sessionId in the job object matches the path parameter
-    if (!job.sessionId.toString().equals(sessionId))
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
     return Response.ok(GsonProvider.GSON.toJson(job)).build();
@@ -102,11 +105,9 @@ public class JobControllerV1
 
   /* Start or continue the job with the given id. */
   @PUT
-  @Path("/{sessionId}/{jobId}/start")
+  @Path("/{jobId}/start")
   @Produces(MediaType.APPLICATION_JSON)
   public Response startJob(
-      @PathParam("sessionId")
-      String sessionId,
       @PathParam("jobId")
       String jobId)
   {
@@ -119,10 +120,11 @@ public class JobControllerV1
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
     }
 
-    // Check if the sessionId in the job object matches the path parameter
-    if (!job.sessionId.toString().equals(sessionId))
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
     // Check if the job is queued and have not started yet
@@ -133,31 +135,43 @@ public class JobControllerV1
 
     job.state = RoutingJobState.READY_TO_START;
 
-    return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
+    return Response.ok(GsonProvider.GSON.toJson(job)).build();
   }
 
   /* Stop the job with the given id, and cancels the job. */
   @PUT
-  @Path("/{sessionId}/{jobId}/cancel")
+  @Path("/{jobId}/cancel")
   @Produces(MediaType.APPLICATION_JSON)
   public Response cancelJob(
-      @PathParam("sessionId")
-      String sessionId,
       @PathParam("jobId")
       String jobId)
   {
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    if (session == null)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
+    }
+
     // Return an error that this method is not implemented yet
     return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
   }
 
   /* Change the settings of the job, such as the router settings. */
   @POST
-  @Path("/{sessionId}/{jobId}/changeSettings")
+  @Path("/{jobId}/changeSettings")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changeSettings(
-      @PathParam("sessionId")
-      String sessionId,
       @PathParam("jobId")
       String jobId,
       @RequestBody()
@@ -172,10 +186,11 @@ public class JobControllerV1
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
     }
 
-    // Check if the sessionId in the job object matches the path parameter
-    if (!job.sessionId.toString().equals(sessionId))
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
     }
 
     // Check if the job is queued and have not started yet
@@ -196,12 +211,10 @@ public class JobControllerV1
    * Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core web server.
    */
   @POST
-  @Path("/{sessionId}/{jobId}/uploadInput")
+  @Path("/{jobId}/uploadInput")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response uploadInput(
-      @PathParam("sessionId")
-      String sessionId,
       @PathParam("jobId")
       String jobId,
       @RequestBody()
@@ -216,10 +229,11 @@ public class JobControllerV1
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
     }
 
-    // Check if the sessionId in the job object matches the path parameter
-    if (!job.sessionId.toString().equals(sessionId))
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
     }
 
     // Check if the job is queued and have not started yet
@@ -257,11 +271,9 @@ public class JobControllerV1
 
   /* Download the output of the job, typically in Specctra SES format. */
   @GET
-  @Path("/{sessionId}/{jobId}/downloadOutput")
+  @Path("/{jobId}/downloadOutput")
   @Produces(MediaType.APPLICATION_JSON)
   public Response downloadOutput(
-      @PathParam("sessionId")
-      String sessionId,
       @PathParam("jobId")
       String jobId)
   {
@@ -274,10 +286,11 @@ public class JobControllerV1
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
     }
 
-    // Check if the sessionId in the job object matches the path parameter
-    if (!job.sessionId.toString().equals(sessionId))
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID in the job object does not match the path parameter.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
     }
 
     // Check if the job is completed
