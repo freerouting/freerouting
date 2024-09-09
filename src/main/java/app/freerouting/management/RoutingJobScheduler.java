@@ -1,6 +1,7 @@
 package app.freerouting.management;
 
 import app.freerouting.Freerouting;
+import app.freerouting.board.BoardFileDetails;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -11,14 +12,15 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.UUID;
-import java.util.Vector;
 
 /**
  * This singleton class is responsible for managing the jobs that will be processed by the router.
@@ -28,7 +30,7 @@ import java.util.Vector;
 public class RoutingJobScheduler
 {
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
-  public final Vector<RoutingJob> jobs = new Vector<>();
+  public final LinkedList<RoutingJob> jobs = new LinkedList<>();
   private final int maxParallelJobs = 5;
 
   // Private constructor to prevent instantiation
@@ -42,7 +44,7 @@ public class RoutingJobScheduler
         try
         {
           // loop through jobs with the READY_TO_START state, order them according to their priority and start them up to the maximum number of parallel jobs
-          while (jobs.stream().filter(j -> j.state == RoutingJobState.READY_TO_START).count() > 0)
+          while (jobs.stream().count() > 0)
           {
             // sort the jobs by priority
             Collections.sort(jobs);
@@ -86,6 +88,35 @@ public class RoutingJobScheduler
                 else
                 {
                   break;
+                }
+              }
+
+              if ((job.state == RoutingJobState.COMPLETED) && ((job.output == null) || (job.output.size == 0)))
+              {
+                if (job.output == null)
+                {
+                  job.output = new BoardFileDetails(job.board);
+                  job.output.format = FileFormat.SES;
+                  job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
+                }
+
+                // save the result to the output field as a Specctra SES file
+                if (job.output.format == FileFormat.SES)
+                {
+                  HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+                  boardManager.update_routing_board(job.board);
+
+                  // Save the SES file after the auto-router has finished
+                  try (ByteArrayOutputStream baos = new ByteArrayOutputStream())
+                  {
+                    if (boardManager.saveAsSpecctraSessionSes(baos, job.name))
+                    {
+                      job.output.setData(baos.toByteArray());
+                    }
+                  } catch (Exception e)
+                  {
+                    FRLogger.error("Couldn't save the output into the job object.", e);
+                  }
                 }
               }
             }

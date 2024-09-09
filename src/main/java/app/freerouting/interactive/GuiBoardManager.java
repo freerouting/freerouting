@@ -8,7 +8,6 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SessionToEagle;
-import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -1092,20 +1091,14 @@ public class GuiBoardManager extends HeadlessBoardManager
   /**
    * Writes a .SES session file in the Specctra ses-format.
    */
-  public boolean saveAsSpecctraSessionSes(OutputStream p_output_stream, String p_design_name)
+  public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName)
   {
     if (board_is_read_only)
     {
       return false;
     }
-    boolean wasSaveSuccessful = SpecctraSesFileWriter.write(this.get_routing_board(), p_output_stream, p_design_name);
 
-    if (wasSaveSuccessful)
-    {
-      originalBoardChecksum = calculateCrc32();
-    }
-
-    return wasSaveSuccessful;
+    return super.saveAsSpecctraSessionSes(outputStream, designName);
   }
 
   /**

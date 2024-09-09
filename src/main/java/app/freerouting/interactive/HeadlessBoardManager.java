@@ -4,6 +4,7 @@ import app.freerouting.board.*;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
+import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
@@ -11,10 +12,7 @@ import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Locale;
 
 /**
@@ -167,4 +165,20 @@ public class HeadlessBoardManager implements IBoardManager
     }
     return read_result;
   }
+
+  /**
+   * Writes a .SES session file in the Specctra ses-format.
+   */
+  public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName)
+  {
+    boolean wasSaveSuccessful = SpecctraSesFileWriter.write(this.get_routing_board(), outputStream, designName);
+
+    if (wasSaveSuccessful)
+    {
+      originalBoardChecksum = calculateCrc32();
+    }
+
+    return wasSaveSuccessful;
+  }
+
 }
