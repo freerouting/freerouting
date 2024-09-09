@@ -54,8 +54,11 @@ class Structure extends ScopeKeyword
     // write the control scope
     write_control_scope(p_par.board.rules, p_par.file);
 
-    // write the auto-route settings
-    AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
+    if (p_par.autoroute_settings != null)
+    {
+      // write the auto-route settings
+      AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
+    }
 
     // write the conduction areas
     write_conduction_areas(p_par);
@@ -86,7 +89,7 @@ class Structure extends ScopeKeyword
         // These conduction areas are written in the wiring scope.
         continue;
       }
-      Plane.write_scope(p_par, (ConductionArea) curr_ob);
+      Plane.write_scope(p_par, curr_area);
     }
   }
 

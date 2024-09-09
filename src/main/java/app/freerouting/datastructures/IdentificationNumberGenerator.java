@@ -3,7 +3,7 @@ package app.freerouting.datastructures;
 /**
  * Interface for creating unique identification number.
  */
-public interface IdNoGenerator
+public interface IdentificationNumberGenerator
 {
   /**
    * Create a new unique identification number.

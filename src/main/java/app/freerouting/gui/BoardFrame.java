@@ -348,7 +348,7 @@ public class BoardFrame extends WindowBase
 
     if (isSpecctraDsn)
     {
-      read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers, new ItemIdNoGenerator());
+      read_result = board_panel.board_handling.loadFromSpecctraDsn(inputStream, this.board_observers, new ItemIdentificationNumberGenerator());
 
       // If the file was read successfully, initialize the windows
       if (read_result == DsnFile.ReadResult.OK)

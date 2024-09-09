@@ -1,15 +1,20 @@
 package app.freerouting.interactive;
 
-import app.freerouting.board.Communication;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.*;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 /**
@@ -36,6 +41,8 @@ public class HeadlessBoardManager implements IBoardManager
   protected RoutingBoard board;
   protected Locale locale;
   protected RoutingJob routingJob;
+  // The board checksum is used to detect changes in the board database
+  protected long originalBoardChecksum = 0;
 
   public HeadlessBoardManager(Locale p_locale, RoutingJob routingJob)
   {
@@ -105,5 +112,59 @@ public class HeadlessBoardManager implements IBoardManager
   public Locale get_locale()
   {
     return this.locale;
+  }
+
+  //* Returns the checksum of the board. This checksum is used to detect changes in the board database.
+  public long calculateCrc32()
+  {
+    // Create a memory stream
+    ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
+    DsnFile.write(this, memoryStream, "N/A", false);
+
+    // Transform the output stream to an input stream
+    InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
+
+    return BoardFileDetails.calculateCrc32(inputStream).getValue();
+  }
+
+  /**
+   * Imports a board design from a Specctra dsn-file. The parameters p_item_observers and
+   * p_item_id_no_generator are used, in case the board is embedded into a host system. Returns
+   * false, if the dsn-file is corrupted.
+   */
+  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator)
+  {
+    if (inputStream == null)
+    {
+      return DsnFile.ReadResult.ERROR;
+    }
+
+    DsnFile.ReadResult read_result;
+    try
+    {
+      // TODO: we should have a returned object that represent the DSN file, and we should create a RoutingBoard/BasicBoard based on that as a next step
+      // we create the board inside the DSN file reader instead at the moment, and save it in the board field of the BoardHandling class
+      read_result = DsnFile.read(inputStream, this, boardObservers, identificationNumberGenerator);
+    } catch (Exception e)
+    {
+      read_result = DsnFile.ReadResult.ERROR;
+      FRLogger.error("There was an error while reading DSN file.", e);
+    }
+    if (read_result == DsnFile.ReadResult.OK)
+    {
+      FRAnalytics.fileLoaded("DSN", this.board.communication.specctra_parser_info.host_cad + "," + this.board.communication.specctra_parser_info.host_version);
+      this.board.reduce_nets_of_route_items();
+      originalBoardChecksum = calculateCrc32();
+      FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad, this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(), this.board.components.count(), this.board.rules.nets.max_net_no());
+    }
+
+    try
+    {
+      inputStream.close();
+    } catch (IOException e)
+    {
+      read_result = DsnFile.ReadResult.ERROR;
+    }
+    return read_result;
   }
 }

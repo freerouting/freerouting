@@ -163,7 +163,10 @@ public class RulesFile
     p_par.file.write("rules PCB ");
     p_par.file.write(p_design_name);
     Structure.write_snap_angle(p_par.file, p_par.board.rules.get_trace_angle_restriction());
-    AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
+    if (p_par.autoroute_settings != null)
+    {
+      AutorouteSettings.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
+    }
     // write the default rule using 0 as default layer.
     Rule.write_default_rule(p_par, 0);
     // write the via padstacks

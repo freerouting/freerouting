@@ -5,7 +5,7 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.*;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.datastructures.IdNoGenerator;
+import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SessionToEagle;
 import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
@@ -18,7 +18,6 @@ import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntryType;
-import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
@@ -100,8 +99,6 @@ public class GuiBoardManager extends HeadlessBoardManager
    * The current position of the mouse pointer.
    */
   private FloatPoint current_mouse_position;
-  // The board checksum is used to detect changes in the board database
-  private long originalBoardChecksum = 0;
 
   /**
    * Creates a new BoardHandling
@@ -1042,18 +1039,6 @@ public class GuiBoardManager extends HeadlessBoardManager
     screen_messages.set_status_message(tm.getText("drag_menu"));
   }
 
-  public long calculateCrc32()
-  {
-    // Create a memory stream
-    ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
-    DsnFile.write(this, memoryStream, "N/A", false);
-
-    // Transform the output stream to an input stream
-    InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
-
-    return BoardFileDetails.calculateCrc32(inputStream).getValue();
-  }
-
   public boolean isBoardChanged()
   {
     return calculateCrc32() != originalBoardChecksum;
@@ -1080,48 +1065,6 @@ public class GuiBoardManager extends HeadlessBoardManager
     }
     screen_messages.set_layer(board.layer_structure.arr[settings.layer].name);
     return true;
-  }
-
-  /**
-   * Imports a board design from a Specctra dsn-file. The parameters p_item_observers and
-   * p_item_id_no_generator are used, in case the board is embedded into a host system. Returns
-   * false, if the dsn-file is corrupted.
-   */
-  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream p_design, BoardObservers p_observers, IdNoGenerator p_item_id_no_generator)
-  {
-    if (p_design == null)
-    {
-      return DsnFile.ReadResult.ERROR;
-    }
-
-    DsnFile.ReadResult read_result;
-    try
-    {
-      // TODO: we should have a returned object that represent the DSN file, and we should create a RoutingBoard/BasicBoard based on that as a next step
-      // we create the board inside the DSN file reader instead at the moment, and save it in the board field of the BoardHandling class
-      read_result = DsnFile.read(p_design, this, p_observers, p_item_id_no_generator);
-    } catch (Exception e)
-    {
-      read_result = DsnFile.ReadResult.ERROR;
-      FRLogger.error("There was an error while reading DSN file.", e);
-    }
-    if (read_result == DsnFile.ReadResult.OK)
-    {
-      FRAnalytics.fileLoaded("DSN", this.board.communication.specctra_parser_info.host_cad + "," + this.board.communication.specctra_parser_info.host_version);
-      this.board.reduce_nets_of_route_items();
-      originalBoardChecksum = calculateCrc32();
-      FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad, this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(), this.board.components.count(), this.board.rules.nets.max_net_no());
-      this.set_layer(0);
-    }
-
-    try
-    {
-      p_design.close();
-    } catch (IOException e)
-    {
-      read_result = DsnFile.ReadResult.ERROR;
-    }
-    return read_result;
   }
 
   /**
@@ -1175,6 +1118,14 @@ public class GuiBoardManager extends HeadlessBoardManager
       return false;
     }
     return SessionToEagle.get_instance(p_input_stream, p_output_stream, this.board);
+  }
+
+  @Override
+  public DsnFile.ReadResult loadFromSpecctraDsn(InputStream inputStream, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator)
+  {
+    var result = super.loadFromSpecctraDsn(inputStream, boardObservers, identificationNumberGenerator);
+    this.set_layer(0);
+    return result;
   }
 
   /**

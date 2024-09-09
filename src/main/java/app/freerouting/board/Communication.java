@@ -1,6 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.datastructures.IdNoGenerator;
+import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.CoordinateTransform;
 
 import java.io.IOException;
@@ -30,13 +30,13 @@ public class Communication implements Serializable
    */
   public final int resolution;
   public final SpecctraParserInfo specctra_parser_info;
-  public final IdNoGenerator id_no_generator;
+  public final IdentificationNumberGenerator id_no_generator;
   public transient BoardObservers observers;
 
   /**
    * Creates a new instance of BoardCommunication
    */
-  public Communication(Unit p_unit, int p_resolution, SpecctraParserInfo p_specctra_parser_info, CoordinateTransform p_coordinate_transform, IdNoGenerator p_id_no_generator, BoardObservers p_observers)
+  public Communication(Unit p_unit, int p_resolution, SpecctraParserInfo p_specctra_parser_info, CoordinateTransform p_coordinate_transform, IdentificationNumberGenerator p_id_no_generator, BoardObservers p_observers)
   {
     coordinate_transform = p_coordinate_transform;
     unit = p_unit;
@@ -51,7 +51,7 @@ public class Communication implements Serializable
    */
   public Communication()
   {
-    this(Unit.MIL, 1, new SpecctraParserInfo("\"", null, null, null, null, false), new CoordinateTransform(1, 0, 0), new ItemIdNoGenerator(), new BoardObserverAdaptor());
+    this(Unit.MIL, 1, new SpecctraParserInfo("\"", null, null, null, null, false), new CoordinateTransform(1, 0, 0), new ItemIdentificationNumberGenerator(), new BoardObserverAdaptor());
   }
 
   public boolean host_cad_is_eagle()
