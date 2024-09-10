@@ -132,7 +132,7 @@ public class Freerouting
         FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
       } catch (Exception e)
       {
-        FRLogger.warn("Couldn't get screen resolution. If you are running in a headless environment, disable the GUI be settings the gui.enabled to false.");
+        FRLogger.warn("Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.");
         globalSettings.guiSettings.isEnabled = false;
       }
     }
