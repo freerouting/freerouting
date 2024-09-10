@@ -184,3 +184,9 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xmaxerrs" << "1000"  // Increase maximum error messages
     options.compilerArgs << "-Xmaxwarns" << "1000" // Increase maximum warning messages
 }
+
+task buildDockerImage(type: Exec) {
+    group = 'docker'
+    description = 'Builds the Docker image for the application.'
+    commandLine 'docker', 'build', '-t', 'freerouting/freerouting:2.0.0', '.'
+}
