@@ -17,6 +17,7 @@ module app.freerouting {
   opens app.freerouting.api.dev to jakarta.ws.rs;
   opens app.freerouting.api.v1 to jakarta.ws.rs;
 
+  exports app.freerouting.api.dto to com.google.gson;
   exports app.freerouting.api.dev to org.glassfish.hk2.locator, jersey.server;
   exports app.freerouting.api.v1 to org.glassfish.hk2.locator, jersey.server;
   opens app.freerouting.core to com.google.gson;
