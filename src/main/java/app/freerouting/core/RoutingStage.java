@@ -9,5 +9,14 @@ public enum RoutingStage
   OPTIMIZATION, // The board is routed, and it is currently being optimized
   FINISHED, // The job has been completed successfully
   CANCELLED, // The job has been cancelled by the user
-  ERROR, // The job has been terminated due to an error
+  ERROR; // The job has been terminated due to an error
+
+  public static RoutingStage fromString(String text) {
+    for (RoutingStage stage : RoutingStage.values()) {
+      if (stage.name().equalsIgnoreCase(text)) {
+        return stage;
+      }
+    }
+    throw new IllegalArgumentException("No constant with text " + text + " found");
+  }
 }

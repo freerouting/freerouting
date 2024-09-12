@@ -66,7 +66,7 @@ public class RoutingJobScheduler
                   }
 
                   // load the board from the input into a RoutingBoard object
-                  if (job.input.format == FileFormat.DSN)
+                  if (job.input.getFormat() == FileFormat.DSN)
                   {
                     HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
                     boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
@@ -91,17 +91,17 @@ public class RoutingJobScheduler
                 }
               }
 
-              if ((job.state == RoutingJobState.COMPLETED) && ((job.output == null) || (job.output.size == 0)))
+              if ((job.state == RoutingJobState.COMPLETED) && ((job.output == null) || (job.output.getSize() == 0)))
               {
                 if (job.output == null)
                 {
                   job.output = new BoardFileDetails(job.board);
-                  job.output.format = FileFormat.SES;
+                  job.output.setFormat(FileFormat.SES);
                   job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
                 }
 
                 // save the result to the output field as a Specctra SES file
-                if (job.output.format == FileFormat.SES)
+                if (job.output.getFormat() == FileFormat.SES)
                 {
                   HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
                   boardManager.update_routing_board(job.board);

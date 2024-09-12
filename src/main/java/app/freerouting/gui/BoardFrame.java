@@ -138,7 +138,7 @@ public class BoardFrame extends WindowBase
       try
       {
         routingJob.setInput(selectedFile);
-        if (routingJob.input.format == FileFormat.UNKNOWN)
+        if (routingJob.input.getFormat() == FileFormat.UNKNOWN)
         {
           // The file is not in a valid format
           FRLogger.warn("The input file format was not recognised.");
@@ -166,9 +166,9 @@ public class BoardFrame extends WindowBase
       }
 
       // Load the file into the frame based on its recognised format
-      if ((board_panel != null) && (board_panel.board_handling != null) && (routingJob.input.format != FileFormat.UNKNOWN))
+      if ((board_panel != null) && (board_panel.board_handling != null) && (routingJob.input.getFormat() != FileFormat.UNKNOWN))
       {
-        switch (routingJob.input.format)
+        switch (routingJob.input.getFormat())
         {
           case DSN:
             this.load(routingJob.input.getData(), true, null, routingJob);
@@ -201,7 +201,7 @@ public class BoardFrame extends WindowBase
         return;
       }
 
-      switch (routingJob.output.format)
+      switch (routingJob.output.getFormat())
       {
         case SES:
           // Save the file as a Specctra SES file
@@ -615,7 +615,7 @@ public class BoardFrame extends WindowBase
     {
       ByteArrayOutputStream output_stream = new ByteArrayOutputStream();
       saveAsBinary(output_stream);
-      output.format = FileFormat.FRB;
+      output.setFormat(FileFormat.FRB);
       output.setData(output_stream.toByteArray());
       output_stream.close();
     } catch (Exception e)

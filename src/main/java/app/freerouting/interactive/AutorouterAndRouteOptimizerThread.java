@@ -203,7 +203,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
       hdlg.set_board_read_only(saved_board_read_only);
 
-      if (routingJob.output.format == FileFormat.SES)
+      if (routingJob.output.getFormat() == FileFormat.SES)
       {
         // Save the SES file after the auto-router has finished
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream())
