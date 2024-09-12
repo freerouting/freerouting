@@ -252,7 +252,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     fileChooser.addChoosableFileFilter(dsnFilter);
 
     // Set the file filter based on the output file format
-    switch (this.output.format)
+    switch (this.output.getFormat())
     {
       case SES:
         fileChooser.setFileFilter(sesFilter);
@@ -300,7 +300,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
     if ((filename != null) && (filename.toLowerCase().endsWith(DSN_FILE_EXTENSION)))
     {
-      this.input.format = FileFormat.DSN;
+      this.input.setFormat(FileFormat.DSN);
       this.input.setFilename(filename);
       this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
     }
@@ -313,9 +313,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       return false;
     }
 
-    this.input.format = getFileFormat(fileContent);
+    this.input.setFormat(getFileFormat(fileContent));
 
-    if (this.input.format != FileFormat.UNKNOWN)
+    if (this.input.getFormat() != FileFormat.UNKNOWN)
     {
       this.input.setData(fileContent);
       return true;
@@ -360,7 +360,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR))
     {
       this.output = new BoardFileDetails(outputFile);
-      this.output.format = ff;
+      this.output.setFormat(ff);
       return true;
     }
     else
@@ -414,25 +414,25 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
     setInput(content);
     input.setFilename(inputFile.getAbsolutePath());
-    if (input.format == FileFormat.UNKNOWN)
+    if (input.getFormat() == FileFormat.UNKNOWN)
     {
       // As a fallback method, set the file format based on its extension
-      input.format = getFileFormat(Path.of(input.getAbsolutePath()));
+      input.setFormat(getFileFormat(Path.of(input.getAbsolutePath())));
     }
 
-    if (this.input.format == FileFormat.FRB)
+    if (this.input.getFormat() == FileFormat.FRB)
     {
       this.output = new BoardFileDetails();
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), BINARY_FILE_EXTENSION));
     }
 
-    if (this.input.format == FileFormat.DSN)
+    if (this.input.getFormat() == FileFormat.DSN)
     {
       this.output = new BoardFileDetails();
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), SES_FILE_EXTENSION));
     }
 
-    if (this.input.format != FileFormat.UNKNOWN)
+    if (this.input.getFormat() != FileFormat.UNKNOWN)
     {
       this.input = new BoardFileDetails(inputFile);
       this.name = input.getFilenameWithoutExtension();

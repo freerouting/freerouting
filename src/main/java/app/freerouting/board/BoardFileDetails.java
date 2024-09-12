@@ -4,6 +4,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
+import jakarta.json.bind.annotation.JsonbProperty;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.*;
@@ -42,43 +43,103 @@ public class BoardFileDetails
   protected String filename = "";
   // The absolute path to the directory of the file
   @SerializedName("path")
-  protected String directoryPath = "";
-  protected transient byte[] data = new byte[0];
+  private String directoryPath = "";
 
-  public BoardFileDetails()
-  {
+  // Getter for viaCount
+  public int getViaCount() {
+    return viaCount;
+  }
+
+  private transient byte[] data = new byte[0];
+
+  // Constructor
+  public BoardFileDetails() {}
+
+  // Copy constructor
+  public BoardFileDetails(BoardFileDetails other) {
+    this.size = other.size;
+    this.crc32 = other.crc32;
+    this.format = other.format;
+    this.layerCount = other.layerCount;
+    this.componentCount = other.componentCount;
+    this.netclassCount = other.netclassCount;
+    this.netCount = other.netCount;
+    this.trackCount = other.trackCount;
+    this.traceCount = other.traceCount;
+    this.viaCount = other.viaCount;
+    this.filename = other.filename;
+    this.directoryPath = other.directoryPath;
+    this.data = other.data.clone();
+  }
+
+  // Getter methods for private fields
+  public long getSize() {
+    return size;
+  }
+
+  public long getCrc32() {
+    return crc32;
+  }
+
+  public FileFormat getFormat() {
+    return format;
+  }
+
+  public int getLayerCount() {
+    return layerCount;
+  }
+
+  public int getComponentCount() {
+    return componentCount;
+  }
+
+  public int getNetclassCount() {
+    return netclassCount;
+  }
+
+  public int getNetCount() {
+    return netCount;
+  }
+
+  public int getTrackCount() {
+    return trackCount;
+  }
+
+  public int getTraceCount() {
+    return traceCount;
+  }
+
+  public String getFilename() {
+    return filename;
+  }
+
+  public String getDirectoryPath() {
+    return directoryPath;
   }
 
   /**
    * Creates a new BoardDetails object from a file.
    */
-  public BoardFileDetails(File file)
-  {
+  public BoardFileDetails(File file) {
     this.setFilename(file.getAbsolutePath());
 
-    try (FileInputStream fis = new FileInputStream(file))
-    {
+    try (FileInputStream fis = new FileInputStream(file)) {
       this.setData(fis.readAllBytes());
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       // Ignore the exception and continue with the default values
       FRLogger.error("Failed to read file contents.", e);
     }
 
-    if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
-    {
+    if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN)) {
       String content = "";
-      try
-      {
+      try {
         // read the content of the output file as text
         content = Files.readString(file.toPath());
-      } catch (IOException e)
-      {
+      } catch (IOException e) {
         // Ignore the exception and continue with the default values
       }
 
-      if (this.format == FileFormat.SES)
-      {
+      if (this.format == FileFormat.SES) {
         // get the number of components and nets in the SES file
         this.layerCount = 0;
         this.componentCount = content.split("\\(component").length - 1;
@@ -88,9 +149,7 @@ public class BoardFileDetails
         this.traceCount = 0;
         this.viaCount = 0;
         return;
-      }
-      else if (this.format == FileFormat.DSN)
-      {
+      } else if (this.format == FileFormat.DSN) {
         // get the number of layers and nets in the DSN file
         this.layerCount = content.split("\\(layer").length - 1;
         this.componentCount = content.split("\\(component").length - 1;
@@ -115,8 +174,7 @@ public class BoardFileDetails
   /**
    * Creates a new BoardDetails object from a RoutingBoard object.
    */
-  public BoardFileDetails(BasicBoard board)
-  {
+  public BoardFileDetails(BasicBoard board) {
     this.layerCount = board.get_layer_count();
     this.componentCount = board.components.count();
     this.netclassCount = 0;
@@ -126,18 +184,14 @@ public class BoardFileDetails
     this.viaCount = board.get_vias().size();
   }
 
-  public static CRC32 calculateCrc32(InputStream inputStream)
-  {
+  public static CRC32 calculateCrc32(InputStream inputStream) {
     CRC32 crc = new CRC32();
-    try
-    {
+    try {
       int cnt;
-      while ((cnt = inputStream.read()) != -1)
-      {
+      while ((cnt = inputStream.read()) != -1) {
         crc.update(cnt);
       }
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error(e.getLocalizedMessage(), e);
     }
     return crc;
@@ -146,26 +200,21 @@ public class BoardFileDetails
   /**
    * Saves this object to a UTF-8 JSON file.
    */
-  public void saveAs(String filename) throws IOException
-  {
-    try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8))
-    {
+  public void saveAs(String filename) throws IOException {
+    try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8)) {
       writer.write(this.toString());
     }
   }
 
-  public String getAbsolutePath()
-  {
+  public String getAbsolutePath() {
     return Path.of(this.directoryPath, this.filename).toString();
   }
 
-  public ByteArrayInputStream getData()
-  {
+  public ByteArrayInputStream getData() {
     return new ByteArrayInputStream(this.data);
   }
 
-  public void setData(byte[] data)
-  {
+  public void setData(byte[] data) {
     this.data = data;
     this.size = data.length;
     InputStream inputStream = new ByteArrayInputStream(this.data);
@@ -178,28 +227,15 @@ public class BoardFileDetails
   /**
    * Returns a JSON representation of this object.
    */
-  public String toString()
-  {
+  public String toString() {
     return GsonProvider.GSON.toJson(this);
   }
 
-  public File getFile()
-  {
-    if (!this.filename.isEmpty())
-    {
+  public File getFile() {
+    if (!this.filename.isEmpty()) {
       return new File(Path.of(this.directoryPath, this.filename).toString());
     }
     return null;
-  }
-
-  public String getDirectoryPath()
-  {
-    return this.directoryPath;
-  }
-
-  public String getFilename()
-  {
-    return this.filename;
   }
 
   /**
@@ -207,80 +243,99 @@ public class BoardFileDetails
    *
    * @param filename The filename to set, optionally with its path.
    */
-  public void setFilename(String filename)
-  {
-    if (filename == null)
-    {
+  public void setFilename(String filename) {
+    if (filename == null || filename.trim().isEmpty()) {
       this.directoryPath = "";
       this.filename = "";
       return;
     }
 
-    var path = Path.of(filename).toAbsolutePath();
+    Path path = Path.of(filename).toAbsolutePath().normalize();
 
-    if (filename.contains(File.separator))
-    {
-      // separate the filename into its absolute path and its filename only
+    if (path.getParent() != null) {
       this.directoryPath = path.getParent().toString();
-      // replace the redundant "\.\" with a simple "\"
-      this.directoryPath = this.directoryPath.replace("\\.\\", "\\");
-      // remove the "/", "\" from the end of the directory path
-      this.directoryPath = this.directoryPath.replaceAll("[/\\\\]+$", "");
-      // remove the "\." from the end of the directory path
-      this.directoryPath = this.directoryPath.replaceAll("\\\\.$", "");
-    }
-    else
-    {
+    } else {
       this.directoryPath = "";
     }
 
-    // set the filename only
     this.filename = path.getFileName().toString();
 
-    if (this.format == FileFormat.UNKNOWN)
-    {
-      // try to read the file contents to determine the file format
-      this.format = RoutingJob.getFileFormat(Path.of(this.filename));
+    if (this.format == FileFormat.UNKNOWN) {
+      this.format = RoutingJob.getFileFormat(path);
     }
 
-    // add the default file extension if it is missing
-    if ((this.format != FileFormat.UNKNOWN) && (!this.filename.contains(".")))
-    {
-      String extension = "";
-      switch (this.format)
-      {
-        case SES:
-          extension = "ses";
-          break;
-        case DSN:
-          extension = "dsn";
-          break;
-        case FRB:
-          extension = "frb";
-          break;
-        case RULES:
-          extension = "rules";
-          break;
-        case SCR:
-          extension = "scr";
-          break;
-        default:
-          break;
-      }
-
-      if (!extension.isEmpty())
-      {
-        this.filename = this.filename + "." + extension;
-      }
+    if (this.format != FileFormat.UNKNOWN && !this.filename.contains(".")) {
+      this.filename += "." + getDefaultExtension(this.format);
     }
   }
 
-  public String getFilenameWithoutExtension()
-  {
-    if (this.filename.contains("."))
-    {
+  private String getDefaultExtension(FileFormat format) {
+    switch (format) {
+      case SES: return "ses";
+      case DSN: return "dsn";
+      case FRB: return "frb";
+      case RULES: return "rules";
+      case SCR: return "scr";
+      default: return "";
+    }
+  }
+
+  public String getFilenameWithoutExtension() {
+    if (this.filename.contains(".")) {
       return this.filename.substring(0, this.filename.lastIndexOf('.'));
     }
     return this.filename;
+  }
+
+  public String getFileExtension() {
+    int lastIndexOf = this.filename.lastIndexOf(".");
+    if (lastIndexOf == -1) {
+      return ""; // empty extension
+    }
+    return this.filename.substring(lastIndexOf + 1);
+  }
+
+  public void setSize(long size) {
+    this.size = size;
+  }
+
+  public void setCrc32(long crc32) {
+    this.crc32 = crc32;
+  }
+
+  public void setFormat(FileFormat format) {
+    this.format = format;
+  }
+
+  public void setLayerCount(int layerCount) {
+    this.layerCount = layerCount;
+  }
+
+  public void setComponentCount(int componentCount) {
+    this.componentCount = componentCount;
+  }
+
+  public void setNetclassCount(int netclassCount) {
+    this.netclassCount = netclassCount;
+  }
+
+  public void setNetCount(int netCount) {
+    this.netCount = netCount;
+  }
+
+  public void setTrackCount(int trackCount) {
+    this.trackCount = trackCount;
+  }
+
+  public void setTraceCount(int traceCount) {
+    this.traceCount = traceCount;
+  }
+
+  public void setViaCount(int viaCount) {
+    this.viaCount = viaCount;
+  }
+
+  public void setDirectoryPath(String directoryPath) {
+    this.directoryPath = directoryPath;
   }
 }

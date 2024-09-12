@@ -1,9 +1,8 @@
 package app.freerouting.api.v1;
 
 import app.freerouting.api.dto.BoardFilePayload;
-import app.freerouting.core.RoutingJob;
-import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.Session;
+import app.freerouting.api.dto.RoutingJobDTO;
+import app.freerouting.core.*;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.gson.GsonProvider;
@@ -25,29 +24,115 @@ public class JobControllerV1
   @Path("/enqueue")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response enqueueJob(
-      @RequestBody
-      RoutingJob job)
-  {
-    // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
-    if (session == null)
-    {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
-    }
+  public Response enqueueJob(@RequestBody String requestBody) {
+    try {
+      // Log the received request body
+      System.out.println("Received request body: " + requestBody);
 
-    try
-    {
+      // Manually deserialize the request body
+      RoutingJobDTO jobDTO = GsonProvider.GSON.fromJson(requestBody, RoutingJobDTO.class);
+
+      // Check if the sessionId references a valid session
+      Session session = SessionManager.getInstance().getSession(jobDTO.getSessionId().toString());
+      if (session == null) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity("{\"error\":\"The session ID '" + jobDTO.getSessionId() + "' is invalid.\"}")
+                .build();
+      }
+
+      // Convert DTO to RoutingJob
+      RoutingJob job = convertDtoToRoutingJob(jobDTO);
+
       // Enqueue the job
       job = RoutingJobScheduler.getInstance().enqueueJob(job);
-    } catch (Exception e)
-    {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"" + e.getMessage() + "\"}").build();
+
+      // Convert the enqueued job back to DTO for response
+      RoutingJobDTO responseDto = convertRoutingJobToDto(job);
+
+      return Response.ok(GsonProvider.GSON.toJson(responseDto)).build();
+    } catch (Exception e) {
+      e.printStackTrace(); // Log the full stack trace
+      return Response.status(Response.Status.BAD_REQUEST)
+              .entity("{\"error\":\"Error processing request: " + e.getMessage() + "\"}")
+              .build();
     }
+  }
 
-    // Return the job object
-    return Response.ok(GsonProvider.GSON.toJson(job)).build();
+  private RoutingJob convertDtoToRoutingJob(RoutingJobDTO dto) {
+    RoutingJob job = new RoutingJob(dto.getSessionId());
+    job.name = dto.getName();
+    job.state = convertJobState(dto.getState());
+    job.priority = convertJobPriority(dto.getPriority());
+    job.stage = convertJobStage(dto.getStage());
+    return job;
+  }
 
+  private RoutingJobDTO convertRoutingJobToDto(RoutingJob job) {
+    RoutingJobDTO dto = new RoutingJobDTO();
+    dto.setId(job.id);
+    dto.setSessionId(job.sessionId);
+    dto.setName(job.name);
+    dto.setState(convertRoutingJobState(job.state));
+    dto.setPriority(convertRoutingJobPriority(job.priority));
+    dto.setStage(convertRoutingStage(job.stage));
+    return dto;
+  }
+
+  // Conversion methods
+  private RoutingJobState convertJobState(RoutingJobDTO.JobState state) {
+    switch (state) {
+      case INVALID: return RoutingJobState.INVALID;
+      case QUEUED: return RoutingJobState.QUEUED;
+      case READY_TO_START: return RoutingJobState.READY_TO_START;
+      case RUNNING: return RoutingJobState.RUNNING;
+      case COMPLETED: return RoutingJobState.COMPLETED;
+//      case FAILED: return RoutingJobState.FAILED;
+      case CANCELLED: return RoutingJobState.CANCELLED;
+      default: throw new IllegalArgumentException("Unknown job state: " + state);
+    }
+  }
+
+  private RoutingJobDTO.JobState convertRoutingJobState(RoutingJobState state) {
+    switch (state) {
+      case INVALID: return RoutingJobDTO.JobState.INVALID;
+      case QUEUED: return RoutingJobDTO.JobState.QUEUED;
+      case READY_TO_START: return RoutingJobDTO.JobState.READY_TO_START;
+      case RUNNING: return RoutingJobDTO.JobState.RUNNING;
+      case COMPLETED: return RoutingJobDTO.JobState.COMPLETED;
+//      case FAILED: return RoutingJobDTO.JobState.FAILED;
+      case CANCELLED: return RoutingJobDTO.JobState.CANCELLED;
+      default: throw new IllegalArgumentException("Unknown routing job state: " + state);
+    }
+  }
+
+  private RoutingJobPriority convertJobPriority(RoutingJobDTO.JobPriority priority) {
+    switch (priority) {
+      case LOW: return RoutingJobPriority.LOW;
+      case NORMAL: return RoutingJobPriority.NORMAL;
+      case HIGH: return RoutingJobPriority.HIGH;
+      default: throw new IllegalArgumentException("Unknown job priority: " + priority);
+    }
+  }
+
+  private RoutingJobDTO.JobPriority convertRoutingJobPriority(RoutingJobPriority priority) {
+    switch (priority) {
+      case LOW: return RoutingJobDTO.JobPriority.LOW;
+      case NORMAL: return RoutingJobDTO.JobPriority.NORMAL;
+      case HIGH: return RoutingJobDTO.JobPriority.HIGH;
+      default: throw new IllegalArgumentException("Unknown routing job priority: " + priority);
+    }
+  }
+
+  private RoutingStage convertJobStage(RoutingJobDTO.JobStage stage) {
+    return RoutingStage.fromString(stage.name());
+  }
+
+  private RoutingJobDTO.JobStage convertRoutingStage(RoutingStage stage) {
+    try {
+      return RoutingJobDTO.JobStage.valueOf(stage.name());
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException("Unknown routing stage: " + stage);
+    }
   }
 
   /* Get a list of all jobs in the session with the given id, returning only basic details about them. */
@@ -260,6 +345,9 @@ public class JobControllerV1
       {
         job.input.setFilename(job.name);
       }
+
+      // Set the viaCount in the job's input
+      job.input.setViaCount(input.getViaCount());
 
       return Response.ok(GsonProvider.GSON.toJson(job)).build();
     }
