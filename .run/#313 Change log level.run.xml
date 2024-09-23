@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="#313 Change log level" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
+    <module name="freerouting.main" />
+    <option name="PROGRAM_PARAMETERS" value="-ll TRACE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

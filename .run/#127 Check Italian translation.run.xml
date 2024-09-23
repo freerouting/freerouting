@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="#127 Check Italian translation" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="temurin-21" />
+    <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
+    <module name="freerouting.main" />
+    <option name="PROGRAM_PARAMETERS" value="-l it" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

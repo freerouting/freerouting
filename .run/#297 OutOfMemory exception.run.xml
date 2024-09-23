@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="#297 OutOfMemory exception" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
+    <module name="freerouting.main" />
+    <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue297-myboard.dsn -do .\tests\Issue297-myboard.ses" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="ENABLED" value="false" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
