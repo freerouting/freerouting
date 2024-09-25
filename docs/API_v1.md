@@ -1,48 +1,196 @@
-# Freerouting API
+# Freerouting API Documentation
 
-Freerouting API provides an easy access to auto-routing functionality through standard HTTP RESTful endpoints.
+The Freerouting API provides auto-routing functionality through standard HTTP RESTful endpoints.
 
-You can test the simple GET endpoints in your browser, but I highly recommend using a testing tool like Postman.
+You can test the GET endpoints directly in your browser, but we highly recommend using tools like [Postman](https://www.postman.com/) or [Swagger UI](https://swagger.io/tools/swagger-ui/) for more extensive testing.
 
-The base URL of the endpoints change when there is a new version or revision becomes available, and they always follow the https://api.freerouting.app/{{version}} pattern, where {{version}} is v1, v2 etc. The only exception is the 'dev' version which doesn't require authentication and returns mock data for testing.
+## Base URL
 
-Our current base URL is https://api.freerouting.app/v1, so opening https://api.freerouting.app/v1/system/status in your browser should return a valid JSON document unless there is an issue with the service.
+The base URL for the API is:
+
+```
+{{base_url}}/{{version}}
+```
+
+Where `{{base_url}}` is your server's address and `{{version}}` refers to the API version (`v1`, `v2`, etc.).
+
+### Example Base URL:
+```
+https://api.freerouting.app/v1
+```
+
+---
 
 ## Authentication
-Authentication is requered for some REST API endpoints accessing public data. Using authentication also increases your API rate limit.
 
-Authentication works with personal access token which you can get by registering at https://auth.freerouting.app. Set the options.auth option to the token.
+Some endpoints require authentication via a **Personal Access Token**. To get a token, register at [auth.freerouting.app](https://auth.freerouting.app) and include it in your requests under the `Authorization` header:
 
-## Service Status
+```
+Authorization: Bearer <token>
+```
 
-GET https://api.freerouting.app/system/status
+---
 
-GET https://api.freerouting.app/system/environment
+## Endpoints
 
-## Sessions
+### Service Status
 
-POST https://api.freerouting.app/sessions/create
+- **Get Service Status**
+  ```
+  GET /system/status
+  ```
 
-GET https://api.freerouting.app/sessions/list
+  **Description:** Returns the current status of the system.
 
-GET https://api.freerouting.app/sessions/{{sessionId}}
+- **Get Environment Information**
+  ```
+  GET /system/environment
+  ```
 
-## Routing Jobs
+  **Description:** Returns information about the system environment.
 
-POST https://api.freerouting.app/jobs/enqueue
+---
 
-GET https://api.freerouting.app/jobs/list/{{sessionId}}
+### Sessions
 
-POST https://api.freerouting.app/jobs/{{jobId}}/settings
+- **Create a Session**
+  ```
+  POST /sessions/create
+  ```
 
-PUT https://api.freerouting.app/jobs/{{jobId}}/start
+  **Description:** Creates a new session.
 
-## Inputs and Outputs
+- **List All Sessions**
+  ```
+  GET /sessions/list
+  ```
 
-POST https://api.freerouting.app/jobs/{{jobId}}/input
+  **Description:** Retrieves a list of all active sessions.
 
-GET https://api.freerouting.app/jobs/{{jobId}}/output
+- **Retrieve a Specific Session**
+  ```
+  GET /sessions/{sessionId}
+  ```
 
-## Progress Reports
+  **Parameters:**
+  - `sessionId` *(required)*: The unique identifier of the session.
 
-GET https://api.freerouting.app/jobs/{{jobId}}
+  **Description:** Retrieves detailed information about a specific session.
+
+---
+
+### Routing Jobs
+
+- **Enqueue a Job**
+  ```
+  POST /jobs/enqueue
+  ```
+
+  **Description:** Submits a new routing job to be processed.
+
+- **List Jobs for a Session**
+  ```
+  GET /jobs/list/{sessionId}
+  ```
+
+  **Parameters:**
+  - `sessionId` *(required)*: The unique identifier of the session.
+
+  **Description:** Retrieves a list of routing jobs associated with a specific session.
+
+- **Update Job Settings**
+  ```
+  POST /jobs/{jobId}/settings
+  ```
+
+  **Parameters:**
+  - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Updates the settings for a specific routing job.
+
+- **Start a Job**
+  ```
+  PUT /jobs/{jobId}/start
+  ```
+
+  **Parameters:**
+  - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Starts processing the specified routing job.
+
+---
+
+### Inputs and Outputs
+
+- **Submit Input for a Job**
+  ```
+  POST /jobs/{jobId}/input
+  ```
+
+  **Parameters:**
+  - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Submits input data for a routing job.
+
+- **Get Output for a Job**
+  ```
+  GET /jobs/{jobId}/output
+  ```
+
+  **Parameters:**
+  - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Retrieves the output data for a completed routing job.
+
+---
+
+### Progress Reports
+
+- **Get Progress Report for a Job**
+  ```
+  GET /jobs/{jobId}
+  ```
+
+  **Parameters:**
+  - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Retrieves the current progress of a routing job.
+
+---
+
+## Notes
+
+- Make sure to replace `{{base_url}}` with the actual API base URL and `{{version}}` with the version you're using.
+- Endpoints that include parameters like `{sessionId}` or `{jobId}` need to be replaced with actual values.
+
+## Developer Use Case: {{version}} = "dev"
+
+For developers, the Freerouting API offers a special "dev" version designed for testing and development purposes. In this case, the endpoints do not require authentication, and they return structurally correct, mocked data to facilitate integration and testing.
+
+### Base URL:
+```
+{{base_url}}/dev
+```
+
+### Key Features:
+- **No Authentication Required:** All endpoints in the "dev" version can be accessed without needing a Personal Access Token.
+- **Mocked Data:** The API responses provide realistic, but mocked data that is structurally correct to simulate real-world API interactions.
+  
+### Example:
+To get the service status in the "dev" environment:
+```
+GET /system/status
+```
+Response (mocked data):
+```json
+{
+    "status": "OK",
+    "cpu_load": 100.0,
+    "ram_used": 67,
+    "ram_available": 32,
+    "storage_available": 1706,
+    "session_count": 1
+}
+```
+
+The "dev" version is useful for testing the API integration without relying on live data or requiring authentication.
