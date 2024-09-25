@@ -44,7 +44,7 @@ public class AppContextListener implements ServletContextListener
       FRLogger.warn("Could not retrieve Jetty Server instance from ServletContext.");
     }
 
-    FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/api/v1/system/status.");
+    FRLogger.info("API web server started successfully at " + fullUrl + ". You can ping it at " + fullUrl + "/v1/system/status or open the documentation at " + fullUrl + "/openapi.");
   }
 
   @Override

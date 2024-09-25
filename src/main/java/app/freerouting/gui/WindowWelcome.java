@@ -133,7 +133,6 @@ public class WindowWelcome extends WindowBase
       return;
     }
 
-
     // Start the Jetty server
     Server apiServer = new Server();
 
@@ -183,7 +182,11 @@ public class WindowWelcome extends WindowBase
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
-    jerseyServlet.setInitParameter("javax.ws.rs.Application", "app.freerouting.api.OpenAPIConfig");
+
+    // TODO: Add Servlet for OpenAPI documentation
+    ServletHolder openApiServlet = context.addServlet(ServletContainer.class, "/openapi/*");
+    openApiServlet.setInitOrder(1);
+    openApiServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api.OpenAPIConfig");
 
     // Add the DefaultServlet to handle static content
     ServletHolder defaultServlet = new ServletHolder("defaultServlet", DefaultServlet.class);
