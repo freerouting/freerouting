@@ -180,7 +180,7 @@ public class WindowWelcome extends WindowBase
     apiServer.setHandler(context);
 
     // Set up Jersey Servlet that handles the API
-    ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/api/*");
+    ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
     jerseyServlet.setInitParameter("javax.ws.rs.Application", "app.freerouting.api.OpenAPIConfig");

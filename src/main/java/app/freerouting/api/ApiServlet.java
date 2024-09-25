@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+// TODO: this class seems to be not used in the project
 public class ApiServlet extends HttpServlet
 {
   @Override
