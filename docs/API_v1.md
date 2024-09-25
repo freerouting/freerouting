@@ -185,7 +185,7 @@ Response (mocked data):
 ```json
 {
     "status": "OK",
-    "cpu_load": 100.0,
+    "cpu_load": 62.73316938805016,
     "ram_used": 67,
     "ram_available": 32,
     "storage_available": 1706,
