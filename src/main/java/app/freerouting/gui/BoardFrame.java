@@ -13,6 +13,8 @@ import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.RoutingJobScheduler;
+import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
@@ -124,7 +126,7 @@ public class BoardFrame extends WindowBase
     this.freerouting_version = globalSettings.version;
 
     // Set the menu bar of this frame.
-    this.menubar = new BoardMenuBar(this, globalSettings.guiSettings, globalSettings.featureFlags);
+    this.menubar = new BoardMenuBar(this, globalSettings.featureFlags);
 
     this.menubar.fileMenu.addOpenEventListener((File selectedFile) ->
     {
@@ -150,10 +152,30 @@ public class BoardFrame extends WindowBase
         return;
       }
 
-      // Set the input directory in the global settings
       if (routingJob.input.getFile() != null)
       {
+        // We allow only one job in the queue for GUI sessions, so we need to remove any existing ones before adding a new one
+        String sessionId = SessionManager.getInstance().getGuiSession().id.toString();
+        RoutingJobScheduler.getInstance().clearJobs(sessionId);
+
+        // Enqueue the job to the routing queue
+        RoutingJobScheduler.getInstance().enqueueJob(routingJob);
+
+        // Set the input directory in the global settings
+        String oldInputDirectory = globalSettings.guiSettings.inputDirectory;
         globalSettings.guiSettings.inputDirectory = this.routingJob.input.getDirectoryPath();
+
+        // Save the global settings to the configuration file if the input directory was changed
+        if (!oldInputDirectory.equals(globalSettings.guiSettings.inputDirectory))
+        {
+          try
+          {
+            GlobalSettings.saveAsJson(globalSettings);
+          } catch (IOException e)
+          {
+            FRLogger.error("Couldn't save the global settings to the configuration file", e);
+          }
+        }
 
         try
         {

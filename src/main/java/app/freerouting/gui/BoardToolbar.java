@@ -4,6 +4,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.interactive.*;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -106,7 +107,14 @@ class BoardToolbar extends JPanel
     toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     toolbar_autoroute_button.addActionListener(evt ->
     {
-      var guiRoutingJob = Arrays.stream(RoutingJobScheduler.getInstance().listJobs(SessionManager.getInstance().getGuiSession().id.toString())).findFirst().get();
+      var routingJobs = RoutingJobScheduler.getInstance().listJobs(SessionManager.getInstance().getGuiSession().id.toString());
+      if (routingJobs.length == 0)
+      {
+        FRLogger.warn("No routing job found for the current session");
+        return;
+      }
+
+      var guiRoutingJob = Arrays.stream(routingJobs).findFirst().get();
       guiRoutingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
       InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(guiRoutingJob);
 

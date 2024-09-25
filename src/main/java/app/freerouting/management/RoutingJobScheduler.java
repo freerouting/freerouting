@@ -248,4 +248,9 @@ public class RoutingJobScheduler
   {
     return this.jobs.stream().filter(j -> j.id.toString().equals(jobId)).findFirst().orElse(null);
   }
+
+  public void clearJobs(String sessionId)
+  {
+    this.jobs.removeIf(j -> j.sessionId.toString().equals(sessionId));
+  }
 }
