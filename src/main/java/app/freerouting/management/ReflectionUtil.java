@@ -102,26 +102,32 @@ public class ReflectionUtil
         }
 
         field.setAccessible(true);
-        Object value = field.get(source);
-        if (value != null)
+        Object sourceValue = field.get(source);
+        if (sourceValue != null)
         {
           // Check if the field is a primitive or a string
           if (field.getType().isPrimitive() || field.getType() == String.class)
           {
-            field.set(target, value);
+            // check if the target field is null or its default value
+            var targetValue = field.get(target);
+            var defaultValue = field.getType().getConstructor().newInstance();
+
+            if ((targetValue == null) || targetValue.equals(defaultValue))
+            {
+              field.set(target, sourceValue);
+            }
           }
           else
             // Check if the field is an enum
             if (field.getType().isEnum())
             {
               // Copy the enum value
-              field.set(target, Enum.valueOf((Class<Enum>) field.getType(), value.toString()));
+              field.set(target, Enum.valueOf((Class<Enum>) field.getType(), sourceValue.toString()));
             }
             else
               // Check if the field is an array
               if (field.getType().isArray())
               {
-
 
                 // Is the array of primitive types or strings?
                 if (field.getType().getComponentType().isPrimitive() || field.getType().getComponentType() == String.class)
@@ -132,13 +138,13 @@ public class ReflectionUtil
                   if (targetValue == null)
                   {
                     // The field is an array of primitive types or strings, so we can copy it directly
-                    field.set(target, value);
+                    field.set(target, sourceValue);
                   }
                 }
                 else
                 {
                   // The field is an array, so we need to copy its elements
-                  Object[] sourceArray = (Object[]) value;
+                  Object[] sourceArray = (Object[]) sourceValue;
                   Object[] targetArray = (Object[]) field.get(target);
                   if (targetArray == null)
                   {
@@ -157,7 +163,7 @@ public class ReflectionUtil
                   targetField = field.getType().newInstance();
                   field.set(target, targetField);
                 }
-                copyFields(value, targetField);
+                copyFields(sourceValue, targetField);
               }
         }
       } catch (Exception e)

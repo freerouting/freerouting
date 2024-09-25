@@ -24,7 +24,6 @@ public class GlobalSettings implements Serializable
 {
   public static final Path userdataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
   private static final Path configurationFilePath = userdataPath.resolve("freerouting.json");
-  public final String version = Constants.FREEROUTING_VERSION;
   public final transient EnvironmentSettings environmentSettings = new EnvironmentSettings();
   @SerializedName("profile")
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
@@ -54,6 +53,7 @@ public class GlobalSettings implements Serializable
       "ja",
       "ko"
   };
+  public String version = Constants.FREEROUTING_VERSION;
   public transient boolean show_help_option = false;
   @Deprecated
   public transient String design_input_filename;
@@ -87,8 +87,17 @@ public class GlobalSettings implements Serializable
     GlobalSettings defaultSettings = new GlobalSettings();
     if (loadedSettings != null)
     {
+      // If the version numbers are different, we must save the file again to update it
+      boolean isSaveNeeded = (!loadedSettings.version.equals(defaultSettings.version));
+
       // Apply all the loaded settings to the result if they are not null
+      loadedSettings.version = null;
       ReflectionUtil.copyFields(defaultSettings, loadedSettings);
+
+      if (isSaveNeeded)
+      {
+        saveAsJson(loadedSettings);
+      }
     }
 
     return loadedSettings;
