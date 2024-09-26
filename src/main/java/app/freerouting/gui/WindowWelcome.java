@@ -4,6 +4,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
@@ -490,10 +491,10 @@ public class WindowWelcome extends WindowBase
     if ((routingJob == null) || (routingJob.input.getFile() == null))
     {
       routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
-      routingJob.setDummyInputFile("freerouting_empty_board.dsn");
+      routingJob.setDummyInputFile("tutorial_board.dsn");
       // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
-      input_stream = classLoader.getResourceAsStream("freerouting_empty_board.dsn");
+      input_stream = classLoader.getResourceAsStream("tutorial_board.dsn");
     }
     else
     {
@@ -509,10 +510,27 @@ public class WindowWelcome extends WindowBase
     }
 
     BoardFrame new_frame = new BoardFrame(routingJob, globalSettings);
+
     boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field, routingJob);
     if (!read_ok)
     {
       return null;
+    }
+
+    // Change the palette if we loaded the tutorial DSN file
+    if (Objects.equals(routingJob.input.getFilename(), "tutorial_board.dsn"))
+    {
+      var graphicsContext = new_frame.board_panel.board_handling.graphics_context;
+
+      graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), 0.9);
+      graphicsContext.item_color_table.set_conduction_colors(new Color[]{
+          new Color(232, 204, 135),
+          new Color(180, 159, 105)
+      });
+      graphicsContext.other_color_table.set_background_color(new Color(1, 58, 32));
+      graphicsContext.other_color_table.set_outline_color(new Color(255, 255, 255));
+
+      new_frame.board_panel.setBackground(graphicsContext.other_color_table.get_background_color());
     }
 
     FRAnalytics.buttonClicked("fileio_loaddsn", routingJob.getInputFileDetails());

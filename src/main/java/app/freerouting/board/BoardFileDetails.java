@@ -62,7 +62,6 @@ public class BoardFileDetails
     } catch (IOException e)
     {
       // Ignore the exception and continue with the default values
-      FRLogger.error("Failed to read file contents.", e);
     }
 
     if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
