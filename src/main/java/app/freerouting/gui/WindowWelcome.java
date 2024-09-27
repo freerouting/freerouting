@@ -525,7 +525,7 @@ public class WindowWelcome extends WindowBase
       graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), 0.9);
       graphicsContext.item_color_table.set_conduction_colors(new Color[]{
           new Color(232, 204, 135),
-          new Color(180, 159, 105)
+          new Color(255, 255, 255)
       });
       graphicsContext.other_color_table.set_background_color(new Color(1, 58, 32));
       graphicsContext.other_color_table.set_outline_color(new Color(255, 255, 255));

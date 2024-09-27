@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jvm-test-suite'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.51.0'
@@ -26,6 +27,32 @@ tasks.withType(Javadoc).configureEach {
     options.addStringOption 'Xdoclint:none', '-quiet'
 }
 
+testing {
+    suites {
+        test {
+            useJUnitJupiter()
+        }
+
+        integrationTest(JvmTestSuite) {
+            dependencies {
+                implementation project()
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn(testing.suites.integrationTest)
+}
+
 repositories {
     flatDir {
         dirs 'libs'
@@ -42,9 +69,6 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/junit/junit
-    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-
     // https://mvnrepository.com/artifact/javax.help/javahelp
     //implementation group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
@@ -92,10 +116,6 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-jaxrs2:2.2.24'
     implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2:2.2.24'
     implementation 'io.swagger.core.v3:swagger-core:2.2.24'
-}
-
-test {
-    useJUnitPlatform()
 }
 
 ext {
