@@ -231,7 +231,7 @@ public class RoutingJobScheduler
    */
   public int getQueuePosition(RoutingJob job)
   {
-    return (int) (this.jobs.size() - this.jobs.stream().filter(j -> j != job).count());
+    return this.jobs.indexOf(job);
   }
 
   public RoutingJob[] listJobs()
