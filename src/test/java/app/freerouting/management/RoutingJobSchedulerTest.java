@@ -142,13 +142,7 @@ public class RoutingJobSchedulerTest
     assertFalse(containsJob(scheduler.jobs, job2), "Job2 should be removed.");
     assertTrue(containsJob(scheduler.jobs, job3), "Job3 (from a different session) should not be removed.");
   }
-
-  @Test
-  void testFail()
-  {
-    fail();
-  }
-
+  
   // Helper method to create a test job with a random session ID
   private RoutingJob createTestJob()
   {
