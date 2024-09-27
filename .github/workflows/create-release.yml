@@ -9,7 +9,28 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build and Run Tests
+        run: ./gradlew build
+
   build-jar:
+  
+    needs: build-and-test
   
     runs-on: [windows-latest]
 
@@ -38,6 +59,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
 
   build-ubuntu-x64:
+  
+    needs: build-and-test
 
     runs-on: [ubuntu-latest]
 
@@ -68,6 +91,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}      
    
   build-windows-x64:
+  
+    needs: build-and-test  
 
     runs-on: [windows-latest]
 
@@ -98,6 +123,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}   
 
   build-macos-x64:
+  
+    needs: build-and-test  
 
     runs-on: [macos-latest]
 
