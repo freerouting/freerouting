@@ -48,7 +48,7 @@ public class RoutingJobSchedulerTest
     // Create a test session
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId);
+    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     // Create a test job
     RoutingJob job = new RoutingJob();
@@ -120,8 +120,8 @@ public class RoutingJobSchedulerTest
     // Create a test session
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session1 = sessionManager.createSession(userId);
-    Session session2 = sessionManager.createSession(userId);
+    Session session1 = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session2 = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     // Create test jobs
     RoutingJob job1 = createTestJob(session1.id);
@@ -142,13 +142,13 @@ public class RoutingJobSchedulerTest
     assertFalse(containsJob(scheduler.jobs, job2), "Job2 should be removed.");
     assertTrue(containsJob(scheduler.jobs, job3), "Job3 (from a different session) should not be removed.");
   }
-  
+
   // Helper method to create a test job with a random session ID
   private RoutingJob createTestJob()
   {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId);
+    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
     return createTestJob(session.id);
   }
 

@@ -1,5 +1,6 @@
 package app.freerouting.api.v1;
 
+import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.BoardFilePayload;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -13,8 +14,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.UUID;
+
 @Path("/v1/jobs")
-public class JobControllerV1
+public class JobControllerV1 extends BaseController
 {
   public JobControllerV1()
   {
@@ -29,8 +32,11 @@ public class JobControllerV1
       @RequestBody
       RoutingJob job)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
     if (session == null)
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
@@ -58,14 +64,17 @@ public class JobControllerV1
       @PathParam("sessionId")
       String sessionId)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Get the session with the id of sessionId
-    Session session = SessionManager.getInstance().getSession(sessionId);
+    Session session = SessionManager.getInstance().getSession(sessionId, userId);
 
     RoutingJob[] result;
     // If the session does not exist, list all jobs
     if ((session == null) || (sessionId.isEmpty()) || (sessionId.equals("all")))
     {
-      result = RoutingJobScheduler.getInstance().listJobs();
+      result = RoutingJobScheduler.getInstance().listJobs(null, userId);
     }
     else
     {
@@ -84,6 +93,9 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Enqueue the job
     var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
@@ -94,7 +106,7 @@ public class JobControllerV1
     }
 
     // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
     if (session == null)
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
@@ -111,6 +123,9 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Get the job based on the jobId
     var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
@@ -121,7 +136,7 @@ public class JobControllerV1
     }
 
     // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
     if (session == null)
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
@@ -146,6 +161,9 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Get the job based on the jobId
     var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
@@ -156,10 +174,10 @@ public class JobControllerV1
     }
 
     // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
     if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
     // Return an error that this method is not implemented yet
@@ -177,6 +195,9 @@ public class JobControllerV1
       @RequestBody()
       RouterSettings routerSettings)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Get the job based on the jobId
     var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
@@ -187,10 +208,10 @@ public class JobControllerV1
     }
 
     // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
     if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
     // Check if the job is queued and have not started yet
@@ -220,6 +241,9 @@ public class JobControllerV1
       @RequestBody()
       BoardFilePayload input)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Get the job based on the jobId
     var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
@@ -230,10 +254,10 @@ public class JobControllerV1
     }
 
     // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
     if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
     // Check if the job is queued and have not started yet
@@ -277,6 +301,9 @@ public class JobControllerV1
       @PathParam("jobId")
       String jobId)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Get the job based on the jobId
     var job = RoutingJobScheduler.getInstance().getJob(jobId);
 
@@ -287,10 +314,10 @@ public class JobControllerV1
     }
 
     // Check if the sessionId references a valid session
-    Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
     if (session == null)
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "'is invalid.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
     // Check if the job is completed

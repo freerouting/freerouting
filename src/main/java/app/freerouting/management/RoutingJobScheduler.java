@@ -5,6 +5,7 @@ import app.freerouting.board.BoardFileDetails;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.Session;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -242,6 +244,39 @@ public class RoutingJobScheduler
   public RoutingJob[] listJobs(String sessionId)
   {
     return this.jobs.stream().filter(j -> j.sessionId.toString().equals(sessionId)).toArray(RoutingJob[]::new);
+  }
+
+  public RoutingJob[] listJobs(String sessionId, UUID userId)
+  {
+    SessionManager sessionManager = SessionManager.getInstance();
+
+    if (sessionId == null)
+    {
+      // Get all sessions that belong to the user
+      Session[] sessions = sessionManager.getSessions(null, userId);
+
+      // Iterate through the sessions and list all jobs belonging to them
+      List<RoutingJob> result = new LinkedList<>();
+      for (Session session : sessions)
+      {
+        // List all jobs belonging to the user in the session
+        result.addAll(List.of(listJobs(session.id.toString())));
+      }
+
+      return result.toArray(RoutingJob[]::new);
+    }
+    else
+    {
+      Session session = sessionManager.getSession(sessionId, userId);
+
+      if (session != null)
+      {
+        // List all jobs belonging to the user in the session
+        return listJobs(session.id.toString());
+      }
+    }
+
+    return new RoutingJob[0];
   }
 
   public RoutingJob getJob(String jobId)

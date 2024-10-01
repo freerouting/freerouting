@@ -32,7 +32,7 @@ public class TestBasedOnAnIssue
   {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
-    Session session = SessionManager.getInstance().createSession(sessionId);
+    Session session = SessionManager.getInstance().createSession(sessionId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);

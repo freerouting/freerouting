@@ -31,6 +31,23 @@ public class SessionManager
     return sessions.get(sessionId);
   }
 
+  public Session getSession(String sessionId, UUID userId)
+  {
+    Session session = getSession(sessionId);
+
+    if (session == null)
+    {
+      return null;
+    }
+
+    if (!session.userId.equals(userId))
+    {
+      return null;
+    }
+
+    return session;
+  }
+
   public Session createSession(UUID userId, String host)
   {
     Session session = new Session(userId, host);
@@ -96,6 +113,18 @@ public class SessionManager
     if (!session.host.startsWith("Freerouting/"))
     {
       throw new IllegalArgumentException("Session with id " + sessionId + " and host " + session.host + " is not a valid GUI session. GUI sessions must have the prefix 'Freerouting/' for their host value.");
+    }
+  }
+
+  public Session[] getSessions(String sessionId, UUID userId)
+  {
+    if (sessionId == null)
+    {
+      return sessions.values().stream().filter(s -> s.userId.equals(userId)).toArray(Session[]::new);
+    }
+    else
+    {
+      return new Session[]{sessions.get(sessionId)};
     }
   }
 }

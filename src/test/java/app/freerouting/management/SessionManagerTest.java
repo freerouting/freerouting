@@ -1,5 +1,6 @@
 package app.freerouting.management;
 
+import app.freerouting.Freerouting;
 import app.freerouting.core.Session;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ public class SessionManagerTest
   {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId);
+    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     assertNotNull(session, "Created session should not be null.");
     assertNotNull(session.id, "Session ID should be generated.");
@@ -37,7 +38,7 @@ public class SessionManagerTest
   {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId);
+    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     sessionManager.removeSession(session.id.toString());
     Session retrievedSession = sessionManager.getSession(session.id.toString());
@@ -50,8 +51,8 @@ public class SessionManagerTest
     SessionManager sessionManager = SessionManager.getInstance();
     int initialCount = sessionManager.getActiveSessionsCount();
 
-    sessionManager.createSession(UUID.randomUUID());
-    sessionManager.createSession(UUID.randomUUID());
+    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
     assertEquals(initialCount + 2, sessionManager.getActiveSessionsCount(), "Active session count should be incremented.");
   }
 
@@ -59,8 +60,8 @@ public class SessionManagerTest
   void testListSessionIds()
   {
     SessionManager sessionManager = SessionManager.getInstance();
-    sessionManager.createSession(UUID.randomUUID());
-    sessionManager.createSession(UUID.randomUUID());
+    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     String[] sessionIds = sessionManager.listSessionIds();
     assertTrue(sessionIds.length >= 2, "Session ID list should contain at least two IDs.");
@@ -71,7 +72,7 @@ public class SessionManagerTest
   {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
-    Session session = sessionManager.createSession(userId);
+    Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     assertThrows(IllegalArgumentException.class, sessionManager::getGuiSession, "Getting GUI session without setting it should throw an exception.");
 
