@@ -59,11 +59,13 @@ public class SessionManagerTest
   @Test
   void testListSessionIds()
   {
-    SessionManager sessionManager = SessionManager.getInstance();
-    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
-    sessionManager.createSession(UUID.randomUUID(), "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    UUID userId = UUID.randomUUID();
 
-    String[] sessionIds = sessionManager.listSessionIds();
+    SessionManager sessionManager = SessionManager.getInstance();
+    sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+
+    String[] sessionIds = sessionManager.listSessionIds(userId);
     assertTrue(sessionIds.length >= 2, "Session ID list should contain at least two IDs.");
   }
 

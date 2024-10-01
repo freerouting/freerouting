@@ -28,8 +28,11 @@ public class SessionControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response listSessions()
   {
-    // TODO: filter the list of sessions to only include the ones that the user has access to
-    return Response.ok(GSON.toJson(SessionManager.getInstance().listSessionIds())).build();
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
+    // filter the list of sessions to only include the ones that the user has access to
+    return Response.ok(GSON.toJson(SessionManager.getInstance().listSessionIds(userId))).build();
   }
 
   @POST
@@ -60,8 +63,11 @@ public class SessionControllerV1 extends BaseController
       @PathParam("sessionId")
       String sessionId)
   {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
     // Return one session with the id of sessionId
-    Session session = SessionManager.getInstance().getSession(sessionId);
+    Session session = SessionManager.getInstance().getSession(sessionId, userId);
     if (session == null)
     {
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();

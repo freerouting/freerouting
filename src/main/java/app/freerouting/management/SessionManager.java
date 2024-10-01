@@ -2,6 +2,7 @@ package app.freerouting.management;
 
 import app.freerouting.core.Session;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -65,9 +66,9 @@ public class SessionManager
     return sessions.size();
   }
 
-  public String[] listSessionIds()
+  public String[] listSessionIds(UUID userId)
   {
-    return sessions.keySet().toArray(new String[0]);
+    return Arrays.stream(getSessions(null, userId)).map(s -> s.id.toString()).toArray(String[]::new);
   }
 
   public Session getGuiSession() throws IllegalArgumentException
