@@ -168,7 +168,7 @@ public class JobControllerV1
 
   /* Change the settings of the job, such as the router settings. */
   @POST
-  @Path("/{jobId}/changeSettings")
+  @Path("/{jobId}/settings")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changeSettings(
@@ -211,7 +211,7 @@ public class JobControllerV1
    * Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core web server.
    */
   @POST
-  @Path("/{jobId}/uploadInput")
+  @Path("/{jobId}/input")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response uploadInput(
@@ -271,7 +271,7 @@ public class JobControllerV1
 
   /* Download the output of the job, typically in Specctra SES format. */
   @GET
-  @Path("/{jobId}/downloadOutput")
+  @Path("/{jobId}/output")
   @Produces(MediaType.APPLICATION_JSON)
   public Response downloadOutput(
       @PathParam("jobId")
