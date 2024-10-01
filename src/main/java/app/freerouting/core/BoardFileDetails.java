@@ -1,6 +1,8 @@
-package app.freerouting.board;
+package app.freerouting.core;
 
-import app.freerouting.core.RoutingJob;
+import app.freerouting.board.BasicBoard;
+import app.freerouting.core.events.BoardFileDetailsUpdatedEvent;
+import app.freerouting.core.events.BoardFileDetailsUpdatedEventListener;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
@@ -10,10 +12,13 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.CRC32;
 
 public class BoardFileDetails
 {
+  protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners = new ArrayList<>();
   // The size of the file in bytes
   @SerializedName("size")
   public long size = 0;
@@ -44,6 +49,7 @@ public class BoardFileDetails
   @SerializedName("path")
   protected String directoryPath = "";
   protected transient byte[] data = new byte[0];
+
 
   public BoardFileDetails()
   {
@@ -172,6 +178,8 @@ public class BoardFileDetails
 
     // read the file contents to determine the file format
     this.format = RoutingJob.getFileFormat(this.data);
+
+    fireUpdatedEvent();
   }
 
   /**
@@ -272,6 +280,8 @@ public class BoardFileDetails
         this.filename = this.filename + "." + extension;
       }
     }
+
+    fireUpdatedEvent();
   }
 
   public String getFilenameWithoutExtension()
@@ -282,4 +292,19 @@ public class BoardFileDetails
     }
     return this.filename;
   }
+
+  public void addUpdatedEventListener(BoardFileDetailsUpdatedEventListener listener)
+  {
+    updatedEventListeners.add(listener);
+  }
+
+  public void fireUpdatedEvent()
+  {
+    BoardFileDetailsUpdatedEvent event = new BoardFileDetailsUpdatedEvent(this, this);
+    for (BoardFileDetailsUpdatedEventListener listener : updatedEventListeners)
+    {
+      listener.onBoardFileDetailsUpdated(event);
+    }
+  }
+
 }

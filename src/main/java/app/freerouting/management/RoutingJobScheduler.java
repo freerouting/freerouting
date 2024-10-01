@@ -1,12 +1,8 @@
 package app.freerouting.management;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.BoardFileDetails;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.core.RoutingJob;
-import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.Session;
-import app.freerouting.core.StoppableThread;
+import app.freerouting.core.*;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
@@ -98,6 +94,7 @@ public class RoutingJobScheduler
                 if (job.output == null)
                 {
                   job.output = new BoardFileDetails(job.board);
+                  job.output.addUpdatedEventListener(e -> job.fireOutputUpdatedEvent());
                   job.output.format = FileFormat.SES;
                   job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
                 }
@@ -181,17 +178,35 @@ public class RoutingJobScheduler
     job.state = RoutingJobState.QUEUED;
     this.jobs.add(job);
 
+    return job;
+  }
+
+  public void saveJob(RoutingJob job)
+  {
     if (Freerouting.globalSettings.featureFlags.saveJobs)
     {
+      String sessionIdString = "null";
+      String userIdString = "null";
+
       try
       {
-        saveJob("U-" + UUIDtoShortCode(userId), "S-" + UUIDtoShortCode(sessionId), job);
+        Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+
+        if (session == null)
+        {
+          FRLogger.error(String.format("Failed to save job in session '%s' to disk, because the session does not exist.", job.sessionId), null);
+        }
+
+        sessionIdString = session.id.toString();
+        userIdString = session.userId.toString();
+
+        saveJob("U-" + UUIDtoShortCode(session.userId), "S-" + UUIDtoShortCode(session.id), job);
       } catch (IOException e)
       {
-        FRLogger.error(String.format("Failed to save job for user '%s' in session '%s' to disk.", userId, sessionId), e);
+        FRLogger.error(String.format("Failed to save job for user '%s' in session '%s' to disk.", userIdString, sessionIdString), e);
       }
     }
-    return job;
+
   }
 
   private void saveJob(String userFolder, String sessionFolder, RoutingJob job) throws IOException
@@ -202,14 +217,21 @@ public class RoutingJobScheduler
     // Make sure that we have the directory structure in place, and create it if it doesn't exist
     Files.createDirectories(userFolderPath);
 
-    // List all directories in the user folder and check if they start with a number
-    // If they do, then they are job folders, and we can get the highest number and increment it
-    int jobFolderCount = Files.list(userFolderPath).filter(Files::isDirectory).map(Path::getFileName).map(Path::toString).map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
-                              .filter(s -> s.matches("\\d+")) // Ensure it is numeric
-                              .mapToInt(Integer::parseInt).max().orElse(0);
+    // Check if we already have a directory that has a name with the ending of sessionFolder
+    Path sessionFolderPath = Files.list(userFolderPath).filter(Files::isDirectory).filter(p -> p.getFileName().toString().endsWith(sessionFolder)).findFirst().orElse(null);
+
+    if (sessionFolderPath == null)
+    {
+      // List all directories in the user folder and check if they start with a number
+      // If they do, then they are job folders, and we can get the highest number and increment it
+      int jobFolderCount = Files.list(userFolderPath).filter(Files::isDirectory).map(Path::getFileName).map(Path::toString).map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
+                                .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+                                .mapToInt(Integer::parseInt).max().orElse(0);
+
+      sessionFolderPath = userFolderPath.resolve(String.format("%04d", jobFolderCount + 1) + "_" + sessionFolder);
+    }
 
     // Create the session's folder if it doesn't exist
-    Path sessionFolderPath = userFolderPath.resolve(String.format("%04d", jobFolderCount + 1) + "_" + sessionFolder);
     Files.createDirectories(sessionFolderPath);
 
     // Save the job to the session's folder using ISO standard date and time format
@@ -222,6 +244,20 @@ public class RoutingJobScheduler
     } catch (Exception e)
     {
       FRLogger.error(String.format("Failed to save job '%s' to disk.", job.id), e);
+    }
+
+    // Save the input file if the filename is defined and there is data stored in it
+    if ((job.input != null && job.input.getFilename() != null && !job.input.getFilename().isEmpty() && job.input.getData() != null))
+    {
+      Path inputFilePath = sessionFolderPath.resolve(job.input.getFilename());
+      Files.write(inputFilePath, job.input.getData().readAllBytes());
+    }
+
+    // Save the output file if the filename is defined and there is data stored in it
+    if ((job.output != null && job.output.getFilename() != null && !job.output.getFilename().isEmpty() && job.output.getData() != null))
+    {
+      Path outputFilePath = sessionFolderPath.resolve(job.output.getFilename());
+      Files.write(outputFilePath, job.output.getData().readAllBytes());
     }
   }
 

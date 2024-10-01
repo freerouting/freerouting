@@ -46,6 +46,12 @@ public class JobControllerV1 extends BaseController
     {
       // Enqueue the job
       job = RoutingJobScheduler.getInstance().enqueueJob(job);
+      RoutingJobScheduler.getInstance().saveJob(job);
+
+      // Save the job when the settings, input or output was updated
+      job.addSettingsUpdatedEventListener(e -> RoutingJobScheduler.getInstance().saveJob(e.getJob()));
+      job.addInputUpdatedEventListener(e -> RoutingJobScheduler.getInstance().saveJob(e.getJob()));
+      job.addOutputUpdatedEventListener(e -> RoutingJobScheduler.getInstance().saveJob(e.getJob()));
     } catch (Exception e)
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"" + e.getMessage() + "\"}").build();
@@ -149,6 +155,7 @@ public class JobControllerV1 extends BaseController
     }
 
     job.state = RoutingJobState.READY_TO_START;
+    RoutingJobScheduler.getInstance().saveJob(job);
 
     return Response.ok(GsonProvider.GSON.toJson(job)).build();
   }
@@ -179,6 +186,10 @@ public class JobControllerV1 extends BaseController
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
+
+    // TODO: cancel the job
+
+    RoutingJobScheduler.getInstance().saveJob(job);
 
     // Return an error that this method is not implemented yet
     return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
@@ -221,7 +232,7 @@ public class JobControllerV1 extends BaseController
     }
 
     // Change the settings of the job
-    job.routerSettings = routerSettings;
+    job.setSettings(routerSettings);
 
     // Return the job object
     return Response.ok(GsonProvider.GSON.toJson(job)).build();

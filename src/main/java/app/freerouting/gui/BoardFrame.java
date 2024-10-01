@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.*;
+import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.FileFilter;
 import app.freerouting.designforms.specctra.DsnFile;

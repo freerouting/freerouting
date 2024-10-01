@@ -1,7 +1,8 @@
 package app.freerouting.core;
 
-import app.freerouting.board.BoardFileDetails;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.events.RoutingJobUpdatedEvent;
+import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.designforms.specctra.RulesFile;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
@@ -17,6 +18,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -32,13 +35,15 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public final UUID id = UUID.randomUUID();
   public final Instant createdAt = Instant.now();
+  // events to signal input and output updates
+  protected final transient List<RoutingJobUpdatedEventListener> settingsUpdatedEventListeners = new ArrayList<>();
+  protected final transient List<RoutingJobUpdatedEventListener> inputUpdatedEventListeners = new ArrayList<>();
+  protected final transient List<RoutingJobUpdatedEventListener> outputUpdatedEventListeners = new ArrayList<>();
   public Instant startedAt = null;
   public Instant finishedAt = null;
   public BoardFileDetails input = null;
   public BoardFileDetails snapshot = null;
   public BoardFileDetails output = null;
-  // TODO: pass the router settings as an input and forward it to the router
-  public RouterSettings routerSettings = new RouterSettings();
   public UUID sessionId;
   public String name;
   public RoutingJobState state = RoutingJobState.INVALID;
@@ -46,6 +51,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public RoutingStage stage = RoutingStage.IDLE;
   public transient StoppableThread thread = null;
   public transient RoutingBoard board = null;
+  // TODO: pass the router settings as an input to the router (and don't use the one on IBoardManager/GuiBoardManager)
+  public RouterSettings routerSettings = new RouterSettings();
 
   /**
    * We need a parameterless constructor for the serialization.
@@ -181,6 +188,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public boolean setInput(byte[] inputFileContent)
   {
     this.input = new BoardFileDetails();
+    this.input.addUpdatedEventListener(e -> this.fireInputUpdatedEvent());
     return this.tryToSetInput(inputFileContent);
   }
 
@@ -318,6 +326,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if (this.input.format != FileFormat.UNKNOWN)
     {
       this.input.setData(fileContent);
+      fireInputUpdatedEvent();
       return true;
     }
 
@@ -360,7 +369,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if ((ff == FileFormat.DSN) || (ff == FileFormat.FRB) || (ff == FileFormat.SES) || (ff == FileFormat.SCR))
     {
       this.output = new BoardFileDetails(outputFile);
+      this.output.addUpdatedEventListener(e -> this.fireInputUpdatedEvent());
       this.output.format = ff;
+      fireOutputUpdatedEvent();
       return true;
     }
     else
@@ -423,21 +434,75 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if (this.input.format == FileFormat.FRB)
     {
       this.output = new BoardFileDetails();
+      this.output.addUpdatedEventListener(e -> this.fireOutputUpdatedEvent());
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), BINARY_FILE_EXTENSION));
     }
 
     if (this.input.format == FileFormat.DSN)
     {
       this.output = new BoardFileDetails();
+      this.output.addUpdatedEventListener(e -> this.fireOutputUpdatedEvent());
       this.output.setFilename(changeFileExtension(input.getAbsolutePath(), SES_FILE_EXTENSION));
     }
 
     if (this.input.format != FileFormat.UNKNOWN)
     {
       this.input = new BoardFileDetails(inputFile);
+      this.input.addUpdatedEventListener(e -> this.fireInputUpdatedEvent());
       this.name = input.getFilenameWithoutExtension();
       this.snapshot = new BoardFileDetails();
       this.snapshot.setFilename(getSnapshotFilename(this.input.getFile()));
     }
+
+    fireInputUpdatedEvent();
   }
+
+  public void setSettings(RouterSettings settings)
+  {
+    this.routerSettings = settings;
+    fireSettingsUpdatedEvent();
+  }
+
+  public void addSettingsUpdatedEventListener(RoutingJobUpdatedEventListener listener)
+  {
+    settingsUpdatedEventListeners.add(listener);
+  }
+
+  public void fireSettingsUpdatedEvent()
+  {
+    RoutingJobUpdatedEvent event = new RoutingJobUpdatedEvent(this, this);
+    for (RoutingJobUpdatedEventListener listener : settingsUpdatedEventListeners)
+    {
+      listener.onRoutingJobUpdated(event);
+    }
+  }
+
+  public void addInputUpdatedEventListener(RoutingJobUpdatedEventListener listener)
+  {
+    inputUpdatedEventListeners.add(listener);
+  }
+
+  public void fireInputUpdatedEvent()
+  {
+    RoutingJobUpdatedEvent event = new RoutingJobUpdatedEvent(this, this);
+    for (RoutingJobUpdatedEventListener listener : inputUpdatedEventListeners)
+    {
+      listener.onRoutingJobUpdated(event);
+    }
+  }
+
+  public void addOutputUpdatedEventListener(RoutingJobUpdatedEventListener listener)
+  {
+    outputUpdatedEventListeners.add(listener);
+  }
+
+  public void fireOutputUpdatedEvent()
+  {
+    RoutingJobUpdatedEvent event = new RoutingJobUpdatedEvent(this, this);
+    for (RoutingJobUpdatedEventListener listener : outputUpdatedEventListeners)
+    {
+      listener.onRoutingJobUpdated(event);
+    }
+  }
+
 }

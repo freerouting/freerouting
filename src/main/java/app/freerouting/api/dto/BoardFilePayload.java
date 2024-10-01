@@ -1,6 +1,6 @@
 package app.freerouting.api.dto;
 
-import app.freerouting.board.BoardFileDetails;
+import app.freerouting.core.BoardFileDetails;
 
 import java.util.UUID;
 

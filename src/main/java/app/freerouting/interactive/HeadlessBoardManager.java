@@ -1,6 +1,10 @@
 package app.freerouting.interactive;
 
-import app.freerouting.board.*;
+import app.freerouting.board.BoardObservers;
+import app.freerouting.board.Communication;
+import app.freerouting.board.LayerStructure;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
