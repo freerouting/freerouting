@@ -31,9 +31,9 @@ public class SessionManager
     return sessions.get(sessionId);
   }
 
-  public Session createSession(UUID userId)
+  public Session createSession(UUID userId, String host)
   {
-    Session session = new Session(userId);
+    Session session = new Session(userId, host);
     sessions.put(session.id.toString(), session);
     return session;
   }
@@ -66,6 +66,12 @@ public class SessionManager
     throw new IllegalArgumentException("There is no GUI session.");
   }
 
+  /**
+   * Sets the session as a GUI session.
+   *
+   * @param sessionId
+   * @throws IllegalArgumentException
+   */
   public void setGuiSession(UUID sessionId) throws IllegalArgumentException
   {
     // Check if there are any other GUI sessions and if so, throw an exception because only one GUI session is allowed
@@ -85,6 +91,11 @@ public class SessionManager
     else
     {
       throw new IllegalArgumentException("Session with id " + sessionId + " does not exist.");
+    }
+
+    if (!session.host.startsWith("Freerouting/"))
+    {
+      throw new IllegalArgumentException("Session with id " + sessionId + " and host " + session.host + " is not a valid GUI session. GUI sessions must have the prefix 'Freerouting/' for their host value.");
     }
   }
 }

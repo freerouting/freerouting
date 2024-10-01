@@ -209,7 +209,7 @@ public class WindowWelcome extends WindowBase
   public static boolean InitializeGUI(GlobalSettings globalSettings)
   {
     // Start a new Freerouting session
-    var guiSession = SessionManager.getInstance().createSession(UUID.fromString(globalSettings.userProfileSettings.userId));
+    var guiSession = SessionManager.getInstance().createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
     SessionManager.getInstance().setGuiSession(guiSession.id);
 
     // Set default font for buttons and labels
