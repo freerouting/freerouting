@@ -1,12 +1,7 @@
 package app.freerouting.api.dev;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -21,29 +16,37 @@ public class SystemControllerMocked
   @GET
   @Path("/status")
   @Produces(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Get job by session and job ID", description = "Returns a job object based on session and job ID")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successful response"),
-      @ApiResponse(responseCode = "404", description = "Job not found")
-  })
-  public Response getStatus(
-      @Parameter(description = "Session ID", required = true)
-      @PathParam("sessionId")
-      String sessionId,
-      @Parameter(description = "Job ID", required = true)
-      @PathParam("jobId")
-      String jobId)
+  public Response getStatus()
   {
-    // Return a random system status JSON object with status, cpu, memory, session count, etc. fields
     return Response.ok("""
                        {
                            "status": "OK",
-                           "cpu_load": 6.8121539802289295,
-                           "ram_used": 36,
-                           "ram_available": 59,
-                           "storage_available": 1897,
+                           "cpu_load": 3.954818264180926,
+                           "ram_used": 86,
+                           "ram_available": 73,
+                           "storage_available": 481,
                            "session_count": 1
                        }
                        """).build();
+  }
+
+  @GET
+  @Path("/environment")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getEnvironment()
+  {
+    return Response.ok("""
+                       {
+                           "freerouting_version": "2.0.0,2024-10-14",
+                           "app_started_at": "2024-10-14T10:56:26.730145900Z",
+                           "command_line_arguments": "",
+                           "architecture": "Windows 11,amd64,10.0",
+                           "java": "21.0.2,Eclipse Adoptium",
+                           "system_language": "en,en_US",
+                           "cpu_cores": 12,
+                           "ram": 8176
+                       }
+                       """).build();
+
   }
 }
