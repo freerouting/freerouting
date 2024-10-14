@@ -38,7 +38,7 @@ public class LogEntries
 
   public LogEntry[] getEntries(Instant entriesSince, UUID topic)
   {
-    return entries.stream().filter(e -> ((entriesSince == null) || (e.timestamp.isAfter(entriesSince)) && (topic == null || e.topic.equals(topic)))).toArray(LogEntry[]::new);
+    return entries.stream().filter(e -> ((entriesSince == null) || e.timestamp.isAfter(entriesSince)) && (topic == null || ((e.topic != null) && e.topic.equals(topic)))).toArray(LogEntry[]::new);
   }
 
   public void add(LogEntryType type, String message, UUID topic)
