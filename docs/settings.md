@@ -1,13 +1,64 @@
 ## Freerouting Settings Documentation
 
-Freerouting uses a flexible settings system that allows users to customize various aspects of the application's
-behavior. These settings can be managed through a JSON configuration file, command-line arguments, or environment
-variables.
+Freerouting uses a flexible settings system that allows users to customize various aspects of the application's behavior. These settings can be managed through a JSON configuration file, command-line arguments, or environment variables.
 
 ### Settings File (JSON)
 
-The primary way to configure Freerouting is by using a JSON settings file. This file contains key-value pairs that
-define various settings. Below is a detailed explanation of the available settings:
+The primary way to configure Freerouting is by using a JSON settings file. This file contains key-value pairs that define various settings. The file is typically located in the `%temp%\\freerouting` directory. It is created at the first run of Freerouting if it doesn't already exist. Below is a detailed explanation of the available settings:
+
+```json
+{
+  "version": "2.0.0",
+  "profile": {
+    "id": "09730e5f-4886-49f0-afba-76f459408907",
+    "email": "info@freerouting.app"
+  },
+  "gui": {
+    "enabled": true,
+    "input_directory": "C:\\Work\\freerouting\\tests",
+    "dialog_confirmation_timeout": 5
+  },
+  "router": {
+    "default_preferred_direction_trace_cost": 1.0,
+    "default_undesired_direction_trace_cost": 1.0,
+    "max_passes": 100,
+    "fanout_max_passes": 20,
+    "max_threads": 11,
+    "improvement_threshold": 0.01,
+    "trace_pull_tight_accuracy": 500,
+    "allowed_via_types": true,
+    "via_costs": 50,
+    "plane_via_costs": 5,
+    "start_ripup_costs": 100,
+    "automatic_neckdown": true
+  },
+  "usage_and_diagnostic_data": {
+    "disable_analytics": false,
+    "analytics_modulo": 16
+  },
+  "feature_flags": {
+    "logging": true,
+    "multi_threading": false,
+    "select_mode": false,
+    "macros": false,
+    "other_menu": false,
+    "snapshots": false,
+    "file_load_dialog_at_startup": false,
+    "save_jobs": false
+  },
+  "api_server": {
+    "enabled": false,
+    "http_allowed": true,
+    "endpoints": [
+      "http://0.0.0.0:37864"
+    ]
+  }
+}
+```
+
+#### **`version` Section**
+
+- **`version`**: Specifies the version of the settings file.
 
 #### **`profile` Section**
 
@@ -59,29 +110,27 @@ define various settings. Below is a detailed explanation of the available settin
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
   `[protocol]://[host]:[port]`.
 
-#### **`version` Section**
-
-- **`version`**: Specifies the version of the settings file.
-
 ### Command Line Arguments
 
-Freerouting can also be configured using command-line arguments. These arguments override the settings specified in the
-JSON configuration file.
+Freerouting can also be configured using command-line arguments. These arguments override the settings specified in the JSON configuration file. You must use `--{property-name}={property-value}` format, where `property-name` is the hierarchical definition of the property you want to change and the `property-value` is its desired value. You can use `.`, `-` and `:` charapters to separate the hierarchical levels in the `property-name` parameter.
 
 **Example:**
 
+'''bash
 java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
+'''
 
 ### Environment Variables
 
-Environment variables provide another way to override settings. The environment variable names correspond to the keys in
-the JSON settings file, with periods replaced by underscores.
+Environment variables provide another way to override settings. The environment variable names correspond to the keys in the JSON settings file, starting with `FREEROUTING__` and periods replaced by double underscores.
 
 **Example:**
 
+'''bash
 FREEROUTING__GUI__ENABLED=false
 FREEROUTING__ROUTER__MAX_PASSES=200
 java -jar freerouting.jar
+'''
 
 ## Settings Precedence
 
