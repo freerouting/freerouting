@@ -5,6 +5,7 @@ import app.freerouting.api.dto.BoardFilePayload;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.gson.GsonProvider;
@@ -344,5 +345,37 @@ public class JobControllerV1 extends BaseController
     result.dataBase64 = java.util.Base64.getEncoder().encodeToString(result.getData().readAllBytes());
 
     return Response.ok(GsonProvider.GSON.toJson(result)).build();
+  }
+
+  @GET
+  @Path("/{jobId}/logs")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response logs(
+      @PathParam("jobId")
+      String jobId)
+  {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    // Check if the sessionId references a valid session
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
+    if (session == null)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
+    }
+
+    var logEntries = FRLogger.getLogEntries();
+    var logs = logEntries.getEntries(null, job.id);
+
+    return Response.ok(GsonProvider.GSON.toJson(logs)).build();
   }
 }

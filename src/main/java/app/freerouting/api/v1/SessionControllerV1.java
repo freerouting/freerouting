@@ -2,7 +2,9 @@ package app.freerouting.api.v1;
 
 import app.freerouting.api.BaseController;
 import app.freerouting.core.Session;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.SessionManager;
+import app.freerouting.management.gson.GsonProvider;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -76,5 +78,28 @@ public class SessionControllerV1 extends BaseController
     {
       return Response.ok(GSON.toJson(session)).build();
     }
+  }
+
+  @GET
+  @Path("/{sessionId}/logs")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response logs(
+      @PathParam("sessionId")
+      String sessionId)
+  {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
+    // Return one session with the id of sessionId
+    Session session = SessionManager.getInstance().getSession(sessionId, userId);
+    if (session == null)
+    {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    var logEntries = FRLogger.getLogEntries();
+    var logs = logEntries.getEntries(null, session.id);
+
+    return Response.ok(GsonProvider.GSON.toJson(logs)).build();
   }
 }
