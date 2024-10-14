@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /// <summary>
 /// Provides logging functionality.
@@ -103,9 +104,9 @@ public class FRLogger
     return timeElapsed / 1000.0;
   }
 
-  public static void info(String msg)
+  public static void info(String msg, UUID topic)
   {
-    logEntries.add(LogEntryType.Info, msg);
+    logEntries.add(LogEntryType.Info, msg, topic);
 
     if (!enabled)
     {
@@ -119,9 +120,14 @@ public class FRLogger
     logger.info(msg);
   }
 
-  public static void warn(String msg)
+  public static void info(String msg)
   {
-    logEntries.add(LogEntryType.Warning, msg);
+    info(msg, null);
+  }
+
+  public static void warn(String msg, UUID topic)
+  {
+    logEntries.add(LogEntryType.Warning, msg, topic);
 
     if (!enabled)
     {
@@ -135,9 +141,14 @@ public class FRLogger
     logger.warn(msg);
   }
 
-  public static void debug(String msg)
+  public static void warn(String msg)
   {
-    logEntries.add(LogEntryType.Debug, msg);
+    warn(msg, null);
+  }
+
+  public static void debug(String msg, UUID topic)
+  {
+    logEntries.add(LogEntryType.Debug, msg, topic);
 
     if (!enabled)
     {
@@ -151,9 +162,14 @@ public class FRLogger
     logger.debug(msg);
   }
 
-  public static void error(String msg, Throwable t)
+  public static void debug(String msg)
   {
-    logEntries.add(LogEntryType.Error, msg);
+    debug(msg, null);
+  }
+
+  public static void error(String msg, UUID topic, Throwable exception)
+  {
+    logEntries.add(LogEntryType.Error, msg, topic, exception);
 
     if (!enabled)
     {
@@ -165,19 +181,24 @@ public class FRLogger
     }
 
 
-    if (t == null)
+    if (exception == null)
     {
       logger.error(msg);
     }
     else
     {
-      logger.error(msg, t);
+      logger.error(msg, exception);
     }
+  }
+
+  public static void error(String msg, Throwable exception)
+  {
+    error(msg, null, exception);
   }
 
   public static void trace(String msg)
   {
-    logEntries.add(LogEntryType.Trace, msg);
+    logEntries.add(LogEntryType.Trace, msg, null);
 
     if (!enabled)
     {

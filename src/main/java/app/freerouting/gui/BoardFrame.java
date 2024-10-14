@@ -275,11 +275,11 @@ public class BoardFrame extends WindowBase
 
       // Filter the log entries that are not errors or warnings
       LogEntries filteredLogEntries = new LogEntries();
-      for (LogEntry entry : logEntries.getEntries())
+      for (LogEntry entry : logEntries.getEntries(null, null))
       {
         if (entry.getType() == LogEntryType.Error || entry.getType() == LogEntryType.Warning || entry.getType() == LogEntryType.Info)
         {
-          filteredLogEntries.add(entry.getType(), entry.getMessage());
+          filteredLogEntries.add(entry.getType(), entry.getMessage(), entry.getTopic());
         }
       }
 

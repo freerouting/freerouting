@@ -1,7 +1,9 @@
 package app.freerouting.logger;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class LogEntries
@@ -34,14 +36,14 @@ public class LogEntries
     return entries.stream().map(LogEntry::toString).toArray(String[]::new);
   }
 
-  public LogEntry[] getEntries()
+  public LogEntry[] getEntries(Instant entriesSince, UUID topic)
   {
-    return entries.toArray(new LogEntry[0]);
+    return entries.stream().filter(e -> ((entriesSince == null) || (e.timestamp.isAfter(entriesSince)) && (topic == null || e.topic.equals(topic)))).toArray(LogEntry[]::new);
   }
 
-  public void add(LogEntryType type, String message)
+  public void add(LogEntryType type, String message, UUID topic)
   {
-    this.add(type, message, null);
+    this.add(type, message, topic, null);
 
     // Raise the event
     for (LogEntryAddedListener listener : listeners)
@@ -50,9 +52,9 @@ public class LogEntries
     }
   }
 
-  public void add(LogEntryType type, String message, Throwable exception)
+  public void add(LogEntryType type, String message, UUID topic, Throwable exception)
   {
-    entries.add(new LogEntry(type, message, exception));
+    entries.add(new LogEntry(type, message, exception, topic));
   }
 
   public void addLogEntryAddedListener(LogEntryAddedListener listener)
