@@ -23,7 +23,7 @@ public class LogEntry
   /// <summary>
   /// Exception of the log entry.
   /// </summary>
-  Throwable exception;
+  transient Throwable exception;
   /// <summary>
   /// Topic of the log entry. It is usually the ID of the user, session or job.
   /// </summary>
