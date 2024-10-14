@@ -4,7 +4,7 @@ Freerouting uses a flexible settings system that allows users to customize vario
 
 ### Settings File (JSON)
 
-The primary way to configure Freerouting is by using a JSON settings file. This file contains key-value pairs that define various settings. The file is typically located in the `%temp%\\freerouting` directory, `%temp%` representing the default temporary directory of your operating system. It is created at the first run of Freerouting if it doesn't already exist. Below is a detailed explanation of the available settings:
+The primary way to configure Freerouting is through a JSON settings file. This file contains key-value pairs for different settings and is usually located in the `%temp%\freerouting` directory (`%temp%` refers to your system's temporary folder). The file is created during Freerouting's first run if it doesn't already exist.
 
 ```json
 {
