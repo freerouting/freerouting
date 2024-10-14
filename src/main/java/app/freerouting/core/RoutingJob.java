@@ -211,7 +211,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
 
     // Get the temporary folder path
-    Path snapshotsFolderPath = GlobalSettings.userdataPath.resolve("snapshots");
+    Path snapshotsFolderPath = GlobalSettings.getUserDataPath().resolve("snapshots");
 
     try
     {

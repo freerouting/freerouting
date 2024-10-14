@@ -39,7 +39,7 @@ public class SystemControllerV1
     status.cpuLoad = getCpuLoad();
     status.ramUsed = (int) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
     status.ramAvailable = (int) runtime.freeMemory() / 1024 / 1024;
-    status.storageAvailable = (int) GlobalSettings.userdataPath.toFile().getFreeSpace() / 1024 / 1024;
+    status.storageAvailable = (int) GlobalSettings.getUserDataPath().toFile().getFreeSpace() / 1024 / 1024;
     status.sessionCount = SessionManager.getInstance().getActiveSessionsCount();
 
     return Response.ok(GsonProvider.GSON.toJson(status)).build();

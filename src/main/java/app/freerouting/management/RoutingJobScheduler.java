@@ -212,7 +212,7 @@ public class RoutingJobScheduler
   private void saveJob(String userFolder, String sessionFolder, RoutingJob job) throws IOException
   {
     // Create the user's folder if it doesn't exist
-    Path userFolderPath = GlobalSettings.userdataPath.resolve("data").resolve(userFolder);
+    Path userFolderPath = GlobalSettings.getUserDataPath().resolve("data").resolve(userFolder);
 
     // Make sure that we have the directory structure in place, and create it if it doesn't exist
     Files.createDirectories(userFolderPath);

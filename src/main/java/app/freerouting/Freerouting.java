@@ -11,6 +11,8 @@ import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Locale;
@@ -29,6 +31,37 @@ public class Freerouting
    */
   public static void main(String[] args)
   {
+    // the first thing we need to do is to determine the user directory, because all settings and logs will be located there
+    // 1, set it to the temp directory by default
+    Path userdataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
+    // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH" environment variable value
+    if (System.getenv("FREEROUTING__USER_DATA_PATH") != null)
+    {
+      userdataPath = Paths.get(System.getenv("FREEROUTING__USER_DATA_PATH"));
+    }
+    // 3, check if we need to override it with the "--user-data-path={directory}" command line argument
+    if (args.length > 0 && Arrays.stream(args).anyMatch(s -> s.startsWith("--user-data-path=")))
+    {
+      var userDataPathArg = Arrays.stream(args).filter(s -> s.startsWith("--user-data-path=")).findFirst();
+
+      if (userDataPathArg.isPresent())
+      {
+        userdataPath = Paths.get(userDataPathArg.get().substring("--user-data-path=".length()));
+      }
+    }
+    // 4, create the directory if it doesn't exist
+    if (!userdataPath.toFile().exists())
+    {
+      userdataPath.toFile().mkdirs();
+    }
+    // 5, check if it exists now, and if it does, apply it to FRLogger
+    if (userdataPath.toFile().exists())
+    {
+      GlobalSettings.setUserDataPath(userdataPath);
+    }
+    // 6, make sure that this settings can't be changed later on
+    GlobalSettings.lockUserDataPath();
+
     // we have a special case if logging must be disabled before the general command line arguments
     // are parsed
     if (args.length > 0 && Arrays.asList(args).contains("-dl"))

@@ -22,8 +22,9 @@ import java.util.Objects;
 
 public class GlobalSettings implements Serializable
 {
-  public static final Path userdataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
-  private static final Path configurationFilePath = userdataPath.resolve("freerouting.json");
+  private static Path userDataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
+  private static Path configurationFilePath = userDataPath.resolve("freerouting.json");
+  private static Boolean isUserDataPathLocked = false;
   public final transient EnvironmentSettings environmentSettings = new EnvironmentSettings();
   @SerializedName("profile")
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
@@ -70,6 +71,26 @@ public class GlobalSettings implements Serializable
     {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
+    }
+  }
+
+  public static void lockUserDataPath()
+  {
+    isUserDataPathLocked = true;
+  }
+
+  public static Path getUserDataPath()
+  {
+    return userDataPath;
+  }
+
+  public static void setUserDataPath(Path userDataPath)
+  {
+    if (!isUserDataPathLocked)
+    {
+      GlobalSettings.userDataPath = userDataPath;
+      configurationFilePath = userDataPath.resolve("freerouting.json");
+      FRLogger.changeFileLogLocation(userDataPath);
     }
   }
 
