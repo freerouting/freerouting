@@ -8,6 +8,8 @@ public class ApiServerSettings implements Serializable
 {
   @SerializedName("enabled")
   public Boolean isEnabled = false;
+  @SerializedName("running")
+  public transient Boolean isRunning = false;
   @SerializedName("http_allowed")
   public Boolean isHttpAllowed = false;
   @SerializedName("endpoints")

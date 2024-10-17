@@ -1,5 +1,6 @@
 package app.freerouting;
 
+import app.freerouting.api.AppContextListener;
 import app.freerouting.constants.Constants;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
@@ -7,7 +8,14 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
+import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +31,7 @@ public class Freerouting
   public static final String WEB_URL = "https://www.freerouting.app";
   public static final String VERSION_NUMBER_STRING = "v" + Constants.FREEROUTING_VERSION + " (build-date: " + Constants.FREEROUTING_BUILD_DATE + ")";
   public static GlobalSettings globalSettings;
+  private static Server apiServer; // API server instance
 
   /**
    * The entry point of the Freerouting application
@@ -31,6 +40,8 @@ public class Freerouting
    */
   public static void main(String[] args)
   {
+    FRLogger.traceEntry("MainApplication.main()");
+
     // the first thing we need to do is to determine the user directory, because all settings and logs will be located there
     // 1, set it to the temp directory by default
     Path userdataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
@@ -79,8 +90,6 @@ public class Freerouting
       }
     }
 
-    FRLogger.traceEntry("MainApplication.main()");
-
     try
     {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -118,6 +127,12 @@ public class Freerouting
 
     // apply environment variables to the settings
     globalSettings.applyEnvironmentVariables();
+
+    // if we don't have a GUI enabled then we must use the console as our output
+    if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null))
+    {
+      FRLogger.warn("GUI is disabled and you don't have a console available, so the only feedback from Freerouting is in the log.");
+    }
 
     // get environment parameters and save them in the settings
     globalSettings.environmentSettings.freeroutingVersion = Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
@@ -211,21 +226,146 @@ public class Freerouting
       System.exit(0);
     }
 
+    // Initialize the API server
+    if (globalSettings.apiServerSettings.isEnabled)
+    {
+      apiServer = InitializeAPI(globalSettings.apiServerSettings);
+      globalSettings.apiServerSettings.isRunning = (apiServer != null);
+    }
+
     // Initialize the GUI
     if (globalSettings.guiSettings.isEnabled)
     {
       if (!WindowWelcome.InitializeGUI(globalSettings))
       {
         FRLogger.error("Couldn't initialize the GUI", null);
-        return;
+      }
+      else
+      {
+        globalSettings.guiSettings.isRunning = true;
       }
     }
 
-    if (globalSettings.apiServerSettings.isEnabled)
+    while (globalSettings.guiSettings.isRunning || globalSettings.apiServerSettings.isRunning)
     {
-      WindowWelcome.InitializeAPI(globalSettings.apiServerSettings);
+      try
+      {
+        Thread.sleep(500);
+      } catch (InterruptedException e)
+      {
+        break;
+      }
     }
 
+    ShutdownApplication();
+
     FRLogger.traceExit("MainApplication.main()");
+    System.exit(0);
   }
+
+  private static void ShutdownApplication()
+  {
+    // Stop the API server
+    try
+    {
+      if (apiServer != null)
+      {
+        apiServer.stop();
+      }
+    } catch (Exception e)
+    {
+      FRLogger.error("Error stopping API server", e);
+    }
+
+    FRAnalytics.appClosed();
+  }
+
+  public static Server InitializeAPI(ApiServerSettings apiServerSettings)
+  {
+    // Check if there are any endpoints defined
+    if (apiServerSettings.endpoints.length == 0)
+    {
+      FRLogger.warn("Can't start API server, because no endpoints are defined in ApiServerSettings.");
+      return null;
+    }
+
+    // Start the Jetty server
+    Server apiServer = new Server();
+
+    // Add all endpoints as connectors
+    for (String endpointUrl : apiServerSettings.endpoints)
+    {
+      endpointUrl = endpointUrl.toLowerCase();
+      String[] endpointParts = endpointUrl.split("://");
+      String protocol = endpointParts[0];
+      String hostAndPort = endpointParts[1];
+      String[] hostAndPortParts = hostAndPort.split(":");
+      String host = hostAndPortParts[0];
+      int port = Integer.parseInt(hostAndPortParts[1]);
+
+      // Check if the protocol is HTTP or HTTPS
+      if (!protocol.equals("http") && !protocol.equals("https"))
+      {
+        FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS.".formatted(endpointUrl));
+        continue;
+      }
+
+      // Check if the http is allowed
+      if (!apiServerSettings.isHttpAllowed && protocol.equals("http"))
+      {
+        FRLogger.warn("Can't use the endpoint '%s' for the API server, because HTTP is not allowed.".formatted(endpointUrl));
+        continue;
+      }
+
+      // Warn the user that HTTPS is not implemented yet
+      if (protocol.equals("https"))
+      {
+        FRLogger.warn("HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+      }
+
+      ServerConnector connector = new ServerConnector(apiServer);
+      connector.setHost(host);
+      connector.setPort(port);
+      apiServer.addConnector(connector);
+    }
+
+    // Set up the Servlet Context Handler
+    ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+    context.setContextPath("/");
+    apiServer.setHandler(context);
+
+    // Set up Jersey Servlet that handles the API
+    ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
+    jerseyServlet.setInitOrder(0);
+    jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+
+    // TODO: Add Servlet for OpenAPI documentation
+    ServletHolder openApiServlet = context.addServlet(ServletContainer.class, "/openapi/*");
+    openApiServlet.setInitOrder(1);
+    openApiServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api.OpenAPIConfig");
+
+    // Add the DefaultServlet to handle static content
+    ServletHolder defaultServlet = new ServletHolder("defaultServlet", DefaultServlet.class);
+    context.addServlet(defaultServlet, "/");
+
+    // Add Context Listeners
+    context.addEventListener(new AppContextListener());
+
+    // Instead of apiServer.join(), start in a new thread
+    new Thread(() ->
+    {
+      try
+      {
+        apiServer.start();
+        apiServer.join(); // This will now run in the new thread
+      } catch (Exception e)
+      {
+        FRLogger.error("Error starting or joining API server", e);
+        // Consider additional error handling here
+      }
+    }).start();
+
+    return apiServer;
+  }
+
 }

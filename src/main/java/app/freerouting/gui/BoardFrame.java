@@ -1,5 +1,6 @@
 package app.freerouting.gui;
 
+import app.freerouting.Freerouting;
 import app.freerouting.board.*;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
@@ -1106,20 +1107,21 @@ public class BoardFrame extends WindowBase
         {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
           FRAnalytics.buttonClicked("board_confirm_exit_dialog_no", tm.getText("confirm_cancel"));
-        }
-        else
-        {
-          try
-          {
-            WindowWelcome.saveSettings();
-          } catch (IOException e)
-          {
-            FRLogger.error("Error saving settings to the freerouting.json file.", e);
-          }
-
-          FRAnalytics.appClosed();
+          return;
         }
       }
+
+      try
+      {
+        WindowWelcome.saveSettings();
+      } catch (IOException e)
+      {
+        FRLogger.error("Error saving settings to the freerouting.json file.", e);
+      }
+
+      // If we started the GUI, we must shut down both the GUI and the API (if it's running)
+      Freerouting.globalSettings.guiSettings.isRunning = false;
+      Freerouting.globalSettings.apiServerSettings.isRunning = false;
     }
 
     @Override

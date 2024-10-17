@@ -1,7 +1,6 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
-import app.freerouting.api.AppContextListener;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.boardgraphics.ColorIntensityTable;
@@ -13,14 +12,7 @@ import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.NetClasses;
-import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.DefaultServlet;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.swing.Timer;
 import javax.swing.*;
@@ -46,12 +38,10 @@ public class WindowWelcome extends WindowBase
   private final JButton restore_defaults_button;
   private final JTextField message_field;
   private final JPanel main_panel;
-
   /**
    * The list of open board frames
    */
   private final Collection<BoardFrame> board_frames = new LinkedList<>();
-
   private final Locale locale;
   private final int max_passes;
   private final BoardUpdateStrategy board_update_strategy;
@@ -123,87 +113,6 @@ public class WindowWelcome extends WindowBase
     pack();
     setSize(window_width, window_height);
     setResizable(false);
-  }
-
-  public static void InitializeAPI(ApiServerSettings apiServerSettings)
-  {
-    // Check if there are any endpoints defined
-    if (apiServerSettings.endpoints.length == 0)
-    {
-      FRLogger.warn("Can't start API server, because no endpoints are defined in ApiServerSettings.");
-      return;
-    }
-
-    // Start the Jetty server
-    Server apiServer = new Server();
-
-    // Add all endpoints as connectors
-    for (String endpointUrl : apiServerSettings.endpoints)
-    {
-      endpointUrl = endpointUrl.toLowerCase();
-      String[] endpointParts = endpointUrl.split("://");
-      String protocol = endpointParts[0];
-      String hostAndPort = endpointParts[1];
-      String[] hostAndPortParts = hostAndPort.split(":");
-      String host = hostAndPortParts[0];
-      int port = Integer.parseInt(hostAndPortParts[1]);
-
-      // Check if the protocol is HTTP or HTTPS
-      if (!protocol.equals("http") && !protocol.equals("https"))
-      {
-        FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS.".formatted(endpointUrl));
-        continue;
-      }
-
-      // Check if the http is allowed
-      if (!apiServerSettings.isHttpAllowed && protocol.equals("http"))
-      {
-        FRLogger.warn("Can't use the endpoint '%s' for the API server, because HTTP is not allowed.".formatted(endpointUrl));
-        continue;
-      }
-
-      // Warn the user that HTTPS is not implemented yet
-      if (protocol.equals("https"))
-      {
-        FRLogger.warn("HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
-      }
-
-      ServerConnector connector = new ServerConnector(apiServer);
-      connector.setHost(host);
-      connector.setPort(port);
-      apiServer.addConnector(connector);
-    }
-
-    // Set up the Servlet Context Handler
-    ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-    context.setContextPath("/");
-    apiServer.setHandler(context);
-
-    // Set up Jersey Servlet that handles the API
-    ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
-    jerseyServlet.setInitOrder(0);
-    jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
-
-    // TODO: Add Servlet for OpenAPI documentation
-    ServletHolder openApiServlet = context.addServlet(ServletContainer.class, "/openapi/*");
-    openApiServlet.setInitOrder(1);
-    openApiServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api.OpenAPIConfig");
-
-    // Add the DefaultServlet to handle static content
-    ServletHolder defaultServlet = new ServletHolder("defaultServlet", DefaultServlet.class);
-    context.addServlet(defaultServlet, "/");
-
-    // Add Context Listeners
-    context.addEventListener(new AppContextListener());
-
-    try
-    {
-      apiServer.start();
-      apiServer.join();
-    } catch (Exception e)
-    {
-      throw new RuntimeException(e);
-    }
   }
 
   public static boolean InitializeGUI(GlobalSettings globalSettings)
@@ -670,15 +579,8 @@ public class WindowWelcome extends WindowBase
     new_frame.addWindowListener(new BoardFrameWindowListener(new_frame));
   }
 
-  /**
-   * Exit the Application
-   */
-  private void exitForm(WindowEvent evt)
-  {
-    FRAnalytics.appClosed();
-    System.exit(0);
-  }
 
+  // NOTE: Since we use this Window only to start up the GUI this adapter is not used anymore
   private class BoardFrameWindowListener extends WindowAdapter
   {
 
@@ -702,6 +604,7 @@ public class WindowWelcome extends WindowBase
     }
   }
 
+  // NOTE: Since we use this Window only to start up the GUI this adapter is not used anymore
   private class WindowStateListener extends WindowAdapter
   {
 
@@ -722,7 +625,7 @@ public class WindowWelcome extends WindowBase
       }
       if (exit_program)
       {
-        exitForm(evt);
+        System.exit(0);
       }
     }
   }
