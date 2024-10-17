@@ -39,10 +39,12 @@ public class TestBasedOnAnIssue
     RoutingJob job = new RoutingJob(session.id);
 
     // Look for the file in the current directory and its parent directories
-    File testFile = Path.of(".\\tests\\", filename).toAbsolutePath().toFile();
+    Path testDirectory = Path.of(".").toAbsolutePath();
+    File testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
     while (!testFile.exists())
     {
-      testFile = testFile.getParentFile();
+      testDirectory = testDirectory.getParent();
+      testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
       if (testFile == null)
       {
         break;
@@ -55,7 +57,7 @@ public class TestBasedOnAnIssue
       job.setInput(testFile);
     } catch (IOException e)
     {
-      throw new RuntimeException(testFile.toString() + " not found.", e);
+      throw new RuntimeException(testFile + " not found.", e);
     }
 
     return job;
