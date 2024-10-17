@@ -43,7 +43,7 @@ public class TestBasedOnAnIssue
       job.setInput(Path.of(".\\tests\\", filename).toAbsolutePath().toFile());
     } catch (IOException e)
     {
-      throw new RuntimeException(e);
+      throw new RuntimeException(Path.of(".\\tests\\", filename).toAbsolutePath() + " not found.", e);
     }
 
     return job;
