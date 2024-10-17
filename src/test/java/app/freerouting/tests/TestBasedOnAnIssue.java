@@ -11,6 +11,7 @@ import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -37,13 +38,24 @@ public class TestBasedOnAnIssue
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);
 
+    // Look for the file in the current directory and its parent directories
+    File testFile = Path.of(".\\tests\\", filename).toAbsolutePath().toFile();
+    while (!testFile.exists())
+    {
+      testFile = testFile.getParentFile();
+      if (testFile == null)
+      {
+        break;
+      }
+    }
+
     // Load the file as input
     try
     {
-      job.setInput(Path.of(".\\tests\\", filename).toAbsolutePath().toFile());
+      job.setInput(testFile);
     } catch (IOException e)
     {
-      throw new RuntimeException(Path.of(".\\tests\\", filename).toAbsolutePath() + " not found.", e);
+      throw new RuntimeException(testFile.toString() + " not found.", e);
     }
 
     return job;
