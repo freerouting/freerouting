@@ -2,10 +2,13 @@ package app.freerouting;
 
 import app.freerouting.api.AppContextListener;
 import app.freerouting.constants.Constants;
+import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.settings.ApiServerSettings;
@@ -19,11 +22,15 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.UUID;
 
 /* Entry point class of the application */
 public class Freerouting
@@ -230,6 +237,7 @@ public class Freerouting
     if (globalSettings.apiServerSettings.isEnabled)
     {
       apiServer = InitializeAPI(globalSettings.apiServerSettings);
+      globalSettings.apiServerSettings.isEnabled = (apiServer != null);
       globalSettings.apiServerSettings.isRunning = (apiServer != null);
     }
 
@@ -239,11 +247,18 @@ public class Freerouting
       if (!WindowWelcome.InitializeGUI(globalSettings))
       {
         FRLogger.error("Couldn't initialize the GUI", null);
+        globalSettings.guiSettings.isEnabled = false;
       }
       else
       {
         globalSettings.guiSettings.isRunning = true;
       }
+    }
+
+    // We both GUI and API are disabled (or failed to start) we are in CLI mode
+    if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isEnabled)
+    {
+      InitializeCLI(globalSettings);
     }
 
     while (globalSettings.guiSettings.isRunning || globalSettings.apiServerSettings.isRunning)
@@ -261,6 +276,69 @@ public class Freerouting
 
     FRLogger.traceExit("MainApplication.main()");
     System.exit(0);
+  }
+
+  private static void InitializeCLI(GlobalSettings globalSettings)
+  {
+    if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null))
+    {
+      FRLogger.error("Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.", null);
+      System.exit(1);
+    }
+
+    // Start a new Freerouting session
+    var cliSession = SessionManager.getInstance().createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+
+    // Create a new routing job
+    RoutingJob routingJob = new RoutingJob(cliSession.id);
+    try
+    {
+      routingJob.setInput(globalSettings.design_input_filename);
+    } catch (Exception e)
+    {
+      FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
+    }
+    cliSession.addJob(routingJob);
+
+    var desiredOutputFile = new File(globalSettings.design_output_filename);
+    if ((desiredOutputFile != null) && desiredOutputFile.exists())
+    {
+      if (!desiredOutputFile.delete())
+      {
+        FRLogger.warn("Couldn't delete the file '" + globalSettings.design_output_filename + "'");
+      }
+    }
+
+    routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
+
+    routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+    routingJob.state = RoutingJobState.READY_TO_START;
+
+    // Wait for the RoutingJobScheduler to do its work
+    while ((routingJob.state != RoutingJobState.COMPLETED) && (routingJob.state != RoutingJobState.TERMINATED))
+    {
+      try
+      {
+        Thread.sleep(500);
+      } catch (InterruptedException e)
+      {
+        routingJob.state = RoutingJobState.CANCELLED;
+        break;
+      }
+    }
+
+    // Save the output file
+    if (routingJob.state == RoutingJobState.COMPLETED)
+    {
+      try
+      {
+        Path outputFilePath = Path.of(globalSettings.design_output_filename);
+        Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
+      } catch (IOException e)
+      {
+        FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);
+      }
+    }
   }
 
   private static void ShutdownApplication()
