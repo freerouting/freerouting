@@ -40,7 +40,7 @@ public class TestBasedOnAnIssue
     // Load the file as input
     try
     {
-      job.setInput(Path.of(".\\tests\\", filename).toFile());
+      job.setInput(Path.of(".\\tests\\", filename).toAbsolutePath().toFile());
     } catch (IOException e)
     {
       throw new RuntimeException(e);
