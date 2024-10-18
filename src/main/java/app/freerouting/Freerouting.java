@@ -200,7 +200,7 @@ public class Freerouting
       int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analyticsModulo, 1);
       String userIdString = globalSettings.userProfileSettings.userId.length() >= 4 ? globalSettings.userProfileSettings.userId.substring(0, 4) : "0000";
       int userIdValue = Integer.parseInt(userIdString, 16);
-      allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0);
+      allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0) && (globalSettings.userProfileSettings.isTelemetryAllowed);
     }
 
     if (!allowAnalytics)
