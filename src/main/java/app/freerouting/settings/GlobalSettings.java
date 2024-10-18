@@ -38,6 +38,8 @@ public class GlobalSettings implements Serializable
   public final FeatureFlagsSettings featureFlags = new FeatureFlagsSettings();
   @SerializedName("api_server")
   public final ApiServerSettings apiServerSettings = new ApiServerSettings();
+  @SerializedName("statistics")
+  public final StatisticsSettings statistics = new StatisticsSettings();
   private final transient String[] supportedLanguages = {
       "en",
       "de",

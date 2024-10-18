@@ -1,6 +1,5 @@
 package app.freerouting.management;
 
-import app.freerouting.Freerouting;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.*;
 import app.freerouting.gui.FileFormat;
@@ -19,6 +18,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
+import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * This singleton class is responsible for managing the jobs that will be processed by the router.
@@ -178,12 +179,15 @@ public class RoutingJobScheduler
     job.state = RoutingJobState.QUEUED;
     this.jobs.add(job);
 
+    globalSettings.statistics.incrementJobsStarted();
+
+
     return job;
   }
 
   public void saveJob(RoutingJob job)
   {
-    if (Freerouting.globalSettings.featureFlags.saveJobs)
+    if (globalSettings.featureFlags.saveJobs)
     {
       String sessionIdString = "null";
       String userIdString = "null";

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 /*
  * This class is responsible for maintaining the list of active and past sessions.
  * If the user start the GUI, they will be assigned to a new session until they close the GUI.
@@ -53,6 +55,7 @@ public class SessionManager
   {
     Session session = new Session(userId, host);
     sessions.put(session.id.toString(), session);
+    globalSettings.statistics.incrementSessionsTotal();
     return session;
   }
 

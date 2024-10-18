@@ -11,6 +11,10 @@ public class UserProfileSettings implements Serializable
   public final String userId;
   @SerializedName("email")
   public String userEmail = "";
+  @SerializedName("allow_telemetry")
+  public Boolean isTelemetryAllowed = true;
+  @SerializedName("allow_contact")
+  public Boolean isContactAllowed = true;
 
   public UserProfileSettings()
   {

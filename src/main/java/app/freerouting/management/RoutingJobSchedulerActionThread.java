@@ -8,6 +8,8 @@ import app.freerouting.core.StoppableThread;
 
 import java.time.Instant;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 /**
  * Used for running an action in a separate thread, that can be stopped by the user.
  * This typically represents an action that is triggered by job scheduler
@@ -52,5 +54,6 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
 
     job.finishedAt = Instant.now();
     job.state = RoutingJobState.COMPLETED;
+    globalSettings.statistics.incrementJobsCompleted();
   }
 }
