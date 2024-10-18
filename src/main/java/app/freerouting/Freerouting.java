@@ -208,7 +208,7 @@ public class Freerouting
       FRLogger.debug("Analytics are disabled");
     }
     FRAnalytics.setEnabled(allowAnalytics);
-    FRAnalytics.setUserId(globalSettings.userProfileSettings.userId);
+    FRAnalytics.setUserId(globalSettings.userProfileSettings.userId, globalSettings.userProfileSettings.userEmail);
     FRAnalytics.identify();
     try
     {

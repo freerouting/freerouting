@@ -1,6 +1,7 @@
 package app.freerouting.management;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.management.segment.Properties;
 import app.freerouting.management.segment.Traits;
 
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * A class to manage analytics for the application.
@@ -89,6 +92,7 @@ public class FRAnalytics
   };
   private static SegmentClient analytics;
   private static String permanent_user_id;
+  private static String permanent_user_email;
   private static String appPreviousLocation = "";
   private static String appCurrentLocation = "";
   private static String appWindowTitle = "";
@@ -104,9 +108,10 @@ public class FRAnalytics
     analytics = new SegmentClient(libraryVersion, writeKey);
   }
 
-  public static void setUserId(String userId)
+  public static void setUserId(String userId, String userEmail)
   {
     permanent_user_id = userId;
+    permanent_user_email = userEmail;
   }
 
   private static void identifyUser(String userId, Map<String, String> traits)
@@ -158,6 +163,8 @@ public class FRAnalytics
     {
       Properties p = new Properties();
       p.put("current_time_utc", Instant.now().toString());
+      p.put("user_id", permanent_user_id);
+      p.put("user_email", permanent_user_email);
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
@@ -177,6 +184,8 @@ public class FRAnalytics
   {
     Map<String, String> traits = new HashMap<>();
     traits.put("anonymous", "true");
+    traits.put("user_id", permanent_user_id);
+    traits.put("user_email", permanent_user_email);
     // identifyUser(permanent_user_id, traits);
     identifyAnonymous(permanent_user_id, traits);
   }
@@ -280,6 +289,7 @@ public class FRAnalytics
     sessionCount++;
 
     Map<String, String> properties = new HashMap<>();
+    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
 
     trackAnonymousAction(permanent_user_id, "Auto-router Started", properties);
@@ -292,6 +302,7 @@ public class FRAnalytics
     totalAutorouterRuntime += autorouterRuntime;
 
     Map<String, String> properties = new HashMap<>();
+    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("autorouter_runtime", String.valueOf(autorouterRuntime));
 
@@ -303,6 +314,7 @@ public class FRAnalytics
     routeOptimizerStartedAt = Instant.now().getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
+    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
     trackAnonymousAction(permanent_user_id, "Route Optimizer Started", properties);
   }
@@ -314,6 +326,7 @@ public class FRAnalytics
     totalRouteOptimizerRuntime += routeOptimizerRuntime;
 
     Map<String, String> properties = new HashMap<>();
+    properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("route_optimizer_runtime", String.valueOf(routeOptimizerRuntime));
 

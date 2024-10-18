@@ -1,6 +1,8 @@
 package app.freerouting.gui;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.FeatureFlagsSettings;
 import app.freerouting.settings.GlobalSettings;
 
@@ -61,6 +63,7 @@ class BoardMenuBar extends JMenuBar
         showProfileDialog();
       }
     });
+    profileButton.addActionListener(evt -> FRAnalytics.buttonClicked("profile_button", profileButton.getText()));
 
     // Add the Profile button to the right
     add(Box.createHorizontalGlue());
@@ -211,6 +214,7 @@ class BoardMenuBar extends JMenuBar
         profileDialog.dispose();
       }
     });
+    updateButton.addActionListener(evt -> FRAnalytics.buttonClicked("update_button", GsonProvider.GSON.toJson(globalSettings)));
     profileDialog.add(updateButton, gbc);
 
     // Enable the Update button if email or checkboxes change
