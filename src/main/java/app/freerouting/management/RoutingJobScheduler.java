@@ -45,11 +45,17 @@ public class RoutingJobScheduler
           // loop through jobs with the READY_TO_START state, order them according to their priority and start them up to the maximum number of parallel jobs
           while (jobs.stream().count() > 0)
           {
-            // sort the jobs by priority
-            Collections.sort(jobs);
+            RoutingJob[] jobsArray;
+            synchronized (jobs)
+            {
+              // sort the jobs by priority
+              Collections.sort(jobs);
 
-            // start the jobs up to the maximum number of parallel jobs
-            for (RoutingJob job : jobs)
+              jobsArray = jobs.toArray(RoutingJob[]::new);
+            }
+
+            // start the jobs up to the maximum number of parallel jobs (and make a copy of the list to avoid concurrent modification)
+            for (RoutingJob job : jobsArray)
             {
               if (job.state == RoutingJobState.READY_TO_START)
               {
@@ -177,7 +183,11 @@ public class RoutingJobScheduler
     }
 
     job.state = RoutingJobState.QUEUED;
-    this.jobs.add(job);
+
+    synchronized (jobs)
+    {
+      this.jobs.add(job);
+    }
 
     globalSettings.statistics.incrementJobsStarted();
 
@@ -273,17 +283,26 @@ public class RoutingJobScheduler
    */
   public int getQueuePosition(RoutingJob job)
   {
-    return this.jobs.indexOf(job);
+    synchronized (jobs)
+    {
+      return this.jobs.indexOf(job);
+    }
   }
 
   public RoutingJob[] listJobs()
   {
-    return this.jobs.toArray(RoutingJob[]::new);
+    synchronized (jobs)
+    {
+      return this.jobs.toArray(RoutingJob[]::new);
+    }
   }
 
   public RoutingJob[] listJobs(String sessionId)
   {
-    return this.jobs.stream().filter(j -> j.sessionId.toString().equals(sessionId)).toArray(RoutingJob[]::new);
+    synchronized (jobs)
+    {
+      return this.jobs.stream().filter(j -> j.sessionId.toString().equals(sessionId)).toArray(RoutingJob[]::new);
+    }
   }
 
   public RoutingJob[] listJobs(String sessionId, UUID userId)
@@ -321,11 +340,17 @@ public class RoutingJobScheduler
 
   public RoutingJob getJob(String jobId)
   {
-    return this.jobs.stream().filter(j -> j.id.toString().equals(jobId)).findFirst().orElse(null);
+    synchronized (jobs)
+    {
+      return this.jobs.stream().filter(j -> j.id.toString().equals(jobId)).findFirst().orElse(null);
+    }
   }
 
   public void clearJobs(String sessionId)
   {
-    this.jobs.removeIf(j -> j.sessionId.toString().equals(sessionId));
+    synchronized (jobs)
+    {
+      this.jobs.removeIf(j -> j.sessionId.toString().equals(sessionId));
+    }
   }
 }
