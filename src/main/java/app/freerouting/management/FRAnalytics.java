@@ -379,4 +379,14 @@ public class FRAnalytics
 
     trackAnonymousAction(permanent_user_id, "Exception Thrown", properties);
   }
+
+  public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody)
+  {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("api_method", apiMethod);
+    properties.put("api_request", requestBody);
+    properties.put("api_response", responseBody);
+
+    trackAnonymousAction(permanent_user_id, "API Endpoint Called", properties);
+  }
 }

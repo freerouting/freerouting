@@ -6,6 +6,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.gson.GsonProvider;
@@ -16,6 +17,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
+
+import static app.freerouting.management.gson.GsonProvider.GSON;
 
 @Path("/v1/jobs")
 public class JobControllerV1 extends BaseController
@@ -43,6 +46,8 @@ public class JobControllerV1 extends BaseController
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
+    var request = GSON.toJson(job);
+
     try
     {
       // Enqueue the job
@@ -59,7 +64,9 @@ public class JobControllerV1 extends BaseController
     }
 
     // Return the job object
-    return Response.ok(GsonProvider.GSON.toJson(job)).build();
+    var response = GSON.toJson(job);
+    FRAnalytics.apiEndpointCalled("POST v1/jobs/enqueue", request, response);
+    return Response.ok(response).build();
 
   }
 
@@ -89,7 +96,9 @@ public class JobControllerV1 extends BaseController
     }
 
     // Return a list of jobs in the session
-    return Response.ok(GsonProvider.GSON.toJson(result)).build();
+    var response = GSON.toJson(result);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/list/" + sessionId, "", response);
+    return Response.ok(response).build();
   }
 
   /* Get the current detailed status of the job with id, including statistical data about the (partially) completed board is the process already started. */
@@ -119,7 +128,9 @@ public class JobControllerV1 extends BaseController
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}").build();
     }
 
-    return Response.ok(GsonProvider.GSON.toJson(job)).build();
+    var response = GSON.toJson(job);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId, "", response);
+    return Response.ok(response).build();
   }
 
   /* Start or continue the job with the given id. */
@@ -158,7 +169,9 @@ public class JobControllerV1 extends BaseController
     job.state = RoutingJobState.READY_TO_START;
     RoutingJobScheduler.getInstance().saveJob(job);
 
-    return Response.ok(GsonProvider.GSON.toJson(job)).build();
+    var response = GSON.toJson(job);
+    FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/start", "", response);
+    return Response.ok(response).build();
   }
 
   /* Stop the job with the given id, and cancels the job. */
@@ -189,8 +202,11 @@ public class JobControllerV1 extends BaseController
     }
 
     // TODO: cancel the job
-
+    job.state = RoutingJobState.CANCELLED;
     RoutingJobScheduler.getInstance().saveJob(job);
+
+    var response = GsonProvider.GSON.toJson(job);
+    FRAnalytics.apiEndpointCalled("PUT v1/jobs/" + jobId + "/cancel", "", response);
 
     // Return an error that this method is not implemented yet
     return Response.status(Response.Status.NOT_IMPLEMENTED).entity("{\"error\":\"This method is not implemented yet.\"}").build();
@@ -236,7 +252,9 @@ public class JobControllerV1 extends BaseController
     job.setSettings(routerSettings);
 
     // Return the job object
-    return Response.ok(GsonProvider.GSON.toJson(job)).build();
+    var response = GSON.toJson(job);
+    FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/settings", GSON.toJson(routerSettings), response);
+    return Response.ok(response).build();
   }
 
   /**
@@ -290,18 +308,20 @@ public class JobControllerV1 extends BaseController
 
     // Decode the base64 encoded input data to a byte array
     byte[] inputByteArray = java.util.Base64.getDecoder().decode(input.dataBase64);
-    if (job.setInput(inputByteArray))
+    if (!job.setInput(inputByteArray))
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data is invalid.\"}").build();
+    }
+    else
     {
       if (job.input.getFilename().isEmpty())
       {
         job.input.setFilename(job.name);
       }
 
-      return Response.ok(GsonProvider.GSON.toJson(job)).build();
-    }
-    else
-    {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data is invalid.\"}").build();
+      var response = GSON.toJson(job);
+      FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/input", GSON.toJson(input), response);
+      return Response.ok(response).build();
     }
   }
 
@@ -344,7 +364,9 @@ public class JobControllerV1 extends BaseController
     result.setData(job.output.getData().readAllBytes());
     result.dataBase64 = java.util.Base64.getEncoder().encodeToString(result.getData().readAllBytes());
 
-    return Response.ok(GsonProvider.GSON.toJson(result)).build();
+    var response = GSON.toJson(result);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output", "", response);
+    return Response.ok(response).build();
   }
 
   @GET
@@ -376,6 +398,8 @@ public class JobControllerV1 extends BaseController
     var logEntries = FRLogger.getLogEntries();
     var logs = logEntries.getEntries(null, job.id);
 
-    return Response.ok(GsonProvider.GSON.toJson(logs)).build();
+    var response = GSON.toJson(logs);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs", "", response);
+    return Response.ok(response).build();
   }
 }

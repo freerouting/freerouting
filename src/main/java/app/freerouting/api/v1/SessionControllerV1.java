@@ -3,8 +3,8 @@ package app.freerouting.api.v1;
 import app.freerouting.api.BaseController;
 import app.freerouting.core.Session;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.SessionManager;
-import app.freerouting.management.gson.GsonProvider;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -34,7 +34,9 @@ public class SessionControllerV1 extends BaseController
     UUID userId = AuthenticateUser();
 
     // filter the list of sessions to only include the ones that the user has access to
-    return Response.ok(GSON.toJson(SessionManager.getInstance().listSessionIds(userId))).build();
+    var response = GSON.toJson(SessionManager.getInstance().listSessionIds(userId));
+    FRAnalytics.apiEndpointCalled("GET v1/sessions/list", "", response);
+    return Response.ok(response).build();
   }
 
   @POST
@@ -54,7 +56,9 @@ public class SessionControllerV1 extends BaseController
     }
     else
     {
-      return Response.ok(GSON.toJson(newSession)).build();
+      var response = GSON.toJson(newSession);
+      FRAnalytics.apiEndpointCalled("POST v1/sessions/create", "", response);
+      return Response.ok(response).build();
     }
   }
 
@@ -76,7 +80,9 @@ public class SessionControllerV1 extends BaseController
     }
     else
     {
-      return Response.ok(GSON.toJson(session)).build();
+      var response = GSON.toJson(session);
+      FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId, "", response);
+      return Response.ok(response).build();
     }
   }
 
@@ -100,6 +106,8 @@ public class SessionControllerV1 extends BaseController
     var logEntries = FRLogger.getLogEntries();
     var logs = logEntries.getEntries(null, session.id);
 
-    return Response.ok(GsonProvider.GSON.toJson(logs)).build();
+    var response = GSON.toJson(logs);
+    FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId + "/logs", "", response);
+    return Response.ok(response).build();
   }
 }

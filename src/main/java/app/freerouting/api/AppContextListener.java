@@ -11,7 +11,6 @@ import org.eclipse.jetty.server.Server;
 @WebListener
 public class AppContextListener implements ServletContextListener
 {
-
   @Override
   public void contextInitialized(ServletContextEvent sce)
   {

@@ -15,7 +15,6 @@ import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -416,17 +415,8 @@ public class Freerouting
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
-
-    // TODO: Add Servlet for OpenAPI documentation
-    ServletHolder openApiServlet = context.addServlet(ServletContainer.class, "/openapi/*");
-    openApiServlet.setInitOrder(1);
-    openApiServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api.OpenAPIConfig");
-
-    // Add the DefaultServlet to handle static content
-    ServletHolder defaultServlet = new ServletHolder("defaultServlet", DefaultServlet.class);
-    context.addServlet(defaultServlet, "/");
-
-    // Add Context Listeners
+    
+    // Add Listeners
     context.addEventListener(new AppContextListener());
 
     // Instead of apiServer.join(), start in a new thread
@@ -439,7 +429,6 @@ public class Freerouting
       } catch (Exception e)
       {
         FRLogger.error("Error starting or joining API server", e);
-        // Consider additional error handling here
       }
     }).start();
 
