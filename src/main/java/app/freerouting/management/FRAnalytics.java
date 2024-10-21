@@ -272,6 +272,11 @@ public class FRAnalytics
     properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
     properties.put("application_runtime", String.valueOf((appClosedAt - appStartedAt)));
+    properties.put("statistics_start_time", String.valueOf(globalSettings.statistics.startTime));
+    properties.put("statistics_end_time", String.valueOf(globalSettings.statistics.endTime));
+    properties.put("statistics_sessions_total", String.valueOf(globalSettings.statistics.sessionsTotal));
+    properties.put("statistics_jobs_started", String.valueOf(globalSettings.statistics.jobsStarted));
+    properties.put("statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
 
     trackAnonymousAction(permanent_user_id, "Application Closed", properties);
     try
