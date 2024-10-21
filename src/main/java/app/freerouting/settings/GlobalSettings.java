@@ -58,10 +58,22 @@ public class GlobalSettings implements Serializable
   };
   public String version = Constants.FREEROUTING_VERSION;
   public transient boolean show_help_option = false;
+  /**
+   * The design_input_filename field is deprecated and should not be used. They are kept here for compatibility reasons.
+   * Its function is now moved to the input.getFilename() method of RoutingJob object.
+   */
   @Deprecated
   public transient String design_input_filename;
+  /**
+   * The design_output_filename field is deprecated and should not be used. They are kept here for compatibility reasons.
+   * Its function is now moved to the output.getFilename() method of RoutingJob object.
+   */
   @Deprecated
   public transient String design_output_filename;
+  /**
+   * The design_rules_filename field is deprecated and should not be used. They are kept here for compatibility reasons.
+   * Its function is now removed, .rules files are considered to be deprecated, and other configuration methods should be used instead.
+   */
   @Deprecated
   public transient String design_rules_filename;
   public transient Locale currentLocale = Locale.getDefault();

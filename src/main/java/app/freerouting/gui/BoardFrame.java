@@ -759,6 +759,7 @@ public class BoardFrame extends WindowBase
 
   /**
    * Sets contexts sensitive help for the input component, if the help system is used.
+   * This method is deprecated and should not be used. Context-sensitive help will be removed in the future.
    */
   @Deprecated
   public void set_context_sensitive_help(Component p_component, String p_help_id)
