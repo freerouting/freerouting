@@ -343,7 +343,7 @@ public class FRLogger
     }
 
     // Create a new FileAppender with the new log file path
-    FileAppender newFileAppender = FileAppender.newBuilder().setName("File").withFileName(logFilePath.toString()).setLayout(PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n").build()).withImmediateFlush(true).setConfiguration(config).build();
+    FileAppender newFileAppender = FileAppender.newBuilder().setName("File").withFileName(logFilePath.toString()).setLayout(PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n").build()).setImmediateFlush(true).setConfiguration(config).build();
 
     // Start the new appender
     newFileAppender.start();
