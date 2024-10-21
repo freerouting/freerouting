@@ -4,12 +4,15 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
+import app.freerouting.settings.GlobalSettings;
 
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * Used for running an interactive action in a separate thread, that can be stopped by the user.
@@ -43,7 +46,39 @@ public abstract class InteractiveActionThread extends StoppableThread
     job.routerSettings.preferredDirectionTraceCost = boardManager.settings.autoroute_settings.preferredDirectionTraceCost.clone();
     job.routerSettings.undesiredDirectionTraceCost = boardManager.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
 
-    return new AutorouterAndRouteOptimizerThread(boardManager, job);
+    var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);
+    routerThread.addListener(new ThreadActionListener()
+    {
+      @Override
+      public void autorouterStarted()
+      {
+      }
+
+      @Override
+      public void autorouterAborted()
+      {
+      }
+
+      @Override
+      public void autorouterFinished()
+      {
+        try
+        {
+          GlobalSettings.saveAsJson(globalSettings);
+        } catch (IOException e)
+        {
+          FRLogger.warn("InteractiveActionThread: unable to save global settings");
+        }
+
+        // Show the user settings dialog after auto-routing is finished if the number of completed jobs is greater than 5 and the user has not yet set their email address
+        if ((globalSettings.statistics.jobsCompleted >= 5) && globalSettings.userProfileSettings.userEmail.isEmpty())
+        {
+          boardManager.get_panel().board_frame.menubar.showProfileDialog();
+        }
+      }
+    });
+
+    return routerThread;
   }
 
   public static InteractiveActionThread get_fanout_instance(GuiBoardManager boardManager, RoutingJob job)

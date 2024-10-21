@@ -20,7 +20,7 @@ import static app.freerouting.Freerouting.globalSettings;
 /**
  * Creates the menu bar of a board frame together with its menu items.
  */
-class BoardMenuBar extends JMenuBar
+public class BoardMenuBar extends JMenuBar
 {
 
   public BoardMenuFile fileMenu;
@@ -73,7 +73,7 @@ class BoardMenuBar extends JMenuBar
   /**
    * Displays a modal dialog with user information.
    */
-  private void showProfileDialog()
+  public void showProfileDialog()
   {
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setSize(480, 355);

@@ -47,13 +47,13 @@ public class BoardFrame extends WindowBase
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
   static final FileFilter logfile_filter = new FileFilter(log_file_extensions);
   /**
+   * The menubar of this frame
+   */
+  public final BoardMenuBar menubar;
+  /**
    * The scroll pane for the panel of the routing board.
    */
   final JScrollPane scroll_pane;
-  /**
-   * The menubar of this frame
-   */
-  final BoardMenuBar menubar;
   final ScreenMessages screen_messages;
   /**
    * The panel with the toolbars

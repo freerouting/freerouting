@@ -106,6 +106,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
       FRLogger.info("Starting auto-routing...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
+
+      globalSettings.statistics.incrementJobsCompleted();
       FRAnalytics.autorouterStarted();
 
       String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
@@ -171,22 +173,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
           String end_message = tm.getText("postroute") + " " + curr_message;
           hdlg.screen_messages.set_status_message(end_message);
         }
-        else
-        {
-          hdlg.screen_messages.clear();
-          String curr_message;
-          if (this.isStopRequested())
-          {
-            curr_message = tm.getText("interrupted");
-          }
-          else
-          {
-            curr_message = tm.getText("completed");
-          }
-          int incomplete_count = hdlg.get_ratsnest().incomplete_count();
-          String end_message = tm.getText("autoroute") + " " + curr_message + ", " + incomplete_count + " " + tm.getText("connections_not_found");
-          hdlg.screen_messages.set_status_message(end_message);
-        }
 
         int via_count_after = hdlg.get_routing_board().get_vias().size();
         double trace_length_after = hdlg.coordinate_transform.board_to_user(hdlg.get_routing_board().cumulative_trace_length());
@@ -220,6 +206,22 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         }
       }
 
+      // Update the message status bar, indicating that auto-routing is completed
+      hdlg.screen_messages.clear();
+      String curr_message;
+      if (this.isStopRequested())
+      {
+        curr_message = tm.getText("interrupted");
+      }
+      else
+      {
+        curr_message = tm.getText("completed");
+      }
+      int incomplete_count = hdlg.get_ratsnest().incomplete_count();
+      String end_message = tm.getText("autoroute") + " " + curr_message + ", " + incomplete_count + " " + tm.getText("connections_not_found");
+      hdlg.screen_messages.set_status_message(end_message);
+
+      // Update the ratsnest
       hdlg.update_ratsnest();
       if (!ratsnest_hidden_before)
       {
