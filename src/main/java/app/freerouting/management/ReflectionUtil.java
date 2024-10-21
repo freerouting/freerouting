@@ -83,6 +83,7 @@ public class ReflectionUtil
   }
 
   /* Copy all non-null fields from one object to another recursively */
+  @SuppressWarnings("unchecked")
   public static void copyFields(Object source, Object target)
   {
     for (Field field : source.getClass().getDeclaredFields())
@@ -110,9 +111,8 @@ public class ReflectionUtil
           {
             // check if the target field is null or its default value
             var targetValue = field.get(target);
-            var defaultValue = field.getType().getConstructor().newInstance();
 
-            if ((targetValue == null) || targetValue.equals(defaultValue))
+            if ((targetValue == null) || targetValue.equals(getDefaultValue(field)))
             {
               field.set(target, sourceValue);
             }
@@ -121,8 +121,11 @@ public class ReflectionUtil
             // Check if the field is an enum
             if (field.getType().isEnum())
             {
+              var enumType = (Class<Enum>) field.getType();
+              var enumValue = Enum.valueOf(enumType, sourceValue.toString());
+
               // Copy the enum value
-              field.set(target, Enum.valueOf((Class<Enum>) field.getType(), sourceValue.toString()));
+              field.set(target, enumValue);
             }
             else
               // Check if the field is an array
@@ -160,7 +163,7 @@ public class ReflectionUtil
                 Object targetField = field.get(target);
                 if (targetField == null)
                 {
-                  targetField = field.getType().newInstance();
+                  targetField = field.getType().getDeclaredConstructor().newInstance();
                   field.set(target, targetField);
                 }
                 copyFields(sourceValue, targetField);
@@ -173,5 +176,47 @@ public class ReflectionUtil
 
     }
 
+  }
+
+  private static Object getDefaultValue(Field field)
+  {
+    Object result = null;
+
+    try
+    {
+      result = field.getType().getConstructor().newInstance();
+    } catch (NoSuchMethodException e)
+    {
+      // The field does not have a default constructor, this can usually the case if the type is a primitive type
+      if (field.getType() == int.class || field.getType() == Integer.class)
+      {
+        result = 0;
+      }
+      else if (field.getType() == long.class || field.getType() == Long.class)
+      {
+        result = 0L;
+      }
+      else if (field.getType() == float.class || field.getType() == Float.class)
+      {
+        result = 0.0f;
+      }
+      else if (field.getType() == double.class || field.getType() == Double.class)
+      {
+        result = 0.0;
+      }
+      else if (field.getType() == boolean.class || field.getType() == Boolean.class)
+      {
+        result = false;
+      }
+      else
+      {
+        FRLogger.warn("No default constructor found for field: " + field.getName());
+      }
+    } catch (Exception e)
+    {
+      FRLogger.error("Error getting default value for field: " + field.getName(), e);
+    }
+
+    return result;
   }
 }
