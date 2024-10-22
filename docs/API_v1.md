@@ -121,6 +121,16 @@ Authorization: Bearer <API_KEY>
   POST /jobs/enqueue
   ```
 
+  **Request body:** Contains the session ID and the name of the job.
+
+  ```json
+  {  
+    "sessionId": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
+    "name": "BBD-Mars-64-revE",
+    "priority": "NORMAL"
+  }
+  ```
+
   **Description:** Submits a new routing job to be processed.
 
 - **List Jobs for a Session**
@@ -138,6 +148,15 @@ Authorization: Bearer <API_KEY>
 
   ```http
   POST /jobs/{jobId}/settings
+  ```
+
+  **Request body:** Contains the desired new settings.
+
+  ```json
+  {
+    "max_passes": 5,
+    "via_costs": 42
+  }
   ```
 
   **Parameters:**
@@ -183,6 +202,15 @@ Authorization: Bearer <API_KEY>
 
   **Description:** Submits input data for a routing job.
 
+  **Request body:** Contains the filename and the [Base64-encoded](https://en.wikipedia.org/wiki/Base64) Specctra DSN data.
+
+  ```json
+  {
+    "filename": "BBD-Mars-64-revE.dsn",
+    "data": "KGFyZHdhcmVcU...W1hdGY5OC4zMTcgLKQ0K"
+  }
+  ```  
+
 - **Get Output for a Job**
   
   ```http
@@ -193,6 +221,27 @@ Authorization: Bearer <API_KEY>
   - `jobId` *(required)*: The unique identifier of the job.
 
   **Description:** Retrieves the output data for a completed routing job.
+
+  **Response body:** Contains some details and the [Base64-encoded](https://en.wikipedia.org/wiki/Base64) Specctra SES data.
+
+  ```json
+  {
+    "jobId": "a4155510-4db2-412d-ad58-70b7c58c031d",
+    "data": "KHNlc3Npb24gI...QogICAgKQogICkKKQ==",
+    "size": 13150,
+    "crc32": 264089660,
+    "format": "SES",
+    "layer_count": 4,
+    "component_count": 12,
+    "netclass_count": 3,
+    "net_count": 20,
+    "track_count": 25,
+    "trace_count": 40,
+    "via_count": 28,
+    "filename": "BBD-Mars-64-revE.ses",
+    "path": ""
+  }
+  ```
 
 ---
 
@@ -208,6 +257,49 @@ Authorization: Bearer <API_KEY>
   - `jobId` *(required)*: The unique identifier of the job.
 
   **Description:** Retrieves the current progress of a routing job.
+
+  **Response body:** Contains the details of the job.
+
+  ```json
+  {
+    "id": "a4155510-4db2-412d-ad58-70b7c58c031d",
+    "createdAt": "2024-10-22T08:28:59.106759042Z",
+    "startedAt": "2024-10-22T08:29:47.985542527Z",
+    "input": {
+        "size": 50853,
+        "crc32": 4085067588,
+        "format": "DSN",
+        "layer_count": 4,
+        "component_count": 12,
+        "netclass_count": 3,
+        "net_count": 20,
+        "track_count": 5,
+        "trace_count": 10,
+        "via_count": 18,
+        "filename": "BBD-Mars-64-revE.dsn",
+        "path": ""
+    },
+    "sessionId": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
+    "name": "BBD-Mars-64-revE",
+    "state": "RUNNING",
+    "priority": "NORMAL",
+    "stage": "ROUTING",
+    "routerSettings": {
+        "default_preferred_direction_trace_cost": 1.0,
+        "default_undesired_direction_trace_cost": 1.0,
+        "max_passes": 100,
+        "fanout_max_passes": 20,
+        "max_threads": 1,
+        "improvement_threshold": 0.01,
+        "trace_pull_tight_accuracy": 500,
+        "allowed_via_types": true,
+        "via_costs": 42,
+        "plane_via_costs": 5,
+        "start_ripup_costs": 100,
+        "automatic_neckdown": true
+    }
+  }
+  ```
 
 ---
 
