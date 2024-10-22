@@ -10,6 +10,7 @@ import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
+import com.google.gson.annotations.SerializedName;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -33,25 +34,38 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   private static final String SES_FILE_EXTENSION = "ses";
   private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
 
+  @SerializedName("id")
   public final UUID id = UUID.randomUUID();
+  @SerializedName("created_at")
   public final Instant createdAt = Instant.now();
   // events to signal input and output updates
   protected final transient List<RoutingJobUpdatedEventListener> settingsUpdatedEventListeners = new ArrayList<>();
   protected final transient List<RoutingJobUpdatedEventListener> inputUpdatedEventListeners = new ArrayList<>();
   protected final transient List<RoutingJobUpdatedEventListener> outputUpdatedEventListeners = new ArrayList<>();
+  @SerializedName("started_at")
   public Instant startedAt = null;
+  @SerializedName("finished_at")
   public Instant finishedAt = null;
+  @SerializedName("input")
   public BoardFileDetails input = null;
+  @SerializedName("snapshot")
   public BoardFileDetails snapshot = null;
+  @SerializedName("output")
   public BoardFileDetails output = null;
+  @SerializedName("session_id")
   public UUID sessionId;
+  @SerializedName("name")
   public String name;
+  @SerializedName("state")
   public RoutingJobState state = RoutingJobState.INVALID;
+  @SerializedName("priority")
   public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
+  @SerializedName("stage")
   public RoutingStage stage = RoutingStage.IDLE;
   public transient StoppableThread thread = null;
   public transient RoutingBoard board = null;
   // TODO: pass the router settings as an input to the router (and don't use the one on IBoardManager/GuiBoardManager)
+  @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
 
   /**
