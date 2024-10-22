@@ -672,7 +672,6 @@ public class BoardFrame extends WindowBase
 
     if (!board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, designName))
     {
-
       this.screen_messages.set_status_message(tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
       return false;
     }

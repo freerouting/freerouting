@@ -23,4 +23,4 @@ COPY --from=build /app/build/libs/freerouting-executable.jar /app/freerouting-ex
 EXPOSE 37864
 
 # Run the application
-CMD ["java", "-jar", "/app/freerouting-executable.jar", "--api_server-enabled=true", "--feature_flags-save_jobs=1"]
+CMD ["java", "-jar", "/app/freerouting-executable.jar", "--api_server-enabled=true", "--feature_flags-save_jobs=1", "--user-data-path==~/.freerouting/"]

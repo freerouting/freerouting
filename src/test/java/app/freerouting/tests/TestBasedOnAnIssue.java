@@ -44,6 +44,11 @@ public class TestBasedOnAnIssue
     while (!testFile.exists())
     {
       testDirectory = testDirectory.getParent();
+      if (testDirectory == null)
+      {
+        break;
+      }
+
       testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
       if (testFile == null)
       {
