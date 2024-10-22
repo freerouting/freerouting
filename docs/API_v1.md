@@ -2,36 +2,48 @@
 
 The Freerouting API provides auto-routing functionality through standard HTTP RESTful endpoints.
 
-You can test the GET endpoints directly in your browser, but we highly recommend using tools
-like [Postman](https://www.postman.com/) or [Swagger UI](https://swagger.io/tools/swagger-ui/) for more extensive
+You can test the GET endpoints directly in your browser, but we highly recommend using tools like [Postman](https://www.postman.com/) or [Swagger UI](https://swagger.io/tools/swagger-ui/) for more extensive
 testing.
 
 ## Base URL
 
 The base URL for the API is:
 
-```
-{{base_url}}/{{version}}
+```http
+{{root_url}}/{{version}}
 ```
 
-Where `{{base_url}}` is your server's address and `{{version}}` refers to the API version (`v1`, `v2`, etc.).
+Where `{{root_url}}` is your server's address and `{{version}}` refers to the API version (`v1`, `v2`, etc.).
 
-### Example Base URL:
+### Example Base URL
 
-```
+```http
 https://api.freerouting.app/v1
 ```
 
 ---
 
+## Typical User Workflow
+
+1. (optional) Register at [www.freerouting.app](https://www.freerouting.app) and get an API key.
+2. (optional) [Include](#authentication) the API key in your requests under the `Authorization` header.
+3. Check if you can reach the API by calling the [service status endpoint](#service-status).
+4. Create a [session](#sessions) to start a new routing job.
+5. [Enqueue](#routing-jobs) a new routing job with the desired settings.
+6. (optional) [Change](#routing-jobs) the default settings.
+7. [Submit](#inputs-and-outputs) the input for the job.
+8. [Start](#routing-jobs) the job.
+9. (optional) [Get progress reports](#progress-reports) of the job.
+10. Retrieve the [output](#inputs-and-outputs) of the job when it is completed.
+
 ## Authentication
 
-Some endpoints require authentication via a **Personal Access Token**. To get a token, register
-at [auth.freerouting.app](https://auth.freerouting.app) and include it in your requests under the `Authorization`
+Some endpoints require authentication via a **API Key**. To get a API key, register
+at [www.freerouting.app](https://www.freerouting.app) and include it in your requests under the `Authorization`
 header:
 
-```
-Authorization: Bearer <token>
+```http
+Authorization: Bearer <API_KEY>
 ```
 
 ---
@@ -41,14 +53,16 @@ Authorization: Bearer <token>
 ### Service Status
 
 - **Get Service Status**
-  ```
+
+  ```http
   GET /system/status
   ```
 
   **Description:** Returns the current status of the system.
 
 - **Get Environment Information**
-  ```
+  
+  ```http
   GET /system/environment
   ```
 
@@ -59,37 +73,41 @@ Authorization: Bearer <token>
 ### Sessions
 
 - **Create a Session**
-  ```
+
+  ```http
   POST /sessions/create
   ```
 
   **Description:** Creates a new session.
 
 - **List All Sessions**
-  ```
+  
+  ```http
   GET /sessions/list
   ```
 
   **Description:** Retrieves a list of all active sessions.
 
 - **Retrieve a Specific Session**
-  ```
+  
+  ```http
   GET /sessions/{sessionId}
   ```
 
   **Parameters:**
-    - `sessionId` *(required)*: The unique identifier of the session.
+  - `sessionId` *(required)*: The unique identifier of the session.
 
   **Description:** Retrieves detailed information about a specific session.
 
 - **Get log entries of a session**
-  ```
+  
+  ```http
   GET /sessions/{sessionId}/logs/{timestamp}
   ```
 
   **Parameters:**
-    - `sessionId` *(required)*: The unique identifier of the session.
-    - 'timestamp' *(optional)*: The timestamp from which the log entries will be listed.'
+  - `sessionId` *(required)*: The unique identifier of the session.
+  - 'timestamp' *(optional)*: The timestamp from which the log entries will be listed.'
 
   **Description:** Retrieves a JSON array of log entries for a specific session.
 
@@ -98,50 +116,55 @@ Authorization: Bearer <token>
 ### Routing Jobs
 
 - **Enqueue a Job**
-  ```
+  
+  ```http
   POST /jobs/enqueue
   ```
 
   **Description:** Submits a new routing job to be processed.
 
 - **List Jobs for a Session**
-  ```
+  
+  ```http
   GET /jobs/list/{sessionId}
   ```
 
   **Parameters:**
-    - `sessionId` *(required)*: The unique identifier of the session.
+  - `sessionId` *(required)*: The unique identifier of the session.
 
   **Description:** Retrieves a list of routing jobs associated with a specific session.
 
 - **Update Job Settings**
-  ```
+
+  ```http
   POST /jobs/{jobId}/settings
   ```
 
   **Parameters:**
-    - `jobId` *(required)*: The unique identifier of the job.
+  - `jobId` *(required)*: The unique identifier of the job.
 
   **Description:** Updates the settings for a specific routing job.
 
 - **Start a Job**
-  ```
+  
+  ```http
   PUT /jobs/{jobId}/start
   ```
 
   **Parameters:**
-    - `jobId` *(required)*: The unique identifier of the job.
+  - `jobId` *(required)*: The unique identifier of the job.
 
   **Description:** Starts processing the specified routing job.
 
 - **Get log entries of a job**
-  ```
+
+  ```http
   GET /jobs/{jobId}/logs/{timestamp}
   ```
 
   **Parameters:**
-    - `JobId` *(required)*: The unique identifier of the job.
-    - 'timestamp' *(optional)*: The timestamp from which the log entries will be listed.'
+  - `JobId` *(required)*: The unique identifier of the job.
+  - 'timestamp' *(optional)*: The timestamp from which the log entries will be listed.'
 
   **Description:** Retrieves a JSON array of log entries for a specific job.
 
@@ -150,22 +173,24 @@ Authorization: Bearer <token>
 ### Inputs and Outputs
 
 - **Submit Input for a Job**
-  ```
+
+  ```http
   POST /jobs/{jobId}/input
   ```
 
   **Parameters:**
-    - `jobId` *(required)*: The unique identifier of the job.
+  - `jobId` *(required)*: The unique identifier of the job.
 
   **Description:** Submits input data for a routing job.
 
 - **Get Output for a Job**
-  ```
+  
+  ```http
   GET /jobs/{jobId}/output
   ```
 
   **Parameters:**
-    - `jobId` *(required)*: The unique identifier of the job.
+  - `jobId` *(required)*: The unique identifier of the job.
 
   **Description:** Retrieves the output data for a completed routing job.
 
@@ -174,12 +199,13 @@ Authorization: Bearer <token>
 ### Progress Reports
 
 - **Get Progress Report for a Job**
-  ```
+  
+  ```http
   GET /jobs/{jobId}
   ```
 
   **Parameters:**
-    - `jobId` *(required)*: The unique identifier of the job.
+  - `jobId` *(required)*: The unique identifier of the job.
 
   **Description:** Retrieves the current progress of a routing job.
 
@@ -196,28 +222,22 @@ For developers, the Freerouting API offers a special "dev" version designed for 
 this case, the endpoints do not require authentication, and they return structurally correct, mocked data to facilitate
 integration and testing.
 
-### Base URL:
-
-```
-{{base_url}}/dev
-```
-
-### Key Features:
+### Key Features
 
 - **No Authentication Required:** All endpoints in the "dev" version can be accessed without needing a Personal Access
   Token.
 - **Mocked Data:** The API responses provide realistic, but mocked data that is structurally correct to simulate
   real-world API interactions.
 
-### Example:
+### Example
 
 To get the service status in the "dev" environment:
 
-```
-GET /system/status
+```http
+GET https://api.freerouting.app/dev/system/status
 ```
 
-Response (mocked data):
+Response (mocked data)
 
 ```json
 {
