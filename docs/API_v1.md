@@ -9,7 +9,7 @@ testing.
 
 The base URL for the API is:
 
-```http
+```
 {{root_url}}/{{version}}
 ```
 
@@ -17,7 +17,7 @@ Where `{{root_url}}` is your server's address and `{{version}}` refers to the AP
 
 ### Example Base URL
 
-```http
+```
 https://api.freerouting.app/v1
 ```
 
@@ -125,7 +125,7 @@ Authorization: Bearer <API_KEY>
 
   ```json
   {  
-    "sessionId": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
+    "session_id": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
     "name": "BBD-Mars-64-revE",
     "priority": "NORMAL"
   }
@@ -226,7 +226,7 @@ Authorization: Bearer <API_KEY>
 
   ```json
   {
-    "jobId": "a4155510-4db2-412d-ad58-70b7c58c031d",
+    "job_id": "a4155510-4db2-412d-ad58-70b7c58c031d",
     "data": "KHNlc3Npb24gI...QogICAgKQogICkKKQ==",
     "size": 13150,
     "crc32": 264089660,
@@ -263,8 +263,8 @@ Authorization: Bearer <API_KEY>
   ```json
   {
     "id": "a4155510-4db2-412d-ad58-70b7c58c031d",
-    "createdAt": "2024-10-22T08:28:59.106759042Z",
-    "startedAt": "2024-10-22T08:29:47.985542527Z",
+    "created_at": "2024-10-22T08:28:59.106759042Z",
+    "started_at": "2024-10-22T08:29:47.985542527Z",
     "input": {
         "size": 50853,
         "crc32": 4085067588,
@@ -279,12 +279,12 @@ Authorization: Bearer <API_KEY>
         "filename": "BBD-Mars-64-revE.dsn",
         "path": ""
     },
-    "sessionId": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
+    "session_id": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
     "name": "BBD-Mars-64-revE",
     "state": "RUNNING",
     "priority": "NORMAL",
     "stage": "ROUTING",
-    "routerSettings": {
+    "router_settings": {
         "default_preferred_direction_trace_cost": 1.0,
         "default_undesired_direction_trace_cost": 1.0,
         "max_passes": 100,
