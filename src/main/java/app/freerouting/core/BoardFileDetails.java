@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
 
-public class BoardFileDetails
+public class BoardFileDetails implements Serializable
 {
   protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners = new ArrayList<>();
   // The size of the file in bytes
@@ -48,7 +48,7 @@ public class BoardFileDetails
   // The absolute path to the directory of the file
   @SerializedName("path")
   protected String directoryPath = "";
-  protected transient byte[] data = new byte[0];
+  protected transient byte[] dataBytes = new byte[0];
 
 
   public BoardFileDetails()
@@ -166,18 +166,18 @@ public class BoardFileDetails
 
   public ByteArrayInputStream getData()
   {
-    return new ByteArrayInputStream(this.data);
+    return new ByteArrayInputStream(this.dataBytes);
   }
 
   public void setData(byte[] data)
   {
-    this.data = data;
+    this.dataBytes = data;
     this.size = data.length;
-    InputStream inputStream = new ByteArrayInputStream(this.data);
+    InputStream inputStream = new ByteArrayInputStream(this.dataBytes);
     this.crc32 = BoardFileDetails.calculateCrc32(inputStream).getValue();
 
     // read the file contents to determine the file format
-    this.format = RoutingJob.getFileFormat(this.data);
+    this.format = RoutingJob.getFileFormat(this.dataBytes);
 
     fireUpdatedEvent();
   }

@@ -3,7 +3,6 @@ package app.freerouting.api.dev;
 import app.freerouting.api.dto.BoardFilePayload;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.settings.RouterSettings;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -19,9 +18,7 @@ public class JobControllerMocked
   @Path("/enqueue")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response enqueueJob(
-      @RequestBody
-      RoutingJob job)
+  public Response enqueueJob(RoutingJob job)
   {
     return Response.ok("""
                        {
@@ -245,9 +242,7 @@ public class JobControllerMocked
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changeSettings(
       @PathParam("jobId")
-      String jobId,
-      @RequestBody()
-      RouterSettings routerSettings)
+      String jobId, RouterSettings routerSettings)
   {
     return Response.ok("""
                        {
@@ -286,9 +281,7 @@ public class JobControllerMocked
   @Consumes(MediaType.APPLICATION_JSON)
   public Response uploadInput(
       @PathParam("jobId")
-      String jobId,
-      @RequestBody()
-      BoardFilePayload input)
+      String jobId, BoardFilePayload input)
   {
     return Response.ok("""
                        {

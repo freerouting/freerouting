@@ -11,7 +11,6 @@ import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.RouterSettings;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -32,12 +31,16 @@ public class JobControllerV1 extends BaseController
   @Path("/enqueue")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response enqueueJob(
-      @RequestBody
-      RoutingJob job)
+  public Response enqueueJob(String requestBody)
   {
     // Authenticate the user
     UUID userId = AuthenticateUser();
+
+    RoutingJob job = GSON.fromJson(requestBody, RoutingJob.class);
+    if (job == null)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job data is invalid.\"}").build();
+    }
 
     // Check if the sessionId references a valid session
     Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
@@ -47,7 +50,6 @@ public class JobControllerV1 extends BaseController
     }
 
     var request = GSON.toJson(job);
-
     try
     {
       // Enqueue the job
@@ -219,9 +221,7 @@ public class JobControllerV1 extends BaseController
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changeSettings(
       @PathParam("jobId")
-      String jobId,
-      @RequestBody()
-      RouterSettings routerSettings)
+      String jobId, String requestBody)
   {
     // Authenticate the user
     UUID userId = AuthenticateUser();
@@ -246,6 +246,12 @@ public class JobControllerV1 extends BaseController
     if (job.state != RoutingJobState.QUEUED)
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is already started and cannot be changed.\"}").build();
+    }
+
+    RouterSettings routerSettings = GSON.fromJson(requestBody, RouterSettings.class);
+    if (routerSettings == null)
+    {
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The router settings are invalid.\"}").build();
     }
 
     // Change the settings of the job
@@ -267,9 +273,7 @@ public class JobControllerV1 extends BaseController
   @Consumes(MediaType.APPLICATION_JSON)
   public Response uploadInput(
       @PathParam("jobId")
-      String jobId,
-      @RequestBody()
-      BoardFilePayload input)
+      String jobId, String requestBody)
   {
     // Authenticate the user
     UUID userId = AuthenticateUser();
@@ -296,6 +300,7 @@ public class JobControllerV1 extends BaseController
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The job is already started and cannot be changed.\"}").build();
     }
 
+    BoardFilePayload input = GSON.fromJson(requestBody, BoardFilePayload.class);
     if (input == null)
     {
       return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data is invalid.\"}").build();
@@ -303,7 +308,7 @@ public class JobControllerV1 extends BaseController
 
     if ((input.dataBase64 == null) || (input.dataBase64.isEmpty()))
     {
-      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data must be encoded and put into the dataBase64 field.\"}").build();
+      return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"The input data must be base-64 encoded and put into the data_base64 field.\"}").build();
     }
 
     // Decode the base64 encoded input data to a byte array
