@@ -107,10 +107,10 @@ dependencies {
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
 
     // Add Jetty dependencies
-    implementation 'org.eclipse.jetty:jetty-servlet:11.0.22-mod'
-    implementation 'org.eclipse.jetty:jetty-server:11.0.22'
-    implementation 'org.eclipse.jetty:jetty-util:11.0.22'
-    implementation 'org.eclipse.jetty:jetty-security:11.0.22'
+    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.0.14'
+    implementation 'org.eclipse.jetty:jetty-server:12.0.14'
+    implementation 'org.eclipse.jetty:jetty-util:12.0.14'
+    implementation 'org.eclipse.jetty:jetty-security:12.0.14'
 }
 
 ext {

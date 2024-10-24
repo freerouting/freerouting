@@ -30,7 +30,7 @@ module app.freerouting {
   requires jakarta.json.bind;
   requires jakarta.validation;
 
-  requires org.eclipse.jetty.servlet;
+  requires org.eclipse.jetty.ee10.servlet;
 
   requires jersey.container.servlet;
   requires jersey.container.servlet.core;

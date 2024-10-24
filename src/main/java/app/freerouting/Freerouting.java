@@ -13,10 +13,10 @@ import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.swing.*;
@@ -415,7 +415,7 @@ public class Freerouting
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
     jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
-    
+
     // Add Listeners
     context.addEventListener(new AppContextListener());
 
