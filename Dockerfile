@@ -22,5 +22,8 @@ COPY --from=build /app/build/libs/freerouting-executable.jar /app/freerouting-ex
 # Expose the port the app runs on
 EXPOSE 37864
 
+# Define a writable volume
+VOLUME /mnt/freerouting
+
 # Run the application
-CMD ["java", "-jar", "/app/freerouting-executable.jar", "--api_server-enabled=true", "--feature_flags-save_jobs=1", "--user-data-path==~/.freerouting/"]
+CMD ["java", "-jar", "/app/freerouting-executable.jar", "--api_server-enabled=true", "--gui-enabled=false", "--feature_flags-save_jobs=1", "--user-data-path=/mnt/freerouting"]

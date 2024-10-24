@@ -56,6 +56,7 @@ public class GlobalSettings implements Serializable
       "ja",
       "ko"
   };
+  @SerializedName("version")
   public String version = Constants.FREEROUTING_VERSION;
   public transient boolean show_help_option = false;
   /**
@@ -221,7 +222,7 @@ public class GlobalSettings implements Serializable
         {
           // it's a general settings value setter
           String[] parts = p_args[i].substring(2).split("=");
-          if (parts.length == 2)
+          if ((parts.length == 2) && (!Objects.equals(parts[0], "user-data-path")))
           {
             setValue(parts[0], parts[1]);
           }
