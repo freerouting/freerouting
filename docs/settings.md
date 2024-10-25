@@ -116,9 +116,9 @@ Freerouting can also be configured using command-line arguments. These arguments
 
 **Example:**
 
-'''bash
+```bash
 java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
-'''
+```
 
 ### Environment Variables
 
@@ -126,11 +126,11 @@ Environment variables provide another way to override settings. The environment 
 
 **Example:**
 
-'''bash
+```bash
 FREEROUTING__GUI__ENABLED=false
 FREEROUTING__ROUTER__MAX_PASSES=200
 java -jar freerouting.jar
-'''
+```
 
 ## Settings Precedence
 
