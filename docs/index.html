@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Freerouting - Automatic PCB Routing Tool</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <meta content="Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers, and hobbyists."
+          name="description">
+    <meta content="PCB, routing, software, open-source, Freerouting, PCB design" name="keywords">
+    <meta content="Freerouting Team" name="author">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,58 +57,99 @@
         .features ul li {
             margin: 0.5em 0;
         }
+        .screenshot img {
+            width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
 
-<div class="header">
+<header class="header">
     <h1>Freerouting</h1>
     <p>The Open-Source, Automatic PCB Routing Tool</p>
-    <a href="https://github.com/freerouting/freerouting/releases" class="btn">
+    <a class="btn" href="https://github.com/freerouting/freerouting/releases">
         <i class="fas fa-download"></i> Download Freerouting 2.0.0
     </a>
-    <a href="https://github.com/freerouting/freerouting" class="btn">
+    <a class="btn" href="https://github.com/freerouting/freerouting">
         <i class="fab fa-github"></i> View on GitHub
     </a>
-</div>
+</header>
 
-<div class="section">
-    <h2>About Freerouting</h2>
-    <p>Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers, and hobbyists. It simplifies the complex and time-consuming process of routing printed circuit boards, making it faster and easier to create intricate and high-quality designs. Version 2.0 marks a major milestone, introducing new features, an upgraded GUI, and enhanced performance for an improved user experience.</p>
-</div>
+<main>
+    <section class="section">
+        <h2>About Freerouting</h2>
+        <p>Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers,
+            and
+            hobbyists. It simplifies the complex and time-consuming process of routing printed circuit boards, making it
+            faster and easier to create intricate and high-quality designs. Version 2.0 marks a major milestone,
+            introducing
+            new features, an upgraded GUI, and enhanced performance for an improved user experience.</p>
+    </section>
 
-<div class="screenshot">
-    <h2>Freerouting Interface</h2>
-    <img src="GUI_screenshot.png" alt="Screenshot of Freerouting GUI">
-</div>
+    <section class="screenshot">
+        <h2>Freerouting Interface</h2>
+        <img alt="Screenshot of Freerouting GUI" src="GUI_screenshot.png">
+    </section>
 
-<div class="section features">
-    <h2>Key Features</h2>
-    <ul>
-        <li><strong>Enhanced Configuration Flexibility:</strong> Customize your workflow using JSON configuration files, environment variables, command-line arguments, or the graphical interface.</li>
-        <li><strong>Localization Support:</strong> Improved language support for global users, including streamlined sentence templates and placeholder control for easier translation.</li>
-        <li><strong>API Access (Beta):</strong> Freerouting now has a public API that integrates seamlessly with popular EDA tools like KiCad, EasyEDA, and tscircuit, expanding its usability and interoperability.</li>
-        <li><strong>CLI Interface:</strong> Freerouting now fully supports command-line operation, allowing you to automate and control your routing tasks without a graphical interface.</li>
-        <li><strong>Multi-Threaded Routing Job Scheduler:</strong> Freerouting 2.0 can handle multiple routing tasks simultaneously, significantly improving performance and efficiency.</li>
-        <li><strong>Multi-Platform Support:</strong> Freerouting is compatible with Windows, Linux, macOS, and offers Docker images for both ARM64 and x64 architectures.</li>
-    </ul>
-</div>
+    <section class="section features">
+        <h2>Key Features</h2>
+        <ul>
+            <li><strong>Enhanced Configuration Flexibility:</strong> Customize your workflow using JSON configuration
+                files,
+                environment variables, command-line arguments, or the graphical interface.
+            </li>
+            <li><strong>Localization Support:</strong> Improved language support for global users, including streamlined
+                sentence templates and placeholder control for easier translation.
+            </li>
+            <li><strong>API Access (Beta):</strong> Freerouting now has a public API that integrates seamlessly with
+                popular
+                EDA tools like KiCad, EasyEDA, and tscircuit, expanding its usability and interoperability.
+            </li>
+            <li><strong>CLI Interface:</strong> Freerouting now fully supports command-line operation, allowing you to
+                automate and control your routing tasks without a graphical interface.
+            </li>
+            <li><strong>Multi-Threaded Routing Job Scheduler:</strong> Freerouting 2.0 can handle multiple routing tasks
+                simultaneously, significantly improving performance and efficiency.
+            </li>
+            <li><strong>Multi-Platform Support:</strong> Freerouting is compatible with Windows, Linux, macOS, and
+                offers
+                Docker images for both ARM64 and x64 architectures.
+            </li>
+        </ul>
+    </section>
 
-<div class="section">
-    <h2>Benefits for Users</h2>
-    <p>Freerouting 2.0 offers substantial advantages for PCB designers and engineers:</p>
-    <ul>
-        <li><strong>Save Time and Boost Efficiency:</strong> With its automated routing and multi-threaded scheduling, Freerouting enables faster board design, saving valuable time.</li>
-        <li><strong>High Degree of Customization:</strong> Freerouting adapts to your preferred workflow, with flexible configuration options available through multiple methods.</li>
-        <li><strong>Integrate into Existing Toolchains:</strong> The public API allows easy integration into various EDA environments, offering a more seamless workflow.</li>
-        <li><strong>Improved Localization:</strong> Freerouting’s enhanced localization tools allow users to work in their preferred language without awkward phrasing or misaligned templates.</li>
-        <li><strong>Cross-Platform Accessibility:</strong> Use Freerouting on Windows, Linux, and macOS, ensuring compatibility across popular operating systems.</li>
-    </ul>
-</div>
+    <section class="section">
+        <h2>Benefits for Users</h2>
+        <p>Freerouting 2.0 offers substantial advantages for PCB designers and engineers:</p>
+        <ul>
+            <li><strong>Save Time and Boost Efficiency:</strong> With its automated routing and multi-threaded
+                scheduling,
+                Freerouting enables faster board design, saving valuable time.
+            </li>
+            <li><strong>High Degree of Customization:</strong> Freerouting adapts to your preferred workflow, with
+                flexible
+                configuration options available through multiple methods.
+            </li>
+            <li><strong>Integrate into Existing Toolchains:</strong> The public API allows easy integration into various
+                EDA
+                environments, offering a more seamless workflow.
+            </li>
+            <li><strong>Improved Localization:</strong> Freerouting’s enhanced localization tools allow users to work in
+                their preferred language without awkward phrasing or misaligned templates.
+            </li>
+            <li><strong>Cross-Platform Accessibility:</strong> Use Freerouting on Windows, Linux, and macOS, ensuring
+                compatibility across popular operating systems.
+            </li>
+        </ul>
+    </section>
+</main>
 
-<div class="footer">
-    <p>Freerouting is an open-source project maintained by dedicated volunteers.<br/>Contributions, feedback, and support are always welcome.<br/>Visit the <a href="https://github.com/freerouting/freerouting">GitHub repository</a> to learn more.</p>
-</div>
+<footer class="footer">
+    <p>Freerouting is an open-source project maintained by dedicated volunteers.<br/>Contributions, feedback, and
+        support are always welcome.<br/>Visit the <a href="https://github.com/freerouting/freerouting">GitHub
+            repository</a> to learn more.</p>
+</footer>
 
 </body>
 </html>
