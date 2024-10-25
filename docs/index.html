@@ -20,22 +20,43 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 1em;
-            color: #333;
+            background-color: rgb(1, 58, 32);
+            color: rgb(232, 204, 135);
+        }
+        a {
+            color: rgb(232, 204, 135);
+            text-decoration: underline;
+        }
+        a:hover {
+            color: rgb(200, 176, 116);
         }
         .header, .footer {
             text-align: center;
             padding: 2em 0;
         }
-        .header h1 {
-            font-size: 2.5em;
-            margin: 0.5em 0;
-            font-family: 'NotoSansItalic', Arial, sans-serif;
-            background-color: rgb(1, 58, 32);
-            color: rgb(232, 204, 135);
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
         }
+
+        .header img {
+            margin-right: 5.5em;
+        }
+
+        .header h1 {
+            font-size: 7.5em;
+            font-weight: 100;
+            margin: 0 0 0.25em 0;
+            font-family: 'NotoSansItalic', Arial, sans-serif;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
         .btn {
-            background-color: #007acc;
-            color: white;
+            background-color: rgb(232, 204, 135);
+            color: rgb(1, 58, 32);
             padding: 0.75em 1.5em;
             text-decoration: none;
             border-radius: 5px;
@@ -44,7 +65,8 @@
             display: inline-block;
         }
         .btn:hover {
-            background-color: #005999;
+            color: rgb(1, 58, 32);
+            background-color: rgb(200, 176, 116);
         }
         .section {
             margin: 2em 0;
@@ -52,7 +74,7 @@
         .section h2 {
             font-size: 1.8em;
             margin-bottom: 0.5em;
-            color: #007acc;
+            color: rgb(232, 204, 135);
         }
         .section p, .features ul {
             margin: 1em 0;
@@ -73,7 +95,10 @@
 <body>
 
 <header class="header">
-    <h1>Freerouting</h1>
+    <div class="header-container">
+        <img alt="Freerouting logo" src="logo_transparent.png">
+        <h1>freerouting</h1>
+    </div>
     <p>The Open-Source, Automatic PCB Routing Tool</p>
     <a class="btn" href="https://github.com/freerouting/freerouting/releases">
         <i class="fas fa-download"></i> Download Freerouting 2.0.0
@@ -150,12 +175,35 @@
             </li>
         </ul>
     </section>
+
+    <section class="sponsors">
+        <h2>Sponsors</h2>
+        <p>
+            A heartfelt thank you to my sponsors for their invaluable support and motivation, which enables me to
+            continue volunteering as the sole developer and maintainer of Freerouting.
+        </p>
+        <p>
+            Special thanks to @tscircuit (and @seveibar) for your ongoing generosity!
+        </p>
+        <p>
+            I’d also like to acknowledge past sponsors: @cpyne, @rozza-m, and @digilent. Your support has been essential
+            to this project.
+        </p>
+        <p>
+            Since I’m currently the only active contributor to Freerouting, even a small monthly contribution would be
+            greatly appreciated. If you’d like to support this project, please consider sponsoring me:
+            <a href="https://github.com/sponsors/andrasfuchs">GitHub Sponsors</a>. Thank you!
+        </p>
+    </section>
 </main>
 
 <footer class="footer">
-    <p>Freerouting is an open-source project maintained by dedicated volunteers.<br/>Contributions, feedback, and
-        support are always welcome.<br/>Visit the <a href="https://github.com/freerouting/freerouting">GitHub
-            repository</a> to learn more.</p>
+    <p>
+        Freerouting is an open-source project maintained by <a href="https://github.com/sponsors/andrasfuchs">Andras
+        Fuchs</a>.<br/>
+        Contributions, feedback, and support are always welcome.<br/>
+        Visit the <a href="https://github.com/freerouting/freerouting">GitHub repository</a> to learn more.
+    </p>
 </footer>
 
 </body>
