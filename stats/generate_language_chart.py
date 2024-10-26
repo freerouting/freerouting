@@ -185,3 +185,13 @@ plt.close()  # Closing the plot to prevent it from displaying in the output
 
 # Give some feedback on the console
 print(f"{latest_pie_chart_full_path} was saved")
+
+# Generate some statistics: total number of users, total number of sessions, and the number of user with higher than 3 sessions
+total_users = len(latest_data)
+total_sessions = sum(int(entry['session_count']) for entry in latest_data)
+users_with_high_sessions = sum(1 for entry in latest_data if int(entry['session_count']) > 3)
+
+# Print out the statistics
+print(f"Total number of users: {total_users}")
+print(f"Total number of sessions: {total_sessions}")
+print(f"Number of users with more than 3 sessions: {users_with_high_sessions}")

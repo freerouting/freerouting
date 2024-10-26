@@ -24,6 +24,7 @@ bin/
 # Visual Studio 2015/2017 cache/options directory
 /.vs/
 /integrations/KiCad/installjava/.vs
+/stats/.vs/
 
 freerouting.dsn
 temp-freerouting.dsn
