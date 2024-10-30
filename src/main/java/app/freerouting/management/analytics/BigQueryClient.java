@@ -70,7 +70,7 @@ public class BigQueryClient implements AnalyticsClient
       try
       {
         // table name is the event name with some formatting
-        String tableName = payload.event.toLowerCase().replace(" ", "_");
+        String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
 
         // apply a text transformation to the event and event_text fields
         fields.put("event_text", fields.get("event"));
