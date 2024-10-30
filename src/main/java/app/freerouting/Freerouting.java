@@ -219,8 +219,6 @@ public class Freerouting
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
     FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE + " 00:00", String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.currentLocale, globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram, globalSettings.environmentSettings.host, width, height, dpi);
 
-    FRAnalytics.exceptionThrown("Test exception", new Exception("This is a test exception"));
-
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
     new Thread(checker).start();
