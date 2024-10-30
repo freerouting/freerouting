@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue022-AutoRouter_interrupted.dsn -do .\tests\Issue022-AutoRouter_interrupted.ses" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

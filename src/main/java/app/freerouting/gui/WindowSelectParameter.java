@@ -5,7 +5,7 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 import java.awt.*;

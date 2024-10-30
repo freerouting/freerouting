@@ -1,7 +1,7 @@
-package app.freerouting.management;
+package app.freerouting.management.analytics;
 
+import app.freerouting.management.analytics.dto.*;
 import app.freerouting.management.gson.GsonProvider;
-import app.freerouting.management.segment.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * A client for Segment's HTTP API.
  */
-public class SegmentClient
+public class SegmentClient implements AnalyticsClient
 {
   private static final String SEGMENT_ENDPOINT = "https://api.segment.io/v1/";
   private final String WRITE_KEY;

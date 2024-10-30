@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.boardgraphics.CoordinateTransform;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="-mp 16 -de .\tests\Issue035-ReadPlaceScope.dsn -do .\tests\Issue035-ReadPlaceScope.ses" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

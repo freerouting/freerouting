@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.Padstack;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.*;
 
 import javax.swing.*;

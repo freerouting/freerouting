@@ -4,7 +4,7 @@ import app.freerouting.board.*;
 import app.freerouting.board.ObjectInfoPanel.Printable;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.*;
 
 import javax.swing.*;

@@ -8,9 +8,9 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
 

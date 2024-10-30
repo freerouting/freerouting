@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue143-rpi_splitter_mod.dsn" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

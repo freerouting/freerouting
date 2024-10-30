@@ -6,7 +6,7 @@
     <option name="PROGRAM_PARAMETERS" value="-l de --gui-dialog_confirmation_timeout=25" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue102-Mars-64-revE-rot00.dsn -do .\tests\Mars-64_oit_0p10000_gte.ses -oit 0.1" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

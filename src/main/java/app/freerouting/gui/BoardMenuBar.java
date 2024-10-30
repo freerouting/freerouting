@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.FeatureFlagsSettings;
 
 import javax.swing.*;

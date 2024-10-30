@@ -66,9 +66,26 @@ public class TextManager
 
   public static String convertInstantToString(Instant instant)
   {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    return convertInstantToString(instant, "yyyyMMdd_HHmmss");
+  }
+
+  public static String convertInstantToString(Instant instant, String format)
+  {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
     LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     return localDateTime.format(formatter);
+  }
+
+  public static String generateRandomAlphanumericString(int length)
+  {
+    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    StringBuilder randomString = new StringBuilder();
+    for (int i = 0; i < length; i++)
+    {
+      int index = (int) (characters.length() * Math.random());
+      randomString.append(characters.charAt(index));
+    }
+    return randomString.toString();
   }
 
   private void loadResourceBundle(String baseName)

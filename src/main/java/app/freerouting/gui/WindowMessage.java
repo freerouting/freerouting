@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +75,10 @@ public class WindowMessage extends WindowBase
     }
     String yesOption = UIManager.getString("OptionPane.yesButtonText");
     String noOption = UIManager.getString("OptionPane.noButtonText");
-    Object[] options = {yesOption, noOption};
+    Object[] options = {
+        yesOption,
+        noOption
+    };
     JOptionPane optionPane = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[defaultOption]);
     optionPane.createDialog(null, "").setVisible(true);
     String selected_option = (String) optionPane.getValue();

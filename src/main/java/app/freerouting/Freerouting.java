@@ -7,10 +7,10 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
@@ -196,7 +196,8 @@ public class Freerouting
     {
       // initialize analytics
       FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.segmentWriteKey);
-      int analyticsModulo = Math.max(globalSettings.usageAndDiagnosticData.analyticsModulo, 1);
+      // this option allows us to disable analytics for some users (enabled for all if it is set to 1, otherwise it is disabled for every Nth user)
+      int analyticsModulo = 1;
       String userIdString = globalSettings.userProfileSettings.userId.length() >= 4 ? globalSettings.userProfileSettings.userId.substring(0, 4) : "0000";
       int userIdValue = Integer.parseInt(userIdString, 16);
       allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0) && (globalSettings.userProfileSettings.isTelemetryAllowed);
@@ -216,7 +217,9 @@ public class Freerouting
     {
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE, String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.currentLocale, globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram, globalSettings.environmentSettings.host, width, height, dpi);
+    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE + " 00:00", String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"), System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.currentLocale, globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram, globalSettings.environmentSettings.host, width, height, dpi);
+
+    FRAnalytics.exceptionThrown("Test exception", new Exception("This is a test exception"));
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);

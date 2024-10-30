@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue029-hw48na.dsn -dr .\tests\Issue029-hw48na.rules" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

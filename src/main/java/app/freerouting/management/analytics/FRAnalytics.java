@@ -1,9 +1,9 @@
-package app.freerouting.management;
+package app.freerouting.management.analytics;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.analytics.dto.Properties;
+import app.freerouting.management.analytics.dto.Traits;
 import app.freerouting.management.gson.GsonProvider;
-import app.freerouting.management.segment.Properties;
-import app.freerouting.management.segment.Traits;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -90,7 +90,7 @@ public class FRAnalytics
       put("help_about_menuitem", "app.freerouting.gui/Board/Menu/Help/About");
     }
   };
-  private static SegmentClient analytics;
+  private static AnalyticsClient analytics;
   private static String permanent_user_id;
   private static String permanent_user_email;
   private static String appPreviousLocation = "";
@@ -105,7 +105,8 @@ public class FRAnalytics
 
   public static void setWriteKey(String libraryVersion, String writeKey)
   {
-    analytics = new SegmentClient(libraryVersion, writeKey);
+    //analytics = new SegmentClient(libraryVersion, writeKey);
+    analytics = new BigQueryClient(libraryVersion);
   }
 
   public static void setUserId(String userId, String userEmail)

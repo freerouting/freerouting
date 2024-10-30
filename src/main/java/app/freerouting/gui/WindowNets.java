@@ -3,7 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.NetClasses;

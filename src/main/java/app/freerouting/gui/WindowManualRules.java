@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
 

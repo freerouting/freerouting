@@ -5,10 +5,10 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.interactive.*;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.management.gson.GsonProvider;
 
 import javax.swing.*;

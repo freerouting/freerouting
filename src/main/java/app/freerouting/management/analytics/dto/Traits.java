@@ -1,4 +1,4 @@
-package app.freerouting.management.segment;
+package app.freerouting.management.analytics.dto;
 
 import java.util.HashMap;
 

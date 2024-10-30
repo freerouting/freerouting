@@ -14,9 +14,9 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
-import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;

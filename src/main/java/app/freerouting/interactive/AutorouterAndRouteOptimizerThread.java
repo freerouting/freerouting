@@ -11,8 +11,8 @@ import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;

@@ -8,7 +8,7 @@ import app.freerouting.core.BoardLibrary;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;

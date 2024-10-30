@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="-im -de .\tests\Issue184-motorizedopener\freerouting.dsn -do .\tests\Issue184-motorizedopener\freerouting.ses" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

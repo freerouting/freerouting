@@ -5,7 +5,7 @@ import app.freerouting.board.BoardOutline;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Trace;
 import app.freerouting.interactive.GuiBoardManager;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 
 import javax.swing.*;

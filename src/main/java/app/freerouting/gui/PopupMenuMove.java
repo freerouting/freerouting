@@ -2,8 +2,8 @@ package app.freerouting.gui;
 
 import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.MoveItemState;
-import app.freerouting.management.FRAnalytics;
 import app.freerouting.management.TextManager;
+import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 

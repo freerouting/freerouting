@@ -5,8 +5,8 @@
     <option name="PROGRAM_PARAMETERS" value="-de .\tests\Issue297-myboard.dsn -do .\tests\Issue297-myboard.ses" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
-        <option name="ENABLED" value="false" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
     </extension>
     <method v="2">

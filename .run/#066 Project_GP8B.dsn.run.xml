@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="-Xmx32g -mt 24 -us greedy -is prioritized -de .\tests\Issue066-Project_GP8B.dsn -do .\tests\Issue066-Project_GP8B.ses" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="app.freerouting.management.*" />
+        <option name="PATTERN" value="app.freerouting.management.analytics.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -5,7 +5,7 @@ import app.freerouting.board.Item;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 
 import javax.swing.*;

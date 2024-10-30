@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 import java.awt.*;

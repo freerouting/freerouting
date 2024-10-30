@@ -4,7 +4,7 @@ import app.freerouting.board.*;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.FRAnalytics;
+import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 import javax.swing.text.*;
