@@ -67,6 +67,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   // TODO: pass the router settings as an input to the router (and don't use the one on IBoardManager/GuiBoardManager)
   @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
+  public transient Instant timeoutAt;
 
   /**
    * We need a parameterless constructor for the serialization.

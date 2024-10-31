@@ -6,10 +6,12 @@ import app.freerouting.settings.GlobalSettings;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -86,6 +88,42 @@ public class TextManager
       randomString.append(characters.charAt(index));
     }
     return randomString.toString();
+  }
+
+  public static Long parseTimespanString(String timespanString)
+  {
+    try
+    {
+      // convert the string from "HH:mm:ss" or "mm:ss" or "ss" format to "PnDTnHnMn.nS" format
+      var durationString = convertFromTimespanToDurationFormat(timespanString);
+      // parse the duration
+      Duration duration = Duration.parse(durationString);
+      return duration.getSeconds();
+    } catch (DateTimeParseException e)
+    {
+      return null;
+    }
+  }
+
+  public static String convertFromTimespanToDurationFormat(String timespanString)
+  {
+    String[] parts = timespanString.split(":");
+    StringBuilder durationString = new StringBuilder("PT");
+
+    if (parts.length == 3)
+    {
+      durationString.append(parts[0]).append("H").append(parts[1]).append("M").append(parts[2]).append("S");
+    }
+    else if (parts.length == 2)
+    {
+      durationString.append(parts[0]).append("M").append(parts[1]).append("S");
+    }
+    else if (parts.length == 1)
+    {
+      durationString.append(parts[0]).append("S");
+    }
+
+    return durationString.toString();
   }
 
   private void loadResourceBundle(String baseName)

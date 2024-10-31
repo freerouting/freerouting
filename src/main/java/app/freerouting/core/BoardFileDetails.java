@@ -69,52 +69,6 @@ public class BoardFileDetails implements Serializable
     {
       // Ignore the exception and continue with the default values
     }
-
-    if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
-    {
-      String content = "";
-      try
-      {
-        // read the content of the output file as text
-        content = Files.readString(file.toPath());
-      } catch (IOException e)
-      {
-        // Ignore the exception and continue with the default values
-      }
-
-      if (this.format == FileFormat.SES)
-      {
-        // get the number of components and nets in the SES file
-        this.layerCount = 0;
-        this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = 0;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = 0;
-        this.traceCount = 0;
-        this.viaCount = 0;
-        return;
-      }
-      else if (this.format == FileFormat.DSN)
-      {
-        // get the number of layers and nets in the DSN file
-        this.layerCount = content.split("\\(layer").length - 1;
-        this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = content.split("\\(class").length - 1;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = content.split("\\(wire").length - 1;
-        this.traceCount = 0;
-        this.viaCount = content.split("\\(via").length - 1;
-        return;
-      }
-    }
-
-    this.layerCount = 0;
-    this.componentCount = 0;
-    this.netclassCount = 0;
-    this.netCount = 0;
-    this.trackCount = 0;
-    this.traceCount = 0;
-    this.viaCount = 0;
   }
 
   /**
@@ -178,6 +132,46 @@ public class BoardFileDetails implements Serializable
 
     // read the file contents to determine the file format
     this.format = RoutingJob.getFileFormat(this.dataBytes);
+
+    // set the statistical data based on the file content
+    if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
+    {
+      // read the content as text
+      String content = new String(this.dataBytes, StandardCharsets.UTF_8);
+
+      if (this.format == FileFormat.SES)
+      {
+        // get the number of components and nets in the SES file
+        this.layerCount = 0;
+        this.componentCount = content.split("\\(component").length - 1;
+        this.netclassCount = 0;
+        this.netCount = content.split("\\(net").length - 1;
+        this.trackCount = 0;
+        this.traceCount = 0;
+        this.viaCount = 0;
+      }
+      else if (this.format == FileFormat.DSN)
+      {
+        // get the number of layers and nets in the DSN file
+        this.layerCount = content.split("\\(layer").length - 1;
+        this.componentCount = content.split("\\(component").length - 1;
+        this.netclassCount = content.split("\\(class").length - 1;
+        this.netCount = content.split("\\(net").length - 1;
+        this.trackCount = content.split("\\(wire").length - 1;
+        this.traceCount = 0;
+        this.viaCount = content.split("\\(via").length - 1;
+      }
+    }
+    else
+    {
+      this.layerCount = 0;
+      this.componentCount = 0;
+      this.netclassCount = 0;
+      this.netCount = 0;
+      this.trackCount = 0;
+      this.traceCount = 0;
+      this.viaCount = 0;
+    }
 
     fireUpdatedEvent();
   }

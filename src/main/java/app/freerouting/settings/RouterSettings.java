@@ -19,6 +19,8 @@ public class RouterSettings implements Serializable
   public double defaultPreferredDirectionTraceCost = 1;
   @SerializedName("default_undesired_direction_trace_cost")
   public double defaultUndesiredDirectionTraceCost = 1;
+  @SerializedName("job_timeout")
+  public String jobTimeoutString = "12:00:00";
   @SerializedName("max_passes")
   public int maxPasses = 100;
   @SerializedName("fanout_max_passes")

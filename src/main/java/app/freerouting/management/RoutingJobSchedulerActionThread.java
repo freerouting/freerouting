@@ -28,6 +28,39 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
   {
     job.startedAt = Instant.now();
 
+    // check if we need to check for timeout
+    Long timeout = TextManager.parseTimespanString(job.routerSettings.jobTimeoutString);
+    if (timeout != null)
+    {
+      // maximize the timeout to 24 hours
+      if (timeout > 24 * 60 * 60)
+      {
+        timeout = 24 * 60 * 60L;
+      }
+
+      job.timeoutAt = job.startedAt.plusSeconds(timeout);
+
+      // start a new thread that will check for timeout
+      new Thread(() ->
+      {
+        while (Instant.now().isBefore(job.timeoutAt))
+        {
+          try
+          {
+            Thread.sleep(1000);
+          } catch (InterruptedException e)
+          {
+            e.printStackTrace();
+          }
+        }
+
+        if (job.state == RoutingJobState.RUNNING)
+        {
+          job.state = RoutingJobState.TIMED_OUT;
+        }
+      }).start();
+    }
+
     // start the fanout, routing, optimizer task(s) if needed
     if (job.routerSettings.getRunFanout())
     {
@@ -40,7 +73,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
     {
       job.stage = RoutingStage.ROUTING;
       // start the routing task
-      BatchAutorouter router = new BatchAutorouter(job.thread, job.board, job.routerSettings, !job.routerSettings.getRunFanout(), true, job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
+      BatchAutorouter router = new BatchAutorouter(job);
       router.runBatchLoop();
       job.stage = RoutingStage.IDLE;
     }
@@ -53,7 +86,10 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
     }
 
     job.finishedAt = Instant.now();
-    job.state = RoutingJobState.COMPLETED;
-    globalSettings.statistics.incrementJobsCompleted();
+    if (job.state == RoutingJobState.RUNNING)
+    {
+      job.state = RoutingJobState.COMPLETED;
+      globalSettings.statistics.incrementJobsCompleted();
+    }
   }
 }

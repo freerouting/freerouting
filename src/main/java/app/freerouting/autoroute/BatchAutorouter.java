@@ -2,6 +2,8 @@ package app.freerouting.autoroute;
 
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.*;
+import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
@@ -26,11 +28,18 @@ public class BatchAutorouter extends NamedAlgorithm
   private final HashSet<String> already_checked_board_hashes = new HashSet<>();
   private final LinkedList<Integer> traceLengthDifferenceBetweenPasses = new LinkedList<>();
   private final int trace_pull_tight_accuracy;
+  private RoutingJob job;
   private boolean is_interrupted = false;
   /**
    * Used to draw the airline of the current routed incomplete.
    */
   private FloatLine air_line;
+
+  public BatchAutorouter(RoutingJob job)
+  {
+    this(job.thread, job.board, job.routerSettings, !job.routerSettings.getRunFanout(), true, job.routerSettings.get_start_ripup_costs(), job.routerSettings.trace_pull_tight_accuracy);
+    this.job = job;
+  }
 
   public BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
   {
@@ -133,7 +142,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
     while (still_unrouted_items && !this.is_interrupted)
     {
-      if (thread.is_stop_auto_router_requested())
+      if (thread.is_stop_auto_router_requested() || (job != null && job.state == RoutingJobState.TIMED_OUT))
       {
         this.is_interrupted = true;
       }
@@ -204,13 +213,14 @@ public class BatchAutorouter extends NamedAlgorithm
     }
 
     already_checked_board_hashes.clear();
-    
+
     if (!this.is_interrupted)
     {
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, this.settings.get_start_pass_no(), this.board.get_hash()));
     }
     else
     {
+      // TODO: set it to TIMED_OUT if it was interrupted because of timeout
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, this.settings.get_start_pass_no(), this.board.get_hash()));
     }
 
