@@ -90,66 +90,12 @@ public class WindowUserSettings extends WindowBase
     allowContactCheckbox.addItemListener(e -> globalSettings.userProfileSettings.isContactAllowed = allowContactCheckbox.isSelected());
     profileDialog.add(allowContactCheckbox, gbc);
 
-    // Visual separation for statistics
+    // Update button
     gbc.gridx = 0;
     gbc.gridy = 4;
     gbc.gridwidth = 2;
-    gbc.fill = GridBagConstraints.BOTH;
-    JSeparator separator = new JSeparator();
-    profileDialog.add(separator, gbc);
-
-    // Statistics header
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridwidth = 2;
-    gbc.gridy = 5;
-    gbc.weightx = 0;
-    gbc.ipadx = ipadx;
-    JLabel statisticsHeader = new JLabel(tm.getText("statistics_header", globalSettings.statistics.startTime.substring(0, 10)));
-    profileDialog.add(statisticsHeader, gbc);
-
-    // Statistics
-    gbc.gridwidth = 1;
-    gbc.gridy = 6;
-    gbc.weightx = 0;
-    gbc.ipadx = ipadx;
-    JLabel sessionsLabel = new JLabel(tm.getText("sessions_total"));
-    profileDialog.add(sessionsLabel, gbc);
-    gbc.gridx = 1;
-    gbc.weightx = 1.0;
-    gbc.ipadx = 0;
-    JLabel sessionsValue = new JLabel(globalSettings.statistics.sessionsTotal.toString());
-    profileDialog.add(sessionsValue, gbc);
-
-    gbc.gridx = 0;
-    gbc.gridy = 7;
-    gbc.weightx = 0;
-    gbc.ipadx = ipadx;
-    JLabel startedJobsLabel = new JLabel(tm.getText("jobs_started"));
-    profileDialog.add(startedJobsLabel, gbc);
-    gbc.gridx = 1;
-    gbc.weightx = 1.0;
-    gbc.ipadx = 0;
-    JLabel startedJobsValue = new JLabel(globalSettings.statistics.jobsStarted.toString());
-    profileDialog.add(startedJobsValue, gbc);
-
-    gbc.gridx = 0;
-    gbc.gridy = 8;
-    gbc.weightx = 0;
-    gbc.ipadx = ipadx;
-    JLabel completedJobsLabel = new JLabel(tm.getText("jobs_completed"));
-    profileDialog.add(completedJobsLabel, gbc);
-    gbc.gridx = 1;
-    gbc.weightx = 1.0;
-    gbc.ipadx = 0;
-    JLabel completedJobsValue = new JLabel(globalSettings.statistics.jobsCompleted.toString());
-    profileDialog.add(completedJobsValue, gbc);
-
-    // Update button
-    gbc.gridx = 0;
-    gbc.gridy = 9;
-    gbc.gridwidth = 2;
     gbc.anchor = GridBagConstraints.CENTER;
-    JButton updateButton = new JButton(tm.getText("update_button"));
+    JButton updateButton = new JButton(tm.getText("save_settings_button"));
     var buttonSize = new Dimension(100, updateButton.getPreferredSize().height);
     updateButton.setPreferredSize(buttonSize);
     updateButton.setMaximumSize(buttonSize);
@@ -212,6 +158,60 @@ public class WindowUserSettings extends WindowBase
     }
 
     // Visual separation for statistics
+    gbc.gridx = 0;
+    gbc.gridy = 5;
+    gbc.gridwidth = 2;
+    gbc.fill = GridBagConstraints.BOTH;
+    JSeparator separator = new JSeparator();
+    profileDialog.add(separator, gbc);
+
+    // Statistics header
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.gridwidth = 2;
+    gbc.gridy = 6;
+    gbc.weightx = 0;
+    gbc.ipadx = ipadx;
+    JLabel statisticsHeader = new JLabel(tm.getText("statistics_header", globalSettings.statistics.startTime.substring(0, 10)));
+    profileDialog.add(statisticsHeader, gbc);
+
+    // Statistics
+    gbc.gridwidth = 1;
+    gbc.gridy = 7;
+    gbc.weightx = 0;
+    gbc.ipadx = ipadx;
+    JLabel sessionsLabel = new JLabel(tm.getText("sessions_total"));
+    profileDialog.add(sessionsLabel, gbc);
+    gbc.gridx = 1;
+    gbc.weightx = 1.0;
+    gbc.ipadx = 0;
+    JLabel sessionsValue = new JLabel(globalSettings.statistics.sessionsTotal.toString());
+    profileDialog.add(sessionsValue, gbc);
+
+    gbc.gridx = 0;
+    gbc.gridy = 8;
+    gbc.weightx = 0;
+    gbc.ipadx = ipadx;
+    JLabel startedJobsLabel = new JLabel(tm.getText("jobs_started"));
+    profileDialog.add(startedJobsLabel, gbc);
+    gbc.gridx = 1;
+    gbc.weightx = 1.0;
+    gbc.ipadx = 0;
+    JLabel startedJobsValue = new JLabel(globalSettings.statistics.jobsStarted.toString());
+    profileDialog.add(startedJobsValue, gbc);
+
+    gbc.gridx = 0;
+    gbc.gridy = 9;
+    gbc.weightx = 0;
+    gbc.ipadx = ipadx;
+    JLabel completedJobsLabel = new JLabel(tm.getText("jobs_completed"));
+    profileDialog.add(completedJobsLabel, gbc);
+    gbc.gridx = 1;
+    gbc.weightx = 1.0;
+    gbc.ipadx = 0;
+    JLabel completedJobsValue = new JLabel(globalSettings.statistics.jobsCompleted.toString());
+    profileDialog.add(completedJobsValue, gbc);
+
+    // Visual separation for sponsor message
     gbc.gridx = 0;
     gbc.gridy = 10;
     gbc.gridwidth = 2;
