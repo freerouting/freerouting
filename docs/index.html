@@ -9,7 +9,7 @@
     <meta content="PCB, routing, software, open-source, Freerouting, PCB design" name="keywords">
     <meta content="Freerouting Team" name="author">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-    <link href="favicon.ico" rel="icon" type="image/x-icon">
+    <link href="freerouting_icon_256x256_v3.ico" rel="icon" type="image/x-icon">
     <style>
         @font-face {
             font-family: 'NotoSansItalic';
@@ -97,6 +97,26 @@
             height: auto;
         }
     </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JCLE6RZE0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-4JCLE6RZE0');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a, .btn').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    gtag('event', 'click', {
+                        'event_category': 'engagement',
+                        'event_label': element.href || element.textContent
+                    });
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 
