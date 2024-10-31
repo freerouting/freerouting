@@ -324,7 +324,7 @@ public class JobControllerV1 extends BaseController
         job.input.setFilename(job.name);
       }
 
-      job.setSettings(new RouterSettings(job.input.layerCount));
+      job.setSettings(new RouterSettings(job.input.statistics.layerCount));
 
       var response = GSON.toJson(job);
       FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/input", GSON.toJson(input), response);

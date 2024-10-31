@@ -28,20 +28,8 @@ public class BoardFileDetails implements Serializable
   // The format of the file
   @SerializedName("format")
   public FileFormat format = FileFormat.UNKNOWN;
-  @SerializedName("layer_count")
-  public int layerCount = 0;
-  @SerializedName("component_count")
-  public int componentCount = 0;
-  @SerializedName("netclass_count")
-  public int netclassCount = 0;
-  @SerializedName("net_count")
-  public int netCount = 0;
-  @SerializedName("track_count")
-  public int trackCount = 0;
-  @SerializedName("trace_count")
-  public int traceCount = 0;
-  @SerializedName("via_count")
-  public int viaCount = 0;
+  @SerializedName("statistics")
+  public BoardFileStatistics statistics = new BoardFileStatistics();
   // The filename only without the path
   @SerializedName("filename")
   protected String filename = "";
@@ -76,13 +64,7 @@ public class BoardFileDetails implements Serializable
    */
   public BoardFileDetails(BasicBoard board)
   {
-    this.layerCount = board.get_layer_count();
-    this.componentCount = board.components.count();
-    this.netclassCount = 0;
-    this.netCount = 0;
-    this.trackCount = 0;
-    this.traceCount = board.get_traces().size();
-    this.viaCount = board.get_vias().size();
+    this.statistics = new BoardFileStatistics(board);
   }
 
   public static CRC32 calculateCrc32(InputStream inputStream)
@@ -134,44 +116,7 @@ public class BoardFileDetails implements Serializable
     this.format = RoutingJob.getFileFormat(this.dataBytes);
 
     // set the statistical data based on the file content
-    if ((this.format == FileFormat.SES) || (this.format == FileFormat.DSN))
-    {
-      // read the content as text
-      String content = new String(this.dataBytes, StandardCharsets.UTF_8);
-
-      if (this.format == FileFormat.SES)
-      {
-        // get the number of components and nets in the SES file
-        this.layerCount = 0;
-        this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = 0;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = 0;
-        this.traceCount = 0;
-        this.viaCount = 0;
-      }
-      else if (this.format == FileFormat.DSN)
-      {
-        // get the number of layers and nets in the DSN file
-        this.layerCount = content.split("\\(layer").length - 1;
-        this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = content.split("\\(class").length - 1;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = content.split("\\(wire").length - 1;
-        this.traceCount = 0;
-        this.viaCount = content.split("\\(via").length - 1;
-      }
-    }
-    else
-    {
-      this.layerCount = 0;
-      this.componentCount = 0;
-      this.netclassCount = 0;
-      this.netCount = 0;
-      this.trackCount = 0;
-      this.traceCount = 0;
-      this.viaCount = 0;
-    }
+    this.statistics = new BoardFileStatistics(this.dataBytes, this.format);
 
     fireUpdatedEvent();
   }

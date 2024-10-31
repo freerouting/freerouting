@@ -40,11 +40,8 @@ public abstract class InteractiveActionThread extends StoppableThread
 
   public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager boardManager, RoutingJob job)
   {
-    // TODO: we should not need this, but if we don't do this, the following values in routerSettings are not set properly
-    job.routerSettings.isLayerActive = boardManager.settings.autoroute_settings.isLayerActive.clone();
-    job.routerSettings.isPreferredDirectionHorizontalOnLayer = boardManager.settings.autoroute_settings.isPreferredDirectionHorizontalOnLayer.clone();
-    job.routerSettings.preferredDirectionTraceCost = boardManager.settings.autoroute_settings.preferredDirectionTraceCost.clone();
-    job.routerSettings.undesiredDirectionTraceCost = boardManager.settings.autoroute_settings.undesiredDirectionTraceCost.clone();
+    // TODO: we need to clone the settings here, because the GUI modifies the settings of the boardmanager (but this should be eliminated in the future)
+    job.routerSettings = boardManager.settings.autoroute_settings.clone();
 
     var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);
     routerThread.addListener(new ThreadActionListener()

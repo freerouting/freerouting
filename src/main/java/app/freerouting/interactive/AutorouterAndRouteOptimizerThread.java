@@ -85,6 +85,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   {
     routingJob.startedAt = Instant.now();
     routingJob.state = RoutingJobState.RUNNING;
+    hdlg.set_num_threads(routingJob.routerSettings.maxThreads);
 
     for (ThreadActionListener hl : this.listeners)
     {
