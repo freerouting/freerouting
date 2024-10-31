@@ -9,6 +9,7 @@
     <meta content="PCB, routing, software, open-source, Freerouting, PCB design" name="keywords">
     <meta content="Freerouting Team" name="author">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="favicon.ico" rel="icon" type="image/x-icon">
     <style>
         @font-face {
             font-family: 'NotoSansItalic';
@@ -34,19 +35,24 @@
             text-align: center;
             padding: 2em 0;
         }
+
         .header-container {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: nowrap;
+            margin: 0 auto;
+            max-width: 900px;
         }
 
         .header img {
-            margin-right: 5.5em;
+            width: 25%;
+            height: auto;
+            margin-right: 5%;
         }
 
         .header h1 {
-            font-size: 7.5em;
+            font-size: 6.5vw;
             font-weight: 100;
             margin: 0 0 0.25em 0;
             font-family: 'NotoSansItalic', Arial, sans-serif;
@@ -103,6 +109,9 @@
     <a class="btn" href="https://github.com/freerouting/freerouting/releases">
         <i class="fas fa-download"></i> Download Freerouting 2.0.0
     </a>
+    <a class="btn" href="#">
+        <i class="fas fa-network-wired"></i> Request API Access
+    </a>
     <a class="btn" href="https://github.com/freerouting/freerouting">
         <i class="fab fa-github"></i> View on GitHub
     </a>
@@ -121,7 +130,7 @@
 
     <section class="screenshot">
         <h2>Freerouting Interface</h2>
-        <img alt="Screenshot of Freerouting GUI" src="GUI_screenshot.png">
+        <img alt="Screenshot of Freerouting GUI" loading="lazy" src="GUI_screenshot.png">
     </section>
 
     <section class="section features">
