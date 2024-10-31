@@ -32,9 +32,9 @@ public class WindowUserSettings extends WindowBase
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));
-    profileDialog.setSize(480, 355);
-    profileDialog.setMinimumSize(new Dimension(480, 355));
-    profileDialog.setMaximumSize(new Dimension(480, 355));
+    profileDialog.setSize(480, 500);
+    profileDialog.setMinimumSize(new Dimension(480, 500));
+    profileDialog.setMaximumSize(new Dimension(480, 500));
     profileDialog.setResizable(false);
     profileDialog.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -210,6 +210,40 @@ public class WindowUserSettings extends WindowBase
     {
       updateButton.requestFocus();
     }
+
+    // Visual separation for statistics
+    gbc.gridx = 0;
+    gbc.gridy = 10;
+    gbc.gridwidth = 2;
+    gbc.fill = GridBagConstraints.BOTH;
+    JSeparator separator2 = new JSeparator();
+    profileDialog.add(separator2, gbc);
+
+    // Sponsor message
+    gbc.gridx = 0;
+    gbc.gridy = 11;
+    gbc.gridwidth = 2;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    JLabel sponsorMessage = new JLabel(tm.getText("sponsor_message"));
+    profileDialog.add(sponsorMessage, gbc);
+
+    // Sponsor button
+    gbc.gridy = 12;
+    gbc.anchor = GridBagConstraints.CENTER;
+    JButton sponsorButton = new JButton(tm.getText("sponsor_button"));
+    sponsorButton.setPreferredSize(new Dimension(150, sponsorButton.getPreferredSize().height));
+    sponsorButton.setMaximumSize(new Dimension(150, sponsorButton.getPreferredSize().height));
+    sponsorButton.addActionListener(e ->
+    {
+      try
+      {
+        Desktop.getDesktop().browse(new java.net.URI("https://github.com/sponsors/andrasfuchs"));
+      } catch (Exception ex)
+      {
+        FRLogger.error("Failed to open sponsor link", ex);
+      }
+    });
+    profileDialog.add(sponsorButton, gbc);
 
     profileDialog.setLocationRelativeTo(null);
     profileDialog.setVisible(true);
