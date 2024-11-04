@@ -40,7 +40,7 @@ public abstract class InteractiveActionThread extends StoppableThread
 
   public static InteractiveActionThread get_autorouter_and_route_optimizer_instance(GuiBoardManager boardManager, RoutingJob job)
   {
-    // TODO: we need to clone the settings here, because the GUI modifies the settings of the boardmanager (but this should be eliminated in the future)
+    // TODO: we need to clone the settings here for now, because the GUI modifies the settings of the boardmanager (but this should be eliminated in the future)
     job.routerSettings = boardManager.settings.autoroute_settings.clone();
 
     var routerThread = new AutorouterAndRouteOptimizerThread(boardManager, job);

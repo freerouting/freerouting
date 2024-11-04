@@ -9,23 +9,26 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BoardFileStatistics implements Serializable
 {
   @SerializedName("layer_count")
-  public int layerCount = 0;
+  public Integer layerCount = null;
   @SerializedName("component_count")
-  public int componentCount = 0;
+  public Integer componentCount = null;
   @SerializedName("netclass_count")
   public Integer netclassCount = null;
-  @SerializedName("net_count")
-  public int netCount = 0;
-  @SerializedName("track_count")
-  public int trackCount = 0;
-  @SerializedName("trace_count")
-  public int traceCount = 0;
+  @SerializedName("total_net_count")
+  public Integer totalNetCount = null;
+  @SerializedName("unrouted_net_count")
+  public Integer unroutedNetCount = null;
+  @SerializedName("routed_net_count")
+  public Integer routedNetCount = null;
+  @SerializedName("routed_net_length")
+  public Float routedNetLength = null;
   @SerializedName("via_count")
-  public int viaCount = 0;
+  public Integer viaCount = null;
 
   public BoardFileStatistics()
   {
@@ -38,10 +41,7 @@ public class BoardFileStatistics implements Serializable
   {
     this.layerCount = board.get_layer_count();
     this.componentCount = board.components.count();
-    this.netclassCount = 0;
-    this.netCount = 0;
-    this.trackCount = 0;
-    this.traceCount = board.get_traces().size();
+    this.routedNetCount = board.get_traces().size();
     this.viaCount = board.get_vias().size();
   }
 
@@ -66,7 +66,7 @@ public class BoardFileStatistics implements Serializable
         {
           String[] words = line.split(" ");
 
-          if (words.length >= 2)
+          if ((words.length >= 2) && (Objects.equals(words[0], "(path")))
           {
             // get the layer name
             String layer = words[1];
@@ -82,10 +82,8 @@ public class BoardFileStatistics implements Serializable
         // get the number of components and nets in the SES file
         this.layerCount = layers.size();
         this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = null;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = 0;
-        this.traceCount = content.split("\\(wire").length - 1;
+        this.totalNetCount = content.split("\\(net").length - 1;
+        this.routedNetCount = content.split("\\(wire").length - 1;
         this.viaCount = content.split("\\(via").length - 1;
       }
       else if (format == FileFormat.DSN)
@@ -94,21 +92,10 @@ public class BoardFileStatistics implements Serializable
         this.layerCount = content.split("\\(layer").length - 1;
         this.componentCount = content.split("\\(component").length - 1;
         this.netclassCount = content.split("\\(class").length - 1;
-        this.netCount = content.split("\\(net").length - 1;
-        this.trackCount = content.split("\\(wire").length - 1;
-        this.traceCount = 0;
+        this.totalNetCount = content.split("\\(net").length - 1;
+        this.routedNetCount = content.split("\\(wire").length - 1;
         this.viaCount = content.split("\\(via").length - 1;
       }
-    }
-    else
-    {
-      this.layerCount = 0;
-      this.componentCount = 0;
-      this.netclassCount = 0;
-      this.netCount = 0;
-      this.trackCount = 0;
-      this.traceCount = 0;
-      this.viaCount = 0;
     }
   }
 
