@@ -109,7 +109,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('a, .btn').forEach(function(element) {
                 element.addEventListener('click', function() {
-                    gtag('event', 'click', {
+                    gtag('event', 'click_' + element.id, {
                         'event_category': 'engagement',
                         'event_label': element.href || element.textContent
                     });
@@ -126,13 +126,13 @@
         <h1>freerouting</h1>
     </div>
     <p>The Open-Source, Automatic PCB Routing Tool</p>
-    <a class="btn" href="https://github.com/freerouting/freerouting/releases">
+    <a class="btn" href="https://github.com/freerouting/freerouting/releases" id="download">
         <i class="fas fa-download"></i> Download Freerouting 2.0.0
     </a>
-    <a class="btn" href="https://forms.gle/EqbxFZMSQiSsR4WM8">
+    <a class="btn" href="https://forms.gle/EqbxFZMSQiSsR4WM8" id="api_access">
         <i class="fas fa-network-wired"></i> Request API Access
     </a>
-    <a class="btn" href="https://github.com/freerouting/freerouting">
+    <a class="btn" href="https://github.com/freerouting/freerouting" id="github">
         <i class="fab fa-github"></i> View on GitHub
     </a>
 </header>
@@ -221,17 +221,18 @@
         <p>
             Since I’m currently the only active contributor to Freerouting, even a small monthly contribution would be
             greatly appreciated. If you’d like to support this project, please consider sponsoring me:
-            <a href="https://github.com/sponsors/andrasfuchs">GitHub Sponsors</a>. Thank you!
+            <a href="https://github.com/sponsors/andrasfuchs" id="sponsors">GitHub Sponsors</a>. Thank you!
         </p>
     </section>
 </main>
 
 <footer class="footer">
     <p>
-        Freerouting is an open-source project maintained by <a href="https://github.com/sponsors/andrasfuchs">Andras
-        Fuchs</a>.<br/>
+        Freerouting is an open-source project maintained by <a href="https://github.com/sponsors/andrasfuchs"
+                                                               id="sponsors_footer">Andras Fuchs</a>.<br/>
         Contributions, feedback, and support are always welcome.<br/>
-        Visit the <a href="https://github.com/freerouting/freerouting">GitHub repository</a> to learn more.
+        Visit the <a href="https://github.com/freerouting/freerouting" id="github_footer">GitHub repository</a>
+        to learn more.
     </p>
 </footer>
 
