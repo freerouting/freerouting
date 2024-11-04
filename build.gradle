@@ -150,7 +150,12 @@ tasks.register('executableJar', Jar) {
 
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 
-    from configurations.runtimeClasspath.collect { zipTree(it) }
+    // Exclude signature files from dependencies
+    from {
+        configurations.runtimeClasspath.collect { zipTree(it) }
+    } {
+        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    }
 
     from files(sourceSets.main.output)
 
