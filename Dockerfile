@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:21-jdk-jammy AS build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . /app
 RUN ./gradlew build
 
 # Stage 2: Create the final image
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre-jammy
 
 # Set the working directory in the container
 WORKDIR /app
