@@ -126,6 +126,27 @@ public class TextManager
     return durationString.toString();
   }
 
+  /**
+   * Shortens a string to a specified number of characters by replacing the middle part with dots
+   *
+   * @param text               The text to shorten
+   * @param peakCharacterCount The number of characters to keep at the beginning and end of the text
+   *                           Example:
+   *                           shortenString("This is a long text", 3) -> "Thi...ext"
+   *                           shortenString("This is a long text", 5) -> "This ... text"
+   *                           shortenString("This is a long text", 10) -> "This is a long text"
+   * @return The shortened text
+   */
+  public static String shortenString(String text, int peakCharacterCount)
+  {
+    String shortenedText = text;
+    if (text.length() > peakCharacterCount * 2)
+    {
+      shortenedText = shortenedText.substring(0, peakCharacterCount) + "..." + text.substring(text.length() - peakCharacterCount);
+    }
+    return shortenedText;
+  }
+
   private void loadResourceBundle(String baseName)
   {
     this.currentBaseName = baseName;

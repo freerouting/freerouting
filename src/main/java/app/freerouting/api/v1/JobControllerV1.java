@@ -8,6 +8,7 @@ import app.freerouting.core.Session;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
+import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.RouterSettings;
@@ -326,8 +327,9 @@ public class JobControllerV1 extends BaseController
 
       job.setSettings(new RouterSettings(job.input.statistics.layerCount));
 
+      var request = GSON.toJson(input).replace(input.dataBase64, TextManager.shortenString(input.dataBase64, 4));
       var response = GSON.toJson(job);
-      FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/input", GSON.toJson(input), response);
+      FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/input", request, response);
       return Response.ok(response).build();
     }
   }
@@ -372,7 +374,7 @@ public class JobControllerV1 extends BaseController
     result.dataBase64 = java.util.Base64.getEncoder().encodeToString(result.getData().readAllBytes());
 
     var response = GSON.toJson(result);
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output", "", response);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output", "", response.replace(result.dataBase64, TextManager.shortenString(result.dataBase64, 4)));
     return Response.ok(response).build();
   }
 
