@@ -27,6 +27,8 @@ public class BoardFileStatistics implements Serializable
   public Integer routedNetCount = null;
   @SerializedName("routed_net_length")
   public Float routedNetLength = null;
+  @SerializedName("clearance_violation_count")
+  public Float clearanceViolationCount = null;
   @SerializedName("via_count")
   public Integer viaCount = null;
 
