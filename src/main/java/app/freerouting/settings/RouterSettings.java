@@ -16,9 +16,9 @@ public class RouterSettings implements Serializable
   public transient double[] preferredDirectionTraceCost;
   public transient double[] undesiredDirectionTraceCost;
   @SerializedName("default_preferred_direction_trace_cost")
-  public double defaultPreferredDirectionTraceCost = 1;
+  public double defaultPreferredDirectionTraceCost = 1.0;
   @SerializedName("default_undesired_direction_trace_cost")
-  public double defaultUndesiredDirectionTraceCost = 1;
+  public double defaultUndesiredDirectionTraceCost = 2.5;
   @SerializedName("job_timeout")
   public String jobTimeoutString = "12:00:00";
   @SerializedName("max_passes")
@@ -77,6 +77,14 @@ public class RouterSettings implements Serializable
     isPreferredDirectionHorizontalOnLayer = new boolean[p_layer_count];
     preferredDirectionTraceCost = new double[p_layer_count];
     undesiredDirectionTraceCost = new double[p_layer_count];
+
+    for (int i = 0; i < p_layer_count; ++i)
+    {
+      isLayerActive[i] = true;
+      isPreferredDirectionHorizontalOnLayer[i] = (i % 2 == 1);
+      preferredDirectionTraceCost[i] = defaultPreferredDirectionTraceCost;
+      undesiredDirectionTraceCost[i] = defaultUndesiredDirectionTraceCost;
+    }
   }
 
   /**
