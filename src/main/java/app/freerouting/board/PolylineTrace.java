@@ -492,14 +492,18 @@ public class PolylineTrace extends Trace implements Serializable
           // try to handle intermediate segments of length 0 by comparing end corners
           if (i < found_entry.shape_index_in_object)
           {
-            if (lines.corner(i + 1).equals(lines.corner(found_entry.shape_index_in_object)))
+            if (lines
+                .corner(i + 1)
+                .equals(lines.corner(found_entry.shape_index_in_object)))
             {
               continue;
             }
           }
           else
           {
-            if (lines.corner(found_entry.shape_index_in_object + 1).equals(lines.corner(i)))
+            if (lines
+                .corner(found_entry.shape_index_in_object + 1)
+                .equals(lines.corner(i)))
             {
               continue;
             }
@@ -599,7 +603,10 @@ public class PolylineTrace extends Trace implements Serializable
           Point split_point = curr_drill_item.get_center();
           if (curr_line_segment.contains(split_point))
           {
-            Direction split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+            Direction split_line_direction = curr_line_segment
+                .get_line()
+                .direction()
+                .turn_45_degree(2);
             Line split_line = new Line(split_point, split_line_direction);
             split(i + 1, split_line);
           }
@@ -612,10 +619,16 @@ public class PolylineTrace extends Trace implements Serializable
             Net curr_net = this.board.rules.nets.get(this.net_no_arr[0]);
             if (curr_net != null && curr_net.get_class() != null)
             {
-              ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
+              ignore_areas = curr_net
+                  .get_class()
+                  .get_ignore_cycles_with_areas();
             }
           }
-          if (!ignore_areas && this.get_start_contacts().contains(found_item) && this.get_end_contacts().contains(found_item))
+          if (!ignore_areas && this
+              .get_start_contacts()
+              .contains(found_item) && this
+              .get_end_contacts()
+              .contains(found_item))
           {
             // this trace can be removed because of cycle with conduction area
             board.remove_item(this);
@@ -665,7 +678,9 @@ public class PolylineTrace extends Trace implements Serializable
       }
       if (curr_item instanceof Pin curr_drill_item)
       {
-        if (curr_drill_item.get_center().equals(intersection))
+        if (curr_drill_item
+            .get_center()
+            .equals(intersection))
         {
           return false; // split always at the center of a drill item.
         }
@@ -673,7 +688,11 @@ public class PolylineTrace extends Trace implements Serializable
       }
       else if (curr_item instanceof Trace curr_trace)
       {
-        if (curr_trace != this && curr_trace.first_corner().equals(intersection) || curr_trace.last_corner().equals(intersection))
+        if (curr_trace != this && curr_trace
+            .first_corner()
+            .equals(intersection) || curr_trace
+            .last_corner()
+            .equals(intersection))
         {
           return false;
         }
@@ -695,7 +714,10 @@ public class PolylineTrace extends Trace implements Serializable
       LineSegment curr_line_segment = new LineSegment(this.lines, i + 1);
       if (curr_line_segment.contains(p_point))
       {
-        Direction split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+        Direction split_line_direction = curr_line_segment
+            .get_line()
+            .direction()
+            .turn_45_degree(2);
         Line split_line = new Line(p_point, split_line_direction);
         Trace[] result = split(i + 1, split_line);
         if (result != null)
@@ -773,7 +795,9 @@ public class PolylineTrace extends Trace implements Serializable
       if (curr_split_trace.is_on_the_board())
       {
         boolean trace_combined = curr_split_trace.combine();
-        if (curr_split_trace.corner_count() == 2 && curr_split_trace.first_corner().equals(curr_split_trace.last_corner()))
+        if (curr_split_trace.corner_count() == 2 && curr_split_trace
+            .first_corner()
+            .equals(curr_split_trace.last_corner()))
         {
           // remove trace with only 1 corner
           board.remove_item(curr_split_trace);
@@ -819,7 +843,10 @@ public class PolylineTrace extends Trace implements Serializable
     }
     if (this.net_no_arr.length > 0)
     {
-      if (!this.board.rules.nets.get(this.net_no_arr[0]).get_class().get_pull_tight())
+      if (!this.board.rules.nets
+          .get(this.net_no_arr[0])
+          .get_class()
+          .get_pull_tight())
       {
         return false;
       }
@@ -912,7 +939,9 @@ public class PolylineTrace extends Trace implements Serializable
       return null;
     }
     LineSegment curr_line_segment = new LineSegment(this.lines, p_index + 1);
-    return curr_line_segment.to_simplex().simplify();
+    return curr_line_segment
+        .to_simplex()
+        .simplify();
   }
 
   @Override
@@ -988,7 +1017,10 @@ public class PolylineTrace extends Trace implements Serializable
     lines = p_new_polyline;
 
     // let the observers synchronize the changes
-    board.communication.observers.notify_changed(this);
+    if ((board.communication != null) && (board.communication.observers != null))
+    {
+      board.communication.observers.notify_changed(this);
+    }
 
     IntOctagon clip_shape = null;
     if (board instanceof RoutingBoard)
@@ -1087,7 +1119,9 @@ public class PolylineTrace extends Trace implements Serializable
     {
       return false;
     }
-    double end_line_length = end_corner.to_float().distance(prev_end_corner.to_float());
+    double end_line_length = end_corner
+        .to_float()
+        .distance(prev_end_corner.to_float());
     double curr_clearance = board.clearance_value(this.clearance_class_no(), contact_pin.clearance_class_no(), this.get_layer());
     double add_width = Math.max(edge_to_turn_dist, curr_clearance + 1);
     double preserve_length = matching_exit_restriction.min_length + this.get_half_width() + add_width;
@@ -1114,7 +1148,9 @@ public class PolylineTrace extends Trace implements Serializable
     }
     else
     {
-      trace_polyline = this.polyline().reverse();
+      trace_polyline = this
+          .polyline()
+          .reverse();
       contact_list = this.get_end_contacts();
     }
     Pin contact_pin = null;
@@ -1252,7 +1288,9 @@ public class PolylineTrace extends Trace implements Serializable
     System.arraycopy(trace_polyline.arr, latest_entry_tuple[0], cut_lines, 1, cut_lines.length - 1);
     Polyline cut_polyline = new Polyline(cut_lines);
     Polyline changed_polyline;
-    if (cut_polyline.first_corner().equals(cut_polyline.last_corner()))
+    if (cut_polyline
+        .first_corner()
+        .equals(cut_polyline.last_corner()))
     {
       changed_polyline = border_polyline;
     }
@@ -1292,14 +1330,18 @@ public class PolylineTrace extends Trace implements Serializable
     }
     else
     {
-      trace_polyline = this.polyline().reverse();
+      trace_polyline = this
+          .polyline()
+          .reverse();
       contact_list = this.get_end_contacts();
     }
     if (contact_list.size() != 1)
     {
       return false;
     }
-    Item curr_contact = contact_list.iterator().next();
+    Item curr_contact = contact_list
+        .iterator()
+        .next();
     if (!(curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED && (curr_contact instanceof PolylineTrace contact_trace)))
     {
       return false;
@@ -1309,14 +1351,20 @@ public class PolylineTrace extends Trace implements Serializable
     // look, if this trace has a sharp angle with the contact trace.
     Line first_line = trace_polyline.arr[1];
     // check for sharp angle
-    boolean check_swap = contact_last_line.direction().projection(first_line.direction()) == Signum.NEGATIVE;
+    boolean check_swap = contact_last_line
+        .direction()
+        .projection(first_line.direction()) == Signum.NEGATIVE;
     if (!check_swap)
     {
       double half_width = this.get_half_width();
-      if (trace_polyline.arr.length > 3 && trace_polyline.corner_approx(0).distance_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
+      if (trace_polyline.arr.length > 3 && trace_polyline
+          .corner_approx(0)
+          .distance_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
       {
         // check also for sharp angle with the second line
-        check_swap = (contact_last_line.direction().projection(trace_polyline.arr[2].direction()) == Signum.NEGATIVE);
+        check_swap = (contact_last_line
+            .direction()
+            .projection(trace_polyline.arr[2].direction()) == Signum.NEGATIVE);
       }
     }
     if (!check_swap)

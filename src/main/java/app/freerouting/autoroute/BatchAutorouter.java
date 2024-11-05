@@ -179,7 +179,10 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         traceLengthDifferenceBetweenPasses.removeFirst();
 
-        OptionalDouble averageTraceLengthDifferencePerPass = traceLengthDifferenceBetweenPasses.stream().mapToDouble(a -> a).average();
+        OptionalDouble averageTraceLengthDifferencePerPass = traceLengthDifferenceBetweenPasses
+            .stream()
+            .mapToDouble(a -> a)
+            .average();
 
         // TODO: make the threshold based on the initial score (cost)
         if (averageTraceLengthDifferencePerPass.getAsDouble() < 20.0)
@@ -451,6 +454,7 @@ public class BatchAutorouter extends NamedAlgorithm
       return autoroute_result == AutorouteEngine.AutorouteResult.ROUTED || autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
     } catch (Exception e)
     {
+      FRLogger.error("Error during autoroute_item", e);
       return false;
     }
   }
@@ -483,14 +487,18 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         continue;
       }
-      FloatPoint curr_from_corner = ((DrillItem) curr_from_item).get_center().to_float();
+      FloatPoint curr_from_corner = ((DrillItem) curr_from_item)
+          .get_center()
+          .to_float();
       for (Item curr_to_item : p_to_items)
       {
         if (!(curr_to_item instanceof DrillItem))
         {
           continue;
         }
-        FloatPoint curr_to_corner = ((DrillItem) curr_to_item).get_center().to_float();
+        FloatPoint curr_to_corner = ((DrillItem) curr_to_item)
+            .get_center()
+            .to_float();
         double curr_distance = curr_from_corner.distance_square(curr_to_corner);
         if (curr_distance < min_distance)
         {

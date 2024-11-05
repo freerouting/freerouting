@@ -6,20 +6,23 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.settings.RouterSettings;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Interface for named algorithms, e.g. "Freerouting Classic Fast Auto-router v1.0" for auto-router, "Freerouting Classic Optimizer v1.0" for route-optimization.
  */
-public abstract class NamedAlgorithm
+public abstract class NamedAlgorithm implements Serializable
 {
-  protected final StoppableThread thread;
-  protected final List<BoardSnapshotEventListener> boardSnapshotEventListeners = new ArrayList<>();
-  protected final List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
-  protected final List<TaskStateChangedEventListener> taskStateChangedEventListeners = new ArrayList<>();
+  protected final transient StoppableThread thread;
+  protected final transient List<BoardSnapshotEventListener> boardSnapshotEventListeners = new ArrayList<>();
+  protected final transient List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
+  protected final transient List<TaskStateChangedEventListener> taskStateChangedEventListeners = new ArrayList<>();
   protected final RouterSettings settings;
-  protected RoutingBoard board;
+  // The routing board.
+  // TODO: This should be a transient field, but it is not possible to serialize the board with the JSON serializer.
+  protected transient RoutingBoard board;
 
   protected NamedAlgorithm(StoppableThread thread, RoutingBoard board, RouterSettings settings)
   {

@@ -323,7 +323,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     // the connected items must remain connected after moving
     if (p_item instanceof Connectable)
     {
-      contact_count = p_item.get_all_contacts().size();
+      contact_count = p_item
+          .get_all_contacts()
+          .size();
     }
     if (p_item instanceof Trace && contact_count > 0)
     {
@@ -335,7 +337,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     }
     for (int i = 0; i < p_item.tile_shape_count(); ++i)
     {
-      TileShape moved_shape = (TileShape) p_item.get_tile_shape(i).translate_by(p_vector);
+      TileShape moved_shape = (TileShape) p_item
+          .get_tile_shape(i)
+          .translate_by(p_vector);
       if (!moved_shape.is_contained_in(bounding_box))
       {
         return false;
@@ -471,7 +475,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
             continue; // prefer drill items
           }
           int trace_radius = curr_trace.get_half_width();
-          curr_dist = curr_trace.polyline().distance(pick_location);
+          curr_dist = curr_trace
+              .polyline()
+              .distance(pick_location);
           if (curr_dist < min_dist && curr_dist <= trace_radius)
           {
             candidate_found = true;
@@ -482,7 +488,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
       {
         if (p_layer < 0 || curr_drill_item.is_on_layer(p_layer))
         {
-          FloatPoint drill_item_center = curr_drill_item.get_center().to_float();
+          FloatPoint drill_item_center = curr_drill_item
+              .get_center()
+              .to_float();
           curr_dist = drill_item_center.distance(pick_location);
           if (curr_dist < min_dist || nearest_item instanceof Trace)
           {
@@ -534,7 +542,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
       IntOctagon tidy_clip_shape;
       if (p_tidy_width < Integer.MAX_VALUE)
       {
-        tidy_clip_shape = p_location.surrounding_octagon().enlarge(p_tidy_width);
+        tidy_clip_shape = p_location
+            .surrounding_octagon()
+            .enlarge(p_tidy_width);
       }
       else
       {
@@ -642,7 +652,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     Set<Item> picked_items = this.pick_items(from_corner, p_layer, filter);
     if (picked_items.size() == 1)
     {
-      Trace curr_picked_trace = (Trace) picked_items.iterator().next();
+      Trace curr_picked_trace = (Trace) picked_items
+          .iterator()
+          .next();
       if (curr_picked_trace.nets_equal(p_net_no_arr) && curr_picked_trace.get_half_width() == p_half_width && curr_picked_trace.clearance_class_no() == p_clearance_class_no && (curr_picked_trace instanceof PolylineTrace))
       {
         // can combine  with the picked trace
@@ -773,7 +785,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     IntOctagon tidy_region = null;
     if (p_tidy_width < Integer.MAX_VALUE)
     {
-      tidy_region = new_corner.surrounding_octagon().enlarge(p_tidy_width);
+      tidy_region = new_corner
+          .surrounding_octagon()
+          .enlarge(p_tidy_width);
     }
     int[] opt_net_no_arr;
     if (p_max_recursion_depth <= 0)
@@ -799,7 +813,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
         new_trace = null;
         if (!curr_picked_items.isEmpty())
         {
-          Item found_trace = curr_picked_items.iterator().next();
+          Item found_trace = curr_picked_items
+              .iterator()
+              .next();
           if (found_trace instanceof PolylineTrace)
           {
             new_trace = (PolylineTrace) found_trace;
@@ -953,12 +969,16 @@ public class RoutingBoard extends BasicBoard implements Serializable
     {
       return false; // not yet implemented
     }
-    if (to_trace.polyline().contains(p_from_point))
+    if (to_trace
+        .polyline()
+        .contains(p_from_point))
     {
       // no connection line necessary
       return true;
     }
-    LineSegment projection_line = to_trace.polyline().projection_line(p_from_point);
+    LineSegment projection_line = to_trace
+        .polyline()
+        .projection_line(p_from_point);
     if (projection_line == null)
     {
       return false;
@@ -1068,7 +1088,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     SortedSet<Item> stub_connections = new TreeSet<>();
     for (Item curr_item : stub_set)
     {
-      int item_contact_count = curr_item.get_normal_contacts().size();
+      int item_contact_count = curr_item
+          .get_normal_contacts()
+          .size();
       if (item_contact_count == 1)
       {
         stub_connections.addAll(curr_item.get_connection_items(p_stop_connection_option));
@@ -1324,6 +1346,10 @@ public class RoutingBoard extends BasicBoard implements Serializable
       else if (curr_item instanceof Pin)
       {
         statistics.pinCount++;
+      }
+      else if (curr_item instanceof ComponentOutline)
+      {
+        statistics.componentOutlineCount++;
       }
       else
       {

@@ -11,5 +11,6 @@ public class BoardStatistics
   public int conductionAreaCount;
   public int drillItemCount;
   public int pinCount;
+  public int componentOutlineCount;
   public int otherCount;
 }

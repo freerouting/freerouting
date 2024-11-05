@@ -25,9 +25,8 @@ import java.util.*;
  */
 public class BasicBoard implements Serializable
 {
-
   /**
-   * List of items inserted into this board (eg. trace classes). Traces are Item classes that implement the Connectable interface.
+   * List of items inserted into this board (e.g. trace classes). Traces are Item classes that implement the Connectable interface.
    */
   public final UndoableObjects item_list;
   /**
@@ -115,7 +114,9 @@ public class BasicBoard implements Serializable
     StringBuilder stringBuffer = new StringBuilder();
     for (int i = 0; i < arrayBytes.length; i++)
     {
-      stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16).substring(1));
+      stringBuffer.append(Integer
+          .toString((arrayBytes[i] & 0xff) + 0x100, 16)
+          .substring(1));
     }
     return stringBuffer.toString();
   }
@@ -209,7 +210,9 @@ public class BasicBoard implements Serializable
       return null;
     }
     PolylineTrace new_trace = new PolylineTrace(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, this);
-    if (new_trace.first_corner().equals(new_trace.last_corner()))
+    if (new_trace
+        .first_corner()
+        .equals(new_trace.last_corner()))
     {
       if (p_fixed_state.ordinal() < FixedState.USER_FIXED.ordinal())
       {
@@ -886,7 +889,9 @@ public class BasicBoard implements Serializable
   {
     ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.TRACES);
     Collection<Item> picked_items = this.pick_items(p_location, p_layer, filter);
-    IntOctagon location_shape = TileShape.get_instance(p_location).bounding_octagon();
+    IntOctagon location_shape = TileShape
+        .get_instance(p_location)
+        .bounding_octagon();
     boolean trace_split = false;
     for (Item curr_item : picked_items)
     {
@@ -945,7 +950,9 @@ public class BasicBoard implements Serializable
    */
   public Set<SearchTreeObject> overlapping_objects(ConvexShape p_shape, int p_layer)
   {
-    return this.search_tree_manager.get_default_tree().overlapping_objects(p_shape, p_layer);
+    return this.search_tree_manager
+        .get_default_tree()
+        .overlapping_objects(p_shape, p_layer);
   }
 
   /**
@@ -1499,7 +1506,9 @@ public class BasicBoard implements Serializable
         {
           continue;
         }
-        if (curr_trace.first_corner().equals(p_location))
+        if (curr_trace
+            .first_corner()
+            .equals(p_location))
         {
           Collection<Item> contacts = curr_trace.get_start_contacts();
           if (contacts.isEmpty())
@@ -1507,7 +1516,9 @@ public class BasicBoard implements Serializable
             return curr_trace;
           }
         }
-        if (curr_trace.last_corner().equals(p_location))
+        if (curr_trace
+            .last_corner()
+            .equals(p_location))
         {
           Collection<Item> contacts = curr_trace.get_end_contacts();
           if (contacts.isEmpty())

@@ -317,8 +317,12 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     board.search_tree_manager.remove(this);
     this.translate_by(p_vector);
     board.search_tree_manager.insert(this);
+
     // let the observers synchronize the changes
-    board.communication.observers.notify_changed(this);
+    if ((board.communication != null) && (board.communication.observers != null))
+    {
+      board.communication.observers.notify_changed(this);
+    }
   }
 
   /**
@@ -1457,7 +1461,9 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     Collection<Item> contact_list = this.get_normal_contacts();
     for (Item curr_contact : contact_list)
     {
-      if (curr_contact instanceof Pin && curr_contact.first_layer() == curr_contact.last_layer() && curr_contact.get_normal_contacts().size() <= 1)
+      if (curr_contact instanceof Pin && curr_contact.first_layer() == curr_contact.last_layer() && curr_contact
+          .get_normal_contacts()
+          .size() <= 1)
       {
         return true;
       }
@@ -1474,7 +1480,9 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
         Collection<Item> trace_contact_list = curr_trace.get_normal_contacts();
         for (Item tmp_contact : trace_contact_list)
         {
-          if (tmp_contact instanceof Pin && curr_contact.first_layer() == curr_contact.last_layer() && tmp_contact.get_normal_contacts().size() <= 1)
+          if (tmp_contact instanceof Pin && curr_contact.first_layer() == curr_contact.last_layer() && tmp_contact
+              .get_normal_contacts()
+              .size() <= 1)
           {
             return true;
           }
