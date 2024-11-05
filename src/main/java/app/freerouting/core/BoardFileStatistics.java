@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class BoardFileStatistics implements Serializable
 {
@@ -64,14 +63,15 @@ public class BoardFileStatistics implements Serializable
         // create a list to store the layer names
         List<String> layers = new ArrayList<>();
         // iterate over the lines
-        for (String line : lines)
+        for (int i = 0; i < lines.length; i++)
         {
+          String line = lines[i];
           String[] words = line.split(" ");
 
-          if ((words.length >= 2) && (Objects.equals(words[0], "(path")))
+          if ((i > 0) && (words.length >= 2))
           {
             // get the layer name
-            String layer = words[1];
+            String layer = words[0];
             // add the layer name to the list
             if (!layers.contains(layer))
             {
@@ -84,7 +84,7 @@ public class BoardFileStatistics implements Serializable
         // get the number of components and nets in the SES file
         this.layerCount = layers.size();
         this.componentCount = content.split("\\(component").length - 1;
-        this.totalNetCount = content.split("\\(net").length - 1;
+        this.unroutedNetCount = content.split("\\(net").length - 1;
         this.routedNetCount = content.split("\\(wire").length - 1;
         this.viaCount = content.split("\\(via").length - 1;
       }
