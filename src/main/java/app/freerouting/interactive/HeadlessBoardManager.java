@@ -5,6 +5,7 @@ import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.BoardFileDetails;
+import app.freerouting.core.BoardFileStatistics;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
@@ -18,6 +19,8 @@ import app.freerouting.rules.DefaultItemClearanceClasses;
 
 import java.io.*;
 import java.util.Locale;
+
+import static app.freerouting.management.gson.GsonProvider.GSON;
 
 /**
  * Manages the routing board operations in a headless mode, where no graphical user interface is involved.
@@ -154,7 +157,8 @@ public class HeadlessBoardManager implements IBoardManager
     }
     if (read_result == DsnFile.ReadResult.OK)
     {
-      FRAnalytics.fileLoaded("DSN", this.board.communication.specctra_parser_info.host_cad + "," + this.board.communication.specctra_parser_info.host_version);
+      var boardStats = new BoardFileStatistics(this.board);
+      FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
       this.board.reduce_nets_of_route_items();
       originalBoardChecksum = calculateCrc32();
       FRAnalytics.boardLoaded(this.board.communication.specctra_parser_info.host_cad, this.board.communication.specctra_parser_info.host_version, this.board.get_layer_count(), this.board.components.count(), this.board.rules.nets.max_net_no());

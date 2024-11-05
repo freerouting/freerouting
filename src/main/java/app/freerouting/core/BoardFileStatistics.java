@@ -2,6 +2,7 @@ package app.freerouting.core;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.gui.FileFormat;
+import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,6 +13,8 @@ import java.util.List;
 
 public class BoardFileStatistics implements Serializable
 {
+  @SerializedName("host")
+  public String host = null;
   @SerializedName("layer_count")
   public Integer layerCount = null;
   @SerializedName("component_count")
@@ -40,6 +43,7 @@ public class BoardFileStatistics implements Serializable
    */
   public BoardFileStatistics(BasicBoard board)
   {
+    this.host = board.communication.specctra_parser_info.host_cad + "," + board.communication.specctra_parser_info.host_version;
     this.layerCount = board.get_layer_count();
     this.componentCount = board.components.count();
     this.routedNetCount = board.get_traces().size();
@@ -90,6 +94,41 @@ public class BoardFileStatistics implements Serializable
       }
       else if (format == FileFormat.DSN)
       {
+        // extract the host from the DSN file
+        String[] lines = content.split("\n");
+        String host_cad = null;
+        String host_version = null;
+        for (String line : lines)
+        {
+          String value = null;
+
+          line = line.trim();
+          if (line.startsWith("(host_cad"))
+          {
+            value = line.substring(9, line.length() - 1).trim();
+            host_cad = TextManager.removeQuotes(value);
+          }
+          else if (line.startsWith("(host_version"))
+          {
+            value = line.substring(13, line.length() - 1).trim();
+            host_version = TextManager.removeQuotes(value);
+          }
+
+          if ((host_cad != null) && (host_version != null))
+          {
+            break;
+          }
+        }
+
+        if ((host_cad != null) && (host_version != null))
+        {
+          this.host = host_cad + "," + host_version;
+        }
+        else if (host_cad != null)
+        {
+          this.host = host_cad;
+        }
+
         // get the number of layers and nets in the DSN file
         this.layerCount = content.split("\\(layer").length - 1;
         this.componentCount = content.split("\\(component").length - 1;

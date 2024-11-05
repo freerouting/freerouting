@@ -147,6 +147,27 @@ public class TextManager
     return shortenedText;
   }
 
+  /**
+   * Removes quotes from the beginning and end of a string
+   *
+   * @param text The text to remove quotes from
+   * @return The text without quotes
+   */
+  public static String removeQuotes(String text)
+  {
+    if ((text == null) || (text.length() < 2))
+    {
+      return text;
+    }
+
+    if (text.startsWith("\"") && text.endsWith("\""))
+    {
+      text = text.substring(1, text.length() - 1);
+    }
+
+    return text;
+  }
+
   private void loadResourceBundle(String baseName)
   {
     this.currentBaseName = baseName;
