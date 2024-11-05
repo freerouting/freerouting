@@ -482,12 +482,17 @@ public class BasicBoard implements Serializable
     item_list.delete(p_item);
 
     // let the observers synchronize the deletion
-    communication.observers.notify_deleted(p_item);
+    if ((communication != null) && (communication.observers != null))
+    {
+      communication.observers.notify_deleted(p_item);
+    }
   }
 
   /**
-   * looks, if an item with id_no p_id_no is on the board. Returns the found item or null, if no
-   * such item is found.
+   * Searches for an item with the specified id number on the board.
+   *
+   * @param p_id_no the id number of the item to search for
+   * @return the found item, or null if no such item is found
    */
   public Item get_item(int p_id_no)
   {
@@ -1273,7 +1278,7 @@ public class BasicBoard implements Serializable
    */
   public void start_notify_observers()
   {
-    if (this.communication.observers != null)
+    if ((communication != null) && (this.communication.observers != null))
     {
       communication.observers.activate();
     }
@@ -1284,7 +1289,7 @@ public class BasicBoard implements Serializable
    */
   public void end_notify_observers()
   {
-    if (this.communication.observers != null)
+    if ((communication != null) && (this.communication.observers != null))
     {
       communication.observers.deactivate();
     }
@@ -1296,7 +1301,7 @@ public class BasicBoard implements Serializable
   public boolean observers_active()
   {
     boolean result;
-    if (this.communication.observers != null)
+    if ((communication != null) && (this.communication.observers != null))
     {
       result = communication.observers.is_active();
     }

@@ -200,7 +200,10 @@ public class PolylineTrace extends Trace implements Serializable
     if (something_changed)
     {
       // let the observers synchronize the changes
-      board.communication.observers.notify_changed(this);
+      if ((board.communication != null) && (board.communication.observers != null))
+      {
+        board.communication.observers.notify_changed(this);
+      }
       board.additional_update_after_change(this);
     }
     return something_changed;
