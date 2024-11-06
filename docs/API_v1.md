@@ -60,6 +60,19 @@ Authorization: Bearer <API_KEY>
 
   **Description:** Returns the current status of the system.
 
+  **Response body:**
+
+  ```json
+  {
+    "status": "OK",
+    "cpu_load": 5.234029795633588,
+    "ram_used": 101,
+    "ram_available": 130,
+    "storage_available": 229,
+    "session_count": 2
+  }
+  ```
+
 - **Get Environment Information**
   
   ```http
@@ -79,6 +92,16 @@ Authorization: Bearer <API_KEY>
   ```
 
   **Description:** Creates a new session.
+
+  **Response body:** Contains the new session ID.
+
+  ```json
+  {
+    "id": "13f4f1b4-29a1-48a5-8efb-8cec519d8bd3",
+    "user_id": "d0071163-7ba3-46b3-b3af-bc2ebfd4d1a0",
+    "host": "Postman/11.14"
+  }
+  ```
 
 - **List All Sessions**
   
@@ -198,7 +221,9 @@ Authorization: Bearer <API_KEY>
   ```
 
   **Parameters:**
-  - `jobId` *(required)*: The unique identifier of the job.
+  - `JobId` *(required)*: The unique identifier of the job.
+  - `filename` *(required)*: The name of the file.
+  - `data` *(required)*: The base-64 encoded data of the file.
 
   **Description:** Submits input data for a routing job.
 
@@ -231,13 +256,18 @@ Authorization: Bearer <API_KEY>
     "size": 13150,
     "crc32": 264089660,
     "format": "SES",
-    "layer_count": 4,
-    "component_count": 12,
-    "netclass_count": 3,
-    "net_count": 20,
-    "track_count": 25,
-    "trace_count": 40,
-    "via_count": 28,
+    "statistics": {
+        "host": null,
+        "layer_count": 2,
+        "component_count": 15,
+        "netclass_count": null,
+        "total_net_count": null,
+        "unrouted_net_count": 75,
+        "routed_net_count": 267,
+        "routed_net_length": null,
+        "clearance_violation_count": null,
+        "via_count": 133
+    },
     "filename": "BBD-Mars-64-revE.ses",
     "path": ""
   }
@@ -269,13 +299,18 @@ Authorization: Bearer <API_KEY>
         "size": 50853,
         "crc32": 4085067588,
         "format": "DSN",
-        "layer_count": 4,
-        "component_count": 12,
-        "netclass_count": 3,
-        "net_count": 20,
-        "track_count": 5,
-        "trace_count": 10,
-        "via_count": 18,
+        "statistics": {
+            "host": "KiCad's Pcbnew,(5.1.5)-3",
+            "layer_count": 2,
+            "component_count": 16,
+            "netclass_count": 1,
+            "total_net_count": 160,
+            "unrouted_net_count": null,
+            "routed_net_count": 0,
+            "routed_net_length": null,
+            "clearance_violation_count": null,
+            "via_count": 66
+        },
         "filename": "BBD-Mars-64-revE.dsn",
         "path": ""
     },
