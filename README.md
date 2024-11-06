@@ -53,22 +53,19 @@ When in CLI mode, you typically would have an input file (e.g. Specctra DSN) tha
 
 The following command line arguments are most used ones:
 
-* -de [design input file]: loads up a Specctra .dsn file at startup.
-* -do [design output file]: saves a Specctra board (.dsn), a Specctra session file (.ses) or Eagle session script file (
-  .scr) when the routing is finished.
-* -l [language]: "en" for English, "de" for German, "zh" for Simplified Chinese, otherwise it's the system default.
-  English is set by default for unsupported languages.
-* -inc [net class names, separated by commas]: auto-router ignores the listed net classes, eg. `-inc GND,VCC` will not
-  try to wire components that are either in the "GND" or in the "VCC" net class.
+* -de [design input file]: loads up a Specctra design file (.dsn) at startup.
+* -do [design output file]: saves a Specctra session file (.ses) when the routing is finished.
+* -l [language]: "en" for English, "de" for German, "zh" for Simplified Chinese, etc., otherwise it's the system default.
+* -inc [net class names, separated by commas]: auto-router ignores the listed net classes.
 * -help: shows help.
 
 A typical command line looks something like this:
 
 ```powershell
-java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses
+java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
 ```
 
-This would read the _MyBoard.dsn_ file, do the auto-routing, and then save the result into the _MyBoard.ses_ file.
+This would read the _MyBoard.dsn_ file, do the auto-routing while ignoring the GND and VCC netclasses, and then save the result into the _MyBoard.ses_ file.
 
 For more details see the [CLI documentation](docs/command_line_arguments.md).
 
