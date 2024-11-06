@@ -71,7 +71,7 @@ For more details see the [CLI documentation](docs/command_line_arguments.md).
 
 ### Freerouting API (beta)
 
-Freerouting provides public API endpoints to router PCB boards. The root address of the API is https://api.freerouting.app/v1 and your can quickly check the service status by openning the [https://api.freerouting.app/v1/system/status](https://api.freerouting.app/v1/system/status) URL in your browser.
+Freerouting provides public API endpoints to route PCB boards. The root address of the API is https://api.freerouting.app/v1 and your can quickly check the service status by openning the [/system/status](https://api.freerouting.app/v1/system/status) endpoint in your browser.
 
 In order to access all the functions Freerouting can provide, you need to ask for access on [the Freerouting website](https://www.freerouting.app/) first.
 
