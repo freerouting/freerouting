@@ -114,6 +114,10 @@ We ❤️ all our contributors; this project wouldn't be possible without you!
 - **Contribute Code**: Submit fixes and improvements via [pull requests](https://github.com/freerouting/freerouting/pulls).
 - **Guidelines**: Check out our [Contribution Guide](docs/CONTRIBUTING.md) and [Developer Documentation](docs/developer.md).
 
-If you'd like to support the project financially, [please consider sponsoring me](https://github.com/sponsors/andrasfuchs). 
+## 🙏 Support the Project
 
-Every contribution, no matter how small, is greatly appreciated!
+**If you'd like to support the project financially, [please consider sponsoring me](https://github.com/sponsors/andrasfuchs).**
+
+**Every contribution, no matter how small, is greatly appreciated!**
+
+[![Sponsor](https://img.shields.io/badge/Sponsor%20me-✨-darkgreen?style=for-the-badge&logo=github)](https://github.com/sponsors/andrasfuchs)
