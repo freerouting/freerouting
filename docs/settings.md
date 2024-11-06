@@ -20,7 +20,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   },
   "router": {
     "default_preferred_direction_trace_cost": 1.0,
-    "default_undesired_direction_trace_cost": 1.0,
+    "default_undesired_direction_trace_cost": 2.5,
     "max_passes": 100,
     "fanout_max_passes": 20,
     "max_threads": 11,
