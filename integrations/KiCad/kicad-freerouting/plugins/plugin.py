@@ -18,7 +18,7 @@ import urllib.parse
 import tempfile
 from pathlib import Path
 
-freerouting_temp_folder = os.path.join(tempfile.gettempdir(), "freerouting")
+freerouting_jre_temp_folder = os.path.join(tempfile.gettempdir(), "freerouting", "jre")
 
 def detect_os_architecture():
     os_name = platform.system().lower()
@@ -57,7 +57,7 @@ def check_latest_jre_version(os_name, architecture):
 
 def get_local_java_executable_path(os_name):
     # Find the latest Java JRE 21 in the temp folder (that we installed earlier)
-    java_exe_path = os.path.join(freerouting_temp_folder, f"jdk-21.*.*+*-jre", "bin", "java")
+    java_exe_path = os.path.join(freerouting_jre_temp_folder, f"jdk-21.*.*+*-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
         
@@ -219,8 +219,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
     # auto route by invoking freerouting.jar
     def RunRouter(self):
         # Check if the freerouting temp folder exists, if not create it
-        if not os.path.exists(freerouting_temp_folder):
-            os.makedirs(freerouting_temp_folder)
+        if not os.path.exists(freerouting_jre_temp_folder):
+            os.makedirs(freerouting_jre_temp_folder)
 
         # Check if Java is installed and if it's version 21 or higher
         javaVersion = get_java_version(self.java_path)
@@ -262,9 +262,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             
         if (javaInstallNow == wx.ID_YES):
             # If the user wants to install Java, clean up the previous JRE installations in the temp folder first
-            for file in os.listdir(freerouting_temp_folder):
+            for file in os.listdir(freerouting_jre_temp_folder):
                 if file.startswith("jdk-") and file.endswith("-jre"):
-                    file_path = os.path.join(freerouting_temp_folder, file)
+                    file_path = os.path.join(freerouting_jre_temp_folder, file)
                     if os.path.isdir(file_path):
                         shutil.rmtree(file_path)
                     else:
@@ -445,7 +445,7 @@ def install_java_jre_21():
         jre_url = None
         return local_java_exe
         
-    java_exe_path = os.path.join(freerouting_temp_folder, f"jdk-{jre_version}-jre", "bin", "java")
+    java_exe_path = os.path.join(freerouting_jre_temp_folder, f"jdk-{jre_version}-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"      
  
@@ -456,13 +456,18 @@ def install_java_jre_21():
     if jre_url is None:
         raise FileNotFoundError("Couldn't find a downloaded JRE")
 
+    # Double-check if the temp folder exists
+    if not os.path.exists(freerouting_jre_temp_folder):
+        os.makedirs(freerouting_jre_temp_folder)
+
+    # Download the Java JRE
     print("Downloading Java JRE from " + jre_url)
     file_name = download_with_progress_bar(jre_url)
     print()
 
     # Unzip the downloaded file
     print("Extracting the downloaded file...")
-    unzip_command = f"tar -xf {file_name} -C {freerouting_temp_folder}"
+    unzip_command = f"tar -xf {file_name} -C {freerouting_jre_temp_folder}"
     os.system(unzip_command)
 
     # Remove the downloaded zip file
