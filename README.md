@@ -74,7 +74,7 @@ java -jar freerouting-2.0.0.jar -de MyBoard.dsn -do MyBoard.ses -inc GND,VCC
 
 This command routes `MyBoard.dsn`, ignores the `GND` and `VCC` net classes, and outputs `MyBoard.ses`.
 
-For more details, see the [CLI documentation](docs/command_line_arguments.md).
+For more details (including headless mode), see the [CLI documentation](docs/command_line_arguments.md).
 
 ### Freerouting API
 
