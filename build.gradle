@@ -103,7 +103,7 @@ dependencies {
     implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.0.14'
     implementation 'org.eclipse.jetty:jetty-server:12.0.14'
     implementation 'org.eclipse.jetty:jetty-util:12.0.14'
-    implementation 'org.eclipse.jetty:jetty-security:12.0.14'
+    implementation 'org.eclipse.jetty:jetty-security:12.0.15'
 
     // Add SLF4J API and binding dependencies for Jersey logging
     implementation 'org.slf4j:slf4j-api:2.0.16'
