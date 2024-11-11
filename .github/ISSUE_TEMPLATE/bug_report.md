@@ -35,7 +35,7 @@ If applicable, include the full command line that you used.
 If applicable, include project files like .pro, .kicad_pcb, .dsn.
 
 **Logs**
-Include at lest the most recent lines of your log files or console output.
+Include at least the most recent lines of your log files or console output.
 
 **Additional context**
 Add any other context about the problem here.
