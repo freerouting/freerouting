@@ -28,13 +28,12 @@ else
     tar xvzf jdk14.tar.gz
     echo "> creating runtime image"
     $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
-        --add-modules java.desktop \
+        --add-modules java.desktop,java.logging,java.net.http,java.sql,java.xml \
         --strip-debug \
         --no-header-files \
         --no-man-pages \
         --strip-native-commands \
         --vm=server \
-        --compress=2 \
         --output runtime
 fi
 

@@ -20,13 +20,12 @@ cp ../LICENSE ../build/dist/LICENSE
 
 echo "> Building the Java runtime"
 $JAVA_HOME/bin/jlink -p "$JAVA_HOME/jmods" \
-        --add-modules java.desktop \
+        --add-modules java.desktop,java.logging,java.net.http,java.sql,java.xml \
         --strip-debug \
         --no-header-files \
         --no-man-pages \
         --strip-native-commands \
         --vm=server \
-        --compress=2 \
         --output $JAVA_HOME/runtime
 
 echo "> Creating the package"
