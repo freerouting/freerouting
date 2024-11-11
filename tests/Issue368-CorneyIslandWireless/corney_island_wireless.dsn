@@ -1,0 +1,130 @@
+(pcb "/Users/mmassarelli/Documents/GitHub/corney-island/ergogen/output/pcbs/corney_island_wireless.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "8.0.0")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  218380 -109700  175090 -109700  175090 -66410  218380 -66410
+            218380 -109700)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 200 (type default_smd))
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component ceoloide:switch_mx
+      (place S16 195000.000000 -97625.000000 back 180.000000)
+      (place S17 195000.000000 -78625.000000 back 180.000000)
+    )
+    (component ceoloide:diode_tht_sod123
+      (place D16 202400.000000 -96300.000000 back 270.000000)
+      (place D17 202400.000000 -77300.000000 back 270.000000)
+    )
+  )
+  (library
+    (image ceoloide:switch_mx
+      (pin Rect[T]Pad_2550x2500_um 1 -7085 -2540)
+      (pin RoundRect[T]Pad_2550x2500_0_um_0.200000_1 2 5842 -5080)
+      (keepout "" (circle F.Cu 4600))
+      (keepout "" (circle B.Cu 4600))
+      (keepout "" (circle F.Cu 2400 5080 0))
+      (keepout "" (circle B.Cu 2400 5080 0))
+      (keepout "" (circle F.Cu 2400 -5080 0))
+      (keepout "" (circle B.Cu 2400 -5080 0))
+      (keepout "" (circle F.Cu 3500 2540 -5080))
+      (keepout "" (circle B.Cu 3500 2540 -5080))
+      (keepout "" (circle F.Cu 3500 -3810 -2540))
+      (keepout "" (circle B.Cu 3500 -3810 -2540))
+    )
+    (image ceoloide:diode_tht_sod123
+      (outline (path signal 100  750 0  250 0))
+      (outline (path signal 100  -350 0  250 400))
+      (outline (path signal 100  250 400  250 -400))
+      (outline (path signal 100  250 -400  -350 0))
+      (outline (path signal 100  -350 550  -350 0))
+      (outline (path signal 100  -350 -550  -350 0))
+      (outline (path signal 100  -350 0  -750 0))
+      (pin Rect[T]Pad_900x1200_um 2 1650 0)
+      (pin Rect[T]Pad_900x1200_um 1 -1650 0)
+    )
+    (padstack RoundRect[T]Pad_2550x2500_0_um_0.200000_1
+      (shape (polygon F.Cu 0  -1275 750  -775 1250  1275 1250  1275 -1250  -1275 -1250
+            -1275 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2550x2500_um
+      (shape (rect F.Cu -1275 -1250 1275 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900x1200_um
+      (shape (rect F.Cu -450 -600 450 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net C5
+      (pins S16-1 S17-1)
+    )
+    (net inner_bottom_B
+      (pins S16-2 D16-2)
+    )
+    (net inner_home_B
+      (pins S17-2 D17-2)
+    )
+    (net R2
+      (pins D16-1)
+    )
+    (net R1
+      (pins D17-1)
+    )
+    (class kicad_default "" BAT_P C0 C1 C2 C3 C4 C5 CS DAT DISP1_1 DISP1_2
+      DISP1_4 DISP1_5 GND JST1_1 JST1_2 LED MCU1_1 MCU1_10 MCU1_11 MCU1_12
+      MCU1_13 MCU1_14 MCU1_15 MCU1_16 MCU1_17 MCU1_18 MCU1_19 MCU1_2 MCU1_20
+      MCU1_21 MCU1_22 MCU1_23 MCU1_24 MCU1_3 MCU1_4 MCU1_5 MCU1_6 MCU1_7 MCU1_8
+      MCU1_9 P10 P101 P102 P107 P16 P9 R0 R1 R2 R3 RAW RST SCL SDA VCC far_home_B
+      far_home_F index_bottom_B index_bottom_F index_home_B index_home_F index_top_B
+      index_top_F inner_bottom_B inner_bottom_F inner_home_B inner_home_F
+      inner_top_B inner_top_F mid_home_B mid_home_F middle_bottom_B middle_bottom_F
+      middle_home_B middle_home_F middle_top_B middle_top_F near_home_B near_home_F
+      outer_bottom_B outer_bottom_F outer_home_B outer_home_F outer_top_B
+      outer_top_F pinky_bottom_B pinky_bottom_F pinky_home_B pinky_home_F
+      pinky_top_B pinky_top_F ring_bottom_B ring_bottom_F ring_home_B ring_home_F
+      ring_top_B ring_top_F
+      (circuit
+        (use_via Via[0-1]_600:300_um)
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

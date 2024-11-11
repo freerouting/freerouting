@@ -1,0 +1,45 @@
+(session corney_island_wireless
+  (base_design corney_island_wireless)
+  (placement
+    (resolution um 10)
+    (component ceoloide:switch_mx
+      (place S16 1950000 -976250 back 180)
+      (place S17 1950000 -786250 back 180)
+    )
+    (component ceoloide:diode_tht_sod123
+      (place D16 2024000 -963000 back 270)
+      (place D17 2024000 -773000 back 270)
+    )
+  )
+  (was_is
+  )
+  (routes 
+    (resolution um 10)
+    (parser
+      (host_cad "KiCad's Pcbnew")
+      (host_version 8.0.0)
+    )
+    (library_out 
+      (padstack "Via[0-1]_600:300_um"
+        (shape
+          (circle F.Cu 6000 0 0)
+        )
+        (shape
+          (circle B.Cu 6000 0 0)
+        )
+        (attach off)
+      )
+      (padstack "Via[0-1]_600:300_um"
+        (shape
+          (circle F.Cu 6000 0 0)
+        )
+        (shape
+          (circle B.Cu 6000 0 0)
+        )
+        (attach off)
+      )
+    )
+    (network_out 
+    )
+  )
+)
