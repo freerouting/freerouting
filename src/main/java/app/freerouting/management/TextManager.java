@@ -3,9 +3,13 @@ package app.freerouting.management;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -112,15 +116,27 @@ public class TextManager
 
     if (parts.length == 3)
     {
-      durationString.append(parts[0]).append("H").append(parts[1]).append("M").append(parts[2]).append("S");
+      durationString
+          .append(parts[0])
+          .append("H")
+          .append(parts[1])
+          .append("M")
+          .append(parts[2])
+          .append("S");
     }
     else if (parts.length == 2)
     {
-      durationString.append(parts[0]).append("M").append(parts[1]).append("S");
+      durationString
+          .append(parts[0])
+          .append("M")
+          .append(parts[1])
+          .append("S");
     }
     else if (parts.length == 1)
     {
-      durationString.append(parts[0]).append("S");
+      durationString
+          .append(parts[0])
+          .append("S");
     }
 
     return durationString.toString();
@@ -166,6 +182,33 @@ public class TextManager
     }
 
     return text;
+  }
+
+  /**
+   * Decrypts a string using AES-256-CBC with a passphrase
+   *
+   * @param encodedText The text to encrypt
+   * @param passphrase  The passphrase to use for encryption
+   * @return The encrypted text
+   */
+  public static byte[] decryptAes256Cbc(byte[] encodedText, String passphrase)
+  {
+    try
+    {
+      IvParameterSpec iv = new IvParameterSpec("freeroutingivpar".getBytes(StandardCharsets.UTF_8));
+      SecretKeySpec skeySpec = new SecretKeySpec(passphrase.getBytes(StandardCharsets.UTF_8), "AES");
+
+      Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+      cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+      byte[] original = cipher.doFinal(encodedText);
+
+      return original;
+    } catch (Exception ex)
+    {
+      FRLogger.error("There was a problem decrypting the text", ex);
+    }
+
+    return null;
   }
 
   private void loadResourceBundle(String baseName)
@@ -340,7 +383,9 @@ public class TextManager
     else
     {
       // Handle other components like JLabel, JTextArea, etc.
-      String componentType = component.getClass().getName();
+      String componentType = component
+          .getClass()
+          .getName();
       FRLogger.warn("The component type '" + componentType + "' is not supported");
     }
 

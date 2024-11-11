@@ -21,7 +21,8 @@ import java.util.Map;
  */
 public class BigQueryClient implements AnalyticsClient
 {
-  private static final String BIGQUERY_ENCODED_SERVICE_ACCOUNT_KEY = "ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAiZnJlZXJvdXRpbmctYW5hbHl0aWNzIiwKICAicHJpdmF0ZV9rZXlfaWQiOiAiMWMwY2EzYjRhOGMzMjQ4M2NlZmZjODIwOGZiMmY3NjA2YmIyNzRkYyIsCiAgInByaXZhdGVfa2V5IjogIi0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuTUlJRXZRSUJBREFOQmdrcWhraUc5dzBCQVFFRkFBU0NCS2N3Z2dTakFnRUFBb0lCQVFDeVZpaWtNeUVNYjVQRlxuaEJSWklsMWNSODJMNHpldTVlQnNJWG81THMvVi9HN1NxRGQxU2VCWFlVOGgvdFo1VFBQMFhDeEx4YWhRV2pwa1xuM1ljbjIyR0QreGlzMWF3L1FZeEhhWXdTeVh3NzFsZVZTaWxwbVhJTGFzVGpxVlhGWlltM1Q3M1JWNElkVzlXWFxueVVpdTFKenZMRXNQcGp2YVhTUENpTmgzUno2ZVVIVGx1Tm1XUEZmVU54VW9hWVdwd1piV2tLRExvdlU4dlZWZVxud2ZGN0c1RkxGenJ1dEQ1SE1uZExFWXZRSjNEMDFzUUx6R1JMOXd4QnNuZk5pMktodVBtSGtmRm5WakNJN09aZFxuR3p1Z1N4SGFXZ0dKMEs1VUxDUmh6ZHJjaHpoMlcxMS8zTTRwUkZHYVBCRHFWbFl6ZTVoWVV0aWl4Y2pXNm9seVxucVpDT2srT1JBZ01CQUFFQ2dnRUFBNndyemRiYU5rRDVlbkt4L3hScXR3YnBCQm1YcU5mRno0QkFmYnM1cnpyUlxudHUrZEpjS1Ixc2JUbS92OUkzWWEyNFJHNnNBTksydHlRcWUvdStuRUNEVmtjSkc5YUhlVGVaaUNPSlJTNVVJUVxubjJ2TnJzV28wRFNnalo0ci9LTE95MW8rYXRoYUh2dm9TZ1lNZzhJdjRhcUlPTEFvRVNNRUpLSlFEK1BGRmJwQ1xuVGRRc0c5VGpra01ObXQ2YUlBR3Z0K3RtSURianIrV09LUTZHejdYb1NLRWJienFqaWRPSVgrNmRXeVRSaDdtelxubWZySEZKa2NDeENhclM0TjJyVDhnYVNRYkY1RGdRbXg1aEdQWjlFcXEzV2x3RlNJMDRNZUwwaXRsZ2xFeFlIWFxuQ2tjTk0vRzNpM3l5WTZkY2E0VDllRWZzb3pVUlUzQVMwbkN5bmtKbmdRS0JnUUQxSUlrMFNRaFNsc01YZGpLM1xuNmZhakF3QnMvSGNSRjl3SGQ4UG01dWJ2S2JnaVRzbm4vUnptWEVQemUzRmFtLzZuVjU3RkN1KzFWbUFSblRRM1xuK2hwamMvdTU0dCttcE4zUDBxUFU4NjlPMUpyT2FXbjBJY2FGOStnclFRQU43V3JCeUhoTmVPM0tzV3ovcktXL1xuVFBBeGY4ai9sVW8zVG9ldS9lRlpMaCs1d1FLQmdRQzZQelFwbXJCYUdDSVk0ZitiY0dZcUxJeXBNM3llcEhGaFxuZzErb2E3YmdBZHVFQkJQVHB2M0xSRTN1ZmhPTFFSRDBidDlMck5PNEdTeGVtRlptd2h4QithNkg5Si9wNGxCbFxuOGE5aXp4M3ZEVjVyOXVDMTk3TnNIbm9qRlZyMWo2MFltWkpFYXdZNDZVamQ2YThuSVJRZUJ3M3QvTkttYTZVR1xuNHZ2WW8zcDkwUUtCZ1FDbVNDanF2L1FXV2xFRFZGbjVhb3UxYnU3Vi83a2hia2NEQmRwdGd3cjdDQmp4cFBMUVxuSFdLQ1hlcDJlN0djWHAremt2dVAvT2c0NGR3UGRzMmFmMTF4UTVkcU5KMjBwTGdYSjNPZG5LUzZXL3lic3VSK1xuQ0g5c0Y0eDE4d1QvYmFOeXl2UFkwZ1MwOEFEWnU1dEFGd2dFL0FNMFpXaFA5a1NTajRSVGc3ZGZ3UUtCZ0F4alxuK0F4c2hoNzRUQXhydkoyU3RMbEpqWElVUXM0ckVuL3lSWUxtNTV1dmcvTWNjbFU2WHRnUEMwQTZrd0pJcWVBWlxuSURIZ3BaVXgxNG5UaUt2OWJmUFZzSTdLNzNpWDNkRnFhc2lnRHRYQWhlK1kxUXBHR0dHeEJWOGdKSlVCb2Zwb1xuL1JvZ0pLSFVvMHhnSjQ3cTNIUEM5R0pJMTVyS3ZvZmV3ZkovcmI2QkFvR0Fjb3BzNGw0b0NMRFQzUVNhZ2x2QVxuQXA3Y2dPdmthNklmOU5RVGF0eDN4aFVlamxTdjdSNFZob2E0M3IzUXdFUEJEMStCb0kyd3R4QngxRUhuTEtUZFxuVVI4ajRGdXFuczUvVk0xdkFtVkg3VTVpZm1DK3d0ZXhSbzdUZFhNRFl4YnZET3d1Tlhsb2xyS1JsbW5YaUg3TVxuSUF5MFNiY1FTVTVEMFJpOGhTb0pscVk9XG4tLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tXG4iLAogICJjbGllbnRfZW1haWwiOiAiZnJlZXJvdXRpbmctYXBwbGljYXRpb25AZnJlZXJvdXRpbmctYW5hbHl0aWNzLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwKICAiY2xpZW50X2lkIjogIjExNjg0OTUzOTQ3OTY2MTQ5MDYzNCIsCiAgImF1dGhfdXJpIjogImh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi9hdXRoIiwKICAidG9rZW5fdXJpIjogImh0dHBzOi8vb2F1dGgyLmdvb2dsZWFwaXMuY29tL3Rva2VuIiwKICAiYXV0aF9wcm92aWRlcl94NTA5X2NlcnRfdXJsIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsCiAgImNsaWVudF94NTA5X2NlcnRfdXJsIjogImh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL3JvYm90L3YxL21ldGFkYXRhL3g1MDkvZnJlZXJvdXRpbmctYXBwbGljYXRpb24lNDBmcmVlcm91dGluZy1hbmFseXRpY3MuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLAogICJ1bml2ZXJzZV9kb21haW4iOiAiZ29vZ2xlYXBpcy5jb20iCn0K";
+  private static final String BIGQUERY_ENCRYPTED_SERVICE_ACCOUNT_KEY = "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";
+  private static final String BIGQUERY_PASSPHRASE = "ysddgyXy49JLkGKvEjrMviDaN8h78nHu";
   private static final String BIGQUERY_PROJECT_ID = "freerouting-analytics";
   private static final String BIGQUERY_DATASET_ID = "freerouting_application";
   private static BigQuery bigQuery;
@@ -32,6 +33,8 @@ public class BigQueryClient implements AnalyticsClient
   public BigQueryClient(String libraryVersion)
   {
     LIBRARY_VERSION = libraryVersion;
+    // Enable TLS protocols
+    System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
     bigQuery = createBigQueryClient();
   }
 
@@ -40,13 +43,24 @@ public class BigQueryClient implements AnalyticsClient
     try
     {
       // decode the service account key
-      byte[] decodedKey = Base64.getDecoder().decode(BIGQUERY_ENCODED_SERVICE_ACCOUNT_KEY);
-      InputStream keyStream = new ByteArrayInputStream(decodedKey);
-      GoogleCredentials credentials = ServiceAccountCredentials.fromStream(keyStream);
+      byte[] decodedKey = Base64
+          .getDecoder()
+          .decode(BIGQUERY_ENCRYPTED_SERVICE_ACCOUNT_KEY);
+
+      // decrypt the service account key using aes-256-cbc
+      byte[] serviceKey = TextManager.decryptAes256Cbc(decodedKey, BIGQUERY_PASSPHRASE);
+
+      InputStream keyStream = new ByteArrayInputStream(serviceKey);
+      GoogleCredentials credentials = ServiceAccountCredentials
+          .fromStream(keyStream)
+          .createScoped("https://www.googleapis.com/auth/bigquery");
+      credentials.refreshIfExpired();
       // create the BigQuery client builder
       var bigQueryBuilder = BigQueryOptions.newBuilder();
       // set the credentials
-      var bigQueryOptions = bigQueryBuilder.setCredentials(credentials).build();
+      var bigQueryOptions = bigQueryBuilder
+          .setCredentials(credentials)
+          .build();
       // create the BigQuery client
       return bigQueryOptions.getService();
     } catch (IOException e)
@@ -70,7 +84,10 @@ public class BigQueryClient implements AnalyticsClient
       try
       {
         // table name is the event name with some formatting
-        String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
+        String tableName = payload.event
+            .toLowerCase()
+            .replace(" ", "_")
+            .replace("-", "_");
 
         // apply a text transformation to the event and event_text fields
         fields.put("event_text", fields.get("event"));
@@ -88,11 +105,13 @@ public class BigQueryClient implements AnalyticsClient
         if (response.hasErrors())
         {
           // Handle errors
-          response.getInsertErrors().forEach((index, errors) ->
-          {
-            // Log or handle the errors
-            FRLogger.error("Error in BigQueryClient.send_payload_async: (" + tableName + ")" + errors, null);
-          });
+          response
+              .getInsertErrors()
+              .forEach((index, errors) ->
+              {
+                // Log or handle the errors
+                FRLogger.error("Error in BigQueryClient.send_payload_async: (" + tableName + ")" + errors, null);
+              });
         }
       } catch (Exception e)
       {
