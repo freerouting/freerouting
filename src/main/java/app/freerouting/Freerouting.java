@@ -57,22 +57,35 @@ public class Freerouting
       userdataPath = Paths.get(System.getenv("FREEROUTING__USER_DATA_PATH"));
     }
     // 3, check if we need to override it with the "--user-data-path={directory}" command line argument
-    if (args.length > 0 && Arrays.stream(args).anyMatch(s -> s.startsWith("--user-data-path=")))
+    if (args.length > 0 && Arrays
+        .stream(args)
+        .anyMatch(s -> s.startsWith("--user-data-path=")))
     {
-      var userDataPathArg = Arrays.stream(args).filter(s -> s.startsWith("--user-data-path=")).findFirst();
+      var userDataPathArg = Arrays
+          .stream(args)
+          .filter(s -> s.startsWith("--user-data-path="))
+          .findFirst();
 
       if (userDataPathArg.isPresent())
       {
-        userdataPath = Paths.get(userDataPathArg.get().substring("--user-data-path=".length()));
+        userdataPath = Paths.get(userDataPathArg
+            .get()
+            .substring("--user-data-path=".length()));
       }
     }
     // 4, create the directory if it doesn't exist
-    if (!userdataPath.toFile().exists())
+    if (!userdataPath
+        .toFile()
+        .exists())
     {
-      userdataPath.toFile().mkdirs();
+      userdataPath
+          .toFile()
+          .mkdirs();
     }
     // 5, check if it exists now, and if it does, apply it to FRLogger
-    if (userdataPath.toFile().exists())
+    if (userdataPath
+        .toFile()
+        .exists())
     {
       GlobalSettings.setUserDataPath(userdataPath);
     }
@@ -81,15 +94,21 @@ public class Freerouting
 
     // we have a special case if logging must be disabled before the general command line arguments
     // are parsed
-    if (args.length > 0 && Arrays.asList(args).contains("-dl"))
+    if (args.length > 0 && Arrays
+        .asList(args)
+        .contains("-dl"))
     {
       // disable logging
       FRLogger.disableLogging();
     }
-    else if (args.length > 0 && Arrays.asList(args).contains("-ll"))
+    else if (args.length > 0 && Arrays
+        .asList(args)
+        .contains("-ll"))
     {
       // get the log level from the command line arguments
-      int logLevelIndex = Arrays.asList(args).indexOf("-ll") + 1;
+      int logLevelIndex = Arrays
+          .asList(args)
+          .indexOf("-ll") + 1;
       if (logLevelIndex < args.length)
       {
         FRLogger.changeFileLogLevel(args[logLevelIndex]);
@@ -146,9 +165,15 @@ public class Freerouting
     globalSettings.environmentSettings.commandLineArguments = String.join(" ", args);
     globalSettings.environmentSettings.architecture = System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version");
     globalSettings.environmentSettings.java = System.getProperty("java.version") + "," + System.getProperty("java.vendor");
-    globalSettings.environmentSettings.systemLanguage = Locale.getDefault().getLanguage() + "," + Locale.getDefault();
-    globalSettings.environmentSettings.cpuCores = Runtime.getRuntime().availableProcessors();
-    globalSettings.environmentSettings.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
+    globalSettings.environmentSettings.systemLanguage = Locale
+        .getDefault()
+        .getLanguage() + "," + Locale.getDefault();
+    globalSettings.environmentSettings.cpuCores = Runtime
+        .getRuntime()
+        .availableProcessors();
+    globalSettings.environmentSettings.ram = (int) (Runtime
+        .getRuntime()
+        .maxMemory() / 1024 / 1024);
     FRLogger.debug(" Version: " + globalSettings.environmentSettings.freeroutingVersion);
     FRLogger.debug(" Command line arguments: '" + globalSettings.environmentSettings.commandLineArguments + "'");
     FRLogger.debug(" Architecture: " + globalSettings.environmentSettings.architecture);
@@ -287,7 +312,9 @@ public class Freerouting
     }
 
     // Start a new Freerouting session
-    var cliSession = SessionManager.getInstance().createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+    var cliSession = SessionManager
+        .getInstance()
+        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
 
     // Create a new routing job
     RoutingJob routingJob = new RoutingJob(cliSession.id);
@@ -312,6 +339,7 @@ public class Freerouting
     routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
 
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
+    routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layerCount);
     routingJob.state = RoutingJobState.READY_TO_START;
 
     // Wait for the RoutingJobScheduler to do its work
@@ -333,7 +361,9 @@ public class Freerouting
       try
       {
         Path outputFilePath = Path.of(globalSettings.design_output_filename);
-        Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
+        Files.write(outputFilePath, routingJob.output
+            .getData()
+            .readAllBytes());
       } catch (IOException e)
       {
         FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);

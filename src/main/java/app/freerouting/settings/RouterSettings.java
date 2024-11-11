@@ -26,7 +26,9 @@ public class RouterSettings implements Serializable
   @SerializedName("fanout_max_passes")
   public int maxFanoutPasses = 20;
   @SerializedName("max_threads")
-  public int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  public int maxThreads = Math.max(1, Runtime
+      .getRuntime()
+      .availableProcessors() - 1);
   @SerializedName("improvement_threshold")
   public float optimizationImprovementThreshold = 0.01f;
   public transient boolean save_intermediate_stages = false;
@@ -73,18 +75,7 @@ public class RouterSettings implements Serializable
    */
   public RouterSettings(int p_layer_count)
   {
-    isLayerActive = new boolean[p_layer_count];
-    isPreferredDirectionHorizontalOnLayer = new boolean[p_layer_count];
-    preferredDirectionTraceCost = new double[p_layer_count];
-    undesiredDirectionTraceCost = new double[p_layer_count];
-
-    for (int i = 0; i < p_layer_count; ++i)
-    {
-      isLayerActive[i] = true;
-      isPreferredDirectionHorizontalOnLayer[i] = (i % 2 == 1);
-      preferredDirectionTraceCost[i] = defaultPreferredDirectionTraceCost;
-      undesiredDirectionTraceCost[i] = defaultUndesiredDirectionTraceCost;
-    }
+    setLayerCount(p_layer_count);
   }
 
   /**
@@ -135,6 +126,25 @@ public class RouterSettings implements Serializable
       preferredDirectionTraceCost[layer_count - 1] += outer_add_costs;
       undesiredDirectionTraceCost[0] += outer_add_costs;
       undesiredDirectionTraceCost[layer_count - 1] += outer_add_costs;
+    }
+  }
+
+  /**
+   * Set the layer count and initialize the layer specific settings.
+   */
+  public void setLayerCount(int layerCount)
+  {
+    isLayerActive = new boolean[layerCount];
+    isPreferredDirectionHorizontalOnLayer = new boolean[layerCount];
+    preferredDirectionTraceCost = new double[layerCount];
+    undesiredDirectionTraceCost = new double[layerCount];
+
+    for (int i = 0; i < layerCount; ++i)
+    {
+      isLayerActive[i] = true;
+      isPreferredDirectionHorizontalOnLayer[i] = (i % 2 == 1);
+      preferredDirectionTraceCost[i] = defaultPreferredDirectionTraceCost;
+      undesiredDirectionTraceCost[i] = defaultUndesiredDirectionTraceCost;
     }
   }
 
