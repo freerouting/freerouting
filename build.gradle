@@ -1,7 +1,11 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id 'java'
     id 'jvm-test-suite'
+    id 'signing'
     id 'maven-publish'
+    id "com.vanniktech.maven.publish" version "0.30.0"
     id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.51.0'
 }
@@ -164,7 +168,26 @@ tasks.register('executableJar', Jar) {
     }
 }
 
+// Publishing
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+}
+
 apply from: 'gradle/publishing.gradle'
+
+// Signing
+signing {
+    useInMemoryPgpKeys(
+            findProperty("signing.keyId") as String ?: System.getenv("FREEROUTING_SIGNING_KEY_ID"),
+            findProperty("signing.secretKeyRingFile") as String ?: System.getenv("FREEROUTING_SIGNING_SECRET_KEY_RING_FILE"),
+            findProperty("signing.password") as String ?: System.getenv("FREEROUTING_SIGNING_PASSWORD")
+    )
+
+    sign executableJar
+}
 
 // write constants to code
 tasks.register('writeVersionInfo') {
@@ -213,5 +236,5 @@ tasks.withType(JavaCompile) {
 task buildDockerImage(type: Exec) {
     group = 'docker'
     description = 'Builds the Docker image for the application.'
-    commandLine 'docker', 'build', '-t', 'freerouting/freerouting:2.0.0', '.'
+    commandLine 'docker', 'build', '-t', 'freerouting/freerouting:2.0.1', '.'
 }

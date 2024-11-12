@@ -1,3 +1,5 @@
+apply plugin: "com.vanniktech.maven.publish"
+
 // -----------------------------------------------------------------------------
 // Collect publishing information
 // -----------------------------------------------------------------------------
@@ -31,7 +33,7 @@ artifacts {
     archives executableJar
 }
 
-
+// Define the POM configuration
 def pomConfig = {
     name ext.publishing.pomName
     description ext.publishing.desc
@@ -57,6 +59,7 @@ def pomConfig = {
     }
 }
 
+// Verify that the version is not a SNAPSHOT version (because then it can't be published to Maven Central)
 tasks.register('verifyVersion') {
     doLast {
         if (version.toString().toUpperCase().contains("SNAPSHOT")) {
@@ -65,6 +68,7 @@ tasks.register('verifyVersion') {
     }
 }
 
+// Set up the publishing for the maven-publish plugin
 publishing {
     publications {
         mavenCustom(MavenPublication) {
@@ -98,6 +102,38 @@ publishing {
     }
 }
 
+// Define the publish task
 tasks.named("publish").configure {
     dependsOn verifyVersion
+}
+
+// Configuring the POM (Project Object Model) for Maven Central publication
+mavenPublishing {
+    coordinates(publishing.groupId, publishing.artifactId, publishing.versionId)
+
+    pom {
+        name = publishing.pomName
+        description = publishing.desc
+        inceptionYear = publishing.inceptionYear
+        url = publishing.websiteUrl
+        licenses {
+            license {
+                name = publishing.license
+                url = publishing.licenseUrl
+                distribution = "repo"
+            }
+        }
+        developers {
+            developer {
+                id = publishing.developerAlias
+                name = publishing.developerName
+                email = publishing.developerEmail
+            }
+        }
+        scm {
+            url = publishing.vcsUrl
+            connection = publishing.vcsUrl
+            developerConnection = publishing.vcsUrl
+        }
+    }
 }
