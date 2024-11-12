@@ -103,10 +103,11 @@ public class FRAnalytics
   private static long autorouterStartedAt;
   private static long routeOptimizerStartedAt;
 
-  public static void setWriteKey(String libraryVersion, String writeKey)
+  public static void setAccessKey(String libraryVersion, String key)
   {
-    //analytics = new SegmentClient(libraryVersion, writeKey);
-    analytics = new BigQueryClient(libraryVersion);
+    //analytics = new SegmentClient(libraryVersion, key);
+    //analytics = new BigQueryClient(libraryVersion, key);
+    analytics = new FreeroutingAnalyticsClient(libraryVersion, key);
   }
 
   public static void setUserId(String userId, String userEmail)
@@ -163,7 +164,9 @@ public class FRAnalytics
     try
     {
       Properties p = new Properties();
-      p.put("current_time_utc", Instant.now().toString());
+      p.put("current_time_utc", Instant
+          .now()
+          .toString());
       p.put("user_id", permanent_user_id);
       p.put("user_email", permanent_user_email);
       p.put("app_current_location", appCurrentLocation);
@@ -242,7 +245,9 @@ public class FRAnalytics
 
   public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments, String osName, String osArchitecture, String osVersion, String javaVersion, String javaVendor, Locale systemLanguage, Locale guiLanguage, int cpuCoreCount, long ramAmount, String host, int width, int height, int dpi)
   {
-    appStartedAt = Instant.now().getEpochSecond();
+    appStartedAt = Instant
+        .now()
+        .getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
     properties.put("build_version", freeroutingVersion);
@@ -266,7 +271,9 @@ public class FRAnalytics
 
   public static void appClosed()
   {
-    long appClosedAt = Instant.now().getEpochSecond();
+    long appClosedAt = Instant
+        .now()
+        .getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
     properties.put("session_count", String.valueOf(sessionCount));
@@ -291,7 +298,9 @@ public class FRAnalytics
 
   public static void autorouterStarted()
   {
-    autorouterStartedAt = Instant.now().getEpochSecond();
+    autorouterStartedAt = Instant
+        .now()
+        .getEpochSecond();
     sessionCount++;
 
     Map<String, String> properties = new HashMap<>();
@@ -303,7 +312,9 @@ public class FRAnalytics
 
   public static void autorouterFinished()
   {
-    long autorouterFinishedAt = Instant.now().getEpochSecond();
+    long autorouterFinishedAt = Instant
+        .now()
+        .getEpochSecond();
     long autorouterRuntime = autorouterFinishedAt - autorouterStartedAt;
     totalAutorouterRuntime += autorouterRuntime;
 
@@ -317,7 +328,9 @@ public class FRAnalytics
 
   public static void routeOptimizerStarted()
   {
-    routeOptimizerStartedAt = Instant.now().getEpochSecond();
+    routeOptimizerStartedAt = Instant
+        .now()
+        .getEpochSecond();
 
     Map<String, String> properties = new HashMap<>();
     properties.put("settings", GsonProvider.GSON.toJson(globalSettings));
@@ -327,7 +340,9 @@ public class FRAnalytics
 
   public static void routeOptimizerFinished()
   {
-    long routeOptimizerFinishedAt = Instant.now().getEpochSecond();
+    long routeOptimizerFinishedAt = Instant
+        .now()
+        .getEpochSecond();
     long routeOptimizerRuntime = routeOptimizerFinishedAt - routeOptimizerStartedAt;
     totalRouteOptimizerRuntime += routeOptimizerRuntime;
 

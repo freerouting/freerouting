@@ -26,4 +26,4 @@ EXPOSE 37864
 VOLUME /mnt/freerouting
 
 # Run the application
-CMD ["java", "-jar", "/app/freerouting-executable.jar", "--api_server-enabled=true", "--gui-enabled=false", "--feature_flags-save_jobs=1", "--user-data-path=/mnt/freerouting"]
+CMD ["java", "-jar", "/app/freerouting-executable.jar", "--api_server-enabled=true", "--gui-enabled=false", "--feature_flags-save_jobs=1", "--user_data_path=/mnt/freerouting", "--profile-email=api@freerouting.app"]

@@ -56,21 +56,21 @@ public class Freerouting
     {
       userdataPath = Paths.get(System.getenv("FREEROUTING__USER_DATA_PATH"));
     }
-    // 3, check if we need to override it with the "--user-data-path={directory}" command line argument
+    // 3, check if we need to override it with the "--user_data_path={directory}" command line argument
     if (args.length > 0 && Arrays
         .stream(args)
-        .anyMatch(s -> s.startsWith("--user-data-path=")))
+        .anyMatch(s -> s.startsWith("--user_data_path=")))
     {
       var userDataPathArg = Arrays
           .stream(args)
-          .filter(s -> s.startsWith("--user-data-path="))
+          .filter(s -> s.startsWith("--user_data_path="))
           .findFirst();
 
       if (userDataPathArg.isPresent())
       {
         userdataPath = Paths.get(userDataPathArg
             .get()
-            .substring("--user-data-path=".length()));
+            .substring("--user_data_path=".length()));
       }
     }
     // 4, create the directory if it doesn't exist
@@ -217,16 +217,17 @@ public class Freerouting
     }
 
     boolean allowAnalytics = false;
-    if (globalSettings.usageAndDiagnosticData.segmentWriteKey != null && !globalSettings.usageAndDiagnosticData.segmentWriteKey.isEmpty())
-    {
-      // initialize analytics
-      FRAnalytics.setWriteKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.segmentWriteKey);
-      // this option allows us to disable analytics for some users (enabled for all if it is set to 1, otherwise it is disabled for every Nth user)
-      int analyticsModulo = 1;
-      String userIdString = globalSettings.userProfileSettings.userId.length() >= 4 ? globalSettings.userProfileSettings.userId.substring(0, 4) : "0000";
-      int userIdValue = Integer.parseInt(userIdString, 16);
-      allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0) && (globalSettings.userProfileSettings.isTelemetryAllowed);
-    }
+
+    // initialize analytics
+    FRAnalytics.setAccessKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.loggerKey);
+
+    // this option allows us to disable analytics for some users (enabled for all if it is set to 1, otherwise it is disabled for every Nth user)
+    int analyticsModulo = 1;
+    String userIdString = globalSettings.userProfileSettings.userId.length() >= 4 ? globalSettings.userProfileSettings.userId.substring(0, 4) : "0000";
+    int userIdValue = Integer.parseInt(userIdString, 16);
+
+    // if the user has disabled analytics, we don't need to check the modulo
+    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0) && (globalSettings.userProfileSettings.isTelemetryAllowed);
 
     if (!allowAnalytics)
     {

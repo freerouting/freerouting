@@ -82,7 +82,9 @@ public class GlobalSettings implements Serializable
   public GlobalSettings()
   {
     // validate and set the current locale
-    if (Arrays.stream(supportedLanguages).noneMatch(currentLocale.getLanguage()::equals))
+    if (Arrays
+        .stream(supportedLanguages)
+        .noneMatch(currentLocale.getLanguage()::equals))
     {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
@@ -179,11 +181,19 @@ public class GlobalSettings implements Serializable
   public void applyEnvironmentVariables()
   {
     // Read all the environment variables that begins with "FREEROUTING__"
-    for (var entry : System.getenv().entrySet())
+    for (var entry : System
+        .getenv()
+        .entrySet())
     {
-      if (entry.getKey().startsWith("FREEROUTING__"))
+      if (entry
+          .getKey()
+          .startsWith("FREEROUTING__"))
       {
-        String propertyName = entry.getKey().substring("FREEROUTING__".length()).toLowerCase().replace("__", ".");
+        String propertyName = entry
+            .getKey()
+            .substring("FREEROUTING__".length())
+            .toLowerCase()
+            .replace("__", ".");
         setValue(propertyName, entry.getValue());
       }
     }
@@ -221,8 +231,10 @@ public class GlobalSettings implements Serializable
         if (p_args[i].startsWith("--"))
         {
           // it's a general settings value setter
-          String[] parts = p_args[i].substring(2).split("=");
-          if ((parts.length == 2) && (!Objects.equals(parts[0], "user-data-path")))
+          String[] parts = p_args[i]
+              .substring(2)
+              .split("=");
+          if ((parts.length == 2) && (!Objects.equals(parts[0], "user_data_path")))
           {
             setValue(parts[0], parts[1]);
           }
@@ -305,7 +317,9 @@ public class GlobalSettings implements Serializable
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            String op = p_args[i + 1].toLowerCase().trim();
+            String op = p_args[i + 1]
+                .toLowerCase()
+                .trim();
             routerSettings.boardUpdateStrategy = op.equals("global") ? BoardUpdateStrategy.GLOBAL_OPTIMAL : (op.equals("hybrid") ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
           }
         }
@@ -313,7 +327,9 @@ public class GlobalSettings implements Serializable
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            String op = p_args[i + 1].toLowerCase().trim();
+            String op = p_args[i + 1]
+                .toLowerCase()
+                .trim();
             routerSettings.itemSelectionStrategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
           }
         }
@@ -329,7 +345,9 @@ public class GlobalSettings implements Serializable
           String localeString = "";
           if (p_args.length > i + 1)
           {
-            localeString = p_args[i + 1].toLowerCase().replace("-", "_");
+            localeString = p_args[i + 1]
+                .toLowerCase()
+                .replace("-", "_");
           }
 
           // the locale is provided
