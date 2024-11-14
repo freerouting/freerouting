@@ -26,7 +26,7 @@ import static app.freerouting.management.gson.GsonProvider.GSON;
  * Manages the routing board operations in a headless mode, where no graphical user interface is involved.
  * This class handles the core logic and interactions required for auto-routing and other board-related tasks in a non-interactive environment.
  */
-public class HeadlessBoardManager implements IBoardManager
+public class HeadlessBoardManager implements BoardManager
 {
   /**
    * The file used for logging interactive action, so that they can be replayed later
@@ -83,7 +83,9 @@ public class HeadlessBoardManager implements IBoardManager
   {
     for (int i = 0; i < settings.manual_trace_half_width_arr.length; ++i)
     {
-      settings.manual_trace_half_width_arr[i] = this.board.rules.get_default_net_class().get_trace_half_width(i);
+      settings.manual_trace_half_width_arr[i] = this.board.rules
+          .get_default_net_class()
+          .get_trace_half_width(i);
     }
   }
 
@@ -129,7 +131,9 @@ public class HeadlessBoardManager implements IBoardManager
     // Transform the output stream to an input stream
     InputStream inputStream = new ByteArrayInputStream(memoryStream.toByteArray());
 
-    return BoardFileDetails.calculateCrc32(inputStream).getValue();
+    return BoardFileDetails
+        .calculateCrc32(inputStream)
+        .getValue();
   }
 
   /**

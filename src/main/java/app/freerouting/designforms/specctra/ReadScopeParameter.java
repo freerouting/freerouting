@@ -4,7 +4,7 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
-import app.freerouting.interactive.IBoardManager;
+import app.freerouting.interactive.BoardManager;
 import app.freerouting.settings.RouterSettings;
 
 import java.util.Collection;
@@ -16,7 +16,7 @@ import java.util.LinkedList;
 public class ReadScopeParameter
 {
   final IJFlexScanner scanner;
-  final IBoardManager board_handling;
+  final BoardManager board_handling;
   final NetList netlist = new NetList();
   final BoardObservers observers;
   final IdentificationNumberGenerator item_id_no_generator;
@@ -71,7 +71,7 @@ public class ReadScopeParameter
   /**
    * Creates a new instance of ReadScopeParameter
    */
-  ReadScopeParameter(IJFlexScanner p_scanner, IBoardManager p_board_handling, BoardObservers p_observers, IdentificationNumberGenerator p_item_id_no_generator)
+  ReadScopeParameter(IJFlexScanner p_scanner, BoardManager p_board_handling, BoardObservers p_observers, IdentificationNumberGenerator p_item_id_no_generator)
   {
     scanner = p_scanner;
     board_handling = p_board_handling;

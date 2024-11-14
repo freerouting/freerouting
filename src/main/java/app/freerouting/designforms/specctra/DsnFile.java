@@ -4,7 +4,7 @@ import app.freerouting.board.*;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.interactive.IBoardManager;
+import app.freerouting.interactive.BoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 
@@ -31,7 +31,7 @@ public class DsnFile
    * idNoGenerator are used, in case the board is embedded into a host system. Returns
    * false, if an error occurred.
    */
-  public static ReadResult read(InputStream inputStream, IBoardManager boardManager, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator)
+  public static ReadResult read(InputStream inputStream, BoardManager boardManager, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator)
   {
     IJFlexScanner dsnFlexScanner = new SpecctraDsnStreamReader(inputStream);
 
@@ -96,7 +96,7 @@ public class DsnFile
    * layer, if that layer does not contain any traces This is useful in case the layer type was not
    * set correctly to plane in the dsn-file. Returns true, if something was changed.
    */
-  private static boolean adjust_plane_autoroute_settings(IBoardManager p_board_handling)
+  private static boolean adjust_plane_autoroute_settings(BoardManager p_board_handling)
   {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     app.freerouting.board.LayerStructure board_layer_structure = routing_board.layer_structure;
@@ -138,7 +138,9 @@ public class DsnFile
     double board_area = 0;
     for (int i = 0; i < board_outline.shape_count(); ++i)
     {
-      TileShape[] curr_piece_arr = board_outline.get_shape(i).split_to_convex();
+      TileShape[] curr_piece_arr = board_outline
+          .get_shape(i)
+          .split_to_convex();
       if (curr_piece_arr != null)
       {
         for (TileShape curr_piece : curr_piece_arr)
@@ -159,7 +161,9 @@ public class DsnFile
       {
         continue;
       }
-      TileShape[] convex_pieces = curr_conduction_area.get_area().split_to_convex();
+      TileShape[] convex_pieces = curr_conduction_area
+          .get_area()
+          .split_to_convex();
       double curr_area = 0;
       for (TileShape curr_piece : convex_pieces)
       {
@@ -179,7 +183,9 @@ public class DsnFile
       }
 
       changed_layer_arr[layer_no] = true;
-      if (curr_conduction_area.get_fixed_state().ordinal() < FixedState.USER_FIXED.ordinal())
+      if (curr_conduction_area
+          .get_fixed_state()
+          .ordinal() < FixedState.USER_FIXED.ordinal())
       {
         curr_conduction_area.set_fixed_state(FixedState.USER_FIXED);
       }
@@ -213,7 +219,7 @@ public class DsnFile
    * If p_compat_mode is true, only standard specctra dsn scopes are written, so that any host
    * system with a specctra interface can read them.
    */
-  public static boolean write(IBoardManager boardManager, OutputStream outputStream, String p_design_name, boolean p_compat_mode)
+  public static boolean write(BoardManager boardManager, OutputStream outputStream, String p_design_name, boolean p_compat_mode)
   {
     IndentFileWriter output_file = new IndentFileWriter(outputStream);
 
@@ -236,7 +242,7 @@ public class DsnFile
     return true;
   }
 
-  private static void write_pcb_scope(IBoardManager boardManager, IndentFileWriter indentFileWriter, String p_design_name, boolean p_compat_mode) throws IOException
+  private static void write_pcb_scope(BoardManager boardManager, IndentFileWriter indentFileWriter, String p_design_name, boolean p_compat_mode) throws IOException
   {
     BasicBoard routing_board = boardManager.get_routing_board();
     WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, indentFileWriter, routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform, p_compat_mode);

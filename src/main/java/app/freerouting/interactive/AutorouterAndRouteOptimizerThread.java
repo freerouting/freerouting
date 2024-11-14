@@ -99,10 +99,14 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
       boolean saved_board_read_only = hdlg.is_board_read_only();
       hdlg.set_board_read_only(true);
-      boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
+      boolean ratsnest_hidden_before = hdlg
+          .get_ratsnest()
+          .is_hidden();
       if (!ratsnest_hidden_before)
       {
-        hdlg.get_ratsnest().hide();
+        hdlg
+            .get_ratsnest()
+            .hide();
       }
 
       FRLogger.info("Starting auto-routing...");
@@ -139,7 +143,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       {
         batch_autorouter.runBatchLoop();
       }
-      hdlg.get_routing_board().finish_autoroute();
+      hdlg
+          .get_routing_board()
+          .finish_autoroute();
 
       double autoroutingSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
       FRLogger.info("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete) + ".");
@@ -154,8 +160,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
         FRAnalytics.routeOptimizerStarted();
 
-        int via_count_before = hdlg.get_routing_board().get_vias().size();
-        double trace_length_before = hdlg.coordinate_transform.board_to_user(hdlg.get_routing_board().cumulative_trace_length());
+        int via_count_before = hdlg
+            .get_routing_board()
+            .get_vias()
+            .size();
+        double trace_length_before = hdlg.coordinate_transform.board_to_user(hdlg
+            .get_routing_board()
+            .cumulative_trace_length());
 
         if (hdlg.get_settings().autoroute_settings.getRunOptimizer() && !this.isStopRequested())
         {
@@ -175,8 +186,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
           hdlg.screen_messages.set_status_message(end_message);
         }
 
-        int via_count_after = hdlg.get_routing_board().get_vias().size();
-        double trace_length_after = hdlg.coordinate_transform.board_to_user(hdlg.get_routing_board().cumulative_trace_length());
+        int via_count_after = hdlg
+            .get_routing_board()
+            .get_vias()
+            .size();
+        double trace_length_after = hdlg.coordinate_transform.board_to_user(hdlg
+            .get_routing_board()
+            .cumulative_trace_length());
 
         double percentage_improvement = (via_count_before != 0 && trace_length_before != 0) ? 1.0 - (((((float) via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2)) : 0;
 
@@ -207,6 +223,15 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         }
       }
 
+      // Update the ratsnest
+      hdlg.update_ratsnest();
+      if (!ratsnest_hidden_before)
+      {
+        hdlg
+            .get_ratsnest()
+            .show();
+      }
+
       // Update the message status bar, indicating that auto-routing is completed
       hdlg.screen_messages.clear();
       String curr_message;
@@ -218,17 +243,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       {
         curr_message = tm.getText("completed");
       }
-      int incomplete_count = hdlg.get_ratsnest().incomplete_count();
+      int incomplete_count = hdlg
+          .get_ratsnest()
+          .incomplete_count();
       String end_message = tm.getText("autoroute") + " " + curr_message + ", " + incomplete_count + " " + tm.getText("connections_not_found");
       hdlg.screen_messages.set_status_message(end_message);
 
-      // Update the ratsnest
-      hdlg.update_ratsnest();
-      if (!ratsnest_hidden_before)
-      {
-        hdlg.get_ratsnest().show();
-      }
-
+      // Refresh the windows
       hdlg.get_panel().board_frame.refresh_windows();
       if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
       {
