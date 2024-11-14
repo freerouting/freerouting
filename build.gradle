@@ -179,11 +179,11 @@ mavenPublishing {
 apply from: 'gradle/publishing.gradle'
 
 // Signing - Signing (generating the \builds\libs\*.asc files) is needed for publishing to Maven Central
-signing {
-    useGpgCmd()
-
-    sign configurations.runtimeElements
-}
+//signing {
+//    useGpgCmd()
+//
+//    sign configurations.runtimeElements
+//}
 
 // write constants to code
 tasks.register('writeVersionInfo') {
