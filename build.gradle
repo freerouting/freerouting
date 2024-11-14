@@ -178,15 +178,11 @@ mavenPublishing {
 
 apply from: 'gradle/publishing.gradle'
 
-// Signing
+// Signing - Signing (generating the \builds\libs\*.asc files) is needed for publishing to Maven Central
 signing {
-    useInMemoryPgpKeys(
-            findProperty("signing.keyId") as String ?: System.getenv("FREEROUTING_SIGNING_KEY_ID"),
-            findProperty("signing.secretKeyRingFile") as String ?: System.getenv("FREEROUTING_SIGNING_SECRET_KEY_RING_FILE"),
-            findProperty("signing.password") as String ?: System.getenv("FREEROUTING_SIGNING_PASSWORD")
-    )
+    useGpgCmd()
 
-    sign executableJar
+    sign configurations.runtimeElements
 }
 
 // write constants to code
