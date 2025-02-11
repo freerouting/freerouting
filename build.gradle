@@ -115,7 +115,7 @@ dependencies {
 
     // Add Google Cloud BigQuery dependencies for telemetry
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.29.0'
-    implementation 'com.google.api:gax:2.57.0'
+    implementation 'com.google.api:gax:2.61.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.7.0'
     implementation 'com.google.cloud:google-cloud-core:2.47.0'
     implementation 'com.google.cloud:google-cloud-core-http:2.47.0'
