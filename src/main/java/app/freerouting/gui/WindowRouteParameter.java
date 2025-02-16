@@ -254,7 +254,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow
 
     gridbag_constraints.gridwidth = GridBagConstraints.RELATIVE;
     JLabel pin_exit_edge_to_turn_label = new JLabel(tm.getText("pin_pad_to_turn_gap"));
-    pin_exit_edge_to_turn_label.setToolTipText("pin_pad_to_turn_gap_tooltip");
+    pin_exit_edge_to_turn_label.setToolTipText(tm.getText("pin_pad_to_turn_gap_tooltip"));
     gridbag.setConstraints(pin_exit_edge_to_turn_label, gridbag_constraints);
     main_panel.add(pin_exit_edge_to_turn_label);
     NumberFormat number_format = NumberFormat.getInstance(p_board_frame.get_locale());
