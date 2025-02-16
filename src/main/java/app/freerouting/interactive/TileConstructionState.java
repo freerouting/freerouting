@@ -218,6 +218,6 @@ public class TileConstructionState extends CornerItemConstructionState
   @Override
   public void display_default_message()
   {
-    hdlg.screen_messages.set_status_message(tm.getText("creatig_tile"));
+    hdlg.screen_messages.set_status_message(tm.getText("creating_tile"));
   }
 }
