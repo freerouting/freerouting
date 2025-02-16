@@ -95,7 +95,7 @@ def get_local_java_executable_path(os_name):
 
 # Remove java offending characters
 def search_n_strip(s):
-    s = re.sub('[Ωµ]', '', s)
+    s = re.sub('[ΩµΦ]', '', s)
     return s
 
 
