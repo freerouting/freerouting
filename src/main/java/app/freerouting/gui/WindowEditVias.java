@@ -187,7 +187,7 @@ public class WindowEditVias extends BoardSavableSubWindow
       if (board_rules.via_infos.remove(via_info))
       {
         adjust_table();
-        String message = tm.getText("via") + "via " + via_info.get_name() + " " + tm.getText("removed");
+        String message = tm.getText("via") + " " + via_info.get_name() + " " + tm.getText("removed");
         board_frame.screen_messages.set_status_message(message);
       }
     }
