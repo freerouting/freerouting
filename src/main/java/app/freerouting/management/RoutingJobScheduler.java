@@ -1,14 +1,16 @@
 package app.freerouting.management;
 
 import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.core.*;
+import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.Session;
+import app.freerouting.core.StoppableThread;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -43,7 +45,9 @@ public class RoutingJobScheduler
         try
         {
           // loop through jobs with the READY_TO_START state, order them according to their priority and start them up to the maximum number of parallel jobs
-          while (jobs.stream().count() > 0)
+          while (jobs
+              .stream()
+              .count() > 0)
           {
             RoutingJob[] jobsArray;
             synchronized (jobs)
@@ -59,7 +63,10 @@ public class RoutingJobScheduler
             {
               if (job.state == RoutingJobState.READY_TO_START)
               {
-                int parallelJobs = (int) jobs.stream().filter(j -> j.state == RoutingJobState.RUNNING).count();
+                int parallelJobs = (int) jobs
+                    .stream()
+                    .filter(j -> j.state == RoutingJobState.RUNNING)
+                    .count();
 
                 if (parallelJobs < maxParallelJobs)
                 {
@@ -98,32 +105,7 @@ public class RoutingJobScheduler
 
               if ((job.state == RoutingJobState.COMPLETED) && ((job.output == null) || (job.output.size == 0)))
               {
-                if (job.output == null)
-                {
-                  job.output = new BoardFileDetails(job.board);
-                  job.output.addUpdatedEventListener(e -> job.fireOutputUpdatedEvent());
-                  job.output.format = FileFormat.SES;
-                  job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
-                }
 
-                // save the result to the output field as a Specctra SES file
-                if (job.output.format == FileFormat.SES)
-                {
-                  HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
-                  boardManager.update_routing_board(job.board);
-
-                  // Save the SES file after the auto-router has finished
-                  try (ByteArrayOutputStream baos = new ByteArrayOutputStream())
-                  {
-                    if (boardManager.saveAsSpecctraSessionSes(baos, job.name))
-                    {
-                      job.output.setData(baos.toByteArray());
-                    }
-                  } catch (Exception e)
-                  {
-                    FRLogger.error("Couldn't save the output into the job object.", e);
-                  }
-                }
               }
             }
           }
@@ -152,7 +134,10 @@ public class RoutingJobScheduler
 
   private String UUIDtoShortCode(UUID uuid)
   {
-    return uuid.toString().substring(0, 6).toUpperCase();
+    return uuid
+        .toString()
+        .substring(0, 6)
+        .toUpperCase();
   }
 
   /**
@@ -170,7 +155,9 @@ public class RoutingJobScheduler
       throw new IllegalArgumentException("The job must have a session ID.");
     }
 
-    var session = SessionManager.getInstance().getSession(sessionId.toString());
+    var session = SessionManager
+        .getInstance()
+        .getSession(sessionId.toString());
     if (session == null)
     {
       throw new IllegalArgumentException("The session does not exist.");
@@ -204,7 +191,9 @@ public class RoutingJobScheduler
 
       try
       {
-        Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+        Session session = SessionManager
+            .getInstance()
+            .getSession(job.sessionId.toString());
 
         if (session == null)
         {
@@ -226,21 +215,39 @@ public class RoutingJobScheduler
   private void saveJob(String userFolder, String sessionFolder, RoutingJob job) throws IOException
   {
     // Create the user's folder if it doesn't exist
-    Path userFolderPath = GlobalSettings.getUserDataPath().resolve("data").resolve(userFolder);
+    Path userFolderPath = GlobalSettings
+        .getUserDataPath()
+        .resolve("data")
+        .resolve(userFolder);
 
     // Make sure that we have the directory structure in place, and create it if it doesn't exist
     Files.createDirectories(userFolderPath);
 
     // Check if we already have a directory that has a name with the ending of sessionFolder
-    Path sessionFolderPath = Files.list(userFolderPath).filter(Files::isDirectory).filter(p -> p.getFileName().toString().endsWith(sessionFolder)).findFirst().orElse(null);
+    Path sessionFolderPath = Files
+        .list(userFolderPath)
+        .filter(Files::isDirectory)
+        .filter(p -> p
+            .getFileName()
+            .toString()
+            .endsWith(sessionFolder))
+        .findFirst()
+        .orElse(null);
 
     if (sessionFolderPath == null)
     {
       // List all directories in the user folder and check if they start with a number
       // If they do, then they are job folders, and we can get the highest number and increment it
-      int jobFolderCount = Files.list(userFolderPath).filter(Files::isDirectory).map(Path::getFileName).map(Path::toString).map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
-                                .filter(s -> s.matches("\\d+")) // Ensure it is numeric
-                                .mapToInt(Integer::parseInt).max().orElse(0);
+      int jobFolderCount = Files
+          .list(userFolderPath)
+          .filter(Files::isDirectory)
+          .map(Path::getFileName)
+          .map(Path::toString)
+          .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
+          .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+          .mapToInt(Integer::parseInt)
+          .max()
+          .orElse(0);
 
       sessionFolderPath = userFolderPath.resolve(String.format("%04d", jobFolderCount + 1) + "_" + sessionFolder);
     }
@@ -261,17 +268,25 @@ public class RoutingJobScheduler
     }
 
     // Save the input file if the filename is defined and there is data stored in it
-    if ((job.input != null && job.input.getFilename() != null && !job.input.getFilename().isEmpty() && job.input.getData() != null))
+    if ((job.input != null && job.input.getFilename() != null && !job.input
+        .getFilename()
+        .isEmpty() && job.input.getData() != null))
     {
       Path inputFilePath = sessionFolderPath.resolve(job.input.getFilename());
-      Files.write(inputFilePath, job.input.getData().readAllBytes());
+      Files.write(inputFilePath, job.input
+          .getData()
+          .readAllBytes());
     }
 
     // Save the output file if the filename is defined and there is data stored in it
-    if ((job.output != null && job.output.getFilename() != null && !job.output.getFilename().isEmpty() && job.output.getData() != null))
+    if ((job.output != null && job.output.getFilename() != null && !job.output
+        .getFilename()
+        .isEmpty() && job.output.getData() != null))
     {
       Path outputFilePath = sessionFolderPath.resolve(job.output.getFilename());
-      Files.write(outputFilePath, job.output.getData().readAllBytes());
+      Files.write(outputFilePath, job.output
+          .getData()
+          .readAllBytes());
     }
   }
 
@@ -301,7 +316,12 @@ public class RoutingJobScheduler
   {
     synchronized (jobs)
     {
-      return this.jobs.stream().filter(j -> j.sessionId.toString().equals(sessionId)).toArray(RoutingJob[]::new);
+      return this.jobs
+          .stream()
+          .filter(j -> j.sessionId
+              .toString()
+              .equals(sessionId))
+          .toArray(RoutingJob[]::new);
     }
   }
 
@@ -342,7 +362,13 @@ public class RoutingJobScheduler
   {
     synchronized (jobs)
     {
-      return this.jobs.stream().filter(j -> j.id.toString().equals(jobId)).findFirst().orElse(null);
+      return this.jobs
+          .stream()
+          .filter(j -> j.id
+              .toString()
+              .equals(jobId))
+          .findFirst()
+          .orElse(null);
     }
   }
 
@@ -350,7 +376,9 @@ public class RoutingJobScheduler
   {
     synchronized (jobs)
     {
-      this.jobs.removeIf(j -> j.sessionId.toString().equals(sessionId));
+      this.jobs.removeIf(j -> j.sessionId
+          .toString()
+          .equals(sessionId));
     }
   }
 }

@@ -1,11 +1,14 @@
 package app.freerouting.management;
 
 import app.freerouting.autoroute.BatchAutorouter;
-import app.freerouting.core.RoutingJob;
-import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.RoutingStage;
-import app.freerouting.core.StoppableThread;
+import app.freerouting.autoroute.events.BoardUpdatedEvent;
+import app.freerouting.autoroute.events.BoardUpdatedEventListener;
+import app.freerouting.core.*;
+import app.freerouting.gui.FileFormat;
+import app.freerouting.interactive.HeadlessBoardManager;
+import app.freerouting.logger.FRLogger;
 
+import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 
 import static app.freerouting.Freerouting.globalSettings;
@@ -43,7 +46,9 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
       // start a new thread that will check for timeout
       new Thread(() ->
       {
-        while (Instant.now().isBefore(job.timeoutAt))
+        while (Instant
+            .now()
+            .isBefore(job.timeoutAt))
         {
           try
           {
@@ -74,6 +79,39 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
       job.stage = RoutingStage.ROUTING;
       // start the routing task
       BatchAutorouter router = new BatchAutorouter(job);
+      router.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+      {
+        @Override
+        public void onBoardUpdatedEvent(BoardUpdatedEvent event)
+        {
+          if (job.output == null)
+          {
+            job.output = new BoardFileDetails(job.board);
+            job.output.addUpdatedEventListener(e -> job.fireOutputUpdatedEvent());
+            job.output.format = FileFormat.SES;
+            job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
+          }
+
+          // save the result to the output field as a Specctra SES file
+          if (job.output.format == FileFormat.SES)
+          {
+            HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+            boardManager.update_routing_board(job.board);
+
+            // Save the SES file after the auto-router has finished
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream())
+            {
+              if (boardManager.saveAsSpecctraSessionSes(baos, job.name))
+              {
+                job.output.setData(baos.toByteArray());
+              }
+            } catch (Exception e)
+            {
+              FRLogger.error("Couldn't save the output into the job object.", e);
+            }
+          }
+        }
+      });
       router.runBatchLoop();
       job.stage = RoutingStage.IDLE;
     }

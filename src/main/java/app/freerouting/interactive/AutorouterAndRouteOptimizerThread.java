@@ -7,6 +7,7 @@ import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.FileFormat;
@@ -37,6 +38,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
     super(p_board_handling, routingJob);
 
     this.batch_autorouter = new BatchAutorouter(this, this.hdlg.get_routing_board(), routingJob.routerSettings, !routingJob.routerSettings.getRunFanout(), true, routingJob.routerSettings.get_start_ripup_costs(), this.hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
+    // Add event listener for the GUI updates
     this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override
@@ -45,6 +47,28 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         BoardStatistics boardStatistics = event.getBoardStatistics();
         hdlg.screen_messages.set_batch_autoroute_info(boardStatistics.unrouted_item_count, boardStatistics.routed_item_count, boardStatistics.ripped_item_count, boardStatistics.not_found_item_count);
         hdlg.repaint();
+      }
+    });
+
+    // Add another event listener for the job output object updates
+    this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+    {
+      @Override
+      public void onBoardUpdatedEvent(BoardUpdatedEvent event)
+      {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
+        {
+          boolean wasSaveSuccessful = SpecctraSesFileWriter.write(hdlg.get_routing_board(), outputStream, routingJob.name);
+
+          if (wasSaveSuccessful)
+          {
+            byte[] sesOutputData = outputStream.toByteArray();
+            routingJob.output.setData(sesOutputData);
+          }
+        } catch (Exception e)
+        {
+          FRLogger.error("Couldn't save the SES output into the job object.", e);
+        }
       }
     });
 
