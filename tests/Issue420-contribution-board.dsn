@@ -1,0 +1,2131 @@
+(pcb ./converted_dsn.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  -158000 -26000 158000 -26000 158000 26000 -158000 26000 -158000 -26000)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 200 (type default_smd))
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "simple_chip:20.9799x51.4600_mm"
+      (place U1_source_component_0 -137000 59.963049999964824 front 0)
+    )
+    (component "simple_chip:2.7301x1.8001_mm"
+      (place LED1_source_component_2 -116500 9000 front 0)
+      (place LED2_source_component_4 -111500 9000 front 0)
+      (place LED3_source_component_6 -106500 9000 front 0)
+      (place LED4_source_component_8 -101500 9000 front 0)
+      (place LED5_source_component_10 -96500 9000 front 0)
+      (place LED6_source_component_12 -91500 9000 front 0)
+      (place LED7_source_component_14 -86500 9000 front 0)
+      (place LED8_source_component_16 -81500 9000 front 0)
+      (place LED9_source_component_18 -76500 9000 front 0)
+      (place LED10_source_component_20 -71500 9000 front 0)
+      (place LED11_source_component_22 -66500 9000 front 0)
+      (place LED12_source_component_24 -61500 9000 front 0)
+      (place LED13_source_component_26 -56500 9000 front 0)
+      (place LED14_source_component_28 -51500 9000 front 0)
+      (place LED15_source_component_30 -46500 9000 front 0)
+      (place LED16_source_component_32 -41500 9000 front 0)
+      (place LED17_source_component_34 -36500 9000 front 0)
+      (place LED18_source_component_36 -31500 9000 front 0)
+      (place LED19_source_component_38 -26500 9000 front 0)
+      (place LED20_source_component_40 -21500 9000 front 0)
+      (place LED21_source_component_42 -16500 9000 front 0)
+      (place LED22_source_component_44 -11500 9000 front 0)
+      (place LED23_source_component_46 -6500 9000 front 0)
+      (place LED24_source_component_48 -1500 9000 front 0)
+      (place LED25_source_component_50 3500 9000 front 0)
+      (place LED26_source_component_52 8500 9000 front 0)
+      (place LED27_source_component_54 13500 9000 front 0)
+      (place LED28_source_component_56 18500 9000 front 0)
+      (place LED29_source_component_58 23500 9000 front 0)
+      (place LED30_source_component_60 28500 9000 front 0)
+      (place LED31_source_component_62 33500 9000 front 0)
+      (place LED32_source_component_64 38500 9000 front 0)
+      (place LED33_source_component_66 43500 9000 front 0)
+      (place LED34_source_component_68 48500 9000 front 0)
+      (place LED35_source_component_70 53500 9000 front 0)
+      (place LED36_source_component_72 58500 9000 front 0)
+      (place LED37_source_component_74 63500 9000 front 0)
+      (place LED38_source_component_76 68500 9000 front 0)
+      (place LED39_source_component_78 73500 9000 front 0)
+      (place LED40_source_component_80 78500 9000 front 0)
+      (place LED41_source_component_82 83500 9000 front 0)
+      (place LED42_source_component_84 88500 9000 front 0)
+      (place LED43_source_component_86 93500 9000 front 0)
+      (place LED44_source_component_88 98500 9000 front 0)
+      (place LED45_source_component_90 103500 9000 front 0)
+      (place LED46_source_component_92 108500 9000 front 0)
+      (place LED47_source_component_94 113500 9000 front 0)
+      (place LED48_source_component_96 118500 9000 front 0)
+      (place LED49_source_component_98 123500 9000 front 0)
+      (place LED50_source_component_100 128500 9000 front 0)
+      (place LED51_source_component_102 133500 9000 front 0)
+      (place LED52_source_component_104 138500 9000 front 0)
+      (place LED53_source_component_106 143500 9000 front 0)
+      (place LED54_source_component_108 -116500 4000 front 0)
+      (place LED55_source_component_110 -111500 4000 front 0)
+      (place LED56_source_component_112 -106500 4000 front 0)
+      (place LED57_source_component_114 -101500 4000 front 0)
+      (place LED58_source_component_116 -96500 4000 front 0)
+      (place LED59_source_component_118 -91500 4000 front 0)
+      (place LED60_source_component_120 -86500 4000 front 0)
+      (place LED61_source_component_122 -81500 4000 front 0)
+      (place LED62_source_component_124 -76500 4000 front 0)
+      (place LED63_source_component_126 -71500 4000 front 0)
+      (place LED64_source_component_128 -66500 4000 front 0)
+      (place LED65_source_component_130 -61500 4000 front 0)
+      (place LED66_source_component_132 -56500 4000 front 0)
+      (place LED67_source_component_134 -51500 4000 front 0)
+      (place LED68_source_component_136 -46500 4000 front 0)
+      (place LED69_source_component_138 -41500 4000 front 0)
+      (place LED70_source_component_140 -36500 4000 front 0)
+      (place LED71_source_component_142 -31500 4000 front 0)
+      (place LED72_source_component_144 -26500 4000 front 0)
+      (place LED73_source_component_146 -21500 4000 front 0)
+      (place LED74_source_component_148 -16500 4000 front 0)
+      (place LED75_source_component_150 -11500 4000 front 0)
+      (place LED76_source_component_152 -6500 4000 front 0)
+      (place LED77_source_component_154 -1500 4000 front 0)
+      (place LED78_source_component_156 3500 4000 front 0)
+      (place LED79_source_component_158 8500 4000 front 0)
+      (place LED80_source_component_160 13500 4000 front 0)
+      (place LED81_source_component_162 18500 4000 front 0)
+      (place LED82_source_component_164 23500 4000 front 0)
+      (place LED83_source_component_166 28500 4000 front 0)
+      (place LED84_source_component_168 33500 4000 front 0)
+      (place LED85_source_component_170 38500 4000 front 0)
+      (place LED86_source_component_172 43500 4000 front 0)
+      (place LED87_source_component_174 48500 4000 front 0)
+      (place LED88_source_component_176 53500 4000 front 0)
+      (place LED89_source_component_178 58500 4000 front 0)
+      (place LED90_source_component_180 63500 4000 front 0)
+      (place LED91_source_component_182 68500 4000 front 0)
+      (place LED92_source_component_184 73500 4000 front 0)
+      (place LED93_source_component_186 78500 4000 front 0)
+      (place LED94_source_component_188 83500 4000 front 0)
+      (place LED95_source_component_190 88500 4000 front 0)
+      (place LED96_source_component_192 93500 4000 front 0)
+      (place LED97_source_component_194 98500 4000 front 0)
+      (place LED98_source_component_196 103500 4000 front 0)
+      (place LED99_source_component_198 108500 4000 front 0)
+      (place LED100_source_component_200 113500 4000 front 0)
+      (place LED101_source_component_202 118500 4000 front 0)
+      (place LED102_source_component_204 123500 4000 front 0)
+      (place LED103_source_component_206 128500 4000 front 0)
+      (place LED104_source_component_208 133500 4000 front 0)
+      (place LED105_source_component_210 138500 4000 front 0)
+      (place LED106_source_component_212 143500 4000 front 0)
+      (place LED107_source_component_214 -116500 -1000 front 0)
+      (place LED108_source_component_216 -111500 -1000 front 0)
+      (place LED109_source_component_218 -106500 -1000 front 0)
+      (place LED110_source_component_220 -101500 -1000 front 0)
+      (place LED111_source_component_222 -96500 -1000 front 0)
+      (place LED112_source_component_224 -91500 -1000 front 0)
+      (place LED113_source_component_226 -86500 -1000 front 0)
+      (place LED114_source_component_228 -81500 -1000 front 0)
+      (place LED115_source_component_230 -76500 -1000 front 0)
+      (place LED116_source_component_232 -71500 -1000 front 0)
+      (place LED117_source_component_234 -66500 -1000 front 0)
+      (place LED118_source_component_236 -61500 -1000 front 0)
+      (place LED119_source_component_238 -56500 -1000 front 0)
+      (place LED120_source_component_240 -51500 -1000 front 0)
+      (place LED121_source_component_242 -46500 -1000 front 0)
+      (place LED122_source_component_244 -41500 -1000 front 0)
+      (place LED123_source_component_246 -36500 -1000 front 0)
+      (place LED124_source_component_248 -31500 -1000 front 0)
+      (place LED125_source_component_250 -26500 -1000 front 0)
+      (place LED126_source_component_252 -21500 -1000 front 0)
+      (place LED127_source_component_254 -16500 -1000 front 0)
+      (place LED128_source_component_256 -11500 -1000 front 0)
+      (place LED129_source_component_258 -6500 -1000 front 0)
+      (place LED130_source_component_260 -1500 -1000 front 0)
+      (place LED131_source_component_262 3500 -1000 front 0)
+      (place LED132_source_component_264 8500 -1000 front 0)
+      (place LED133_source_component_266 13500 -1000 front 0)
+      (place LED134_source_component_268 18500 -1000 front 0)
+      (place LED135_source_component_270 23500 -1000 front 0)
+      (place LED136_source_component_272 28500 -1000 front 0)
+      (place LED137_source_component_274 33500 -1000 front 0)
+      (place LED138_source_component_276 38500 -1000 front 0)
+      (place LED139_source_component_278 43500 -1000 front 0)
+      (place LED140_source_component_280 48500 -1000 front 0)
+      (place LED141_source_component_282 53500 -1000 front 0)
+      (place LED142_source_component_284 58500 -1000 front 0)
+      (place LED143_source_component_286 63500 -1000 front 0)
+      (place LED144_source_component_288 68500 -1000 front 0)
+      (place LED145_source_component_290 73500 -1000 front 0)
+      (place LED146_source_component_292 78500 -1000 front 0)
+      (place LED147_source_component_294 83500 -1000 front 0)
+      (place LED148_source_component_296 88500 -1000 front 0)
+      (place LED149_source_component_298 93500 -1000 front 0)
+      (place LED150_source_component_300 98500 -1000 front 0)
+      (place LED151_source_component_302 103500 -1000 front 0)
+      (place LED152_source_component_304 108500 -1000 front 0)
+      (place LED153_source_component_306 113500 -1000 front 0)
+      (place LED154_source_component_308 118500 -1000 front 0)
+      (place LED155_source_component_310 123500 -1000 front 0)
+      (place LED156_source_component_312 128500 -1000 front 0)
+      (place LED157_source_component_314 133500 -1000 front 0)
+      (place LED158_source_component_316 138500 -1000 front 0)
+      (place LED159_source_component_318 143500 -1000 front 0)
+      (place LED160_source_component_320 -116500 -6000 front 0)
+      (place LED161_source_component_322 -111500 -6000 front 0)
+      (place LED162_source_component_324 -106500 -6000 front 0)
+      (place LED163_source_component_326 -101500 -6000 front 0)
+      (place LED164_source_component_328 -96500 -6000 front 0)
+      (place LED165_source_component_330 -91500 -6000 front 0)
+      (place LED166_source_component_332 -86500 -6000 front 0)
+      (place LED167_source_component_334 -81500 -6000 front 0)
+      (place LED168_source_component_336 -76500 -6000 front 0)
+      (place LED169_source_component_338 -71500 -6000 front 0)
+      (place LED170_source_component_340 -66500 -6000 front 0)
+      (place LED171_source_component_342 -61500 -6000 front 0)
+      (place LED172_source_component_344 -56500 -6000 front 0)
+      (place LED173_source_component_346 -51500 -6000 front 0)
+      (place LED174_source_component_348 -46500 -6000 front 0)
+      (place LED175_source_component_350 -41500 -6000 front 0)
+      (place LED176_source_component_352 -36500 -6000 front 0)
+      (place LED177_source_component_354 -31500 -6000 front 0)
+      (place LED178_source_component_356 -26500 -6000 front 0)
+      (place LED179_source_component_358 -21500 -6000 front 0)
+      (place LED180_source_component_360 -16500 -6000 front 0)
+      (place LED181_source_component_362 -11500 -6000 front 0)
+      (place LED182_source_component_364 -6500 -6000 front 0)
+      (place LED183_source_component_366 -1500 -6000 front 0)
+      (place LED184_source_component_368 3500 -6000 front 0)
+      (place LED185_source_component_370 8500 -6000 front 0)
+      (place LED186_source_component_372 13500 -6000 front 0)
+      (place LED187_source_component_374 18500 -6000 front 0)
+      (place LED188_source_component_376 23500 -6000 front 0)
+      (place LED189_source_component_378 28500 -6000 front 0)
+      (place LED190_source_component_380 33500 -6000 front 0)
+      (place LED191_source_component_382 38500 -6000 front 0)
+      (place LED192_source_component_384 43500 -6000 front 0)
+      (place LED193_source_component_386 48500 -6000 front 0)
+      (place LED194_source_component_388 53500 -6000 front 0)
+      (place LED195_source_component_390 58500 -6000 front 0)
+      (place LED196_source_component_392 63500 -6000 front 0)
+      (place LED197_source_component_394 68500 -6000 front 0)
+      (place LED198_source_component_396 73500 -6000 front 0)
+      (place LED199_source_component_398 78500 -6000 front 0)
+      (place LED200_source_component_400 83500 -6000 front 0)
+      (place LED201_source_component_402 88500 -6000 front 0)
+      (place LED202_source_component_404 93500 -6000 front 0)
+      (place LED203_source_component_406 98500 -6000 front 0)
+      (place LED204_source_component_408 103500 -6000 front 0)
+      (place LED205_source_component_410 108500 -6000 front 0)
+      (place LED206_source_component_412 113500 -6000 front 0)
+      (place LED207_source_component_414 118500 -6000 front 0)
+      (place LED208_source_component_416 123500 -6000 front 0)
+      (place LED209_source_component_418 128500 -6000 front 0)
+      (place LED210_source_component_420 133500 -6000 front 0)
+      (place LED211_source_component_422 138500 -6000 front 0)
+      (place LED212_source_component_424 143500 -6000 front 0)
+      (place LED213_source_component_426 -116500 -11000 front 0)
+      (place LED214_source_component_428 -111500 -11000 front 0)
+      (place LED215_source_component_430 -106500 -11000 front 0)
+      (place LED216_source_component_432 -101500 -11000 front 0)
+      (place LED217_source_component_434 -96500 -11000 front 0)
+      (place LED218_source_component_436 -91500 -11000 front 0)
+      (place LED219_source_component_438 -86500 -11000 front 0)
+      (place LED220_source_component_440 -81500 -11000 front 0)
+      (place LED221_source_component_442 -76500 -11000 front 0)
+      (place LED222_source_component_444 -71500 -11000 front 0)
+      (place LED223_source_component_446 -66500 -11000 front 0)
+      (place LED224_source_component_448 -61500 -11000 front 0)
+      (place LED225_source_component_450 -56500 -11000 front 0)
+      (place LED226_source_component_452 -51500 -11000 front 0)
+      (place LED227_source_component_454 -46500 -11000 front 0)
+      (place LED228_source_component_456 -41500 -11000 front 0)
+      (place LED229_source_component_458 -36500 -11000 front 0)
+      (place LED230_source_component_460 -31500 -11000 front 0)
+      (place LED231_source_component_462 -26500 -11000 front 0)
+      (place LED232_source_component_464 -21500 -11000 front 0)
+      (place LED233_source_component_466 -16500 -11000 front 0)
+      (place LED234_source_component_468 -11500 -11000 front 0)
+      (place LED235_source_component_470 -6500 -11000 front 0)
+      (place LED236_source_component_472 -1500 -11000 front 0)
+      (place LED237_source_component_474 3500 -11000 front 0)
+      (place LED238_source_component_476 8500 -11000 front 0)
+      (place LED239_source_component_478 13500 -11000 front 0)
+      (place LED240_source_component_480 18500 -11000 front 0)
+      (place LED241_source_component_482 23500 -11000 front 0)
+      (place LED242_source_component_484 28500 -11000 front 0)
+      (place LED243_source_component_486 33500 -11000 front 0)
+      (place LED244_source_component_488 38500 -11000 front 0)
+      (place LED245_source_component_490 43500 -11000 front 0)
+      (place LED246_source_component_492 48500 -11000 front 0)
+      (place LED247_source_component_494 53500 -11000 front 0)
+      (place LED248_source_component_496 58500 -11000 front 0)
+      (place LED249_source_component_498 63500 -11000 front 0)
+      (place LED250_source_component_500 68500 -11000 front 0)
+      (place LED251_source_component_502 73500 -11000 front 0)
+      (place LED252_source_component_504 78500 -11000 front 0)
+      (place LED253_source_component_506 83500 -11000 front 0)
+      (place LED254_source_component_508 88500 -11000 front 0)
+      (place LED255_source_component_510 93500 -11000 front 0)
+      (place LED256_source_component_512 98500 -11000 front 0)
+      (place LED257_source_component_514 103500 -11000 front 0)
+      (place LED258_source_component_516 108500 -11000 front 0)
+      (place LED259_source_component_518 113500 -11000 front 0)
+      (place LED260_source_component_520 118500 -11000 front 0)
+      (place LED261_source_component_522 123500 -11000 front 0)
+      (place LED262_source_component_524 128500 -11000 front 0)
+      (place LED263_source_component_526 133500 -11000 front 0)
+      (place LED264_source_component_528 138500 -11000 front 0)
+      (place LED265_source_component_530 143500 -11000 front 0)
+      (place LED266_source_component_532 -116500 -16000 front 0)
+      (place LED267_source_component_534 -111500 -16000 front 0)
+      (place LED268_source_component_536 -106500 -16000 front 0)
+      (place LED269_source_component_538 -101500 -16000 front 0)
+      (place LED270_source_component_540 -96500 -16000 front 0)
+      (place LED271_source_component_542 -91500 -16000 front 0)
+      (place LED272_source_component_544 -86500 -16000 front 0)
+      (place LED273_source_component_546 -81500 -16000 front 0)
+      (place LED274_source_component_548 -76500 -16000 front 0)
+      (place LED275_source_component_550 -71500 -16000 front 0)
+      (place LED276_source_component_552 -66500 -16000 front 0)
+      (place LED277_source_component_554 -61500 -16000 front 0)
+      (place LED278_source_component_556 -56500 -16000 front 0)
+      (place LED279_source_component_558 -51500 -16000 front 0)
+      (place LED280_source_component_560 -46500 -16000 front 0)
+      (place LED281_source_component_562 -41500 -16000 front 0)
+      (place LED282_source_component_564 -36500 -16000 front 0)
+      (place LED283_source_component_566 -31500 -16000 front 0)
+      (place LED284_source_component_568 -26500 -16000 front 0)
+      (place LED285_source_component_570 -21500 -16000 front 0)
+      (place LED286_source_component_572 -16500 -16000 front 0)
+      (place LED287_source_component_574 -11500 -16000 front 0)
+      (place LED288_source_component_576 -6500 -16000 front 0)
+      (place LED289_source_component_578 -1500 -16000 front 0)
+      (place LED290_source_component_580 3500 -16000 front 0)
+      (place LED291_source_component_582 8500 -16000 front 0)
+      (place LED292_source_component_584 13500 -16000 front 0)
+      (place LED293_source_component_586 18500 -16000 front 0)
+      (place LED294_source_component_588 23500 -16000 front 0)
+      (place LED295_source_component_590 28500 -16000 front 0)
+      (place LED296_source_component_592 33500 -16000 front 0)
+      (place LED297_source_component_594 38500 -16000 front 0)
+      (place LED298_source_component_596 43500 -16000 front 0)
+      (place LED299_source_component_598 48500 -16000 front 0)
+      (place LED300_source_component_600 53500 -16000 front 0)
+      (place LED301_source_component_602 58500 -16000 front 0)
+      (place LED302_source_component_604 63500 -16000 front 0)
+      (place LED303_source_component_606 68500 -16000 front 0)
+      (place LED304_source_component_608 73500 -16000 front 0)
+      (place LED305_source_component_610 78500 -16000 front 0)
+      (place LED306_source_component_612 83500 -16000 front 0)
+      (place LED307_source_component_614 88500 -16000 front 0)
+      (place LED308_source_component_616 93500 -16000 front 0)
+      (place LED309_source_component_618 98500 -16000 front 0)
+      (place LED310_source_component_620 103500 -16000 front 0)
+      (place LED311_source_component_622 108500 -16000 front 0)
+      (place LED312_source_component_624 113500 -16000 front 0)
+      (place LED313_source_component_626 118500 -16000 front 0)
+      (place LED314_source_component_628 123500 -16000 front 0)
+      (place LED315_source_component_630 128500 -16000 front 0)
+      (place LED316_source_component_632 133500 -16000 front 0)
+      (place LED317_source_component_634 138500 -16000 front 0)
+      (place LED318_source_component_636 143500 -16000 front 0)
+      (place LED319_source_component_638 -116500 -21000 front 0)
+      (place LED320_source_component_640 -111500 -21000 front 0)
+      (place LED321_source_component_642 -106500 -21000 front 0)
+      (place LED322_source_component_644 -101500 -21000 front 0)
+      (place LED323_source_component_646 -96500 -21000 front 0)
+      (place LED324_source_component_648 -91500 -21000 front 0)
+      (place LED325_source_component_650 -86500 -21000 front 0)
+      (place LED326_source_component_652 -81500 -21000 front 0)
+      (place LED327_source_component_654 -76500 -21000 front 0)
+      (place LED328_source_component_656 -71500 -21000 front 0)
+      (place LED329_source_component_658 -66500 -21000 front 0)
+      (place LED330_source_component_660 -61500 -21000 front 0)
+      (place LED331_source_component_662 -56500 -21000 front 0)
+      (place LED332_source_component_664 -51500 -21000 front 0)
+      (place LED333_source_component_666 -46500 -21000 front 0)
+      (place LED334_source_component_668 -41500 -21000 front 0)
+      (place LED335_source_component_670 -36500 -21000 front 0)
+      (place LED336_source_component_672 -31500 -21000 front 0)
+      (place LED337_source_component_674 -26500 -21000 front 0)
+      (place LED338_source_component_676 -21500 -21000 front 0)
+      (place LED339_source_component_678 -16500 -21000 front 0)
+      (place LED340_source_component_680 -11500 -21000 front 0)
+      (place LED341_source_component_682 -6500 -21000 front 0)
+      (place LED342_source_component_684 -1500 -21000 front 0)
+      (place LED343_source_component_686 3500 -21000 front 0)
+      (place LED344_source_component_688 8500 -21000 front 0)
+      (place LED345_source_component_690 13500 -21000 front 0)
+      (place LED346_source_component_692 18500 -21000 front 0)
+      (place LED347_source_component_694 23500 -21000 front 0)
+      (place LED348_source_component_696 28500 -21000 front 0)
+      (place LED349_source_component_698 33500 -21000 front 0)
+      (place LED350_source_component_700 38500 -21000 front 0)
+      (place LED351_source_component_702 43500 -21000 front 0)
+      (place LED352_source_component_704 48500 -21000 front 0)
+      (place LED353_source_component_706 53500 -21000 front 0)
+      (place LED354_source_component_708 58500 -21000 front 0)
+      (place LED355_source_component_710 63500 -21000 front 0)
+      (place LED356_source_component_712 68500 -21000 front 0)
+      (place LED357_source_component_714 73500 -21000 front 0)
+      (place LED358_source_component_716 78500 -21000 front 0)
+      (place LED359_source_component_718 83500 -21000 front 0)
+      (place LED360_source_component_720 88500 -21000 front 0)
+      (place LED361_source_component_722 93500 -21000 front 0)
+      (place LED362_source_component_724 98500 -21000 front 0)
+      (place LED363_source_component_726 103500 -21000 front 0)
+      (place LED364_source_component_728 108500 -21000 front 0)
+      (place LED365_source_component_730 113500 -21000 front 0)
+      (place LED366_source_component_732 118500 -21000 front 0)
+      (place LED367_source_component_734 123500 -21000 front 0)
+      (place LED368_source_component_736 128500 -21000 front 0)
+      (place LED369_source_component_738 133500 -21000 front 0)
+      (place LED370_source_component_740 138500 -21000 front 0)
+      (place LED371_source_component_742 143500 -21000 front 0)
+    )
+    (component "simple_capacitor:1.6000x0.6000_mm"
+      (place C_LED1_source_component_3 -116500 6800 front 0 (PN "0.100uF"))
+      (place C_LED2_source_component_5 -111500 6800 front 0 (PN "0.100uF"))
+      (place C_LED3_source_component_7 -106500 6800 front 0 (PN "0.100uF"))
+      (place C_LED4_source_component_9 -101500 6800 front 0 (PN "0.100uF"))
+      (place C_LED5_source_component_11 -96500 6800 front 0 (PN "0.100uF"))
+      (place C_LED6_source_component_13 -91500 6800 front 0 (PN "0.100uF"))
+      (place C_LED7_source_component_15 -86500 6800 front 0 (PN "0.100uF"))
+      (place C_LED8_source_component_17 -81500 6800 front 0 (PN "0.100uF"))
+      (place C_LED9_source_component_19 -76500 6800 front 0 (PN "0.100uF"))
+      (place C_LED10_source_component_21 -71500 6800 front 0 (PN "0.100uF"))
+      (place C_LED11_source_component_23 -66500 6800 front 0 (PN "0.100uF"))
+      (place C_LED12_source_component_25 -61500 6800 front 0 (PN "0.100uF"))
+      (place C_LED13_source_component_27 -56500 6800 front 0 (PN "0.100uF"))
+      (place C_LED14_source_component_29 -51500 6800 front 0 (PN "0.100uF"))
+      (place C_LED15_source_component_31 -46500 6800 front 0 (PN "0.100uF"))
+      (place C_LED16_source_component_33 -41500 6800 front 0 (PN "0.100uF"))
+      (place C_LED17_source_component_35 -36500 6800 front 0 (PN "0.100uF"))
+      (place C_LED18_source_component_37 -31500 6800 front 0 (PN "0.100uF"))
+      (place C_LED19_source_component_39 -26500 6800 front 0 (PN "0.100uF"))
+      (place C_LED20_source_component_41 -21500 6800 front 0 (PN "0.100uF"))
+      (place C_LED21_source_component_43 -16500 6800 front 0 (PN "0.100uF"))
+      (place C_LED22_source_component_45 -11500 6800 front 0 (PN "0.100uF"))
+      (place C_LED23_source_component_47 -6500 6800 front 0 (PN "0.100uF"))
+      (place C_LED24_source_component_49 -1500 6800 front 0 (PN "0.100uF"))
+      (place C_LED25_source_component_51 3500 6800 front 0 (PN "0.100uF"))
+      (place C_LED26_source_component_53 8500 6800 front 0 (PN "0.100uF"))
+      (place C_LED27_source_component_55 13500 6800 front 0 (PN "0.100uF"))
+      (place C_LED28_source_component_57 18500 6800 front 0 (PN "0.100uF"))
+      (place C_LED29_source_component_59 23500 6800 front 0 (PN "0.100uF"))
+      (place C_LED30_source_component_61 28500 6800 front 0 (PN "0.100uF"))
+      (place C_LED31_source_component_63 33500 6800 front 0 (PN "0.100uF"))
+      (place C_LED32_source_component_65 38500 6800 front 0 (PN "0.100uF"))
+      (place C_LED33_source_component_67 43500 6800 front 0 (PN "0.100uF"))
+      (place C_LED34_source_component_69 48500 6800 front 0 (PN "0.100uF"))
+      (place C_LED35_source_component_71 53500 6800 front 0 (PN "0.100uF"))
+      (place C_LED36_source_component_73 58500 6800 front 0 (PN "0.100uF"))
+      (place C_LED37_source_component_75 63500 6800 front 0 (PN "0.100uF"))
+      (place C_LED38_source_component_77 68500 6800 front 0 (PN "0.100uF"))
+      (place C_LED39_source_component_79 73500 6800 front 0 (PN "0.100uF"))
+      (place C_LED40_source_component_81 78500 6800 front 0 (PN "0.100uF"))
+      (place C_LED41_source_component_83 83500 6800 front 0 (PN "0.100uF"))
+      (place C_LED42_source_component_85 88500 6800 front 0 (PN "0.100uF"))
+      (place C_LED43_source_component_87 93500 6800 front 0 (PN "0.100uF"))
+      (place C_LED44_source_component_89 98500 6800 front 0 (PN "0.100uF"))
+      (place C_LED45_source_component_91 103500 6800 front 0 (PN "0.100uF"))
+      (place C_LED46_source_component_93 108500 6800 front 0 (PN "0.100uF"))
+      (place C_LED47_source_component_95 113500 6800 front 0 (PN "0.100uF"))
+      (place C_LED48_source_component_97 118500 6800 front 0 (PN "0.100uF"))
+      (place C_LED49_source_component_99 123500 6800 front 0 (PN "0.100uF"))
+      (place C_LED50_source_component_101 128500 6800 front 0 (PN "0.100uF"))
+      (place C_LED51_source_component_103 133500 6800 front 0 (PN "0.100uF"))
+      (place C_LED52_source_component_105 138500 6800 front 0 (PN "0.100uF"))
+      (place C_LED53_source_component_107 143500 6800 front 0 (PN "0.100uF"))
+      (place C_LED54_source_component_109 -116500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED55_source_component_111 -111500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED56_source_component_113 -106500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED57_source_component_115 -101500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED58_source_component_117 -96500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED59_source_component_119 -91500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED60_source_component_121 -86500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED61_source_component_123 -81500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED62_source_component_125 -76500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED63_source_component_127 -71500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED64_source_component_129 -66500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED65_source_component_131 -61500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED66_source_component_133 -56500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED67_source_component_135 -51500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED68_source_component_137 -46500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED69_source_component_139 -41500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED70_source_component_141 -36500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED71_source_component_143 -31500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED72_source_component_145 -26500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED73_source_component_147 -21500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED74_source_component_149 -16500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED75_source_component_151 -11500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED76_source_component_153 -6500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED77_source_component_155 -1500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED78_source_component_157 3500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED79_source_component_159 8500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED80_source_component_161 13500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED81_source_component_163 18500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED82_source_component_165 23500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED83_source_component_167 28500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED84_source_component_169 33500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED85_source_component_171 38500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED86_source_component_173 43500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED87_source_component_175 48500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED88_source_component_177 53500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED89_source_component_179 58500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED90_source_component_181 63500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED91_source_component_183 68500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED92_source_component_185 73500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED93_source_component_187 78500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED94_source_component_189 83500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED95_source_component_191 88500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED96_source_component_193 93500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED97_source_component_195 98500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED98_source_component_197 103500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED99_source_component_199 108500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED100_source_component_201 113500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED101_source_component_203 118500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED102_source_component_205 123500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED103_source_component_207 128500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED104_source_component_209 133500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED105_source_component_211 138500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED106_source_component_213 143500 1799.9999999999998 front 0 (PN "0.100uF"))
+      (place C_LED107_source_component_215 -116500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED108_source_component_217 -111500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED109_source_component_219 -106500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED110_source_component_221 -101500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED111_source_component_223 -96500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED112_source_component_225 -91500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED113_source_component_227 -86500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED114_source_component_229 -81500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED115_source_component_231 -76500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED116_source_component_233 -71500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED117_source_component_235 -66500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED118_source_component_237 -61500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED119_source_component_239 -56500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED120_source_component_241 -51500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED121_source_component_243 -46500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED122_source_component_245 -41500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED123_source_component_247 -36500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED124_source_component_249 -31500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED125_source_component_251 -26500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED126_source_component_253 -21500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED127_source_component_255 -16500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED128_source_component_257 -11500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED129_source_component_259 -6500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED130_source_component_261 -1500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED131_source_component_263 3500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED132_source_component_265 8500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED133_source_component_267 13500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED134_source_component_269 18500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED135_source_component_271 23500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED136_source_component_273 28500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED137_source_component_275 33500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED138_source_component_277 38500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED139_source_component_279 43500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED140_source_component_281 48500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED141_source_component_283 53500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED142_source_component_285 58500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED143_source_component_287 63500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED144_source_component_289 68500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED145_source_component_291 73500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED146_source_component_293 78500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED147_source_component_295 83500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED148_source_component_297 88500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED149_source_component_299 93500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED150_source_component_301 98500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED151_source_component_303 103500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED152_source_component_305 108500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED153_source_component_307 113500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED154_source_component_309 118500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED155_source_component_311 123500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED156_source_component_313 128500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED157_source_component_315 133500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED158_source_component_317 138500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED159_source_component_319 143500 -3200 front 0 (PN "0.100uF"))
+      (place C_LED160_source_component_321 -116500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED161_source_component_323 -111500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED162_source_component_325 -106500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED163_source_component_327 -101500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED164_source_component_329 -96500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED165_source_component_331 -91500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED166_source_component_333 -86500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED167_source_component_335 -81500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED168_source_component_337 -76500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED169_source_component_339 -71500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED170_source_component_341 -66500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED171_source_component_343 -61500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED172_source_component_345 -56500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED173_source_component_347 -51500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED174_source_component_349 -46500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED175_source_component_351 -41500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED176_source_component_353 -36500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED177_source_component_355 -31500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED178_source_component_357 -26500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED179_source_component_359 -21500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED180_source_component_361 -16500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED181_source_component_363 -11500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED182_source_component_365 -6500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED183_source_component_367 -1500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED184_source_component_369 3500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED185_source_component_371 8500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED186_source_component_373 13500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED187_source_component_375 18500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED188_source_component_377 23500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED189_source_component_379 28500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED190_source_component_381 33500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED191_source_component_383 38500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED192_source_component_385 43500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED193_source_component_387 48500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED194_source_component_389 53500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED195_source_component_391 58500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED196_source_component_393 63500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED197_source_component_395 68500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED198_source_component_397 73500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED199_source_component_399 78500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED200_source_component_401 83500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED201_source_component_403 88500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED202_source_component_405 93500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED203_source_component_407 98500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED204_source_component_409 103500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED205_source_component_411 108500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED206_source_component_413 113500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED207_source_component_415 118500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED208_source_component_417 123500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED209_source_component_419 128500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED210_source_component_421 133500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED211_source_component_423 138500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED212_source_component_425 143500 -8200 front 0 (PN "0.100uF"))
+      (place C_LED213_source_component_427 -116500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED214_source_component_429 -111500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED215_source_component_431 -106500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED216_source_component_433 -101500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED217_source_component_435 -96500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED218_source_component_437 -91500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED219_source_component_439 -86500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED220_source_component_441 -81500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED221_source_component_443 -76500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED222_source_component_445 -71500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED223_source_component_447 -66500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED224_source_component_449 -61500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED225_source_component_451 -56500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED226_source_component_453 -51500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED227_source_component_455 -46500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED228_source_component_457 -41500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED229_source_component_459 -36500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED230_source_component_461 -31500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED231_source_component_463 -26500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED232_source_component_465 -21500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED233_source_component_467 -16500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED234_source_component_469 -11500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED235_source_component_471 -6500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED236_source_component_473 -1500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED237_source_component_475 3500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED238_source_component_477 8500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED239_source_component_479 13500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED240_source_component_481 18500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED241_source_component_483 23500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED242_source_component_485 28500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED243_source_component_487 33500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED244_source_component_489 38500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED245_source_component_491 43500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED246_source_component_493 48500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED247_source_component_495 53500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED248_source_component_497 58500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED249_source_component_499 63500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED250_source_component_501 68500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED251_source_component_503 73500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED252_source_component_505 78500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED253_source_component_507 83500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED254_source_component_509 88500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED255_source_component_511 93500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED256_source_component_513 98500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED257_source_component_515 103500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED258_source_component_517 108500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED259_source_component_519 113500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED260_source_component_521 118500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED261_source_component_523 123500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED262_source_component_525 128500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED263_source_component_527 133500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED264_source_component_529 138500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED265_source_component_531 143500 -13200 front 0 (PN "0.100uF"))
+      (place C_LED266_source_component_533 -116500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED267_source_component_535 -111500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED268_source_component_537 -106500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED269_source_component_539 -101500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED270_source_component_541 -96500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED271_source_component_543 -91500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED272_source_component_545 -86500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED273_source_component_547 -81500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED274_source_component_549 -76500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED275_source_component_551 -71500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED276_source_component_553 -66500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED277_source_component_555 -61500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED278_source_component_557 -56500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED279_source_component_559 -51500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED280_source_component_561 -46500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED281_source_component_563 -41500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED282_source_component_565 -36500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED283_source_component_567 -31500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED284_source_component_569 -26500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED285_source_component_571 -21500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED286_source_component_573 -16500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED287_source_component_575 -11500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED288_source_component_577 -6500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED289_source_component_579 -1500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED290_source_component_581 3500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED291_source_component_583 8500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED292_source_component_585 13500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED293_source_component_587 18500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED294_source_component_589 23500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED295_source_component_591 28500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED296_source_component_593 33500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED297_source_component_595 38500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED298_source_component_597 43500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED299_source_component_599 48500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED300_source_component_601 53500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED301_source_component_603 58500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED302_source_component_605 63500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED303_source_component_607 68500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED304_source_component_609 73500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED305_source_component_611 78500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED306_source_component_613 83500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED307_source_component_615 88500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED308_source_component_617 93500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED309_source_component_619 98500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED310_source_component_621 103500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED311_source_component_623 108500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED312_source_component_625 113500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED313_source_component_627 118500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED314_source_component_629 123500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED315_source_component_631 128500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED316_source_component_633 133500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED317_source_component_635 138500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED318_source_component_637 143500 -18200 front 0 (PN "0.100uF"))
+      (place C_LED319_source_component_639 -116500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED320_source_component_641 -111500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED321_source_component_643 -106500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED322_source_component_645 -101500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED323_source_component_647 -96500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED324_source_component_649 -91500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED325_source_component_651 -86500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED326_source_component_653 -81500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED327_source_component_655 -76500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED328_source_component_657 -71500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED329_source_component_659 -66500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED330_source_component_661 -61500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED331_source_component_663 -56500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED332_source_component_665 -51500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED333_source_component_667 -46500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED334_source_component_669 -41500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED335_source_component_671 -36500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED336_source_component_673 -31500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED337_source_component_675 -26500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED338_source_component_677 -21500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED339_source_component_679 -16500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED340_source_component_681 -11500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED341_source_component_683 -6500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED342_source_component_685 -1500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED343_source_component_687 3500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED344_source_component_689 8500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED345_source_component_691 13500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED346_source_component_693 18500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED347_source_component_695 23500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED348_source_component_697 28500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED349_source_component_699 33500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED350_source_component_701 38500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED351_source_component_703 43500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED352_source_component_705 48500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED353_source_component_707 53500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED354_source_component_709 58500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED355_source_component_711 63500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED356_source_component_713 68500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED357_source_component_715 73500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED358_source_component_717 78500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED359_source_component_719 83500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED360_source_component_721 88500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED361_source_component_723 93500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED362_source_component_725 98500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED363_source_component_727 103500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED364_source_component_729 108500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED365_source_component_731 113500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED366_source_component_733 118500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED367_source_component_735 123500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED368_source_component_737 128500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED369_source_component_739 133500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED370_source_component_741 138500 -23200 front 0 (PN "0.100uF"))
+      (place C_LED371_source_component_743 143500 -23200 front 0 (PN "0.100uF"))
+    )
+    (component "simple_capacitor:1.5000x4.3000_mm"
+      (place C1_source_component_744 -122000 0 front 0 (PN "100uF"))
+    )
+    (component "simple_chip:4.4591x12.2869_mm"
+      (place U2_source_component_1 -115570.43520000005 17466.549200000063 front 0)
+    )
+  )
+  (library
+    (image "simple_chip:20.9799x51.4600_mm"
+      (pin RoundRect[T]Pad_1499.997x1499.997_um 41 2499.740999999972 -10999.977999999941)
+      (pin RoundRect[T]Pad_1499.997x1499.997_um 42 2499.740999999972 -13500.099999999975)
+      (pin RoundRect[T]Pad_1499.997x1499.997_um 43 2499.740999999972 -15999.967999999968)
+      (pin RoundRect[T]Pad_1499.997x1499.997_um 44 999.870999999871 -24299.92600000003)
+      (pin RoundRect[T]Pad_1499.997x1499.997_um 45 -1000.1250000000255 -24299.92600000003)
+      (pin RoundRect[T]Pad_1499.997x1499.997_um 46 -0.12700000002041634 -20999.95799999988)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 1 9689.973000000009 -24129.999999999996)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 40 -9689.973000000009 -24129.999999999996)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 2 9689.973000000009 -21590.000000000033)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 39 -9689.973000000009 -21590.000000000033)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 3 9689.973000000009 -19049.999999999956)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 38 -9689.973000000009 -19049.999999999956)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 4 9689.973000000009 -16509.999999999993)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 37 -9689.973000000009 -16509.999999999993)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 5 9689.973000000009 -13970.000000000027)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 36 -9689.973000000009 -13970.000000000027)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 6 9689.973000000009 -11429.999999999949)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 35 -9689.973000000009 -11429.999999999949)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 7 9689.973000000009 -8889.999999999985)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 34 -9689.973000000009 -8889.999999999985)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 8 9689.973000000009 -6350.000000000024)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 33 -9689.973000000009 -6350.000000000022)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 9 9689.973000000009 -3809.999999999946)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 32 -9689.973000000009 -3809.999999999945)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 10 9689.973000000009 -1269.9999999999825)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 31 -9689.973000000009 -1269.9999999999811)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 11 9689.973000000009 1269.9999999999811)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 30 -9689.973000000009 1269.9999999999825)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 12 9689.973000000009 3810.0000000000587)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 29 -9689.973000000009 3810.0000000000596)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 13 9689.973000000009 6350.000000000022)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 28 -9689.973000000009 6350.000000000024)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 14 9689.973000000009 8889.999999999985)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 27 -9689.973000000009 8889.999999999985)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 15 9689.973000000009 11429.999999999949)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 26 -9689.973000000009 11429.999999999949)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 16 9689.973000000009 13970.000000000027)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 25 -9689.973000000009 13970.000000000027)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 17 9689.973000000009 16509.999999999993)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 24 -9689.973000000009 16509.999999999993)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 18 9689.973000000009 19049.999999999956)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 23 -9689.973000000009 19049.999999999956)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 19 9689.973000000009 21590.000000000033)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 22 -9689.973000000009 21590.000000000033)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 20 9689.973000000009 24129.999999999996)
+      (pin RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um 21 -9689.973000000009 24129.999999999996)
+    )
+    (image "simple_chip:2.7301x1.8001_mm"
+      (pin RoundRect[T]Pad_899.9982x699.9986_um 1 -915.0349999999889 550.0369999999748)
+      (pin RoundRect[T]Pad_899.9982x699.9986_um 2 -915.0349999999889 -550.0369999999748)
+      (pin RoundRect[T]Pad_899.9982x699.9986_um 3 915.0349999999889 -550.0369999999748)
+      (pin RoundRect[T]Pad_899.9982x699.9986_um 4 915.0349999999889 550.0369999999748)
+    )
+    (image "simple_capacitor:1.6000x0.6000_mm"
+    )
+    (image "simple_capacitor:1.5000x4.3000_mm"
+      (pin RoundRect[T]Pad_1500x1500_um 1 0 -1400)
+      (pin RoundRect[T]Pad_1500x1500_um 2 0 1400)
+    )
+    (image "simple_chip:4.4591x12.2869_mm"
+      (pin Round[A]Pad_999.9979999999999_1599.9967999999997_um 1 -1429.5647999999517 -2276.5492000000636)
+      (pin Round[A]Pad_999.9979999999999_1599.9967999999997_um 2 -1429.5647999999517 263.45079999993715)
+      (pin Round[A]Pad_999.9979999999999_1599.9967999999997_um 3 -1429.5647999999517 2803.4507999999364)
+      (pin Round[A]Pad_999.9979999999999_1599.9967999999997_um 4 -1429.5647999999517 5343.450799999935)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+    (padstack "RoundRect[T]Pad_1499.997x1499.997_um"
+      (shape (polygon F.Cu 0 -750 750 750 750 750 -750 -750 -750 -750 750))
+      (attach off)
+    )
+    (padstack "RoundRect[T]Pad_3199.9935999999993x1599.9967999999997_um"
+      (shape (polygon F.Cu 0 -1600 800 1600 800 1600 -800 -1600 -800 -1600 800))
+      (attach off)
+    )
+    (padstack "RoundRect[T]Pad_899.9982x699.9986_um"
+      (shape (polygon F.Cu 0 -450 350 450 350 450 -350 -450 -350 -450 350))
+      (attach off)
+    )
+    (padstack "RoundRect[T]Pad_1500x1500_um"
+      (shape (polygon F.Cu 0 -750 750 750 750 750 -750 -750 -750 -750 750))
+      (attach off)
+    )
+    (padstack "Round[A]Pad_999.9979999999999_1599.9967999999997_um"
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(LED1_source_component_2-Pad1)"
+      (pins LED1_source_component_2-1 LED2_source_component_4-3)
+    )
+    (net "Net-(LED1_source_component_2-Pad3)"
+      (pins LED1_source_component_2-3 U1_source_component_0-15)
+    )
+    (net "Net-(LED10_source_component_20-Pad1)"
+      (pins LED10_source_component_20-1 LED11_source_component_22-3)
+    )
+    (net "Net-(LED100_source_component_200-Pad1)"
+      (pins LED100_source_component_200-1 LED101_source_component_202-3)
+    )
+    (net "Net-(LED101_source_component_202-Pad1)"
+      (pins LED101_source_component_202-1 LED102_source_component_204-3)
+    )
+    (net "Net-(LED102_source_component_204-Pad1)"
+      (pins LED102_source_component_204-1 LED103_source_component_206-3)
+    )
+    (net "Net-(LED103_source_component_206-Pad1)"
+      (pins LED103_source_component_206-1 LED104_source_component_208-3)
+    )
+    (net "Net-(LED104_source_component_208-Pad1)"
+      (pins LED104_source_component_208-1 LED105_source_component_210-3)
+    )
+    (net "Net-(LED105_source_component_210-Pad1)"
+      (pins LED105_source_component_210-1 LED106_source_component_212-3)
+    )
+    (net "Net-(LED106_source_component_212-Pad1)"
+      (pins LED106_source_component_212-1 LED107_source_component_214-3)
+    )
+    (net "Net-(LED107_source_component_214-Pad1)"
+      (pins LED107_source_component_214-1 LED108_source_component_216-3)
+    )
+    (net "Net-(LED108_source_component_216-Pad1)"
+      (pins LED108_source_component_216-1 LED109_source_component_218-3)
+    )
+    (net "Net-(LED109_source_component_218-Pad1)"
+      (pins LED109_source_component_218-1 LED110_source_component_220-3)
+    )
+    (net "Net-(LED11_source_component_22-Pad1)"
+      (pins LED11_source_component_22-1 LED12_source_component_24-3)
+    )
+    (net "Net-(LED110_source_component_220-Pad1)"
+      (pins LED110_source_component_220-1 LED111_source_component_222-3)
+    )
+    (net "Net-(LED111_source_component_222-Pad1)"
+      (pins LED111_source_component_222-1 LED112_source_component_224-3)
+    )
+    (net "Net-(LED112_source_component_224-Pad1)"
+      (pins LED112_source_component_224-1 LED113_source_component_226-3)
+    )
+    (net "Net-(LED113_source_component_226-Pad1)"
+      (pins LED113_source_component_226-1 LED114_source_component_228-3)
+    )
+    (net "Net-(LED114_source_component_228-Pad1)"
+      (pins LED114_source_component_228-1 LED115_source_component_230-3)
+    )
+    (net "Net-(LED115_source_component_230-Pad1)"
+      (pins LED115_source_component_230-1 LED116_source_component_232-3)
+    )
+    (net "Net-(LED116_source_component_232-Pad1)"
+      (pins LED116_source_component_232-1 LED117_source_component_234-3)
+    )
+    (net "Net-(LED117_source_component_234-Pad1)"
+      (pins LED117_source_component_234-1 LED118_source_component_236-3)
+    )
+    (net "Net-(LED118_source_component_236-Pad1)"
+      (pins LED118_source_component_236-1 LED119_source_component_238-3)
+    )
+    (net "Net-(LED119_source_component_238-Pad1)"
+      (pins LED119_source_component_238-1 LED120_source_component_240-3)
+    )
+    (net "Net-(LED12_source_component_24-Pad1)"
+      (pins LED12_source_component_24-1 LED13_source_component_26-3)
+    )
+    (net "Net-(LED120_source_component_240-Pad1)"
+      (pins LED120_source_component_240-1 LED121_source_component_242-3)
+    )
+    (net "Net-(LED121_source_component_242-Pad1)"
+      (pins LED121_source_component_242-1 LED122_source_component_244-3)
+    )
+    (net "Net-(LED122_source_component_244-Pad1)"
+      (pins LED122_source_component_244-1 LED123_source_component_246-3)
+    )
+    (net "Net-(LED123_source_component_246-Pad1)"
+      (pins LED123_source_component_246-1 LED124_source_component_248-3)
+    )
+    (net "Net-(LED124_source_component_248-Pad1)"
+      (pins LED124_source_component_248-1 LED125_source_component_250-3)
+    )
+    (net "Net-(LED125_source_component_250-Pad1)"
+      (pins LED125_source_component_250-1 LED126_source_component_252-3)
+    )
+    (net "Net-(LED126_source_component_252-Pad1)"
+      (pins LED126_source_component_252-1 LED127_source_component_254-3)
+    )
+    (net "Net-(LED127_source_component_254-Pad1)"
+      (pins LED127_source_component_254-1 LED128_source_component_256-3)
+    )
+    (net "Net-(LED128_source_component_256-Pad1)"
+      (pins LED128_source_component_256-1 LED129_source_component_258-3)
+    )
+    (net "Net-(LED129_source_component_258-Pad1)"
+      (pins LED129_source_component_258-1 LED130_source_component_260-3)
+    )
+    (net "Net-(LED13_source_component_26-Pad1)"
+      (pins LED13_source_component_26-1 LED14_source_component_28-3)
+    )
+    (net "Net-(LED130_source_component_260-Pad1)"
+      (pins LED130_source_component_260-1 LED131_source_component_262-3)
+    )
+    (net "Net-(LED131_source_component_262-Pad1)"
+      (pins LED131_source_component_262-1 LED132_source_component_264-3)
+    )
+    (net "Net-(LED132_source_component_264-Pad1)"
+      (pins LED132_source_component_264-1 LED133_source_component_266-3)
+    )
+    (net "Net-(LED133_source_component_266-Pad1)"
+      (pins LED133_source_component_266-1 LED134_source_component_268-3)
+    )
+    (net "Net-(LED134_source_component_268-Pad1)"
+      (pins LED134_source_component_268-1 LED135_source_component_270-3)
+    )
+    (net "Net-(LED135_source_component_270-Pad1)"
+      (pins LED135_source_component_270-1 LED136_source_component_272-3)
+    )
+    (net "Net-(LED136_source_component_272-Pad1)"
+      (pins LED136_source_component_272-1 LED137_source_component_274-3)
+    )
+    (net "Net-(LED137_source_component_274-Pad1)"
+      (pins LED137_source_component_274-1 LED138_source_component_276-3)
+    )
+    (net "Net-(LED138_source_component_276-Pad1)"
+      (pins LED138_source_component_276-1 LED139_source_component_278-3)
+    )
+    (net "Net-(LED139_source_component_278-Pad1)"
+      (pins LED139_source_component_278-1 LED140_source_component_280-3)
+    )
+    (net "Net-(LED14_source_component_28-Pad1)"
+      (pins LED14_source_component_28-1 LED15_source_component_30-3)
+    )
+    (net "Net-(LED140_source_component_280-Pad1)"
+      (pins LED140_source_component_280-1 LED141_source_component_282-3)
+    )
+    (net "Net-(LED141_source_component_282-Pad1)"
+      (pins LED141_source_component_282-1 LED142_source_component_284-3)
+    )
+    (net "Net-(LED142_source_component_284-Pad1)"
+      (pins LED142_source_component_284-1 LED143_source_component_286-3)
+    )
+    (net "Net-(LED143_source_component_286-Pad1)"
+      (pins LED143_source_component_286-1 LED144_source_component_288-3)
+    )
+    (net "Net-(LED144_source_component_288-Pad1)"
+      (pins LED144_source_component_288-1 LED145_source_component_290-3)
+    )
+    (net "Net-(LED145_source_component_290-Pad1)"
+      (pins LED145_source_component_290-1 LED146_source_component_292-3)
+    )
+    (net "Net-(LED146_source_component_292-Pad1)"
+      (pins LED146_source_component_292-1 LED147_source_component_294-3)
+    )
+    (net "Net-(LED147_source_component_294-Pad1)"
+      (pins LED147_source_component_294-1 LED148_source_component_296-3)
+    )
+    (net "Net-(LED148_source_component_296-Pad1)"
+      (pins LED148_source_component_296-1 LED149_source_component_298-3)
+    )
+    (net "Net-(LED149_source_component_298-Pad1)"
+      (pins LED149_source_component_298-1 LED150_source_component_300-3)
+    )
+    (net "Net-(LED15_source_component_30-Pad1)"
+      (pins LED15_source_component_30-1 LED16_source_component_32-3)
+    )
+    (net "Net-(LED150_source_component_300-Pad1)"
+      (pins LED150_source_component_300-1 LED151_source_component_302-3)
+    )
+    (net "Net-(LED151_source_component_302-Pad1)"
+      (pins LED151_source_component_302-1 LED152_source_component_304-3)
+    )
+    (net "Net-(LED152_source_component_304-Pad1)"
+      (pins LED152_source_component_304-1 LED153_source_component_306-3)
+    )
+    (net "Net-(LED153_source_component_306-Pad1)"
+      (pins LED153_source_component_306-1 LED154_source_component_308-3)
+    )
+    (net "Net-(LED154_source_component_308-Pad1)"
+      (pins LED154_source_component_308-1 LED155_source_component_310-3)
+    )
+    (net "Net-(LED155_source_component_310-Pad1)"
+      (pins LED155_source_component_310-1 LED156_source_component_312-3)
+    )
+    (net "Net-(LED156_source_component_312-Pad1)"
+      (pins LED156_source_component_312-1 LED157_source_component_314-3)
+    )
+    (net "Net-(LED157_source_component_314-Pad1)"
+      (pins LED157_source_component_314-1 LED158_source_component_316-3)
+    )
+    (net "Net-(LED158_source_component_316-Pad1)"
+      (pins LED158_source_component_316-1 LED159_source_component_318-3)
+    )
+    (net "Net-(LED159_source_component_318-Pad1)"
+      (pins LED159_source_component_318-1 LED160_source_component_320-3)
+    )
+    (net "Net-(LED16_source_component_32-Pad1)"
+      (pins LED16_source_component_32-1 LED17_source_component_34-3)
+    )
+    (net "Net-(LED160_source_component_320-Pad1)"
+      (pins LED160_source_component_320-1 LED161_source_component_322-3)
+    )
+    (net "Net-(LED161_source_component_322-Pad1)"
+      (pins LED161_source_component_322-1 LED162_source_component_324-3)
+    )
+    (net "Net-(LED162_source_component_324-Pad1)"
+      (pins LED162_source_component_324-1 LED163_source_component_326-3)
+    )
+    (net "Net-(LED163_source_component_326-Pad1)"
+      (pins LED163_source_component_326-1 LED164_source_component_328-3)
+    )
+    (net "Net-(LED164_source_component_328-Pad1)"
+      (pins LED164_source_component_328-1 LED165_source_component_330-3)
+    )
+    (net "Net-(LED165_source_component_330-Pad1)"
+      (pins LED165_source_component_330-1 LED166_source_component_332-3)
+    )
+    (net "Net-(LED166_source_component_332-Pad1)"
+      (pins LED166_source_component_332-1 LED167_source_component_334-3)
+    )
+    (net "Net-(LED167_source_component_334-Pad1)"
+      (pins LED167_source_component_334-1 LED168_source_component_336-3)
+    )
+    (net "Net-(LED168_source_component_336-Pad1)"
+      (pins LED168_source_component_336-1 LED169_source_component_338-3)
+    )
+    (net "Net-(LED169_source_component_338-Pad1)"
+      (pins LED169_source_component_338-1 LED170_source_component_340-3)
+    )
+    (net "Net-(LED17_source_component_34-Pad1)"
+      (pins LED17_source_component_34-1 LED18_source_component_36-3)
+    )
+    (net "Net-(LED170_source_component_340-Pad1)"
+      (pins LED170_source_component_340-1 LED171_source_component_342-3)
+    )
+    (net "Net-(LED171_source_component_342-Pad1)"
+      (pins LED171_source_component_342-1 LED172_source_component_344-3)
+    )
+    (net "Net-(LED172_source_component_344-Pad1)"
+      (pins LED172_source_component_344-1 LED173_source_component_346-3)
+    )
+    (net "Net-(LED173_source_component_346-Pad1)"
+      (pins LED173_source_component_346-1 LED174_source_component_348-3)
+    )
+    (net "Net-(LED174_source_component_348-Pad1)"
+      (pins LED174_source_component_348-1 LED175_source_component_350-3)
+    )
+    (net "Net-(LED175_source_component_350-Pad1)"
+      (pins LED175_source_component_350-1 LED176_source_component_352-3)
+    )
+    (net "Net-(LED176_source_component_352-Pad1)"
+      (pins LED176_source_component_352-1 LED177_source_component_354-3)
+    )
+    (net "Net-(LED177_source_component_354-Pad1)"
+      (pins LED177_source_component_354-1 LED178_source_component_356-3)
+    )
+    (net "Net-(LED178_source_component_356-Pad1)"
+      (pins LED178_source_component_356-1 LED179_source_component_358-3)
+    )
+    (net "Net-(LED179_source_component_358-Pad1)"
+      (pins LED179_source_component_358-1 LED180_source_component_360-3)
+    )
+    (net "Net-(LED18_source_component_36-Pad1)"
+      (pins LED18_source_component_36-1 LED19_source_component_38-3)
+    )
+    (net "Net-(LED180_source_component_360-Pad1)"
+      (pins LED180_source_component_360-1 LED181_source_component_362-3)
+    )
+    (net "Net-(LED181_source_component_362-Pad1)"
+      (pins LED181_source_component_362-1 LED182_source_component_364-3)
+    )
+    (net "Net-(LED182_source_component_364-Pad1)"
+      (pins LED182_source_component_364-1 LED183_source_component_366-3)
+    )
+    (net "Net-(LED183_source_component_366-Pad1)"
+      (pins LED183_source_component_366-1 LED184_source_component_368-3)
+    )
+    (net "Net-(LED184_source_component_368-Pad1)"
+      (pins LED184_source_component_368-1 LED185_source_component_370-3)
+    )
+    (net "Net-(LED185_source_component_370-Pad1)"
+      (pins LED185_source_component_370-1 LED186_source_component_372-3)
+    )
+    (net "Net-(LED186_source_component_372-Pad1)"
+      (pins LED186_source_component_372-1 LED187_source_component_374-3)
+    )
+    (net "Net-(LED187_source_component_374-Pad1)"
+      (pins LED187_source_component_374-1 LED188_source_component_376-3)
+    )
+    (net "Net-(LED188_source_component_376-Pad1)"
+      (pins LED188_source_component_376-1 LED189_source_component_378-3)
+    )
+    (net "Net-(LED189_source_component_378-Pad1)"
+      (pins LED189_source_component_378-1 LED190_source_component_380-3)
+    )
+    (net "Net-(LED19_source_component_38-Pad1)"
+      (pins LED19_source_component_38-1 LED20_source_component_40-3)
+    )
+    (net "Net-(LED190_source_component_380-Pad1)"
+      (pins LED190_source_component_380-1 LED191_source_component_382-3)
+    )
+    (net "Net-(LED191_source_component_382-Pad1)"
+      (pins LED191_source_component_382-1 LED192_source_component_384-3)
+    )
+    (net "Net-(LED192_source_component_384-Pad1)"
+      (pins LED192_source_component_384-1 LED193_source_component_386-3)
+    )
+    (net "Net-(LED193_source_component_386-Pad1)"
+      (pins LED193_source_component_386-1 LED194_source_component_388-3)
+    )
+    (net "Net-(LED194_source_component_388-Pad1)"
+      (pins LED194_source_component_388-1 LED195_source_component_390-3)
+    )
+    (net "Net-(LED195_source_component_390-Pad1)"
+      (pins LED195_source_component_390-1 LED196_source_component_392-3)
+    )
+    (net "Net-(LED196_source_component_392-Pad1)"
+      (pins LED196_source_component_392-1 LED197_source_component_394-3)
+    )
+    (net "Net-(LED197_source_component_394-Pad1)"
+      (pins LED197_source_component_394-1 LED198_source_component_396-3)
+    )
+    (net "Net-(LED198_source_component_396-Pad1)"
+      (pins LED198_source_component_396-1 LED199_source_component_398-3)
+    )
+    (net "Net-(LED199_source_component_398-Pad1)"
+      (pins LED199_source_component_398-1 LED200_source_component_400-3)
+    )
+    (net "Net-(LED2_source_component_4-Pad1)"
+      (pins LED2_source_component_4-1 LED3_source_component_6-3)
+    )
+    (net "Net-(LED20_source_component_40-Pad1)"
+      (pins LED20_source_component_40-1 LED21_source_component_42-3)
+    )
+    (net "Net-(LED200_source_component_400-Pad1)"
+      (pins LED200_source_component_400-1 LED201_source_component_402-3)
+    )
+    (net "Net-(LED201_source_component_402-Pad1)"
+      (pins LED201_source_component_402-1 LED202_source_component_404-3)
+    )
+    (net "Net-(LED202_source_component_404-Pad1)"
+      (pins LED202_source_component_404-1 LED203_source_component_406-3)
+    )
+    (net "Net-(LED203_source_component_406-Pad1)"
+      (pins LED203_source_component_406-1 LED204_source_component_408-3)
+    )
+    (net "Net-(LED204_source_component_408-Pad1)"
+      (pins LED204_source_component_408-1 LED205_source_component_410-3)
+    )
+    (net "Net-(LED205_source_component_410-Pad1)"
+      (pins LED205_source_component_410-1 LED206_source_component_412-3)
+    )
+    (net "Net-(LED206_source_component_412-Pad1)"
+      (pins LED206_source_component_412-1 LED207_source_component_414-3)
+    )
+    (net "Net-(LED207_source_component_414-Pad1)"
+      (pins LED207_source_component_414-1 LED208_source_component_416-3)
+    )
+    (net "Net-(LED208_source_component_416-Pad1)"
+      (pins LED208_source_component_416-1 LED209_source_component_418-3)
+    )
+    (net "Net-(LED209_source_component_418-Pad1)"
+      (pins LED209_source_component_418-1 LED210_source_component_420-3)
+    )
+    (net "Net-(LED21_source_component_42-Pad1)"
+      (pins LED21_source_component_42-1 LED22_source_component_44-3)
+    )
+    (net "Net-(LED210_source_component_420-Pad1)"
+      (pins LED210_source_component_420-1 LED211_source_component_422-3)
+    )
+    (net "Net-(LED211_source_component_422-Pad1)"
+      (pins LED211_source_component_422-1 LED212_source_component_424-3)
+    )
+    (net "Net-(LED212_source_component_424-Pad1)"
+      (pins LED212_source_component_424-1 LED213_source_component_426-3)
+    )
+    (net "Net-(LED213_source_component_426-Pad1)"
+      (pins LED213_source_component_426-1 LED214_source_component_428-3)
+    )
+    (net "Net-(LED214_source_component_428-Pad1)"
+      (pins LED214_source_component_428-1 LED215_source_component_430-3)
+    )
+    (net "Net-(LED215_source_component_430-Pad1)"
+      (pins LED215_source_component_430-1 LED216_source_component_432-3)
+    )
+    (net "Net-(LED216_source_component_432-Pad1)"
+      (pins LED216_source_component_432-1 LED217_source_component_434-3)
+    )
+    (net "Net-(LED217_source_component_434-Pad1)"
+      (pins LED217_source_component_434-1 LED218_source_component_436-3)
+    )
+    (net "Net-(LED218_source_component_436-Pad1)"
+      (pins LED218_source_component_436-1 LED219_source_component_438-3)
+    )
+    (net "Net-(LED219_source_component_438-Pad1)"
+      (pins LED219_source_component_438-1 LED220_source_component_440-3)
+    )
+    (net "Net-(LED22_source_component_44-Pad1)"
+      (pins LED22_source_component_44-1 LED23_source_component_46-3)
+    )
+    (net "Net-(LED220_source_component_440-Pad1)"
+      (pins LED220_source_component_440-1 LED221_source_component_442-3)
+    )
+    (net "Net-(LED221_source_component_442-Pad1)"
+      (pins LED221_source_component_442-1 LED222_source_component_444-3)
+    )
+    (net "Net-(LED222_source_component_444-Pad1)"
+      (pins LED222_source_component_444-1 LED223_source_component_446-3)
+    )
+    (net "Net-(LED223_source_component_446-Pad1)"
+      (pins LED223_source_component_446-1 LED224_source_component_448-3)
+    )
+    (net "Net-(LED224_source_component_448-Pad1)"
+      (pins LED224_source_component_448-1 LED225_source_component_450-3)
+    )
+    (net "Net-(LED225_source_component_450-Pad1)"
+      (pins LED225_source_component_450-1 LED226_source_component_452-3)
+    )
+    (net "Net-(LED226_source_component_452-Pad1)"
+      (pins LED226_source_component_452-1 LED227_source_component_454-3)
+    )
+    (net "Net-(LED227_source_component_454-Pad1)"
+      (pins LED227_source_component_454-1 LED228_source_component_456-3)
+    )
+    (net "Net-(LED228_source_component_456-Pad1)"
+      (pins LED228_source_component_456-1 LED229_source_component_458-3)
+    )
+    (net "Net-(LED229_source_component_458-Pad1)"
+      (pins LED229_source_component_458-1 LED230_source_component_460-3)
+    )
+    (net "Net-(LED23_source_component_46-Pad1)"
+      (pins LED23_source_component_46-1 LED24_source_component_48-3)
+    )
+    (net "Net-(LED230_source_component_460-Pad1)"
+      (pins LED230_source_component_460-1 LED231_source_component_462-3)
+    )
+    (net "Net-(LED231_source_component_462-Pad1)"
+      (pins LED231_source_component_462-1 LED232_source_component_464-3)
+    )
+    (net "Net-(LED232_source_component_464-Pad1)"
+      (pins LED232_source_component_464-1 LED233_source_component_466-3)
+    )
+    (net "Net-(LED233_source_component_466-Pad1)"
+      (pins LED233_source_component_466-1 LED234_source_component_468-3)
+    )
+    (net "Net-(LED234_source_component_468-Pad1)"
+      (pins LED234_source_component_468-1 LED235_source_component_470-3)
+    )
+    (net "Net-(LED235_source_component_470-Pad1)"
+      (pins LED235_source_component_470-1 LED236_source_component_472-3)
+    )
+    (net "Net-(LED236_source_component_472-Pad1)"
+      (pins LED236_source_component_472-1 LED237_source_component_474-3)
+    )
+    (net "Net-(LED237_source_component_474-Pad1)"
+      (pins LED237_source_component_474-1 LED238_source_component_476-3)
+    )
+    (net "Net-(LED238_source_component_476-Pad1)"
+      (pins LED238_source_component_476-1 LED239_source_component_478-3)
+    )
+    (net "Net-(LED239_source_component_478-Pad1)"
+      (pins LED239_source_component_478-1 LED240_source_component_480-3)
+    )
+    (net "Net-(LED24_source_component_48-Pad1)"
+      (pins LED24_source_component_48-1 LED25_source_component_50-3)
+    )
+    (net "Net-(LED240_source_component_480-Pad1)"
+      (pins LED240_source_component_480-1 LED241_source_component_482-3)
+    )
+    (net "Net-(LED241_source_component_482-Pad1)"
+      (pins LED241_source_component_482-1 LED242_source_component_484-3)
+    )
+    (net "Net-(LED242_source_component_484-Pad1)"
+      (pins LED242_source_component_484-1 LED243_source_component_486-3)
+    )
+    (net "Net-(LED243_source_component_486-Pad1)"
+      (pins LED243_source_component_486-1 LED244_source_component_488-3)
+    )
+    (net "Net-(LED244_source_component_488-Pad1)"
+      (pins LED244_source_component_488-1 LED245_source_component_490-3)
+    )
+    (net "Net-(LED245_source_component_490-Pad1)"
+      (pins LED245_source_component_490-1 LED246_source_component_492-3)
+    )
+    (net "Net-(LED246_source_component_492-Pad1)"
+      (pins LED246_source_component_492-1 LED247_source_component_494-3)
+    )
+    (net "Net-(LED247_source_component_494-Pad1)"
+      (pins LED247_source_component_494-1 LED248_source_component_496-3)
+    )
+    (net "Net-(LED248_source_component_496-Pad1)"
+      (pins LED248_source_component_496-1 LED249_source_component_498-3)
+    )
+    (net "Net-(LED249_source_component_498-Pad1)"
+      (pins LED249_source_component_498-1 LED250_source_component_500-3)
+    )
+    (net "Net-(LED25_source_component_50-Pad1)"
+      (pins LED25_source_component_50-1 LED26_source_component_52-3)
+    )
+    (net "Net-(LED250_source_component_500-Pad1)"
+      (pins LED250_source_component_500-1 LED251_source_component_502-3)
+    )
+    (net "Net-(LED251_source_component_502-Pad1)"
+      (pins LED251_source_component_502-1 LED252_source_component_504-3)
+    )
+    (net "Net-(LED252_source_component_504-Pad1)"
+      (pins LED252_source_component_504-1 LED253_source_component_506-3)
+    )
+    (net "Net-(LED253_source_component_506-Pad1)"
+      (pins LED253_source_component_506-1 LED254_source_component_508-3)
+    )
+    (net "Net-(LED254_source_component_508-Pad1)"
+      (pins LED254_source_component_508-1 LED255_source_component_510-3)
+    )
+    (net "Net-(LED255_source_component_510-Pad1)"
+      (pins LED255_source_component_510-1 LED256_source_component_512-3)
+    )
+    (net "Net-(LED256_source_component_512-Pad1)"
+      (pins LED256_source_component_512-1 LED257_source_component_514-3)
+    )
+    (net "Net-(LED257_source_component_514-Pad1)"
+      (pins LED257_source_component_514-1 LED258_source_component_516-3)
+    )
+    (net "Net-(LED258_source_component_516-Pad1)"
+      (pins LED258_source_component_516-1 LED259_source_component_518-3)
+    )
+    (net "Net-(LED259_source_component_518-Pad1)"
+      (pins LED259_source_component_518-1 LED260_source_component_520-3)
+    )
+    (net "Net-(LED26_source_component_52-Pad1)"
+      (pins LED26_source_component_52-1 LED27_source_component_54-3)
+    )
+    (net "Net-(LED260_source_component_520-Pad1)"
+      (pins LED260_source_component_520-1 LED261_source_component_522-3)
+    )
+    (net "Net-(LED261_source_component_522-Pad1)"
+      (pins LED261_source_component_522-1 LED262_source_component_524-3)
+    )
+    (net "Net-(LED262_source_component_524-Pad1)"
+      (pins LED262_source_component_524-1 LED263_source_component_526-3)
+    )
+    (net "Net-(LED263_source_component_526-Pad1)"
+      (pins LED263_source_component_526-1 LED264_source_component_528-3)
+    )
+    (net "Net-(LED264_source_component_528-Pad1)"
+      (pins LED264_source_component_528-1 LED265_source_component_530-3)
+    )
+    (net "Net-(LED265_source_component_530-Pad1)"
+      (pins LED265_source_component_530-1 LED266_source_component_532-3)
+    )
+    (net "Net-(LED266_source_component_532-Pad1)"
+      (pins LED266_source_component_532-1 LED267_source_component_534-3)
+    )
+    (net "Net-(LED267_source_component_534-Pad1)"
+      (pins LED267_source_component_534-1 LED268_source_component_536-3)
+    )
+    (net "Net-(LED268_source_component_536-Pad1)"
+      (pins LED268_source_component_536-1 LED269_source_component_538-3)
+    )
+    (net "Net-(LED269_source_component_538-Pad1)"
+      (pins LED269_source_component_538-1 LED270_source_component_540-3)
+    )
+    (net "Net-(LED27_source_component_54-Pad1)"
+      (pins LED27_source_component_54-1 LED28_source_component_56-3)
+    )
+    (net "Net-(LED270_source_component_540-Pad1)"
+      (pins LED270_source_component_540-1 LED271_source_component_542-3)
+    )
+    (net "Net-(LED271_source_component_542-Pad1)"
+      (pins LED271_source_component_542-1 LED272_source_component_544-3)
+    )
+    (net "Net-(LED272_source_component_544-Pad1)"
+      (pins LED272_source_component_544-1 LED273_source_component_546-3)
+    )
+    (net "Net-(LED273_source_component_546-Pad1)"
+      (pins LED273_source_component_546-1 LED274_source_component_548-3)
+    )
+    (net "Net-(LED274_source_component_548-Pad1)"
+      (pins LED274_source_component_548-1 LED275_source_component_550-3)
+    )
+    (net "Net-(LED275_source_component_550-Pad1)"
+      (pins LED275_source_component_550-1 LED276_source_component_552-3)
+    )
+    (net "Net-(LED276_source_component_552-Pad1)"
+      (pins LED276_source_component_552-1 LED277_source_component_554-3)
+    )
+    (net "Net-(LED277_source_component_554-Pad1)"
+      (pins LED277_source_component_554-1 LED278_source_component_556-3)
+    )
+    (net "Net-(LED278_source_component_556-Pad1)"
+      (pins LED278_source_component_556-1 LED279_source_component_558-3)
+    )
+    (net "Net-(LED279_source_component_558-Pad1)"
+      (pins LED279_source_component_558-1 LED280_source_component_560-3)
+    )
+    (net "Net-(LED28_source_component_56-Pad1)"
+      (pins LED28_source_component_56-1 LED29_source_component_58-3)
+    )
+    (net "Net-(LED280_source_component_560-Pad1)"
+      (pins LED280_source_component_560-1 LED281_source_component_562-3)
+    )
+    (net "Net-(LED281_source_component_562-Pad1)"
+      (pins LED281_source_component_562-1 LED282_source_component_564-3)
+    )
+    (net "Net-(LED282_source_component_564-Pad1)"
+      (pins LED282_source_component_564-1 LED283_source_component_566-3)
+    )
+    (net "Net-(LED283_source_component_566-Pad1)"
+      (pins LED283_source_component_566-1 LED284_source_component_568-3)
+    )
+    (net "Net-(LED284_source_component_568-Pad1)"
+      (pins LED284_source_component_568-1 LED285_source_component_570-3)
+    )
+    (net "Net-(LED285_source_component_570-Pad1)"
+      (pins LED285_source_component_570-1 LED286_source_component_572-3)
+    )
+    (net "Net-(LED286_source_component_572-Pad1)"
+      (pins LED286_source_component_572-1 LED287_source_component_574-3)
+    )
+    (net "Net-(LED287_source_component_574-Pad1)"
+      (pins LED287_source_component_574-1 LED288_source_component_576-3)
+    )
+    (net "Net-(LED288_source_component_576-Pad1)"
+      (pins LED288_source_component_576-1 LED289_source_component_578-3)
+    )
+    (net "Net-(LED289_source_component_578-Pad1)"
+      (pins LED289_source_component_578-1 LED290_source_component_580-3)
+    )
+    (net "Net-(LED29_source_component_58-Pad1)"
+      (pins LED29_source_component_58-1 LED30_source_component_60-3)
+    )
+    (net "Net-(LED290_source_component_580-Pad1)"
+      (pins LED290_source_component_580-1 LED291_source_component_582-3)
+    )
+    (net "Net-(LED291_source_component_582-Pad1)"
+      (pins LED291_source_component_582-1 LED292_source_component_584-3)
+    )
+    (net "Net-(LED292_source_component_584-Pad1)"
+      (pins LED292_source_component_584-1 LED293_source_component_586-3)
+    )
+    (net "Net-(LED293_source_component_586-Pad1)"
+      (pins LED293_source_component_586-1 LED294_source_component_588-3)
+    )
+    (net "Net-(LED294_source_component_588-Pad1)"
+      (pins LED294_source_component_588-1 LED295_source_component_590-3)
+    )
+    (net "Net-(LED295_source_component_590-Pad1)"
+      (pins LED295_source_component_590-1 LED296_source_component_592-3)
+    )
+    (net "Net-(LED296_source_component_592-Pad1)"
+      (pins LED296_source_component_592-1 LED297_source_component_594-3)
+    )
+    (net "Net-(LED297_source_component_594-Pad1)"
+      (pins LED297_source_component_594-1 LED298_source_component_596-3)
+    )
+    (net "Net-(LED298_source_component_596-Pad1)"
+      (pins LED298_source_component_596-1 LED299_source_component_598-3)
+    )
+    (net "Net-(LED299_source_component_598-Pad1)"
+      (pins LED299_source_component_598-1 LED300_source_component_600-3)
+    )
+    (net "Net-(LED3_source_component_6-Pad1)"
+      (pins LED3_source_component_6-1 LED4_source_component_8-3)
+    )
+    (net "Net-(LED30_source_component_60-Pad1)"
+      (pins LED30_source_component_60-1 LED31_source_component_62-3)
+    )
+    (net "Net-(LED300_source_component_600-Pad1)"
+      (pins LED300_source_component_600-1 LED301_source_component_602-3)
+    )
+    (net "Net-(LED301_source_component_602-Pad1)"
+      (pins LED301_source_component_602-1 LED302_source_component_604-3)
+    )
+    (net "Net-(LED302_source_component_604-Pad1)"
+      (pins LED302_source_component_604-1 LED303_source_component_606-3)
+    )
+    (net "Net-(LED303_source_component_606-Pad1)"
+      (pins LED303_source_component_606-1 LED304_source_component_608-3)
+    )
+    (net "Net-(LED304_source_component_608-Pad1)"
+      (pins LED304_source_component_608-1 LED305_source_component_610-3)
+    )
+    (net "Net-(LED305_source_component_610-Pad1)"
+      (pins LED305_source_component_610-1 LED306_source_component_612-3)
+    )
+    (net "Net-(LED306_source_component_612-Pad1)"
+      (pins LED306_source_component_612-1 LED307_source_component_614-3)
+    )
+    (net "Net-(LED307_source_component_614-Pad1)"
+      (pins LED307_source_component_614-1 LED308_source_component_616-3)
+    )
+    (net "Net-(LED308_source_component_616-Pad1)"
+      (pins LED308_source_component_616-1 LED309_source_component_618-3)
+    )
+    (net "Net-(LED309_source_component_618-Pad1)"
+      (pins LED309_source_component_618-1 LED310_source_component_620-3)
+    )
+    (net "Net-(LED31_source_component_62-Pad1)"
+      (pins LED31_source_component_62-1 LED32_source_component_64-3)
+    )
+    (net "Net-(LED310_source_component_620-Pad1)"
+      (pins LED310_source_component_620-1 LED311_source_component_622-3)
+    )
+    (net "Net-(LED311_source_component_622-Pad1)"
+      (pins LED311_source_component_622-1 LED312_source_component_624-3)
+    )
+    (net "Net-(LED312_source_component_624-Pad1)"
+      (pins LED312_source_component_624-1 LED313_source_component_626-3)
+    )
+    (net "Net-(LED313_source_component_626-Pad1)"
+      (pins LED313_source_component_626-1 LED314_source_component_628-3)
+    )
+    (net "Net-(LED314_source_component_628-Pad1)"
+      (pins LED314_source_component_628-1 LED315_source_component_630-3)
+    )
+    (net "Net-(LED315_source_component_630-Pad1)"
+      (pins LED315_source_component_630-1 LED316_source_component_632-3)
+    )
+    (net "Net-(LED316_source_component_632-Pad1)"
+      (pins LED316_source_component_632-1 LED317_source_component_634-3)
+    )
+    (net "Net-(LED317_source_component_634-Pad1)"
+      (pins LED317_source_component_634-1 LED318_source_component_636-3)
+    )
+    (net "Net-(LED318_source_component_636-Pad1)"
+      (pins LED318_source_component_636-1 LED319_source_component_638-3)
+    )
+    (net "Net-(LED319_source_component_638-Pad1)"
+      (pins LED319_source_component_638-1 LED320_source_component_640-3)
+    )
+    (net "Net-(LED32_source_component_64-Pad1)"
+      (pins LED32_source_component_64-1 LED33_source_component_66-3)
+    )
+    (net "Net-(LED320_source_component_640-Pad1)"
+      (pins LED320_source_component_640-1 LED321_source_component_642-3)
+    )
+    (net "Net-(LED321_source_component_642-Pad1)"
+      (pins LED321_source_component_642-1 LED322_source_component_644-3)
+    )
+    (net "Net-(LED322_source_component_644-Pad1)"
+      (pins LED322_source_component_644-1 LED323_source_component_646-3)
+    )
+    (net "Net-(LED323_source_component_646-Pad1)"
+      (pins LED323_source_component_646-1 LED324_source_component_648-3)
+    )
+    (net "Net-(LED324_source_component_648-Pad1)"
+      (pins LED324_source_component_648-1 LED325_source_component_650-3)
+    )
+    (net "Net-(LED325_source_component_650-Pad1)"
+      (pins LED325_source_component_650-1 LED326_source_component_652-3)
+    )
+    (net "Net-(LED326_source_component_652-Pad1)"
+      (pins LED326_source_component_652-1 LED327_source_component_654-3)
+    )
+    (net "Net-(LED327_source_component_654-Pad1)"
+      (pins LED327_source_component_654-1 LED328_source_component_656-3)
+    )
+    (net "Net-(LED328_source_component_656-Pad1)"
+      (pins LED328_source_component_656-1 LED329_source_component_658-3)
+    )
+    (net "Net-(LED329_source_component_658-Pad1)"
+      (pins LED329_source_component_658-1 LED330_source_component_660-3)
+    )
+    (net "Net-(LED33_source_component_66-Pad1)"
+      (pins LED33_source_component_66-1 LED34_source_component_68-3)
+    )
+    (net "Net-(LED330_source_component_660-Pad1)"
+      (pins LED330_source_component_660-1 LED331_source_component_662-3)
+    )
+    (net "Net-(LED331_source_component_662-Pad1)"
+      (pins LED331_source_component_662-1 LED332_source_component_664-3)
+    )
+    (net "Net-(LED332_source_component_664-Pad1)"
+      (pins LED332_source_component_664-1 LED333_source_component_666-3)
+    )
+    (net "Net-(LED333_source_component_666-Pad1)"
+      (pins LED333_source_component_666-1 LED334_source_component_668-3)
+    )
+    (net "Net-(LED334_source_component_668-Pad1)"
+      (pins LED334_source_component_668-1 LED335_source_component_670-3)
+    )
+    (net "Net-(LED335_source_component_670-Pad1)"
+      (pins LED335_source_component_670-1 LED336_source_component_672-3)
+    )
+    (net "Net-(LED336_source_component_672-Pad1)"
+      (pins LED336_source_component_672-1 LED337_source_component_674-3)
+    )
+    (net "Net-(LED337_source_component_674-Pad1)"
+      (pins LED337_source_component_674-1 LED338_source_component_676-3)
+    )
+    (net "Net-(LED338_source_component_676-Pad1)"
+      (pins LED338_source_component_676-1 LED339_source_component_678-3)
+    )
+    (net "Net-(LED339_source_component_678-Pad1)"
+      (pins LED339_source_component_678-1 LED340_source_component_680-3)
+    )
+    (net "Net-(LED34_source_component_68-Pad1)"
+      (pins LED34_source_component_68-1 LED35_source_component_70-3)
+    )
+    (net "Net-(LED340_source_component_680-Pad1)"
+      (pins LED340_source_component_680-1 LED341_source_component_682-3)
+    )
+    (net "Net-(LED341_source_component_682-Pad1)"
+      (pins LED341_source_component_682-1 LED342_source_component_684-3)
+    )
+    (net "Net-(LED342_source_component_684-Pad1)"
+      (pins LED342_source_component_684-1 LED343_source_component_686-3)
+    )
+    (net "Net-(LED343_source_component_686-Pad1)"
+      (pins LED343_source_component_686-1 LED344_source_component_688-3)
+    )
+    (net "Net-(LED344_source_component_688-Pad1)"
+      (pins LED344_source_component_688-1 LED345_source_component_690-3)
+    )
+    (net "Net-(LED345_source_component_690-Pad1)"
+      (pins LED345_source_component_690-1 LED346_source_component_692-3)
+    )
+    (net "Net-(LED346_source_component_692-Pad1)"
+      (pins LED346_source_component_692-1 LED347_source_component_694-3)
+    )
+    (net "Net-(LED347_source_component_694-Pad1)"
+      (pins LED347_source_component_694-1 LED348_source_component_696-3)
+    )
+    (net "Net-(LED348_source_component_696-Pad1)"
+      (pins LED348_source_component_696-1 LED349_source_component_698-3)
+    )
+    (net "Net-(LED349_source_component_698-Pad1)"
+      (pins LED349_source_component_698-1 LED350_source_component_700-3)
+    )
+    (net "Net-(LED35_source_component_70-Pad1)"
+      (pins LED35_source_component_70-1 LED36_source_component_72-3)
+    )
+    (net "Net-(LED350_source_component_700-Pad1)"
+      (pins LED350_source_component_700-1 LED351_source_component_702-3)
+    )
+    (net "Net-(LED351_source_component_702-Pad1)"
+      (pins LED351_source_component_702-1 LED352_source_component_704-3)
+    )
+    (net "Net-(LED352_source_component_704-Pad1)"
+      (pins LED352_source_component_704-1 LED353_source_component_706-3)
+    )
+    (net "Net-(LED353_source_component_706-Pad1)"
+      (pins LED353_source_component_706-1 LED354_source_component_708-3)
+    )
+    (net "Net-(LED354_source_component_708-Pad1)"
+      (pins LED354_source_component_708-1 LED355_source_component_710-3)
+    )
+    (net "Net-(LED355_source_component_710-Pad1)"
+      (pins LED355_source_component_710-1 LED356_source_component_712-3)
+    )
+    (net "Net-(LED356_source_component_712-Pad1)"
+      (pins LED356_source_component_712-1 LED357_source_component_714-3)
+    )
+    (net "Net-(LED357_source_component_714-Pad1)"
+      (pins LED357_source_component_714-1 LED358_source_component_716-3)
+    )
+    (net "Net-(LED358_source_component_716-Pad1)"
+      (pins LED358_source_component_716-1 LED359_source_component_718-3)
+    )
+    (net "Net-(LED359_source_component_718-Pad1)"
+      (pins LED359_source_component_718-1 LED360_source_component_720-3)
+    )
+    (net "Net-(LED36_source_component_72-Pad1)"
+      (pins LED36_source_component_72-1 LED37_source_component_74-3)
+    )
+    (net "Net-(LED360_source_component_720-Pad1)"
+      (pins LED360_source_component_720-1 LED361_source_component_722-3)
+    )
+    (net "Net-(LED361_source_component_722-Pad1)"
+      (pins LED361_source_component_722-1 LED362_source_component_724-3)
+    )
+    (net "Net-(LED362_source_component_724-Pad1)"
+      (pins LED362_source_component_724-1 LED363_source_component_726-3)
+    )
+    (net "Net-(LED363_source_component_726-Pad1)"
+      (pins LED363_source_component_726-1 LED364_source_component_728-3)
+    )
+    (net "Net-(LED364_source_component_728-Pad1)"
+      (pins LED364_source_component_728-1 LED365_source_component_730-3)
+    )
+    (net "Net-(LED365_source_component_730-Pad1)"
+      (pins LED365_source_component_730-1 LED366_source_component_732-3)
+    )
+    (net "Net-(LED366_source_component_732-Pad1)"
+      (pins LED366_source_component_732-1 LED367_source_component_734-3)
+    )
+    (net "Net-(LED367_source_component_734-Pad1)"
+      (pins LED367_source_component_734-1 LED368_source_component_736-3)
+    )
+    (net "Net-(LED368_source_component_736-Pad1)"
+      (pins LED368_source_component_736-1 LED369_source_component_738-3)
+    )
+    (net "Net-(LED369_source_component_738-Pad1)"
+      (pins LED369_source_component_738-1 LED370_source_component_740-3)
+    )
+    (net "Net-(LED37_source_component_74-Pad1)"
+      (pins LED37_source_component_74-1 LED38_source_component_76-3)
+    )
+    (net "Net-(LED370_source_component_740-Pad1)"
+      (pins LED370_source_component_740-1 LED371_source_component_742-3)
+    )
+    (net "Net-(LED38_source_component_76-Pad1)"
+      (pins LED38_source_component_76-1 LED39_source_component_78-3)
+    )
+    (net "Net-(LED39_source_component_78-Pad1)"
+      (pins LED39_source_component_78-1 LED40_source_component_80-3)
+    )
+    (net "Net-(LED4_source_component_8-Pad1)"
+      (pins LED4_source_component_8-1 LED5_source_component_10-3)
+    )
+    (net "Net-(LED40_source_component_80-Pad1)"
+      (pins LED40_source_component_80-1 LED41_source_component_82-3)
+    )
+    (net "Net-(LED41_source_component_82-Pad1)"
+      (pins LED41_source_component_82-1 LED42_source_component_84-3)
+    )
+    (net "Net-(LED42_source_component_84-Pad1)"
+      (pins LED42_source_component_84-1 LED43_source_component_86-3)
+    )
+    (net "Net-(LED43_source_component_86-Pad1)"
+      (pins LED43_source_component_86-1 LED44_source_component_88-3)
+    )
+    (net "Net-(LED44_source_component_88-Pad1)"
+      (pins LED44_source_component_88-1 LED45_source_component_90-3)
+    )
+    (net "Net-(LED45_source_component_90-Pad1)"
+      (pins LED45_source_component_90-1 LED46_source_component_92-3)
+    )
+    (net "Net-(LED46_source_component_92-Pad1)"
+      (pins LED46_source_component_92-1 LED47_source_component_94-3)
+    )
+    (net "Net-(LED47_source_component_94-Pad1)"
+      (pins LED47_source_component_94-1 LED48_source_component_96-3)
+    )
+    (net "Net-(LED48_source_component_96-Pad1)"
+      (pins LED48_source_component_96-1 LED49_source_component_98-3)
+    )
+    (net "Net-(LED49_source_component_98-Pad1)"
+      (pins LED49_source_component_98-1 LED50_source_component_100-3)
+    )
+    (net "Net-(LED5_source_component_10-Pad1)"
+      (pins LED5_source_component_10-1 LED6_source_component_12-3)
+    )
+    (net "Net-(LED50_source_component_100-Pad1)"
+      (pins LED50_source_component_100-1 LED51_source_component_102-3)
+    )
+    (net "Net-(LED51_source_component_102-Pad1)"
+      (pins LED51_source_component_102-1 LED52_source_component_104-3)
+    )
+    (net "Net-(LED52_source_component_104-Pad1)"
+      (pins LED52_source_component_104-1 LED53_source_component_106-3)
+    )
+    (net "Net-(LED53_source_component_106-Pad1)"
+      (pins LED53_source_component_106-1 LED54_source_component_108-3)
+    )
+    (net "Net-(LED54_source_component_108-Pad1)"
+      (pins LED54_source_component_108-1 LED55_source_component_110-3)
+    )
+    (net "Net-(LED55_source_component_110-Pad1)"
+      (pins LED55_source_component_110-1 LED56_source_component_112-3)
+    )
+    (net "Net-(LED56_source_component_112-Pad1)"
+      (pins LED56_source_component_112-1 LED57_source_component_114-3)
+    )
+    (net "Net-(LED57_source_component_114-Pad1)"
+      (pins LED57_source_component_114-1 LED58_source_component_116-3)
+    )
+    (net "Net-(LED58_source_component_116-Pad1)"
+      (pins LED58_source_component_116-1 LED59_source_component_118-3)
+    )
+    (net "Net-(LED59_source_component_118-Pad1)"
+      (pins LED59_source_component_118-1 LED60_source_component_120-3)
+    )
+    (net "Net-(LED6_source_component_12-Pad1)"
+      (pins LED6_source_component_12-1 LED7_source_component_14-3)
+    )
+    (net "Net-(LED60_source_component_120-Pad1)"
+      (pins LED60_source_component_120-1 LED61_source_component_122-3)
+    )
+    (net "Net-(LED61_source_component_122-Pad1)"
+      (pins LED61_source_component_122-1 LED62_source_component_124-3)
+    )
+    (net "Net-(LED62_source_component_124-Pad1)"
+      (pins LED62_source_component_124-1 LED63_source_component_126-3)
+    )
+    (net "Net-(LED63_source_component_126-Pad1)"
+      (pins LED63_source_component_126-1 LED64_source_component_128-3)
+    )
+    (net "Net-(LED64_source_component_128-Pad1)"
+      (pins LED64_source_component_128-1 LED65_source_component_130-3)
+    )
+    (net "Net-(LED65_source_component_130-Pad1)"
+      (pins LED65_source_component_130-1 LED66_source_component_132-3)
+    )
+    (net "Net-(LED66_source_component_132-Pad1)"
+      (pins LED66_source_component_132-1 LED67_source_component_134-3)
+    )
+    (net "Net-(LED67_source_component_134-Pad1)"
+      (pins LED67_source_component_134-1 LED68_source_component_136-3)
+    )
+    (net "Net-(LED68_source_component_136-Pad1)"
+      (pins LED68_source_component_136-1 LED69_source_component_138-3)
+    )
+    (net "Net-(LED69_source_component_138-Pad1)"
+      (pins LED69_source_component_138-1 LED70_source_component_140-3)
+    )
+    (net "Net-(LED7_source_component_14-Pad1)"
+      (pins LED7_source_component_14-1 LED8_source_component_16-3)
+    )
+    (net "Net-(LED70_source_component_140-Pad1)"
+      (pins LED70_source_component_140-1 LED71_source_component_142-3)
+    )
+    (net "Net-(LED71_source_component_142-Pad1)"
+      (pins LED71_source_component_142-1 LED72_source_component_144-3)
+    )
+    (net "Net-(LED72_source_component_144-Pad1)"
+      (pins LED72_source_component_144-1 LED73_source_component_146-3)
+    )
+    (net "Net-(LED73_source_component_146-Pad1)"
+      (pins LED73_source_component_146-1 LED74_source_component_148-3)
+    )
+    (net "Net-(LED74_source_component_148-Pad1)"
+      (pins LED74_source_component_148-1 LED75_source_component_150-3)
+    )
+    (net "Net-(LED75_source_component_150-Pad1)"
+      (pins LED75_source_component_150-1 LED76_source_component_152-3)
+    )
+    (net "Net-(LED76_source_component_152-Pad1)"
+      (pins LED76_source_component_152-1 LED77_source_component_154-3)
+    )
+    (net "Net-(LED77_source_component_154-Pad1)"
+      (pins LED77_source_component_154-1 LED78_source_component_156-3)
+    )
+    (net "Net-(LED78_source_component_156-Pad1)"
+      (pins LED78_source_component_156-1 LED79_source_component_158-3)
+    )
+    (net "Net-(LED79_source_component_158-Pad1)"
+      (pins LED79_source_component_158-1 LED80_source_component_160-3)
+    )
+    (net "Net-(LED8_source_component_16-Pad1)"
+      (pins LED8_source_component_16-1 LED9_source_component_18-3)
+    )
+    (net "Net-(LED80_source_component_160-Pad1)"
+      (pins LED80_source_component_160-1 LED81_source_component_162-3)
+    )
+    (net "Net-(LED81_source_component_162-Pad1)"
+      (pins LED81_source_component_162-1 LED82_source_component_164-3)
+    )
+    (net "Net-(LED82_source_component_164-Pad1)"
+      (pins LED82_source_component_164-1 LED83_source_component_166-3)
+    )
+    (net "Net-(LED83_source_component_166-Pad1)"
+      (pins LED83_source_component_166-1 LED84_source_component_168-3)
+    )
+    (net "Net-(LED84_source_component_168-Pad1)"
+      (pins LED84_source_component_168-1 LED85_source_component_170-3)
+    )
+    (net "Net-(LED85_source_component_170-Pad1)"
+      (pins LED85_source_component_170-1 LED86_source_component_172-3)
+    )
+    (net "Net-(LED86_source_component_172-Pad1)"
+      (pins LED86_source_component_172-1 LED87_source_component_174-3)
+    )
+    (net "Net-(LED87_source_component_174-Pad1)"
+      (pins LED87_source_component_174-1 LED88_source_component_176-3)
+    )
+    (net "Net-(LED88_source_component_176-Pad1)"
+      (pins LED88_source_component_176-1 LED89_source_component_178-3)
+    )
+    (net "Net-(LED89_source_component_178-Pad1)"
+      (pins LED89_source_component_178-1 LED90_source_component_180-3)
+    )
+    (net "Net-(LED9_source_component_18-Pad1)"
+      (pins LED9_source_component_18-1 LED10_source_component_20-3)
+    )
+    (net "Net-(LED90_source_component_180-Pad1)"
+      (pins LED90_source_component_180-1 LED91_source_component_182-3)
+    )
+    (net "Net-(LED91_source_component_182-Pad1)"
+      (pins LED91_source_component_182-1 LED92_source_component_184-3)
+    )
+    (net "Net-(LED92_source_component_184-Pad1)"
+      (pins LED92_source_component_184-1 LED93_source_component_186-3)
+    )
+    (net "Net-(LED93_source_component_186-Pad1)"
+      (pins LED93_source_component_186-1 LED94_source_component_188-3)
+    )
+    (net "Net-(LED94_source_component_188-Pad1)"
+      (pins LED94_source_component_188-1 LED95_source_component_190-3)
+    )
+    (net "Net-(LED95_source_component_190-Pad1)"
+      (pins LED95_source_component_190-1 LED96_source_component_192-3)
+    )
+    (net "Net-(LED96_source_component_192-Pad1)"
+      (pins LED96_source_component_192-1 LED97_source_component_194-3)
+    )
+    (net "Net-(LED97_source_component_194-Pad1)"
+      (pins LED97_source_component_194-1 LED98_source_component_196-3)
+    )
+    (net "Net-(LED98_source_component_196-Pad1)"
+      (pins LED98_source_component_196-1 LED99_source_component_198-3)
+    )
+    (net "Net-(LED99_source_component_198-Pad1)"
+      (pins LED99_source_component_198-1 LED100_source_component_200-3)
+    )
+    (net "Net-(U2_source_component_1-Pad3)"
+      (pins U2_source_component_1-3 U1_source_component_0-32)
+    )
+    (net "Net-(U2_source_component_1-Pad4)"
+      (pins U2_source_component_1-4 U1_source_component_0-31)
+    )
+    (net "GND_source_net_0"
+      (pins U2_source_component_1-1 LED1_source_component_2-2 C_LED1_source_component_3-2 LED2_source_component_4-2 C_LED2_source_component_5-2 LED3_source_component_6-2 C_LED3_source_component_7-2 LED4_source_component_8-2 C_LED4_source_component_9-2 LED5_source_component_10-2 C_LED5_source_component_11-2 LED6_source_component_12-2 C_LED6_source_component_13-2 LED7_source_component_14-2 C_LED7_source_component_15-2 LED8_source_component_16-2 C_LED8_source_component_17-2 LED9_source_component_18-2 C_LED9_source_component_19-2 LED10_source_component_20-2 C_LED10_source_component_21-2 LED11_source_component_22-2 C_LED11_source_component_23-2 LED12_source_component_24-2 C_LED12_source_component_25-2 LED13_source_component_26-2 C_LED13_source_component_27-2 LED14_source_component_28-2 C_LED14_source_component_29-2 LED15_source_component_30-2 C_LED15_source_component_31-2 LED16_source_component_32-2 C_LED16_source_component_33-2 LED17_source_component_34-2 C_LED17_source_component_35-2 LED18_source_component_36-2 C_LED18_source_component_37-2 LED19_source_component_38-2 C_LED19_source_component_39-2 LED20_source_component_40-2 C_LED20_source_component_41-2 LED21_source_component_42-2 C_LED21_source_component_43-2 LED22_source_component_44-2 C_LED22_source_component_45-2 LED23_source_component_46-2 C_LED23_source_component_47-2 LED24_source_component_48-2 C_LED24_source_component_49-2 LED25_source_component_50-2 C_LED25_source_component_51-2 LED26_source_component_52-2 C_LED26_source_component_53-2 LED27_source_component_54-2 C_LED27_source_component_55-2 LED28_source_component_56-2 C_LED28_source_component_57-2 LED29_source_component_58-2 C_LED29_source_component_59-2 LED30_source_component_60-2 C_LED30_source_component_61-2 LED31_source_component_62-2 C_LED31_source_component_63-2 LED32_source_component_64-2 C_LED32_source_component_65-2 LED33_source_component_66-2 C_LED33_source_component_67-2 LED34_source_component_68-2 C_LED34_source_component_69-2 LED35_source_component_70-2 C_LED35_source_component_71-2 LED36_source_component_72-2 C_LED36_source_component_73-2 LED37_source_component_74-2 C_LED37_source_component_75-2 LED38_source_component_76-2 C_LED38_source_component_77-2 LED39_source_component_78-2 C_LED39_source_component_79-2 LED40_source_component_80-2 C_LED40_source_component_81-2 LED41_source_component_82-2 C_LED41_source_component_83-2 LED42_source_component_84-2 C_LED42_source_component_85-2 LED43_source_component_86-2 C_LED43_source_component_87-2 LED44_source_component_88-2 C_LED44_source_component_89-2 LED45_source_component_90-2 C_LED45_source_component_91-2 LED46_source_component_92-2 C_LED46_source_component_93-2 LED47_source_component_94-2 C_LED47_source_component_95-2 LED48_source_component_96-2 C_LED48_source_component_97-2 LED49_source_component_98-2 C_LED49_source_component_99-2 LED50_source_component_100-2 C_LED50_source_component_101-2 LED51_source_component_102-2 C_LED51_source_component_103-2 LED52_source_component_104-2 C_LED52_source_component_105-2 LED53_source_component_106-2 C_LED53_source_component_107-2 LED54_source_component_108-2 C_LED54_source_component_109-2 LED55_source_component_110-2 C_LED55_source_component_111-2 LED56_source_component_112-2 C_LED56_source_component_113-2 LED57_source_component_114-2 C_LED57_source_component_115-2 LED58_source_component_116-2 C_LED58_source_component_117-2 LED59_source_component_118-2 C_LED59_source_component_119-2 LED60_source_component_120-2 C_LED60_source_component_121-2 LED61_source_component_122-2 C_LED61_source_component_123-2 LED62_source_component_124-2 C_LED62_source_component_125-2 LED63_source_component_126-2 C_LED63_source_component_127-2 LED64_source_component_128-2 C_LED64_source_component_129-2 LED65_source_component_130-2 C_LED65_source_component_131-2 LED66_source_component_132-2 C_LED66_source_component_133-2 LED67_source_component_134-2 C_LED67_source_component_135-2 LED68_source_component_136-2 C_LED68_source_component_137-2 LED69_source_component_138-2 C_LED69_source_component_139-2 LED70_source_component_140-2 C_LED70_source_component_141-2 LED71_source_component_142-2 C_LED71_source_component_143-2 LED72_source_component_144-2 C_LED72_source_component_145-2 LED73_source_component_146-2 C_LED73_source_component_147-2 LED74_source_component_148-2 C_LED74_source_component_149-2 LED75_source_component_150-2 C_LED75_source_component_151-2 LED76_source_component_152-2 C_LED76_source_component_153-2 LED77_source_component_154-2 C_LED77_source_component_155-2 LED78_source_component_156-2 C_LED78_source_component_157-2 LED79_source_component_158-2 C_LED79_source_component_159-2 LED80_source_component_160-2 C_LED80_source_component_161-2 LED81_source_component_162-2 C_LED81_source_component_163-2 LED82_source_component_164-2 C_LED82_source_component_165-2 LED83_source_component_166-2 C_LED83_source_component_167-2 LED84_source_component_168-2 C_LED84_source_component_169-2 LED85_source_component_170-2 C_LED85_source_component_171-2 LED86_source_component_172-2 C_LED86_source_component_173-2 LED87_source_component_174-2 C_LED87_source_component_175-2 LED88_source_component_176-2 C_LED88_source_component_177-2 LED89_source_component_178-2 C_LED89_source_component_179-2 LED90_source_component_180-2 C_LED90_source_component_181-2 LED91_source_component_182-2 C_LED91_source_component_183-2 LED92_source_component_184-2 C_LED92_source_component_185-2 LED93_source_component_186-2 C_LED93_source_component_187-2 LED94_source_component_188-2 C_LED94_source_component_189-2 LED95_source_component_190-2 C_LED95_source_component_191-2 LED96_source_component_192-2 C_LED96_source_component_193-2 LED97_source_component_194-2 C_LED97_source_component_195-2 LED98_source_component_196-2 C_LED98_source_component_197-2 LED99_source_component_198-2 C_LED99_source_component_199-2 LED100_source_component_200-2 C_LED100_source_component_201-2 LED101_source_component_202-2 C_LED101_source_component_203-2 LED102_source_component_204-2 C_LED102_source_component_205-2 LED103_source_component_206-2 C_LED103_source_component_207-2 LED104_source_component_208-2 C_LED104_source_component_209-2 LED105_source_component_210-2 C_LED105_source_component_211-2 LED106_source_component_212-2 C_LED106_source_component_213-2 LED107_source_component_214-2 C_LED107_source_component_215-2 LED108_source_component_216-2 C_LED108_source_component_217-2 LED109_source_component_218-2 C_LED109_source_component_219-2 LED110_source_component_220-2 C_LED110_source_component_221-2 LED111_source_component_222-2 C_LED111_source_component_223-2 LED112_source_component_224-2 C_LED112_source_component_225-2 LED113_source_component_226-2 C_LED113_source_component_227-2 LED114_source_component_228-2 C_LED114_source_component_229-2 LED115_source_component_230-2 C_LED115_source_component_231-2 LED116_source_component_232-2 C_LED116_source_component_233-2 LED117_source_component_234-2 C_LED117_source_component_235-2 LED118_source_component_236-2 C_LED118_source_component_237-2 LED119_source_component_238-2 C_LED119_source_component_239-2 LED120_source_component_240-2 C_LED120_source_component_241-2 LED121_source_component_242-2 C_LED121_source_component_243-2 LED122_source_component_244-2 C_LED122_source_component_245-2 LED123_source_component_246-2 C_LED123_source_component_247-2 LED124_source_component_248-2 C_LED124_source_component_249-2 LED125_source_component_250-2 C_LED125_source_component_251-2 LED126_source_component_252-2 C_LED126_source_component_253-2 LED127_source_component_254-2 C_LED127_source_component_255-2 LED128_source_component_256-2 C_LED128_source_component_257-2 LED129_source_component_258-2 C_LED129_source_component_259-2 LED130_source_component_260-2 C_LED130_source_component_261-2 LED131_source_component_262-2 C_LED131_source_component_263-2 LED132_source_component_264-2 C_LED132_source_component_265-2 LED133_source_component_266-2 C_LED133_source_component_267-2 LED134_source_component_268-2 C_LED134_source_component_269-2 LED135_source_component_270-2 C_LED135_source_component_271-2 LED136_source_component_272-2 C_LED136_source_component_273-2 LED137_source_component_274-2 C_LED137_source_component_275-2 LED138_source_component_276-2 C_LED138_source_component_277-2 LED139_source_component_278-2 C_LED139_source_component_279-2 LED140_source_component_280-2 C_LED140_source_component_281-2 LED141_source_component_282-2 C_LED141_source_component_283-2 LED142_source_component_284-2 C_LED142_source_component_285-2 LED143_source_component_286-2 C_LED143_source_component_287-2 LED144_source_component_288-2 C_LED144_source_component_289-2 LED145_source_component_290-2 C_LED145_source_component_291-2 LED146_source_component_292-2 C_LED146_source_component_293-2 LED147_source_component_294-2 C_LED147_source_component_295-2 LED148_source_component_296-2 C_LED148_source_component_297-2 LED149_source_component_298-2 C_LED149_source_component_299-2 LED150_source_component_300-2 C_LED150_source_component_301-2 LED151_source_component_302-2 C_LED151_source_component_303-2 LED152_source_component_304-2 C_LED152_source_component_305-2 LED153_source_component_306-2 C_LED153_source_component_307-2 LED154_source_component_308-2 C_LED154_source_component_309-2 LED155_source_component_310-2 C_LED155_source_component_311-2 LED156_source_component_312-2 C_LED156_source_component_313-2 LED157_source_component_314-2 C_LED157_source_component_315-2 LED158_source_component_316-2 C_LED158_source_component_317-2 LED159_source_component_318-2 C_LED159_source_component_319-2 LED160_source_component_320-2 C_LED160_source_component_321-2 LED161_source_component_322-2 C_LED161_source_component_323-2 LED162_source_component_324-2 C_LED162_source_component_325-2 LED163_source_component_326-2 C_LED163_source_component_327-2 LED164_source_component_328-2 C_LED164_source_component_329-2 LED165_source_component_330-2 C_LED165_source_component_331-2 LED166_source_component_332-2 C_LED166_source_component_333-2 LED167_source_component_334-2 C_LED167_source_component_335-2 LED168_source_component_336-2 C_LED168_source_component_337-2 LED169_source_component_338-2 C_LED169_source_component_339-2 LED170_source_component_340-2 C_LED170_source_component_341-2 LED171_source_component_342-2 C_LED171_source_component_343-2 LED172_source_component_344-2 C_LED172_source_component_345-2 LED173_source_component_346-2 C_LED173_source_component_347-2 LED174_source_component_348-2 C_LED174_source_component_349-2 LED175_source_component_350-2 C_LED175_source_component_351-2 LED176_source_component_352-2 C_LED176_source_component_353-2 LED177_source_component_354-2 C_LED177_source_component_355-2 LED178_source_component_356-2 C_LED178_source_component_357-2 LED179_source_component_358-2 C_LED179_source_component_359-2 LED180_source_component_360-2 C_LED180_source_component_361-2 LED181_source_component_362-2 C_LED181_source_component_363-2 LED182_source_component_364-2 C_LED182_source_component_365-2 LED183_source_component_366-2 C_LED183_source_component_367-2 LED184_source_component_368-2 C_LED184_source_component_369-2 LED185_source_component_370-2 C_LED185_source_component_371-2 LED186_source_component_372-2 C_LED186_source_component_373-2 LED187_source_component_374-2 C_LED187_source_component_375-2 LED188_source_component_376-2 C_LED188_source_component_377-2 LED189_source_component_378-2 C_LED189_source_component_379-2 LED190_source_component_380-2 C_LED190_source_component_381-2 LED191_source_component_382-2 C_LED191_source_component_383-2 LED192_source_component_384-2 C_LED192_source_component_385-2 LED193_source_component_386-2 C_LED193_source_component_387-2 LED194_source_component_388-2 C_LED194_source_component_389-2 LED195_source_component_390-2 C_LED195_source_component_391-2 LED196_source_component_392-2 C_LED196_source_component_393-2 LED197_source_component_394-2 C_LED197_source_component_395-2 LED198_source_component_396-2 C_LED198_source_component_397-2 LED199_source_component_398-2 C_LED199_source_component_399-2 LED200_source_component_400-2 C_LED200_source_component_401-2 LED201_source_component_402-2 C_LED201_source_component_403-2 LED202_source_component_404-2 C_LED202_source_component_405-2 LED203_source_component_406-2 C_LED203_source_component_407-2 LED204_source_component_408-2 C_LED204_source_component_409-2 LED205_source_component_410-2 C_LED205_source_component_411-2 LED206_source_component_412-2 C_LED206_source_component_413-2 LED207_source_component_414-2 C_LED207_source_component_415-2 LED208_source_component_416-2 C_LED208_source_component_417-2 LED209_source_component_418-2 C_LED209_source_component_419-2 LED210_source_component_420-2 C_LED210_source_component_421-2 LED211_source_component_422-2 C_LED211_source_component_423-2 LED212_source_component_424-2 C_LED212_source_component_425-2 LED213_source_component_426-2 C_LED213_source_component_427-2 LED214_source_component_428-2 C_LED214_source_component_429-2 LED215_source_component_430-2 C_LED215_source_component_431-2 LED216_source_component_432-2 C_LED216_source_component_433-2 LED217_source_component_434-2 C_LED217_source_component_435-2 LED218_source_component_436-2 C_LED218_source_component_437-2 LED219_source_component_438-2 C_LED219_source_component_439-2 LED220_source_component_440-2 C_LED220_source_component_441-2 LED221_source_component_442-2 C_LED221_source_component_443-2 LED222_source_component_444-2 C_LED222_source_component_445-2 LED223_source_component_446-2 C_LED223_source_component_447-2 LED224_source_component_448-2 C_LED224_source_component_449-2 LED225_source_component_450-2 C_LED225_source_component_451-2 LED226_source_component_452-2 C_LED226_source_component_453-2 LED227_source_component_454-2 C_LED227_source_component_455-2 LED228_source_component_456-2 C_LED228_source_component_457-2 LED229_source_component_458-2 C_LED229_source_component_459-2 LED230_source_component_460-2 C_LED230_source_component_461-2 LED231_source_component_462-2 C_LED231_source_component_463-2 LED232_source_component_464-2 C_LED232_source_component_465-2 LED233_source_component_466-2 C_LED233_source_component_467-2 LED234_source_component_468-2 C_LED234_source_component_469-2 LED235_source_component_470-2 C_LED235_source_component_471-2 LED236_source_component_472-2 C_LED236_source_component_473-2 LED237_source_component_474-2 C_LED237_source_component_475-2 LED238_source_component_476-2 C_LED238_source_component_477-2 LED239_source_component_478-2 C_LED239_source_component_479-2 LED240_source_component_480-2 C_LED240_source_component_481-2 LED241_source_component_482-2 C_LED241_source_component_483-2 LED242_source_component_484-2 C_LED242_source_component_485-2 LED243_source_component_486-2 C_LED243_source_component_487-2 LED244_source_component_488-2 C_LED244_source_component_489-2 LED245_source_component_490-2 C_LED245_source_component_491-2 LED246_source_component_492-2 C_LED246_source_component_493-2 LED247_source_component_494-2 C_LED247_source_component_495-2 LED248_source_component_496-2 C_LED248_source_component_497-2 LED249_source_component_498-2 C_LED249_source_component_499-2 LED250_source_component_500-2 C_LED250_source_component_501-2 LED251_source_component_502-2 C_LED251_source_component_503-2 LED252_source_component_504-2 C_LED252_source_component_505-2 LED253_source_component_506-2 C_LED253_source_component_507-2 LED254_source_component_508-2 C_LED254_source_component_509-2 LED255_source_component_510-2 C_LED255_source_component_511-2 LED256_source_component_512-2 C_LED256_source_component_513-2 LED257_source_component_514-2 C_LED257_source_component_515-2 LED258_source_component_516-2 C_LED258_source_component_517-2 LED259_source_component_518-2 C_LED259_source_component_519-2 LED260_source_component_520-2 C_LED260_source_component_521-2 LED261_source_component_522-2 C_LED261_source_component_523-2 LED262_source_component_524-2 C_LED262_source_component_525-2 LED263_source_component_526-2 C_LED263_source_component_527-2 LED264_source_component_528-2 C_LED264_source_component_529-2 LED265_source_component_530-2 C_LED265_source_component_531-2 LED266_source_component_532-2 C_LED266_source_component_533-2 LED267_source_component_534-2 C_LED267_source_component_535-2 LED268_source_component_536-2 C_LED268_source_component_537-2 LED269_source_component_538-2 C_LED269_source_component_539-2 LED270_source_component_540-2 C_LED270_source_component_541-2 LED271_source_component_542-2 C_LED271_source_component_543-2 LED272_source_component_544-2 C_LED272_source_component_545-2 LED273_source_component_546-2 C_LED273_source_component_547-2 LED274_source_component_548-2 C_LED274_source_component_549-2 LED275_source_component_550-2 C_LED275_source_component_551-2 LED276_source_component_552-2 C_LED276_source_component_553-2 LED277_source_component_554-2 C_LED277_source_component_555-2 LED278_source_component_556-2 C_LED278_source_component_557-2 LED279_source_component_558-2 C_LED279_source_component_559-2 LED280_source_component_560-2 C_LED280_source_component_561-2 LED281_source_component_562-2 C_LED281_source_component_563-2 LED282_source_component_564-2 C_LED282_source_component_565-2 LED283_source_component_566-2 C_LED283_source_component_567-2 LED284_source_component_568-2 C_LED284_source_component_569-2 LED285_source_component_570-2 C_LED285_source_component_571-2 LED286_source_component_572-2 C_LED286_source_component_573-2 LED287_source_component_574-2 C_LED287_source_component_575-2 LED288_source_component_576-2 C_LED288_source_component_577-2 LED289_source_component_578-2 C_LED289_source_component_579-2 LED290_source_component_580-2 C_LED290_source_component_581-2 LED291_source_component_582-2 C_LED291_source_component_583-2 LED292_source_component_584-2 C_LED292_source_component_585-2 LED293_source_component_586-2 C_LED293_source_component_587-2 LED294_source_component_588-2 C_LED294_source_component_589-2 LED295_source_component_590-2 C_LED295_source_component_591-2 LED296_source_component_592-2 C_LED296_source_component_593-2 LED297_source_component_594-2 C_LED297_source_component_595-2 LED298_source_component_596-2 C_LED298_source_component_597-2 LED299_source_component_598-2 C_LED299_source_component_599-2 LED300_source_component_600-2 C_LED300_source_component_601-2 LED301_source_component_602-2 C_LED301_source_component_603-2 LED302_source_component_604-2 C_LED302_source_component_605-2 LED303_source_component_606-2 C_LED303_source_component_607-2 LED304_source_component_608-2 C_LED304_source_component_609-2 LED305_source_component_610-2 C_LED305_source_component_611-2 LED306_source_component_612-2 C_LED306_source_component_613-2 LED307_source_component_614-2 C_LED307_source_component_615-2 LED308_source_component_616-2 C_LED308_source_component_617-2 LED309_source_component_618-2 C_LED309_source_component_619-2 LED310_source_component_620-2 C_LED310_source_component_621-2 LED311_source_component_622-2 C_LED311_source_component_623-2 LED312_source_component_624-2 C_LED312_source_component_625-2 LED313_source_component_626-2 C_LED313_source_component_627-2 LED314_source_component_628-2 C_LED314_source_component_629-2 LED315_source_component_630-2 C_LED315_source_component_631-2 LED316_source_component_632-2 C_LED316_source_component_633-2 LED317_source_component_634-2 C_LED317_source_component_635-2 LED318_source_component_636-2 C_LED318_source_component_637-2 LED319_source_component_638-2 C_LED319_source_component_639-2 LED320_source_component_640-2 C_LED320_source_component_641-2 LED321_source_component_642-2 C_LED321_source_component_643-2 LED322_source_component_644-2 C_LED322_source_component_645-2 LED323_source_component_646-2 C_LED323_source_component_647-2 LED324_source_component_648-2 C_LED324_source_component_649-2 LED325_source_component_650-2 C_LED325_source_component_651-2 LED326_source_component_652-2 C_LED326_source_component_653-2 LED327_source_component_654-2 C_LED327_source_component_655-2 LED328_source_component_656-2 C_LED328_source_component_657-2 LED329_source_component_658-2 C_LED329_source_component_659-2 LED330_source_component_660-2 C_LED330_source_component_661-2 LED331_source_component_662-2 C_LED331_source_component_663-2 LED332_source_component_664-2 C_LED332_source_component_665-2 LED333_source_component_666-2 C_LED333_source_component_667-2 LED334_source_component_668-2 C_LED334_source_component_669-2 LED335_source_component_670-2 C_LED335_source_component_671-2 LED336_source_component_672-2 C_LED336_source_component_673-2 LED337_source_component_674-2 C_LED337_source_component_675-2 LED338_source_component_676-2 C_LED338_source_component_677-2 LED339_source_component_678-2 C_LED339_source_component_679-2 LED340_source_component_680-2 C_LED340_source_component_681-2 LED341_source_component_682-2 C_LED341_source_component_683-2 LED342_source_component_684-2 C_LED342_source_component_685-2 LED343_source_component_686-2 C_LED343_source_component_687-2 LED344_source_component_688-2 C_LED344_source_component_689-2 LED345_source_component_690-2 C_LED345_source_component_691-2 LED346_source_component_692-2 C_LED346_source_component_693-2 LED347_source_component_694-2 C_LED347_source_component_695-2 LED348_source_component_696-2 C_LED348_source_component_697-2 LED349_source_component_698-2 C_LED349_source_component_699-2 LED350_source_component_700-2 C_LED350_source_component_701-2 LED351_source_component_702-2 C_LED351_source_component_703-2 LED352_source_component_704-2 C_LED352_source_component_705-2 LED353_source_component_706-2 C_LED353_source_component_707-2 LED354_source_component_708-2 C_LED354_source_component_709-2 LED355_source_component_710-2 C_LED355_source_component_711-2 LED356_source_component_712-2 C_LED356_source_component_713-2 LED357_source_component_714-2 C_LED357_source_component_715-2 LED358_source_component_716-2 C_LED358_source_component_717-2 LED359_source_component_718-2 C_LED359_source_component_719-2 LED360_source_component_720-2 C_LED360_source_component_721-2 LED361_source_component_722-2 C_LED361_source_component_723-2 LED362_source_component_724-2 C_LED362_source_component_725-2 LED363_source_component_726-2 C_LED363_source_component_727-2 LED364_source_component_728-2 C_LED364_source_component_729-2 LED365_source_component_730-2 C_LED365_source_component_731-2 LED366_source_component_732-2 C_LED366_source_component_733-2 LED367_source_component_734-2 C_LED367_source_component_735-2 LED368_source_component_736-2 C_LED368_source_component_737-2 LED369_source_component_738-2 C_LED369_source_component_739-2 LED370_source_component_740-2 C_LED370_source_component_741-2 LED371_source_component_742-2 C_LED371_source_component_743-2 C1_source_component_744-2 U1_source_component_0-3 U1_source_component_0-38 U1_source_component_0-8 U1_source_component_0-13 U1_source_component_0-28 U1_source_component_0-18 U1_source_component_0-23)
+    )
+    (net "unconnected-(LED371_source_component_742-Pad1)"
+      (pins LED371_source_component_742-1)
+    )
+    (net "unconnected-(U1_source_component_0-Pad1)"
+      (pins U1_source_component_0-1)
+    )
+    (net "unconnected-(U1_source_component_0-Pad10)"
+      (pins U1_source_component_0-10)
+    )
+    (net "unconnected-(U1_source_component_0-Pad11)"
+      (pins U1_source_component_0-11)
+    )
+    (net "unconnected-(U1_source_component_0-Pad12)"
+      (pins U1_source_component_0-12)
+    )
+    (net "unconnected-(U1_source_component_0-Pad14)"
+      (pins U1_source_component_0-14)
+    )
+    (net "unconnected-(U1_source_component_0-Pad16)"
+      (pins U1_source_component_0-16)
+    )
+    (net "unconnected-(U1_source_component_0-Pad17)"
+      (pins U1_source_component_0-17)
+    )
+    (net "unconnected-(U1_source_component_0-Pad19)"
+      (pins U1_source_component_0-19)
+    )
+    (net "unconnected-(U1_source_component_0-Pad2)"
+      (pins U1_source_component_0-2)
+    )
+    (net "unconnected-(U1_source_component_0-Pad20)"
+      (pins U1_source_component_0-20)
+    )
+    (net "unconnected-(U1_source_component_0-Pad21)"
+      (pins U1_source_component_0-21)
+    )
+    (net "unconnected-(U1_source_component_0-Pad22)"
+      (pins U1_source_component_0-22)
+    )
+    (net "unconnected-(U1_source_component_0-Pad24)"
+      (pins U1_source_component_0-24)
+    )
+    (net "unconnected-(U1_source_component_0-Pad25)"
+      (pins U1_source_component_0-25)
+    )
+    (net "unconnected-(U1_source_component_0-Pad26)"
+      (pins U1_source_component_0-26)
+    )
+    (net "unconnected-(U1_source_component_0-Pad27)"
+      (pins U1_source_component_0-27)
+    )
+    (net "unconnected-(U1_source_component_0-Pad29)"
+      (pins U1_source_component_0-29)
+    )
+    (net "unconnected-(U1_source_component_0-Pad30)"
+      (pins U1_source_component_0-30)
+    )
+    (net "unconnected-(U1_source_component_0-Pad33)"
+      (pins U1_source_component_0-33)
+    )
+    (net "unconnected-(U1_source_component_0-Pad34)"
+      (pins U1_source_component_0-34)
+    )
+    (net "unconnected-(U1_source_component_0-Pad35)"
+      (pins U1_source_component_0-35)
+    )
+    (net "unconnected-(U1_source_component_0-Pad36)"
+      (pins U1_source_component_0-36)
+    )
+    (net "unconnected-(U1_source_component_0-Pad37)"
+      (pins U1_source_component_0-37)
+    )
+    (net "unconnected-(U1_source_component_0-Pad39)"
+      (pins U1_source_component_0-39)
+    )
+    (net "unconnected-(U1_source_component_0-Pad4)"
+      (pins U1_source_component_0-4)
+    )
+    (net "unconnected-(U1_source_component_0-Pad41)"
+      (pins U1_source_component_0-41)
+    )
+    (net "unconnected-(U1_source_component_0-Pad42)"
+      (pins U1_source_component_0-42)
+    )
+    (net "unconnected-(U1_source_component_0-Pad43)"
+      (pins U1_source_component_0-43)
+    )
+    (net "unconnected-(U1_source_component_0-Pad44)"
+      (pins U1_source_component_0-44)
+    )
+    (net "unconnected-(U1_source_component_0-Pad45)"
+      (pins U1_source_component_0-45)
+    )
+    (net "unconnected-(U1_source_component_0-Pad46)"
+      (pins U1_source_component_0-46)
+    )
+    (net "unconnected-(U1_source_component_0-Pad5)"
+      (pins U1_source_component_0-5)
+    )
+    (net "unconnected-(U1_source_component_0-Pad6)"
+      (pins U1_source_component_0-6)
+    )
+    (net "unconnected-(U1_source_component_0-Pad7)"
+      (pins U1_source_component_0-7)
+    )
+    (net "unconnected-(U1_source_component_0-Pad9)"
+      (pins U1_source_component_0-9)
+    )
+    (net "V5_source_net_1"
+      (pins U2_source_component_1-2 LED1_source_component_2-4 C_LED1_source_component_3-1 LED2_source_component_4-4 C_LED2_source_component_5-1 LED3_source_component_6-4 C_LED3_source_component_7-1 LED4_source_component_8-4 C_LED4_source_component_9-1 LED5_source_component_10-4 C_LED5_source_component_11-1 LED6_source_component_12-4 C_LED6_source_component_13-1 LED7_source_component_14-4 C_LED7_source_component_15-1 LED8_source_component_16-4 C_LED8_source_component_17-1 LED9_source_component_18-4 C_LED9_source_component_19-1 LED10_source_component_20-4 C_LED10_source_component_21-1 LED11_source_component_22-4 C_LED11_source_component_23-1 LED12_source_component_24-4 C_LED12_source_component_25-1 LED13_source_component_26-4 C_LED13_source_component_27-1 LED14_source_component_28-4 C_LED14_source_component_29-1 LED15_source_component_30-4 C_LED15_source_component_31-1 LED16_source_component_32-4 C_LED16_source_component_33-1 LED17_source_component_34-4 C_LED17_source_component_35-1 LED18_source_component_36-4 C_LED18_source_component_37-1 LED19_source_component_38-4 C_LED19_source_component_39-1 LED20_source_component_40-4 C_LED20_source_component_41-1 LED21_source_component_42-4 C_LED21_source_component_43-1 LED22_source_component_44-4 C_LED22_source_component_45-1 LED23_source_component_46-4 C_LED23_source_component_47-1 LED24_source_component_48-4 C_LED24_source_component_49-1 LED25_source_component_50-4 C_LED25_source_component_51-1 LED26_source_component_52-4 C_LED26_source_component_53-1 LED27_source_component_54-4 C_LED27_source_component_55-1 LED28_source_component_56-4 C_LED28_source_component_57-1 LED29_source_component_58-4 C_LED29_source_component_59-1 LED30_source_component_60-4 C_LED30_source_component_61-1 LED31_source_component_62-4 C_LED31_source_component_63-1 LED32_source_component_64-4 C_LED32_source_component_65-1 LED33_source_component_66-4 C_LED33_source_component_67-1 LED34_source_component_68-4 C_LED34_source_component_69-1 LED35_source_component_70-4 C_LED35_source_component_71-1 LED36_source_component_72-4 C_LED36_source_component_73-1 LED37_source_component_74-4 C_LED37_source_component_75-1 LED38_source_component_76-4 C_LED38_source_component_77-1 LED39_source_component_78-4 C_LED39_source_component_79-1 LED40_source_component_80-4 C_LED40_source_component_81-1 LED41_source_component_82-4 C_LED41_source_component_83-1 LED42_source_component_84-4 C_LED42_source_component_85-1 LED43_source_component_86-4 C_LED43_source_component_87-1 LED44_source_component_88-4 C_LED44_source_component_89-1 LED45_source_component_90-4 C_LED45_source_component_91-1 LED46_source_component_92-4 C_LED46_source_component_93-1 LED47_source_component_94-4 C_LED47_source_component_95-1 LED48_source_component_96-4 C_LED48_source_component_97-1 LED49_source_component_98-4 C_LED49_source_component_99-1 LED50_source_component_100-4 C_LED50_source_component_101-1 LED51_source_component_102-4 C_LED51_source_component_103-1 LED52_source_component_104-4 C_LED52_source_component_105-1 LED53_source_component_106-4 C_LED53_source_component_107-1 LED54_source_component_108-4 C_LED54_source_component_109-1 LED55_source_component_110-4 C_LED55_source_component_111-1 LED56_source_component_112-4 C_LED56_source_component_113-1 LED57_source_component_114-4 C_LED57_source_component_115-1 LED58_source_component_116-4 C_LED58_source_component_117-1 LED59_source_component_118-4 C_LED59_source_component_119-1 LED60_source_component_120-4 C_LED60_source_component_121-1 LED61_source_component_122-4 C_LED61_source_component_123-1 LED62_source_component_124-4 C_LED62_source_component_125-1 LED63_source_component_126-4 C_LED63_source_component_127-1 LED64_source_component_128-4 C_LED64_source_component_129-1 LED65_source_component_130-4 C_LED65_source_component_131-1 LED66_source_component_132-4 C_LED66_source_component_133-1 LED67_source_component_134-4 C_LED67_source_component_135-1 LED68_source_component_136-4 C_LED68_source_component_137-1 LED69_source_component_138-4 C_LED69_source_component_139-1 LED70_source_component_140-4 C_LED70_source_component_141-1 LED71_source_component_142-4 C_LED71_source_component_143-1 LED72_source_component_144-4 C_LED72_source_component_145-1 LED73_source_component_146-4 C_LED73_source_component_147-1 LED74_source_component_148-4 C_LED74_source_component_149-1 LED75_source_component_150-4 C_LED75_source_component_151-1 LED76_source_component_152-4 C_LED76_source_component_153-1 LED77_source_component_154-4 C_LED77_source_component_155-1 LED78_source_component_156-4 C_LED78_source_component_157-1 LED79_source_component_158-4 C_LED79_source_component_159-1 LED80_source_component_160-4 C_LED80_source_component_161-1 LED81_source_component_162-4 C_LED81_source_component_163-1 LED82_source_component_164-4 C_LED82_source_component_165-1 LED83_source_component_166-4 C_LED83_source_component_167-1 LED84_source_component_168-4 C_LED84_source_component_169-1 LED85_source_component_170-4 C_LED85_source_component_171-1 LED86_source_component_172-4 C_LED86_source_component_173-1 LED87_source_component_174-4 C_LED87_source_component_175-1 LED88_source_component_176-4 C_LED88_source_component_177-1 LED89_source_component_178-4 C_LED89_source_component_179-1 LED90_source_component_180-4 C_LED90_source_component_181-1 LED91_source_component_182-4 C_LED91_source_component_183-1 LED92_source_component_184-4 C_LED92_source_component_185-1 LED93_source_component_186-4 C_LED93_source_component_187-1 LED94_source_component_188-4 C_LED94_source_component_189-1 LED95_source_component_190-4 C_LED95_source_component_191-1 LED96_source_component_192-4 C_LED96_source_component_193-1 LED97_source_component_194-4 C_LED97_source_component_195-1 LED98_source_component_196-4 C_LED98_source_component_197-1 LED99_source_component_198-4 C_LED99_source_component_199-1 LED100_source_component_200-4 C_LED100_source_component_201-1 LED101_source_component_202-4 C_LED101_source_component_203-1 LED102_source_component_204-4 C_LED102_source_component_205-1 LED103_source_component_206-4 C_LED103_source_component_207-1 LED104_source_component_208-4 C_LED104_source_component_209-1 LED105_source_component_210-4 C_LED105_source_component_211-1 LED106_source_component_212-4 C_LED106_source_component_213-1 LED107_source_component_214-4 C_LED107_source_component_215-1 LED108_source_component_216-4 C_LED108_source_component_217-1 LED109_source_component_218-4 C_LED109_source_component_219-1 LED110_source_component_220-4 C_LED110_source_component_221-1 LED111_source_component_222-4 C_LED111_source_component_223-1 LED112_source_component_224-4 C_LED112_source_component_225-1 LED113_source_component_226-4 C_LED113_source_component_227-1 LED114_source_component_228-4 C_LED114_source_component_229-1 LED115_source_component_230-4 C_LED115_source_component_231-1 LED116_source_component_232-4 C_LED116_source_component_233-1 LED117_source_component_234-4 C_LED117_source_component_235-1 LED118_source_component_236-4 C_LED118_source_component_237-1 LED119_source_component_238-4 C_LED119_source_component_239-1 LED120_source_component_240-4 C_LED120_source_component_241-1 LED121_source_component_242-4 C_LED121_source_component_243-1 LED122_source_component_244-4 C_LED122_source_component_245-1 LED123_source_component_246-4 C_LED123_source_component_247-1 LED124_source_component_248-4 C_LED124_source_component_249-1 LED125_source_component_250-4 C_LED125_source_component_251-1 LED126_source_component_252-4 C_LED126_source_component_253-1 LED127_source_component_254-4 C_LED127_source_component_255-1 LED128_source_component_256-4 C_LED128_source_component_257-1 LED129_source_component_258-4 C_LED129_source_component_259-1 LED130_source_component_260-4 C_LED130_source_component_261-1 LED131_source_component_262-4 C_LED131_source_component_263-1 LED132_source_component_264-4 C_LED132_source_component_265-1 LED133_source_component_266-4 C_LED133_source_component_267-1 LED134_source_component_268-4 C_LED134_source_component_269-1 LED135_source_component_270-4 C_LED135_source_component_271-1 LED136_source_component_272-4 C_LED136_source_component_273-1 LED137_source_component_274-4 C_LED137_source_component_275-1 LED138_source_component_276-4 C_LED138_source_component_277-1 LED139_source_component_278-4 C_LED139_source_component_279-1 LED140_source_component_280-4 C_LED140_source_component_281-1 LED141_source_component_282-4 C_LED141_source_component_283-1 LED142_source_component_284-4 C_LED142_source_component_285-1 LED143_source_component_286-4 C_LED143_source_component_287-1 LED144_source_component_288-4 C_LED144_source_component_289-1 LED145_source_component_290-4 C_LED145_source_component_291-1 LED146_source_component_292-4 C_LED146_source_component_293-1 LED147_source_component_294-4 C_LED147_source_component_295-1 LED148_source_component_296-4 C_LED148_source_component_297-1 LED149_source_component_298-4 C_LED149_source_component_299-1 LED150_source_component_300-4 C_LED150_source_component_301-1 LED151_source_component_302-4 C_LED151_source_component_303-1 LED152_source_component_304-4 C_LED152_source_component_305-1 LED153_source_component_306-4 C_LED153_source_component_307-1 LED154_source_component_308-4 C_LED154_source_component_309-1 LED155_source_component_310-4 C_LED155_source_component_311-1 LED156_source_component_312-4 C_LED156_source_component_313-1 LED157_source_component_314-4 C_LED157_source_component_315-1 LED158_source_component_316-4 C_LED158_source_component_317-1 LED159_source_component_318-4 C_LED159_source_component_319-1 LED160_source_component_320-4 C_LED160_source_component_321-1 LED161_source_component_322-4 C_LED161_source_component_323-1 LED162_source_component_324-4 C_LED162_source_component_325-1 LED163_source_component_326-4 C_LED163_source_component_327-1 LED164_source_component_328-4 C_LED164_source_component_329-1 LED165_source_component_330-4 C_LED165_source_component_331-1 LED166_source_component_332-4 C_LED166_source_component_333-1 LED167_source_component_334-4 C_LED167_source_component_335-1 LED168_source_component_336-4 C_LED168_source_component_337-1 LED169_source_component_338-4 C_LED169_source_component_339-1 LED170_source_component_340-4 C_LED170_source_component_341-1 LED171_source_component_342-4 C_LED171_source_component_343-1 LED172_source_component_344-4 C_LED172_source_component_345-1 LED173_source_component_346-4 C_LED173_source_component_347-1 LED174_source_component_348-4 C_LED174_source_component_349-1 LED175_source_component_350-4 C_LED175_source_component_351-1 LED176_source_component_352-4 C_LED176_source_component_353-1 LED177_source_component_354-4 C_LED177_source_component_355-1 LED178_source_component_356-4 C_LED178_source_component_357-1 LED179_source_component_358-4 C_LED179_source_component_359-1 LED180_source_component_360-4 C_LED180_source_component_361-1 LED181_source_component_362-4 C_LED181_source_component_363-1 LED182_source_component_364-4 C_LED182_source_component_365-1 LED183_source_component_366-4 C_LED183_source_component_367-1 LED184_source_component_368-4 C_LED184_source_component_369-1 LED185_source_component_370-4 C_LED185_source_component_371-1 LED186_source_component_372-4 C_LED186_source_component_373-1 LED187_source_component_374-4 C_LED187_source_component_375-1 LED188_source_component_376-4 C_LED188_source_component_377-1 LED189_source_component_378-4 C_LED189_source_component_379-1 LED190_source_component_380-4 C_LED190_source_component_381-1 LED191_source_component_382-4 C_LED191_source_component_383-1 LED192_source_component_384-4 C_LED192_source_component_385-1 LED193_source_component_386-4 C_LED193_source_component_387-1 LED194_source_component_388-4 C_LED194_source_component_389-1 LED195_source_component_390-4 C_LED195_source_component_391-1 LED196_source_component_392-4 C_LED196_source_component_393-1 LED197_source_component_394-4 C_LED197_source_component_395-1 LED198_source_component_396-4 C_LED198_source_component_397-1 LED199_source_component_398-4 C_LED199_source_component_399-1 LED200_source_component_400-4 C_LED200_source_component_401-1 LED201_source_component_402-4 C_LED201_source_component_403-1 LED202_source_component_404-4 C_LED202_source_component_405-1 LED203_source_component_406-4 C_LED203_source_component_407-1 LED204_source_component_408-4 C_LED204_source_component_409-1 LED205_source_component_410-4 C_LED205_source_component_411-1 LED206_source_component_412-4 C_LED206_source_component_413-1 LED207_source_component_414-4 C_LED207_source_component_415-1 LED208_source_component_416-4 C_LED208_source_component_417-1 LED209_source_component_418-4 C_LED209_source_component_419-1 LED210_source_component_420-4 C_LED210_source_component_421-1 LED211_source_component_422-4 C_LED211_source_component_423-1 LED212_source_component_424-4 C_LED212_source_component_425-1 LED213_source_component_426-4 C_LED213_source_component_427-1 LED214_source_component_428-4 C_LED214_source_component_429-1 LED215_source_component_430-4 C_LED215_source_component_431-1 LED216_source_component_432-4 C_LED216_source_component_433-1 LED217_source_component_434-4 C_LED217_source_component_435-1 LED218_source_component_436-4 C_LED218_source_component_437-1 LED219_source_component_438-4 C_LED219_source_component_439-1 LED220_source_component_440-4 C_LED220_source_component_441-1 LED221_source_component_442-4 C_LED221_source_component_443-1 LED222_source_component_444-4 C_LED222_source_component_445-1 LED223_source_component_446-4 C_LED223_source_component_447-1 LED224_source_component_448-4 C_LED224_source_component_449-1 LED225_source_component_450-4 C_LED225_source_component_451-1 LED226_source_component_452-4 C_LED226_source_component_453-1 LED227_source_component_454-4 C_LED227_source_component_455-1 LED228_source_component_456-4 C_LED228_source_component_457-1 LED229_source_component_458-4 C_LED229_source_component_459-1 LED230_source_component_460-4 C_LED230_source_component_461-1 LED231_source_component_462-4 C_LED231_source_component_463-1 LED232_source_component_464-4 C_LED232_source_component_465-1 LED233_source_component_466-4 C_LED233_source_component_467-1 LED234_source_component_468-4 C_LED234_source_component_469-1 LED235_source_component_470-4 C_LED235_source_component_471-1 LED236_source_component_472-4 C_LED236_source_component_473-1 LED237_source_component_474-4 C_LED237_source_component_475-1 LED238_source_component_476-4 C_LED238_source_component_477-1 LED239_source_component_478-4 C_LED239_source_component_479-1 LED240_source_component_480-4 C_LED240_source_component_481-1 LED241_source_component_482-4 C_LED241_source_component_483-1 LED242_source_component_484-4 C_LED242_source_component_485-1 LED243_source_component_486-4 C_LED243_source_component_487-1 LED244_source_component_488-4 C_LED244_source_component_489-1 LED245_source_component_490-4 C_LED245_source_component_491-1 LED246_source_component_492-4 C_LED246_source_component_493-1 LED247_source_component_494-4 C_LED247_source_component_495-1 LED248_source_component_496-4 C_LED248_source_component_497-1 LED249_source_component_498-4 C_LED249_source_component_499-1 LED250_source_component_500-4 C_LED250_source_component_501-1 LED251_source_component_502-4 C_LED251_source_component_503-1 LED252_source_component_504-4 C_LED252_source_component_505-1 LED253_source_component_506-4 C_LED253_source_component_507-1 LED254_source_component_508-4 C_LED254_source_component_509-1 LED255_source_component_510-4 C_LED255_source_component_511-1 LED256_source_component_512-4 C_LED256_source_component_513-1 LED257_source_component_514-4 C_LED257_source_component_515-1 LED258_source_component_516-4 C_LED258_source_component_517-1 LED259_source_component_518-4 C_LED259_source_component_519-1 LED260_source_component_520-4 C_LED260_source_component_521-1 LED261_source_component_522-4 C_LED261_source_component_523-1 LED262_source_component_524-4 C_LED262_source_component_525-1 LED263_source_component_526-4 C_LED263_source_component_527-1 LED264_source_component_528-4 C_LED264_source_component_529-1 LED265_source_component_530-4 C_LED265_source_component_531-1 LED266_source_component_532-4 C_LED266_source_component_533-1 LED267_source_component_534-4 C_LED267_source_component_535-1 LED268_source_component_536-4 C_LED268_source_component_537-1 LED269_source_component_538-4 C_LED269_source_component_539-1 LED270_source_component_540-4 C_LED270_source_component_541-1 LED271_source_component_542-4 C_LED271_source_component_543-1 LED272_source_component_544-4 C_LED272_source_component_545-1 LED273_source_component_546-4 C_LED273_source_component_547-1 LED274_source_component_548-4 C_LED274_source_component_549-1 LED275_source_component_550-4 C_LED275_source_component_551-1 LED276_source_component_552-4 C_LED276_source_component_553-1 LED277_source_component_554-4 C_LED277_source_component_555-1 LED278_source_component_556-4 C_LED278_source_component_557-1 LED279_source_component_558-4 C_LED279_source_component_559-1 LED280_source_component_560-4 C_LED280_source_component_561-1 LED281_source_component_562-4 C_LED281_source_component_563-1 LED282_source_component_564-4 C_LED282_source_component_565-1 LED283_source_component_566-4 C_LED283_source_component_567-1 LED284_source_component_568-4 C_LED284_source_component_569-1 LED285_source_component_570-4 C_LED285_source_component_571-1 LED286_source_component_572-4 C_LED286_source_component_573-1 LED287_source_component_574-4 C_LED287_source_component_575-1 LED288_source_component_576-4 C_LED288_source_component_577-1 LED289_source_component_578-4 C_LED289_source_component_579-1 LED290_source_component_580-4 C_LED290_source_component_581-1 LED291_source_component_582-4 C_LED291_source_component_583-1 LED292_source_component_584-4 C_LED292_source_component_585-1 LED293_source_component_586-4 C_LED293_source_component_587-1 LED294_source_component_588-4 C_LED294_source_component_589-1 LED295_source_component_590-4 C_LED295_source_component_591-1 LED296_source_component_592-4 C_LED296_source_component_593-1 LED297_source_component_594-4 C_LED297_source_component_595-1 LED298_source_component_596-4 C_LED298_source_component_597-1 LED299_source_component_598-4 C_LED299_source_component_599-1 LED300_source_component_600-4 C_LED300_source_component_601-1 LED301_source_component_602-4 C_LED301_source_component_603-1 LED302_source_component_604-4 C_LED302_source_component_605-1 LED303_source_component_606-4 C_LED303_source_component_607-1 LED304_source_component_608-4 C_LED304_source_component_609-1 LED305_source_component_610-4 C_LED305_source_component_611-1 LED306_source_component_612-4 C_LED306_source_component_613-1 LED307_source_component_614-4 C_LED307_source_component_615-1 LED308_source_component_616-4 C_LED308_source_component_617-1 LED309_source_component_618-4 C_LED309_source_component_619-1 LED310_source_component_620-4 C_LED310_source_component_621-1 LED311_source_component_622-4 C_LED311_source_component_623-1 LED312_source_component_624-4 C_LED312_source_component_625-1 LED313_source_component_626-4 C_LED313_source_component_627-1 LED314_source_component_628-4 C_LED314_source_component_629-1 LED315_source_component_630-4 C_LED315_source_component_631-1 LED316_source_component_632-4 C_LED316_source_component_633-1 LED317_source_component_634-4 C_LED317_source_component_635-1 LED318_source_component_636-4 C_LED318_source_component_637-1 LED319_source_component_638-4 C_LED319_source_component_639-1 LED320_source_component_640-4 C_LED320_source_component_641-1 LED321_source_component_642-4 C_LED321_source_component_643-1 LED322_source_component_644-4 C_LED322_source_component_645-1 LED323_source_component_646-4 C_LED323_source_component_647-1 LED324_source_component_648-4 C_LED324_source_component_649-1 LED325_source_component_650-4 C_LED325_source_component_651-1 LED326_source_component_652-4 C_LED326_source_component_653-1 LED327_source_component_654-4 C_LED327_source_component_655-1 LED328_source_component_656-4 C_LED328_source_component_657-1 LED329_source_component_658-4 C_LED329_source_component_659-1 LED330_source_component_660-4 C_LED330_source_component_661-1 LED331_source_component_662-4 C_LED331_source_component_663-1 LED332_source_component_664-4 C_LED332_source_component_665-1 LED333_source_component_666-4 C_LED333_source_component_667-1 LED334_source_component_668-4 C_LED334_source_component_669-1 LED335_source_component_670-4 C_LED335_source_component_671-1 LED336_source_component_672-4 C_LED336_source_component_673-1 LED337_source_component_674-4 C_LED337_source_component_675-1 LED338_source_component_676-4 C_LED338_source_component_677-1 LED339_source_component_678-4 C_LED339_source_component_679-1 LED340_source_component_680-4 C_LED340_source_component_681-1 LED341_source_component_682-4 C_LED341_source_component_683-1 LED342_source_component_684-4 C_LED342_source_component_685-1 LED343_source_component_686-4 C_LED343_source_component_687-1 LED344_source_component_688-4 C_LED344_source_component_689-1 LED345_source_component_690-4 C_LED345_source_component_691-1 LED346_source_component_692-4 C_LED346_source_component_693-1 LED347_source_component_694-4 C_LED347_source_component_695-1 LED348_source_component_696-4 C_LED348_source_component_697-1 LED349_source_component_698-4 C_LED349_source_component_699-1 LED350_source_component_700-4 C_LED350_source_component_701-1 LED351_source_component_702-4 C_LED351_source_component_703-1 LED352_source_component_704-4 C_LED352_source_component_705-1 LED353_source_component_706-4 C_LED353_source_component_707-1 LED354_source_component_708-4 C_LED354_source_component_709-1 LED355_source_component_710-4 C_LED355_source_component_711-1 LED356_source_component_712-4 C_LED356_source_component_713-1 LED357_source_component_714-4 C_LED357_source_component_715-1 LED358_source_component_716-4 C_LED358_source_component_717-1 LED359_source_component_718-4 C_LED359_source_component_719-1 LED360_source_component_720-4 C_LED360_source_component_721-1 LED361_source_component_722-4 C_LED361_source_component_723-1 LED362_source_component_724-4 C_LED362_source_component_725-1 LED363_source_component_726-4 C_LED363_source_component_727-1 LED364_source_component_728-4 C_LED364_source_component_729-1 LED365_source_component_730-4 C_LED365_source_component_731-1 LED366_source_component_732-4 C_LED366_source_component_733-1 LED367_source_component_734-4 C_LED367_source_component_735-1 LED368_source_component_736-4 C_LED368_source_component_737-1 LED369_source_component_738-4 C_LED369_source_component_739-1 LED370_source_component_740-4 C_LED370_source_component_741-1 LED371_source_component_742-4 C_LED371_source_component_743-1 C1_source_component_744-1 U1_source_component_0-40)
+    )
+    (class "kicad_default" "" "Net-(LED1_source_component_2-Pad1)" "Net-(LED1_source_component_2-Pad3)" "Net-(LED10_source_component_20-Pad1)" "Net-(LED100_source_component_200-Pad1)" "Net-(LED101_source_component_202-Pad1)" "Net-(LED102_source_component_204-Pad1)" "Net-(LED103_source_component_206-Pad1)" "Net-(LED104_source_component_208-Pad1)" "Net-(LED105_source_component_210-Pad1)" "Net-(LED106_source_component_212-Pad1)" "Net-(LED107_source_component_214-Pad1)" "Net-(LED108_source_component_216-Pad1)" "Net-(LED109_source_component_218-Pad1)" "Net-(LED11_source_component_22-Pad1)" "Net-(LED110_source_component_220-Pad1)" "Net-(LED111_source_component_222-Pad1)" "Net-(LED112_source_component_224-Pad1)" "Net-(LED113_source_component_226-Pad1)" "Net-(LED114_source_component_228-Pad1)" "Net-(LED115_source_component_230-Pad1)" "Net-(LED116_source_component_232-Pad1)" "Net-(LED117_source_component_234-Pad1)" "Net-(LED118_source_component_236-Pad1)" "Net-(LED119_source_component_238-Pad1)" "Net-(LED12_source_component_24-Pad1)" "Net-(LED120_source_component_240-Pad1)" "Net-(LED121_source_component_242-Pad1)" "Net-(LED122_source_component_244-Pad1)" "Net-(LED123_source_component_246-Pad1)" "Net-(LED124_source_component_248-Pad1)" "Net-(LED125_source_component_250-Pad1)" "Net-(LED126_source_component_252-Pad1)" "Net-(LED127_source_component_254-Pad1)" "Net-(LED128_source_component_256-Pad1)" "Net-(LED129_source_component_258-Pad1)" "Net-(LED13_source_component_26-Pad1)" "Net-(LED130_source_component_260-Pad1)" "Net-(LED131_source_component_262-Pad1)" "Net-(LED132_source_component_264-Pad1)" "Net-(LED133_source_component_266-Pad1)" "Net-(LED134_source_component_268-Pad1)" "Net-(LED135_source_component_270-Pad1)" "Net-(LED136_source_component_272-Pad1)" "Net-(LED137_source_component_274-Pad1)" "Net-(LED138_source_component_276-Pad1)" "Net-(LED139_source_component_278-Pad1)" "Net-(LED14_source_component_28-Pad1)" "Net-(LED140_source_component_280-Pad1)" "Net-(LED141_source_component_282-Pad1)" "Net-(LED142_source_component_284-Pad1)" "Net-(LED143_source_component_286-Pad1)" "Net-(LED144_source_component_288-Pad1)" "Net-(LED145_source_component_290-Pad1)" "Net-(LED146_source_component_292-Pad1)" "Net-(LED147_source_component_294-Pad1)" "Net-(LED148_source_component_296-Pad1)" "Net-(LED149_source_component_298-Pad1)" "Net-(LED15_source_component_30-Pad1)" "Net-(LED150_source_component_300-Pad1)" "Net-(LED151_source_component_302-Pad1)" "Net-(LED152_source_component_304-Pad1)" "Net-(LED153_source_component_306-Pad1)" "Net-(LED154_source_component_308-Pad1)" "Net-(LED155_source_component_310-Pad1)" "Net-(LED156_source_component_312-Pad1)" "Net-(LED157_source_component_314-Pad1)" "Net-(LED158_source_component_316-Pad1)" "Net-(LED159_source_component_318-Pad1)" "Net-(LED16_source_component_32-Pad1)" "Net-(LED160_source_component_320-Pad1)" "Net-(LED161_source_component_322-Pad1)" "Net-(LED162_source_component_324-Pad1)" "Net-(LED163_source_component_326-Pad1)" "Net-(LED164_source_component_328-Pad1)" "Net-(LED165_source_component_330-Pad1)" "Net-(LED166_source_component_332-Pad1)" "Net-(LED167_source_component_334-Pad1)" "Net-(LED168_source_component_336-Pad1)" "Net-(LED169_source_component_338-Pad1)" "Net-(LED17_source_component_34-Pad1)" "Net-(LED170_source_component_340-Pad1)" "Net-(LED171_source_component_342-Pad1)" "Net-(LED172_source_component_344-Pad1)" "Net-(LED173_source_component_346-Pad1)" "Net-(LED174_source_component_348-Pad1)" "Net-(LED175_source_component_350-Pad1)" "Net-(LED176_source_component_352-Pad1)" "Net-(LED177_source_component_354-Pad1)" "Net-(LED178_source_component_356-Pad1)" "Net-(LED179_source_component_358-Pad1)" "Net-(LED18_source_component_36-Pad1)" "Net-(LED180_source_component_360-Pad1)" "Net-(LED181_source_component_362-Pad1)" "Net-(LED182_source_component_364-Pad1)" "Net-(LED183_source_component_366-Pad1)" "Net-(LED184_source_component_368-Pad1)" "Net-(LED185_source_component_370-Pad1)" "Net-(LED186_source_component_372-Pad1)" "Net-(LED187_source_component_374-Pad1)" "Net-(LED188_source_component_376-Pad1)" "Net-(LED189_source_component_378-Pad1)" "Net-(LED19_source_component_38-Pad1)" "Net-(LED190_source_component_380-Pad1)" "Net-(LED191_source_component_382-Pad1)" "Net-(LED192_source_component_384-Pad1)" "Net-(LED193_source_component_386-Pad1)" "Net-(LED194_source_component_388-Pad1)" "Net-(LED195_source_component_390-Pad1)" "Net-(LED196_source_component_392-Pad1)" "Net-(LED197_source_component_394-Pad1)" "Net-(LED198_source_component_396-Pad1)" "Net-(LED199_source_component_398-Pad1)" "Net-(LED2_source_component_4-Pad1)" "Net-(LED20_source_component_40-Pad1)" "Net-(LED200_source_component_400-Pad1)" "Net-(LED201_source_component_402-Pad1)" "Net-(LED202_source_component_404-Pad1)" "Net-(LED203_source_component_406-Pad1)" "Net-(LED204_source_component_408-Pad1)" "Net-(LED205_source_component_410-Pad1)" "Net-(LED206_source_component_412-Pad1)" "Net-(LED207_source_component_414-Pad1)" "Net-(LED208_source_component_416-Pad1)" "Net-(LED209_source_component_418-Pad1)" "Net-(LED21_source_component_42-Pad1)" "Net-(LED210_source_component_420-Pad1)" "Net-(LED211_source_component_422-Pad1)" "Net-(LED212_source_component_424-Pad1)" "Net-(LED213_source_component_426-Pad1)" "Net-(LED214_source_component_428-Pad1)" "Net-(LED215_source_component_430-Pad1)" "Net-(LED216_source_component_432-Pad1)" "Net-(LED217_source_component_434-Pad1)" "Net-(LED218_source_component_436-Pad1)" "Net-(LED219_source_component_438-Pad1)" "Net-(LED22_source_component_44-Pad1)" "Net-(LED220_source_component_440-Pad1)" "Net-(LED221_source_component_442-Pad1)" "Net-(LED222_source_component_444-Pad1)" "Net-(LED223_source_component_446-Pad1)" "Net-(LED224_source_component_448-Pad1)" "Net-(LED225_source_component_450-Pad1)" "Net-(LED226_source_component_452-Pad1)" "Net-(LED227_source_component_454-Pad1)" "Net-(LED228_source_component_456-Pad1)" "Net-(LED229_source_component_458-Pad1)" "Net-(LED23_source_component_46-Pad1)" "Net-(LED230_source_component_460-Pad1)" "Net-(LED231_source_component_462-Pad1)" "Net-(LED232_source_component_464-Pad1)" "Net-(LED233_source_component_466-Pad1)" "Net-(LED234_source_component_468-Pad1)" "Net-(LED235_source_component_470-Pad1)" "Net-(LED236_source_component_472-Pad1)" "Net-(LED237_source_component_474-Pad1)" "Net-(LED238_source_component_476-Pad1)" "Net-(LED239_source_component_478-Pad1)" "Net-(LED24_source_component_48-Pad1)" "Net-(LED240_source_component_480-Pad1)" "Net-(LED241_source_component_482-Pad1)" "Net-(LED242_source_component_484-Pad1)" "Net-(LED243_source_component_486-Pad1)" "Net-(LED244_source_component_488-Pad1)" "Net-(LED245_source_component_490-Pad1)" "Net-(LED246_source_component_492-Pad1)" "Net-(LED247_source_component_494-Pad1)" "Net-(LED248_source_component_496-Pad1)" "Net-(LED249_source_component_498-Pad1)" "Net-(LED25_source_component_50-Pad1)" "Net-(LED250_source_component_500-Pad1)" "Net-(LED251_source_component_502-Pad1)" "Net-(LED252_source_component_504-Pad1)" "Net-(LED253_source_component_506-Pad1)" "Net-(LED254_source_component_508-Pad1)" "Net-(LED255_source_component_510-Pad1)" "Net-(LED256_source_component_512-Pad1)" "Net-(LED257_source_component_514-Pad1)" "Net-(LED258_source_component_516-Pad1)" "Net-(LED259_source_component_518-Pad1)" "Net-(LED26_source_component_52-Pad1)" "Net-(LED260_source_component_520-Pad1)" "Net-(LED261_source_component_522-Pad1)" "Net-(LED262_source_component_524-Pad1)" "Net-(LED263_source_component_526-Pad1)" "Net-(LED264_source_component_528-Pad1)" "Net-(LED265_source_component_530-Pad1)" "Net-(LED266_source_component_532-Pad1)" "Net-(LED267_source_component_534-Pad1)" "Net-(LED268_source_component_536-Pad1)" "Net-(LED269_source_component_538-Pad1)" "Net-(LED27_source_component_54-Pad1)" "Net-(LED270_source_component_540-Pad1)" "Net-(LED271_source_component_542-Pad1)" "Net-(LED272_source_component_544-Pad1)" "Net-(LED273_source_component_546-Pad1)" "Net-(LED274_source_component_548-Pad1)" "Net-(LED275_source_component_550-Pad1)" "Net-(LED276_source_component_552-Pad1)" "Net-(LED277_source_component_554-Pad1)" "Net-(LED278_source_component_556-Pad1)" "Net-(LED279_source_component_558-Pad1)" "Net-(LED28_source_component_56-Pad1)" "Net-(LED280_source_component_560-Pad1)" "Net-(LED281_source_component_562-Pad1)" "Net-(LED282_source_component_564-Pad1)" "Net-(LED283_source_component_566-Pad1)" "Net-(LED284_source_component_568-Pad1)" "Net-(LED285_source_component_570-Pad1)" "Net-(LED286_source_component_572-Pad1)" "Net-(LED287_source_component_574-Pad1)" "Net-(LED288_source_component_576-Pad1)" "Net-(LED289_source_component_578-Pad1)" "Net-(LED29_source_component_58-Pad1)" "Net-(LED290_source_component_580-Pad1)" "Net-(LED291_source_component_582-Pad1)" "Net-(LED292_source_component_584-Pad1)" "Net-(LED293_source_component_586-Pad1)" "Net-(LED294_source_component_588-Pad1)" "Net-(LED295_source_component_590-Pad1)" "Net-(LED296_source_component_592-Pad1)" "Net-(LED297_source_component_594-Pad1)" "Net-(LED298_source_component_596-Pad1)" "Net-(LED299_source_component_598-Pad1)" "Net-(LED3_source_component_6-Pad1)" "Net-(LED30_source_component_60-Pad1)" "Net-(LED300_source_component_600-Pad1)" "Net-(LED301_source_component_602-Pad1)" "Net-(LED302_source_component_604-Pad1)" "Net-(LED303_source_component_606-Pad1)" "Net-(LED304_source_component_608-Pad1)" "Net-(LED305_source_component_610-Pad1)" "Net-(LED306_source_component_612-Pad1)" "Net-(LED307_source_component_614-Pad1)" "Net-(LED308_source_component_616-Pad1)" "Net-(LED309_source_component_618-Pad1)" "Net-(LED31_source_component_62-Pad1)" "Net-(LED310_source_component_620-Pad1)" "Net-(LED311_source_component_622-Pad1)" "Net-(LED312_source_component_624-Pad1)" "Net-(LED313_source_component_626-Pad1)" "Net-(LED314_source_component_628-Pad1)" "Net-(LED315_source_component_630-Pad1)" "Net-(LED316_source_component_632-Pad1)" "Net-(LED317_source_component_634-Pad1)" "Net-(LED318_source_component_636-Pad1)" "Net-(LED319_source_component_638-Pad1)" "Net-(LED32_source_component_64-Pad1)" "Net-(LED320_source_component_640-Pad1)" "Net-(LED321_source_component_642-Pad1)" "Net-(LED322_source_component_644-Pad1)" "Net-(LED323_source_component_646-Pad1)" "Net-(LED324_source_component_648-Pad1)" "Net-(LED325_source_component_650-Pad1)" "Net-(LED326_source_component_652-Pad1)" "Net-(LED327_source_component_654-Pad1)" "Net-(LED328_source_component_656-Pad1)" "Net-(LED329_source_component_658-Pad1)" "Net-(LED33_source_component_66-Pad1)" "Net-(LED330_source_component_660-Pad1)" "Net-(LED331_source_component_662-Pad1)" "Net-(LED332_source_component_664-Pad1)" "Net-(LED333_source_component_666-Pad1)" "Net-(LED334_source_component_668-Pad1)" "Net-(LED335_source_component_670-Pad1)" "Net-(LED336_source_component_672-Pad1)" "Net-(LED337_source_component_674-Pad1)" "Net-(LED338_source_component_676-Pad1)" "Net-(LED339_source_component_678-Pad1)" "Net-(LED34_source_component_68-Pad1)" "Net-(LED340_source_component_680-Pad1)" "Net-(LED341_source_component_682-Pad1)" "Net-(LED342_source_component_684-Pad1)" "Net-(LED343_source_component_686-Pad1)" "Net-(LED344_source_component_688-Pad1)" "Net-(LED345_source_component_690-Pad1)" "Net-(LED346_source_component_692-Pad1)" "Net-(LED347_source_component_694-Pad1)" "Net-(LED348_source_component_696-Pad1)" "Net-(LED349_source_component_698-Pad1)" "Net-(LED35_source_component_70-Pad1)" "Net-(LED350_source_component_700-Pad1)" "Net-(LED351_source_component_702-Pad1)" "Net-(LED352_source_component_704-Pad1)" "Net-(LED353_source_component_706-Pad1)" "Net-(LED354_source_component_708-Pad1)" "Net-(LED355_source_component_710-Pad1)" "Net-(LED356_source_component_712-Pad1)" "Net-(LED357_source_component_714-Pad1)" "Net-(LED358_source_component_716-Pad1)" "Net-(LED359_source_component_718-Pad1)" "Net-(LED36_source_component_72-Pad1)" "Net-(LED360_source_component_720-Pad1)" "Net-(LED361_source_component_722-Pad1)" "Net-(LED362_source_component_724-Pad1)" "Net-(LED363_source_component_726-Pad1)" "Net-(LED364_source_component_728-Pad1)" "Net-(LED365_source_component_730-Pad1)" "Net-(LED366_source_component_732-Pad1)" "Net-(LED367_source_component_734-Pad1)" "Net-(LED368_source_component_736-Pad1)" "Net-(LED369_source_component_738-Pad1)" "Net-(LED37_source_component_74-Pad1)" "Net-(LED370_source_component_740-Pad1)" "Net-(LED38_source_component_76-Pad1)" "Net-(LED39_source_component_78-Pad1)" "Net-(LED4_source_component_8-Pad1)" "Net-(LED40_source_component_80-Pad1)" "Net-(LED41_source_component_82-Pad1)" "Net-(LED42_source_component_84-Pad1)" "Net-(LED43_source_component_86-Pad1)" "Net-(LED44_source_component_88-Pad1)" "Net-(LED45_source_component_90-Pad1)" "Net-(LED46_source_component_92-Pad1)" "Net-(LED47_source_component_94-Pad1)" "Net-(LED48_source_component_96-Pad1)" "Net-(LED49_source_component_98-Pad1)" "Net-(LED5_source_component_10-Pad1)" "Net-(LED50_source_component_100-Pad1)" "Net-(LED51_source_component_102-Pad1)" "Net-(LED52_source_component_104-Pad1)" "Net-(LED53_source_component_106-Pad1)" "Net-(LED54_source_component_108-Pad1)" "Net-(LED55_source_component_110-Pad1)" "Net-(LED56_source_component_112-Pad1)" "Net-(LED57_source_component_114-Pad1)" "Net-(LED58_source_component_116-Pad1)" "Net-(LED59_source_component_118-Pad1)" "Net-(LED6_source_component_12-Pad1)" "Net-(LED60_source_component_120-Pad1)" "Net-(LED61_source_component_122-Pad1)" "Net-(LED62_source_component_124-Pad1)" "Net-(LED63_source_component_126-Pad1)" "Net-(LED64_source_component_128-Pad1)" "Net-(LED65_source_component_130-Pad1)" "Net-(LED66_source_component_132-Pad1)" "Net-(LED67_source_component_134-Pad1)" "Net-(LED68_source_component_136-Pad1)" "Net-(LED69_source_component_138-Pad1)" "Net-(LED7_source_component_14-Pad1)" "Net-(LED70_source_component_140-Pad1)" "Net-(LED71_source_component_142-Pad1)" "Net-(LED72_source_component_144-Pad1)" "Net-(LED73_source_component_146-Pad1)" "Net-(LED74_source_component_148-Pad1)" "Net-(LED75_source_component_150-Pad1)" "Net-(LED76_source_component_152-Pad1)" "Net-(LED77_source_component_154-Pad1)" "Net-(LED78_source_component_156-Pad1)" "Net-(LED79_source_component_158-Pad1)" "Net-(LED8_source_component_16-Pad1)" "Net-(LED80_source_component_160-Pad1)" "Net-(LED81_source_component_162-Pad1)" "Net-(LED82_source_component_164-Pad1)" "Net-(LED83_source_component_166-Pad1)" "Net-(LED84_source_component_168-Pad1)" "Net-(LED85_source_component_170-Pad1)" "Net-(LED86_source_component_172-Pad1)" "Net-(LED87_source_component_174-Pad1)" "Net-(LED88_source_component_176-Pad1)" "Net-(LED89_source_component_178-Pad1)" "Net-(LED9_source_component_18-Pad1)" "Net-(LED90_source_component_180-Pad1)" "Net-(LED91_source_component_182-Pad1)" "Net-(LED92_source_component_184-Pad1)" "Net-(LED93_source_component_186-Pad1)" "Net-(LED94_source_component_188-Pad1)" "Net-(LED95_source_component_190-Pad1)" "Net-(LED96_source_component_192-Pad1)" "Net-(LED97_source_component_194-Pad1)" "Net-(LED98_source_component_196-Pad1)" "Net-(LED99_source_component_198-Pad1)" "Net-(U2_source_component_1-Pad3)" "Net-(U2_source_component_1-Pad4)" "GND_source_net_0" "unconnected-(LED371_source_component_742-Pad1)" "unconnected-(U1_source_component_0-Pad1)" "unconnected-(U1_source_component_0-Pad10)" "unconnected-(U1_source_component_0-Pad11)" "unconnected-(U1_source_component_0-Pad12)" "unconnected-(U1_source_component_0-Pad14)" "unconnected-(U1_source_component_0-Pad16)" "unconnected-(U1_source_component_0-Pad17)" "unconnected-(U1_source_component_0-Pad19)" "unconnected-(U1_source_component_0-Pad2)" "unconnected-(U1_source_component_0-Pad20)" "unconnected-(U1_source_component_0-Pad21)" "unconnected-(U1_source_component_0-Pad22)" "unconnected-(U1_source_component_0-Pad24)" "unconnected-(U1_source_component_0-Pad25)" "unconnected-(U1_source_component_0-Pad26)" "unconnected-(U1_source_component_0-Pad27)" "unconnected-(U1_source_component_0-Pad29)" "unconnected-(U1_source_component_0-Pad30)" "unconnected-(U1_source_component_0-Pad33)" "unconnected-(U1_source_component_0-Pad34)" "unconnected-(U1_source_component_0-Pad35)" "unconnected-(U1_source_component_0-Pad36)" "unconnected-(U1_source_component_0-Pad37)" "unconnected-(U1_source_component_0-Pad39)" "unconnected-(U1_source_component_0-Pad4)" "unconnected-(U1_source_component_0-Pad41)" "unconnected-(U1_source_component_0-Pad42)" "unconnected-(U1_source_component_0-Pad43)" "unconnected-(U1_source_component_0-Pad44)" "unconnected-(U1_source_component_0-Pad45)" "unconnected-(U1_source_component_0-Pad46)" "unconnected-(U1_source_component_0-Pad5)" "unconnected-(U1_source_component_0-Pad6)" "unconnected-(U1_source_component_0-Pad7)" "unconnected-(U1_source_component_0-Pad9)" "V5_source_net_1"
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 100)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)
