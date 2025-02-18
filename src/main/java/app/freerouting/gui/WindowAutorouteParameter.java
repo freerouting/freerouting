@@ -321,7 +321,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
       against_preferred_direction_trace_costs_input_completed[i] = true;
     }
 
-    JLabel applyValuesNote = new JLabel("(note: you need to press Enter to apply the new values)");
+    JLabel applyValuesNote = new JLabel(tm.getText("apply_values_note"));
     gridbag.setConstraints(applyValuesNote, gridbag_constraints);
     main_panel.add(applyValuesNote, gridbag_constraints);
 
