@@ -85,7 +85,9 @@ public class FRLogger
     long timeElapsed = 0;
     try
     {
-      timeElapsed = Duration.between(perfData.get(perfId.hashCode()), Instant.now()).toMillis();
+      timeElapsed = Duration
+          .between(perfData.get(perfId.hashCode()), Instant.now())
+          .toMillis();
     } catch (Exception e)
     {
       // we can ignore this exception
@@ -248,7 +250,9 @@ public class FRLogger
     var refs = refList.toArray(new AppenderRef[0]);
     for (int i = 0; i < refs.length; i++)
     {
-      if (refs[i].getRef().equals("Console"))
+      if (refs[i]
+          .getRef()
+          .equals("Console"))
       {
         refs[i] = AppenderRef.createAppenderRef("Console", level, null);
       }
@@ -338,12 +342,24 @@ public class FRLogger
     // Remove the existing File appender
     if (config.getAppender("File") != null)
     {
-      config.getAppender("File").stop();
+      config
+          .getAppender("File")
+          .stop();
       rootLoggerConfig.removeAppender("File");
     }
 
     // Create a new FileAppender with the new log file path
-    FileAppender newFileAppender = FileAppender.newBuilder().setName("File").withFileName(logFilePath.toString()).setLayout(PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n").build()).setImmediateFlush(true).setConfiguration(config).build();
+    FileAppender newFileAppender = FileAppender
+        .newBuilder()
+        .setName("File")
+        .withFileName(logFilePath.toString())
+        .setLayout(PatternLayout
+            .newBuilder()
+            .withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n")
+            .build())
+        .setImmediateFlush(true)
+        .setConfiguration(config)
+        .build();
 
     // Start the new appender
     newFileAppender.start();

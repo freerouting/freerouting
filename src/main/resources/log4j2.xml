@@ -8,16 +8,16 @@
     <Appenders>
         <File name="File" fileName="${filename}" bufferSize="1">
             <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n</pattern>
             </PatternLayout>
         </File>
 
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n"/>
         </Console>
 
         <Console name="stderr" target="SYSTEM_ERR">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n"/>
         </Console>
     </Appenders>
 

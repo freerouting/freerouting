@@ -174,23 +174,23 @@ public class Freerouting
     globalSettings.environmentSettings.ram = (int) (Runtime
         .getRuntime()
         .maxMemory() / 1024 / 1024);
-    FRLogger.debug(" Version: " + globalSettings.environmentSettings.freeroutingVersion);
-    FRLogger.debug(" Command line arguments: '" + globalSettings.environmentSettings.commandLineArguments + "'");
-    FRLogger.debug(" Architecture: " + globalSettings.environmentSettings.architecture);
-    FRLogger.debug(" Java: " + globalSettings.environmentSettings.java);
-    FRLogger.debug(" System Language: " + globalSettings.environmentSettings.systemLanguage);
-    FRLogger.debug(" Hardware: " + globalSettings.environmentSettings.cpuCores + " CPU cores," + globalSettings.environmentSettings.ram + " MB RAM");
-    FRLogger.debug(" UTC Time: " + globalSettings.environmentSettings.appStartedAt);
+    FRLogger.debug("Version: " + globalSettings.environmentSettings.freeroutingVersion);
+    FRLogger.debug("Command line arguments: '" + globalSettings.environmentSettings.commandLineArguments + "'");
+    FRLogger.debug("Architecture: " + globalSettings.environmentSettings.architecture);
+    FRLogger.debug("Java: " + globalSettings.environmentSettings.java);
+    FRLogger.debug("System Language: " + globalSettings.environmentSettings.systemLanguage);
+    FRLogger.debug("Hardware: " + globalSettings.environmentSettings.cpuCores + " CPU cores," + globalSettings.environmentSettings.ram + " MB RAM");
+    FRLogger.debug("UTC Time: " + globalSettings.environmentSettings.appStartedAt);
 
     // parse the command line arguments
     globalSettings.applyCommandLineArguments(args);
 
-    FRLogger.debug(" GUI Language: " + globalSettings.currentLocale);
+    FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
 
-    FRLogger.debug(" Host: " + globalSettings.environmentSettings.host);
+    FRLogger.debug("Host: " + globalSettings.environmentSettings.host);
 
 
-    // Get some headful information if we are running in a GUI
+    // Get some useful information if we are running in a GUI
     int width = 0;
     int height = 0;
     int dpi = 0;
@@ -208,7 +208,7 @@ public class Freerouting
 
         // Get screen DPI
         dpi = toolkit.getScreenResolution();
-        FRLogger.debug(" Screen: " + width + "x" + height + ", " + dpi + " DPI");
+        FRLogger.debug("Screen: " + width + "x" + height + ", " + dpi + " DPI");
       } catch (Exception e)
       {
         FRLogger.warn("Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.");
