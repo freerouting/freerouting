@@ -68,13 +68,21 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
   public transient Instant timeoutAt;
+  private String shortName = "N/A";
 
   /**
    * We need a parameterless constructor for the serialization.
    */
   public RoutingJob()
   {
-    this.name = "J-" + this.id.toString().substring(0, 6).toUpperCase();
+    this.name = "J-" + this.id
+        .toString()
+        .substring(0, 6)
+        .toUpperCase();
+    this.shortName = this.id
+        .toString()
+        .substring(0, 6)
+        .toUpperCase();
   }
 
   /**
@@ -84,6 +92,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   {
     this();
     this.sessionId = sessionId;
+    this.shortName = this.sessionId
+        .toString()
+        .substring(0, 6)
+        .toUpperCase() + "\\" + this.id
+        .toString()
+        .substring(0, 6)
+        .toUpperCase();
+
   }
 
   /**
@@ -177,7 +193,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
 
   public static FileFormat getFileFormat(Path path)
   {
-    String filename = path.toString().toLowerCase();
+    String filename = path
+        .toString()
+        .toLowerCase();
     String[] parts = filename.split("\\.");
     if (parts.length > 1)
     {
@@ -213,7 +231,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     long crc32Checksum;
     try (FileInputStream inputStream = new FileInputStream(inputFile.getAbsoluteFile()))
     {
-      crc32Checksum = BoardFileDetails.calculateCrc32(inputStream).getValue();
+      crc32Checksum = BoardFileDetails
+          .calculateCrc32(inputStream)
+          .getValue();
     } catch (IOException e)
     {
       crc32Checksum = 0;
@@ -226,7 +246,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
 
     // Get the temporary folder path
-    Path snapshotsFolderPath = GlobalSettings.getUserDataPath().resolve("snapshots");
+    Path snapshotsFolderPath = GlobalSettings
+        .getUserDataPath()
+        .resolve("snapshots");
 
     try
     {
@@ -295,7 +317,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
 
     // Set the default file name based on the output file name
-    if (!this.output.getFilename().isEmpty())
+    if (!this.output
+        .getFilename()
+        .isEmpty())
     {
       fileChooser.setSelectedFile(this.output.getFile());
     }
@@ -321,7 +345,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     this.snapshot = new BoardFileDetails();
     this.output = new BoardFileDetails();
 
-    if ((filename != null) && (filename.toLowerCase().endsWith(DSN_FILE_EXTENSION)))
+    if ((filename != null) && (filename
+        .toLowerCase()
+        .endsWith(DSN_FILE_EXTENSION)))
     {
       this.input.format = FileFormat.DSN;
       this.input.setFilename(filename);
@@ -354,8 +380,13 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     Path filePath = Path.of(filename);
 
     // Get the filename and split it into parts
-    String originalFullPathWithoutFilename = filePath.getParent().toAbsolutePath().toString();
-    String originalFilename = filePath.getFileName().toString();
+    String originalFullPathWithoutFilename = filePath
+        .getParent()
+        .toAbsolutePath()
+        .toString();
+    String originalFilename = filePath
+        .getFileName()
+        .toString();
     String[] nameParts = originalFilename.split("\\.");
     if (nameParts.length > 1)
     {
@@ -366,10 +397,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
       }
       String newFilename = originalFilename.substring(0, originalFilename.length() - extension.length() - 1) + "." + newFileExtension;
 
-      return Path.of(originalFullPathWithoutFilename, newFilename).toString();
+      return Path
+          .of(originalFullPathWithoutFilename, newFilename)
+          .toString();
     }
 
-    return Path.of(originalFullPathWithoutFilename, originalFilename + "." + newFileExtension).toString();
+    return Path
+        .of(originalFullPathWithoutFilename, originalFilename + "." + newFileExtension)
+        .toString();
   }
 
   public boolean tryToSetOutputFile(File outputFile)
@@ -520,4 +555,23 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
   }
 
+  public void logInfo(String message)
+  {
+    FRLogger.info("[" + this.shortName + "] " + message, this.id);
+  }
+
+  public void logWarning(String message)
+  {
+    FRLogger.warn("[" + this.shortName + "] " + message, this.id);
+  }
+
+  public void logError(String message, Exception ex)
+  {
+    FRLogger.error("[" + this.shortName + "] " + message, this.id, ex);
+  }
+
+  public void logDebug(String message)
+  {
+    FRLogger.debug("[" + this.shortName + "] " + message, this.id);
+  }
 }

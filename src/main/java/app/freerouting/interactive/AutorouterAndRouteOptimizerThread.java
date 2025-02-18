@@ -133,7 +133,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .hide();
       }
 
-      FRLogger.info("Starting auto-routing...");
+      routingJob.logInfo("Starting auto-routing...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
       globalSettings.statistics.incrementJobsCompleted();
