@@ -94,15 +94,15 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
 
     // Add Jersey dependencies
-    implementation 'org.glassfish.jersey.core:jersey-common:3.1.7'
-    implementation 'org.glassfish.jersey.core:jersey-client:3.1.9'
-    implementation 'org.glassfish.jersey.core:jersey-server:3.1.7'
-    implementation 'org.glassfish.jersey.inject:jersey-hk2:3.1.7'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-binding:3.1.7'
-    implementation 'org.glassfish.jersey.media:jersey-media-sse:3.1.7'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:3.1.7'
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.7'
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:3.1.7'
+    implementation 'org.glassfish.jersey.core:jersey-common:3.1.10'
+    implementation 'org.glassfish.jersey.core:jersey-client:3.1.10'
+    implementation 'org.glassfish.jersey.core:jersey-server:3.1.10'
+    implementation 'org.glassfish.jersey.inject:jersey-hk2:3.1.10'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-binding:3.1.10'
+    implementation 'org.glassfish.jersey.media:jersey-media-sse:3.1.10'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:3.1.10'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.10'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:3.1.10'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
 
     // Add Jetty dependencies
@@ -116,11 +116,11 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.16'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.29.0'
-    implementation 'com.google.api:gax:2.57.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.32.1'
+    implementation 'com.google.api:gax:2.61.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.7.0'
-    implementation 'com.google.cloud:google-cloud-core:2.47.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.47.0'
+    implementation 'com.google.cloud:google-cloud-core:2.51.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.51.0'
     implementation 'com.google.cloud:google-cloud-bigquery:2.43.3'
 }
 
