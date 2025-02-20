@@ -264,71 +264,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     return snapshotsFolderPath + File.separator + intermediate_snapshot_file_name;
   }
 
-  public File showSaveAsDialog(String p_default_directory, Component p_parent)
-  {
-    String directoryName;
-    var outputFile = this.output.getFile();
-    if (outputFile == null)
-    {
-      directoryName = p_default_directory;
-    }
-    else
-    {
-      directoryName = outputFile.getParent();
-    }
-
-    JFileChooser fileChooser = new JFileChooser(directoryName);
-    fileChooser.setMinimumSize(new Dimension(500, 250));
-
-    // Add the file filter for SPECCTRA Session .SES files
-    FileNameExtensionFilter sesFilter = new FileNameExtensionFilter("SPECCTRA Session file (*.ses)", "ses");
-    fileChooser.addChoosableFileFilter(sesFilter);
-
-    // Add the file filter for Freerouting binary .FRB files
-    FileNameExtensionFilter frbFilter = new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
-    fileChooser.addChoosableFileFilter(frbFilter);
-
-    // Add the file filter for Eagle script .SCR files
-    FileNameExtensionFilter scrFilter = new FileNameExtensionFilter("Eagle Session Script file (*.scr)", "scr");
-    fileChooser.addChoosableFileFilter(scrFilter);
-
-    // Add the file filter for SPECCTRA Design .DSN files
-    FileNameExtensionFilter dsnFilter = new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
-    fileChooser.addChoosableFileFilter(dsnFilter);
-
-    // Set the file filter based on the output file format
-    switch (this.output.format)
-    {
-      case SES:
-        fileChooser.setFileFilter(sesFilter);
-        break;
-      case FRB:
-        fileChooser.setFileFilter(frbFilter);
-        break;
-      case SCR:
-        fileChooser.setFileFilter(scrFilter);
-        break;
-      case DSN:
-        fileChooser.setFileFilter(dsnFilter);
-        break;
-      default:
-        fileChooser.setFileFilter(sesFilter);
-        break;
-    }
-
-    // Set the default file name based on the output file name
-    if (!this.output
-        .getFilename()
-        .isEmpty())
-    {
-      fileChooser.setSelectedFile(this.output.getFile());
-    }
-
-    fileChooser.showSaveDialog(p_parent);
-
-    return fileChooser.getSelectedFile();
-  }
-
   public File getRulesFile()
   {
     return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
@@ -565,7 +500,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     FRLogger.warn("[" + this.shortName + "] " + message, this.id);
   }
 
-  public void logError(String message, Exception ex)
+  public void logError(String message, Throwable ex)
   {
     FRLogger.error("[" + this.shortName + "] " + message, this.id, ex);
   }

@@ -1082,7 +1082,7 @@ public class GuiBoardManager extends HeadlessBoardManager
       originalBoardChecksum = calculateCrc32();
     } catch (Exception e)
     {
-      FRLogger.error("Couldn't read design file", e);
+      routingJob.logError("Couldn't read design file", e);
       return false;
     }
     screen_messages.set_layer(board.layer_structure.arr[settings.layer].name);

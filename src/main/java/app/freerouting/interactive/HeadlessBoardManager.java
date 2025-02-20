@@ -12,7 +12,6 @@ import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
@@ -94,7 +93,7 @@ public class HeadlessBoardManager implements BoardManager
   {
     if (this.board != null)
     {
-      FRLogger.warn(" BoardHandling.create_board: board already created");
+      routingJob.logWarning(" BoardHandling.create_board: board already created");
     }
     int outline_cl_class_no = 0;
 
@@ -157,7 +156,7 @@ public class HeadlessBoardManager implements BoardManager
     } catch (Exception e)
     {
       read_result = DsnFile.ReadResult.ERROR;
-      FRLogger.error("There was an error while reading DSN file.", e);
+      routingJob.logError("There was an error while reading DSN file.", e);
     }
     if (read_result == DsnFile.ReadResult.OK)
     {

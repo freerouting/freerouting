@@ -54,9 +54,10 @@ public class BatchOptimizer extends NamedAlgorithm
    */
   public void runBatchLoop()
   {
-    FRLogger.debug("Before optimize: Via count: " + board
+    job.logDebug("Before optimization: Via count: " + board
         .get_vias()
         .size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
+
     double route_improved = -1;
     int curr_pass_no = 0;
     use_increased_ripup_costs = true;
@@ -123,7 +124,7 @@ public class BatchOptimizer extends NamedAlgorithm
     }
 
     double routeoptimizer_pass_duration = FRLogger.traceExit(optimizationPassId);
-    FRLogger.info("Route optimizer pass #" + p_pass_no + " was completed in " + FRLogger.formatDuration(routeoptimizer_pass_duration));
+    job.logInfo("Route optimizer pass #" + p_pass_no + " was completed in " + FRLogger.formatDuration(routeoptimizer_pass_duration));
     return route_improved;
   }
 

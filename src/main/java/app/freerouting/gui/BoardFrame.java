@@ -20,6 +20,7 @@ import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Component;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -46,6 +47,7 @@ public class BoardFrame extends WindowBase
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
   static final FileFilter logfile_filter = new FileFilter(log_file_extensions);
+  public final RoutingJob routingJob;
   /**
    * The menubar of this frame
    */
@@ -102,7 +104,6 @@ public class BoardFrame extends WindowBase
   ColorManager color_manager;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
-  RoutingJob routingJob;
   private LocalDateTime intermediate_stage_file_last_saved_at;
 
   /**
@@ -700,6 +701,73 @@ public class BoardFrame extends WindowBase
     this.screen_messages.set_status_message(tm.getText("message_specctra_ses_saved", outputFile.getPath()));
 
     return true;
+  }
+
+  public File showSaveAsDialog(String p_default_directory, BoardFileDetails output)
+  {
+    var p_parent = this;
+
+    String directoryName;
+    var outputFile = output.getFile();
+    if (outputFile == null)
+    {
+      directoryName = p_default_directory;
+    }
+    else
+    {
+      directoryName = outputFile.getParent();
+    }
+
+    JFileChooser fileChooser = new JFileChooser(directoryName);
+    fileChooser.setMinimumSize(new Dimension(500, 250));
+
+    // Add the file filter for SPECCTRA Session .SES files
+    FileNameExtensionFilter sesFilter = new FileNameExtensionFilter("SPECCTRA Session file (*.ses)", "ses");
+    fileChooser.addChoosableFileFilter(sesFilter);
+
+    // Add the file filter for Freerouting binary .FRB files
+    FileNameExtensionFilter frbFilter = new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
+    fileChooser.addChoosableFileFilter(frbFilter);
+
+    // Add the file filter for Eagle script .SCR files
+    FileNameExtensionFilter scrFilter = new FileNameExtensionFilter("Eagle Session Script file (*.scr)", "scr");
+    fileChooser.addChoosableFileFilter(scrFilter);
+
+    // Add the file filter for SPECCTRA Design .DSN files
+    FileNameExtensionFilter dsnFilter = new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
+    fileChooser.addChoosableFileFilter(dsnFilter);
+
+    // Set the file filter based on the output file format
+    switch (output.format)
+    {
+      case SES:
+        fileChooser.setFileFilter(sesFilter);
+        break;
+      case FRB:
+        fileChooser.setFileFilter(frbFilter);
+        break;
+      case SCR:
+        fileChooser.setFileFilter(scrFilter);
+        break;
+      case DSN:
+        fileChooser.setFileFilter(dsnFilter);
+        break;
+      default:
+        fileChooser.setFileFilter(sesFilter);
+        break;
+    }
+
+    // Set the default file name based on the output file name
+    if (!output
+        .getFilename()
+        .isEmpty())
+    {
+      fileChooser.setSelectedFile(output.getFile());
+    }
+
+    fileChooser.showSaveDialog(p_parent);
+
+    return fileChooser.getSelectedFile();
   }
 
 

@@ -56,7 +56,7 @@ public class BoardMenuFile extends JMenu
     file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     file_save_as_menuitem.addActionListener(evt ->
     {
-      File selected_file = board_frame.routingJob.showSaveAsDialog(globalSettings.guiSettings.inputDirectory, board_frame);
+      File selected_file = board_frame.showSaveAsDialog(globalSettings.guiSettings.inputDirectory, board_frame.routingJob.output);
 
       saveAsEventListeners.forEach(listener -> listener.accept(selected_file));
     });

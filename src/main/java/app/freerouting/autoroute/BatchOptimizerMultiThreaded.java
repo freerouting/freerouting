@@ -58,7 +58,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
           num_prioritized = Integer.parseInt(ratio[1], 10);
         } catch (NumberFormatException e)
         {
-          FRLogger.error("Invalid hybrid ratio", e);
+          job.logError("Invalid hybrid ratio", e);
           num_optimal = 1;
           num_prioritized = 1;
         }
@@ -247,7 +247,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
     pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(thread_pool_size, r ->
     {
       Thread t = new Thread(r);
-      t.setUncaughtExceptionHandler((t1, e) -> FRLogger.error("Exception in thread pool worker thread: " + t1, e));
+      t.setUncaughtExceptionHandler((t1, e) -> job.logError("Exception in thread pool worker thread: " + t1, e));
       return t;
     });
 
@@ -272,7 +272,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
       int i = 0;
       while (!pool.awaitTermination(1, TimeUnit.SECONDS))
       {
-        FRLogger.debug("Running route optimizer on " + pool.getActiveCount() + " thread(s). Completed " + pool.getCompletedTaskCount() + " of " + pool.getTaskCount() + " tasks.");
+        job.logDebug("Running route optimizer on " + pool.getActiveCount() + " thread(s). Completed " + pool.getCompletedTaskCount() + " of " + pool.getTaskCount() + " tasks.");
 
         if (this.thread.isStopRequested())
         {
@@ -282,7 +282,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
       }
     } catch (InterruptedException ie)
     {
-      FRLogger.error("Exception with pool.awaitTermination", ie);
+      job.logError("Exception with pool.awaitTermination", ie);
 
       interrupted = true;
       pool.shutdownNow();
