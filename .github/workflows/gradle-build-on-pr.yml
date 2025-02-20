@@ -1,24 +1,24 @@
-name: gradle-build-on-pr
+name: Build the source on PR
 
-on: [pull_request]
+on: [ pull_request ]
 
 jobs:
   gradle:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
           cache: 'gradle'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-    
-    - name: Execute Gradle build
-      run: ./gradlew build
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Execute Gradle build
+        run: ./gradlew build

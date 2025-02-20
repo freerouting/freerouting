@@ -1,4 +1,4 @@
-name: Docker Build and Push
+name: Push the Docker nightly image
 
 on:
   push:

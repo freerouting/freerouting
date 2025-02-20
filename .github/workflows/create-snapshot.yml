@@ -1,4 +1,4 @@
-name: create-snapshot
+name: Update the snapshot build
 
 on:
   push:
@@ -27,117 +27,117 @@ jobs:
 
   delete-old-snapshot-assets:
 
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Delete old SNAPSHOT assets
-      uses: mknejp/delete-release-assets@v1
-      with:
-        fail-if-no-assets: false
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: SNAPSHOT
-        assets: | 
+      - uses: actions/checkout@v4
+      - name: Delete old SNAPSHOT assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          fail-if-no-assets: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: SNAPSHOT
+          assets: |
             freerouting-SNAPSHOT.zip
             freerouting-SNAPSHOT.tar.gz
             freerouting-SNAPSHOT-*.*   
 
   build-jar:
-  
+
     needs: delete-old-snapshot-assets
 
-    runs-on: [windows-latest]
+    runs-on: [ windows-latest ]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
           cache: 'gradle'
-    - name: Build with Gradle
-      run: .\gradlew.bat dist --no-daemon
-    - name: Create Distribution   
-      run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
-    - uses: AButler/upload-release-assets@v3.0
-      with:
+      - name: Build with Gradle
+        run: .\gradlew.bat dist --no-daemon
+      - name: Create Distribution
+        run: distribution\create-distribution-jar.bat SNAPSHOT-$(date +"%Y%m%d_%H%M00")
+      - uses: AButler/upload-release-assets@v3.0
+        with:
           files: './distribution/freerouting-SNAPSHOT-*.jar'
           release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}      
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-ubuntu-x64:
-  
+
     needs: delete-old-snapshot-assets
 
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
           cache: 'gradle'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew dist
-    - name: Create Distribution   
-      run: distribution/create-distribution-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")   
-    - uses: AButler/upload-release-assets@v3.0
-      with:
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: distribution/create-distribution-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
+      - uses: AButler/upload-release-assets@v3.0
+        with:
           files: './distribution/freerouting-SNAPSHOT-*-linux-x64.zip'
           release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}      
-   
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
   build-windows-x64:
-  
+
     needs: delete-old-snapshot-assets
 
-    runs-on: [windows-latest]
+    runs-on: [ windows-latest ]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
           cache: 'gradle'
-    - name: Build with Gradle
-      run: .\gradlew.bat dist --no-daemon
-    - name: Create Distribution   
-      run: distribution\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"   
-    - uses: AButler/upload-release-assets@v3.0
-      with:
+      - name: Build with Gradle
+        run: .\gradlew.bat dist --no-daemon
+      - name: Create Distribution
+        run: distribution\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
+      - uses: AButler/upload-release-assets@v3.0
+        with:
           files: './distribution/freerouting-SNAPSHOT-*-windows-x64.msi'
-          release-tag: SNAPSHOT 
-          repo-token: ${{ secrets.GITHUB_TOKEN }}   
-          
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
   build-macos-x64:
-  
+
     needs: delete-old-snapshot-assets
 
-    runs-on: [macos-latest]
+    runs-on: [ macos-latest ]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
           cache: 'gradle'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew dist
-    - name: Create Distribution   
-      run: distribution/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
-    - uses: AButler/upload-release-assets@v3.0
-      with:
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: distribution/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
+      - uses: AButler/upload-release-assets@v3.0
+        with:
           files: './distribution/freerouting-SNAPSHOT-*-macos-x64.dmg'
           release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}        
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
