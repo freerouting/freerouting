@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.*;
 
 /**
- * Creates all Incompletes (Ratsnest) to display them on the screen
+ * Creates all incompletes (ratsnest) to display them on the screen
  */
 public class RatsNest
 {
@@ -44,7 +44,9 @@ public class RatsNest
       {
         for (int i = 0; i < curr_item.net_count(); ++i)
         {
-          net_item_lists.get(curr_item.get_net_no(i) - 1).add(curr_item);
+          net_item_lists
+              .get(curr_item.get_net_no(i) - 1)
+              .add(curr_item);
         }
       }
     }

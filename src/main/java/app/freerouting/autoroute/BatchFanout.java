@@ -83,7 +83,7 @@ public class BatchFanout extends NamedAlgorithm
         }
         if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED)
         {
-          fireBoardUpdatedEvent(this.board.get_statistics());
+          fireBoardUpdatedEvent(this.board.get_statistics(), this.board);
         }
         if (this.thread.isStopRequested())
         {
@@ -155,7 +155,9 @@ public class BatchFanout extends NamedAlgorithm
       double y = 0;
       for (app.freerouting.board.Pin curr_pin : curr_pin_list)
       {
-        FloatPoint curr_point = curr_pin.get_center().to_float();
+        FloatPoint curr_point = curr_pin
+            .get_center()
+            .to_float();
         x += curr_point.x;
         y += curr_point.y;
       }
@@ -205,7 +207,9 @@ public class BatchFanout extends NamedAlgorithm
       Pin(app.freerouting.board.Pin p_board_pin)
       {
         this.board_pin = p_board_pin;
-        FloatPoint pin_location = p_board_pin.get_center().to_float();
+        FloatPoint pin_location = p_board_pin
+            .get_center()
+            .to_float();
         this.distance_to_component_center = pin_location.distance(gravity_center_of_smd_pins);
       }
 

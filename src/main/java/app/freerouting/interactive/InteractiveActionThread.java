@@ -20,7 +20,7 @@ import static app.freerouting.Freerouting.globalSettings;
  */
 public abstract class InteractiveActionThread extends StoppableThread
 {
-  public final GuiBoardManager hdlg;
+  public final GuiBoardManager boardManager;
   protected final RoutingJob routingJob;
   protected List<ThreadActionListener> listeners = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public abstract class InteractiveActionThread extends StoppableThread
    */
   protected InteractiveActionThread(GuiBoardManager boardManager, RoutingJob job)
   {
-    this.hdlg = boardManager;
+    this.boardManager = boardManager;
     this.routingJob = job;
   }
 
@@ -102,7 +102,7 @@ public abstract class InteractiveActionThread extends StoppableThread
   public void run()
   {
     thread_action();
-    hdlg.repaint();
+    boardManager.repaint();
   }
 
   public synchronized void draw(Graphics p_graphics)
@@ -121,12 +121,12 @@ public abstract class InteractiveActionThread extends StoppableThread
     @Override
     protected void thread_action()
     {
-      if (!(hdlg.interactive_state instanceof SelectedItemState))
+      if (!(boardManager.interactive_state instanceof SelectedItemState))
       {
         return;
       }
-      InteractiveState return_state = ((SelectedItemState) hdlg.interactive_state).autoroute(this);
-      hdlg.set_interactive_state(return_state);
+      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).autoroute(this);
+      boardManager.set_interactive_state(return_state);
     }
   }
 
@@ -141,12 +141,12 @@ public abstract class InteractiveActionThread extends StoppableThread
     @Override
     protected void thread_action()
     {
-      if (!(hdlg.interactive_state instanceof SelectedItemState))
+      if (!(boardManager.interactive_state instanceof SelectedItemState))
       {
         return;
       }
-      InteractiveState return_state = ((SelectedItemState) hdlg.interactive_state).fanout(this);
-      hdlg.set_interactive_state(return_state);
+      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).fanout(this);
+      boardManager.set_interactive_state(return_state);
     }
   }
 
@@ -161,12 +161,12 @@ public abstract class InteractiveActionThread extends StoppableThread
     @Override
     protected void thread_action()
     {
-      if (!(hdlg.interactive_state instanceof SelectedItemState))
+      if (!(boardManager.interactive_state instanceof SelectedItemState))
       {
         return;
       }
-      InteractiveState return_state = ((SelectedItemState) hdlg.interactive_state).pull_tight(this);
-      hdlg.set_interactive_state(return_state);
+      InteractiveState return_state = ((SelectedItemState) boardManager.interactive_state).pull_tight(this);
+      boardManager.set_interactive_state(return_state);
     }
   }
 
@@ -184,23 +184,23 @@ public abstract class InteractiveActionThread extends StoppableThread
     @Override
     protected void thread_action()
     {
-      TextManager tm = new TextManager(InteractiveState.class, hdlg.get_locale());
+      TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
 
-      boolean saved_board_read_only = hdlg.is_board_read_only();
-      hdlg.set_board_read_only(true);
+      boolean saved_board_read_only = boardManager.is_board_read_only();
+      boardManager.set_board_read_only(true);
       String start_message = tm.getText("logfile") + " " + tm.getText("stop_message");
-      hdlg.screen_messages.set_status_message(start_message);
-      hdlg.screen_messages.set_write_protected(true);
+      boardManager.screen_messages.set_status_message(start_message);
+      boardManager.screen_messages.set_write_protected(true);
       boolean done = false;
-      InteractiveState previous_state = hdlg.interactive_state;
-      if (!hdlg.activityReplayFile.start_read(this.input_stream))
+      InteractiveState previous_state = boardManager.interactive_state;
+      if (!boardManager.activityReplayFile.start_read(this.input_stream))
       {
         done = true;
       }
       boolean interrupted = false;
       int debug_counter = 0;
-      hdlg.get_panel().board_frame.refresh_windows();
-      hdlg.paint_immediately = true;
+      boardManager.get_panel().board_frame.refresh_windows();
+      boardManager.paint_immediately = true;
       while (!done)
       {
         if (isStopRequested())
@@ -209,7 +209,7 @@ public abstract class InteractiveActionThread extends StoppableThread
           done = true;
         }
         ++debug_counter;
-        ActivityReplayFileScope logfile_scope = hdlg.activityReplayFile.start_read_scope();
+        ActivityReplayFileScope logfile_scope = boardManager.activityReplayFile.start_read_scope();
         if (logfile_scope == null)
         {
           done = true; // end of logfile
@@ -218,21 +218,21 @@ public abstract class InteractiveActionThread extends StoppableThread
         {
           try
           {
-            InteractiveState new_state = logfile_scope.read_scope(hdlg.activityReplayFile, hdlg.interactive_state, hdlg);
+            InteractiveState new_state = logfile_scope.read_scope(boardManager.activityReplayFile, boardManager.interactive_state, boardManager);
             if (new_state == null)
             {
               FRLogger.warn("BoardHandling:read_logfile: inconsistent logfile scope");
               new_state = previous_state;
             }
-            hdlg.repaint();
-            hdlg.set_interactive_state(new_state);
+            boardManager.repaint();
+            boardManager.set_interactive_state(new_state);
           } catch (Exception e)
           {
             done = true;
           }
         }
       }
-      hdlg.paint_immediately = false;
+      boardManager.paint_immediately = false;
       try
       {
         this.input_stream.close();
@@ -240,8 +240,8 @@ public abstract class InteractiveActionThread extends StoppableThread
       {
         FRLogger.error("ReadLogfileThread: unable to close input stream", e);
       }
-      hdlg.get_panel().board_frame.refresh_windows();
-      hdlg.screen_messages.set_write_protected(false);
+      boardManager.get_panel().board_frame.refresh_windows();
+      boardManager.screen_messages.set_write_protected(false);
       String curr_message;
       if (interrupted)
       {
@@ -252,9 +252,9 @@ public abstract class InteractiveActionThread extends StoppableThread
         curr_message = tm.getText("completed");
       }
       String end_message = tm.getText("logfile") + " " + curr_message;
-      hdlg.screen_messages.set_status_message(end_message);
-      hdlg.set_board_read_only(saved_board_read_only);
-      hdlg.get_panel().board_frame.repaint_all();
+      boardManager.screen_messages.set_status_message(end_message);
+      boardManager.set_board_read_only(saved_board_read_only);
+      boardManager.get_panel().board_frame.repaint_all();
     }
   }
 }

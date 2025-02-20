@@ -64,9 +64,9 @@ public class HeadlessBoardManager implements BoardManager
     return this.board;
   }
 
-  public synchronized void update_routing_board(RoutingBoard routing_board)
+  public synchronized void replaceRoutingBoard(RoutingBoard newRoutingBoard)
   {
-    this.board = routing_board;
+    this.board = newRoutingBoard;
   }
 
   @Override

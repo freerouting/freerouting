@@ -113,7 +113,9 @@ public class GuiBoardManager extends HeadlessBoardManager
     this.tm = new TextManager(this.getClass(), globalSettings.currentLocale);
 
     LogEntries.LogEntryAddedListener listener = this::logEntryAdded;
-    FRLogger.getLogEntries().addLogEntryAddedListener(listener);
+    FRLogger
+        .getLogEntries()
+        .addLogEntryAddedListener(listener);
   }
 
   private void logEntryAdded(LogEntryType logEntryType, String s)
@@ -307,7 +309,10 @@ public class GuiBoardManager extends HeadlessBoardManager
     }
     else
     {
-      result = board.rules.nets.get(p_net_no).get_class().get_trace_clearance_class();
+      result = board.rules.nets
+          .get(p_net_no)
+          .get_class()
+          .get_trace_clearance_class();
     }
     return result;
   }
@@ -324,7 +329,10 @@ public class GuiBoardManager extends HeadlessBoardManager
     }
     if (result == null)
     {
-      result = board.rules.nets.get(p_net_no).get_class().get_via_rule();
+      result = board.rules.nets
+          .get(p_net_no)
+          .get_class()
+          .get_via_rule();
     }
     return result;
   }
@@ -578,7 +586,13 @@ public class GuiBoardManager extends HeadlessBoardManager
    */
   public void remove_ratsnest()
   {
+    // TODO: test these two versions combined with get_ratsnest() method
+
+    // Version A
     ratsnest = null;
+
+    // Version B
+    // do nothing as we create a new instance of ratsnest every time
   }
 
   /**
@@ -586,11 +600,17 @@ public class GuiBoardManager extends HeadlessBoardManager
    */
   public RatsNest get_ratsnest()
   {
+    // TODO: test these two versions combined with remove_ratsnest() method
+
+    // Version A
     if (ratsnest == null)
     {
       ratsnest = new RatsNest(this.board);
     }
     return this.ratsnest;
+
+    // Version B
+    // return new RatsNest(this.board);
   }
 
   public void recalculate_length_violations()
@@ -856,7 +876,10 @@ public class GuiBoardManager extends HeadlessBoardManager
       Set<Item> hover_item = pick_items(this.current_mouse_position);
       if (hover_item.size() == 1)
       {
-        String hover_info = hover_item.iterator().next().get_hover_info(locale);
+        String hover_info = hover_item
+            .iterator()
+            .next()
+            .get_hover_info(locale);
         this.panel.setToolTipText(hover_info);
       }
       else
@@ -1222,7 +1245,9 @@ public class GuiBoardManager extends HeadlessBoardManager
     }
     else if (interactive_state instanceof SelectedItemState)
     {
-      ((SelectedItemState) interactive_state).get_item_list().addAll(p_items);
+      ((SelectedItemState) interactive_state)
+          .get_item_list()
+          .addAll(p_items);
       repaint();
     }
   }
@@ -1784,7 +1809,7 @@ public class GuiBoardManager extends HeadlessBoardManager
   {
     if ((num_threads > 1) && (!globalSettings.featureFlags.multiThreading))
     {
-      FRLogger.info("Multi-threading is disabled in the settings. Using single thread.");
+      routingJob.logInfo("Multi-threading is disabled in the settings. Using single thread.");
       num_threads = 1;
     }
 

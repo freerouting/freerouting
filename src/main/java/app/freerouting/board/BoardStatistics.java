@@ -13,4 +13,8 @@ public class BoardStatistics
   public int pinCount;
   public int componentOutlineCount;
   public int otherCount;
+  public double totalTraceLength;
+  public double weightedTraceLength;
+  // TODO: is this the same as the unrouted item count?
+  public int incompleteItemCount;
 }

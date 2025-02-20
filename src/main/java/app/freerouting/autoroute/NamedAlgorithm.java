@@ -85,9 +85,12 @@ public abstract class NamedAlgorithm implements Serializable
     boardUpdatedEventListeners.add(listener);
   }
 
-  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics)
+  /**
+   * Fires a board updated event. This happens when the board has been updated, e.g. after a route has been added.
+   */
+  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RoutingBoard board)
   {
-    BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics);
+    BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics, board);
     for (BoardUpdatedEventListener listener : boardUpdatedEventListeners)
     {
       listener.onBoardUpdatedEvent(event);
@@ -99,6 +102,9 @@ public abstract class NamedAlgorithm implements Serializable
     taskStateChangedEventListeners.add(listener);
   }
 
+  /**
+   * Fires a task state changed event. This happens when the state of the task changes, e.g. from running to stopped, or we start a new pass of the current process.
+   */
   public void fireTaskStateChangedEvent(TaskStateChangedEvent event)
   {
     for (TaskStateChangedEventListener listener : taskStateChangedEventListeners)

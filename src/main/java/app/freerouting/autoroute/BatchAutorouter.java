@@ -28,7 +28,7 @@ public class BatchAutorouter extends NamedAlgorithm
   private final HashSet<String> already_checked_board_hashes = new HashSet<>();
   private final LinkedList<Integer> traceLengthDifferenceBetweenPasses = new LinkedList<>();
   private final int trace_pull_tight_accuracy;
-  private RoutingJob job;
+  protected RoutingJob job;
   private boolean is_interrupted = false;
   /**
    * Used to draw the airline of the current routed incomplete.
@@ -41,7 +41,7 @@ public class BatchAutorouter extends NamedAlgorithm
     this.job = job;
   }
 
-  public BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
+  private BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
   {
     super(p_thread, board, settings);
 
@@ -187,7 +187,7 @@ public class BatchAutorouter extends NamedAlgorithm
         // TODO: make the threshold based on the initial score (cost)
         if (averageTraceLengthDifferencePerPass.getAsDouble() < 20.0)
         {
-          FRLogger.warn("There were only " + FRLogger.defaultFloatFormat.format(averageTraceLengthDifferencePerPass.getAsDouble()) + " track length increase in the last " + numberOfPassesToAverage + " passes, so it's very likely that autorouter can't improve the result further.");
+          job.logWarning("There were only " + FRLogger.defaultFloatFormat.format(averageTraceLengthDifferencePerPass.getAsDouble()) + " track length increase in the last " + numberOfPassesToAverage + " passes, so it's very likely that autorouter can't improve the result further.");
           this.is_interrupted = true;
         }
         else
@@ -196,7 +196,7 @@ public class BatchAutorouter extends NamedAlgorithm
         }
       }
       double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes", traceLengthDifferences);
-      FRLogger.info("Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration));
+      job.logInfo("Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration));
 
       if (this.settings.save_intermediate_stages)
       {
@@ -295,7 +295,7 @@ public class BatchAutorouter extends NamedAlgorithm
       BoardStatistics stats = board.get_statistics();
       stats.unrouted_item_count = items_to_go_count;
 
-      this.fireBoardUpdatedEvent(stats);
+      this.fireBoardUpdatedEvent(stats, this.board);
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list)
@@ -332,12 +332,12 @@ public class BatchAutorouter extends NamedAlgorithm
           --items_to_go_count;
           ripped_item_count += ripped_item_list.size();
 
-          BoardStatistics updatedStats = board.get_statistics();
-          updatedStats.unrouted_item_count = items_to_go_count;
-          updatedStats.ripped_item_count = ripped_item_count;
-          updatedStats.not_found_item_count = not_found;
-          updatedStats.routed_item_count = routed;
-          this.fireBoardUpdatedEvent(updatedStats);
+          BoardStatistics boardStatistics = board.get_statistics();
+          boardStatistics.unrouted_item_count = items_to_go_count;
+          boardStatistics.ripped_item_count = ripped_item_count;
+          boardStatistics.not_found_item_count = not_found;
+          boardStatistics.routed_item_count = routed;
+          this.fireBoardUpdatedEvent(boardStatistics, this.board);
         }
       }
 
@@ -355,7 +355,7 @@ public class BatchAutorouter extends NamedAlgorithm
       return true;
     } catch (Exception e)
     {
-      // Something went wrong during the auto-routing
+      job.logError("Something went wrong during the auto-routing", e);
       this.air_line = null;
       return false;
     }
@@ -454,7 +454,7 @@ public class BatchAutorouter extends NamedAlgorithm
       return autoroute_result == AutorouteEngine.AutorouteResult.ROUTED || autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
     } catch (Exception e)
     {
-      FRLogger.error("Error during autoroute_item", e);
+      job.logError("Error during autoroute_item", e);
       return false;
     }
   }

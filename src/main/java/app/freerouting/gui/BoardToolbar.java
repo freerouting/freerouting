@@ -110,14 +110,21 @@ class BoardToolbar extends JPanel
     toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     toolbar_autoroute_button.addActionListener(evt ->
     {
-      var routingJobs = RoutingJobScheduler.getInstance().listJobs(SessionManager.getInstance().getGuiSession().id.toString());
+      var routingJobs = RoutingJobScheduler
+          .getInstance()
+          .listJobs(SessionManager
+              .getInstance()
+              .getGuiSession().id.toString());
       if (routingJobs.length == 0)
       {
         FRLogger.warn("No routing job found for the current session");
         return;
       }
 
-      var guiRoutingJob = Arrays.stream(routingJobs).findFirst().get();
+      var guiRoutingJob = Arrays
+          .stream(routingJobs)
+          .findFirst()
+          .get();
       guiRoutingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
       InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(guiRoutingJob);
 
@@ -150,11 +157,13 @@ class BoardToolbar extends JPanel
       // delete all tracks and vias
       board.delete_all_tracks_and_vias();
       // update the board
-      board_frame.board_panel.board_handling.update_routing_board(board);
+      board_frame.board_panel.board_handling.replaceRoutingBoard(board);
       // create a deep copy of the routing board
-      board = board_frame.board_panel.board_handling.get_routing_board().deepCopy();
+      board = board_frame.board_panel.board_handling
+          .get_routing_board()
+          .deepCopy();
       // update the board again
-      board_frame.board_panel.board_handling.update_routing_board(board);
+      board_frame.board_panel.board_handling.replaceRoutingBoard(board);
       // create ratsnest
       board_frame.board_panel.board_handling.create_ratsnest();
       // redraw the board

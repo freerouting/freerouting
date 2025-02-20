@@ -157,11 +157,17 @@ public class BoardFrame extends WindowBase
       if (routingJob.input.getFile() != null)
       {
         // We allow only one job in the queue for GUI sessions, so we need to remove any existing ones before adding a new one
-        String sessionId = SessionManager.getInstance().getGuiSession().id.toString();
-        RoutingJobScheduler.getInstance().clearJobs(sessionId);
+        String sessionId = SessionManager
+            .getInstance()
+            .getGuiSession().id.toString();
+        RoutingJobScheduler
+            .getInstance()
+            .clearJobs(sessionId);
 
         // Enqueue the job to the routing queue
-        RoutingJobScheduler.getInstance().enqueueJob(routingJob);
+        RoutingJobScheduler
+            .getInstance()
+            .enqueueJob(routingJob);
 
         // Set the input directory in the global settings
         String oldInputDirectory = globalSettings.guiSettings.inputDirectory;
@@ -525,9 +531,12 @@ public class BoardFrame extends WindowBase
   }
 
 
+  @Deprecated
   public boolean save_intermediate_stage_file()
   {
-    if ((intermediate_stage_file_last_saved_at != null) && (intermediate_stage_file_last_saved_at.plusSeconds(30).isAfter(LocalDateTime.now())))
+    if ((intermediate_stage_file_last_saved_at != null) && (intermediate_stage_file_last_saved_at
+        .plusSeconds(30)
+        .isAfter(LocalDateTime.now())))
     {
       return false;
     }
@@ -538,17 +547,25 @@ public class BoardFrame extends WindowBase
 
   public boolean delete_intermediate_stage_file()
   {
-    return this.routingJob.snapshot.getFile().delete();
+    return this.routingJob.snapshot
+        .getFile()
+        .delete();
   }
 
   public boolean is_intermediate_stage_file_available()
   {
-    return (this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot.getFile().exists() && this.routingJob.snapshot.getFile().canRead());
+    return (this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot
+        .getFile()
+        .exists() && this.routingJob.snapshot
+        .getFile()
+        .canRead());
   }
 
   public LocalDateTime get_intermediate_stage_file_modification_time()
   {
-    long lastModified = this.routingJob.snapshot.getFile().lastModified();
+    long lastModified = this.routingJob.snapshot
+        .getFile()
+        .lastModified();
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
   }
 
@@ -627,7 +644,9 @@ public class BoardFrame extends WindowBase
   /**
    * Saves the board, GUI settings and subwindows to disk as a binary file.
    * Returns false, if the save failed.
+   * DEPRECATED: do not use this version-specific binary file format anymore, use SES, DSN, RoutingJob-JSON format instead
    */
+  @Deprecated
   private boolean saveAsBinary(BoardFileDetails output)
   {
     if (output == null)
@@ -652,7 +671,9 @@ public class BoardFrame extends WindowBase
 
   /**
    * Writes a Specctra Session File (SES). Returns false, if write operation fails.
+   * DEPRECATED: use HeadlessBoardManager.saveAsSpecctraSessionSes instead
    */
+  @Deprecated
   public boolean saveAsSpecctraSessionSes(File outputFile, String designName)
   {
     if (outputFile == null)

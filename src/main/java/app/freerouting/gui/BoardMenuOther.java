@@ -47,11 +47,13 @@ public class BoardMenuOther extends JMenu
       // delete all tracks and vias
       board.delete_all_tracks_and_vias();
       // update the board
-      other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
+      other_menu.board_frame.board_panel.board_handling.replaceRoutingBoard(board);
       // create a deep copy of the routing board
-      board = other_menu.board_frame.board_panel.board_handling.get_routing_board().deepCopy();
+      board = other_menu.board_frame.board_panel.board_handling
+          .get_routing_board()
+          .deepCopy();
       // update the board again
-      other_menu.board_frame.board_panel.board_handling.update_routing_board(board);
+      other_menu.board_frame.board_panel.board_handling.replaceRoutingBoard(board);
       // create ratsnest
       other_menu.board_frame.board_panel.board_handling.create_ratsnest();
       // redraw the board

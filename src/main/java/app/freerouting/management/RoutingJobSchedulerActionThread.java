@@ -96,7 +96,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
           if (job.output.format == FileFormat.SES)
           {
             HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
-            boardManager.update_routing_board(job.board);
+            boardManager.replaceRoutingBoard(job.board);
 
             // Save the SES file after the auto-router has finished
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream())

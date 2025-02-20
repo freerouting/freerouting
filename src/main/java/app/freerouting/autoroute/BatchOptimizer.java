@@ -2,15 +2,10 @@ package app.freerouting.autoroute;
 
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.*;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.interactive.InteractiveActionThread;
-import app.freerouting.interactive.InteractiveState;
-import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.TextManager;
-import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.RouterSettings;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,25 +15,26 @@ import java.util.TreeSet;
 /**
  * Optimizes routes using a single thread on a board that has completed auto-routing.
  */
-public class BatchOptRoute extends NamedAlgorithm
+public class BatchOptimizer extends NamedAlgorithm
 {
   protected static int MAX_AUTOROUTE_PASSES = 6;
   protected static int ADDITIONAL_RIPUP_COST_FACTOR_AT_START = 10;
-  protected final InteractiveActionThread guiThread;
-  protected boolean clone_board;
   protected ReadSortedRouteItems sorted_route_items;
-  protected boolean use_increased_ripup_costs; // in the first passes the ripup costs are increased for better
-  // performance.
-  protected double min_cumulative_trace_length_before = 0;
+  // in the first passes the ripup costs are increased for better performance.
+  protected boolean use_increased_ripup_costs;
+  // the minimum cumulative trace length that was reached during the optimization
+  protected double min_cumulative_trace_length = 0.0;
+  protected RoutingJob job;
 
   /**
-   * To optimize the route on the board after the autoroute task is finished.
+   * Creates a new instance of BatchOptRoute, which is used to optimize the board.
+   *
+   * @param job
    */
-  public BatchOptRoute(InteractiveActionThread p_thread, boolean p_clone_board, RoutingBoard board, RouterSettings settings)
+  public BatchOptimizer(RoutingJob job)
   {
-    super(p_thread, board, settings);
-    this.clone_board = p_clone_board;
-    this.guiThread = p_thread;
+    super(job.thread, job.board, job.routerSettings);
+    this.job = job;
   }
 
   static boolean contains_only_unfixed_traces(Collection<Item> p_item_list)
@@ -54,45 +50,13 @@ public class BatchOptRoute extends NamedAlgorithm
   }
 
   /**
-   * Calculates the cumulative trace lengths multiplied by the trace radius of all traces on the
-   * board, which are not shove_fixed.
-   */
-  protected static double calc_weighted_trace_length(RoutingBoard p_board)
-  {
-    double result = 0;
-    int default_clearance_class = BoardRules.default_clearance_class();
-    Iterator<UndoableObjects.UndoableObjectNode> it = p_board.item_list.start_read_object();
-    for (; ; )
-    {
-      UndoableObjects.Storable curr_item = p_board.item_list.read_object(it);
-      if (curr_item == null)
-      {
-        break;
-      }
-      if (curr_item instanceof Trace curr_trace)
-      {
-        FixedState fixed_state = curr_trace.get_fixed_state();
-        if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED)
-        {
-          double weighted_trace_length = curr_trace.get_length() * (curr_trace.get_half_width() + p_board.clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
-          if (fixed_state == FixedState.SHOVE_FIXED)
-          {
-            // to produce less violations with pin exit directions.
-            weighted_trace_length /= 2;
-          }
-          result += weighted_trace_length;
-        }
-      }
-    }
-    return result;
-  }
-
-  /**
    * Optimize the route on the board.
    */
   public void runBatchLoop()
   {
-    FRLogger.debug("Before optimize: Via count: " + board.get_vias().size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
+    FRLogger.debug("Before optimize: Via count: " + board
+        .get_vias()
+        .size() + ", trace length: " + Math.round(board.cumulative_trace_length()));
     double route_improved = -1;
     int curr_pass_no = 0;
     use_increased_ripup_costs = true;
@@ -107,15 +71,6 @@ public class BatchOptRoute extends NamedAlgorithm
 
       boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
       route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
-
-      if ((route_improved > this.settings.optimizationImprovementThreshold) && (this.settings.save_intermediate_stages))
-      {
-        // Save intermediate optimization results:
-        // 1. To save the result in case the program is terminated unexpectedly,
-        //    e.g., Windows OS update automatically reboots machine
-        // 2. To provide a way to check intermediate results for a long-running optimization
-        this.guiThread.hdlg.get_panel().board_frame.save_intermediate_stage_file();
-      }
     }
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, curr_pass_no, this.board.get_hash()));
@@ -129,12 +84,13 @@ public class BatchOptRoute extends NamedAlgorithm
   protected float opt_route_pass(int p_pass_no, boolean p_with_preferred_directions)
   {
     float route_improved = 0.0f;
-    int via_count_before = this.board.get_vias().size();
-    double trace_length_before = this.guiThread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
-    this.guiThread.hdlg.screen_messages.set_post_route_info(via_count_before, trace_length_before, this.guiThread.hdlg.coordinate_transform.user_unit);
+
+    BoardStatistics boardStatisticsBefore = board.get_statistics();
+    this.fireBoardUpdatedEvent(boardStatisticsBefore, this.board);
+
     this.sorted_route_items = new ReadSortedRouteItems();
-    this.min_cumulative_trace_length_before = calc_weighted_trace_length(board);
-    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + via_count_before + " vias and " + String.format("%(,.2f", trace_length_before) + " trace length.";
+    this.min_cumulative_trace_length = boardStatisticsBefore.weightedTraceLength;
+    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.totalTraceLength) + " trace length.";
 
     FRLogger.traceEntry(optimizationPassId);
 
@@ -150,12 +106,12 @@ public class BatchOptRoute extends NamedAlgorithm
       {
         break;
       }
-      if (opt_route_item(curr_item, p_pass_no, p_with_preferred_directions).improved())
+      if (opt_route_item(curr_item, p_with_preferred_directions, false).improved())
       {
-        int via_count_after = this.board.get_vias().size();
-        double trace_length_after = this.guiThread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
+        BoardStatistics boardStatisticsAfter = board.get_statistics();
+        this.fireBoardUpdatedEvent(boardStatisticsAfter, this.board);
 
-        route_improved = (float) ((via_count_before != 0 && trace_length_before != 0) ? 1.0 - (((((float) via_count_after / via_count_before) + (trace_length_after / trace_length_before)) / 2)) : 0);
+        route_improved = (float) ((boardStatisticsBefore.viaCount != 0 && boardStatisticsBefore.totalTraceLength != 0) ? 1.0 - (((((float) boardStatisticsAfter.viaCount / boardStatisticsBefore.viaCount) + (boardStatisticsAfter.totalTraceLength / boardStatisticsBefore.totalTraceLength)) / 2)) : 0);
       }
     }
 
@@ -171,33 +127,31 @@ public class BatchOptRoute extends NamedAlgorithm
     return route_improved;
   }
 
-  protected void remove_ratsnest()
-  {
-    this.guiThread.hdlg.remove_ratsnest();
-  }
-
-  protected RatsNest get_ratsnest()
-  {
-    return this.guiThread.hdlg.get_ratsnest();
-  }
-
   /**
    * Try to improve the route by re-routing the connections containing p_item.
+   *
+   * @param p_item                      the item to be re-routed
+   * @param p_with_preferred_directions if true, the preferred directions are used for the traces
+   * @param disableSnapshots            if true, the snapshots are not used which means that the routing cannot be undone, but it's much more efficient
    */
-  protected ItemRouteResult opt_route_item(Item p_item, int p_pass_no, boolean p_with_preferred_directions)
+  protected ItemRouteResult opt_route_item(Item p_item, boolean p_with_preferred_directions, boolean disableSnapshots)
   {
-    TextManager tm = new TextManager(InteractiveState.class, this.guiThread.hdlg.get_locale());
+    // check if item.board is a RoutingBoard
+    if (!(p_item.board instanceof RoutingBoard routingBoard))
+    {
+      job.logWarning("The item to be optimized is not on a RoutingBoard.");
+      return new ItemRouteResult(p_item.get_id_no());
+    }
 
-    String start_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message") + "        " + tm.getText("routeoptimizer_pass") + p_pass_no;
-    this.guiThread.hdlg.screen_messages.set_status_message(start_message); // assume overwriting messages is harmless
+    // calculate the statistics for the board before the routing
+    BoardStatistics boardStatisticsBefore = routingBoard.get_statistics();
+    this.fireBoardUpdatedEvent(boardStatisticsBefore, routingBoard);
 
-    this.remove_ratsnest(); // looks like caching the ratsnest is not necessary
-    // as a new instance is needed every time, i.e., remove/get ratsnest are called in pair
-    int incomplete_count_before = this.get_ratsnest().incomplete_count();
-
-    int via_count_before = this.board.get_vias().size();
+    // collect the items to be re-routed
     Set<Item> ripped_items = new TreeSet<>();
     ripped_items.add(p_item);
+
+    // add the contacts of the traces to the ripped items if it's a trace
     if (p_item instanceof Trace curr_trace)
     {
       // add also the fork items, especially because not all fork items may be
@@ -212,11 +166,15 @@ public class BatchOptRoute extends NamedAlgorithm
         curr_contact_list = curr_trace.get_end_contacts();
       }
     }
+
     Set<Item> ripped_connections = new TreeSet<>();
+    // add all the connections of the items to be re-routed
     for (Item curr_item : ripped_items)
     {
       ripped_connections.addAll(curr_item.get_connection_items(Item.StopConnectionOption.NONE));
     }
+
+    // check if the connections contain user fixed items, which should not be re-routed
     for (Item curr_item : ripped_connections)
     {
       if (curr_item.is_user_fixed())
@@ -225,67 +183,63 @@ public class BatchOptRoute extends NamedAlgorithm
       }
     }
 
-    if (!this.clone_board)
+    if (!disableSnapshots)
     {
-      board.generate_snapshot();
+      // make the current situation restorable by undo with the snapshot
+      routingBoard.generate_snapshot();
     }
-    // no need to undo for cloned board which is either promoted to master or discarded
 
-    this.board.remove_items(ripped_connections);
+    // remove the items to be re-routed
+    routingBoard.remove_items(ripped_connections);
     for (int i = 0; i < p_item.net_count(); ++i)
     {
-      this.board.combine_traces(p_item.get_net_no(i));
+      routingBoard.combine_traces(p_item.get_net_no(i));
     }
-    int ripup_costs = this.guiThread.hdlg.get_settings().autoroute_settings.get_start_ripup_costs();
+
+    // calculate the ripup costs
+    int ripup_costs = this.settings.get_start_ripup_costs();
     if (this.use_increased_ripup_costs)
     {
+      // TODO: move this fixed parameter (ADDITIONAL_RIPUP_COST_FACTOR_AT_START=10) to the router optimizer settings
       ripup_costs *= ADDITIONAL_RIPUP_COST_FACTOR_AT_START;
     }
+
+    // reduce the ripup costs for traces
     if (p_item instanceof Trace)
     {
       // taking less ripup costs seems to produce better results
+      // TODO: move this fixed parameter (0.6) to the router optimizer settings
       ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
     }
 
-    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, settings.trace_pull_tight_accuracy, p_with_preferred_directions, this.clone_board ? this.board : null, settings);
+    // route the connections
+    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, settings.trace_pull_tight_accuracy, p_with_preferred_directions, disableSnapshots ? routingBoard : null, settings);
 
-    this.remove_ratsnest();
-    int incomplete_count_after = this.get_ratsnest().incomplete_count();
+    // check the result by generating the statistics for the board again after the routing
+    BoardStatistics boardStatisticsAfter = routingBoard.get_statistics();
+    this.fireBoardUpdatedEvent(boardStatisticsAfter, routingBoard);
 
-    int via_count_after = this.board.get_vias().size();
-    double trace_length_after = calc_weighted_trace_length(board);
-
-    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), via_count_before, via_count_after, this.min_cumulative_trace_length_before, trace_length_after, incomplete_count_before, incomplete_count_after);
+    // check if the board was improved
+    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.viaCount, boardStatisticsAfter.viaCount, this.min_cumulative_trace_length, boardStatisticsAfter.totalTraceLength, boardStatisticsBefore.incompleteItemCount, boardStatisticsAfter.incompleteItemCount);
     boolean route_improved = !this.thread.isStopRequested() && result.improved();
     result.update_improved(route_improved);
 
     if (route_improved)
     {
-      if (incomplete_count_after < incomplete_count_before || (incomplete_count_after == incomplete_count_before && via_count_after < via_count_before))
-      {
-        this.min_cumulative_trace_length_before = trace_length_after;
-      }
-      else
-      {
-        // Only cumulative trace length shortened.
-        // Catch unexpected increase of cumulative trace length somewhere for example by removing
-        // acid traps.
-        this.min_cumulative_trace_length_before = Math.min(this.min_cumulative_trace_length_before, trace_length_after);
-      }
+      this.min_cumulative_trace_length = Math.min(this.min_cumulative_trace_length, boardStatisticsAfter.weightedTraceLength);
 
-      if (!this.clone_board)
+      if (!disableSnapshots)
       {
-        board.pop_snapshot();
+        // this was a successful routing, so the snapshot can be removed
+        routingBoard.pop_snapshot();
       }
-
-      double new_trace_length = this.guiThread.hdlg.coordinate_transform.board_to_user(this.board.cumulative_trace_length());
-      this.guiThread.hdlg.screen_messages.set_post_route_info(via_count_after, new_trace_length, this.guiThread.hdlg.coordinate_transform.user_unit);
     }
     else
     {
-      if (!this.clone_board)
+      if (!disableSnapshots)
       {
-        board.undo(null);
+        // this was not a successful routing, so we can undo the routing using the snapshot
+        routingBoard.undo(null);
       }
     }
 
@@ -293,8 +247,7 @@ public class BatchOptRoute extends NamedAlgorithm
   }
 
   /**
-   * Returns the current position of the item, which will be rerouted or null, if the optimizer is
-   * not active.
+   * Returns the current position of the item, which will be rerouted or null, if the optimizer is not active.
    */
   public FloatPoint get_current_position()
   {
@@ -398,7 +351,9 @@ public class BatchOptRoute extends NamedAlgorithm
         {
           if (!curr_via.is_user_fixed())
           {
-            FloatPoint curr_via_center = curr_via.get_center().to_float();
+            FloatPoint curr_via_center = curr_via
+                .get_center()
+                .to_float();
             int curr_via_min_layer = curr_via.first_layer();
             if (curr_via_center.x > min_item_coor.x || curr_via_center.x == min_item_coor.x && (curr_via_center.y > min_item_coor.y || curr_via_center.y == min_item_coor.y && curr_via_min_layer > min_item_layer))
             {
@@ -425,8 +380,12 @@ public class BatchOptRoute extends NamedAlgorithm
         {
           if (!curr_trace.is_shove_fixed())
           {
-            FloatPoint first_corner = curr_trace.first_corner().to_float();
-            FloatPoint last_corner = curr_trace.last_corner().to_float();
+            FloatPoint first_corner = curr_trace
+                .first_corner()
+                .to_float();
+            FloatPoint last_corner = curr_trace
+                .last_corner()
+                .to_float();
             FloatPoint compare_corner;
             if (first_corner.x < last_corner.x || first_corner.x == last_corner.x && first_corner.y < last_corner.y)
             {
