@@ -121,7 +121,7 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-appengine:2.7.0'
     implementation 'com.google.cloud:google-cloud-core:2.51.0'
     implementation 'com.google.cloud:google-cloud-core-http:2.51.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.43.3'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.48.0'
 }
 
 ext {
