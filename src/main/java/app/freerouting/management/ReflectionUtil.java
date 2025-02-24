@@ -123,8 +123,8 @@ public class ReflectionUtil
         field.setAccessible(true);
         Object sourceValue = field.get(source);
 
-        // Only copy the field if the new value is not null
-        if (sourceValue != null)
+        // Only copy the field if the new value is not null, and not the default value
+        if ((sourceValue != null) && !sourceValue.equals(getDefaultValue(field)))
         {
           // Check if the field is a primitive or a string
           if (field
@@ -134,7 +134,8 @@ public class ReflectionUtil
             // check if the target field is null or its default value
             var targetValue = field.get(target);
 
-            if ((targetValue == null) || targetValue.equals(getDefaultValue(field)))
+            //if ((targetValue == null) || targetValue.equals(getDefaultValue(field)))
+            if (targetValue != sourceValue)
             {
               field.set(target, sourceValue);
               numberOfFieldsChanged++;
