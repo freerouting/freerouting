@@ -26,10 +26,12 @@ public abstract class StoppableThread extends Thread implements Stoppable
     thread_action();
   }
 
+  // Request the thread to stop including the fanout, auto-router and optimizer tasks
   @Override
   public synchronized void requestStop()
   {
     stop_requested = true;
+    stop_auto_router = true;
   }
 
   @Override
@@ -38,11 +40,13 @@ public abstract class StoppableThread extends Thread implements Stoppable
     return stop_requested;
   }
 
+  // Request the thread to stop the auto-router, but continue with the optimizer and other tasks
   public synchronized void request_stop_auto_router()
   {
     stop_auto_router = true;
   }
 
+  // Check if the thread should stop the auto router
   public synchronized boolean is_stop_auto_router_requested()
   {
     return stop_auto_router;

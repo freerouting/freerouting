@@ -210,6 +210,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
       String start_message = tm.getText("batch_autorouter") + " " + tm.getText("stop_message");
       boardManager.screen_messages.set_status_message(start_message);
+
+      // Let's run the fanout if it's enabled
       boolean fanout_first = boardManager.get_settings().autoroute_settings.getRunFanout() && boardManager.get_settings().autoroute_settings.get_start_pass_no() <= 1;
       if (fanout_first)
       {
@@ -232,6 +234,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         });
         fanout.runBatchLoop();
       }
+
+      // Let's run the autorouter
       if (boardManager.get_settings().autoroute_settings.getRunRouter() && !this.is_stop_auto_router_requested())
       {
         batch_autorouter.runBatchLoop();
@@ -246,6 +250,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
       Thread.sleep(100);
 
+      // Let's run the optimizer if it's enabled
       int num_threads = boardManager.get_num_threads();
       if (num_threads > 0)
       {
@@ -299,8 +304,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         }
       }
 
+      // Restore the board read-only state
       boardManager.set_board_read_only(saved_board_read_only);
 
+      // Save the result to the output field as a Specctra SES file
       if (routingJob.output.format == FileFormat.SES)
       {
         // Save the SES file after the auto-router has finished

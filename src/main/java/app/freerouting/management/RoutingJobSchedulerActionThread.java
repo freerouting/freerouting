@@ -9,6 +9,7 @@ import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.management.ManagementFactory;
 import java.time.Instant;
 
 import static app.freerouting.Freerouting.globalSettings;
@@ -19,6 +20,8 @@ import static app.freerouting.Freerouting.globalSettings;
  */
 public class RoutingJobSchedulerActionThread extends StoppableThread
 {
+  private final long MAX_TIMEOUT = 24 * 60 * 60; // 24 hours
+  private final int GRACE_PERIOD = 30; // 30 seconds
   RoutingJob job;
 
   public RoutingJobSchedulerActionThread(RoutingJob job)
@@ -39,35 +42,58 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
     if (timeout != null)
     {
       // maximize the timeout to 24 hours
-      if (timeout > 24 * 60 * 60)
+      if (timeout > MAX_TIMEOUT)
       {
-        timeout = 24 * 60 * 60L;
+        timeout = MAX_TIMEOUT;
       }
 
       job.timeoutAt = job.startedAt.plusSeconds(timeout);
+    }
 
-      // start a new thread that will check for timeout
-      new Thread(() ->
+    // Start a new thread that will monitor the job thread
+    new Thread(() ->
+    {
+      while ((job != null) && (job.thread != null))
       {
-        while (Instant
-            .now()
-            .isBefore(job.timeoutAt))
+
+        try
         {
-          try
-          {
-            Thread.sleep(1000);
-          } catch (InterruptedException e)
-          {
-            e.printStackTrace();
-          }
+          Thread.sleep(1000);
+        } catch (InterruptedException e)
+        {
+          e.printStackTrace();
         }
 
         if (job.state == RoutingJobState.RUNNING)
         {
-          job.state = RoutingJobState.TIMED_OUT;
+          // Get the CPU time and memory usage of the job thread
+          this.monitorCpuAndMemoryUsage(job);
+
+          // Check for timeout
+          if (!Instant
+              .now()
+              .isBefore(job.timeoutAt))
+          {
+
+            // signal the job thread to stop, and wait gracefully for up to 30 seconds for it
+            job.thread.requestStop();
+            while ((job.state == RoutingJobState.RUNNING) && Instant
+                .now()
+                .isBefore(job.timeoutAt.plusSeconds(GRACE_PERIOD)))
+            {
+              try
+              {
+                Thread.sleep(1000);
+              } catch (InterruptedException e)
+              {
+                e.printStackTrace();
+              }
+            }
+            job.state = RoutingJobState.TIMED_OUT;
+          }
         }
-      }).start();
-    }
+      }
+    }).start();
 
     // start the fanout, routing, optimizer task(s) if needed
     if (job.routerSettings.getRunFanout())
@@ -131,6 +157,36 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
     {
       job.state = RoutingJobState.COMPLETED;
       globalSettings.statistics.incrementJobsCompleted();
+    }
+  }
+
+  private void monitorCpuAndMemoryUsage(RoutingJob job)
+  {
+    // Get the ThreadMXBean instance and cast it to com.sun.management.ThreadMXBean
+    com.sun.management.ThreadMXBean threadMXBean = (com.sun.management.ThreadMXBean) ManagementFactory.getThreadMXBean();
+
+    // Get all live thread IDs
+    long[] threadIds = threadMXBean.getAllThreadIds();
+
+    // Iterate through the thread IDs and get memory usage
+    for (long threadId : threadIds)
+    {
+      if (threadId == job.thread.threadId())
+      {
+        // CPU time and memory usage
+        float cpuTime = threadMXBean.getThreadCpuTime(threadId) / 1000.0f / 1000.0f / 1000.0f;
+
+        // Enable thread memory allocation measurement
+        threadMXBean.setThreadAllocatedMemoryEnabled(true);
+
+        // Get the thread's allocated memory in bytes
+        long allocatedMemory = threadMXBean.getThreadAllocatedBytes(threadId);
+        float allocatedMB = allocatedMemory / (1024.0f * 1024.0f);
+
+        // Update the job's resource usage
+        job.resourceUsage.cpuTimeUsed += cpuTime;
+        job.resourceUsage.maxMemoryUsed = Math.max(job.maxMemoryUsed, allocatedMB);
+      }
     }
   }
 }
