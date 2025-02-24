@@ -5,6 +5,7 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -426,5 +427,16 @@ public class RouterSettings implements Serializable
   public void set_automatic_neckdown(boolean p_value)
   {
     this.automatic_neckdown = p_value;
+  }
+
+  /**
+   * Apply the new values from the given settings to this settings object.
+   *
+   * @param settings The settings to copy the values from.
+   * @return The number of fields that were changed.
+   */
+  public int applyNewValuesFrom(RouterSettings settings)
+  {
+    return ReflectionUtil.copyFields(settings, this);
   }
 }

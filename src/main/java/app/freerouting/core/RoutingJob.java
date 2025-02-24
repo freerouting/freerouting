@@ -68,7 +68,6 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public BoardFileDetails output = null;
   @SerializedName("snapshot")
   public BoardFileDetails snapshot = null;
-  // TODO: pass the router settings as an input to the router (and don't use the one on IBoardManager/GuiBoardManager)
   @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
   @SerializedName("resource_usage")
@@ -449,10 +448,13 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     fireInputUpdatedEvent();
   }
 
-  public void setSettings(RouterSettings settings)
+  public boolean setSettings(RouterSettings settings)
   {
-    this.routerSettings = settings;
+    // Update the router settings that are defined in the settings parameter. All other settings should remain the same.
+    boolean wereSettingsChanged = this.routerSettings.applyNewValuesFrom(settings) > 0;
     fireSettingsUpdatedEvent();
+
+    return wereSettingsChanged;
   }
 
   public void addSettingsUpdatedEventListener(RoutingJobUpdatedEventListener listener)
