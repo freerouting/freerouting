@@ -663,4 +663,67 @@ public class JobControllerV1 extends BaseController
         .ok(response)
         .build();
   }
+
+  /* Stream the log entries of the job in real-time using Server-Sent Events. */
+  @GET
+  @Path("/{jobId}/logs/stream")
+  @Produces(MediaType.SERVER_SENT_EVENTS)
+  public void streamLogs(
+      @PathParam("jobId")
+      String jobId,
+      @Context
+      SseEventSink eventSink,
+      @Context
+      Sse sse)
+  {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler
+        .getInstance()
+        .getJob(jobId);
+
+    // If the job does not exist or session is invalid, close the connection
+    if (job == null || SessionManager
+        .getInstance()
+        .getSession(job.sessionId.toString(), userId) == null)
+    {
+      eventSink.close();
+    }
+
+    // Create a scheduled executor for periodic updates
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+    // stream a new log entry when the job logsEntryAdded event was fired
+    job.addLogEntryAddedEventListener(e ->
+    {
+      try
+      {
+        var result = e.getLogEntry();
+        OutboundSseEvent event = sse
+            .newEventBuilder()
+            .id(String.valueOf(System.currentTimeMillis()))
+            .data(GSON.toJson(result))
+            .build();
+
+        eventSink.send(event);
+
+        // Close the connection if the job is completed or cancelled
+        if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED)
+        {
+          eventSink.close();
+          executor.shutdown();
+        }
+      } catch (Exception ex)
+      {
+        FRLogger.error("Error while streaming logs", ex);
+        eventSink.close();
+        executor.shutdown();
+      }
+    });
+
+    // Log the API call
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs/stream", "", "stream-started");
+  }
 }

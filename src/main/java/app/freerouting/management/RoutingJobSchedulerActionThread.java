@@ -30,6 +30,9 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
   protected void thread_action()
   {
     job.startedAt = Instant.now();
+    // Use ISO standard time format
+    job.logInfo("Job '" + job.shortName + "' started at " + job.startedAt.toString());
+
 
     // check if we need to check for timeout
     Long timeout = TextManager.parseTimespanString(job.routerSettings.jobTimeoutString);

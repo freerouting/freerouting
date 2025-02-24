@@ -1,6 +1,8 @@
 package app.freerouting.core;
 
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.events.RoutingJobLogEntryAddedEvent;
+import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.designforms.specctra.RulesFile;
@@ -8,6 +10,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.gui.WindowMessage;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.logger.LogEntry;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import com.google.gson.annotations.SerializedName;
@@ -42,33 +45,35 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   protected final transient List<RoutingJobUpdatedEventListener> settingsUpdatedEventListeners = new ArrayList<>();
   protected final transient List<RoutingJobUpdatedEventListener> inputUpdatedEventListeners = new ArrayList<>();
   protected final transient List<RoutingJobUpdatedEventListener> outputUpdatedEventListeners = new ArrayList<>();
+  protected final transient List<RoutingJobLogEntryAddedEventListener> logEntryAddedEventListeners = new ArrayList<>();
+  @SerializedName("short_name")
+  public String shortName = "N/A";
+  @SerializedName("name")
+  public String name;
   @SerializedName("started_at")
   public Instant startedAt = null;
   @SerializedName("finished_at")
   public Instant finishedAt = null;
-  @SerializedName("input")
-  public BoardFileDetails input = null;
-  @SerializedName("snapshot")
-  public BoardFileDetails snapshot = null;
-  @SerializedName("output")
-  public BoardFileDetails output = null;
-  @SerializedName("session_id")
-  public UUID sessionId;
-  @SerializedName("name")
-  public String name;
   @SerializedName("state")
   public RoutingJobState state = RoutingJobState.INVALID;
-  @SerializedName("priority")
-  public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
   @SerializedName("stage")
   public RoutingStage stage = RoutingStage.IDLE;
-  public transient StoppableThread thread = null;
-  public transient RoutingBoard board = null;
+  @SerializedName("priority")
+  public RoutingJobPriority priority = RoutingJobPriority.NORMAL;
+  @SerializedName("session_id")
+  public UUID sessionId;
+  @SerializedName("input")
+  public BoardFileDetails input = null;
+  @SerializedName("output")
+  public BoardFileDetails output = null;
+  @SerializedName("snapshot")
+  public BoardFileDetails snapshot = null;
   // TODO: pass the router settings as an input to the router (and don't use the one on IBoardManager/GuiBoardManager)
   @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
+  public transient StoppableThread thread = null;
+  public transient RoutingBoard board = null;
   public transient Instant timeoutAt;
-  private String shortName = "N/A";
 
   /**
    * We need a parameterless constructor for the serialization.
@@ -490,23 +495,41 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     }
   }
 
+  public void addLogEntryAddedEventListener(RoutingJobLogEntryAddedEventListener listener)
+  {
+    logEntryAddedEventListeners.add(listener);
+  }
+
+  public void fireLogEntryAddedEvent(LogEntry logEntry)
+  {
+    RoutingJobLogEntryAddedEvent event = new RoutingJobLogEntryAddedEvent(this, this, logEntry);
+    for (RoutingJobLogEntryAddedEventListener listener : logEntryAddedEventListeners)
+    {
+      listener.onLogEntryAdded(event);
+    }
+  }
+
   public void logInfo(String message)
   {
-    FRLogger.info("[" + this.shortName + "] " + message, this.id);
+    LogEntry logEntry = FRLogger.info("[" + this.shortName + "] " + message, this.id);
+    fireLogEntryAddedEvent(logEntry);
   }
 
   public void logWarning(String message)
   {
-    FRLogger.warn("[" + this.shortName + "] " + message, this.id);
+    LogEntry logEntry = FRLogger.warn("[" + this.shortName + "] " + message, this.id);
+    fireLogEntryAddedEvent(logEntry);
   }
 
   public void logError(String message, Throwable ex)
   {
-    FRLogger.error("[" + this.shortName + "] " + message, this.id, ex);
+    LogEntry logEntry = FRLogger.error("[" + this.shortName + "] " + message, this.id, ex);
+    fireLogEntryAddedEvent(logEntry);
   }
 
   public void logDebug(String message)
   {
-    FRLogger.debug("[" + this.shortName + "] " + message, this.id);
+    LogEntry logEntry = FRLogger.debug("[" + this.shortName + "] " + message, this.id);
+    fireLogEntryAddedEvent(logEntry);
   }
 }

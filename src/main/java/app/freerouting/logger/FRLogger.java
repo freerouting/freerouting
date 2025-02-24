@@ -106,13 +106,13 @@ public class FRLogger
     return timeElapsed / 1000.0;
   }
 
-  public static void info(String msg, UUID topic)
+  public static LogEntry info(String msg, UUID topic)
   {
-    logEntries.add(LogEntryType.Info, msg, topic);
+    LogEntry logEntry = logEntries.add(LogEntryType.Info, msg, topic);
 
     if (!enabled)
     {
-      return;
+      return null;
     }
     if (logger == null)
     {
@@ -120,20 +120,22 @@ public class FRLogger
     }
 
     logger.info(msg);
+
+    return logEntry;
   }
 
-  public static void info(String msg)
+  public static LogEntry info(String msg)
   {
-    info(msg, null);
+    return info(msg, null);
   }
 
-  public static void warn(String msg, UUID topic)
+  public static LogEntry warn(String msg, UUID topic)
   {
-    logEntries.add(LogEntryType.Warning, msg, topic);
+    LogEntry logEntry = logEntries.add(LogEntryType.Warning, msg, topic);
 
     if (!enabled)
     {
-      return;
+      return null;
     }
     if (logger == null)
     {
@@ -141,20 +143,22 @@ public class FRLogger
     }
 
     logger.warn(msg);
+
+    return logEntry;
   }
 
-  public static void warn(String msg)
+  public static LogEntry warn(String msg)
   {
-    warn(msg, null);
+    return warn(msg, null);
   }
 
-  public static void debug(String msg, UUID topic)
+  public static LogEntry debug(String msg, UUID topic)
   {
-    logEntries.add(LogEntryType.Debug, msg, topic);
+    LogEntry logEntry = logEntries.add(LogEntryType.Debug, msg, topic);
 
     if (!enabled)
     {
-      return;
+      return null;
     }
     if (logger == null)
     {
@@ -162,20 +166,22 @@ public class FRLogger
     }
 
     logger.debug(msg);
+
+    return logEntry;
   }
 
-  public static void debug(String msg)
+  public static LogEntry debug(String msg)
   {
-    debug(msg, null);
+    return debug(msg, null);
   }
 
-  public static void error(String msg, UUID topic, Throwable exception)
+  public static LogEntry error(String msg, UUID topic, Throwable exception)
   {
-    logEntries.add(LogEntryType.Error, msg, topic, exception);
+    LogEntry logEntry = logEntries.add(LogEntryType.Error, msg, topic, exception);
 
     if (!enabled)
     {
-      return;
+      return null;
     }
     if (logger == null)
     {
@@ -191,20 +197,22 @@ public class FRLogger
     {
       logger.error(msg, exception);
     }
+
+    return logEntry;
   }
 
-  public static void error(String msg, Throwable exception)
+  public static LogEntry error(String msg, Throwable exception)
   {
-    error(msg, null, exception);
+    return error(msg, null, exception);
   }
 
-  public static void trace(String msg)
+  public static LogEntry trace(String msg)
   {
-    logEntries.add(LogEntryType.Trace, msg, null);
+    LogEntry logEntry = logEntries.add(LogEntryType.Trace, msg, null);
 
     if (!enabled)
     {
-      return;
+      return null;
     }
     if (logger == null)
     {
@@ -212,6 +220,8 @@ public class FRLogger
     }
 
     logger.trace(msg);
+
+    return logEntry;
   }
 
   /// <summary>
