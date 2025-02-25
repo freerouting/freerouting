@@ -12,7 +12,7 @@ Here’s a quick guide to help you get started:
 
 ### 1. Set HTTP headers for API Access
 
-Make sure you have set the required HTTP headers: your **API key, Profile ID and Host** for each API call.&#x20;
+Make sure you have set the required HTTP headers: your **API key, Profile ID and Host** for each API call.
 
 Include your API key in all requests using the `Authorization` header:
 
@@ -23,13 +23,14 @@ Freerouting-Environment-Host: <HOST_NAME>/<HOST_VERSION>
 ```
 
 **API Key:**
-Your API key is a unique identifier that grants access to Freerouting API endpoints. Include it in the `Authorization` header as follows:
+Your API key is a unique identifier that grants access to Freerouting API endpoints. Include it in the `Authorization`
+header as follows:
 
 ```
 Authorization: Bearer <YOUR_API_KEY>
 ```
 
-***You API key is:*** `aabbccdd-0011-2233-4455-66778899aabb`
+***Your API key is:*** `aabbccdd-0011-2233-4455-66778899aabb`
 
 **Profile ID:**
 The Profile ID identifies the user making the API call. This should be a valid GUID (e.g., `4f93609a-cf64-41cf-a046-6b8486ad85ec`).
@@ -90,9 +91,8 @@ For more detailed documentation, visit the [Freerouting API Docs](https://www.fr
 - Join our community or submit feedback via GitHub: [Freerouting GitHub](https://github.com/freerouting/freerouting).
 - Reach out to us at [info@freerouting.app](mailto\:info@freerouting.app).
 
-We can’t wait to see how you integrate Freerouting into your projects! If you have questions or feedback, don’t hesitate to get in touch.
+I can’t wait to see how you integrate Freerouting into your projects! If you have questions or feedback, don’t hesitate to get in touch.
 
-Happy routing,\
-**Andras Fuchs**\
+Happy routing,
+**Andras Fuchs**
 [Freerouting Website](https://www.freerouting.app)
-
