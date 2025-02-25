@@ -41,7 +41,7 @@ public class BatchAutorouter extends NamedAlgorithm
     this.job = job;
   }
 
-  private BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
+  public BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
   {
     super(p_thread, board, settings);
 
@@ -72,14 +72,16 @@ public class BatchAutorouter extends NamedAlgorithm
    * the number of passes to complete the board or p_max_pass_count + 1, if the board is not
    * completed.
    */
-  public static int autoroute_passes_for_optimizing_item(StoppableThread p_thread, int p_max_pass_count, int p_ripup_costs, int trace_pull_tight_accuracy, boolean p_with_preferred_directions, RoutingBoard updated_routing_board, RouterSettings routerSettings)
+  public static int autoroute_passes_for_optimizing_item(RoutingJob job, int p_max_pass_count, int p_ripup_costs, int trace_pull_tight_accuracy, boolean p_with_preferred_directions, RoutingBoard updated_routing_board, RouterSettings routerSettings)
   {
-    BatchAutorouter router_instance = new BatchAutorouter(p_thread, updated_routing_board, routerSettings, true, p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
+    BatchAutorouter router_instance = new BatchAutorouter(job.thread, updated_routing_board, routerSettings, true, p_with_preferred_directions, p_ripup_costs, trace_pull_tight_accuracy);
+    router_instance.job = job;
+
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
     while (still_unrouted_items && !router_instance.is_interrupted && curr_pass_no <= p_max_pass_count)
     {
-      if (p_thread.is_stop_auto_router_requested())
+      if (job.thread.is_stop_auto_router_requested())
       {
         router_instance.is_interrupted = true;
       }
@@ -196,7 +198,17 @@ public class BatchAutorouter extends NamedAlgorithm
         }
       }
       double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes", traceLengthDifferences);
-      job.logInfo("Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration));
+
+      String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration);
+      if (job.resourceUsage.cpuTimeUsed > 0)
+      {
+        passCompletedMessage += ", using " + FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed) + " CPU seconds and " + (int) job.resourceUsage.maxMemoryUsed + " MB memory.";
+      }
+      else
+      {
+        passCompletedMessage += ".";
+      }
+      job.logInfo(passCompletedMessage);
 
       if (this.settings.save_intermediate_stages)
       {

@@ -214,7 +214,7 @@ public class BatchOptimizer extends NamedAlgorithm
     }
 
     // route the connections
-    BatchAutorouter.autoroute_passes_for_optimizing_item(this.thread, MAX_AUTOROUTE_PASSES, ripup_costs, settings.trace_pull_tight_accuracy, p_with_preferred_directions, disableSnapshots ? routingBoard : null, settings);
+    BatchAutorouter.autoroute_passes_for_optimizing_item(job, MAX_AUTOROUTE_PASSES, ripup_costs, settings.trace_pull_tight_accuracy, p_with_preferred_directions, routingBoard, settings);
 
     // check the result by generating the statistics for the board again after the routing
     BoardStatistics boardStatisticsAfter = routingBoard.get_statistics();

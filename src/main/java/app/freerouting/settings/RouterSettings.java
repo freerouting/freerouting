@@ -59,7 +59,7 @@ public class RouterSettings implements Serializable
   public boolean automatic_neckdown = true;
   private transient boolean runFanout = false;
   private transient boolean runRouter = true;
-  private transient boolean runOptimizer = false;
+  private transient boolean runOptimizer = true;
   private transient int start_pass_no = 1;
   private transient int stop_pass_no = 999;
 
