@@ -2,6 +2,7 @@ package app.freerouting.autoroute;
 
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -19,8 +20,16 @@ import java.util.TreeSet;
 public class BatchFanout extends NamedAlgorithm
 {
   private final SortedSet<Component> sorted_components;
+  protected RoutingJob job;
 
-  public BatchFanout(StoppableThread p_thread, RoutingBoard board, RouterSettings settings)
+  public BatchFanout(RoutingJob routingJob)
+  {
+    this(routingJob.thread, routingJob.board, routingJob.routerSettings);
+    this.job = routingJob;
+  }
+
+
+  private BatchFanout(StoppableThread p_thread, RoutingBoard board, RouterSettings settings)
   {
     super(p_thread, board, settings);
 

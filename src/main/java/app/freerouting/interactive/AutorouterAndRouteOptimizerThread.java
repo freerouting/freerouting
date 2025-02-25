@@ -202,7 +202,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .hide();
       }
 
-      routingJob.logInfo("Starting auto-routing...");
+      routingJob.logInfo("Starting routing of '" + routingJob.name + "'...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
       globalSettings.statistics.incrementJobsCompleted();
@@ -215,7 +215,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       boolean fanout_first = boardManager.get_settings().autoroute_settings.getRunFanout() && boardManager.get_settings().autoroute_settings.get_start_pass_no() <= 1;
       if (fanout_first)
       {
-        BatchFanout fanout = new BatchFanout(this, boardManager.get_routing_board(), boardManager.get_settings().autoroute_settings);
+        BatchFanout fanout = new BatchFanout(routingJob);
         fanout.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
         {
           @Override
