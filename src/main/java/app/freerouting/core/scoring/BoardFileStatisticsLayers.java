@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Statistics of the layers of a board.
+ */
 public class BoardFileStatisticsLayers implements Serializable
 {
   @SerializedName("total_count")

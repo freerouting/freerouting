@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
+/**
+ * Basic parameters of a board.
+ */
 public class BoardFileStatisticsBoard implements Serializable
 {
   @SerializedName("bounding_box")

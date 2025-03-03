@@ -9,18 +9,25 @@ import java.io.Serializable;
  */
 public class BoardFileStatisticsTraces implements Serializable
 {
+  // The total number of traces.
   @SerializedName("total_count")
   public Integer totalCount = null;
+  // The total number of segments in all traces.
   @SerializedName("total_segment_count")
   public Integer totalSegmentCount = null;
+  // The total length of all traces.
   @SerializedName("total_length")
   public Float totalLength = null;
+  // The average length of the traces.
   @SerializedName("average_length")
   public Float averageLength = null;
+  // The total vertical length of all traces.
   @SerializedName("total_vertical_length")
   public Float totalVerticalLength = null;
+  // The total horizontal length of all traces.
   @SerializedName("total_horizontal_length")
   public Float totalHorizontalLength = null;
+  // The total angled (non-horizontal and non-vertical) length of all traces.
   @SerializedName("total_angled_length")
   public Float totalAngledLength = null;
 }

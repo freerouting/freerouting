@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Statistics of the traces (routed connections) of a board.
+ * Statistics of the bends (of traces) of a board.
  */
 public class BoardFileStatisticsBends implements Serializable
 {

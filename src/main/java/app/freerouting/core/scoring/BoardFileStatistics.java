@@ -12,6 +12,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Statistics of a board.
+ */
 public class BoardFileStatistics implements Serializable
 {
   @SerializedName("host")
