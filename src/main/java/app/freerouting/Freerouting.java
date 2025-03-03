@@ -11,6 +11,7 @@ import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
@@ -355,6 +356,9 @@ public class Freerouting
         break;
       }
     }
+
+    // Print the serialized routingJob statistics to the console
+    System.out.println(GsonProvider.GSON.toJson(routingJob));
 
     // Save the output file
     if (routingJob.state == RoutingJobState.COMPLETED)
