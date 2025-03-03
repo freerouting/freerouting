@@ -1,4 +1,4 @@
-package app.freerouting.core;
+package app.freerouting.core.scoring;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.gui.FileFormat;
@@ -6,6 +6,7 @@ import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -15,24 +16,26 @@ public class BoardFileStatistics implements Serializable
 {
   @SerializedName("host")
   public String host = null;
-  @SerializedName("layer_count")
-  public Integer layerCount = null;
-  @SerializedName("component_count")
-  public Integer componentCount = null;
-  @SerializedName("netclass_count")
-  public Integer netclassCount = null;
-  @SerializedName("total_net_count")
-  public Integer totalNetCount = null;
-  @SerializedName("unrouted_net_count")
-  public Integer unroutedNetCount = null;
-  @SerializedName("routed_net_count")
-  public Integer routedNetCount = null;
-  @SerializedName("routed_net_length")
-  public Float routedNetLength = null;
-  @SerializedName("clearance_violation_count")
-  public Float clearanceViolationCount = null;
-  @SerializedName("via_count")
-  public Integer viaCount = null;
+  @SerializedName("unit")
+  public String unit = null;
+  @SerializedName("board")
+  public BoardFileStatisticsBoard board = new BoardFileStatisticsBoard();
+  @SerializedName("layers")
+  public BoardFileStatisticsLayers layers = new BoardFileStatisticsLayers();
+  @SerializedName("components")
+  public BoardFileStatisticsComponents components = new BoardFileStatisticsComponents();
+  @SerializedName("pads")
+  public BoardFileStatisticsPads pads = new BoardFileStatisticsPads();
+  @SerializedName("nets")
+  public BoardFileStatisticsNets nets = new BoardFileStatisticsNets();
+  @SerializedName("traces")
+  public BoardFileStatisticsTraces traces = new BoardFileStatisticsTraces();
+  @SerializedName("bends")
+  public BoardFileStatisticsBends bends = new BoardFileStatisticsBends();
+  @SerializedName("vias")
+  public BoardFileStatisticsVias vias = new BoardFileStatisticsVias();
+  @SerializedName("clearance_violations")
+  public BoardFileStatisticsClearanceViolations clearanceViolations = new BoardFileStatisticsClearanceViolations();
 
   public BoardFileStatistics()
   {
@@ -43,11 +46,21 @@ public class BoardFileStatistics implements Serializable
    */
   public BoardFileStatistics(BasicBoard board)
   {
+    var bb = board.get_bounding_box();
+
     this.host = board.communication.specctra_parser_info.host_cad + "," + board.communication.specctra_parser_info.host_version;
-    this.layerCount = board.get_layer_count();
-    this.componentCount = board.components.count();
-    this.routedNetCount = board.get_traces().size();
-    this.viaCount = board.get_vias().size();
+    this.unit = board.communication.unit.toString();
+    this.board.boundingBox = new Rectangle2D.Float((float) bb.ur.x, (float) board.get_bounding_box().ur.y, (float) board.get_bounding_box().ll.x, (float) board.get_bounding_box().ll.y);
+    this.board.size = new Rectangle2D.Float(0, 0, (float) board.get_bounding_box().ll.x - (float) board.get_bounding_box().ur.x, (float) board.get_bounding_box().ll.y - (float) board.get_bounding_box().ur.y);
+    this.layers.totalCount = board.get_layer_count();
+    this.layers.signalCount = board.layer_structure.signal_layer_count();
+    this.components.totalCount = board.components.count();
+    this.traces.totalCount = board
+        .get_traces()
+        .size();
+    this.vias.totalCount = board
+        .get_vias()
+        .size();
   }
 
   public BoardFileStatistics(byte[] data, FileFormat format)
@@ -86,11 +99,11 @@ public class BoardFileStatistics implements Serializable
         }
 
         // get the number of components and nets in the SES file
-        this.layerCount = layers.size();
-        this.componentCount = content.split("\\(component").length - 1;
-        this.unroutedNetCount = content.split("\\(net").length - 1;
-        this.routedNetCount = content.split("\\(wire").length - 1;
-        this.viaCount = content.split("\\(via").length - 1;
+        this.layers.totalCount = layers.size();
+        this.components.totalCount = content.split("\\(component").length - 1;
+        this.nets.totalCount = content.split("\\(net").length - 1;
+        this.traces.totalCount = content.split("\\(wire").length - 1;
+        this.vias.totalCount = content.split("\\(via").length - 1;
       }
       else if (format == FileFormat.DSN)
       {
@@ -105,12 +118,16 @@ public class BoardFileStatistics implements Serializable
           line = line.trim();
           if (line.startsWith("(host_cad"))
           {
-            value = line.substring(9, line.length() - 1).trim();
+            value = line
+                .substring(9, line.length() - 1)
+                .trim();
             host_cad = TextManager.removeQuotes(value);
           }
           else if (line.startsWith("(host_version"))
           {
-            value = line.substring(13, line.length() - 1).trim();
+            value = line
+                .substring(13, line.length() - 1)
+                .trim();
             host_version = TextManager.removeQuotes(value);
           }
 
@@ -130,12 +147,12 @@ public class BoardFileStatistics implements Serializable
         }
 
         // get the number of layers and nets in the DSN file
-        this.layerCount = content.split("\\(layer").length - 1;
-        this.componentCount = content.split("\\(component").length - 1;
-        this.netclassCount = content.split("\\(class").length - 1;
-        this.totalNetCount = content.split("\\(net").length - 1;
-        this.routedNetCount = content.split("\\(wire").length - 1;
-        this.viaCount = content.split("\\(via").length - 1;
+        this.layers.totalCount = content.split("\\(layer").length - 1;
+        this.components.totalCount = content.split("\\(component").length - 1;
+        this.nets.classCount = content.split("\\(class").length - 1;
+        this.nets.totalCount = content.split("\\(net").length - 1;
+        this.traces.totalCount = content.split("\\(wire").length - 1;
+        this.vias.totalCount = content.split("\\(via").length - 1;
       }
     }
   }

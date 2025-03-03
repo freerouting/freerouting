@@ -3,6 +3,7 @@ package app.freerouting.core;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEvent;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEventListener;
+import app.freerouting.core.scoring.BoardFileStatistics;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
@@ -97,7 +98,9 @@ public class BoardFileDetails implements Serializable
 
   public String getAbsolutePath()
   {
-    return Path.of(this.directoryPath, this.filename).toString();
+    return Path
+        .of(this.directoryPath, this.filename)
+        .toString();
   }
 
   public ByteArrayInputStream getData()
@@ -110,7 +113,9 @@ public class BoardFileDetails implements Serializable
     this.dataBytes = data;
     this.size = data.length;
     InputStream inputStream = new ByteArrayInputStream(this.dataBytes);
-    this.crc32 = BoardFileDetails.calculateCrc32(inputStream).getValue();
+    this.crc32 = BoardFileDetails
+        .calculateCrc32(inputStream)
+        .getValue();
 
     // read the file contents to determine the file format
     this.format = RoutingJob.getFileFormat(this.dataBytes);
@@ -133,7 +138,9 @@ public class BoardFileDetails implements Serializable
   {
     if (!this.filename.isEmpty())
     {
-      return new File(Path.of(this.directoryPath, this.filename).toString());
+      return new File(Path
+          .of(this.directoryPath, this.filename)
+          .toString());
     }
     return null;
   }
@@ -162,12 +169,16 @@ public class BoardFileDetails implements Serializable
       return;
     }
 
-    var path = Path.of(filename).toAbsolutePath();
+    var path = Path
+        .of(filename)
+        .toAbsolutePath();
 
     if (filename.contains(File.separator))
     {
       // separate the filename into its absolute path and its filename only
-      this.directoryPath = path.getParent().toString();
+      this.directoryPath = path
+          .getParent()
+          .toString();
       // replace the redundant "\.\" with a simple "\"
       this.directoryPath = this.directoryPath.replace("\\.\\", "\\");
       // remove the "/", "\" from the end of the directory path
@@ -181,7 +192,9 @@ public class BoardFileDetails implements Serializable
     }
 
     // set the filename only
-    this.filename = path.getFileName().toString();
+    this.filename = path
+        .getFileName()
+        .toString();
 
     if (this.format == FileFormat.UNKNOWN)
     {

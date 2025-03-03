@@ -340,7 +340,7 @@ public class Freerouting
     routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
 
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-    routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layerCount);
+    routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
     routingJob.state = RoutingJobState.READY_TO_START;
 
     // Wait for the RoutingJobScheduler to do its work
