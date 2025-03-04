@@ -11,6 +11,7 @@ public class GsonProvider
 {
   public static final Gson GSON = new GsonBuilder()
       .setPrettyPrinting()
+      .disableHtmlEscaping()
       .registerTypeAdapter(Instant.class, new InstantTypeAdapter())
       .registerTypeAdapter(byte[].class, new ByteArrayToBase64TypeAdapter())
       .registerTypeAdapter(Path.class, new PathTypeAdapter())
