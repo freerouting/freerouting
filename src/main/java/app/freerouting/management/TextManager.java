@@ -211,6 +211,29 @@ public class TextManager
     return null;
   }
 
+  /**
+   * Unescapes unicode characters in a string
+   *
+   * @param text The text to unescape
+   *             Example: unescapeUnicode("This is a \\u0063haracter") -> "This is a character"
+   */
+  public static String unescapeUnicode(String text)
+  {
+    Pattern pattern = Pattern.compile("\\\\u(\\p{XDigit}{4})");
+    Matcher matcher = pattern.matcher(text);
+    StringBuffer result = new StringBuffer();
+
+    while (matcher.find())
+    {
+      String hexCode = matcher.group(1);
+      char unicode = (char) Integer.parseInt(hexCode, 16);
+      matcher.appendReplacement(result, String.valueOf(unicode));
+    }
+    matcher.appendTail(result);
+
+    return result.toString();
+  }
+
   private void loadResourceBundle(String baseName)
   {
     this.currentBaseName = baseName;
