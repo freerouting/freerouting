@@ -202,19 +202,31 @@ public class BoardFileStatistics implements Serializable
 
         }
       }
+    }
 
-      int default_clearance_class = BoardRules.default_clearance_class();
-      this.traces.totalWeightedLength = 0.0f;
-      FixedState fixed_state = trace.get_fixed_state();
-      if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED)
+    this.traces.totalWeightedLength = 0.0f;
+    int default_clearance_class = BoardRules.default_clearance_class();
+    Iterator<UndoableObjects.UndoableObjectNode> it2 = board.item_list.start_read_object();
+    for (; ; )
+    {
+      UndoableObjects.Storable curr_item = board.item_list.read_object(it2);
+      if (curr_item == null)
       {
-        double weighted_trace_length = trace.get_length() * (trace.get_half_width() + board.clearance_value(trace.clearance_class_no(), default_clearance_class, trace.get_layer()));
-        if (fixed_state == FixedState.SHOVE_FIXED)
+        break;
+      }
+      if (curr_item instanceof Trace curr_trace)
+      {
+        FixedState fixed_state = curr_trace.get_fixed_state();
+        if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED)
         {
-          // to produce less violations with pin exit directions.
-          weighted_trace_length /= 2;
+          double weighted_trace_length = curr_trace.get_length() * (curr_trace.get_half_width() + board.clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
+          if (fixed_state == FixedState.SHOVE_FIXED)
+          {
+            // to produce less violations with pin exit directions.
+            weighted_trace_length /= 2;
+          }
+          this.traces.totalWeightedLength += (float) weighted_trace_length;
         }
-        this.traces.totalWeightedLength += (float) weighted_trace_length;
       }
     }
 
