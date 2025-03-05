@@ -1,22 +1,22 @@
 package app.freerouting.core.scoring;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Unit;
-import app.freerouting.board.Via;
+import app.freerouting.board.*;
 import app.freerouting.constants.Constants;
+import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.rules.BoardRules;
 import com.google.gson.annotations.SerializedName;
 
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -87,6 +87,54 @@ public class BoardFileStatistics implements Serializable
     this.layers.totalCount = board.get_layer_count();
     this.layers.signalCount = board.layer_structure.signal_layer_count();
 
+    // Items
+    this.items.totalCount = 0;
+    this.items.traceCount = 0;
+    this.items.viaCount = 0;
+    this.items.conductionAreaCount = 0;
+    this.items.drillItemCount = 0;
+    this.items.pinCount = 0;
+    this.items.componentOutlineCount = 0;
+    this.items.otherCount = 0;
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    for (; ; )
+    {
+      Item curr_item = (Item) board.item_list.read_object(it);
+      if (curr_item == null)
+      {
+        break;
+      }
+      this.items.totalCount++;
+      if (curr_item instanceof Trace)
+      {
+        this.items.traceCount++;
+      }
+      else if (curr_item instanceof Via)
+      {
+        this.items.viaCount++;
+      }
+      else if (curr_item instanceof ConductionArea)
+      {
+        this.items.conductionAreaCount++;
+      }
+      else if (curr_item instanceof DrillItem)
+      {
+        this.items.drillItemCount++;
+      }
+      else if (curr_item instanceof Pin)
+      {
+        this.items.pinCount++;
+      }
+      else if (curr_item instanceof ComponentOutline)
+      {
+        this.items.componentOutlineCount++;
+      }
+      else
+      {
+        this.items.otherCount++;
+      }
+    }
+
     // Components
     this.components.totalCount = board.components.count();
 
@@ -153,6 +201,20 @@ public class BoardFileStatistics implements Serializable
           }
 
         }
+      }
+
+      int default_clearance_class = BoardRules.default_clearance_class();
+      this.traces.totalWeightedLength = 0.0f;
+      FixedState fixed_state = trace.get_fixed_state();
+      if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED)
+      {
+        double weighted_trace_length = trace.get_length() * (trace.get_half_width() + board.clearance_value(trace.clearance_class_no(), default_clearance_class, trace.get_layer()));
+        if (fixed_state == FixedState.SHOVE_FIXED)
+        {
+          // to produce less violations with pin exit directions.
+          weighted_trace_length /= 2;
+        }
+        this.traces.totalWeightedLength += (float) weighted_trace_length;
       }
     }
 

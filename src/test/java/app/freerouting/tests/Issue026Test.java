@@ -13,6 +13,6 @@ public class Issue026Test extends TestBasedOnAnIssue
     job = RunRoutingJob(job, settings);
     var stats = GetBoardStatistics(job);
 
-    assertEquals(59, stats.drillItemCount, "The drill item count should be 59");
+    assertEquals(59, stats.items.drillItemCount, "The drill item count should be 59");
   }
 }

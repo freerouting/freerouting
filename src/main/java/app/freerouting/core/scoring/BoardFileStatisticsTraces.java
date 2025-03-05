@@ -18,6 +18,8 @@ public class BoardFileStatisticsTraces implements Serializable
   // The total length of all traces.
   @SerializedName("total_length")
   public Float totalLength = null;
+  @SerializedName("total_weighted_length")
+  public Float totalWeightedLength = null;
   // The average length of the traces.
   @SerializedName("average_length")
   public Float averageLength = null;

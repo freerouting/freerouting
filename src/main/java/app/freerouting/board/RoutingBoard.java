@@ -4,6 +4,8 @@ import app.freerouting.autoroute.AutorouteControl;
 import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.autoroute.AutorouteEngine;
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardFileStatisticsRouterCounters;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
@@ -1318,48 +1320,18 @@ public class RoutingBoard extends BasicBoard implements Serializable
 
   public BoardStatistics get_statistics()
   {
-    BoardStatistics statistics = new BoardStatistics();
+    BoardFileStatistics bfs = new BoardFileStatistics(this);
 
-    Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
-    for (; ; )
-    {
-      Item curr_item = (Item) item_list.read_object(it);
-      if (curr_item == null)
-      {
-        break;
-      }
-      if (curr_item instanceof Trace)
-      {
-        statistics.items.traceCount++;
-      }
-      else if (curr_item instanceof Via)
-      {
-        statistics.items.viaCount++;
-      }
-      else if (curr_item instanceof ConductionArea)
-      {
-        statistics.items.conductionAreaCount++;
-      }
-      else if (curr_item instanceof DrillItem)
-      {
-        statistics.items.drillItemCount++;
-      }
-      else if (curr_item instanceof Pin)
-      {
-        statistics.items.pinCount++;
-      }
-      else if (curr_item instanceof ComponentOutline)
-      {
-        statistics.items.componentOutlineCount++;
-      }
-      else
-      {
-        statistics.items.otherCount++;
-      }
-    }
+    BoardStatistics statistics = new BoardStatistics();
+    statistics.items = bfs.items;
 
     statistics.totalTraceLength = this.cumulative_trace_length();
     statistics.weightedTraceLength = this.calc_weighted_trace_length();
+
+    if (statistics.routerCounters == null)
+    {
+      statistics.routerCounters = new BoardFileStatisticsRouterCounters();
+    }
     statistics.routerCounters.incompleteItemCount = new RatsNest(this).incomplete_count();
 
     return statistics;

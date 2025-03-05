@@ -306,7 +306,10 @@ public class BatchAutorouter extends NamedAlgorithm
       int routed = 0;
       BoardStatistics stats = board.get_statistics();
       stats.routerCounters.unrouted_item_count = items_to_go_count;
-
+      stats.routerCounters.ripped_item_count = ripped_item_count;
+      stats.routerCounters.not_found_item_count = not_found;
+      stats.routerCounters.routed_item_count = routed;
+      
       this.fireBoardUpdatedEvent(stats, this.board);
 
       // Let's go through all items to route
