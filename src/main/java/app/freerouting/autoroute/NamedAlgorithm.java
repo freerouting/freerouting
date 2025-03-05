@@ -1,9 +1,10 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.autoroute.events.*;
-import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.RouterCounters;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.core.scoring.BoardFileStatistics;
 import app.freerouting.settings.RouterSettings;
 
 import java.io.Serializable;
@@ -88,9 +89,9 @@ public abstract class NamedAlgorithm implements Serializable
   /**
    * Fires a board updated event. This happens when the board has been updated, e.g. after a route has been added.
    */
-  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RoutingBoard board)
+  public void fireBoardUpdatedEvent(BoardFileStatistics boardStatistics, RouterCounters routerCounters, RoutingBoard board)
   {
-    BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics, board);
+    BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics, routerCounters, board);
     for (BoardUpdatedEventListener listener : boardUpdatedEventListeners)
     {
       listener.onBoardUpdatedEvent(event);

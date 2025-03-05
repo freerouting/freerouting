@@ -2,13 +2,16 @@ package app.freerouting.autoroute;
 
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.*;
+import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.core.scoring.BoardFileStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
@@ -173,7 +176,7 @@ public class BatchAutorouter extends NamedAlgorithm
       still_unrouted_items = autoroute_pass(curr_pass_no);
 
       // let's check if there was enough track length change in the last few passes, because if it was too little we should stop
-      // TODO: score the board based on the costs settings of trace length, corner and via count, unconnected ratsnets, etc.
+      // TODO: score the board based on the costs settings of trace length, corner and via count, unconnected ratsnest, etc.
       int traceLengthDifferences = this.board.diff_traces(boardBefore);
       traceLengthDifferenceBetweenPasses.add(traceLengthDifferences);
 
@@ -304,13 +307,16 @@ public class BatchAutorouter extends NamedAlgorithm
       int ripped_item_count = 0;
       int not_found = 0;
       int routed = 0;
-      BoardStatistics stats = board.get_statistics();
-      stats.routerCounters.unrouted_item_count = items_to_go_count;
-      stats.routerCounters.ripped_item_count = ripped_item_count;
-      stats.routerCounters.not_found_item_count = not_found;
-      stats.routerCounters.routed_item_count = routed;
-      
-      this.fireBoardUpdatedEvent(stats, this.board);
+      BoardFileStatistics stats = board.get_statistics();
+      RouterCounters routerCounters = new RouterCounters();
+      routerCounters.passCount = p_pass_no;
+      routerCounters.queuedToBeRoutedCount = items_to_go_count;
+      routerCounters.rippedCount = ripped_item_count;
+      routerCounters.failedToBeRoutedCount = not_found;
+      routerCounters.routedCount = routed;
+      routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
+
+      this.fireBoardUpdatedEvent(stats, routerCounters, this.board);
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list)
@@ -347,12 +353,13 @@ public class BatchAutorouter extends NamedAlgorithm
           --items_to_go_count;
           ripped_item_count += ripped_item_list.size();
 
-          BoardStatistics boardStatistics = board.get_statistics();
-          boardStatistics.routerCounters.unrouted_item_count = items_to_go_count;
-          boardStatistics.routerCounters.ripped_item_count = ripped_item_count;
-          boardStatistics.routerCounters.not_found_item_count = not_found;
-          boardStatistics.routerCounters.routed_item_count = routed;
-          this.fireBoardUpdatedEvent(boardStatistics, this.board);
+          BoardFileStatistics boardStatistics = board.get_statistics();
+          routerCounters.passCount = p_pass_no;
+          routerCounters.queuedToBeRoutedCount = items_to_go_count;
+          routerCounters.rippedCount = ripped_item_count;
+          routerCounters.failedToBeRoutedCount = not_found;
+          routerCounters.routedCount = routed;
+          this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
         }
       }
 

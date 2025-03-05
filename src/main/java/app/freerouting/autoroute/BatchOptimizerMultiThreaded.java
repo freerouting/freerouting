@@ -1,8 +1,9 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Item;
+import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.scoring.BoardFileStatistics;
 import app.freerouting.logger.FRLogger;
 
 import java.util.ArrayList;
@@ -157,10 +158,10 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
   {
     this.board = winning_candidate.board;
 
-    BoardStatistics boardStatistics = this.board.get_statistics();
-    this.fireBoardUpdatedEvent(boardStatistics, this.board);
+    BoardFileStatistics boardStatistics = this.board.get_statistics();
+    this.fireBoardUpdatedEvent(boardStatistics, null, this.board);
 
-    this.min_cumulative_trace_length = boardStatistics.weightedTraceLength;
+    this.min_cumulative_trace_length = boardStatistics.traces.totalWeightedLength;
 
     ++update_count;
   }
@@ -231,12 +232,14 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
       winning_candidate = null;
     }
 
-    BoardStatistics boardStatisticsBefore = board.get_statistics();
-    this.fireBoardUpdatedEvent(boardStatisticsBefore, this.board);
+    BoardFileStatistics boardStatisticsBefore = board.get_statistics();
+    RouterCounters routerCounters = new RouterCounters();
+    routerCounters.passCount = p_pass_no;
+    this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
 
-    this.min_cumulative_trace_length = boardStatisticsBefore.weightedTraceLength;
+    this.min_cumulative_trace_length = boardStatisticsBefore.traces.totalWeightedLength;
 
-    String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.totalTraceLength) + " trace length running on " + thread_pool_size + " threads.";
+    String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.traces.totalLength) + " trace length running on " + thread_pool_size + " threads.";
     FRLogger.traceEntry(optimizationPassId);
 
     prepare_next_round_of_route_items();
@@ -312,11 +315,11 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
     String us = current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL ? "Global Optimal" : "Greedy";
     String is = current_item_selection_strategy() == ItemSelectionStrategy.SEQUENTIAL ? "Sequential" : (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM ? "Random" : "Prioritized");
 
-    BoardStatistics boardStatisticsAfter = board.get_statistics();
-    this.fireBoardUpdatedEvent(boardStatisticsAfter, this.board);
+    BoardFileStatistics boardStatisticsAfter = board.get_statistics();
+    this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
 
     job.logDebug("Finished pass #" + p_pass_no + " in " + minutes + " minutes " + sec + " seconds with " + update_count + " board updates using " + thread_pool_size + " thread(s) with '" + us + "' strategy and '" + is + "' item selection strategy.");
-    job.logDebug("Route optimizer pass summary - Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + ", via count: " + best_route_result.via_count() + ", trace length: " + (int) boardStatisticsAfter.totalTraceLength + ", via count delta: " + (boardStatisticsBefore.items.viaCount - best_route_result.via_count()) + ", trace length delta: " + (int) (boardStatisticsBefore.totalTraceLength - boardStatisticsAfter.totalTraceLength) + ".");
+    job.logDebug("Route optimizer pass summary - Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + ", via count: " + best_route_result.via_count() + ", trace length: " + boardStatisticsAfter.traces.totalLength + ", via count delta: " + (boardStatisticsBefore.items.viaCount - best_route_result.via_count()) + ", trace length delta: " + (boardStatisticsBefore.traces.totalLength - boardStatisticsAfter.traces.totalLength) + ".");
 
     FRLogger.traceExit(optimizationPassId);
 
@@ -325,6 +328,6 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
 
   public double getWinningCandidateScore()
   {
-    return this.board.get_statistics().totalTraceLength;
+    return this.board.get_statistics().traces.totalLength;
   }
 }

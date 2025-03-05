@@ -92,7 +92,7 @@ public class BatchFanout extends NamedAlgorithm
         }
         if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED)
         {
-          fireBoardUpdatedEvent(this.board.get_statistics(), this.board);
+          fireBoardUpdatedEvent(this.board.get_statistics(), null, this.board);
         }
         if (this.thread.isStopRequested())
         {

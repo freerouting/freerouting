@@ -3,7 +3,6 @@ package app.freerouting.interactive;
 import app.freerouting.autoroute.*;
 import app.freerouting.autoroute.events.*;
 import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -49,11 +48,10 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       @Override
       public void onBoardUpdatedEvent(BoardUpdatedEvent event)
       {
-        BoardFileStatistics boardFileStatistics = new BoardFileStatistics(routingJob.board);
-        BoardStatistics boardStatistics = event.getBoardStatistics();
-        boardManager.screen_messages.set_batch_autoroute_info(boardStatistics.routerCounters.unrouted_item_count, boardStatistics.routerCounters.routed_item_count, boardStatistics.routerCounters.ripped_item_count, boardStatistics.routerCounters.not_found_item_count);
+        boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
         boardManager.repaint();
-        routingJob.logDebug(GsonProvider.GSON.toJson(boardFileStatistics));
+        routingJob.logDebug(GsonProvider.GSON.toJson(event.getRouterCounters()));
+        routingJob.logDebug(GsonProvider.GSON.toJson(event.getBoardStatistics()));
       }
     });
 
@@ -121,8 +119,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event)
         {
-          BoardStatistics boardStatistics = event.getBoardStatistics();
-          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.totalTraceLength, boardManager.coordinate_transform.user_unit);
+          BoardFileStatistics boardStatistics = event.getBoardStatistics();
+          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
           boardManager.repaint();
         }
       });
@@ -153,9 +151,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event)
         {
-          BoardStatistics boardStatistics = event.getBoardStatistics();
+          BoardFileStatistics boardStatistics = event.getBoardStatistics();
           boardManager.replaceRoutingBoard(event.getBoard());
-          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.totalTraceLength, boardManager.coordinate_transform.user_unit);
+          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
         }
       });
 

@@ -5,14 +5,12 @@ import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.autoroute.AutorouteEngine;
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.core.scoring.BoardFileStatistics;
-import app.freerouting.core.scoring.BoardFileStatisticsRouterCounters;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
@@ -1318,56 +1316,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     }
   }
 
-  public BoardStatistics get_statistics()
+  public BoardFileStatistics get_statistics()
   {
-    BoardFileStatistics bfs = new BoardFileStatistics(this);
-
-    BoardStatistics statistics = new BoardStatistics();
-    statistics.items = bfs.items;
-
-    statistics.totalTraceLength = this.cumulative_trace_length();
-    statistics.weightedTraceLength = this.calc_weighted_trace_length();
-
-    if (statistics.routerCounters == null)
-    {
-      statistics.routerCounters = new BoardFileStatisticsRouterCounters();
-    }
-    statistics.routerCounters.incompleteItemCount = new RatsNest(this).incomplete_count();
-
-    return statistics;
-  }
-
-  /**
-   * Calculates the cumulative trace lengths multiplied by the trace radius of all traces on the board, which are not shove_fixed.
-   */
-  protected double calc_weighted_trace_length()
-  {
-    double result = 0;
-    int default_clearance_class = BoardRules.default_clearance_class();
-    Iterator<UndoableObjects.UndoableObjectNode> it = this.item_list.start_read_object();
-    for (; ; )
-    {
-      UndoableObjects.Storable curr_item = this.item_list.read_object(it);
-      if (curr_item == null)
-      {
-        break;
-      }
-      if (curr_item instanceof Trace curr_trace)
-      {
-        FixedState fixed_state = curr_trace.get_fixed_state();
-        if (fixed_state == FixedState.NOT_FIXED || fixed_state == FixedState.SHOVE_FIXED)
-        {
-          double weighted_trace_length = curr_trace.get_length() * (curr_trace.get_half_width() + this.clearance_value(curr_trace.clearance_class_no(), default_clearance_class, curr_trace.get_layer()));
-          if (fixed_state == FixedState.SHOVE_FIXED)
-          {
-            // to produce less violations with pin exit directions.
-            weighted_trace_length /= 2;
-          }
-          result += weighted_trace_length;
-        }
-      }
-    }
-    return result;
+    return new BoardFileStatistics(this);
   }
 
   /**

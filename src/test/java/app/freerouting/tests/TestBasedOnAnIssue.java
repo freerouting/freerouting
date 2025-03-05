@@ -1,10 +1,10 @@
 package app.freerouting.tests;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.BoardStatistics;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
+import app.freerouting.core.scoring.BoardFileStatistics;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
@@ -33,14 +33,20 @@ public class TestBasedOnAnIssue
   {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
-    Session session = SessionManager.getInstance().createSession(sessionId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
+    Session session = SessionManager
+        .getInstance()
+        .createSession(sessionId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
 
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);
 
     // Look for the file in the current directory and its parent directories
-    Path testDirectory = Path.of(".").toAbsolutePath();
-    File testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
+    Path testDirectory = Path
+        .of(".")
+        .toAbsolutePath();
+    File testFile = Path
+        .of(testDirectory.toString(), "tests", filename)
+        .toFile();
     while (!testFile.exists())
     {
       testDirectory = testDirectory.getParent();
@@ -49,7 +55,9 @@ public class TestBasedOnAnIssue
         break;
       }
 
-      testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
+      testFile = Path
+          .of(testDirectory.toString(), "tests", filename)
+          .toFile();
       if (testFile == null)
       {
         break;
@@ -103,13 +111,13 @@ public class TestBasedOnAnIssue
     return job;
   }
 
-  protected BoardStatistics GetBoardStatistics(RoutingJob job)
+  protected BoardFileStatistics GetBoardStatistics(RoutingJob job)
   {
     if ((job == null) || (job.board == null))
     {
       throw new IllegalArgumentException("The job or its board cannot be null.");
     }
 
-    return job.board.get_statistics();
+    return new BoardFileStatistics(job.board);
   }
 }

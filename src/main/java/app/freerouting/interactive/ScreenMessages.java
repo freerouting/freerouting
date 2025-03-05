@@ -1,6 +1,7 @@
 package app.freerouting.interactive;
 
 import app.freerouting.board.Unit;
+import app.freerouting.core.RouterCounters;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.management.TextManager;
 
@@ -92,12 +93,12 @@ public class ScreenMessages
     layer_field.setText(tm.getText("found") + " " + found + ", " + tm.getText("failed") + " " + failed);
   }
 
-  public void set_batch_autoroute_info(int p_items_to_go, int p_routed, int p_ripped, int p_failed)
+  public void set_batch_autoroute_info(RouterCounters routerCounters)
   {
-    int ripped = p_ripped;
-    int routed = p_routed;
-    int items_to_go = p_items_to_go;
-    int failed = p_failed;
+    int items_to_go = routerCounters.queuedToBeRoutedCount;
+    int routed = routerCounters.routedCount;
+    int ripped = routerCounters.rippedCount;
+    int failed = routerCounters.failedToBeRoutedCount;
     add_field.setText(tm.getText("to_route") + " " + items_to_go + ", " + tm.getText("routed") + " " + routed + ", ");
     layer_field.setText(tm.getText("ripped") + " " + ripped + ", " + tm.getText("failed") + " " + failed);
   }

@@ -48,8 +48,6 @@ public class BoardFileStatistics implements Serializable
   public BoardFileStatisticsVias vias = new BoardFileStatisticsVias();
   @SerializedName("clearance_violations")
   public BoardFileStatisticsClearanceViolations clearanceViolations = new BoardFileStatisticsClearanceViolations();
-  @SerializedName("router_counters")
-  public BoardFileStatisticsRouterCounters routerCounters = null;
 
   public BoardFileStatistics()
   {

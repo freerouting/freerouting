@@ -1,10 +1,16 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
-import app.freerouting.board.*;
+import app.freerouting.board.Item;
+import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
+import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.scoring.BoardFileStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 
 import java.util.Collection;
@@ -86,12 +92,14 @@ public class BatchOptimizer extends NamedAlgorithm
   {
     float route_improved = 0.0f;
 
-    BoardStatistics boardStatisticsBefore = board.get_statistics();
-    this.fireBoardUpdatedEvent(boardStatisticsBefore, this.board);
+    BoardFileStatistics boardStatisticsBefore = board.get_statistics();
+    RouterCounters routerCounters = new RouterCounters();
+    routerCounters.passCount = p_pass_no;
+    this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
 
     this.sorted_route_items = new ReadSortedRouteItems();
-    this.min_cumulative_trace_length = boardStatisticsBefore.weightedTraceLength;
-    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.totalTraceLength) + " trace length.";
+    this.min_cumulative_trace_length = boardStatisticsBefore.traces.totalWeightedLength;
+    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.traces.totalLength) + " trace length.";
 
     FRLogger.traceEntry(optimizationPassId);
 
@@ -109,10 +117,10 @@ public class BatchOptimizer extends NamedAlgorithm
       }
       if (opt_route_item(curr_item, p_with_preferred_directions, false).improved())
       {
-        BoardStatistics boardStatisticsAfter = board.get_statistics();
-        this.fireBoardUpdatedEvent(boardStatisticsAfter, this.board);
+        BoardFileStatistics boardStatisticsAfter = board.get_statistics();
+        this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
 
-        route_improved = (float) ((boardStatisticsBefore.items.viaCount != 0 && boardStatisticsBefore.totalTraceLength != 0) ? 1.0 - (((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount) + (boardStatisticsAfter.totalTraceLength / boardStatisticsBefore.totalTraceLength)) / 2)) : 0);
+        route_improved = (float) ((boardStatisticsBefore.items.viaCount != 0 && boardStatisticsBefore.traces.totalLength != 0) ? 1.0 - (((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount) + (boardStatisticsAfter.traces.totalLength / boardStatisticsBefore.traces.totalLength)) / 2)) : 0);
       }
     }
 
@@ -145,8 +153,10 @@ public class BatchOptimizer extends NamedAlgorithm
     }
 
     // calculate the statistics for the board before the routing
-    BoardStatistics boardStatisticsBefore = routingBoard.get_statistics();
-    this.fireBoardUpdatedEvent(boardStatisticsBefore, routingBoard);
+    BoardFileStatistics boardStatisticsBefore = routingBoard.get_statistics();
+    RouterCounters routerCountersBefore = new RouterCounters();
+    routerCountersBefore.incompleteCount = new RatsNest(routingBoard).incomplete_count();
+    this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCountersBefore, routingBoard);
 
     // collect the items to be re-routed
     Set<Item> ripped_items = new TreeSet<>();
@@ -217,17 +227,19 @@ public class BatchOptimizer extends NamedAlgorithm
     BatchAutorouter.autoroute_passes_for_optimizing_item(job, MAX_AUTOROUTE_PASSES, ripup_costs, settings.trace_pull_tight_accuracy, p_with_preferred_directions, routingBoard, settings);
 
     // check the result by generating the statistics for the board again after the routing
-    BoardStatistics boardStatisticsAfter = routingBoard.get_statistics();
-    this.fireBoardUpdatedEvent(boardStatisticsAfter, routingBoard);
+    BoardFileStatistics boardStatisticsAfter = routingBoard.get_statistics();
+    RouterCounters routerCountersAfter = new RouterCounters();
+    routerCountersAfter.incompleteCount = new RatsNest(routingBoard).incomplete_count();
+    this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCountersAfter, routingBoard);
 
     // check if the board was improved
-    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.items.viaCount, boardStatisticsAfter.items.viaCount, this.min_cumulative_trace_length, boardStatisticsAfter.totalTraceLength, boardStatisticsBefore.routerCounters.incompleteItemCount, boardStatisticsAfter.routerCounters.incompleteItemCount);
+    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.items.viaCount, boardStatisticsAfter.items.viaCount, this.min_cumulative_trace_length, boardStatisticsAfter.traces.totalLength, routerCountersBefore.incompleteCount, routerCountersAfter.incompleteCount);
     boolean route_improved = !this.thread.isStopRequested() && result.improved();
     result.update_improved(route_improved);
 
     if (route_improved)
     {
-      this.min_cumulative_trace_length = Math.min(this.min_cumulative_trace_length, boardStatisticsAfter.weightedTraceLength);
+      this.min_cumulative_trace_length = Math.min(this.min_cumulative_trace_length, boardStatisticsAfter.traces.totalWeightedLength);
 
       if (!disableSnapshots)
       {
@@ -288,35 +300,6 @@ public class BatchOptimizer extends NamedAlgorithm
   {
     return NamedAlgorithmType.OPTIMIZER;
   }
-  /*
-  protected class RouteResult
-  {
-  	public boolean improved;
-      int via_count_before, via_count_after;
-      double trace_length_before, trace_length_after;
-  	int incomplete_count_before, incomplete_count_after;
-
-  	public RouteResult(boolean p_improved) {
-  		this(p_improved, 0, 0, 0, 0, 0, 0);
-  	}
-
-  	public RouteResult(boolean p_improved,
-  			    int p_via_count_before, int p_via_count_after,
-  			    double p_trace_length_before, double p_trace_length_after,
-  			    int p_incomplete_count_before, int p_incomplete_count_after)
-  	{
-  		improved                = p_improved;
-  		via_count_before        = p_via_count_before;
-  		via_count_after         = p_via_count_after;
-  		trace_length_before     = p_trace_length_before;
-  		trace_length_after      = p_trace_length_after;
-  		incomplete_count_before = p_incomplete_count_before;
-  		incomplete_count_after  = p_incomplete_count_after;
-  	}
-
-  	public int via_count_reduced() { return via_count_before - via_count_after; }
-  	public double length_reduced() { return trace_length_before - trace_length_after; }
-  } */
 
   /**
    * Reads the vias and traces on the board in ascending x order. Because the vias and traces on the
