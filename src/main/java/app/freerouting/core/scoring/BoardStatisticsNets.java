@@ -5,12 +5,12 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Statistics of the layers of a board.
+ * Statistics of the nets (unrouted connections) of a board.
  */
-public class BoardFileStatisticsLayers implements Serializable
+public class BoardStatisticsNets implements Serializable
 {
   @SerializedName("total_count")
   public Integer totalCount = null;
-  @SerializedName("signal_count")
-  public Integer signalCount = null;
+  @SerializedName("class_count")
+  public Integer classCount = null;
 }

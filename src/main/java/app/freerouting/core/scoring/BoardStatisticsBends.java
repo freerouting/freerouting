@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Statistics of the bends (of traces) of a board.
  */
-public class BoardFileStatisticsBends implements Serializable
+public class BoardStatisticsBends implements Serializable
 {
   @SerializedName("total_count")
   public Integer totalCount = null;

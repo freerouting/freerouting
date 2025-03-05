@@ -6,7 +6,7 @@ import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.StoppableThread;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatLine;
@@ -307,7 +307,7 @@ public class BatchAutorouter extends NamedAlgorithm
       int ripped_item_count = 0;
       int not_found = 0;
       int routed = 0;
-      BoardFileStatistics stats = board.get_statistics();
+      BoardStatistics stats = board.get_statistics();
       RouterCounters routerCounters = new RouterCounters();
       routerCounters.passCount = p_pass_no;
       routerCounters.queuedToBeRoutedCount = items_to_go_count;
@@ -353,7 +353,7 @@ public class BatchAutorouter extends NamedAlgorithm
           --items_to_go_count;
           ripped_item_count += ripped_item_list.size();
 
-          BoardFileStatistics boardStatistics = board.get_statistics();
+          BoardStatistics boardStatistics = board.get_statistics();
           routerCounters.passCount = p_pass_no;
           routerCounters.queuedToBeRoutedCount = items_to_go_count;
           routerCounters.rippedCount = ripped_item_count;

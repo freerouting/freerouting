@@ -22,41 +22,41 @@ import java.util.List;
 /**
  * Statistics of a board.
  */
-public class BoardFileStatistics implements Serializable
+public class BoardStatistics implements Serializable
 {
   @SerializedName("host")
   public String host = null;
   @SerializedName("unit")
   public String unit = null;
   @SerializedName("board")
-  public BoardFileStatisticsBoard board = new BoardFileStatisticsBoard();
+  public BoardStatisticsBoard board = new BoardStatisticsBoard();
   @SerializedName("layers")
-  public BoardFileStatisticsLayers layers = new BoardFileStatisticsLayers();
+  public BoardStatisticsLayers layers = new BoardStatisticsLayers();
   @SerializedName("items")
-  public BoardFileStatisticsItems items = new BoardFileStatisticsItems();
+  public BoardStatisticsItems items = new BoardStatisticsItems();
   @SerializedName("components")
-  public BoardFileStatisticsComponents components = new BoardFileStatisticsComponents();
+  public BoardStatisticsComponents components = new BoardStatisticsComponents();
   @SerializedName("pads")
-  public BoardFileStatisticsPads pads = new BoardFileStatisticsPads();
+  public BoardStatisticsPads pads = new BoardStatisticsPads();
   @SerializedName("nets")
-  public BoardFileStatisticsNets nets = new BoardFileStatisticsNets();
+  public BoardStatisticsNets nets = new BoardStatisticsNets();
   @SerializedName("traces")
-  public BoardFileStatisticsTraces traces = new BoardFileStatisticsTraces();
+  public BoardStatisticsTraces traces = new BoardStatisticsTraces();
   @SerializedName("bends")
-  public BoardFileStatisticsBends bends = new BoardFileStatisticsBends();
+  public BoardStatisticsBends bends = new BoardStatisticsBends();
   @SerializedName("vias")
-  public BoardFileStatisticsVias vias = new BoardFileStatisticsVias();
+  public BoardStatisticsVias vias = new BoardStatisticsVias();
   @SerializedName("clearance_violations")
-  public BoardFileStatisticsClearanceViolations clearanceViolations = new BoardFileStatisticsClearanceViolations();
+  public BoardStatisticsClearanceViolations clearanceViolations = new BoardStatisticsClearanceViolations();
 
-  public BoardFileStatistics()
+  public BoardStatistics()
   {
   }
 
   /**
    * Creates a new BoardFileStatistics object from a RoutingBoard object.
    */
-  public BoardFileStatistics(BasicBoard board)
+  public BoardStatistics(BasicBoard board)
   {
     this(board, null);
   }
@@ -64,7 +64,7 @@ public class BoardFileStatistics implements Serializable
   /**
    * Creates a new BoardFileStatistics object from a RoutingBoard object and defines the preferred unit for the statistics.
    */
-  public BoardFileStatistics(BasicBoard board, Unit unit)
+  public BoardStatistics(BasicBoard board, Unit unit)
   {
     var bb = board.get_bounding_box();
 
@@ -339,7 +339,7 @@ public class BoardFileStatistics implements Serializable
    * @param data   Binary data of the file.
    * @param format Format of the file. Only SES and DSN formats are supported at the moment.
    */
-  public BoardFileStatistics(byte[] data, FileFormat format)
+  public BoardStatistics(byte[] data, FileFormat format)
   {
     // set the statistical data based on the file content
     if ((format == FileFormat.SES) || (format == FileFormat.DSN))

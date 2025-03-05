@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Statistics of the vias of a board.
  */
-public class BoardFileStatisticsVias implements Serializable
+public class BoardStatisticsVias implements Serializable
 {
   // Total count of vias
   @SerializedName("total_count")

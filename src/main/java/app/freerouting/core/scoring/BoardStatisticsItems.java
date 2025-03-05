@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Statistics of the components of a board.
  */
-public class BoardFileStatisticsItems implements Serializable
+public class BoardStatisticsItems implements Serializable
 {
   @SerializedName("total_count")
   public Integer totalCount = null;

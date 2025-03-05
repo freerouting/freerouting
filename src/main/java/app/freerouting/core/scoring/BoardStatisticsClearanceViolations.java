@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Statistics of the components of a board.
+ * Statistics of the clearance violations of a board.
  */
-public class BoardFileStatisticsComponents implements Serializable
+public class BoardStatisticsClearanceViolations implements Serializable
 {
   @SerializedName("total_count")
   public Integer totalCount = null;

@@ -7,7 +7,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.RatsNest;
@@ -92,7 +92,7 @@ public class BatchOptimizer extends NamedAlgorithm
   {
     float route_improved = 0.0f;
 
-    BoardFileStatistics boardStatisticsBefore = board.get_statistics();
+    BoardStatistics boardStatisticsBefore = board.get_statistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = p_pass_no;
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
@@ -117,7 +117,7 @@ public class BatchOptimizer extends NamedAlgorithm
       }
       if (opt_route_item(curr_item, p_with_preferred_directions, false).improved())
       {
-        BoardFileStatistics boardStatisticsAfter = board.get_statistics();
+        BoardStatistics boardStatisticsAfter = board.get_statistics();
         this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
 
         route_improved = (float) ((boardStatisticsBefore.items.viaCount != 0 && boardStatisticsBefore.traces.totalLength != 0) ? 1.0 - (((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount) + (boardStatisticsAfter.traces.totalLength / boardStatisticsBefore.traces.totalLength)) / 2)) : 0);
@@ -153,7 +153,7 @@ public class BatchOptimizer extends NamedAlgorithm
     }
 
     // calculate the statistics for the board before the routing
-    BoardFileStatistics boardStatisticsBefore = routingBoard.get_statistics();
+    BoardStatistics boardStatisticsBefore = routingBoard.get_statistics();
     RouterCounters routerCountersBefore = new RouterCounters();
     routerCountersBefore.incompleteCount = new RatsNest(routingBoard).incomplete_count();
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCountersBefore, routingBoard);
@@ -227,7 +227,7 @@ public class BatchOptimizer extends NamedAlgorithm
     BatchAutorouter.autoroute_passes_for_optimizing_item(job, MAX_AUTOROUTE_PASSES, ripup_costs, settings.trace_pull_tight_accuracy, p_with_preferred_directions, routingBoard, settings);
 
     // check the result by generating the statistics for the board again after the routing
-    BoardFileStatistics boardStatisticsAfter = routingBoard.get_statistics();
+    BoardStatistics boardStatisticsAfter = routingBoard.get_statistics();
     RouterCounters routerCountersAfter = new RouterCounters();
     routerCountersAfter.incompleteCount = new RatsNest(routingBoard).incomplete_count();
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCountersAfter, routingBoard);

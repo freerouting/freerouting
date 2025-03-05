@@ -4,7 +4,7 @@ import app.freerouting.autoroute.AutorouteControl;
 import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
 import app.freerouting.autoroute.AutorouteEngine;
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
@@ -1316,9 +1316,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     }
   }
 
-  public BoardFileStatistics get_statistics()
+  public BoardStatistics get_statistics()
   {
-    return new BoardFileStatistics(this);
+    return new BoardStatistics(this);
   }
 
   /**

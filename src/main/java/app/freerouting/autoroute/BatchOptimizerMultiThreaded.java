@@ -3,7 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.Item;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.logger.FRLogger;
 
 import java.util.ArrayList;
@@ -158,7 +158,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
   {
     this.board = winning_candidate.board;
 
-    BoardFileStatistics boardStatistics = this.board.get_statistics();
+    BoardStatistics boardStatistics = this.board.get_statistics();
     this.fireBoardUpdatedEvent(boardStatistics, null, this.board);
 
     this.min_cumulative_trace_length = boardStatistics.traces.totalWeightedLength;
@@ -232,7 +232,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
       winning_candidate = null;
     }
 
-    BoardFileStatistics boardStatisticsBefore = board.get_statistics();
+    BoardStatistics boardStatisticsBefore = board.get_statistics();
     RouterCounters routerCounters = new RouterCounters();
     routerCounters.passCount = p_pass_no;
     this.fireBoardUpdatedEvent(boardStatisticsBefore, routerCounters, this.board);
@@ -315,7 +315,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
     String us = current_board_update_strategy() == BoardUpdateStrategy.GLOBAL_OPTIMAL ? "Global Optimal" : "Greedy";
     String is = current_item_selection_strategy() == ItemSelectionStrategy.SEQUENTIAL ? "Sequential" : (current_item_selection_strategy() == ItemSelectionStrategy.RANDOM ? "Random" : "Prioritized");
 
-    BoardFileStatistics boardStatisticsAfter = board.get_statistics();
+    BoardStatistics boardStatisticsAfter = board.get_statistics();
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
 
     job.logDebug("Finished pass #" + p_pass_no + " in " + minutes + " minutes " + sec + " seconds with " + update_count + " board updates using " + thread_pool_size + " thread(s) with '" + us + "' strategy and '" + is + "' item selection strategy.");

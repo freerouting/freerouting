@@ -4,7 +4,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
@@ -111,13 +111,13 @@ public class TestBasedOnAnIssue
     return job;
   }
 
-  protected BoardFileStatistics GetBoardStatistics(RoutingJob job)
+  protected BoardStatistics GetBoardStatistics(RoutingJob job)
   {
     if ((job == null) || (job.board == null))
     {
       throw new IllegalArgumentException("The job or its board cannot be null.");
     }
 
-    return new BoardFileStatistics(job.board);
+    return new BoardStatistics(job.board);
   }
 }

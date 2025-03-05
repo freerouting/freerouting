@@ -4,7 +4,7 @@ import app.freerouting.api.AppContextListener;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
@@ -359,7 +359,7 @@ public class Freerouting
     }
 
     // Print the serialized routingJob statistics to the console
-    System.out.println(GsonProvider.GSON.toJson(new BoardFileStatistics(routingJob.board)));
+    System.out.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
 
     // Save the output file
     if (routingJob.state == RoutingJobState.COMPLETED)

@@ -6,7 +6,7 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -119,7 +119,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event)
         {
-          BoardFileStatistics boardStatistics = event.getBoardStatistics();
+          BoardStatistics boardStatistics = event.getBoardStatistics();
           boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
           boardManager.repaint();
         }
@@ -151,7 +151,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event)
         {
-          BoardFileStatistics boardStatistics = event.getBoardStatistics();
+          BoardStatistics boardStatistics = event.getBoardStatistics();
           boardManager.replaceRoutingBoard(event.getBoard());
           boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
         }

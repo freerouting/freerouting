@@ -2,17 +2,17 @@ package app.freerouting.autoroute.events;
 
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RouterCounters;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 
 import java.util.EventObject;
 
 public class BoardUpdatedEvent extends EventObject
 {
-  private final BoardFileStatistics boardStatistics;
+  private final BoardStatistics boardStatistics;
   private final RouterCounters routerCounters;
   private final RoutingBoard board;
 
-  public BoardUpdatedEvent(Object source, BoardFileStatistics statistics, RouterCounters routerCounters, RoutingBoard board)
+  public BoardUpdatedEvent(Object source, BoardStatistics statistics, RouterCounters routerCounters, RoutingBoard board)
   {
     super(source);
     this.boardStatistics = statistics;
@@ -20,7 +20,7 @@ public class BoardUpdatedEvent extends EventObject
     this.board = board;
   }
 
-  public BoardFileStatistics getBoardStatistics()
+  public BoardStatistics getBoardStatistics()
   {
     return boardStatistics;
   }

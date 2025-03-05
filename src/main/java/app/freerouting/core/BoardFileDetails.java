@@ -3,7 +3,7 @@ package app.freerouting.core;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEvent;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEventListener;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
@@ -30,7 +30,7 @@ public class BoardFileDetails implements Serializable
   @SerializedName("format")
   public FileFormat format = FileFormat.UNKNOWN;
   @SerializedName("statistics")
-  public BoardFileStatistics statistics = new BoardFileStatistics();
+  public BoardStatistics statistics = new BoardStatistics();
   // The filename only without the path
   @SerializedName("filename")
   protected String filename = "";
@@ -65,7 +65,7 @@ public class BoardFileDetails implements Serializable
    */
   public BoardFileDetails(BasicBoard board)
   {
-    this.statistics = new BoardFileStatistics(board);
+    this.statistics = new BoardStatistics(board);
   }
 
   public static CRC32 calculateCrc32(InputStream inputStream)
@@ -121,7 +121,7 @@ public class BoardFileDetails implements Serializable
     this.format = RoutingJob.getFileFormat(this.dataBytes);
 
     // set the statistical data based on the file content
-    this.statistics = new BoardFileStatistics(this.dataBytes, this.format);
+    this.statistics = new BoardStatistics(this.dataBytes, this.format);
 
     fireUpdatedEvent();
   }

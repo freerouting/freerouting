@@ -5,10 +5,12 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Statistics of the clearance violations of a board.
+ * Statistics of the layers of a board.
  */
-public class BoardFileStatisticsClearanceViolations implements Serializable
+public class BoardStatisticsLayers implements Serializable
 {
   @SerializedName("total_count")
   public Integer totalCount = null;
+  @SerializedName("signal_count")
+  public Integer signalCount = null;
 }

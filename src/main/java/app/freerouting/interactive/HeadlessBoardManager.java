@@ -6,7 +6,7 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.core.scoring.BoardFileStatistics;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.designforms.specctra.DsnFile;
 import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
@@ -160,7 +160,7 @@ public class HeadlessBoardManager implements BoardManager
     }
     if (read_result == DsnFile.ReadResult.OK)
     {
-      var boardStats = new BoardFileStatistics(this.board);
+      var boardStats = new BoardStatistics(this.board);
       FRAnalytics.fileLoaded("DSN", GSON.toJson(boardStats));
       this.board.reduce_nets_of_route_items();
       originalBoardChecksum = calculateCrc32();

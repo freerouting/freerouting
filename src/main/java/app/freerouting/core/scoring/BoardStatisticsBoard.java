@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Basic parameters of a board.
  */
-public class BoardFileStatisticsBoard implements Serializable
+public class BoardStatisticsBoard implements Serializable
 {
   @SerializedName("bounding_box")
   public Rectangle2D.Float boundingBox = null;
