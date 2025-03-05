@@ -305,7 +305,7 @@ public class BatchAutorouter extends NamedAlgorithm
       int not_found = 0;
       int routed = 0;
       BoardStatistics stats = board.get_statistics();
-      stats.unrouted_item_count = items_to_go_count;
+      stats.routerCounters.unrouted_item_count = items_to_go_count;
 
       this.fireBoardUpdatedEvent(stats, this.board);
 
@@ -345,10 +345,10 @@ public class BatchAutorouter extends NamedAlgorithm
           ripped_item_count += ripped_item_list.size();
 
           BoardStatistics boardStatistics = board.get_statistics();
-          boardStatistics.unrouted_item_count = items_to_go_count;
-          boardStatistics.ripped_item_count = ripped_item_count;
-          boardStatistics.not_found_item_count = not_found;
-          boardStatistics.routed_item_count = routed;
+          boardStatistics.routerCounters.unrouted_item_count = items_to_go_count;
+          boardStatistics.routerCounters.ripped_item_count = ripped_item_count;
+          boardStatistics.routerCounters.not_found_item_count = not_found;
+          boardStatistics.routerCounters.routed_item_count = routed;
           this.fireBoardUpdatedEvent(boardStatistics, this.board);
         }
       }

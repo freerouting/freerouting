@@ -236,7 +236,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
 
     this.min_cumulative_trace_length = boardStatisticsBefore.weightedTraceLength;
 
-    String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + boardStatisticsBefore.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.totalTraceLength) + " trace length running on " + thread_pool_size + " threads.";
+    String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.totalTraceLength) + " trace length running on " + thread_pool_size + " threads.";
     FRLogger.traceEntry(optimizationPassId);
 
     prepare_next_round_of_route_items();
@@ -316,7 +316,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
     this.fireBoardUpdatedEvent(boardStatisticsAfter, this.board);
 
     job.logDebug("Finished pass #" + p_pass_no + " in " + minutes + " minutes " + sec + " seconds with " + update_count + " board updates using " + thread_pool_size + " thread(s) with '" + us + "' strategy and '" + is + "' item selection strategy.");
-    job.logDebug("Route optimizer pass summary - Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + ", via count: " + best_route_result.via_count() + ", trace length: " + (int) boardStatisticsAfter.totalTraceLength + ", via count delta: " + (boardStatisticsBefore.viaCount - best_route_result.via_count()) + ", trace length delta: " + (int) (boardStatisticsBefore.totalTraceLength - boardStatisticsAfter.totalTraceLength) + ".");
+    job.logDebug("Route optimizer pass summary - Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + ", via count: " + best_route_result.via_count() + ", trace length: " + (int) boardStatisticsAfter.totalTraceLength + ", via count delta: " + (boardStatisticsBefore.items.viaCount - best_route_result.via_count()) + ", trace length delta: " + (int) (boardStatisticsBefore.totalTraceLength - boardStatisticsAfter.totalTraceLength) + ".");
 
     FRLogger.traceExit(optimizationPassId);
 

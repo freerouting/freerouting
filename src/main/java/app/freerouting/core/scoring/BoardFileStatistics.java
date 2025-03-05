@@ -2,6 +2,7 @@ package app.freerouting.core.scoring;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Trace;
+import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
 import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -31,6 +32,8 @@ public class BoardFileStatistics implements Serializable
   public BoardFileStatisticsBoard board = new BoardFileStatisticsBoard();
   @SerializedName("layers")
   public BoardFileStatisticsLayers layers = new BoardFileStatisticsLayers();
+  @SerializedName("items")
+  public BoardFileStatisticsItems items = new BoardFileStatisticsItems();
   @SerializedName("components")
   public BoardFileStatisticsComponents components = new BoardFileStatisticsComponents();
   @SerializedName("pads")
@@ -45,15 +48,25 @@ public class BoardFileStatistics implements Serializable
   public BoardFileStatisticsVias vias = new BoardFileStatisticsVias();
   @SerializedName("clearance_violations")
   public BoardFileStatisticsClearanceViolations clearanceViolations = new BoardFileStatisticsClearanceViolations();
+  @SerializedName("router_counters")
+  public BoardFileStatisticsRouterCounters routerCounters = null;
 
   public BoardFileStatistics()
   {
   }
 
   /**
-   * Creates a new BoardDetails object from a RoutingBoard object.
+   * Creates a new BoardFileStatistics object from a RoutingBoard object.
    */
   public BoardFileStatistics(BasicBoard board)
+  {
+    this(board, null);
+  }
+
+  /**
+   * Creates a new BoardFileStatistics object from a RoutingBoard object and defines the preferred unit for the statistics.
+   */
+  public BoardFileStatistics(BasicBoard board, Unit unit)
   {
     var bb = board.get_bounding_box();
 
@@ -233,10 +246,23 @@ public class BoardFileStatistics implements Serializable
     this.clearanceViolations.totalCount = board
         .get_outline()
         .clearance_violation_count();
+
+
+    // Convert all length values from board.communication.unit to the preferred unit
+    if (unit == null)
+    {
+      unit = Unit.MM;
+    }
+
+    if (unit != board.communication.unit)
+    {
+      // TODO: We need to convert all length values to the preferred unit
+      // this.unit = unit.toString();
+    }
   }
 
   /**
-   * Creates a new BoardDetails object from a file. This method should be used only if the board object is not available, because the board object based method is more detailed.
+   * Creates a new BoardFileStatistics object from a file. This method should be used only if the board object is not available, because the board object based method is more detailed.
    *
    * @param data   Binary data of the file.
    * @param format Format of the file. Only SES and DSN formats are supported at the moment.

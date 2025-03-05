@@ -8,8 +8,8 @@ import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.geometry.planar.Vector;
 import app.freerouting.geometry.planar.*;
+import app.freerouting.geometry.planar.Vector;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
@@ -1330,37 +1330,37 @@ public class RoutingBoard extends BasicBoard implements Serializable
       }
       if (curr_item instanceof Trace)
       {
-        statistics.traceCount++;
+        statistics.items.traceCount++;
       }
       else if (curr_item instanceof Via)
       {
-        statistics.viaCount++;
+        statistics.items.viaCount++;
       }
       else if (curr_item instanceof ConductionArea)
       {
-        statistics.conductionAreaCount++;
+        statistics.items.conductionAreaCount++;
       }
       else if (curr_item instanceof DrillItem)
       {
-        statistics.drillItemCount++;
+        statistics.items.drillItemCount++;
       }
       else if (curr_item instanceof Pin)
       {
-        statistics.pinCount++;
+        statistics.items.pinCount++;
       }
       else if (curr_item instanceof ComponentOutline)
       {
-        statistics.componentOutlineCount++;
+        statistics.items.componentOutlineCount++;
       }
       else
       {
-        statistics.otherCount++;
+        statistics.items.otherCount++;
       }
     }
 
     statistics.totalTraceLength = this.cumulative_trace_length();
     statistics.weightedTraceLength = this.calc_weighted_trace_length();
-    statistics.incompleteItemCount = new RatsNest(this).incomplete_count();
+    statistics.routerCounters.incompleteItemCount = new RatsNest(this).incomplete_count();
 
     return statistics;
   }

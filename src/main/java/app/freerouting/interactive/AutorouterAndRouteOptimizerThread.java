@@ -7,6 +7,7 @@ import app.freerouting.board.BoardStatistics;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.scoring.BoardFileStatistics;
 import app.freerouting.designforms.specctra.SpecctraSesFileWriter;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -14,6 +15,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
@@ -47,9 +49,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       @Override
       public void onBoardUpdatedEvent(BoardUpdatedEvent event)
       {
+        BoardFileStatistics boardFileStatistics = new BoardFileStatistics(routingJob.board);
         BoardStatistics boardStatistics = event.getBoardStatistics();
-        boardManager.screen_messages.set_batch_autoroute_info(boardStatistics.unrouted_item_count, boardStatistics.routed_item_count, boardStatistics.ripped_item_count, boardStatistics.not_found_item_count);
+        boardManager.screen_messages.set_batch_autoroute_info(boardStatistics.routerCounters.unrouted_item_count, boardStatistics.routerCounters.routed_item_count, boardStatistics.routerCounters.ripped_item_count, boardStatistics.routerCounters.not_found_item_count);
         boardManager.repaint();
+        routingJob.logDebug(GsonProvider.GSON.toJson(boardFileStatistics));
       }
     });
 
@@ -118,7 +122,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         public void onBoardUpdatedEvent(BoardUpdatedEvent event)
         {
           BoardStatistics boardStatistics = event.getBoardStatistics();
-          boardManager.screen_messages.set_post_route_info(boardStatistics.viaCount, boardStatistics.totalTraceLength, boardManager.coordinate_transform.user_unit);
+          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.totalTraceLength, boardManager.coordinate_transform.user_unit);
           boardManager.repaint();
         }
       });
@@ -151,7 +155,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         {
           BoardStatistics boardStatistics = event.getBoardStatistics();
           boardManager.replaceRoutingBoard(event.getBoard());
-          boardManager.screen_messages.set_post_route_info(boardStatistics.viaCount, boardStatistics.totalTraceLength, boardManager.coordinate_transform.user_unit);
+          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.totalTraceLength, boardManager.coordinate_transform.user_unit);
         }
       });
 

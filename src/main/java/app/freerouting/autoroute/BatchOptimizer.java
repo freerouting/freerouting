@@ -91,7 +91,7 @@ public class BatchOptimizer extends NamedAlgorithm
 
     this.sorted_route_items = new ReadSortedRouteItems();
     this.min_cumulative_trace_length = boardStatisticsBefore.weightedTraceLength;
-    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.totalTraceLength) + " trace length.";
+    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.totalTraceLength) + " trace length.";
 
     FRLogger.traceEntry(optimizationPassId);
 
@@ -112,7 +112,7 @@ public class BatchOptimizer extends NamedAlgorithm
         BoardStatistics boardStatisticsAfter = board.get_statistics();
         this.fireBoardUpdatedEvent(boardStatisticsAfter, this.board);
 
-        route_improved = (float) ((boardStatisticsBefore.viaCount != 0 && boardStatisticsBefore.totalTraceLength != 0) ? 1.0 - (((((float) boardStatisticsAfter.viaCount / boardStatisticsBefore.viaCount) + (boardStatisticsAfter.totalTraceLength / boardStatisticsBefore.totalTraceLength)) / 2)) : 0);
+        route_improved = (float) ((boardStatisticsBefore.items.viaCount != 0 && boardStatisticsBefore.totalTraceLength != 0) ? 1.0 - (((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount) + (boardStatisticsAfter.totalTraceLength / boardStatisticsBefore.totalTraceLength)) / 2)) : 0);
       }
     }
 
@@ -221,7 +221,7 @@ public class BatchOptimizer extends NamedAlgorithm
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routingBoard);
 
     // check if the board was improved
-    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.viaCount, boardStatisticsAfter.viaCount, this.min_cumulative_trace_length, boardStatisticsAfter.totalTraceLength, boardStatisticsBefore.incompleteItemCount, boardStatisticsAfter.incompleteItemCount);
+    ItemRouteResult result = new ItemRouteResult(p_item.get_id_no(), boardStatisticsBefore.items.viaCount, boardStatisticsAfter.items.viaCount, this.min_cumulative_trace_length, boardStatisticsAfter.totalTraceLength, boardStatisticsBefore.routerCounters.incompleteItemCount, boardStatisticsAfter.routerCounters.incompleteItemCount);
     boolean route_improved = !this.thread.isStopRequested() && result.improved();
     result.update_improved(route_improved);
 
