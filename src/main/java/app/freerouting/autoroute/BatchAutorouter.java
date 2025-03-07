@@ -488,18 +488,19 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         return AutorouteItemResult.ROUTED;
       }
-
-      if (autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED)
+      else if (autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED)
       {
         return AutorouteItemResult.ALREADY_CONNECTED;
+      }
+      else
+      {
+        return AutorouteItemResult.UNKNOWN;
       }
     } catch (Exception e)
     {
       job.logError("Error during autoroute_item", e);
       return AutorouteItemResult.FAILED;
     }
-
-    return AutorouteItemResult.UNKNOWN;
   }
 
   /**
@@ -526,23 +527,43 @@ public class BatchAutorouter extends NamedAlgorithm
     double min_distance = Double.MAX_VALUE;
     for (Item curr_from_item : p_from_items)
     {
-      if (!(curr_from_item instanceof DrillItem))
+      FloatPoint curr_from_corner;
+      if (curr_from_item instanceof DrillItem)
+      {
+        curr_from_corner = ((DrillItem) curr_from_item)
+            .get_center()
+            .to_float();
+      }
+      else if (curr_from_item instanceof PolylineTrace from_trace)
+      {
+        // Use trace endpoints as potential connection points
+        continue; // We'll handle traces in the second loop for better efficiency
+      }
+      else
       {
         continue;
       }
-      FloatPoint curr_from_corner = ((DrillItem) curr_from_item)
-          .get_center()
-          .to_float();
+
       for (Item curr_to_item : p_to_items)
       {
-        if (!(curr_to_item instanceof DrillItem))
+        FloatPoint curr_to_corner;
+        if (curr_to_item instanceof DrillItem)
+        {
+          curr_to_corner = ((DrillItem) curr_to_item)
+              .get_center()
+              .to_float();
+        }
+        else if (curr_to_item instanceof PolylineTrace to_trace)
+        {
+          // Find nearest point on trace to the from item point
+          curr_to_corner = nearest_point_on_trace(to_trace, curr_from_corner);
+        }
+        else
         {
           continue;
         }
-        FloatPoint curr_to_corner = ((DrillItem) curr_to_item)
-            .get_center()
-            .to_float();
-        double curr_distance = curr_from_corner.distance_square(curr_to_corner);
+
+        double curr_distance = curr_from_corner.distance(curr_to_corner);
         if (curr_distance < min_distance)
         {
           min_distance = curr_distance;
@@ -551,7 +572,223 @@ public class BatchAutorouter extends NamedAlgorithm
         }
       }
     }
-    this.air_line = new FloatLine(from_corner, to_corner);
+
+    // Check trace-to-trace and trace-to-drill connections
+    for (Item curr_from_item : p_from_items)
+    {
+      if (!(curr_from_item instanceof PolylineTrace from_trace))
+      {
+        continue;
+      }
+
+      for (Item curr_to_item : p_to_items)
+      {
+        FloatPoint curr_from_corner;
+        FloatPoint curr_to_corner;
+
+        if (curr_to_item instanceof DrillItem)
+        {
+          // Trace to drill item
+          curr_to_corner = ((DrillItem) curr_to_item)
+              .get_center()
+              .to_float();
+          curr_from_corner = nearest_point_on_trace(from_trace, curr_to_corner);
+        }
+        else if (curr_to_item instanceof PolylineTrace to_trace)
+        {
+          // Trace to trace - find closest points between the two traces
+          FloatPoint[] closest_points = find_closest_points_between_traces(from_trace, to_trace);
+          curr_from_corner = closest_points[0];
+          curr_to_corner = closest_points[1];
+        }
+        else
+        {
+          continue;
+        }
+
+        double curr_distance = curr_from_corner.distance(curr_to_corner);
+        if (curr_distance < min_distance)
+        {
+          min_distance = curr_distance;
+          from_corner = curr_from_corner;
+          to_corner = curr_to_corner;
+        }
+      }
+    }
+
+    if (from_corner != null && to_corner != null)
+    {
+      this.air_line = new FloatLine(from_corner, to_corner);
+    }
+    else
+    {
+      this.air_line = null;
+    }
+  }
+
+  /**
+   * Finds the nearest point on a trace to the given point
+   */
+  private FloatPoint nearest_point_on_trace(PolylineTrace p_trace, FloatPoint p_point)
+  {
+    double min_distance = Double.MAX_VALUE;
+    FloatPoint nearest_point = null;
+
+    // Get endpoints
+    FloatPoint first_corner = p_trace
+        .first_corner()
+        .to_float();
+    FloatPoint last_corner = p_trace
+        .last_corner()
+        .to_float();
+
+    // Check distance to endpoints first
+    double distance_to_first = p_point.distance(first_corner);
+    double distance_to_last = p_point.distance(last_corner);
+
+    if (distance_to_first < min_distance)
+    {
+      min_distance = distance_to_first;
+      nearest_point = first_corner;
+    }
+
+    if (distance_to_last < min_distance)
+    {
+      min_distance = distance_to_last;
+      nearest_point = last_corner;
+    }
+
+    // Check distances to line segments
+    for (int i = 0; i < p_trace.corner_count() - 1; i++)
+    {
+      FloatPoint segment_start = p_trace
+          .polyline()
+          .corner_approx(i);
+      FloatPoint segment_end = p_trace
+          .polyline()
+          .corner_approx(i + 1);
+      FloatLine segment = new FloatLine(segment_start, segment_end);
+
+      FloatPoint projection = segment.perpendicular_projection(p_point);
+      if (projection.is_contained_in_box(segment_start, segment_end, 0.01))
+      {
+        double distance = p_point.distance(projection);
+        if (distance < min_distance)
+        {
+          min_distance = distance;
+          nearest_point = projection;
+        }
+      }
+    }
+
+    return nearest_point;
+  }
+
+  /**
+   * Finds the closest points between two traces
+   *
+   * @return an array with two FloatPoints: [point_on_first_trace, point_on_second_trace]
+   */
+  private FloatPoint[] find_closest_points_between_traces(PolylineTrace p_first_trace, PolylineTrace p_second_trace)
+  {
+    double min_distance = Double.MAX_VALUE;
+    FloatPoint[] result = new FloatPoint[2];
+
+    // Check endpoints to endpoints
+    FloatPoint first_trace_start = p_first_trace
+        .first_corner()
+        .to_float();
+    FloatPoint first_trace_end = p_first_trace
+        .last_corner()
+        .to_float();
+    FloatPoint second_trace_start = p_second_trace
+        .first_corner()
+        .to_float();
+    FloatPoint second_trace_end = p_second_trace
+        .last_corner()
+        .to_float();
+
+    // Check all endpoint combinations
+    double distance = first_trace_start.distance(second_trace_start);
+    if (distance < min_distance)
+    {
+      min_distance = distance;
+      result[0] = first_trace_start;
+      result[1] = second_trace_start;
+    }
+
+    distance = first_trace_start.distance(second_trace_end);
+    if (distance < min_distance)
+    {
+      min_distance = distance;
+      result[0] = first_trace_start;
+      result[1] = second_trace_end;
+    }
+
+    distance = first_trace_end.distance(second_trace_start);
+    if (distance < min_distance)
+    {
+      min_distance = distance;
+      result[0] = first_trace_end;
+      result[1] = second_trace_start;
+    }
+
+    distance = first_trace_end.distance(second_trace_end);
+    if (distance < min_distance)
+    {
+      min_distance = distance;
+      result[0] = first_trace_end;
+      result[1] = second_trace_end;
+    }
+
+    // Check all segment combinations for closest points
+    for (int i = 0; i < p_first_trace.corner_count() - 1; i++)
+    {
+      FloatPoint first_segment_start = p_first_trace
+          .polyline()
+          .corner_approx(i);
+      FloatPoint first_segment_end = p_first_trace
+          .polyline()
+          .corner_approx(i + 1);
+      FloatLine first_segment = new FloatLine(first_segment_start, first_segment_end);
+
+      for (int j = 0; j < p_second_trace.corner_count() - 1; j++)
+      {
+        FloatPoint second_segment_start = p_second_trace
+            .polyline()
+            .corner_approx(j);
+        FloatPoint second_segment_end = p_second_trace
+            .polyline()
+            .corner_approx(j + 1);
+        FloatLine second_segment = new FloatLine(second_segment_start, second_segment_end);
+
+        // Find closest points between these two line segments
+        FloatPoint point_on_first = first_segment.nearest_segment_point(second_segment_start);
+        FloatPoint point_on_second = second_segment.perpendicular_projection(point_on_first);
+
+        // Check if projection is on the segment
+        if (!point_on_second.is_contained_in_box(second_segment_start, second_segment_end, 0.01))
+        {
+          // If not, use the nearest endpoint
+          double dist_to_start = point_on_first.distance(second_segment_start);
+          double dist_to_end = point_on_first.distance(second_segment_end);
+          point_on_second = (dist_to_start < dist_to_end) ? second_segment_start : second_segment_end;
+        }
+
+        // Recalculate the point on first segment based on the point on second segment
+        point_on_first = first_segment.nearest_segment_point(point_on_second);
+
+        distance = point_on_first.distance(point_on_second);
+        if (distance < min_distance)
+        {
+          min_distance = distance;
+          result[0] = point_on_first;
+          result[1] = point_on_second;
+        }
+      }
+    }
+
+    return result;
   }
 
   public enum AutorouteItemResult
