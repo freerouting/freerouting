@@ -3,9 +3,9 @@ package app.freerouting.board;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.Stoppable;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
-import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 
@@ -762,8 +762,12 @@ public class PolylineTrace extends Trace implements Serializable
   }
 
   /**
-   * Splits this trace and overlapping traces, and combines this trace. Returns true, if something
-   * was changed. If p_clip_shape != null, splitting is restricted to p_clip_shape.
+   * Splits this trace and overlapping traces, and combines this trace.
+   * Returns true, if something was changed.
+   * If p_clip_shape != null, splitting is restricted to p_clip_shape.
+   *
+   * @param p_clip_shape the shape to clip the trace to
+   * @return true, if something was changed
    */
   public boolean normalize(IntOctagon p_clip_shape) throws Exception
   {
@@ -774,7 +778,13 @@ public class PolylineTrace extends Trace implements Serializable
   {
     if (normalization_depth > MAX_NORMALIZATION_DEPTH)
     {
-      throw new Exception("We reached the maximum normalization depth (" + MAX_NORMALIZATION_DEPTH + ").");
+      throw new Exception("Max normalization depth reached with trace '" + this.get_id_no() + "'");
+    }
+
+    // Early exit if trace is very simple (only 2 points)
+    if (this.corner_count() <= 2)
+    {
+      return false;
     }
 
     boolean observers_activated = false;

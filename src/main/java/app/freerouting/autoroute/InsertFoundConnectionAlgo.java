@@ -75,7 +75,7 @@ public class InsertFoundConnectionAlgo
       p_board.normalize_traces(p_ctrl.net_no);
     } catch (Exception e)
     {
-      FRLogger.error("The normalization of net '" + p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.", e);
+      FRLogger.warn("The normalization of net '" + p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.");
     }
 
     return new_instance;
@@ -112,7 +112,9 @@ public class InsertFoundConnectionAlgo
         for (Item curr_item : picked_items)
         {
           Pin curr_pin = (Pin) curr_item;
-          if (curr_pin.contains_net(ctrl.net_no) && curr_pin.get_center().equals(curr_end_corner))
+          if (curr_pin.contains_net(ctrl.net_no) && curr_pin
+              .get_center()
+              .equals(curr_end_corner))
           {
             if (i == 0)
             {
@@ -214,7 +216,9 @@ public class InsertFoundConnectionAlgo
     {
       return null;
     }
-    FloatPoint pin_center = p_pin.get_center().to_float();
+    FloatPoint pin_center = p_pin
+        .get_center()
+        .to_float();
     double curr_clearance = this.board.rules.clearance_matrix.get_value(ctrl.trace_clearance_class_no, p_pin.clearance_class_no(), p_layer, true);
     double pin_neck_down_distance = 2 * (0.5 * p_pin.get_max_width(p_layer) + curr_clearance);
     if (pin_center.distance(p_to_corner.to_float()) >= pin_neck_down_distance)
@@ -254,7 +258,9 @@ public class InsertFoundConnectionAlgo
       // add a corner in case  neck_down_end_point is not exactly on the line from p_from_corner to
       // p_to_corner
       boolean horizontal_first = Math.abs(float_from_corner.x - float_neck_down_end_point.x) >= Math.abs(float_from_corner.y - float_neck_down_end_point.y);
-      IntPoint add_corner = LocateFoundConnectionAlgo.calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, board.rules.get_trace_angle_restriction()).round();
+      IntPoint add_corner = LocateFoundConnectionAlgo
+          .calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, board.rules.get_trace_angle_restriction())
+          .round();
       Point curr_ok_point = board.insert_forced_trace_segment(p_from_corner, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
       if (curr_ok_point != add_corner)
       {
@@ -265,7 +271,9 @@ public class InsertFoundConnectionAlgo
       {
         return p_from_corner;
       }
-      add_corner = LocateFoundConnectionAlgo.calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first, board.rules.get_trace_angle_restriction()).round();
+      add_corner = LocateFoundConnectionAlgo
+          .calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first, board.rules.get_trace_angle_restriction())
+          .round();
       if (!add_corner.equals(p_to_corner))
       {
         curr_ok_point = board.insert_forced_trace_segment(neck_down_end_point, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no, ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);

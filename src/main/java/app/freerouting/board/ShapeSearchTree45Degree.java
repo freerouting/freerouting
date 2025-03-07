@@ -2,13 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
-import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
-import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntOctagon;
-import app.freerouting.geometry.planar.Line;
-import app.freerouting.geometry.planar.Shape;
-import app.freerouting.geometry.planar.Side;
-import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 
 import java.util.Collection;
@@ -96,26 +90,65 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
   @Override
   public Collection<IncompleteFreeSpaceExpansionRoom> complete_shape(IncompleteFreeSpaceExpansionRoom p_room, int p_net_no, SearchTreeObject p_ignore_object, TileShape p_ignore_shape)
   {
-    if (!(p_room.get_contained_shape().is_IntOctagon()))
+    TileShape contained_shape = p_room.get_contained_shape();
+    IntOctagon shape_to_be_contained;
+
+    if (contained_shape.is_IntOctagon())
     {
-      FRLogger.debug("ShapeSearchTree45Degree.complete_shape: unexpected p_shape_to_be_contained");
+      shape_to_be_contained = contained_shape.bounding_octagon();
+    }
+    else if (contained_shape instanceof app.freerouting.geometry.planar.Simplex)
+    {
+      // Convert Simplex to IntOctagon for processing
+      shape_to_be_contained = contained_shape.bounding_octagon();
+      if (shape_to_be_contained == null)
+      {
+        // If conversion fails (e.g., unbounded Simplex)
+        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: cannot convert Simplex to IntOctagon");
+        return new LinkedList<>();
+      }
+    }
+    else
+    {
+      FRLogger.debug("ShapeSearchTree45Degree.complete_shape: unexpected shape type");
       return new LinkedList<>();
     }
-    IntOctagon shape_to_be_contained = p_room.get_contained_shape().bounding_octagon();
+
     if (this.root == null)
     {
       return new LinkedList<>();
     }
-    IntOctagon start_shape = board.get_bounding_box().bounding_octagon();
+
+    IntOctagon start_shape = board
+        .get_bounding_box()
+        .bounding_octagon();
     if (p_room.get_shape() != null)
     {
-      if (!(p_room.get_shape() instanceof IntOctagon))
+      TileShape room_shape = p_room.get_shape();
+      IntOctagon octagon_room_shape;
+
+      if (room_shape instanceof IntOctagon)
       {
-        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: p_start_shape of type IntOctagon expected");
+        octagon_room_shape = (IntOctagon) room_shape;
+      }
+      else if (room_shape instanceof app.freerouting.geometry.planar.Simplex)
+      {
+        octagon_room_shape = room_shape.bounding_octagon();
+        if (octagon_room_shape == null)
+        {
+          FRLogger.warn("ShapeSearchTree45Degree.complete_shape: cannot convert room shape Simplex to IntOctagon");
+          return new LinkedList<>();
+        }
+      }
+      else
+      {
+        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: room shape type not supported");
         return new LinkedList<>();
       }
-      start_shape = p_room.get_shape().bounding_octagon().intersection(start_shape);
+
+      start_shape = octagon_room_shape.intersection(start_shape);
     }
+
     IntOctagon bounding_shape = start_shape;
     int room_layer = p_room.get_layer();
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
@@ -142,7 +175,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
           if (is_obstacle && curr_object.shape_layer(shape_index) == room_layer && curr_object != p_ignore_object)
           {
 
-            IntOctagon curr_object_shape = curr_object.get_tree_shape(this, shape_index).bounding_octagon();
+            IntOctagon curr_object_shape = curr_object
+                .get_tree_shape(this, shape_index)
+                .bounding_octagon();
             Collection<IncompleteFreeSpaceExpansionRoom> new_result = new LinkedList<>();
             IntOctagon new_bounding_shape = IntOctagon.EMPTY;
             for (IncompleteFreeSpaceExpansionRoom curr_room : result)
@@ -170,7 +205,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
 
                 for (IncompleteFreeSpaceExpansionRoom tmp_shape : new_result)
                 {
-                  new_bounding_shape = new_bounding_shape.union(tmp_shape.get_shape().bounding_box());
+                  new_bounding_shape = new_bounding_shape.union(tmp_shape
+                      .get_shape()
+                      .bounding_box());
                 }
               }
               else
@@ -190,9 +227,12 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
         }
       }
     }
+
     result = divide_large_room(result, board.get_bounding_box());
     // remove rooms with shapes equal to the contained shape to prevent endless loop.
-    result.removeIf(room -> room.get_contained_shape().contains(room.get_shape()));
+    result.removeIf(room -> room
+        .get_contained_shape()
+        .contains(room.get_shape()));
     return result;
   }
 
@@ -207,8 +247,12 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     Collection<IncompleteFreeSpaceExpansionRoom> result = super.divide_large_room(p_room_list, p_board_bounding_box);
     for (IncompleteFreeSpaceExpansionRoom curr_room : result)
     {
-      curr_room.set_shape(curr_room.get_shape().bounding_octagon());
-      curr_room.set_contained_shape(curr_room.get_contained_shape().bounding_octagon());
+      curr_room.set_shape(curr_room
+          .get_shape()
+          .bounding_octagon());
+      curr_room.set_contained_shape(curr_room
+          .get_contained_shape()
+          .bounding_octagon());
     }
     return result;
   }
@@ -236,8 +280,51 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
       FRLogger.trace("ShapeSearchTree45Degree.restrain_shape: p_shape_to_be_contained is empty");
       return result;
     }
-    IntOctagon room_shape = p_incomplete_room.get_shape().bounding_octagon();
-    IntOctagon shape_to_be_contained = p_incomplete_room.get_contained_shape().bounding_octagon();
+
+    IntOctagon shape_to_be_contained;
+    if (contained_shape.is_IntOctagon())
+    {
+      shape_to_be_contained = contained_shape.bounding_octagon();
+    }
+    else if (contained_shape instanceof app.freerouting.geometry.planar.Simplex)
+    {
+      shape_to_be_contained = contained_shape.bounding_octagon();
+      if (shape_to_be_contained == null)
+      {
+        FRLogger.warn("restrain_shape: cannot convert Simplex to IntOctagon");
+        return new LinkedList<>();
+      }
+    }
+    else
+    {
+      FRLogger.warn("restrain_shape: incompatible shape type");
+      return new LinkedList<>();
+    }
+
+    IntOctagon room_shape;
+    if (p_incomplete_room.get_shape() instanceof IntOctagon)
+    {
+      room_shape = p_incomplete_room
+          .get_shape()
+          .bounding_octagon();
+    }
+    else if (p_incomplete_room.get_shape() instanceof app.freerouting.geometry.planar.Simplex)
+    {
+      room_shape = p_incomplete_room
+          .get_shape()
+          .bounding_octagon();
+      if (room_shape == null)
+      {
+        FRLogger.warn("restrain_shape: cannot convert room shape Simplex to IntOctagon");
+        return new LinkedList<>();
+      }
+    }
+    else
+    {
+      FRLogger.warn("restrain_shape: unsupported room shape type");
+      return new LinkedList<>();
+    }
+
     double cut_line_distance = -1;
     int restraining_line_no = -1;
 
