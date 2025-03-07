@@ -305,14 +305,16 @@ public class BatchAutorouter extends NamedAlgorithm
 
       int items_to_go_count = autoroute_item_list.size();
       int ripped_item_count = 0;
-      int not_found = 0;
+      int not_routed = 0;
       int routed = 0;
+      int skipped = 0;
       BoardStatistics stats = board.get_statistics();
       RouterCounters routerCounters = new RouterCounters();
       routerCounters.passCount = p_pass_no;
       routerCounters.queuedToBeRoutedCount = items_to_go_count;
+      routerCounters.skippedCount = skipped;
       routerCounters.rippedCount = ripped_item_count;
-      routerCounters.failedToBeRoutedCount = not_found;
+      routerCounters.failedToBeRoutedCount = not_routed;
       routerCounters.routedCount = routed;
       routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
 
@@ -342,13 +344,20 @@ public class BatchAutorouter extends NamedAlgorithm
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
-          if (autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no))
+          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
+          if (autorouterResult == AutorouteItemResult.ROUTED)
           {
+            // The item was successfully routed
             ++routed;
+          }
+          else if ((autorouterResult == AutorouteItemResult.ALREADY_CONNECTED) || (autorouterResult == AutorouteItemResult.NO_UNCONNECTED_NETS) || (autorouterResult == AutorouteItemResult.CONNECTED_TO_PLANE))
+          {
+            // The item doesn't need to be routed
+            ++skipped;
           }
           else
           {
-            ++not_found;
+            ++not_routed;
           }
           --items_to_go_count;
           ripped_item_count += ripped_item_list.size();
@@ -356,9 +365,11 @@ public class BatchAutorouter extends NamedAlgorithm
           BoardStatistics boardStatistics = board.get_statistics();
           routerCounters.passCount = p_pass_no;
           routerCounters.queuedToBeRoutedCount = items_to_go_count;
+          routerCounters.skippedCount = skipped;
           routerCounters.rippedCount = ripped_item_count;
-          routerCounters.failedToBeRoutedCount = not_found;
+          routerCounters.failedToBeRoutedCount = not_routed;
           routerCounters.routedCount = routed;
+          routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
           this.fireBoardUpdatedEvent(boardStatistics, routerCounters, this.board);
         }
       }
@@ -391,7 +402,7 @@ public class BatchAutorouter extends NamedAlgorithm
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is routed.
-  private boolean autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no)
+  private AutorouteItemResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no)
   {
     try
     {
@@ -425,7 +436,7 @@ public class BatchAutorouter extends NamedAlgorithm
       Set<Item> unconnected_set = p_item.get_unconnected_set(p_route_net_no);
       if (unconnected_set.isEmpty())
       {
-        return true; // p_item is already routed.
+        return AutorouteItemResult.NO_UNCONNECTED_NETS; // p_item is already routed.
       }
 
       Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);
@@ -437,7 +448,7 @@ public class BatchAutorouter extends NamedAlgorithm
         {
           if (curr_item instanceof ConductionArea)
           {
-            return true; // already connected to plane
+            return AutorouteItemResult.CONNECTED_TO_PLANE; // already connected to plane
           }
         }
       }
@@ -473,12 +484,22 @@ public class BatchAutorouter extends NamedAlgorithm
       }
 
       // Return true, if the item is routed
-      return autoroute_result == AutorouteEngine.AutorouteResult.ROUTED || autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
+      if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED)
+      {
+        return AutorouteItemResult.ROUTED;
+      }
+
+      if (autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED)
+      {
+        return AutorouteItemResult.ALREADY_CONNECTED;
+      }
     } catch (Exception e)
     {
       job.logError("Error during autoroute_item", e);
-      return false;
+      return AutorouteItemResult.FAILED;
     }
+
+    return AutorouteItemResult.UNKNOWN;
   }
 
   /**
@@ -531,5 +552,15 @@ public class BatchAutorouter extends NamedAlgorithm
       }
     }
     this.air_line = new FloatLine(from_corner, to_corner);
+  }
+
+  public enum AutorouteItemResult
+  {
+    UNKNOWN,              // Unknown result
+    NO_UNCONNECTED_NETS,  // Item has no unconnected nets
+    CONNECTED_TO_PLANE,   // Item is connected to a conduction plane
+    ALREADY_CONNECTED,    // Item is already connected
+    ROUTED,               // Item was successfully routed
+    FAILED                // Routing failed
   }
 }

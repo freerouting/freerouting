@@ -18,6 +18,9 @@ public class RouterCounters implements Serializable
   // The number of items on the board that got successfully routed in this pass
   @SerializedName("routed_count")
   public Integer routedCount = null;
+  // The number of items on the board that were skipped in this pass
+  @SerializedName("skipped_count")
+  public Integer skippedCount = null;
   // The number of items on the board that were ripped in this pass
   @SerializedName("ripped_count")
   public Integer rippedCount = null;
