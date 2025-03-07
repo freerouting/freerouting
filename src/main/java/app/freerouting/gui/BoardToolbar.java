@@ -265,7 +265,6 @@ class BoardToolbar extends JPanel
     unitSelectionPanel.addValueChangedEventListener((String value) -> FRAnalytics.buttonClicked("unitSelectionPanel", value));
     right_toolbar.add(unitSelectionPanel);
 
-
     this.add(right_toolbar, BorderLayout.EAST);
 
     // Set the font size for the toolbar icons

@@ -3,8 +3,8 @@ package app.freerouting.gui;
 import app.freerouting.management.TextManager;
 
 import javax.swing.*;
-import java.awt.Cursor;
 import java.awt.*;
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ public class SegmentedButtons extends JPanel
 {
   private final ButtonGroup buttonGroup;
   private final Map<JToggleButton, String> buttonValues;
-  private String selectedValue;
   private final Color textColor = new Color(0, 0, 0); // Text color
   private final Color selectedTextColor = new Color(225, 225, 225); // Text color for selected button
   private final Color selectedColor = new Color(30, 30, 30); // Background color for selected button
@@ -25,8 +24,8 @@ public class SegmentedButtons extends JPanel
   private final Color selectedAndHoverColor = new Color(50, 50, 50); // Selected and hover color
   private final Color borderColor = new Color(121, 116, 126); // Border color around the buttons
   private final int borderWidth = 1; // Border width around the buttons
-
   private final List<Consumer<String>> valueChangedEventListeners = new ArrayList<>();
+  private String selectedValue;
 
   public SegmentedButtons(TextManager tm, String heading, String... values)
   {
@@ -221,7 +220,15 @@ public class SegmentedButtons extends JPanel
     for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet())
     {
       JToggleButton button = entry.getKey();
-      button.setSelected(entry.getValue().equals(value));
+      button.setSelected(entry
+          .getValue()
+          .equals(value));
+    }
+
+    // Call the event listeners
+    if (this.valueChangedEventListeners != null)
+    {
+      this.valueChangedEventListeners.forEach(listener -> listener.accept(value));
     }
   }
 }
