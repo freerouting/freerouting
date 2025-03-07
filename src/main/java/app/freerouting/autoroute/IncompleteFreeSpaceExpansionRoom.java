@@ -17,8 +17,8 @@ public class IncompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   private TileShape contained_shape;
 
   /**
-   * Creates a new instance of IncompleteFreeSpaceExpansionRoom. If p_shape == null means p_shape is
-   * the whole plane.
+   * Creates a new instance of IncompleteFreeSpaceExpansionRoom.
+   * If p_shape == null means p_shape is the whole plane.
    */
   public IncompleteFreeSpaceExpansionRoom(TileShape p_shape, int p_layer, TileShape p_contained_shape)
   {

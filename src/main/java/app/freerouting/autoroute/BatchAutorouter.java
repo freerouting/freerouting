@@ -357,6 +357,7 @@ public class BatchAutorouter extends NamedAlgorithm
           }
           else
           {
+            job.logDebug("Autorouter " + autorouterResult.details);
             ++not_routed;
           }
           --items_to_go_count;

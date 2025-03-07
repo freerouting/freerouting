@@ -1526,7 +1526,8 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
 
     simpleName.append(this
         .getClass()
-        .getSimpleName());
+        .getSimpleName()
+        .toLowerCase());
 
     if (component_no > 0)
     {

@@ -14,7 +14,6 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
@@ -50,8 +49,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       {
         boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
         boardManager.repaint();
-        routingJob.logDebug(GsonProvider.GSON.toJson(event.getRouterCounters()));
-        routingJob.logDebug(GsonProvider.GSON.toJson(event.getBoardStatistics()));
+        //        routingJob.logDebug(GsonProvider.GSON.toJson(event.getRouterCounters()));
+        //        routingJob.logDebug(GsonProvider.GSON.toJson(event.getBoardStatistics()));
       }
     });
 
