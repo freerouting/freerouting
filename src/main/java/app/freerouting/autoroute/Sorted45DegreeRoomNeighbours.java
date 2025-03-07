@@ -28,7 +28,9 @@ public class Sorted45DegreeRoomNeighbours
   {
     from_room = p_from_room;
     completed_room = p_completed_room;
-    room_shape = p_completed_room.get_shape().bounding_octagon();
+    room_shape = p_completed_room
+        .get_shape()
+        .bounding_octagon();
     sorted_neighbours = new TreeSet<>();
 
     edge_interior_touches_obstacle = new boolean[8];
@@ -173,7 +175,7 @@ public class Sorted45DegreeRoomNeighbours
     int lx;
     if (p_edge_interior_touches_obstacle[6])
     {
-      lx = p_room_oct.lx;
+      lx = p_room_oct.leftX;
     }
     else
     {
@@ -183,7 +185,7 @@ public class Sorted45DegreeRoomNeighbours
     int ly;
     if (p_edge_interior_touches_obstacle[0])
     {
-      ly = p_room_oct.ly;
+      ly = p_room_oct.bottomY;
     }
     else
     {
@@ -193,7 +195,7 @@ public class Sorted45DegreeRoomNeighbours
     int rx;
     if (p_edge_interior_touches_obstacle[2])
     {
-      rx = p_room_oct.rx;
+      rx = p_room_oct.rightX;
     }
     else
     {
@@ -203,7 +205,7 @@ public class Sorted45DegreeRoomNeighbours
     int uy;
     if (p_edge_interior_touches_obstacle[4])
     {
-      uy = p_room_oct.uy;
+      uy = p_room_oct.topY;
     }
     else
     {
@@ -213,7 +215,7 @@ public class Sorted45DegreeRoomNeighbours
     int ulx;
     if (p_edge_interior_touches_obstacle[5])
     {
-      ulx = p_room_oct.ulx;
+      ulx = p_room_oct.upperLeftDiagonalX;
     }
     else
     {
@@ -223,7 +225,7 @@ public class Sorted45DegreeRoomNeighbours
     int lrx;
     if (p_edge_interior_touches_obstacle[1])
     {
-      lrx = p_room_oct.lrx;
+      lrx = p_room_oct.lowerRightDiagonalX;
     }
     else
     {
@@ -233,7 +235,7 @@ public class Sorted45DegreeRoomNeighbours
     int llx;
     if (p_edge_interior_touches_obstacle[7])
     {
-      llx = p_room_oct.llx;
+      llx = p_room_oct.lowerLeftDiagonalX;
     }
     else
     {
@@ -243,7 +245,7 @@ public class Sorted45DegreeRoomNeighbours
     int urx;
     if (p_edge_interior_touches_obstacle[3])
     {
-      urx = p_room_oct.urx;
+      urx = p_room_oct.upperRightDiagonalX;
     }
     else
     {
@@ -273,7 +275,9 @@ public class Sorted45DegreeRoomNeighbours
       FRLogger.warn("Sorted45DegreeRoomNeighbours.calculate_side_incomplete_rooms_of_obstacle_expansion_room: ObstacleExpansionRoom expected for this.from_room");
       return;
     }
-    IntOctagon board_bounding_oct = p_autoroute_engine.board.get_bounding_box().bounding_octagon();
+    IntOctagon board_bounding_oct = p_autoroute_engine.board
+        .get_bounding_box()
+        .bounding_octagon();
     IntPoint curr_corner = this.room_shape.corner(p_from_side_no);
     int curr_side_no = p_from_side_no;
     for (; ; )
@@ -282,24 +286,24 @@ public class Sorted45DegreeRoomNeighbours
       IntPoint next_corner = this.room_shape.corner(next_side_no);
       if (!curr_corner.equals(next_corner))
       {
-        int lx = board_bounding_oct.lx;
-        int ly = board_bounding_oct.ly;
-        int rx = board_bounding_oct.rx;
-        int uy = board_bounding_oct.uy;
-        int ulx = board_bounding_oct.ulx;
-        int lrx = board_bounding_oct.lrx;
-        int llx = board_bounding_oct.llx;
-        int urx = board_bounding_oct.urx;
+        int lx = board_bounding_oct.leftX;
+        int ly = board_bounding_oct.bottomY;
+        int rx = board_bounding_oct.rightX;
+        int uy = board_bounding_oct.topY;
+        int ulx = board_bounding_oct.upperLeftDiagonalX;
+        int lrx = board_bounding_oct.lowerRightDiagonalX;
+        int llx = board_bounding_oct.lowerLeftDiagonalX;
+        int urx = board_bounding_oct.upperRightDiagonalX;
         switch (curr_side_no)
         {
-          case 0 -> uy = this.room_shape.ly;
-          case 1 -> ulx = this.room_shape.lrx;
-          case 2 -> lx = this.room_shape.rx;
-          case 3 -> llx = this.room_shape.urx;
-          case 4 -> ly = this.room_shape.uy;
-          case 5 -> lrx = this.room_shape.ulx;
-          case 6 -> rx = this.room_shape.lx;
-          case 7 -> urx = this.room_shape.llx;
+          case 0 -> uy = this.room_shape.bottomY;
+          case 1 -> ulx = this.room_shape.lowerRightDiagonalX;
+          case 2 -> lx = this.room_shape.rightX;
+          case 3 -> llx = this.room_shape.upperRightDiagonalX;
+          case 4 -> ly = this.room_shape.topY;
+          case 5 -> lrx = this.room_shape.upperLeftDiagonalX;
+          case 6 -> rx = this.room_shape.leftX;
+          case 7 -> urx = this.room_shape.lowerLeftDiagonalX;
           default ->
           {
             FRLogger.warn("SortedOrthoganelRoomNeighbours.calculate_edge_incomplete_rooms_of_obstacle_expansion_room: curr_side_no illegal");
@@ -386,8 +390,12 @@ public class Sorted45DegreeRoomNeighbours
       if (new_rooms.size() == 1)
       {
         // Check, that the area increases to prevent endless loop.
-        IncompleteFreeSpaceExpansionRoom new_room = new_rooms.iterator().next();
-        if (new_room.get_shape().area() > room_area)
+        IncompleteFreeSpaceExpansionRoom new_room = new_rooms
+            .iterator()
+            .next();
+        if (new_room
+            .get_shape()
+            .area() > room_area)
         {
           curr_incomplete_room.set_shape(new_room.get_shape());
           curr_incomplete_room.set_contained_shape(new_room.get_contained_shape());
@@ -435,111 +443,111 @@ public class Sorted45DegreeRoomNeighbours
 
     // insert the new incomplete room from p_prev_neighbour to the next corner of the room shape.
 
-    int lx = board_bounding_oct.lx;
-    int ly = board_bounding_oct.ly;
-    int rx = board_bounding_oct.rx;
-    int uy = board_bounding_oct.uy;
-    int ulx = board_bounding_oct.ulx;
-    int lrx = board_bounding_oct.lrx;
-    int llx = board_bounding_oct.llx;
-    int urx = board_bounding_oct.urx;
+    int lx = board_bounding_oct.leftX;
+    int ly = board_bounding_oct.bottomY;
+    int rx = board_bounding_oct.rightX;
+    int uy = board_bounding_oct.topY;
+    int ulx = board_bounding_oct.upperLeftDiagonalX;
+    int lrx = board_bounding_oct.lowerRightDiagonalX;
+    int llx = board_bounding_oct.lowerLeftDiagonalX;
+    int urx = board_bounding_oct.upperRightDiagonalX;
     switch (from_side_no)
     {
       case 0 ->
       {
-        uy = this.room_shape.ly;
-        ulx = p_prev_neighbour.intersection.lrx;
+        uy = this.room_shape.bottomY;
+        ulx = p_prev_neighbour.intersection.lowerRightDiagonalX;
       }
       case 1 ->
       {
-        ulx = this.room_shape.lrx;
-        lx = p_prev_neighbour.intersection.rx;
+        ulx = this.room_shape.lowerRightDiagonalX;
+        lx = p_prev_neighbour.intersection.rightX;
       }
       case 2 ->
       {
-        lx = this.room_shape.rx;
-        llx = p_prev_neighbour.intersection.urx;
+        lx = this.room_shape.rightX;
+        llx = p_prev_neighbour.intersection.upperRightDiagonalX;
       }
       case 3 ->
       {
-        llx = this.room_shape.urx;
-        ly = p_prev_neighbour.intersection.uy;
+        llx = this.room_shape.upperRightDiagonalX;
+        ly = p_prev_neighbour.intersection.topY;
       }
       case 4 ->
       {
-        ly = this.room_shape.uy;
-        lrx = p_prev_neighbour.intersection.ulx;
+        ly = this.room_shape.topY;
+        lrx = p_prev_neighbour.intersection.upperLeftDiagonalX;
       }
       case 5 ->
       {
-        lrx = this.room_shape.ulx;
-        rx = p_prev_neighbour.intersection.lx;
+        lrx = this.room_shape.upperLeftDiagonalX;
+        rx = p_prev_neighbour.intersection.leftX;
       }
       case 6 ->
       {
-        rx = this.room_shape.lx;
-        urx = p_prev_neighbour.intersection.llx;
+        rx = this.room_shape.leftX;
+        urx = p_prev_neighbour.intersection.lowerLeftDiagonalX;
       }
       case 7 ->
       {
-        urx = this.room_shape.llx;
-        uy = p_prev_neighbour.intersection.ly;
+        urx = this.room_shape.lowerLeftDiagonalX;
+        uy = p_prev_neighbour.intersection.bottomY;
       }
     }
     insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
 
     // insert the new incomplete room from p_prev_neighbour to the next corner of the room shape.
 
-    lx = board_bounding_oct.lx;
-    ly = board_bounding_oct.ly;
-    rx = board_bounding_oct.rx;
-    uy = board_bounding_oct.uy;
-    ulx = board_bounding_oct.ulx;
-    lrx = board_bounding_oct.lrx;
-    llx = board_bounding_oct.llx;
-    urx = board_bounding_oct.urx;
+    lx = board_bounding_oct.leftX;
+    ly = board_bounding_oct.bottomY;
+    rx = board_bounding_oct.rightX;
+    uy = board_bounding_oct.topY;
+    ulx = board_bounding_oct.upperLeftDiagonalX;
+    lrx = board_bounding_oct.lowerRightDiagonalX;
+    llx = board_bounding_oct.lowerLeftDiagonalX;
+    urx = board_bounding_oct.upperRightDiagonalX;
 
     switch (to_side_no)
     {
       case 0 ->
       {
-        uy = this.room_shape.ly;
-        urx = p_next_neighbour.intersection.llx;
+        uy = this.room_shape.bottomY;
+        urx = p_next_neighbour.intersection.lowerLeftDiagonalX;
       }
       case 1 ->
       {
-        ulx = this.room_shape.lrx;
-        uy = p_next_neighbour.intersection.ly;
+        ulx = this.room_shape.lowerRightDiagonalX;
+        uy = p_next_neighbour.intersection.bottomY;
       }
       case 2 ->
       {
-        lx = this.room_shape.rx;
-        ulx = p_next_neighbour.intersection.lrx;
+        lx = this.room_shape.rightX;
+        ulx = p_next_neighbour.intersection.lowerRightDiagonalX;
       }
       case 3 ->
       {
-        llx = this.room_shape.urx;
-        lx = p_next_neighbour.intersection.rx;
+        llx = this.room_shape.upperRightDiagonalX;
+        lx = p_next_neighbour.intersection.rightX;
       }
       case 4 ->
       {
-        ly = this.room_shape.uy;
-        llx = p_next_neighbour.intersection.urx;
+        ly = this.room_shape.topY;
+        llx = p_next_neighbour.intersection.upperRightDiagonalX;
       }
       case 5 ->
       {
-        lrx = this.room_shape.ulx;
-        ly = p_next_neighbour.intersection.uy;
+        lrx = this.room_shape.upperLeftDiagonalX;
+        ly = p_next_neighbour.intersection.topY;
       }
       case 6 ->
       {
-        rx = this.room_shape.lx;
-        lrx = p_next_neighbour.intersection.ulx;
+        rx = this.room_shape.leftX;
+        lrx = p_next_neighbour.intersection.upperLeftDiagonalX;
       }
       case 7 ->
       {
-        urx = this.room_shape.llx;
-        rx = p_next_neighbour.intersection.lx;
+        urx = this.room_shape.lowerLeftDiagonalX;
+        rx = p_next_neighbour.intersection.leftX;
       }
     }
     insert_incomplete_room(p_autoroute_engine, lx, ly, rx, uy, ulx, lrx, llx, urx);
@@ -614,183 +622,183 @@ public class Sorted45DegreeRoomNeighbours
         }
         else
         {
-          int lx = board_bounding_oct.lx;
-          int ly = board_bounding_oct.ly;
-          int rx = board_bounding_oct.rx;
-          int uy = board_bounding_oct.uy;
-          int ulx = board_bounding_oct.ulx;
-          int lrx = board_bounding_oct.lrx;
-          int llx = board_bounding_oct.llx;
-          int urx = board_bounding_oct.urx;
+          int lx = board_bounding_oct.leftX;
+          int ly = board_bounding_oct.bottomY;
+          int rx = board_bounding_oct.rightX;
+          int uy = board_bounding_oct.topY;
+          int ulx = board_bounding_oct.upperLeftDiagonalX;
+          int lrx = board_bounding_oct.lowerRightDiagonalX;
+          int llx = board_bounding_oct.lowerLeftDiagonalX;
+          int urx = board_bounding_oct.upperRightDiagonalX;
 
           switch (next_neighbour.first_touching_side)
           {
             case 0 ->
             {
-              if (prev_neighbour.intersection.llx < next_neighbour.intersection.llx)
+              if (prev_neighbour.intersection.lowerLeftDiagonalX < next_neighbour.intersection.lowerLeftDiagonalX)
               {
-                urx = next_neighbour.intersection.llx;
-                uy = prev_neighbour.intersection.ly;
+                urx = next_neighbour.intersection.lowerLeftDiagonalX;
+                uy = prev_neighbour.intersection.bottomY;
                 if (prev_neighbour.last_touching_side == 0)
                 {
-                  ulx = prev_neighbour.intersection.lrx;
+                  ulx = prev_neighbour.intersection.lowerRightDiagonalX;
                 }
               }
-              else if (prev_neighbour.intersection.llx > next_neighbour.intersection.llx)
+              else if (prev_neighbour.intersection.lowerLeftDiagonalX > next_neighbour.intersection.lowerLeftDiagonalX)
               {
-                rx = next_neighbour.intersection.lx;
-                urx = prev_neighbour.intersection.llx;
+                rx = next_neighbour.intersection.leftX;
+                urx = prev_neighbour.intersection.lowerLeftDiagonalX;
               }
               else // prev_neighbour.intersection.llx == next_neighbour.intersection.llx
               {
-                urx = next_neighbour.intersection.llx;
+                urx = next_neighbour.intersection.lowerLeftDiagonalX;
               }
             }
             case 1 ->
             {
-              if (prev_neighbour.intersection.ly < next_neighbour.intersection.ly)
+              if (prev_neighbour.intersection.bottomY < next_neighbour.intersection.bottomY)
               {
-                uy = next_neighbour.intersection.ly;
-                ulx = prev_neighbour.intersection.lrx;
+                uy = next_neighbour.intersection.bottomY;
+                ulx = prev_neighbour.intersection.lowerRightDiagonalX;
                 if (prev_neighbour.last_touching_side == 1)
                 {
-                  lx = prev_neighbour.intersection.rx;
+                  lx = prev_neighbour.intersection.rightX;
                 }
               }
-              else if (prev_neighbour.intersection.ly > next_neighbour.intersection.ly)
+              else if (prev_neighbour.intersection.bottomY > next_neighbour.intersection.bottomY)
               {
-                uy = prev_neighbour.intersection.ly;
-                urx = next_neighbour.intersection.llx;
+                uy = prev_neighbour.intersection.bottomY;
+                urx = next_neighbour.intersection.lowerLeftDiagonalX;
               }
               else // prev_neighbour.intersection.ly == next_neighbour.intersection.ly
               {
-                uy = next_neighbour.intersection.ly;
+                uy = next_neighbour.intersection.bottomY;
               }
             }
             case 2 ->
             {
-              if (prev_neighbour.intersection.lrx > next_neighbour.intersection.lrx)
+              if (prev_neighbour.intersection.lowerRightDiagonalX > next_neighbour.intersection.lowerRightDiagonalX)
               {
-                ulx = next_neighbour.intersection.lrx;
-                lx = prev_neighbour.intersection.rx;
+                ulx = next_neighbour.intersection.lowerRightDiagonalX;
+                lx = prev_neighbour.intersection.rightX;
                 if (prev_neighbour.last_touching_side == 2)
                 {
-                  llx = prev_neighbour.intersection.urx;
+                  llx = prev_neighbour.intersection.upperRightDiagonalX;
                 }
               }
-              else if (prev_neighbour.intersection.lrx < next_neighbour.intersection.lrx)
+              else if (prev_neighbour.intersection.lowerRightDiagonalX < next_neighbour.intersection.lowerRightDiagonalX)
               {
-                uy = next_neighbour.intersection.ly;
-                ulx = prev_neighbour.intersection.lrx;
+                uy = next_neighbour.intersection.bottomY;
+                ulx = prev_neighbour.intersection.lowerRightDiagonalX;
               }
               else // prev_neighbour.intersection.lrx == next_neighbour.intersection.lrx
               {
-                ulx = next_neighbour.intersection.lrx;
+                ulx = next_neighbour.intersection.lowerRightDiagonalX;
               }
             }
             case 3 ->
             {
-              if (prev_neighbour.intersection.rx > next_neighbour.intersection.rx)
+              if (prev_neighbour.intersection.rightX > next_neighbour.intersection.rightX)
               {
-                lx = next_neighbour.intersection.rx;
-                llx = prev_neighbour.intersection.urx;
+                lx = next_neighbour.intersection.rightX;
+                llx = prev_neighbour.intersection.upperRightDiagonalX;
                 if (prev_neighbour.last_touching_side == 3)
                 {
-                  ly = prev_neighbour.intersection.uy;
+                  ly = prev_neighbour.intersection.topY;
                 }
               }
-              else if (prev_neighbour.intersection.rx < next_neighbour.intersection.rx)
+              else if (prev_neighbour.intersection.rightX < next_neighbour.intersection.rightX)
               {
-                lx = prev_neighbour.intersection.rx;
-                ulx = next_neighbour.intersection.lrx;
+                lx = prev_neighbour.intersection.rightX;
+                ulx = next_neighbour.intersection.lowerRightDiagonalX;
               }
               else // prev_neighbour.intersection.ry == next_neighbour.intersection.ry
               {
-                lx = next_neighbour.intersection.rx;
+                lx = next_neighbour.intersection.rightX;
               }
             }
             case 4 ->
             {
-              if (prev_neighbour.intersection.urx > next_neighbour.intersection.urx)
+              if (prev_neighbour.intersection.upperRightDiagonalX > next_neighbour.intersection.upperRightDiagonalX)
               {
-                llx = next_neighbour.intersection.urx;
-                ly = prev_neighbour.intersection.uy;
+                llx = next_neighbour.intersection.upperRightDiagonalX;
+                ly = prev_neighbour.intersection.topY;
                 if (prev_neighbour.last_touching_side == 4)
                 {
-                  lrx = prev_neighbour.intersection.ulx;
+                  lrx = prev_neighbour.intersection.upperLeftDiagonalX;
                 }
               }
-              else if (prev_neighbour.intersection.urx < next_neighbour.intersection.urx)
+              else if (prev_neighbour.intersection.upperRightDiagonalX < next_neighbour.intersection.upperRightDiagonalX)
               {
-                lx = next_neighbour.intersection.rx;
-                llx = prev_neighbour.intersection.urx;
+                lx = next_neighbour.intersection.rightX;
+                llx = prev_neighbour.intersection.upperRightDiagonalX;
               }
               else // prev_neighbour.intersection.urx == next_neighbour.intersection.urx
               {
-                llx = next_neighbour.intersection.urx;
+                llx = next_neighbour.intersection.upperRightDiagonalX;
               }
             }
             case 5 ->
             {
-              if (prev_neighbour.intersection.uy > next_neighbour.intersection.uy)
+              if (prev_neighbour.intersection.topY > next_neighbour.intersection.topY)
               {
-                ly = next_neighbour.intersection.uy;
-                lrx = prev_neighbour.intersection.ulx;
+                ly = next_neighbour.intersection.topY;
+                lrx = prev_neighbour.intersection.upperLeftDiagonalX;
                 if (prev_neighbour.last_touching_side == 5)
                 {
-                  rx = prev_neighbour.intersection.lx;
+                  rx = prev_neighbour.intersection.leftX;
                 }
               }
-              else if (prev_neighbour.intersection.uy < next_neighbour.intersection.uy)
+              else if (prev_neighbour.intersection.topY < next_neighbour.intersection.topY)
               {
-                ly = prev_neighbour.intersection.uy;
-                llx = next_neighbour.intersection.urx;
+                ly = prev_neighbour.intersection.topY;
+                llx = next_neighbour.intersection.upperRightDiagonalX;
               }
               else // prev_neighbour.intersection.uy == next_neighbour.intersection.uy
               {
-                ly = next_neighbour.intersection.uy;
+                ly = next_neighbour.intersection.topY;
               }
             }
             case 6 ->
             {
-              if (prev_neighbour.intersection.ulx < next_neighbour.intersection.ulx)
+              if (prev_neighbour.intersection.upperLeftDiagonalX < next_neighbour.intersection.upperLeftDiagonalX)
               {
-                lrx = next_neighbour.intersection.ulx;
-                rx = prev_neighbour.intersection.lx;
+                lrx = next_neighbour.intersection.upperLeftDiagonalX;
+                rx = prev_neighbour.intersection.leftX;
                 if (prev_neighbour.last_touching_side == 6)
                 {
-                  urx = prev_neighbour.intersection.llx;
+                  urx = prev_neighbour.intersection.lowerLeftDiagonalX;
                 }
               }
-              else if (prev_neighbour.intersection.ulx > next_neighbour.intersection.ulx)
+              else if (prev_neighbour.intersection.upperLeftDiagonalX > next_neighbour.intersection.upperLeftDiagonalX)
               {
-                ly = next_neighbour.intersection.uy;
-                lrx = prev_neighbour.intersection.ulx;
+                ly = next_neighbour.intersection.topY;
+                lrx = prev_neighbour.intersection.upperLeftDiagonalX;
               }
               else // prev_neighbour.intersection.ulx == next_neighbour.intersection.ulx
               {
-                lrx = next_neighbour.intersection.ulx;
+                lrx = next_neighbour.intersection.upperLeftDiagonalX;
               }
             }
             case 7 ->
             {
-              if (prev_neighbour.intersection.lx < next_neighbour.intersection.lx)
+              if (prev_neighbour.intersection.leftX < next_neighbour.intersection.leftX)
               {
-                rx = next_neighbour.intersection.lx;
-                urx = prev_neighbour.intersection.llx;
+                rx = next_neighbour.intersection.leftX;
+                urx = prev_neighbour.intersection.lowerLeftDiagonalX;
                 if (prev_neighbour.last_touching_side == 7)
                 {
-                  uy = prev_neighbour.intersection.ly;
+                  uy = prev_neighbour.intersection.bottomY;
                 }
               }
-              else if (prev_neighbour.intersection.lx > next_neighbour.intersection.lx)
+              else if (prev_neighbour.intersection.leftX > next_neighbour.intersection.leftX)
               {
-                rx = prev_neighbour.intersection.lx;
-                lrx = next_neighbour.intersection.ulx;
+                rx = prev_neighbour.intersection.leftX;
+                lrx = next_neighbour.intersection.upperLeftDiagonalX;
               }
               else // prev_neighbour.intersection.lx == next_neighbour.intersection.lx
               {
-                rx = next_neighbour.intersection.lx;
+                rx = next_neighbour.intersection.leftX;
               }
             }
             default -> FRLogger.warn("Sorted45DegreeRoomNeighbour.calculate_new_incomplete: illegal touching side");
@@ -836,35 +844,35 @@ public class Sorted45DegreeRoomNeighbours
       shape = p_neighbour_shape;
       intersection = p_intersection;
 
-      if (intersection.ly == room_shape.ly && intersection.llx > room_shape.llx)
+      if (intersection.bottomY == room_shape.bottomY && intersection.lowerLeftDiagonalX > room_shape.lowerLeftDiagonalX)
       {
         this.first_touching_side = 0;
       }
-      else if (intersection.lrx == room_shape.lrx && intersection.ly > room_shape.ly)
+      else if (intersection.lowerRightDiagonalX == room_shape.lowerRightDiagonalX && intersection.bottomY > room_shape.bottomY)
       {
         this.first_touching_side = 1;
       }
-      else if (intersection.rx == room_shape.rx && intersection.lrx < room_shape.lrx)
+      else if (intersection.rightX == room_shape.rightX && intersection.lowerRightDiagonalX < room_shape.lowerRightDiagonalX)
       {
         this.first_touching_side = 2;
       }
-      else if (intersection.urx == room_shape.urx && intersection.rx < room_shape.rx)
+      else if (intersection.upperRightDiagonalX == room_shape.upperRightDiagonalX && intersection.rightX < room_shape.rightX)
       {
         this.first_touching_side = 3;
       }
-      else if (intersection.uy == room_shape.uy && intersection.urx < room_shape.urx)
+      else if (intersection.topY == room_shape.topY && intersection.upperRightDiagonalX < room_shape.upperRightDiagonalX)
       {
         this.first_touching_side = 4;
       }
-      else if (intersection.ulx == room_shape.ulx && intersection.uy < room_shape.uy)
+      else if (intersection.upperLeftDiagonalX == room_shape.upperLeftDiagonalX && intersection.topY < room_shape.topY)
       {
         this.first_touching_side = 5;
       }
-      else if (intersection.lx == room_shape.lx && intersection.ulx > room_shape.ulx)
+      else if (intersection.leftX == room_shape.leftX && intersection.upperLeftDiagonalX > room_shape.upperLeftDiagonalX)
       {
         this.first_touching_side = 6;
       }
-      else if (intersection.llx == room_shape.llx && intersection.lx > room_shape.lx)
+      else if (intersection.lowerLeftDiagonalX == room_shape.lowerLeftDiagonalX && intersection.leftX > room_shape.leftX)
       {
         this.first_touching_side = 7;
       }
@@ -876,35 +884,35 @@ public class Sorted45DegreeRoomNeighbours
         return;
       }
 
-      if (intersection.llx == room_shape.llx && intersection.ly > room_shape.ly)
+      if (intersection.lowerLeftDiagonalX == room_shape.lowerLeftDiagonalX && intersection.bottomY > room_shape.bottomY)
       {
         this.last_touching_side = 7;
       }
-      else if (intersection.lx == room_shape.lx && intersection.llx > room_shape.llx)
+      else if (intersection.leftX == room_shape.leftX && intersection.lowerLeftDiagonalX > room_shape.lowerLeftDiagonalX)
       {
         this.last_touching_side = 6;
       }
-      else if (intersection.ulx == room_shape.ulx && intersection.lx > room_shape.lx)
+      else if (intersection.upperLeftDiagonalX == room_shape.upperLeftDiagonalX && intersection.leftX > room_shape.leftX)
       {
         this.last_touching_side = 5;
       }
-      else if (intersection.uy == room_shape.uy && intersection.ulx > room_shape.ulx)
+      else if (intersection.topY == room_shape.topY && intersection.upperLeftDiagonalX > room_shape.upperLeftDiagonalX)
       {
         this.last_touching_side = 4;
       }
-      else if (intersection.urx == room_shape.urx && intersection.uy < room_shape.uy)
+      else if (intersection.upperRightDiagonalX == room_shape.upperRightDiagonalX && intersection.topY < room_shape.topY)
       {
         this.last_touching_side = 3;
       }
-      else if (intersection.rx == room_shape.rx && intersection.urx < room_shape.urx)
+      else if (intersection.rightX == room_shape.rightX && intersection.upperRightDiagonalX < room_shape.upperRightDiagonalX)
       {
         this.last_touching_side = 2;
       }
-      else if (intersection.lrx == room_shape.lrx && intersection.rx < room_shape.rx)
+      else if (intersection.lowerRightDiagonalX == room_shape.lowerRightDiagonalX && intersection.rightX < room_shape.rightX)
       {
         this.last_touching_side = 1;
       }
-      else if (intersection.ly == room_shape.ly && intersection.lrx < room_shape.lrx)
+      else if (intersection.bottomY == room_shape.bottomY && intersection.lowerRightDiagonalX < room_shape.lowerRightDiagonalX)
       {
         this.last_touching_side = 0;
       }
@@ -925,14 +933,18 @@ public class Sorted45DegreeRoomNeighbours
           boolean touch_only_at_corner = false;
           if (curr_side_no == this.first_touching_side)
           {
-            if (intersection.corner(curr_side_no).equals(room_shape.corner(next_side_no)))
+            if (intersection
+                .corner(curr_side_no)
+                .equals(room_shape.corner(next_side_no)))
             {
               touch_only_at_corner = true;
             }
           }
           if (curr_side_no == this.last_touching_side)
           {
-            if (intersection.corner(next_side_no).equals(room_shape.corner(curr_side_no)))
+            if (intersection
+                .corner(next_side_no)
+                .equals(room_shape.corner(curr_side_no)))
             {
               touch_only_at_corner = true;
             }

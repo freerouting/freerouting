@@ -1,9 +1,7 @@
 package app.freerouting.board;
 
-import app.freerouting.autoroute.AutorouteControl;
+import app.freerouting.autoroute.*;
 import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
-import app.freerouting.autoroute.AutorouteEngine;
-import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
@@ -865,13 +863,13 @@ public class RoutingBoard extends BasicBoard implements Serializable
 
   /**
    * Routes automatically p_item to another item of the same net, to which it is not yet
-   * electrically connected. Returns an enum of type AutorouteEngine.AutorouteResult
+   * electrically connected. Returns an enum of type AutorouteAttemptState
    */
-  public AutorouteEngine.AutorouteResult autoroute(Item p_item, RouterSettings routerSettings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+  public AutorouteAttemptResult autoroute(Item p_item, RouterSettings routerSettings, int p_via_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
   {
     if (!(p_item instanceof Connectable) || p_item.net_count() == 0)
     {
-      return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
+      return new AutorouteAttemptResult(AutorouteAttemptState.NO_CONNECTIONS, "The item '" + p_item + "' is not connectable.");
     }
     if (p_item.net_count() > 1)
     {
@@ -888,19 +886,19 @@ public class RoutingBoard extends BasicBoard implements Serializable
       {
         if (curr_item instanceof ConductionArea)
         {
-          return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // already connected to plane
+          return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE, "The item '" + curr_item + "' is connected to a plane.");
         }
       }
     }
     Set<Item> route_dest_set = p_item.get_unconnected_set(route_net_no);
     if (route_dest_set.isEmpty())
     {
-      return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED; // p_item is already routed.
+      return new AutorouteAttemptResult(AutorouteAttemptState.ALREADY_CONNECTED, "The item '" + p_item + "' is already connected.");
     }
     SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine = init_autoroute(p_item.get_net_no(0), ctrl_settings.trace_clearance_class_no, p_stoppable_thread, p_time_limit, false);
-    AutorouteEngine.AutorouteResult result = curr_autoroute_engine.autoroute_connection(route_start_set, route_dest_set, ctrl_settings, ripped_item_list);
-    if (result == AutorouteEngine.AutorouteResult.ROUTED)
+    AutorouteAttemptResult result = curr_autoroute_engine.autoroute_connection(route_start_set, route_dest_set, ctrl_settings, ripped_item_list);
+    if (result.state == AutorouteAttemptState.ROUTED)
     {
       final int time_limit_to_prevent_endless_loop = 1000;
       opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, p_stoppable_thread, time_limit_to_prevent_endless_loop);
@@ -913,11 +911,11 @@ public class RoutingBoard extends BasicBoard implements Serializable
    * only 1 layer. Ripup is allowed if p_ripup_costs is {@literal >}= 0. Returns an enum of type
    * AutorouteEngine.AutorouteResult
    */
-  public AutorouteEngine.AutorouteResult fanout(Pin p_pin, RouterSettings routerSettings, int p_ripup_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
+  public AutorouteAttemptResult fanout(Pin p_pin, RouterSettings routerSettings, int p_ripup_costs, Stoppable p_stoppable_thread, TimeLimit p_time_limit)
   {
     if (p_pin.first_layer() != p_pin.last_layer() || p_pin.net_count() != 1)
     {
-      return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
+      return new AutorouteAttemptResult(AutorouteAttemptState.ALREADY_CONNECTED, "The pin '" + p_pin + "' is already connected.");
     }
     int pin_net_no = p_pin.get_net_no(0);
     int pin_layer = p_pin.first_layer();
@@ -926,13 +924,13 @@ public class RoutingBoard extends BasicBoard implements Serializable
     {
       if (curr_item.first_layer() != pin_layer || curr_item.last_layer() != pin_layer)
       {
-        return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
+        return new AutorouteAttemptResult(AutorouteAttemptState.ALREADY_CONNECTED, "The pin '" + p_pin + "' is already connected.");
       }
     }
     Set<Item> unconnected_set = p_pin.get_unconnected_set(pin_net_no);
     if (unconnected_set.isEmpty())
     {
-      return AutorouteEngine.AutorouteResult.ALREADY_CONNECTED;
+      return new AutorouteAttemptResult(AutorouteAttemptState.NO_UNCONNECTED_NETS, "The pin '" + p_pin + "' is already connected.");
     }
     AutorouteControl ctrl_settings = new AutorouteControl(this, pin_net_no, routerSettings);
     ctrl_settings.is_fanout = true;
@@ -944,8 +942,8 @@ public class RoutingBoard extends BasicBoard implements Serializable
     }
     SortedSet<Item> ripped_item_list = new TreeSet<>();
     AutorouteEngine curr_autoroute_engine = init_autoroute(pin_net_no, ctrl_settings.trace_clearance_class_no, p_stoppable_thread, p_time_limit, false);
-    AutorouteEngine.AutorouteResult result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set, ctrl_settings, ripped_item_list);
-    if (result == AutorouteEngine.AutorouteResult.ROUTED)
+    AutorouteAttemptResult result = curr_autoroute_engine.autoroute_connection(pin_connected_set, unconnected_set, ctrl_settings, ripped_item_list);
+    if (result.state == AutorouteAttemptState.ROUTED)
     {
       final int time_limit_to_prevent_endless_loop = 1000;
       opt_changed_area(new int[0], null, routerSettings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, p_stoppable_thread, time_limit_to_prevent_endless_loop);

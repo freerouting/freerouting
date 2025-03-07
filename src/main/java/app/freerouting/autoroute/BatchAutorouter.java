@@ -345,12 +345,12 @@ public class BatchAutorouter extends NamedAlgorithm
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
-          if (autorouterResult == AutorouteItemResult.ROUTED)
+          if (autorouterResult.state == AutorouteAttemptState.ROUTED)
           {
             // The item was successfully routed
             ++routed;
           }
-          else if ((autorouterResult == AutorouteItemResult.ALREADY_CONNECTED) || (autorouterResult == AutorouteItemResult.NO_UNCONNECTED_NETS) || (autorouterResult == AutorouteItemResult.CONNECTED_TO_PLANE))
+          else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED) || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS) || (autorouterResult.state == AutorouteAttemptState.CONNECTED_TO_PLANE))
           {
             // The item doesn't need to be routed
             ++skipped;
@@ -402,7 +402,7 @@ public class BatchAutorouter extends NamedAlgorithm
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is routed.
-  private AutorouteItemResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no)
+  private AutorouteAttemptResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no)
   {
     try
     {
@@ -436,7 +436,7 @@ public class BatchAutorouter extends NamedAlgorithm
       Set<Item> unconnected_set = p_item.get_unconnected_set(p_route_net_no);
       if (unconnected_set.isEmpty())
       {
-        return AutorouteItemResult.NO_UNCONNECTED_NETS; // p_item is already routed.
+        return new AutorouteAttemptResult(AutorouteAttemptState.NO_UNCONNECTED_NETS);
       }
 
       Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);
@@ -448,7 +448,7 @@ public class BatchAutorouter extends NamedAlgorithm
         {
           if (curr_item instanceof ConductionArea)
           {
-            return AutorouteItemResult.CONNECTED_TO_PLANE; // already connected to plane
+            return new AutorouteAttemptResult(AutorouteAttemptState.CONNECTED_TO_PLANE);
           }
         }
       }
@@ -475,31 +475,19 @@ public class BatchAutorouter extends NamedAlgorithm
       AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no, autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
 
       // Do the auto-routing between the two sets of items
-      AutorouteEngine.AutorouteResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set, autoroute_control, p_ripped_item_list);
+      AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set, autoroute_control, p_ripped_item_list);
 
       // Update the changed area of the board
-      if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED)
+      if (autoroute_result.state == AutorouteAttemptState.ROUTED)
       {
         board.opt_changed_area(new int[0], null, this.trace_pull_tight_accuracy, autoroute_control.trace_costs, this.thread, TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
       }
 
-      // Return true, if the item is routed
-      if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED)
-      {
-        return AutorouteItemResult.ROUTED;
-      }
-      else if (autoroute_result == AutorouteEngine.AutorouteResult.ALREADY_CONNECTED)
-      {
-        return AutorouteItemResult.ALREADY_CONNECTED;
-      }
-      else
-      {
-        return AutorouteItemResult.UNKNOWN;
-      }
+      return autoroute_result;
     } catch (Exception e)
     {
       job.logError("Error during autoroute_item", e);
-      return AutorouteItemResult.FAILED;
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
     }
   }
 
@@ -789,15 +777,5 @@ public class BatchAutorouter extends NamedAlgorithm
     }
 
     return result;
-  }
-
-  public enum AutorouteItemResult
-  {
-    UNKNOWN,              // Unknown result
-    NO_UNCONNECTED_NETS,  // Item has no unconnected nets
-    CONNECTED_TO_PLANE,   // Item is connected to a conduction plane
-    ALREADY_CONNECTED,    // Item is already connected
-    ROUTED,               // Item was successfully routed
-    FAILED                // Routing failed
   }
 }

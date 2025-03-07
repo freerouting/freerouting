@@ -6,9 +6,9 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.ClearanceMatrix;
@@ -1517,6 +1517,24 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     }
 
     return false;
+  }
+
+  @Override
+  public String toString()
+  {
+    StringBuilder simpleName = new StringBuilder();
+
+    simpleName.append(this
+        .getClass()
+        .getSimpleName());
+
+    if (component_no > 0)
+    {
+      simpleName.append(" of component #");
+      simpleName.append(component_no);
+    }
+
+    return simpleName.toString();
   }
 
   /**

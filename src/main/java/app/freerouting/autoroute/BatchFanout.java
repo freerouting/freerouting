@@ -83,14 +83,14 @@ public class BatchFanout extends NamedAlgorithm
         double max_milliseconds = 10000 * (p_pass_no + 1);
         TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
         this.board.start_marking_changed_area();
-        AutorouteEngine.AutorouteResult curr_result = this.board.fanout(curr_pin.board_pin, settings, ripup_costs, this.thread, time_limit);
-        switch (curr_result)
+        AutorouteAttemptResult curr_result = this.board.fanout(curr_pin.board_pin, settings, ripup_costs, this.thread, time_limit);
+        switch (curr_result.state)
         {
           case ROUTED -> ++routed_count;
-          case NOT_ROUTED -> ++not_routed_count;
+          case SKIPPED -> ++not_routed_count;
           case INSERT_ERROR -> ++insert_error_count;
         }
-        if (curr_result != AutorouteEngine.AutorouteResult.NOT_ROUTED)
+        if (curr_result.state == AutorouteAttemptState.ROUTED)
         {
           fireBoardUpdatedEvent(this.board.get_statistics(), null, this.board);
         }

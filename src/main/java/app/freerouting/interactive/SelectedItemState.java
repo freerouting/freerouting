@@ -1,8 +1,9 @@
 package app.freerouting.interactive;
 
-import app.freerouting.autoroute.AutorouteEngine;
-import app.freerouting.board.Component;
+import app.freerouting.autoroute.AutorouteAttemptResult;
+import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.board.*;
+import app.freerouting.board.Component;
 import app.freerouting.core.Package;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -106,7 +107,9 @@ public class SelectedItemState extends InteractiveState
   {
     for (Item curr_ob : item_list)
     {
-      if (curr_ob.get_fixed_state().ordinal() < FixedState.USER_FIXED.ordinal())
+      if (curr_ob
+          .get_fixed_state()
+          .ordinal() < FixedState.USER_FIXED.ordinal())
       {
         curr_ob.set_fixed_state(FixedState.USER_FIXED);
       }
@@ -195,7 +198,9 @@ public class SelectedItemState extends InteractiveState
       Item curr_ob = it.next();
       if (curr_ob instanceof Via)
       {
-        FloatPoint curr_center = ((DrillItem) curr_ob).get_center().to_float();
+        FloatPoint curr_center = ((DrillItem) curr_ob)
+            .get_center()
+            .to_float();
         gravity_x += curr_center.x;
         gravity_y += curr_center.y;
         ++pin_count;
@@ -219,7 +224,9 @@ public class SelectedItemState extends InteractiveState
     for (int i = 0; i < pin_arr.length; ++i)
     {
       Via curr_via = (Via) it.next();
-      Vector rel_coor = curr_via.get_center().difference_by(gravity_point);
+      Vector rel_coor = curr_via
+          .get_center()
+          .difference_by(gravity_point);
       String pin_name = String.valueOf(i + 1);
       pin_arr[i] = new Package.Pin(pin_name, curr_via.get_padstack().no, rel_coor, 0);
     }
@@ -250,7 +257,9 @@ public class SelectedItemState extends InteractiveState
    */
   public InteractiveState delete_items()
   {
-    hdlg.get_routing_board().generate_snapshot();
+    hdlg
+        .get_routing_board()
+        .generate_snapshot();
 
     // calculate the changed nets for updating the ratsnest
     Set<Integer> changed_nets = new TreeSet<>();
@@ -268,11 +277,15 @@ public class SelectedItemState extends InteractiveState
     boolean all_items_removed;
     if (hdlg.settings.push_enabled)
     {
-      all_items_removed = hdlg.get_routing_board().remove_items_and_pull_tight(item_list, hdlg.settings.trace_pull_tight_region_width, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
+      all_items_removed = hdlg
+          .get_routing_board()
+          .remove_items_and_pull_tight(item_list, hdlg.settings.trace_pull_tight_region_width, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy);
     }
     else
     {
-      all_items_removed = hdlg.get_routing_board().remove_items(item_list);
+      all_items_removed = hdlg
+          .get_routing_board()
+          .remove_items(item_list);
     }
     if (!all_items_removed)
     {
@@ -322,7 +335,9 @@ public class SelectedItemState extends InteractiveState
       {
         for (int i = 0; i < curr_item.net_count(); ++i)
         {
-          if (!curr_item.get_unconnected_set(curr_item.get_net_no(i)).isEmpty())
+          if (!curr_item
+              .get_unconnected_set(curr_item.get_net_no(i))
+              .isEmpty())
           {
             autoroute_item_list.add(curr_item);
           }
@@ -333,10 +348,14 @@ public class SelectedItemState extends InteractiveState
     hdlg.screen_messages.set_interactive_autoroute_info(found_count, not_found_count, items_to_go_count);
     // Empty this.item_list to avoid displaying the selected items.
     this.item_list = new TreeSet<>();
-    boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
+    boolean ratsnest_hidden_before = hdlg
+        .get_ratsnest()
+        .is_hidden();
     if (!ratsnest_hidden_before)
     {
-      hdlg.get_ratsnest().hide();
+      hdlg
+          .get_ratsnest()
+          .hide();
     }
     for (Item curr_item : autoroute_item_list)
     {
@@ -364,14 +383,18 @@ public class SelectedItemState extends InteractiveState
       {
         via_costs = hdlg.settings.autoroute_settings.get_via_costs();
       }
-      hdlg.get_routing_board().start_marking_changed_area();
-      AutorouteEngine.AutorouteResult autoroute_result = hdlg.get_routing_board().autoroute(curr_item, hdlg.settings.autoroute_settings, via_costs, p_stoppable_thread, null);
-      if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED)
+      hdlg
+          .get_routing_board()
+          .start_marking_changed_area();
+      AutorouteAttemptResult autoroute_result = hdlg
+          .get_routing_board()
+          .autoroute(curr_item, hdlg.settings.autoroute_settings, via_costs, p_stoppable_thread, null);
+      if (autoroute_result.state == AutorouteAttemptState.ROUTED)
       {
         ++found_count;
         hdlg.repaint();
       }
-      else if (autoroute_result != AutorouteEngine.AutorouteResult.ALREADY_CONNECTED)
+      else if (autoroute_result.state != AutorouteAttemptState.ALREADY_CONNECTED)
       {
         ++not_found_count;
       }
@@ -401,7 +424,9 @@ public class SelectedItemState extends InteractiveState
     hdlg.update_ratsnest();
     if (!ratsnest_hidden_before)
     {
-      hdlg.get_ratsnest().show();
+      hdlg
+          .get_ratsnest()
+          .show();
     }
     return this.return_state;
   }
@@ -435,10 +460,14 @@ public class SelectedItemState extends InteractiveState
     hdlg.screen_messages.set_interactive_autoroute_info(found_count, not_found_count, items_to_go_count);
     // Empty this.item_list to avoid displaying the selected items.
     this.item_list = new TreeSet<>();
-    boolean ratsnest_hidden_before = hdlg.get_ratsnest().is_hidden();
+    boolean ratsnest_hidden_before = hdlg
+        .get_ratsnest()
+        .is_hidden();
     if (!ratsnest_hidden_before)
     {
-      hdlg.get_ratsnest().hide();
+      hdlg
+          .get_ratsnest()
+          .hide();
     }
     for (Pin curr_pin : fanout_list)
     {
@@ -447,14 +476,18 @@ public class SelectedItemState extends InteractiveState
         interrupted = true;
         break;
       }
-      hdlg.get_routing_board().start_marking_changed_area();
-      AutorouteEngine.AutorouteResult autoroute_result = hdlg.get_routing_board().fanout(curr_pin, hdlg.settings.autoroute_settings, -1, p_stoppable_thread, null);
-      if (autoroute_result == AutorouteEngine.AutorouteResult.ROUTED)
+      hdlg
+          .get_routing_board()
+          .start_marking_changed_area();
+      AutorouteAttemptResult autoroute_result = hdlg
+          .get_routing_board()
+          .fanout(curr_pin, hdlg.settings.autoroute_settings, -1, p_stoppable_thread, null);
+      if (autoroute_result.state == AutorouteAttemptState.ROUTED)
       {
         ++found_count;
         hdlg.repaint();
       }
-      else if (autoroute_result != AutorouteEngine.AutorouteResult.ALREADY_CONNECTED)
+      else if (autoroute_result.state != AutorouteAttemptState.ALREADY_CONNECTED)
       {
         ++not_found_count;
       }
@@ -485,7 +518,9 @@ public class SelectedItemState extends InteractiveState
     hdlg.update_ratsnest();
     if (!ratsnest_hidden_before)
     {
-      hdlg.get_ratsnest().show();
+      hdlg
+          .get_ratsnest()
+          .show();
     }
     return this.return_state;
   }
@@ -503,7 +538,9 @@ public class SelectedItemState extends InteractiveState
       String start_message = tm.getText("pull_tight") + " " + tm.getText("stop_message");
       hdlg.screen_messages.set_status_message(start_message);
     }
-    hdlg.get_routing_board().start_marking_changed_area();
+    hdlg
+        .get_routing_board()
+        .start_marking_changed_area();
     boolean interrupted = false;
     for (Item curr_item : item_list)
     {
@@ -533,7 +570,9 @@ public class SelectedItemState extends InteractiveState
 
     if (hdlg.settings.push_enabled && !interrupted)
     {
-      hdlg.get_routing_board().opt_changed_area(new int[0], null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, null, p_stoppable_thread, 0);
+      hdlg
+          .get_routing_board()
+          .opt_changed_area(new int[0], null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, null, p_stoppable_thread, 0);
     }
 
     if (p_stoppable_thread != null)
@@ -607,7 +646,9 @@ public class SelectedItemState extends InteractiveState
     Set<Item> new_selected_items = new TreeSet<>();
     for (int curr_net_no : curr_net_no_set)
     {
-      new_selected_items.addAll(hdlg.get_routing_board().get_connectable_items(curr_net_no));
+      new_selected_items.addAll(hdlg
+          .get_routing_board()
+          .get_connectable_items(curr_net_no));
     }
     this.item_list = new_selected_items;
     if (new_selected_items.isEmpty())
@@ -641,7 +682,9 @@ public class SelectedItemState extends InteractiveState
     Set<Item> new_selected_items = new TreeSet<>(item_list);
     for (int curr_group_no : curr_group_no_set)
     {
-      new_selected_items.addAll(hdlg.get_routing_board().get_component_items(curr_group_no));
+      new_selected_items.addAll(hdlg
+          .get_routing_board()
+          .get_component_items(curr_group_no));
     }
     if (new_selected_items.isEmpty())
     {
@@ -721,7 +764,9 @@ public class SelectedItemState extends InteractiveState
     boolean state_ended = (picked_items.isEmpty());
     if (picked_items.size() == 1)
     {
-      Item picked_item = picked_items.iterator().next();
+      Item picked_item = picked_items
+          .iterator()
+          .next();
       if (this.item_list.contains(picked_item))
       {
         this.item_list.remove(picked_item);

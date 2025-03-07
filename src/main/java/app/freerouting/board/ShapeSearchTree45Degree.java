@@ -60,17 +60,17 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
   {
     return switch (p_obstacle_line_no)
     {
-      case 0 -> p_obstacle_shape.ly - p_contained_shape.uy;
-      case 2 -> p_contained_shape.lx - p_obstacle_shape.rx;
-      case 4 -> p_contained_shape.ly - p_obstacle_shape.uy;
-      case 6 -> p_obstacle_shape.lx - p_contained_shape.rx;
+      case 0 -> p_obstacle_shape.bottomY - p_contained_shape.topY;
+      case 2 -> p_contained_shape.leftX - p_obstacle_shape.rightX;
+      case 4 -> p_contained_shape.bottomY - p_obstacle_shape.topY;
+      case 6 -> p_obstacle_shape.leftX - p_contained_shape.rightX;
 
       // factor 0.5 used instead to 1 / sqrt(2) to prefer orthogonal lines slightly to diagonal
       // restraining lines.
-      case 1 -> 0.5 * (p_contained_shape.ulx - p_obstacle_shape.lrx);
-      case 3 -> 0.5 * (p_contained_shape.llx - p_obstacle_shape.urx);
-      case 5 -> 0.5 * (p_obstacle_shape.ulx - p_contained_shape.lrx);
-      case 7 -> 0.5 * (p_obstacle_shape.llx - p_contained_shape.urx);
+      case 1 -> 0.5 * (p_contained_shape.upperLeftDiagonalX - p_obstacle_shape.lowerRightDiagonalX);
+      case 3 -> 0.5 * (p_contained_shape.lowerLeftDiagonalX - p_obstacle_shape.upperRightDiagonalX);
+      case 5 -> 0.5 * (p_obstacle_shape.upperLeftDiagonalX - p_contained_shape.lowerRightDiagonalX);
+      case 7 -> 0.5 * (p_obstacle_shape.lowerLeftDiagonalX - p_contained_shape.upperRightDiagonalX);
       default ->
       {
         FRLogger.warn("ShapeSearchTree45Degree.signed_line_distance: p_obstacle_line_no out of range");
@@ -405,25 +405,25 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
    */
   IntOctagon calc_outside_restrained_shape(IntOctagon p_obstacle_shape, int p_obstacle_line_no, IntOctagon p_room_shape)
   {
-    int lx = p_room_shape.lx;
-    int ly = p_room_shape.ly;
-    int rx = p_room_shape.rx;
-    int uy = p_room_shape.uy;
-    int ulx = p_room_shape.ulx;
-    int lrx = p_room_shape.lrx;
-    int llx = p_room_shape.llx;
-    int urx = p_room_shape.urx;
+    int lx = p_room_shape.leftX;
+    int ly = p_room_shape.bottomY;
+    int rx = p_room_shape.rightX;
+    int uy = p_room_shape.topY;
+    int ulx = p_room_shape.upperLeftDiagonalX;
+    int lrx = p_room_shape.lowerRightDiagonalX;
+    int llx = p_room_shape.lowerLeftDiagonalX;
+    int urx = p_room_shape.upperRightDiagonalX;
 
     switch (p_obstacle_line_no)
     {
-      case 0 -> uy = p_obstacle_shape.ly;
-      case 2 -> lx = p_obstacle_shape.rx;
-      case 4 -> ly = p_obstacle_shape.uy;
-      case 6 -> rx = p_obstacle_shape.lx;
-      case 1 -> ulx = p_obstacle_shape.lrx;
-      case 3 -> llx = p_obstacle_shape.urx;
-      case 5 -> lrx = p_obstacle_shape.ulx;
-      case 7 -> urx = p_obstacle_shape.llx;
+      case 0 -> uy = p_obstacle_shape.bottomY;
+      case 2 -> lx = p_obstacle_shape.rightX;
+      case 4 -> ly = p_obstacle_shape.topY;
+      case 6 -> rx = p_obstacle_shape.leftX;
+      case 1 -> ulx = p_obstacle_shape.lowerRightDiagonalX;
+      case 3 -> llx = p_obstacle_shape.upperRightDiagonalX;
+      case 5 -> lrx = p_obstacle_shape.upperLeftDiagonalX;
+      case 7 -> urx = p_obstacle_shape.lowerLeftDiagonalX;
       default -> FRLogger.warn("ShapeSearchTree45Degree.calc_outside_restrained_shape: p_obstacle_line_no out of range");
     }
 
@@ -437,25 +437,25 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
    */
   IntOctagon calc_inside_restrained_shape(IntOctagon p_obstacle_shape, int p_obstacle_line_no, IntOctagon p_room_shape)
   {
-    int lx = p_room_shape.lx;
-    int ly = p_room_shape.ly;
-    int rx = p_room_shape.rx;
-    int uy = p_room_shape.uy;
-    int ulx = p_room_shape.ulx;
-    int lrx = p_room_shape.lrx;
-    int llx = p_room_shape.llx;
-    int urx = p_room_shape.urx;
+    int lx = p_room_shape.leftX;
+    int ly = p_room_shape.bottomY;
+    int rx = p_room_shape.rightX;
+    int uy = p_room_shape.topY;
+    int ulx = p_room_shape.upperLeftDiagonalX;
+    int lrx = p_room_shape.lowerRightDiagonalX;
+    int llx = p_room_shape.lowerLeftDiagonalX;
+    int urx = p_room_shape.upperRightDiagonalX;
 
     switch (p_obstacle_line_no)
     {
-      case 0 -> ly = p_obstacle_shape.ly;
-      case 2 -> rx = p_obstacle_shape.rx;
-      case 4 -> uy = p_obstacle_shape.uy;
-      case 6 -> lx = p_obstacle_shape.lx;
-      case 1 -> lrx = p_obstacle_shape.lrx;
-      case 3 -> urx = p_obstacle_shape.urx;
-      case 5 -> ulx = p_obstacle_shape.ulx;
-      case 7 -> llx = p_obstacle_shape.llx;
+      case 0 -> ly = p_obstacle_shape.bottomY;
+      case 2 -> rx = p_obstacle_shape.rightX;
+      case 4 -> uy = p_obstacle_shape.topY;
+      case 6 -> lx = p_obstacle_shape.leftX;
+      case 1 -> lrx = p_obstacle_shape.lowerRightDiagonalX;
+      case 3 -> urx = p_obstacle_shape.upperRightDiagonalX;
+      case 5 -> ulx = p_obstacle_shape.upperLeftDiagonalX;
+      case 7 -> llx = p_obstacle_shape.lowerLeftDiagonalX;
       default -> FRLogger.warn("ShapeSearchTree45Degree.calc_inside_restrained_shape: p_obstacle_line_no out of range");
     }
 

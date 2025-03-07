@@ -10,8 +10,8 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * Temporary autoroute data stored on the RoutingBoard.
@@ -121,8 +121,22 @@ public class AutorouteEngine
    * Auto-routes a connection between p_start_set and p_dest_set.
    * Returns ALREADY_CONNECTED, ROUTED, NOT_ROUTED, or INSERT_ERROR.
    */
-  public AutorouteResult autoroute_connection(Set<Item> p_start_set, Set<Item> p_dest_set, AutorouteControl p_ctrl, SortedSet<Item> p_ripped_item_list)
+  public AutorouteAttemptResult autoroute_connection(Set<Item> p_start_set, Set<Item> p_dest_set, AutorouteControl p_ctrl, SortedSet<Item> p_ripped_item_list)
   {
+    String sourceItems = String.join(", ", p_start_set
+        .stream()
+        .map(Item::toString)
+        .toList());
+    String targetItems = String.join(", ", p_dest_set
+        .stream()
+        .map(Item::toString)
+        .toList());
+
+    if ((sourceItems.equals("Pin of component #36")) && (targetItems.equals("Pin of component #66")))
+    {
+      FRLogger.warn("");
+    }
+
     MazeSearchAlgo maze_search_algo;
     try
     {
@@ -132,6 +146,12 @@ public class AutorouteEngine
       FRLogger.error("AutorouteEngine.autoroute_connection: Exception in MazeSearchAlgo.get_instance", e);
       maze_search_algo = null;
     }
+
+    if (maze_search_algo == null)
+    {
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "Failed to route connection between " + sourceItems + " and " + targetItems + ", because the maze search algorithm could not be created.");
+    }
+
     MazeSearchAlgo.Result search_result = null;
     if (maze_search_algo != null)
     {
@@ -142,6 +162,11 @@ public class AutorouteEngine
       {
         FRLogger.error("AutorouteEngine.autoroute_connection: Exception in maze_search_algo.find_connection", e);
       }
+    }
+
+    if (search_result == null)
+    {
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "Failed to route connection between " + sourceItems + " and " + targetItems + ", because no connection was found between their nets.");
     }
 
     LocateFoundConnectionAlgo autoroute_result = null;
@@ -167,18 +192,18 @@ public class AutorouteEngine
 
     if (autoroute_result == null)
     {
-      return AutorouteResult.NOT_ROUTED;
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "Failed to route connection between " + sourceItems + " and " + targetItems + ".");
     }
 
     if (!p_ctrl.layer_active[autoroute_result.start_layer] || !p_ctrl.layer_active[autoroute_result.target_layer])
     {
-      return AutorouteResult.NOT_ROUTED;
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "Failed to route connection between " + sourceItems + " and " + targetItems + ", because some of their layers are disabled.");
     }
 
     if (autoroute_result.connection_items == null)
     {
       FRLogger.debug("AutorouteEngine.autoroute_connection: result_items != null expected");
-      return AutorouteResult.ALREADY_CONNECTED;
+      return new AutorouteAttemptResult(AutorouteAttemptState.SKIPPED, "No new connections were made between " + sourceItems + " and " + targetItems + ".");
     }
 
     // Delete the ripped connections.
@@ -224,9 +249,10 @@ public class AutorouteEngine
     }
     if (insert_found_connection_algo == null)
     {
-      return AutorouteResult.INSERT_ERROR;
+      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED, "Failed to route connection between " + sourceItems + " and " + targetItems + ", because the new connection could not be inserted.");
     }
-    return AutorouteResult.ROUTED;
+
+    return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
   }
 
   /**
@@ -368,7 +394,9 @@ public class AutorouteEngine
         // add a new incomplete room to curr_neighbour.
         int[] touching_sides = room_shape.touching_sides(neighbour_shape);
         Line[] line_arr = new Line[1];
-        line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
+        line_arr[0] = neighbour_shape
+            .border_line(touching_sides[1])
+            .opposite();
         Simplex new_incomplete_room_shape = Simplex.get_instance(line_arr);
         IncompleteFreeSpaceExpansionRoom new_incomplete_room = add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
         ExpansionDoor new_door = new ExpansionDoor(curr_neighbour, new_incomplete_room, 1);
@@ -417,7 +445,9 @@ public class AutorouteEngine
       boolean is_first_completed_room = true;
       for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : completed_shapes)
       {
-        if (curr_incomplete_room.get_shape().dimension() != 2)
+        if (curr_incomplete_room
+            .get_shape()
+            .dimension() != 2)
         {
           continue;
         }
@@ -460,7 +490,9 @@ public class AutorouteEngine
   private CompleteFreeSpaceExpansionRoom add_complete_room(IncompleteFreeSpaceExpansionRoom p_room)
   {
     CompleteFreeSpaceExpansionRoom completed_room = (CompleteFreeSpaceExpansionRoom) calculate_doors(p_room);
-    if (completed_room == null || completed_room.get_shape().dimension() != 2)
+    if (completed_room == null || completed_room
+        .get_shape()
+        .dimension() != 2)
     {
       return null;
     }
@@ -505,7 +537,9 @@ public class AutorouteEngine
     {
       return;
     }
-    Iterator<ExpansionDoor> it = p_room.get_doors().iterator();
+    Iterator<ExpansionDoor> it = p_room
+        .get_doors()
+        .iterator();
     while (it.hasNext())
     {
       ExpansionDoor curr_door = it.next();
@@ -520,7 +554,9 @@ public class AutorouteEngine
       {
         this.complete_expansion_room((IncompleteFreeSpaceExpansionRoom) neighbour_room);
         // restart reading because the doors have changed
-        it = p_room.get_doors().iterator();
+        it = p_room
+            .get_doors()
+            .iterator();
       }
       else if (neighbour_room instanceof ObstacleExpansionRoom obstacle_neighbour_room)
       {
@@ -637,13 +673,5 @@ public class AutorouteEngine
   protected int generate_room_id_no()
   {
     return ++expansion_room_instance_count;
-  }
-
-  /**
-   * The possible results of autorouting a connection
-   */
-  public enum AutorouteResult
-  {
-    ALREADY_CONNECTED, ROUTED, NOT_ROUTED, INSERT_ERROR
   }
 }
