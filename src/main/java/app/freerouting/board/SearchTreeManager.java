@@ -171,22 +171,27 @@ public class SearchTreeManager
         return curr_tree;
       }
     }
-    // tree is not yet initialized
+
+    // Create a new ShapeSearchTree object based on the board's settings
     ShapeSearchTree curr_autoroute_tree;
     boolean fast_algorithm = !this.board.rules.get_slow_autoroute_algorithm();
     if (fast_algorithm && this.board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
     {
+      // fast algorithm with 90 degree restriction
       curr_autoroute_tree = new ShapeSearchTree90Degree(this.board, p_clearance_class_no);
     }
     else if (fast_algorithm && this.board.rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
     {
+      // fast algorithm with 45 degree restriction
       curr_autoroute_tree = new ShapeSearchTree45Degree(this.board, p_clearance_class_no);
     }
     else
     {
+      // slow algorithm or no angle restriction
       curr_autoroute_tree = new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, this.board, p_clearance_class_no);
     }
     this.compensated_search_trees.add(curr_autoroute_tree);
+
     Iterator<UndoableObjects.UndoableObjectNode> it = this.board.item_list.start_read_object();
     for (; ; )
     {

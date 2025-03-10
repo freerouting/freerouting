@@ -53,7 +53,7 @@ public class BoardRules implements Serializable
    * restricted exit directions. If the value is {@literal <}= 0, there are no exit restrictions.
    */
   private double pin_edge_to_turn_dist;
-  private boolean slow_autoroute_algorithm = false;
+  private boolean use_slow_autoroute_algorithm = false;
 
   /**
    * Creates a new instance of this class.
@@ -91,7 +91,9 @@ public class BoardRules implements Serializable
   public int get_trace_half_width(int p_net_no, int p_layer)
   {
     Net curr_net = nets.get(p_net_no);
-    return curr_net.get_class().get_trace_half_width(p_layer);
+    return curr_net
+        .get_class()
+        .get_trace_half_width(p_layer);
   }
 
   /**
@@ -132,14 +134,18 @@ public class BoardRules implements Serializable
    */
   public void set_default_trace_half_width(int p_layer, int p_value)
   {
-    this.get_default_net_class().set_trace_half_width(p_layer, p_value);
+    this
+        .get_default_net_class()
+        .set_trace_half_width(p_layer, p_value);
     min_trace_half_width = Math.min(min_trace_half_width, p_value);
     max_trace_half_width = Math.max(max_trace_half_width, p_value);
   }
 
   public int get_default_trace_half_width(int p_layer)
   {
-    return this.get_default_net_class().get_trace_half_width(p_layer);
+    return this
+        .get_default_net_class()
+        .get_trace_half_width(p_layer);
   }
 
   /**
@@ -152,7 +158,9 @@ public class BoardRules implements Serializable
       FRLogger.warn("BoardRules.set_trace_half_widths: p_value out of range");
       return;
     }
-    this.get_default_net_class().set_trace_half_width(p_value);
+    this
+        .get_default_net_class()
+        .set_trace_half_width(p_value);
     min_trace_half_width = Math.min(min_trace_half_width, p_value);
     max_trace_half_width = Math.max(max_trace_half_width, p_value);
   }
@@ -176,9 +184,13 @@ public class BoardRules implements Serializable
   public NetClass get_new_net_class(Locale p_locale)
   {
     NetClass result = this.net_classes.append(this.layer_structure, this.clearance_matrix, p_locale);
-    result.set_trace_clearance_class(this.get_default_net_class().get_trace_clearance_class());
+    result.set_trace_clearance_class(this
+        .get_default_net_class()
+        .get_trace_clearance_class());
     result.set_via_rule(this.get_default_via_rule());
-    result.set_trace_half_width(this.get_default_net_class().get_trace_half_width(0));
+    result.set_trace_half_width(this
+        .get_default_net_class()
+        .get_trace_half_width(0));
     return result;
   }
 
@@ -188,9 +200,13 @@ public class BoardRules implements Serializable
   public NetClass get_new_net_class(String p_name)
   {
     NetClass result = this.net_classes.append(p_name, this.layer_structure, this.clearance_matrix, false);
-    result.set_trace_clearance_class(this.get_default_net_class().get_trace_clearance_class());
+    result.set_trace_clearance_class(this
+        .get_default_net_class()
+        .get_trace_clearance_class());
     result.set_via_rule(this.get_default_via_rule());
-    result.set_trace_half_width(this.get_default_net_class().get_trace_half_width(0));
+    result.set_trace_half_width(this
+        .get_default_net_class()
+        .get_trace_half_width(0));
     return result;
   }
 
@@ -219,7 +235,9 @@ public class BoardRules implements Serializable
         if (existing_via != null)
         {
           ConvexShape new_shape = curr_padstack.get_shape(curr_from_layer);
-          ConvexShape existing_shape = existing_via.get_padstack().get_shape(curr_from_layer);
+          ConvexShape existing_shape = existing_via
+              .get_padstack()
+              .get_shape(curr_from_layer);
           if (new_shape.max_width() < existing_shape.max_width())
           {
             // The via with the smallest pad shape is preferred
@@ -479,7 +497,7 @@ public class BoardRules implements Serializable
    */
   public boolean get_slow_autoroute_algorithm()
   {
-    return slow_autoroute_algorithm;
+    return use_slow_autoroute_algorithm;
   }
 
   /**
@@ -489,7 +507,7 @@ public class BoardRules implements Serializable
    */
   public void set_slow_autoroute_algorithm(boolean p_value)
   {
-    slow_autoroute_algorithm = p_value;
+    use_slow_autoroute_algorithm = p_value;
   }
 
   /**
@@ -506,7 +524,9 @@ public class BoardRules implements Serializable
     {
       return 0;
     }
-    Padstack via_padstack = default_via_rule.get_via(0).get_padstack();
+    Padstack via_padstack = default_via_rule
+        .get_via(0)
+        .get_padstack();
     ConvexShape curr_shape = via_padstack.get_shape(via_padstack.from_layer());
     double result = curr_shape.max_width();
     curr_shape = via_padstack.get_shape(via_padstack.to_layer());
