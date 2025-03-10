@@ -70,7 +70,7 @@ public class BatchOptimizer extends NamedAlgorithm
 
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    while (((route_improved >= this.settings.optimizationImprovementThreshold) || (route_improved < 0)) && (!this.thread.isStopRequested()))
+    while (((route_improved >= this.settings.optimizer.optimizationImprovementThreshold) || (route_improved < 0)) && (!this.thread.isStopRequested()))
     {
       ++curr_pass_no;
       String current_board_hash = this.board.get_hash();
@@ -274,13 +274,13 @@ public class BatchOptimizer extends NamedAlgorithm
   @Override
   protected String getId()
   {
-    return "optimizer-classic";
+    return "freerouting-optimizer";
   }
 
   @Override
   protected String getName()
   {
-    return "Freerouting Classic Route Optimizer";
+    return "Freerouting Optimizer";
   }
 
   @Override
@@ -292,7 +292,7 @@ public class BatchOptimizer extends NamedAlgorithm
   @Override
   protected String getDescription()
   {
-    return "Freerouting Classic Optimizer v1.0";
+    return "Freerouting Optimizer v1.0";
   }
 
   @Override

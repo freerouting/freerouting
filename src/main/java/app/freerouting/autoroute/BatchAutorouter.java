@@ -106,13 +106,13 @@ public class BatchAutorouter extends NamedAlgorithm
   @Override
   public String getId()
   {
-    return "router-classic";
+    return "freerouting-router";
   }
 
   @Override
   public String getName()
   {
-    return "Freerouting Classic Auto-router";
+    return "Freerouting Auto-router";
   }
 
   @Override
@@ -124,7 +124,7 @@ public class BatchAutorouter extends NamedAlgorithm
   @Override
   public String getDescription()
   {
-    return "Freerouting Classic Auto-router v1.0";
+    return "Freerouting Auto-router v1.0";
   }
 
   @Override

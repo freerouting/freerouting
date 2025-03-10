@@ -100,14 +100,14 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       }
     });
 
-    if (routingJob.routerSettings.maxThreads > 1)
+    if (routingJob.routerSettings.optimizer.maxThreads > 1)
     {
       routingJob.logWarning("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
     }
 
     this.batch_opt_route = null;
 
-    if (routingJob.routerSettings.maxThreads == 1)
+    if (routingJob.routerSettings.optimizer.maxThreads == 1)
     {
       // Single-threaded route optimization
       this.batch_opt_route = new BatchOptimizer(routingJob);
@@ -140,7 +140,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       });
     }
 
-    if (routingJob.routerSettings.maxThreads > 1)
+    if (routingJob.routerSettings.optimizer.maxThreads > 1)
     {
       // Multi-threaded route optimization
       this.batch_opt_route = new BatchOptimizerMultiThreaded(routingJob);
@@ -179,7 +179,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   {
     routingJob.startedAt = Instant.now();
     routingJob.state = RoutingJobState.RUNNING;
-    boardManager.set_num_threads(routingJob.routerSettings.maxThreads);
+    boardManager.set_num_threads(routingJob.routerSettings.optimizer.maxThreads);
 
     for (ThreadActionListener hl : this.listeners)
     {

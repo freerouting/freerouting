@@ -1,8 +1,6 @@
 package app.freerouting.settings;
 
 import app.freerouting.autoroute.AutorouteControl;
-import app.freerouting.autoroute.BoardUpdateStrategy;
-import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
@@ -12,30 +10,17 @@ import java.io.Serializable;
 
 public class RouterSettings implements Serializable
 {
-  public transient boolean[] isLayerActive;
-  public transient boolean[] isPreferredDirectionHorizontalOnLayer;
-  public transient double[] preferredDirectionTraceCost;
-  public transient double[] undesiredDirectionTraceCost;
-  @SerializedName("default_preferred_direction_trace_cost")
-  public double defaultPreferredDirectionTraceCost = 1.0;
-  @SerializedName("default_undesired_direction_trace_cost")
-  public double defaultUndesiredDirectionTraceCost = 2.5;
+  @SerializedName("enabled")
+  public transient boolean enabled = true;
+  @SerializedName("algorithm")
+  public String algorithm = "freerouting-router/slow";
   @SerializedName("job_timeout")
   public String jobTimeoutString = "12:00:00";
   @SerializedName("max_passes")
   public int maxPasses = 100;
-  @SerializedName("fanout_max_passes")
-  public int maxFanoutPasses = 20;
-  @SerializedName("max_threads")
-  public int maxThreads = Math.max(1, Runtime
-      .getRuntime()
-      .availableProcessors() - 1);
-  @SerializedName("improvement_threshold")
-  public float optimizationImprovementThreshold = 0.01f;
+  public transient boolean[] isLayerActive;
+  public transient boolean[] isPreferredDirectionHorizontalOnLayer;
   public transient boolean save_intermediate_stages = false;
-  public transient BoardUpdateStrategy boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
-  public transient String hybridRatio = "1:1";
-  public transient ItemSelectionStrategy itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
   @SerializedName("ignore_net_classes")
   public transient String[] ignoreNetClasses = new String[0];
   /**
@@ -45,21 +30,18 @@ public class RouterSettings implements Serializable
   public int trace_pull_tight_accuracy = 500;
   @SerializedName("allowed_via_types")
   public boolean vias_allowed = true;
-  @SerializedName("via_costs")
-  public int via_costs = 50;
-  @SerializedName("plane_via_costs")
-  public int plane_via_costs = 5;
-  @SerializedName("start_ripup_costs")
-  public int start_ripup_costs = 100;
   /**
    * If true, the trace width at static pins smaller the trace width will be lowered
    * automatically to the pin with, if necessary.
    */
   @SerializedName("automatic_neckdown")
   public boolean automatic_neckdown = true;
-  private transient boolean runFanout = false;
-  private transient boolean runRouter = true;
-  private transient boolean runOptimizer = true;
+  @SerializedName("fanout")
+  public RouterFanoutSettings fanout = new RouterFanoutSettings();
+  @SerializedName("optimizer")
+  public RouterOptimizerSettings optimizer = new RouterOptimizerSettings();
+  @SerializedName("scoring")
+  public RouterScoringSettings scoring = new RouterScoringSettings();
   private transient int start_pass_no = 1;
   private transient int stop_pass_no = 999;
 
@@ -107,15 +89,15 @@ public class RouterSettings implements Serializable
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
       isPreferredDirectionHorizontalOnLayer[i] = curr_preferred_direction_is_horizontal;
-      preferredDirectionTraceCost[i] = defaultPreferredDirectionTraceCost;
-      undesiredDirectionTraceCost[i] = defaultUndesiredDirectionTraceCost;
+      scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
+      scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
       if (curr_preferred_direction_is_horizontal)
       {
-        undesiredDirectionTraceCost[i] += horizontal_add_costs_against_preferred_dir;
+        scoring.undesiredDirectionTraceCost[i] += horizontal_add_costs_against_preferred_dir;
       }
       else
       {
-        undesiredDirectionTraceCost[i] += vertical_add_costs_against_preferred_dir;
+        scoring.undesiredDirectionTraceCost[i] += vertical_add_costs_against_preferred_dir;
       }
     }
     int signal_layer_count = p_board.layer_structure.signal_layer_count();
@@ -123,10 +105,10 @@ public class RouterSettings implements Serializable
     {
       double outer_add_costs = 0.2 * signal_layer_count;
       // increase costs on the outer layers.
-      preferredDirectionTraceCost[0] += outer_add_costs;
-      preferredDirectionTraceCost[layer_count - 1] += outer_add_costs;
-      undesiredDirectionTraceCost[0] += outer_add_costs;
-      undesiredDirectionTraceCost[layer_count - 1] += outer_add_costs;
+      scoring.preferredDirectionTraceCost[0] += outer_add_costs;
+      scoring.preferredDirectionTraceCost[layer_count - 1] += outer_add_costs;
+      scoring.undesiredDirectionTraceCost[0] += outer_add_costs;
+      scoring.undesiredDirectionTraceCost[layer_count - 1] += outer_add_costs;
     }
   }
 
@@ -137,15 +119,15 @@ public class RouterSettings implements Serializable
   {
     isLayerActive = new boolean[layerCount];
     isPreferredDirectionHorizontalOnLayer = new boolean[layerCount];
-    preferredDirectionTraceCost = new double[layerCount];
-    undesiredDirectionTraceCost = new double[layerCount];
+    scoring.preferredDirectionTraceCost = new double[layerCount];
+    scoring.undesiredDirectionTraceCost = new double[layerCount];
 
     for (int i = 0; i < layerCount; ++i)
     {
       isLayerActive[i] = true;
       isPreferredDirectionHorizontalOnLayer[i] = (i % 2 == 1);
-      preferredDirectionTraceCost[i] = defaultPreferredDirectionTraceCost;
-      undesiredDirectionTraceCost[i] = defaultUndesiredDirectionTraceCost;
+      scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
+      scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
     }
   }
 
@@ -157,30 +139,30 @@ public class RouterSettings implements Serializable
     RouterSettings result = new RouterSettings(this.isLayerActive.length);
     result.isLayerActive = this.isLayerActive.clone();
     result.isPreferredDirectionHorizontalOnLayer = this.isPreferredDirectionHorizontalOnLayer.clone();
-    result.preferredDirectionTraceCost = this.preferredDirectionTraceCost.clone();
-    result.undesiredDirectionTraceCost = this.undesiredDirectionTraceCost.clone();
-    result.defaultPreferredDirectionTraceCost = this.defaultPreferredDirectionTraceCost;
-    result.defaultUndesiredDirectionTraceCost = this.defaultUndesiredDirectionTraceCost;
+    result.scoring.preferredDirectionTraceCost = this.scoring.preferredDirectionTraceCost.clone();
+    result.scoring.undesiredDirectionTraceCost = this.scoring.undesiredDirectionTraceCost.clone();
+    result.scoring.defaultPreferredDirectionTraceCost = this.scoring.defaultPreferredDirectionTraceCost;
+    result.scoring.defaultUndesiredDirectionTraceCost = this.scoring.defaultUndesiredDirectionTraceCost;
     result.maxPasses = this.maxPasses;
-    result.maxThreads = this.maxThreads;
-    result.optimizationImprovementThreshold = this.optimizationImprovementThreshold;
-    result.boardUpdateStrategy = this.boardUpdateStrategy;
-    result.hybridRatio = this.hybridRatio;
-    result.itemSelectionStrategy = this.itemSelectionStrategy;
+    result.optimizer.maxThreads = this.optimizer.maxThreads;
+    result.optimizer.optimizationImprovementThreshold = this.optimizer.optimizationImprovementThreshold;
+    result.optimizer.boardUpdateStrategy = this.optimizer.boardUpdateStrategy;
+    result.optimizer.hybridRatio = this.optimizer.hybridRatio;
+    result.optimizer.itemSelectionStrategy = this.optimizer.itemSelectionStrategy;
     result.ignoreNetClasses = this.ignoreNetClasses.clone();
     result.trace_pull_tight_accuracy = this.trace_pull_tight_accuracy;
     System.arraycopy(this.isLayerActive, 0, result.isLayerActive, 0, isLayerActive.length);
     System.arraycopy(this.isPreferredDirectionHorizontalOnLayer, 0, result.isPreferredDirectionHorizontalOnLayer, 0, isPreferredDirectionHorizontalOnLayer.length);
-    System.arraycopy(this.preferredDirectionTraceCost, 0, result.preferredDirectionTraceCost, 0, preferredDirectionTraceCost.length);
-    System.arraycopy(this.undesiredDirectionTraceCost, 0, result.undesiredDirectionTraceCost, 0, undesiredDirectionTraceCost.length);
-    result.runFanout = this.runFanout;
-    result.runRouter = this.runRouter;
-    result.runOptimizer = this.runOptimizer;
+    System.arraycopy(this.scoring.preferredDirectionTraceCost, 0, result.scoring.preferredDirectionTraceCost, 0, scoring.preferredDirectionTraceCost.length);
+    System.arraycopy(this.scoring.undesiredDirectionTraceCost, 0, result.scoring.undesiredDirectionTraceCost, 0, scoring.undesiredDirectionTraceCost.length);
+    result.fanout.enabled = this.fanout.enabled;
+    result.enabled = this.enabled;
+    result.optimizer.enabled = this.optimizer.enabled;
     result.vias_allowed = this.vias_allowed;
     result.automatic_neckdown = this.automatic_neckdown;
-    result.via_costs = this.via_costs;
-    result.plane_via_costs = this.plane_via_costs;
-    result.start_ripup_costs = this.start_ripup_costs;
+    result.scoring.via_costs = this.scoring.via_costs;
+    result.scoring.plane_via_costs = this.scoring.plane_via_costs;
+    result.scoring.start_ripup_costs = this.scoring.start_ripup_costs;
     result.start_pass_no = this.start_pass_no;
     result.stop_pass_no = this.stop_pass_no;
     return result;
@@ -188,12 +170,12 @@ public class RouterSettings implements Serializable
 
   public int get_start_ripup_costs()
   {
-    return start_ripup_costs;
+    return scoring.start_ripup_costs;
   }
 
   public void set_start_ripup_costs(int p_value)
   {
-    start_ripup_costs = Math.max(p_value, 1);
+    scoring.start_ripup_costs = Math.max(p_value, 1);
   }
 
   public int get_start_pass_no()
@@ -225,32 +207,32 @@ public class RouterSettings implements Serializable
 
   public boolean getRunFanout()
   {
-    return runFanout;
+    return fanout.enabled;
   }
 
   public void setRunFanout(boolean p_value)
   {
-    runFanout = p_value;
+    fanout.enabled = p_value;
   }
 
   public boolean getRunRouter()
   {
-    return runRouter;
+    return enabled;
   }
 
   public void setRunRouter(boolean p_value)
   {
-    runRouter = p_value;
+    enabled = p_value;
   }
 
   public boolean getRunOptimizer()
   {
-    return runOptimizer;
+    return optimizer.enabled;
   }
 
   public void setRunOptimizer(boolean p_value)
   {
-    runOptimizer = p_value;
+    optimizer.enabled = p_value;
   }
 
   public boolean get_vias_allowed()
@@ -265,22 +247,22 @@ public class RouterSettings implements Serializable
 
   public int get_via_costs()
   {
-    return via_costs;
+    return scoring.via_costs;
   }
 
   public void set_via_costs(int p_value)
   {
-    via_costs = Math.max(p_value, 1);
+    scoring.via_costs = Math.max(p_value, 1);
   }
 
   public int get_plane_via_costs()
   {
-    return plane_via_costs;
+    return scoring.plane_via_costs;
   }
 
   public void set_plane_via_costs(int p_value)
   {
-    plane_via_costs = Math.max(p_value, 1);
+    scoring.plane_via_costs = Math.max(p_value, 1);
   }
 
   public void set_layer_active(int p_layer, boolean p_value)
@@ -330,7 +312,7 @@ public class RouterSettings implements Serializable
       FRLogger.warn("AutorouteSettings.set_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
-    preferredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
+    scoring.preferredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
   }
 
   public double get_preferred_direction_trace_costs(int p_layer)
@@ -340,7 +322,7 @@ public class RouterSettings implements Serializable
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
-    return preferredDirectionTraceCost[p_layer];
+    return scoring.preferredDirectionTraceCost[p_layer];
   }
 
   public double get_against_preferred_direction_trace_costs(int p_layer)
@@ -350,7 +332,7 @@ public class RouterSettings implements Serializable
       FRLogger.warn("AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
       return 0;
     }
-    return undesiredDirectionTraceCost[p_layer];
+    return scoring.undesiredDirectionTraceCost[p_layer];
   }
 
   public double get_horizontal_trace_costs(int p_layer)
@@ -363,11 +345,11 @@ public class RouterSettings implements Serializable
     double result;
     if (isPreferredDirectionHorizontalOnLayer[p_layer])
     {
-      result = preferredDirectionTraceCost[p_layer];
+      result = scoring.preferredDirectionTraceCost[p_layer];
     }
     else
     {
-      result = undesiredDirectionTraceCost[p_layer];
+      result = scoring.undesiredDirectionTraceCost[p_layer];
     }
     return result;
   }
@@ -379,7 +361,7 @@ public class RouterSettings implements Serializable
       FRLogger.warn("AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
       return;
     }
-    undesiredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
+    scoring.undesiredDirectionTraceCost[p_layer] = Math.max(p_value, 0.1);
   }
 
   public double get_vertical_trace_costs(int p_layer)
@@ -392,18 +374,18 @@ public class RouterSettings implements Serializable
     double result;
     if (isPreferredDirectionHorizontalOnLayer[p_layer])
     {
-      result = undesiredDirectionTraceCost[p_layer];
+      result = scoring.undesiredDirectionTraceCost[p_layer];
     }
     else
     {
-      result = preferredDirectionTraceCost[p_layer];
+      result = scoring.preferredDirectionTraceCost[p_layer];
     }
     return result;
   }
 
   public AutorouteControl.ExpansionCostFactor[] get_trace_cost_arr()
   {
-    AutorouteControl.ExpansionCostFactor[] result = new AutorouteControl.ExpansionCostFactor[preferredDirectionTraceCost.length];
+    AutorouteControl.ExpansionCostFactor[] result = new AutorouteControl.ExpansionCostFactor[scoring.preferredDirectionTraceCost.length];
     for (int i = 0; i < result.length; ++i)
     {
       result[i] = new AutorouteControl.ExpansionCostFactor(get_horizontal_trace_costs(i), get_vertical_trace_costs(i));

@@ -289,15 +289,15 @@ public class GlobalSettings implements Serializable
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            routerSettings.maxThreads = Integer.decode(p_args[i + 1]);
+            routerSettings.optimizer.maxThreads = Integer.decode(p_args[i + 1]);
 
-            if (routerSettings.maxThreads <= 0)
+            if (routerSettings.optimizer.maxThreads <= 0)
             {
-              routerSettings.maxThreads = 0;
+              routerSettings.optimizer.maxThreads = 0;
             }
-            if (routerSettings.maxThreads > 1024)
+            if (routerSettings.optimizer.maxThreads > 1024)
             {
-              routerSettings.maxThreads = 1024;
+              routerSettings.optimizer.maxThreads = 1024;
             }
           }
         }
@@ -305,11 +305,11 @@ public class GlobalSettings implements Serializable
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            routerSettings.optimizationImprovementThreshold = Float.parseFloat(p_args[i + 1]) / 100;
+            routerSettings.optimizer.optimizationImprovementThreshold = Float.parseFloat(p_args[i + 1]) / 100;
 
-            if (routerSettings.optimizationImprovementThreshold <= 0)
+            if (routerSettings.optimizer.optimizationImprovementThreshold <= 0)
             {
-              routerSettings.optimizationImprovementThreshold = 0;
+              routerSettings.optimizer.optimizationImprovementThreshold = 0;
             }
           }
         }
@@ -320,7 +320,7 @@ public class GlobalSettings implements Serializable
             String op = p_args[i + 1]
                 .toLowerCase()
                 .trim();
-            routerSettings.boardUpdateStrategy = op.equals("global") ? BoardUpdateStrategy.GLOBAL_OPTIMAL : (op.equals("hybrid") ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
+            routerSettings.optimizer.boardUpdateStrategy = op.equals("global") ? BoardUpdateStrategy.GLOBAL_OPTIMAL : (op.equals("hybrid") ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
           }
         }
         else if (p_args[i].startsWith("-is"))
@@ -330,14 +330,14 @@ public class GlobalSettings implements Serializable
             String op = p_args[i + 1]
                 .toLowerCase()
                 .trim();
-            routerSettings.itemSelectionStrategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
+            routerSettings.optimizer.itemSelectionStrategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
           }
         }
         else if (p_args[i].startsWith("-hr"))
         { // hybrid ratio
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            routerSettings.hybridRatio = p_args[i + 1].trim();
+            routerSettings.optimizer.hybridRatio = p_args[i + 1].trim();
           }
         }
         else if (p_args[i].equals("-l"))
@@ -478,21 +478,21 @@ public class GlobalSettings implements Serializable
 
   public int getNumThreads()
   {
-    return routerSettings.maxThreads;
+    return routerSettings.optimizer.maxThreads;
   }
 
   public String getHybridRatio()
   {
-    return routerSettings.hybridRatio;
+    return routerSettings.optimizer.hybridRatio;
   }
 
   public BoardUpdateStrategy getBoardUpdateStrategy()
   {
-    return routerSettings.boardUpdateStrategy;
+    return routerSettings.optimizer.boardUpdateStrategy;
   }
 
   public ItemSelectionStrategy getItemSelectionStrategy()
   {
-    return routerSettings.itemSelectionStrategy;
+    return routerSettings.optimizer.itemSelectionStrategy;
   }
 }

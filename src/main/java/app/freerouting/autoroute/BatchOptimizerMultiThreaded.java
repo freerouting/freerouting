@@ -38,9 +38,9 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
   {
     super(job);
 
-    this.thread_pool_size = job.routerSettings.maxThreads;
-    this.board_update_strategy = job.routerSettings.boardUpdateStrategy;
-    this.item_selection_strategy = job.routerSettings.boardUpdateStrategy == BoardUpdateStrategy.GLOBAL_OPTIMAL ? ItemSelectionStrategy.SEQUENTIAL : job.routerSettings.itemSelectionStrategy;
+    this.thread_pool_size = job.routerSettings.optimizer.maxThreads;
+    this.board_update_strategy = job.routerSettings.optimizer.boardUpdateStrategy;
+    this.item_selection_strategy = job.routerSettings.optimizer.boardUpdateStrategy == BoardUpdateStrategy.GLOBAL_OPTIMAL ? ItemSelectionStrategy.SEQUENTIAL : job.routerSettings.optimizer.itemSelectionStrategy;
 
     best_route_result = new ItemRouteResult(-1);
     winning_candidate = null;
@@ -49,9 +49,9 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
     {
       int num_optimal = 1, num_prioritized = 1;
 
-      if (job.routerSettings.hybridRatio != null && job.routerSettings.hybridRatio.indexOf(":") > 0)
+      if (job.routerSettings.optimizer.hybridRatio != null && job.routerSettings.optimizer.hybridRatio.indexOf(":") > 0)
       {
-        String[] ratio = job.routerSettings.hybridRatio.split(":");
+        String[] ratio = job.routerSettings.optimizer.hybridRatio.split(":");
 
         try
         {

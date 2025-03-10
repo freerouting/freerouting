@@ -14,8 +14,8 @@ import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
 
-import javax.swing.Timer;
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -118,8 +118,12 @@ public class WindowWelcome extends WindowBase
   public static boolean InitializeGUI(GlobalSettings globalSettings)
   {
     // Start a new Freerouting session
-    var guiSession = SessionManager.getInstance().createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
-    SessionManager.getInstance().setGuiSession(guiSession.id);
+    var guiSession = SessionManager
+        .getInstance()
+        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+    SessionManager
+        .getInstance()
+        .setGuiSession(guiSession.id);
 
     // Set default font for buttons and labels
     FontUIResource menuFont = (FontUIResource) UIManager.get("Menu.font");
@@ -178,10 +182,10 @@ public class WindowWelcome extends WindowBase
       }
 
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + globalSettings.routerSettings.maxPasses - 1);
-      new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.maxThreads);
-      new_frame.board_panel.board_handling.set_board_update_strategy(globalSettings.routerSettings.boardUpdateStrategy);
-      new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.routerSettings.hybridRatio);
-      new_frame.board_panel.board_handling.set_item_selection_strategy(globalSettings.routerSettings.itemSelectionStrategy);
+      new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.optimizer.maxThreads);
+      new_frame.board_panel.board_handling.set_board_update_strategy(globalSettings.routerSettings.optimizer.boardUpdateStrategy);
+      new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.routerSettings.optimizer.hybridRatio);
+      new_frame.board_panel.board_handling.set_item_selection_strategy(globalSettings.routerSettings.optimizer.itemSelectionStrategy);
 
       if (globalSettings.design_output_filename != null)
       {
@@ -399,7 +403,9 @@ public class WindowWelcome extends WindowBase
     InputStream input_stream = null;
     if ((routingJob == null) || (routingJob.input.getFile() == null))
     {
-      routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
+      routingJob = new RoutingJob(SessionManager
+          .getInstance()
+          .getGuiSession().id);
       routingJob.setDummyInputFile("tutorial_board.dsn");
       // Load an empty template file from the resources
       ClassLoader classLoader = WindowBase.class.getClassLoader();
@@ -484,7 +490,10 @@ public class WindowWelcome extends WindowBase
 
         for (int i = 0; i < netClasses.count(); i++)
         {
-          if (netClasses.get(i).get_name().equalsIgnoreCase(net_class_name))
+          if (netClasses
+              .get(i)
+              .get_name()
+              .equalsIgnoreCase(net_class_name))
           {
             netClasses.get(i).is_ignored_by_autorouter = true;
           }
@@ -511,7 +520,9 @@ public class WindowWelcome extends WindowBase
     RoutingJob routingJob = null;
     try
     {
-      routingJob = new RoutingJob(SessionManager.getInstance().getGuiSession().id);
+      routingJob = new RoutingJob(SessionManager
+          .getInstance()
+          .getGuiSession().id);
       routingJob.setInput(fileToOpen);
 
       if (routingJob.input.getFile() != null)

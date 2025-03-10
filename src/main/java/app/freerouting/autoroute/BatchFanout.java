@@ -51,7 +51,7 @@ public class BatchFanout extends NamedAlgorithm
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     int curr_pass_no;
-    for (curr_pass_no = 0; curr_pass_no < this.settings.maxFanoutPasses; ++curr_pass_no)
+    for (curr_pass_no = 0; curr_pass_no < this.settings.maxPasses; ++curr_pass_no)
     {
       String current_board_hash = this.board.get_hash();
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
@@ -108,13 +108,13 @@ public class BatchFanout extends NamedAlgorithm
   @Override
   protected String getId()
   {
-    return "fanout-classic";
+    return "freerouting-fanout";
   }
 
   @Override
   protected String getName()
   {
-    return "Freerouting Classic Fanout";
+    return "Freerouting Fanout";
   }
 
   @Override
@@ -126,7 +126,7 @@ public class BatchFanout extends NamedAlgorithm
   @Override
   protected String getDescription()
   {
-    return "Freerouting Classic Fanout algorithm v1.0";
+    return "Freerouting Fanout algorithm v1.0";
   }
 
   @Override
