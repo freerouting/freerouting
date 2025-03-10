@@ -14,6 +14,7 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
@@ -49,8 +50,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       {
         boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
         boardManager.repaint();
-        //        routingJob.logDebug(GsonProvider.GSON.toJson(event.getRouterCounters()));
-        //        routingJob.logDebug(GsonProvider.GSON.toJson(event.getBoardStatistics()));
+        //routingJob.logInfo(GsonProvider.GSON.toJson(event.getRouterCounters()));
+        //routingJob.logDebug(GsonProvider.GSON.toJson(event.getBoardStatistics()));
       }
     });
 
@@ -107,7 +108,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
     this.batch_opt_route = null;
 
-    if (routingJob.routerSettings.optimizer.maxThreads == 1)
+    if ((!globalSettings.featureFlags.multiThreading) || (routingJob.routerSettings.optimizer.maxThreads == 1))
     {
       // Single-threaded route optimization
       this.batch_opt_route = new BatchOptimizer(routingJob);
@@ -140,7 +141,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       });
     }
 
-    if (routingJob.routerSettings.optimizer.maxThreads > 1)
+    if ((globalSettings.featureFlags.multiThreading) && (routingJob.routerSettings.optimizer.maxThreads > 1))
     {
       // Multi-threaded route optimization
       this.batch_opt_route = new BatchOptimizerMultiThreaded(routingJob);
@@ -203,6 +204,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .hide();
       }
 
+      routingJob.logInfo(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
+
       routingJob.logInfo("Starting routing of '" + routingJob.name + "'...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
@@ -248,6 +251,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       double autoroutingSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
       routingJob.logInfo("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete) + ".");
       FRAnalytics.autorouterFinished();
+
+      routingJob.logInfo(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
 
       Thread.sleep(100);
 
@@ -298,6 +303,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         double routeOptimizationSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
         routingJob.logInfo("Route optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + (percentage_improvement > 0 ? " and it improved the design by ~" + String.format("%(,.2f", percentage_improvement * 100.0) + "%" : "") + ".");
         FRAnalytics.routeOptimizerFinished();
+
+        routingJob.logInfo(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
 
         if (!this.isStopRequested())
         {
