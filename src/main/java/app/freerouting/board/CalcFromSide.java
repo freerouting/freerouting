@@ -27,7 +27,9 @@ public class CalcFromSide
       if (intersections.length > 0)
       {
         fromside_no = intersections[0];
-        intersection = curr_seg.get_line().intersection_approx(p_shape.border_line(fromside_no));
+        intersection = curr_seg
+            .get_line()
+            .intersection_approx(p_shape.border_line(fromside_no));
         border_intersection_found = true;
         break;
       }
@@ -101,7 +103,9 @@ public class CalcFromSide
       Side next_side = check_line.side_of(next_corner);
       if (prev_side != next_side)
       {
-        FloatPoint curr_intersection = p_shape.border_line(i - 1).intersection_approx(check_line);
+        FloatPoint curr_intersection = p_shape
+            .border_line(i - 1)
+            .intersection_approx(check_line);
         if (curr_intersection.distance_square(start_corner) < curr_intersection.distance_square(end_corner))
         {
           front_side_no = i - 1;
@@ -112,7 +116,7 @@ public class CalcFromSide
     }
     if (front_side_no < 0)
     {
-      FRLogger.warn("CalcFromSide: start corner was not found");
+      FRLogger.debug("CalcFromSide: start corner was not found");
       no = -1;
       border_intersection = null;
       return;

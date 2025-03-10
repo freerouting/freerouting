@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Convex shape defined as intersection of half-planes. A half-plane is defined as the positive side
- * of a directed line.
+ * Convex shape defined as intersection of half-planes.
+ * A half-plane is defined as the positive side of a directed line.
  */
 public class Simplex extends TileShape implements Serializable
 {
@@ -121,8 +121,12 @@ public class Simplex extends TileShape implements Serializable
     {
       prev_no = no - 1;
     }
-    IntVector prev_dir = (IntVector) arr[prev_no].direction().get_vector();
-    IntVector curr_dir = (IntVector) arr[no].direction().get_vector();
+    IntVector prev_dir = (IntVector) arr[prev_no]
+        .direction()
+        .get_vector();
+    IntVector curr_dir = (IntVector) arr[no]
+        .direction()
+        .get_vector();
     return (prev_dir.determinant(curr_dir) > 0);
   }
 
@@ -354,7 +358,7 @@ public class Simplex extends TileShape implements Serializable
       }
       if (side_of_line0 == Side.ON_THE_LEFT)
       {
-        FRLogger.warn("empty Simplex not normalized");
+        FRLogger.debug("empty Simplex not normalized");
         return -1;
       }
       // now the 3 lines intersect in the same point
@@ -975,7 +979,9 @@ public class Simplex extends TileShape implements Serializable
       }
       if (!check_cross_first_line)
       {
-        check_cross_first_line = inner_corner_no > 0 && last_curr_dir.determinant(first_direction) > 0 && last_curr_dir.get_vector().scalar_product(first_direction.get_vector()) < 0;
+        check_cross_first_line = inner_corner_no > 0 && last_curr_dir.determinant(first_direction) > 0 && last_curr_dir
+            .get_vector()
+            .scalar_product(first_direction.get_vector()) < 0;
         // scalar_product checked to ignore backcrossing at
         // small inner_corner_no
       }
@@ -1205,7 +1211,9 @@ public class Simplex extends TileShape implements Serializable
     {
       if (line_arr[0].is_parallel(line_arr[1]))
       {
-        if (line_arr[0].direction().equals(line_arr[1].direction()))
+        if (line_arr[0]
+            .direction()
+            .equals(line_arr[1].direction()))
         // one of the two remaining lines is redundant
         {
           if (line_arr[1].side_of(line_arr[0].a) == Side.ON_THE_LEFT)
@@ -1297,7 +1305,9 @@ public class Simplex extends TileShape implements Serializable
     }
     IntDirection first_projection_dir = Direction.NULL;
     IntDirection second_projection_dir = Direction.NULL;
-    IntDirection prev_inner_dir = (IntDirection) prev_inner_line.direction().opposite();
+    IntDirection prev_inner_dir = (IntDirection) prev_inner_line
+        .direction()
+        .opposite();
     IntDirection next_inner_dir = (IntDirection) curr_inner_line.direction();
     int outer_line_no = 0;
 

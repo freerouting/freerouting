@@ -276,16 +276,7 @@ public abstract class PolylineShape implements Shape, Serializable
    */
   public int next_no(int p_no)
   {
-    int result;
-    if (p_no == border_line_count() - 1)
-    {
-      result = 0;
-    }
-    else
-    {
-      result = p_no + 1;
-    }
-    return result;
+    return (p_no + 1) % border_line_count();
   }
 
   @Override

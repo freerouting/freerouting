@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.autoroute.*;
 import app.freerouting.autoroute.events.*;
 import app.freerouting.board.AngleRestriction;
+import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -14,7 +15,6 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.tests.BoardValidator;
 
 import java.awt.*;
@@ -204,7 +204,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .hide();
       }
 
-      routingJob.logInfo(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
+      routingJob.logInfo(getBoardSummary(boardManager.get_routing_board()));
 
       routingJob.logInfo("Starting routing of '" + routingJob.name + "'...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
@@ -252,7 +252,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       routingJob.logInfo("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete) + ".");
       FRAnalytics.autorouterFinished();
 
-      routingJob.logInfo(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
+      routingJob.logInfo(getBoardSummary(boardManager.get_routing_board()));
 
       Thread.sleep(100);
 
@@ -304,7 +304,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         routingJob.logInfo("Route optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + (percentage_improvement > 0 ? " and it improved the design by ~" + String.format("%(,.2f", percentage_improvement * 100.0) + "%" : "") + ".");
         FRAnalytics.routeOptimizerFinished();
 
-        routingJob.logInfo(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
+        routingJob.logInfo(getBoardSummary(boardManager.get_routing_board()));
 
         if (!this.isStopRequested())
         {
@@ -393,6 +393,15 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
     }
 
     FRLogger.traceExit("BatchAutorouterThread.thread_action()");
+  }
+
+  private String getBoardSummary(RoutingBoard routingBoard)
+  {
+    var bs = new BoardStatistics(routingBoard);
+
+    String sb = "Board summary:\n" + "  Traces: " + bs.traces.totalLength + "\n" + "  Failed: " + bs.traces.incompleteCount + "\n";
+
+    return sb;
   }
 
   @Override

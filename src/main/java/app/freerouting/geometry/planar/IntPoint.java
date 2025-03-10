@@ -27,11 +27,11 @@ public class IntPoint extends Point implements Serializable
   {
     if (Math.abs(p_x) > Limits.CRIT_INT)
     {
-      FRLogger.warn("IntPoint: p_x is out of range");
+      FRLogger.debug("IntPoint: p_x is out of range");
     }
     if (Math.abs(p_y) > Limits.CRIT_INT)
     {
-      FRLogger.warn("IntPoint: p_y is out of range");
+      FRLogger.debug("IntPoint: p_y is out of range");
     }
 
     x = p_x;

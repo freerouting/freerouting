@@ -104,7 +104,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
       if (shape_to_be_contained == null)
       {
         // If conversion fails (e.g., unbounded Simplex)
-        FRLogger.warn("ShapeSearchTree45Degree.complete_shape: cannot convert Simplex to IntOctagon");
+        FRLogger.debug("ShapeSearchTree45Degree.complete_shape: cannot convert Simplex to IntOctagon");
         return new LinkedList<>();
       }
     }
