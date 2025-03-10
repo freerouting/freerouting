@@ -7,6 +7,7 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.gui.FileFormat;
+import app.freerouting.interactive.RatsNest;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
@@ -197,7 +198,6 @@ public class BoardStatistics implements Serializable
           {
             this.traces.totalAngledLength += length;
           }
-
         }
       }
     }
@@ -227,6 +227,8 @@ public class BoardStatistics implements Serializable
         }
       }
     }
+    
+    this.traces.incompleteCount = new RatsNest(board).incomplete_count();
 
     // Bends
     this.bends.totalCount = 0;
