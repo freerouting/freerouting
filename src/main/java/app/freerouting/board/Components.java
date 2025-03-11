@@ -133,7 +133,11 @@ public class Components implements Serializable
         break;
       }
       this.component_arr.setElementAt(curr_component, curr_component.no - 1);
-      p_observers.notify_moved(curr_component);
+
+      if (p_observers != null)
+      {
+        p_observers.notify_moved(curr_component);
+      }
     }
   }
 

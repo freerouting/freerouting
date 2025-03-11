@@ -68,6 +68,12 @@ public class TestBasedOnAnIssue
     try
     {
       job.setInput(testFile);
+
+      var statsBefore = new BoardStatistics(job.input
+          .getData()
+          .readAllBytes(), job.input.format);
+      var jobSettings = new RouterSettings(statsBefore.layers.totalCount);
+      job.routerSettings.applyNewValuesFrom(jobSettings);
     } catch (IOException e)
     {
       throw new RuntimeException(testFile + " not found.", e);

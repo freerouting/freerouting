@@ -7,9 +7,9 @@ import app.freerouting.core.BoardLibrary;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 
@@ -1391,7 +1391,11 @@ public class BasicBoard implements Serializable
       search_tree_manager.remove(curr_item);
 
       // let the observers synchronize the deletion
-      communication.observers.notify_deleted(curr_item);
+      if ((communication != null) && (communication.observers != null))
+      {
+        communication.observers.notify_deleted(curr_item);
+      }
+
       if (p_changed_nets != null)
       {
         for (int i = 0; i < curr_item.net_count(); ++i)
