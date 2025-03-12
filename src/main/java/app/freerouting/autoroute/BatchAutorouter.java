@@ -345,7 +345,7 @@ public class BatchAutorouter extends NamedAlgorithm
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
           //boolean useSlowAlgorithm = this.board.rules.get_use_slow_autoroute_algorithm();
-          boolean useSlowAlgorithm = p_pass_no % 2 == 0;
+          boolean useSlowAlgorithm = p_pass_no % 4 == 0;
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no, useSlowAlgorithm);
           if (autorouterResult.state == AutorouteAttemptState.ROUTED)
           {
