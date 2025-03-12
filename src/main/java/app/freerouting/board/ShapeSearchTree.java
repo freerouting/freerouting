@@ -4,20 +4,7 @@ import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
 import app.freerouting.datastructures.MinAreaTree;
 import app.freerouting.datastructures.Signum;
-import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntOctagon;
-import app.freerouting.geometry.planar.Line;
-import app.freerouting.geometry.planar.LineSegment;
-import app.freerouting.geometry.planar.Polyline;
-import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.geometry.planar.RegularTileShape;
-import app.freerouting.geometry.planar.Shape;
-import app.freerouting.geometry.planar.ShapeBoundingDirections;
-import app.freerouting.geometry.planar.Side;
-import app.freerouting.geometry.planar.Simplex;
-import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ClearanceMatrix;
 
@@ -38,6 +25,7 @@ public class ShapeSearchTree extends MinAreaTree
    * compensated_clearance_class_no = 0, the shapes are not compensated.
    */
   public final int compensated_clearance_class_no;
+  public final String key;
   protected final BasicBoard board;
 
   /**
@@ -50,7 +38,25 @@ public class ShapeSearchTree extends MinAreaTree
     super(p_directions);
     this.compensated_clearance_class_no = p_compensated_clearance_class_no;
     board = p_board;
+    key = getKey(this, p_directions, compensated_clearance_class_no);
   }
+
+  public static String getKey(ShapeSearchTree searchTree, ShapeBoundingDirections directions, int clearance_class)
+  {
+    return searchTree
+        .getClass()
+        .getSimpleName() + "_" + directions
+        .getClass()
+        .getSimpleName()
+        .replaceAll("BoundingDirections", "") + "_cc" + clearance_class;
+  }
+
+  @Override
+  public String toString()
+  {
+    return key;
+  }
+
 
   /**
    * Returns, if for the shapes stored in this tree clearance compensation is used.
@@ -129,7 +135,9 @@ public class ShapeSearchTree extends MinAreaTree
   {
     int compensated_half_width = p_to_trace.get_half_width() + this.clearance_compensation_value(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
     TileShape[] link_shapes = this.offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
-    boolean change_order = p_from_trace.first_corner().equals(p_to_trace.first_corner());
+    boolean change_order = p_from_trace
+        .first_corner()
+        .equals(p_to_trace.first_corner());
     // remove the last or first tree entry from p_from_trace and the
     // first tree entry from p_to_trace, because they will be replaced by
     // the new link entries.
@@ -202,7 +210,9 @@ public class ShapeSearchTree extends MinAreaTree
   {
     int compensated_half_width = p_to_trace.get_half_width() + this.clearance_compensation_value(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
     TileShape[] link_shapes = this.offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
-    boolean change_order = p_from_trace.last_corner().equals(p_to_trace.last_corner());
+    boolean change_order = p_from_trace
+        .last_corner()
+        .equals(p_to_trace.last_corner());
     Leaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
     Leaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
     // remove the last or first tree entry from p_from_trace and the
@@ -609,7 +619,9 @@ public class ShapeSearchTree extends MinAreaTree
             for (IncompleteFreeSpaceExpansionRoom curr_incomplete_room : result)
             {
               boolean something_changed = false;
-              TileShape intersection = curr_incomplete_room.get_shape().intersection(curr_object_shape);
+              TileShape intersection = curr_incomplete_room
+                  .get_shape()
+                  .intersection(curr_object_shape);
               if (intersection.dimension() == 2)
               {
                 boolean ignore_expansion_room = curr_object instanceof CompleteFreeSpaceExpansionRoom && p_ignore_shape != null && p_ignore_shape.contains(intersection);
@@ -622,14 +634,18 @@ public class ShapeSearchTree extends MinAreaTree
                   new_result.addAll(restrain_shape(curr_incomplete_room, curr_object_shape));
                   for (IncompleteFreeSpaceExpansionRoom tmp_room : new_result)
                   {
-                    new_bounding_shape = new_bounding_shape.union(tmp_room.get_shape().bounding_shape(this.bounding_directions));
+                    new_bounding_shape = new_bounding_shape.union(tmp_room
+                        .get_shape()
+                        .bounding_shape(this.bounding_directions));
                   }
                 }
               }
               if (!something_changed)
               {
                 new_result.add(curr_incomplete_room);
-                new_bounding_shape = new_bounding_shape.union(curr_incomplete_room.get_shape().bounding_shape(this.bounding_directions));
+                new_bounding_shape = new_bounding_shape.union(curr_incomplete_room
+                    .get_shape()
+                    .bounding_shape(this.bounding_directions));
               }
             }
             result = new_result;
@@ -790,16 +806,24 @@ public class ShapeSearchTree extends MinAreaTree
     TileShape pin_shape = p_tie_pin.get_tree_shape_on_layer(this, p_trace.get_layer());
     FloatPoint compare_corner;
     int trace_shape_no;
-    if (p_trace.first_corner().equals(p_tie_pin.get_center()))
+    if (p_trace
+        .first_corner()
+        .equals(p_tie_pin.get_center()))
     {
       trace_shape_no = 0;
-      compare_corner = p_trace.polyline().corner_approx(1);
+      compare_corner = p_trace
+          .polyline()
+          .corner_approx(1);
 
     }
-    else if (p_trace.last_corner().equals(p_tie_pin.get_center()))
+    else if (p_trace
+        .last_corner()
+        .equals(p_tie_pin.get_center()))
     {
       trace_shape_no = p_trace.corner_count() - 2;
-      compare_corner = p_trace.polyline().corner_approx(p_trace.corner_count() - 2);
+      compare_corner = p_trace
+          .polyline()
+          .corner_approx(p_trace.corner_count() - 2);
     }
     else
     {
@@ -946,7 +970,9 @@ public class ShapeSearchTree extends MinAreaTree
     TileShape[] result;
     if (p_board_outline.keepout_outside_outline_generated())
     {
-      TileShape[] convex_shapes = p_board_outline.get_keepout_area().split_to_convex();
+      TileShape[] convex_shapes = p_board_outline
+          .get_keepout_area()
+          .split_to_convex();
       if (convex_shapes == null)
       {
         return new TileShape[0];
@@ -1041,14 +1067,20 @@ public class ShapeSearchTree extends MinAreaTree
     {
       return p_room_list;
     }
-    IncompleteFreeSpaceExpansionRoom curr_room = p_room_list.iterator().next();
-    IntBox room_bounding_box = curr_room.get_shape().bounding_box();
+    IncompleteFreeSpaceExpansionRoom curr_room = p_room_list
+        .iterator()
+        .next();
+    IntBox room_bounding_box = curr_room
+        .get_shape()
+        .bounding_box();
     if (2 * room_bounding_box.height() <= p_board_bounding_box.height() || 2 * room_bounding_box.width() <= p_board_bounding_box.width())
     {
       return p_room_list;
     }
     double max_section_width = 0.5 * Math.max(p_board_bounding_box.height(), p_board_bounding_box.width());
-    TileShape[] section_arr = curr_room.get_shape().divide_into_sections(max_section_width);
+    TileShape[] section_arr = curr_room
+        .get_shape()
+        .divide_into_sections(max_section_width);
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
     for (TileShape curr_section : section_arr)
     {

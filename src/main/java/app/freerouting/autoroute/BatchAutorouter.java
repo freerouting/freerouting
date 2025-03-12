@@ -344,7 +344,9 @@ public class BatchAutorouter extends NamedAlgorithm
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
-          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no);
+          //boolean useSlowAlgorithm = this.board.rules.get_use_slow_autoroute_algorithm();
+          boolean useSlowAlgorithm = p_pass_no % 2 == 0;
+          var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no, useSlowAlgorithm);
           if (autorouterResult.state == AutorouteAttemptState.ROUTED)
           {
             // The item was successfully routed
@@ -403,7 +405,7 @@ public class BatchAutorouter extends NamedAlgorithm
   }
 
   // Tries to route an item on a specific net. Returns true, if the item is routed.
-  private AutorouteAttemptResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no)
+  private AutorouteAttemptResult autoroute_item(Item p_item, int p_route_net_no, SortedSet<Item> p_ripped_item_list, int p_ripup_pass_no, boolean useSlowAlgorithm)
   {
     try
     {
@@ -473,7 +475,7 @@ public class BatchAutorouter extends NamedAlgorithm
       TimeLimit time_limit = new TimeLimit((int) max_milliseconds);
 
       // Initialize the auto-router engine
-      AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no, autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database);
+      AutorouteEngine autoroute_engine = board.init_autoroute(p_route_net_no, autoroute_control.trace_clearance_class_no, this.thread, time_limit, this.retain_autoroute_database, useSlowAlgorithm);
 
       // Do the auto-routing between the two sets of items
       AutorouteAttemptResult autoroute_result = autoroute_engine.autoroute_connection(route_start_set, route_dest_set, autoroute_control, p_ripped_item_list);

@@ -48,6 +48,7 @@ public class InsertFoundConnectionAlgo
     {
       if (!new_instance.insert_via(curr_new_item.corners[0], curr_layer, curr_new_item.layer))
       {
+        FRLogger.debug("InsertFoundConnectionAlgo: insert via failed for net #" + p_ctrl.net_no);
         return null;
       }
       curr_layer = curr_new_item.layer;

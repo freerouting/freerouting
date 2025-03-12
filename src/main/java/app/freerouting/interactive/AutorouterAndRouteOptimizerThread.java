@@ -399,7 +399,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   {
     var bs = new BoardStatistics(routingBoard);
 
-    String sb = "Board summary:\n" + "  Traces: " + bs.traces.totalLength + "\n" + "  Failed: " + bs.traces.incompleteCount + "\n";
+    String sb = "Board summary:\n" + "  Traces: " + bs.traces.totalLength + "\n" + "  Incompletes: " + bs.traces.incompleteCount + "\n";
 
     return sb;
   }

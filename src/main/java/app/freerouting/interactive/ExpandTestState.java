@@ -186,7 +186,7 @@ public class ExpandTestState extends InteractiveState
     this.control_settings.ripup_pass_no = hdlg.settings.autoroute_settings.get_start_pass_no();
     this.control_settings.ripup_costs = this.control_settings.ripup_pass_no * hdlg.settings.autoroute_settings.get_start_ripup_costs();
     this.control_settings.vias_allowed = false;
-    this.autoroute_engine = new AutorouteEngine(board, this.control_settings.trace_clearance_class_no, false);
+    this.autoroute_engine = new AutorouteEngine(board, this.control_settings.trace_clearance_class_no, false, false);
     this.autoroute_engine.init_connection(route_net_no, null, null);
     if (route_item == null)
     {
@@ -214,13 +214,17 @@ public class ExpandTestState extends InteractiveState
     {
       SortedSet<Item> ripped_item_list = new TreeSet<>();
       this.autoroute_result = LocateFoundConnectionAlgo.get_instance(search_result, control_settings, this.autoroute_engine.autoroute_search_tree, hdlg.get_routing_board().rules.get_trace_angle_restriction(), ripped_item_list);
-      hdlg.get_routing_board().generate_snapshot();
+      hdlg
+          .get_routing_board()
+          .generate_snapshot();
       SortedSet<Item> ripped_connections = new TreeSet<>();
       for (Item curr_ripped_item : ripped_item_list)
       {
         ripped_connections.addAll(curr_ripped_item.get_connection_items(Item.StopConnectionOption.VIA));
       }
-      hdlg.get_routing_board().remove_items(ripped_connections);
+      hdlg
+          .get_routing_board()
+          .remove_items(ripped_connections);
       InsertFoundConnectionAlgo.get_instance(autoroute_result, hdlg.get_routing_board(), control_settings);
     }
   }

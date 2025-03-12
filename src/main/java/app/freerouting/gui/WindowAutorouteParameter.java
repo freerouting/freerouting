@@ -116,9 +116,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
 
       // set the preferred direction combobox
       settings_autorouter_combo_box_arr.add(new JComboBox<>());
-      settings_autorouter_combo_box_arr.get(i).addItem(this.horizontal);
-      settings_autorouter_combo_box_arr.get(i).addItem(this.vertical);
-      settings_autorouter_combo_box_arr.get(i).addActionListener(new PreferredDirectionListener(i));
+      settings_autorouter_combo_box_arr
+          .get(i)
+          .addItem(this.horizontal);
+      settings_autorouter_combo_box_arr
+          .get(i)
+          .addItem(this.vertical);
+      settings_autorouter_combo_box_arr
+          .get(i)
+          .addActionListener(new PreferredDirectionListener(i));
       //settings_autorouter_combo_box_arr.get(i).addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_combo_box_arr", null));
       gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
       gridbag.setConstraints(settings_autorouter_combo_box_arr.get(i), gridbag_constraints);
@@ -254,7 +260,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_fast);
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_slow);
     settings_autorouter_detailed_speed_combo_box.addActionListener(new WindowAutorouteParameter.SpeedListener());
-    settings_autorouter_detailed_speed_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box.getSelectedItem().toString()));
+    settings_autorouter_detailed_speed_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box
+        .getSelectedItem()
+        .toString()));
 
     gridbag_constraints.gridwidth = 2;
     JLabel speed_label = new JLabel();
@@ -355,11 +363,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     {
       if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i)))
       {
-        this.settings_autorouter_combo_box_arr.get(i).setSelectedItem(this.horizontal);
+        this.settings_autorouter_combo_box_arr
+            .get(i)
+            .setSelectedItem(this.horizontal);
       }
       else
       {
-        this.settings_autorouter_combo_box_arr.get(i).setSelectedItem(this.vertical);
+        this.settings_autorouter_combo_box_arr
+            .get(i)
+            .setSelectedItem(this.vertical);
       }
     }
 
@@ -438,7 +450,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     public void actionPerformed(ActionEvent p_evt)
     {
       int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(this.signal_layer_no);
-      board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no, settings_autorouter_combo_box_arr.get(signal_layer_no).getSelectedItem() == horizontal);
+      board_handling.settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no, settings_autorouter_combo_box_arr
+          .get(signal_layer_no)
+          .getSelectedItem() == horizontal);
     }
   }
 
@@ -710,11 +724,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     @Override
     public void actionPerformed(ActionEvent p_evt)
     {
-      boolean old_is_slow = board_handling.get_routing_board().rules.get_slow_autoroute_algorithm();
+      boolean old_is_slow = board_handling.get_routing_board().rules.get_use_slow_autoroute_algorithm();
       boolean new_is_slow = settings_autorouter_detailed_speed_combo_box.getSelectedItem() == speed_slow;
       if (old_is_slow != new_is_slow)
       {
-        board_handling.get_routing_board().rules.set_slow_autoroute_algorithm(new_is_slow);
+        board_handling.get_routing_board().rules.set_use_slow_autoroute_algorithm(new_is_slow);
         board_handling.get_routing_board().search_tree_manager.reset_compensated_trees();
       }
     }

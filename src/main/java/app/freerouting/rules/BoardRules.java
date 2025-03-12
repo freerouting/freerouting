@@ -495,7 +495,7 @@ public class BoardRules implements Serializable
    * of type IntBox are used in 90 degree autorouting and shapes of type IntOctagon are used in 45
    * degree autorouting.
    */
-  public boolean get_slow_autoroute_algorithm()
+  public boolean get_use_slow_autoroute_algorithm()
   {
     return use_slow_autoroute_algorithm;
   }
@@ -505,7 +505,7 @@ public class BoardRules implements Serializable
    * of type IntBox are used in 90 degree autorouting and shapes of type IntOctagon are used in 45
    * degree autorouting.
    */
-  public void set_slow_autoroute_algorithm(boolean p_value)
+  public void set_use_slow_autoroute_algorithm(boolean p_value)
   {
     use_slow_autoroute_algorithm = p_value;
   }

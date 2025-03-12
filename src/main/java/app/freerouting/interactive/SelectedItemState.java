@@ -388,7 +388,7 @@ public class SelectedItemState extends InteractiveState
           .start_marking_changed_area();
       AutorouteAttemptResult autoroute_result = hdlg
           .get_routing_board()
-          .autoroute(curr_item, hdlg.settings.autoroute_settings, via_costs, p_stoppable_thread, null);
+          .autoroute(curr_item, hdlg.settings.autoroute_settings, via_costs, p_stoppable_thread, null, false);
       if (autoroute_result.state == AutorouteAttemptState.ROUTED)
       {
         ++found_count;
