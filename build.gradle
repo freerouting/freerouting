@@ -107,7 +107,7 @@ dependencies {
 
     // Add Jetty dependencies
     implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.0.15'
-    implementation 'org.eclipse.jetty:jetty-server:12.0.15'
+    implementation 'org.eclipse.jetty:jetty-server:12.0.18'
     implementation 'org.eclipse.jetty:jetty-util:12.0.15'
     implementation 'org.eclipse.jetty:jetty-security:12.0.15'
 
