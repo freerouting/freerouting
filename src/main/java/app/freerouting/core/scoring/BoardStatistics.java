@@ -11,6 +11,7 @@ import app.freerouting.interactive.RatsNest;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.RouterScoringSettings;
 import com.google.gson.annotations.SerializedName;
 
 import java.awt.geom.Rectangle2D;
@@ -227,7 +228,7 @@ public class BoardStatistics implements Serializable
         }
       }
     }
-    
+
     this.traces.incompleteCount = new RatsNest(board).incomplete_count();
 
     // Bends
@@ -330,8 +331,22 @@ public class BoardStatistics implements Serializable
 
     if (unit != board.communication.unit)
     {
-      // TODO: We need to convert all length values to the preferred unit
-      // this.unit = unit.toString();
+      // convert all length values to the preferred unit
+      Unit fromUnit = board.communication.unit;
+      Unit toUnit = unit;
+      this.unit = unit.toString();
+
+      // Board
+      this.board.boundingBox = new Rectangle2D.Float((float) Unit.scale(this.board.boundingBox.x, fromUnit, toUnit), (float) Unit.scale(this.board.boundingBox.y, fromUnit, toUnit), (float) Unit.scale(this.board.boundingBox.width, fromUnit, toUnit), (float) Unit.scale(this.board.boundingBox.height, fromUnit, toUnit));
+      this.board.size = new Rectangle2D.Float(0, 0, (float) Unit.scale(this.board.size.width, fromUnit, toUnit), (float) Unit.scale(this.board.size.height, fromUnit, toUnit));
+
+      // Traces
+      this.traces.totalLength = (float) Unit.scale(this.traces.totalLength, fromUnit, toUnit);
+      this.traces.totalWeightedLength = (float) Unit.scale(this.traces.totalWeightedLength, fromUnit, toUnit);
+      this.traces.averageLength = (float) Unit.scale(this.traces.averageLength, fromUnit, toUnit);
+      this.traces.totalHorizontalLength = (float) Unit.scale(this.traces.totalHorizontalLength, fromUnit, toUnit);
+      this.traces.totalVerticalLength = (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
+      this.traces.totalAngledLength = (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
     }
   }
 
@@ -443,4 +458,25 @@ public class BoardStatistics implements Serializable
     return GsonProvider.GSON.toJson(this);
   }
 
+  /**
+   * Calculates the score/cost of the board based on the given scoring settings. Higher score means better board.
+   */
+  public float calculateScore(RouterScoringSettings scoringSettings)
+  {
+    float maximumScore = getMaximumScore(scoringSettings);
+    float penalties = this.traces.incompleteCount * scoringSettings.unroutedNetPenalty + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty + this.bends.totalCount * scoringSettings.bendPenalty;
+    float costs = (float) (this.traces.totalLength * scoringSettings.defaultPreferredDirectionTraceCost + this.vias.totalCount * scoringSettings.via_costs);
+
+    return maximumScore - penalties - costs;
+  }
+
+  public float getMaximumScore(RouterScoringSettings scoringSettings)
+  {
+    return this.nets.totalCount * scoringSettings.unroutedNetPenalty;
+  }
+
+  public float getNormalizedScore(RouterScoringSettings scoringSettings)
+  {
+    return Math.max(0, calculateScore(scoringSettings) / getMaximumScore(scoringSettings)) * 1000;
+  }
 }
