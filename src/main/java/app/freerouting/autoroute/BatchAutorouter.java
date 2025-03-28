@@ -194,21 +194,6 @@ public class BatchAutorouter extends NamedAlgorithm
 
         if ((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM))
         {
-          double averageHistoricalScore = scoreHistory
-              .stream()
-              .mapToDouble(a -> a)
-              .average()
-              .getAsDouble();
-
-          float maximumScore = new BoardStatistics(this.board).getMaximumScore(this.settings.scoring);
-          float improvementThreshold = maximumScore * EXPECTED_SCORE_IMPROVEMENT_PERCENT / 100;
-          float scoreImprovement = boardScoreAfter - (float) averageHistoricalScore;
-          if (scoreImprovement < improvementThreshold)
-          {
-            job.logWarning("There were only " + FRLogger.defaultFloatFormat.format((averageHistoricalScore / maximumScore) * 100) + "% score change in the last " + numberOfPassesToAverage + " passes, so it's very likely that auto-router can't improve the result further.");
-            this.is_interrupted = true;
-          }
-
           // let's go back to the best board so far, and continue from there
           double maxScoreSoFar = scoreHistory
               .stream()
