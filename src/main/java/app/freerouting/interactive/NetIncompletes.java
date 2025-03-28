@@ -114,7 +114,7 @@ public class NetIncompletes
   }
 
   /**
-   * Returns the number of incompletes of this net.
+   * Returns the number of incompletes/airlines of this net.
    */
   public int count()
   {
@@ -127,8 +127,12 @@ public class NetIncompletes
   boolean calc_length_violation()
   {
     double old_violation = this.length_violation;
-    double max_length = this.net.get_class().get_maximum_trace_length();
-    double min_length = this.net.get_class().get_minimum_trace_length();
+    double max_length = this.net
+        .get_class()
+        .get_maximum_trace_length();
+    double min_length = this.net
+        .get_class()
+        .get_minimum_trace_length();
     if (max_length <= 0 && min_length <= 0)
     {
       this.length_violation = 0;
@@ -190,7 +194,9 @@ public class NetIncompletes
     Collection<Pin> net_pins = this.net.get_pins();
     for (Pin curr_pin : net_pins)
     {
-      draw_length_violation_marker(curr_pin.get_center().to_float(), this.length_violation, p_graphics, p_graphics_context);
+      draw_length_violation_marker(curr_pin
+          .get_center()
+          .to_float(), this.length_violation, p_graphics, p_graphics_context);
     }
   }
 
@@ -207,7 +213,9 @@ public class NetIncompletes
     int curr_index = 0;
     while (!p_item_list.isEmpty())
     {
-      Item start_item = p_item_list.iterator().next();
+      Item start_item = p_item_list
+          .iterator()
+          .next();
       Collection<Item> curr_connected_set = start_item.get_connected_set(this.net.net_number);
       handled_items.addAll(curr_connected_set);
       p_item_list.removeAll(curr_connected_set);

@@ -97,10 +97,37 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     {
       shape_to_be_contained = contained_shape.bounding_octagon();
     }
-    else if (contained_shape instanceof app.freerouting.geometry.planar.Simplex)
+    else if (contained_shape instanceof Simplex simplex)
     {
+      // Clean up the Simplex by removing short border lines
+      var lineCount = simplex.border_line_count();
+      for (int i = 0; i < lineCount; i++)
+      {
+        if (i < 0)
+        {
+          break;
+        }
+
+        // Remove the tiny line from the Simplex to avoid problems with the octagon conversion
+        // Remove lines that are the same as the next line just in the opposite direction
+        Line line = simplex.border_line(i);
+        Line nextLine = simplex.border_line((i + 1) % lineCount);
+        if ((line.length() < 10) || (line.equals(nextLine.opposite())))
+        {
+          simplex = simplex.remove_border_line(i);
+          lineCount = simplex.border_line_count();
+          i = i - 1;
+        }
+      }
+
+      if (simplex.border_line_count() < 3)
+      {
+        // If the Simplex has less than 3 lines, it cannot be converted to an octagon
+        return new LinkedList<>();
+      }
+
       // Convert Simplex to IntOctagon for processing
-      shape_to_be_contained = contained_shape.bounding_octagon();
+      shape_to_be_contained = simplex.bounding_octagon();
       if (shape_to_be_contained == null)
       {
         // If conversion fails (e.g., unbounded Simplex)

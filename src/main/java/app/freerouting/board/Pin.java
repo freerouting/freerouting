@@ -4,10 +4,10 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.LogicalPart;
 import app.freerouting.core.Package;
 import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 
@@ -71,7 +71,9 @@ public class Pin extends DrillItem implements Serializable
       // rotation may be not exact
       FloatPoint location_approx = rel_location.to_float();
       location_approx = location_approx.rotate(Math.toRadians(component_rotation), FloatPoint.ZERO);
-      rel_location = location_approx.round().difference_by(Point.ZERO);
+      rel_location = location_approx
+          .round()
+          .difference_by(Point.ZERO);
     }
     if (!component.placed_on_front() && board.components.get_flip_style_rotate_first())
     {
@@ -89,7 +91,9 @@ public class Pin extends DrillItem implements Serializable
 
       // Calculate the pin center.
       Component component = board.components.get(this.get_component_no());
-      pin_center = component.get_location().translate_by(this.relative_location());
+      pin_center = component
+          .get_location()
+          .translate_by(this.relative_location());
 
       // check that the pin center is inside the pin shape and correct it eventually
 
@@ -111,7 +115,9 @@ public class Pin extends DrillItem implements Serializable
       }
       else if (!curr_shape.contains_inside(pin_center))
       {
-        pin_center = curr_shape.centre_of_gravity().round();
+        pin_center = curr_shape
+            .centre_of_gravity()
+            .round();
       }
       this.set_center(pin_center);
     }
@@ -127,7 +133,9 @@ public class Pin extends DrillItem implements Serializable
       FRLogger.warn("Pin.get_padstack; component not found");
       return null;
     }
-    int padstack_no = component.get_package().get_pin(pin_no).padstack_no;
+    int padstack_no = component
+        .get_package()
+        .get_pin(pin_no).padstack_no;
     return board.library.padstacks.get(padstack_no);
   }
 
@@ -153,7 +161,9 @@ public class Pin extends DrillItem implements Serializable
       FRLogger.warn("Pin.name: component not found");
       return null;
     }
-    return component.get_package().get_pin(pin_no).name;
+    return component
+        .get_package()
+        .get_pin(pin_no).name;
   }
 
   /**
@@ -202,7 +212,9 @@ public class Pin extends DrillItem implements Serializable
         rel_location = package_pin.relative_location.mirror_at_y_axis();
       }
 
-      Vector component_translation = component.get_location().difference_by(Point.ZERO);
+      Vector component_translation = component
+          .get_location()
+          .difference_by(Point.ZERO);
 
       for (int index = 0; index < this.precalculated_shapes.length; ++index)
       {
@@ -293,13 +305,17 @@ public class Pin extends DrillItem implements Serializable
     Component component = board.components.get(this.get_component_no());
     if (component != null)
     {
-      if (component.get_package().pin_count() <= 3)
+      if (component
+          .get_package()
+          .pin_count() <= 3)
       {
         pad_xy_factor *= 2; // allow connection to the longer side also for shorter pads.
       }
     }
 
-    Collection<Direction> padstack_exit_directions = this.get_padstack().get_trace_exit_directions(padstack_layer, pad_xy_factor);
+    Collection<Direction> padstack_exit_directions = this
+        .get_padstack()
+        .get_trace_exit_directions(padstack_layer, pad_xy_factor);
     if (padstack_exit_directions.isEmpty())
     {
       return result;
@@ -588,7 +604,9 @@ public class Pin extends DrillItem implements Serializable
   public double get_min_width(int p_layer)
   {
     int padstack_layer = get_padstack_layer(p_layer - this.first_layer());
-    Shape padstack_shape = this.get_padstack().get_shape(padstack_layer);
+    Shape padstack_shape = this
+        .get_padstack()
+        .get_shape(padstack_layer);
     if (padstack_shape == null)
     {
       FRLogger.warn("Pin.get_min_width: padstack_shape is null");
@@ -619,7 +637,9 @@ public class Pin extends DrillItem implements Serializable
   public double get_max_width(int p_layer)
   {
     int padstack_layer = get_padstack_layer(p_layer - this.first_layer());
-    Shape padstack_shape = this.get_padstack().get_shape(padstack_layer);
+    Shape padstack_shape = this
+        .get_padstack()
+        .get_shape(padstack_layer);
     if (padstack_shape == null)
     {
       FRLogger.warn("Pin.get_max_width: padstack_shape is null");
@@ -644,12 +664,16 @@ public class Pin extends DrillItem implements Serializable
     Component component = board.components.get(this.get_component_no());
     p_window.append(component.name, tm.getText("component_info"), component);
     p_window.append(", " + tm.getText("pin_2") + " ");
-    p_window.append(component.get_package().get_pin(this.pin_no).name);
+    p_window.append(component
+        .get_package()
+        .get_pin(this.pin_no).name);
     p_window.append(", " + tm.getText("padstack") + " ");
     Padstack padstack = this.get_padstack();
     p_window.append(padstack.name, tm.getText("padstack_info"), padstack);
     p_window.append(" " + tm.getText("at") + " ");
-    p_window.append(this.get_center().to_float());
+    p_window.append(this
+        .get_center()
+        .to_float());
     this.print_connectable_item_info(p_window, p_locale);
     p_window.newline();
   }
@@ -661,7 +685,9 @@ public class Pin extends DrillItem implements Serializable
 
     Component component = board.components.get(this.get_component_no());
     Padstack padstack = this.get_padstack();
-    String hover_info = tm.getText("pin") + " : " + tm.getText("component_2") + " " + component.name + " " + tm.getText("pin_2") + " " + component.get_package().get_pin(this.pin_no).name + " " + tm.getText("padstack") + " " + padstack.name + " " + this.get_connectable_item_hover_info(p_locale);
+    String hover_info = tm.getText("pin") + " : " + tm.getText("component_2") + " " + component.name + " " + tm.getText("pin_2") + " " + component
+        .get_package()
+        .get_pin(this.pin_no).name + " " + tm.getText("padstack") + " " + padstack.name + " " + this.get_connectable_item_hover_info(p_locale);
     return hover_info;
   }
 
@@ -781,6 +807,31 @@ public class Pin extends DrillItem implements Serializable
       }
     }
     return nearest_exit_corner;
+  }
+
+  @Override
+  public String toString()
+  {
+    StringBuilder simpleName = new StringBuilder();
+
+    simpleName.append(this
+        .getClass()
+        .getSimpleName()
+        .toLowerCase());
+
+    if (pin_no > 0)
+    {
+      simpleName.append(" #");
+      simpleName.append(pin_no);
+    }
+
+    if (component_no > 0)
+    {
+      simpleName.append(" of component #");
+      simpleName.append(component_no);
+    }
+
+    return simpleName.toString();
   }
 
   /**

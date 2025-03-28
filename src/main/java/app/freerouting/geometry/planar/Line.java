@@ -484,7 +484,9 @@ public class Line implements Comparable<Line>, Serializable
    */
   public boolean is_parallel(Line p_other)
   {
-    return this.direction().side_of(p_other.direction()) == Side.COLLINEAR;
+    return this
+        .direction()
+        .side_of(p_other.direction()) == Side.COLLINEAR;
   }
 
   /**
@@ -493,7 +495,9 @@ public class Line implements Comparable<Line>, Serializable
   public boolean is_perpendicular(Line p_other)
   {
     Vector v1 = direction().get_vector();
-    Vector v2 = p_other.direction().get_vector();
+    Vector v2 = p_other
+        .direction()
+        .get_vector();
     return v1.projection(v2) == Signum.ZERO;
   }
 
@@ -633,8 +637,12 @@ public class Line implements Comparable<Line>, Serializable
     {
       return null;
     }
-    Direction dir1 = this.direction().turn_45_degree(2);
-    Direction dir2 = this.direction().turn_45_degree(6);
+    Direction dir1 = this
+        .direction()
+        .turn_45_degree(2);
+    Direction dir2 = this
+        .direction()
+        .turn_45_degree(6);
 
     Point check_point_1 = p_from_point.translate_by(dir1.get_vector());
     if (this.side_of(check_point_1) != line_side)
@@ -646,7 +654,9 @@ public class Line implements Comparable<Line>, Serializable
     {
       return dir2;
     }
-    FloatPoint nearest_line_point = p_from_point.to_float().projection_approx(this);
+    FloatPoint nearest_line_point = p_from_point
+        .to_float()
+        .projection_approx(this);
     Direction result;
     if (nearest_line_point.distance_square(check_point_1.to_float()) <= nearest_line_point.distance_square(check_point_2.to_float()))
     {
@@ -687,5 +697,13 @@ public class Line implements Comparable<Line>, Serializable
     Point new_a = b.mirror_horizontal(p_pole);
     Point new_b = a.mirror_horizontal(p_pole);
     return new Line(new_a, new_b);
+  }
+
+  public float length()
+  {
+    IntPoint ipa = (IntPoint) a;
+    IntPoint ipb = (IntPoint) b;
+
+    return (float) Math.sqrt((ipb.x - ipa.x) * (ipb.x - ipa.x) + (ipb.y - ipa.y) * (ipb.y - ipa.y));
   }
 }

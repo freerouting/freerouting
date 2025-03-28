@@ -16,6 +16,7 @@ import java.util.*;
 public class RatsNest
 {
 
+  public final int max_connections;
   private final NetIncompletes[] net_incompletes;
   private final boolean[] is_filtered;
   public boolean hidden = false;
@@ -50,6 +51,10 @@ public class RatsNest
         }
       }
     }
+    this.max_connections = net_item_lists
+        .stream()
+        .mapToInt(Collection::size)
+        .sum() - net_item_lists.size();
     this.net_incompletes = new NetIncompletes[max_net_no];
     this.is_filtered = new boolean[max_net_no];
     for (int i = 0; i < net_incompletes.length; ++i)
@@ -84,6 +89,10 @@ public class RatsNest
     }
   }
 
+  /**
+   * Returns the number of incomplete connections (airlines) of the ratsnest.
+   * This values might be higher than the number of nets, if the nets have multiple unrouted connections.
+   */
   public int incomplete_count()
   {
     int result = 0;

@@ -28,6 +28,8 @@ public class BatchAutorouter extends NamedAlgorithm
   private static final int STOP_AT_PASS_MINIMUM = 8;
   // The modulo of the pass number to check if the improvements were so small that process should stop despite not all items are routed
   private static final int STOP_AT_PASS_MODULO = 4;
+  // The minimum percentage of improvement to continue the auto-router
+  private static final float EXPECTED_SCORE_IMPROVEMENT_PERCENT = 0.5f;
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
   private final boolean retain_autoroute_database;
@@ -75,7 +77,7 @@ public class BatchAutorouter extends NamedAlgorithm
   }
 
   /**
-   * Autoroutes ripup passes until the board is completed or the autorouter is stopped by the user,
+   * Auto-routes ripup passes until the board is completed or the auto-router is stopped by the user,
    * or if p_max_pass_count is exceeded. Is currently used in the optimize via batch pass. Returns
    * the number of passes to complete the board or p_max_pass_count + 1, if the board is not
    * completed.
@@ -158,12 +160,12 @@ public class BatchAutorouter extends NamedAlgorithm
       }
 
       String current_board_hash = this.board.get_hash();
-      //      if (already_checked_board_hashes.contains(current_board_hash))
-      //      {
-      //        // This board was already evaluated, so we stop auto-router to avoid the endless loop
-      //        thread.request_stop_auto_router();
-      //        break;
-      //      }
+      if (already_checked_board_hashes.contains(current_board_hash))
+      {
+        // This board was already evaluated, so we stop auto-router to avoid the endless loop
+        thread.request_stop_auto_router();
+        break;
+      }
 
       int curr_pass_no = this.settings.get_start_pass_no();
       if (curr_pass_no > this.settings.get_stop_pass_no())
@@ -178,7 +180,7 @@ public class BatchAutorouter extends NamedAlgorithm
       scoreHistory.add(boardScoreBefore);
       boardHistory.add(this.board.deepCopy());
 
-      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' with the score of " + FRLogger.defaultFloatFormat.format(boardScoreBefore));
+      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
 
       already_checked_board_hashes.add(this.board.get_hash());
       still_unrouted_items = autoroute_pass(curr_pass_no, new Random().nextInt());
@@ -199,7 +201,7 @@ public class BatchAutorouter extends NamedAlgorithm
               .getAsDouble();
 
           float maximumScore = new BoardStatistics(this.board).getMaximumScore(this.settings.scoring);
-          float improvementThreshold = maximumScore * 0.001f;
+          float improvementThreshold = maximumScore * EXPECTED_SCORE_IMPROVEMENT_PERCENT / 100;
           float scoreImprovement = boardScoreAfter - (float) averageHistoricalScore;
           if (scoreImprovement < improvementThreshold)
           {
@@ -223,14 +225,18 @@ public class BatchAutorouter extends NamedAlgorithm
                 this.board = boardHistory.get(i);
                 boardHistory.remove(i);
                 scoreHistory.remove(i);
-                job.logDebug("Going back to the best board so far, which has the score of " + FRLogger.defaultFloatFormat.format(maxScoreSoFar));
+                already_checked_board_hashes.remove(this.board.get_hash());
+
+                var boardStatistics = this.board.get_statistics();
+                job.logDebug("Going back to the best board so far, which has the score of " + FRLogger.defaultFloatFormat.format(boardStatistics.getNormalizedScore(job.routerSettings.scoring)) + " (" + boardStatistics.connections.incompleteCount + " unrouted).");
+
                 break;
               }
             }
           }
         }
       }
-      double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' changing its score by " + FRLogger.defaultFloatFormat.format(boardScoreAfter - boardScoreBefore));
+      double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
 
       String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration);
       if (job.resourceUsage.cpuTimeUsed > 0)

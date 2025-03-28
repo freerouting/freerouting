@@ -520,4 +520,10 @@ public class IntPoint extends Point implements Serializable
   {
     return -p_other.compare_y(this);
   }
+
+  @Override
+  public String toString()
+  {
+    return "(" + this.x + "," + this.y + ")";
+  }
 }

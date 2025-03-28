@@ -143,7 +143,9 @@ public abstract class Direction implements Comparable<Direction>, Serializable
    */
   public Side side_of(Direction p_other)
   {
-    return this.get_vector().side_of(p_other.get_vector());
+    return this
+        .get_vector()
+        .side_of(p_other.get_vector());
   }
 
   /**
@@ -153,7 +155,9 @@ public abstract class Direction implements Comparable<Direction>, Serializable
    */
   public Signum projection(Direction p_other)
   {
-    return this.get_vector().projection(p_other.get_vector());
+    return this
+        .get_vector()
+        .projection(p_other.get_vector());
   }
 
   /**
@@ -162,7 +166,9 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   public Direction middle_approx(Direction p_other)
   {
     FloatPoint v1 = get_vector().to_float();
-    FloatPoint v2 = p_other.get_vector().to_float();
+    FloatPoint v2 = p_other
+        .get_vector()
+        .to_float();
     double length1 = v1.size();
     double length2 = v2.size();
     double x = v1.x / length1 + v2.x / length2;
@@ -209,7 +215,9 @@ public abstract class Direction implements Comparable<Direction>, Serializable
    */
   public double angle_approx()
   {
-    return this.get_vector().angle_approx();
+    return this
+        .get_vector()
+        .angle_approx();
   }
 
   // auxiliary functions needed because the virtual function mechanism
@@ -218,4 +226,49 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   abstract int compareTo(IntDirection p_other);
 
   abstract int compareTo(BigIntDirection p_other);
+
+  @Override
+  public String toString()
+  {
+    if (this.compareTo(RIGHT) == 0)
+    {
+      return "RIGHT";
+    }
+    else if (this.compareTo(RIGHT45) == 0)
+    {
+      return "UP-RIGHT";
+    }
+    else if (this.compareTo(UP) == 0)
+    {
+      return "UP";
+    }
+    else if (this.compareTo(UP45) == 0)
+    {
+      return "UP-LEFT";
+    }
+    else if (this.compareTo(LEFT) == 0)
+    {
+      return "LEFT";
+    }
+    else if (this.compareTo(LEFT45) == 0)
+    {
+      return "DOWN-LEFT";
+    }
+    else if (this.compareTo(DOWN) == 0)
+    {
+      return "DOWN";
+    }
+    else if (this.compareTo(DOWN45) == 0)
+    {
+      return "DOWN-RIGHT";
+    }
+    else if (this.compareTo(NULL) == 0)
+    {
+      return "NULL";
+    }
+    else
+    {
+      return "UNKNOWN";
+    }
+  }
 }

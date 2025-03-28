@@ -33,6 +33,10 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public transient BasicBoard board;
   public double smallest_clearance;
   /**
+   * not 0, if this item belongs to a component
+   */
+  protected int component_no;
+  /**
    * The nets, to which this item belongs
    */
   int[] net_no_arr;
@@ -45,10 +49,6 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    */
   private transient ItemSearchTreesInfo search_trees_info;
   private FixedState fixed_state;
-  /**
-   * not 0, if this item belongs to a component
-   */
-  private int component_no;
   /**
    * False, if the item is deleted or not inserted into the board
    */

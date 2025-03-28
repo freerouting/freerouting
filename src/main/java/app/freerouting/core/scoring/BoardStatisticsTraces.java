@@ -32,6 +32,4 @@ public class BoardStatisticsTraces implements Serializable
   // The total angled (non-horizontal and non-vertical) length of all traces.
   @SerializedName("total_angled_length")
   public Float totalAngledLength = null;
-  @SerializedName("incomplete_count")
-  public Integer incompleteCount = null;
 }

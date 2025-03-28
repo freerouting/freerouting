@@ -42,6 +42,8 @@ public class BoardStatistics implements Serializable
   public BoardStatisticsPads pads = new BoardStatisticsPads();
   @SerializedName("nets")
   public BoardStatisticsNets nets = new BoardStatisticsNets();
+  @SerializedName("connections")
+  public BoardStatisticsConnections connections = new BoardStatisticsConnections();
   @SerializedName("traces")
   public BoardStatisticsTraces traces = new BoardStatisticsTraces();
   @SerializedName("bends")
@@ -229,7 +231,10 @@ public class BoardStatistics implements Serializable
       }
     }
 
-    this.traces.incompleteCount = new RatsNest(board).incomplete_count();
+    // Connections
+    var ratsnest = new RatsNest(board);
+    this.connections.maximumCount = ratsnest.max_connections;
+    this.connections.incompleteCount = ratsnest.incomplete_count();
 
     // Bends
     this.bends.totalCount = 0;
@@ -464,7 +469,7 @@ public class BoardStatistics implements Serializable
   public float calculateScore(RouterScoringSettings scoringSettings)
   {
     float maximumScore = getMaximumScore(scoringSettings);
-    float penalties = this.traces.incompleteCount * scoringSettings.unroutedNetPenalty + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty + this.bends.totalCount * scoringSettings.bendPenalty;
+    float penalties = this.connections.incompleteCount * scoringSettings.unroutedNetPenalty + this.clearanceViolations.totalCount * scoringSettings.clearanceViolationPenalty + this.bends.totalCount * scoringSettings.bendPenalty;
     float costs = (float) (this.traces.totalLength * scoringSettings.defaultPreferredDirectionTraceCost + this.vias.totalCount * scoringSettings.via_costs);
 
     return maximumScore - penalties - costs;
@@ -472,7 +477,7 @@ public class BoardStatistics implements Serializable
 
   public float getMaximumScore(RouterScoringSettings scoringSettings)
   {
-    return this.nets.totalCount * scoringSettings.unroutedNetPenalty;
+    return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
   public float getNormalizedScore(RouterScoringSettings scoringSettings)

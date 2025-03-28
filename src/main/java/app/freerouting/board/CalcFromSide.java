@@ -7,7 +7,7 @@ public class CalcFromSide
 {
   public static final CalcFromSide NOT_CALCULATED = new CalcFromSide(-1, null);
   final int no;
-  final FloatPoint border_intersection;
+  FloatPoint border_intersection;
 
   /**
    * calculates the number of the edge line of p_shape where p_polyline enters. Used in the push
@@ -116,15 +116,51 @@ public class CalcFromSide
     }
     if (front_side_no < 0)
     {
-      FRLogger.debug("CalcFromSide: start corner was not found");
-      no = -1;
-      border_intersection = null;
+      // Fallback: find the nearest side of the shape to the start point of the line segment
+      start_corner = p_line_segment.start_point_approx();
+      double min_distance = Double.MAX_VALUE;
+      int nearest_side = 0;
+
+      // Check each side of the shape
+      for (int i = 0; i < border_line_count; i++)
+      {
+        FloatLine border_line = new FloatLine(p_shape.border_line(i).a.to_float(), p_shape.border_line(i).b.to_float());
+        FloatPoint projection = border_line.perpendicular_projection(start_corner);
+
+        // Only consider if projection is on the line segment
+        FloatPoint side_start = p_shape.corner_approx(i);
+        FloatPoint side_end = p_shape.corner_approx((i + 1) % border_line_count);
+        if (projection.is_contained_in_box(side_start, side_end, 0.01))
+        {
+          double distance = start_corner.distance(projection);
+          if (distance < min_distance)
+          {
+            min_distance = distance;
+            nearest_side = i;
+            this.border_intersection = projection;
+          }
+        }
+      }
+
+      // Apply the same shove direction logic as the original code
+      if (p_shove_to_the_left)
+      {
+        this.no = (nearest_side + 2) % border_line_count;
+      }
+      else
+      {
+        this.no = (nearest_side + border_line_count - 2) % border_line_count;
+      }
+
+      // Update border intersection to be the middle of the chosen side
+      FloatPoint prev_corner = p_shape.corner_approx(this.no);
+      FloatPoint next_corner = p_shape.corner_approx((this.no + 1) % border_line_count);
+      this.border_intersection = prev_corner.middle_point(next_corner);
       return;
     }
     if (p_shove_to_the_left)
     {
       this.no = (front_side_no + 2) % border_line_count;
-
     }
     else
     {
