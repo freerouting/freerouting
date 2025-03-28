@@ -48,7 +48,13 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       @Override
       public void onBoardUpdatedEvent(BoardUpdatedEvent event)
       {
+        // TODO: the settings should be job specific and not global
+        float boardScore = event
+            .getBoardStatistics()
+            .getNormalizedScore(globalSettings.routerSettings.scoring);
+
         boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
+        boardManager.screen_messages.set_board_score(boardScore, event.getBoardStatistics().traces.incompleteCount);
         boardManager.repaint();
         //routingJob.logInfo(GsonProvider.GSON.toJson(event.getRouterCounters()));
         //routingJob.logDebug(GsonProvider.GSON.toJson(event.getBoardStatistics()));
@@ -121,6 +127,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         {
           BoardStatistics boardStatistics = event.getBoardStatistics();
           boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
+          boardManager.screen_messages.set_board_score(boardStatistics.getNormalizedScore(globalSettings.routerSettings.scoring), boardStatistics.traces.incompleteCount);
           boardManager.repaint();
         }
       });

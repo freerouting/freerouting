@@ -4,8 +4,8 @@ import app.freerouting.management.TextManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.Cursor;
 import java.awt.*;
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ class BoardPanelStatus extends JPanel
   public final JLabel statusMessage;
   public final JLabel additionalMessage;
   public final JLabel currentLayer;
+  public final JLabel currentBoardScore;
   public final JLabel mousePosition;
   public final JLabel unitLabel;
   // An icon for errors and warnings
@@ -98,6 +99,11 @@ class BoardPanelStatus extends JPanel
     currentLayer = new JLabel();
     tm.setText(currentLayer, "current_layer");
     rightMessagePanel.add(currentLayer, BorderLayout.CENTER);
+
+    // Initialize current board score label
+    currentBoardScore = new JLabel();
+    tm.setText(currentBoardScore, "current_board_score");
+    rightMessagePanel.add(currentBoardScore, BorderLayout.CENTER);
 
     // Create cursor panel
     JPanel cursorPanel = new JPanel(new BorderLayout());

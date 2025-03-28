@@ -345,6 +345,7 @@ public class SelectedItemState extends InteractiveState
       }
     }
     int items_to_go_count = autoroute_item_list.size();
+
     hdlg.screen_messages.set_interactive_autoroute_info(found_count, not_found_count, items_to_go_count);
     // Empty this.item_list to avoid displaying the selected items.
     this.item_list = new TreeSet<>();

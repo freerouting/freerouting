@@ -3,6 +3,7 @@ package app.freerouting.interactive;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ public class ScreenMessages
   private final JLabel add_field;
   private final JLabel status_field;
   private final JLabel layer_field;
+  private final JLabel score_field;
   private final JLabel mouse_position;
   private final JLabel unit_label;
   private final TextManager tm;
@@ -36,7 +38,7 @@ public class ScreenMessages
   /**
    * Creates a new instance of ScreenMessages
    */
-  public ScreenMessages(JLabel errorLabel, JLabel warningLabel, JLabel p_status_field, JLabel p_add_field, JLabel p_layer_field, JLabel p_mouse_position, JLabel p_unit_label, Locale p_locale)
+  public ScreenMessages(JLabel errorLabel, JLabel warningLabel, JLabel p_status_field, JLabel p_add_field, JLabel p_layer_field, JLabel p_score_field, JLabel p_mouse_position, JLabel p_unit_label, Locale p_locale)
   {
 
     tm = new TextManager(this.getClass(), p_locale);
@@ -47,6 +49,7 @@ public class ScreenMessages
     status_field = p_status_field;
     add_field = p_add_field;
     layer_field = p_layer_field;
+    score_field = p_score_field;
     mouse_position = p_mouse_position;
     unit_label = p_unit_label;
     add_field.setText(empty_string);
@@ -89,6 +92,7 @@ public class ScreenMessages
     int found = p_found;
     int failed = p_not_found;
     int items_to_go = p_items_to_go;
+
     add_field.setText(tm.getText("to_route") + " " + items_to_go);
     layer_field.setText(tm.getText("found") + " " + found + ", " + tm.getText("failed") + " " + failed);
   }
@@ -176,5 +180,10 @@ public class ScreenMessages
   public void set_write_protected(boolean p_value)
   {
     write_protected = p_value;
+  }
+
+  public void set_board_score(float score, int unrouted_count)
+  {
+    score_field.setText("Quality score: " + FRLogger.defaultFloatFormat.format(score) + " (" + unrouted_count + " unrouted)");
   }
 }

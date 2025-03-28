@@ -28,8 +28,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 public class GuiBoardManager extends HeadlessBoardManager
 {
 
-  // The interval in milliseconds between two repaints of the board panel
+  // The interval in milliseconds between two repaints of the board panel (sets the effective frame rate)
   private static final long repaint_interval = 1000;
   // The time of the last repaint of the board panel
   private static long last_repainted_time = 0;

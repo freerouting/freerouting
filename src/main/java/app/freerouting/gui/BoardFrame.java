@@ -21,8 +21,8 @@ import app.freerouting.settings.GlobalSettings;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.Component;
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
@@ -30,8 +30,8 @@ import java.io.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -307,7 +307,7 @@ public class BoardFrame extends WindowBase
     this.select_toolbar = new BoardToolbarSelectedItem(this);
 
     // Screen messages are displayed in the status bar, below the canvas.
-    this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel, this.message_panel.statusMessage, this.message_panel.additionalMessage, this.message_panel.currentLayer, this.message_panel.mousePosition, this.message_panel.unitLabel, this.locale);
+    this.screen_messages = new ScreenMessages(this.message_panel.errorLabel, this.message_panel.warningLabel, this.message_panel.statusMessage, this.message_panel.additionalMessage, this.message_panel.currentLayer, this.message_panel.currentBoardScore, this.message_panel.mousePosition, this.message_panel.unitLabel, this.locale);
 
     // The scroll pane for the canvas of the routing board.
     this.scroll_pane = new JScrollPane();

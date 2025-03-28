@@ -24,12 +24,17 @@ import java.util.*;
 public class BatchAutorouter extends NamedAlgorithm
 {
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
+  // The minimum number of passes to complete the board, unless all items are routed
+  private static final int STOP_AT_PASS_MINIMUM = 8;
+  // The modulo of the pass number to check if the improvements were so small that process should stop despite not all items are routed
+  private static final int STOP_AT_PASS_MODULO = 4;
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
   private final boolean retain_autoroute_database;
   private final int start_ripup_costs;
   private final HashSet<String> already_checked_board_hashes = new HashSet<>();
-  private final LinkedList<Integer> traceLengthDifferenceBetweenPasses = new LinkedList<>();
+  private final LinkedList<Float> scoreHistory = new LinkedList<>();
+  private final LinkedList<RoutingBoard> boardHistory = new LinkedList<>();
   private final int trace_pull_tight_accuracy;
   protected RoutingJob job;
   private boolean is_interrupted = false;
@@ -88,7 +93,7 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         router_instance.is_interrupted = true;
       }
-      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
+      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no, 0);
       if (still_unrouted_items && !router_instance.is_interrupted && updated_routing_board == null)
       {
         routerSettings.increment_pass_no();
@@ -142,7 +147,7 @@ public class BatchAutorouter extends NamedAlgorithm
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     boolean still_unrouted_items = true;
-    int minimumPassCountBeforeImprovementCheck = 5;
+    int minimumPassCountBeforeImprovementCheck = STOP_AT_PASS_MINIMUM;
     int numberOfPassesToAverage = minimumPassCountBeforeImprovementCheck;
 
     while (still_unrouted_items && !this.is_interrupted)
@@ -153,12 +158,12 @@ public class BatchAutorouter extends NamedAlgorithm
       }
 
       String current_board_hash = this.board.get_hash();
-      if (already_checked_board_hashes.contains(current_board_hash))
-      {
-        // This board was already evaluated, so we stop auto-router to avoid the endless loop
-        thread.request_stop_auto_router();
-        break;
-      }
+      //      if (already_checked_board_hashes.contains(current_board_hash))
+      //      {
+      //        // This board was already evaluated, so we stop auto-router to avoid the endless loop
+      //        thread.request_stop_auto_router();
+      //        break;
+      //      }
 
       int curr_pass_no = this.settings.get_start_pass_no();
       if (curr_pass_no > this.settings.get_stop_pass_no())
@@ -169,38 +174,63 @@ public class BatchAutorouter extends NamedAlgorithm
 
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
 
-      BasicBoard boardBefore = this.board.clone();
+      float boardScoreBefore = new BoardStatistics(this.board).calculateScore(this.settings.scoring);
+      scoreHistory.add(boardScoreBefore);
+      boardHistory.add(this.board.deepCopy());
 
-      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes");
+      FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' with the score of " + FRLogger.defaultFloatFormat.format(boardScoreBefore));
+
       already_checked_board_hashes.add(this.board.get_hash());
-      still_unrouted_items = autoroute_pass(curr_pass_no);
+      still_unrouted_items = autoroute_pass(curr_pass_no, new Random().nextInt());
 
-      // let's check if there was enough track length change in the last few passes, because if it was too little we should stop
-      // TODO: score the board based on the costs settings of trace length, corner and via count, unconnected ratsnest, etc.
-      int traceLengthDifferences = this.board.diff_traces(boardBefore);
-      traceLengthDifferenceBetweenPasses.add(traceLengthDifferences);
+      float boardScoreAfter = new BoardStatistics(this.board).calculateScore(this.settings.scoring);
 
-      if (traceLengthDifferenceBetweenPasses.size() > numberOfPassesToAverage)
+      if (scoreHistory.size() >= numberOfPassesToAverage)
       {
-        traceLengthDifferenceBetweenPasses.removeFirst();
+        scoreHistory.removeFirst();
+        boardHistory.removeFirst();
 
-        OptionalDouble averageTraceLengthDifferencePerPass = traceLengthDifferenceBetweenPasses
-            .stream()
-            .mapToDouble(a -> a)
-            .average();
+        if ((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM))
+        {
+          double averageHistoricalScore = scoreHistory
+              .stream()
+              .mapToDouble(a -> a)
+              .average()
+              .getAsDouble();
 
-        // TODO: make the threshold based on the initial score (cost)
-        if (averageTraceLengthDifferencePerPass.getAsDouble() < 20.0)
-        {
-          job.logWarning("There were only " + FRLogger.defaultFloatFormat.format(averageTraceLengthDifferencePerPass.getAsDouble()) + " track length increase in the last " + numberOfPassesToAverage + " passes, so it's very likely that autorouter can't improve the result further.");
-          this.is_interrupted = true;
-        }
-        else
-        {
-          numberOfPassesToAverage = minimumPassCountBeforeImprovementCheck;
+          float maximumScore = new BoardStatistics(this.board).getMaximumScore(this.settings.scoring);
+          float improvementThreshold = maximumScore * 0.001f;
+          float scoreImprovement = boardScoreAfter - (float) averageHistoricalScore;
+          if (scoreImprovement < improvementThreshold)
+          {
+            job.logWarning("There were only " + FRLogger.defaultFloatFormat.format((averageHistoricalScore / maximumScore) * 100) + "% score change in the last " + numberOfPassesToAverage + " passes, so it's very likely that auto-router can't improve the result further.");
+            this.is_interrupted = true;
+          }
+
+          // let's go back to the best board so far, and continue from there
+          double maxScoreSoFar = scoreHistory
+              .stream()
+              .mapToDouble(a -> a)
+              .max()
+              .getAsDouble();
+
+          if (maxScoreSoFar > boardScoreAfter)
+          {
+            for (int i = 0; i < boardHistory.size(); i++)
+            {
+              if (scoreHistory.get(i) == maxScoreSoFar)
+              {
+                this.board = boardHistory.get(i);
+                boardHistory.remove(i);
+                scoreHistory.remove(i);
+                job.logDebug("Going back to the best board so far, which has the score of " + FRLogger.defaultFloatFormat.format(maxScoreSoFar));
+                break;
+              }
+            }
+          }
         }
       }
-      double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' making {} changes", traceLengthDifferences);
+      double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "' changing its score by " + FRLogger.defaultFloatFormat.format(boardScoreAfter - boardScoreBefore));
 
       String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration);
       if (job.resourceUsage.cpuTimeUsed > 0)
@@ -249,13 +279,13 @@ public class BatchAutorouter extends NamedAlgorithm
    * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
    * completely routed.
    */
-  private boolean autoroute_pass(int p_pass_no)
+  private boolean autoroute_pass(int p_pass_no, int seed)
   {
     try
     {
       Collection<Item> autoroute_item_list = new LinkedList<>();
       Set<Item> handled_items = new TreeSet<>();
-      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object(seed);
       for (; ; )
       {
         UndoableObjects.Storable curr_ob = board.item_list.read_object(it);

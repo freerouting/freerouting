@@ -42,7 +42,9 @@ public class RouterSettings implements Serializable
   public RouterOptimizerSettings optimizer = new RouterOptimizerSettings();
   @SerializedName("scoring")
   public RouterScoringSettings scoring = new RouterScoringSettings();
+  // The starting and current pass number.
   private transient int start_pass_no = 1;
+  // The stopping pass number.
   private transient int stop_pass_no = 999;
 
   /**

@@ -1320,8 +1320,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
   }
 
   /**
-   * Create a deep copy of the routing board.
-   * TODO: check if this method is the same as the BasicBoard.clone method
+   * Create a deep copy of the routing board. This method is similar to the BasicBoard.clone method, but it copies the routing related values as well.
    */
   public synchronized RoutingBoard deepCopy()
   {
