@@ -13,47 +13,65 @@ public class LogEntries
 
   public int getWarningCount()
   {
-    return (int) entries
-        .stream()
-        .filter(e -> e.type == LogEntryType.Warning)
-        .count();
+    synchronized (entries)
+    {
+      return (int) entries
+          .stream()
+          .filter(e -> e.type == LogEntryType.Warning)
+          .count();
+    }
   }
 
   public int getErrorCount()
   {
-    return (int) entries
-        .stream()
-        .filter(e -> e.type == LogEntryType.Error)
-        .count();
+    synchronized (entries)
+    {
+      return (int) entries
+          .stream()
+          .filter(e -> e.type == LogEntryType.Error)
+          .count();
+    }
   }
 
   public void clear()
   {
-    entries.clear();
+    synchronized (entries)
+    {
+      entries.clear();
+    }
   }
 
   public String getAsString()
   {
-    return entries
-        .stream()
-        .map(LogEntry::toString)
-        .collect(Collectors.joining("\n", "", "\n"));
+    synchronized (entries)
+    {
+      return entries
+          .stream()
+          .map(LogEntry::toString)
+          .collect(Collectors.joining("\n", "", "\n"));
+    }
   }
 
   public String[] get()
   {
-    return entries
-        .stream()
-        .map(LogEntry::toString)
-        .toArray(String[]::new);
+    synchronized (entries)
+    {
+      return entries
+          .stream()
+          .map(LogEntry::toString)
+          .toArray(String[]::new);
+    }
   }
 
   public LogEntry[] getEntries(Instant entriesSince, UUID topic)
   {
-    return entries
-        .stream()
-        .filter(e -> ((entriesSince == null) || e.timestamp.isAfter(entriesSince)) && (topic == null || ((e.topic != null) && e.topic.equals(topic))))
-        .toArray(LogEntry[]::new);
+    synchronized (entries)
+    {
+      return entries
+          .stream()
+          .filter(e -> ((entriesSince == null) || e.timestamp.isAfter(entriesSince)) && (topic == null || ((e.topic != null) && e.topic.equals(topic))))
+          .toArray(LogEntry[]::new);
+    }
   }
 
   public LogEntry add(LogEntryType type, String message, UUID topic)
@@ -73,7 +91,10 @@ public class LogEntries
   {
     LogEntry logEntry = new LogEntry(type, message, exception, topic);
 
-    entries.add(logEntry);
+    synchronized (entries)
+    {
+      entries.add(logEntry);
+    }
 
     return logEntry;
   }
