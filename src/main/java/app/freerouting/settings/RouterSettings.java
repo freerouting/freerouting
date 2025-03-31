@@ -13,7 +13,7 @@ public class RouterSettings implements Serializable
   @SerializedName("enabled")
   public transient boolean enabled = true;
   @SerializedName("algorithm")
-  public String algorithm = "freerouting-router/slow";
+  public String algorithm = "freerouting-router";
   @SerializedName("job_timeout")
   public String jobTimeoutString = "12:00:00";
   @SerializedName("max_passes")

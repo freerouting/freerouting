@@ -5,6 +5,7 @@ import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.boardgraphics.ColorIntensityTable;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.InteractiveActionThread;
 import app.freerouting.interactive.ThreadActionListener;
 import app.freerouting.logger.FRLogger;
@@ -180,7 +181,8 @@ public class WindowWelcome extends WindowBase
         System.exit(1);
         return false;
       }
-
+      var bs = new BoardStatistics(new_frame.board_panel.board_handling.get_routing_board());
+      new_frame.board_panel.board_handling.screen_messages.set_board_score(bs.getNormalizedScore(routingJob.routerSettings.scoring), bs.connections.incompleteCount);
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + globalSettings.routerSettings.maxPasses - 1);
       new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.optimizer.maxThreads);
       new_frame.board_panel.board_handling.set_board_update_strategy(globalSettings.routerSettings.optimizer.boardUpdateStrategy);

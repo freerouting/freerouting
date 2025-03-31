@@ -171,6 +171,7 @@ public class ScreenMessages
       status_field.setText(empty_string);
       clear_add_field();
       layer_field.setText(empty_string);
+      score_field.setText(empty_string);
     }
   }
 
@@ -184,6 +185,6 @@ public class ScreenMessages
 
   public void set_board_score(float score, int unrouted_count)
   {
-    score_field.setText("Quality score: " + FRLogger.defaultFloatFormat.format(score) + " (" + unrouted_count + " unrouted)");
+    score_field.setText(tm.getText("score", FRLogger.defaultFloatFormat.format(score), String.valueOf(unrouted_count)));
   }
 }

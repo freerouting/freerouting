@@ -3,7 +3,6 @@ package app.freerouting.interactive;
 import app.freerouting.autoroute.*;
 import app.freerouting.autoroute.events.*;
 import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -210,8 +209,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .hide();
       }
 
-      routingJob.logInfo(getBoardSummary(boardManager.get_routing_board()));
-
       routingJob.logInfo("Starting routing of '" + routingJob.name + "'...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
@@ -388,16 +385,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
     }
 
     FRLogger.traceExit("BatchAutorouterThread.thread_action()");
-  }
-
-  private String getBoardSummary(RoutingBoard routingBoard)
-  {
-    var bs = new BoardStatistics(routingBoard);
-    var score = bs.getNormalizedScore(routingJob.routerSettings.scoring);
-
-    String sb = "Board quality score: " + FRLogger.defaultFloatFormat.format(score) + " (" + bs.connections.incompleteCount + " unrouted)";
-
-    return sb;
   }
 
   @Override

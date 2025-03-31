@@ -101,7 +101,7 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         router_instance.is_interrupted = true;
       }
-      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no, 0);
+      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
       if (still_unrouted_items && !router_instance.is_interrupted && updated_routing_board == null)
       {
         routerSettings.increment_pass_no();
@@ -202,7 +202,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
       already_checked_board_hashes.add(this.board.get_hash());
 
-      continueAutorouting = autoroute_pass(curr_pass_no, new Random().nextInt());
+      continueAutorouting = autoroute_pass(curr_pass_no);
 
       float boardScoreAfter = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
 
@@ -312,7 +312,7 @@ public class BatchAutorouter extends NamedAlgorithm
    * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
    * completely routed.
    */
-  private boolean autoroute_pass(int p_pass_no, int seed)
+  private boolean autoroute_pass(int p_pass_no)
   {
     try
     {
