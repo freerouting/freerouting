@@ -782,20 +782,20 @@ class Structure extends ScopeKeyword
         
       }
 
-      if (curr_pair[1].startsWith(p_string_quote) && curr_pair[1].endsWith(p_string_quote))
-      {
-        // remove the quotes
-        curr_pair[1] = curr_pair[1].substring(1, curr_pair[1].length() - 1);
-      }
-      else
-      {
-        String[] tmp_pair = curr_pair[1].split("_", 2);
-        if (tmp_pair.length != 1)
-        {
-          // pairs with more than 1 underline like smd_via_same_net are not implemented
-          continue;
-        }
-      }
+      // if (curr_pair[1].startsWith(p_string_quote) && curr_pair[1].endsWith(p_string_quote))
+      // {
+      //   // remove the quotes
+      //   curr_pair[1] = curr_pair[1].substring(1, curr_pair[1].length() - 1);
+      // }
+      // else
+      // {
+      //   String[] tmp_pair = curr_pair[1].split("_", 2);
+      //   if (tmp_pair.length != 1)
+      //   {
+      //     // pairs with more than 1 underline like smd_via_same_net are not implemented
+      //     continue;
+      //   }
+      // }
 
       int first_class_no;
       if (curr_pair[0].equals("wire"))
