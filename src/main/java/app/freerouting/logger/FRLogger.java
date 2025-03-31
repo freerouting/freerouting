@@ -25,6 +25,7 @@ import java.util.UUID;
 public class FRLogger
 {
   public static final DecimalFormat defaultFloatFormat = new DecimalFormat("0.00");
+  public static final DecimalFormat defaultSignedFloatFormat = new DecimalFormat("+0.00;-0.00");
   private static final HashMap<Integer, Instant> perfData = new HashMap<>();
   private static final LogEntries logEntries = new LogEntries();
   private static Logger logger;

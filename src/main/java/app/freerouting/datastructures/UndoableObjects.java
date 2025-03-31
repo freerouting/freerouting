@@ -43,41 +43,15 @@ public class UndoableObjects implements Serializable
   }
 
   /**
-   * Returns an iterator for sequential reading of the object list. Use it together with
-   * this.read_object().
+   * Returns an iterator for sequential reading of the object list.
+   *
+   * @return an iterator for sequential reading of the object list
    */
   public Iterator<UndoableObjectNode> start_read_object()
   {
-    return start_read_object(0);
-  }
-
-  /**
-   * Returns an iterator for sequential reading of the object list. Use the seed to randomize the list order.
-   *
-   * @param seed a positive integer (seed) for the randomization
-   * @return an iterator for sequential reading of the object list
-   */
-  public Iterator<UndoableObjectNode> start_read_object(int seed)
-  {
-    Collection<UndoableObjectNode> object_list = objects.values();
-
-    if (seed > 0)
-    {
-      // use the Fisher-Yates shuffle algorithm with the seed
-      // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-
-      int n = object_list.size();
-      Object[] a = object_list.toArray();
-      for (int i = n - 1; i > 0; i--)
-      {
-        int j = seed % (i + 1);
-        Object tmp = a[j];
-        a[j] = a[i];
-        a[i] = tmp;
-      }
-    }
-
-    return object_list.iterator();
+    return objects
+        .values()
+        .iterator();
   }
 
   /**

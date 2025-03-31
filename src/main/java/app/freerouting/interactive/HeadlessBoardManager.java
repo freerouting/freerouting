@@ -39,6 +39,7 @@ public class HeadlessBoardManager implements BoardManager
    * The listener for the autorouter thread
    */
   public ThreadActionListener autorouter_listener;
+  // TODO: board management is a mess: BoardManager, NamedAlgorithm and RoutingJob all have a board, and they must be in sync
   /**
    * The board object that contains all the data for the board
    */

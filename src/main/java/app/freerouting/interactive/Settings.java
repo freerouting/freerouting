@@ -19,6 +19,7 @@ public class Settings implements Serializable
    * The array of manual trace half widths, initially equal to the automatic trace half widths.
    */
   final int[] manual_trace_half_width_arr;
+  // TODO: this is a duplicate, should be removed later (RoutingJob has its RouterSettings, we should use that)
   public RouterSettings autoroute_settings;
   /**
    * the current layer

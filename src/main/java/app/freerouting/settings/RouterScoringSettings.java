@@ -26,9 +26,9 @@ public class RouterScoringSettings implements Serializable
   @SerializedName("start_ripup_costs")
   public int start_ripup_costs = 100;
   // The penalty for an unrouted net.
-  public float unroutedNetPenalty = 5000;
+  public float unroutedNetPenalty = 4000;
   // The penalty for a clearance violation.
-  public float clearanceViolationPenalty = 3000;
+  public float clearanceViolationPenalty = 1000;
   // The penalty for a bend.
   public float bendPenalty = 10;
 }

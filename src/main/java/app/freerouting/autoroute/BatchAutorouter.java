@@ -18,11 +18,17 @@ import app.freerouting.settings.RouterSettings;
 
 import java.util.*;
 
+import static java.util.Collections.shuffle;
+
 /**
  * Handles the sequencing of the auto-router passes.
  */
 public class BatchAutorouter extends NamedAlgorithm
 {
+  // Number of times a board is allowed to be selected to be the best board
+  private static final int BEST_NOMINATION_LIMIT_TO_PREVENT_ENDLESS_LOOP = 10;
+  // Maximum number of tries on the same board
+  private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 5;
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
   // The minimum number of passes to complete the board, unless all items are routed
   private static final int STOP_AT_PASS_MINIMUM = 8;
@@ -148,11 +154,14 @@ public class BatchAutorouter extends NamedAlgorithm
   {
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
-    boolean still_unrouted_items = true;
+    boolean continueAutorouting = true;
     int minimumPassCountBeforeImprovementCheck = STOP_AT_PASS_MINIMUM;
     int numberOfPassesToAverage = minimumPassCountBeforeImprovementCheck;
+    float bestScoreSoFar = 0.0f;
+    int bestNominationCounter = 0;
+    int tryOnKnownBoardCounter = 0;
 
-    while (still_unrouted_items && !this.is_interrupted)
+    while (continueAutorouting && !this.is_interrupted)
     {
       if (thread.is_stop_auto_router_requested() || (job != null && job.state == RoutingJobState.TIMED_OUT))
       {
@@ -162,9 +171,18 @@ public class BatchAutorouter extends NamedAlgorithm
       String current_board_hash = this.board.get_hash();
       if (already_checked_board_hashes.contains(current_board_hash))
       {
-        // This board was already evaluated, so we stop auto-router to avoid the endless loop
-        thread.request_stop_auto_router();
-        break;
+        tryOnKnownBoardCounter++;
+
+        if (tryOnKnownBoardCounter > MAXIMUM_TRIES_ON_THE_SAME_BOARD)
+        {
+          job.logInfo("The auto-router was not able to improve the board after " + tryOnKnownBoardCounter + " tries, stopping the auto-router.");
+          thread.request_stop_auto_router();
+          break;
+        }
+      }
+      else
+      {
+        tryOnKnownBoardCounter = 0;
       }
 
       int curr_pass_no = this.settings.get_start_pass_no();
@@ -176,23 +194,21 @@ public class BatchAutorouter extends NamedAlgorithm
 
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
 
-      float boardScoreBefore = new BoardStatistics(this.board).calculateScore(this.settings.scoring);
+      float boardScoreBefore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
       scoreHistory.add(boardScoreBefore);
       boardHistory.add(this.board.deepCopy());
 
       FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
 
       already_checked_board_hashes.add(this.board.get_hash());
-      still_unrouted_items = autoroute_pass(curr_pass_no, new Random().nextInt());
 
-      float boardScoreAfter = new BoardStatistics(this.board).calculateScore(this.settings.scoring);
+      continueAutorouting = autoroute_pass(curr_pass_no, new Random().nextInt());
 
-      if (scoreHistory.size() >= numberOfPassesToAverage)
+      float boardScoreAfter = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
+
+      if ((scoreHistory.size() >= numberOfPassesToAverage) || (thread.is_stop_auto_router_requested()))
       {
-        scoreHistory.removeFirst();
-        boardHistory.removeFirst();
-
-        if ((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM))
+        if (((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM)) || (thread.is_stop_auto_router_requested()))
         {
           // let's go back to the best board so far, and continue from there
           double maxScoreSoFar = scoreHistory
@@ -213,17 +229,40 @@ public class BatchAutorouter extends NamedAlgorithm
                 already_checked_board_hashes.remove(this.board.get_hash());
 
                 var boardStatistics = this.board.get_statistics();
-                job.logDebug("Going back to the best board so far, which has the score of " + FRLogger.defaultFloatFormat.format(boardStatistics.getNormalizedScore(job.routerSettings.scoring)) + " (" + boardStatistics.connections.incompleteCount + " unrouted).");
+                job.logInfo("Going back to the best board so far, which has the score of " + FRLogger.defaultFloatFormat.format(boardStatistics.getNormalizedScore(job.routerSettings.scoring)) + " (" + boardStatistics.connections.incompleteCount + " unrouted).");
+
+                if (bestScoreSoFar != maxScoreSoFar)
+                {
+                  bestScoreSoFar = (float) maxScoreSoFar;
+                  bestNominationCounter = 0;
+                }
+                else
+                {
+                  bestNominationCounter++;
+                  if (bestNominationCounter > BEST_NOMINATION_LIMIT_TO_PREVENT_ENDLESS_LOOP)
+                  {
+                    job.logInfo("Best board was selected " + bestNominationCounter + " times, so it looks like there is no improvement any more, stopping the auto-router.");
+                    thread.request_stop_auto_router();
+                    break;
+                  }
+                }
 
                 break;
               }
             }
           }
         }
+
+        // trim the history
+        while (scoreHistory.size() >= numberOfPassesToAverage)
+        {
+          scoreHistory.removeFirst();
+          boardHistory.removeFirst();
+        }
       }
       double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
 
-      String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration);
+      String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of " + FRLogger.defaultFloatFormat.format(boardScoreAfter) + " (" + this.board.get_statistics().connections.incompleteCount + " unrouted)";
       if (job.resourceUsage.cpuTimeUsed > 0)
       {
         passCompletedMessage += ", using " + FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed) + " CPU seconds and " + (int) job.resourceUsage.maxMemoryUsed + " MB memory.";
@@ -240,12 +279,15 @@ public class BatchAutorouter extends NamedAlgorithm
       }
 
       // check if there are still unrouted items
-      if (still_unrouted_items && !is_interrupted)
+      if (continueAutorouting && !is_interrupted)
       {
         this.settings.increment_pass_no();
       }
     }
-    if (!(this.remove_unconnected_vias || still_unrouted_items || this.is_interrupted))
+
+    job.board = this.board;
+
+    if (!(this.remove_unconnected_vias || continueAutorouting || this.is_interrupted))
     {
       // clean up the route if the board is completed and if fanout is used.
       remove_tails(Item.StopConnectionOption.NONE);
@@ -274,9 +316,9 @@ public class BatchAutorouter extends NamedAlgorithm
   {
     try
     {
-      Collection<Item> autoroute_item_list = new LinkedList<>();
+      LinkedList<Item> autoroute_item_list = new LinkedList<>();
       Set<Item> handled_items = new TreeSet<>();
-      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object(seed);
+      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
       for (; ; )
       {
         UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
@@ -340,6 +382,9 @@ public class BatchAutorouter extends NamedAlgorithm
       routerCounters.incompleteCount = new RatsNest(board).incomplete_count();
 
       this.fireBoardUpdatedEvent(stats, routerCounters, this.board);
+
+      // Shuffle the items to route
+      shuffle(autoroute_item_list, new Random());
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list)
