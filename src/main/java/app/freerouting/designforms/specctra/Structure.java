@@ -736,6 +736,7 @@ class Structure extends ScopeKeyword
     {
       create_default_clearance_classes(p_board_rules);
     }
+
     for (String curr_string : p_rule.clearance_class_pairs)
     {
       if (curr_string.equalsIgnoreCase("smd_to_turn_gap"))
@@ -744,8 +745,20 @@ class Structure extends ScopeKeyword
         result = true;
         continue;
       }
-      String[] curr_pair;
-      if (curr_string.startsWith(p_string_quote))
+      String[] curr_pair = new String[2];
+      if (p_rule.clearance_class_pairs.size() == 2)
+      {
+        Iterator<String> iterator = p_rule.clearance_class_pairs.iterator();
+        curr_pair[0] = iterator.next();
+        curr_pair[1] = iterator.next();
+        for (int i = 0; i < curr_pair.length; i++) {
+          curr_pair[i] = curr_pair[i].replaceAll("[\"]", "");
+          if (curr_pair[1].startsWith("_")) {
+            curr_pair[1] = curr_pair[1].substring(1);
+          }
+        }
+      }
+      else if (curr_string.startsWith(p_string_quote))
       {
         // split at the second occurrence of p_string_quote
         curr_string = curr_string.substring(p_string_quote.length());
@@ -766,6 +779,7 @@ class Structure extends ScopeKeyword
           // pairs with more than 1 underline like smd_via_same_net are not implemented
           continue;
         }
+        
       }
 
       if (curr_pair[1].startsWith(p_string_quote) && curr_pair[1].endsWith(p_string_quote))
