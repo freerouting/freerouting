@@ -17,7 +17,7 @@ public class Issue026Test extends TestBasedOnAnIssue
     var statsAfter = GetBoardStatistics(job);
 
     assertTrue(statsAfter.items.drillItemCount < 60, "The drill item count should be less than 60");
-    assertEquals(0, statsAfter.traces.incompleteCount, "The incomplete count should be 0");
+    assertEquals(0, statsAfter.connections.incompleteCount, "The incomplete count should be 0");
     assertEquals(0, statsAfter.clearanceViolations.totalCount, "The total count of clearance violations should be 0");
   }
 }
