@@ -90,6 +90,10 @@ public class InsertFoundConnectionAlgo
   {
     if (p_trace.corners.length == 1)
     {
+      if (this.first_corner == null)
+      {
+        this.first_corner = p_trace.corners[0];
+      }
       this.last_corner = p_trace.corners[0];
       return true;
     }
