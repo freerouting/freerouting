@@ -1,0 +1,390 @@
+(pcb "Issue413-test"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "8.0.7-8.0.7-0~ubuntu24.04.1")
+    (generated_by_freerouting)
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+    )
+    (layer B.Cu
+      (type signal)
+    )
+    (boundary
+      (rect pcb -200.0 -600200.0 600200.0 200.0)
+    )
+    (boundary
+      (polygon signal 0
+        0.0 -600000.0
+        600000.0 -600000.0
+        600000.0 0.0
+        0.0 0.0
+      )
+    )
+    (via "Via[0-1]_600:300_um" "Via[0-1]_600:300_um")
+    (rule
+      (width 4900.0)
+      (clearance 200.0)
+      (clearance 2450.0 (type smd_to_turn_gap))
+      (clearance 200.0 (type kicad))
+    )
+    (snap_angle 
+      fortyfive_degree
+    )
+    (control
+      (via_at_smd off)
+    )
+    (keepout
+      (polygon F.Cu 0
+        230000.0 -296000.0
+        236000.0 -296000.0
+        236000.0 -290000.0
+        230000.0 -290000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        400000.0 -286000.0
+        406000.0 -286000.0
+        406000.0 -280000.0
+        400000.0 -280000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        300000.0 -276000.0
+        306000.0 -276000.0
+        306000.0 -270000.0
+        300000.0 -270000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        499000.0 -46000.0
+        505000.0 -46000.0
+        505000.0 -40000.0
+        499000.0 -40000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        120000.0 -306000.0
+        126000.0 -306000.0
+        126000.0 -300000.0
+        120000.0 -300000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        380000.0 -306000.0
+        386000.0 -306000.0
+        386000.0 -300000.0
+        380000.0 -300000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        250000.0 -286000.0
+        256000.0 -286000.0
+        256000.0 -280000.0
+        250000.0 -280000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        429000.0 -305000.0
+        435000.0 -305000.0
+        435000.0 -299000.0
+        429000.0 -299000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        440000.0 -206000.0
+        446000.0 -206000.0
+        446000.0 -200000.0
+        440000.0 -200000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        491500.0 -256000.0
+        497500.0 -256000.0
+        497500.0 -250000.0
+        491500.0 -250000.0
+      )
+    )
+    (keepout
+      (polygon F.Cu 0
+        210000.0 -296000.0
+        216000.0 -296000.0
+        216000.0 -290000.0
+        210000.0 -290000.0
+      )
+    )
+  )
+  (placement
+    (component "endpoint_footprint"
+      (place 
+        X8 560000.0 -320000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X3 300000.0 -250000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X7 360000.0 -120000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X2 480000.0 -440000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X1 500000.0 -30000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X9 360000.0 -300000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X5 190000.0 -530000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X10 430000.0 -290000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X4 50000.0 -380000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+      (place 
+        X6 20000.0 -20000.0 front 0
+        (pin 1 (clearance_class default))
+      )
+    )
+  )
+  (library
+    (image "endpoint_footprint"
+      (side front)
+      (pin "Rect[T]Pad_5000x5000_um" 1 2500.0 -2500.0)
+    )
+    (padstack "Rect[T]Pad_5000x5000_um"
+      (shape
+        (rect F.Cu -2500.0 -2500.0 2500.0 2500.0)
+      )
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape
+        (circle F.Cu 600.0 0.0 0.0)
+      )
+      (shape
+        (circle B.Cu 600.0 0.0 0.0)
+      )
+      (attach off)
+    )
+  )
+  (network
+    (net N0 1
+      (pins
+        X1-1
+        X2-1
+      )
+    )
+    (net N3 1
+      (pins
+        X7-1
+        X8-1
+      )
+    )
+    (net N2 1
+      (pins
+        X6-1
+        X5-1
+      )
+    )
+    (net N1 1
+      (pins
+        X4-1
+        X3-1
+      )
+    )
+    (net N4 1
+      (pins
+        X10-1
+        X9-1
+      )
+    )
+    (via 
+      "Via[0-1]_600:300_um" "Via[0-1]_600:300_um" default
+    )
+    (via 
+      "Via[0-1]_600:300_um-kicad_default" "Via[0-1]_600:300_um" default
+    )
+    (via_rule
+      default "Via[0-1]_600:300_um"
+    )
+    (via_rule
+      "kicad_default" "Via[0-1]_600:300_um-kicad_default"
+    )
+    (class default
+      (clearance_class default)
+      (via_rule default)
+      (rule
+        (width 4900.0)
+      )
+      (circuit 
+        (use_layer F.Cu B.Cu)
+      )
+    )
+    (class "kicad_default"
+      N0 N3 N2 N1 N4
+      (clearance_class default)
+      (via_rule "kicad_default")
+      (rule
+        (width 4900.0)
+      )
+      (circuit 
+        (use_layer F.Cu B.Cu)
+      )
+    )
+  )
+  (wiring
+    (wire
+      (polyline_path F.Cu 4900.0
+        22500.0 -22500.0 22500.1 -22500.1 
+        22500.0 -22500.0 22295.8 -22704.2 
+        22295.8 -26872.4 22295.8 -28261.8 
+        22295.8 -28261.8 22295.7 -28261.8 
+      )
+      (net N2 1)
+      (clearance_class default)
+    )
+    (wire
+      (polyline_path B.Cu 4900.0
+        22295.8 -28261.8 22295.9 -28261.8 
+        22295.8 -28261.8 22295.8 -512010.0 
+        22295.8 -512010.0 25281.9 -514996.1 
+        25281.9 -514996.1 25281.8 -514996.2 
+      )
+      (net N2 1)
+      (clearance_class default)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        25281.9 -514996.1 25281.9 -514996.0 
+        25281.9 -514996.1 174996.1 -514996.1 
+        185100.0 -532500.0 185100.1 -532500.1 
+        185100.0 -532500.0 185099.9 -532500.0 
+      )
+      (net N2 1)
+      (clearance_class default)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        192500.0 -532500.0 192500.0 -532500.1 
+        192500.0 -532500.0 192499.9 -532500.0 
+        185100.0 0.0 185100.0 -0.1 
+      )
+      (net N2 1)
+      (clearance_class default)
+      (type shove_fixed)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        432500.0 -292500.0 432500.0 -292500.1 
+        381248.0 -292500.0 381247.9 -292500.0 
+        369900.0 -302500.0 369899.9 -302500.1 
+        362500.1 -302500.0 362500.0 -302500.0 
+      )
+      (net N4 1)
+      (clearance_class default)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        362500.0 -302500.0 362500.0 -302499.9 
+        362500.0 -302500.0 362500.1 -302500.0 
+        369900.0 0.0 369900.0 0.1 
+      )
+      (net N4 1)
+      (clearance_class default)
+      (type shove_fixed)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        502500.0 -32500.0 502500.0 -32500.1 
+        496349.8 -32500.0 316667.6 -32500.0 
+        316667.6 -32500.0 311947.5 -37220.1 
+        311947.5 -37220.1 311947.4 -37220.0 
+      )
+      (net N0 1)
+      (clearance_class default)
+    )
+    (wire
+      (polyline_path B.Cu 4900.0
+        311947.5 -37220.1 311947.6 -37220.1 
+        311947.5 -37220.1 311947.5 -374649.4 
+        311947.5 -374649.4 377641.7 -440343.6 
+        377641.7 -440343.6 377641.6 -440343.7 
+      )
+      (net N0 1)
+      (clearance_class default)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        377641.7 -440343.6 377641.7 -440343.5 
+        377641.7 -440343.6 480343.6 -440343.6 
+        475100.0 -442500.0 475100.1 -442500.1 
+        482499.9 -442500.0 482500.0 -442500.0 
+      )
+      (net N0 1)
+      (clearance_class default)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        482500.0 -442500.0 482500.0 -442500.1 
+        482500.0 -442500.0 482499.9 -442500.0 
+        475100.0 0.0 475100.0 -0.1 
+      )
+      (net N0 1)
+      (clearance_class default)
+      (type shove_fixed)
+    )
+    (wire
+      (polyline_path F.Cu 4900.0
+        562500.0 -322500.0 562499.9 -322500.0 
+        562500.0 -322500.0 562500.0 -311204.1 
+        562500.0 -311204.1 373795.9 -122500.0 
+        373795.9 -122500.0 362500.0 -122500.0 
+        362500.0 -122500.0 362500.0 -122499.9 
+      )
+      (net N3 1)
+      (clearance_class default)
+    )
+    (via "Via[0-1]_600:300_um" 22295.8 -28261.8
+      (net N2 1)
+      (clearance_class default)
+    )
+    (via "Via[0-1]_600:300_um" 25281.9 -514996.1
+      (net N2 1)
+      (clearance_class default)
+    )
+    (via "Via[0-1]_600:300_um" 311947.5 -37220.1
+      (net N0 1)
+      (clearance_class default)
+    )
+    (via "Via[0-1]_600:300_um" 377641.7 -440343.6
+      (net N0 1)
+      (clearance_class default)
+    )
+  )
+)
