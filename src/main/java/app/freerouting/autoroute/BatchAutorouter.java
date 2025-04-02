@@ -25,24 +25,20 @@ import static java.util.Collections.shuffle;
  */
 public class BatchAutorouter extends NamedAlgorithm
 {
-  // Number of times a board is allowed to be selected to be the best board
-  private static final int BEST_NOMINATION_LIMIT_TO_PREVENT_ENDLESS_LOOP = 10;
+  // The lowest rank of the board to be selected to go back to
+  private static final int BOARD_RANK_LIMIT = 50;
   // Maximum number of tries on the same board
-  private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 10;
+  private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 3;
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
   // The minimum number of passes to complete the board, unless all items are routed
   private static final int STOP_AT_PASS_MINIMUM = 8;
   // The modulo of the pass number to check if the improvements were so small that process should stop despite not all items are routed
   private static final int STOP_AT_PASS_MODULO = 4;
-  // The minimum percentage of improvement to continue the auto-router
-  private static final float EXPECTED_SCORE_IMPROVEMENT_PERCENT = 0.5f;
+
   private final boolean remove_unconnected_vias;
   private final AutorouteControl.ExpansionCostFactor[] trace_cost_arr;
   private final boolean retain_autoroute_database;
   private final int start_ripup_costs;
-  private final HashSet<String> already_checked_board_hashes = new HashSet<>();
-  private final LinkedList<Float> scoreHistory = new LinkedList<>();
-  private final LinkedList<RoutingBoard> boardHistory = new LinkedList<>();
   private final int trace_pull_tight_accuracy;
   protected RoutingJob job;
   private boolean is_interrupted = false;
@@ -155,11 +151,7 @@ public class BatchAutorouter extends NamedAlgorithm
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     boolean continueAutorouting = true;
-    int minimumPassCountBeforeImprovementCheck = STOP_AT_PASS_MINIMUM;
-    int numberOfPassesToAverage = minimumPassCountBeforeImprovementCheck;
-    float bestScoreSoFar = 0.0f;
-    int bestNominationCounter = 0;
-    int tryOnKnownBoardCounter = 0;
+    BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
 
     while (continueAutorouting && !this.is_interrupted)
     {
@@ -169,21 +161,6 @@ public class BatchAutorouter extends NamedAlgorithm
       }
 
       String current_board_hash = this.board.get_hash();
-      if (already_checked_board_hashes.contains(current_board_hash))
-      {
-        tryOnKnownBoardCounter++;
-
-        if (tryOnKnownBoardCounter >= MAXIMUM_TRIES_ON_THE_SAME_BOARD)
-        {
-          job.logInfo("The router was not able to improve the board after " + tryOnKnownBoardCounter + " tries, stopping the auto-router.");
-          thread.request_stop_auto_router();
-          break;
-        }
-      }
-      else
-      {
-        tryOnKnownBoardCounter = 0;
-      }
 
       int curr_pass_no = this.settings.get_start_pass_no();
       if (curr_pass_no > this.settings.get_stop_pass_no())
@@ -195,70 +172,42 @@ public class BatchAutorouter extends NamedAlgorithm
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
 
       float boardScoreBefore = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
-      scoreHistory.add(boardScoreBefore);
-      boardHistory.add(this.board.deepCopy());
+      bh.add(this.board);
 
       FRLogger.traceEntry("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
-
-      already_checked_board_hashes.add(this.board.get_hash());
 
       continueAutorouting = autoroute_pass(curr_pass_no);
 
       BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
       float boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
 
-      if ((scoreHistory.size() >= numberOfPassesToAverage) || (thread.is_stop_auto_router_requested()))
+      if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (thread.is_stop_auto_router_requested()))
       {
         if (((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM)) || (thread.is_stop_auto_router_requested()))
         {
-          // let's go back to the best board so far, and continue from there
-          double maxScoreSoFar = scoreHistory
-              .stream()
-              .mapToDouble(a -> a)
-              .max()
-              .getAsDouble();
-
-          if (maxScoreSoFar > boardScoreAfter)
+          // Check if the score improved compared to the previous passes, restore a previous board if not
+          if (bh.getMaxScore() >= boardScoreAfter)
           {
-            for (int i = 0; i < boardHistory.size(); i++)
+            var boardToRestore = bh.restoreBoard(MAXIMUM_TRIES_ON_THE_SAME_BOARD);
+            if (boardToRestore == null)
             {
-              if (scoreHistory.get(i) == maxScoreSoFar)
-              {
-                this.board = boardHistory.get(i);
-                boardHistory.remove(i);
-                scoreHistory.remove(i);
-                already_checked_board_hashes.remove(this.board.get_hash());
-
-                var boardStatistics = this.board.get_statistics();
-                job.logInfo("Going back to the best board so far, which has the score of " + FRLogger.defaultFloatFormat.format(boardStatistics.getNormalizedScore(job.routerSettings.scoring)) + " (" + boardStatistics.connections.incompleteCount + " unrouted).");
-
-                if (bestScoreSoFar != maxScoreSoFar)
-                {
-                  bestScoreSoFar = (float) maxScoreSoFar;
-                  bestNominationCounter = 0;
-                }
-                else
-                {
-                  bestNominationCounter++;
-                  if (bestNominationCounter > BEST_NOMINATION_LIMIT_TO_PREVENT_ENDLESS_LOOP)
-                  {
-                    job.logInfo("Best board was selected " + bestNominationCounter + " times, so it looks like there is no improvement any more, stopping the auto-router.");
-                    thread.request_stop_auto_router();
-                    break;
-                  }
-                }
-
-                break;
-              }
+              job.logInfo("The router was not able to improve the board, stopping the auto-router.");
+              thread.request_stop_auto_router();
+              break;
             }
-          }
-        }
 
-        // trim the history
-        while (scoreHistory.size() >= numberOfPassesToAverage)
-        {
-          scoreHistory.removeFirst();
-          boardHistory.removeFirst();
+            int boardToRestoreRank = bh.getRank(boardToRestore);
+
+            if (boardToRestoreRank > BOARD_RANK_LIMIT)
+            {
+              thread.request_stop_auto_router();
+              break;
+            }
+
+            this.board = boardToRestore;
+            var boardStatistics = this.board.get_statistics();
+            job.logInfo("Restoring an earlier board that has the score of " + FRLogger.formatScore(boardStatistics.getNormalizedScore(job.routerSettings.scoring), boardStatistics.connections.incompleteCount, boardStatistics.clearanceViolations.totalCount) + ".");
+          }
         }
       }
       double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
@@ -294,7 +243,7 @@ public class BatchAutorouter extends NamedAlgorithm
       remove_tails(Item.StopConnectionOption.NONE);
     }
 
-    already_checked_board_hashes.clear();
+    bh.clear();
 
     if (!this.is_interrupted)
     {

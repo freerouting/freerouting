@@ -17,7 +17,7 @@ public class RouterSettings implements Serializable
   @SerializedName("job_timeout")
   public String jobTimeoutString = "12:00:00";
   @SerializedName("max_passes")
-  public int maxPasses = 100;
+  public int maxPasses = 9999;
   public transient boolean[] isLayerActive;
   public transient boolean[] isPreferredDirectionHorizontalOnLayer;
   public transient boolean save_intermediate_stages = false;
