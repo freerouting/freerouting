@@ -3,6 +3,7 @@ package app.freerouting.gui;
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.interactive.*;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
@@ -168,6 +169,9 @@ class BoardToolbar extends JPanel
       board_frame.board_panel.board_handling.create_ratsnest();
       // redraw the board
       board_frame.board_panel.board_handling.repaint();
+      // update the board frame
+      BoardStatistics boardStatistics = board.get_statistics();
+      board_frame.screen_messages.set_board_score(boardStatistics.getNormalizedScore(globalSettings.routerSettings.scoring), boardStatistics.connections.incompleteCount, boardStatistics.clearanceViolations.totalCount);
     });
     delete_all_tracks_button.addActionListener(evt -> FRAnalytics.buttonClicked("delete_all_tracks_button", delete_all_tracks_button.getText()));
     middle_toolbar.add(delete_all_tracks_button);

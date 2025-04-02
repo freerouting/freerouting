@@ -52,10 +52,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .getNormalizedScore(routingJob.routerSettings.scoring);
 
         boardManager.screen_messages.set_batch_autoroute_info(event.getRouterCounters());
-        boardManager.screen_messages.set_board_score(boardScore, event.getBoardStatistics().connections.incompleteCount);
+        boardManager.screen_messages.set_board_score(boardScore, event.getBoardStatistics().connections.incompleteCount, event.getBoardStatistics().clearanceViolations.totalCount);
         boardManager.repaint();
-        //routingJob.logInfo(GsonProvider.GSON.toJson(event.getRouterCounters()));
-        //routingJob.logDebug(GsonProvider.GSON.toJson(event.getBoardStatistics()));
       }
     });
 
@@ -125,7 +123,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         {
           BoardStatistics boardStatistics = event.getBoardStatistics();
           boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
-          boardManager.screen_messages.set_board_score(boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring), boardStatistics.connections.incompleteCount);
+          boardManager.screen_messages.set_board_score(boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring), boardStatistics.connections.incompleteCount, boardStatistics.clearanceViolations.totalCount);
           boardManager.repaint();
         }
       });
@@ -209,7 +207,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .hide();
       }
 
-      routingJob.logInfo("Starting routing of '" + routingJob.name + "'...");
+      int threadCount = boardManager.get_num_threads();
+      routingJob.logInfo("Starting routing of '" + routingJob.name + "' on " + (threadCount == 1 ? "1 thread" : threadCount + " threads") + "...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
       globalSettings.statistics.incrementJobsCompleted();
@@ -258,7 +257,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       var scoreBeforeOptimization = bs.getNormalizedScore(routingJob.routerSettings.scoring);
 
       double autoroutingSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
-      routingJob.logInfo("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete) + " with the score of " + FRLogger.defaultFloatFormat.format(scoreBeforeOptimization) + " (" + bs.connections.incompleteCount + " unrouted).");
+      routingJob.logInfo("Auto-routing was completed in " + FRLogger.formatDuration(autoroutingSecondsToComplete) + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount, bs.clearanceViolations.totalCount) + ".");
       FRAnalytics.autorouterFinished();
 
       Thread.sleep(100);
@@ -267,7 +266,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       int num_threads = boardManager.get_num_threads();
       if (num_threads > 0)
       {
-        routingJob.logInfo("Starting route optimization on " + (num_threads == 1 ? "1 thread" : num_threads + " threads") + "...");
+        routingJob.logInfo("Starting optimization on " + (num_threads == 1 ? "1 thread" : num_threads + " threads") + "...");
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
         FRAnalytics.routeOptimizerStarted();
 
@@ -295,7 +294,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         double percentage_improvement = ((scoreAfterOptimization / scoreBeforeOptimization) * 100.0) - 100.0;
 
         double routeOptimizationSecondsToComplete = FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
-        routingJob.logInfo("Route optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + (percentage_improvement > 0 ? " with the score of " + FRLogger.defaultFloatFormat.format(scoreBeforeOptimization) + " (" + bs.connections.incompleteCount + " unrouted) and an improvement of " + FRLogger.defaultSignedFloatFormat.format(percentage_improvement) + "%." : "."));
+        routingJob.logInfo("Optimization was completed in " + FRLogger.formatDuration(routeOptimizationSecondsToComplete) + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount, bs.clearanceViolations.totalCount) + (percentage_improvement > 0 ? " and an improvement of " + FRLogger.defaultSignedFloatFormat.format(percentage_improvement) + "%." : "."));
         FRAnalytics.routeOptimizerFinished();
 
         if (!this.isStopRequested())

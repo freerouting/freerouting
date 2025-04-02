@@ -28,7 +28,7 @@ public class BatchAutorouter extends NamedAlgorithm
   // Number of times a board is allowed to be selected to be the best board
   private static final int BEST_NOMINATION_LIMIT_TO_PREVENT_ENDLESS_LOOP = 10;
   // Maximum number of tries on the same board
-  private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 5;
+  private static final int MAXIMUM_TRIES_ON_THE_SAME_BOARD = 10;
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
   // The minimum number of passes to complete the board, unless all items are routed
   private static final int STOP_AT_PASS_MINIMUM = 8;
@@ -173,9 +173,9 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         tryOnKnownBoardCounter++;
 
-        if (tryOnKnownBoardCounter > MAXIMUM_TRIES_ON_THE_SAME_BOARD)
+        if (tryOnKnownBoardCounter >= MAXIMUM_TRIES_ON_THE_SAME_BOARD)
         {
-          job.logInfo("The auto-router was not able to improve the board after " + tryOnKnownBoardCounter + " tries, stopping the auto-router.");
+          job.logInfo("The router was not able to improve the board after " + tryOnKnownBoardCounter + " tries, stopping the auto-router.");
           thread.request_stop_auto_router();
           break;
         }
@@ -204,7 +204,8 @@ public class BatchAutorouter extends NamedAlgorithm
 
       continueAutorouting = autoroute_pass(curr_pass_no);
 
-      float boardScoreAfter = new BoardStatistics(this.board).getNormalizedScore(job.routerSettings.scoring);
+      BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
+      float boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
 
       if ((scoreHistory.size() >= numberOfPassesToAverage) || (thread.is_stop_auto_router_requested()))
       {
@@ -262,7 +263,7 @@ public class BatchAutorouter extends NamedAlgorithm
       }
       double autorouter_pass_duration = FRLogger.traceExit("BatchAutorouter.autoroute_pass #" + curr_pass_no + " on board '" + current_board_hash + "'");
 
-      String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of " + FRLogger.defaultFloatFormat.format(boardScoreAfter) + " (" + this.board.get_statistics().connections.incompleteCount + " unrouted)";
+      String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of " + FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount, boardStatisticsAfter.clearanceViolations.totalCount);
       if (job.resourceUsage.cpuTimeUsed > 0)
       {
         passCompletedMessage += ", using " + FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed) + " CPU seconds and " + (int) job.resourceUsage.maxMemoryUsed + " MB memory.";

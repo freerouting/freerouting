@@ -41,7 +41,48 @@ public class FRLogger
     minutes = Math.floor(minutes % 60.0);
     seconds = seconds % 60.0;
 
-    return (hours > 0 ? (int) hours + " hour(s) " : "") + (minutes > 0 ? (int) minutes + " minute(s) " : "") + defaultFloatFormat.format(seconds) + " seconds";
+    String hoursText = hours > 0 ? (int) hours + (hours == 1 ? " hour " : " hours ") : "";
+
+    String minutesText = minutes > 0 ? (int) minutes + (minutes == 1 ? " minute " : " minutes ") : "";
+
+    return hoursText + minutesText + defaultFloatFormat.format(seconds) + " seconds";
+  }
+
+  public static String formatScore(float score, int incomplete, int violations)
+  {
+    StringBuilder sb = new StringBuilder(defaultFloatFormat.format(score));
+
+    // Only include unrouted and violations if they exist
+    if (incomplete > 0 || violations > 0)
+    {
+      sb.append(" (");
+
+      // Add unrouted info only if there are any
+      if (incomplete > 0)
+      {
+        sb
+            .append(incomplete)
+            .append(" unrouted");
+      }
+
+      // Add separator if both unrouted and violations exist
+      if (incomplete > 0 && violations > 0)
+      {
+        sb.append(" and ");
+      }
+
+      // Add violations info only if there are any
+      if (violations > 0)
+      {
+        sb
+            .append(violations)
+            .append(violations == 1 ? " violation" : " violations");
+      }
+
+      sb.append(")");
+    }
+
+    return sb.toString();
   }
 
   public static void traceEntry(String perfId)

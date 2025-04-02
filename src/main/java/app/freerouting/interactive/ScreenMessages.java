@@ -183,8 +183,8 @@ public class ScreenMessages
     write_protected = p_value;
   }
 
-  public void set_board_score(float score, int unrouted_count)
+  public void set_board_score(float score, int unrouted_count, int violation_count)
   {
-    score_field.setText(tm.getText("score", FRLogger.defaultFloatFormat.format(score), String.valueOf(unrouted_count)));
+    score_field.setText(tm.getText("score", FRLogger.defaultFloatFormat.format(score), String.valueOf(unrouted_count), String.valueOf(violation_count)));
   }
 }

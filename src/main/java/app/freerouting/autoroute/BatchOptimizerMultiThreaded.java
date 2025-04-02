@@ -318,7 +318,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
     BoardStatistics boardStatisticsAfter = board.get_statistics();
     this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, this.board);
 
-    job.logDebug("Finished pass #" + p_pass_no + " in " + minutes + " minutes " + sec + " seconds with " + update_count + " board updates using " + thread_pool_size + " thread(s) with '" + us + "' strategy and '" + is + "' item selection strategy.");
+    job.logDebug("Finished optimizer pass #" + p_pass_no + " in " + minutes + " minutes " + sec + " seconds with " + update_count + " board updates using " + thread_pool_size + " thread(s) with '" + us + "' strategy and '" + is + "' item selection strategy.");
     job.logDebug("Route optimizer pass summary - Improved: " + best_route_result.improved() + ", interrupted: " + interrupted + ", via count: " + best_route_result.via_count() + ", trace length: " + boardStatisticsAfter.traces.totalLength + ", via count delta: " + (boardStatisticsBefore.items.viaCount - best_route_result.via_count()) + ", trace length delta: " + (boardStatisticsBefore.traces.totalLength - boardStatisticsAfter.traces.totalLength) + ".");
 
     FRLogger.traceExit(optimizationPassId);

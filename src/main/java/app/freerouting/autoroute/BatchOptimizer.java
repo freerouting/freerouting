@@ -132,7 +132,8 @@ public class BatchOptimizer extends NamedAlgorithm
     }
 
     double routeoptimizer_pass_duration = FRLogger.traceExit(optimizationPassId);
-    job.logInfo("Route optimizer pass #" + p_pass_no + " was completed in " + FRLogger.formatDuration(routeoptimizer_pass_duration));
+    BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
+    job.logInfo("Optimizer pass #" + p_pass_no + " was completed in " + FRLogger.formatDuration(routeoptimizer_pass_duration) + " with the score of " + FRLogger.formatScore(boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring), boardStatisticsAfter.connections.incompleteCount, boardStatisticsAfter.clearanceViolations.totalCount) + ".");
     return route_improved;
   }
 
