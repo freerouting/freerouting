@@ -131,12 +131,7 @@ public class AutorouteEngine
         .stream()
         .map(Item::toString)
         .toList());
-
-    if ((sourceItems.equals("Pin of component #36")) && (targetItems.equals("Pin of component #66")))
-    {
-      FRLogger.warn("");
-    }
-
+    
     MazeSearchAlgo maze_search_algo;
     try
     {
