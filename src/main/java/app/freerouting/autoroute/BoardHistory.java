@@ -3,22 +3,28 @@ package app.freerouting.autoroute;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.settings.RouterScoringSettings;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Records, manages and ranks the boards that were generated during the routing process.
+ * This implementation is thread-safe.
  */
 public class BoardHistory
 {
-  private final LinkedList<BoardHistoryEntry> boards = new LinkedList<>();
+  private final List<BoardHistoryEntry> boards = Collections.synchronizedList(new ArrayList<>());
   private final RouterScoringSettings scoringSettings;
+  private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
   public BoardHistory(RouterScoringSettings scoringSettings)
   {
     this.scoringSettings = scoringSettings;
   }
 
-  public void add(RoutingBoard board)
+  public synchronized void add(RoutingBoard board)
   {
     if (contains(board))
     {
@@ -28,7 +34,7 @@ public class BoardHistory
     boards.add(new BoardHistoryEntry(board.deepCopy(), scoringSettings));
   }
 
-  public void clear()
+  public synchronized void clear()
   {
     boards.clear();
   }
@@ -36,17 +42,28 @@ public class BoardHistory
   public boolean contains(RoutingBoard board)
   {
     String hash = board.get_hash();
-    for (BoardHistoryEntry entry : boards)
+    rwLock
+        .readLock()
+        .lock();
+    try
     {
-      if (entry.hash.equals(hash))
+      for (BoardHistoryEntry entry : boards)
       {
-        return true;
+        if (entry.hash.equals(hash))
+        {
+          return true;
+        }
       }
+      return false;
+    } finally
+    {
+      rwLock
+          .readLock()
+          .unlock();
     }
-    return false;
   }
 
-  public void remove(RoutingBoard board)
+  public synchronized void remove(RoutingBoard board)
   {
     String hash = board.get_hash();
     for (int i = 0; i < boards.size(); i++)
@@ -61,52 +78,107 @@ public class BoardHistory
 
   public float getMaxScore()
   {
-    float maxScore = 0;
-    for (BoardHistoryEntry entry : boards)
+    rwLock
+        .readLock()
+        .lock();
+    try
     {
-      if (entry.score > maxScore)
+      float maxScore = 0;
+      for (BoardHistoryEntry entry : boards)
       {
-        maxScore = entry.score;
+        if (entry.score > maxScore)
+        {
+          maxScore = entry.score;
+        }
       }
+      return maxScore;
+    } finally
+    {
+      rwLock
+          .readLock()
+          .unlock();
     }
-    return maxScore;
   }
 
   /**
    * Returns the best board in the history that has a restore count less than or equal to maxAllowedRestoreCount.
    * Returns null if no such board exists.
    */
-  public RoutingBoard restoreBoard(int maxAllowedRestoreCount)
+  public synchronized RoutingBoard restoreBoard(int maxAllowedRestoreCount)
   {
-    // Sort the boards by score
-    boards.sort((o1, o2) -> Float.compare(o2.score, o1.score));
-
-    for (BoardHistoryEntry entry : boards)
+    if (maxAllowedRestoreCount <= 0)
     {
-      if (entry.restoreCount <= maxAllowedRestoreCount)
-      {
-        entry.restoreCount++;
-        return entry.board.deepCopy();
-      }
+      maxAllowedRestoreCount = Integer.MAX_VALUE;
     }
-    return null;
+
+    rwLock
+        .readLock()
+        .lock();
+
+    try
+    {
+      // Sort the boards by score
+      boards.sort((o1, o2) -> Float.compare(o2.score, o1.score));
+
+      for (BoardHistoryEntry entry : boards)
+      {
+        if (entry.restoreCount <= maxAllowedRestoreCount)
+        {
+          entry.restoreCount++;
+          return entry.board.deepCopy();
+        }
+      }
+      return null;
+    } finally
+    {
+      rwLock
+          .readLock()
+          .unlock();
+    }
+  }
+
+  public RoutingBoard restoreBestBoard()
+  {
+    return restoreBoard(0);
   }
 
   public int size()
   {
-    return boards.size();
+    rwLock
+        .readLock()
+        .lock();
+    try
+    {
+      return boards.size();
+    } finally
+    {
+      rwLock
+          .readLock()
+          .unlock();
+    }
   }
 
   public int getRank(RoutingBoard board)
   {
     String hash = board.get_hash();
-    for (int i = 0; i < boards.size(); i++)
+    rwLock
+        .readLock()
+        .lock();
+    try
     {
-      if (boards.get(i).hash.equals(hash))
+      for (int i = 0; i < boards.size(); i++)
       {
-        return i + 1;
+        if (boards.get(i).hash.equals(hash))
+        {
+          return i + 1;
+        }
       }
+      return -1;
+    } finally
+    {
+      rwLock
+          .readLock()
+          .unlock();
     }
-    return -1;
   }
 }
