@@ -178,44 +178,76 @@ public class BatchAutorouter extends NamedAlgorithm
 
       boolean useSlowAlgorithm = p_pass_no % 4 == 0;
 
+      BatchAutorouterThread[] autorouterThreads = new BatchAutorouterThread[job.routerSettings.maxThreads];
+      BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
+
       // Start multiple instances of the following part in parallel, wait for the results and keep only the best one
+
+      // Prepare the threads
       for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++)
       {
         // deep copy the board
         RoutingBoard clonedBoard = this.board.deepCopy();
 
-        // clone the autoroute item list to avoid concurrent modification
+        // clone the auto-route item list to avoid concurrent modification
         List<Item> clonedAutorouteItemList = new ArrayList<>(getAutorouteItems(clonedBoard));
 
         // shuffle the items to route
         shuffle(clonedAutorouteItemList, new Random());
 
-        BatchAutorouterThread autorouterThread = new BatchAutorouterThread(clonedBoard, clonedAutorouteItemList, p_pass_no, useSlowAlgorithm, job.routerSettings, this.start_ripup_costs, this.trace_pull_tight_accuracy, this.remove_unconnected_vias, true);
+        autorouterThreads[threadIndex] = new BatchAutorouterThread(clonedBoard, clonedAutorouteItemList, p_pass_no, useSlowAlgorithm, job.routerSettings, this.start_ripup_costs, this.trace_pull_tight_accuracy, this.remove_unconnected_vias, true);
+        autorouterThreads[threadIndex].setName("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex));
+        autorouterThreads[threadIndex].setDaemon(true);
+        autorouterThreads[threadIndex].setPriority(Thread.MIN_PRIORITY);
+      }
 
-        // Update the board on the GUI only based on the first thread
-        if (threadIndex == 0)
+      // Update the board on the GUI only based on the first thread
+      autorouterThreads[0].addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+      {
+        @Override
+        public void onBoardUpdatedEvent(BoardUpdatedEvent event)
         {
-          this.air_line = autorouterThread.latest_air_line;
+          air_line = autorouterThreads[0].latest_air_line;
+          fireBoardUpdatedEvent(event.getBoardStatistics(), event.getRouterCounters(), event.getBoard());
+        }
+      });
 
-          autorouterThread.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
-          {
-            @Override
-            public void onBoardUpdatedEvent(BoardUpdatedEvent event)
-            {
-              fireBoardUpdatedEvent(event.getBoardStatistics(), event.getRouterCounters(), event.getBoard());
-            }
-          });
+      // Start the threads
+      for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++)
+      {
+        // start the thread
+        autorouterThreads[threadIndex].start();
+      }
+
+      // Wait for the threads to finish
+      for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++)
+      {
+        BatchAutorouterThread autorouterThread = autorouterThreads[threadIndex];
+
+        // wait for the thread to finish
+        try
+        {
+          autorouterThread.join(TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        } catch (InterruptedException e)
+        {
+          job.logError("Autorouter thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " was interrupted", e);
+          this.is_interrupted = true;
+          break;
         }
 
-        autorouterThread.start();
-        autorouterThread.join();
+        bh.add(autorouterThread.getBoard());
 
         // calculate the new board score
-        BoardStatistics clonedBoardStatistics = clonedBoard.get_statistics();
+        BoardStatistics clonedBoardStatistics = autorouterThread
+            .getBoard()
+            .get_statistics();
         float clonedBoardScore = clonedBoardStatistics.getNormalizedScore(job.routerSettings.scoring);
 
-        job.logInfo("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " finished with score: " + FRLogger.formatScore(clonedBoardScore, clonedBoardStatistics.connections.incompleteCount, clonedBoardStatistics.clearanceViolations.totalCount));
+        job.logDebug("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " finished with score: " + FRLogger.formatScore(clonedBoardScore, clonedBoardStatistics.connections.incompleteCount, clonedBoardStatistics.clearanceViolations.totalCount));
       }
+
+      this.board = bh.restoreBestBoard();
+      bh.clear();
 
       // We are done with this pass
       this.air_line = null;
