@@ -549,4 +549,9 @@ public class BatchAutorouterThread extends StoppableThread
       listener.onBoardUpdatedEvent(event);
     }
   }
+
+  public RoutingBoard getBoard()
+  {
+    return board;
+  }
 }
