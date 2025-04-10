@@ -273,7 +273,7 @@ public class BatchOptimizer extends NamedAlgorithm
   }
 
   @Override
-  protected String getId()
+  public String getId()
   {
     return "freerouting-optimizer";
   }
