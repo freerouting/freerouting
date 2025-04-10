@@ -107,6 +107,10 @@ Installers are available for Windows x64, Linux x64, and macOS. For other system
 
    **Note for macOS Users**: Launch Freerouting from the Terminal; starting from Finder is not supported.
 
+## Docker Image on GitHub Container Registry (GHCR)
+
+Freerouting Docker images for both stable releases (e.g., 2.1.0) and development (nightly) builds are available directly from [ghcr.io/freerouting/freerouting](ghcr.io/freerouting/freerouting).
+
 ## Contributing
 
 We ❤️ all our contributors; this project wouldn't be possible without you!
