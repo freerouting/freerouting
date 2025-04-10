@@ -169,7 +169,11 @@ class Structure extends ScopeKeyword
   {
     for (int i = 0; i < p_par.board.layer_structure.arr.length; ++i)
     {
-      boolean write_layer_rule = p_par.board.rules.get_default_net_class().get_trace_half_width(i) != p_par.board.rules.get_default_net_class().get_trace_half_width(0) || !clearance_equals(p_par.board.rules.clearance_matrix, i, 0);
+      boolean write_layer_rule = p_par.board.rules
+          .get_default_net_class()
+          .get_trace_half_width(i) != p_par.board.rules
+          .get_default_net_class()
+          .get_trace_half_width(0) || !clearance_equals(p_par.board.rules.clearance_matrix, i, 0);
       Layer.write_scope(p_par, i, write_layer_rule);
     }
   }
@@ -209,7 +213,9 @@ class Structure extends ScopeKeyword
     boolean via_at_smd_allowed = false;
     for (int i = 0; i < p_rules.via_infos.count(); ++i)
     {
-      if (p_rules.via_infos.get(i).attach_smd_allowed())
+      if (p_rules.via_infos
+          .get(i)
+          .attach_smd_allowed())
       {
         via_at_smd_allowed = true;
         break;
@@ -589,7 +595,9 @@ class Structure extends ScopeKeyword
       }
       if (!conduction_area_found && !curr_layer.net_names.isEmpty())
       {
-        String curr_net_name = curr_layer.net_names.iterator().next();
+        String curr_net_name = curr_layer.net_names
+            .iterator()
+            .next();
         Net.Id curr_net_id = new Net.Id(curr_net_name, 1);
         if (!p_netlist.contains(curr_net_id))
         {
@@ -751,9 +759,11 @@ class Structure extends ScopeKeyword
         Iterator<String> iterator = p_rule.clearance_class_pairs.iterator();
         curr_pair[0] = iterator.next();
         curr_pair[1] = iterator.next();
-        for (int i = 0; i < curr_pair.length; i++) {
+        for (int i = 0; i < curr_pair.length; i++)
+        {
           curr_pair[i] = curr_pair[i].replaceAll("[\"]", "");
-          if (curr_pair[1].startsWith("_")) {
+          if (curr_pair[1].startsWith("_"))
+          {
             curr_pair[1] = curr_pair[1].substring(1);
           }
         }
@@ -779,24 +789,9 @@ class Structure extends ScopeKeyword
           // pairs with more than 1 underline like smd_via_same_net are not implemented
           continue;
         }
-        
+
       }
-
-      // if (curr_pair[1].startsWith(p_string_quote) && curr_pair[1].endsWith(p_string_quote))
-      // {
-      //   // remove the quotes
-      //   curr_pair[1] = curr_pair[1].substring(1, curr_pair[1].length() - 1);
-      // }
-      // else
-      // {
-      //   String[] tmp_pair = curr_pair[1].split("_", 2);
-      //   if (tmp_pair.length != 1)
-      //   {
-      //     // pairs with more than 1 underline like smd_via_same_net are not implemented
-      //     continue;
-      //   }
-      // }
-
+      
       int first_class_no;
       if (curr_pair[0].equals("wire"))
       {
@@ -908,7 +903,9 @@ class Structure extends ScopeKeyword
       FRLogger.warn("Structure.insert_keepout: board not initialized");
       return false;
     }
-    Layer curr_layer = (p_area.shape_list.iterator().next()).layer;
+    Layer curr_layer = (p_area.shape_list
+        .iterator()
+        .next()).layer;
     if (curr_layer == Layer.SIGNAL)
     {
       for (int i = 0; i < board.get_layer_count(); ++i)
@@ -1149,7 +1146,9 @@ class Structure extends ScopeKeyword
         continue;
       }
       Area plane_area = Shape.transform_area_to_board(plane_info.area.shape_list, p_par.coordinate_transform);
-      Layer curr_layer = (plane_info.area.shape_list.iterator().next()).layer;
+      Layer curr_layer = (plane_info.area.shape_list
+          .iterator()
+          .next()).layer;
       if (curr_layer.no >= 0)
       {
         int clearance_class_no;
@@ -1205,10 +1204,14 @@ class Structure extends ScopeKeyword
       }
       Iterator<Shape> it = p_board_construction_info.outline_shapes.iterator();
 
-      Rectangle bounding_box = it.next().bounding_box();
+      Rectangle bounding_box = it
+          .next()
+          .bounding_box();
       while (it.hasNext())
       {
-        bounding_box = bounding_box.union(it.next().bounding_box());
+        bounding_box = bounding_box.union(it
+            .next()
+            .bounding_box());
       }
       p_board_construction_info.bounding_shape = bounding_box;
     }
