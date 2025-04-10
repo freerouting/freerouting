@@ -19,6 +19,7 @@ import app.freerouting.tests.BoardValidator;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
+import java.util.Objects;
 
 import static app.freerouting.Freerouting.globalSettings;
 
@@ -27,8 +28,8 @@ import static app.freerouting.Freerouting.globalSettings;
  */
 public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 {
-  private final BatchAutorouter batch_autorouter;
-  private BatchOptimizer batch_opt_route;
+  private final BatchAutorouter batchAutorouter;
+  private BatchOptimizer batchOptimizer;
 
   /**
    * Creates a new instance of AutorouterAndRouteOptimizerThread
@@ -40,9 +41,16 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
     routingJob.thread = this;
     routingJob.board = p_board_handling.get_routing_board();
 
-    this.batch_autorouter = new BatchAutorouter(routingJob);
+    this.batchAutorouter = new BatchAutorouter(routingJob);
+
+    if (!Objects.equals(routingJob.routerSettings.algorithm, this.batchAutorouter.getId()))
+    {
+      routingJob.logWarning("The algorithm '" + routingJob.routerSettings.algorithm + "' is not supported by the batch autorouter. The default algorithm '" + this.batchAutorouter.getId() + "' will be used instead.");
+      routingJob.routerSettings.algorithm = this.batchAutorouter.getId();
+    }
+
     // Add event listener for the GUI updates
-    this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+    this.batchAutorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override
       public void onBoardUpdatedEvent(BoardUpdatedEvent event)
@@ -58,7 +66,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
     });
 
     // Add another event listener for the job output object updates
-    this.batch_autorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+    this.batchAutorouter.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
     {
       @Override
       public void onBoardUpdatedEvent(BoardUpdatedEvent event)
@@ -79,7 +87,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       }
     });
 
-    this.batch_autorouter.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
+    this.batchAutorouter.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
     {
       @Override
       public void onTaskStateChangedEvent(TaskStateChangedEvent event)
@@ -94,7 +102,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       }
     });
 
-    this.batch_autorouter.addBoardSnapshotEventListener(new BoardSnapshotEventListener()
+    this.batchAutorouter.addBoardSnapshotEventListener(new BoardSnapshotEventListener()
     {
       @Override
       public void onBoardSnapshotEvent(BoardSnapshotEvent event)
@@ -108,15 +116,21 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       routingJob.logWarning("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
     }
 
-    this.batch_opt_route = null;
+    this.batchOptimizer = null;
 
     if ((!globalSettings.featureFlags.multiThreading) || (routingJob.routerSettings.optimizer.maxThreads == 1))
     {
       // Single-threaded route optimization
-      this.batch_opt_route = new BatchOptimizer(routingJob);
+      this.batchOptimizer = new BatchOptimizer(routingJob);
+
+      if (!Objects.equals(routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId()))
+      {
+        routingJob.logWarning("The algorithm '" + routingJob.routerSettings.optimizer.algorithm + "' is not supported by the batch autorouter. The default algorithm '" + this.batchOptimizer.getId() + "' will be used instead.");
+        routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
+      }
 
       // Add event listener for the GUI updates
-      this.batch_opt_route.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+      this.batchOptimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
       {
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event)
@@ -128,7 +142,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         }
       });
 
-      this.batch_opt_route.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
+      this.batchOptimizer.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
       {
         @Override
         public void onTaskStateChangedEvent(TaskStateChangedEvent event)
@@ -147,9 +161,9 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
     if ((globalSettings.featureFlags.multiThreading) && (routingJob.routerSettings.optimizer.maxThreads > 1))
     {
       // Multi-threaded route optimization
-      this.batch_opt_route = new BatchOptimizerMultiThreaded(routingJob);
+      this.batchOptimizer = new BatchOptimizerMultiThreaded(routingJob);
 
-      this.batch_opt_route.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+      this.batchOptimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
       {
         @Override
         public void onBoardUpdatedEvent(BoardUpdatedEvent event)
@@ -160,7 +174,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         }
       });
 
-      this.batch_opt_route.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
+      this.batchOptimizer.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
       {
         @Override
         public void onTaskStateChangedEvent(TaskStateChangedEvent event)
@@ -207,7 +221,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
             .hide();
       }
 
-      int threadCount = boardManager.get_num_threads();
+      int threadCount = routingJob.routerSettings.maxThreads;
       routingJob.logInfo("Starting routing of '" + routingJob.name + "' on " + (threadCount == 1 ? "1 thread" : threadCount + " threads") + "...");
       FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
 
@@ -244,7 +258,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       // Let's run the autorouter
       if (boardManager.get_settings().autoroute_settings.getRunRouter() && !this.is_stop_auto_router_requested())
       {
-        batch_autorouter.runBatchLoop();
+        batchAutorouter.runBatchLoop();
       }
 
       boardManager.replaceRoutingBoard(routingJob.board);
@@ -274,7 +288,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
         {
           String opt_message = tm.getText("batch_optimizer") + " " + tm.getText("stop_message");
           boardManager.screen_messages.set_status_message(opt_message);
-          this.batch_opt_route.runBatchLoop();
+          this.batchOptimizer.runBatchLoop();
           String curr_message;
           if (this.isStopRequested())
           {
@@ -389,7 +403,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
   @Override
   public void draw(Graphics p_graphics)
   {
-    FloatLine curr_air_line = batch_autorouter.get_air_line();
+    FloatLine curr_air_line = batchAutorouter.get_air_line();
     if (curr_air_line != null)
     {
       FloatPoint[] draw_line = new FloatPoint[2];
@@ -400,7 +414,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       double draw_width = Math.min(this.boardManager.get_routing_board().communication.get_resolution(Unit.MIL) * 3, 300); // problem with low resolution on Kicad300;
       this.boardManager.graphics_context.draw(draw_line, draw_width, draw_color, p_graphics, 1);
     }
-    FloatPoint current_opt_position = batch_opt_route.get_current_position();
+    FloatPoint current_opt_position = batchOptimizer.get_current_position();
     int radius = 10 * this.boardManager.get_routing_board().rules.get_default_trace_half_width(0);
     if (current_opt_position != null)
     {

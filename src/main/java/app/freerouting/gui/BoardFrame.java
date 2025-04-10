@@ -297,10 +297,19 @@ public class BoardFrame extends WindowBase
       scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
       scrollPane.setPreferredSize(new Dimension(1000, 600));
 
+      // Append the new log entries to the text area
+      logEntries.addLogEntryAddedListener((LogEntry logEntry) ->
+      {
+        var type = logEntry.getType();
+        if (type == LogEntryType.Error || type == LogEntryType.Warning || type == LogEntryType.Info)
+        {
+          textArea.append(logEntry + "\n");
+        }
+      });
+
       int messageType = (filteredLogEntries.getErrorCount() > 0) ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
 
       JOptionPane.showMessageDialog(null, scrollPane, tm.getText("logs_window_title"), messageType);
-
     });
 
     // DEPRECATED: we don't use this toolbar anymore

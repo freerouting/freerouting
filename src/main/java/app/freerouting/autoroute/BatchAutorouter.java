@@ -1,5 +1,7 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.autoroute.events.BoardUpdatedEvent;
+import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.*;
 import app.freerouting.core.RouterCounters;
@@ -97,7 +99,7 @@ public class BatchAutorouter extends NamedAlgorithm
       {
         router_instance.is_interrupted = true;
       }
-      still_unrouted_items = autoroute_pass(curr_pass_no);
+      still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
       if (still_unrouted_items && !router_instance.is_interrupted && updated_routing_board == null)
       {
         routerSettings.increment_pass_no();
@@ -112,6 +114,156 @@ public class BatchAutorouter extends NamedAlgorithm
     return curr_pass_no;
   }
 
+  private static LinkedList<Item> getAutorouteItems(RoutingBoard board)
+  {
+    LinkedList<Item> autoroute_item_list = new LinkedList<>();
+    Set<Item> handled_items = new TreeSet<>();
+    Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
+    for (; ; )
+    {
+      UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
+      if (curr_ob == null)
+      {
+        break;
+      }
+      if (curr_ob instanceof Connectable && curr_ob instanceof Item curr_item)
+      {
+        // This is a connectable item, like PolylineTrace or Pin
+        if (!curr_item.is_routable())
+        {
+          if (!handled_items.contains(curr_item))
+          {
+
+            // Let's go through all nets of this item
+            for (int i = 0; i < curr_item.net_count(); ++i)
+            {
+              int curr_net_no = curr_item.get_net_no(i);
+              Set<Item> connected_set = curr_item.get_connected_set(curr_net_no);
+              for (Item curr_connected_item : connected_set)
+              {
+                if (curr_connected_item.net_count() <= 1)
+                {
+                  handled_items.add(curr_connected_item);
+                }
+              }
+              int net_item_count = board.connectable_item_count(curr_net_no);
+
+              // If the item is not connected to all other items of the net, we add it to the auto-router's to-do list
+              if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets()))
+              {
+                autoroute_item_list.add(curr_item);
+              }
+            }
+          }
+        }
+      }
+    }
+    return autoroute_item_list;
+  }
+
+  /**
+   * Multi-threaded version of the router that routes one ripup pass of all items of the board.
+   * WARNING: this version is not working as intended yet. It is a work in progress.
+   * <p>
+   * Returns false if the board is already completely routed.
+   */
+  private boolean autoroute_pass_multi_thread(int p_pass_no)
+  {
+    try
+    {
+      LinkedList<Item> autoroute_item_list = getAutorouteItems(this.board);
+
+      // If there are no items to route, we're done
+      if (autoroute_item_list.isEmpty())
+      {
+        this.air_line = null;
+        return false;
+      }
+
+      boolean useSlowAlgorithm = p_pass_no % 4 == 0;
+
+      BatchAutorouterThread[] autorouterThreads = new BatchAutorouterThread[job.routerSettings.maxThreads];
+      BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
+
+      // Start multiple instances of the following part in parallel, wait for the results and keep only the best one
+
+      // Prepare the threads
+      for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++)
+      {
+        // deep copy the board
+        RoutingBoard clonedBoard = this.board.deepCopy();
+
+        // clone the auto-route item list to avoid concurrent modification
+        List<Item> clonedAutorouteItemList = new ArrayList<>(getAutorouteItems(clonedBoard));
+
+        // shuffle the items to route
+        shuffle(clonedAutorouteItemList, new Random());
+
+        autorouterThreads[threadIndex] = new BatchAutorouterThread(clonedBoard, clonedAutorouteItemList, p_pass_no, useSlowAlgorithm, job.routerSettings, this.start_ripup_costs, this.trace_pull_tight_accuracy, this.remove_unconnected_vias, true);
+        autorouterThreads[threadIndex].setName("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex));
+        autorouterThreads[threadIndex].setDaemon(true);
+        autorouterThreads[threadIndex].setPriority(Thread.MIN_PRIORITY);
+      }
+
+      // Update the board on the GUI only based on the first thread
+      autorouterThreads[0].addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+      {
+        @Override
+        public void onBoardUpdatedEvent(BoardUpdatedEvent event)
+        {
+          air_line = autorouterThreads[0].latest_air_line;
+          fireBoardUpdatedEvent(event.getBoardStatistics(), event.getRouterCounters(), event.getBoard());
+        }
+      });
+
+      // Start the threads
+      for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++)
+      {
+        // start the thread
+        autorouterThreads[threadIndex].start();
+      }
+
+      // Wait for the threads to finish
+      for (int threadIndex = 0; threadIndex < job.routerSettings.maxThreads; threadIndex++)
+      {
+        BatchAutorouterThread autorouterThread = autorouterThreads[threadIndex];
+
+        // wait for the thread to finish
+        try
+        {
+          autorouterThread.join(TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
+        } catch (InterruptedException e)
+        {
+          job.logError("Autorouter thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " was interrupted", e);
+          this.is_interrupted = true;
+          break;
+        }
+
+        bh.add(autorouterThread.getBoard());
+
+        // calculate the new board score
+        BoardStatistics clonedBoardStatistics = autorouterThread
+            .getBoard()
+            .get_statistics();
+        float clonedBoardScore = clonedBoardStatistics.getNormalizedScore(job.routerSettings.scoring);
+
+        job.logDebug("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " finished with score: " + FRLogger.formatScore(clonedBoardScore, clonedBoardStatistics.connections.incompleteCount, clonedBoardStatistics.clearanceViolations.totalCount));
+      }
+
+      this.board = bh.restoreBestBoard();
+      bh.clear();
+
+      // We are done with this pass
+      this.air_line = null;
+      return true;
+    } catch (Exception e)
+    {
+      job.logError("Something went wrong during the auto-routing", e);
+      this.air_line = null;
+      return false;
+    }
+  }
+
   /**
    * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
    * completely routed.
@@ -120,48 +272,7 @@ public class BatchAutorouter extends NamedAlgorithm
   {
     try
     {
-      LinkedList<Item> autoroute_item_list = new LinkedList<>();
-      Set<Item> handled_items = new TreeSet<>();
-      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-      for (; ; )
-      {
-        UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
-        if (curr_ob == null)
-        {
-          break;
-        }
-        if (curr_ob instanceof Connectable && curr_ob instanceof Item curr_item)
-        {
-          // This is a connectable item, like PolylineTrace or Pin
-          if (!curr_item.is_routable())
-          {
-            if (!handled_items.contains(curr_item))
-            {
-
-              // Let's go through all nets of this item
-              for (int i = 0; i < curr_item.net_count(); ++i)
-              {
-                int curr_net_no = curr_item.get_net_no(i);
-                Set<Item> connected_set = curr_item.get_connected_set(curr_net_no);
-                for (Item curr_connected_item : connected_set)
-                {
-                  if (curr_connected_item.net_count() <= 1)
-                  {
-                    handled_items.add(curr_connected_item);
-                  }
-                }
-                int net_item_count = board.connectable_item_count(curr_net_no);
-
-                // If the item is not connected to all other items of the net, we add it to the auto-router's to-do list
-                if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets()))
-                {
-                  autoroute_item_list.add(curr_item);
-                }
-              }
-            }
-          }
-        }
-      }
+      LinkedList<Item> autoroute_item_list = getAutorouteItems(this.board);
 
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty())
@@ -216,7 +327,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
-          //boolean useSlowAlgorithm = this.board.rules.get_use_slow_autoroute_algorithm();
+
           boolean useSlowAlgorithm = p_pass_no % 4 == 0;
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no, useSlowAlgorithm);
           if (autorouterResult.state == AutorouteAttemptState.ROUTED)
@@ -798,5 +909,36 @@ public class BatchAutorouter extends NamedAlgorithm
     }
 
     return result;
+  }
+
+  /**
+   * Return an uppercase one-letter, two-letter or three-letter string based on the thread index (0 = A, 1 = B, 2 = C, ..., 26 = AA, 27 = AB, ...).
+   *
+   * @param threadIndex
+   * @return
+   */
+  private String ThreadIndexToLetter(int threadIndex)
+  {
+    if (threadIndex < 0)
+    {
+      return "";
+    }
+    if (threadIndex < 26)
+    {
+      return String.valueOf((char) ('A' + threadIndex));
+    }
+    else if (threadIndex < 26 * 26)
+    {
+      int firstLetterIndex = threadIndex / 26;
+      int secondLetterIndex = threadIndex % 26;
+      return String.valueOf((char) ('A' + firstLetterIndex)) + (char) ('A' + secondLetterIndex);
+    }
+    else
+    {
+      int firstLetterIndex = threadIndex / (26 * 26);
+      int secondLetterIndex = (threadIndex / 26) % 26;
+      int thirdLetterIndex = threadIndex % 26;
+      return String.valueOf((char) ('A' + firstLetterIndex)) + (char) ('A' + secondLetterIndex) + (char) ('A' + thirdLetterIndex);
+    }
   }
 }

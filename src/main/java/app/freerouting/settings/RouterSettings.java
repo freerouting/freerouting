@@ -42,6 +42,8 @@ public class RouterSettings implements Serializable
   public RouterOptimizerSettings optimizer = new RouterOptimizerSettings();
   @SerializedName("scoring")
   public RouterScoringSettings scoring = new RouterScoringSettings();
+  @SerializedName("max_threads")
+  public int maxThreads = 1; //Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   // The starting and current pass number.
   private transient int start_pass_no = 1;
   // The stopping pass number.

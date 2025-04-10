@@ -16,6 +16,7 @@ import app.freerouting.gui.BoardPanel;
 import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
+import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.BoardRules;
@@ -118,9 +119,9 @@ public class GuiBoardManager extends HeadlessBoardManager
         .addLogEntryAddedListener(listener);
   }
 
-  private void logEntryAdded(LogEntryType logEntryType, String s)
+  private void logEntryAdded(LogEntry logEntry)
   {
-    if ((logEntryType == LogEntryType.Error) || (logEntryType == LogEntryType.Warning))
+    if ((logEntry.getType() == LogEntryType.Error) || (logEntry.getType() == LogEntryType.Warning))
     {
       LogEntries entries = FRLogger.getLogEntries();
       screen_messages.set_error_and_warning_count(entries.getErrorCount(), entries.getWarningCount());
