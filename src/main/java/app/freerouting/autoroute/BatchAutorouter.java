@@ -162,8 +162,10 @@ public class BatchAutorouter extends NamedAlgorithm
   }
 
   /**
-   * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
-   * completely routed.
+   * Multi-threaded version of the router that routes one ripup pass of all items of the board.
+   * WARNING: this version is not working as intended yet. It is a work in progress.
+   * <p>
+   * Returns false if the board is already completely routed.
    */
   private boolean autoroute_pass_multi_thread(int p_pass_no)
   {
@@ -270,48 +272,7 @@ public class BatchAutorouter extends NamedAlgorithm
   {
     try
     {
-      LinkedList<Item> autoroute_item_list = new LinkedList<>();
-      Set<Item> handled_items = new TreeSet<>();
-      Iterator<UndoableObjects.UndoableObjectNode> it = board.item_list.start_read_object();
-      for (; ; )
-      {
-        UndoableObjects.Storable curr_ob = board.item_list.read_object(it);
-        if (curr_ob == null)
-        {
-          break;
-        }
-        if (curr_ob instanceof Connectable && curr_ob instanceof Item curr_item)
-        {
-          // This is a connectable item, like PolylineTrace or Pin
-          if (!curr_item.is_routable())
-          {
-            if (!handled_items.contains(curr_item))
-            {
-
-              // Let's go through all nets of this item
-              for (int i = 0; i < curr_item.net_count(); ++i)
-              {
-                int curr_net_no = curr_item.get_net_no(i);
-                Set<Item> connected_set = curr_item.get_connected_set(curr_net_no);
-                for (Item curr_connected_item : connected_set)
-                {
-                  if (curr_connected_item.net_count() <= 1)
-                  {
-                    handled_items.add(curr_connected_item);
-                  }
-                }
-                int net_item_count = board.connectable_item_count(curr_net_no);
-
-                // If the item is not connected to all other items of the net, we add it to the auto-router's to-do list
-                if ((connected_set.size() < net_item_count) && (!curr_item.has_ignored_nets()))
-                {
-                  autoroute_item_list.add(curr_item);
-                }
-              }
-            }
-          }
-        }
-      }
+      LinkedList<Item> autoroute_item_list = getAutorouteItems(this.board);
 
       // If there are no items to route, we're done
       if (autoroute_item_list.isEmpty())
@@ -366,7 +327,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
           // Do the auto-routing step for this item (typically PolylineTrace or Pin)
           SortedSet<Item> ripped_item_list = new TreeSet<>();
-          //boolean useSlowAlgorithm = this.board.rules.get_use_slow_autoroute_algorithm();
+
           boolean useSlowAlgorithm = p_pass_no % 4 == 0;
           var autorouterResult = autoroute_item(curr_item, curr_item.get_net_no(i), ripped_item_list, p_pass_no, useSlowAlgorithm);
           if (autorouterResult.state == AutorouteAttemptState.ROUTED)
