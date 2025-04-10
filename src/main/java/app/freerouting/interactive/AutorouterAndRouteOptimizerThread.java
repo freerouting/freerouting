@@ -163,6 +163,12 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       // Multi-threaded route optimization
       this.batchOptimizer = new BatchOptimizerMultiThreaded(routingJob);
 
+      if (!Objects.equals(routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId()))
+      {
+        routingJob.logWarning("The algorithm '" + routingJob.routerSettings.optimizer.algorithm + "' is not supported by the batch autorouter. The default algorithm '" + this.batchOptimizer.getId() + "' will be used instead.");
+        routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
+      }
+
       this.batchOptimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
       {
         @Override
