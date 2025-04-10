@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class RouterOptimizerSettings implements Serializable
 {
   @SerializedName("enabled")
-  public transient boolean enabled = true;
+  public transient boolean enabled = false;
   @SerializedName("algorithm")
   public String algorithm = "freerouting-optimizer";
   @SerializedName("max_passes")
