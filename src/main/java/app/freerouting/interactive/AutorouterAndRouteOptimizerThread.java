@@ -111,11 +111,6 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       }
     });
 
-    if (routingJob.routerSettings.optimizer.maxThreads > 1)
-    {
-      routingJob.logWarning("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
-    }
-
     this.batchOptimizer = null;
 
     if ((!globalSettings.featureFlags.multiThreading) || (routingJob.routerSettings.optimizer.maxThreads == 1))
@@ -287,6 +282,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       if (num_threads > 0)
       {
         routingJob.logInfo("Starting optimization on " + (num_threads == 1 ? "1 thread" : num_threads + " threads") + "...");
+        if (num_threads > 1)
+        {
+          routingJob.logWarning("Multi-threaded route optimization is broken and it is known to generate clearance violations. It is highly recommended to use the single-threaded route optimization instead by setting the number of threads to 1 with the '-mt 1' command line argument.");
+        }
+
         FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
         FRAnalytics.routeOptimizerStarted();
 
