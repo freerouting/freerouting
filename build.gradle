@@ -5,7 +5,7 @@ plugins {
     id 'jvm-test-suite'
     id 'signing'
     id 'maven-publish'
-    id "com.vanniktech.maven.publish" version "0.30.0"
+    id "com.vanniktech.maven.publish" version "0.31.0"
     id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.51.0'
 }
