@@ -78,12 +78,6 @@ public class LogEntries
   {
     LogEntry logEntry = this.add(type, message, topic, null);
 
-    // Raise the event
-    for (LogEntryAddedListener listener : listeners)
-    {
-      listener.logEntryAdded(type, message);
-    }
-
     return logEntry;
   }
 
@@ -94,6 +88,12 @@ public class LogEntries
     synchronized (entries)
     {
       entries.add(logEntry);
+    }
+
+    // Raise the event
+    for (LogEntryAddedListener listener : listeners)
+    {
+      listener.logEntryAdded(logEntry);
     }
 
     return logEntry;
@@ -107,6 +107,6 @@ public class LogEntries
   // Event to be raised when a log entry is added
   public interface LogEntryAddedListener
   {
-    void logEntryAdded(LogEntryType type, String message);
+    void logEntryAdded(LogEntry logEntry);
   }
 }
