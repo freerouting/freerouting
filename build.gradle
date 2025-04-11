@@ -113,7 +113,7 @@ dependencies {
 
     // Add SLF4J API and binding dependencies for Jersey logging
     implementation 'org.slf4j:slf4j-api:2.0.16'
-    implementation 'org.slf4j:slf4j-nop:2.0.16'
+    implementation 'org.slf4j:slf4j-nop:2.0.17'
 
     // Add Google Cloud BigQuery dependencies for telemetry
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.32.1'
