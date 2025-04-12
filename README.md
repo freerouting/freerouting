@@ -7,7 +7,7 @@
 <p align="center">
     <a href="https://github.com/freerouting/freerouting/releases"><img src="https://img.shields.io/github/v/release/freerouting/freerouting" alt="Release version" /></a>
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v1.9.0/total" alt="Downloads"/>
-    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v2.0.0/total" alt="Downloads"/>
+    <img src="https://img.shields.io/github/downloads/freerouting/freerouting/v2.0.1/total" alt="Downloads"/>
     <img src="https://img.shields.io/github/downloads/freerouting/freerouting/total" alt="Downloads"/>
     <a href="LICENSE"><img src="https://img.shields.io/github/license/freerouting/freerouting" alt="License"/></a>
 	<a href="https://github.com/freerouting/freerouting/blob/master/docs/code_of_conduct.md"><img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Contributor Covenant" /></a>
@@ -109,7 +109,7 @@ Installers are available for Windows x64, Linux x64, and macOS. For other system
 
 ## Docker Image on GitHub Container Registry (GHCR)
 
-Freerouting Docker images for both stable releases (e.g., 2.1.0) and development (nightly) builds are available directly from [ghcr.io/freerouting/freerouting](ghcr.io/freerouting/freerouting).
+Freerouting Docker images for both stable releases (e.g., 2.1.0) and development (nightly) builds are available directly from [ghcr.io/freerouting/freerouting](https://ghcr.io/freerouting/freerouting).
 
 ## Contributing
 
