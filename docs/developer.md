@@ -84,8 +84,6 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 	* Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
 	* Release the staging repository
 
-* Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
-
 * Update the Docker image on Azure
 	1. build docker image locally for Linux x64 (~2 mins)
 		```
@@ -101,4 +99,6 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 		az acr login --name freerouting
 		docker push freerouting.azurecr.io/freerouting/api:latest
 		```
+* Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
+  
 * Test and publish a new version of the Python Freerouting Client on PyPi.org
