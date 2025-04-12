@@ -85,3 +85,20 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 	* Release the staging repository
 
 * Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
+
+* Update the Docker image on Azure
+	1. build docker image locally for Linux x64 (~2 mins)
+		```
+		docker build -t freerouting:latest .
+  		```
+	3. tag the docker image
+		```
+		docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
+  		```
+	5. push image to Azure as freerouting.azurecr.io/freerouting/api:latest
+		```
+  		az login
+		az acr login --name freerouting
+		docker push freerouting.azurecr.io/freerouting/api:latest
+		```
+* Test and publish a new version of the Python Freerouting Client on PyPi.org
