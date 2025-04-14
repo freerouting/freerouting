@@ -120,8 +120,8 @@ We ❤️ all our contributors; this project wouldn't be possible without you!
 
 ## 🙏 Support the Project
 
-**If you'd like to support the project financially, [please consider sponsoring me](https://github.com/sponsors/andrasfuchs).**
+**If you'd like to support the project financially, [please consider sponsoring the project](https://github.com/sponsors/andrasfuchs).**
 
 **Every contribution, no matter how small, is greatly appreciated!**
 
-[![Sponsor](https://img.shields.io/badge/Sponsor%20me-✨-darkgreen?style=for-the-badge&logo=github)](https://github.com/sponsors/andrasfuchs)
+[![Sponsor](https://img.shields.io/badge/Sponsor%20the%20project-✨-darkgreen?style=for-the-badge&logo=github)](https://github.com/sponsors/andrasfuchs)
