@@ -120,7 +120,7 @@ dependencies {
     implementation 'com.google.api:gax:2.63.1'
     implementation 'com.google.api-client:google-api-client-appengine:2.7.2'
     implementation 'com.google.cloud:google-cloud-core:2.53.1'
-    implementation 'com.google.cloud:google-cloud-core-http:2.53.1'
+    implementation 'com.google.cloud:google-cloud-core-http:2.54.3'
     implementation 'com.google.cloud:google-cloud-bigquery:2.49.0'
 }
 
