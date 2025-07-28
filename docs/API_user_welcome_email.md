@@ -33,7 +33,7 @@ Authorization: Bearer <YOUR_API_KEY>
 ***Your API key is:*** `aabbccdd-0011-2233-4455-66778899aabb`
 
 **Profile ID:**
-The Profile ID identifies the user making the API call. This should be a valid GUID (e.g., `4f93609a-cf64-41cf-a046-6b8486ad85ec`).
+The Profile ID identifies the user making the API call. This should be a valid GUID (e.g., `ffeeddcc-bbaa-9988-7766-554433221100`).
 
 - Use a unique Profile ID for each user if you have multiple users accessing the API.
 - This helps organize and monitor API usage per user.
@@ -84,7 +84,7 @@ The basic steps include:
   GET /jobs/{jobId}/output
   ```
 
-For more detailed documentation, visit the [Freerouting API Docs](https://www.freerouting.app/docs/API_v1.md).
+For more detailed documentation, visit the [Freerouting API Docs](https://github.com/freerouting/freerouting/blob/master/docs/API_v1.md).
 
 ### 4. Need Help?
 
