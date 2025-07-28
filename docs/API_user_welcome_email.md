@@ -2,7 +2,7 @@
 
 **Body:**
 
-Dear ...,
+Dear {{name}},
 
 Welcome to the Freerouting API! We are thrilled to have you onboard as part of our growing community of PCB design enthusiasts and developers.
 
@@ -30,10 +30,10 @@ header as follows:
 Authorization: Bearer <YOUR_API_KEY>
 ```
 
-***Your API key is:*** `aabbccdd-0011-2233-4455-66778899aabb`
+***Your API key is:*** `{{apiKey}}`
 
 **Profile ID:**
-The Profile ID identifies the user making the API call. This should be a valid GUID (e.g., `ffeeddcc-bbaa-9988-7766-554433221100`).
+The Profile ID identifies the user making the API call. This should be a valid GUID (e.g., `{{sampleUserId}}`).
 
 - Use a unique Profile ID for each user if you have multiple users accessing the API.
 - This helps organize and monitor API usage per user.
