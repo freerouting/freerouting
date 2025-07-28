@@ -1,3 +1,5 @@
+**Recipient:** {{email}}
+
 **Subject:** Welcome to the Freerouting API – Getting Started Guide
 
 **Body:**
