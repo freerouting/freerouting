@@ -1,10 +1,13 @@
 package app.freerouting.tests;
 
 import app.freerouting.Freerouting;
+import app.freerouting.management.RoutingJobScheduler;
+import app.freerouting.settings.GlobalSettings;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,15 +42,20 @@ public class Issue522Test {
                     "-mp", "2"
             };
 
-            // We need to run main in a separate thread because it calls System.exit()
-            Thread testThread = new Thread(() -> Freerouting.main(args));
-            testThread.start();
-            testThread.join(60000); // Wait for max 1 minute
+            // Replicate the logic from Freerouting.main() without calling System.exit()
+            GlobalSettings globalSettings = new GlobalSettings();
+            globalSettings.applyCommandLineArguments(args);
+            Freerouting.globalSettings = globalSettings;
+            GlobalSettings.setUserDataPath(tempDir);
 
-            if (testThread.isAlive()) {
-                testThread.interrupt();
-                fail("Test timed out.");
-            }
+            // Get the scheduler instance to ensure its thread is running
+            RoutingJobScheduler.getInstance();
+
+            // Use reflection to call the private InitializeCLI method
+            Method initializeCSLIMethod = Freerouting.class.getDeclaredMethod("InitializeCLI", GlobalSettings.class);
+            initializeCSLIMethod.setAccessible(true);
+            initializeCSLIMethod.invoke(null, globalSettings);
+
 
             assertTrue(Files.exists(logFile), "Log file should have been created");
             String logContent = new String(Files.readAllBytes(logFile), StandardCharsets.UTF_8);

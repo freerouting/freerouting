@@ -8,6 +8,7 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
@@ -329,6 +330,7 @@ public class Freerouting
       FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
     }
     cliSession.addJob(routingJob);
+    RoutingJobScheduler.getInstance().enqueueJob(routingJob);
 
     var desiredOutputFile = new File(globalSettings.design_output_filename);
     if ((desiredOutputFile != null) && desiredOutputFile.exists())
