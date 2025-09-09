@@ -8,7 +8,6 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.VersionChecker;
@@ -330,7 +329,6 @@ public class Freerouting
       FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
     }
     cliSession.addJob(routingJob);
-    RoutingJobScheduler.getInstance().enqueueJob(routingJob);
 
     var desiredOutputFile = new File(globalSettings.design_output_filename);
     if ((desiredOutputFile != null) && desiredOutputFile.exists())
@@ -344,7 +342,6 @@ public class Freerouting
     routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
 
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-    routingJob.routerSettings.set_stop_pass_no(routingJob.routerSettings.get_start_pass_no() + routingJob.routerSettings.maxPasses - 1);
     routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
     routingJob.state = RoutingJobState.READY_TO_START;
 
