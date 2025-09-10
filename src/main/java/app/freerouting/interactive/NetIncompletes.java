@@ -207,34 +207,37 @@ public class NetIncompletes
   private NetItem[] calculate_net_items(Collection<Item> p_item_list)
   {
     ArrayList<NetItem> result = new ArrayList<>();
-    int input_size = p_item_list.size();
+    Set<Item> unique_items = new HashSet<>(p_item_list);
+    int unique_items_count = unique_items.size();
 
-    Collection<Item> handled_items = new LinkedList<>();
-    int curr_index = 0;
-    while (!p_item_list.isEmpty())
+    while (!unique_items.isEmpty())
     {
-      Item start_item = p_item_list
-          .iterator()
-          .next();
+      Item start_item = unique_items.iterator().next();
       Collection<Item> curr_connected_set = start_item.get_connected_set(this.net.net_number);
-      handled_items.addAll(curr_connected_set);
-      p_item_list.removeAll(curr_connected_set);
-      for (Item curr_item : curr_connected_set)
+
+      // Prevent ConcurrentModificationException by creating a list of items to remove
+      Collection<Item> items_in_component = new ArrayList<>();
+      for (Item item_in_set : curr_connected_set) {
+        if (unique_items.contains(item_in_set)) {
+          items_in_component.add(item_in_set);
+        }
+      }
+
+      for (Item curr_item : items_in_component)
       {
         result.add(new NetItem(curr_item, curr_connected_set));
-        ++curr_index;
       }
+      unique_items.removeAll(items_in_component);
     }
 
-    if (curr_index > input_size)
+    if (result.size() > unique_items_count)
     {
       FRLogger.warn("NetIncompletes.calculate_net_items: too many items");
     }
-    else if (curr_index < input_size)
+    else if (result.size() < unique_items_count)
     {
       FRLogger.warn("NetIncompletes.calculate_net_items: too few items");
     }
-
     return result.toArray(new NetItem[0]);
   }
 
