@@ -142,11 +142,17 @@ public class ClearanceMatrix implements Serializable
     // assure, that the clearance value is positive and even, and round it up, if it is odd
     // NOTE: why does it need to be even?
     int value = Math.max(p_value, 0);
-    value += value % 2;
+    if (value % 2 != 0) {
+      if (value == Integer.MAX_VALUE) {
+        value--;
+      } else {
+        value++;
+      }
+    }
 
     curr_entry.layer[p_layer] = value;
-    curr_row.max_value[p_layer] = Math.max(curr_row.max_value[p_layer], p_value);
-    this.max_value_on_layer[p_layer] = Math.max(this.max_value_on_layer[p_layer], p_value);
+    curr_row.max_value[p_layer] = Math.max(curr_row.max_value[p_layer], value);
+    this.max_value_on_layer[p_layer] = Math.max(this.max_value_on_layer[p_layer], value);
   }
 
   /**
