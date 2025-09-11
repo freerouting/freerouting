@@ -38,8 +38,6 @@ public class BatchAutorouterThread extends StoppableThread
 
   public FloatLine latest_air_line = null;
 
-  private boolean is_interrupted = false;
-
   public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo, boolean useSlowAlgorithm, RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions)
   {
     this.board = board;
@@ -366,7 +364,7 @@ public class BatchAutorouterThread extends StoppableThread
     for (Item curr_item : autorouteItemList)
     {
       // If the user requested to stop the auto-router, we stop it
-      if (this.is_interrupted)
+      if (this.is_stop_auto_router_requested())
       {
         break;
       }
@@ -377,7 +375,6 @@ public class BatchAutorouterThread extends StoppableThread
         // If the user requested to stop the auto-router, we stop it
         if (this.is_stop_auto_router_requested())
         {
-          this.is_interrupted = true;
           break;
         }
 
