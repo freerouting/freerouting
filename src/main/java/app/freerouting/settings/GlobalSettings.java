@@ -459,6 +459,13 @@ public class GlobalSettings implements Serializable
             }
           }
         }
+        else if (p_args[i].startsWith("-random_seed"))
+        {
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
+          {
+            routerSettings.random_seed = Long.parseLong(p_args[i + 1]);
+          }
+        }
       } catch (Exception e)
       {
         FRLogger.error("There was a problem parsing the '" + p_args[i] + "' parameter", e);

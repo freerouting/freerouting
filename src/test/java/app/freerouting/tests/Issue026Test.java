@@ -10,7 +10,7 @@ public class Issue026Test extends TestBasedOnAnIssue
   @Test
   void test_Issue_026_Autorouter_interrupted_and_connections_not_found()
   {
-    var job = GetRoutingJob("Issue026-J2_reference.dsn");
+    var job = GetRoutingJobWithRandomSeed("Issue026-J2_reference.dsn");
 
     job = RunRoutingJob(job, job.routerSettings);
 

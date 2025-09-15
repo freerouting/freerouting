@@ -44,6 +44,7 @@ public class BatchAutorouter extends NamedAlgorithm
   private final int trace_pull_tight_accuracy;
   protected RoutingJob job;
   private boolean is_interrupted = false;
+  private Random random = null;
   /**
    * Used to draw the airline of the current routed incomplete.
    */
@@ -58,6 +59,10 @@ public class BatchAutorouter extends NamedAlgorithm
   public BatchAutorouter(StoppableThread p_thread, RoutingBoard board, RouterSettings settings, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions, int p_start_ripup_costs, int p_pull_tight_accuracy)
   {
     super(p_thread, board, settings);
+
+    if (settings.random_seed != null) {
+      this.random = new Random(settings.random_seed);
+    }
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
     if (p_with_preferred_directions)
@@ -197,7 +202,11 @@ public class BatchAutorouter extends NamedAlgorithm
         List<Item> clonedAutorouteItemList = new ArrayList<>(getAutorouteItems(clonedBoard));
 
         // shuffle the items to route
-        shuffle(clonedAutorouteItemList, new Random());
+        if (this.random != null) {
+          shuffle(clonedAutorouteItemList, this.random);
+        } else {
+          shuffle(clonedAutorouteItemList, new Random());
+        }
 
         autorouterThreads[threadIndex] = new BatchAutorouterThread(clonedBoard, clonedAutorouteItemList, p_pass_no, useSlowAlgorithm, job.routerSettings, this.start_ripup_costs, this.trace_pull_tight_accuracy, this.remove_unconnected_vias, true);
         autorouterThreads[threadIndex].setName("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex));
@@ -301,7 +310,11 @@ public class BatchAutorouter extends NamedAlgorithm
       // TODO: Start mutliple instances of the following part in parallel, wait for the results and keep the best one
 
       // Shuffle the items to route
-      shuffle(autoroute_item_list, new Random());
+      if (this.random != null) {
+        shuffle(autoroute_item_list, this.random);
+      } else {
+        shuffle(autoroute_item_list, new Random());
+      }
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list)
