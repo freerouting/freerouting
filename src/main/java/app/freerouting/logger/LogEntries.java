@@ -104,6 +104,11 @@ public class LogEntries
     listeners.add(listener);
   }
 
+  public void removeLogEntryAddedListener(LogEntryAddedListener listener)
+  {
+    listeners.remove(listener);
+  }
+
   // Event to be raised when a log entry is added
   public interface LogEntryAddedListener
   {

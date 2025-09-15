@@ -93,7 +93,7 @@ public class BasicBoard implements Serializable
     insert_outline(p_outline_shapes, p_outline_cl_class_no);
   }
 
-  private static BasicBoard deserialize(byte[] object_byte_array)
+  public static BasicBoard deserialize(byte[] object_byte_array)
   {
     try
     {
@@ -121,7 +121,7 @@ public class BasicBoard implements Serializable
     return stringBuffer.toString();
   }
 
-  private byte[] serialize(boolean basicProfile)
+  public byte[] serialize(boolean basicProfile)
   {
     try
     {
