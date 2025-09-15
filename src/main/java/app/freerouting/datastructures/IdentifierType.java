@@ -64,12 +64,18 @@ public class IdentifierType
         }
       }
 
+      if (!need_quotes) {
+        try {
+          Double.parseDouble(p_name);
+          need_quotes = true;
+        } catch (NumberFormatException e) {
+          // Not a number, do nothing
+        }
+      }
       if (need_quotes)
       {
         p_name = quote(p_name);
       }
-
-      // always put quotes around the identifiers even if they don't have illegal characters
       p_file.write(p_name);
     } catch (IOException e)
     {
