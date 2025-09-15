@@ -65,11 +65,8 @@ public class IdentifierType
       }
 
       if (!need_quotes) {
-        try {
-          Double.parseDouble(p_name);
-          need_quotes = true;
-        } catch (NumberFormatException e) {
-          // Not a number, do nothing
+        if (p_name.matches("^-?\\d.*")) {
+            need_quotes = true;
         }
       }
       if (need_quotes)

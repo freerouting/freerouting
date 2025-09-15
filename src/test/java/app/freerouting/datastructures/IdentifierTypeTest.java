@@ -40,5 +40,12 @@ class IdentifierTypeTest {
         identifierType.write("test-with-reserved", osw_reserved);
         osw_reserved.flush();
         assertEquals("\"test-with-reserved\"", baos_reserved.toString());
+
+        // Test with a string that starts with a number
+        java.io.ByteArrayOutputStream baos_start_with_number = new java.io.ByteArrayOutputStream();
+        OutputStreamWriter osw_start_with_number = new OutputStreamWriter(baos_start_with_number);
+        identifierType.write("600a", osw_start_with_number);
+        osw_start_with_number.flush();
+        assertEquals("\"600a\"", baos_start_with_number.toString());
     }
 }
