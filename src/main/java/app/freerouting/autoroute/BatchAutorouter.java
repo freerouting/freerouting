@@ -98,14 +98,10 @@ public class BatchAutorouter extends NamedAlgorithm
 
     boolean still_unrouted_items = true;
     int curr_pass_no = 1;
-    while (still_unrouted_items && !router_instance.is_interrupted && curr_pass_no <= p_max_pass_count)
+    while (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && curr_pass_no <= p_max_pass_count)
     {
-      if (job.thread.is_stop_auto_router_requested())
-      {
-        router_instance.is_interrupted = true;
-      }
       still_unrouted_items = router_instance.autoroute_pass(curr_pass_no);
-      if (still_unrouted_items && !router_instance.is_interrupted && updated_routing_board == null)
+      if (still_unrouted_items && !job.thread.is_stop_auto_router_requested() && updated_routing_board == null)
       {
         routerSettings.increment_pass_no();
       }
@@ -244,7 +240,7 @@ public class BatchAutorouter extends NamedAlgorithm
         } catch (InterruptedException e)
         {
           job.logError("Autorouter thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex) + " was interrupted", e);
-          this.is_interrupted = true;
+          this.thread.requestStop();
           break;
         }
 
@@ -320,7 +316,7 @@ public class BatchAutorouter extends NamedAlgorithm
       for (Item curr_item : autoroute_item_list)
       {
         // If the user requested to stop the auto-router, we stop it
-        if (this.is_interrupted)
+        if (this.thread.is_stop_auto_router_requested())
         {
           break;
         }
@@ -331,7 +327,6 @@ public class BatchAutorouter extends NamedAlgorithm
           // If the user requested to stop the auto-router, we stop it
           if (this.thread.is_stop_auto_router_requested())
           {
-            this.is_interrupted = true;
             break;
           }
 
@@ -434,11 +429,11 @@ public class BatchAutorouter extends NamedAlgorithm
     boolean continueAutorouting = true;
     BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
 
-    while (continueAutorouting && !this.is_interrupted)
+    while (continueAutorouting && !this.thread.is_stop_auto_router_requested())
     {
-      if (thread.is_stop_auto_router_requested() || (job != null && job.state == RoutingJobState.TIMED_OUT))
+      if (job != null && job.state == RoutingJobState.TIMED_OUT)
       {
-        this.is_interrupted = true;
+        this.thread.request_stop_auto_router();
       }
 
       String current_board_hash = this.board.get_hash();
@@ -462,9 +457,9 @@ public class BatchAutorouter extends NamedAlgorithm
       BoardStatistics boardStatisticsAfter = new BoardStatistics(this.board);
       float boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
 
-      if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (thread.is_stop_auto_router_requested()))
+      if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (this.thread.is_stop_auto_router_requested()))
       {
-        if (((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM)) || (thread.is_stop_auto_router_requested()))
+        if (((curr_pass_no % STOP_AT_PASS_MODULO == 0) && (curr_pass_no >= STOP_AT_PASS_MINIMUM)) || (this.thread.is_stop_auto_router_requested()))
         {
           // Check if the score improved compared to the previous passes, restore a previous board if not
           if (bh.getMaxScore() >= boardScoreAfter)
@@ -510,7 +505,7 @@ public class BatchAutorouter extends NamedAlgorithm
       }
 
       // check if there are still unrouted items
-      if (continueAutorouting && !is_interrupted)
+      if (continueAutorouting && !this.thread.is_stop_auto_router_requested())
       {
         this.settings.increment_pass_no();
       }
@@ -518,7 +513,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
     job.board = this.board;
 
-    if (!(this.remove_unconnected_vias || continueAutorouting || this.is_interrupted))
+    if (!(this.remove_unconnected_vias || continueAutorouting || this.thread.is_stop_auto_router_requested()))
     {
       // clean up the route if the board is completed and if fanout is used.
       remove_tails(Item.StopConnectionOption.NONE);
@@ -526,7 +521,7 @@ public class BatchAutorouter extends NamedAlgorithm
 
     bh.clear();
 
-    if (!this.is_interrupted)
+    if (!this.thread.is_stop_auto_router_requested())
     {
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.FINISHED, this.settings.get_start_pass_no(), this.board.get_hash()));
     }
@@ -536,7 +531,7 @@ public class BatchAutorouter extends NamedAlgorithm
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.CANCELLED, this.settings.get_start_pass_no(), this.board.get_hash()));
     }
 
-    return !this.is_interrupted;
+    return !this.thread.is_stop_auto_router_requested();
   }
 
   private void remove_tails(Item.StopConnectionOption p_stop_connection_option)
