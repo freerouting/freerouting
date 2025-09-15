@@ -47,7 +47,13 @@ public class MazeSearchAlgo
   {
     autoroute_engine = p_autoroute_engine;
     ctrl = p_ctrl;
-    random_generator.setSeed(p_ctrl.ripup_costs); // To get reproducible random numbers in the ripup algorithm.
+    long seed;
+    if (p_ctrl.settings.random_seed != null) {
+        seed = p_ctrl.settings.random_seed;
+    } else {
+        seed = p_ctrl.ripup_costs;
+    }
+    random_generator.setSeed(seed); // To get reproducible random numbers in the ripup algorithm.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
     maze_expansion_list = new PriorityQueue<>(Comparator.comparingDouble(o -> o.sorting_value));
     destination_distance = new DestinationDistance(ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost, ctrl.min_cheap_via_cost);

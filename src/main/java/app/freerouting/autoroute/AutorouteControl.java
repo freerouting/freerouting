@@ -15,6 +15,7 @@ import app.freerouting.settings.RouterSettings;
 public class AutorouteControl
 {
 
+  public final RouterSettings settings;
   /**
    * The horizontal and vertical trace costs on each layer
    */
@@ -139,6 +140,7 @@ public class AutorouteControl
    */
   private AutorouteControl(RoutingBoard p_board, RouterSettings p_settings, ExpansionCostFactor[] p_trace_costs_arr)
   {
+    this.settings = p_settings;
     layer_count = p_board.get_layer_count();
     trace_half_width = new int[layer_count];
     compensated_trace_half_width = new int[layer_count];
