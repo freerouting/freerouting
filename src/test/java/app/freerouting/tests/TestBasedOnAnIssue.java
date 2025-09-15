@@ -35,13 +35,6 @@ public class TestBasedOnAnIssue
     return GetRoutingJob(filename, null);
   }
 
-  protected RoutingJob GetRoutingJobWithRandomSeed(String filename)
-  {
-    long seed = new Random().nextLong();
-    System.out.println("Using random seed: " + seed);
-    return GetRoutingJob(filename, seed);
-  }
-
   protected RoutingJob GetRoutingJob(String filename, Long seed)
   {
     // Create a new session
@@ -54,6 +47,7 @@ public class TestBasedOnAnIssue
     RoutingJob job = new RoutingJob(session.id);
     if (seed != null)
     {
+      System.out.println("Using random seed: " + seed);
       job.routerSettings.random_seed = seed;
     }
 
