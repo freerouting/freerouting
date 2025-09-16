@@ -31,6 +31,11 @@ public class TestBasedOnAnIssue
 
   protected RoutingJob GetRoutingJob(String filename)
   {
+    return GetRoutingJob(filename, null);
+  }
+
+  protected RoutingJob GetRoutingJob(String filename, Long seed)
+  {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
     Session session = SessionManager
@@ -39,6 +44,11 @@ public class TestBasedOnAnIssue
 
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);
+    if (seed != null)
+    {
+      System.out.println("Using random seed: " + seed);
+      job.routerSettings.random_seed = seed;
+    }
 
     // Look for the file in the current directory and its parent directories
     Path testDirectory = Path

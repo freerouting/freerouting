@@ -66,6 +66,11 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   - Allows resuming interrupted optimizations from the last checkpoint.
   - Disabled by default.
 
+- **`-random_seed [seed]`**
+  Sets the random seed for the autorouter.
+  - If a seed is provided, the autorouter will behave deterministically. This affects both the shuffling of items to route and the randomization in the maze search algorithm during rip-up.
+  - If no seed is provided, the autorouter will use a different random seed for each run.
+
 ### Optimization Strategies
 
 - **`-us [greedy | global | hybrid]`**  

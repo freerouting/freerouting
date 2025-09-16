@@ -9,7 +9,7 @@ public class Issue159Test extends TestBasedOnAnIssue
   @Test
   void test_Issue_159_Out_of_memory_error()
   {
-    var job = GetRoutingJob("Issue159-setonix_2hp-pcb.dsn");
+    var job = GetRoutingJob("Issue159-setonix_2hp-pcb.dsn", 12345L);
 
     job = RunRoutingJob(job, job.routerSettings);
 
