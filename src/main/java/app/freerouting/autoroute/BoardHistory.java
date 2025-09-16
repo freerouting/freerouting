@@ -1,8 +1,11 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.board.BasicBoard;
 import app.freerouting.board.RoutingBoard;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.settings.RouterScoringSettings;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +34,7 @@ public class BoardHistory
       return;
     }
 
-    boards.add(new BoardHistoryEntry(board.deepCopy(), scoringSettings));
+    boards.add(new BoardHistoryEntry(board, scoringSettings));
   }
 
   public synchronized void clear()
@@ -125,7 +128,7 @@ public class BoardHistory
         if (entry.restoreCount <= maxAllowedRestoreCount)
         {
           entry.restoreCount++;
-          return entry.board.deepCopy();
+          return (RoutingBoard) BasicBoard.deserialize(entry.board);
         }
       }
       return null;
@@ -179,6 +182,22 @@ public class BoardHistory
       rwLock
           .readLock()
           .unlock();
+    }
+  }
+
+  private static class BoardHistoryEntry implements Serializable
+  {
+    public final byte[] board;
+    public final String hash;
+    public final float score;
+    public int restoreCount;
+
+    public BoardHistoryEntry(RoutingBoard board, RouterScoringSettings scoringSettings)
+    {
+      this.board = board.serialize(false);
+      this.hash = board.get_hash();
+      this.score = new BoardStatistics(board).getNormalizedScore(scoringSettings);
+      this.restoreCount = 0;
     }
   }
 }

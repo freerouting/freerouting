@@ -74,6 +74,7 @@ public class BoardFrame extends WindowBase
   private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
   private final BoardObservers board_observers;
   private final String freerouting_version;
+  private LogEntries.LogEntryAddedListener log_entry_added_listener;
   /**
    * The panel with the graphical representation of the board.
    */
@@ -298,14 +299,15 @@ public class BoardFrame extends WindowBase
       scrollPane.setPreferredSize(new Dimension(1000, 600));
 
       // Append the new log entries to the text area
-      logEntries.addLogEntryAddedListener((LogEntry logEntry) ->
+      log_entry_added_listener = (LogEntry logEntry) ->
       {
         var type = logEntry.getType();
         if (type == LogEntryType.Error || type == LogEntryType.Warning || type == LogEntryType.Info)
         {
           textArea.append(logEntry + "\n");
         }
-      });
+      };
+      logEntries.addLogEntryAddedListener(log_entry_added_listener);
 
       int messageType = (filteredLogEntries.getErrorCount() > 0) ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
 
@@ -948,6 +950,10 @@ public class BoardFrame extends WindowBase
     {
       board_panel.board_handling.dispose();
       board_panel.board_handling = null;
+    }
+    if (this.log_entry_added_listener != null)
+    {
+      FRLogger.getLogEntries().removeLogEntryAddedListener(this.log_entry_added_listener);
     }
     super.dispose();
   }

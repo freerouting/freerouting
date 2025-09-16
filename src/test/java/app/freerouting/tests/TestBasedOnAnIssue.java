@@ -22,7 +22,7 @@ public class TestBasedOnAnIssue
   protected RouterSettings settings;
 
   @BeforeEach
-  void setUp()
+  protected void setUp()
   {
     Freerouting.globalSettings = new GlobalSettings();
     settings = Freerouting.globalSettings.routerSettings;
