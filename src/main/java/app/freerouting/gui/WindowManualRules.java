@@ -103,13 +103,13 @@ public class WindowManualRules extends BoardSavableSubWindow
     gridbag.setConstraints(this.settings_routing_manual_rule_selection_layer_combo_box, gridbag_constraints);
     main_panel.add(this.settings_routing_manual_rule_selection_layer_combo_box);
     settings_routing_manual_rule_selection_layer_combo_box.addActionListener(new LayerComboBoxListener());
-    settings_routing_manual_rule_selection_layer_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_layer_combo_box", settings_routing_manual_rule_selection_layer_combo_box.getSelectedItem().toString()));
+    settings_routing_manual_rule_selection_layer_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_layer_combo_box", settings_routing_manual_rule_selection_layer_combo_box
+        .getSelectedItem()
+        .toString()));
 
     JLabel empty_label = new JLabel();
     gridbag.setConstraints(empty_label, gridbag_constraints);
     main_panel.add(empty_label);
-
-    p_board_frame.set_context_sensitive_help(this, "WindowManualRules");
 
     this.pack();
     this.setResizable(false);

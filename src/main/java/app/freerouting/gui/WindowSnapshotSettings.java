@@ -194,8 +194,6 @@ public class WindowSnapshotSettings extends BoardSavableSubWindow
     other_snapshots_settings_info_list_filter_check_box.addActionListener(new InfoListFilterListener());
     other_snapshots_settings_info_list_filter_check_box.addActionListener(evt -> FRAnalytics.buttonClicked("other_snapshots_settings_info_list_filter_check_box", other_snapshots_settings_info_list_filter_check_box.getText()));
 
-    p_board_frame.set_context_sensitive_help(this, "WindowSnapshots_SnapshotSettings");
-
     this.refresh();
     this.pack();
     this.setResizable(false);

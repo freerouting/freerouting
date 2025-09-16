@@ -130,8 +130,6 @@ public class WindowSnapshot extends BoardSavableSubWindow
     gridbag.setConstraints(other_snapshots_delete_all_button, gridbag_constraints);
     south_panel.add(other_snapshots_settings_button);
 
-    p_board_frame.set_context_sensitive_help(this, "WindowSnapshots");
-
     this.pack();
   }
 

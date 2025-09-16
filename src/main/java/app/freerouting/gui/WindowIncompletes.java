@@ -21,7 +21,6 @@ public class WindowIncompletes extends WindowObjectListWithFilter
 
     this.setTitle(tm.getText("incompletes"));
     this.list_empty_message.setText(tm.getText("route_completed"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_Incompletes");
   }
 
   /**

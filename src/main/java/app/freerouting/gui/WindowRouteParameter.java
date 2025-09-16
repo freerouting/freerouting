@@ -360,8 +360,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow
     route_detail_outline_keepout_check_box.setToolTipText(tm.getText("keepout_outside_outline_tooltip"));
     main_panel.add(route_detail_outline_keepout_check_box, gridbag_constraints);
 
-    p_board_frame.set_context_sensitive_help(this, "WindowRouteParameter");
-
     this.refresh();
     this.pack();
     this.setResizable(false);
@@ -479,7 +477,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow
     {
       this.route_detail_off_button.setSelected(true);
     }
-    BoardOutline outline = this.board_handling.get_routing_board().get_outline();
+    BoardOutline outline = this.board_handling
+        .get_routing_board()
+        .get_outline();
     if (outline != null)
     {
       this.route_detail_outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
@@ -530,13 +530,17 @@ public class WindowRouteParameter extends BoardSavableSubWindow
       {
         return;
       }
-      Collection<Trace> trace_list = board_handling.get_routing_board().get_traces();
+      Collection<Trace> trace_list = board_handling
+          .get_routing_board()
+          .get_traces();
       boolean free_angle_traces_found = false;
       for (Trace curr_trace : trace_list)
       {
         if (curr_trace instanceof PolylineTrace)
         {
-          if (!((PolylineTrace) curr_trace).polyline().is_orthogonal())
+          if (!((PolylineTrace) curr_trace)
+              .polyline()
+              .is_orthogonal())
           {
             free_angle_traces_found = true;
             break;
@@ -565,13 +569,17 @@ public class WindowRouteParameter extends BoardSavableSubWindow
       {
         return;
       }
-      Collection<Trace> trace_list = board_handling.get_routing_board().get_traces();
+      Collection<Trace> trace_list = board_handling
+          .get_routing_board()
+          .get_traces();
       boolean free_angle_traces_found = false;
       for (Trace curr_trace : trace_list)
       {
         if (curr_trace instanceof PolylineTrace)
         {
-          if (!((PolylineTrace) curr_trace).polyline().is_multiple_of_45_degree())
+          if (!((PolylineTrace) curr_trace)
+              .polyline()
+              .is_multiple_of_45_degree())
           {
             free_angle_traces_found = true;
             break;
@@ -859,7 +867,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow
       {
         return;
       }
-      BoardOutline outline = board_handling.get_routing_board().get_outline();
+      BoardOutline outline = board_handling
+          .get_routing_board()
+          .get_outline();
       if (outline != null)
       {
         outline.generate_keepout_outside(route_detail_outline_keepout_check_box.isSelected());

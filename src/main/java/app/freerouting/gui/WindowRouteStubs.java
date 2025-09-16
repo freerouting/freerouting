@@ -27,7 +27,6 @@ public class WindowRouteStubs extends CleanupWindows
 
     this.setTitle(tm.getText("route_stubs"));
     this.list_empty_message.setText(tm.getText("no_route_stubs_found"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_RouteStubs");
   }
 
   @Override
@@ -87,18 +86,28 @@ public class WindowRouteStubs extends CleanupWindows
             stub_layer = first_contact_last_layer;
           }
         }
-        stub_location = ((Via) curr_item).get_center().to_float();
+        stub_location = ((Via) curr_item)
+            .get_center()
+            .to_float();
       }
       else
       {
         Trace curr_trace = (Trace) curr_item;
-        if (curr_trace.get_start_contacts().isEmpty())
+        if (curr_trace
+            .get_start_contacts()
+            .isEmpty())
         {
-          stub_location = curr_trace.first_corner().to_float();
+          stub_location = curr_trace
+              .first_corner()
+              .to_float();
         }
-        else if (curr_trace.get_end_contacts().isEmpty())
+        else if (curr_trace
+            .get_end_contacts()
+            .isEmpty())
         {
-          stub_location = curr_trace.last_corner().to_float();
+          stub_location = curr_trace
+              .last_corner()
+              .to_float();
         }
         else
         {

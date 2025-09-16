@@ -61,8 +61,6 @@ public class WindowEditVias extends BoardSavableSubWindow
     rules_vias_vias_edit_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_remove_button", rules_vias_vias_edit_remove_button.getText()));
     via_info_button_panel.add(rules_vias_vias_edit_remove_button);
 
-    p_board_frame.set_context_sensitive_help(this, "WindowVia_EditVia");
-
     this.add(main_panel);
     this.pack();
   }
@@ -90,9 +88,15 @@ public class WindowEditVias extends BoardSavableSubWindow
     this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.main_panel.add(scroll_pane, BorderLayout.CENTER);
 
-    this.table.getColumnModel().getColumn(ColumnName.CLEARANCE_CLASS.ordinal()).setCellEditor(new DefaultCellEditor(cl_class_combo_box));
+    this.table
+        .getColumnModel()
+        .getColumn(ColumnName.CLEARANCE_CLASS.ordinal())
+        .setCellEditor(new DefaultCellEditor(cl_class_combo_box));
 
-    this.table.getColumnModel().getColumn(ColumnName.PADSTACK.ordinal()).setCellEditor(new DefaultCellEditor(padstack_combo_box));
+    this.table
+        .getColumnModel()
+        .getColumn(ColumnName.PADSTACK.ordinal())
+        .setCellEditor(new DefaultCellEditor(padstack_combo_box));
   }
 
   private void add_combobox_items()

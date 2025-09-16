@@ -332,9 +332,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     JLabel applyValuesNote = new JLabel(tm.getText("apply_values_note"));
     gridbag.setConstraints(applyValuesNote, gridbag_constraints);
     main_panel.add(applyValuesNote, gridbag_constraints);
-
-    p_board_frame.set_context_sensitive_help(this, "WindowAutorouteParameter");
-
+    
     this.refresh();
     this.pack();
     this.setResizable(false);

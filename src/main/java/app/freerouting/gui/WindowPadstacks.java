@@ -24,7 +24,6 @@ public class WindowPadstacks extends WindowObjectListWithFilter
     setLanguage(p_board_frame.get_locale());
 
     this.setTitle(tm.getText("padstacks"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LibraryPadstacks");
   }
 
   /**

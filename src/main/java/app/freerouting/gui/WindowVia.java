@@ -19,8 +19,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * Window for interactive editing of via rules.
@@ -171,8 +171,6 @@ public class WindowVia extends BoardSavableSubWindow
     rules_vias_rules_remove_button.addActionListener(new RemoveViaRuleListener());
     rules_vias_rules_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_remove_button", rules_vias_rules_remove_button.getText()));
     via_rule_button_panel.add(rules_vias_rules_remove_button);
-
-    p_board_frame.set_context_sensitive_help(this, "WindowVia");
 
     this.add(main_panel);
     this.pack();
@@ -402,7 +400,9 @@ public class WindowVia extends BoardSavableSubWindow
       ViaInfo via_with_selected_padstack = null;
       for (int i = 0; i < pcb.rules.via_infos.count(); ++i)
       {
-        if (pcb.rules.via_infos.get(i).get_padstack() == selected_padstack)
+        if (pcb.rules.via_infos
+            .get(i)
+            .get_padstack() == selected_padstack)
         {
           via_with_selected_padstack = pcb.rules.via_infos.get(i);
           break;

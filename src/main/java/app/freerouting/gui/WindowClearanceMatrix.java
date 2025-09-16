@@ -68,7 +68,9 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     rules_clearance_layer_combo_box = new ComboBoxLayer(board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
     north_panel.add(this.rules_clearance_layer_combo_box);
     rules_clearance_layer_combo_box.addActionListener(new ComboBoxListener());
-    rules_clearance_layer_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_layer_combo_box", rules_clearance_layer_combo_box.getSelectedItem().toString()));
+    rules_clearance_layer_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_layer_combo_box", rules_clearance_layer_combo_box
+        .getSelectedItem()
+        .toString()));
 
     main_panel.add(north_panel, BorderLayout.NORTH);
 
@@ -98,8 +100,6 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     south_panel.add(rules_clearance_prune_button, BorderLayout.EAST);
 
     main_panel.add(south_panel, BorderLayout.SOUTH);
-
-    p_board_frame.set_context_sensitive_help(this, "WindowClearanceMatrix");
 
     this.add(main_panel);
     this.pack();
@@ -149,7 +149,9 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     JTableHeader table_header = this.clearance_table.getTableHeader();
     table_header.setBackground(header_background_color);
 
-    TableColumn first_column = this.clearance_table.getColumnModel().getColumn(0);
+    TableColumn first_column = this.clearance_table
+        .getColumnModel()
+        .getColumn(0);
     DefaultTableCellRenderer first_column_renderer = new DefaultTableCellRenderer();
     first_column_renderer.setBackground(header_background_color);
     first_column.setCellRenderer(first_column_renderer);
@@ -160,7 +162,10 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     result.add(scroll_pane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if (p_board_frame.get_locale().getLanguage().equalsIgnoreCase("de"))
+    if (p_board_frame
+        .get_locale()
+        .getLanguage()
+        .equalsIgnoreCase("de"))
     {
       JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle als Punkt eingegeben werden!");
       result.add(bug_label, BorderLayout.SOUTH);
@@ -287,7 +292,9 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().rules.clearance_matrix;
     for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
     {
-      result = Math.max(result, clearance_matrix.get_name(i).length());
+      result = Math.max(result, clearance_matrix
+          .get_name(i)
+          .length());
     }
     return result;
   }

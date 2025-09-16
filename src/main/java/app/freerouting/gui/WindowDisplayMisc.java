@@ -183,8 +183,6 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     main_panel.add(auto_layer_dim_slider);
     this.auto_layer_dim_slider.addChangeListener(new SliderChangeListener());
 
-    p_board_frame.set_context_sensitive_help(this, "WindowDisplay_Miscellaneous");
-
     this.refresh();
     this.pack();
     this.setResizable(false);

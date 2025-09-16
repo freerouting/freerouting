@@ -22,7 +22,6 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
 
     this.setTitle(tm.getText("title"));
     this.list_empty_message.setText(tm.getText("list_empty_message"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_ClearanceViolations");
   }
 
   @Override
@@ -30,7 +29,9 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
   {
     GuiBoardManager board_handling = this.board_frame.board_panel.board_handling;
 
-    ClearanceViolations clearance_violations = new ClearanceViolations(board_handling.get_routing_board().get_items());
+    ClearanceViolations clearance_violations = new ClearanceViolations(board_handling
+        .get_routing_board()
+        .get_items());
     SortedSet<ViolationInfo> sorted_set = new TreeSet<>();
     for (ClearanceViolation curr_violation : clearance_violations.list)
     {

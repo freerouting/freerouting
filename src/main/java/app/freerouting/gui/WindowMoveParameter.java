@@ -113,8 +113,6 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     gridbag.setConstraints(settings_controls_rotate_radiobutton, gridbag_constraints);
     main_panel.add(settings_controls_rotate_radiobutton, gridbag_constraints);
 
-    p_board_frame.set_context_sensitive_help(this, "WindowMoveParameter");
-
     this.refresh();
     this.pack();
     this.setResizable(false);

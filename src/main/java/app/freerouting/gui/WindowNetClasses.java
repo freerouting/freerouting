@@ -101,8 +101,6 @@ public class WindowNetClasses extends BoardSavableSubWindow
     rules_netclasses_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
     rules_netclasses_filter_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_filter_incompletes_button", rules_netclasses_filter_incompletes_button.getText()));
 
-    p_board_frame.set_context_sensitive_help(this, "WindowNetClasses");
-
     this.add(main_panel);
     this.pack();
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -164,17 +162,29 @@ public class WindowNetClasses extends BoardSavableSubWindow
     this.center_panel.add(scroll_pane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if (board_frame.get_locale().getLanguage().equalsIgnoreCase("de"))
+    if (board_frame
+        .get_locale()
+        .getLanguage()
+        .equalsIgnoreCase("de"))
     {
       JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle zur Zeit als Punkt eingegeben werden!");
       this.center_panel.add(bug_label, BorderLayout.SOUTH);
     }
     this.main_panel.add(center_panel, BorderLayout.CENTER);
 
-    this.table.getColumnModel().getColumn(ColumnName.CLEARANCE_CLASS.ordinal()).setCellEditor(new DefaultCellEditor(cl_class_combo_box));
+    this.table
+        .getColumnModel()
+        .getColumn(ColumnName.CLEARANCE_CLASS.ordinal())
+        .setCellEditor(new DefaultCellEditor(cl_class_combo_box));
 
-    this.table.getColumnModel().getColumn(ColumnName.VIA_RULE.ordinal()).setCellEditor(new DefaultCellEditor(via_rule_combo_box));
-    this.table.getColumnModel().getColumn(ColumnName.ON_LAYER.ordinal()).setCellEditor(new DefaultCellEditor(layer_combo_box));
+    this.table
+        .getColumnModel()
+        .getColumn(ColumnName.VIA_RULE.ordinal())
+        .setCellEditor(new DefaultCellEditor(via_rule_combo_box));
+    this.table
+        .getColumnModel()
+        .getColumn(ColumnName.ON_LAYER.ordinal())
+        .setCellEditor(new DefaultCellEditor(layer_combo_box));
   }
 
   private void add_combobox_items()
@@ -298,7 +308,9 @@ public class WindowNetClasses extends BoardSavableSubWindow
         boolean item_matches = false;
         for (int i = 0; i < curr_item.net_count(); ++i)
         {
-          NetClass curr_net_class = nets.get(curr_item.get_net_no(i)).get_class();
+          NetClass curr_net_class = nets
+              .get(curr_item.get_net_no(i))
+              .get_class();
           if (curr_net_class == null)
           {
             continue;
@@ -348,7 +360,9 @@ public class WindowNetClasses extends BoardSavableSubWindow
       for (int i = 1; i <= max_net_no; ++i)
       {
         board_handling.set_incompletes_filter(i, true);
-        NetClass curr_net_class = board_rules.nets.get(i).get_class();
+        NetClass curr_net_class = board_rules.nets
+            .get(i)
+            .get_class();
         for (int j = 0; j < selected_class_arr.length; ++j)
         {
           if (curr_net_class == selected_class_arr[j])
@@ -435,7 +449,9 @@ public class WindowNetClasses extends BoardSavableSubWindow
         {
           Point p = e.getPoint();
           int index = columnModel.getColumnIndexAtX(p.x);
-          int realIndex = columnModel.getColumn(index).getModelIndex();
+          int realIndex = columnModel
+              .getColumn(index)
+              .getModelIndex();
           return column_tool_tips[realIndex];
         }
       };

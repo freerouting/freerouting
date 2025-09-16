@@ -50,8 +50,6 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
     this.main_panel.add(scroll_pane, BorderLayout.CENTER);
     add_net_class_combo_box();
 
-    p_board_frame.set_context_sensitive_help(this, "WindowNetClasses_AssignNetClass");
-
     this.add(main_panel);
     this.pack();
   }
@@ -64,7 +62,10 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
     {
       net_rule_combo_box.addItem(routing_board.rules.net_classes.get(i));
     }
-    this.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(net_rule_combo_box));
+    this.table
+        .getColumnModel()
+        .getColumn(1)
+        .setCellEditor(new DefaultCellEditor(net_rule_combo_box));
   }
 
   @Override
@@ -82,7 +83,10 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
 
   private class AssignRuleTable extends JTable
   {
-    private final String[] column_tool_tips = {tm.getText("net_name_tooltip"), tm.getText("class_name_tooltip")};
+    private final String[] column_tool_tips = {
+        tm.getText("net_name_tooltip"),
+        tm.getText("class_name_tooltip")
+    };
 
     public AssignRuleTable(AssignRuleTableModel p_table_model)
     {
@@ -100,7 +104,9 @@ public class WindowAssignNetClass extends BoardSavableSubWindow
         {
           Point p = e.getPoint();
           int index = columnModel.getColumnIndexAtX(p.x);
-          int realIndex = columnModel.getColumn(index).getModelIndex();
+          int realIndex = columnModel
+              .getColumn(index)
+              .getModelIndex();
           return column_tool_tips[realIndex];
         }
       };

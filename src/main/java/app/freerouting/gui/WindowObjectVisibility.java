@@ -33,7 +33,6 @@ public class WindowObjectVisibility extends WindowVisibility
       message_arr[i] = tm.getText(ObjectNames.values()[i].toString());
     }
     WindowObjectVisibility result = new WindowObjectVisibility(p_board_frame, title, header_message, message_arr);
-    p_board_frame.set_context_sensitive_help(result, "WindowDisplay_ObjectVisibility");
     result.refresh();
     return result;
   }

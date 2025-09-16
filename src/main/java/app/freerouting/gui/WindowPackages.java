@@ -23,7 +23,6 @@ public class WindowPackages extends WindowObjectListWithFilter
     setLanguage(p_board_frame.get_locale());
 
     this.setTitle(tm.getText("packages"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LibraryPackages");
   }
 
   /**

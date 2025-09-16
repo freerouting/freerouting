@@ -22,7 +22,6 @@ import app.freerouting.settings.GlobalSettings;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
@@ -74,7 +73,6 @@ public class BoardFrame extends WindowBase
   private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
   private final BoardObservers board_observers;
   private final String freerouting_version;
-  private LogEntries.LogEntryAddedListener log_entry_added_listener;
   /**
    * The panel with the graphical representation of the board.
    */
@@ -105,6 +103,7 @@ public class BoardFrame extends WindowBase
   ColorManager color_manager;
   BoardSavableSubWindow[] permanent_subwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
   Collection<BoardTemporarySubWindow> temporary_subwindows = new LinkedList<>();
+  private LogEntries.LogEntryAddedListener log_entry_added_listener;
   private LocalDateTime intermediate_stage_file_last_saved_at;
 
   /**
@@ -857,21 +856,6 @@ public class BoardFrame extends WindowBase
   }
 
   /**
-   * Sets contexts sensitive help for the input component, if the help system is used.
-   * This method is deprecated and should not be used. Context-sensitive help will be removed in the future.
-   */
-  @Deprecated
-  public void set_context_sensitive_help(Component p_component, String p_help_id)
-  {
-    if (p_component == null)
-    {
-      throw new NullPointerException("p_component");
-    }
-
-    //throw new UnsupportedOperationException("Context sensitive help is disabled.");
-  }
-
-  /**
    * Sets the toolbar to the buttons of the selected item state.
    */
   public void set_select_toolbar()
@@ -953,7 +937,9 @@ public class BoardFrame extends WindowBase
     }
     if (this.log_entry_added_listener != null)
     {
-      FRLogger.getLogEntries().removeLogEntryAddedListener(this.log_entry_added_listener);
+      FRLogger
+          .getLogEntries()
+          .removeLogEntryAddedListener(this.log_entry_added_listener);
     }
     super.dispose();
   }

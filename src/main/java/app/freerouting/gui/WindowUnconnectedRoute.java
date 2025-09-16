@@ -28,7 +28,6 @@ public class WindowUnconnectedRoute extends CleanupWindows
 
     this.setTitle(tm.getText("unconnected_route"));
     this.list_empty_message.setText(tm.getText("no_unconnected_route_found"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_UnconnectedRoute");
   }
 
   @Override

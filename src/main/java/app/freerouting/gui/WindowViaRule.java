@@ -99,8 +99,6 @@ public class WindowViaRule extends WindowBase
     rules_vias_rules_edit_move_down_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_down_button", rules_vias_rules_edit_move_down_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_down_button);
 
-    p_board_frame.set_context_sensitive_help(this, "WindowVia_EditViaRule");
-
     this.add(main_panel);
     this.pack();
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

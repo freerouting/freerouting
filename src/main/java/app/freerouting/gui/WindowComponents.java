@@ -22,9 +22,8 @@ public class WindowComponents extends WindowObjectListWithFilter
     setLanguage(p_board_frame.get_locale());
 
     this.setTitle(tm.getText("components"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_BoardComponents");
   }
-
+ 
   /**
    * Fills the list with the board components.
    */

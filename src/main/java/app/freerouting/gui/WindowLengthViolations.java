@@ -26,7 +26,6 @@ public class WindowLengthViolations extends WindowObjectListWithFilter
 
     this.setTitle(tm.getText("title"));
     this.list_empty_message.setText(tm.getText("list_empty"));
-    p_board_frame.set_context_sensitive_help(this, "WindowObjectList_LengthViolations");
   }
 
   @Override
