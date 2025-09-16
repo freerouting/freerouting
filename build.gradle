@@ -100,7 +100,7 @@ dependencies {
     implementation 'org.glassfish.jersey.inject:jersey-hk2:3.1.10'
     implementation 'org.glassfish.jersey.media:jersey-media-json-binding:3.1.10'
     implementation 'org.glassfish.jersey.media:jersey-media-sse:3.1.10'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:3.1.10'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:3.1.11'
     implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.10'
     implementation 'org.glassfish.jersey.containers:jersey-container-servlet:3.1.10'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
@@ -117,11 +117,11 @@ dependencies {
 
     // Add Google Cloud BigQuery dependencies for telemetry
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.33.1'
-    implementation 'com.google.api:gax:2.63.1'
+    implementation 'com.google.api:gax:2.70.1'
     implementation 'com.google.api-client:google-api-client-appengine:2.7.2'
-    implementation 'com.google.cloud:google-cloud-core:2.53.1'
-    implementation 'com.google.cloud:google-cloud-core-http:2.53.1'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.49.0'
+    implementation 'com.google.cloud:google-cloud-core:2.60.1'
+    implementation 'com.google.cloud:google-cloud-core-http:2.60.1'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.55.0'
 }
 
 ext {
