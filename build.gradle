@@ -1,5 +1,7 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
+import java.time.Duration
+
 plugins {
     id 'java'
     id 'jvm-test-suite'
@@ -235,4 +237,13 @@ task buildDockerImage(type: Exec) {
     group = 'docker'
     description = 'Builds the Docker image for the application.'
     commandLine 'docker', 'build', '-t', 'freerouting/freerouting:2.0.1', '.'
+}
+
+test {
+    testLogging {
+        showExceptions = true
+        showStandardStreams = true
+    }
+
+    timeout = Duration.ofMinutes(15)
 }

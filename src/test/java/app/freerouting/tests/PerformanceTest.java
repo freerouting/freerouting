@@ -1,58 +1,40 @@
 package app.freerouting.tests;
 
-import app.freerouting.core.events.RoutingJobUpdatedEvent;
-import app.freerouting.core.events.RoutingJobUpdatedEventListener;
 import app.freerouting.logger.FRLogger;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.time.Instant;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class PerformanceTest extends TestBasedOnAnIssue
 {
   @Test
   void testRoutingPerformance()
   {
-    System.out.println("[" + Instant.now() + "] Testing routing performance by routing 'Issue326-Mars-64-revE.dsn' with default settings.");
-    System.out.println("[" + Instant.now() + "] The benchmark score for v2.1 is 976.35, completed in 3.6 minutes.");
-    for (int i = 0; i < 3; i++)
+    System.out.println("Testing performance by routing reference board 'BBD_Mars-64.dsn' with default settings.");
+    System.out.println("The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 29.5 minutes, 27 minutes with failure and 9 minutes with partial failure.");
+    System.out.println("The benchmark score for Freerouting v2.1 is 976.35, completed in 3.6 minutes.");
+    var job = GetRoutingJob("BBD_Mars-64.dsn");
+    job.routerSettings.jobTimeoutString = "00:15:00";
+    job = RunRoutingJob(job, job.routerSettings);
+
+    if (job.output == null)
     {
-      var job = GetRoutingJob("Issue326-Mars-64-revE.dsn");
-      job.addOutputUpdatedEventListener(new RoutingJobUpdatedEventListener()
-      {
-        Instant lastUpdate = Instant
-            .now()
-            .minusMillis(60 * 60 * 1000);
-
-        @Override
-        public void onRoutingJobUpdated(RoutingJobUpdatedEvent event)
-        {
-          if (Duration
-              .between(lastUpdate, Instant.now())
-              .toSeconds() < 30)
-          {
-            return;
-          }
-
-          var stats = event.getJob().board.get_statistics();
-          System.out.println("[" + Instant.now() + "] Routing is in progress... Current score: " + FRLogger.formatScore(stats.getNormalizedScore(event.getJob().routerSettings.scoring), stats.connections.incompleteCount, stats.clearanceViolations.totalCount) + ".");
-          System.out.flush();
-          lastUpdate = Instant.now();
-        }
-      });
-      job = RunRoutingJob(job, job.routerSettings);
-
-      if (job.output == null)
-      {
-        System.out.println("[" + Instant.now() + "] Run #" + (i + 1) + " failed.");
-        continue;
-      }
-
-      var bs = job.output.statistics;
+      fail("Routing job failed.");
+    }
+    else
+    {
+      var bs = job.board.get_statistics();
       var scoreBeforeOptimization = bs.getNormalizedScore(job.routerSettings.scoring);
       Duration routingDuration = Duration.between(job.startedAt, job.finishedAt);
 
-      System.out.println("[" + Instant.now() + "] Run #" + (i + 1) + " was completed in " + FRLogger.formatDuration(routingDuration.toSeconds()) + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount, bs.clearanceViolations.totalCount) + ".");
+      System.out.println("Routing was completed in " + FRLogger.formatDuration(routingDuration.toSeconds()) + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount, bs.clearanceViolations.totalCount) + ".");
     }
+
+    assertTrue(Duration
+        .between(job.startedAt, job.finishedAt)
+        .compareTo(Duration.ofMinutes(5)) < 0, "Routing of the reference board 'BBD_Mars-64.dsn' should complete within 5 minutes.");
   }
 }

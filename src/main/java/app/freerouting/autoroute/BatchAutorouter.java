@@ -59,9 +59,7 @@ public class BatchAutorouter extends NamedAlgorithm
   {
     super(p_thread, board, settings);
 
-    if (settings.random_seed != null) {
-      this.random = new Random(settings.random_seed);
-    }
+    this.random = new Random(settings.random_seed);
 
     this.remove_unconnected_vias = p_remove_unconnected_vias;
     if (p_with_preferred_directions)
@@ -197,11 +195,7 @@ public class BatchAutorouter extends NamedAlgorithm
         List<Item> clonedAutorouteItemList = new ArrayList<>(getAutorouteItems(clonedBoard));
 
         // shuffle the items to route
-        if (this.random != null) {
-          shuffle(clonedAutorouteItemList, this.random);
-        } else {
-          shuffle(clonedAutorouteItemList, new Random());
-        }
+        shuffle(clonedAutorouteItemList, this.random);
 
         autorouterThreads[threadIndex] = new BatchAutorouterThread(clonedBoard, clonedAutorouteItemList, p_pass_no, useSlowAlgorithm, job.routerSettings, this.start_ripup_costs, this.trace_pull_tight_accuracy, this.remove_unconnected_vias, true);
         autorouterThreads[threadIndex].setName("Router thread #" + p_pass_no + "." + ThreadIndexToLetter(threadIndex));
@@ -305,11 +299,7 @@ public class BatchAutorouter extends NamedAlgorithm
       // TODO: Start mutliple instances of the following part in parallel, wait for the results and keep the best one
 
       // Shuffle the items to route
-      if (this.random != null) {
-        shuffle(autoroute_item_list, this.random);
-      } else {
-        shuffle(autoroute_item_list, new Random());
-      }
+      shuffle(autoroute_item_list, this.random);
 
       // Let's go through all items to route
       for (Item curr_item : autoroute_item_list)
@@ -490,7 +480,7 @@ public class BatchAutorouter extends NamedAlgorithm
       String passCompletedMessage = "Auto-router pass #" + curr_pass_no + " on board '" + current_board_hash + "' was completed in " + FRLogger.formatDuration(autorouter_pass_duration) + " with the score of " + FRLogger.formatScore(boardScoreAfter, boardStatisticsAfter.connections.incompleteCount, boardStatisticsAfter.clearanceViolations.totalCount);
       if (job.resourceUsage.cpuTimeUsed > 0)
       {
-        passCompletedMessage += ", using " + FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed) + " CPU seconds and " + (int) job.resourceUsage.maxMemoryUsed + " MB memory.";
+        passCompletedMessage += ", using " + FRLogger.defaultFloatFormat.format(job.resourceUsage.cpuTimeUsed) + " CPU seconds and the job allocated " + (int) job.resourceUsage.maxMemoryUsed + " MB of memory so far.";
       }
       else
       {

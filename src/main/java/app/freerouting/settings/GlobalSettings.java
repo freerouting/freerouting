@@ -5,6 +5,7 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
+import app.freerouting.management.TextManager;
 import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
 
@@ -463,7 +464,7 @@ public class GlobalSettings implements Serializable
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            routerSettings.random_seed = Long.parseLong(p_args[i + 1]);
+            routerSettings.random_seed = TextManager.hexadecimalStringToLong(p_args[i + 1]);
           }
         }
       } catch (Exception e)

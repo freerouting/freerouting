@@ -7,7 +7,7 @@ public class RouterJobResourceUsage
   // Total CPU time used in seconds
   @SerializedName("cpu_time")
   public float cpuTimeUsed = 0.0f;
-  // Maximum memory used in MB
+  // The total amount of memory allocated in MB (this is not the currently used memory)
   @SerializedName("max_memory")
   public float maxMemoryUsed = 0.0f;
   // Total IO read in MB, including input uploads

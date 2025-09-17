@@ -47,13 +47,7 @@ public class MazeSearchAlgo
   {
     autoroute_engine = p_autoroute_engine;
     ctrl = p_ctrl;
-    long seed;
-    if (p_ctrl.settings.random_seed != null) {
-        seed = p_ctrl.settings.random_seed;
-    } else {
-        seed = p_ctrl.ripup_costs;
-    }
-    random_generator.setSeed(seed); // To get reproducible random numbers in the ripup algorithm.
+    random_generator.setSeed(ctrl.settings.random_seed); // To get reproducible random numbers in the ripup algorithm.
     this.search_tree = p_autoroute_engine.autoroute_search_tree;
     maze_expansion_list = new PriorityQueue<>(Comparator.comparingDouble(o -> o.sorting_value));
     destination_distance = new DestinationDistance(ctrl.trace_costs, ctrl.layer_active, ctrl.min_normal_via_cost, ctrl.min_cheap_via_cost);
@@ -123,7 +117,9 @@ public class MazeSearchAlgo
       {
         continue;
       }
-      Item curr_trace_contact = curr_end_contacts.iterator().next();
+      Item curr_trace_contact = curr_end_contacts
+          .iterator()
+          .next();
       boolean protect_fanout_via = false;
       if (curr_trace_contact instanceof Pin && curr_trace_contact.first_layer() == curr_trace_contact.last_layer())
       {
@@ -688,19 +684,25 @@ public class MazeSearchAlgo
   {
     int layer = p_from_element.next_room.get_layer();
     int trace_half_width = this.ctrl.compensated_trace_half_width[layer];
-    boolean room_shape_is_thin = p_from_element.next_room.get_shape().min_width() < 2 * trace_half_width;
+    boolean room_shape_is_thin = p_from_element.next_room
+        .get_shape()
+        .min_width() < 2 * trace_half_width;
 
     if (room_shape_is_thin)
     {
       // expand only drills intersecting the backtrack door
-      if (p_from_element.backtrack_door == null || !p_drill.get_shape().intersects(p_from_element.backtrack_door.get_shape()))
+      if (p_from_element.backtrack_door == null || !p_drill
+          .get_shape()
+          .intersects(p_from_element.backtrack_door.get_shape()))
       {
         return;
       }
     }
 
     double via_radius = ctrl.via_radius_arr[layer];
-    ConvexShape shrinked_drill_shape = p_drill.get_shape().shrink(via_radius);
+    ConvexShape shrinked_drill_shape = p_drill
+        .get_shape()
+        .shrink(via_radius);
     FloatPoint compare_corner = p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
     if (p_from_element.door instanceof DrillPage && p_from_element.backtrack_door instanceof TargetItemExpansionDoor)
     {
@@ -1289,13 +1291,17 @@ public class MazeSearchAlgo
       return false;
     }
 
-    IntPoint door_center = door_shape.centre_of_gravity().round();
+    IntPoint door_center = door_shape
+        .centre_of_gravity()
+        .round();
     int curr_layer = p_list_element.next_room.get_layer();
     int check_radius = this.ctrl.compensated_trace_half_width[curr_layer] + AutorouteEngine.TRACE_WIDTH_TOLERANCE;
     // create a perpendicular line segment of length 2 * check_radius through the door center
     Line[] line_arr = new Line[3];
     line_arr[0] = door_line.translate(check_radius);
-    line_arr[1] = new Line(door_center, door_line.direction().turn_45_degree(2));
+    line_arr[1] = new Line(door_center, door_line
+        .direction()
+        .turn_45_degree(2));
     line_arr[2] = door_line.translate(-check_radius);
 
     Polyline check_polyline = new Polyline(line_arr);

@@ -7,6 +7,7 @@ import app.freerouting.core.Session;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
+import app.freerouting.management.TextManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,9 @@ public class TestBasedOnAnIssue
 
   protected RoutingJob GetRoutingJob(String filename)
   {
-    return GetRoutingJob(filename, null);
+    RoutingJob job = GetRoutingJob(filename, null);
+    job.routerSettings.jobTimeoutString = "00:05:00";
+    return job;
   }
 
   protected RoutingJob GetRoutingJob(String filename, Long seed)
@@ -46,7 +49,6 @@ public class TestBasedOnAnIssue
     RoutingJob job = new RoutingJob(session.id);
     if (seed != null)
     {
-      System.out.println("Using random seed: " + seed);
       job.routerSettings.random_seed = seed;
     }
 
@@ -103,9 +105,8 @@ public class TestBasedOnAnIssue
     scheduler.enqueueJob(job);
     job.state = RoutingJobState.READY_TO_START;
 
-    // Wait for the job to finish, but timeout after 5 minutes
     long startTime = System.currentTimeMillis();
-    long timeoutInMillis = 5 * 60 * 1000; // 5 minutes in milliseconds
+    long timeoutInMillis = TextManager.parseTimespanString(settings.jobTimeoutString) * 1000;
 
     while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED) && (job.state != RoutingJobState.TERMINATED))
     {
@@ -120,7 +121,8 @@ public class TestBasedOnAnIssue
       // Check for timeout every iteration
       if (System.currentTimeMillis() - startTime > timeoutInMillis)
       {
-        throw new RuntimeException("Routing job timed out after 5 minutes.");
+        float timeoutInMinutes = timeoutInMillis / 60000.0f;
+        throw new RuntimeException("Routing job timed out after " + timeoutInMinutes + " minutes.");
       }
     }
 

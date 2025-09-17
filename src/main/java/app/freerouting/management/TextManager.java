@@ -234,6 +234,24 @@ public class TextManager
     return result.toString();
   }
 
+  public static String longToHexadecimalString(Long longValue)
+  {
+    return String.format("0x%016X", longValue);
+  }
+
+  public static Long hexadecimalStringToLong(String hexString)
+  {
+    if (hexString.startsWith("0x") || hexString.startsWith("0X"))
+    {
+      hexString = hexString.substring(2);
+      return Long.parseUnsignedLong(hexString, 16);
+    }
+    else
+    {
+      return Long.parseUnsignedLong(hexString, 10);
+    }
+  }
+
   private void loadResourceBundle(String baseName)
   {
     this.currentBaseName = baseName;

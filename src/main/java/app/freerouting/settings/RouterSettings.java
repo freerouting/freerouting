@@ -7,6 +7,7 @@ import app.freerouting.management.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Random;
 
 public class RouterSettings implements Serializable
 {
@@ -43,9 +44,11 @@ public class RouterSettings implements Serializable
   @SerializedName("scoring")
   public RouterScoringSettings scoring = new RouterScoringSettings();
   @SerializedName("max_threads")
-  public int maxThreads = 1; //Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  public int maxThreads = Math.max(1, Runtime
+      .getRuntime()
+      .availableProcessors() - 1);
   @SerializedName("random_seed")
-  public Long random_seed = null;
+  public transient Long random_seed = new Random().nextLong();
   // The starting and current pass number.
   private transient int start_pass_no = 1;
   // The stopping pass number.
