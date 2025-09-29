@@ -95,6 +95,6 @@ For more detailed documentation, visit the [Freerouting API Docs](https://github
 
 I can’t wait to see how you integrate Freerouting into your projects! If you have questions or feedback, don’t hesitate to get in touch.
 
-Happy routing,
-**Andras Fuchs**
+Happy routing,<br>
+**Andras Fuchs**<br>
 [Freerouting Website](https://www.freerouting.app)
