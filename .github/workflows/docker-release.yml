@@ -4,6 +4,10 @@ on:
   release:
     types: [ published ]
   workflow_dispatch: # Allows you to run this workflow manually
+    inputs:
+      git_ref:
+        description: 'The git tag to build (e.g., v2.1.0)'
+        required: true
 
 env:
   REGISTRY: ghcr.io
@@ -19,6 +23,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.git_ref }}        
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
