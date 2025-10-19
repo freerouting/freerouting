@@ -38,7 +38,17 @@ public class RouterSettings implements Serializable
   @SerializedName("automatic_neckdown")
   public boolean automatic_neckdown = true;
   /**
-   * If true, the autorouter will route connections to planes via short traces to vias.
+   * If true, the autorouter will route connections to copper planes/pours via short traces to vias.
+   * When enabled, pads connected to nets with planes will have traces routed to vias, allowing
+   * connection through the plane layer. This is useful for multi-layer boards where one or more
+   * layers are dedicated to common nets (e.g., ground or power planes).
+   * 
+   * When false, the autorouter skips routing for items already connected to planes (legacy behavior).
+   * 
+   * Additional tuning parameters:
+   * - planeViaDistancePenalty: Controls preference for shorter traces from pads to vias
+   * - planeSharedViaPenalty: Controls preference for one via per pad vs shared vias
+   * - plane_via_costs: Cost of placing a via on a plane (typically lower than regular via costs)
    */
   @SerializedName("route_to_planes_enabled")
   public boolean route_to_planes_enabled = true;
