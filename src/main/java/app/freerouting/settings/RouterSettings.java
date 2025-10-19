@@ -45,10 +45,9 @@ public class RouterSettings implements Serializable
    * 
    * When false, the autorouter skips routing for items already connected to planes (legacy behavior).
    * 
-   * Additional tuning parameters:
+   * Related tuning parameters in RouterScoringSettings:
    * - planeViaDistancePenalty: Controls preference for shorter traces from pads to vias
    * - planeSharedViaPenalty: Controls preference for one via per pad vs shared vias
-   * - plane_via_costs: Cost of placing a via on a plane (typically lower than regular via costs)
    */
   @SerializedName("route_to_planes_enabled")
   public boolean route_to_planes_enabled = true;
