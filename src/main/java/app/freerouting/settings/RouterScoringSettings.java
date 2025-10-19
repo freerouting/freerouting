@@ -31,4 +31,10 @@ public class RouterScoringSettings implements Serializable
   public float clearanceViolationPenalty = 1000;
   // The penalty for a bend.
   public float bendPenalty = 10;
+  // Penalty multiplier for trace length from pad to via on plane connections (higher = shorter traces preferred)
+  @SerializedName("plane_via_distance_penalty")
+  public double planeViaDistancePenalty = 10.0;
+  // Penalty for sharing a via between multiple pads on plane connections (higher = prefer one via per pad)
+  @SerializedName("plane_shared_via_penalty")
+  public double planeSharedViaPenalty = 50.0;
 }

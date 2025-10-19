@@ -37,6 +37,11 @@ public class RouterSettings implements Serializable
    */
   @SerializedName("automatic_neckdown")
   public boolean automatic_neckdown = true;
+  /**
+   * If true, the autorouter will route connections to planes via short traces to vias.
+   */
+  @SerializedName("route_to_planes_enabled")
+  public boolean route_to_planes_enabled = true;
   @SerializedName("fanout")
   public RouterFanoutSettings fanout = new RouterFanoutSettings();
   @SerializedName("optimizer")
@@ -171,8 +176,11 @@ public class RouterSettings implements Serializable
     result.optimizer.enabled = this.optimizer.enabled;
     result.vias_allowed = this.vias_allowed;
     result.automatic_neckdown = this.automatic_neckdown;
+    result.route_to_planes_enabled = this.route_to_planes_enabled;
     result.scoring.via_costs = this.scoring.via_costs;
     result.scoring.plane_via_costs = this.scoring.plane_via_costs;
+    result.scoring.planeViaDistancePenalty = this.scoring.planeViaDistancePenalty;
+    result.scoring.planeSharedViaPenalty = this.scoring.planeSharedViaPenalty;
     result.scoring.start_ripup_costs = this.scoring.start_ripup_costs;
     result.start_pass_no = this.start_pass_no;
     result.stop_pass_no = this.stop_pass_no;

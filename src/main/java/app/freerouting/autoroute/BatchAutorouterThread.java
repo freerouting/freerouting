@@ -468,8 +468,11 @@ public class BatchAutorouterThread extends StoppableThread
       Set<Item> connected_set = p_item.get_connected_set(p_route_net_no);
       Set<Item> route_start_set;
       Set<Item> route_dest_set;
-      if (contains_plane)
+      
+      // Check if we should route to planes or skip items already connected to planes
+      if (contains_plane && !settings.route_to_planes_enabled)
       {
+        // Old behavior: skip routing if already connected to a plane
         for (Item curr_item : connected_set)
         {
           if (curr_item instanceof ConductionArea)
@@ -478,6 +481,7 @@ public class BatchAutorouterThread extends StoppableThread
           }
         }
       }
+      
       if (contains_plane)
       {
         route_start_set = connected_set;
