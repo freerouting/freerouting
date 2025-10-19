@@ -45,7 +45,7 @@ public class RouterSettings implements Serializable
    * 
    * When false, the autorouter skips routing for items already connected to planes (legacy behavior).
    * 
-   * Related tuning parameters in the scoring sub-settings (RouterScoringSettings):
+   * Related tuning parameters in the scoring settings (RouterScoringSettings):
    * - planeViaDistancePenalty: Controls preference for shorter traces from pads to vias
    * - planeSharedViaPenalty: Controls preference for one via per pad vs shared vias
    */
