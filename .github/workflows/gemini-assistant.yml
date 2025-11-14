@@ -15,8 +15,9 @@ jobs:
     steps:
       - name: Run Gemini CLI
         uses: google-github-actions/run-gemini-cli@v0
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # Set as an environment variable
         with:
-          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
           # The prompt is the full comment body.
           # We add instructions to it.
           prompt: |
