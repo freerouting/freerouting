@@ -36,3 +36,9 @@ scripts/logs
 scripts/test.dsn
 scripts/test.ses
 scripts/freeroutingp.exe
+
+# gemini-cli settings
+.gemini/
+
+# GitHub App credentials
+gha-creds-*.json

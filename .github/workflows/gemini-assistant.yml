@@ -14,7 +14,7 @@ jobs:
       pull-requests: write # Allows it to comment on PRs too
     steps:
       - name: Run Gemini CLI
-        uses: google-github-actions/run-gemini-cli@v1
+        uses: google-github-actions/run-gemini-cli@v0
         with:
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
           # The prompt is the full comment body.
