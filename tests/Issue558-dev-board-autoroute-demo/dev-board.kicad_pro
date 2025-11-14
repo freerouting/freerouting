@@ -525,7 +525,7 @@
       "netlist": "",
       "plot": "gerbers/",
       "pos_files": "",
-      "specctra_dsn": "",
+      "specctra_dsn": "../Issue558-dev-board.dsn",
       "step": "",
       "svg": "",
       "vrml": ""
