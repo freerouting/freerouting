@@ -1,0 +1,29 @@
+name: Gemini Assistant
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  run_gemini_cli:
+    # Check if the comment body contains the trigger phrase
+    if: contains(github.event.comment.body, '@gemini-assistant')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write  # Allows the action to write a comment
+      pull-requests: write # Allows it to comment on PRs too
+    steps:
+      - name: Run Gemini CLI
+        uses: google-github-actions/run-gemini-cli@v1
+        with:
+          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+          # The prompt is the full comment body.
+          # We add instructions to it.
+          prompt: |
+            You are a helpful assistant for the Freerouting project.
+            The user's comment is below. Respond to it in the context of the issue.
+            User comment: "${{ github.event.comment.body }}"
+          # This posts the Gemini response as a new comment
+          post-comment: true
+          # This points the action to the issue it came from
+          github-context: ${{ toJSON(github) }}
