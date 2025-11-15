@@ -25,14 +25,16 @@ If applicable, add screenshots to help explain your problem.
 
 **Environment**
  - OS: [e.g. Windows 11, 64-bit]
- - Freerouting version: [e.g. 1.9]
+ - Freerouting version: [e.g. 2.1]
  - EDA: [e.g. N/A, KiCad, EasyEDA]
 
 **Command line arguments**
 If applicable, include the full command line that you used.
 
-**Project files**
-If applicable, include project files like .pro, .kicad_pcb, .dsn.
+**Project Files (Crucial)**
+Please attach your full KiCad project archived as a ZIP file. If that is not available, please attach the exported DSN and generated SES files instead.
+
+*Note: Providing only the .dsn file is often not enough to reproduce specific issues. Attaching the full project ZIP makes bug hunting significantly faster and increases the chance of a quick fix.*
 
 **Logs**
 Include at least the most recent lines of your log files or console output.
