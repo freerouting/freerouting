@@ -63,8 +63,15 @@ public class Issue555Test extends TestBasedOnAnIssue
       System.out.println("Routing was completed in " + FRLogger.formatDuration(routingDuration.toSeconds()) + " with the score of " + FRLogger.formatScore(scoreBeforeOptimization, bs.connections.incompleteCount, bs.clearanceViolations.totalCount) + ".");
     }
 
+    // Check if we could finish within 1 minute
     assertTrue(Duration
         .between(job.startedAt, job.finishedAt)
         .compareTo(Duration.ofMinutes(1)) < 0, "Routing of the reference board 'Issue555-CNH_Functional_Tester_1.dsn' should complete within 1 minute.");
+
+    // Check if we could finish within 40 passes
+    assertTrue(job.routerSettings.get_stop_pass_no() < 40, "Routing of the reference board 'Issue555-CNH_Functional_Tester_1.dsn' should complete within 40 passes.");
+
+    // Check if we have at most 6 unrouted connections
+    assertTrue(job.board.get_statistics().connections.incompleteCount <= 6, "Routing of the reference board 'Issue555-CNH_Functional_Tester_1.dsn' should leave at most 6 unrouted connections.");
   }
 }
