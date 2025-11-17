@@ -96,9 +96,9 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.4'
 
     // Add Jersey dependencies
-    implementation 'org.glassfish.jersey.core:jersey-common:3.1.10'
-    implementation 'org.glassfish.jersey.core:jersey-client:3.1.10'
-    implementation 'org.glassfish.jersey.core:jersey-server:3.1.10'
+    implementation 'org.glassfish.jersey.core:jersey-common:4.0.0'
+    implementation 'org.glassfish.jersey.core:jersey-client:4.0.0'
+    implementation 'org.glassfish.jersey.core:jersey-server:4.0.0'
     implementation 'org.glassfish.jersey.inject:jersey-hk2:3.1.10'
     implementation 'org.glassfish.jersey.media:jersey-media-json-binding:3.1.10'
     implementation 'org.glassfish.jersey.media:jersey-media-sse:3.1.10'
