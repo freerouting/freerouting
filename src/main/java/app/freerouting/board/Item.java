@@ -461,8 +461,15 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
             continue;
           }
 
+          // Determine the layer where both items overlap
+          // For multi-layer items (vias, pins), we need to use the layer of the curr_item's shape
+          // that we're actually checking against, not just the layer of this item's shape
+          int this_layer = shape_layer(i);
+          int other_layer = curr_item.shape_layer(curr_entry.shape_index_in_object);
+          int clearance_layer = other_layer;  // Use the layer of the other item's shape
+
           // Calculate the expected minimum clearance between these two shapes
-          double minimum_clearance = board.rules.clearance_matrix.get_value(curr_item.clearance_class, this.clearance_class, shape_layer(i), false);
+          double minimum_clearance = board.rules.clearance_matrix.get_value(curr_item.clearance_class, this.clearance_class, clearance_layer, false);
 
           double actual_clearance = 0;
 
@@ -485,7 +492,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
           TileShape intersection = enlarged_shape_1.intersection(enlarged_shape_2);
           if (intersection.dimension() == 2)
           {
-            ClearanceViolation curr_violation = new ClearanceViolation(this, curr_item, intersection, shape_layer(i), minimum_clearance, actual_clearance);
+            ClearanceViolation curr_violation = new ClearanceViolation(this, curr_item, intersection, clearance_layer, minimum_clearance, actual_clearance);
             result.add(curr_violation);
           }
         }
