@@ -106,7 +106,6 @@ public class DesignRulesCheckerTest
       if (testDirectory == null)
       {
         fail("Test file not found: " + filename);
-        return null;
       }
 
       testFile = Path

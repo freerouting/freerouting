@@ -102,10 +102,14 @@ public class DesignRulesChecker
     items.add(new DrcViolationItem(secondItemDesc, pos, secondUuid));
     
     // Create violation description
-    String description = String.format("Clearance violation between %s and %s (expected: %.4f%s, actual: %.4f%s)",
-        firstItemDesc, secondItemDesc,
-        violation.expected_clearance * unitScale, coordinateUnit,
-        violation.actual_clearance * unitScale, coordinateUnit);
+    String description = String.format(
+        "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)",
+        firstItemDesc, 
+        secondItemDesc,
+        violation.expected_clearance * unitScale, 
+        coordinateUnit,
+        violation.actual_clearance * unitScale, 
+        coordinateUnit);
     
     return new DrcViolation("clearance", description, "error", items);
   }
