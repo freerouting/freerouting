@@ -5,6 +5,7 @@ import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
@@ -443,15 +444,15 @@ public class Freerouting
     }
 
     // Run DRC check
-    app.freerouting.board.DesignRulesChecker drcChecker = new app.freerouting.board.DesignRulesChecker(drcJob.board);
-    
+    DesignRulesChecker drcChecker = new DesignRulesChecker(drcJob.board);
+
     // Determine coordinate unit (default to mm)
     String coordinateUnit = "mm";
-    
+
     // Generate DRC report
     String sourceFileName = new File(globalSettings.design_input_filename).getName();
     String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
-    
+
     // Output the DRC report
     if (globalSettings.drc_output_filename != null)
     {

@@ -1,6 +1,7 @@
-package app.freerouting.board;
+package app.freerouting.drc;
 
 import app.freerouting.Freerouting;
+import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
 import app.freerouting.management.SessionManager;
@@ -29,16 +30,16 @@ public class DesignRulesCheckerTest
   {
     // Create a simple routing job with a DSN file
     RoutingJob job = getRoutingJobFromTestFile("BBD_Mars-64.dsn");
-    
+
     assertNotNull(job, "Job should not be null");
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
     DesignRulesChecker drcChecker = new DesignRulesChecker(job.board);
-    
+
     // Generate report
     DrcReport report = drcChecker.generateReport("test.dsn", "mm");
-    
+
     // Verify report structure
     assertNotNull(report, "Report should not be null");
     assertEquals("https://schemas.kicad.org/drc.v1.json", report.$schema, "Schema should match KiCad format");
@@ -55,22 +56,24 @@ public class DesignRulesCheckerTest
   {
     // Create a simple routing job with a DSN file
     RoutingJob job = getRoutingJobFromTestFile("BBD_Mars-64.dsn");
-    
+
     assertNotNull(job, "Job should not be null");
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
     DesignRulesChecker drcChecker = new DesignRulesChecker(job.board);
-    
+
     // Generate JSON report
     String jsonReport = drcChecker.generateReportJson("test.dsn", "mm");
-    
+
     // Verify JSON is valid
     assertNotNull(jsonReport, "JSON report should not be null");
     assertFalse(jsonReport.isEmpty(), "JSON report should not be empty");
-    
+
     // Parse JSON to verify structure
-    JsonObject json = JsonParser.parseString(jsonReport).getAsJsonObject();
+    JsonObject json = JsonParser
+        .parseString(jsonReport)
+        .getAsJsonObject();
     assertTrue(json.has("$schema"), "JSON should have $schema field");
     assertTrue(json.has("coordinate_units"), "JSON should have coordinate_units field");
     assertTrue(json.has("date"), "JSON should have date field");
@@ -99,7 +102,7 @@ public class DesignRulesCheckerTest
     File testFile = Path
         .of(testDirectory.toString(), "tests", filename)
         .toFile();
-    
+
     while (!testFile.exists())
     {
       testDirectory = testDirectory.getParent();
@@ -118,16 +121,12 @@ public class DesignRulesCheckerTest
     try
     {
       job.setInput(testFile);
-      
+
       // Load the board
       if (job.input.format == app.freerouting.gui.FileFormat.DSN)
       {
-        app.freerouting.interactive.HeadlessBoardManager boardManager = 
-            new app.freerouting.interactive.HeadlessBoardManager(null, job);
-        boardManager.loadFromSpecctraDsn(
-            job.input.getData(), 
-            null, 
-            new ItemIdentificationNumberGenerator());
+        app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(null, job);
+        boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
         job.board = boardManager.get_routing_board();
       }
     } catch (Exception e)

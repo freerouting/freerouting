@@ -1,5 +1,6 @@
-package app.freerouting.board;
+package app.freerouting.drc;
 
+import app.freerouting.board.*;
 import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.management.gson.GsonProvider;
@@ -23,13 +24,13 @@ public class DesignRulesChecker
 
   /**
    * Collects all clearance violations on the board.
-   * 
+   *
    * @return Collection of all clearance violations found
    */
   public Collection<ClearanceViolation> getAllClearanceViolations()
   {
     List<ClearanceViolation> allViolations = new ArrayList<>();
-    
+
     // Iterate through all items on the board
     Collection<Item> items = board.get_items();
     for (Item item : items)
@@ -41,85 +42,82 @@ public class DesignRulesChecker
         allViolations.addAll(itemViolations);
       }
     }
-    
+
     return allViolations;
   }
 
   /**
    * Generates a DRC report in KiCad JSON format.
-   * 
-   * @param sourceFile Name of the source file
+   *
+   * @param sourceFile     Name of the source file
    * @param coordinateUnit Unit for coordinates (e.g., "mm", "mil")
    * @return DRC report in KiCad JSON format
    */
   public DrcReport generateReport(String sourceFile, String coordinateUnit)
   {
     DrcReport report = new DrcReport(coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
-    
+
     // Get all clearance violations
     Collection<ClearanceViolation> violations = getAllClearanceViolations();
-    
+
     // Convert internal violations to DRC report format
     for (ClearanceViolation violation : violations)
     {
       DrcViolation drcViolation = convertToDrcViolation(violation, coordinateUnit);
       report.addViolation(drcViolation);
     }
-    
+
     return report;
   }
 
   /**
    * Converts an internal ClearanceViolation to a DrcViolation for the report.
-   * 
-   * @param violation Internal clearance violation
+   *
+   * @param violation      Internal clearance violation
    * @param coordinateUnit Unit for coordinates
    * @return DRC violation in report format
    */
   private DrcViolation convertToDrcViolation(ClearanceViolation violation, String coordinateUnit)
   {
     List<DrcViolationItem> items = new ArrayList<>();
-    
+
     // Get the center of the violation shape
     FloatPoint center = violation.shape.centre_of_gravity();
-    
+
     // Convert coordinates based on the unit
     double unitScale = getUnitScale(coordinateUnit);
     double x = center.x * unitScale;
     double y = center.y * unitScale;
-    
+
     // Create items for first and second objects
     DrcPosition pos = new DrcPosition(x, y);
-    
+
     String firstItemDesc = getItemDescription(violation.first_item);
     String secondItemDesc = getItemDescription(violation.second_item);
-    
+
     // Use item IDs as UUIDs (they are unique within the board)
     String firstUuid = String.valueOf(violation.first_item.get_id_no());
     String secondUuid = String.valueOf(violation.second_item.get_id_no());
-    
+
     items.add(new DrcViolationItem(firstItemDesc, pos, firstUuid));
     items.add(new DrcViolationItem(secondItemDesc, pos, secondUuid));
-    
+
     // Create violation description
-    String description = String.format("Clearance violation between %s and %s (expected: %.4f%s, actual: %.4f%s)",
-        firstItemDesc, secondItemDesc,
-        violation.expected_clearance * unitScale, coordinateUnit,
-        violation.actual_clearance * unitScale, coordinateUnit);
-    
+    String description = String.format("Clearance violation between %s and %s (expected: %.4f%s, actual: %.4f%s)", firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit, violation.actual_clearance * unitScale, coordinateUnit);
+
     return new DrcViolation("clearance", description, "error", items);
   }
 
   /**
    * Gets a human-readable description of an item.
-   * 
+   *
    * @param item The item to describe
    * @return Description string
    */
   private String getItemDescription(Item item)
   {
     StringBuilder desc = new StringBuilder();
-    
+
     if (item instanceof Trace)
     {
       desc.append("Trace");
@@ -138,22 +136,27 @@ public class DesignRulesChecker
     }
     else
     {
-      desc.append(item.getClass().getSimpleName());
+      desc.append(item
+          .getClass()
+          .getSimpleName());
     }
-    
+
     // Add net information
     if (item.net_count() > 0)
     {
       String netName = board.rules.nets.get(item.get_net_no(0)).name;
-      desc.append(" [").append(netName).append("]");
+      desc
+          .append(" [")
+          .append(netName)
+          .append("]");
     }
-    
+
     return desc.toString();
   }
 
   /**
    * Gets the scale factor to convert from board units to the specified unit.
-   * 
+   *
    * @param coordinateUnit Target unit ("mm", "mil", etc.)
    * @return Scale factor
    */
@@ -174,8 +177,8 @@ public class DesignRulesChecker
 
   /**
    * Generates a JSON string of the DRC report.
-   * 
-   * @param sourceFile Name of the source file
+   *
+   * @param sourceFile     Name of the source file
    * @param coordinateUnit Unit for coordinates
    * @return JSON string of the DRC report
    */

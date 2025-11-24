@@ -5,6 +5,7 @@ import app.freerouting.api.dto.BoardFilePayload;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -772,12 +773,8 @@ public class JobControllerV1 extends BaseController
       {
         try
         {
-          app.freerouting.interactive.HeadlessBoardManager boardManager = 
-              new app.freerouting.interactive.HeadlessBoardManager(null, job);
-          boardManager.loadFromSpecctraDsn(
-              job.input.getData(), 
-              null, 
-              new app.freerouting.board.ItemIdentificationNumberGenerator());
+          app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(null, job);
+          boardManager.loadFromSpecctraDsn(job.input.getData(), null, new app.freerouting.board.ItemIdentificationNumberGenerator());
           job.board = boardManager.get_routing_board();
         } catch (Exception e)
         {
@@ -798,21 +795,20 @@ public class JobControllerV1 extends BaseController
     }
 
     // Run DRC check
-    app.freerouting.board.DesignRulesChecker drcChecker = 
-        new app.freerouting.board.DesignRulesChecker(job.board);
-    
+    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board);
+
     // Determine coordinate unit (default to mm)
     String coordinateUnit = "mm";
-    
+
     // Get source file name
     String sourceFileName = job.input != null ? job.input.getFilename() : "unknown";
-    
+
     // Generate DRC report
     String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
-    
+
     // Log the API call
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/drc", "", "drc-report-generated");
-    
+
     return Response
         .ok(drcReportJson)
         .build();
