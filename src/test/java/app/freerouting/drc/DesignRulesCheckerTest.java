@@ -48,7 +48,7 @@ public class DesignRulesCheckerTest
     assertNotNull(report.violations, "Violations list should not be null");
     assertNotNull(report.unconnected_items, "Unconnected items list should not be null");
     assertNotNull(report.schematic_parity, "Schematic parity list should not be null");
-    assertTrue(report.kicad_version.contains("Freerouting"), "Version should contain Freerouting");
+    assertTrue(report.freerouting_version.contains("Freerouting"), "Version should contain Freerouting");
   }
 
   @Test
