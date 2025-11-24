@@ -29,7 +29,7 @@ public class DrcReport
   /**
    * Version of the tool that generated the report
    */
-  public final String kicad_version;
+  public final String freerouting_version;
 
   /**
    * Source file name
@@ -55,7 +55,7 @@ public class DrcReport
   {
     this.coordinate_units = coordinateUnits;
     this.source = source;
-    this.kicad_version = version;
+    this.freerouting_version = version;
     this.date = ZonedDateTime
         .now()
         .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);

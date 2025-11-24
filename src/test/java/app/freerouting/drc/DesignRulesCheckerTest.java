@@ -35,7 +35,7 @@ public class DesignRulesCheckerTest
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board);
+    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
 
     // Generate report
     DrcReport report = drcChecker.generateReport("test.dsn", "mm");
@@ -61,7 +61,7 @@ public class DesignRulesCheckerTest
     assertNotNull(job.board, "Board should be loaded");
 
     // Create DRC checker
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board);
+    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, Freerouting.globalSettings.drcSettings);
 
     // Generate JSON report
     String jsonReport = drcChecker.generateReportJson("test.dsn", "mm");

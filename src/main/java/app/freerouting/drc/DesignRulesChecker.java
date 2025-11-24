@@ -4,6 +4,7 @@ import app.freerouting.board.*;
 import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.management.gson.GsonProvider;
+import app.freerouting.settings.DesignRulesCheckerSettings;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,10 +17,12 @@ import java.util.List;
 public class DesignRulesChecker
 {
   private final BasicBoard board;
+  private final DesignRulesCheckerSettings drcSettings;
 
-  public DesignRulesChecker(BasicBoard board)
+  public DesignRulesChecker(BasicBoard board, DesignRulesCheckerSettings drcSettings)
   {
     this.board = board;
+    this.drcSettings = drcSettings;
   }
 
   /**
@@ -103,15 +106,8 @@ public class DesignRulesChecker
     items.add(new DrcViolationItem(secondItemDesc, pos, secondUuid));
 
     // Create violation description
-    String description = String.format(
-        "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)",
-        firstItemDesc, 
-        secondItemDesc,
-        violation.expected_clearance * unitScale, 
-        coordinateUnit,
-        violation.actual_clearance * unitScale, 
-        coordinateUnit);
-    
+    String description = String.format("Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)", firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit, violation.actual_clearance * unitScale, coordinateUnit);
+
     return new DrcViolation("clearance", description, "error", items);
   }
 
@@ -171,7 +167,7 @@ public class DesignRulesChecker
   {
     // Get the board's native unit
     Unit boardUnit = board.communication.unit;
-    
+
     // Determine target unit
     Unit targetUnit;
     if ("mm".equals(coordinateUnit))
@@ -195,7 +191,7 @@ public class DesignRulesChecker
       // Default to board unit if unknown
       targetUnit = boardUnit;
     }
-    
+
     // Use the board's scale method to convert 1 unit
     return Unit.scale(1.0, boardUnit, targetUnit);
   }

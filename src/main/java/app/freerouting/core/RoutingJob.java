@@ -68,6 +68,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public BoardFileDetails output = null;
   @SerializedName("snapshot")
   public BoardFileDetails snapshot = null;
+  @SerializedName("drc")
+  public BoardFileDetails drc = null;
   @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
   @SerializedName("resource_usage")

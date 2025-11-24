@@ -787,15 +787,15 @@ public class JobControllerV1 extends BaseController
       }
       else
       {
-		  return Response
-			  .status(Response.Status.BAD_REQUEST)
-			  .entity("{\"error\":\"Failed to load board for DRC check.\"}")
-			  .build();
+        return Response
+            .status(Response.Status.BAD_REQUEST)
+            .entity("{\"error\":\"Failed to load board for DRC check.\"}")
+            .build();
       }
     }
 
     // Run DRC check
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board);
+    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, null);
 
     // Determine coordinate unit (default to mm)
     String coordinateUnit = "mm";

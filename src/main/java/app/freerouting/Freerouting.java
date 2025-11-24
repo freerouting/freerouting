@@ -263,7 +263,7 @@ public class Freerouting
     }
 
     // Disable GUI and API if in DRC-only mode
-    if (globalSettings.drc_only_mode)
+    if (globalSettings.drc_report_file != null)
     {
       globalSettings.guiSettings.isEnabled = false;
       globalSettings.apiServerSettings.isEnabled = false;
@@ -294,7 +294,7 @@ public class Freerouting
     // We both GUI and API are disabled (or failed to start) we are in CLI mode
     if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isEnabled)
     {
-      if (globalSettings.drc_only_mode)
+      if ((globalSettings.routerSettings.enabled = false) && (globalSettings.drcSettings.enabled = true))
       {
         InitializeDRC(globalSettings);
       }
@@ -408,6 +408,7 @@ public class Freerouting
 
     // Create a new routing job (but won't route it)
     RoutingJob drcJob = new RoutingJob(drcSession.id);
+    drcJob.drc = globalSettings.drc_report_file;
     try
     {
       drcJob.setInput(globalSettings.design_input_filename);
@@ -425,7 +426,7 @@ public class Freerouting
     }
 
     // Run DRC check
-    DesignRulesChecker drcChecker = new DesignRulesChecker(drcJob.board);
+    DesignRulesChecker drcChecker = new DesignRulesChecker(drcJob.board, globalSettings.drcSettings);
 
     // Determine coordinate unit (default to mm)
     String coordinateUnit = "mm";
@@ -435,17 +436,18 @@ public class Freerouting
     String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
 
     // Output the DRC report
-    if (globalSettings.drc_output_filename != null)
+    if (drcJob.drc != null)
     {
+      String outputFileName = drcJob.drc.getFilename();
       // Write to file
       try
       {
-        Path outputFilePath = Path.of(globalSettings.drc_output_filename);
+        Path outputFilePath = Path.of(outputFileName);
         Files.write(outputFilePath, drcReportJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        FRLogger.info("DRC report written to: " + globalSettings.drc_output_filename);
+        FRLogger.info("DRC report written to: " + outputFileName);
       } catch (IOException e)
       {
-        FRLogger.error("Couldn't save the DRC report to '" + globalSettings.drc_output_filename + "'", e);
+        FRLogger.error("Couldn't save the DRC report to '" + outputFileName + "'", e);
         System.exit(1);
       }
     }
