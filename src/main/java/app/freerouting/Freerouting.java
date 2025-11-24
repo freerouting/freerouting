@@ -359,6 +359,7 @@ public class Freerouting
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
     routingJob.routerSettings.set_stop_pass_no(routingJob.routerSettings.get_start_pass_no() + routingJob.routerSettings.maxPasses - 1);
     routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
+    routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 
     // Wait for the RoutingJobScheduler to do its work

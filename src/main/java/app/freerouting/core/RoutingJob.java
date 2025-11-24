@@ -11,6 +11,7 @@ import app.freerouting.gui.WindowMessage;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
+import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
 import com.google.gson.annotations.SerializedName;
@@ -72,6 +73,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   public BoardFileDetails drc = null;
   @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
+  @SerializedName("drc_settings")
+  public DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
   @SerializedName("resource_usage")
   public RouterJobResourceUsage resourceUsage = new RouterJobResourceUsage();
   public transient StoppableThread thread = null;

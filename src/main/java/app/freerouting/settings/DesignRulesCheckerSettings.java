@@ -12,4 +12,16 @@ public class DesignRulesCheckerSettings implements Serializable
   public boolean includeWarnings = true;
   @SerializedName("include_errors")
   public boolean includeErrors = true;
+
+  /**
+   * Copy constructor
+   */
+  public DesignRulesCheckerSettings clone()
+  {
+    DesignRulesCheckerSettings clone = new DesignRulesCheckerSettings();
+    clone.enabled = this.enabled;
+    clone.includeWarnings = this.includeWarnings;
+    clone.includeErrors = this.includeErrors;
+    return clone;
+  }
 }

@@ -795,7 +795,7 @@ public class JobControllerV1 extends BaseController
     }
 
     // Run DRC check
-    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, null);
+    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, job.drcSettings);
 
     // Determine coordinate unit (default to mm)
     String coordinateUnit = "mm";
