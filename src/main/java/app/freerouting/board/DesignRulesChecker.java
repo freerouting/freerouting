@@ -159,17 +159,35 @@ public class DesignRulesChecker
    */
   private double getUnitScale(String coordinateUnit)
   {
-    // Board units are typically in 0.0001 mm (tenth of a micron)
-    // This is a simplified conversion - adjust based on actual board unit
+    // Get the board's native unit
+    Unit boardUnit = board.communication.unit;
+    
+    // Determine target unit
+    Unit targetUnit;
     if ("mm".equals(coordinateUnit))
     {
-      return 0.0001; // Convert from 0.0001mm to mm
+      targetUnit = Unit.MM;
     }
     else if ("mil".equals(coordinateUnit))
     {
-      return 0.0001 * 39.3701; // Convert to mils (1mm = 39.3701 mil)
+      targetUnit = Unit.MIL;
     }
-    return 1.0; // Default: no conversion
+    else if ("inch".equals(coordinateUnit))
+    {
+      targetUnit = Unit.INCH;
+    }
+    else if ("um".equals(coordinateUnit))
+    {
+      targetUnit = Unit.UM;
+    }
+    else
+    {
+      // Default to board unit if unknown
+      targetUnit = boardUnit;
+    }
+    
+    // Use the board's scale method to convert 1 unit
+    return Unit.scale(1.0, boardUnit, targetUnit);
   }
 
   /**

@@ -764,37 +764,13 @@ public class JobControllerV1 extends BaseController
           .build();
     }
 
-    // Check if the job has a board loaded
-    if (job.board == null)
+    // Check if the job has a board loaded, and load it if needed
+    if (!app.freerouting.board.BoardLoader.loadBoardIfNeeded(job))
     {
-      // Try to load the board if input is available
-      if (job.input != null && job.input.format == app.freerouting.gui.FileFormat.DSN)
-      {
-        try
-        {
-          app.freerouting.interactive.HeadlessBoardManager boardManager = 
-              new app.freerouting.interactive.HeadlessBoardManager(null, job);
-          boardManager.loadFromSpecctraDsn(
-              job.input.getData(), 
-              null, 
-              new app.freerouting.board.ItemIdentificationNumberGenerator());
-          job.board = boardManager.get_routing_board();
-        } catch (Exception e)
-        {
-          FRLogger.error("Couldn't load the board for DRC check", e);
-          return Response
-              .status(Response.Status.INTERNAL_SERVER_ERROR)
-              .entity("{\"error\":\"Failed to load board: " + e.getMessage() + "\"}")
-              .build();
-        }
-      }
-      else
-      {
-        return Response
-            .status(Response.Status.BAD_REQUEST)
-            .entity("{\"error\":\"Job has no board loaded and input format is not DSN.\"}")
-            .build();
-      }
+      return Response
+          .status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Failed to load board for DRC check.\"}")
+          .build();
     }
 
     // Run DRC check

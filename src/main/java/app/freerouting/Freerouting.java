@@ -417,28 +417,9 @@ public class Freerouting
     }
 
     // Load the board without routing
-    if (drcJob.input.format == app.freerouting.gui.FileFormat.DSN)
+    if (!app.freerouting.board.BoardLoader.loadBoardIfNeeded(drcJob))
     {
-      app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(null, drcJob);
-      try
-      {
-        boardManager.loadFromSpecctraDsn(drcJob.input.getData(), null, new app.freerouting.board.ItemIdentificationNumberGenerator());
-        drcJob.board = boardManager.get_routing_board();
-      } catch (Exception e)
-      {
-        FRLogger.error("Couldn't load the board from DSN file", e);
-        System.exit(1);
-      }
-    }
-    else
-    {
-      FRLogger.error("Only DSN format is supported as an input for DRC mode.", null);
-      System.exit(1);
-    }
-
-    if (drcJob.board == null)
-    {
-      FRLogger.error("Board is null after loading", null);
+      FRLogger.error("Failed to load board for DRC check", null);
       System.exit(1);
     }
 
