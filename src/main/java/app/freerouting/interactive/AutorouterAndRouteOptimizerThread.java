@@ -113,83 +113,86 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
     this.batchOptimizer = null;
 
-    if ((!globalSettings.featureFlags.multiThreading) || (routingJob.routerSettings.optimizer.maxThreads == 1))
+    if (routingJob.routerSettings.optimizer.enabled)
     {
-      // Single-threaded route optimization
-      this.batchOptimizer = new BatchOptimizer(routingJob);
-
-      if (!Objects.equals(routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId()))
+      if ((!globalSettings.featureFlags.multiThreading) || (routingJob.routerSettings.optimizer.maxThreads == 1))
       {
-        routingJob.logWarning("The algorithm '" + routingJob.routerSettings.optimizer.algorithm + "' is not supported by the batch autorouter. The default algorithm '" + this.batchOptimizer.getId() + "' will be used instead.");
-        routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
+        // Single-threaded route optimization
+        this.batchOptimizer = new BatchOptimizer(routingJob);
+
+        if (!Objects.equals(routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId()))
+        {
+          routingJob.logWarning("The algorithm '" + routingJob.routerSettings.optimizer.algorithm + "' is not supported by the batch autorouter. The default algorithm '" + this.batchOptimizer.getId() + "' will be used instead.");
+          routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
+        }
+
+        // Add event listener for the GUI updates
+        this.batchOptimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+        {
+          @Override
+          public void onBoardUpdatedEvent(BoardUpdatedEvent event)
+          {
+            BoardStatistics boardStatistics = event.getBoardStatistics();
+            boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
+            boardManager.screen_messages.set_board_score(boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring), boardStatistics.connections.incompleteCount, boardStatistics.clearanceViolations.totalCount);
+            boardManager.repaint();
+          }
+        });
+
+        this.batchOptimizer.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
+        {
+          @Override
+          public void onTaskStateChangedEvent(TaskStateChangedEvent event)
+          {
+            TaskState taskState = event.getTaskState();
+            if (taskState == TaskState.RUNNING)
+            {
+              TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
+              String start_message = tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
+              boardManager.screen_messages.set_status_message(start_message);
+            }
+          }
+        });
       }
 
-      // Add event listener for the GUI updates
-      this.batchOptimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+      if ((globalSettings.featureFlags.multiThreading) && (routingJob.routerSettings.optimizer.maxThreads > 1))
       {
-        @Override
-        public void onBoardUpdatedEvent(BoardUpdatedEvent event)
-        {
-          BoardStatistics boardStatistics = event.getBoardStatistics();
-          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
-          boardManager.screen_messages.set_board_score(boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring), boardStatistics.connections.incompleteCount, boardStatistics.clearanceViolations.totalCount);
-          boardManager.repaint();
-        }
-      });
+        // Multi-threaded route optimization
+        this.batchOptimizer = new BatchOptimizerMultiThreaded(routingJob);
 
-      this.batchOptimizer.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
-      {
-        @Override
-        public void onTaskStateChangedEvent(TaskStateChangedEvent event)
+        if (!Objects.equals(routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId()))
         {
-          TaskState taskState = event.getTaskState();
-          if (taskState == TaskState.RUNNING)
+          routingJob.logWarning("The algorithm '" + routingJob.routerSettings.optimizer.algorithm + "' is not supported by the batch autorouter. The default algorithm '" + this.batchOptimizer.getId() + "' will be used instead.");
+          routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
+        }
+
+        this.batchOptimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
+        {
+          @Override
+          public void onBoardUpdatedEvent(BoardUpdatedEvent event)
           {
-            TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
-            String start_message = tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
-            boardManager.screen_messages.set_status_message(start_message);
+            BoardStatistics boardStatistics = event.getBoardStatistics();
+            boardManager.replaceRoutingBoard(event.getBoard());
+            boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
           }
-        }
-      });
-    }
+        });
 
-    if ((globalSettings.featureFlags.multiThreading) && (routingJob.routerSettings.optimizer.maxThreads > 1))
-    {
-      // Multi-threaded route optimization
-      this.batchOptimizer = new BatchOptimizerMultiThreaded(routingJob);
+        this.batchOptimizer.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
+        {
+          @Override
+          public void onTaskStateChangedEvent(TaskStateChangedEvent event)
+          {
+            TaskState taskState = event.getTaskState();
+            if (taskState == TaskState.RUNNING)
+            {
+              TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
+              String start_message = tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
+              boardManager.screen_messages.set_status_message(start_message);
+            }
+          }
+        });
 
-      if (!Objects.equals(routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId()))
-      {
-        routingJob.logWarning("The algorithm '" + routingJob.routerSettings.optimizer.algorithm + "' is not supported by the batch autorouter. The default algorithm '" + this.batchOptimizer.getId() + "' will be used instead.");
-        routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
       }
-
-      this.batchOptimizer.addBoardUpdatedEventListener(new BoardUpdatedEventListener()
-      {
-        @Override
-        public void onBoardUpdatedEvent(BoardUpdatedEvent event)
-        {
-          BoardStatistics boardStatistics = event.getBoardStatistics();
-          boardManager.replaceRoutingBoard(event.getBoard());
-          boardManager.screen_messages.set_post_route_info(boardStatistics.items.viaCount, boardStatistics.traces.totalLength, boardManager.coordinate_transform.user_unit);
-        }
-      });
-
-      this.batchOptimizer.addTaskStateChangedEventListener(new TaskStateChangedEventListener()
-      {
-        @Override
-        public void onTaskStateChangedEvent(TaskStateChangedEvent event)
-        {
-          TaskState taskState = event.getTaskState();
-          if (taskState == TaskState.RUNNING)
-          {
-            TextManager tm = new TextManager(InteractiveState.class, boardManager.get_locale());
-            String start_message = tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
-            boardManager.screen_messages.set_status_message(start_message);
-          }
-        }
-      });
-
     }
   }
 
@@ -279,7 +282,7 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
 
       // Let's run the optimizer if it's enabled
       int num_threads = boardManager.get_num_threads();
-      if (num_threads > 0)
+      if ((num_threads > 0) && (routingJob.routerSettings.optimizer.enabled))
       {
         routingJob.logInfo("Starting optimization on " + (num_threads == 1 ? "1 thread" : num_threads + " threads") + "...");
         if (num_threads > 1)
@@ -420,20 +423,25 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread
       double draw_width = Math.min(this.boardManager.get_routing_board().communication.get_resolution(Unit.MIL) * 3, 300); // problem with low resolution on Kicad300;
       this.boardManager.graphics_context.draw(draw_line, draw_width, draw_color, p_graphics, 1);
     }
-    FloatPoint current_opt_position = batchOptimizer.get_current_position();
-    int radius = 10 * this.boardManager.get_routing_board().rules.get_default_trace_half_width(0);
-    if (current_opt_position != null)
+
+    if (this.batchOptimizer != null)
     {
-      final int draw_width = 1;
-      Color draw_color = this.boardManager.graphics_context.get_incomplete_color();
-      FloatPoint[] draw_points = new FloatPoint[2];
-      draw_points[0] = new FloatPoint(current_opt_position.x - radius, current_opt_position.y - radius);
-      draw_points[1] = new FloatPoint(current_opt_position.x + radius, current_opt_position.y + radius);
-      this.boardManager.graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
-      draw_points[0] = new FloatPoint(current_opt_position.x + radius, current_opt_position.y - radius);
-      draw_points[1] = new FloatPoint(current_opt_position.x - radius, current_opt_position.y + radius);
-      this.boardManager.graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
-      this.boardManager.graphics_context.draw_circle(current_opt_position, radius, draw_width, draw_color, p_graphics, 1);
+      // draw the current optimization position
+      FloatPoint current_opt_position = batchOptimizer.get_current_position();
+      int radius = 10 * this.boardManager.get_routing_board().rules.get_default_trace_half_width(0);
+      if (current_opt_position != null)
+      {
+        final int draw_width = 1;
+        Color draw_color = this.boardManager.graphics_context.get_incomplete_color();
+        FloatPoint[] draw_points = new FloatPoint[2];
+        draw_points[0] = new FloatPoint(current_opt_position.x - radius, current_opt_position.y - radius);
+        draw_points[1] = new FloatPoint(current_opt_position.x + radius, current_opt_position.y + radius);
+        this.boardManager.graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
+        draw_points[0] = new FloatPoint(current_opt_position.x + radius, current_opt_position.y - radius);
+        draw_points[1] = new FloatPoint(current_opt_position.x - radius, current_opt_position.y + radius);
+        this.boardManager.graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
+        this.boardManager.graphics_context.draw_circle(current_opt_position, radius, draw_width, draw_color, p_graphics, 1);
+      }
     }
   }
 }
