@@ -15,6 +15,7 @@ public class Issue522Test extends TestBasedOnAnIssue
 
   @Test
   public void test_Issue_522_Max_passes_is_respected()
+  {
     // Get a routing job
     job = GetRoutingJob("Issue026-J2_reference.dsn");
 
