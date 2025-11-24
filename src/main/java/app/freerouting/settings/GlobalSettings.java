@@ -60,6 +60,8 @@ public class GlobalSettings implements Serializable
   @SerializedName("version")
   public String version = Constants.FREEROUTING_VERSION;
   public transient boolean show_help_option = false;
+  public transient boolean drc_only_mode = false;
+  public transient String drc_output_filename;
   /**
    * The design_input_filename field is deprecated and should not be used. They are kept here for compatibility reasons.
    * Its function is now moved to the input.getFilename() method of RoutingJob object.
@@ -465,6 +467,15 @@ public class GlobalSettings implements Serializable
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             routerSettings.random_seed = TextManager.hexadecimalStringToLong(p_args[i + 1]);
+          }
+        }
+        else if (p_args[i].startsWith("-drc"))
+        {
+          // DRC-only mode
+          drc_only_mode = true;
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
+          {
+            drc_output_filename = p_args[i + 1];
           }
         }
       } catch (Exception e)

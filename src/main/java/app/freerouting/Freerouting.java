@@ -286,7 +286,14 @@ public class Freerouting
     // We both GUI and API are disabled (or failed to start) we are in CLI mode
     if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isEnabled)
     {
-      InitializeCLI(globalSettings);
+      if (globalSettings.drc_only_mode)
+      {
+        InitializeDRC(globalSettings);
+      }
+      else
+      {
+        InitializeCLI(globalSettings);
+      }
     }
 
     while (globalSettings.guiSettings.isRunning || globalSettings.apiServerSettings.isRunning)
@@ -375,6 +382,88 @@ public class Freerouting
       {
         FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);
       }
+    }
+  }
+
+  private static void InitializeDRC(GlobalSettings globalSettings)
+  {
+    if (globalSettings.design_input_filename == null)
+    {
+      FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
+      System.exit(1);
+    }
+
+    // Start a new Freerouting session
+    var drcSession = SessionManager
+        .getInstance()
+        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+
+    // Create a new routing job (but won't route it)
+    RoutingJob drcJob = new RoutingJob(drcSession.id);
+    try
+    {
+      drcJob.setInput(globalSettings.design_input_filename);
+    } catch (Exception e)
+    {
+      FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
+      System.exit(1);
+    }
+
+    // Load the board without routing
+    if (drcJob.input.format == app.freerouting.gui.FileFormat.DSN)
+    {
+      app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(null, drcJob);
+      try
+      {
+        boardManager.loadFromSpecctraDsn(drcJob.input.getData(), null, new app.freerouting.board.ItemIdentificationNumberGenerator());
+        drcJob.board = boardManager.get_routing_board();
+      } catch (Exception e)
+      {
+        FRLogger.error("Couldn't load the board from DSN file", e);
+        System.exit(1);
+      }
+    }
+    else
+    {
+      FRLogger.error("Only DSN format is supported as an input for DRC mode.", null);
+      System.exit(1);
+    }
+
+    if (drcJob.board == null)
+    {
+      FRLogger.error("Board is null after loading", null);
+      System.exit(1);
+    }
+
+    // Run DRC check
+    app.freerouting.board.DesignRulesChecker drcChecker = new app.freerouting.board.DesignRulesChecker(drcJob.board);
+    
+    // Determine coordinate unit (default to mm)
+    String coordinateUnit = "mm";
+    
+    // Generate DRC report
+    String sourceFileName = new File(globalSettings.design_input_filename).getName();
+    String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
+    
+    // Output the DRC report
+    if (globalSettings.drc_output_filename != null)
+    {
+      // Write to file
+      try
+      {
+        Path outputFilePath = Path.of(globalSettings.drc_output_filename);
+        Files.write(outputFilePath, drcReportJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        FRLogger.info("DRC report written to: " + globalSettings.drc_output_filename);
+      } catch (IOException e)
+      {
+        FRLogger.error("Couldn't save the DRC report to '" + globalSettings.drc_output_filename + "'", e);
+        System.exit(1);
+      }
+    }
+    else
+    {
+      // Print to console
+      System.out.println(drcReportJson);
     }
   }
 
