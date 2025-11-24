@@ -102,6 +102,7 @@ public class TestBasedOnAnIssue
     }
 
     job.routerSettings = settings;
+    job.routerSettings.set_stop_pass_no(job.routerSettings.get_start_pass_no() + job.routerSettings.maxPasses - 1);
     scheduler.enqueueJob(job);
     job.state = RoutingJobState.READY_TO_START;
 

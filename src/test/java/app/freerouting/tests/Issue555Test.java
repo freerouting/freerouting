@@ -46,7 +46,7 @@ public class Issue555Test extends TestBasedOnAnIssue
     System.out.println("The benchmark times for Freerouting v1.8, v1.9 and v2.0 were 12 seconds (4 unrouted), 10 seconds (4 unrouted) and 11 seconds (4 unrouted) in 6 passes.");
     System.out.println("The benchmark score for Freerouting v2.1 is 962.18 (6 unrouted), completed in 54 seconds, hitting the 40 pass limit.");
     var job = GetRoutingJob("Issue555-CNH_Functional_Tester_1.dsn");
-    job.routerSettings.jobTimeoutString = "00:05:00";
+    job.routerSettings.jobTimeoutString = "00:03:00";
     job.routerSettings.maxPasses = 40;
     job = RunRoutingJob(job, job.routerSettings);
 
