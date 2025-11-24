@@ -726,4 +726,95 @@ public class JobControllerV1 extends BaseController
     // Log the API call
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/logs/stream", "", "stream-started");
   }
+
+  /* Get DRC report for a job */
+  @GET
+  @Path("/{jobId}/drc")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getDrcReport(
+      @PathParam("jobId")
+      String jobId)
+  {
+    // Authenticate the user
+    UUID userId = AuthenticateUser();
+
+    // Get the job based on the jobId
+    var job = RoutingJobScheduler
+        .getInstance()
+        .getJob(jobId);
+
+    // If the job does not exist, return a 404 response
+    if (job == null)
+    {
+      return Response
+          .status(Response.Status.NOT_FOUND)
+          .entity("{\"error\":\"Job not found.\"}")
+          .build();
+    }
+
+    // Check if the sessionId references a valid session
+    Session session = SessionManager
+        .getInstance()
+        .getSession(job.sessionId.toString(), userId);
+    if (session == null)
+    {
+      return Response
+          .status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
+          .build();
+    }
+
+    // Check if the job has a board loaded
+    if (job.board == null)
+    {
+      // Try to load the board if input is available
+      if (job.input != null && job.input.format == app.freerouting.gui.FileFormat.DSN)
+      {
+        try
+        {
+          app.freerouting.interactive.HeadlessBoardManager boardManager = 
+              new app.freerouting.interactive.HeadlessBoardManager(null, job);
+          boardManager.loadFromSpecctraDsn(
+              job.input.getData(), 
+              null, 
+              new app.freerouting.board.ItemIdentificationNumberGenerator());
+          job.board = boardManager.get_routing_board();
+        } catch (Exception e)
+        {
+          FRLogger.error("Couldn't load the board for DRC check", e);
+          return Response
+              .status(Response.Status.INTERNAL_SERVER_ERROR)
+              .entity("{\"error\":\"Failed to load board: " + e.getMessage() + "\"}")
+              .build();
+        }
+      }
+      else
+      {
+        return Response
+            .status(Response.Status.BAD_REQUEST)
+            .entity("{\"error\":\"Job has no board loaded and input format is not DSN.\"}")
+            .build();
+      }
+    }
+
+    // Run DRC check
+    app.freerouting.board.DesignRulesChecker drcChecker = 
+        new app.freerouting.board.DesignRulesChecker(job.board);
+    
+    // Determine coordinate unit (default to mm)
+    String coordinateUnit = "mm";
+    
+    // Get source file name
+    String sourceFileName = job.input != null ? job.input.getFilename() : "unknown";
+    
+    // Generate DRC report
+    String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
+    
+    // Log the API call
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/drc", "", "drc-report-generated");
+    
+    return Response
+        .ok(drcReportJson)
+        .build();
+  }
 }

@@ -261,6 +261,13 @@ public class Freerouting
       System.exit(0);
     }
 
+    // Disable GUI and API if in DRC-only mode
+    if (globalSettings.drc_only_mode)
+    {
+      globalSettings.guiSettings.isEnabled = false;
+      globalSettings.apiServerSettings.isEnabled = false;
+    }
+
     // Initialize the API server
     if (globalSettings.apiServerSettings.isEnabled)
     {

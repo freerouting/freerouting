@@ -265,6 +265,15 @@ public class GlobalSettings implements Serializable
             design_output_filename = p_args[i + 1];
           }
         }
+        else if (p_args[i].startsWith("-drc"))
+        {
+          // DRC-only mode (must be checked before -dr)
+          drc_only_mode = true;
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
+          {
+            drc_output_filename = p_args[i + 1];
+          }
+        }
         else if (p_args[i].startsWith("-dr"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
@@ -467,15 +476,6 @@ public class GlobalSettings implements Serializable
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             routerSettings.random_seed = TextManager.hexadecimalStringToLong(p_args[i + 1]);
-          }
-        }
-        else if (p_args[i].startsWith("-drc"))
-        {
-          // DRC-only mode
-          drc_only_mode = true;
-          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
-          {
-            drc_output_filename = p_args[i + 1];
           }
         }
       } catch (Exception e)
