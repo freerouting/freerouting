@@ -103,8 +103,8 @@ dependencies {
     implementation 'org.glassfish.jersey.media:jersey-media-json-binding:3.1.10'
     implementation 'org.glassfish.jersey.media:jersey-media-sse:3.1.10'
     implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:3.1.11'
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:3.1.10'
-    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:3.1.10'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet-core:4.0.0'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:4.0.0'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.6'
 
     // Add Jetty dependencies
