@@ -27,7 +27,12 @@ public class DrcReport
   public final String date;
 
   /**
-   * Version of the tool that generated the report
+   * Version of KiCad that generated the report (this is "N/A" for Freerouting)
+   */
+  public final String kicad_version = "N/A";
+
+  /**
+   * Version of Freerouting that generated the report
    */
   public final String freerouting_version;
 
@@ -70,5 +75,13 @@ public class DrcReport
   public void addViolation(DrcViolation violation)
   {
     this.violations.add(violation);
+  }
+
+  /**
+   * Add an unconnected item to the report
+   */
+  public void addUnconnectedItem(DrcViolation item)
+  {
+    this.unconnected_items.add(item);
   }
 }

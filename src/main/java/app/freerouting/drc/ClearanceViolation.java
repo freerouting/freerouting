@@ -1,11 +1,11 @@
-package app.freerouting.board;
+package app.freerouting.drc;
 
+import app.freerouting.board.Item;
+import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.geometry.planar.ConvexShape;
-
 import app.freerouting.management.TextManager;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Information of a clearance violation between 2 items.

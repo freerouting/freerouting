@@ -2,7 +2,7 @@ package app.freerouting.drc;
 
 import app.freerouting.board.*;
 import app.freerouting.constants.Constants;
-import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.interactive.RatsNest;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 
@@ -50,6 +50,28 @@ public class DesignRulesChecker
   }
 
   /**
+   * Collects all unconnected items on the board.
+   *
+   * @return Collection of all unconnected items found
+   */
+  public Collection<UnconnectedItems> getAllUnconnectedItems()
+  {
+    List<UnconnectedItems> unconnectedItems = new ArrayList<>();
+
+    var ratsnest = new RatsNest(board);
+
+    // Iterate through all items on the board
+    for (RatsNest.AirLine airline : ratsnest.get_airlines())
+    {
+      // Create an unconnected items object
+      unconnectedItems.add(new UnconnectedItems(airline.from_item, airline.to_item));
+    }
+
+    return unconnectedItems;
+  }
+
+
+  /**
    * Generates a DRC report in KiCad JSON format.
    *
    * @param sourceFile     Name of the source file
@@ -70,6 +92,16 @@ public class DesignRulesChecker
       report.addViolation(drcViolation);
     }
 
+    // Get all unconnected items
+    Collection<UnconnectedItems> unconnectedItems = getAllUnconnectedItems();
+
+    // Convert unconnected items to DRC report format
+    for (UnconnectedItems unconnectedItem : unconnectedItems)
+    {
+      DrcViolation drcViolation = convertToDrcViolation(unconnectedItem, coordinateUnit);
+      report.addUnconnectedItem(drcViolation);
+    }
+
     return report;
   }
 
@@ -84,31 +116,68 @@ public class DesignRulesChecker
   {
     List<DrcViolationItem> items = new ArrayList<>();
 
-    // Get the center of the violation shape
-    FloatPoint center = violation.shape.centre_of_gravity();
-
     // Convert coordinates based on the unit
     double unitScale = getUnitScale(coordinateUnit);
-    double x = center.x * unitScale;
-    double y = center.y * unitScale;
 
     // Create items for first and second objects
-    DrcPosition pos = new DrcPosition(x, y);
-
     String firstItemDesc = getItemDescription(violation.first_item);
     String secondItemDesc = getItemDescription(violation.second_item);
+
+    // Position is the center of gravity of the violation shape
+    var firstItemCenterOfGravity = violation.first_item
+        .bounding_box()
+        .centre_of_gravity();
+    DrcPosition firstItemPos = new DrcPosition(firstItemCenterOfGravity.x * unitScale, firstItemCenterOfGravity.y * unitScale);
+    var secondItemCenterOfGravity = violation.second_item
+        .bounding_box()
+        .centre_of_gravity();
+    DrcPosition secondItemPos = new DrcPosition(secondItemCenterOfGravity.x * unitScale, secondItemCenterOfGravity.y * unitScale);
 
     // Use item IDs as UUIDs (they are unique within the board)
     String firstUuid = String.valueOf(violation.first_item.get_id_no());
     String secondUuid = String.valueOf(violation.second_item.get_id_no());
 
-    items.add(new DrcViolationItem(firstItemDesc, pos, firstUuid));
-    items.add(new DrcViolationItem(secondItemDesc, pos, secondUuid));
+    items.add(new DrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
+    items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
 
     // Create violation description
     String description = String.format("Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)", firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit, violation.actual_clearance * unitScale, coordinateUnit);
 
     return new DrcViolation("clearance", description, "error", items);
+  }
+
+  private DrcViolation convertToDrcViolation(UnconnectedItems unconnectedItems, String coordinateUnit)
+  {
+    List<DrcViolationItem> items = new ArrayList<>();
+
+    // Convert coordinates based on the unit
+    double unitScale = getUnitScale(coordinateUnit);
+
+    // Create items for from and to objects
+    String fromItemDesc = getItemDescription(unconnectedItems.first_item);
+    String toItemDesc = getItemDescription(unconnectedItems.second_item);
+
+    // Position is the center of gravity of the item
+    var fromItemCenterOfGravity = unconnectedItems.first_item
+        .bounding_box()
+        .centre_of_gravity();
+    DrcPosition fromItemPos = new DrcPosition(fromItemCenterOfGravity.x * unitScale, fromItemCenterOfGravity.y * unitScale);
+    var toItemCenterOfGravity = unconnectedItems.second_item
+        .bounding_box()
+        .centre_of_gravity();
+    DrcPosition toItemPos = new DrcPosition(toItemCenterOfGravity.x * unitScale, toItemCenterOfGravity.y * unitScale);
+
+    // Use item IDs as UUIDs (they are unique within the board)
+    String fromUuid = String.valueOf(unconnectedItems.first_item.get_id_no());
+    String toUuid = String.valueOf(unconnectedItems.second_item.get_id_no());
+
+    items.add(new DrcViolationItem(fromItemDesc, fromItemPos, fromUuid));
+    items.add(new DrcViolationItem(toItemDesc, toItemPos, toUuid));
+
+    // Create violation description
+    String description = String.format("Unconnected items: %s and %s", fromItemDesc, toItemDesc);
+
+    return new DrcViolation("unconnected", description, "warning", items);
   }
 
   /**

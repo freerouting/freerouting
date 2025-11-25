@@ -1,8 +1,8 @@
 package app.freerouting.interactive;
 
-import app.freerouting.board.ClearanceViolation;
 import app.freerouting.board.Item;
 import app.freerouting.boardgraphics.GraphicsContext;
+import app.freerouting.drc.ClearanceViolation;
 
 import java.awt.*;
 import java.util.Collection;
