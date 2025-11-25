@@ -294,7 +294,7 @@ public class Freerouting
     // We both GUI and API are disabled (or failed to start) we are in CLI mode
     if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isEnabled)
     {
-      if ((globalSettings.routerSettings.enabled = false) && (globalSettings.drcSettings.enabled = true))
+      if ((!globalSettings.routerSettings.enabled) && (globalSettings.drcSettings.enabled))
       {
         InitializeDRC(globalSettings);
       }
@@ -439,7 +439,7 @@ public class Freerouting
     // Output the DRC report
     if (drcJob.drc != null)
     {
-      String outputFileName = drcJob.drc.getFilename();
+      String outputFileName = drcJob.drc.getAbsolutePath();
       // Write to file
       try
       {
