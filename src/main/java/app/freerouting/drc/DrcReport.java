@@ -1,5 +1,7 @@
 package app.freerouting.drc;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,46 +16,55 @@ public class DrcReport
   /**
    * JSON schema URL
    */
+  @SerializedName("$schema")
   public final String $schema = "https://schemas.kicad.org/drc.v1.json";
 
   /**
    * Coordinate units used in the report (e.g., "mm", "mil")
    */
+  @SerializedName("coordinate_units")
   public final String coordinate_units;
 
   /**
    * Date and time when the report was generated
    */
+  @SerializedName("date")
   public final String date;
 
   /**
    * Version of KiCad that generated the report (this is "N/A" for Freerouting)
    */
+  @SerializedName("kicad_version")
   public final String kicad_version = "N/A";
 
   /**
    * Version of Freerouting that generated the report
    */
+  @SerializedName("freerouting_version")
   public final String freerouting_version;
 
   /**
    * Source file name
    */
+  @SerializedName("source")
   public final String source;
-
-  /**
-   * List of violations found
-   */
-  public final List<DrcViolation> violations;
 
   /**
    * List of unconnected items (empty for now)
    */
-  public final List<Object> unconnected_items;
+  @SerializedName("unconnected_items")
+  public final List<DrcViolation> unconnected_items;
+
+  /**
+   * List of violations found
+   */
+  @SerializedName("violations")
+  public final List<DrcViolation> violations;
 
   /**
    * Schematic parity issues (empty for now)
    */
+  @SerializedName("schematic_parity")
   public final List<Object> schematic_parity;
 
   public DrcReport(String coordinateUnits, String source, String version)
