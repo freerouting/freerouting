@@ -983,7 +983,7 @@ public class ShapeSearchTree extends MinAreaTree
         for (int i = 0; i < convex_shapes.length; ++i)
         {
           TileShape curr_convex_shape = convex_shapes[i];
-          int offset_width = this.clearance_compensation_value(p_board_outline.clearance_class_no(), 0);
+          int offset_width = this.clearance_compensation_value(p_board_outline.clearance_class_no(), layer_no);
           curr_convex_shape = (TileShape) curr_convex_shape.enlarge(offset_width);
           tree_shape_list.add(curr_convex_shape);
         }
@@ -1014,7 +1014,7 @@ public class ShapeSearchTree extends MinAreaTree
             curr_line_arr[1] = curr_outline_shape.border_line(i);
             curr_line_arr[2] = curr_outline_shape.border_line((i + 1) % border_line_count);
             Polyline tmp_polyline = new Polyline(curr_line_arr);
-            int cmp_value = this.clearance_compensation_value(p_board_outline.clearance_class_no(), 0);
+            int cmp_value = this.clearance_compensation_value(p_board_outline.clearance_class_no(), layer_no);
             result[curr_no] = tmp_polyline.offset_shape(half_width + cmp_value, 0);
             ++curr_no;
             curr_line_arr[0] = curr_line_arr[1];
