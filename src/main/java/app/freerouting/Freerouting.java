@@ -5,6 +5,7 @@ import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.DefaultExceptionHandler;
 import app.freerouting.gui.WindowWelcome;
 import app.freerouting.logger.FRLogger;
@@ -261,6 +262,13 @@ public class Freerouting
       System.exit(0);
     }
 
+    // Disable GUI and API if in DRC-only mode
+    if (globalSettings.drc_report_file != null)
+    {
+      globalSettings.guiSettings.isEnabled = false;
+      globalSettings.apiServerSettings.isEnabled = false;
+    }
+
     // Initialize the API server
     if (globalSettings.apiServerSettings.isEnabled)
     {
@@ -286,7 +294,14 @@ public class Freerouting
     // We both GUI and API are disabled (or failed to start) we are in CLI mode
     if (!globalSettings.guiSettings.isEnabled && !globalSettings.apiServerSettings.isEnabled)
     {
-      InitializeCLI(globalSettings);
+      if ((!globalSettings.routerSettings.enabled) && (globalSettings.drcSettings.enabled))
+      {
+        InitializeDRC(globalSettings);
+      }
+      else
+      {
+        InitializeCLI(globalSettings);
+      }
     }
 
     while (globalSettings.guiSettings.isRunning || globalSettings.apiServerSettings.isRunning)
@@ -344,6 +359,7 @@ public class Freerouting
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
     routingJob.routerSettings.set_stop_pass_no(routingJob.routerSettings.get_start_pass_no() + routingJob.routerSettings.maxPasses - 1);
     routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
+    routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 
     // Wait for the RoutingJobScheduler to do its work
@@ -375,6 +391,71 @@ public class Freerouting
       {
         FRLogger.error("Couldn't save the output file '" + globalSettings.design_output_filename + "'", e);
       }
+    }
+  }
+
+  private static void InitializeDRC(GlobalSettings globalSettings)
+  {
+    if (globalSettings.design_input_filename == null)
+    {
+      FRLogger.error("An input file must be specified with -de argument in DRC mode.", null);
+      System.exit(1);
+    }
+
+    // Start a new Freerouting session
+    var drcSession = SessionManager
+        .getInstance()
+        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+
+    // Create a new routing job (but won't route it)
+    RoutingJob drcJob = new RoutingJob(drcSession.id);
+    drcJob.drc = globalSettings.drc_report_file;
+    try
+    {
+      drcJob.setInput(globalSettings.design_input_filename);
+    } catch (Exception e)
+    {
+      FRLogger.error("Couldn't load the input file '" + globalSettings.design_input_filename + "'", e);
+      System.exit(1);
+    }
+
+    // Load the board without routing
+    if (!app.freerouting.board.BoardLoader.loadBoardIfNeeded(drcJob))
+    {
+      FRLogger.error("Failed to load board for DRC check", null);
+      System.exit(1);
+    }
+
+    // Run DRC check
+    DesignRulesChecker drcChecker = new DesignRulesChecker(drcJob.board, globalSettings.drcSettings);
+
+    // Determine coordinate unit (default to mm)
+    String coordinateUnit = "mm";
+
+    // Generate DRC report
+    String sourceFileName = new File(globalSettings.design_input_filename).getName();
+    String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
+
+    // Output the DRC report
+    if (drcJob.drc != null)
+    {
+      String outputFileName = drcJob.drc.getAbsolutePath();
+      // Write to file
+      try
+      {
+        Path outputFilePath = Path.of(outputFileName);
+        Files.write(outputFilePath, drcReportJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        FRLogger.info("DRC report written to: " + outputFileName);
+      } catch (IOException e)
+      {
+        FRLogger.error("Couldn't save the DRC report to '" + outputFileName + "'", e);
+        System.exit(1);
+      }
+    }
+    else
+    {
+      // Print to console
+      System.out.println(drcReportJson);
     }
   }
 

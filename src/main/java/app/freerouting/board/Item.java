@@ -6,6 +6,7 @@ import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;

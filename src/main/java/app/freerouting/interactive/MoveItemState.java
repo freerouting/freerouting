@@ -1,8 +1,9 @@
 package app.freerouting.interactive;
 
-import app.freerouting.board.Component;
 import app.freerouting.board.*;
+import app.freerouting.board.Component;
 import app.freerouting.core.BoardLibrary;
+import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -46,10 +47,14 @@ public class MoveItemState extends InteractiveState
       activityReplayFile.start_scope(ActivityReplayFileScope.MOVE_ITEMS, p_location);
     }
     BasicBoard routing_board = hdlg.get_routing_board();
-    this.observers_activated = !hdlg.get_routing_board().observers_active();
+    this.observers_activated = !hdlg
+        .get_routing_board()
+        .observers_active();
     if (this.observers_activated)
     {
-      hdlg.get_routing_board().start_notify_observers();
+      hdlg
+          .get_routing_board()
+          .start_notify_observers();
     }
     // make the situation restorable by undo
     routing_board.generate_snapshot();
@@ -185,12 +190,16 @@ public class MoveItemState extends InteractiveState
       {
         if (!fixed_items.isEmpty())
         {
-          ((SelectedItemState) p_parent_state).get_item_list().addAll(fixed_items);
+          ((SelectedItemState) p_parent_state)
+              .get_item_list()
+              .addAll(fixed_items);
           p_board_handling.screen_messages.set_status_message(tm.getText("please_unfix_selected_items_before_moving"));
         }
         else
         {
-          ((SelectedItemState) p_parent_state).get_item_list().addAll(obstacle_items);
+          ((SelectedItemState) p_parent_state)
+              .get_item_list()
+              .addAll(obstacle_items);
           p_board_handling.screen_messages.set_status_message(tm.getText("please_unroute_or_extend_selection_before_moving"));
         }
       }
@@ -211,7 +220,9 @@ public class MoveItemState extends InteractiveState
         return;
       }
     }
-    Collection<Item> new_item_list = hdlg.get_routing_board().get_connectable_items(p_net_no);
+    Collection<Item> new_item_list = hdlg
+        .get_routing_board()
+        .get_connectable_items(p_net_no);
     new_item_list.add(p_item);
     NetItems new_net_items = new NetItems(p_net_no, new_item_list);
     this.net_items_list.add(new_net_items);
@@ -282,7 +293,9 @@ public class MoveItemState extends InteractiveState
   @Override
   public InteractiveState cancel()
   {
-    hdlg.get_routing_board().undo(null);
+    hdlg
+        .get_routing_board()
+        .undo(null);
     for (NetItems curr_net_items : this.net_items_list)
     {
       this.hdlg.update_ratsnest(curr_net_items.net_no);
@@ -343,11 +356,18 @@ public class MoveItemState extends InteractiveState
 
   private Vector adjust_to_placement_grid(Vector p_vector)
   {
-    Point new_component_location = this.grid_snap_component.get_location().translate_by(p_vector);
-    IntPoint rounded_component_location = new_component_location.to_float().round_to_grid(hdlg.settings.horizontal_component_grid, hdlg.settings.vertical_component_grid);
+    Point new_component_location = this.grid_snap_component
+        .get_location()
+        .translate_by(p_vector);
+    IntPoint rounded_component_location = new_component_location
+        .to_float()
+        .round_to_grid(hdlg.settings.horizontal_component_grid, hdlg.settings.vertical_component_grid);
     Vector adjustment = rounded_component_location.difference_by(new_component_location);
     Vector result = p_vector.add(adjustment);
-    this.current_position = this.previous_position.translate_by(result).to_float().round();
+    this.current_position = this.previous_position
+        .translate_by(result)
+        .to_float()
+        .round();
     return p_vector.add(adjustment);
   }
 

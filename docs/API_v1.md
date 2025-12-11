@@ -357,6 +357,80 @@ Authorization: Bearer <API_KEY>
   }
   ```
 
+- **Get DRC (design rules check) Report for a Job**
+
+  ```http
+  GET /jobs/{jobId}/drc
+  ```
+
+  **Parameters:**
+    - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Retrieves the DRC report of a routing job.
+
+  **Response body:** Contains the DRC report of the job.
+
+  ```json
+  {
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2025-12-11T16:15:54.777901+01:00",
+    "kicad_version": "N/A",
+    "freerouting_version": "Freerouting 2.1.2-SNAPSHOT",
+    "source": "Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn",
+    "unconnected_items": [
+      {
+        "description": "Unconnected items: Pin [GND] and Pin [GND]",
+        "items": [
+          {
+            "description": "Pin [GND]",
+            "pos": {
+              "x": 1183.875,
+              "y": -1075.0
+            },
+            "uuid": "148"
+          },
+          {
+            "description": "Pin [GND]",
+            "pos": {
+              "x": 1183.875,
+              "y": -1075.0
+            },
+            "uuid": "636"
+          }
+        ],
+        "severity": "warning",
+        "type": "unconnected"
+      },
+      {
+        "description": "Unconnected items: Trace [GND] and Trace [GND]",
+        "items": [
+          {
+            "description": "Trace [GND]",
+            "pos": {
+              "x": 1521.75,
+              "y": -1030.3945
+            },
+            "uuid": "2396"
+          },
+          {
+            "description": "Trace [GND]",
+            "pos": {
+              "x": 1521.75,
+              "y": -1030.464
+            },
+            "uuid": "2410"
+          }
+        ],
+        "severity": "warning",
+        "type": "unconnected"
+      }
+    ],
+    "violations": [],
+    "schematic_parity": []
+  }
+  ```
+  
 ---
 
 ## Notes

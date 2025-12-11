@@ -1,0 +1,293 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2025-11-24T16:40:34+0100",
+    "kicad_version": "9.0.1",
+    "schematic_parity": [],
+    "source": "dev-board.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [GND] on B.Cu, length 0,4596 mm",
+                    "pos": {
+                        "x": 131.6,
+                        "y": 73.1375
+                    },
+                    "uuid": "610a5526-1cc5-407d-b837-3d1dff13ce46"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Hole clearance violation (board minimum hole clearance 0,2500 mm; actual 0,2001 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 124.31,
+                        "y": 88.12
+                    },
+                    "uuid": "12290627-28e4-478f-92e9-37bc8a862d58"
+                },
+                {
+                    "description": "Pad A1_B12 [GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 124.0,
+                        "y": 87.05
+                    },
+                    "uuid": "6566ee79-2585-450f-9761-2daefe03e358"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board minimum hole clearance 0,2500 mm; actual 0,2349 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 124.31,
+                        "y": 88.12
+                    },
+                    "uuid": "12290627-28e4-478f-92e9-37bc8a862d58"
+                },
+                {
+                    "description": "Pad A4_B9 [+5V] of J1 on F.Cu",
+                    "pos": {
+                        "x": 124.8,
+                        "y": 87.05
+                    },
+                    "uuid": "9f0f592d-cdac-4e1e-926a-bc3d94887ca1"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board minimum hole clearance 0,2500 mm; actual 0,2001 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 130.09,
+                        "y": 88.12
+                    },
+                    "uuid": "fc3be324-d957-4f66-acda-c0e6d97f4930"
+                },
+                {
+                    "description": "Pad B1_A12 [GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 87.05
+                    },
+                    "uuid": "df09ae52-ef6b-46cc-98ba-50c9f818e980"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board minimum hole clearance 0,2500 mm; actual 0,2349 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 130.09,
+                        "y": 88.12
+                    },
+                    "uuid": "fc3be324-d957-4f66-acda-c0e6d97f4930"
+                },
+                {
+                    "description": "Pad B4_A9 [+5V] of J1 on F.Cu",
+                    "pos": {
+                        "x": 129.6,
+                        "y": 87.05
+                    },
+                    "uuid": "043535c0-9fe3-488b-bd70-4ab32d8a8e2a"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Rectangle on Edge.Cuts",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 41.4
+                    },
+                    "uuid": "2aa9b106-7419-4753-9e66-a57333538caa"
+                },
+                {
+                    "description": "Segment of J1 on F.Silkscreen",
+                    "pos": {
+                        "x": 122.73,
+                        "y": 94.4
+                    },
+                    "uuid": "cfbf9f35-8a81-477f-81e8-dcaf3b22effe"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Rectangle on Edge.Cuts",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 41.4
+                    },
+                    "uuid": "2aa9b106-7419-4753-9e66-a57333538caa"
+                },
+                {
+                    "description": "Segment of J1 on F.Silkscreen",
+                    "pos": {
+                        "x": 131.67,
+                        "y": 94.4
+                    },
+                    "uuid": "8da185aa-fab4-486e-9f8e-fa7a07b1ca1b"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Rectangle on Edge.Cuts",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 41.4
+                    },
+                    "uuid": "2aa9b106-7419-4753-9e66-a57333538caa"
+                },
+                {
+                    "description": "Segment of U2 on F.Silkscreen",
+                    "pos": {
+                        "x": 118.0,
+                        "y": 35.5
+                    },
+                    "uuid": "3181866d-8959-4da1-8a6b-e570c6ce8856"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Rectangle on Edge.Cuts",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 41.4
+                    },
+                    "uuid": "2aa9b106-7419-4753-9e66-a57333538caa"
+                },
+                {
+                    "description": "Segment of U2 on F.Silkscreen",
+                    "pos": {
+                        "x": 136.0,
+                        "y": 35.5
+                    },
+                    "uuid": "015986d7-c802-4e3a-baa4-0e2d95ad91e8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Rectangle on Edge.Cuts",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 41.4
+                    },
+                    "uuid": "2aa9b106-7419-4753-9e66-a57333538caa"
+                },
+                {
+                    "description": "Segment of U2 on F.Silkscreen",
+                    "pos": {
+                        "x": 136.0,
+                        "y": 41.44
+                    },
+                    "uuid": "4718f85d-8b5e-46fd-ac0b-0c0ab0b6752a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'easyeda2kicad'.",
+            "items": [
+                {
+                    "description": "Footprint SW2",
+                    "pos": {
+                        "x": 135.2,
+                        "y": 90.0
+                    },
+                    "uuid": "0666de78-82ac-4322-8257-3602e5384ef4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'TYPE-C-31-M-12'.",
+            "items": [
+                {
+                    "description": "Footprint J1",
+                    "pos": {
+                        "x": 127.2,
+                        "y": 91.8
+                    },
+                    "uuid": "0fb6ce59-e693-4dc7-a2a2-e1551fd930ed"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'easyeda2kicad'.",
+            "items": [
+                {
+                    "description": "Footprint SW1",
+                    "pos": {
+                        "x": 118.9,
+                        "y": 90.0
+                    },
+                    "uuid": "9fc87b18-d5f8-4c85-98a2-240d40207f68"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'PCM_Espressif'.",
+            "items": [
+                {
+                    "description": "Footprint U2",
+                    "pos": {
+                        "x": 127.0,
+                        "y": 51.25
+                    },
+                    "uuid": "a9b19933-0989-4d81-9e53-fba36f595af4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        }
+    ]
+}

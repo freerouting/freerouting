@@ -39,6 +39,9 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`-dr [design rules file]`**  
   Reads design rules from a previously saved `.rules` file.
 
+- **`-drc [design rules check json file]`**
+  Writes the design rules check report in KiCad JSON DRC schema format.
+
 ### Routing Parameters
 
 - **`-mp [number of passes]`**  

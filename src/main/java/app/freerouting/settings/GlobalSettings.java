@@ -3,6 +3,8 @@ package app.freerouting.settings;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.constants.Constants;
+import app.freerouting.core.BoardFileDetails;
+import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.ReflectionUtil;
 import app.freerouting.management.TextManager;
@@ -33,6 +35,8 @@ public class GlobalSettings implements Serializable
   public final GuiSettings guiSettings = new GuiSettings();
   @SerializedName("router")
   public final RouterSettings routerSettings = new RouterSettings();
+  @SerializedName("drc")
+  public final DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
   @SerializedName("usage_and_diagnostic_data")
   public final UsageAndDiagnosticDataSettings usageAndDiagnosticData = new UsageAndDiagnosticDataSettings();
   @SerializedName("feature_flags")
@@ -60,6 +64,8 @@ public class GlobalSettings implements Serializable
   @SerializedName("version")
   public String version = Constants.FREEROUTING_VERSION;
   public transient boolean show_help_option = false;
+  // DRC report file details that we got from the command line arguments.
+  public transient BoardFileDetails drc_report_file = null;
   /**
    * The design_input_filename field is deprecated and should not be used. They are kept here for compatibility reasons.
    * Its function is now moved to the input.getFilename() method of RoutingJob object.
@@ -261,6 +267,18 @@ public class GlobalSettings implements Serializable
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             design_output_filename = p_args[i + 1];
+          }
+        }
+        else if (p_args[i].startsWith("-drc"))
+        {
+          // DRC-only mode (must be checked before -dr)
+          routerSettings.enabled = false;
+          drcSettings.enabled = true;
+          if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
+          {
+            drc_report_file = new BoardFileDetails();
+            drc_report_file.format = FileFormat.DRC_JSON;
+            drc_report_file.setFilename(p_args[i + 1]);
           }
         }
         else if (p_args[i].startsWith("-dr"))

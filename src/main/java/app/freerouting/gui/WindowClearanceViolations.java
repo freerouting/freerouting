@@ -1,6 +1,7 @@
 package app.freerouting.gui;
 
 import app.freerouting.board.*;
+import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.interactive.ClearanceViolations;
 import app.freerouting.interactive.GuiBoardManager;

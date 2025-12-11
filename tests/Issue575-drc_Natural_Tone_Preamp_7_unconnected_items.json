@@ -1,0 +1,2183 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2025-11-24T16:55:49+0100",
+    "kicad_version": "9.0.1",
+    "schematic_parity": [],
+    "source": "Test.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 7 [Net-(C15-Pad1)] of U2 on Top",
+                    "pos": {
+                        "x": 168.3377,
+                        "y": 105.7639
+                    },
+                    "uuid": "1c123ad8-0ca2-4f4c-9b75-c4c0467d41a1"
+                },
+                {
+                    "description": "Track [Net-(C15-Pad1)] on Top, length 0,1461 mm",
+                    "pos": {
+                        "x": 168.338,
+                        "y": 100.684
+                    },
+                    "uuid": "de065393-8086-4191-ae45-061bd1abe8b7"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [Net-(D5-Pad2)] of R13 on Bottom",
+                    "pos": {
+                        "x": 140.55,
+                        "y": 107.5
+                    },
+                    "uuid": "fc554606-b01c-4979-9beb-95f2bbd575e4"
+                },
+                {
+                    "description": "Track [Net-(D5-Pad2)] on Top, length 0,6300 mm",
+                    "pos": {
+                        "x": 175.9,
+                        "y": 103.56
+                    },
+                    "uuid": "3ba1a717-d908-4d0b-9a58-7ac693b81b5f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 6 [Net-(J1-Pad1)] of U1 on Bottom",
+                    "pos": {
+                        "x": 168.3087,
+                        "y": 105.7639
+                    },
+                    "uuid": "4cbb82da-5142-43a2-a7d2-283dd1e93d7c"
+                },
+                {
+                    "description": "Track [Net-(J1-Pad1)] on Bottom, length 1,9350 mm",
+                    "pos": {
+                        "x": 141.465,
+                        "y": 108.641
+                    },
+                    "uuid": "ee1a171e-6b92-4804-baef-230b6cb6c8ce"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [Net-(J5-Pad1)] on Top, length 0,0014 mm",
+                    "pos": {
+                        "x": 165.933,
+                        "y": 110.346
+                    },
+                    "uuid": "66686ed5-52fc-4b42-b94c-10303fd697e9"
+                },
+                {
+                    "description": "PTH pad 1 [Net-(J5-Pad1)] of J5",
+                    "pos": {
+                        "x": 139.684,
+                        "y": 117.729
+                    },
+                    "uuid": "382f3474-e8de-4ca0-b089-e852bacc13e3"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [Net-(J22-Pad1)] on Bottom, length 1,1270 mm",
+                    "pos": {
+                        "x": 178.301,
+                        "y": 112.249
+                    },
+                    "uuid": "047d7d6a-5cb9-44ce-8d78-180d98ae2235"
+                },
+                {
+                    "description": "Track [Net-(J22-Pad1)] on Bottom, length 2,2260 mm",
+                    "pos": {
+                        "x": 142.189,
+                        "y": 113.146
+                    },
+                    "uuid": "e1c6a0db-1009-4cce-b3e5-37e1adb03bf1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 18 [Net-(R3-Pad1)] of U1 on Bottom",
+                    "pos": {
+                        "x": 159.0087,
+                        "y": 107.0339
+                    },
+                    "uuid": "7086f13e-7d89-44b2-9644-9a7192aa2810"
+                },
+                {
+                    "description": "Track [Net-(R3-Pad1)] on Bottom, length 0,3125 mm",
+                    "pos": {
+                        "x": 132.308,
+                        "y": 102.527
+                    },
+                    "uuid": "0313c05c-4396-45f6-bc3b-9fa636c65266"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 3 [Net-(U2-Pad22)] of U3 on Top",
+                    "pos": {
+                        "x": 154.3762,
+                        "y": 110.8578
+                    },
+                    "uuid": "77bdc322-f577-413b-8377-c2fc9c6f3545"
+                },
+                {
+                    "description": "Pad 22 [Net-(U2-Pad22)] of U2 on Top",
+                    "pos": {
+                        "x": 159.0377,
+                        "y": 110.8439
+                    },
+                    "uuid": "fe104b52-8a4c-46a7-838c-b5b2dd0049ff"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [Net-(J22-Pad1)] on Top - Bottom",
+                    "pos": {
+                        "x": 177.174,
+                        "y": 112.249
+                    },
+                    "uuid": "2a3717ff-91a6-4f0d-bb11-a7ea96299b6f"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [Net-(J9-Pad1)] on Top - Bottom",
+                    "pos": {
+                        "x": 149.265,
+                        "y": 110.88
+                    },
+                    "uuid": "5b53e0ae-dc76-4570-82f1-d69281d957c8"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [Net-(J9-Pad1)] on Top - Bottom",
+                    "pos": {
+                        "x": 149.702,
+                        "y": 108.585
+                    },
+                    "uuid": "6edcfb53-d214-4da6-b6bb-d631be8f9b49"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [Net-(J5-Pad1)] on Top, length 0,0014 mm",
+                    "pos": {
+                        "x": 165.933,
+                        "y": 110.346
+                    },
+                    "uuid": "66686ed5-52fc-4b42-b94c-10303fd697e9"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [+5V] on Top - Bottom",
+                    "pos": {
+                        "x": 176.234,
+                        "y": 109.885
+                    },
+                    "uuid": "1f7baebd-6074-4e7b-af41-00828fcde575"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [+5V] on Bottom, length 0,0657 mm",
+                    "pos": {
+                        "x": 162.568,
+                        "y": 100.684
+                    },
+                    "uuid": "8eb1e48f-40eb-4727-aabb-1b3a7ba493a1"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [+5V] on Bottom, length 0,0658 mm",
+                    "pos": {
+                        "x": 162.5566,
+                        "y": 100.684
+                    },
+                    "uuid": "c70f26a1-5199-47a4-9852-3bb4ab7b9550"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [GND] on Top, length 0,0170 mm",
+                    "pos": {
+                        "x": 117.337,
+                        "y": 101.969
+                    },
+                    "uuid": "939215fc-48ae-4c4a-8541-0e10c8265217"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [GND] on Bottom, length 0,1001 mm",
+                    "pos": {
+                        "x": 170.0984,
+                        "y": 98.1499
+                    },
+                    "uuid": "9c7c5232-85cc-438a-93c5-e8e2b7bc64cc"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Footprint 'SOIC-8_3.9x4.9mm_P1.27mm' does not match copy in library 'Package_SO'.",
+            "items": [
+                {
+                    "description": "Footprint U5",
+                    "pos": {
+                        "x": 119.8,
+                        "y": 99.605
+                    },
+                    "uuid": "00000000-0000-0000-0000-00005ed738c8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J21",
+                    "pos": {
+                        "x": 117.395,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-00005ed80692"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'TSOT-23-6_HandSoldering' does not match copy in library 'Package_TO_SOT_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint U8",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 102.552
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000607c6512"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'Siddall'.",
+            "items": [
+                {
+                    "description": "Footprint U11",
+                    "pos": {
+                        "x": 172.72,
+                        "y": 99.314
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000607ceed0"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SOT-23_Handsoldering' does not match copy in library 'Package_TO_SOT_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint U9",
+                    "pos": {
+                        "x": 174.4,
+                        "y": 102.61
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000607e0413"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J23",
+                    "pos": {
+                        "x": 122.975,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006081cf30"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J22",
+                    "pos": {
+                        "x": 120.185,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-000060938079"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SOIC-8_3.9x4.9mm_P1.27mm' does not match copy in library 'Package_SO'.",
+            "items": [
+                {
+                    "description": "Footprint U6",
+                    "pos": {
+                        "x": 129.337,
+                        "y": 99.605
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006093a2ff"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SOT-23-5_HandSoldering' does not match copy in library 'Package_TO_SOT_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint U10",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 102.544
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006094bbd1"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SOIC-8_3.9x4.9mm_P1.27mm' does not match copy in library 'Package_SO'.",
+            "items": [
+                {
+                    "description": "Footprint U7",
+                    "pos": {
+                        "x": 138.862,
+                        "y": 99.605
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638be3ab"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J25",
+                    "pos": {
+                        "x": 188.595,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638e7a62"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J24",
+                    "pos": {
+                        "x": 185.801,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638e7b41"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SOIC-24W_7.5x15.4mm_P1.27mm' does not match copy in library 'Package_SO'.",
+            "items": [
+                {
+                    "description": "Footprint U2",
+                    "pos": {
+                        "x": 163.6877,
+                        "y": 106.3989
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638eb45e"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SOIC-24W_7.5x15.4mm_P1.27mm' does not match copy in library 'Package_SO'.",
+            "items": [
+                {
+                    "description": "Footprint U3",
+                    "pos": {
+                        "x": 149.7262,
+                        "y": 106.4128
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638eb52a"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J28",
+                    "pos": {
+                        "x": 125.73,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f3b10"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J14",
+                    "pos": {
+                        "x": 164.794,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4749"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J19",
+                    "pos": {
+                        "x": 178.744,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4764"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J20",
+                    "pos": {
+                        "x": 181.534,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f477f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J6",
+                    "pos": {
+                        "x": 142.474,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f479d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J8",
+                    "pos": {
+                        "x": 148.054,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f47b8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J9",
+                    "pos": {
+                        "x": 150.844,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f47d3"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J12",
+                    "pos": {
+                        "x": 159.214,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f47ee"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J7",
+                    "pos": {
+                        "x": 145.264,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4809"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J15",
+                    "pos": {
+                        "x": 167.584,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4824"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J13",
+                    "pos": {
+                        "x": 162.004,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f483f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J3",
+                    "pos": {
+                        "x": 134.104,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f485a"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J2",
+                    "pos": {
+                        "x": 131.314,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4875"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J17",
+                    "pos": {
+                        "x": 173.164,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4890"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J16",
+                    "pos": {
+                        "x": 170.374,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f48ab"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J1",
+                    "pos": {
+                        "x": 128.524,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f48c6"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J5",
+                    "pos": {
+                        "x": 139.684,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f48e1"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J18",
+                    "pos": {
+                        "x": 175.954,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f48fc"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J4",
+                    "pos": {
+                        "x": 136.894,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4917"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J10",
+                    "pos": {
+                        "x": 153.634,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f4932"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'SolderWirePad_1x01_Drill0.8mm' not found in library 'Connector_Wire'.",
+            "items": [
+                {
+                    "description": "Footprint J11",
+                    "pos": {
+                        "x": 156.424,
+                        "y": 117.729
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f494d"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D7",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 105.8
+                    },
+                    "uuid": "2dbb84a3-1083-4531-824c-f09c8892980c"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R9",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 104.3
+                    },
+                    "uuid": "00000000-0000-0000-0000-00005ed8073b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R17",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 108.625
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006063c4b9"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R13",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 107.5
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006063c549"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R11",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 102.616
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000607e0313"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R8",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 104.3
+                    },
+                    "uuid": "00000000-0000-0000-0000-000060813cea"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R5",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 104.3
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006081cb81"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "The current configuration does not include the footprint library 'Siddall'.",
+            "items": [
+                {
+                    "description": "Footprint F1",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 111.506
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006081f843"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R7",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 107.5
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006081f933"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R10",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 111.5
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006081f963"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R15",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 96.3
+                    },
+                    "uuid": "00000000-0000-0000-0000-000060931ff6"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R14",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 96.294
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006094a73b"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R6",
+                    "pos": {
+                        "x": 119.95,
+                        "y": 104.3
+                    },
+                    "uuid": "00000000-0000-0000-0000-00006094c9b8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R20",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 98.142
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638aa0ae"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R21",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 98.1405
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638aa0d0"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R12",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 102.61
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638aa7b2"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R18",
+                    "pos": {
+                        "x": 174.4,
+                        "y": 102.594
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638aa7e2"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R16",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 108.631
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638aa8a8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R1",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 101.252
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638aa8d8"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R22",
+                    "pos": {
+                        "x": 119.95,
+                        "y": 98.1405
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638be417"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SOIC-24W_7.5x15.4mm_P1.27mm' does not match copy in library 'Package_SO'.",
+            "items": [
+                {
+                    "description": "Footprint U4",
+                    "pos": {
+                        "x": 149.7262,
+                        "y": 106.4128
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638eb6e3"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D5",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 105.8
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638ebd3a"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R19",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 98.142
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638eece7"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R4",
+                    "pos": {
+                        "x": 119.95,
+                        "y": 101.252
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638efa28"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R3",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 101.252
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638efa69"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'R_1206_3216Metric_Pad1.30x1.75mm_HandSolder' does not match copy in library 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint R2",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 101.252
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638efbe4"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'SOIC-24W_7.5x15.4mm_P1.27mm' does not match copy in library 'Package_SO'.",
+            "items": [
+                {
+                    "description": "Footprint U1",
+                    "pos": {
+                        "x": 163.6587,
+                        "y": 106.3989
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f068e"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D6",
+                    "pos": {
+                        "x": 186.9,
+                        "y": 105.8
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f5776"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D1",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 113.0
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f63fd"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D4",
+                    "pos": {
+                        "x": 119.95,
+                        "y": 113.0
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f6445"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D2",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 113.0
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f67ae"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D3",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 113.0
+                    },
+                    "uuid": "00000000-0000-0000-0000-0000638f6818"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Footprint 'D_MiniMELF' does not match copy in library 'Diode_SMD'.",
+            "items": [
+                {
+                    "description": "Footprint D8",
+                    "pos": {
+                        "x": 174.4,
+                        "y": 105.794
+                    },
+                    "uuid": "ed67ea09-9da1-4f5b-a650-52eb44a18c1f"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C5",
+                    "pos": {
+                        "x": 120.0,
+                        "y": 104.878
+                    },
+                    "uuid": "123dec07-bcf5-4d0b-bd7f-25665af2aa3a"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C7",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 104.9
+                    },
+                    "uuid": "aac73d2a-4b00-4ac9-a7f5-062299d06345"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of L1",
+                    "pos": {
+                        "x": 186.7,
+                        "y": 98.4
+                    },
+                    "uuid": "79ef1a27-1576-498f-9fca-705091575d07"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C6",
+                    "pos": {
+                        "x": 129.4,
+                        "y": 104.878
+                    },
+                    "uuid": "9b2d755d-c5a6-42ab-9b2f-a8c8c28653eb"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C13",
+                    "pos": {
+                        "x": 186.9334,
+                        "y": 110.031
+                    },
+                    "uuid": "99af8e55-3beb-496f-8400-4e0621c3675d"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of U8",
+                    "pos": {
+                        "x": 189.5,
+                        "y": 104.3
+                    },
+                    "uuid": "02752af0-d2a9-4884-95d1-e8a515fa4e8a"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of U9",
+                    "pos": {
+                        "x": 175.823,
+                        "y": 102.675
+                    },
+                    "uuid": "ec1eae85-6dde-457c-bf64-c057734292ef"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C18",
+                    "pos": {
+                        "x": 174.437,
+                        "y": 97.6788
+                    },
+                    "uuid": "6f7221b8-763a-4485-956e-77d17c105f56"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C15",
+                    "pos": {
+                        "x": 120.0,
+                        "y": 108.9
+                    },
+                    "uuid": "ffb06150-6b76-4b00-b02a-7578c832205e"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C14",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 112.981
+                    },
+                    "uuid": "977daa50-7e85-4fc6-bc07-f335f64f7d0a"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of U10",
+                    "pos": {
+                        "x": 181.987,
+                        "y": 102.575
+                    },
+                    "uuid": "f891221d-fce3-4f40-9cc6-13a1a4f8942f"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C11",
+                    "pos": {
+                        "x": 180.5878,
+                        "y": 107.194
+                    },
+                    "uuid": "6464bea2-6a30-42b9-8174-68f7a9035763"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of U2",
+                    "pos": {
+                        "x": 163.6,
+                        "y": 98.1139
+                    },
+                    "uuid": "89686d1c-a3dd-44a8-bfc4-08a94e14d9c4"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of U3",
+                    "pos": {
+                        "x": 149.7,
+                        "y": 98.2139
+                    },
+                    "uuid": "7a0cd447-e340-48ab-96c7-3749bcc939d6"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C3",
+                    "pos": {
+                        "x": 150.6375,
+                        "y": 97.3139
+                    },
+                    "uuid": "ea0cf77e-3ccc-48b3-85a6-cf0a55951bcf"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C17",
+                    "pos": {
+                        "x": 180.523,
+                        "y": 97.6788
+                    },
+                    "uuid": "ec81f036-9ff7-4c25-ac11-1c2a47121f61"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C2",
+                    "pos": {
+                        "x": 164.652,
+                        "y": 97.2492
+                    },
+                    "uuid": "f955bb38-3e92-4dff-a2cc-9e89e09ad6ea"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C16",
+                    "pos": {
+                        "x": 180.6016,
+                        "y": 110.025
+                    },
+                    "uuid": "2a305faf-acec-4362-bb7a-1ef9af8f3a5d"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C19",
+                    "pos": {
+                        "x": 180.5746,
+                        "y": 112.975
+                    },
+                    "uuid": "d71beed0-2b73-4ec2-9701-b64723f44abf"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D7",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 107.3
+                    },
+                    "uuid": "d1a78685-f2e8-4406-a9ce-e12e7255ae7a"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R9",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 105.765
+                    },
+                    "uuid": "58ccc73b-80c5-49b6-a58b-06b8136da4ac"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R17",
+                    "pos": {
+                        "x": 180.6254,
+                        "y": 109.975
+                    },
+                    "uuid": "874e37d1-214f-4ae0-a9ff-dfc8c127ba1c"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R13",
+                    "pos": {
+                        "x": 138.9746,
+                        "y": 108.875
+                    },
+                    "uuid": "88d28330-e77c-464f-adf2-e1dcc3603774"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R11",
+                    "pos": {
+                        "x": 186.9186,
+                        "y": 103.981
+                    },
+                    "uuid": "cf92c83d-46cd-406a-9bc4-a92ece7f594f"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R8",
+                    "pos": {
+                        "x": 139.0254,
+                        "y": 105.765
+                    },
+                    "uuid": "371b245e-257e-445d-9966-446ff021f0fa"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C8",
+                    "pos": {
+                        "x": 174.364,
+                        "y": 97.6656
+                    },
+                    "uuid": "419f6a1c-5818-4aab-b032-f8e5cf8d1792"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R5",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 105.765
+                    },
+                    "uuid": "14f80256-601c-4612-a67e-88f5d9cf880e"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of F1",
+                    "pos": {
+                        "x": 186.9,
+                        "y": 112.97
+                    },
+                    "uuid": "cddf7c5d-0e7e-4af9-8e36-c0924a348966"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C12",
+                    "pos": {
+                        "x": 119.9754,
+                        "y": 108.934
+                    },
+                    "uuid": "3fec17d3-c155-4262-95e4-58d44b58cfdc"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R7",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 108.934
+                    },
+                    "uuid": "1899506e-235d-4d11-8fa3-802b5fa1c2ff"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R10",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 112.994
+                    },
+                    "uuid": "797f4e42-437d-4929-b421-9c75f92953b4"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R15",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 97.7
+                    },
+                    "uuid": "d0919934-6475-4fbe-a676-a44ba12ea874"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R14",
+                    "pos": {
+                        "x": 180.55,
+                        "y": 97.694
+                    },
+                    "uuid": "e2683b82-fef6-400a-bd98-453951672587"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R6",
+                    "pos": {
+                        "x": 119.95,
+                        "y": 105.717
+                    },
+                    "uuid": "3bce96da-b20c-419b-848c-e4a56c3dec5f"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R20",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 99.6772
+                    },
+                    "uuid": "16765126-a85d-4dfe-8133-fd65c20d52ec"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R21",
+                    "pos": {
+                        "x": 126.2746,
+                        "y": 99.6772
+                    },
+                    "uuid": "cde6b858-7a58-4889-ab53-2fd39b0998b5"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R12",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 103.975
+                    },
+                    "uuid": "d112ddca-6e0a-4b35-a80a-8e8ccaf6f844"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R18",
+                    "pos": {
+                        "x": 174.4106,
+                        "y": 103.944
+                    },
+                    "uuid": "ef5e7584-6db1-4593-a5ab-47099dcb3241"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R16",
+                    "pos": {
+                        "x": 186.908,
+                        "y": 110.0
+                    },
+                    "uuid": "ca01b322-8eb0-407c-b5d7-c393da6bbd89"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R1",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 102.717
+                    },
+                    "uuid": "8e0d258d-3934-4b61-8cb1-078fa10f856f"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R22",
+                    "pos": {
+                        "x": 119.95,
+                        "y": 99.6772
+                    },
+                    "uuid": "57b9c696-c5c6-46cb-9803-7d0a062463bf"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of U4",
+                    "pos": {
+                        "x": 149.699963,
+                        "y": 98.2139
+                    },
+                    "uuid": "9acc2631-e4a2-4ef9-b4d7-7d88d2ddd73c"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C4",
+                    "pos": {
+                        "x": 156.7375,
+                        "y": 97.3278
+                    },
+                    "uuid": "714154a3-318e-47cf-bce5-1df64a95191c"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D5",
+                    "pos": {
+                        "x": 180.6,
+                        "y": 107.265
+                    },
+                    "uuid": "46433286-3b2e-49a5-8a00-54033463b556"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R19",
+                    "pos": {
+                        "x": 139.0254,
+                        "y": 99.6772
+                    },
+                    "uuid": "07c1cb0f-206d-427e-8588-519d5f7b444d"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R4",
+                    "pos": {
+                        "x": 119.9754,
+                        "y": 102.717
+                    },
+                    "uuid": "912f6bd2-c9cf-49f1-9ecf-bcf97a82226d"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R3",
+                    "pos": {
+                        "x": 126.3,
+                        "y": 102.717
+                    },
+                    "uuid": "0e098484-4f3a-4ef1-b15a-044d572cf12d"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of R2",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 102.717
+                    },
+                    "uuid": "a02fa6af-b9d3-4608-8a41-8d4ac2fa42bd"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C1",
+                    "pos": {
+                        "x": 170.5,
+                        "y": 97.2139
+                    },
+                    "uuid": "a579b5aa-0119-4e92-8d13-a97c4bfff592"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of U1",
+                    "pos": {
+                        "x": 163.599963,
+                        "y": 98.1139
+                    },
+                    "uuid": "a01b53b8-2483-43cd-82e2-ffe105d8b082"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D6",
+                    "pos": {
+                        "x": 186.887,
+                        "y": 107.25
+                    },
+                    "uuid": "b8f089e9-53e3-4a3b-b959-f1c92b666d0a"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D1",
+                    "pos": {
+                        "x": 139.0,
+                        "y": 111.476
+                    },
+                    "uuid": "548106d9-3ba0-4245-a203-a99998afd225"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D4",
+                    "pos": {
+                        "x": 119.95,
+                        "y": 111.476
+                    },
+                    "uuid": "b23311d0-5c15-41af-b8ff-21308456f19a"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of C20",
+                    "pos": {
+                        "x": 132.523,
+                        "y": 109.1002
+                    },
+                    "uuid": "da9bb1ba-c8c0-4f24-b9a3-a98ede9a16cb"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D2",
+                    "pos": {
+                        "x": 132.5,
+                        "y": 111.476
+                    },
+                    "uuid": "3efed98b-1b17-4ac7-8a1d-75e403926f27"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D3",
+                    "pos": {
+                        "x": 126.554,
+                        "y": 111.476
+                    },
+                    "uuid": "4514ebf3-c498-4d9f-996a-a8b72302c3ee"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        },
+        {
+            "description": "Text height out of range (board setup constraints silk text height min height 0,8000 mm; actual 0,5000 mm)",
+            "items": [
+                {
+                    "description": "Reference field of D8",
+                    "pos": {
+                        "x": 174.4,
+                        "y": 107.244
+                    },
+                    "uuid": "15db60a5-b87c-454e-bb46-78043e333748"
+                }
+            ],
+            "severity": "warning",
+            "type": "text_height"
+        }
+    ]
+}
