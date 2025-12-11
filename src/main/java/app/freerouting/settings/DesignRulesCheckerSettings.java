@@ -16,6 +16,7 @@ public class DesignRulesCheckerSettings implements Serializable
   /**
    * Copy constructor
    */
+  @Override
   public DesignRulesCheckerSettings clone()
   {
     DesignRulesCheckerSettings clone = new DesignRulesCheckerSettings();
