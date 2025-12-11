@@ -483,6 +483,7 @@ public class GlobalSettings implements Serializable
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             routerSettings.random_seed = TextManager.hexadecimalStringToLong(p_args[i + 1]);
+            i++;
           }
         }
       } catch (Exception e)
