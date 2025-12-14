@@ -49,7 +49,7 @@ def check_latest_jre_version(os_name, architecture):
     try:
         latest_jre_info_request = urllib.request.Request(
             # Docs at https://api.adoptium.net/q/swagger-ui/
-            f"https://api.adoptium.net/v3/assets/latest/21/hotspot?image_type=jre&os={os_name}&architecture={architecture}",
+            f"https://api.adoptium.net/v3/assets/latest/25/hotspot?image_type=jre&os={os_name}&architecture={architecture}",
             headers={"User-Agent": ""}  # The server rejects requests with the default UA
         )
         with urllib.request.urlopen(latest_jre_info_request) as response:
@@ -68,15 +68,15 @@ def get_local_java_executable_path(os_name):
     if java_exe:
         javaVersion = get_java_version(java_exe)
         javaMajorVersion = int(javaVersion.split(".")[0])
-        if javaMajorVersion >= 21:
+        if javaMajorVersion >= 25:
             print(f"Found Java in system PATH ({java_exe}), using that.")
             return java_exe
 
     # 2. Find the latest Java JRE 21 in the temp folder (that we installed earlier)
     java_found_exes = sorted(
-        [str(p) for p in freerouting_jre_temp_folder.glob("jdk-21.*.*+*-jre/bin/java*") if p.is_file() and re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", str(p))],
+        [str(p) for p in freerouting_jre_temp_folder.glob("jdk-25.*.*+*-jre/bin/java*") if p.is_file() and re.search(r"jdk-25\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", str(p))],
         reverse=True,
-        key=lambda p: re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-21\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
+        key=lambda p: re.search(r"jdk-25\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p).groups() if re.search(r"jdk-25\.(\d+)\.(\d+)(\.\d+)?\+(\d+)-jre", p) else ()
     )
 
     if java_found_exes:
@@ -90,7 +90,7 @@ def get_local_java_executable_path(os_name):
         if Path(homebrew_java_path).is_file():
             javaVersion = get_java_version(homebrew_java_path)
             javaMajorVersion = int(javaVersion.split(".")[0])
-            if javaMajorVersion >= 21:
+            if javaMajorVersion >= 25:
                 print(f"Found Homebrew Java ({homebrew_java_path}), using that.")
                 return homebrew_java_path
             
@@ -103,7 +103,7 @@ def get_local_java_executable_path(os_name):
         if java_home_exe.is_file():
             javaVersion = get_java_version(str(java_home_exe))
             javaMajorVersion = int(javaVersion.split(".")[0])
-            if javaMajorVersion >= 21:
+            if javaMajorVersion >= 25:
                 print(f"Found Java via JAVA_HOME ({java_home_exe}), using that.")
                 return str(java_home_exe)
             
@@ -237,7 +237,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         # Check if the freerouting temp folder exists, if not create it
         freerouting_jre_temp_folder.mkdir(parents=True, exist_ok=True) # Use mkdir with parents and exist_ok
 
-        # Check if Java is installed and if it's version 21 or higher
+        # Check if Java is installed and if it's version 25 or higher
         javaVersion = get_java_version(self.java_path)
         try:
             javaMajorVersion = int(javaVersion.split(".")[0])
@@ -254,7 +254,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             flatpak_message = flatpakNote if os_name == "linux" else ""
 
             javaInstallationWarningMessage = textwrap.dedent(f"""
-            Java JRE version 21 or higher is required, but no Java installation was found.{flatpak_message}
+            Java JRE version 25 or higher is required, but no Java installation was found.{flatpak_message}
             Would you like to install it now?
             (This can take up to a few minutes.)
             """)
@@ -266,9 +266,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             if (javaInstallNow != wx.ID_YES):
                 return False
         else:
-            if (javaMajorVersion < 21):
+            if (javaMajorVersion < 25):
                 javaInstallationWarningMessage = textwrap.dedent(f"""
-                Java JRE version 21 or higher is required, but you have Java version {javaVersion} installed.
+                Java JRE version 25 or higher is required, but you have Java version {javaVersion} installed.
                 Would you like to install a newer one now?
                 (This can take up to a few minutes.)
                 """)
@@ -284,8 +284,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 else:
                     path.unlink(missing_ok=True) # Use unlink with missing_ok
 
-            # Install Java JRE 21
-            self.java_path = install_java_jre_21()
+            # Install Java JRE 25
+            self.java_path = install_java_jre_25()
             
         javaVersion = get_java_version(self.java_path)
         try:
@@ -293,7 +293,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         except ValueError:
             javaMajorVersion = 0
             
-        if javaMajorVersion < 21:
+        if javaMajorVersion < 25:
             wx_show_error(textwrap.dedent("""
             Java JRE installation failed, so we can't run Freerouting at the moment.
             You can download the latest Java JRE from https://adoptium.net/temurin/releases and install it manually. KiCad must be restarted after the installation.
@@ -458,7 +458,7 @@ def download_with_progress_bar(url):
     # Return temp filename
     return urllib.request.urlretrieve(url, reporthook=download_progress_hook)[0]
 
-def install_java_jre_21():
+def install_java_jre_25():
     # Get platform information and the appropriate URL
     os_name, architecture = detect_os_architecture()
     print(f"Operating System: {os_name}")
@@ -480,7 +480,7 @@ def install_java_jre_21():
         print(f"You already have the latest Java JRE ({jre_version}) downloaded.")
         return local_java_exe
     
-    if local_java_exe and get_java_version(local_java_exe).split(".")[0].isdigit() and int(get_java_version(local_java_exe).split(".")[0]) >= 21:
+    if local_java_exe and get_java_version(local_java_exe).split(".")[0].isdigit() and int(get_java_version(local_java_exe).split(".")[0]) >= 25:
          print(f"Found a suitable Java installation ({local_java_exe}), no need to download.")
          return local_java_exe
 
@@ -498,7 +498,7 @@ def install_java_jre_21():
         Failed to download Java JRE from:
         {jre_url}
 
-        Please check your internet connection or try downloading and installing Java JRE 21 or higher manually from https://adoptium.net/temurin/releases.
+        Please check your internet connection or try downloading and installing Java JRE 25 or higher manually from https://adoptium.net/temurin/releases.
         """))
         return "" # Return empty string to indicate failure
 
@@ -535,7 +535,7 @@ def install_java_jre_21():
         Java JRE extraction seemed to complete, but the executable was not found at:
         {java_exe_path}
 
-        Something might have gone wrong during the extraction. Please try downloading and installing Java JRE 21 or higher manually from https://adoptium.net/temurin/releases.
+        Something might have gone wrong during the extraction. Please try downloading and installing Java JRE 25 or higher manually from https://adoptium.net/temurin/releases.
         """))
         return ""
 
