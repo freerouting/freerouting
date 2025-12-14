@@ -10,7 +10,7 @@ plugins {
     id "com.vanniktech.maven.publish" version "0.31.0"
     id 'net.nemerosa.versioning' version '3.1.0'
     id 'com.github.ben-manes.versions' version '0.52.0'
-    id 'org.openrewrite.rewrite' version '7.1.2'
+    id 'org.openrewrite.rewrite' version '7.22.0'
 }
 
 java {
@@ -129,15 +129,6 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-core:2.62.1'
     implementation 'com.google.cloud:google-cloud-core-http:2.62.1'
     implementation 'com.google.cloud:google-cloud-bigquery:2.55.3'
-
-    // The "Bill of Materials" (BOM) keeps all recipe versions in sync
-    rewrite(platform("org.openrewrite.recipe:rewrite-recipe-bom:latest.release"))
-
-    // Add the specific modules for the recipes listed above
-    rewrite("org.openrewrite.recipe:rewrite-migrate-java")      // For UpgradeToJava21
-    rewrite("org.openrewrite.recipe:rewrite-gradle")            // For MigrateToGradle9
-    rewrite("org.openrewrite.recipe:rewrite-static-analysis")   // For CommonStaticAnalysis
-    rewrite("org.openrewrite.recipe:rewrite-testing-frameworks")// For JUnit/Test cleanup
 }
 
 ext {
@@ -260,17 +251,4 @@ test {
     }
 
     timeout = Duration.ofMinutes(15)
-}
-
-rewrite {
-    // UNCOMMENT ONE LINE AT A TIME to run that specific recipe:
-    
-    // 1. First, fix the build system
-    // activeRecipe("org.openrewrite.gradle.MigrateToGradle9")
-
-    // 2. Then, upgrade Java syntax
-    // activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
-
-    // 3. Finally, polish the code
-    // activeRecipe("org.openrewrite.staticanalysis.CommonStaticAnalysis")
 }
