@@ -1,6 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="(Default)" type="Application" factoryName="Application">
-    <option name="ALTERNATIVE_JRE_PATH" value="temurin-21" />
     <option name="MAIN_CLASS_NAME" value="app.freerouting.Freerouting" />
     <module name="freerouting.main" />
     <extension name="coverage">
