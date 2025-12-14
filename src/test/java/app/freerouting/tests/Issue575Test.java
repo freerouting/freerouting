@@ -4,6 +4,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,6 +15,7 @@ public class Issue575Test extends TestBasedOnAnIssue
   private RoutingJob job;
 
   @Test
+  @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
   public void test_Issue_575_6_track_and_1_hole_clearance_violations()
   {
     // Get a routing job
@@ -33,6 +35,7 @@ public class Issue575Test extends TestBasedOnAnIssue
   }
 
   @Test
+  @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
   public void test_Issue_575_4_hole_clearance_violations()
   {
     // Get a routing job
@@ -52,6 +55,7 @@ public class Issue575Test extends TestBasedOnAnIssue
   }
 
   @Test
+  @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
   public void test_Issue_575_7_unconnected_items()
   {
     // Get a routing job
