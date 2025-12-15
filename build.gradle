@@ -126,8 +126,10 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-core-http:2.62.1'
     implementation 'com.google.cloud:google-cloud-bigquery:2.55.3'
 
-    // OpenRewrite for code quality
-    rewrite("org.openrewrite.recipe:rewrite-rewrite:0.16.1")
+    // OpenRewrite:
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.23.0'
+    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.23.0'
+    rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
 }
 
 ext {
@@ -253,6 +255,11 @@ test {
 }
 
 rewrite {
-    activeRecipe("org.openrewrite.java.recipes.JavaRecipeBestPractices")
+    activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+    checkstyleConfigFile = file("google_checks.xml")
+    //activeRecipe("org.openrewrite.java.format.AutoFormat")
+    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava17")
+    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
+    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
     setExportDatatables(true)
 }
