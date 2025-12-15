@@ -972,7 +972,7 @@ public class Network extends ScopeKeyword
           FRLogger.warn("Network.search_lib_package: component list empty at '" + p_part_name + "'");
           return null;
         }
-        String component_name = curr_mapping.components.first();
+        String component_name = curr_mapping.components.getFirst();
         if (component_name == null)
         {
           FRLogger.warn("Network.search_lib_package: component list empty at '" + p_part_name + "'");

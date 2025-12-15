@@ -211,19 +211,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
     if (parts.length > 1)
     {
       String extension = parts[parts.length - 1].toLowerCase();
-      switch (extension)
+      return switch (extension)
       {
-        case DSN_FILE_EXTENSION:
-          return FileFormat.DSN;
-        case BINARY_FILE_EXTENSION:
-          return FileFormat.FRB;
-        case "ses":
-          return FileFormat.SES;
-        case "scr":
-          return FileFormat.SCR;
-        default:
-          return FileFormat.UNKNOWN;
-      }
+        case DSN_FILE_EXTENSION -> FileFormat.DSN;
+        case BINARY_FILE_EXTENSION -> FileFormat.FRB;
+        case "ses" -> FileFormat.SES;
+        case "scr" -> FileFormat.SCR;
+        default -> FileFormat.UNKNOWN;
+      };
     }
 
     return FileFormat.UNKNOWN;

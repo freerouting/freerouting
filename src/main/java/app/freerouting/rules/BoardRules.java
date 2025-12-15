@@ -306,7 +306,7 @@ public class BoardRules implements Serializable
     {
       return null;
     }
-    return this.via_rules.get(0);
+    return this.via_rules.getFirst();
   }
 
   /**

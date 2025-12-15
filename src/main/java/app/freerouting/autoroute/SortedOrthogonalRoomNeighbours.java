@@ -226,7 +226,7 @@ public class SortedOrthogonalRoomNeighbours
   private void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine)
   {
     IntBox board_bounds = p_autoroute_engine.board.bounding_box;
-    SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.last();
+    SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.getLast();
 
     for (SortedRoomNeighbour next_neighbour : this.sorted_neighbours)
     {

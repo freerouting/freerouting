@@ -566,7 +566,7 @@ public class Sorted45DegreeRoomNeighbours
   private void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine)
   {
     IntOctagon board_bounding_oct = p_autoroute_engine.board.bounding_box.bounding_octagon();
-    SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.last();
+    SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.getLast();
     if (this.from_room instanceof ObstacleExpansionRoom && this.sorted_neighbours.size() == 1)
     {
       // ObstacleExpansionRoom has only 1 neighbour

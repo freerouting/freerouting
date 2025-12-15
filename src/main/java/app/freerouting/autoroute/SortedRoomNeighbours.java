@@ -432,7 +432,7 @@ public class SortedRoomNeighbours
    */
   public void calculate_new_incomplete_rooms(AutorouteEngine p_autoroute_engine)
   {
-    SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.last();
+    SortedRoomNeighbour prev_neighbour = this.sorted_neighbours.getLast();
     Simplex room_simplex = this.from_room
         .get_shape()
         .to_Simplex();
@@ -442,10 +442,10 @@ public class SortedRoomNeighbours
       int last_touching_side_no = next_neighbour.touching_side_no_of_room % room_simplex.border_line_count();
 
       int curr_next_no = room_simplex.next_no(first_touching_side_no);
-      boolean intersection_with_prev_neighbour_ends_at_corner = (first_touching_side_no != last_touching_side_no || prev_neighbour == this.sorted_neighbours.last()) && prev_neighbour
+      boolean intersection_with_prev_neighbour_ends_at_corner = (first_touching_side_no != last_touching_side_no || prev_neighbour == this.sorted_neighbours.getLast()) && prev_neighbour
           .last_corner()
           .equals(room_simplex.corner(curr_next_no));
-      boolean intersection_with_next_neighbour_starts_at_corner = (first_touching_side_no != last_touching_side_no || prev_neighbour == this.sorted_neighbours.last()) && next_neighbour
+      boolean intersection_with_next_neighbour_starts_at_corner = (first_touching_side_no != last_touching_side_no || prev_neighbour == this.sorted_neighbours.getLast()) && next_neighbour
           .first_corner()
           .equals(room_simplex.corner(last_touching_side_no));
 
@@ -538,7 +538,7 @@ public class SortedRoomNeighbours
 
           Direction middle_line_dir = middle_edge_line.direction();
 
-          boolean last_time = curr_touching_side_no == first_touching_side_no && !(prev_neighbour == this.sorted_neighbours.last() && first_time)
+          boolean last_time = curr_touching_side_no == first_touching_side_no && !(prev_neighbour == this.sorted_neighbours.getLast() && first_time)
               // The expression above handles the case, when all neighbours are on 1 edge line.
               || corner_cut_off;
 
