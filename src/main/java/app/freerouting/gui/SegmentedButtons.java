@@ -173,7 +173,7 @@ public class SegmentedButtons extends JPanel
     });
 
     // Action listener for selection changes
-    button.addActionListener(e ->
+    button.addActionListener(_ ->
     {
       for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet())
       {

@@ -191,7 +191,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
     if (job.output == null)
     {
       job.output = new BoardFileDetails(job.board);
-      job.output.addUpdatedEventListener(e -> job.fireOutputUpdatedEvent());
+      job.output.addUpdatedEventListener(_ -> job.fireOutputUpdatedEvent());
       job.output.format = FileFormat.SES;
       job.output.setFilename(job.input.getFilenameWithoutExtension() + ".ses");
     }

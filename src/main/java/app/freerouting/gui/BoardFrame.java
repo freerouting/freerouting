@@ -407,7 +407,7 @@ public class BoardFrame extends WindowBase
       try
       {
         object_stream = new ObjectInputStream(inputStream);
-      } catch (IOException e)
+      } catch (IOException _)
       {
         return false;
       }
@@ -428,7 +428,7 @@ public class BoardFrame extends WindowBase
         viewport_position = (Point) object_stream.readObject();
         frame_location = (Point) object_stream.readObject();
         frame_bounds = (Rectangle) object_stream.readObject();
-      } catch (Exception e)
+      } catch (Exception _)
       {
         return false;
       }
@@ -446,7 +446,7 @@ public class BoardFrame extends WindowBase
     try
     {
       inputStream.close();
-    } catch (IOException e)
+    } catch (IOException _)
     {
       return false;
     }
@@ -499,7 +499,7 @@ public class BoardFrame extends WindowBase
       try
       {
         input_stream = new FileInputStream(defaults_file);
-      } catch (FileNotFoundException e)
+      } catch (FileNotFoundException _)
       {
         defaults_file_found = false;
       }
@@ -514,7 +514,7 @@ public class BoardFrame extends WindowBase
         try
         {
           input_stream.close();
-        } catch (IOException e)
+        } catch (IOException _)
         {
           return false;
         }
@@ -530,11 +530,11 @@ public class BoardFrame extends WindowBase
     {
       FileInputStream input_stream = new FileInputStream(this.routingJob.snapshot.getFile());
       return this.load(input_stream, false, null, this.routingJob);
-    } catch (IOException e)
+    } catch (IOException _)
     {
       screen_messages.set_status_message(tm.getText("error_2"));
       return false;
-    } catch (Exception e)
+    } catch (Exception _)
     {
       screen_messages.set_status_message(tm.getText("error_3"));
       return false;
@@ -630,11 +630,11 @@ public class BoardFrame extends WindowBase
 
       output_stream = new FileOutputStream(outputFile);
       saveAsBinary(output_stream);
-    } catch (IOException e)
+    } catch (IOException _)
     {
       screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
-    } catch (Exception e)
+    } catch (Exception _)
     {
       screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
@@ -644,7 +644,7 @@ public class BoardFrame extends WindowBase
     try
     {
       output_stream.close();
-    } catch (IOException e)
+    } catch (IOException _)
     {
       screen_messages.set_status_message(tm.getText("message_binary_file_save_failed", outputFile.getPath()));
       return false;
@@ -672,7 +672,7 @@ public class BoardFrame extends WindowBase
       output.format = FileFormat.FRB;
       output.setData(output_stream.toByteArray());
       output_stream.close();
-    } catch (Exception e)
+    } catch (Exception _)
     {
       return false;
     }
@@ -697,7 +697,7 @@ public class BoardFrame extends WindowBase
     try
     {
       output_stream = new FileOutputStream(outputFile);
-    } catch (Exception e)
+    } catch (Exception _)
     {
       output_stream = null;
     }
@@ -817,7 +817,7 @@ public class BoardFrame extends WindowBase
     try
     {
       output_stream = new FileOutputStream(outputFile);
-    } catch (Exception e)
+    } catch (Exception _)
     {
       output_stream = null;
     }
@@ -847,7 +847,7 @@ public class BoardFrame extends WindowBase
     try
     {
       output_stream = new FileOutputStream(outputFile);
-    } catch (Exception e)
+    } catch (Exception _)
     {
       output_stream = null;
     }

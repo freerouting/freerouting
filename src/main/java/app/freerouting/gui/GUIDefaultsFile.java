@@ -57,7 +57,7 @@ public class GUIDefaultsFile
     try
     {
       result.write_defaults_scope();
-    } catch (IOException e)
+    } catch (IOException _)
     {
       FRLogger.warn("unable to write defaults file");
       return false;

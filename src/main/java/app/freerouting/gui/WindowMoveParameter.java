@@ -90,9 +90,9 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     settings_controls_rotate_radiobutton = new JRadioButton(tm.getText("rotate"));
 
     settings_controls_zoom_radiobutton.addActionListener(new ZoomButtonListener());
-    settings_controls_zoom_radiobutton.addActionListener(evt -> FRAnalytics.buttonClicked("settings_controls_zoom_radiobutton", settings_controls_zoom_radiobutton.getText()));
+    settings_controls_zoom_radiobutton.addActionListener(_ -> FRAnalytics.buttonClicked("settings_controls_zoom_radiobutton", settings_controls_zoom_radiobutton.getText()));
     settings_controls_rotate_radiobutton.addActionListener(new RotateButtonListener());
-    settings_controls_rotate_radiobutton.addActionListener(evt -> FRAnalytics.buttonClicked("settings_controls_rotate_radiobutton", settings_controls_rotate_radiobutton.getText()));
+    settings_controls_rotate_radiobutton.addActionListener(_ -> FRAnalytics.buttonClicked("settings_controls_rotate_radiobutton", settings_controls_rotate_radiobutton.getText()));
 
     ButtonGroup button_group = new ButtonGroup();
     button_group.add(settings_controls_zoom_radiobutton);

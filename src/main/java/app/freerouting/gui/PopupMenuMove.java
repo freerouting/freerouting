@@ -26,56 +26,56 @@ public class PopupMenuMove extends PopupMenuDisplay
 
     JMenuItem popup_turn_90_menuitem = new JMenuItem();
     popup_turn_90_menuitem.setText(tm.getText("90_degree"));
-    popup_turn_90_menuitem.addActionListener(evt -> turn_45_degree(2));
-    popup_turn_90_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_turn_90_menuitem", popup_turn_90_menuitem.getText()));
+    popup_turn_90_menuitem.addActionListener(_ -> turn_45_degree(2));
+    popup_turn_90_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_90_menuitem", popup_turn_90_menuitem.getText()));
     rotate_menu.add(popup_turn_90_menuitem);
 
     JMenuItem popup_turn_180_menuitem = new JMenuItem();
     popup_turn_180_menuitem.setText(tm.getText("180_degree"));
-    popup_turn_180_menuitem.addActionListener(evt -> turn_45_degree(4));
-    popup_turn_180_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_turn_180_menuitem", popup_turn_180_menuitem.getText()));
+    popup_turn_180_menuitem.addActionListener(_ -> turn_45_degree(4));
+    popup_turn_180_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_180_menuitem", popup_turn_180_menuitem.getText()));
     rotate_menu.add(popup_turn_180_menuitem);
 
     JMenuItem popup_turn_270_menuitem = new JMenuItem();
     popup_turn_270_menuitem.setText(tm.getText("-90_degree"));
-    popup_turn_270_menuitem.addActionListener(evt -> turn_45_degree(6));
-    popup_turn_270_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_turn_270_menuitem", popup_turn_270_menuitem.getText()));
+    popup_turn_270_menuitem.addActionListener(_ -> turn_45_degree(6));
+    popup_turn_270_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_270_menuitem", popup_turn_270_menuitem.getText()));
     rotate_menu.add(popup_turn_270_menuitem);
 
     JMenuItem popup_turn_45_menuitem = new JMenuItem();
     popup_turn_45_menuitem.setText(tm.getText("45_degree"));
-    popup_turn_45_menuitem.addActionListener(evt -> turn_45_degree(1));
-    popup_turn_45_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_turn_45_menuitem", popup_turn_45_menuitem.getText()));
+    popup_turn_45_menuitem.addActionListener(_ -> turn_45_degree(1));
+    popup_turn_45_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_45_menuitem", popup_turn_45_menuitem.getText()));
     rotate_menu.add(popup_turn_45_menuitem);
 
     JMenuItem popup_turn_135_menuitem = new JMenuItem();
     popup_turn_135_menuitem.setText(tm.getText("135_degree"));
-    popup_turn_135_menuitem.addActionListener(evt -> turn_45_degree(3));
-    popup_turn_135_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_turn_135_menuitem", popup_turn_135_menuitem.getText()));
+    popup_turn_135_menuitem.addActionListener(_ -> turn_45_degree(3));
+    popup_turn_135_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_135_menuitem", popup_turn_135_menuitem.getText()));
     rotate_menu.add(popup_turn_135_menuitem);
 
     JMenuItem popup_turn_225_menuitem = new JMenuItem();
     popup_turn_225_menuitem.setText(tm.getText("-135_degree"));
-    popup_turn_225_menuitem.addActionListener(evt -> turn_45_degree(5));
-    popup_turn_225_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_turn_225_menuitem", popup_turn_225_menuitem.getText()));
+    popup_turn_225_menuitem.addActionListener(_ -> turn_45_degree(5));
+    popup_turn_225_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_225_menuitem", popup_turn_225_menuitem.getText()));
     rotate_menu.add(popup_turn_225_menuitem);
 
     JMenuItem popup_turn_315_menuitem = new JMenuItem();
     popup_turn_315_menuitem.setText(tm.getText("-45_degree"));
-    popup_turn_315_menuitem.addActionListener(evt -> turn_45_degree(7));
-    popup_turn_315_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_turn_315_menuitem", popup_turn_315_menuitem.getText()));
+    popup_turn_315_menuitem.addActionListener(_ -> turn_45_degree(7));
+    popup_turn_315_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_turn_315_menuitem", popup_turn_315_menuitem.getText()));
     rotate_menu.add(popup_turn_315_menuitem);
 
     JMenuItem popup_change_side_menuitem = new JMenuItem();
     popup_change_side_menuitem.setText(tm.getText("change_side"));
-    popup_change_side_menuitem.addActionListener(evt -> board_panel.board_handling.change_placement_side());
-    popup_change_side_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_change_side_menuitem", popup_change_side_menuitem.getText()));
+    popup_change_side_menuitem.addActionListener(_ -> board_panel.board_handling.change_placement_side());
+    popup_change_side_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_change_side_menuitem", popup_change_side_menuitem.getText()));
 
     this.add(popup_change_side_menuitem, 1);
 
     JMenuItem popup_reset_rotation_menuitem = new JMenuItem();
     popup_reset_rotation_menuitem.setText(tm.getText("reset_rotation"));
-    popup_reset_rotation_menuitem.addActionListener(evt ->
+    popup_reset_rotation_menuitem.addActionListener(_ ->
     {
       InteractiveState interactive_state = board_panel.board_handling.get_interactive_state();
       if (interactive_state instanceof MoveItemState state)
@@ -83,21 +83,21 @@ public class PopupMenuMove extends PopupMenuDisplay
         state.reset_rotation();
       }
     });
-    popup_reset_rotation_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_reset_rotation_menuitem", popup_reset_rotation_menuitem.getText()));
+    popup_reset_rotation_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_reset_rotation_menuitem", popup_reset_rotation_menuitem.getText()));
 
     this.add(popup_reset_rotation_menuitem, 2);
 
     JMenuItem popup_insert_menuitem = new JMenuItem();
     popup_insert_menuitem.setText(tm.getText("insert"));
-    popup_insert_menuitem.addActionListener(evt -> board_panel.board_handling.return_from_state());
-    popup_insert_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_insert_menuitem", popup_insert_menuitem.getText()));
+    popup_insert_menuitem.addActionListener(_ -> board_panel.board_handling.return_from_state());
+    popup_insert_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_insert_menuitem", popup_insert_menuitem.getText()));
 
     this.add(popup_insert_menuitem, 3);
 
     JMenuItem popup_cancel_menuitem = new JMenuItem();
     popup_cancel_menuitem.setText(tm.getText("cancel"));
-    popup_cancel_menuitem.addActionListener(evt -> board_panel.board_handling.cancel_state());
-    popup_cancel_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
+    popup_cancel_menuitem.addActionListener(_ -> board_panel.board_handling.cancel_state());
+    popup_cancel_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
 
     this.add(popup_cancel_menuitem, 4);
   }

@@ -68,7 +68,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     rules_clearance_layer_combo_box = new ComboBoxLayer(board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
     north_panel.add(this.rules_clearance_layer_combo_box);
     rules_clearance_layer_combo_box.addActionListener(new ComboBoxListener());
-    rules_clearance_layer_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_layer_combo_box", rules_clearance_layer_combo_box
+    rules_clearance_layer_combo_box.addActionListener(_ -> FRAnalytics.buttonClicked("rules_clearance_layer_combo_box", rules_clearance_layer_combo_box
         .getSelectedItem()
         .toString()));
 
@@ -90,13 +90,13 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     final JButton rules_clearance_add_class_button = new JButton(tm.getText("add_class"));
     rules_clearance_add_class_button.setToolTipText(tm.getText("add_class_tooltip"));
     rules_clearance_add_class_button.addActionListener(new AddClassListener());
-    rules_clearance_add_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_add_class_button", rules_clearance_add_class_button.getText()));
+    rules_clearance_add_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_clearance_add_class_button", rules_clearance_add_class_button.getText()));
     south_panel.add(rules_clearance_add_class_button, BorderLayout.WEST);
 
     final JButton rules_clearance_prune_button = new JButton(tm.getText("prune"));
     rules_clearance_prune_button.setToolTipText(tm.getText("prune_tooltip"));
     rules_clearance_prune_button.addActionListener(new PruneListener());
-    rules_clearance_prune_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_clearance_prune_button", rules_clearance_prune_button.getText()));
+    rules_clearance_prune_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_clearance_prune_button", rules_clearance_prune_button.getText()));
     south_panel.add(rules_clearance_prune_button, BorderLayout.EAST);
 
     main_panel.add(south_panel, BorderLayout.SOUTH);
@@ -395,7 +395,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
         try
         {
           number_value = Float.parseFloat((String) p_value);
-        } catch (Exception e)
+        } catch (Exception _)
         {
           return;
         }

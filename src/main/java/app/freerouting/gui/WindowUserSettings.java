@@ -78,7 +78,7 @@ public class WindowUserSettings extends WindowBase
     gbc.gridwidth = 2;
     JCheckBox telemetryCheckbox = new JCheckBox(tm.getText("allow_telemetry"));
     telemetryCheckbox.setSelected(globalSettings.userProfileSettings.isTelemetryAllowed);
-    telemetryCheckbox.addItemListener(e -> globalSettings.userProfileSettings.isTelemetryAllowed = telemetryCheckbox.isSelected());
+    telemetryCheckbox.addItemListener(_ -> globalSettings.userProfileSettings.isTelemetryAllowed = telemetryCheckbox.isSelected());
     profileDialog.add(telemetryCheckbox, gbc);
 
     // Contacting
@@ -87,7 +87,7 @@ public class WindowUserSettings extends WindowBase
     gbc.gridwidth = 2;
     JCheckBox allowContactCheckbox = new JCheckBox(tm.getText("allow_contact"));
     allowContactCheckbox.setSelected(globalSettings.userProfileSettings.isContactAllowed);
-    allowContactCheckbox.addItemListener(e -> globalSettings.userProfileSettings.isContactAllowed = allowContactCheckbox.isSelected());
+    allowContactCheckbox.addItemListener(_ -> globalSettings.userProfileSettings.isContactAllowed = allowContactCheckbox.isSelected());
     profileDialog.add(allowContactCheckbox, gbc);
 
     // Update button
@@ -116,7 +116,7 @@ public class WindowUserSettings extends WindowBase
         profileDialog.dispose();
       }
     });
-    updateButton.addActionListener(evt -> FRAnalytics.buttonClicked("update_button", GsonProvider.GSON.toJson(globalSettings)));
+    updateButton.addActionListener(_ -> FRAnalytics.buttonClicked("update_button", GsonProvider.GSON.toJson(globalSettings)));
     profileDialog.add(updateButton, gbc);
 
     // Enable the Update button if email or checkboxes change
@@ -142,7 +142,7 @@ public class WindowUserSettings extends WindowBase
     };
     emailField.getDocument().addDocumentListener(documentListener);
 
-    ItemListener itemListener = e -> validateEmail(emailField, updateButton);
+    ItemListener itemListener = _ -> validateEmail(emailField, updateButton);
     telemetryCheckbox.addItemListener(itemListener);
     allowContactCheckbox.addItemListener(itemListener);
 
@@ -233,7 +233,7 @@ public class WindowUserSettings extends WindowBase
     JButton sponsorButton = new JButton(tm.getText("sponsor_button"));
     sponsorButton.setPreferredSize(new Dimension(150, sponsorButton.getPreferredSize().height));
     sponsorButton.setMaximumSize(new Dimension(150, sponsorButton.getPreferredSize().height));
-    sponsorButton.addActionListener(e ->
+    sponsorButton.addActionListener(_ ->
     {
       try
       {

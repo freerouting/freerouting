@@ -22,15 +22,15 @@ class PopupMenuSelectedItems extends PopupMenuDisplay
 
     JMenuItem popup_copy_menuitem = new JMenuItem();
     popup_copy_menuitem.setText(tm.getText("copy"));
-    popup_copy_menuitem.addActionListener(evt -> board_panel.board_handling.copy_selected_items(board_panel.right_button_click_location));
-    popup_copy_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_copy_menuitem", popup_copy_menuitem.getText()));
+    popup_copy_menuitem.addActionListener(_ -> board_panel.board_handling.copy_selected_items(board_panel.right_button_click_location));
+    popup_copy_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_copy_menuitem", popup_copy_menuitem.getText()));
 
     this.add(popup_copy_menuitem);
 
     JMenuItem popup_move_menuitem = new JMenuItem();
     popup_move_menuitem.setText(tm.getText("move"));
-    popup_move_menuitem.addActionListener(evt -> board_panel.board_handling.move_selected_items(board_panel.right_button_click_location));
-    popup_move_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_move_menuitem", popup_move_menuitem.getText()));
+    popup_move_menuitem.addActionListener(_ -> board_panel.board_handling.move_selected_items(board_panel.right_button_click_location));
+    popup_move_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_move_menuitem", popup_move_menuitem.getText()));
 
     this.add(popup_move_menuitem, 0);
   }

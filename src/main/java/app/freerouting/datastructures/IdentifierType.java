@@ -74,7 +74,7 @@ public class IdentifierType
         p_name = quote(p_name);
       }
       p_file.write(p_name);
-    } catch (IOException e)
+    } catch (IOException _)
     {
       FRLogger.warn("IdentifierType.write: unable to write to file");
     }

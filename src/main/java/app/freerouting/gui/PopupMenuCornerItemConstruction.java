@@ -28,22 +28,22 @@ class PopupMenuCornerItemConstruction extends JPopupMenu
         // Same action as if the left button is clicked with
         // the current mouse coordinates in this situation
         // because the left button is a shortcut for this action.
-        evt -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));
-    popup_add_corner_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_add_corner_menuitem", popup_add_corner_menuitem.getText()));
+        _ -> board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location));
+    popup_add_corner_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_add_corner_menuitem", popup_add_corner_menuitem.getText()));
 
     this.add(popup_add_corner_menuitem);
 
     JMenuItem popup_close_menuitem = new JMenuItem();
     popup_close_menuitem.setText(tm.getText("close"));
-    popup_close_menuitem.addActionListener(evt -> board_panel.board_handling.return_from_state());
-    popup_close_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_close_menuitem", popup_close_menuitem.getText()));
+    popup_close_menuitem.addActionListener(_ -> board_panel.board_handling.return_from_state());
+    popup_close_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_close_menuitem", popup_close_menuitem.getText()));
 
     this.add(popup_close_menuitem);
 
     JMenuItem popup_cancel_menuitem = new JMenuItem();
     popup_cancel_menuitem.setText(tm.getText("cancel"));
-    popup_cancel_menuitem.addActionListener(evt -> board_panel.board_handling.cancel_state());
-    popup_cancel_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
+    popup_cancel_menuitem.addActionListener(_ -> board_panel.board_handling.cancel_state());
+    popup_cancel_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("popup_cancel_menuitem", popup_cancel_menuitem.getText()));
 
     this.add(popup_cancel_menuitem);
   }

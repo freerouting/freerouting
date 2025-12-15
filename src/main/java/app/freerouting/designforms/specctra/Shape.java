@@ -199,7 +199,7 @@ public abstract class Shape
     try
     {
       next_token = p_scanner.next_token();
-    } catch (IOException e)
+    } catch (IOException _)
     {
       FRLogger.warn("Shape.read_area_scope: IO error scanning file at '" + p_scanner.get_scope_identifier() + "'");
       return null;

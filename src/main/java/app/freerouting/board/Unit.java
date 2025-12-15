@@ -33,7 +33,7 @@ public enum Unit implements Serializable
     try
     {
       return Unit.valueOf(p_string.toUpperCase());
-    } catch (IllegalArgumentException e)
+    } catch (IllegalArgumentException _)
     {
       return null;
     }

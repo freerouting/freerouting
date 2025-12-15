@@ -87,13 +87,13 @@ public class ColorManager extends BoardSavableSubWindow
 
     // Set up the dialog that the color_editor_button brings up.
     final JColorChooser colorChooser = new JColorChooser();
-    ActionListener okListener = e -> colorEditor.currentColor = colorChooser.getColor();
+    ActionListener okListener = _ -> colorEditor.currentColor = colorChooser.getColor();
 
     TextManager tm = new TextManager(ColorManager.class, p_locale);
     final JDialog dialog = JColorChooser.createDialog(color_editor_button, tm.getText("pick_a_color"), true, colorChooser, okListener, null);
 
     // Here's the code that brings up the dialog.
-    color_editor_button.addActionListener(e ->
+    color_editor_button.addActionListener(_ ->
     {
       color_editor_button.setBackground(colorEditor.currentColor);
       colorChooser.setColor(colorEditor.currentColor);
@@ -102,7 +102,7 @@ public class ColorManager extends BoardSavableSubWindow
       // dialog.setLocationRelativeTo(color_editor_button);
       dialog.setVisible(true);
     });
-    color_editor_button.addActionListener(evt -> FRAnalytics.buttonClicked("color_editor_button", color_editor_button.getText()));
+    color_editor_button.addActionListener(_ -> FRAnalytics.buttonClicked("color_editor_button", color_editor_button.getText()));
   }
 
   /**
@@ -171,7 +171,7 @@ public class ColorManager extends BoardSavableSubWindow
       setClickCountToStart(1); // This is usually 1 or 2.
 
       // Must do this so that editing stops when appropriate.
-      b.addActionListener(e -> fireEditingStopped());
+      b.addActionListener(_ -> fireEditingStopped());
     }
 
     @Override

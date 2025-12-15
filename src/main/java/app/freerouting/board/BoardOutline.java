@@ -287,7 +287,7 @@ public class BoardOutline extends Item implements Serializable
     try
     {
       p_stream.writeObject(this);
-    } catch (IOException e)
+    } catch (IOException _)
     {
       return false;
     }

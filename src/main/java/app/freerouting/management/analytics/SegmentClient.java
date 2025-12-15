@@ -70,7 +70,7 @@ public class SegmentClient implements AnalyticsClient
           }
           // return response.toString();
         }
-      } catch (Exception e)
+      } catch (Exception _)
       {
         //FRLogger.error("Exception in SegmentClient.send_payload_async: " + e.getMessage(), e);
       }

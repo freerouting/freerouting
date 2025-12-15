@@ -397,7 +397,7 @@ class ActivityReplayFileScanner
     try
     {
       message = ZZ_ERROR_MSG[errorCode];
-    } catch (ArrayIndexOutOfBoundsException e)
+    } catch (ArrayIndexOutOfBoundsException _)
     {
       message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR];
     }

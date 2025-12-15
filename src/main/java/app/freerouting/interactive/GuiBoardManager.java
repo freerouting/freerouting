@@ -1159,7 +1159,7 @@ public class GuiBoardManager extends HeadlessBoardManager
       p_object_stream.writeObject(graphics_context);
 
       originalBoardChecksum = calculateCrc32();
-    } catch (Exception e)
+    } catch (Exception _)
     {
       screen_messages.set_status_message(tm.getText("save_error"));
       result = false;

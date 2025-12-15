@@ -36,13 +36,13 @@ public class WindowNets extends WindowObjectListWithFilter
     curr_button_panel.add(rules_nets_assign_class_button);
     rules_nets_assign_class_button.setToolTipText(tm.getText("assign_class_tooltip"));
     rules_nets_assign_class_button.addActionListener(new AssignClassListener());
-    rules_nets_assign_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_nets_assign_class_button", rules_nets_assign_class_button.getText()));
+    rules_nets_assign_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_nets_assign_class_button", rules_nets_assign_class_button.getText()));
 
     final JButton rules_nets_filter_incompletes_button = new JButton(tm.getText("filter_incompletes"));
     curr_button_panel.add(rules_nets_filter_incompletes_button);
     rules_nets_filter_incompletes_button.setToolTipText(tm.getText("filter_incompletes_tooltip"));
     rules_nets_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
-    rules_nets_filter_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_nets_filter_incompletes_button", rules_nets_filter_incompletes_button.getText()));
+    rules_nets_filter_incompletes_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_nets_filter_incompletes_button", rules_nets_filter_incompletes_button.getText()));
   }
 
   /**

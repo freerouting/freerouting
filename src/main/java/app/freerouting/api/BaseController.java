@@ -32,7 +32,7 @@ public class BaseController
       try
       {
         userId = UUID.fromString(userIdString);
-      } catch (IllegalArgumentException e)
+      } catch (IllegalArgumentException _)
       {
         // We couldn't parse the userId, so we fall back to e-mail address
       }

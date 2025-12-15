@@ -98,7 +98,7 @@ public class BigQueryClient implements AnalyticsClient
           // Handle errors
           response
               .getInsertErrors()
-              .forEach((index, errors) ->
+              .forEach((_, errors) ->
               {
                 // Log or handle the errors
                 FRLogger.error("Error in BigQueryClient.send_payload_async: (" + tableName + ")" + errors, null);

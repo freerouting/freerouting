@@ -53,12 +53,12 @@ public class WindowEditVias extends BoardSavableSubWindow
     final JButton rules_vias_vias_edit_add_button = new JButton(tm.getText("add"));
     rules_vias_vias_edit_add_button.setToolTipText(tm.getText("add_tooltip"));
     rules_vias_vias_edit_add_button.addActionListener(new AddViaListener());
-    rules_vias_vias_edit_add_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_add_button", rules_vias_vias_edit_add_button.getText()));
+    rules_vias_vias_edit_add_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_vias_edit_add_button", rules_vias_vias_edit_add_button.getText()));
     via_info_button_panel.add(rules_vias_vias_edit_add_button);
     final JButton rules_vias_vias_edit_remove_button = new JButton(tm.getText("remove"));
     rules_vias_vias_edit_remove_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_vias_vias_edit_remove_button.addActionListener(new RemoveViaListener());
-    rules_vias_vias_edit_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_vias_edit_remove_button", rules_vias_vias_edit_remove_button.getText()));
+    rules_vias_vias_edit_remove_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_vias_edit_remove_button", rules_vias_vias_edit_remove_button.getText()));
     via_info_button_panel.add(rules_vias_vias_edit_remove_button);
 
     this.add(main_panel);

@@ -11,7 +11,7 @@ class LogEntriesTest {
         LogEntries logEntries = new LogEntries();
         AtomicInteger listenerCallCount = new AtomicInteger(0);
 
-        LogEntries.LogEntryAddedListener listener = logEntry -> listenerCallCount.incrementAndGet();
+        LogEntries.LogEntryAddedListener listener = _ -> listenerCallCount.incrementAndGet();
 
         // Add listener and verify it's called
         logEntries.addLogEntryAddedListener(listener);

@@ -91,11 +91,11 @@ class BoardToolbar extends JPanel
     // Add "Settings" button to the toolbar
     settings_button = new JButton();
     tm.setText(settings_button, "settings_button");
-    settings_button.addActionListener(evt ->
+    settings_button.addActionListener(_ ->
     {
       board_frame.autoroute_parameter_window.setVisible(true);
     });
-    settings_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_button", settings_button.getText()));
+    settings_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_button", settings_button.getText()));
     middle_toolbar.add(settings_button);
 
     // Add "Autoroute" button to the toolbar
@@ -109,7 +109,7 @@ class BoardToolbar extends JPanel
     // Set padding (top, left, bottom, right)
     toolbar_autoroute_button.setBorder(BorderFactory.createCompoundBorder(toolbar_autoroute_button.getBorder(), BorderFactory.createEmptyBorder(2, 5, 2, 5)));
     toolbar_autoroute_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    toolbar_autoroute_button.addActionListener(evt ->
+    toolbar_autoroute_button.addActionListener(_ ->
     {
       var routingJobs = RoutingJobScheduler
           .getInstance()
@@ -135,24 +135,24 @@ class BoardToolbar extends JPanel
         thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
       }
     });
-    toolbar_autoroute_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_autoroute_button", GsonProvider.GSON.toJson(globalSettings)));
+    toolbar_autoroute_button.addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_autoroute_button", GsonProvider.GSON.toJson(globalSettings)));
     middle_toolbar.add(toolbar_autoroute_button);
 
     // Add "Cancel" button to the toolbar
     cancel_button = new JButton();
     tm.setText(cancel_button, "cancel_button");
-    cancel_button.addActionListener(evt ->
+    cancel_button.addActionListener(_ ->
     {
       board_frame.board_panel.board_handling.stop_autorouter_and_route_optimizer();
     });
-    cancel_button.addActionListener(evt -> FRAnalytics.buttonClicked("cancel_button", cancel_button.getText()));
+    cancel_button.addActionListener(_ -> FRAnalytics.buttonClicked("cancel_button", cancel_button.getText()));
     cancel_button.setEnabled(false);
     middle_toolbar.add(cancel_button);
 
     // Add "Delete All Tracks and Vias" button to the toolbar
     delete_all_tracks_button = new JButton();
     tm.setText(delete_all_tracks_button, "delete_all_tracks_button");
-    delete_all_tracks_button.addActionListener(evt ->
+    delete_all_tracks_button.addActionListener(_ ->
     {
       RoutingBoard board = board_frame.board_panel.board_handling.get_routing_board();
       // delete all tracks and vias
@@ -173,7 +173,7 @@ class BoardToolbar extends JPanel
       BoardStatistics boardStatistics = board.get_statistics();
       board_frame.screen_messages.set_board_score(boardStatistics.getNormalizedScore(globalSettings.routerSettings.scoring), boardStatistics.connections.incompleteCount, boardStatistics.clearanceViolations.totalCount);
     });
-    delete_all_tracks_button.addActionListener(evt -> FRAnalytics.buttonClicked("delete_all_tracks_button", delete_all_tracks_button.getText()));
+    delete_all_tracks_button.addActionListener(_ -> FRAnalytics.buttonClicked("delete_all_tracks_button", delete_all_tracks_button.getText()));
     middle_toolbar.add(delete_all_tracks_button);
 
     final JLabel separator_2 = new JLabel();
@@ -184,20 +184,20 @@ class BoardToolbar extends JPanel
 
     toolbar_undo_button = new JButton();
     tm.setText(toolbar_undo_button, "undo_button");
-    toolbar_undo_button.addActionListener(evt ->
+    toolbar_undo_button.addActionListener(_ ->
     {
       board_frame.board_panel.board_handling.cancel_state();
       board_frame.board_panel.board_handling.undo();
       board_frame.refresh_windows();
     });
-    toolbar_undo_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_undo_button", toolbar_undo_button.getText()));
+    toolbar_undo_button.addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_undo_button", toolbar_undo_button.getText()));
 
     middle_toolbar.add(toolbar_undo_button);
 
     toolbar_redo_button = new JButton();
     tm.setText(toolbar_redo_button, "redo_button");
-    toolbar_redo_button.addActionListener(evt -> board_frame.board_panel.board_handling.redo());
-    toolbar_redo_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_redo_button", toolbar_redo_button.getText()));
+    toolbar_redo_button.addActionListener(_ -> board_frame.board_panel.board_handling.redo());
+    toolbar_redo_button.addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_redo_button", toolbar_redo_button.getText()));
 
     middle_toolbar.add(toolbar_redo_button);
 
@@ -208,15 +208,15 @@ class BoardToolbar extends JPanel
 
     toolbar_incompletes_button = new JButton();
     tm.setText(toolbar_incompletes_button, "incompletes_button");
-    toolbar_incompletes_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_ratsnest());
-    toolbar_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_incompletes_button", toolbar_incompletes_button.getText()));
+    toolbar_incompletes_button.addActionListener(_ -> board_frame.board_panel.board_handling.toggle_ratsnest());
+    toolbar_incompletes_button.addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_incompletes_button", toolbar_incompletes_button.getText()));
 
     middle_toolbar.add(toolbar_incompletes_button);
 
     toolbar_violation_button = new JButton();
     tm.setText(toolbar_violation_button, "violations_button");
-    toolbar_violation_button.addActionListener(evt -> board_frame.board_panel.board_handling.toggle_clearance_violations());
-    toolbar_violation_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_violation_button", toolbar_violation_button.getText()));
+    toolbar_violation_button.addActionListener(_ -> board_frame.board_panel.board_handling.toggle_clearance_violations());
+    toolbar_violation_button.addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_violation_button", toolbar_violation_button.getText()));
 
     middle_toolbar.add(toolbar_violation_button);
 
@@ -228,14 +228,14 @@ class BoardToolbar extends JPanel
 
     toolbar_display_region_button = new JButton();
     tm.setText(toolbar_display_region_button, "display_region_button");
-    toolbar_display_region_button.addActionListener(evt -> board_frame.board_panel.board_handling.zoom_region());
-    toolbar_display_region_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_region_button", toolbar_display_region_button.getText()));
+    toolbar_display_region_button.addActionListener(_ -> board_frame.board_panel.board_handling.zoom_region());
+    toolbar_display_region_button.addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_display_region_button", toolbar_display_region_button.getText()));
     middle_toolbar.add(toolbar_display_region_button);
 
     toolbar_display_all_button = new JButton();
     tm.setText(toolbar_display_all_button, "display_all_button");
-    toolbar_display_all_button.addActionListener(evt -> board_frame.zoom_all());
-    toolbar_display_all_button.addActionListener(evt -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
+    toolbar_display_all_button.addActionListener(_ -> board_frame.zoom_all());
+    toolbar_display_all_button.addActionListener(_ -> FRAnalytics.buttonClicked("toolbar_display_all_button", toolbar_display_all_button.getText()));
     middle_toolbar.add(toolbar_display_all_button);
 
     this.add(middle_toolbar, BorderLayout.CENTER);

@@ -259,7 +259,7 @@ rewrite {
     //checkstyleConfigFile = file("google_checks.xml")
     //activeRecipe("org.openrewrite.java.format.AutoFormat")
     //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava17")
-    activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
-    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
+    //activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
+    activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
     setExportDatatables(true)
 }

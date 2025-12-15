@@ -98,7 +98,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
     try
     {
       p_object_stream.writeObject(filter_string.getText());
-    } catch (IOException e)
+    } catch (IOException _)
     {
       FRLogger.warn("WindowObjectListWithFilter.save: save failed");
     }
@@ -112,7 +112,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList
     {
       String curr_string = (String) p_object_stream.readObject();
       this.filter_string.setText(curr_string);
-    } catch (Exception e)
+    } catch (Exception _)
     {
       FRLogger.warn("WindowObjectListWithFilter.read: read failed");
     }

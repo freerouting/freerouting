@@ -13,7 +13,7 @@ public class RandomSeedTest extends TestBasedOnAnIssue
         // Test with a fixed seed
         long fixedSeed = 12345L;
         String firstHash = null;
-        System.out.println("Testing with fixed seed: " + fixedSeed);
+      IO.println("Testing with fixed seed: " + fixedSeed);
         for (int i = 0; i < 3; i++)
         {
             var job = GetRoutingJob("Issue026-J2_reference.dsn", fixedSeed);
@@ -32,7 +32,7 @@ public class RandomSeedTest extends TestBasedOnAnIssue
         // Test without a seed
         String previousHash = null;
         boolean foundDifference = false;
-        System.out.println("Testing without seed.");
+      IO.println("Testing without seed.");
         // Increase loop iterations to reduce chance of flaky pass
         for (int i = 0; i < 5; i++)
         {

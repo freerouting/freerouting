@@ -960,7 +960,7 @@ public class PolylineTrace extends Trace implements Serializable
     try
     {
       p_stream.writeObject(this);
-    } catch (IOException e)
+    } catch (IOException _)
     {
       return false;
     }

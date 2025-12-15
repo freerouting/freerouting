@@ -54,7 +54,7 @@ public class BoardFileDetails implements Serializable
     try (FileInputStream fis = new FileInputStream(file))
     {
       this.setData(fis.readAllBytes());
-    } catch (IOException e)
+    } catch (IOException _)
     {
       // Ignore the exception and continue with the default values
     }

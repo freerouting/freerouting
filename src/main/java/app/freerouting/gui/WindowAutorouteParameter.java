@@ -108,7 +108,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
       // set the active checkbox
       settings_autorouter_layer_active_arr[i] = new JCheckBox();
       settings_autorouter_layer_active_arr[i].addActionListener(new LayerActiveListener(i));
-      settings_autorouter_layer_active_arr[i].addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
+      settings_autorouter_layer_active_arr[i].addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_layer_active_arr", null));
       board_handling.settings.autoroute_settings.set_layer_active(i, curr_layer.is_signal);
       settings_autorouter_layer_active_arr[i].setEnabled(curr_layer.is_signal);
       gridbag.setConstraints(settings_autorouter_layer_active_arr[i], gridbag_constraints);
@@ -142,7 +142,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
 
     settings_autorouter_vias_allowed = new JCheckBox();
     settings_autorouter_vias_allowed.addActionListener(new ViasAllowedListener());
-    settings_autorouter_vias_allowed.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_vias_allowed", settings_autorouter_vias_allowed.getText()));
+    settings_autorouter_vias_allowed.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_vias_allowed", settings_autorouter_vias_allowed.getText()));
 
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(settings_autorouter_vias_allowed, gridbag_constraints);
@@ -167,11 +167,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     this.settings_autorouter_postroute_pass_button.setToolTipText(tm.getText("postroute_tooltip"));
 
     settings_autorouter_fanout_pass_button.addActionListener(new FanoutListener());
-    settings_autorouter_fanout_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_fanout_pass_button", settings_autorouter_fanout_pass_button.getText()));
+    settings_autorouter_fanout_pass_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_fanout_pass_button", settings_autorouter_fanout_pass_button.getText()));
     settings_autorouter_autoroute_pass_button.addActionListener(new AutorouteListener());
-    settings_autorouter_autoroute_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button", settings_autorouter_autoroute_pass_button.getText()));
+    settings_autorouter_autoroute_pass_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_autoroute_pass_button", settings_autorouter_autoroute_pass_button.getText()));
     settings_autorouter_postroute_pass_button.addActionListener(new PostrouteListener());
-    settings_autorouter_postroute_pass_button.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_postroute_pass_button", settings_autorouter_postroute_pass_button.getText()));
+    settings_autorouter_postroute_pass_button.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_postroute_pass_button", settings_autorouter_postroute_pass_button.getText()));
 
     settings_autorouter_fanout_pass_button.setSelected(false);
     settings_autorouter_autoroute_pass_button.setSelected(true);
@@ -260,7 +260,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_fast);
     settings_autorouter_detailed_speed_combo_box.addItem(this.speed_slow);
     settings_autorouter_detailed_speed_combo_box.addActionListener(new WindowAutorouteParameter.SpeedListener());
-    settings_autorouter_detailed_speed_combo_box.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box
+    settings_autorouter_detailed_speed_combo_box.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_detailed_speed_combo_box", settings_autorouter_detailed_speed_combo_box
         .getSelectedItem()
         .toString()));
 

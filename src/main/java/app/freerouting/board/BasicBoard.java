@@ -854,7 +854,7 @@ public class BasicBoard implements Serializable
         try
         {
           curr_item = (Item) item_list.read_object(it);
-        } catch (ConcurrentModificationException e)
+        } catch (ConcurrentModificationException _)
         {
           something_changed = true;
           break;
@@ -1161,7 +1161,7 @@ public class BasicBoard implements Serializable
           {
             curr_item.draw(p_graphics, p_graphics_context);
           }
-        } catch (ConcurrentModificationException e)
+        } catch (ConcurrentModificationException _)
         {
           // may happen when window are changed interactively while running a logfile
           return;

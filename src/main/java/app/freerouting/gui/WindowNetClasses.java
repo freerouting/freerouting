@@ -68,38 +68,38 @@ public class WindowNetClasses extends BoardSavableSubWindow
     final JButton rules_netclasses_add_class_button = new JButton(tm.getText("add"));
     rules_netclasses_add_class_button.setToolTipText(tm.getText("add_tooltip"));
     rules_netclasses_add_class_button.addActionListener(new AddNetClassListener());
-    rules_netclasses_add_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_add_class_button", rules_netclasses_add_class_button.getText()));
+    rules_netclasses_add_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_add_class_button", rules_netclasses_add_class_button.getText()));
     net_class_button_panel.add(rules_netclasses_add_class_button);
 
     final JButton rules_netclasses_remove_class_button = new JButton(tm.getText("remove"));
     rules_netclasses_remove_class_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_netclasses_remove_class_button.addActionListener(new RemoveNetClassListener());
-    rules_netclasses_remove_class_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_remove_class_button", rules_netclasses_remove_class_button.getText()));
+    rules_netclasses_remove_class_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_remove_class_button", rules_netclasses_remove_class_button.getText()));
     net_class_button_panel.add(rules_netclasses_remove_class_button);
 
     final JButton rules_netclasses_assign_button = new JButton(tm.getText("assign"));
     rules_netclasses_assign_button.setToolTipText(tm.getText("assign_tooltip"));
     rules_netclasses_assign_button.addActionListener(new AssignClassesListener());
-    rules_netclasses_assign_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_assign_button", rules_netclasses_assign_button.getText()));
+    rules_netclasses_assign_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_assign_button", rules_netclasses_assign_button.getText()));
     net_class_button_panel.add(rules_netclasses_assign_button);
 
     final JButton rules_netclasses_select_button = new JButton(tm.getText("select"));
     rules_netclasses_select_button.setToolTipText(tm.getText("select_tooltip"));
     rules_netclasses_select_button.addActionListener(new SelectClassesListener());
-    rules_netclasses_select_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_select_button", rules_netclasses_select_button.getText()));
+    rules_netclasses_select_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_select_button", rules_netclasses_select_button.getText()));
     net_class_button_panel.add(rules_netclasses_select_button);
 
     final JButton rules_netclasses_contained_nets_button = new JButton(tm.getText("show_nets"));
     net_class_button_panel.add(rules_netclasses_contained_nets_button);
     rules_netclasses_contained_nets_button.setToolTipText(tm.getText("show_nets_tooltip"));
     rules_netclasses_contained_nets_button.addActionListener(new ContainedNetsListener());
-    rules_netclasses_contained_nets_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_contained_nets_button", rules_netclasses_contained_nets_button.getText()));
+    rules_netclasses_contained_nets_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_contained_nets_button", rules_netclasses_contained_nets_button.getText()));
 
     final JButton rules_netclasses_filter_incompletes_button = new JButton(tm.getText("filter_incompletes"));
     net_class_button_panel.add(rules_netclasses_filter_incompletes_button);
     rules_netclasses_filter_incompletes_button.setToolTipText(tm.getText("filter_incompletes_tooltip"));
     rules_netclasses_filter_incompletes_button.addActionListener(new FilterIncompletesListener());
-    rules_netclasses_filter_incompletes_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_netclasses_filter_incompletes_button", rules_netclasses_filter_incompletes_button.getText()));
+    rules_netclasses_filter_incompletes_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_netclasses_filter_incompletes_button", rules_netclasses_filter_incompletes_button.getText()));
 
     this.add(main_panel);
     this.pack();
@@ -677,7 +677,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
           try
           {
             curr_value = Float.parseFloat(string);
-          } catch (Exception e)
+          } catch (Exception _)
           {
             curr_value = 0f;
           }
@@ -707,7 +707,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
           try
           {
             curr_value = Float.parseFloat(string);
-          } catch (Exception e)
+          } catch (Exception _)
           {
             curr_value = 0f;
           }
@@ -763,7 +763,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
           try
           {
             curr_value = Float.parseFloat(string);
-          } catch (Exception e)
+          } catch (Exception _)
           {
             curr_value = 0f;
           }

@@ -46,7 +46,7 @@ public class Freerouting
    *
    * @param args
    */
-  public static void main(String[] args)
+  void main(String[] args)
   {
     FRLogger.traceEntry("MainApplication.main()");
 
@@ -133,7 +133,7 @@ public class Freerouting
     {
       globalSettings = GlobalSettings.load();
       FRLogger.info("Settings were loaded from freerouting.json");
-    } catch (Exception e)
+    } catch (Exception _)
     {
       // we don't want to stop if the configuration file doesn't exist
     }
@@ -146,7 +146,7 @@ public class Freerouting
       try
       {
         GlobalSettings.saveAsJson(globalSettings);
-      } catch (Exception e)
+      } catch (Exception _)
       {
         // it's ok if we can't save the configuration file
       }
@@ -211,7 +211,7 @@ public class Freerouting
         // Get screen DPI
         dpi = toolkit.getScreenResolution();
         FRLogger.debug("Screen: " + width + "x" + height + ", " + dpi + " DPI");
-      } catch (Exception e)
+      } catch (Exception _)
       {
         FRLogger.warn("Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.");
         globalSettings.guiSettings.isEnabled = false;
@@ -241,7 +241,7 @@ public class Freerouting
     try
     {
       Thread.sleep(1000);
-    } catch (Exception ignored)
+    } catch (Exception _)
     {
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
@@ -257,7 +257,7 @@ public class Freerouting
     // check if the user wants to see the help only
     if (globalSettings.show_help_option)
     {
-      System.out.print(tm.getText("command_line_help"));
+      IO.print(tm.getText("command_line_help"));
       System.exit(0);
     }
 
@@ -308,7 +308,7 @@ public class Freerouting
       try
       {
         Thread.sleep(500);
-      } catch (InterruptedException e)
+      } catch (InterruptedException _)
       {
         break;
       }
@@ -367,7 +367,7 @@ public class Freerouting
       try
       {
         Thread.sleep(500);
-      } catch (InterruptedException e)
+      } catch (InterruptedException _)
       {
         routingJob.state = RoutingJobState.CANCELLED;
         break;
@@ -375,7 +375,7 @@ public class Freerouting
     }
 
     // Print the serialized routingJob statistics to the console
-    System.out.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
+    IO.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
 
     // Save the output file
     if (routingJob.state == RoutingJobState.COMPLETED)
@@ -454,7 +454,7 @@ public class Freerouting
     else
     {
       // Print to console
-      System.out.println(drcReportJson);
+      IO.println(drcReportJson);
     }
   }
 

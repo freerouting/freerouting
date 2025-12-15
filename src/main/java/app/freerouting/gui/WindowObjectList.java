@@ -63,14 +63,14 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     info_components_show_button.setToolTipText(tm.getText("info_tooltip"));
     ShowListener show_listener = new ShowListener();
     info_components_show_button.addActionListener(show_listener);
-    info_components_show_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
+    info_components_show_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_show_button", info_components_show_button.getText()));
     north_button_panel.add(info_components_show_button);
 
     JButton info_components_instance_button = new JButton(tm.getText("select"));
     info_components_instance_button.setToolTipText(tm.getText("select_tooltip"));
     SelectListener instance_listener = new SelectListener();
     info_components_instance_button.addActionListener(instance_listener);
-    info_components_instance_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
+    info_components_instance_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_instance_button", info_components_instance_button.getText()));
     north_button_panel.add(info_components_instance_button);
 
     JPanel south_button_panel = new JPanel();
@@ -79,14 +79,14 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     JButton info_components_invert_button = new JButton(tm.getText("invert"));
     info_components_invert_button.setToolTipText(tm.getText("invert_tooltip"));
     info_components_invert_button.addActionListener(new InvertListener());
-    info_components_invert_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
+    info_components_invert_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_invert_button", info_components_invert_button.getText()));
     south_button_panel.add(info_components_invert_button);
 
     JButton info_components_recalculate_button = new JButton(tm.getText("recalculate"));
     info_components_recalculate_button.setToolTipText(tm.getText("recalculate_tooltip"));
     RecalculateListener recalculate_listener = new RecalculateListener();
     info_components_recalculate_button.addActionListener(recalculate_listener);
-    info_components_recalculate_button.addActionListener(evt -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
+    info_components_recalculate_button.addActionListener(_ -> FRAnalytics.buttonClicked("info_components_recalculate_button", info_components_recalculate_button.getText()));
     south_button_panel.add(info_components_recalculate_button);
 
     this.list_empty_message = new JLabel(tm.getText("list_empty"));

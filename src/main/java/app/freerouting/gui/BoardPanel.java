@@ -54,7 +54,7 @@ public class BoardPanel extends JPanel
     {
       // used to be able to change the location of the mouse pointer
       robot = new Robot();
-    } catch (AWTException e)
+    } catch (AWTException _)
     {
       FRLogger.warn("unable to create robot");
     }

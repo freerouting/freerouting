@@ -55,7 +55,7 @@ public class BoardMenuBar extends JMenuBar
         showProfileDialog();
       }
     });
-    profileButton.addActionListener(evt -> FRAnalytics.buttonClicked("profile_button", profileButton.getText()));
+    profileButton.addActionListener(_ -> FRAnalytics.buttonClicked("profile_button", profileButton.getText()));
 
     // Add the Profile button to the right
     add(Box.createHorizontalGlue());

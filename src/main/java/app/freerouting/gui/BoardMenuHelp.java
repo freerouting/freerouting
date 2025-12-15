@@ -22,8 +22,8 @@ public class BoardMenuHelp extends JMenu
 
     JMenuItem help_about_menuitem = new JMenuItem();
     help_about_menuitem.setText(tm.getText("about"));
-    help_about_menuitem.addActionListener(evt -> board_frame.about_window.setVisible(true));
-    help_about_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("help_about_menuitem", help_about_menuitem.getText()));
+    help_about_menuitem.addActionListener(_ -> board_frame.about_window.setVisible(true));
+    help_about_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("help_about_menuitem", help_about_menuitem.getText()));
     this.add(help_about_menuitem);
   }
 }

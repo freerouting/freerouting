@@ -104,7 +104,7 @@ public class TextManager
       // parse the duration
       Duration duration = Duration.parse(durationString);
       return duration.getSeconds();
-    } catch (DateTimeParseException e)
+    } catch (DateTimeParseException _)
     {
       return null;
     }
@@ -261,13 +261,13 @@ public class TextManager
     try
     {
       defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", currentLocale);
-    } catch (Exception e)
+    } catch (Exception _)
     {
       FRLogger.warn("There was a problem loading the resource bundle 'app.freerouting.Common' of locale '" + currentLocale + "'");
       try
       {
         defaultMessages = ResourceBundle.getBundle("app.freerouting.Common", Locale.forLanguageTag("en-US"));
-      } catch (Exception ex)
+      } catch (Exception _)
       {
         defaultMessages = null;
         FRLogger.error("There was a problem loading the resource bundle 'app.freerouting.Common' of locale 'en-US'", null);
@@ -278,13 +278,13 @@ public class TextManager
     try
     {
       classMessages = ResourceBundle.getBundle(currentBaseName, currentLocale);
-    } catch (Exception e)
+    } catch (Exception _)
     {
       //FRLogger.warn("There was a problem loading the resource bundle '" + currentBaseName + "' of locale '" + currentLocale + "'");
       try
       {
         classMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en-US"));
-      } catch (Exception ex)
+      } catch (Exception _)
       {
         classMessages = null;
         //FRLogger.error("There was a problem loading the resource bundle '" + currentBaseName + "' of locale 'en-US'",null);
@@ -295,7 +295,7 @@ public class TextManager
     try
     {
       englishClassMessages = ResourceBundle.getBundle(currentBaseName, Locale.forLanguageTag("en"));
-    } catch (Exception e)
+    } catch (Exception _)
     {
       //FRLogger.warn("There was a problem loading the resource bundle '" + currentBaseName + "' of locale 'en'");
     }

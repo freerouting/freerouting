@@ -171,7 +171,7 @@ public class HeadlessBoardManager implements BoardManager
     try
     {
       inputStream.close();
-    } catch (IOException e)
+    } catch (IOException _)
     {
       read_result = DsnFile.ReadResult.ERROR;
     }

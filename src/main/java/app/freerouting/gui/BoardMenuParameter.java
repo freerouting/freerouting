@@ -33,29 +33,29 @@ public class BoardMenuParameter extends JMenu
 
     JMenuItem settings_selection_menuitem = new JMenuItem();
     settings_selection_menuitem.setText(parameter_menu.tm.getText("select"));
-    settings_selection_menuitem.addActionListener(evt -> parameter_menu.board_frame.select_parameter_window.setVisible(true));
-    settings_selection_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("settings_selection_menuitem", settings_selection_menuitem.getText()));
+    settings_selection_menuitem.addActionListener(_ -> parameter_menu.board_frame.select_parameter_window.setVisible(true));
+    settings_selection_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("settings_selection_menuitem", settings_selection_menuitem.getText()));
 
     parameter_menu.add(settings_selection_menuitem);
 
     JMenuItem settings_routing_menuitem = new JMenuItem();
     settings_routing_menuitem.setText(parameter_menu.tm.getText("route"));
-    settings_routing_menuitem.addActionListener(evt -> parameter_menu.board_frame.route_parameter_window.setVisible(true));
-    settings_routing_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("settings_routing_menuitem", settings_routing_menuitem.getText()));
+    settings_routing_menuitem.addActionListener(_ -> parameter_menu.board_frame.route_parameter_window.setVisible(true));
+    settings_routing_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_menuitem", settings_routing_menuitem.getText()));
 
     parameter_menu.add(settings_routing_menuitem);
 
     JMenuItem settings_autorouter_menuitem = new JMenuItem();
     settings_autorouter_menuitem.setText(parameter_menu.tm.getText("autoroute"));
-    settings_autorouter_menuitem.addActionListener(evt -> parameter_menu.board_frame.autoroute_parameter_window.setVisible(true));
-    settings_autorouter_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("settings_autorouter_menuitem", settings_autorouter_menuitem.getText()));
+    settings_autorouter_menuitem.addActionListener(_ -> parameter_menu.board_frame.autoroute_parameter_window.setVisible(true));
+    settings_autorouter_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("settings_autorouter_menuitem", settings_autorouter_menuitem.getText()));
 
     parameter_menu.add(settings_autorouter_menuitem);
 
     JMenuItem settings_controls_menuitem = new JMenuItem();
     settings_controls_menuitem.setText(parameter_menu.tm.getText("move"));
-    settings_controls_menuitem.addActionListener(evt -> parameter_menu.board_frame.move_parameter_window.setVisible(true));
-    settings_controls_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("settings_controls_menuitem", settings_controls_menuitem.getText()));
+    settings_controls_menuitem.addActionListener(_ -> parameter_menu.board_frame.move_parameter_window.setVisible(true));
+    settings_controls_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("settings_controls_menuitem", settings_controls_menuitem.getText()));
 
     parameter_menu.add(settings_controls_menuitem);
 

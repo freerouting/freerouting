@@ -74,7 +74,7 @@ public class InsertFoundConnectionAlgo
     try
     {
       p_board.normalize_traces(p_ctrl.net_no);
-    } catch (Exception e)
+    } catch (Exception _)
     {
       FRLogger.warn("The normalization of net '" + p_board.rules.nets.get(p_ctrl.net_no).name + "' failed.");
     }

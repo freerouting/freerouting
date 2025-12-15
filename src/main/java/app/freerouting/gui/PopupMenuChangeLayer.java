@@ -62,7 +62,7 @@ class PopupMenuChangeLayer extends JMenu
 
       message1 = tm.getText("layer_changed_to") + " ";
       layer_no = p_layer_no;
-      addActionListener(evt ->
+      addActionListener(_ ->
       {
         final BoardPanel board_panel = board_frame.board_panel;
         if (board_panel.board_handling.change_layer_action(layer_no))

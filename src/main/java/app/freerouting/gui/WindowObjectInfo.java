@@ -203,7 +203,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
     try
     {
       document.insertString(document.getLength(), p_string, document.getStyle(p_style));
-    } catch (BadLocationException e)
+    } catch (BadLocationException _)
     {
       FRLogger.warn("ObjectInfoWindow.append: unable to insert text into text pane.");
       return false;
@@ -336,7 +336,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
     object_info_button.setForeground(Color.blue);
 
     object_info_button.addActionListener(new InfoButtonListener(p_window_title, p_objects));
-    object_info_button.addActionListener(evt -> FRAnalytics.buttonClicked("object_info_button", object_info_button.getText()));
+    object_info_button.addActionListener(_ -> FRAnalytics.buttonClicked("object_info_button", object_info_button.getText()));
 
     // Add style for inserting the button  to the document.
     StyledDocument document = this.text_pane.getStyledDocument();
@@ -349,7 +349,7 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
     try
     {
       document.insertString(document.getLength(), p_button_name, button_style);
-    } catch (BadLocationException e)
+    } catch (BadLocationException _)
     {
       System.err.println("ObjectInfoWindow.append: unable to insert text into text pane.");
       return false;

@@ -72,7 +72,7 @@ public class WindowViaRule extends WindowBase
     gridbag.setConstraints(rules_vias_rules_edit_append_button, gridbag_constraints);
     rules_vias_rules_edit_append_button.setToolTipText(tm.getText("append_tooltip"));
     rules_vias_rules_edit_append_button.addActionListener(new AppendListener());
-    rules_vias_rules_edit_append_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_append_button", rules_vias_rules_edit_append_button.getText()));
+    rules_vias_rules_edit_append_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_append_button", rules_vias_rules_edit_append_button.getText()));
     button_panel.add(rules_vias_rules_edit_append_button);
 
     final JButton rules_vias_rules_edit_remove_button = new JButton(tm.getText("remove"));
@@ -80,7 +80,7 @@ public class WindowViaRule extends WindowBase
     gridbag.setConstraints(rules_vias_rules_edit_remove_button, gridbag_constraints);
     rules_vias_rules_edit_remove_button.setToolTipText(tm.getText("remove_tooltip"));
     rules_vias_rules_edit_remove_button.addActionListener(new DeleteListener());
-    rules_vias_rules_edit_remove_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_remove_button", rules_vias_rules_edit_remove_button.getText()));
+    rules_vias_rules_edit_remove_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_remove_button", rules_vias_rules_edit_remove_button.getText()));
     button_panel.add(rules_vias_rules_edit_remove_button);
 
     final JButton rules_vias_rules_edit_move_up_button = new JButton(tm.getText("move_up"));
@@ -88,7 +88,7 @@ public class WindowViaRule extends WindowBase
     gridbag.setConstraints(rules_vias_rules_edit_move_up_button, gridbag_constraints);
     rules_vias_rules_edit_move_up_button.setToolTipText(tm.getText("move_up_tooltip"));
     rules_vias_rules_edit_move_up_button.addActionListener(new MoveUpListener());
-    rules_vias_rules_edit_move_up_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_up_button", rules_vias_rules_edit_move_up_button.getText()));
+    rules_vias_rules_edit_move_up_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_up_button", rules_vias_rules_edit_move_up_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_up_button);
 
     final JButton rules_vias_rules_edit_move_down_button = new JButton(tm.getText("move_down"));
@@ -96,7 +96,7 @@ public class WindowViaRule extends WindowBase
     gridbag.setConstraints(rules_vias_rules_edit_move_down_button, gridbag_constraints);
     rules_vias_rules_edit_move_down_button.setToolTipText(tm.getText("move_down_tooltip"));
     rules_vias_rules_edit_move_down_button.addActionListener(new MoveDownListener());
-    rules_vias_rules_edit_move_down_button.addActionListener(evt -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_down_button", rules_vias_rules_edit_move_down_button.getText()));
+    rules_vias_rules_edit_move_down_button.addActionListener(_ -> FRAnalytics.buttonClicked("rules_vias_rules_edit_move_down_button", rules_vias_rules_edit_move_down_button.getText()));
     button_panel.add(rules_vias_rules_edit_move_down_button);
 
     this.add(main_panel);

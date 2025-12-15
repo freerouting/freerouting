@@ -97,7 +97,7 @@ public class WindowWelcome extends WindowBase
     open_board_button.setText(tm.getText("open_own_design"));
     open_board_button.setToolTipText(tm.getText("open_own_design_tooltip"));
     open_board_button.addActionListener(this::open_board_design_action);
-    open_board_button.addActionListener(evt -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
+    open_board_button.addActionListener(_ -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
 
     gridbag.setConstraints(open_board_button, gridbag_constraints);
     main_panel.add(open_board_button, gridbag_constraints);
@@ -301,8 +301,8 @@ public class WindowWelcome extends WindowBase
         final String AUTOSTART_MSG = tm.getText("auto_start_routing_message");
         JOptionPane auto_start_routing_dialog = new JOptionPane(AUTOSTART_MSG, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
 
-        startNowButton.addActionListener(event -> auto_start_routing_dialog.setValue(options[0]));
-        startNowButton.addActionListener(evt -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
+        startNowButton.addActionListener(_ -> auto_start_routing_dialog.setValue(options[0]));
+        startNowButton.addActionListener(_ -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
 
         final String AUTOSTART_TITLE = tm.getText("auto_start_routing_title");
 

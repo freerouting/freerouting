@@ -67,7 +67,7 @@ public abstract class InteractiveActionThread extends StoppableThread
         try
         {
           GlobalSettings.saveAsJson(globalSettings);
-        } catch (IOException e)
+        } catch (IOException _)
         {
           FRLogger.warn("InteractiveActionThread: unable to save global settings");
         }
@@ -231,7 +231,7 @@ public abstract class InteractiveActionThread extends StoppableThread
             }
             boardManager.repaint();
             boardManager.set_interactive_state(new_state);
-          } catch (Exception e)
+          } catch (Exception _)
           {
             done = true;
           }
