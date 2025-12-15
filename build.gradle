@@ -22,10 +22,6 @@ java.toolchain {
     languageVersion = JavaLanguageVersion.of(25)
 }
 
-rewrite {
-    activeRecipe("org.openrewrite.java.cleanup.Cleanup", "org.openrewrite.java.format.AutoFormat")
-}
-
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 tasks.withType(JavaCompile).configureEach {
@@ -129,6 +125,9 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-core:2.62.1'
     implementation 'com.google.cloud:google-cloud-core-http:2.62.1'
     implementation 'com.google.cloud:google-cloud-bigquery:2.55.3'
+
+    // OpenRewrite for code quality
+    rewrite("org.openrewrite.recipe:rewrite-rewrite:0.16.1")
 }
 
 ext {
@@ -251,4 +250,9 @@ test {
     }
 
     timeout = Duration.ofMinutes(15)
+}
+
+rewrite {
+    activeRecipe("org.openrewrite.java.recipes.JavaRecipeBestPractices")
+    setExportDatatables(true)
 }
