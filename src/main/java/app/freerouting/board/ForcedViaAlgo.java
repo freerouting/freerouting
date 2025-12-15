@@ -110,9 +110,9 @@ public class ForcedViaAlgo
       curr_pad_shape = (Shape) curr_pad_shape.translate_by(translate_vector);
       TileShape tile_shape;
       Circle start_trace_circle;
-      if (p_trace_pen_halfwidth_arr[i] > 0 && p_location instanceof IntPoint)
+      if (p_trace_pen_halfwidth_arr[i] > 0 && p_location instanceof IntPoint point)
       {
-        start_trace_circle = new Circle((IntPoint) p_location, p_trace_pen_halfwidth_arr[i]);
+        start_trace_circle = new Circle(point, p_trace_pen_halfwidth_arr[i]);
       }
       else
       {

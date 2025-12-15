@@ -241,9 +241,9 @@ public class BasicBoard implements Serializable
       return;
     }
     IntOctagon clip_shape = null;
-    if (this instanceof RoutingBoard)
+    if (this instanceof RoutingBoard board)
     {
-      ChangedArea changed_area = ((RoutingBoard) this).changed_area;
+      ChangedArea changed_area = board.changed_area;
       if (changed_area != null)
       {
         clip_shape = changed_area.get_area(p_layer);
@@ -463,9 +463,9 @@ public class BasicBoard implements Serializable
       {
         break;
       }
-      if (curr_item instanceof BoardOutline)
+      if (curr_item instanceof BoardOutline outline)
       {
-        return (BoardOutline) curr_item;
+        return outline;
       }
     }
     return null;
@@ -614,9 +614,9 @@ public class BasicBoard implements Serializable
       {
         break;
       }
-      if (curr_item.get_component_no() == p_component_no && curr_item instanceof Pin)
+      if (curr_item.get_component_no() == p_component_no && curr_item instanceof Pin pin)
       {
-        result.add((Pin) curr_item);
+        result.add(pin);
       }
     }
     return result;
@@ -683,9 +683,9 @@ public class BasicBoard implements Serializable
       {
         break;
       }
-      if (curr_item instanceof ConductionArea)
+      if (curr_item instanceof ConductionArea area)
       {
-        result.add((ConductionArea) curr_item);
+        result.add(area);
       }
     }
     return result;
@@ -705,9 +705,9 @@ public class BasicBoard implements Serializable
       {
         break;
       }
-      if (curr_item instanceof Pin)
+      if (curr_item instanceof Pin pin)
       {
-        result.add((Pin) curr_item);
+        result.add(pin);
       }
     }
     return result;
@@ -752,9 +752,9 @@ public class BasicBoard implements Serializable
       {
         break;
       }
-      if (curr_item instanceof Via)
+      if (curr_item instanceof Via via)
       {
-        result.add((Via) curr_item);
+        result.add(via);
       }
     }
     return result;
@@ -774,9 +774,9 @@ public class BasicBoard implements Serializable
       {
         break;
       }
-      if (curr_item instanceof Trace)
+      if (curr_item instanceof Trace trace)
       {
-        result.add((Trace) curr_item);
+        result.add(trace);
       }
     }
     return result;
@@ -796,9 +796,9 @@ public class BasicBoard implements Serializable
       {
         break;
       }
-      if (curr_item instanceof Trace)
+      if (curr_item instanceof Trace trace)
       {
-        result += ((Trace) curr_item).get_length();
+        result += trace.get_length();
       }
     }
     return result;
@@ -823,9 +823,9 @@ public class BasicBoard implements Serializable
         {
           break;
         }
-        if ((p_net_no < 0 || curr_item.contains_net(p_net_no)) && curr_item instanceof Trace && curr_item.is_on_the_board())
+        if ((p_net_no < 0 || curr_item.contains_net(p_net_no)) && curr_item instanceof Trace trace && curr_item.is_on_the_board())
         {
-          if (((Trace) curr_item).combine())
+          if (trace.combine())
           {
             something_changed = true;
             result = true;
@@ -980,9 +980,9 @@ public class BasicBoard implements Serializable
       Set<SearchTreeObject> curr_overlaps = overlapping_objects(tile_shapes[i], p_layer);
       for (SearchTreeObject curr_overlap : curr_overlaps)
       {
-        if (curr_overlap instanceof Item)
+        if (curr_overlap instanceof Item item)
         {
-          result.add((Item) curr_overlap);
+          result.add(item);
         }
       }
     }
@@ -1182,9 +1182,9 @@ public class BasicBoard implements Serializable
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_object : overlaps)
     {
-      if (curr_object instanceof Item)
+      if (curr_object instanceof Item item)
       {
-        result.add((Item) curr_object);
+        result.add(item);
       }
     }
     if (p_filter != null)

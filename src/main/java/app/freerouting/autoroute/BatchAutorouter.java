@@ -645,9 +645,9 @@ public class BatchAutorouter extends NamedAlgorithm
     for (Item curr_from_item : p_from_items)
     {
       FloatPoint curr_from_corner;
-      if (curr_from_item instanceof DrillItem)
+      if (curr_from_item instanceof DrillItem item)
       {
-        curr_from_corner = ((DrillItem) curr_from_item)
+        curr_from_corner = item
             .get_center()
             .to_float();
       }
@@ -664,9 +664,9 @@ public class BatchAutorouter extends NamedAlgorithm
       for (Item curr_to_item : p_to_items)
       {
         FloatPoint curr_to_corner;
-        if (curr_to_item instanceof DrillItem)
+        if (curr_to_item instanceof DrillItem drillItem)
         {
-          curr_to_corner = ((DrillItem) curr_to_item)
+          curr_to_corner = drillItem
               .get_center()
               .to_float();
         }
@@ -703,10 +703,10 @@ public class BatchAutorouter extends NamedAlgorithm
         FloatPoint curr_from_corner;
         FloatPoint curr_to_corner;
 
-        if (curr_to_item instanceof DrillItem)
+        if (curr_to_item instanceof DrillItem item)
         {
           // Trace to drill item
-          curr_to_corner = ((DrillItem) curr_to_item)
+          curr_to_corner = item
               .get_center()
               .to_float();
           curr_from_corner = nearest_point_on_trace(from_trace, curr_to_corner);

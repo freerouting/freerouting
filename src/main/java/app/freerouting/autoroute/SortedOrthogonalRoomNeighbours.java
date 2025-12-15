@@ -121,9 +121,9 @@ public class SortedOrthogonalRoomNeighbours
     {
       completed_room = new CompleteFreeSpaceExpansionRoom(room_shape, p_room.get_layer(), p_room_id_no);
     }
-    else if (p_room instanceof ObstacleExpansionRoom)
+    else if (p_room instanceof ObstacleExpansionRoom room)
     {
-      completed_room = (ObstacleExpansionRoom) p_room;
+      completed_room = room;
     }
     else
     {
@@ -142,9 +142,9 @@ public class SortedOrthogonalRoomNeighbours
       {
         continue;
       }
-      if ((completed_room instanceof CompleteFreeSpaceExpansionRoom) && !curr_object.is_trace_obstacle(p_net_no))
+      if ((completed_room instanceof CompleteFreeSpaceExpansionRoom room) && !curr_object.is_trace_obstacle(p_net_no))
       {
-        ((CompleteFreeSpaceExpansionRoom) completed_room).calculate_target_doors(curr_entry, p_net_no, p_autoroute_search_tree);
+        room.calculate_target_doors(curr_entry, p_net_no, p_autoroute_search_tree);
         continue;
       }
       TileShape curr_shape = curr_object.get_tree_shape(p_autoroute_search_tree, curr_entry.shape_index_in_object);
@@ -155,7 +155,7 @@ public class SortedOrthogonalRoomNeighbours
       }
       IntBox intersection = room_box.intersection(curr_box);
       int dimension = intersection.dimension();
-      if (dimension > 1 && completed_room instanceof ObstacleExpansionRoom)
+      if (dimension > 1 && completed_room instanceof ObstacleExpansionRoom room)
       {
         if (curr_object instanceof Item curr_item)
         {
@@ -164,7 +164,7 @@ public class SortedOrthogonalRoomNeighbours
           {
             ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
             ObstacleExpansionRoom curr_overlap_room = item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
-            ((ObstacleExpansionRoom) completed_room).create_overlap_door(curr_overlap_room);
+            room.create_overlap_door(curr_overlap_room);
           }
         }
         continue;
@@ -180,9 +180,9 @@ public class SortedOrthogonalRoomNeighbours
       {
         // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbour_room = null;
-        if (curr_object instanceof ExpansionRoom)
+        if (curr_object instanceof ExpansionRoom room)
         {
-          neighbour_room = (ExpansionRoom) curr_object;
+          neighbour_room = room;
         }
         else if (curr_object instanceof Item curr_item)
         {
@@ -424,7 +424,7 @@ public class SortedOrthogonalRoomNeighbours
         {
           CompleteExpansionRoom other_room = curr_door.other_room(this.completed_room);
           {
-            if (other_room instanceof CompleteFreeSpaceExpansionRoom)
+            if (other_room instanceof CompleteFreeSpaceExpansionRoom room)
             {
               TileShape curr_door_shape = curr_door.get_shape();
               double curr_door_area = curr_door_shape.area();
@@ -432,7 +432,7 @@ public class SortedOrthogonalRoomNeighbours
               {
                 max_door_area = curr_door_area;
                 ignore_shape = curr_door_shape;
-                ignore_object = (CompleteFreeSpaceExpansionRoom) other_room;
+                ignore_object = room;
               }
             }
           }

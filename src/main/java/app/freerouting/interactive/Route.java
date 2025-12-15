@@ -347,17 +347,17 @@ public class Route
     {
       connection_point = target.get_center();
     }
-    else if (nearest_target_item instanceof PolylineTrace)
+    else if (nearest_target_item instanceof PolylineTrace trace)
     {
-      return board.connect_to_trace(p_from_point, (PolylineTrace) nearest_target_item, this.pen_half_width_arr[layer], this.clearance_class);
+      return board.connect_to_trace(p_from_point, trace, this.pen_half_width_arr[layer], this.clearance_class);
     }
     else if (nearest_target_item instanceof ConductionArea)
     {
       connection_point = p_from_point;
     }
-    if (connection_point instanceof IntPoint)
+    if (connection_point instanceof IntPoint point)
     {
-      route_completed = connect(p_from_point, (IntPoint) connection_point);
+      route_completed = connect(p_from_point, point);
     }
     return route_completed;
   }
@@ -435,9 +435,9 @@ public class Route
     }
     for (Item curr_item : this.target_set)
     {
-      if (curr_item instanceof Pin)
+      if (curr_item instanceof Pin pin)
       {
-        Collection<Pin> curr_swappable_pins = ((Pin) curr_item).get_swappable_pins();
+        Collection<Pin> curr_swappable_pins = pin.get_swappable_pins();
         for (Pin curr_swappable_pin : curr_swappable_pins)
         {
           result.add(new SwapPinInfo(curr_swappable_pin));
@@ -449,9 +449,9 @@ public class Route
     Collection<Item> picked_items = board.pick_items(this.prev_corner, this.layer, selection_filter);
     for (Item curr_item : picked_items)
     {
-      if (curr_item instanceof Pin)
+      if (curr_item instanceof Pin pin)
       {
-        Collection<Pin> curr_swappable_pins = ((Pin) curr_item).get_swappable_pins();
+        Collection<Pin> curr_swappable_pins = pin.get_swappable_pins();
         for (Pin curr_swappable_pin : curr_swappable_pins)
         {
           result.add(new SwapPinInfo(curr_swappable_pin));
@@ -590,16 +590,16 @@ public class Route
   private Point[] angled_connection(Point p_from_point, Point p_to_point)
   {
     IntPoint add_corner = null;
-    if (p_from_point instanceof IntPoint && p_to_point instanceof IntPoint)
+    if (p_from_point instanceof IntPoint point && p_to_point instanceof IntPoint point1)
     {
       AngleRestriction angle_restriction = this.board.rules.get_trace_angle_restriction();
       if (angle_restriction == AngleRestriction.NINETY_DEGREE)
       {
-        add_corner = ((IntPoint) p_from_point).ninety_degree_corner((IntPoint) p_to_point, true);
+        add_corner = point.ninety_degree_corner(point1, true);
       }
       else if (angle_restriction == AngleRestriction.FORTYFIVE_DEGREE)
       {
-        add_corner = ((IntPoint) p_from_point).fortyfive_degree_corner((IntPoint) p_to_point, true);
+        add_corner = point.fortyfive_degree_corner(point1, true);
       }
     }
     int new_corner_count = 2;
@@ -631,9 +631,9 @@ public class Route
     }
     for (Item curr_ob : target_set)
     {
-      if (curr_ob instanceof DrillItem)
+      if (curr_ob instanceof DrillItem item)
       {
-        Point curr_point = ((DrillItem) curr_ob).get_center();
+        Point curr_point = item.get_center();
         target_points.add(new TargetPoint(curr_point.to_float(), curr_ob));
       }
       else if (curr_ob instanceof Trace || curr_ob instanceof ConductionArea)
@@ -761,9 +761,9 @@ public class Route
     if (!this.prev_corner.equals(start_pin.get_center()))
     {
       Item picked_item = this.board.pick_nearest_routing_item(this.prev_corner, this.layer, null);
-      if (picked_item instanceof Trace)
+      if (picked_item instanceof Trace trace)
       {
-        if (((Trace) picked_item).get_half_width() > neck_down_halfwidth)
+        if (trace.get_half_width() > neck_down_halfwidth)
         {
           return this.prev_corner;
         }

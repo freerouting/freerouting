@@ -199,9 +199,9 @@ public class RulesFile
     String string_quote = p_board.communication.specctra_parser_info.string_quote;
     for (Rule curr_rule : p_rules)
     {
-      if (curr_rule instanceof Rule.WidthRule)
+      if (curr_rule instanceof Rule.WidthRule rule1)
       {
-        double wire_width = ((Rule.WidthRule) curr_rule).value;
+        double wire_width = rule1.value;
         int trace_halfwidth = (int) Math.round(coordinate_transform.dsn_to_board(wire_width) / 2);
         if (layer_no < 0)
         {
@@ -212,9 +212,9 @@ public class RulesFile
           p_board.rules.set_default_trace_half_width(layer_no, trace_halfwidth);
         }
       }
-      else if (curr_rule instanceof Rule.ClearanceRule)
+      else if (curr_rule instanceof Rule.ClearanceRule rule)
       {
-        Structure.set_clearance_rule((Rule.ClearanceRule) curr_rule, layer_no, coordinate_transform, p_board.rules, string_quote);
+        Structure.set_clearance_rule(rule, layer_no, coordinate_transform, p_board.rules, string_quote);
       }
     }
   }

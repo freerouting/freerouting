@@ -797,13 +797,13 @@ public class GUIDefaultsFile
   {
     double result;
     Object next_token = this.scanner.next_token();
-    if (next_token instanceof Double)
+    if (next_token instanceof Double double1)
     {
-      result = (Double) next_token;
+      result = double1;
     }
-    else if (next_token instanceof Integer)
+    else if (next_token instanceof Integer integer)
     {
-      result = (Integer) next_token;
+      result = integer;
     }
     else
     {
@@ -1391,13 +1391,13 @@ public class GUIDefaultsFile
   {
     Object next_token = this.scanner.next_token();
     double intensity;
-    if (next_token instanceof Double)
+    if (next_token instanceof Double double1)
     {
-      intensity = (Double) next_token;
+      intensity = double1;
     }
-    else if (next_token instanceof Integer)
+    else if (next_token instanceof Integer integer)
     {
-      intensity = (Integer) next_token;
+      intensity = integer;
     }
     else
     {

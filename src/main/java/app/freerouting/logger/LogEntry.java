@@ -59,6 +59,6 @@ public class LogEntry
   @Override
   public String toString()
   {
-    return String.format("%-7s", this.type.toString().toUpperCase()) + " " + this.message;
+    return "%-7s".formatted(this.type.toString().toUpperCase()) + " " + this.message;
   }
 }

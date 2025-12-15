@@ -277,7 +277,7 @@ public class WindowWelcome extends WindowBase
       {
         LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String load_snapshot_confirmation = String.format(tm.getText("load_snapshot_confirmation"), modification_time.format(formatter));
+        String load_snapshot_confirmation = tm.getText("load_snapshot_confirmation").formatted(modification_time.format(formatter));
 
         if (WindowMessage.confirm(load_snapshot_confirmation))
         {
@@ -579,7 +579,7 @@ public class WindowWelcome extends WindowBase
     {
       LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      String load_snapshot_confirmation = String.format(tm.getText("load_snapshot_confirmation"), modification_time.format(formatter));
+      String load_snapshot_confirmation = tm.getText("load_snapshot_confirmation").formatted(modification_time.format(formatter));
 
       if (WindowMessage.confirm(load_snapshot_confirmation))
       {

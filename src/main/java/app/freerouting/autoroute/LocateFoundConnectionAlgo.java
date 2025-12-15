@@ -214,9 +214,9 @@ public abstract class LocateFoundConnectionAlgo
     CompleteExpansionRoom curr_next_room = null;
     ExpandableObject curr_backtrack_door = p_maze_search_result.destination_door;
     MazeSearchElement curr_maze_search_element = curr_backtrack_door.get_maze_search_element(p_maze_search_result.section_no_of_door);
-    if (curr_backtrack_door instanceof TargetItemExpansionDoor)
+    if (curr_backtrack_door instanceof TargetItemExpansionDoor door)
     {
-      curr_next_room = ((TargetItemExpansionDoor) curr_backtrack_door).room;
+      curr_next_room = door.room;
     }
     else if (curr_backtrack_door instanceof ExpansionDrill curr_drill)
     {
@@ -225,9 +225,9 @@ public abstract class LocateFoundConnectionAlgo
       {
         for (CompleteExpansionRoom tmp_room : curr_drill.room_arr)
         {
-          if (tmp_room instanceof ObstacleExpansionRoom)
+          if (tmp_room instanceof ObstacleExpansionRoom room)
           {
-            p_ripped_item_list.add(((ObstacleExpansionRoom) tmp_room).get_item());
+            p_ripped_item_list.add(room.get_item());
           }
         }
       }
@@ -259,9 +259,9 @@ public abstract class LocateFoundConnectionAlgo
       curr_backtrack_element = new BacktrackElement(curr_backtrack_door, curr_section_no, curr_next_room);
       if (curr_maze_search_element.room_ripped)
       {
-        if (curr_next_room instanceof ObstacleExpansionRoom)
+        if (curr_next_room instanceof ObstacleExpansionRoom room)
         {
-          p_ripped_item_list.add(((ObstacleExpansionRoom) curr_next_room).get_item());
+          p_ripped_item_list.add(room.get_item());
         }
       }
     }
@@ -466,9 +466,9 @@ public abstract class LocateFoundConnectionAlgo
         next_room.draw(p_graphics, p_graphics_context, 0.2);
       }
       ExpandableObject next_door = backtrack_array[i].door;
-      if (next_door instanceof ExpansionDrill)
+      if (next_door instanceof ExpansionDrill drill)
       {
-        ((ExpansionDrill) next_door).draw(p_graphics, p_graphics_context, 0.2);
+        drill.draw(p_graphics, p_graphics_context, 0.2);
       }
     }
   }

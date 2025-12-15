@@ -189,9 +189,9 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
   @Override
   public int compareTo(Object p_other)
   {
-    if (p_other instanceof Component)
+    if (p_other instanceof Component component)
     {
-      return this.name.compareToIgnoreCase(((Component) p_other).name);
+      return this.name.compareToIgnoreCase(component.name);
     }
     return 1;
   }

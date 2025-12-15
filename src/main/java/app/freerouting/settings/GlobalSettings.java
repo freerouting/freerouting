@@ -18,14 +18,13 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 
 public class GlobalSettings implements Serializable
 {
-  private static Path userDataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
+  private static Path userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
   private static Path configurationFilePath = userDataPath.resolve("freerouting.json");
   private static Boolean isUserDataPathLocked = false;
   public final transient EnvironmentSettings environmentSettings = new EnvironmentSettings();

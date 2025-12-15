@@ -147,9 +147,9 @@ public class SelectedItemState extends InteractiveState
     Net new_net = board.rules.nets.new_net(hdlg.get_locale());
     for (Item curr_item : item_list)
     {
-      if (curr_item instanceof ObstacleArea)
+      if (curr_item instanceof ObstacleArea area)
       {
-        board.make_conductive((ObstacleArea) curr_item, new_net.net_number);
+        board.make_conductive(area, new_net.net_number);
       }
       else if (curr_item instanceof DrillItem)
       {
@@ -452,9 +452,9 @@ public class SelectedItemState extends InteractiveState
     Collection<Pin> fanout_list = new LinkedList<>();
     for (Item curr_item : item_list)
     {
-      if (curr_item instanceof Pin)
+      if (curr_item instanceof Pin pin)
       {
-        fanout_list.add((Pin) curr_item);
+        fanout_list.add(pin);
       }
     }
     int items_to_go_count = fanout_list.size();
@@ -562,9 +562,9 @@ public class SelectedItemState extends InteractiveState
           curr_trace.smoothen_end_corners_fork(!hdlg.settings.push_enabled, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, p_stoppable_thread);
         }
       }
-      else if (curr_item instanceof Via)
+      else if (curr_item instanceof Via via)
       {
-        OptViaAlgo.opt_via_location(hdlg.get_routing_board(), (Via) curr_item, null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, 10);
+        OptViaAlgo.opt_via_location(hdlg.get_routing_board(), via, null, hdlg.settings.autoroute_settings.trace_pull_tight_accuracy, 10);
       }
     }
     String curr_message;

@@ -180,9 +180,9 @@ public class BoardLibrary implements Serializable
       {
         break;
       }
-      if (curr_item instanceof DrillItem)
+      if (curr_item instanceof DrillItem item)
       {
-        if (((DrillItem) curr_item).get_padstack() == p_padstack)
+        if (item.get_padstack() == p_padstack)
         {
           return true;
         }

@@ -65,7 +65,7 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable
     second_item.print_info(p_window, p_locale);
     p_window.newline();
     p_window.indent();
-    String clearance_violation_info_expected_clearance = String.format(tm.getText("clearance_violation_info_expected_clearance"), (this.expected_clearance / 10000.0), (this.actual_clearance / 10000.0));
+    String clearance_violation_info_expected_clearance = tm.getText("clearance_violation_info_expected_clearance").formatted((this.expected_clearance / 10000.0), (this.actual_clearance / 10000.0));
     p_window.append(clearance_violation_info_expected_clearance);
   }
 }

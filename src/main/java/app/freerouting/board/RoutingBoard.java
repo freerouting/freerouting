@@ -73,9 +73,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
       Collection<SearchTreeObject> overlaps = this.autoroute_engine.autoroute_search_tree.overlapping_objects(curr_shape, curr_layer);
       for (SearchTreeObject curr_object : overlaps)
       {
-        if (curr_object instanceof CompleteFreeSpaceExpansionRoom)
+        if (curr_object instanceof CompleteFreeSpaceExpansionRoom room)
         {
-          this.autoroute_engine.remove_complete_expansion_room((CompleteFreeSpaceExpansionRoom) curr_object);
+          this.autoroute_engine.remove_complete_expansion_room(room);
         }
       }
     }
@@ -381,7 +381,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
       Set<Item> obstacles = this.overlapping_items_with_clearance(curr_shape, p_item.shape_layer(i), net_no_arr, p_item.clearance_class_no());
       for (SearchTreeObject curr_ob : obstacles)
       {
-        if (curr_ob != p_item && curr_ob instanceof Connectable && !((Connectable) curr_ob).contains_net(p_new_net_no))
+        if (curr_ob != p_item && curr_ob instanceof Connectable connectable && !connectable.contains_net(p_new_net_no))
         {
           return false;
         }
@@ -815,9 +815,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
           Item found_trace = curr_picked_items
               .iterator()
               .next();
-          if (found_trace instanceof PolylineTrace)
+          if (found_trace instanceof PolylineTrace trace)
           {
-            new_trace = (PolylineTrace) found_trace;
+            new_trace = trace;
           }
         }
       }

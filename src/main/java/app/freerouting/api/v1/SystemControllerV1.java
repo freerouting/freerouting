@@ -21,9 +21,9 @@ public class SystemControllerV1
   public static double getCpuLoad()
   {
     OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-    if (osBean instanceof com.sun.management.OperatingSystemMXBean)
+    if (osBean instanceof com.sun.management.OperatingSystemMXBean bean)
     {
-      return ((com.sun.management.OperatingSystemMXBean) osBean).getSystemCpuLoad() * 100;
+      return bean.getSystemCpuLoad() * 100;
     }
     return -1;
   }

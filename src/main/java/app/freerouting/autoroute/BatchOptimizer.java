@@ -99,7 +99,7 @@ public class BatchOptimizer extends NamedAlgorithm
 
     this.sorted_route_items = new ReadSortedRouteItems();
     this.min_cumulative_trace_length = boardStatisticsBefore.traces.totalWeightedLength;
-    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.traces.totalLength) + " trace length.";
+    String optimizationPassId = "BatchOptRoute.opt_route_pass #" + p_pass_no + " with " + boardStatisticsBefore.items.viaCount + " vias and " + "%(,.2f".formatted(boardStatisticsBefore.traces.totalLength) + " trace length.";
 
     FRLogger.traceEntry(optimizationPassId);
 

@@ -46,7 +46,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
 
     if (clearance_violations.global_smallest_clearance != Double.MAX_VALUE)
     {
-      FRLogger.info(String.format("The smallest clearance on the board is %.4f mm.", clearance_violations.global_smallest_clearance / 10000.0));
+      FRLogger.info("The smallest clearance on the board is %.4f mm.".formatted(clearance_violations.global_smallest_clearance / 10000.0));
     }
   }
 
@@ -135,7 +135,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
       LayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
 
       String clearance_violation_message_template = tm.getText("clearance_violation_message_template");
-      return String.format(clearance_violation_message_template, delta, item_info(violation.first_item), item_info(violation.second_item), location.to_string(board_frame.get_locale()), layer_structure.arr[violation.layer].name);
+      return clearance_violation_message_template.formatted(delta, item_info(violation.first_item), item_info(violation.second_item), location.to_string(board_frame.get_locale()), layer_structure.arr[violation.layer].name);
     }
 
     @Override

@@ -69,9 +69,9 @@ public class WindowPadstacks extends WindowObjectListWithFilter
       {
         break;
       }
-      if (curr_object instanceof DrillItem)
+      if (curr_object instanceof DrillItem item)
       {
-        Padstack curr_padstack = ((DrillItem) curr_object).get_padstack();
+        Padstack curr_padstack = item.get_padstack();
         for (Padstack curr_selected_padstack : padstack_list)
         {
           if (curr_padstack == curr_selected_padstack)

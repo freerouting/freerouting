@@ -509,13 +509,13 @@ public class SessionToEagle extends JFrame
     for (int i = 0; i < 2; ++i)
     {
       next_token = this.scanner.next_token();
-      if (next_token instanceof Double)
+      if (next_token instanceof Double double1)
       {
-        location[i] = (Double) next_token;
+        location[i] = double1;
       }
-      else if (next_token instanceof Integer)
+      else if (next_token instanceof Integer integer)
       {
-        location[i] = (Integer) next_token;
+        location[i] = integer;
       }
       else
       {

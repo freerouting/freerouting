@@ -154,9 +154,9 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
       TileShape room_shape = p_room.get_shape();
       IntOctagon octagon_room_shape;
 
-      if (room_shape instanceof IntOctagon)
+      if (room_shape instanceof IntOctagon octagon)
       {
-        octagon_room_shape = (IntOctagon) room_shape;
+        octagon_room_shape = octagon;
       }
       else if (room_shape instanceof app.freerouting.geometry.planar.Simplex)
       {

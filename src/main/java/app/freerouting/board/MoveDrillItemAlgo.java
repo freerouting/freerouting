@@ -56,9 +56,9 @@ public class MoveDrillItemAlgo
     ignore_items.add(p_drill_item);
     ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
     boolean attach_allowed = false;
-    if (p_drill_item instanceof Via)
+    if (p_drill_item instanceof Via via)
     {
-      attach_allowed = ((Via) p_drill_item).attach_allowed;
+      attach_allowed = via.attach_allowed;
     }
     ShapeSearchTree search_tree = p_board.search_tree_manager.get_default_tree();
     for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); ++curr_layer)
@@ -101,9 +101,9 @@ public class MoveDrillItemAlgo
     }
 
     boolean attach_allowed = false;
-    if (p_drill_item instanceof Via)
+    if (p_drill_item instanceof Via via)
     {
-      attach_allowed = ((Via) p_drill_item).attach_allowed;
+      attach_allowed = via.attach_allowed;
     }
     ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
     Collection<Item> ignore_items = new LinkedList<>();

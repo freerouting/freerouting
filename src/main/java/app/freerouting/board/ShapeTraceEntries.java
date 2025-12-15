@@ -153,7 +153,7 @@ public class ShapeTraceEntries
         continue;
       }
       boolean contains_own_net = curr_item.shares_net_no(this.own_net_nos);
-      if (curr_item instanceof ConductionArea && (contains_own_net || !((ConductionArea) curr_item).get_is_obstacle()))
+      if (curr_item instanceof ConductionArea area && (contains_own_net || !area.get_is_obstacle()))
       {
         continue;
       }
@@ -162,11 +162,11 @@ public class ShapeTraceEntries
         this.found_obstacle = curr_item;
         return false;
       }
-      if (curr_item instanceof Via)
+      if (curr_item instanceof Via via)
       {
         if (p_is_pad_check || !contains_own_net)
         {
-          shove_via_list.add((Via) curr_item);
+          shove_via_list.add(via);
         }
       }
       else if (curr_item instanceof PolylineTrace curr_trace)
@@ -186,7 +186,7 @@ public class ShapeTraceEntries
             this.found_obstacle = curr_item;
             return false;
           }
-          if (p_is_pad_check && !((curr_item instanceof Pin) && ((Pin) curr_item).drill_allowed()))
+          if (p_is_pad_check && !((curr_item instanceof Pin pin) && pin.drill_allowed()))
           {
             this.found_obstacle = curr_item;
             return false;
@@ -298,9 +298,9 @@ public class ShapeTraceEntries
   {
     for (Item curr_item : p_item_list)
     {
-      if (curr_item instanceof PolylineTrace && !curr_item.shares_net_no(this.own_net_nos))
+      if (curr_item instanceof PolylineTrace trace && !curr_item.shares_net_no(this.own_net_nos))
       {
-        cutout_trace((PolylineTrace) curr_item, this.shape, this.cl_class);
+        cutout_trace(trace, this.shape, this.cl_class);
       }
     }
   }
@@ -378,10 +378,10 @@ public class ShapeTraceEntries
               this.found_obstacle = contact_item;
               return false;
             }
-            if (contact_item instanceof Trace)
+            if (contact_item instanceof Trace trace)
             {
 
-              if (contact_item.is_shove_fixed() || ((Trace) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_class_no() != p_trace.clearance_class_no())
+              if (contact_item.is_shove_fixed() || trace.get_half_width() != p_trace.get_half_width() || contact_item.clearance_class_no() != p_trace.clearance_class_no())
               {
                 if (offset_shape.contains_inside(end_corner))
                 {
@@ -390,9 +390,9 @@ public class ShapeTraceEntries
                 }
               }
             }
-            else if (contact_item instanceof Via)
+            else if (contact_item instanceof Via via)
             {
-              TileShape via_shape = ((Via) contact_item).get_tile_shape_on_layer(layer);
+              TileShape via_shape = via.get_tile_shape_on_layer(layer);
 
               double via_trace_diff = via_shape.smallest_radius() - p_trace.get_compensated_half_width(search_tree);
               if (!search_tree.is_clearance_compensation_used())

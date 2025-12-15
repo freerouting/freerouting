@@ -881,9 +881,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo
     Collection<Item> contact_list = p_trace.get_start_contacts();
     for (Item curr_contact : contact_list)
     {
-      if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed())
+      if (curr_contact instanceof PolylineTrace trace && !curr_contact.is_shove_fixed())
       {
-        Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();
+        Polyline contact_trace_polyline = trace.polyline();
         FloatPoint curr_other_trace_corner_approx;
         Line curr_other_trace_line;
         Line curr_other_prev_trace_line;
@@ -1025,9 +1025,9 @@ class PullTightAlgoAnyAngle extends PullTightAlgo
     Collection<Item> contact_list = p_trace.get_end_contacts();
     for (Item curr_contact : contact_list)
     {
-      if (curr_contact instanceof PolylineTrace && !curr_contact.is_shove_fixed())
+      if (curr_contact instanceof PolylineTrace trace && !curr_contact.is_shove_fixed())
       {
-        Polyline contact_trace_polyline = ((PolylineTrace) curr_contact).polyline();
+        Polyline contact_trace_polyline = trace.polyline();
         if (contact_trace_polyline.corner_count() > 2)
         {
           FloatPoint curr_other_trace_corner_approx;

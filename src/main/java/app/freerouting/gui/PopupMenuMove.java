@@ -78,9 +78,9 @@ public class PopupMenuMove extends PopupMenuDisplay
     popup_reset_rotation_menuitem.addActionListener(evt ->
     {
       InteractiveState interactive_state = board_panel.board_handling.get_interactive_state();
-      if (interactive_state instanceof MoveItemState)
+      if (interactive_state instanceof MoveItemState state)
       {
-        ((MoveItemState) interactive_state).reset_rotation();
+        state.reset_rotation();
       }
     });
     popup_reset_rotation_menuitem.addActionListener(evt -> FRAnalytics.buttonClicked("popup_reset_rotation_menuitem", popup_reset_rotation_menuitem.getText()));

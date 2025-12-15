@@ -112,16 +112,16 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     connect_point_list.add(old_center);
     Point new_center = this.get_center();
     IntPoint add_corner = null;
-    if (old_center instanceof IntPoint && new_center instanceof IntPoint)
+    if (old_center instanceof IntPoint point && new_center instanceof IntPoint point1)
     {
       // Make sure, that the traces will remain 90- or 45-degree.
       if (board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
       {
-        add_corner = ((IntPoint) old_center).ninety_degree_corner((IntPoint) new_center, true);
+        add_corner = point.ninety_degree_corner(point1, true);
       }
       else if (board.rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
       {
-        add_corner = ((IntPoint) old_center).fortyfive_degree_corner((IntPoint) new_center, true);
+        add_corner = point.fortyfive_degree_corner(point1, true);
       }
     }
     if (add_corner != null)

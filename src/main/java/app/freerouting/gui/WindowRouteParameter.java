@@ -536,9 +536,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow
       boolean free_angle_traces_found = false;
       for (Trace curr_trace : trace_list)
       {
-        if (curr_trace instanceof PolylineTrace)
+        if (curr_trace instanceof PolylineTrace trace)
         {
-          if (!((PolylineTrace) curr_trace)
+          if (!trace
               .polyline()
               .is_orthogonal())
           {
@@ -575,9 +575,9 @@ public class WindowRouteParameter extends BoardSavableSubWindow
       boolean free_angle_traces_found = false;
       for (Trace curr_trace : trace_list)
       {
-        if (curr_trace instanceof PolylineTrace)
+        if (curr_trace instanceof PolylineTrace trace)
         {
-          if (!((PolylineTrace) curr_trace)
+          if (!trace
               .polyline()
               .is_multiple_of_45_degree())
           {

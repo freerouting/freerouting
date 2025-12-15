@@ -177,21 +177,21 @@ public class OptViaAlgo
     PolylineTrace contact_trace = null;
     for (Item curr_contact : contact_list)
     {
-      if (curr_contact instanceof ConductionArea)
+      if (curr_contact instanceof ConductionArea area)
       {
         if (contact_plane != null)
         {
           return false;
         }
-        contact_plane = (ConductionArea) curr_contact;
+        contact_plane = area;
       }
-      else if (curr_contact instanceof PolylineTrace)
+      else if (curr_contact instanceof PolylineTrace trace)
       {
         if (curr_contact.is_shove_fixed() || contact_trace != null)
         {
           return false;
         }
-        contact_trace = (PolylineTrace) curr_contact;
+        contact_trace = trace;
       }
       else
       {

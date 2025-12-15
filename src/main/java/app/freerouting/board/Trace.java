@@ -94,7 +94,7 @@ public abstract class Trace extends Item implements Connectable, Serializable
     {
       return false;
     }
-    if (p_other instanceof ConductionArea && !((ConductionArea) p_other).get_is_obstacle())
+    if (p_other instanceof ConductionArea area && !area.get_is_obstacle())
     {
       return false;
     }
@@ -442,9 +442,9 @@ public abstract class Trace extends Item implements Connectable, Serializable
       Set<Item> curr_overlaps = this.board.overlapping_items_with_clearance(curr_oct, this.layer, new int[0], this.clearance_class_no());
       for (Item curr_item : curr_overlaps)
       {
-        if ((curr_item instanceof Pin) && curr_item.shares_net(this))
+        if ((curr_item instanceof Pin pin) && curr_item.shares_net(this))
         {
-          result.add((Pin) curr_item);
+          result.add(pin);
         }
       }
       curr_end_point = this.last_corner();

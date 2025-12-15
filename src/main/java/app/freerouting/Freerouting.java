@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Locale;
@@ -53,11 +52,11 @@ public class Freerouting
 
     // the first thing we need to do is to determine the user directory, because all settings and logs will be located there
     // 1, set it to the temp directory by default
-    Path userdataPath = Paths.get(System.getProperty("java.io.tmpdir"), "freerouting");
+    Path userdataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
     // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH" environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null)
     {
-      userdataPath = Paths.get(System.getenv("FREEROUTING__USER_DATA_PATH"));
+      userdataPath = Path.of(System.getenv("FREEROUTING__USER_DATA_PATH"));
     }
     // 3, check if we need to override it with the "--user_data_path={directory}" command line argument
     if (args.length > 0 && Arrays
@@ -71,7 +70,7 @@ public class Freerouting
 
       if (userDataPathArg.isPresent())
       {
-        userdataPath = Paths.get(userDataPathArg
+        userdataPath = Path.of(userDataPathArg
             .get()
             .substring("--user_data_path=".length()));
       }

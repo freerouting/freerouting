@@ -239,7 +239,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
 
     this.min_cumulative_trace_length = boardStatisticsBefore.traces.totalWeightedLength;
 
-    String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + boardStatisticsBefore.items.viaCount + " vias and " + String.format("%(,.2f", boardStatisticsBefore.traces.totalLength) + " trace length running on " + thread_pool_size + " threads.";
+    String optimizationPassId = "BatchOptRouteMT.opt_route_pass #" + p_pass_no + " with " + item_ids.size() + " items, " + boardStatisticsBefore.items.viaCount + " vias and " + "%(,.2f".formatted(boardStatisticsBefore.traces.totalLength) + " trace length running on " + thread_pool_size + " threads.";
     FRLogger.traceEntry(optimizationPassId);
 
     prepare_next_round_of_route_items();

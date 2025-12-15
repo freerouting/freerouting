@@ -428,10 +428,10 @@ public class AutorouteEngine
       for (ExpansionDoor curr_door : room_doors)
       {
         ExpansionRoom other_room = curr_door.other_room(p_room);
-        if (other_room instanceof CompleteFreeSpaceExpansionRoom && curr_door.dimension == 2)
+        if (other_room instanceof CompleteFreeSpaceExpansionRoom room && curr_door.dimension == 2)
         {
           from_door_shape = curr_door.get_shape();
-          ignore_object = (CompleteFreeSpaceExpansionRoom) other_room;
+          ignore_object = room;
           break;
         }
       }
@@ -545,9 +545,9 @@ public class AutorouteEngine
       {
         continue;
       }
-      if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom)
+      if (neighbour_room instanceof IncompleteFreeSpaceExpansionRoom room)
       {
-        this.complete_expansion_room((IncompleteFreeSpaceExpansionRoom) neighbour_room);
+        this.complete_expansion_room(room);
         // restart reading because the doors have changed
         it = p_room
             .get_doors()
@@ -586,9 +586,9 @@ public class AutorouteEngine
         continue;
       }
       other_room.remove_door(curr_door);
-      if (other_room instanceof IncompleteFreeSpaceExpansionRoom)
+      if (other_room instanceof IncompleteFreeSpaceExpansionRoom room)
       {
-        this.remove_incomplete_expansion_room((IncompleteFreeSpaceExpansionRoom) other_room);
+        this.remove_incomplete_expansion_room(room);
       }
     }
     p_room.clear_doors();

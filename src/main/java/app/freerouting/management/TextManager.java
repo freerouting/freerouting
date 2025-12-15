@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,7 +89,7 @@ public class TextManager
     StringBuilder randomString = new StringBuilder();
     for (int i = 0; i < length; i++)
     {
-      int index = (int) (characters.length() * Math.random());
+      int index = (int) (characters.length() * ThreadLocalRandom.current().nextDouble());
       randomString.append(characters.charAt(index));
     }
     return randomString.toString();
@@ -236,7 +237,7 @@ public class TextManager
 
   public static String longToHexadecimalString(Long longValue)
   {
-    return String.format("0x%016X", longValue);
+    return "0x%016X".formatted(longValue);
   }
 
   public static Long hexadecimalStringToLong(String hexString)
@@ -391,30 +392,30 @@ public class TextManager
     text = insertIcons(component, text);
 
     // Set the text for the component
-    if (component instanceof JButton)
+    if (component instanceof JButton button1)
     {
       // Set the text for the button
-      ((JButton) component).setText(text);
+      button1.setText(text);
       if (tooltip != null && !tooltip.isEmpty())
       {
         // Set the tooltip text for the component
         component.setToolTipText(tooltip);
       }
     }
-    else if (component instanceof JToggleButton)
+    else if (component instanceof JToggleButton button)
     {
       // Set the text for the toggle button
-      ((JToggleButton) component).setText(text);
+      button.setText(text);
       if (tooltip != null && !tooltip.isEmpty())
       {
         // Set the tooltip text for the component
         component.setToolTipText(tooltip);
       }
     }
-    else if (component instanceof JLabel)
+    else if (component instanceof JLabel label)
     {
       // Set the text for the toggle button
-      ((JLabel) component).setText(text);
+      label.setText(text);
       if (tooltip != null && !tooltip.isEmpty())
       {
         // Set the tooltip text for the component

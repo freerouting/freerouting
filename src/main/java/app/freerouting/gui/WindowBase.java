@@ -42,13 +42,13 @@ public class WindowBase extends JFrame
         Window window = e.getWindow();
         String className = window.getClass().getName();
         String title = "";
-        if (window instanceof Frame)
+        if (window instanceof Frame frame)
         {
-          title = ((Frame) window).getTitle();
+          title = frame.getTitle();
         }
-        if (window instanceof WindowBase)
+        if (window instanceof WindowBase base)
         {
-          ((WindowBase) window).gotFocusAt = Instant.now();
+          base.gotFocusAt = Instant.now();
         }
         FRLogger.trace("Window '" + className + "' with title of '" + title + "' gained focus.");
 
@@ -64,13 +64,13 @@ public class WindowBase extends JFrame
         Window window = e.getWindow();
         String className = window.getClass().getName();
         String title = "";
-        if (window instanceof Frame)
+        if (window instanceof Frame frame)
         {
-          title = ((Frame) window).getTitle();
+          title = frame.getTitle();
         }
-        if (window instanceof WindowBase)
+        if (window instanceof WindowBase base)
         {
-          Instant gotFocusAt = ((WindowBase) window).gotFocusAt;
+          Instant gotFocusAt = base.gotFocusAt;
           if (gotFocusAt != null)
           {
             long gotFocusFor = Instant.now().getEpochSecond() - gotFocusAt.getEpochSecond();

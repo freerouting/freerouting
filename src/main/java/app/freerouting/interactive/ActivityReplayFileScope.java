@@ -360,9 +360,9 @@ public abstract class ActivityReplayFileScope
     public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       InteractiveState result;
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        Collection<Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
+        Collection<Item> item_list = state.get_item_list();
         result = CopyItemState.get_instance(p_location, item_list, p_return_state.return_state, p_board_handling, null);
       }
       else
@@ -385,9 +385,9 @@ public abstract class ActivityReplayFileScope
     public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       InteractiveState result;
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        Collection<Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
+        Collection<Item> item_list = state.get_item_list();
         result = MoveItemState.get_instance(p_location, item_list, p_return_state.return_state, p_board_handling, null);
       }
       else
@@ -420,10 +420,10 @@ public abstract class ActivityReplayFileScope
     @Override
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
-      if (p_return_state instanceof MoveItemState)
+      if (p_return_state instanceof MoveItemState state)
       {
         int factor = p_activityReplayFile.read_int();
-        ((MoveItemState) p_return_state).turn_90_degree(factor);
+        state.turn_90_degree(factor);
         return p_return_state;
       }
 
@@ -442,10 +442,10 @@ public abstract class ActivityReplayFileScope
     @Override
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
-      if (p_return_state instanceof MoveItemState)
+      if (p_return_state instanceof MoveItemState state)
       {
         int angle = p_activityReplayFile.read_int();
-        ((MoveItemState) p_return_state).rotate(angle);
+        state.rotate(angle);
         return p_return_state;
       }
 
@@ -464,9 +464,9 @@ public abstract class ActivityReplayFileScope
     @Override
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
-      if (p_return_state instanceof MoveItemState)
+      if (p_return_state instanceof MoveItemState state)
       {
-        ((MoveItemState) p_return_state).change_placement_side();
+        state.change_placement_side();
         return p_return_state;
       }
 
@@ -640,9 +640,9 @@ public abstract class ActivityReplayFileScope
     {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        result = ((SelectedItemState) p_return_state).delete_items();
+        result = state.delete_items();
       }
       else
       {
@@ -665,9 +665,9 @@ public abstract class ActivityReplayFileScope
     {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        result = ((SelectedItemState) p_return_state).pull_tight(null);
+        result = state.pull_tight(null);
       }
       else
       {
@@ -690,9 +690,9 @@ public abstract class ActivityReplayFileScope
     {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        result = ((SelectedItemState) p_return_state).autoroute(null);
+        result = state.autoroute(null);
       }
       else
       {
@@ -715,9 +715,9 @@ public abstract class ActivityReplayFileScope
     {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        result = ((SelectedItemState) p_return_state).fanout(null);
+        result = state.fanout(null);
       }
       else
       {
@@ -743,10 +743,10 @@ public abstract class ActivityReplayFileScope
     {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
         int int_value = p_activityReplayFile.read_int();
-        result = ((SelectedItemState) p_return_state).assign_clearance_class(int_value);
+        result = state.assign_clearance_class(int_value);
       }
       else
       {
@@ -772,9 +772,9 @@ public abstract class ActivityReplayFileScope
     {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        result = ((SelectedItemState) p_return_state).assign_items_to_new_net();
+        result = state.assign_items_to_new_net();
       }
       else
       {
@@ -800,9 +800,9 @@ public abstract class ActivityReplayFileScope
     {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        result = ((SelectedItemState) p_return_state).assign_items_to_new_group();
+        result = state.assign_items_to_new_group();
       }
       else
       {
@@ -824,9 +824,9 @@ public abstract class ActivityReplayFileScope
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        return_state = ((SelectedItemState) p_return_state).extent_to_whole_connected_sets();
+        return_state = state.extent_to_whole_connected_sets();
       }
       else
       {
@@ -847,9 +847,9 @@ public abstract class ActivityReplayFileScope
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        return_state = ((SelectedItemState) p_return_state).extent_to_whole_components();
+        return_state = state.extent_to_whole_components();
       }
       else
       {
@@ -870,9 +870,9 @@ public abstract class ActivityReplayFileScope
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        return_state = ((SelectedItemState) p_return_state).extent_to_whole_nets();
+        return_state = state.extent_to_whole_nets();
       }
       else
       {
@@ -893,9 +893,9 @@ public abstract class ActivityReplayFileScope
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        return_state = ((SelectedItemState) p_return_state).extent_to_whole_connections();
+        return_state = state.extent_to_whole_connections();
       }
       else
       {
@@ -915,9 +915,9 @@ public abstract class ActivityReplayFileScope
     @Override
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        ((SelectedItemState) p_return_state).fix_items();
+        state.fix_items();
       }
       else
       {
@@ -937,9 +937,9 @@ public abstract class ActivityReplayFileScope
     @Override
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
-      if (p_return_state instanceof SelectedItemState)
+      if (p_return_state instanceof SelectedItemState state)
       {
-        ((SelectedItemState) p_return_state).unfix_items();
+        state.unfix_items();
       }
       else
       {
@@ -1219,9 +1219,9 @@ public abstract class ActivityReplayFileScope
       if (selection == 0)
       {
         p_board_handling.settings.item_selection_filter.set_selected(item_type, false);
-        if (p_return_state instanceof SelectedItemState)
+        if (p_return_state instanceof SelectedItemState state)
         {
-          ((SelectedItemState) p_return_state).filter();
+          state.filter();
         }
       }
       else

@@ -136,11 +136,11 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
       {
         break;
       }
-      if (curr_item instanceof Pin)
+      if (curr_item instanceof Pin pin)
       {
         if (curr_item.contains_net(this.net_number))
         {
-          result.add((Pin) curr_item);
+          result.add(pin);
         }
       }
     }
@@ -180,9 +180,9 @@ public class Net implements Comparable<Net>, ObjectInfoPanel.Printable, Serializ
     for (Item curr_item : net_items)
     {
 
-      if (curr_item instanceof Trace)
+      if (curr_item instanceof Trace trace)
       {
-        cumulative_trace_length += ((Trace) curr_item).get_length();
+        cumulative_trace_length += trace.get_length();
       }
     }
     return cumulative_trace_length;

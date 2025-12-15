@@ -186,18 +186,18 @@ public class MoveItemState extends InteractiveState
     }
     if (!move_ok)
     {
-      if (p_parent_state instanceof SelectedItemState)
+      if (p_parent_state instanceof SelectedItemState state)
       {
         if (!fixed_items.isEmpty())
         {
-          ((SelectedItemState) p_parent_state)
+          state
               .get_item_list()
               .addAll(fixed_items);
           p_board_handling.screen_messages.set_status_message(tm.getText("please_unfix_selected_items_before_moving"));
         }
         else
         {
-          ((SelectedItemState) p_parent_state)
+          state
               .get_item_list()
               .addAll(obstacle_items);
           p_board_handling.screen_messages.set_status_message(tm.getText("please_unroute_or_extend_selection_before_moving"));
@@ -457,9 +457,9 @@ public class MoveItemState extends InteractiveState
     boolean placement_side_changable = true;
     for (Item curr_item : item_list)
     {
-      if (curr_item instanceof Via)
+      if (curr_item instanceof Via via)
       {
-        if (board_library.get_mirrored_via_padstack(((Via) curr_item).get_padstack()) == null)
+        if (board_library.get_mirrored_via_padstack(via.get_padstack()) == null)
         {
           placement_side_changable = false;
           break;

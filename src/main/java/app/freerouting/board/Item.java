@@ -91,9 +91,9 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public int compareTo(Object p_other)
   {
     int result;
-    if (p_other instanceof Item)
+    if (p_other instanceof Item item)
     {
-      result = ((Item) p_other).id_no - id_no;
+      result = item.id_no - id_no;
     }
     else
     {
@@ -945,9 +945,9 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
       return true;
     }
     // Also power planes are delete_fixed.
-    if (this instanceof ConductionArea)
+    if (this instanceof ConductionArea area)
     {
-      return !this.board.layer_structure.arr[((ConductionArea) this).get_layer()].is_signal;
+      return !this.board.layer_structure.arr[area.get_layer()].is_signal;
     }
     return false;
   }

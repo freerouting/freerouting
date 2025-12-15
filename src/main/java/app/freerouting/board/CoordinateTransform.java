@@ -91,17 +91,17 @@ public class CoordinateTransform implements Serializable
   public PrintableShape board_to_user(Shape p_shape, Locale p_locale)
   {
     PrintableShape result;
-    if (p_shape instanceof app.freerouting.geometry.planar.Circle)
+    if (p_shape instanceof app.freerouting.geometry.planar.Circle circle)
     {
-      result = board_to_user((app.freerouting.geometry.planar.Circle) p_shape, p_locale);
+      result = board_to_user(circle, p_locale);
     }
-    else if (p_shape instanceof IntBox)
+    else if (p_shape instanceof IntBox box)
     {
-      result = board_to_user((IntBox) p_shape, p_locale);
+      result = board_to_user(box, p_locale);
     }
-    else if (p_shape instanceof PolylineShape)
+    else if (p_shape instanceof PolylineShape shape)
     {
-      result = board_to_user((PolylineShape) p_shape, p_locale);
+      result = board_to_user(shape, p_locale);
     }
     else
     {

@@ -75,9 +75,9 @@ public class SortedRoomNeighbours
       }
     }
 
-    if (result instanceof CompleteFreeSpaceExpansionRoom)
+    if (result instanceof CompleteFreeSpaceExpansionRoom room)
     {
-      calculate_target_doors((CompleteFreeSpaceExpansionRoom) result, room_neighbours.own_net_objects, p_autoroute_engine);
+      calculate_target_doors(room, room_neighbours.own_net_objects, p_autoroute_engine);
     }
     return result;
   }
@@ -136,9 +136,9 @@ public class SortedRoomNeighbours
     {
       completed_room = new CompleteFreeSpaceExpansionRoom(room_shape, p_room.get_layer(), p_room_id_no);
     }
-    else if (p_room instanceof ObstacleExpansionRoom)
+    else if (p_room instanceof ObstacleExpansionRoom room)
     {
-      completed_room = (ObstacleExpansionRoom) p_room;
+      completed_room = room;
     }
     else
     {
@@ -168,14 +168,14 @@ public class SortedRoomNeighbours
       int dimension = intersection.dimension();
       if (dimension > 1)
       {
-        if (completed_room instanceof ObstacleExpansionRoom && curr_object instanceof Item curr_item)
+        if (completed_room instanceof ObstacleExpansionRoom room && curr_object instanceof Item curr_item)
         {
           // only Obstacle expansion room may have a 2-dim overlap
           if (curr_item.is_routable())
           {
             ItemAutorouteInfo item_info = curr_item.get_autoroute_info();
             ObstacleExpansionRoom curr_overlap_room = item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
-            ((ObstacleExpansionRoom) completed_room).create_overlap_door(curr_overlap_room);
+            room.create_overlap_door(curr_overlap_room);
           }
         }
         else
@@ -200,9 +200,9 @@ public class SortedRoomNeighbours
         result.add_sorted_neighbour(curr_shape, intersection, touching_sides[0], touching_sides[1], false, false);
         // make  sure, that there is a door to the neighbour room.
         ExpansionRoom neighbour_room = null;
-        if (curr_object instanceof ExpansionRoom)
+        if (curr_object instanceof ExpansionRoom room)
         {
-          neighbour_room = (ExpansionRoom) curr_object;
+          neighbour_room = room;
         }
         else if (curr_object instanceof Item curr_item)
         {
@@ -277,10 +277,10 @@ public class SortedRoomNeighbours
     {
       return false;
     }
-    if (p_room_1 instanceof ObstacleExpansionRoom && p_room_2 instanceof ObstacleExpansionRoom)
+    if (p_room_1 instanceof ObstacleExpansionRoom room && p_room_2 instanceof ObstacleExpansionRoom room1)
     {
-      Item first_item = ((ObstacleExpansionRoom) p_room_1).get_item();
-      Item second_item = ((ObstacleExpansionRoom) p_room_2).get_item();
+      Item first_item = room.get_item();
+      Item second_item = room1.get_item();
       // insert only overlap_doors between items of the same net for performance reasons.
       return (first_item.shares_net(second_item));
     }
@@ -303,16 +303,16 @@ public class SortedRoomNeighbours
       }
       prev_corner = curr_corner;
     }
-    if (p_room_1 instanceof ObstacleExpansionRoom)
+    if (p_room_1 instanceof ObstacleExpansionRoom room)
     {
-      if (!insert_door_ok((ObstacleExpansionRoom) p_room_1, door_line))
+      if (!insert_door_ok(room, door_line))
       {
         return false;
       }
     }
-    if (p_room_2 instanceof ObstacleExpansionRoom)
+    if (p_room_2 instanceof ObstacleExpansionRoom room)
     {
-      return insert_door_ok((ObstacleExpansionRoom) p_room_2, door_line);
+      return insert_door_ok(room, door_line);
     }
     return true;
   }

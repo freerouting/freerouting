@@ -105,9 +105,9 @@ public class SelectItemsInRegionState extends SelectRegionState
     boolean something_found = (!found_items.isEmpty());
     if (something_found)
     {
-      if (this.return_state instanceof SelectedItemState)
+      if (this.return_state instanceof SelectedItemState state)
       {
-        ((SelectedItemState) this.return_state).get_item_list().addAll(found_items);
+        state.get_item_list().addAll(found_items);
       }
       else
       {

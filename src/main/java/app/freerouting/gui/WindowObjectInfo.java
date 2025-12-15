@@ -98,10 +98,10 @@ public class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectI
       {
         ++via_count;
       }
-      else if (curr_object instanceof Trace)
+      else if (curr_object instanceof Trace trace)
       {
         ++trace_count;
-        cumulative_trace_length += ((Trace) curr_object).get_length();
+        cumulative_trace_length += trace.get_length();
       }
     }
     new_instance.append_bold(new_instance.tm.getText("summary") + " ");

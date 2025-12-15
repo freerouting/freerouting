@@ -240,9 +240,9 @@ class Structure extends ScopeKeyword
     Layer keepout_layer = new Layer(board_layer.name, layer_no, board_layer.is_signal);
     app.freerouting.geometry.planar.Shape boundary_shape;
     app.freerouting.geometry.planar.Shape[] holes;
-    if (keepout_area instanceof app.freerouting.geometry.planar.Shape)
+    if (keepout_area instanceof app.freerouting.geometry.planar.Shape shape)
     {
-      boundary_shape = (app.freerouting.geometry.planar.Shape) keepout_area;
+      boundary_shape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     }
     else
@@ -403,9 +403,9 @@ class Structure extends ScopeKeyword
             {
               break;
             }
-            if (next_token instanceof String)
+            if (next_token instanceof String string)
             {
-              net_names.add((String) next_token);
+              net_names.add(string);
             }
             else
             {
@@ -458,9 +458,9 @@ class Structure extends ScopeKeyword
             skip_scope(p_scanner);
           }
         }
-        else if (next_token instanceof String)
+        else if (next_token instanceof String string)
         {
-          normal_vias.add((String) next_token);
+          normal_vias.add(string);
         }
         else
         {
@@ -686,9 +686,9 @@ class Structure extends ScopeKeyword
     // update width rules
     for (Object curr_ob : p_board_construction_info.default_rules)
     {
-      if (curr_ob instanceof Rule.WidthRule)
+      if (curr_ob instanceof Rule.WidthRule rule)
       {
-        double wire_width = ((Rule.WidthRule) curr_ob).value;
+        double wire_width = rule.value;
         int trace_halfwidth = (int) Math.round(p_par.coordinate_transform.dsn_to_board(wire_width) / 2);
         p_board_rules.set_default_trace_half_widths(trace_halfwidth);
       }
@@ -702,9 +702,9 @@ class Structure extends ScopeKeyword
       }
       for (Rule curr_ob : layer_rule.rule)
       {
-        if (curr_ob instanceof Rule.WidthRule)
+        if (curr_ob instanceof Rule.WidthRule rule)
         {
-          double wire_width = ((Rule.WidthRule) curr_ob).value;
+          double wire_width = rule.value;
           int trace_halfwidth = (int) Math.round(p_par.coordinate_transform.dsn_to_board(wire_width) / 2);
           p_board_rules.set_default_trace_half_width(layer_no, trace_halfwidth);
         }

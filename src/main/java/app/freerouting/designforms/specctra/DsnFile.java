@@ -122,14 +122,14 @@ public class DsnFile
     Collection<Item> item_list = routing_board.get_items();
     for (Item curr_item : item_list)
     {
-      if (curr_item instanceof Trace)
+      if (curr_item instanceof Trace trace)
       {
-        int curr_layer = ((Trace) curr_item).get_layer();
+        int curr_layer = trace.get_layer();
         layer_contains_wires_arr[curr_layer] = true;
       }
-      else if (curr_item instanceof ConductionArea)
+      else if (curr_item instanceof ConductionArea area)
       {
-        conduction_area_list.add((ConductionArea) curr_item);
+        conduction_area_list.add(area);
       }
     }
     boolean nothing_changed = true;
@@ -291,9 +291,9 @@ public class DsnFile
     {
       int value;
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof Integer)
+      if (next_token instanceof Integer integer)
       {
-        value = (Integer) next_token;
+        value = integer;
       }
       else
       {
@@ -320,13 +320,13 @@ public class DsnFile
     {
       double value;
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof Double)
+      if (next_token instanceof Double double1)
       {
-        value = (Double) next_token;
+        value = double1;
       }
-      else if (next_token instanceof Integer)
+      else if (next_token instanceof Integer integer)
       {
-        value = (Integer) next_token;
+        value = integer;
       }
       else
       {

@@ -35,9 +35,9 @@ public class MoveComponent
     translate_vector = p_translate_vector;
     max_recursion_depth = p_max_recursion_depth;
     max_via_recursion_depth = p_max_via_recursion_depth;
-    if (p_item.board instanceof RoutingBoard)
+    if (p_item.board instanceof RoutingBoard routingBoard)
     {
-      board = (RoutingBoard) p_item.board;
+      board = routingBoard;
     }
     else
     {
@@ -67,9 +67,9 @@ public class MoveComponent
         all_items_movable = false;
         return;
       }
-      if (curr_item instanceof DrillItem)
+      if (curr_item instanceof DrillItem item)
       {
-        item_centers.add(((DrillItem) curr_item).get_center().to_float());
+        item_centers.add(item.get_center().to_float());
       }
     }
     // calculate the gravity point of all item centers
@@ -89,9 +89,9 @@ public class MoveComponent
     {
       Item curr_item = it.next();
       Point item_center;
-      if (curr_item instanceof DrillItem)
+      if (curr_item instanceof DrillItem item)
       {
-        item_center = ((DrillItem) curr_item).get_center();
+        item_center = item.get_center();
       }
       else
       {

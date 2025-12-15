@@ -84,13 +84,13 @@ public class Circuit
         FRLogger.error("Circuit.read_length_scope: IO error scanning file", e);
         return null;
       }
-      if (next_token instanceof Double)
+      if (next_token instanceof Double double1)
       {
-        length_arr[i] = (Double) next_token;
+        length_arr[i] = double1;
       }
-      else if (next_token instanceof Integer)
+      else if (next_token instanceof Integer integer)
       {
-        length_arr[i] = (Integer) next_token;
+        length_arr[i] = integer;
       }
       else
       {

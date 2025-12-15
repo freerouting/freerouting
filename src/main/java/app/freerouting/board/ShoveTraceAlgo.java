@@ -480,9 +480,9 @@ public class ShoveTraceAlgo
           // to avoid acid traps
           is_obstacle = curr_item instanceof Pin && p_contact_pins != null && !p_contact_pins.contains(curr_item);
         }
-        else if (curr_item instanceof ConductionArea)
+        else if (curr_item instanceof ConductionArea area)
         {
-          is_obstacle = ((ConductionArea) curr_item).get_is_obstacle();
+          is_obstacle = area.get_is_obstacle();
         }
         else if (curr_item instanceof ViaObstacleArea || curr_item instanceof ComponentObstacleArea)
         {

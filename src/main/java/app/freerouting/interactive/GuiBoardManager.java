@@ -218,9 +218,9 @@ public class GuiBoardManager extends HeadlessBoardManager
           Collection<Item> contact_list = curr_pin.get_normal_contacts();
           for (Item curr_contact : contact_list)
           {
-            if ((curr_contact instanceof PolylineTrace) && curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED)
+            if ((curr_contact instanceof PolylineTrace trace) && curr_contact.get_fixed_state() == FixedState.SHOVE_FIXED)
             {
-              if (((PolylineTrace) curr_contact).corner_count() == 2)
+              if (trace.corner_count() == 2)
               {
                 curr_contact.set_fixed_state(FixedState.NOT_FIXED);
               }
@@ -1244,9 +1244,9 @@ public class GuiBoardManager extends HeadlessBoardManager
     {
       set_interactive_state(SelectedItemState.get_instance(p_items, interactive_state, this, activityReplayFile));
     }
-    else if (interactive_state instanceof SelectedItemState)
+    else if (interactive_state instanceof SelectedItemState state)
     {
-      ((SelectedItemState) interactive_state)
+      state
           .get_item_list()
           .addAll(p_items);
       repaint();

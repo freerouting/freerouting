@@ -166,9 +166,9 @@ class Wiring extends ScopeKeyword
     Layer conduction_layer = new Layer(board_layer.name, layer_no, board_layer.is_signal);
     app.freerouting.geometry.planar.Shape boundary_shape;
     app.freerouting.geometry.planar.Shape[] holes;
-    if (curr_area instanceof app.freerouting.geometry.planar.Shape)
+    if (curr_area instanceof app.freerouting.geometry.planar.Shape shape)
     {
-      boundary_shape = (app.freerouting.geometry.planar.Shape) curr_area;
+      boundary_shape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     }
     else
@@ -306,9 +306,9 @@ class Wiring extends ScopeKeyword
       p_scanner.set_scope_identifier(net_name);
 
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof Integer)
+      if (next_token instanceof Integer integer)
       {
-        subnet_number = (Integer) next_token;
+        subnet_number = integer;
         next_token = p_scanner.next_token();
       }
       if (next_token != CLOSED_BRACKET)
@@ -647,13 +647,13 @@ class Wiring extends ScopeKeyword
       for (int i = 0; i < 2; ++i)
       {
         next_token = p_par.scanner.next_token();
-        if (next_token instanceof Double)
+        if (next_token instanceof Double double1)
         {
-          location[i] = (Double) next_token;
+          location[i] = double1;
         }
-        else if (next_token instanceof Integer)
+        else if (next_token instanceof Integer integer)
         {
-          location[i] = (Integer) next_token;
+          location[i] = integer;
         }
         else
         {

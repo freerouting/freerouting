@@ -143,9 +143,9 @@ public abstract class PullTightAlgo
               break; // because items may be removed
             }
           }
-          else if (curr_ob instanceof Via && p_trace_cost_arr != null)
+          else if (curr_ob instanceof Via via && p_trace_cost_arr != null)
           {
-            if (OptViaAlgo.opt_via_location(this.board, (Via) curr_ob, p_trace_cost_arr, this.min_translate_dist, 10))
+            if (OptViaAlgo.opt_via_location(this.board, via, p_trace_cost_arr, this.min_translate_dist, 10))
             {
               something_changed = true;
             }

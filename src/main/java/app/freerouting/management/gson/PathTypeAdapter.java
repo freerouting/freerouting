@@ -6,7 +6,6 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class PathTypeAdapter extends TypeAdapter<Path>
 {
@@ -34,6 +33,6 @@ public class PathTypeAdapter extends TypeAdapter<Path>
       return null;
     }
 
-    return Paths.get(in.nextString());
+    return Path.of(in.nextString());
   }
 }

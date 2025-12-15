@@ -532,9 +532,9 @@ public class ShapeSearchTree extends MinAreaTree
     Set<Item> result = new TreeSet<>();
     for (SearchTreeObject curr_object : overlaps)
     {
-      if (curr_object instanceof Item)
+      if (curr_object instanceof Item item)
       {
-        result.add((Item) curr_object);
+        result.add(item);
       }
     }
     return result;

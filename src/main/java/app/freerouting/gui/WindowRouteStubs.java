@@ -50,7 +50,7 @@ public class WindowRouteStubs extends CleanupWindows
 
       FloatPoint stub_location;
       int stub_layer;
-      if (curr_item instanceof Via)
+      if (curr_item instanceof Via via)
       {
         Collection<Item> contact_list = curr_item.get_all_contacts();
         if (contact_list.isEmpty())
@@ -86,7 +86,7 @@ public class WindowRouteStubs extends CleanupWindows
             stub_layer = first_contact_last_layer;
           }
         }
-        stub_location = ((Via) curr_item)
+        stub_location = via
             .get_center()
             .to_float();
       }

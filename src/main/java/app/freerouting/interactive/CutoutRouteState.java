@@ -50,9 +50,9 @@ public class CutoutRouteState extends SelectRegionState
 
     for (Item curr_item : p_item_list)
     {
-      if (!curr_item.is_user_fixed() && curr_item instanceof PolylineTrace)
+      if (!curr_item.is_user_fixed() && curr_item instanceof PolylineTrace trace)
       {
-        item_list.add((PolylineTrace) curr_item);
+        item_list.add(trace);
       }
     }
 

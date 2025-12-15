@@ -338,13 +338,13 @@ public class MazeSearchAlgo
 
     FloatPoint shape_entry_middle = p_list_element.shape_entry.a.middle_point(p_list_element.shape_entry.b);
 
-    if (this.ctrl.with_neckdown && p_list_element.door instanceof TargetItemExpansionDoor)
+    if (this.ctrl.with_neckdown && p_list_element.door instanceof TargetItemExpansionDoor door)
     {
       // try evtl. neckdown at a start pin
-      Item start_item = ((TargetItemExpansionDoor) p_list_element.door).item;
-      if (start_item instanceof Pin)
+      Item start_item = door.item;
+      if (start_item instanceof Pin pin)
       {
-        double neckdown_half_width = ((Pin) start_item).get_trace_neckdown_halfwidth(layer_no);
+        double neckdown_half_width = pin.get_trace_neckdown_halfwidth(layer_no);
         if (neckdown_half_width > 0)
         {
           half_width = Math.min(half_width, neckdown_half_width);
@@ -353,9 +353,9 @@ public class MazeSearchAlgo
     }
 
     boolean next_room_is_thick = true;
-    if (p_list_element.next_room instanceof ObstacleExpansionRoom)
+    if (p_list_element.next_room instanceof ObstacleExpansionRoom room)
     {
-      next_room_is_thick = room_shape_is_thick((ObstacleExpansionRoom) p_list_element.next_room);
+      next_room_is_thick = room_shape_is_thick(room);
     }
     else
     {
@@ -383,10 +383,10 @@ public class MazeSearchAlgo
         }
       }
     }
-    if (!layer_active && p_list_element.door instanceof ExpansionDrill)
+    if (!layer_active && p_list_element.door instanceof ExpansionDrill drill)
     {
       // check for drill to a foreign conduction area on split plane.
-      Point drill_location = ((ExpansionDrill) p_list_element.door).location;
+      Point drill_location = drill.location;
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.CONDUCTION);
       Set<Item> picked_items = autoroute_engine.board.pick_items(drill_location, layer_no, filter);
       for (Item curr_item : picked_items)
@@ -489,9 +489,9 @@ public class MazeSearchAlgo
           }
         }
       }
-      else if (p_list_element.next_room instanceof ObstacleExpansionRoom)
+      else if (p_list_element.next_room instanceof ObstacleExpansionRoom room)
       {
-        Item curr_obstacle_item = ((ObstacleExpansionRoom) p_list_element.next_room).get_item();
+        Item curr_obstacle_item = room.get_item();
         if (curr_obstacle_item instanceof Via curr_via)
         {
           ExpansionDrill via_drill_info = curr_via.get_autoroute_drill_info(this.autoroute_engine.autoroute_search_tree);
@@ -704,14 +704,14 @@ public class MazeSearchAlgo
         .get_shape()
         .shrink(via_radius);
     FloatPoint compare_corner = p_from_element.shape_entry.a.middle_point(p_from_element.shape_entry.b);
-    if (p_from_element.door instanceof DrillPage && p_from_element.backtrack_door instanceof TargetItemExpansionDoor)
+    if (p_from_element.door instanceof DrillPage && p_from_element.backtrack_door instanceof TargetItemExpansionDoor door)
     {
       // If expansion comes from a pin with trace exit directions the expansion_value is calculated
       // from the nearest trace exit point instead from the center olf the pin.
-      Item from_item = ((TargetItemExpansionDoor) p_from_element.backtrack_door).item;
-      if (from_item instanceof Pin)
+      Item from_item = door.item;
+      if (from_item instanceof Pin pin)
       {
-        FloatPoint nearest_exit_corner = ((Pin) from_item).nearest_trace_exit_corner(p_drill.location.to_float(), trace_half_width, layer);
+        FloatPoint nearest_exit_corner = pin.nearest_trace_exit_corner(p_drill.location.to_float(), trace_half_width, layer);
         if (nearest_exit_corner != null)
         {
           compare_corner = nearest_exit_corner;
@@ -789,14 +789,14 @@ public class MazeSearchAlgo
     boolean smd_attached_on_component_side = false;
     boolean smd_attached_on_solder_side = false;
     boolean room_ripped;
-    if (curr_drill.room_arr[p_list_element.section_no_of_door] instanceof ObstacleExpansionRoom)
+    if (curr_drill.room_arr[p_list_element.section_no_of_door] instanceof ObstacleExpansionRoom room)
     {
       // check ripup of an existing via
       if (!this.ctrl.ripup_allowed)
       {
         return;
       }
-      Item curr_obstacle_item = ((ObstacleExpansionRoom) curr_drill.room_arr[p_list_element.section_no_of_door]).get_item();
+      Item curr_obstacle_item = room.get_item();
       if (!(curr_obstacle_item instanceof Via))
       {
         return;
@@ -986,11 +986,11 @@ public class MazeSearchAlgo
       }
       ItemAutorouteInfo curr_info = curr_item.get_autoroute_info();
       curr_info.set_start_info(true);
-      if (curr_item instanceof Connectable)
+      if (curr_item instanceof Connectable connectable)
       {
         for (int i = 0; i < curr_item.tree_shape_count(search_tree); ++i)
         {
-          TileShape contained_shape = ((Connectable) curr_item).get_trace_connection_shape(search_tree, i);
+          TileShape contained_shape = connectable.get_trace_connection_shape(search_tree, i);
           IncompleteFreeSpaceExpansionRoom new_start_room = autoroute_engine.add_incomplete_expansion_room(null, curr_item.shape_layer(i), contained_shape);
           start_rooms.add(new_start_room);
         }
@@ -1049,14 +1049,14 @@ public class MazeSearchAlgo
     Item obstacle_item = p_obstacle_room.get_item();
     int layer = p_obstacle_room.get_layer();
     double obstacle_half_width;
-    if (obstacle_item instanceof Trace)
+    if (obstacle_item instanceof Trace trace)
     {
-      obstacle_half_width = ((Trace) obstacle_item).get_half_width() + this.search_tree.clearance_compensation_value(obstacle_item.clearance_class_no(), layer);
+      obstacle_half_width = trace.get_half_width() + this.search_tree.clearance_compensation_value(obstacle_item.clearance_class_no(), layer);
 
     }
-    else if (obstacle_item instanceof Via)
+    else if (obstacle_item instanceof Via via)
     {
-      TileShape via_shape = ((Via) obstacle_item).get_tree_shape_on_layer(this.search_tree, layer);
+      TileShape via_shape = via.get_tree_shape_on_layer(this.search_tree, layer);
       obstacle_half_width = 0.5 * via_shape.max_width();
     }
     else
@@ -1091,9 +1091,9 @@ public class MazeSearchAlgo
     CompleteExpansionRoom previous_room = p_list_element.door.other_room(p_list_element.next_room);
     boolean room_was_shoved = p_list_element.adjustment != MazeSearchElement.Adjustment.NONE;
     Item previous_item = null;
-    if (previous_room instanceof ObstacleExpansionRoom)
+    if (previous_room instanceof ObstacleExpansionRoom room)
     {
-      previous_item = ((ObstacleExpansionRoom) previous_room).get_item();
+      previous_item = room.get_item();
     }
     if (room_was_shoved)
     {
@@ -1250,9 +1250,9 @@ public class MazeSearchAlgo
     Collection<TargetItemExpansionDoor> target_doors = p_room.get_target_doors();
     for (TargetItemExpansionDoor curr_target_door : target_doors)
     {
-      if (curr_target_door.item instanceof Pin)
+      if (curr_target_door.item instanceof Pin pin)
       {
-        return ((Pin) curr_target_door.item).get_trace_neckdown_halfwidth(p_room.get_layer());
+        return pin.get_trace_neckdown_halfwidth(p_room.get_layer());
       }
     }
     return 0;

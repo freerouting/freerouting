@@ -511,9 +511,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         int old_value = board_handling.settings.autoroute_settings.get_via_costs();
         Object input = via_cost_field.getValue();
         int input_value;
-        if (input instanceof Number)
+        if (input instanceof Number number)
         {
-          input_value = ((Number) input).intValue();
+          input_value = number.intValue();
           if (input_value <= 0)
           {
             input_value = 1;
@@ -567,9 +567,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         int old_value = board_handling.settings.autoroute_settings.get_plane_via_costs();
         Object input = plane_via_cost_field.getValue();
         int input_value;
-        if (input instanceof Number)
+        if (input instanceof Number number)
         {
-          input_value = ((Number) input).intValue();
+          input_value = number.intValue();
           if (input_value <= 0)
           {
             input_value = 1;
@@ -623,9 +623,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         int old_value = board_handling.settings.autoroute_settings.get_start_ripup_costs();
         Object input = start_ripup_costs.getValue();
         int input_value;
-        if (input instanceof Number)
+        if (input instanceof Number number)
         {
-          input_value = ((Number) input).intValue();
+          input_value = number.intValue();
           if (input_value <= 0)
           {
             input_value = 1;
@@ -676,9 +676,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         int old_value = board_handling.settings.autoroute_settings.get_start_pass_no();
         Object input = start_pass_no.getValue();
         int input_value;
-        if (input instanceof Number)
+        if (input instanceof Number number)
         {
-          input_value = ((Number) input).intValue();
+          input_value = number.intValue();
           if (input_value < 1)
           {
             input_value = 1;
@@ -751,9 +751,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         double old_value = board_handling.settings.autoroute_settings.get_preferred_direction_trace_costs(curr_layer_no);
         Object input = preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
         double input_value;
-        if (input instanceof Number)
+        if (input instanceof Number number)
         {
-          input_value = ((Number) input).doubleValue();
+          input_value = number.doubleValue();
           if (input_value <= 0)
           {
             input_value = old_value;
@@ -820,9 +820,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
         double old_value = board_handling.settings.autoroute_settings.get_against_preferred_direction_trace_costs(curr_layer_no);
         Object input = against_preferred_direction_trace_cost_arr[this.signal_layer_no].getValue();
         double input_value;
-        if (input instanceof Number)
+        if (input instanceof Number number)
         {
-          input_value = ((Number) input).doubleValue();
+          input_value = number.doubleValue();
           if (input_value <= 0)
           {
             input_value = old_value;

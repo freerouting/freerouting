@@ -145,13 +145,13 @@ public abstract class Shape
       Iterator<Object> it = corner_list.iterator();
       double width = 0;
       Object next_object = it.next();
-      if (next_object instanceof Double)
+      if (next_object instanceof Double double1)
       {
-        width = (Double) next_object;
+        width = double1;
       }
-      else if (next_object instanceof Integer)
+      else if (next_object instanceof Integer integer)
       {
-        width = (Integer) next_object;
+        width = integer;
       }
       else
       {
@@ -162,13 +162,13 @@ public abstract class Shape
       for (int i = 0; i < corner_arr.length; ++i)
       {
         next_object = it.next();
-        if (next_object instanceof Double)
+        if (next_object instanceof Double double1)
         {
-          corner_arr[i] = (Double) next_object;
+          corner_arr[i] = double1;
         }
-        else if (next_object instanceof Integer)
+        else if (next_object instanceof Integer integer)
         {
-          corner_arr[i] = (Integer) next_object;
+          corner_arr[i] = integer;
         }
         else
         {
@@ -304,13 +304,13 @@ public abstract class Shape
       for (int i = 0; i < 4; ++i)
       {
         next_token = p_scanner.next_token();
-        if (next_token instanceof Double)
+        if (next_token instanceof Double double1)
         {
-          rect_coor[i] = (Double) next_token;
+          rect_coor[i] = double1;
         }
-        else if (next_token instanceof Integer)
+        else if (next_token instanceof Integer integer)
         {
-          rect_coor[i] = (Integer) next_token;
+          rect_coor[i] = integer;
         }
         else
         {
@@ -416,13 +416,13 @@ public abstract class Shape
       for (int i = 0; i < coor_arr.length; ++i)
       {
         Object next_object = it.next();
-        if (next_object instanceof Double)
+        if (next_object instanceof Double double1)
         {
-          coor_arr[i] = (Double) next_object;
+          coor_arr[i] = double1;
         }
-        else if (next_object instanceof Integer)
+        else if (next_object instanceof Integer integer)
         {
-          coor_arr[i] = (Integer) next_object;
+          coor_arr[i] = integer;
         }
         else
         {
@@ -469,13 +469,13 @@ public abstract class Shape
           FRLogger.warn("Shape.read_circle_scope: closed bracket expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
         }
-        if (next_token instanceof Double)
+        if (next_token instanceof Double double1)
         {
-          circle_coor[curr_index] = (Double) next_token;
+          circle_coor[curr_index] = double1;
         }
-        else if (next_token instanceof Integer)
+        else if (next_token instanceof Integer integer)
         {
-          circle_coor[curr_index] = (Integer) next_token;
+          circle_coor[curr_index] = integer;
         }
         else
         {
@@ -537,13 +537,13 @@ public abstract class Shape
       Iterator<Object> it = corner_list.iterator();
       double width = 0;
       Object next_object = it.next();
-      if (next_object instanceof Double)
+      if (next_object instanceof Double double1)
       {
-        width = (Double) next_object;
+        width = double1;
       }
-      else if (next_object instanceof Integer)
+      else if (next_object instanceof Integer integer)
       {
-        width = (Integer) next_object;
+        width = integer;
       }
       else
       {
@@ -554,13 +554,13 @@ public abstract class Shape
       for (int i = 0; i < coordinate_arr.length; ++i)
       {
         next_object = it.next();
-        if (next_object instanceof Double)
+        if (next_object instanceof Double double1)
         {
-          coordinate_arr[i] = (Double) next_object;
+          coordinate_arr[i] = double1;
         }
-        else if (next_object instanceof Integer)
+        else if (next_object instanceof Integer integer)
         {
-          coordinate_arr[i] = (Integer) next_object;
+          coordinate_arr[i] = integer;
         }
         else
         {

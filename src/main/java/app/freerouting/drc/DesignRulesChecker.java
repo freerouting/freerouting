@@ -141,7 +141,7 @@ public class DesignRulesChecker
     items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
 
     // Create violation description
-    String description = String.format("Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)", firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit, violation.actual_clearance * unitScale, coordinateUnit);
+    String description = "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)".formatted(firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit, violation.actual_clearance * unitScale, coordinateUnit);
 
     return new DrcViolation("clearance", description, "error", items);
   }
@@ -175,7 +175,7 @@ public class DesignRulesChecker
     items.add(new DrcViolationItem(toItemDesc, toItemPos, toUuid));
 
     // Create violation description
-    String description = String.format("Unconnected items: %s and %s", fromItemDesc, toItemDesc);
+    String description = "Unconnected items: %s and %s".formatted(fromItemDesc, toItemDesc);
 
     return new DrcViolation("unconnected", description, "warning", items);
   }

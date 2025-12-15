@@ -197,7 +197,7 @@ public class RoutingJobScheduler
 
         if (session == null)
         {
-          FRLogger.error(String.format("Failed to save job in session '%s' to disk, because the session does not exist.", job.sessionId), null);
+          FRLogger.error("Failed to save job in session '%s' to disk, because the session does not exist.".formatted(job.sessionId), null);
         }
 
         sessionIdString = session.id.toString();
@@ -206,7 +206,7 @@ public class RoutingJobScheduler
         saveJob("U-" + UUIDtoShortCode(session.userId), "S-" + UUIDtoShortCode(session.id), job);
       } catch (IOException e)
       {
-        FRLogger.error(String.format("Failed to save job for user '%s' in session '%s' to disk.", userIdString, sessionIdString), e);
+        FRLogger.error("Failed to save job for user '%s' in session '%s' to disk.".formatted(userIdString, sessionIdString), e);
       }
     }
 
@@ -249,7 +249,7 @@ public class RoutingJobScheduler
           .max()
           .orElse(0);
 
-      sessionFolderPath = userFolderPath.resolve(String.format("%04d", jobFolderCount + 1) + "_" + sessionFolder);
+      sessionFolderPath = userFolderPath.resolve("%04d".formatted(jobFolderCount + 1) + "_" + sessionFolder);
     }
 
     // Create the session's folder if it doesn't exist
@@ -264,7 +264,7 @@ public class RoutingJobScheduler
       GsonProvider.GSON.toJson(job, writer);
     } catch (Exception e)
     {
-      FRLogger.error(String.format("Failed to save job '%s' to disk.", job.id), e);
+      FRLogger.error("Failed to save job '%s' to disk.".formatted(job.id), e);
     }
 
     // Save the input file if the filename is defined and there is data stored in it

@@ -201,10 +201,10 @@ public class MazeShoveTraceAlgo
       {
         continue;
       }
-      if (curr_door.first_room instanceof ObstacleExpansionRoom && curr_door.second_room instanceof ObstacleExpansionRoom)
+      if (curr_door.first_room instanceof ObstacleExpansionRoom room && curr_door.second_room instanceof ObstacleExpansionRoom room1)
       {
-        Item first_room_item = ((ObstacleExpansionRoom) curr_door.first_room).get_item();
-        Item second_room_item = ((ObstacleExpansionRoom) curr_door.second_room).get_item();
+        Item first_room_item = room.get_item();
+        Item second_room_item = room1.get_item();
         if (first_room_item != second_room_item)
         {
           // there may be topological problems at a trace fork
@@ -308,9 +308,9 @@ public class MazeShoveTraceAlgo
       return false;
     }
     boolean points_matching;
-    if (p_from_item instanceof DrillItem)
+    if (p_from_item instanceof DrillItem item)
     {
-      Point from_center = ((DrillItem) p_from_item).get_center();
+      Point from_center = item.get_center();
       points_matching = from_center.equals(p_trace.first_corner()) || from_center.equals(p_trace.last_corner());
     }
     else if (p_from_item instanceof PolylineTrace from_trace)

@@ -54,12 +54,12 @@ public class AnalyticsControllerV1
     {
       return Response
           .status(Response.Status.INTERNAL_SERVER_ERROR)
-          .entity(String.format("""
+          .entity("""
                                 {
                                   "error": "An error occurred while processing the request."
                                   "message": "%s"
                                 }
-                                """, e.getMessage()))
+                                """.formatted(e.getMessage()))
           .build();
     }
 

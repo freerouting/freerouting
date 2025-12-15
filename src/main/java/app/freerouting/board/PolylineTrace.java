@@ -232,9 +232,9 @@ public class PolylineTrace extends Trace implements Serializable
     boolean reverse_order = false;
     for (Item curr_ob : contacts)
     {
-      if (curr_ob instanceof PolylineTrace)
+      if (curr_ob instanceof PolylineTrace trace)
       {
-        other_trace = (PolylineTrace) curr_ob;
+        other_trace = trace;
         if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == this.get_fixed_state())
         {
           if (start_corner.equals(other_trace.last_corner()))
@@ -314,9 +314,9 @@ public class PolylineTrace extends Trace implements Serializable
       board.remove_item(this);
     }
     board.remove_item(other_trace);
-    if (board instanceof RoutingBoard)
+    if (board instanceof RoutingBoard routingBoard)
     {
-      ((RoutingBoard) board).join_changed_area(start_corner.to_float(), get_layer());
+      routingBoard.join_changed_area(start_corner.to_float(), get_layer());
     }
     return true;
   }
@@ -344,9 +344,9 @@ public class PolylineTrace extends Trace implements Serializable
     boolean reverse_order = false;
     for (Item curr_ob : contacts)
     {
-      if (curr_ob instanceof PolylineTrace)
+      if (curr_ob instanceof PolylineTrace trace)
       {
-        other_trace = (PolylineTrace) curr_ob;
+        other_trace = trace;
         if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == this.get_fixed_state())
         {
           if (end_corner.equals(other_trace.first_corner()))
@@ -427,9 +427,9 @@ public class PolylineTrace extends Trace implements Serializable
       board.remove_item(this);
     }
     board.remove_item(other_trace);
-    if (board instanceof RoutingBoard)
+    if (board instanceof RoutingBoard routingBoard)
     {
-      ((RoutingBoard) board).join_changed_area(end_corner.to_float(), get_layer());
+      routingBoard.join_changed_area(end_corner.to_float(), get_layer());
     }
     return true;
   }
@@ -1033,9 +1033,9 @@ public class PolylineTrace extends Trace implements Serializable
     }
 
     IntOctagon clip_shape = null;
-    if (board instanceof RoutingBoard)
+    if (board instanceof RoutingBoard routingBoard)
     {
-      ChangedArea changed_area = ((RoutingBoard) board).changed_area;
+      ChangedArea changed_area = routingBoard.changed_area;
       if (changed_area != null)
       {
         clip_shape = changed_area.get_area(this.get_layer());
@@ -1079,9 +1079,9 @@ public class PolylineTrace extends Trace implements Serializable
     Pin contact_pin = null;
     for (Item curr_contact : contact_list)
     {
-      if (curr_contact instanceof Pin)
+      if (curr_contact instanceof Pin pin)
       {
-        contact_pin = (Pin) curr_contact;
+        contact_pin = pin;
         break;
       }
     }
@@ -1166,9 +1166,9 @@ public class PolylineTrace extends Trace implements Serializable
     Pin contact_pin = null;
     for (Item curr_contact : contact_list)
     {
-      if (curr_contact instanceof Pin)
+      if (curr_contact instanceof Pin pin)
       {
-        contact_pin = (Pin) curr_contact;
+        contact_pin = pin;
         break;
       }
     }
@@ -1385,9 +1385,9 @@ public class PolylineTrace extends Trace implements Serializable
     Collection<Item> curr_contacts = contact_trace.get_start_contacts();
     for (Item tmp_contact : curr_contacts)
     {
-      if (tmp_contact instanceof Pin)
+      if (tmp_contact instanceof Pin pin)
       {
-        contact_pin = (Pin) tmp_contact;
+        contact_pin = pin;
         break;
       }
     }

@@ -4,6 +4,7 @@ import app.freerouting.logger.FRLogger;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class ReflectionUtil
 {
@@ -109,13 +110,13 @@ public class ReflectionUtil
       try
       {
         // check if the field is static and skip it if it is
-        if (java.lang.reflect.Modifier.isStatic(field.getModifiers()))
+        if (Modifier.isStatic(field.getModifiers()))
         {
           continue;
         }
 
         // check if the field is private and skip it if it is
-        if (!java.lang.reflect.Modifier.isPublic(field.getModifiers()))
+        if (!Modifier.isPublic(field.getModifiers()))
         {
           continue;
         }

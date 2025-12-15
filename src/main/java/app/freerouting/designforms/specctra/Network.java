@@ -516,14 +516,14 @@ public class Network extends ScopeKeyword
 
     for (Rule curr_rule : p_class.rules)
     {
-      if (curr_rule instanceof Rule.WidthRule)
+      if (curr_rule instanceof Rule.WidthRule rule1)
       {
-        int trace_halfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(((Rule.WidthRule) curr_rule).value / 2));
+        int trace_halfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(rule1.value / 2));
         board_net_class.set_trace_half_width(trace_halfwidth);
       }
-      else if (curr_rule instanceof Rule.ClearanceRule)
+      else if (curr_rule instanceof Rule.ClearanceRule rule)
       {
-        add_clearance_rule(p_board.rules.clearance_matrix, board_net_class, (Rule.ClearanceRule) curr_rule, -1, p_coordinate_transform);
+        add_clearance_rule(p_board.rules.clearance_matrix, board_net_class, rule, -1, p_coordinate_transform);
         clearance_rule_found = true;
       }
       else
@@ -546,14 +546,14 @@ public class Network extends ScopeKeyword
         }
         for (Rule curr_rule : curr_layer_rule.rules)
         {
-          if (curr_rule instanceof Rule.WidthRule)
+          if (curr_rule instanceof Rule.WidthRule rule1)
           {
-            int trace_halfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(((Rule.WidthRule) curr_rule).value / 2));
+            int trace_halfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(rule1.value / 2));
             board_net_class.set_trace_half_width(layer_no, trace_halfwidth);
           }
-          else if (curr_rule instanceof Rule.ClearanceRule)
+          else if (curr_rule instanceof Rule.ClearanceRule rule)
           {
-            add_clearance_rule(p_board.rules.clearance_matrix, board_net_class, (Rule.ClearanceRule) curr_rule, layer_no, p_coordinate_transform);
+            add_clearance_rule(p_board.rules.clearance_matrix, board_net_class, rule, layer_no, p_coordinate_transform);
             clearance_rule_found = true;
           }
           else
@@ -648,9 +648,9 @@ public class Network extends ScopeKeyword
         }
         for (Rule curr_rule : curr_layer_rule.rules)
         {
-          if (curr_rule instanceof Rule.ClearanceRule)
+          if (curr_rule instanceof Rule.ClearanceRule rule)
           {
-            add_mixed_clearance_rule(p_board.rules.clearance_matrix, p_first_class, p_second_class, (Rule.ClearanceRule) curr_rule, layer_no, p_coordinate_transform);
+            add_mixed_clearance_rule(p_board.rules.clearance_matrix, p_first_class, p_second_class, rule, layer_no, p_coordinate_transform);
           }
           else
           {
@@ -1340,9 +1340,9 @@ public class Network extends ScopeKeyword
       return false;
     }
     boolean scope_is_empty = (next_token == CLOSED_BRACKET);
-    if (next_token instanceof Integer)
+    if (next_token instanceof Integer integer)
     {
-      subnet_number = (Integer) next_token;
+      subnet_number = integer;
     }
     boolean pin_order_found = false;
     Collection<Net.Pin> pin_list = new LinkedList<>();
@@ -1454,10 +1454,10 @@ public class Network extends ScopeKeyword
         }
         for (Rule curr_ob : net_rules)
         {
-          if (curr_ob instanceof Rule.WidthRule)
+          if (curr_ob instanceof Rule.WidthRule rule)
           {
             app.freerouting.rules.NetClass default_net_rule = p_board.rules.get_default_net_class();
-            double wire_width = ((Rule.WidthRule) curr_ob).value;
+            double wire_width = rule.value;
             int trace_halfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(wire_width) / 2);
             app.freerouting.rules.NetClass net_rule = p_board.rules.net_classes.find(trace_halfwidth, default_net_rule.get_trace_clearance_class(), default_net_rule.get_via_rule());
             if (net_rule == null)

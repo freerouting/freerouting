@@ -110,9 +110,9 @@ public class Library extends ScopeKeyword
     try
     {
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof String)
+      if (next_token instanceof String string)
       {
-        padstack_name = (String) next_token;
+        padstack_name = string;
         p_scanner.set_scope_identifier(padstack_name);
       }
       else
@@ -181,15 +181,15 @@ public class Library extends ScopeKeyword
     {
       app.freerouting.geometry.planar.Shape curr_shape = pad_shape.transform_to_board_rel(p_coordinate_transform);
       ConvexShape convex_shape;
-      if (curr_shape instanceof ConvexShape)
+      if (curr_shape instanceof ConvexShape shape1)
       {
-        convex_shape = (ConvexShape) curr_shape;
+        convex_shape = shape1;
       }
       else
       {
-        if (curr_shape instanceof PolygonShape)
+        if (curr_shape instanceof PolygonShape shape)
         {
-          curr_shape = ((PolygonShape) curr_shape).convex_hull();
+          curr_shape = shape.convex_hull();
         }
         TileShape[] convex_shapes = curr_shape.split_to_convex();
         if (convex_shapes.length != 1)
@@ -197,9 +197,9 @@ public class Library extends ScopeKeyword
           FRLogger.warn("Library.read_padstack_scope: convex shape expected at '" + p_scanner.get_scope_identifier() + "'");
         }
         convex_shape = convex_shapes[0];
-        if (convex_shape instanceof Simplex)
+        if (convex_shape instanceof Simplex simplex)
         {
-          convex_shape = ((Simplex) convex_shape).simplify();
+          convex_shape = simplex.simplify();
         }
       }
       ConvexShape padstack_shape = convex_shape;

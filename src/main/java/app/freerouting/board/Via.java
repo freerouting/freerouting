@@ -105,7 +105,7 @@ public class Via extends DrillItem implements Serializable
     {
       return false;
     }
-    if ((p_other instanceof ConductionArea) && !((ConductionArea) p_other).get_is_obstacle())
+    if ((p_other instanceof ConductionArea area) && !area.get_is_obstacle())
     {
       return false;
     }

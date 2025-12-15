@@ -178,9 +178,9 @@ public class CoordinateTransform implements Serializable
   public Shape board_to_dsn(app.freerouting.geometry.planar.Shape p_board_shape, Layer p_layer)
   {
     Shape result;
-    if (p_board_shape instanceof IntBox)
+    if (p_board_shape instanceof IntBox box)
     {
-      result = new Rectangle(p_layer, board_to_dsn((IntBox) p_board_shape));
+      result = new Rectangle(p_layer, board_to_dsn(box));
     }
     else if (p_board_shape instanceof PolylineShape)
     {
@@ -209,9 +209,9 @@ public class CoordinateTransform implements Serializable
   public Shape board_to_dsn_rel(app.freerouting.geometry.planar.Shape p_board_shape, Layer p_layer)
   {
     Shape result;
-    if (p_board_shape instanceof IntBox)
+    if (p_board_shape instanceof IntBox box)
     {
-      result = new Rectangle(p_layer, board_to_dsn_rel((IntBox) p_board_shape));
+      result = new Rectangle(p_layer, board_to_dsn_rel(box));
     }
     else if (p_board_shape instanceof PolylineShape)
     {

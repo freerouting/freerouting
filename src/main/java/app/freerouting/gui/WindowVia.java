@@ -307,9 +307,9 @@ public class WindowVia extends BoardSavableSubWindow
       default_radius_input_panel.add(default_radius_input_field);
       JOptionPane.showMessageDialog(board_frame, default_radius_input_panel, null, JOptionPane.PLAIN_MESSAGE);
       Object input_value = default_radius_input_field.getValue();
-      if (input_value instanceof Number)
+      if (input_value instanceof Number number)
       {
-        default_radius = ((Number) input_value).doubleValue();
+        default_radius = number.doubleValue();
       }
 
       // input panel  to make the default radius layer-dependent
@@ -325,9 +325,9 @@ public class WindowVia extends BoardSavableSubWindow
       {
         Object input = padstack_input_panel.circle_radius[i - from_layer_no].getValue();
         double radius = default_radius;
-        if (input instanceof Number)
+        if (input instanceof Number number)
         {
-          radius = ((Number) input).doubleValue();
+          radius = number.doubleValue();
         }
         int circle_radius = (int) Math.round(coordinate_transform.user_to_board(radius));
         if (circle_radius > 0)

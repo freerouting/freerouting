@@ -50,9 +50,9 @@ public class MinAreaTree extends ShapeTree
       }
       if (curr_node.bounding_shape.intersects(p_shape))
       {
-        if (curr_node instanceof Leaf)
+        if (curr_node instanceof Leaf leaf)
         {
-          found_overlaps.add((Leaf) curr_node);
+          found_overlaps.add(leaf);
         }
         else
         {

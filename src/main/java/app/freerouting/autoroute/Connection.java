@@ -162,9 +162,9 @@ public class Connection
     double result = 0;
     for (Item curr_item : item_list)
     {
-      if (curr_item instanceof Trace)
+      if (curr_item instanceof Trace trace)
       {
-        result += ((Trace) curr_item).get_length();
+        result += trace.get_length();
       }
     }
     return result;

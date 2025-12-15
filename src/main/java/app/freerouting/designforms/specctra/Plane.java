@@ -35,9 +35,9 @@ public class Plane extends ScopeKeyword
     Layer plane_layer = new Layer(board_layer.name, layer_no, board_layer.is_signal);
     app.freerouting.geometry.planar.Shape boundary_shape;
     app.freerouting.geometry.planar.Shape[] holes;
-    if (curr_area instanceof app.freerouting.geometry.planar.Shape)
+    if (curr_area instanceof app.freerouting.geometry.planar.Shape shape)
     {
-      boundary_shape = (app.freerouting.geometry.planar.Shape) curr_area;
+      boundary_shape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     }
     else

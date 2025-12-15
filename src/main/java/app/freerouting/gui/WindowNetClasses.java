@@ -665,18 +665,18 @@ public class WindowNetClasses extends BoardSavableSubWindow
       {
 
         float curr_value = 0f;
-        if (p_value instanceof Float)
+        if (p_value instanceof Float float1)
         {
-          curr_value = (Float) p_value;
+          curr_value = float1;
         }
-        else if (p_value instanceof String)
+        else if (p_value instanceof String string)
         {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
           try
           {
-            curr_value = Float.parseFloat((String) p_value);
+            curr_value = Float.parseFloat(string);
           } catch (Exception e)
           {
             curr_value = 0f;
@@ -695,18 +695,18 @@ public class WindowNetClasses extends BoardSavableSubWindow
       else if (p_col == ColumnName.MAX_TRACE_LENGTH.ordinal())
       {
         float curr_value = 0f;
-        if (p_value instanceof Float)
+        if (p_value instanceof Float float1)
         {
-          curr_value = (Float) p_value;
+          curr_value = float1;
         }
-        else if (p_value instanceof String)
+        else if (p_value instanceof String string)
         {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
           try
           {
-            curr_value = Float.parseFloat((String) p_value);
+            curr_value = Float.parseFloat(string);
           } catch (Exception e)
           {
             curr_value = 0f;
@@ -751,18 +751,18 @@ public class WindowNetClasses extends BoardSavableSubWindow
       else if (p_col == ColumnName.TRACE_WIDTH.ordinal())
       {
         float curr_value = 0f;
-        if (p_value instanceof Float)
+        if (p_value instanceof Float float1)
         {
-          curr_value = (Float) p_value;
+          curr_value = float1;
         }
-        else if (p_value instanceof String)
+        else if (p_value instanceof String string)
         {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
           try
           {
-            curr_value = Float.parseFloat((String) p_value);
+            curr_value = Float.parseFloat(string);
           } catch (Exception e)
           {
             curr_value = 0f;

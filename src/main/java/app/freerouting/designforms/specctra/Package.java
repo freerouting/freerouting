@@ -241,9 +241,9 @@ public class Package
     }
     app.freerouting.geometry.planar.Shape boundary_shape;
     app.freerouting.geometry.planar.Shape[] holes;
-    if (p_keepout.area instanceof app.freerouting.geometry.planar.Shape)
+    if (p_keepout.area instanceof app.freerouting.geometry.planar.Shape shape)
     {
-      boundary_shape = (app.freerouting.geometry.planar.Shape) p_keepout.area;
+      boundary_shape = shape;
       holes = new app.freerouting.geometry.planar.Shape[0];
     }
     else
@@ -320,13 +320,13 @@ public class Package
       for (int i = 0; i < 2; ++i)
       {
         next_token = p_scanner.next_token();
-        if (next_token instanceof Double)
+        if (next_token instanceof Double double1)
         {
-          pin_coor[i] = (Double) next_token;
+          pin_coor[i] = double1;
         }
-        else if (next_token instanceof Integer)
+        else if (next_token instanceof Integer integer)
         {
-          pin_coor[i] = (Integer) next_token;
+          pin_coor[i] = integer;
         }
         else
         {

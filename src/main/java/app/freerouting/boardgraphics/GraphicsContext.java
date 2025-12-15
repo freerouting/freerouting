@@ -416,9 +416,9 @@ public class GraphicsContext implements Serializable
     {
       return;
     }
-    if (p_area instanceof Circle)
+    if (p_area instanceof Circle circle)
     {
-      fill_circle((Circle) p_area, p_g, p_color, p_translucency_factor);
+      fill_circle(circle, p_g, p_color, p_translucency_factor);
     }
     else
     {

@@ -54,10 +54,10 @@ public class RouteState extends InteractiveState
       return null;
     }
     int[] route_net_no_arr;
-    if (picked_item instanceof Pin && net_count > 1)
+    if (picked_item instanceof Pin pin && net_count > 1)
     {
       // tie pin, remove nets, which are already connected to this pin on the current layer.
-      route_net_no_arr = get_route_net_numbers_at_tie_pin((Pin) picked_item, p_board_handling.settings.layer);
+      route_net_no_arr = get_route_net_numbers_at_tie_pin(pin, p_board_handling.settings.layer);
     }
     else
     {
@@ -92,15 +92,15 @@ public class RouteState extends InteractiveState
     if (picked_item instanceof Trace picked_trace)
     {
       Point picked_corner = picked_trace.nearest_end_point(location);
-      if (picked_corner instanceof IntPoint && p_location.distance(picked_corner.to_float()) < 5 * picked_trace.get_half_width())
+      if (picked_corner instanceof IntPoint point && p_location.distance(picked_corner.to_float()) < 5 * picked_trace.get_half_width())
       {
-        location = (IntPoint) picked_corner;
+        location = point;
       }
       else
       {
-        if (picked_trace instanceof PolylineTrace)
+        if (picked_trace instanceof PolylineTrace trace)
         {
-          FloatPoint nearest_point = ((PolylineTrace) picked_trace).polyline().nearest_point_approx(p_location);
+          FloatPoint nearest_point = trace.polyline().nearest_point_approx(p_location);
           location = nearest_point.round();
         }
         if (!routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_class_no()))
@@ -121,9 +121,9 @@ public class RouteState extends InteractiveState
     else if (picked_item instanceof DrillItem drill_item)
     {
       Point center = drill_item.get_center();
-      if (center instanceof IntPoint)
+      if (center instanceof IntPoint point)
       {
-        location = (IntPoint) center;
+        location = point;
       }
     }
     if (!start_ok)

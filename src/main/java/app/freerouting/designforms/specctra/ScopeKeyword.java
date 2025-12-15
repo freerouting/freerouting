@@ -80,10 +80,10 @@ public class ScopeKeyword extends Keyword
       {
         ScopeKeyword next_scope;
         // a new scope is expected
-        if (next_token instanceof ScopeKeyword)
+        if (next_token instanceof ScopeKeyword keyword)
         {
           // read the next scope, which is the "structure" part of the DSN file
-          next_scope = (ScopeKeyword) next_token;
+          next_scope = keyword;
           if (!next_scope.read_scope(p_par))
           {
             return false;

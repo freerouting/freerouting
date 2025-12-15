@@ -94,9 +94,9 @@ class DrillPage implements ExpandableObject
         {
           continue;
         }
-        if (curr_item instanceof Pin)
+        if (curr_item instanceof Pin pin)
         {
-          if (p_attach_smd && ((Pin) curr_item).drill_allowed())
+          if (p_attach_smd && pin.drill_allowed())
           {
             continue;
           }

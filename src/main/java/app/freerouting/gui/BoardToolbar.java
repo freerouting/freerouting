@@ -301,9 +301,9 @@ class BoardToolbar extends JPanel
       comp.setFont(newFont);
 
       // If the component is a container, update its child components recursively
-      if (comp instanceof Container)
+      if (comp instanceof Container container)
       {
-        updateContainerFont((Container) comp, newFont);
+        updateContainerFont(container, newFont);
       }
     }
   }
@@ -313,9 +313,9 @@ class BoardToolbar extends JPanel
     for (Component child : container.getComponents())
     {
       child.setFont(font);
-      if (child instanceof Container)
+      if (child instanceof Container container1)
       {
-        updateContainerFont((Container) child, font);
+        updateContainerFont(container1, font);
       }
     }
   }
