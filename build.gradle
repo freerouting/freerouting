@@ -80,8 +80,8 @@ dependencies {
     //implementation group: 'javax.help', name: 'javahelp', version: '2.0.05'
 
     // https://mvnrepository.com/artifact/org.apache.logging.log4j
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.25.2'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.25.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.25.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.25.2'
 
     // https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.13.2'
@@ -160,7 +160,7 @@ jar {
 tasks.register('executableJar', Jar) {
     archiveClassifier = 'executable'
 
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     // Exclude signature files from dependencies
     from {
