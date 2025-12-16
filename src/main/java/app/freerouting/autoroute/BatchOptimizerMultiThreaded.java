@@ -29,8 +29,8 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
   private ThreadPoolExecutor pool;
   private ItemRouteResult best_route_result;
   private OptimizeRouteTask winning_candidate;
-  private int num_tasks_finished = 0;
-  private int update_count = 0;
+  private int num_tasks_finished;
+  private int update_count;
   private CountDownLatch task_completion_signal = new CountDownLatch(1);
   private int hybrid_index = -1;
 
@@ -64,12 +64,12 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
           num_prioritized = 1;
         }
 
-        for (int i = 0; i < num_optimal; ++i)
+        for (int i = 0; i < num_optimal; i++)
         {
           hybrid_list.add(BoardUpdateStrategy.GLOBAL_OPTIMAL);
         }
 
-        for (int i = 0; i < num_prioritized; ++i)
+        for (int i = 0; i < num_prioritized; i++)
         {
           hybrid_list.add(BoardUpdateStrategy.GREEDY);
         }
@@ -188,8 +188,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer
         if (r != null)
         { // use PriorityQueue to sort item according to route result
           pq.add(r);
-        }
-        else
+        } else
         {
           new_item_ids.add(item.get_id_no());
         }

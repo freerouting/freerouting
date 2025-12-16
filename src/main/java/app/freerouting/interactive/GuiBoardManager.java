@@ -43,7 +43,7 @@ public class GuiBoardManager extends HeadlessBoardManager
   // The interval in milliseconds between two repaints of the board panel (sets the effective frame rate)
   private static final long repaint_interval = 1000;
   // The time of the last repaint of the board panel
-  private static long last_repainted_time = 0;
+  private static long last_repainted_time;
   /**
    * The text message fields displayed on the screen
    */
@@ -70,7 +70,7 @@ public class GuiBoardManager extends HeadlessBoardManager
   /**
    * To repaint the board immediately for example when reading a logfile.
    */
-  boolean paint_immediately = false;
+  boolean paint_immediately;
   /**
    * thread pool size
    */
@@ -94,7 +94,7 @@ public class GuiBoardManager extends HeadlessBoardManager
    * True if currently a logfile is being processed. Used to prevent interactive changes of the
    * board database in this case.
    */
-  private boolean board_is_read_only = false;
+  private boolean board_is_read_only;
   /**
    * The current position of the mouse pointer.
    */
@@ -246,7 +246,7 @@ public class GuiBoardManager extends HeadlessBoardManager
         // change the current layer to the best visible layer, if it becomes invisible;
         double best_visibility = 0;
         int best_visible_layer = 0;
-        for (int i = 0; i < graphics_context.layer_count(); ++i)
+        for (int i = 0; i < graphics_context.layer_count(); i++)
         {
           if (graphics_context.get_layer_visibility(i) > best_visibility)
           {
@@ -441,14 +441,14 @@ public class GuiBoardManager extends HeadlessBoardManager
   {
     if (p_layer_no == ComboBoxLayer.ALL_LAYER_INDEX)
     {
-      for (int i = 0; i < settings.manual_trace_half_width_arr.length; ++i)
+      for (int i = 0; i < settings.manual_trace_half_width_arr.length; i++)
       {
         this.settings.set_manual_trace_half_width(i, p_value);
       }
     }
     else if (p_layer_no == ComboBoxLayer.INNER_LAYER_INDEX)
     {
-      for (int i = 1; i < settings.manual_trace_half_width_arr.length - 1; ++i)
+      for (int i = 1; i < settings.manual_trace_half_width_arr.length - 1; i++)
       {
         this.settings.set_manual_trace_half_width(i, p_value);
       }
@@ -1698,7 +1698,7 @@ public class GuiBoardManager extends HeadlessBoardManager
     Set<Item> result = board.pick_items(location, settings.layer, p_item_filter);
     if (result.isEmpty() && settings.select_on_all_visible_layers)
     {
-      for (int i = 0; i < graphics_context.layer_count(); ++i)
+      for (int i = 0; i < graphics_context.layer_count(); i++)
       {
         if (i == settings.layer || graphics_context.get_layer_visibility(i) <= 0)
         {

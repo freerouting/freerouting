@@ -83,7 +83,7 @@ public class RationalVector extends Vector implements Serializable
     }
     det = BigIntAux.determinant(y, other.y, z, other.z);
 
-    return (det.signum() == 0);
+    return det.signum() == 0;
   }
 
   /**
@@ -119,7 +119,7 @@ public class RationalVector extends Vector implements Serializable
   @Override
   public boolean is_orthogonal()
   {
-    return (x.signum() == 0 || y.signum() == 0);
+    return x.signum() == 0 || y.signum() == 0;
   }
 
   @Override
@@ -231,7 +231,7 @@ public class RationalVector extends Vector implements Serializable
     BigInteger gcd = dx.gcd(y);
     dx = dx.divide(gcd);
     dy = dy.divide(gcd);
-    if ((dx.abs()).compareTo(Limits.CRIT_INT_BIG) <= 0 && (dy.abs()).compareTo(Limits.CRIT_INT_BIG) <= 0)
+    if (dx.abs().compareTo(Limits.CRIT_INT_BIG) <= 0 && dy.abs().compareTo(Limits.CRIT_INT_BIG) <= 0)
     {
       return new IntDirection(dx.intValue(), dy.intValue());
     }

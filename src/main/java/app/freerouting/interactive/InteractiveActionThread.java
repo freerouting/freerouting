@@ -1,5 +1,7 @@
 package app.freerouting.interactive;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.logger.FRLogger;
@@ -11,8 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * Used for running an interactive action in a separate thread, that can be stopped by the user.

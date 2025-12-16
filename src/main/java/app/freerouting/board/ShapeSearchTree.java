@@ -19,7 +19,7 @@ public class ShapeSearchTree extends MinAreaTree
   /**
    * used in objects of class EntrySortedByClearance
    */
-  private static int last_generated_id_no = 0;
+  private static int last_generated_id_no;
   /**
    * The clearance class number for which the shapes of this tree is compensated. If
    * compensated_clearance_class_no = 0, the shapes are not compensated.
@@ -97,16 +97,16 @@ public class ShapeSearchTree extends MinAreaTree
     Leaf[] new_leaf_arr = new Leaf[new_shape_count];
     TileShape[] new_precalculated_tree_shapes = new TileShape[new_shape_count];
     Leaf[] old_entries = p_obj.get_search_tree_entries(this);
-    for (int i = 0; i < p_keep_at_start_count; ++i)
+    for (int i = 0; i < p_keep_at_start_count; i++)
     {
       new_leaf_arr[i] = old_entries[i];
       new_precalculated_tree_shapes[i] = p_obj.get_tree_shape(this, i);
     }
-    for (int i = p_keep_at_start_count; i < old_shape_count - p_keep_at_end_count; ++i)
+    for (int i = p_keep_at_start_count; i < old_shape_count - p_keep_at_end_count; i++)
     {
       remove_leaf(old_entries[i]);
     }
-    for (int i = 0; i < p_keep_at_end_count; ++i)
+    for (int i = 0; i < p_keep_at_end_count; i++)
     {
       int new_index = new_shape_count - p_keep_at_end_count + i;
       int old_index = old_shape_count - p_keep_at_end_count + i;
@@ -120,7 +120,7 @@ public class ShapeSearchTree extends MinAreaTree
     System.arraycopy(changed_shapes, 0, new_precalculated_tree_shapes, p_keep_at_start_count, changed_shapes.length);
     p_obj.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
-    for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; ++i)
+    for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; i++)
     {
       new_leaf_arr[i] = insert(p_obj, i);
     }
@@ -160,14 +160,13 @@ public class ShapeSearchTree extends MinAreaTree
     int old_to_shape_count = to_trace_entries.length;
     TileShape[] new_precalculated_tree_shapes = new TileShape[new_shape_count];
     // transfer the tree entries except the last or first from p_from_trace to p_to_trace
-    for (int i = 0; i < from_shape_count_minus_1; ++i)
+    for (int i = 0; i < from_shape_count_minus_1; i++)
     {
       int from_no;
       if (change_order)
       {
         from_no = from_shape_count_minus_1 - i;
-      }
-      else
+      } else
       {
         from_no = i;
       }
@@ -176,7 +175,7 @@ public class ShapeSearchTree extends MinAreaTree
       new_leaf_arr[i].object = p_to_trace;
       new_leaf_arr[i].shape_index_in_object = i;
     }
-    for (int i = 1; i < old_to_shape_count; ++i)
+    for (int i = 1; i < old_to_shape_count; i++)
     {
       int curr_ind = from_shape_count_minus_1 + link_shapes.length + i - 1;
       new_precalculated_tree_shapes[curr_ind] = p_to_trace.get_tree_shape(this, i);
@@ -185,7 +184,7 @@ public class ShapeSearchTree extends MinAreaTree
     }
 
     // correct the precalculated tree shapes first, because it is used in this.insert
-    for (int i = 0; i < link_shapes.length; ++i)
+    for (int i = 0; i < link_shapes.length; i++)
     {
       int curr_ind = from_shape_count_minus_1 + i;
       new_precalculated_tree_shapes[curr_ind] = link_shapes[i];
@@ -193,7 +192,7 @@ public class ShapeSearchTree extends MinAreaTree
     p_to_trace.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
     // create the new link entries
-    for (int i = 0; i < link_shapes.length; ++i)
+    for (int i = 0; i < link_shapes.length; i++)
     {
       int curr_ind = from_shape_count_minus_1 + i;
       new_leaf_arr[curr_ind] = insert(p_to_trace, curr_ind);
@@ -235,21 +234,20 @@ public class ShapeSearchTree extends MinAreaTree
     TileShape[] new_precalculated_tree_shapes = new TileShape[new_shape_count];
     // transfer the tree entries except the last from the old shapes
     // of p_to_trace to the new shapes of p_to_trace
-    for (int i = 0; i < to_shape_count_minus_1; ++i)
+    for (int i = 0; i < to_shape_count_minus_1; i++)
     {
       new_precalculated_tree_shapes[i] = p_to_trace.get_tree_shape(this, i);
       new_leaf_arr[i] = to_trace_entries[i];
     }
 
-    for (int i = 1; i < from_trace_entries.length; ++i)
+    for (int i = 1; i < from_trace_entries.length; i++)
     {
       int curr_ind = to_shape_count_minus_1 + link_shapes.length + i - 1;
       int from_no;
       if (change_order)
       {
         from_no = from_trace_entries.length - i - 1;
-      }
-      else
+      } else
       {
         from_no = i;
       }
@@ -260,7 +258,7 @@ public class ShapeSearchTree extends MinAreaTree
     }
 
     // correct the precalculated tree shapes first, because it is used in this.insert
-    for (int i = 0; i < link_shapes.length; ++i)
+    for (int i = 0; i < link_shapes.length; i++)
     {
       int curr_ind = to_shape_count_minus_1 + i;
       new_precalculated_tree_shapes[curr_ind] = link_shapes[i];
@@ -268,7 +266,7 @@ public class ShapeSearchTree extends MinAreaTree
     p_to_trace.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
     // create the new link entries
-    for (int i = 0; i < link_shapes.length; ++i)
+    for (int i = 0; i < link_shapes.length; i++)
     {
       int curr_ind = to_shape_count_minus_1 + i;
       new_leaf_arr[curr_ind] = insert(p_to_trace, curr_ind);
@@ -286,7 +284,7 @@ public class ShapeSearchTree extends MinAreaTree
     Leaf[] start_piece_leaf_arr = new Leaf[p_start_piece.polyline().arr.length - 2];
     Leaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
     // transfer the entries at the start of p_from_trace to p_start_piece.
-    for (int i = 0; i < start_piece_leaf_arr.length - 1; ++i)
+    for (int i = 0; i < start_piece_leaf_arr.length - 1; i++)
     {
       start_piece_leaf_arr[i] = from_trace_entries[i];
       start_piece_leaf_arr[i].object = p_start_piece;
@@ -302,7 +300,7 @@ public class ShapeSearchTree extends MinAreaTree
     // create the first tree entry of the end piece.
     end_piece_leaf_arr[0] = insert(p_end_piece, 0);
 
-    for (int i = 1; i < end_piece_leaf_arr.length; ++i)
+    for (int i = 1; i < end_piece_leaf_arr.length; i++)
     {
       int from_index = from_trace_entries.length - end_piece_leaf_arr.length + i;
       end_piece_leaf_arr[i] = from_trace_entries[from_index];
@@ -384,7 +382,7 @@ public class ShapeSearchTree extends MinAreaTree
       boolean ignore_object = p_layer >= 0 && curr_object.shape_layer(shape_index) != p_layer;
       if (!ignore_object)
       {
-        for (int i = 0; i < p_ignore_net_nos.length; ++i)
+        for (int i = 0; i < p_ignore_net_nos.length; i++)
         {
           if (!curr_object.is_obstacle(p_ignore_net_nos[i]))
           {
@@ -457,7 +455,7 @@ public class ShapeSearchTree extends MinAreaTree
       boolean ignore_item = p_layer >= 0 && curr_item.shape_layer(shape_index) != p_layer;
       if (!ignore_item)
       {
-        for (int i = 0; i < p_ignore_net_nos.length; ++i)
+        for (int i = 0; i < p_ignore_net_nos.length; i++)
         {
           if (!curr_item.is_obstacle(p_ignore_net_nos[i]))
           {
@@ -651,8 +649,7 @@ public class ShapeSearchTree extends MinAreaTree
             result = new_result;
             bounding_shape = new_bounding_shape;
           }
-        }
-        else
+        } else
         {
           this.node_stack.push(((InnerNode) curr_node).first_child);
           this.node_stack.push(((InnerNode) curr_node).second_child);
@@ -697,7 +694,7 @@ public class ShapeSearchTree extends MinAreaTree
     }
     Line cut_line = null;
     double cut_line_distance = -1;
-    for (int i = 0; i < obstacle_simplex.border_line_count(); ++i)
+    for (int i = 0; i < obstacle_simplex.border_line_count(); i++)
     {
       LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
       if (room_shape.is_intersected_interior_by(curr_line_segment))
@@ -739,7 +736,7 @@ public class ShapeSearchTree extends MinAreaTree
         return result;
       }
 
-      for (int i = 0; i < obstacle_simplex.border_line_count(); ++i)
+      for (int i = 0; i < obstacle_simplex.border_line_count(); i++)
       {
         LineSegment curr_line_segment = new LineSegment(obstacle_simplex, i);
         if (room_shape.is_intersected_interior_by(curr_line_segment))
@@ -837,7 +834,7 @@ public class ShapeSearchTree extends MinAreaTree
     }
     TileShape[] shape_pieces = trace_shape.cutout(pin_shape);
     TileShape new_trace_shape = Simplex.EMPTY;
-    for (int i = 0; i < shape_pieces.length; ++i)
+    for (int i = 0; i < shape_pieces.length; i++)
     {
       if (shape_pieces[i].dimension() == 2)
       {
@@ -860,14 +857,13 @@ public class ShapeSearchTree extends MinAreaTree
     Leaf[] new_leaf_arr = new Leaf[old_entries.length];
     TileShape[] new_precalculated_tree_shapes = new TileShape[old_entries.length];
     remove_leaf(old_entries[p_shape_no]);
-    for (int i = 0; i < new_precalculated_tree_shapes.length; ++i)
+    for (int i = 0; i < new_precalculated_tree_shapes.length; i++)
     {
       if (i == p_shape_no)
       {
         new_precalculated_tree_shapes[i] = p_new_shape;
 
-      }
-      else
+      } else
       {
         new_precalculated_tree_shapes[i] = p_item.get_tree_shape(this, i);
         new_leaf_arr[i] = old_entries[i];
@@ -885,25 +881,22 @@ public class ShapeSearchTree extends MinAreaTree
       return new TileShape[0];
     }
     TileShape[] result = new TileShape[p_drill_item.tile_shape_count()];
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       Shape curr_shape = p_drill_item.get_shape(i);
       if (curr_shape == null)
       {
         result[i] = null;
-      }
-      else
+      } else
       {
         TileShape curr_tile_shape;
         if (this.board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
         {
           curr_tile_shape = curr_shape.bounding_box();
-        }
-        else if (this.board.rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
+        } else if (this.board.rules.get_trace_angle_restriction() == AngleRestriction.FORTYFIVE_DEGREE)
         {
           curr_tile_shape = curr_shape.bounding_octagon();
-        }
-        else
+        } else
         {
           curr_tile_shape = curr_shape.bounding_tile();
         }
@@ -911,8 +904,7 @@ public class ShapeSearchTree extends MinAreaTree
         if (curr_tile_shape == null)
         {
           FRLogger.warn("ShapeSearchTree.calculate_tree_shapes: shape is null");
-        }
-        else
+        } else
         {
           curr_tile_shape = (TileShape) curr_tile_shape.enlarge(offset_width);
         }
@@ -943,7 +935,7 @@ public class ShapeSearchTree extends MinAreaTree
     }
 
     Collection<TileShape> tree_shape_list = new LinkedList<>();
-    for (int i = 0; i < convex_shapes.length; ++i)
+    for (int i = 0; i < convex_shapes.length; i++)
     {
       TileShape curr_convex_shape = convex_shapes[i];
 
@@ -954,7 +946,7 @@ public class ShapeSearchTree extends MinAreaTree
     }
     TileShape[] result = new TileShape[tree_shape_list.size()];
     Iterator<TileShape> it = tree_shape_list.iterator();
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = it.next();
     }
@@ -978,9 +970,9 @@ public class ShapeSearchTree extends MinAreaTree
         return new TileShape[0];
       }
       Collection<TileShape> tree_shape_list = new LinkedList<>();
-      for (int layer_no = 0; layer_no < this.board.layer_structure.arr.length; ++layer_no)
+      for (int layer_no = 0; layer_no < this.board.layer_structure.arr.length; layer_no++)
       {
-        for (int i = 0; i < convex_shapes.length; ++i)
+        for (int i = 0; i < convex_shapes.length; i++)
         {
           TileShape curr_convex_shape = convex_shapes[i];
           int offset_width = this.clearance_compensation_value(p_board_outline.clearance_class_no(), layer_no);
@@ -990,7 +982,7 @@ public class ShapeSearchTree extends MinAreaTree
       }
       result = new TileShape[tree_shape_list.size()];
       Iterator<TileShape> it = tree_shape_list.iterator();
-      for (int i = 0; i < result.length; ++i)
+      for (int i = 0; i < result.length; i++)
       {
         result[i] = it.next();
       }
@@ -1002,14 +994,14 @@ public class ShapeSearchTree extends MinAreaTree
       int half_width = p_board_outline.get_half_width();
       Line[] curr_line_arr = new Line[3];
       int curr_no = 0;
-      for (int layer_no = 0; layer_no < this.board.layer_structure.arr.length; ++layer_no)
+      for (int layer_no = 0; layer_no < this.board.layer_structure.arr.length; layer_no++)
       {
-        for (int shape_no = 0; shape_no < p_board_outline.shape_count(); ++shape_no)
+        for (int shape_no = 0; shape_no < p_board_outline.shape_count(); shape_no++)
         {
           PolylineShape curr_outline_shape = p_board_outline.get_shape(shape_no);
           int border_line_count = curr_outline_shape.border_line_count();
           curr_line_arr[0] = curr_outline_shape.border_line(border_line_count - 1);
-          for (int i = 0; i < border_line_count; ++i)
+          for (int i = 0; i < border_line_count; i++)
           {
             curr_line_arr[1] = curr_outline_shape.border_line(i);
             curr_line_arr[2] = curr_outline_shape.border_line((i + 1) % border_line_count);
@@ -1049,7 +1041,7 @@ public class ShapeSearchTree extends MinAreaTree
     }
     int offset_width = p_trace.get_half_width() + this.clearance_compensation_value(p_trace.clearance_class_no(), p_trace.get_layer());
     TileShape[] result = new TileShape[p_trace.tile_shape_count()];
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = this.offset_shape(p_trace.polyline(), offset_width, i);
     }
@@ -1094,7 +1086,7 @@ public class ShapeSearchTree extends MinAreaTree
   boolean validate_entries(Item p_item)
   {
     Leaf[] curr_tree_entries = p_item.get_search_tree_entries(this);
-    for (int i = 0; i < curr_tree_entries.length; ++i)
+    for (int i = 0; i < curr_tree_entries.length; i++)
     {
       Leaf curr_leaf = curr_tree_entries[i];
       if (curr_leaf.shape_index_in_object != i)

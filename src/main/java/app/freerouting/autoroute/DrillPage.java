@@ -42,7 +42,7 @@ class DrillPage implements ExpandableObject
     shape = p_shape;
     board = p_board;
     maze_search_info_arr = new MazeSearchElement[p_board.get_layer_count()];
-    for (int i = 0; i < maze_search_info_arr.length; ++i)
+    for (int i = 0; i < maze_search_info_arr.length; i++)
     {
       maze_search_info_arr[i] = new MazeSearchElement();
     }
@@ -116,7 +116,7 @@ class DrillPage implements ExpandableObject
       }
       TileShape[] holes = new TileShape[cutout_shapes.size()];
       Iterator<TileShape> it = cutout_shapes.iterator();
-      for (int i = 0; i < holes.length; ++i)
+      for (int i = 0; i < holes.length; i++)
       {
         holes[i] = it.next();
       }
@@ -126,7 +126,7 @@ class DrillPage implements ExpandableObject
       // Use the center points of these drill shapes to try making a via.
       int drill_first_layer = 0;
       int drill_last_layer = this.board.get_layer_count() - 1;
-      for (int i = 0; i < drill_shapes.length; ++i)
+      for (int i = 0; i < drill_shapes.length; i++)
       {
         TileShape curr_drill_shape = drill_shapes[i];
         Point curr_drill_location = null;

@@ -1,5 +1,7 @@
 package app.freerouting.interactive;
 
+import static app.freerouting.management.gson.GsonProvider.GSON;
+
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
@@ -18,8 +20,6 @@ import app.freerouting.rules.DefaultItemClearanceClasses;
 
 import java.io.*;
 import java.util.Locale;
-
-import static app.freerouting.management.gson.GsonProvider.GSON;
 
 /**
  * Manages the routing board operations in a headless mode, where no graphical user interface is involved.
@@ -47,7 +47,7 @@ public class HeadlessBoardManager implements BoardManager
   protected Locale locale;
   protected RoutingJob routingJob;
   // The board checksum is used to detect changes in the board database
-  protected long originalBoardChecksum = 0;
+  protected long originalBoardChecksum;
 
   public HeadlessBoardManager(Locale p_locale, RoutingJob routingJob)
   {
@@ -81,7 +81,7 @@ public class HeadlessBoardManager implements BoardManager
   @Override
   public void initialize_manual_trace_half_widths()
   {
-    for (int i = 0; i < settings.manual_trace_half_width_arr.length; ++i)
+    for (int i = 0; i < settings.manual_trace_half_width_arr.length; i++)
     {
       settings.manual_trace_half_width_arr[i] = this.board.rules
           .get_default_net_class()

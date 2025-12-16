@@ -574,7 +574,7 @@ public class IntOctagon extends RegularTileShape implements Serializable
     if (precalculated_to_simplex == null)
     {
       Line[] line_arr = new Line[8];
-      for (int i = 0; i < 8; ++i)
+      for (int i = 0; i < 8; i++)
       {
         line_arr[i] = border_line(i);
       }
@@ -676,7 +676,7 @@ public class IntOctagon extends RegularTileShape implements Serializable
   @Override
   public boolean is_contained_in(IntBox p_box)
   {
-    return (leftX >= p_box.ll.x && bottomY >= p_box.ll.y && rightX <= p_box.ur.x && topY <= p_box.ur.y);
+    return leftX >= p_box.ll.x && bottomY >= p_box.ll.y && rightX <= p_box.ur.x && topY <= p_box.ur.y;
   }
 
   @Override
@@ -1074,7 +1074,7 @@ public class IntOctagon extends RegularTileShape implements Serializable
     p_max_result_points = Math.min(p_max_result_points, 8);
     IntPoint[] result = new IntPoint[p_max_result_points];
     double[] min_dist = new double[p_max_result_points];
-    for (int i = 0; i < p_max_result_points; ++i)
+    for (int i = 0; i < p_max_result_points; i++)
     {
       min_dist[i] = Double.MAX_VALUE;
     }
@@ -1083,11 +1083,11 @@ public class IntOctagon extends RegularTileShape implements Serializable
     {
       IntPoint curr_border_point = border_point(p_point, curr_dir);
       double curr_dist = inside_point.distance_square(curr_border_point.to_float());
-      for (int i = 0; i < p_max_result_points; ++i)
+      for (int i = 0; i < p_max_result_points; i++)
       {
         if (curr_dist < min_dist[i])
         {
-          for (int k = p_max_result_points - 1; k > i; --k)
+          for (int k = p_max_result_points - 1; k > i; k--)
           {
             min_dist[k] = min_dist[k - 1];
             result[k] = result[k - 1];
@@ -1424,7 +1424,7 @@ public class IntOctagon extends RegularTileShape implements Serializable
     IntOctagon[] result = new IntOctagon[8];
 
     // add the 4 boxes to the result
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       result[i] = boxes[i].to_IntOctagon();
     }
@@ -1484,7 +1484,7 @@ public class IntOctagon extends RegularTileShape implements Serializable
 
     result[7] = new IntOctagon(p_d.leftX, tmp2, tmp, p_d.topY, p_d.upperLeftDiagonalX, c.upperLeftDiagonalX, p_d.lowerLeftDiagonalX, p_d.upperRightDiagonalX);
 
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 8; i++)
     {
       result[i] = result[i].normalize();
     }

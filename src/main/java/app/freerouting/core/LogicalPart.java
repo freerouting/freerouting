@@ -53,7 +53,7 @@ public class LogicalPart implements ObjectInfoPanel.Printable, Serializable
 
     p_window.append_bold(tm.getText("logical_part_2") + " ");
     p_window.append_bold(this.name);
-    for (int i = 0; i < this.part_pin_arr.length; ++i)
+    for (int i = 0; i < this.part_pin_arr.length; i++)
     {
       PartPin curr_pin = this.part_pin_arr[i];
       p_window.newline();

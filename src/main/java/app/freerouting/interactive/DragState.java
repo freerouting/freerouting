@@ -15,8 +15,8 @@ import java.util.TreeSet;
 public abstract class DragState extends InteractiveState
 {
   protected FloatPoint previous_location;
-  protected boolean something_dragged = false;
-  protected boolean observers_activated = false;
+  protected boolean something_dragged;
+  protected boolean observers_activated;
 
   /**
    * Creates a new instance of DragState
@@ -44,7 +44,7 @@ public abstract class DragState extends InteractiveState
     int pick_layer = curr_layer;
     boolean item_found = false;
 
-    for (int i = 0; i < try_count; ++i)
+    for (int i = 0; i < try_count; i++)
     {
       if (i == 0 || pick_layer != curr_layer && (p_board_handling.graphics_context.get_layer_visibility(pick_layer)) > 0)
       {

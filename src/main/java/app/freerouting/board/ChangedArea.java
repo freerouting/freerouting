@@ -19,7 +19,7 @@ class ChangedArea
     layer_count = p_layer_count;
     arr = new MutableOctagon[layer_count];
     // initialise all octagons to empty
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       arr[i] = new MutableOctagon();
       arr[i].set_empty();
@@ -56,7 +56,7 @@ class ChangedArea
       return;
     }
     int corner_count = p_shape.border_line_count();
-    for (int i = 0; i < corner_count; ++i)
+    for (int i = 0; i < corner_count; i++)
     {
       join(p_shape.corner_approx(i), p_layer);
     }
@@ -77,7 +77,7 @@ class ChangedArea
     int lly = Integer.MAX_VALUE;
     int urx = Integer.MIN_VALUE;
     int ury = Integer.MIN_VALUE;
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       MutableOctagon curr = arr[i];
       llx = Math.min(llx, (int) Math.floor(curr.lx));

@@ -2,6 +2,7 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
 
 import java.io.IOException;
@@ -32,10 +33,10 @@ public class PolylinePath extends Path
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
     int line_count = coordinate_arr.length / 4;
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       p_file.new_line();
-      for (int j = 0; j < 4; ++j)
+      for (int j = 0; j < 4; j++)
       {
         p_file.write(String.valueOf(coordinate_arr[4 * i + j]));
         p_file.write(" ");
@@ -53,10 +54,10 @@ public class PolylinePath extends Path
     p_file.write(" ");
     p_file.write(String.valueOf(this.width));
     int line_count = coordinate_arr.length / 4;
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       p_file.new_line();
-      for (int j = 0; j < 4; ++j)
+      for (int j = 0; j < 4; j++)
       {
         int curr_coor = (int) Math.round(coordinate_arr[4 * i + j]);
         p_file.write(String.valueOf(curr_coor));
@@ -67,14 +68,14 @@ public class PolylinePath extends Path
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
+  public Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
   {
     FRLogger.warn("PolylinePath.transform_to_board_rel not implemented");
     return null;
   }
 
   @Override
-  public app.freerouting.geometry.planar.Shape transform_to_board(CoordinateTransform p_coordinate_transform)
+  public Shape transform_to_board(CoordinateTransform p_coordinate_transform)
   {
     FRLogger.warn("PolylinePath.transform_to_board not implemented");
     return null;

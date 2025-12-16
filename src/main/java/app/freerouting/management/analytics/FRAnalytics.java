@@ -1,5 +1,7 @@
 package app.freerouting.management.analytics;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.dto.Properties;
 import app.freerouting.management.analytics.dto.Traits;
@@ -10,8 +12,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-
-import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * A class to manage analytics for the application.
@@ -97,9 +97,9 @@ public class FRAnalytics
   private static String appCurrentLocation = "";
   private static String appWindowTitle = "";
   private static long appStartedAt;
-  private static int sessionCount = 0;
-  private static long totalAutorouterRuntime = 0;
-  private static long totalRouteOptimizerRuntime = 0;
+  private static int sessionCount;
+  private static long totalAutorouterRuntime;
+  private static long totalRouteOptimizerRuntime;
   private static long autorouterStartedAt;
   private static long routeOptimizerStartedAt;
 
@@ -279,7 +279,7 @@ public class FRAnalytics
     properties.put("session_count", String.valueOf(sessionCount));
     properties.put("total_autorouter_runtime", String.valueOf(totalAutorouterRuntime));
     properties.put("total_route_optimizer_runtime", String.valueOf(totalRouteOptimizerRuntime));
-    properties.put("application_runtime", String.valueOf((appClosedAt - appStartedAt)));
+    properties.put("application_runtime", String.valueOf(appClosedAt - appStartedAt));
     properties.put("statistics_start_time", String.valueOf(globalSettings.statistics.startTime));
     properties.put("statistics_end_time", String.valueOf(globalSettings.statistics.endTime));
     properties.put("statistics_sessions_total", String.valueOf(globalSettings.statistics.sessionsTotal));
@@ -409,5 +409,8 @@ public class FRAnalytics
     properties.put("api_response", responseBody);
 
     trackAnonymousAction(permanent_user_id, "API Endpoint Called", properties);
+  }
+
+  private FRAnalytics() {
   }
 }

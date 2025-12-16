@@ -1,29 +1,40 @@
 package app.freerouting.gui;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.Freerouting;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.interactive.*;
+import app.freerouting.interactive.DragMenuState;
+import app.freerouting.interactive.InteractiveActionThread;
+import app.freerouting.interactive.InteractiveState;
+import app.freerouting.interactive.RouteMenuState;
+import app.freerouting.interactive.SelectMenuState;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.management.gson.GsonProvider;
-
-import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.Arrays;
-
-import static app.freerouting.Freerouting.globalSettings;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.border.BevelBorder;
 
 /**
  * Implements the toolbar panel of the board frame.
  */
-class BoardToolbar extends JPanel
-{
+class BoardToolbar extends JPanel {
+
   private final float ICON_FONT_SIZE = 26.0f;
   private final SegmentedButtons modeSelectionPanel;
   private final JButton settings_button;
@@ -42,8 +53,7 @@ class BoardToolbar extends JPanel
   /**
    * Creates a new instance of BoardToolbarPanel
    */
-  BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode)
-  {
+  BoardToolbar(BoardFrame p_board_frame, boolean p_disable_select_mode) {
     this.board_frame = p_board_frame;
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
@@ -56,18 +66,14 @@ class BoardToolbar extends JPanel
 
     left_toolbar.setMaximumSize(new Dimension(1200, 30));
 
-    if (!p_disable_select_mode)
-    {
+    if (!p_disable_select_mode) {
       modeSelectionPanel = new SegmentedButtons(tm, "Mode", "select_button", "route_button", "drag_button");
-    }
-    else
-    {
+    } else {
       modeSelectionPanel = new SegmentedButtons(tm, "Mode", "route_button", "drag_button");
     }
     modeSelectionPanel.addValueChangedEventListener((String value) ->
     {
-      switch (value)
-      {
+      switch (value) {
         case "select_button":
           board_frame.board_panel.board_handling.set_select_menu_state();
           break;
@@ -116,8 +122,7 @@ class BoardToolbar extends JPanel
           .listJobs(SessionManager
               .getInstance()
               .getGuiSession().id.toString());
-      if (routingJobs.length == 0)
-      {
+      if (routingJobs.length == 0) {
         FRLogger.warn("No routing job found for the current session");
         return;
       }
@@ -129,8 +134,7 @@ class BoardToolbar extends JPanel
       guiRoutingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
       InteractiveActionThread thread = board_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(guiRoutingJob);
 
-      if ((thread != null) && (board_frame.board_panel.board_handling.autorouter_listener != null))
-      {
+      if ((thread != null) && (board_frame.board_panel.board_handling.autorouter_listener != null)) {
         // Add the auto-router listener to save the design file when the auto-router is running
         thread.addListener(board_frame.board_panel.board_handling.autorouter_listener);
       }
@@ -171,7 +175,8 @@ class BoardToolbar extends JPanel
       board_frame.board_panel.board_handling.repaint();
       // update the board frame
       BoardStatistics boardStatistics = board.get_statistics();
-      board_frame.screen_messages.set_board_score(boardStatistics.getNormalizedScore(globalSettings.routerSettings.scoring), boardStatistics.connections.incompleteCount, boardStatistics.clearanceViolations.totalCount);
+      board_frame.screen_messages.set_board_score(boardStatistics.getNormalizedScore(globalSettings.routerSettings.scoring), boardStatistics.connections.incompleteCount,
+          boardStatistics.clearanceViolations.totalCount);
     });
     delete_all_tracks_button.addActionListener(_ -> FRAnalytics.buttonClicked("delete_all_tracks_button", delete_all_tracks_button.getText()));
     middle_toolbar.add(delete_all_tracks_button);
@@ -245,12 +250,10 @@ class BoardToolbar extends JPanel
     final JToolBar right_toolbar = new JToolBar();
     right_toolbar.setAutoscrolls(true);
 
-
     unitSelectionPanel = new SegmentedButtons(tm, "Unit", "unit_mil", "unit_inch", "unit_mm", "unit_um");
     unitSelectionPanel.addValueChangedEventListener((String value) ->
     {
-      switch (value)
-      {
+      switch (value) {
         case "unit_mil":
           board_frame.board_panel.board_handling.change_user_unit(Unit.MIL);
           break;
@@ -277,8 +280,7 @@ class BoardToolbar extends JPanel
     // Add listeners to enable/disable buttons based on the board read-only state
     board_frame.addBoardLoadedEventListener((RoutingBoard board) ->
     {
-      if ((board == null) || (board.components.count() == 0))
-      {
+      if ((board == null) || (board.components.count() == 0)) {
         // disable all buttons if the board is empty
         setEnabled(false);
       }
@@ -291,37 +293,30 @@ class BoardToolbar extends JPanel
     });
   }
 
-  private static void changeToolbarFontSize(JToolBar toolBar, float newSize)
-  {
-    for (Component comp : toolBar.getComponents())
-    {
+  private static void changeToolbarFontSize(JToolBar toolBar, float newSize) {
+    for (Component comp : toolBar.getComponents()) {
       Font font = comp.getFont();
       // Create a new font based on the current font but with the new size
       Font newFont = font.deriveFont(newSize);
       comp.setFont(newFont);
 
       // If the component is a container, update its child components recursively
-      if (comp instanceof Container container)
-      {
+      if (comp instanceof Container container) {
         updateContainerFont(container, newFont);
       }
     }
   }
 
-  private static void updateContainerFont(Container container, Font font)
-  {
-    for (Component child : container.getComponents())
-    {
+  private static void updateContainerFont(Container container, Font font) {
+    for (Component child : container.getComponents()) {
       child.setFont(font);
-      if (child instanceof Container container1)
-      {
+      if (child instanceof Container container1) {
         updateContainerFont(container1, font);
       }
     }
   }
 
-  public void setEnabled(boolean enabled)
-  {
+  public void setEnabled(boolean enabled) {
     modeSelectionPanel.setEnabled(enabled);
     settings_button.setEnabled(enabled);
     toolbar_autoroute_button.setEnabled(enabled);
@@ -339,26 +334,18 @@ class BoardToolbar extends JPanel
   /**
    * Sets the selected button in the menu button group
    */
-  void setModeSelectionPanelValue(InteractiveState interactive_state)
-  {
-    if (interactive_state instanceof RouteMenuState)
-    {
+  void setModeSelectionPanelValue(InteractiveState interactive_state) {
+    if (interactive_state instanceof RouteMenuState) {
       this.modeSelectionPanel.setSelectedValue("route_button");
-    }
-    else if (interactive_state instanceof DragMenuState)
-    {
+    } else if (interactive_state instanceof DragMenuState) {
       this.modeSelectionPanel.setSelectedValue("drag_button");
-    }
-    else if (interactive_state instanceof SelectMenuState)
-    {
+    } else if (interactive_state instanceof SelectMenuState) {
       this.modeSelectionPanel.setSelectedValue("select_button");
     }
   }
 
-  public void setUnitSelectionPanelValue(Unit unit)
-  {
-    switch (unit)
-    {
+  public void setUnitSelectionPanelValue(Unit unit) {
+    switch (unit) {
       case MIL:
         this.unitSelectionPanel.setSelectedValue("unit_mil");
         break;

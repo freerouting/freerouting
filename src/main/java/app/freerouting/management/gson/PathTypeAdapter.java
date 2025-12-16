@@ -2,6 +2,7 @@ package app.freerouting.management.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class PathTypeAdapter extends TypeAdapter<Path>
   public Path read(JsonReader in) throws IOException
   {
     // add a check for null
-    if (in.peek() == com.google.gson.stream.JsonToken.NULL)
+    if (in.peek() == JsonToken.NULL)
     {
       in.nextNull();
       return null;

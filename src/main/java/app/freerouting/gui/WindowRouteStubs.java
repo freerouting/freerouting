@@ -135,7 +135,7 @@ public class WindowRouteStubs extends CleanupWindows
       return;
     }
     Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_list_values.size(); ++i)
+    for (int i = 0; i < selected_list_values.size(); i++)
     {
       selected_items.add(((RouteStubInfo) selected_list_values.get(i)).stub_item);
     }

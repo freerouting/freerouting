@@ -196,7 +196,7 @@ public class Line implements Comparable<Line>, Serializable
    */
   public boolean is_on_the_left(TileShape p_tile)
   {
-    for (int i = 0; i < p_tile.border_line_count(); ++i)
+    for (int i = 0; i < p_tile.border_line_count(); i++)
     {
       if (this.side_of(p_tile.corner(i)) == Side.ON_THE_RIGHT)
       {
@@ -211,7 +211,7 @@ public class Line implements Comparable<Line>, Serializable
    */
   public boolean is_on_the_right(TileShape p_tile)
   {
-    for (int i = 0; i < p_tile.border_line_count(); ++i)
+    for (int i = 0; i < p_tile.border_line_count(); i++)
     {
       if (this.side_of(p_tile.corner(i)) == Side.ON_THE_LEFT)
       {
@@ -353,7 +353,7 @@ public class Line implements Comparable<Line>, Serializable
         is_x = is_x.negate();
         is_y = is_y.negate();
       }
-      if ((is_x.mod(det)).signum() == 0 && (is_y.mod(det)).signum() == 0)
+      if (is_x.mod(det).signum() == 0 && is_y.mod(det).signum() == 0)
       {
         is_x = is_x.divide(det);
         is_y = is_y.divide(det);
@@ -507,7 +507,7 @@ public class Line implements Comparable<Line>, Serializable
   public boolean is_equal_or_opposite(Line p_other)
   {
 
-    return (side_of(p_other.a) == Side.COLLINEAR && side_of(p_other.b) == Side.COLLINEAR);
+    return side_of(p_other.a) == Side.COLLINEAR && side_of(p_other.b) == Side.COLLINEAR;
   }
 
   /**

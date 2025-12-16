@@ -49,7 +49,7 @@ public class Circle extends Shape
   {
     int[] new_coor = new int[3];
     new_coor[0] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[0]) / 2);
-    for (int i = 1; i < 3; ++i)
+    for (int i = 1; i < 3; i++)
     {
       new_coor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[i]));
     }
@@ -73,7 +73,7 @@ public class Circle extends Shape
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);
-    for (int i = 0; i < coor.length; ++i)
+    for (int i = 0; i < coor.length; i++)
     {
       p_file.write(" ");
       p_file.write(String.valueOf(coor[i]));
@@ -87,7 +87,7 @@ public class Circle extends Shape
     p_file.new_line();
     p_file.write("(circle ");
     p_identifier_type.write(this.layer.name, p_file);
-    for (int i = 0; i < coor.length; ++i)
+    for (int i = 0; i < coor.length; i++)
     {
       p_file.write(" ");
       int curr_coor = (int) Math.round(coor[i]);

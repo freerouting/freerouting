@@ -53,7 +53,7 @@ public class BoardRules implements Serializable
    * restricted exit directions. If the value is {@literal <}= 0, there are no exit restrictions.
    */
   private double pin_edge_to_turn_dist;
-  private boolean use_slow_autoroute_algorithm = false;
+  private boolean use_slow_autoroute_algorithm;
 
   /**
    * Creates a new instance of this class.
@@ -103,7 +103,7 @@ public class BoardRules implements Serializable
   public boolean trace_widths_are_layer_dependent(int p_net_no)
   {
     int compare_width = get_trace_half_width(p_net_no, 0);
-    for (int i = 1; i < this.layer_structure.arr.length; ++i)
+    for (int i = 1; i < this.layer_structure.arr.length; i++)
     {
       if (get_trace_half_width(p_net_no, i) != compare_width)
       {
@@ -223,7 +223,7 @@ public class BoardRules implements Serializable
     // Add the rule  containing all vias.
     ViaRule default_rule = new ViaRule(p_name);
     int default_via_cl_class = p_net_class.default_item_clearance_classes.get(DefaultItemClearanceClasses.ItemClass.VIA);
-    for (int i = 0; i < this.via_infos.count(); ++i)
+    for (int i = 0; i < this.via_infos.count(); i++)
     {
       ViaInfo curr_via_info = this.via_infos.get(i);
       if (curr_via_info.get_clearance_class() == default_via_cl_class)
@@ -244,8 +244,7 @@ public class BoardRules implements Serializable
             default_rule.remove_via(existing_via);
             default_rule.append_via(curr_via_info);
           }
-        }
-        else
+        } else
         {
           default_rule.append_via(curr_via_info);
         }
@@ -337,7 +336,7 @@ public class BoardRules implements Serializable
       }
     }
 
-    for (int i = 0; i < this.net_classes.count(); ++i)
+    for (int i = 0; i < this.net_classes.count(); i++)
     {
       NetClass curr_net_class = this.net_classes.get(i);
       if (curr_net_class.get_trace_clearance_class() == p_from_no)
@@ -353,7 +352,7 @@ public class BoardRules implements Serializable
       }
     }
 
-    for (int i = 0; i < this.via_infos.count(); ++i)
+    for (int i = 0; i < this.via_infos.count(); i++)
     {
       ViaInfo curr_via = this.via_infos.get(i);
       if (curr_via.get_clearance_class() == p_from_no)
@@ -376,7 +375,7 @@ public class BoardRules implements Serializable
         return false;
       }
     }
-    for (int i = 0; i < this.net_classes.count(); ++i)
+    for (int i = 0; i < this.net_classes.count(); i++)
     {
       NetClass curr_net_class = this.net_classes.get(i);
       if (curr_net_class.get_trace_clearance_class() == p_index)
@@ -392,7 +391,7 @@ public class BoardRules implements Serializable
       }
     }
 
-    for (int i = 0; i < this.via_infos.count(); ++i)
+    for (int i = 0; i < this.via_infos.count(); i++)
     {
       ViaInfo curr_via = this.via_infos.get(i);
       if (curr_via.get_clearance_class() == p_index)
@@ -409,7 +408,7 @@ public class BoardRules implements Serializable
       }
     }
 
-    for (int i = 0; i < this.net_classes.count(); ++i)
+    for (int i = 0; i < this.net_classes.count(); i++)
     {
       NetClass curr_net_class = this.net_classes.get(i);
       if (curr_net_class.get_trace_clearance_class() > p_index)
@@ -426,7 +425,7 @@ public class BoardRules implements Serializable
       }
     }
 
-    for (int i = 0; i < this.via_infos.count(); ++i)
+    for (int i = 0; i < this.via_infos.count(); i++)
     {
       ViaInfo curr_via = this.via_infos.get(i);
       if (curr_via.get_clearance_class() > p_index)

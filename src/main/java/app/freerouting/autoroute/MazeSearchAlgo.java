@@ -38,7 +38,7 @@ public class MazeSearchAlgo
    * The destination door found by the expanding algorithm.
    */
   private ExpandableObject destination_door;
-  private int section_no_of_destination_door = 0;
+  private int section_no_of_destination_door;
 
   /**
    * Creates a new instance of MazeSearchAlgo
@@ -103,13 +103,12 @@ public class MazeSearchAlgo
   {
     final double FANOUT_COST_CONST = 20000;
     Collection<Item> curr_end_contacts;
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       if (i == 0)
       {
         curr_end_contacts = p_trace.get_start_contacts();
-      }
-      else
+      } else
       {
         curr_end_contacts = p_trace.get_end_contacts();
       }
@@ -124,8 +123,7 @@ public class MazeSearchAlgo
       if (curr_trace_contact instanceof Pin && curr_trace_contact.first_layer() == curr_trace_contact.last_layer())
       {
         protect_fanout_via = true;
-      }
-      else if (curr_trace_contact instanceof PolylineTrace contact_trace && curr_trace_contact.get_fixed_state() == FixedState.SHOVE_FIXED)
+      } else if (curr_trace_contact instanceof PolylineTrace contact_trace && curr_trace_contact.get_fixed_state() == FixedState.SHOVE_FIXED)
       {
         // look for shove fixed exit traces of SMD-pins
         if (contact_trace.corner_count() == 2)
@@ -207,6 +205,7 @@ public class MazeSearchAlgo
   {
     while (occupy_next_element())
     {
+      continue;
     }
     if (this.destination_door == null)
     {
@@ -379,7 +378,7 @@ public class MazeSearchAlgo
         else
         {
           double curr_dist = nearest_points[1].distance(shape_entry_middle);
-          next_room_is_thick = (curr_dist > half_width + 1);
+          next_room_is_thick = curr_dist > half_width + 1;
         }
       }
     }
@@ -434,7 +433,7 @@ public class MazeSearchAlgo
         if (this.ctrl.ripup_allowed)
         {
           ripup_costs = check_ripup(p_list_element, obstacle_room.get_item(), curr_door_is_small);
-          room_rippable = (ripup_costs >= 0);
+          room_rippable = ripup_costs >= 0;
         }
 
         if (ripup_costs != ALREADY_RIPPED_COSTS && next_room_is_thick)
@@ -573,7 +572,7 @@ public class MazeSearchAlgo
     boolean something_expanded = false;
     FloatLine[] line_sections = p_to_door.get_section_segments(half_width);
 
-    for (int i = 0; i < line_sections.length; ++i)
+    for (int i = 0; i < line_sections.length; i++)
     {
       if (p_to_door.section_arr[i].is_occupied)
       {
@@ -599,8 +598,7 @@ public class MazeSearchAlgo
             return false;
           }
         }
-      }
-      else
+      } else
       {
         // expand only doors on the opposite side of the room from the shape_entry.
         if (p_to_door.dimension == 1 && i == 0 && line_sections[0].b.distance_square(line_sections[0].a) < 1)
@@ -828,14 +826,12 @@ public class MazeSearchAlgo
         {
           via_lower_bound = curr_layer + 1;
           break;
-        }
-        else if (drill_result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD)
+        } else if (drill_result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD)
         {
           if (curr_layer == 0)
           {
             smd_attached_on_component_side = true;
-          }
-          else if (curr_layer == ctrl.layer_count - 1)
+          } else if (curr_layer == ctrl.layer_count - 1)
           {
             smd_attached_on_solder_side = true;
           }
@@ -865,8 +861,7 @@ public class MazeSearchAlgo
         {
           via_upper_bound = curr_layer - 1;
           break;
-        }
-        else if (drill_result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD)
+        } else if (drill_result == ForcedPadAlgo.CheckDrillResult.DRILLABLE_WITH_ATTACH_SMD)
         {
           if (curr_layer == ctrl.layer_count - 1)
           {
@@ -881,7 +876,7 @@ public class MazeSearchAlgo
       }
     }
 
-    for (int to_layer = via_lower_bound; to_layer <= via_upper_bound; ++to_layer)
+    for (int to_layer = via_lower_bound; to_layer <= via_upper_bound; to_layer++)
     {
       if (to_layer == from_layer)
       {
@@ -894,14 +889,13 @@ public class MazeSearchAlgo
       {
         curr_first_layer = to_layer;
         curr_last_layer = from_layer;
-      }
-      else
+      } else
       {
         curr_first_layer = from_layer;
         curr_last_layer = to_layer;
       }
       boolean mask_found = false;
-      for (int i = 0; i < ctrl.via_info_arr.length; ++i)
+      for (int i = 0; i < ctrl.via_info_arr.length; i++)
       {
         AutorouteControl.ViaMask curr_via_info = ctrl.via_info_arr[i];
         if (curr_first_layer >= curr_via_info.from_layer && curr_last_layer <= curr_via_info.to_layer && curr_via_info.from_layer >= via_lower_bound && curr_via_info.to_layer <= via_upper_bound)
@@ -953,7 +947,7 @@ public class MazeSearchAlgo
       }
       ItemAutorouteInfo curr_info = curr_item.get_autoroute_info();
       curr_info.set_start_info(false);
-      for (int i = 0; i < curr_item.tree_shape_count(this.search_tree); ++i)
+      for (int i = 0; i < curr_item.tree_shape_count(this.search_tree); i++)
       {
         TileShape curr_tree_shape = curr_item.get_tree_shape(this.search_tree, i);
         if (curr_tree_shape != null)
@@ -988,7 +982,7 @@ public class MazeSearchAlgo
       curr_info.set_start_info(true);
       if (curr_item instanceof Connectable connectable)
       {
-        for (int i = 0; i < curr_item.tree_shape_count(search_tree); ++i)
+        for (int i = 0; i < curr_item.tree_shape_count(search_tree); i++)
         {
           TileShape contained_shape = connectable.get_trace_connection_shape(search_tree, i);
           IncompleteFreeSpaceExpansionRoom new_start_room = autoroute_engine.add_incomplete_expansion_room(null, curr_item.shape_layer(i), contained_shape);
@@ -1275,7 +1269,7 @@ public class MazeSearchAlgo
     Line door_line = null;
     FloatPoint prev_corner = door_shape.corner_approx(0);
     int corner_count = door_shape.border_line_count();
-    for (int i = 1; i < corner_count; ++i)
+    for (int i = 1; i < corner_count; i++)
     {
       // skip lines of length 0
       FloatPoint next_corner = door_shape.corner_approx(i);

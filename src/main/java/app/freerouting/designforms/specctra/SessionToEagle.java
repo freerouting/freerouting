@@ -2,7 +2,9 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Pin;
+import app.freerouting.board.Unit;
 import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
@@ -38,7 +40,7 @@ public class SessionToEagle extends JFrame
    * The layer structure in specctra format
    */
   private final LayerStructure specctra_layer_structure;
-  private final app.freerouting.board.Unit unit;
+  private final Unit unit;
   /**
    * The scale factor for transforming coordinates from the session file to Eagle
    */
@@ -48,7 +50,7 @@ public class SessionToEagle extends JFrame
    */
   private final double board_scale_factor;
 
-  SessionToEagle(IJFlexScanner p_scanner, OutputStreamWriter p_out_file, BasicBoard p_board, app.freerouting.board.Unit p_unit, double p_session_file_scale_dominator, double p_board_scale_factor)
+  SessionToEagle(IJFlexScanner p_scanner, OutputStreamWriter p_out_file, BasicBoard p_board, Unit p_unit, double p_session_file_scale_dominator, double p_board_scale_factor)
   {
     scanner = p_scanner;
     out_file = p_out_file;
@@ -106,17 +108,16 @@ public class SessionToEagle extends JFrame
 
     // read the first line of the session file
     Object next_token = null;
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; i++)
     {
       next_token = this.scanner.next_token();
       boolean keyword_ok = true;
       if (i == 0)
       {
-        keyword_ok = (next_token == Keyword.OPEN_BRACKET);
-      }
-      else if (i == 1)
+        keyword_ok = next_token == Keyword.OPEN_BRACKET;
+      } else if (i == 1)
       {
-        keyword_ok = (next_token == Keyword.SESSION);
+        keyword_ok = next_token == Keyword.SESSION;
         this.scanner.yybegin(SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
       }
       if (!keyword_ok)
@@ -136,7 +137,7 @@ public class SessionToEagle extends JFrame
 
     // Activate all layers in Eagle.
 
-    for (int i = 0; i < this.board.layer_structure.arr.length; ++i)
+    for (int i = 0; i < this.board.layer_structure.arr.length; i++)
     {
       this.out_file.write("LAYER " + this.get_eagle_layer_string(i) + ";\n");
     }
@@ -193,15 +194,13 @@ public class SessionToEagle extends JFrame
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.PLACEMENT_SCOPE)
+        } else if (next_token == Keyword.PLACEMENT_SCOPE)
         {
           if (!process_placement_scope())
           {
             return false;
           }
-        }
-        else
+        } else
         {
           // overread all scopes except the routes scope for the time being
           ScopeKeyword.skip_scope(this.scanner);
@@ -241,8 +240,7 @@ public class SessionToEagle extends JFrame
           {
             return false;
           }
-        }
-        else
+        } else
         {
           // skip unknown scope
           ScopeKeyword.skip_scope(this.scanner);
@@ -316,8 +314,7 @@ public class SessionToEagle extends JFrame
         if (next_token == Keyword.NETWORK_OUT)
         {
           result = process_network_scope();
-        }
-        else
+        } else
         {
           // skip unknown scope
           ScopeKeyword.skip_scope(this.scanner);
@@ -353,8 +350,7 @@ public class SessionToEagle extends JFrame
         if (next_token == Keyword.NET)
         {
           result = process_net_scope();
-        }
-        else
+        } else
         {
           // skip unknown scope
           ScopeKeyword.skip_scope(this.scanner);
@@ -402,15 +398,13 @@ public class SessionToEagle extends JFrame
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.VIA)
+        } else if (next_token == Keyword.VIA)
         {
           if (!process_via_scope(net_name))
           {
             return false;
           }
-        }
-        else
+        } else
         {
           ScopeKeyword.skip_scope(this.scanner);
         }
@@ -442,8 +436,7 @@ public class SessionToEagle extends JFrame
         if (next_token == Keyword.POLYGON_PATH)
         {
           wire_path = Shape.read_polygon_path_scope(this.scanner, this.specctra_layer_structure);
-        }
-        else
+        } else
         {
           ScopeKeyword.skip_scope(this.scanner);
         }
@@ -469,21 +462,19 @@ public class SessionToEagle extends JFrame
     double wire_width = wire_path.width / this.session_file_scale_denominator;
     this.out_file.write(String.valueOf(wire_width));
     this.out_file.write(" (");
-    for (int i = 0; i < wire_path.coordinate_arr.length; ++i)
+    for (int i = 0; i < wire_path.coordinate_arr.length; i++)
     {
       double wire_coor = wire_path.coordinate_arr[i] / this.session_file_scale_denominator;
       this.out_file.write(String.valueOf(wire_coor));
       if (i % 2 == 0)
       {
         this.out_file.write(" ");
-      }
-      else
+      } else
       {
         if (i == wire_path.coordinate_arr.length - 1)
         {
           this.out_file.write(")");
-        }
-        else
+        } else
         {
           this.out_file.write(") (");
         }
@@ -506,18 +497,16 @@ public class SessionToEagle extends JFrame
     this.scanner.set_scope_identifier(padstack_name);
     // read the location
     double[] location = new double[2];
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       next_token = this.scanner.next_token();
       if (next_token instanceof Double double1)
       {
         location[i] = double1;
-      }
-      else if (next_token instanceof Integer integer)
+      } else if (next_token instanceof Integer integer)
       {
         location[i] = integer;
-      }
-      else
+      } else
       {
         FRLogger.warn("SessionToEagle.process_via_scope: number expected at '" + this.scanner.get_scope_identifier() + "'");
         return false;
@@ -577,7 +566,7 @@ public class SessionToEagle extends JFrame
     this.out_file.write(String.valueOf(via_diameter));
 
     // Shape lesen und einsetzen Square / Round / Octagon
-    if (via_shape instanceof app.freerouting.geometry.planar.Circle)
+    if (via_shape instanceof Circle)
     {
       this.out_file.write(" round ");
     }
@@ -615,7 +604,7 @@ public class SessionToEagle extends JFrame
 
   private boolean process_swapped_pins() throws IOException
   {
-    for (int i = 1; i <= this.board.components.count(); ++i)
+    for (int i = 1; i <= this.board.components.count(); i++)
     {
       if (!process_swapped_pins(i))
       {
@@ -648,13 +637,13 @@ public class SessionToEagle extends JFrame
       pin_info_arr[i] = new PinInfo(curr_pin);
       ++i;
     }
-    for (i = 0; i < pin_info_arr.length; ++i)
+    for (i = 0; i < pin_info_arr.length; i++)
     {
       PinInfo curr_pin_info = pin_info_arr[i];
       if (curr_pin_info.curr_changed_to != curr_pin_info.pin.get_changed_to())
       {
         PinInfo other_pin_info = null;
-        for (int j = i + 1; j < pin_info_arr.length; ++j)
+        for (int j = i + 1; j < pin_info_arr.length; j++)
         {
           if (pin_info_arr[j].pin.get_changed_to() == curr_pin_info.pin)
           {

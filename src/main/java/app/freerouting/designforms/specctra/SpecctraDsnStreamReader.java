@@ -2,12 +2,13 @@ package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @SuppressWarnings("all")
 
@@ -79,7 +80,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
   /**
    * the input device
    */
-  private java.io.Reader zzReader;
+  private Reader zzReader;
   /**
    * the current state of the DFA
    */
@@ -161,7 +162,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
    *
    * @param in the java.io.Reader to read input from.
    */
-  SpecctraDsnStreamReader(java.io.Reader in)
+  SpecctraDsnStreamReader(Reader in)
   {
     this.zzReader = in;
   }
@@ -171,9 +172,9 @@ class SpecctraDsnStreamReader implements IJFlexScanner
    *
    * @param in the java.io.Inputstream to read input from.
    */
-  SpecctraDsnStreamReader(java.io.InputStream in)
+  SpecctraDsnStreamReader(InputStream in)
   {
-    this(new java.io.InputStreamReader(in));
+    this(new InputStreamReader(in));
   }
 
   private static int[] zzUnpackAction()
@@ -302,7 +303,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
    * @return <code>false</code>, iff there was new input.
    * @throws java.io.IOException if any I/O-Error occurs
    */
-  private boolean zzRefill() throws java.io.IOException
+  private boolean zzRefill() throws IOException
   {
 
     /* first: make room (if you can) */
@@ -344,7 +345,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
   /**
    * Closes the input stream.
    */
-  public final void yyclose() throws java.io.IOException
+  public final void yyclose() throws IOException
   {
     zzAtEOF = true; /* indicate end of file */
     zzEndRead = zzStartRead; /* invalidate buffer    */
@@ -363,7 +364,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
    *
    * @param reader the new input stream
    */
-  public final void yyreset(java.io.Reader reader)
+  public final void yyreset(Reader reader)
   {
     zzReader = reader;
     zzAtBOL = true;
@@ -484,7 +485,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
    * @return the next token
    * @throws java.io.IOException if any I/O-Error occurs
    */
-  public Object next_token() throws java.io.IOException
+  public Object next_token() throws IOException
   {
     int zzInput;
     int zzAction;
@@ -932,6 +933,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
         {
           stringBuffer.setLength(0);
           yybegin(STRING2);
+          break;
         }
         case 178:
           break;
@@ -967,6 +969,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
           // we are at the beginning of a text string that is surrounded by double quotes
           stringBuffer.setLength(0);
           yybegin(STRING1);
+          break;
         }
         case 183:
           break;
@@ -1100,6 +1103,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
         case 12:
         {
           stringBuffer.append('\\');
+          break;
         }
         case 204:
           break;
@@ -1224,6 +1228,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
           break;
         case 3:
         {
+          break;
           /* ignore */
         }
         case 224:
@@ -1264,6 +1269,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
         {
           // we are at the end of a text string that is surrounded by double quotes
           stringBuffer.append(yytext());
+          break;
         }
         case 230:
           break;
@@ -1431,7 +1437,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
 
   public String[] next_string_list(char separator)
   {
-    java.util.Collection<String> result = new java.util.LinkedList<String>();
+    Collection<String> result = new LinkedList<String>();
 
     // Every string list must have at least one item, but the first item can be empty. In this case we ignore that and continue reading the next item.
     // This is extra step is also needed to handle the bug KiCad 8 introduced in the netlist definition, when it started the list of nets with a "" string.
@@ -1481,7 +1487,7 @@ class SpecctraDsnStreamReader implements IJFlexScanner
     try
     {
       next_token = next_token();
-    } catch (java.io.IOException e)
+    } catch (IOException e)
     {
       FRLogger.error("Network.read_net_pins: IO error scanning file", e);
       return false;

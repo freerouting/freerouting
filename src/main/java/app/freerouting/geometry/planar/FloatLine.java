@@ -307,14 +307,13 @@ public class FloatLine
     double dx = b.x - a.x;
     double dy = b.y - a.y;
     FloatPoint curr_a = this.a;
-    for (int i = 0; i < p_count; ++i)
+    for (int i = 0; i < p_count; i++)
     {
       FloatPoint curr_b;
       if (i == p_count - 1)
       {
         curr_b = this.b;
-      }
-      else
+      } else
       {
         double curr_b_dist = (i + 1) * section_length;
         double curr_b_x = a.x + (dx * curr_b_dist) / line_length;

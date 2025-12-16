@@ -1,5 +1,7 @@
 package app.freerouting.autoroute;
 
+import static java.util.Collections.shuffle;
+
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
@@ -19,8 +21,6 @@ import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
 
 import java.util.*;
-
-import static java.util.Collections.shuffle;
 
 /**
  * Handles the sequencing of the auto-router passes.
@@ -43,7 +43,7 @@ public class BatchAutorouter extends NamedAlgorithm
   private final int start_ripup_costs;
   private final int trace_pull_tight_accuracy;
   protected RoutingJob job;
-  private Random random = null;
+  private Random random;
   /**
    * Used to draw the airline of the current routed incomplete.
    */
@@ -70,7 +70,7 @@ public class BatchAutorouter extends NamedAlgorithm
     {
       // remove preferred direction
       this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
-      for (int i = 0; i < this.trace_cost_arr.length; ++i)
+      for (int i = 0; i < this.trace_cost_arr.length; i++)
       {
         double curr_min_cost = this.settings.get_preferred_direction_trace_costs(i);
         this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
@@ -133,7 +133,7 @@ public class BatchAutorouter extends NamedAlgorithm
           {
 
             // Let's go through all nets of this item
-            for (int i = 0; i < curr_item.net_count(); ++i)
+            for (int i = 0; i < curr_item.net_count(); i++)
             {
               int curr_net_no = curr_item.get_net_no(i);
               Set<Item> connected_set = curr_item.get_connected_set(curr_net_no);
@@ -311,7 +311,7 @@ public class BatchAutorouter extends NamedAlgorithm
         }
 
         // Let's go through all nets of this item
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           // If the user requested to stop the auto-router, we stop it
           if (this.thread.is_stop_auto_router_requested())
@@ -331,13 +331,11 @@ public class BatchAutorouter extends NamedAlgorithm
           {
             // The item was successfully routed
             ++routed;
-          }
-          else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED) || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS) || (autorouterResult.state == AutorouteAttemptState.CONNECTED_TO_PLANE))
+          } else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED) || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS) || (autorouterResult.state == AutorouteAttemptState.CONNECTED_TO_PLANE))
           {
             // The item doesn't need to be routed
             ++skipped;
-          }
-          else
+          } else
           {
             job.logDebug("Autorouter " + autorouterResult.details);
             ++not_routed;
@@ -889,7 +887,7 @@ public class BatchAutorouter extends NamedAlgorithm
           // If not, use the nearest endpoint
           double dist_to_start = point_on_first.distance(second_segment_start);
           double dist_to_end = point_on_first.distance(second_segment_end);
-          point_on_second = (dist_to_start < dist_to_end) ? second_segment_start : second_segment_end;
+          point_on_second = dist_to_start < dist_to_end ? second_segment_start : second_segment_end;
         }
 
         // Recalculate the point on first segment based on the point on second segment

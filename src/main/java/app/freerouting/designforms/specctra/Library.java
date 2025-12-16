@@ -34,7 +34,7 @@ public class Library extends ScopeKeyword
 
     if (p_par.board.library.packages != null)
     {
-      for (int i = 1; i <= p_par.board.library.packages.count(); ++i)
+      for (int i = 1; i <= p_par.board.library.packages.count(); i++)
       {
         Package.write_scope(p_par, p_par.board.library.packages.get(i));
       }
@@ -42,7 +42,7 @@ public class Library extends ScopeKeyword
 
     if (p_par.board.library.padstacks != null)
     {
-      for (int i = 1; i <= p_par.board.library.padstacks.count(); ++i)
+      for (int i = 1; i <= p_par.board.library.padstacks.count(); i++)
       {
         write_padstack_scope(p_par, p_par.board.library.padstacks.get(i));
       }
@@ -73,7 +73,7 @@ public class Library extends ScopeKeyword
     p_par.file.start_scope();
     p_par.file.write("padstack ");
     p_par.identifier_type.write(p_padstack.name, p_par.file);
-    for (int i = first_layer_no; i <= last_layer_no; ++i)
+    for (int i = first_layer_no; i <= last_layer_no; i++)
     {
       app.freerouting.geometry.planar.Shape curr_board_shape = p_padstack.get_shape(i);
       if (curr_board_shape == null)
@@ -272,8 +272,7 @@ public class Library extends ScopeKeyword
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.IMAGE)
+        } else if (next_token == Keyword.IMAGE)
         {
           Package curr_package = Package.read_scope(p_par.scanner, p_par.layer_structure);
           if (curr_package == null)
@@ -281,8 +280,7 @@ public class Library extends ScopeKeyword
             return false;
           }
           package_list.add(curr_package);
-        }
-        else
+        } else
         {
           skip_scope(p_par.scanner);
         }
@@ -294,7 +292,7 @@ public class Library extends ScopeKeyword
     for (Package curr_package : package_list)
     {
       app.freerouting.core.Package.Pin[] pin_arr = new app.freerouting.core.Package.Pin[curr_package.pin_info_arr.length];
-      for (int i = 0; i < pin_arr.length; ++i)
+      for (int i = 0; i < pin_arr.length; i++)
       {
         Package.PinInfo pin_info = curr_package.pin_info_arr[i];
         int rel_x = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[0]));
@@ -311,14 +309,13 @@ public class Library extends ScopeKeyword
       app.freerouting.geometry.planar.Shape[] outline_arr = new app.freerouting.geometry.planar.Shape[curr_package.outline.size()];
 
       Iterator<Shape> it3 = curr_package.outline.iterator();
-      for (int i = 0; i < outline_arr.length; ++i)
+      for (int i = 0; i < outline_arr.length; i++)
       {
         Shape curr_shape = it3.next();
         if (curr_shape != null)
         {
           outline_arr[i] = curr_shape.transform_to_board_rel(p_par.coordinate_transform);
-        }
-        else
+        } else
         {
           FRLogger.warn("Library.read_scope: outline shape is null at '" + p_par.scanner.get_scope_identifier() + "'");
         }
@@ -328,7 +325,7 @@ public class Library extends ScopeKeyword
       generate_missing_keepout_names("place_keepout_", curr_package.place_keepouts);
       app.freerouting.core.Package.Keepout[] keepout_arr = new app.freerouting.core.Package.Keepout[curr_package.keepouts.size()];
       Iterator<Shape.ReadAreaScopeResult> it2 = curr_package.keepouts.iterator();
-      for (int i = 0; i < keepout_arr.length; ++i)
+      for (int i = 0; i < keepout_arr.length; i++)
       {
         Shape.ReadAreaScopeResult curr_keepout = it2.next();
         Layer curr_layer = curr_keepout.shape_list.iterator().next().layer;
@@ -337,7 +334,7 @@ public class Library extends ScopeKeyword
       }
       app.freerouting.core.Package.Keepout[] via_keepout_arr = new app.freerouting.core.Package.Keepout[curr_package.via_keepouts.size()];
       it2 = curr_package.via_keepouts.iterator();
-      for (int i = 0; i < via_keepout_arr.length; ++i)
+      for (int i = 0; i < via_keepout_arr.length; i++)
       {
         Shape.ReadAreaScopeResult curr_keepout = it2.next();
         Layer curr_layer = (curr_keepout.shape_list.iterator().next()).layer;
@@ -346,7 +343,7 @@ public class Library extends ScopeKeyword
       }
       app.freerouting.core.Package.Keepout[] place_keepout_arr = new app.freerouting.core.Package.Keepout[curr_package.place_keepouts.size()];
       it2 = curr_package.place_keepouts.iterator();
-      for (int i = 0; i < place_keepout_arr.length; ++i)
+      for (int i = 0; i < place_keepout_arr.length; i++)
       {
         Shape.ReadAreaScopeResult curr_keepout = it2.next();
         Layer curr_layer = (curr_keepout.shape_list.iterator().next()).layer;

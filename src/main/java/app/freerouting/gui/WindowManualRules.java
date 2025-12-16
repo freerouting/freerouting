@@ -163,7 +163,7 @@ public class WindowManualRules extends BoardSavableSubWindow
       // check if the half width is layer_dependent.
       boolean trace_widths_layer_dependent = false;
       int first_half_width = this.board_handling.settings.get_manual_trace_half_width(0);
-      for (int i = 1; i < this.board_handling.get_layer_count(); ++i)
+      for (int i = 1; i < this.board_handling.get_layer_count(); i++)
       {
         if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width)
         {
@@ -185,7 +185,7 @@ public class WindowManualRules extends BoardSavableSubWindow
       // check if the half width is layer_dependent on the inner layers.
       boolean trace_widths_layer_dependent = false;
       int first_half_width = this.board_handling.settings.get_manual_trace_half_width(1);
-      for (int i = 2; i < this.board_handling.get_layer_count() - 1; ++i)
+      for (int i = 2; i < this.board_handling.get_layer_count() - 1; i++)
       {
         if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width)
         {

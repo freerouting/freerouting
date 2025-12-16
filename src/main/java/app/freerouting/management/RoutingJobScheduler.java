@@ -1,5 +1,7 @@
 package app.freerouting.management;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -20,8 +22,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
-import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * This singleton class is responsible for managing the jobs that will be processed by the router.
@@ -83,8 +83,7 @@ public class RoutingJobScheduler
                     HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
                     boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
                     job.board = boardManager.get_routing_board();
-                  }
-                  else
+                  } else
                   {
                     FRLogger.warn("Only DSN format is supported as an input.");
                     job.state = RoutingJobState.INVALID;
@@ -96,16 +95,10 @@ public class RoutingJobScheduler
                   job.thread = routerThread;
                   job.thread.start();
                   job.state = RoutingJobState.RUNNING;
-                }
-                else
+                } else
                 {
                   break;
                 }
-              }
-
-              if ((job.state == RoutingJobState.COMPLETED) && ((job.output == null) || (job.output.size == 0)))
-              {
-
               }
             }
           }
@@ -243,8 +236,8 @@ public class RoutingJobScheduler
           .filter(Files::isDirectory)
           .map(Path::getFileName)
           .map(Path::toString)
-          .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
-          .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+          .map(s -> s.split("_")[0])// Extract the numeric prefix before the underscore
+          .filter(s -> s.matches("\\d+"))// Ensure it is numeric
           .mapToInt(Integer::parseInt)
           .max()
           .orElse(0);
@@ -268,9 +261,9 @@ public class RoutingJobScheduler
     }
 
     // Save the input file if the filename is defined and there is data stored in it
-    if ((job.input != null && job.input.getFilename() != null && !job.input
+    if (job.input != null && job.input.getFilename() != null && !job.input
         .getFilename()
-        .isEmpty() && job.input.getData() != null))
+        .isEmpty() && job.input.getData() != null)
     {
       Path inputFilePath = sessionFolderPath.resolve(job.input.getFilename());
       Files.write(inputFilePath, job.input
@@ -279,9 +272,9 @@ public class RoutingJobScheduler
     }
 
     // Save the output file if the filename is defined and there is data stored in it
-    if ((job.output != null && job.output.getFilename() != null && !job.output
+    if (job.output != null && job.output.getFilename() != null && !job.output
         .getFilename()
-        .isEmpty() && job.output.getData() != null))
+        .isEmpty() && job.output.getData() != null)
     {
       Path outputFilePath = sessionFolderPath.resolve(job.output.getFilename());
       Files.write(outputFilePath, job.output

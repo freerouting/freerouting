@@ -19,7 +19,7 @@ public class CircleConstructionState extends InteractiveState
 {
   private final FloatPoint circle_center;
   private double circle_radius = 0;
-  private boolean observers_activated = false;
+  private boolean observers_activated;
 
   /**
    * Creates a new instance of CircleConstructionState
@@ -74,7 +74,7 @@ public class CircleConstructionState extends InteractiveState
     int cl_class;
     RoutingBoard board = hdlg.get_routing_board();
     cl_class = BoardRules.clearance_class_none();
-    boolean construction_succeeded = (this.circle_radius > 0);
+    boolean construction_succeeded = this.circle_radius > 0;
     ConvexShape obstacle_shape = null;
     if (construction_succeeded)
     {

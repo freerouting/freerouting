@@ -15,7 +15,7 @@ public abstract class Cursor
   private static final Line2D LEFT_DIAGONAL_LINE = new Line2D.Double(-MAX_COOR, MAX_COOR, MAX_COOR, -MAX_COOR);
   double x_coor;
   double y_coor;
-  boolean location_initialized = false;
+  boolean location_initialized;
 
   public static Cursor get_45_degree_cross_hair_cursor()
   {

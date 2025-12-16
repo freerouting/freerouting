@@ -43,12 +43,12 @@ public class PolygonShapeConstructionState extends CornerItemConstructionState
   {
     add_corner_for_snap_angle();
     int corner_count = corner_list.size();
-    boolean construction_succeeded = (corner_count > 2);
+    boolean construction_succeeded = corner_count > 2;
     if (construction_succeeded)
     {
       IntPoint[] corner_arr = new IntPoint[corner_count];
       Iterator<IntPoint> it = corner_list.iterator();
-      for (int i = 0; i < corner_count; ++i)
+      for (int i = 0; i < corner_count; i++)
       {
         corner_arr[i] = it.next();
       }

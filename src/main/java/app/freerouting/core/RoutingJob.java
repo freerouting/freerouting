@@ -52,9 +52,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   @SerializedName("name")
   public String name;
   @SerializedName("started_at")
-  public Instant startedAt = null;
+  public Instant startedAt;
   @SerializedName("finished_at")
-  public Instant finishedAt = null;
+  public Instant finishedAt;
   @SerializedName("state")
   public RoutingJobState state = RoutingJobState.INVALID;
   @SerializedName("stage")
@@ -64,21 +64,21 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob>
   @SerializedName("session_id")
   public UUID sessionId;
   @SerializedName("input")
-  public BoardFileDetails input = null;
+  public BoardFileDetails input;
   @SerializedName("output")
-  public BoardFileDetails output = null;
+  public BoardFileDetails output;
   @SerializedName("snapshot")
-  public BoardFileDetails snapshot = null;
+  public BoardFileDetails snapshot;
   @SerializedName("drc")
-  public BoardFileDetails drc = null;
+  public BoardFileDetails drc;
   @SerializedName("router_settings")
   public RouterSettings routerSettings = new RouterSettings();
   @SerializedName("drc_settings")
   public DesignRulesCheckerSettings drcSettings = new DesignRulesCheckerSettings();
   @SerializedName("resource_usage")
   public RouterJobResourceUsage resourceUsage = new RouterJobResourceUsage();
-  public transient StoppableThread thread = null;
-  public transient RoutingBoard board = null;
+  public transient StoppableThread thread;
+  public transient RoutingBoard board;
   public transient Instant timeoutAt;
 
   /**

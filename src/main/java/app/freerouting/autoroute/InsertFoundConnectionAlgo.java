@@ -111,7 +111,7 @@ public class InsertFoundConnectionAlgo
     {
       ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.PINS);
       Point curr_end_corner = p_trace.corners[0];
-      for (int i = 0; i < 2; ++i)
+      for (int i = 0; i < 2; i++)
       {
         Set<Item> picked_items = this.board.pick_items(curr_end_corner, p_trace.layer, item_filter);
         for (Item curr_item : picked_items)
@@ -124,8 +124,7 @@ public class InsertFoundConnectionAlgo
             if (i == 0)
             {
               start_pin = curr_pin;
-            }
-            else
+            } else
             {
               end_pin = curr_pin;
             }
@@ -138,7 +137,7 @@ public class InsertFoundConnectionAlgo
     net_no_arr[0] = ctrl.net_no;
 
     int from_corner_no = 0;
-    for (int i = 1; i < p_trace.corners.length; ++i)
+    for (int i = 1; i < p_trace.corners.length; i++)
     {
       Point[] curr_corner_arr = Arrays.copyOfRange(p_trace.corners, from_corner_no, i + 1);
       Polyline insert_polyline = new Polyline(curr_corner_arr);
@@ -151,8 +150,7 @@ public class InsertFoundConnectionAlgo
       if (ok_point == insert_polyline.last_corner() || neckdown_inserted)
       {
         from_corner_no = i;
-      }
-      else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1)
+      } else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1)
       {
         // if ok_point == insert_polyline.first_corner() the spring over may have failed.
         // Spring over may correct the situation because an insertion, which is ok with clearance
@@ -171,15 +169,14 @@ public class InsertFoundConnectionAlgo
           }
         }
         FRLogger.trace("InsertFoundConnectionAlgo: violation corrected");
-      }
-      else
+      } else
       {
         result = false;
         break;
       }
     }
 
-    for (int i = 0; i < p_trace.corners.length - 1; ++i)
+    for (int i = 0; i < p_trace.corners.length - 1; i++)
     {
       Trace trace_stub = board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
       if (trace_stub != null)
@@ -321,7 +318,7 @@ public class InsertFoundConnectionAlgo
     int[] net_no_arr = new int[1];
     net_no_arr[0] = ctrl.net_no;
     ViaInfo via_info = null;
-    for (int i = 0; i < this.ctrl.via_rule.via_count(); ++i)
+    for (int i = 0; i < this.ctrl.via_rule.via_count(); i++)
     {
       ViaInfo curr_via_info = this.ctrl.via_rule.get_via(i);
       Padstack curr_via_padstack = curr_via_info.get_padstack();

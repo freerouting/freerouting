@@ -105,8 +105,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
                 {
                   new_bounding_shape = new_bounding_shape.union(tmp_shape.get_shape().bounding_box());
                 }
-              }
-              else
+              } else
               {
                 new_result.add(curr_room);
                 new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
@@ -115,8 +114,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
             result = new_result;
             bounding_shape = new_bounding_shape;
           }
-        }
-        else
+        } else
         {
           this.node_stack.push(((InnerNode) curr_node).first_child);
           this.node_stack.push(((InnerNode) curr_node).second_child);
@@ -251,22 +249,20 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
       return new TileShape[0];
     }
     TileShape[] result = new TileShape[p_drill_item.tile_shape_count()];
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       Shape curr_shape = p_drill_item.get_shape(i);
       if (curr_shape == null)
       {
         result[i] = null;
-      }
-      else
+      } else
       {
         IntBox curr_tile_shape = curr_shape.bounding_box();
         int offset_width = this.clearance_compensation_value(p_drill_item.clearance_class_no(), p_drill_item.shape_layer(i));
         if (curr_tile_shape == null)
         {
           FRLogger.warn("BoxShapeSearchTree.calculate_tree_shapes: shape is null");
-        }
-        else
+        } else
         {
           curr_tile_shape = curr_tile_shape.offset(offset_width);
         }
@@ -280,7 +276,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
   TileShape[] calculate_tree_shapes(ObstacleArea p_obstacle_area)
   {
     TileShape[] result = super.calculate_tree_shapes(p_obstacle_area);
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = result[i].bounding_box();
     }
@@ -291,7 +287,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
   TileShape[] calculate_tree_shapes(BoardOutline p_outline)
   {
     TileShape[] result = super.calculate_tree_shapes(p_outline);
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = result[i].bounding_box();
     }
@@ -317,7 +313,7 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree
     int to_no = Math.min(p_to_no, p_polyline.arr.length - 1);
     int shape_count = Math.max(to_no - from_no - 1, 0);
     TileShape[] shape_arr = new TileShape[shape_count];
-    for (int j = from_no; j < to_no - 1; ++j)
+    for (int j = from_no; j < to_no - 1; j++)
     {
       shape_arr[j - from_no] = p_polyline.offset_box(p_half_width, j);
     }

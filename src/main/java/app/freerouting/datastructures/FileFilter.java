@@ -21,14 +21,13 @@ public class FileFilter extends javax.swing.filechooser.FileFilter
   public String getDescription()
   {
     StringBuilder message = new StringBuilder("Files with the extensions");
-    for (int i = 0; i < extensions.length; ++i)
+    for (int i = 0; i < extensions.length; i++)
     {
       message.append(" .").append(extensions[i]);
       if (i == extensions.length - 2)
       {
         message.append(" or");
-      }
-      else if (i < extensions.length - 2)
+      } else if (i < extensions.length - 2)
       {
         message.append(",");
       }
@@ -50,7 +49,7 @@ public class FileFilter extends javax.swing.filechooser.FileFilter
       return false;
     }
     String found_extension = name_parts[name_parts.length - 1];
-    for (int i = 0; i < extensions.length; ++i)
+    for (int i = 0; i < extensions.length; i++)
     {
       if (found_extension.equalsIgnoreCase(extensions[i]))
       {

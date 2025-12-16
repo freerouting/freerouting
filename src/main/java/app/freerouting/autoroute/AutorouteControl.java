@@ -149,7 +149,7 @@ public class AutorouteControl
     via_radius_arr = new double[layer_count];
     add_via_costs = new ViaCost[layer_count];
 
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       add_via_costs[i] = new ViaCost(layer_count);
       layer_active[i] = p_settings.get_layer_active(i);
@@ -162,9 +162,9 @@ public class AutorouteControl
     max_shove_trace_recursion_depth = 20;
     max_shove_via_recursion_depth = 5;
     max_spring_over_recursion_depth = 5;
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
-      for (int j = 0; j < layer_count; ++j)
+      for (int j = 0; j < layer_count; j++)
       {
         add_via_costs[i].to_layer[j] = 0;
       }
@@ -196,13 +196,12 @@ public class AutorouteControl
       via_rule = p_board.rules.via_rules.firstElement();
       curr_net_class = null;
     }
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       if (net_no > 0)
       {
         trace_half_width[i] = p_board.rules.get_trace_half_width(net_no, i);
-      }
-      else
+      } else
       {
         trace_half_width[i] = p_board.rules.get_trace_half_width(1, i);
       }
@@ -221,7 +220,7 @@ public class AutorouteControl
       this.via_clearance_class = 1;
     }
     this.via_info_arr = new ViaMask[via_rule.via_count()];
-    for (int i = 0; i < via_rule.via_count(); ++i)
+    for (int i = 0; i < via_rule.via_count(); i++)
     {
       ViaInfo curr_via = via_rule.get_via(i);
       if (curr_via.attach_smd_allowed())
@@ -231,15 +230,14 @@ public class AutorouteControl
       Padstack curr_via_padstack = curr_via.get_padstack();
       int from_layer = curr_via_padstack.from_layer();
       int to_layer = curr_via_padstack.to_layer();
-      for (int j = from_layer; j <= to_layer; ++j)
+      for (int j = from_layer; j <= to_layer; j++)
       {
         ConvexShape curr_shape = curr_via_padstack.get_shape(j);
         double curr_radius;
         if (curr_shape != null)
         {
           curr_radius = 0.5 * curr_shape.max_width();
-        }
-        else
+        } else
         {
           curr_radius = 0;
         }
@@ -247,7 +245,7 @@ public class AutorouteControl
       }
       via_info_arr[i] = new ViaMask(from_layer, to_layer, curr_via.attach_smd_allowed());
     }
-    for (int j = 0; j < this.layer_count; ++j)
+    for (int j = 0; j < this.layer_count; j++)
     {
       this.via_radius_arr[j] = Math.max(this.via_radius_arr[j], trace_half_width[j]);
       this.max_via_radius = Math.max(this.max_via_radius, this.via_radius_arr[j]);

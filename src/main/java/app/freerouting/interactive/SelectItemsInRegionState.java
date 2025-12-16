@@ -91,7 +91,7 @@ public class SelectItemsInRegionState extends SelectRegionState
       Set<Item> visible_items = new TreeSet<>();
       for (Item curr_item : found_items)
       {
-        for (int i = curr_item.first_layer(); i <= curr_item.last_layer(); ++i)
+        for (int i = curr_item.first_layer(); i <= curr_item.last_layer(); i++)
         {
           if (hdlg.graphics_context.get_layer_visibility(i) > 0)
           {
@@ -102,7 +102,7 @@ public class SelectItemsInRegionState extends SelectRegionState
       }
       found_items = visible_items;
     }
-    boolean something_found = (!found_items.isEmpty());
+    boolean something_found = !found_items.isEmpty();
     if (something_found)
     {
       if (this.return_state instanceof SelectedItemState state)

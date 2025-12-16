@@ -35,7 +35,7 @@ public class SortedOrthogonalRoomNeighbours
     room_shape = (IntBox) p_completed_room.get_shape();
     sorted_neighbours = new TreeSet<>();
     edge_interior_touches_obstacle = new boolean[4];
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       edge_interior_touches_obstacle[i] = false;
     }
@@ -86,7 +86,7 @@ public class SortedOrthogonalRoomNeighbours
       return;
     }
     IntBox bounding_box = p_autoroute_engine.board.get_bounding_box();
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       IntBox new_room_box = switch (i)
       {
@@ -398,7 +398,7 @@ public class SortedOrthogonalRoomNeighbours
     double room_area = room_box.area();
 
     int remove_edge_no = -1;
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       if (!this.edge_interior_touches_obstacle[i])
       {

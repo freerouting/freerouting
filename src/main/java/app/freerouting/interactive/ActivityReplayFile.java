@@ -15,7 +15,7 @@ public class ActivityReplayFile
 {
   private ActivityReplayFileScanner scanner;
   private FileWriter file_writer;
-  private boolean write_enabled = false;
+  private boolean write_enabled;
   private Object pending_token;
 
   /**
@@ -34,7 +34,7 @@ public class ActivityReplayFile
   {
     double x = 0;
     double y = 0;
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       Object curr_ob = this.next_token();
       if (!(curr_ob instanceof Double))
@@ -46,8 +46,7 @@ public class ActivityReplayFile
       if (i == 0)
       {
         x = f;
-      }
-      else
+      } else
       {
         y = f;
       }
@@ -196,7 +195,7 @@ public class ActivityReplayFile
       this.pending_token = curr_ob;
       return -1;
     }
-    return ((Integer) curr_ob);
+    return (Integer) curr_ob;
   }
 
   /**

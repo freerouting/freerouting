@@ -50,7 +50,7 @@ public class TextManager
   private ResourceBundle defaultMessages;
   private ResourceBundle classMessages;
   private ResourceBundle englishClassMessages;
-  private Font materialDesignIcons = null;
+  private Font materialDesignIcons;
 
   public TextManager(Class baseClass, Locale locale)
   {

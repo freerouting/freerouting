@@ -1,6 +1,7 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.board.Communication;
+import app.freerouting.board.Unit;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 
@@ -42,7 +43,7 @@ public class Resolution extends ScopeKeyword
         FRLogger.warn("Resolution.read_scope: string expected at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
-      p_par.unit = app.freerouting.board.Unit.from_string((String) next_token);
+      p_par.unit = Unit.from_string((String) next_token);
       if (p_par.unit == null)
       {
         FRLogger.warn("Resolution.read_scope: unit mil, inch or mm expected at '" + p_par.scanner.get_scope_identifier() + "'");

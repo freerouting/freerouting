@@ -1,9 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.geometry.planar.Shape;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 
 import java.io.Serializable;
@@ -91,7 +88,7 @@ public class CoordinateTransform implements Serializable
   public PrintableShape board_to_user(Shape p_shape, Locale p_locale)
   {
     PrintableShape result;
-    if (p_shape instanceof app.freerouting.geometry.planar.Circle circle)
+    if (p_shape instanceof Circle circle)
     {
       result = board_to_user(circle, p_locale);
     }
@@ -111,7 +108,7 @@ public class CoordinateTransform implements Serializable
     return result;
   }
 
-  public PrintableShape.Circle board_to_user(app.freerouting.geometry.planar.Circle p_circle, Locale p_locale)
+  public PrintableShape.Circle board_to_user(Circle p_circle, Locale p_locale)
   {
     return new PrintableShape.Circle(board_to_user(p_circle.center.to_float()), board_to_user(p_circle.radius), p_locale);
   }
@@ -125,7 +122,7 @@ public class CoordinateTransform implements Serializable
   {
     FloatPoint[] corners = p_shape.corner_approx_arr();
     FloatPoint[] transformed_corners = new FloatPoint[corners.length];
-    for (int i = 0; i < corners.length; ++i)
+    for (int i = 0; i < corners.length; i++)
     {
       transformed_corners[i] = board_to_user(corners[i]);
     }

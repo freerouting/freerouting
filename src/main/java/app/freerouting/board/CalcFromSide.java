@@ -20,7 +20,7 @@ public class CalcFromSide
     FloatPoint intersection = null;
     boolean border_intersection_found = false;
     // calculate the edge_no of p_shape, where p_polyline enters
-    for (int curr_no = p_no; curr_no > 0; --curr_no)
+    for (int curr_no = p_no; curr_no > 0; curr_no--)
     {
       LineSegment curr_seg = new LineSegment(p_polyline, curr_no);
       int[] intersections = curr_seg.border_intersections(p_shape);
@@ -43,7 +43,7 @@ public class CalcFromSide
       Line check_line = p_polyline.arr[1];
       double min_dist = Double.MAX_VALUE;
       int edge_count = p_shape.border_line_count();
-      for (int i = 0; i < edge_count; ++i)
+      for (int i = 0; i < edge_count; i++)
       {
         Line curr_line = p_shape.border_line(i);
         FloatPoint curr_intersection = check_line.intersection_approx(curr_line);
@@ -89,14 +89,13 @@ public class CalcFromSide
     Side prev_side = check_line.side_of(first_corner);
     int front_side_no = -1;
 
-    for (int i = 1; i <= border_line_count; ++i)
+    for (int i = 1; i <= border_line_count; i++)
     {
       FloatPoint next_corner;
       if (i == border_line_count)
       {
         next_corner = first_corner;
-      }
-      else
+      } else
       {
         next_corner = p_shape.corner_approx(i);
       }

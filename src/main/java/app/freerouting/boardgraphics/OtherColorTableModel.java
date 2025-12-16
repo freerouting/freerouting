@@ -40,7 +40,7 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
   public OtherColorTableModel(OtherColorTableModel p_item_color_model)
   {
     super(p_item_color_model.data.length, p_item_color_model.locale);
-    for (int i = 0; i < this.data.length; ++i)
+    for (int i = 0; i < this.data.length; i++)
     {
       this.data[i] = new Object[p_item_color_model.data[i].length];
       System.arraycopy(p_item_color_model.data[i], 0, this.data[i], 0, this.data[i].length);

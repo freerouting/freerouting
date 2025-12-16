@@ -20,7 +20,7 @@ public class CornerItemConstructionState extends InteractiveState
    */
   protected LinkedList<IntPoint> corner_list = new LinkedList<>();
   protected FloatPoint snapped_mouse_position;
-  protected boolean observers_activated = false;
+  protected boolean observers_activated;
 
   /**
    * Creates a new instance of CornerItemConstructionState
@@ -70,7 +70,7 @@ public class CornerItemConstructionState extends InteractiveState
   {
     super.mouse_moved();
     IntPoint curr_mouse_pos = hdlg.get_current_mouse_position().round();
-    this.snapped_mouse_position = (this.snap(curr_mouse_pos)).to_float();
+    this.snapped_mouse_position = this.snap(curr_mouse_pos).to_float();
     hdlg.repaint();
     return this;
   }
@@ -94,9 +94,9 @@ public class CornerItemConstructionState extends InteractiveState
     }
     FloatPoint[] corners = new FloatPoint[corner_count];
     Iterator<IntPoint> it = corner_list.iterator();
-    for (int i = 0; i < corners.length - 1; ++i)
+    for (int i = 0; i < corners.length - 1; i++)
     {
-      corners[i] = (it.next()).to_float();
+      corners[i] = it.next().to_float();
     }
     if (this.snapped_mouse_position == null)
     {
@@ -142,7 +142,7 @@ public class CornerItemConstructionState extends InteractiveState
   private IntPoint snap(IntPoint p_point)
   {
     IntPoint result;
-    boolean list_empty = (corner_list.isEmpty());
+    boolean list_empty = corner_list.isEmpty();
     if (hdlg.get_routing_board().rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE && !list_empty)
     {
       IntPoint last_corner = corner_list.getLast();

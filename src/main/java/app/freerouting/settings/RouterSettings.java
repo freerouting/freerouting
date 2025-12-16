@@ -21,7 +21,7 @@ public class RouterSettings implements Serializable
   public int maxPasses = 9999;
   public transient boolean[] isLayerActive;
   public transient boolean[] isPreferredDirectionHorizontalOnLayer;
-  public transient boolean save_intermediate_stages = false;
+  public transient boolean save_intermediate_stages;
   @SerializedName("ignore_net_classes")
   public transient String[] ignoreNetClasses = new String[0];
   /**
@@ -90,7 +90,7 @@ public class RouterSettings implements Serializable
     // make more horizontal preferred direction, if the board is horizontal.
 
     boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       isLayerActive[i] = p_board.layer_structure.arr[i].is_signal;
       if (p_board.layer_structure.arr[i].is_signal)
@@ -103,8 +103,7 @@ public class RouterSettings implements Serializable
       if (curr_preferred_direction_is_horizontal)
       {
         scoring.undesiredDirectionTraceCost[i] += horizontal_add_costs_against_preferred_dir;
-      }
-      else
+      } else
       {
         scoring.undesiredDirectionTraceCost[i] += vertical_add_costs_against_preferred_dir;
       }
@@ -131,10 +130,10 @@ public class RouterSettings implements Serializable
     scoring.preferredDirectionTraceCost = new double[layerCount];
     scoring.undesiredDirectionTraceCost = new double[layerCount];
 
-    for (int i = 0; i < layerCount; ++i)
+    for (int i = 0; i < layerCount; i++)
     {
       isLayerActive[i] = true;
-      isPreferredDirectionHorizontalOnLayer[i] = (i % 2 == 1);
+      isPreferredDirectionHorizontalOnLayer[i] = i % 2 == 1;
       scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
       scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
     }
@@ -398,7 +397,7 @@ public class RouterSettings implements Serializable
   public AutorouteControl.ExpansionCostFactor[] get_trace_cost_arr()
   {
     AutorouteControl.ExpansionCostFactor[] result = new AutorouteControl.ExpansionCostFactor[scoring.preferredDirectionTraceCost.length];
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = new AutorouteControl.ExpansionCostFactor(get_horizontal_trace_costs(i), get_vertical_trace_costs(i));
     }

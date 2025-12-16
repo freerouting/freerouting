@@ -1,11 +1,15 @@
 package app.freerouting.gui;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,8 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * Creates the file menu of a board frame.
@@ -39,7 +41,7 @@ public class BoardMenuFile extends JMenu
     JMenuItem file_open_menuitem = new JMenuItem();
     file_open_menuitem.setText(tm.getText("open"));
     file_open_menuitem.setToolTipText(tm.getText("open_tooltip"));
-    file_open_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+    file_open_menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
     file_open_menuitem.addActionListener(_ ->
     {
       File selected_file = RoutingJob.showOpenDialog(globalSettings.guiSettings.inputDirectory, board_frame);
@@ -53,7 +55,7 @@ public class BoardMenuFile extends JMenu
     file_save_as_menuitem = new JMenuItem();
     file_save_as_menuitem.setText(tm.getText("save_as"));
     file_save_as_menuitem.setToolTipText(tm.getText("save_as_tooltip"));
-    file_save_as_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+    file_save_as_menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
     file_save_as_menuitem.addActionListener(_ ->
     {
       File selected_file = board_frame.showSaveAsDialog(globalSettings.guiSettings.inputDirectory, board_frame.routingJob.output);
@@ -87,7 +89,7 @@ public class BoardMenuFile extends JMenu
     JMenuItem file_exit_menuitem = new JMenuItem();
     file_exit_menuitem.setText(tm.getText("exit"));
     file_exit_menuitem.setToolTipText(tm.getText("exit_tooltip"));
-    file_exit_menuitem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
+    file_exit_menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
     file_exit_menuitem.addActionListener(_ -> board_frame.dispose());
     file_exit_menuitem.addActionListener(_ -> FRAnalytics.buttonClicked("file_exit_menuitem", file_exit_menuitem.getText()));
 

@@ -36,7 +36,7 @@ public class BatchAutorouterThread extends StoppableThread
   private final int passNo;
   private final boolean useSlowAlgorithm;
 
-  public FloatLine latest_air_line = null;
+  public FloatLine latest_air_line;
 
   public BatchAutorouterThread(RoutingBoard board, List<Item> autorouteItemList, int passNo, boolean useSlowAlgorithm, RouterSettings routerSettings, int startRipupCosts, int tracePullTightAccuracy, boolean p_remove_unconnected_vias, boolean p_with_preferred_directions)
   {
@@ -55,7 +55,7 @@ public class BatchAutorouterThread extends StoppableThread
     {
       // remove preferred direction
       this.trace_cost_arr = new AutorouteControl.ExpansionCostFactor[this.board.get_layer_count()];
-      for (int i = 0; i < this.trace_cost_arr.length; ++i)
+      for (int i = 0; i < this.trace_cost_arr.length; i++)
       {
         double curr_min_cost = this.settings.get_preferred_direction_trace_costs(i);
         this.trace_cost_arr[i] = new AutorouteControl.ExpansionCostFactor(curr_min_cost, curr_min_cost);
@@ -320,7 +320,7 @@ public class BatchAutorouterThread extends StoppableThread
           // If not, use the nearest endpoint
           double dist_to_start = point_on_first.distance(second_segment_start);
           double dist_to_end = point_on_first.distance(second_segment_end);
-          point_on_second = (dist_to_start < dist_to_end) ? second_segment_start : second_segment_end;
+          point_on_second = dist_to_start < dist_to_end ? second_segment_start : second_segment_end;
         }
 
         // Recalculate the point on first segment based on the point on second segment
@@ -370,7 +370,7 @@ public class BatchAutorouterThread extends StoppableThread
       }
 
       // Let's go through all nets of this item
-      for (int i = 0; i < curr_item.net_count(); ++i)
+      for (int i = 0; i < curr_item.net_count(); i++)
       {
         // If the user requested to stop the auto-router, we stop it
         if (this.is_stop_auto_router_requested())
@@ -389,13 +389,11 @@ public class BatchAutorouterThread extends StoppableThread
         {
           // The item was successfully routed
           ++routed;
-        }
-        else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED) || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS) || (autorouterResult.state == AutorouteAttemptState.CONNECTED_TO_PLANE))
+        } else if ((autorouterResult.state == AutorouteAttemptState.ALREADY_CONNECTED) || (autorouterResult.state == AutorouteAttemptState.NO_UNCONNECTED_NETS) || (autorouterResult.state == AutorouteAttemptState.CONNECTED_TO_PLANE))
         {
           // The item doesn't need to be routed
           ++skipped;
-        }
-        else
+        } else
         {
           FRLogger.debug("Autorouter " + autorouterResult.details);
           ++not_routed;

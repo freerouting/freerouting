@@ -94,7 +94,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     settings_autorouter_layer_active_arr = new JCheckBox[layer_count];
     settings_autorouter_combo_box_arr = new ArrayList<>(layer_count);
 
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       gridbag_constraints.gridwidth = 3;
       Layer curr_layer = layer_structure.arr[i];
@@ -304,7 +304,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     number_format.setMaximumFractionDigits(2);
     final int TEXT_FIELD_LENGTH = 2;
     NumberFormat float_number_format = new DecimalFormat("0.0");
-    for (int i = 0; i < signal_layer_count; ++i)
+    for (int i = 0; i < signal_layer_count; i++)
     {
       signal_layer_name_arr[i] = new JLabel();
       Layer curr_signal_layer = layer_structure.get_signal_layer(i);
@@ -352,20 +352,19 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     this.settings_autorouter_autoroute_pass_button.setSelected(settings.getRunRouter());
     this.settings_autorouter_postroute_pass_button.setSelected(settings.getRunOptimizer());
 
-    for (int i = 0; i < settings_autorouter_layer_active_arr.length; ++i)
+    for (int i = 0; i < settings_autorouter_layer_active_arr.length; i++)
     {
       this.settings_autorouter_layer_active_arr[i].setSelected(settings.get_layer_active(i));
     }
 
-    for (int i = 0; i < settings_autorouter_combo_box_arr.size(); ++i)
+    for (int i = 0; i < settings_autorouter_combo_box_arr.size(); i++)
     {
       if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i)))
       {
         this.settings_autorouter_combo_box_arr
             .get(i)
             .setSelectedItem(this.horizontal);
-      }
-      else
+      } else
       {
         this.settings_autorouter_combo_box_arr
             .get(i)
@@ -377,11 +376,11 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow
     this.plane_via_cost_field.setValue(settings.get_plane_via_costs());
     this.start_ripup_costs.setValue(settings.get_start_ripup_costs());
     this.start_pass_no.setValue(settings.get_start_pass_no());
-    for (int i = 0; i < preferred_direction_trace_cost_arr.length; ++i)
+    for (int i = 0; i < preferred_direction_trace_cost_arr.length; i++)
     {
       this.preferred_direction_trace_cost_arr[i].setValue(settings.get_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
     }
-    for (int i = 0; i < against_preferred_direction_trace_cost_arr.length; ++i)
+    for (int i = 0; i < against_preferred_direction_trace_cost_arr.length; i++)
     {
       this.against_preferred_direction_trace_cost_arr[i].setValue(settings.get_against_preferred_direction_trace_costs(layer_structure.get_layer_no(i)));
     }

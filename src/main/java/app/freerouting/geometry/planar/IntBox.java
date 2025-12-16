@@ -52,7 +52,7 @@ public class IntBox extends RegularTileShape implements Serializable
   @Override
   public boolean is_empty()
   {
-    return (ll.x > ur.x || ll.y > ur.y);
+    return ll.x > ur.x || ll.y > ur.y;
   }
 
   @Override
@@ -66,7 +66,7 @@ public class IntBox extends RegularTileShape implements Serializable
    */
   public int width()
   {
-    return (ur.x - ll.x);
+    return ur.x - ll.x;
   }
 
   /**
@@ -74,7 +74,7 @@ public class IntBox extends RegularTileShape implements Serializable
    */
   public int height()
   {
-    return (ur.y - ll.y);
+    return ur.y - ll.y;
   }
 
   @Override
@@ -881,27 +881,25 @@ public class IntBox extends RegularTileShape implements Serializable
     int section_length_y = (int) Math.ceil(height / y_count);
     IntBox[] result = new IntBox[x_count * y_count];
     int curr_index = 0;
-    for (int j = 0; j < y_count; ++j)
+    for (int j = 0; j < y_count; j++)
     {
       int curr_lly = this.ll.y + j * section_length_y;
       int curr_ury;
       if (j == (y_count - 1))
       {
         curr_ury = this.ur.y;
-      }
-      else
+      } else
       {
         curr_ury = curr_lly + section_length_y;
       }
-      for (int i = 0; i < x_count; ++i)
+      for (int i = 0; i < x_count; i++)
       {
         int curr_llx = this.ll.x + i * section_length_x;
         int curr_urx;
         if (i == (x_count - 1))
         {
           curr_urx = this.ur.x;
-        }
-        else
+        } else
         {
           curr_urx = curr_llx + section_length_x;
         }
@@ -917,7 +915,7 @@ public class IntBox extends RegularTileShape implements Serializable
   {
     TileShape[] tmp_result = p_shape.cutout_from(this);
     TileShape[] result = new TileShape[tmp_result.length];
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = tmp_result[i].simplify();
     }

@@ -34,12 +34,12 @@ public class WindowPadstacks extends WindowObjectListWithFilter
   {
     Padstacks padstacks = this.board_frame.board_panel.board_handling.get_routing_board().library.padstacks;
     Padstack[] sorted_arr = new Padstack[padstacks.count()];
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       sorted_arr[i] = padstacks.get(i + 1);
     }
     Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       this.add_to_list(sorted_arr[i]);
     }
@@ -55,7 +55,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
       return;
     }
     Collection<Padstack> padstack_list = new LinkedList<>();
-    for (int i = 0; i < selected_padstacks.size(); ++i)
+    for (int i = 0; i < selected_padstacks.size(); i++)
     {
       padstack_list.add((Padstack) selected_padstacks.get(i));
     }

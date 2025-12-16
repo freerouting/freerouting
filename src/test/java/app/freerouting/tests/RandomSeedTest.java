@@ -1,9 +1,9 @@
 package app.freerouting.tests;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 public class RandomSeedTest extends TestBasedOnAnIssue
 {
@@ -22,8 +22,7 @@ public class RandomSeedTest extends TestBasedOnAnIssue
             if (i == 0)
             {
                 firstHash = currentHash;
-            }
-            else
+            } else
             {
                 assertEquals(firstHash, currentHash, "Seeded runs should produce identical results. Run " + (i + 1));
             }

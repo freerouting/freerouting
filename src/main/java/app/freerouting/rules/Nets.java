@@ -45,7 +45,7 @@ public class Nets implements Serializable
    */
   public static boolean is_normal_net_no(int p_net_no)
   {
-    return (p_net_no > 0 && p_net_no <= max_legal_net_no);
+    return p_net_no > 0 && p_net_no <= max_legal_net_no;
   }
 
   /**

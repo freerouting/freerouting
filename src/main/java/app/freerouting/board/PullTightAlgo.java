@@ -107,7 +107,7 @@ public abstract class PullTightAlgo
     while (something_changed)
     {
       something_changed = false;
-      for (int i = 0; i < board.get_layer_count(); ++i)
+      for (int i = 0; i < board.get_layer_count(); i++)
       {
         IntOctagon changed_region = board.changed_area.get_area(i);
         if (changed_region.is_empty())
@@ -136,14 +136,12 @@ public abstract class PullTightAlgo
               {
                 break;
               }
-            }
-            else if (smoothen_end_corners_at_trace_1(curr_trace))
+            } else if (smoothen_end_corners_at_trace_1(curr_trace))
             {
               something_changed = true;
               break; // because items may be removed
             }
-          }
-          else if (curr_ob instanceof Via via && p_trace_cost_arr != null)
+          } else if (curr_ob instanceof Via via && p_trace_cost_arr != null)
           {
             if (OptViaAlgo.opt_via_location(this.board, via, p_trace_cost_arr, this.min_translate_dist, 10))
             {
@@ -206,7 +204,7 @@ public abstract class PullTightAlgo
     {
       return p_polyline;
     }
-    for (int i = 2; i < p_polyline.arr.length - 2; ++i)
+    for (int i = 2; i < p_polyline.arr.length - 2; i++)
     {
       Line new_line = reposition_line(p_polyline.arr, i);
       if (new_line != null)
@@ -235,7 +233,7 @@ public abstract class PullTightAlgo
     // check, that the corners of the line to translate are inside
     // the clip shape
     {
-      for (int i = -1; i < 1; ++i)
+      for (int i = -1; i < 1; i++)
       {
         Point curr_corner = p_line_arr[p_no + i].intersection(p_line_arr[p_no + i + 1]);
         if (curr_clip_shape.is_outside(curr_corner))
@@ -347,7 +345,7 @@ public abstract class PullTightAlgo
   {
     boolean polyline_changed = false;
     Polyline curr_polyline = p_polyline;
-    for (int i = 1; i < curr_polyline.arr.length - 1; ++i)
+    for (int i = 1; i < curr_polyline.arr.length - 1; i++)
     {
       boolean try_skip;
       if (i == 1 || i == curr_polyline.arr.length - 2)
@@ -357,8 +355,7 @@ public abstract class PullTightAlgo
         Point prev_corner = curr_polyline.corner(i - 1);
         Point curr_corner = curr_polyline.corner(i);
         try_skip = curr_corner.equals(prev_corner);
-      }
-      else
+      } else
       {
         FloatPoint prev_corner = curr_polyline.corner_approx(i - 1);
         FloatPoint curr_corner = curr_polyline.corner_approx(i);
@@ -373,7 +370,7 @@ public abstract class PullTightAlgo
         System.arraycopy(curr_polyline.arr, 0, curr_lines, 0, i);
         System.arraycopy(curr_polyline.arr, i + 1, curr_lines, i, curr_lines.length - i);
         Polyline tmp = new Polyline(curr_lines);
-        boolean check_ok = (tmp.arr.length == curr_lines.length);
+        boolean check_ok = tmp.arr.length == curr_lines.length;
         if (check_ok && !curr_polyline.arr[i].is_multiple_of_45_degree())
         {
           // no check necessary for skipping 45 degree lines, because the check is

@@ -54,7 +54,7 @@ public class WindowViaRule extends WindowBase
     this.main_panel.add(list_scroll_pane, BorderLayout.CENTER);
 
     // fill the list
-    for (int i = 0; i < p_via_rule.via_count(); ++i)
+    for (int i = 0; i < p_via_rule.via_count(); i++)
     {
       this.rule_list_model.addElement(p_via_rule.get_via(i));
     }
@@ -132,7 +132,7 @@ public class WindowViaRule extends WindowBase
         return;
       }
       int curr_index = 0;
-      for (int i = 0; i < via_list.count(); ++i)
+      for (int i = 0; i < via_list.count(); i++)
       {
         ViaInfo curr_via = via_list.get(i);
         if (!via_rule.contains(curr_via))

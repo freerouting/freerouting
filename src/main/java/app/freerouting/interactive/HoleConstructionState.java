@@ -107,7 +107,7 @@ public class HoleConstructionState extends CornerItemConstructionState
     }
     add_corner_for_snap_angle();
     int corner_count = corner_list.size();
-    boolean construction_succeeded = (corner_count > 2);
+    boolean construction_succeeded = corner_count > 2;
     PolylineShape[] new_holes = null;
     PolylineShape new_border = null;
     if (construction_succeeded)
@@ -122,7 +122,7 @@ public class HoleConstructionState extends CornerItemConstructionState
       else
       {
         new_holes = new PolylineShape[old_holes.length + 1];
-        for (int i = 0; i < old_holes.length; ++i)
+        for (int i = 0; i < old_holes.length; i++)
         {
           new_holes[i] = (PolylineShape) old_holes[i];
           if (new_holes[i] == null)
@@ -137,7 +137,7 @@ public class HoleConstructionState extends CornerItemConstructionState
     {
       IntPoint[] new_hole_corners = new IntPoint[corner_count];
       Iterator<IntPoint> it = corner_list.iterator();
-      for (int i = 0; i < corner_count; ++i)
+      for (int i = 0; i < corner_count; i++)
       {
         new_hole_corners[i] = it.next();
       }

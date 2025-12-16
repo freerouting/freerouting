@@ -98,7 +98,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable
    */
   public boolean is_multiple_of_45_degree()
   {
-    return (is_orthogonal() || is_diagonal());
+    return is_orthogonal() || is_diagonal();
   }
 
   /**

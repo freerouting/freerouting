@@ -37,7 +37,7 @@ public class PlanarDelaunayTriangulation
    * id numbers are for implementing an ordering on the Edges so that they can be used in a set for
    * example
    */
-  private int last_edge_id_no = 0;
+  private int last_edge_id_no;
 
   /**
    * Creates a new instance of PlanarDelaunayTriangulation from p_object_list.
@@ -68,7 +68,7 @@ public class PlanarDelaunayTriangulation
     bounding_corners[2] = new Corner(null, new IntPoint(-bounding_coor, -bounding_coor));
 
     Edge[] edge_lines = new Edge[3];
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       edge_lines[i] = new Edge(bounding_corners[i], bounding_corners[i + 1]);
     }
@@ -132,15 +132,14 @@ public class PlanarDelaunayTriangulation
     // if p_corner is contained in an edge line.
 
     Edge containing_edge = null;
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; i++)
     {
       Edge curr_edge = p_triangle.edge_lines[i];
       Side curr_side;
       if (curr_edge.left_triangle == p_triangle)
       {
         curr_side = p_corner.side_of(curr_edge.start_corner, curr_edge.end_corner);
-      }
-      else
+      } else
       {
         curr_side = p_corner.side_of(curr_edge.end_corner, curr_edge.start_corner);
       }
@@ -149,8 +148,7 @@ public class PlanarDelaunayTriangulation
         // p_corner is outside this triangle
         FRLogger.warn("PlanarDelaunayTriangulation.split: p_corner is outside");
         return false;
-      }
-      else if (curr_side == Side.COLLINEAR)
+      } else if (curr_side == Side.COLLINEAR)
       {
         if (containing_edge != null)
         {
@@ -190,7 +188,7 @@ public class PlanarDelaunayTriangulation
         this.search_graph.insert(curr_triangle, p_triangle);
       }
 
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         legalize_edge(p_corner, p_triangle.edge_lines[i]);
       }
@@ -216,7 +214,7 @@ public class PlanarDelaunayTriangulation
       this.search_graph.insert(new_triangles[2], neighbour_to_split);
       this.search_graph.insert(new_triangles[3], neighbour_to_split);
 
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         Edge curr_edge = p_triangle.edge_lines[i];
         if (curr_edge != containing_edge)
@@ -224,7 +222,7 @@ public class PlanarDelaunayTriangulation
           legalize_edge(p_corner, curr_edge);
         }
       }
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         Edge curr_edge = neighbour_to_split.edge_lines[i];
         if (curr_edge != containing_edge)
@@ -270,7 +268,7 @@ public class PlanarDelaunayTriangulation
     this.search_graph.insert(flipped_edge.right_triangle, p_edge.right_triangle);
 
     // Call this function recursively for the other edge lines of triangle_to_change.
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; i++)
     {
       Edge curr_edge = triangle_to_change.edge_lines[i];
       if (curr_edge != p_edge)
@@ -492,7 +490,7 @@ public class PlanarDelaunayTriangulation
     @Override
     public int compareTo(Edge p_other)
     {
-      return (this.id_no - p_other.id_no);
+      return this.id_no - p_other.id_no;
     }
 
     public Triangle get_left_triangle()
@@ -587,7 +585,7 @@ public class PlanarDelaunayTriangulation
 
       int left_index = -1;
       int right_index = -1;
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         if (this.left_triangle.edge_lines[i] == this)
         {
@@ -679,7 +677,7 @@ public class PlanarDelaunayTriangulation
       {
         // check if the left triangle contains this edge
         boolean found = false;
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; i++)
         {
           if (left_triangle.edge_lines[i] == this)
           {
@@ -705,7 +703,7 @@ public class PlanarDelaunayTriangulation
       {
         // check if the left triangle contains this edge
         boolean found = false;
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; i++)
         {
           if (right_triangle.edge_lines[i] == this)
           {
@@ -803,7 +801,7 @@ public class PlanarDelaunayTriangulation
     public Corner opposite_corner(Edge p_edge_line)
     {
       int edge_line_no = -1;
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         if (this.edge_lines[i] == p_edge_line)
         {
@@ -839,7 +837,7 @@ public class PlanarDelaunayTriangulation
         FRLogger.warn("Triangle.contains: array is_on_the_left_of_edge_line not initialized");
         return false;
       }
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         Edge curr_edge = this.edge_lines[i];
         Side curr_side = p_corner.side_of(curr_edge.start_corner, curr_edge.end_corner);
@@ -851,8 +849,7 @@ public class PlanarDelaunayTriangulation
           {
             return false;
           }
-        }
-        else
+        } else
         {
           if (curr_side == Side.ON_THE_LEFT)
           {
@@ -870,7 +867,7 @@ public class PlanarDelaunayTriangulation
     {
       if (this.is_leaf())
       {
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; i++)
         {
           Edge curr_edge = this.edge_lines[i];
           if (curr_edge.start_corner.object != null && curr_edge.end_corner.object != null)
@@ -902,7 +899,7 @@ public class PlanarDelaunayTriangulation
       Triangle[] new_triangles = new Triangle[3];
 
       Edge[] new_edges = new Edge[3];
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         new_edges[i] = new Edge(this.get_corner(i), p_corner);
       }
@@ -929,14 +926,13 @@ public class PlanarDelaunayTriangulation
 
       // Set the new neighbour triangles of the edge lines.
 
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         Edge curr_edge = new_triangles[i].edge_lines[0];
         if (curr_edge.get_left_triangle() == this)
         {
           curr_edge.set_left_triangle(new_triangles[i]);
-        }
-        else
+        } else
         {
           curr_edge.set_right_triangle(new_triangles[i]);
         }
@@ -972,7 +968,7 @@ public class PlanarDelaunayTriangulation
       int neighbour_touching_edge_no = -1;
       Edge touching_edge = null;
       Edge other_touching_edge = null;
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
         Edge curr_edge = this.edge_lines[i];
         if (p_corner.side_of(curr_edge.start_corner, curr_edge.end_corner) == Side.COLLINEAR)
@@ -1121,7 +1117,7 @@ public class PlanarDelaunayTriangulation
       if (this.is_leaf())
       {
         Edge prev_edge = this.edge_lines[2];
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; i++)
         {
           Edge curr_edge = this.edge_lines[i];
           if (!curr_edge.validate())
@@ -1133,8 +1129,7 @@ public class PlanarDelaunayTriangulation
           if (prev_edge.left_triangle == this)
           {
             prev_end_corner = prev_edge.end_corner;
-          }
-          else
+          } else
           {
             prev_end_corner = prev_edge.start_corner;
           }
@@ -1142,12 +1137,10 @@ public class PlanarDelaunayTriangulation
           if (curr_edge.left_triangle == this)
           {
             curr_start_corner = curr_edge.start_corner;
-          }
-          else if (curr_edge.right_triangle == this)
+          } else if (curr_edge.right_triangle == this)
           {
             curr_start_corner = curr_edge.end_corner;
-          }
-          else
+          } else
           {
             FRLogger.warn("Triangle.validate: edge inconsistent");
             return false;
@@ -1184,9 +1177,9 @@ public class PlanarDelaunayTriangulation
         return; // already initialized
       }
       this.is_on_the_left_of_edge_line = new boolean[3];
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; i++)
       {
-        this.is_on_the_left_of_edge_line[i] = (this.edge_lines[i].left_triangle == this);
+        this.is_on_the_left_of_edge_line[i] = this.edge_lines[i].left_triangle == this;
       }
     }
   }

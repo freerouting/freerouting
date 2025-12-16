@@ -61,7 +61,7 @@ public class MoveDrillItemAlgo
       attach_allowed = via.attach_allowed;
     }
     ShapeSearchTree search_tree = p_board.search_tree_manager.get_default_tree();
-    for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); ++curr_layer)
+    for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); curr_layer++)
     {
       int curr_ind = curr_layer - p_drill_item.first_layer();
       TileShape curr_shape = p_drill_item.get_tree_shape(search_tree, curr_ind);
@@ -74,8 +74,7 @@ public class MoveDrillItemAlgo
       if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
       {
         curr_tile_shape = new_shape.bounding_box();
-      }
-      else
+      } else
       {
         curr_tile_shape = new_shape.bounding_octagon();
       }
@@ -109,7 +108,7 @@ public class MoveDrillItemAlgo
     Collection<Item> ignore_items = new LinkedList<>();
     ignore_items.add(p_drill_item);
     ShapeSearchTree search_tree = p_board.search_tree_manager.get_default_tree();
-    for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); ++curr_layer)
+    for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); curr_layer++)
     {
       int curr_ind = curr_layer - p_drill_item.first_layer();
       TileShape curr_shape = p_drill_item.get_tree_shape(search_tree, curr_ind);
@@ -122,8 +121,7 @@ public class MoveDrillItemAlgo
       if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
       {
         curr_tile_shape = new_shape.bounding_box();
-      }
-      else
+      } else
       {
         curr_tile_shape = new_shape.bounding_octagon();
       }
@@ -137,7 +135,7 @@ public class MoveDrillItemAlgo
         return false;
       }
       IntBox curr_bounding_box = curr_shape.bounding_box();
-      for (int j = 0; j < 4; ++j)
+      for (int j = 0; j < 4; j++)
       {
         p_board.join_changed_area(curr_bounding_box.corner_approx(j), curr_layer);
       }
@@ -186,7 +184,7 @@ public class MoveDrillItemAlgo
       IntPoint curr_via_center = (IntPoint) curr_via.get_center();
       FloatPoint check_via_center = curr_via_center.to_float();
       Vector rel_coor = null;
-      for (int i = 0; i < try_via_centers.length; ++i)
+      for (int i = 0; i < try_via_centers.length; i++)
       {
         if (i == 0 || check_via_center.distance_square(try_via_centers[i].to_float()) <= max_dist_square)
         {
@@ -292,12 +290,15 @@ public class MoveDrillItemAlgo
       }
       FloatPoint[] shove_deltas = curr_offset_shape.nearest_relative_outside_locations(curr_via_shape, try_count);
       try_via_centers = new IntPoint[shove_deltas.length];
-      for (int i = 0; i < try_via_centers.length; ++i)
+      for (int i = 0; i < try_via_centers.length; i++)
       {
         Vector curr_delta = shove_deltas[i].round().difference_by(Point.ZERO);
         try_via_centers[i] = (IntPoint) curr_via_center.translate_by(curr_delta);
       }
     }
     return try_via_centers;
+  }
+
+  private MoveDrillItemAlgo() {
   }
 }

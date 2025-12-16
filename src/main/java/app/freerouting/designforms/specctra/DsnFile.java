@@ -1,13 +1,19 @@
 package app.freerouting.designforms.specctra;
 
-import app.freerouting.board.*;
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.BoardObservers;
+import app.freerouting.board.BoardOutline;
+import app.freerouting.board.ConductionArea;
+import app.freerouting.board.FixedState;
+import app.freerouting.board.Item;
+import app.freerouting.board.Trace;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.interactive.BoardManager;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,48 +23,37 @@ import java.util.LinkedList;
 /**
  * Class for reading and writing dsn-files.
  */
-public class DsnFile
-{
+public class DsnFile {
 
   static final char CLASS_CLEARANCE_SEPARATOR = '-';
 
-  private DsnFile()
-  {
+  private DsnFile() {
   }
 
   /**
-   * Creates a routing board from a Specctra DSN file. The parameters p_item_observers and
-   * idNoGenerator are used, in case the board is embedded into a host system. Returns
-   * false, if an error occurred.
+   * Creates a routing board from a Specctra DSN file. The parameters p_item_observers and idNoGenerator are used, in case the board is embedded into a host system. Returns false, if an error
+   * occurred.
    */
-  public static ReadResult read(InputStream inputStream, BoardManager boardManager, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator)
-  {
+  public static ReadResult read(InputStream inputStream, BoardManager boardManager, BoardObservers boardObservers, IdentificationNumberGenerator identificationNumberGenerator) {
     IJFlexScanner dsnFlexScanner = new SpecctraDsnStreamReader(inputStream);
 
     // first, check if the file is a Specctra DSN file by looking for the first keywords "(pcb "
     Object curr_token;
-    for (int i = 0; i < 3; ++i)
-    {
-      try
-      {
+    for (int i = 0; i < 3; i++) {
+      try {
         curr_token = dsnFlexScanner.next_token();
-      } catch (IOException e)
-      {
+      } catch (IOException e) {
         FRLogger.error("DsnFile.read: IO error scanning file", e);
         return ReadResult.ERROR;
       }
       boolean keyword_ok = true;
-      if (i == 0)
-      {
-        keyword_ok = (curr_token == Keyword.OPEN_BRACKET);
-      }
-      else if (i == 1)
-      {
-        keyword_ok = (curr_token == Keyword.PCB_SCOPE);
+      if (i == 0) {
+        keyword_ok = curr_token == Keyword.OPEN_BRACKET;
+      } else if (i == 1) {
+        keyword_ok = curr_token == Keyword.PCB_SCOPE;
         dsnFlexScanner.yybegin(SpecctraDsnStreamReader.NAME); // to overread the name of the pcb for i = 2
       }
-      if (!keyword_ok)
-      {
+      if (!keyword_ok) {
         FRLogger.warn("DsnFile.read: the input file is not in a Specctra DSN file format. It must be a text file starting with the '(pcb' character array.");
         return ReadResult.ERROR;
       }
@@ -70,65 +65,49 @@ public class DsnFile
     // read the rest of the file after the "(pcb" part
     boolean read_ok = Keyword.PCB_SCOPE.read_scope(read_scope_par);
     ReadResult result;
-    if (read_ok)
-    {
+    if (read_ok) {
       // the board object is now available in the board manager
       result = ReadResult.OK;
-      if (read_scope_par.autoroute_settings == null)
-      {
+      if (read_scope_par.autoroute_settings == null) {
         // look for power planes with incorrect layer type and adjust autoroute parameters
         adjust_plane_autoroute_settings(boardManager);
       }
-    }
-    else if (!read_scope_par.board_outline_ok)
-    {
+    } else if (!read_scope_par.board_outline_ok) {
       result = ReadResult.OUTLINE_MISSING;
-    }
-    else
-    {
+    } else {
       result = ReadResult.ERROR;
     }
     return result;
   }
 
   /**
-   * Sets contains_plane to true for nets with a conduction_area covering a large part of a signal
-   * layer, if that layer does not contain any traces This is useful in case the layer type was not
-   * set correctly to plane in the dsn-file. Returns true, if something was changed.
+   * Sets contains_plane to true for nets with a conduction_area covering a large part of a signal layer, if that layer does not contain any traces This is useful in case the layer type was not set
+   * correctly to plane in the dsn-file. Returns true, if something was changed.
    */
-  private static boolean adjust_plane_autoroute_settings(BoardManager p_board_handling)
-  {
+  private static boolean adjust_plane_autoroute_settings(BoardManager p_board_handling) {
     BasicBoard routing_board = p_board_handling.get_routing_board();
     app.freerouting.board.LayerStructure board_layer_structure = routing_board.layer_structure;
-    if (board_layer_structure.arr.length <= 2)
-    {
+    if (board_layer_structure.arr.length <= 2) {
       return false;
     }
-    for (app.freerouting.board.Layer curr_layer : board_layer_structure.arr)
-    {
-      if (!curr_layer.is_signal)
-      {
+    for (app.freerouting.board.Layer curr_layer : board_layer_structure.arr) {
+      if (!curr_layer.is_signal) {
         return false;
       }
     }
     boolean[] layer_contains_wires_arr = new boolean[board_layer_structure.arr.length];
     boolean[] changed_layer_arr = new boolean[board_layer_structure.arr.length];
-    for (int i = 0; i < layer_contains_wires_arr.length; ++i)
-    {
+    for (int i = 0; i < layer_contains_wires_arr.length; i++) {
       layer_contains_wires_arr[i] = false;
       changed_layer_arr[i] = false;
     }
     Collection<ConductionArea> conduction_area_list = new LinkedList<>();
     Collection<Item> item_list = routing_board.get_items();
-    for (Item curr_item : item_list)
-    {
-      if (curr_item instanceof Trace trace)
-      {
+    for (Item curr_item : item_list) {
+      if (curr_item instanceof Trace trace) {
         int curr_layer = trace.get_layer();
         layer_contains_wires_arr[curr_layer] = true;
-      }
-      else if (curr_item instanceof ConductionArea area)
-      {
+      } else if (curr_item instanceof ConductionArea area) {
         conduction_area_list.add(area);
       }
     }
@@ -136,48 +115,39 @@ public class DsnFile
 
     BoardOutline board_outline = routing_board.get_outline();
     double board_area = 0;
-    for (int i = 0; i < board_outline.shape_count(); ++i)
-    {
+    for (int i = 0; i < board_outline.shape_count(); i++) {
       TileShape[] curr_piece_arr = board_outline
           .get_shape(i)
           .split_to_convex();
-      if (curr_piece_arr != null)
-      {
-        for (TileShape curr_piece : curr_piece_arr)
-        {
+      if (curr_piece_arr != null) {
+        for (TileShape curr_piece : curr_piece_arr) {
           board_area += curr_piece.area();
         }
       }
     }
-    for (ConductionArea curr_conduction_area : conduction_area_list)
-    {
+    for (ConductionArea curr_conduction_area : conduction_area_list) {
       int layer_no = curr_conduction_area.get_layer();
-      if (layer_contains_wires_arr[layer_no])
-      {
+      if (layer_contains_wires_arr[layer_no]) {
         continue;
       }
       app.freerouting.board.Layer curr_layer = routing_board.layer_structure.arr[layer_no];
-      if (!curr_layer.is_signal || layer_no == 0 || layer_no == board_layer_structure.arr.length - 1)
-      {
+      if (!curr_layer.is_signal || layer_no == 0 || layer_no == board_layer_structure.arr.length - 1) {
         continue;
       }
       TileShape[] convex_pieces = curr_conduction_area
           .get_area()
           .split_to_convex();
       double curr_area = 0;
-      for (TileShape curr_piece : convex_pieces)
-      {
+      for (TileShape curr_piece : convex_pieces) {
         curr_area += curr_piece.area();
       }
-      if (curr_area < 0.5 * board_area)
-      {
+      if (curr_area < 0.5 * board_area) {
         // skip conduction areas not covering most of the board
         continue;
       }
 
-      for (int i = 0; i < curr_conduction_area.net_count(); ++i)
-      {
-        app.freerouting.rules.Net curr_net = routing_board.rules.nets.get(curr_conduction_area.get_net_no(i));
+      for (int i = 0; i < curr_conduction_area.net_count(); i++) {
+        Net curr_net = routing_board.rules.nets.get(curr_conduction_area.get_net_no(i));
         curr_net.set_contains_plane(true);
         nothing_changed = false;
       }
@@ -185,13 +155,11 @@ public class DsnFile
       changed_layer_arr[layer_no] = true;
       if (curr_conduction_area
           .get_fixed_state()
-          .ordinal() < FixedState.USER_FIXED.ordinal())
-      {
+          .ordinal() < FixedState.USER_FIXED.ordinal()) {
         curr_conduction_area.set_fixed_state(FixedState.USER_FIXED);
       }
     }
-    if (nothing_changed)
-    {
+    if (nothing_changed) {
       return false;
     }
     // Adjust the layer preferred directions in the autoroute settings.
@@ -199,14 +167,10 @@ public class DsnFile
     RouterSettings autoroute_settings = p_board_handling.get_settings().autoroute_settings;
     int layer_count = routing_board.get_layer_count();
     boolean curr_preferred_direction_is_horizontal = autoroute_settings.get_preferred_direction_is_horizontal(0);
-    for (int i = 0; i < layer_count; ++i)
-    {
-      if (changed_layer_arr[i])
-      {
+    for (int i = 0; i < layer_count; i++) {
+      if (changed_layer_arr[i]) {
         autoroute_settings.set_layer_active(i, false);
-      }
-      else if (autoroute_settings.get_layer_active(i))
-      {
+      } else if (autoroute_settings.get_layer_active(i)) {
         autoroute_settings.set_preferred_direction_is_horizontal(i, curr_preferred_direction_is_horizontal);
         curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
       }
@@ -215,37 +179,31 @@ public class DsnFile
   }
 
   /**
-   * Writes p_board to a text file in the Specctra dsn format. Returns false, if the write failed.
-   * If p_compat_mode is true, only standard specctra dsn scopes are written, so that any host
-   * system with a specctra interface can read them.
+   * Writes p_board to a text file in the Specctra dsn format. Returns false, if the write failed. If p_compat_mode is true, only standard specctra dsn scopes are written, so that any host system with
+   * a specctra interface can read them.
    */
-  public static boolean write(BoardManager boardManager, OutputStream outputStream, String p_design_name, boolean p_compat_mode)
-  {
+  public static boolean write(BoardManager boardManager, OutputStream outputStream, String p_design_name, boolean p_compat_mode) {
     IndentFileWriter output_file = new IndentFileWriter(outputStream);
 
-    try
-    {
+    try {
       write_pcb_scope(boardManager, output_file, p_design_name, p_compat_mode);
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("unable to write Specctra DSN file", e);
       return false;
     }
-    try
-    {
+    try {
       output_file.close();
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("unable to close Specctra DSN file", e);
       return false;
     }
     return true;
   }
 
-  private static void write_pcb_scope(BoardManager boardManager, IndentFileWriter indentFileWriter, String p_design_name, boolean p_compat_mode) throws IOException
-  {
+  private static void write_pcb_scope(BoardManager boardManager, IndentFileWriter indentFileWriter, String p_design_name, boolean p_compat_mode) throws IOException {
     BasicBoard routing_board = boardManager.get_routing_board();
-    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, indentFileWriter, routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform, p_compat_mode);
+    WriteScopeParameter write_scope_parameter = new WriteScopeParameter(routing_board, null, indentFileWriter, routing_board.communication.specctra_parser_info.string_quote,
+        routing_board.communication.coordinate_transform, p_compat_mode);
 
     indentFileWriter.start_scope(false);
     indentFileWriter.write("pcb ");
@@ -262,124 +220,95 @@ public class DsnFile
     indentFileWriter.end_scope();
   }
 
-  static boolean read_on_off_scope(IJFlexScanner p_scanner)
-  {
-    try
-    {
+  static boolean read_on_off_scope(IJFlexScanner p_scanner) {
+    try {
       Object next_token = p_scanner.next_token();
       boolean result = false;
-      if (next_token == Keyword.ON)
-      {
+      if (next_token == Keyword.ON) {
         result = true;
-      }
-      else if (next_token != Keyword.OFF)
-      {
+      } else if (next_token != Keyword.OFF) {
         FRLogger.warn("DsnFile.read_boolean: Keyword.OFF expected at '" + p_scanner.get_scope_identifier() + "'");
       }
       ScopeKeyword.skip_scope(p_scanner);
       return result;
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_boolean: IO error scanning file", e);
       return false;
     }
   }
 
-  static int read_integer_scope(IJFlexScanner p_scanner)
-  {
-    try
-    {
+  static int read_integer_scope(IJFlexScanner p_scanner) {
+    try {
       int value;
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof Integer integer)
-      {
+      if (next_token instanceof Integer integer) {
         value = integer;
-      }
-      else
-      {
+      } else {
         FRLogger.warn("DsnFile.read_integer_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       next_token = p_scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET)
-      {
+      if (next_token != Keyword.CLOSED_BRACKET) {
         FRLogger.warn("DsnFile.read_integer_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       return value;
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_integer_scope: IO error scanning file", e);
       return 0;
     }
   }
 
-  static double read_float_scope(IJFlexScanner p_scanner)
-  {
-    try
-    {
+  static double read_float_scope(IJFlexScanner p_scanner) {
+    try {
       double value;
       Object next_token = p_scanner.next_token();
-      if (next_token instanceof Double double1)
-      {
+      if (next_token instanceof Double double1) {
         value = double1;
-      }
-      else if (next_token instanceof Integer integer)
-      {
+      } else if (next_token instanceof Integer integer) {
         value = integer;
-      }
-      else
-      {
+      } else {
         FRLogger.warn("DsnFile.read_float_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       next_token = p_scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET)
-      {
+      if (next_token != Keyword.CLOSED_BRACKET) {
         FRLogger.warn("DsnFile.read_float_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
         return 0;
       }
       return value;
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_float_scope: IO error scanning file", e);
       return 0;
     }
   }
 
-  public static String read_string_scope(IJFlexScanner p_scanner)
-  {
-    try
-    {
+  public static String read_string_scope(IJFlexScanner p_scanner) {
+    try {
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       String result = p_scanner.next_string();
       Object next_token = p_scanner.next_token();
-      if (next_token != Keyword.CLOSED_BRACKET)
-      {
+      if (next_token != Keyword.CLOSED_BRACKET) {
         FRLogger.warn("DsnFile.read_string_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
       }
       return result;
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("DsnFile.read_string_scope: IO error scanning file", e);
       return null;
     }
   }
 
-  public static String[] read_string_list_scope(IJFlexScanner p_scanner)
-  {
+  public static String[] read_string_list_scope(IJFlexScanner p_scanner) {
     String[] result = p_scanner.next_string_list();
 
-    if (!p_scanner.next_closing_bracket())
-    {
+    if (!p_scanner.next_closing_bracket()) {
       return null;
     }
 
     return result;
   }
 
-  public enum ReadResult
-  {
+  public enum ReadResult {
     OK, OUTLINE_MISSING, ERROR
   }
 }

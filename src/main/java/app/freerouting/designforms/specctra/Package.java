@@ -97,12 +97,10 @@ public class Package
               return null;
             }
             pin_info_list.add(next_pin);
-          }
-          else if (next_token == Keyword.SIDE)
+          } else if (next_token == Keyword.SIDE)
           {
             is_front = read_placement_side(p_scanner);
-          }
-          else if (next_token == Keyword.OUTLINE)
+          } else if (next_token == Keyword.OUTLINE)
           {
             Shape curr_shape = Shape.read_scope(p_scanner, p_layer_structure);
             if (curr_shape != null)
@@ -116,36 +114,31 @@ public class Package
               FRLogger.warn("Package.read_scope: closed bracket expected at '" + p_scanner.get_scope_identifier() + "'");
               return null;
             }
-          }
-          else if (next_token == Keyword.KEEPOUT)
+          } else if (next_token == Keyword.KEEPOUT)
           {
             Shape.ReadAreaScopeResult keepout_area = Shape.read_area_scope(p_scanner, p_layer_structure, false);
             if (keepout_area != null)
             {
               keepouts.add(keepout_area);
-            }
-            else
+            } else
             {
               FRLogger.error("Package.read_scope: could not read keepout area of package '" + package_name + "'", null);
             }
-          }
-          else if (next_token == Keyword.VIA_KEEPOUT)
+          } else if (next_token == Keyword.VIA_KEEPOUT)
           {
             Shape.ReadAreaScopeResult keepout_area = Shape.read_area_scope(p_scanner, p_layer_structure, false);
             if (keepout_area != null)
             {
               via_keepouts.add(keepout_area);
             }
-          }
-          else if (next_token == Keyword.PLACE_KEEPOUT)
+          } else if (next_token == Keyword.PLACE_KEEPOUT)
           {
             Shape.ReadAreaScopeResult keepout_area = Shape.read_area_scope(p_scanner, p_layer_structure, false);
             if (keepout_area != null)
             {
               place_keepouts.add(keepout_area);
             }
-          }
-          else
+          } else
           {
             ScopeKeyword.skip_scope(p_scanner);
           }
@@ -153,7 +146,7 @@ public class Package
       }
       PinInfo[] pin_info_arr = new PinInfo[pin_info_list.size()];
       Iterator<PinInfo> it = pin_info_list.iterator();
-      for (int i = 0; i < pin_info_arr.length; ++i)
+      for (int i = 0; i < pin_info_arr.length; i++)
       {
         pin_info_arr[i] = it.next();
       }
@@ -182,7 +175,7 @@ public class Package
       p_par.file.write("back)");
     }
     // write the pins of the package
-    for (int i = 0; i < p_package.pin_count(); ++i)
+    for (int i = 0; i < p_package.pin_count(); i++)
     {
       app.freerouting.core.Package.Pin curr_pin = p_package.get_pin(i);
       p_par.file.new_line();
@@ -192,7 +185,7 @@ public class Package
       p_par.file.write(" ");
       p_par.identifier_type.write(curr_pin.name, p_par.file);
       double[] rel_coor = p_par.coordinate_transform.board_to_dsn(curr_pin.relative_location);
-      for (int j = 0; j < rel_coor.length; ++j)
+      for (int j = 0; j < rel_coor.length; j++)
       {
         p_par.file.write(" ");
         p_par.file.write(String.valueOf(rel_coor[j]));
@@ -207,16 +200,16 @@ public class Package
       p_par.file.write(")");
     }
     // write the keepouts belonging to  the package.
-    for (int i = 0; i < p_package.keepout_arr.length; ++i)
+    for (int i = 0; i < p_package.keepout_arr.length; i++)
     {
       write_package_keepout(p_package.keepout_arr[i], p_par, false);
     }
-    for (int i = 0; i < p_package.via_keepout_arr.length; ++i)
+    for (int i = 0; i < p_package.via_keepout_arr.length; i++)
     {
       write_package_keepout(p_package.via_keepout_arr[i], p_par, true);
     }
     // write the package outline.
-    for (int i = 0; i < p_package.outline.length; ++i)
+    for (int i = 0; i < p_package.outline.length; i++)
     {
       p_par.file.start_scope();
       p_par.file.write("outline");
@@ -265,7 +258,7 @@ public class Package
     {
       dsn_shape.write_scope(p_par.file, p_par.identifier_type);
     }
-    for (int j = 0; j < holes.length; ++j)
+    for (int j = 0; j < holes.length; j++)
     {
       Shape dsn_hole = p_par.coordinate_transform.board_to_dsn(holes[j], keepout_layer);
       dsn_hole.write_hole_scope(p_par.file, p_par.identifier_type);
@@ -317,18 +310,16 @@ public class Package
       String pin_name = next_token.toString();
 
       double[] pin_coor = new double[2];
-      for (int i = 0; i < 2; ++i)
+      for (int i = 0; i < 2; i++)
       {
         next_token = p_scanner.next_token();
         if (next_token instanceof Double double1)
         {
           pin_coor[i] = double1;
-        }
-        else if (next_token instanceof Integer integer)
+        } else if (next_token instanceof Integer integer)
         {
           pin_coor[i] = integer;
-        }
-        else
+        } else
         {
           FRLogger.warn("Package.read_pin_info: number expected at '" + p_scanner.get_scope_identifier() + "'");
           return null;
@@ -355,8 +346,7 @@ public class Package
           if (next_token == Keyword.ROTATE)
           {
             rotation = read_rotation(p_scanner);
-          }
-          else
+          } else
           {
             ScopeKeyword.skip_scope(p_scanner);
           }
@@ -400,7 +390,7 @@ public class Package
   {
     Collection<Item> board_items = p_par.board.get_items();
     boolean component_found = false;
-    for (int i = 1; i <= p_par.board.components.count(); ++i)
+    for (int i = 1; i <= p_par.board.components.count(); i++)
     {
       app.freerouting.board.Component curr_component = p_par.board.components.get(i);
       if (curr_component.get_package() == p_package)
@@ -438,7 +428,7 @@ public class Package
   private static boolean read_placement_side(IJFlexScanner p_scanner) throws IOException
   {
     Object next_token = p_scanner.next_token();
-    boolean result = (next_token != Keyword.BACK);
+    boolean result = next_token != Keyword.BACK;
 
     next_token = p_scanner.next_token();
     if (next_token != Keyword.CLOSED_BRACKET)

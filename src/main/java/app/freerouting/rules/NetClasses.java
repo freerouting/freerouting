@@ -89,7 +89,7 @@ public class NetClasses implements Serializable
       if (curr_class.get_trace_clearance_class() == p_trace_clearance_class && curr_class.get_via_rule() == p_via_rule)
       {
         boolean trace_widths_equal = true;
-        for (int i = 0; i < curr_class.layer_count(); ++i)
+        for (int i = 0; i < curr_class.layer_count(); i++)
         {
           if (curr_class.get_trace_half_width(i) != p_trace_half_width)
           {
@@ -119,7 +119,7 @@ public class NetClasses implements Serializable
       if (curr_class.get_trace_clearance_class() == p_trace_clearance_class && curr_class.get_via_rule() == p_via_rule && p_trace_half_width_arr.length == curr_class.layer_count())
       {
         boolean trace_widths_equal = true;
-        for (int i = 0; i < curr_class.layer_count(); ++i)
+        for (int i = 0; i < curr_class.layer_count(); i++)
         {
           if (curr_class.get_trace_half_width(i) != p_trace_half_width_arr[i])
           {

@@ -23,7 +23,7 @@ public class CoordinateTransform implements Serializable
   /**
    * Left side and right side of the board are swapped.
    */
-  private boolean mirror_left_right = false;
+  private boolean mirror_left_right;
   /**
    * Top side and bottom side of the board are swapped.
    */

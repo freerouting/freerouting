@@ -53,12 +53,12 @@ public class WindowNets extends WindowObjectListWithFilter
   {
     Nets nets = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
     Net[] sorted_arr = new Net[nets.max_net_no()];
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       sorted_arr[i] = nets.get(i + 1);
     }
     Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       this.add_to_list(sorted_arr[i]);
     }
@@ -74,7 +74,7 @@ public class WindowNets extends WindowObjectListWithFilter
       return;
     }
     int[] selected_net_numbers = new int[selected_nets.size()];
-    for (int i = 0; i < selected_nets.size(); ++i)
+    for (int i = 0; i < selected_nets.size(); i++)
     {
       selected_net_numbers[i] = ((Net) selected_nets.get(i)).net_number;
     }
@@ -113,7 +113,7 @@ public class WindowNets extends WindowObjectListWithFilter
       }
       NetClasses net_classes = board_frame.board_panel.board_handling.get_routing_board().rules.net_classes;
       NetClass[] class_arr = new NetClass[net_classes.count()];
-      for (int i = 0; i < class_arr.length; ++i)
+      for (int i = 0; i < class_arr.length; i++)
       {
         class_arr[i] = net_classes.get(i);
       }
@@ -122,7 +122,7 @@ public class WindowNets extends WindowObjectListWithFilter
       {
         return;
       }
-      for (int i = 0; i < selected_nets.size(); ++i)
+      for (int i = 0; i < selected_nets.size(); i++)
       {
         ((Net) selected_nets.get(i)).set_class(selected_class);
       }
@@ -142,11 +142,11 @@ public class WindowNets extends WindowObjectListWithFilter
       }
       GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       int max_net_no = board_handling.get_routing_board().rules.nets.max_net_no();
-      for (int i = 1; i <= max_net_no; ++i)
+      for (int i = 1; i <= max_net_no; i++)
       {
         board_handling.set_incompletes_filter(i, true);
       }
-      for (int i = 0; i < selected_nets.size(); ++i)
+      for (int i = 0; i < selected_nets.size(); i++)
       {
         board_handling.set_incompletes_filter(((Net) selected_nets.get(i)).net_number, false);
       }

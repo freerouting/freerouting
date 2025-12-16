@@ -27,13 +27,13 @@ public class IntDirection extends Direction implements Serializable
   @Override
   public boolean is_orthogonal()
   {
-    return (x == 0 || y == 0);
+    return x == 0 || y == 0;
   }
 
   @Override
   public boolean is_diagonal()
   {
-    return (Math.abs(x) == Math.abs(y));
+    return Math.abs(x) == Math.abs(y);
   }
 
   @Override
@@ -174,7 +174,7 @@ public class IntDirection extends Direction implements Serializable
   @Override
   int compareTo(BigIntDirection p_other)
   {
-    return -(p_other.compareTo(this));
+    return -p_other.compareTo(this);
   }
 
   final double determinant(IntDirection p_other)

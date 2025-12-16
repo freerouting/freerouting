@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class BoardStatisticsBoard implements Serializable
 {
   @SerializedName("bounding_box")
-  public Rectangle2D.Float boundingBox = null;
+  public Rectangle2D.Float boundingBox;
   @SerializedName("size")
-  public Rectangle2D.Float size = null;
+  public Rectangle2D.Float size;
 }

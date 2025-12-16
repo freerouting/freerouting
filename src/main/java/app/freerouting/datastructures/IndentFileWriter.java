@@ -15,7 +15,7 @@ public class IndentFileWriter extends OutputStreamWriter
   private static final String INDENT_STRING = "  ";
   private static final String BEGIN_SCOPE = "(";
   private static final String END_SCOPE = ")";
-  private int current_indent_level = 0;
+  private int current_indent_level;
 
   /**
    * Creates a new instance of IndentFileWriter
@@ -74,7 +74,7 @@ public class IndentFileWriter extends OutputStreamWriter
     try
     {
       write("\n");
-      for (int i = 0; i < current_indent_level; ++i)
+      for (int i = 0; i < current_indent_level; i++)
       {
         write(INDENT_STRING);
       }

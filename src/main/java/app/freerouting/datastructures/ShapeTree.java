@@ -48,7 +48,7 @@ public abstract class ShapeTree
       return;
     }
     Leaf[] leaf_arr = new Leaf[shape_count];
-    for (int i = 0; i < shape_count; ++i)
+    for (int i = 0; i < shape_count; i++)
     {
       leaf_arr[i] = insert(p_obj, i);
     }
@@ -129,7 +129,7 @@ public abstract class ShapeTree
     {
       return;
     }
-    for (int i = 0; i < p_entries.length; ++i)
+    for (int i = 0; i < p_entries.length; i++)
     {
       remove_leaf(p_entries[i]);
     }
@@ -151,7 +151,7 @@ public abstract class ShapeTree
     Leaf[] leaf_arr = this.to_array();
     double cumulative_depth = 0;
     int maximum_depth = 0;
-    for (int i = 0; i < leaf_arr.length; ++i)
+    for (int i = 0; i < leaf_arr.length; i++)
     {
       if (leaf_arr[i] != null)
       {

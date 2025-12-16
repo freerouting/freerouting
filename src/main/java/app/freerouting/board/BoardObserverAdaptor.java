@@ -5,7 +5,7 @@ package app.freerouting.board;
  */
 public class BoardObserverAdaptor implements BoardObservers
 {
-  private boolean active = false;
+  private boolean active;
 
   /**
    * Tell the observers the deletion p_object.

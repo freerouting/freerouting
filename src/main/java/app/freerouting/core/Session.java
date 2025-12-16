@@ -17,7 +17,7 @@ public class Session implements Serializable
   public final UUID userId;
   @SerializedName("host")
   public final String host;
-  public transient boolean isGuiSession = false;
+  public transient boolean isGuiSession;
 
   /**
    * Creates a new session.

@@ -269,15 +269,14 @@ public class MazeShoveTraceAlgo
         if (curr_door_projection.distance(from_corner) + compensated_trace_half_width <= shove_width)
         {
           FloatLine[] line_sections = curr_door.get_section_segments(compensated_trace_half_width);
-          for (int i = 0; i < line_sections.length; ++i)
+          for (int i = 0; i < line_sections.length; i++)
           {
             FloatLine curr_line_section = line_sections[i];
             FloatPoint curr_section_nearest_corner;
             if (curr_line_section.a.distance_square(from_corner) <= curr_line_section.b.distance_square(from_corner))
             {
               curr_section_nearest_corner = curr_line_section.a;
-            }
-            else
+            } else
             {
               curr_section_nearest_corner = curr_line_section.b;
             }
@@ -336,5 +335,8 @@ public class MazeShoveTraceAlgo
       section_no = p_section_no;
       section_line = p_section_line;
     }
+  }
+
+  private MazeShoveTraceAlgo() {
   }
 }

@@ -34,7 +34,7 @@ public class ClearanceMatrix implements Serializable
     class_count = Math.max(p_class_count, 1);
     layer_structure = p_layer_structure;
     row = new Row[class_count];
-    for (int i = 0; i < class_count; ++i)
+    for (int i = 0; i < class_count; i++)
     {
       row[i] = new Row(p_name_arr[i]);
     }
@@ -61,7 +61,7 @@ public class ClearanceMatrix implements Serializable
    */
   public int get_no(String p_name)
   {
-    for (int i = 0; i < class_count; ++i)
+    for (int i = 0; i < class_count; i++)
     {
       if (row[i].name.equalsIgnoreCase(p_name))
       {
@@ -89,7 +89,7 @@ public class ClearanceMatrix implements Serializable
    */
   public void set_default_value(int p_value)
   {
-    for (int i = 0; i < layer_structure.arr.length; ++i)
+    for (int i = 0; i < layer_structure.arr.length; i++)
     {
       set_default_value(i, p_value);
     }
@@ -100,9 +100,9 @@ public class ClearanceMatrix implements Serializable
    */
   public void set_default_value(int p_layer, int p_value)
   {
-    for (int i = 1; i < class_count; ++i)
+    for (int i = 1; i < class_count; i++)
     {
-      for (int j = 1; j < class_count; ++j)
+      for (int j = 1; j < class_count; j++)
       {
         set_value(i, j, p_layer, p_value);
       }
@@ -114,7 +114,7 @@ public class ClearanceMatrix implements Serializable
    */
   public void set_value(int p_i, int p_j, int p_value)
   {
-    for (int layer = 0; layer < layer_structure.arr.length; ++layer)
+    for (int layer = 0; layer < layer_structure.arr.length; layer++)
     {
       set_value(p_i, p_j, layer, p_value);
     }
@@ -125,7 +125,7 @@ public class ClearanceMatrix implements Serializable
    */
   public void set_inner_value(int p_i, int p_j, int p_value)
   {
-    for (int layer = 1; layer < layer_structure.arr.length - 1; ++layer)
+    for (int layer = 1; layer < layer_structure.arr.length - 1; layer++)
     {
       set_value(p_i, p_j, layer, p_value);
     }
@@ -199,7 +199,7 @@ public class ClearanceMatrix implements Serializable
   public boolean is_layer_dependent(int p_i, int p_j)
   {
     int compare_value = row[p_j].column[p_i].layer[0];
-    for (int l = 1; l < layer_structure.arr.length; ++l)
+    for (int l = 1; l < layer_structure.arr.length; l++)
     {
       if (row[p_j].column[p_i].layer[l] != compare_value)
       {
@@ -220,7 +220,7 @@ public class ClearanceMatrix implements Serializable
       return false; // no inner layers
     }
     int compare_value = row[p_j].column[p_i].layer[1];
-    for (int l = 2; l < layer_structure.arr.length - 1; ++l)
+    for (int l = 2; l < layer_structure.arr.length - 1; l++)
     {
       if (row[p_j].column[p_i].layer[l] != compare_value)
       {
@@ -280,7 +280,7 @@ public class ClearanceMatrix implements Serializable
     Row[] new_row = new Row[this.class_count];
 
     // append a matrix entry to each old row
-    for (int i = 0; i < old_class_count; ++i)
+    for (int i = 0; i < old_class_count; i++)
     {
       Row curr_old_row = this.row[i];
       new_row[i] = new Row(curr_old_row.name);
@@ -299,9 +299,9 @@ public class ClearanceMatrix implements Serializable
 
     // Set the new matrix elements to default values.
 
-    for (int i = 0; i < old_class_count; ++i)
+    for (int i = 0; i < old_class_count; i++)
     {
-      for (int j = 0; j < this.layer_structure.arr.length; ++j)
+      for (int j = 0; j < this.layer_structure.arr.length; j++)
       {
         int default_value = this.get_value(1, i, j, false);
         this.set_value(old_class_count, i, j, default_value);
@@ -309,7 +309,7 @@ public class ClearanceMatrix implements Serializable
       }
     }
 
-    for (int j = 0; j < this.layer_structure.arr.length; ++j)
+    for (int j = 0; j < this.layer_structure.arr.length; j++)
     {
       int default_value = this.get_value(1, 1, j, false);
       this.set_value(old_class_count, old_class_count, j, default_value);
@@ -329,7 +329,7 @@ public class ClearanceMatrix implements Serializable
 
     // remove the  matrix entry with index p_index in to each old row
     int new_row_index = 0;
-    for (int i = 0; i < old_class_count; ++i)
+    for (int i = 0; i < old_class_count; i++)
     {
       if (i == p_index)
       {
@@ -340,7 +340,7 @@ public class ClearanceMatrix implements Serializable
       Row curr_new_row = new_row[new_row_index];
 
       int new_column_index = 0;
-      for (int j = 0; j < old_class_count; ++j)
+      for (int j = 0; j < old_class_count; j++)
       {
         if (j == p_index)
         {
@@ -370,7 +370,7 @@ public class ClearanceMatrix implements Serializable
     }
     Row row_1 = this.row[p_1];
     Row row_2 = this.row[p_2];
-    for (int i = 1; i < class_count; ++i)
+    for (int i = 1; i < class_count; i++)
     {
       if (!row_1.column[i].equals(row_2.column[i]))
       {
@@ -393,7 +393,7 @@ public class ClearanceMatrix implements Serializable
     {
       name = p_name;
       column = new MatrixEntry[class_count];
-      for (int i = 0; i < class_count; ++i)
+      for (int i = 0; i < class_count; i++)
       {
         column[i] = new MatrixEntry();
       }
@@ -407,7 +407,7 @@ public class ClearanceMatrix implements Serializable
 
       p_window.append_bold(tm.getText("spacing_from_clearance_class") + " ");
       p_window.append_bold(this.name);
-      for (int i = 1; i < this.column.length; ++i)
+      for (int i = 1; i < this.column.length; i++)
       {
         p_window.newline();
         p_window.indent();
@@ -417,7 +417,7 @@ public class ClearanceMatrix implements Serializable
         if (curr_column.is_layer_dependent())
         {
           p_window.append(" " + tm.getText("on_layer") + " ");
-          for (int j = 0; j < layer_structure.arr.length; ++j)
+          for (int j = 0; j < layer_structure.arr.length; j++)
           {
             p_window.newline();
             p_window.indent();
@@ -426,8 +426,7 @@ public class ClearanceMatrix implements Serializable
             p_window.append(" = ");
             p_window.append(curr_column.layer[j]);
           }
-        }
-        else
+        } else
         {
           p_window.append(" = ");
           p_window.append(curr_column.layer[0]);
@@ -446,7 +445,7 @@ public class ClearanceMatrix implements Serializable
     private MatrixEntry()
     {
       layer = new int[layer_structure.arr.length];
-      for (int i = 0; i < layer_structure.arr.length; ++i)
+      for (int i = 0; i < layer_structure.arr.length; i++)
       {
         layer[i] = 0;
       }
@@ -457,7 +456,7 @@ public class ClearanceMatrix implements Serializable
      */
     boolean equals(MatrixEntry p_other)
     {
-      for (int i = 0; i < layer_structure.arr.length; ++i)
+      for (int i = 0; i < layer_structure.arr.length; i++)
       {
         if (this.layer[i] != p_other.layer[i])
         {
@@ -473,7 +472,7 @@ public class ClearanceMatrix implements Serializable
     boolean is_layer_dependent()
     {
       int compare_value = layer[0];
-      for (int i = 1; i < layer_structure.arr.length; ++i)
+      for (int i = 1; i < layer_structure.arr.length; i++)
       {
         if (layer[i] != compare_value)
         {

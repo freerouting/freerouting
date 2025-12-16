@@ -68,7 +68,7 @@ public class TileConstructionState extends CornerItemConstructionState
       Iterator<IntPoint> it = corner_list.iterator();
       IntPoint first_corner = it.next();
       IntPoint prev_corner = first_corner;
-      for (int i = 0; i < corner_count - 1; ++i)
+      for (int i = 0; i < corner_count - 1; i++)
       {
         IntPoint next_corner = it.next();
         edge_lines[i] = new Line(prev_corner, next_corner);
@@ -120,7 +120,7 @@ public class TileConstructionState extends CornerItemConstructionState
   {
     IntPoint[] corner_arr = new IntPoint[corner_list.size()];
     Iterator<IntPoint> it = corner_list.iterator();
-    for (int i = 0; i < corner_arr.length; ++i)
+    for (int i = 0; i < corner_arr.length; i++)
     {
       corner_arr[i] = it.next();
     }
@@ -189,7 +189,7 @@ public class TileConstructionState extends CornerItemConstructionState
     }
     IntPoint[] corner_arr = new IntPoint[corner_list.size()];
     Iterator<IntPoint> it = corner_list.iterator();
-    for (int i = 0; i < corner_arr.length; ++i)
+    for (int i = 0; i < corner_arr.length; i++)
     {
       corner_arr[i] = it.next();
     }

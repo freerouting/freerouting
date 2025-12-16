@@ -107,44 +107,36 @@ public class RulesFile
         if (next_token == Keyword.RULE)
         {
           add_rules(Rule.read_scope(scanner), routing_board, null);
-        }
-        else if (next_token == Keyword.LAYER)
+        } else if (next_token == Keyword.LAYER)
         {
           add_layer_rules(scanner, routing_board);
-        }
-        else if (next_token == Keyword.PADSTACK)
+        } else if (next_token == Keyword.PADSTACK)
         {
           Library.read_padstack_scope(scanner, layer_structure, coordinate_transform, routing_board.library.padstacks);
-        }
-        else if (next_token == Keyword.VIA)
+        } else if (next_token == Keyword.VIA)
         {
           read_via_info(scanner, routing_board);
-        }
-        else if (next_token == Keyword.VIA_RULE)
+        } else if (next_token == Keyword.VIA_RULE)
         {
           read_via_rule(scanner, routing_board);
-        }
-        else if (next_token == Keyword.CLASS)
+        } else if (next_token == Keyword.CLASS)
         {
           read_net_class(scanner, layer_structure, routing_board);
-        }
-        else if (next_token == Keyword.SNAP_ANGLE)
+        } else if (next_token == Keyword.SNAP_ANGLE)
         {
           AngleRestriction snap_angle = Structure.read_snap_angle(scanner);
           if (snap_angle != null)
           {
             routing_board.rules.set_trace_angle_restriction(snap_angle);
           }
-        }
-        else if (next_token == Keyword.AUTOROUTE_SETTINGS)
+        } else if (next_token == Keyword.AUTOROUTE_SETTINGS)
         {
           RouterSettings autoroute_settings = AutorouteSettings.read_scope(scanner, layer_structure);
           if (autoroute_settings != null)
           {
             p_board_handling.settings.autoroute_settings = autoroute_settings;
           }
-        }
-        else
+        } else
         {
           ScopeKeyword.skip_scope(scanner);
         }
@@ -170,7 +162,7 @@ public class RulesFile
     // write the default rule using 0 as default layer.
     Rule.write_default_rule(p_par, 0);
     // write the via padstacks
-    for (int i = 1; i <= p_par.board.library.padstacks.count(); ++i)
+    for (int i = 1; i <= p_par.board.library.padstacks.count(); i++)
     {
       Padstack curr_padstack = p_par.board.library.padstacks.get(i);
       if (p_par.board.library.get_via_padstack(curr_padstack.name) != null)
@@ -294,5 +286,8 @@ public class RulesFile
     }
     Network.insert_net_class(curr_class, p_layer_structure, p_board, p_board.communication.coordinate_transform, false);
     return true;
+  }
+
+  private RulesFile() {
   }
 }

@@ -50,7 +50,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
     slider_arr = new JSlider[p_message_arr.length];
     message_arr = new JLabel[p_message_arr.length];
     gridbag_constraints.ipady = 0;
-    for (int i = 0; i < p_message_arr.length; ++i)
+    for (int i = 0; i < p_message_arr.length; i++)
     {
       message_arr[i] = new JLabel();
 
@@ -107,7 +107,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
 
   protected void set_all_minimum()
   {
-    for (int i = 0; i < slider_arr.length; ++i)
+    for (int i = 0; i < slider_arr.length; i++)
     {
       set_slider_value(i, 0);
       set_changed_value(i, 0);
@@ -116,7 +116,7 @@ public abstract class WindowVisibility extends BoardSavableSubWindow
 
   protected void set_all_maximum()
   {
-    for (int i = 0; i < slider_arr.length; ++i)
+    for (int i = 0; i < slider_arr.length; i++)
     {
       set_slider_value(i, MAX_SLIDER_VALUE);
       set_changed_value(i, 1);

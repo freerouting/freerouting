@@ -302,9 +302,9 @@ public class FRLogger
     var refs = refList.toArray(new AppenderRef[0]);
     for (int i = 0; i < refs.length; i++)
     {
-      if (refs[i]
-          .getRef()
-          .equals("Console"))
+      if ("Console"
+          .equals(refs[i]
+          .getRef()))
       {
         refs[i] = AppenderRef.createAppenderRef("Console", level, null);
       }
@@ -327,35 +327,35 @@ public class FRLogger
   {
     String logLevel = level.toUpperCase();
 
-    if (logLevel.equals("OFF") || logLevel.equals("0"))
+    if ("OFF".equals(logLevel) || "0".equals(logLevel))
     {
       FRLogger.disableLogging();
     }
-    else if (logLevel.equals("FATAL") || logLevel.equals("1"))
+    else if ("FATAL".equals(logLevel) || "1".equals(logLevel))
     {
       FRLogger.changeFileLogLevel(Level.FATAL);
     }
-    else if (logLevel.equals("ERROR") || logLevel.equals("2"))
+    else if ("ERROR".equals(logLevel) || "2".equals(logLevel))
     {
       FRLogger.changeFileLogLevel(Level.ERROR);
     }
-    else if (logLevel.equals("WARN") || logLevel.equals("3"))
+    else if ("WARN".equals(logLevel) || "3".equals(logLevel))
     {
       FRLogger.changeFileLogLevel(Level.WARN);
     }
-    else if (logLevel.equals("INFO") || logLevel.equals("4"))
+    else if ("INFO".equals(logLevel) || "4".equals(logLevel))
     {
       FRLogger.changeFileLogLevel(Level.INFO);
     }
-    else if (logLevel.equals("DEBUG") || logLevel.equals("5"))
+    else if ("DEBUG".equals(logLevel) || "5".equals(logLevel))
     {
       FRLogger.changeFileLogLevel(Level.DEBUG);
     }
-    else if (logLevel.equals("TRACE") || logLevel.equals("6"))
+    else if ("TRACE".equals(logLevel) || "6".equals(logLevel))
     {
       FRLogger.changeFileLogLevel(Level.TRACE);
     }
-    else if (logLevel.equals("ALL") || logLevel.equals("7"))
+    else if ("ALL".equals(logLevel) || "7".equals(logLevel))
     {
       FRLogger.changeFileLogLevel(Level.ALL);
     }
@@ -421,5 +421,8 @@ public class FRLogger
 
     // Update the loggers with the new configuration
     context.updateLoggers();
+  }
+
+  private FRLogger() {
   }
 }

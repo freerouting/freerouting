@@ -52,7 +52,7 @@ class PullTightAlgo90 extends PullTightAlgo
     {
       return p_polyline;
     }
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       TileShape shape_to_check = check_polyline.offset_shape(curr_half_width, i);
       if (!board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins))
@@ -80,7 +80,7 @@ class PullTightAlgo90 extends PullTightAlgo
     boolean polyline_changed = false;
     Line[] check_lines = new Line[4];
     boolean second_last_corner_skipped = false;
-    for (int i = 5; i <= p_polyline.arr.length; ++i)
+    for (int i = 5; i <= p_polyline.arr.length; i++)
     {
       boolean skip_lines = false;
       boolean in_clip_shape = curr_clip_shape == null || curr_clip_shape.contains(p_polyline.corner_approx(i - 3));
@@ -92,8 +92,7 @@ class PullTightAlgo90 extends PullTightAlgo
         if (i < p_polyline.arr.length)
         {
           check_lines[3] = p_polyline.arr[i];
-        }
-        else
+        } else
         {
           // use as concluding line the second last line
           check_lines[3] = p_polyline.arr[i - 2];
@@ -126,8 +125,7 @@ class PullTightAlgo90 extends PullTightAlgo
         }
         polyline_changed = true;
         ++i;
-      }
-      else
+      } else
       {
         ++new_line_index;
         new_lines[new_line_index] = p_polyline.arr[i - 3];
@@ -147,7 +145,7 @@ class PullTightAlgo90 extends PullTightAlgo
     }
     else
     {
-      for (int i = 3; i > 0; --i)
+      for (int i = 3; i > 0; i--)
       {
         ++new_line_index;
         new_lines[new_line_index] = p_polyline.arr[p_polyline.arr.length - i];

@@ -95,7 +95,7 @@ public class BigIntAux
     bZeros += y;
     b >>>= y;
 
-    int t = (Math.min(aZeros, bZeros));
+    int t = Math.min(aZeros, bZeros);
 
     while (a != b)
     {

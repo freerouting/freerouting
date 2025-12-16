@@ -26,7 +26,7 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom
    * The list of doors to neighbour expansion rooms
    */
   private List<ExpansionDoor> doors;
-  private boolean doors_calculated = false;
+  private boolean doors_calculated;
 
   /**
    * Creates a new instance of ObstacleExpansionRoom

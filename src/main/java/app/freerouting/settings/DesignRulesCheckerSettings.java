@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class DesignRulesCheckerSettings implements Serializable
 {
   @SerializedName("enabled")
-  public transient boolean enabled = false;
+  public transient boolean enabled;
   @SerializedName("include_warnings")
   public boolean includeWarnings = true;
   @SerializedName("include_errors")

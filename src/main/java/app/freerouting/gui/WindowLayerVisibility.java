@@ -32,12 +32,12 @@ public class WindowLayerVisibility extends WindowVisibility
     String header_message = tm.getText("layer_visibility_header");
     LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
     String[] message_arr = new String[layer_structure.arr.length];
-    for (int i = 0; i < message_arr.length; ++i)
+    for (int i = 0; i < message_arr.length; i++)
     {
       message_arr[i] = layer_structure.arr[i].name;
     }
     WindowLayerVisibility result = new WindowLayerVisibility(p_board_frame, title, header_message, message_arr);
-    for (int i = 0; i < message_arr.length; ++i)
+    for (int i = 0; i < message_arr.length; i++)
     {
       result.set_slider_value(i, board_panel.board_handling.graphics_context.get_raw_layer_visibility(i));
     }
@@ -54,7 +54,7 @@ public class WindowLayerVisibility extends WindowVisibility
   protected void set_all_minimum()
   {
     int layer_count = this.get_board_handling().graphics_context.layer_count();
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       if (i != this.get_board_handling().settings.get_layer())
       {
@@ -71,7 +71,7 @@ public class WindowLayerVisibility extends WindowVisibility
   public void refresh()
   {
     GraphicsContext graphics_context = this.get_board_handling().graphics_context;
-    for (int i = 0; i < graphics_context.layer_count(); ++i)
+    for (int i = 0; i < graphics_context.layer_count(); i++)
     {
       this.set_slider_value(i, graphics_context.get_raw_layer_visibility(i));
     }

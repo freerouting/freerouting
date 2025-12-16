@@ -30,7 +30,7 @@ public class Polygon extends Shape
   {
     IntPoint[] corner_arr = new IntPoint[coor.length / 2];
     double[] curr_point = new double[2];
-    for (int i = 0; i < corner_arr.length; ++i)
+    for (int i = 0; i < corner_arr.length; i++)
     {
       curr_point[0] = coor[2 * i];
       curr_point[1] = coor[2 * i + 1];
@@ -47,7 +47,7 @@ public class Polygon extends Shape
       return Simplex.EMPTY;
     }
     IntPoint[] corner_arr = new IntPoint[coor.length / 2];
-    for (int i = 0; i < corner_arr.length; ++i)
+    for (int i = 0; i < corner_arr.length; i++)
     {
       int curr_x = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[2 * i]));
       int curr_y = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[2 * i + 1]));
@@ -64,15 +64,14 @@ public class Polygon extends Shape
     bounds[1] = Integer.MAX_VALUE;
     bounds[2] = Integer.MIN_VALUE;
     bounds[3] = Integer.MIN_VALUE;
-    for (int i = 0; i < coor.length; ++i)
+    for (int i = 0; i < coor.length; i++)
     {
       if (i % 2 == 0)
       {
         // x coordinate
         bounds[0] = Math.min(bounds[0], coor[i]);
         bounds[2] = Math.max(bounds[2], coor[i]);
-      }
-      else
+      } else
       {
         // x coordinate
         bounds[1] = Math.min(bounds[1], coor[i]);
@@ -94,7 +93,7 @@ public class Polygon extends Shape
     p_file.write(" ");
     p_file.write(String.valueOf(0));
     int corner_count = coor.length / 2;
-    for (int i = 0; i < corner_count; ++i)
+    for (int i = 0; i < corner_count; i++)
     {
       p_file.new_line();
       p_file.write(String.valueOf(coor[2 * i]));
@@ -113,7 +112,7 @@ public class Polygon extends Shape
     p_file.write(" ");
     p_file.write(String.valueOf(0));
     int corner_count = coor.length / 2;
-    for (int i = 0; i < corner_count; ++i)
+    for (int i = 0; i < corner_count; i++)
     {
       p_file.new_line();
       int curr_coor = (int) Math.round(coor[2 * i]);

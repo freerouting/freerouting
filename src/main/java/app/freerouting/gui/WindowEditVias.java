@@ -102,11 +102,11 @@ public class WindowEditVias extends BoardSavableSubWindow
   private void add_combobox_items()
   {
     RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    for (int i = 0; i < routing_board.rules.clearance_matrix.get_class_count(); ++i)
+    for (int i = 0; i < routing_board.rules.clearance_matrix.get_class_count(); i++)
     {
       cl_class_combo_box.addItem(routing_board.rules.clearance_matrix.get_name(i));
     }
-    for (int i = 0; i < routing_board.library.via_padstack_count(); ++i)
+    for (int i = 0; i < routing_board.library.via_padstack_count(); i++)
     {
       padstack_combo_box.addItem(routing_board.library.get_via_padstack(i).name);
     }
@@ -209,13 +209,13 @@ public class WindowEditVias extends BoardSavableSubWindow
     {
       column_names = new String[ColumnName.values().length];
 
-      for (int i = 0; i < column_names.length; ++i)
+      for (int i = 0; i < column_names.length; i++)
       {
-        column_names[i] = tm.getText((ColumnName.values()[i]).toString());
+        column_names[i] = tm.getText(ColumnName.values()[i].toString());
       }
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
       data = new Object[board_rules.via_infos.count()][];
-      for (int i = 0; i < data.length; ++i)
+      for (int i = 0; i < data.length; i++)
       {
         this.data[i] = new Object[ColumnName.values().length];
       }
@@ -228,7 +228,7 @@ public class WindowEditVias extends BoardSavableSubWindow
     public void set_values()
     {
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
-      for (int i = 0; i < data.length; ++i)
+      for (int i = 0; i < data.length; i++)
       {
         ViaInfo curr_via = board_rules.via_infos.get(i);
         this.data[i][ColumnName.NAME.ordinal()] = curr_via.get_name();

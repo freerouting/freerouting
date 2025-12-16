@@ -32,7 +32,7 @@ public class PolylineArea implements Area, Serializable
   private static void cutout_hole_piece(TileShape p_divide_piece, TileShape p_hole_piece, Collection<TileShape> p_result_pieces)
   {
     TileShape[] result_pieces = p_divide_piece.cutout(p_hole_piece);
-    for (int i = 0; i < result_pieces.length; ++i)
+    for (int i = 0; i < result_pieces.length; i++)
     {
       TileShape curr_piece = result_pieces[i];
       if (curr_piece.dimension() == 2)
@@ -97,7 +97,7 @@ public class PolylineArea implements Area, Serializable
     {
       return false;
     }
-    for (int i = 0; i < hole_arr.length; ++i)
+    for (int i = 0; i < hole_arr.length; i++)
     {
       if (hole_arr[i].contains(p_point))
       {
@@ -114,7 +114,7 @@ public class PolylineArea implements Area, Serializable
     {
       return false;
     }
-    for (int i = 0; i < hole_arr.length; ++i)
+    for (int i = 0; i < hole_arr.length; i++)
     {
       if (hole_arr[i].contains_inside(p_point))
       {
@@ -130,7 +130,7 @@ public class PolylineArea implements Area, Serializable
     double min_dist = Double.MAX_VALUE;
     FloatPoint result = null;
     TileShape[] convex_shapes = split_to_convex();
-    for (int i = 0; i < convex_shapes.length; ++i)
+    for (int i = 0; i < convex_shapes.length; i++)
     {
       FloatPoint curr_nearest_point = convex_shapes[i].nearest_point_approx(p_from_point);
       double curr_dist = curr_nearest_point.distance_square(p_from_point);
@@ -152,7 +152,7 @@ public class PolylineArea implements Area, Serializable
     }
     PolylineShape translated_border = border_shape.translate_by(p_vector);
     PolylineShape[] translated_holes = new PolylineShape[hole_arr.length];
-    for (int i = 0; i < hole_arr.length; ++i)
+    for (int i = 0; i < hole_arr.length; i++)
     {
       translated_holes[i] = hole_arr[i].translate_by(p_vector);
     }
@@ -163,7 +163,7 @@ public class PolylineArea implements Area, Serializable
   public FloatPoint[] corner_approx_arr()
   {
     int corner_count = border_shape.border_line_count();
-    for (int i = 0; i < hole_arr.length; ++i)
+    for (int i = 0; i < hole_arr.length; i++)
     {
       corner_count += hole_arr[i].border_line_count();
     }
@@ -171,7 +171,7 @@ public class PolylineArea implements Area, Serializable
     FloatPoint[] curr_corner_arr = border_shape.corner_approx_arr();
     System.arraycopy(curr_corner_arr, 0, result, 0, curr_corner_arr.length);
     int dest_pos = curr_corner_arr.length;
-    for (int i = 0; i < hole_arr.length; ++i)
+    for (int i = 0; i < hole_arr.length; i++)
     {
       curr_corner_arr = hole_arr[i].corner_approx_arr();
       System.arraycopy(curr_corner_arr, 0, result, dest_pos, curr_corner_arr.length);
@@ -209,7 +209,7 @@ public class PolylineArea implements Area, Serializable
         return null;
       }
       Collection<TileShape> curr_piece_list = new LinkedList<>(Arrays.asList(convex_border_pieces));
-      for (int i = 0; i < hole_arr.length; ++i)
+      for (int i = 0; i < hole_arr.length; i++)
       {
         if (hole_arr[i].dimension() < 2)
         {
@@ -221,7 +221,7 @@ public class PolylineArea implements Area, Serializable
         {
           return null;
         }
-        for (int j = 0; j < convex_hole_pieces.length; ++j)
+        for (int j = 0; j < convex_hole_pieces.length; j++)
         {
           TileShape curr_hole_piece = convex_hole_pieces[j];
           Collection<TileShape> new_piece_list = new LinkedList<>();
@@ -238,7 +238,7 @@ public class PolylineArea implements Area, Serializable
       }
       precalculated_convex_pieces = new TileShape[curr_piece_list.size()];
       Iterator<TileShape> it = curr_piece_list.iterator();
-      for (int i = 0; i < precalculated_convex_pieces.length; ++i)
+      for (int i = 0; i < precalculated_convex_pieces.length; i++)
       {
         precalculated_convex_pieces[i] = it.next();
       }
@@ -251,7 +251,7 @@ public class PolylineArea implements Area, Serializable
   {
     PolylineShape new_border = border_shape.turn_90_degree(p_factor, p_pole);
     PolylineShape[] new_hole_arr = new PolylineShape[hole_arr.length];
-    for (int i = 0; i < new_hole_arr.length; ++i)
+    for (int i = 0; i < new_hole_arr.length; i++)
     {
       new_hole_arr[i] = hole_arr[i].turn_90_degree(p_factor, p_pole);
     }
@@ -263,7 +263,7 @@ public class PolylineArea implements Area, Serializable
   {
     PolylineShape new_border = border_shape.rotate_approx(p_angle, p_pole);
     PolylineShape[] new_hole_arr = new PolylineShape[hole_arr.length];
-    for (int i = 0; i < new_hole_arr.length; ++i)
+    for (int i = 0; i < new_hole_arr.length; i++)
     {
       new_hole_arr[i] = hole_arr[i].rotate_approx(p_angle, p_pole);
     }
@@ -275,7 +275,7 @@ public class PolylineArea implements Area, Serializable
   {
     PolylineShape new_border = border_shape.mirror_vertical(p_pole);
     PolylineShape[] new_hole_arr = new PolylineShape[hole_arr.length];
-    for (int i = 0; i < new_hole_arr.length; ++i)
+    for (int i = 0; i < new_hole_arr.length; i++)
     {
       new_hole_arr[i] = hole_arr[i].mirror_vertical(p_pole);
     }
@@ -287,7 +287,7 @@ public class PolylineArea implements Area, Serializable
   {
     PolylineShape new_border = border_shape.mirror_horizontal(p_pole);
     PolylineShape[] new_hole_arr = new PolylineShape[hole_arr.length];
-    for (int i = 0; i < new_hole_arr.length; ++i)
+    for (int i = 0; i < new_hole_arr.length; i++)
     {
       new_hole_arr[i] = hole_arr[i].mirror_horizontal(p_pole);
     }

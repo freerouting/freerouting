@@ -17,7 +17,7 @@ public class TimeLimit
   public TimeLimit(int p_milli_seconds)
   {
     this.time_limit = p_milli_seconds;
-    this.time_stamp = (new Date()).getTime();
+    this.time_stamp = new Date().getTime();
   }
 
   /**
@@ -25,8 +25,8 @@ public class TimeLimit
    */
   public boolean limit_exceeded()
   {
-    long curr_time = (new Date()).getTime();
-    return (curr_time - this.time_stamp > this.time_limit);
+    long curr_time = new Date().getTime();
+    return curr_time - this.time_stamp > this.time_limit;
   }
 
   /**
@@ -38,7 +38,7 @@ public class TimeLimit
     {
       return;
     }
-    double new_limit = (p_factor * this.time_limit);
+    double new_limit = p_factor * this.time_limit;
     new_limit = Math.min(new_limit, Integer.MAX_VALUE);
     this.time_limit = (int) new_limit;
   }

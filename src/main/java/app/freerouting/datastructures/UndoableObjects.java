@@ -30,7 +30,7 @@ public class UndoableObjects implements Serializable
    * the current undo level
    */
   private int stack_level;
-  private boolean redo_possible = false;
+  private boolean redo_possible;
 
   /**
    * Creates a new instance of UndoableObjectsList
@@ -66,7 +66,7 @@ public class UndoableObjects implements Serializable
       // skip objects getting alive only by redo
       if (curr_node != null && curr_node.level <= this.stack_level)
       {
-        return (curr_node.object);
+        return curr_node.object;
       }
     }
     return null;

@@ -91,7 +91,7 @@ public class Settings implements Serializable
    * Indicates, if the data of this class are not allowed to be changed in interactive board
    * editing.
    */
-  private transient boolean read_only = false;
+  private transient boolean read_only;
   /**
    * The file used for logging interactive action, so that they can be replayed later
    */

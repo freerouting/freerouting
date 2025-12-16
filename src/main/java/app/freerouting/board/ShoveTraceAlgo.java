@@ -134,7 +134,7 @@ public class ShoveTraceAlgo
       {
         break;
       }
-      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); i++)
       {
         LineSegment curr_line_segment = new LineSegment(curr_substitute_trace.polyline(), i + 1);
         if (p_shove_to_the_left)
@@ -160,8 +160,7 @@ public class ShoveTraceAlgo
             if (search_tree.is_clearance_compensation_used())
             {
               curr_ok_length -= search_tree.clearance_compensation_value(curr_substitute_trace.clearance_class_no(), p_layer);
-            }
-            else
+            } else
             {
               curr_ok_length -= cl_matrix.get_value(p_cl_type, curr_substitute_trace.clearance_class_no(), p_layer, true);
             }
@@ -237,7 +236,7 @@ public class ShoveTraceAlgo
       double max_dist = 0.5 * curr_shove_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
       double max_dist_square = max_dist * max_dist;
       boolean shove_via_ok = false;
-      for (int i = 0; i < try_via_centers.length; ++i)
+      for (int i = 0; i < try_via_centers.length; i++)
       {
         if (i == 0 || curr_shove_via_center.distance_square(try_via_centers[i].to_float()) <= max_dist_square)
         {
@@ -289,7 +288,7 @@ public class ShoveTraceAlgo
           curr_substitute_trace.change(new_polyline);
         }
       }
-      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); i++)
       {
         Direction curr_dir = curr_substitute_trace.polyline().arr[i + 1].direction();
         boolean is_in_front = p_dir == null || p_dir.equals(curr_dir);
@@ -383,7 +382,7 @@ public class ShoveTraceAlgo
         }
       }
       int[] curr_net_no_arr = curr_substitute_trace.net_no_arr;
-      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); i++)
       {
         CalcShapeAndFromSide curr = new CalcShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, false);
         if (!this.insert(curr.shape, curr.from_side, p_layer, curr_net_no_arr, curr_substitute_trace.clearance_class_no(), p_ignore_items, p_max_recursion_depth - 1, p_max_via_recursion_depth, p_max_spring_over_recursion_depth))
@@ -391,7 +390,7 @@ public class ShoveTraceAlgo
           return false;
         }
       }
-      for (int i = 0; i < curr_substitute_trace.corner_count(); ++i)
+      for (int i = 0; i < curr_substitute_trace.corner_count(); i++)
       {
         board.join_changed_area(curr_substitute_trace.polyline().corner_approx(i), p_layer);
       }
@@ -414,7 +413,7 @@ public class ShoveTraceAlgo
 
       if (!tails_exist_before)
       {
-        for (int i = 0; i < 2; ++i)
+        for (int i = 0; i < 2; i++)
         {
           Trace tail = board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
           if (tail != null)
@@ -468,7 +467,7 @@ public class ShoveTraceAlgo
     {
       check_net_no_arr = new int[0];
     }
-    for (int i = 0; i < p_polyline.arr.length - 2; ++i)
+    for (int i = 0; i < p_polyline.arr.length - 2; i++)
     {
       TileShape curr_shape = p_polyline.offset_shape(p_half_width, i);
       Collection<Item> obstacles = search_tree.overlapping_items_with_clearance(curr_shape, p_layer, check_net_no_arr, p_cl_type);
@@ -479,16 +478,13 @@ public class ShoveTraceAlgo
         {
           // to avoid acid traps
           is_obstacle = curr_item instanceof Pin && p_contact_pins != null && !p_contact_pins.contains(curr_item);
-        }
-        else if (curr_item instanceof ConductionArea area)
+        } else if (curr_item instanceof ConductionArea area)
         {
           is_obstacle = area.get_is_obstacle();
-        }
-        else if (curr_item instanceof ViaObstacleArea || curr_item instanceof ComponentObstacleArea)
+        } else if (curr_item instanceof ViaObstacleArea || curr_item instanceof ComponentObstacleArea)
         {
           is_obstacle = false;
-        }
-        else if (curr_item instanceof PolylineTrace)
+        } else if (curr_item instanceof PolylineTrace)
         {
           if (curr_item.is_shove_fixed())
           {
@@ -502,14 +498,12 @@ public class ShoveTraceAlgo
                 is_obstacle = false;
               }
             }
-          }
-          else
+          } else
           {
             // an unfixed trace can be pushed aside eventually
             is_obstacle = false;
           }
-        }
-        else
+        } else
         {
           // an unfixed via can be pushed aside eventually
           is_obstacle = !curr_item.is_routable();
@@ -521,8 +515,7 @@ public class ShoveTraceAlgo
           {
             found_obstacle = curr_item;
             found_obstacle_bounding_box = curr_item.bounding_box();
-          }
-          else if (found_obstacle != curr_item)
+          } else if (found_obstacle != curr_item)
           {
             // check, if 1 obstacle is contained in the other obstacle and take
             // the bigger obstacle in this case.
@@ -534,8 +527,7 @@ public class ShoveTraceAlgo
               {
                 found_obstacle = curr_item;
                 found_obstacle_bounding_box = curr_item_bounding_box;
-              }
-              else if (!found_obstacle_bounding_box.contains(curr_item_bounding_box))
+              } else if (!found_obstacle_bounding_box.contains(curr_item_bounding_box))
               {
                 return null;
               }
@@ -589,7 +581,7 @@ public class ShoveTraceAlgo
       }
       else if (found_obstacle instanceof DrillItem found_drill_item)
       {
-        obstacle_shape = (found_drill_item.get_tree_shape_on_layer(search_tree, p_layer));
+        obstacle_shape = found_drill_item.get_tree_shape_on_layer(search_tree, p_layer);
       }
     }
     if (!try_spring_over)
@@ -663,14 +655,13 @@ public class ShoveTraceAlgo
     substitute_lines[0] = p_polyline.arr[first_intersection_line_no];
     int curr_edge_line_no = first_intersection_side_no;
 
-    for (int i = 1; i <= side_diff + 1; ++i)
+    for (int i = 1; i <= side_diff + 1; i++)
     {
       substitute_lines[i] = offset_shape.border_line(curr_edge_line_no);
       if (curr_edge_line_no == offset_shape.border_line_count() - 1)
       {
         curr_edge_line_no = 0;
-      }
-      else
+      } else
       {
         ++curr_edge_line_no;
       }

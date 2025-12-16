@@ -64,7 +64,7 @@ public class DragItemState extends DragState
     Vector rel_coor = to_location.difference_by(from_location);
     double length = rel_coor.length_approx();
     boolean shove_ok = false;
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       move_component = new MoveComponent(item_to_move, rel_coor, 99, 5);
       if (move_component.check())
@@ -133,7 +133,7 @@ public class DragItemState extends DragState
       // Update the incompletes for the nets of the moved items.
       if (item_to_move.get_component_no() == 0)
       {
-        for (int i = 0; i < item_to_move.net_count(); ++i)
+        for (int i = 0; i < item_to_move.net_count(); i++)
         {
           hdlg.update_ratsnest(item_to_move.get_net_no(i));
         }
@@ -144,7 +144,7 @@ public class DragItemState extends DragState
         Set<Integer> changed_nets = new TreeSet<>();
         for (Item curr_moved_item : moved_items)
         {
-          for (int i = 0; i < curr_moved_item.net_count(); ++i)
+          for (int i = 0; i < curr_moved_item.net_count(); i++)
           {
             changed_nets.add(curr_moved_item.get_net_no(i));
           }

@@ -53,7 +53,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   /**
    * False, if the item is deleted or not inserted into the board
    */
-  private boolean on_the_board = false;
+  private boolean on_the_board;
   /**
    * Temporary data used in the autoroute algorithm.
    */
@@ -119,7 +119,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     {
       return false;
     }
-    for (int i = 0; i < net_no_arr.length; ++i)
+    for (int i = 0; i < net_no_arr.length; i++)
     {
       if (net_no_arr[i] == p_net_no)
       {
@@ -159,9 +159,9 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    */
   public boolean shares_net_no(int[] p_net_no_arr)
   {
-    for (int i = 0; i < net_no_arr.length; ++i)
+    for (int i = 0; i < net_no_arr.length; i++)
     {
-      for (int j = 0; j < p_net_no_arr.length; ++j)
+      for (int j = 0; j < p_net_no_arr.length; j++)
       {
         if (net_no_arr[i] == p_net_no_arr[j])
         {
@@ -400,7 +400,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
       return result;
     }
     ShapeSearchTree default_tree = board.search_tree_manager.get_default_tree();
-    for (int i = 0; i < tile_shape_count(); ++i)
+    for (int i = 0; i < tile_shape_count(); i++)
     {
       TileShape curr_tile_shape = get_tile_shape(i);
       Collection<TreeEntry> curr_overlapping_items = default_tree.overlapping_tree_entries_with_clearance(curr_tile_shape, shape_layer(i), new int[0], clearance_class);
@@ -524,7 +524,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     {
       return result;
     }
-    for (int i = 0; i < this.tile_shape_count(); ++i)
+    for (int i = 0; i < this.tile_shape_count(); i++)
     {
       Collection<SearchTreeObject> overlapping_items = board.overlapping_objects(get_tile_shape(i), shape_layer(i));
       for (SearchTreeObject curr_ob : overlapping_items)
@@ -553,7 +553,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     {
       return result;
     }
-    for (int i = 0; i < this.tile_shape_count(); ++i)
+    for (int i = 0; i < this.tile_shape_count(); i++)
     {
       if (this.shape_layer(i) != p_layer)
       {
@@ -582,7 +582,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public boolean is_connected()
   {
     Collection<Item> contacts = this.get_all_contacts();
-    return (!contacts.isEmpty());
+    return !contacts.isEmpty();
   }
 
   /**
@@ -592,7 +592,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public boolean is_connected_on_layer(int p_layer)
   {
     Collection<Item> contacts_on_layer = this.get_all_contacts(p_layer);
-    return (!contacts_on_layer.isEmpty());
+    return !contacts_on_layer.isEmpty();
   }
 
   /**
@@ -907,7 +907,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public boolean validate()
   {
     boolean result = board.search_tree_manager.validate_entries(this);
-    for (int i = 0; i < this.tile_shape_count(); ++i)
+    for (int i = 0; i < this.tile_shape_count(); i++)
     {
       TileShape curr_shape = this.get_tile_shape(i);
       if (curr_shape.is_empty())
@@ -931,7 +931,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    */
   public boolean is_user_fixed()
   {
-    return (fixed_state.ordinal() >= FixedState.USER_FIXED.ordinal());
+    return fixed_state.ordinal() >= FixedState.USER_FIXED.ordinal();
   }
 
   /**
@@ -957,7 +957,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    */
   public boolean is_shove_fixed()
   {
-    return (this.fixed_state.ordinal() >= FixedState.SHOVE_FIXED.ordinal());
+    return this.fixed_state.ordinal() >= FixedState.SHOVE_FIXED.ordinal();
   }
 
   /**
@@ -1008,7 +1008,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    */
   public boolean is_connectable()
   {
-    return ((this instanceof Connectable) && this.net_count() > 0);
+    return (this instanceof Connectable) && this.net_count() > 0;
   }
 
   /**
@@ -1043,7 +1043,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   public boolean remove_from_net(int p_net_no)
   {
     int found_index = -1;
-    for (int i = 0; i < this.net_no_arr.length; ++i)
+    for (int i = 0; i < this.net_no_arr.length; i++)
     {
       if (this.net_no_arr[i] == p_net_no)
       {
@@ -1295,7 +1295,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
     String net_hover_info = "";
-    for (int i = 0; i < this.net_count(); ++i)
+    for (int i = 0; i < this.net_count(); i++)
     {
       net_hover_info += tm.getText("net") + " : ";
       Net curr_net = board.rules.nets.get(this.get_net_no(i));
@@ -1311,7 +1311,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
   {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
-    for (int i = 0; i < this.net_count(); ++i)
+    for (int i = 0; i < this.net_count(); i++)
     {
       p_window.append(", " + tm.getText("net") + " ");
       Net curr_net = board.rules.nets.get(this.get_net_no(i));
@@ -1416,7 +1416,7 @@ public abstract class Item implements Drawable, SearchTreeObject, ObjectInfoPane
    */
   public boolean nets_normal()
   {
-    for (int i = 0; i < this.net_no_arr.length; ++i)
+    for (int i = 0; i < this.net_no_arr.length; i++)
     {
       if (!Nets.is_normal_net_no(this.net_no_arr[i]))
       {

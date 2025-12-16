@@ -46,7 +46,7 @@ public class ItemSelectionFilter implements Serializable
   public ItemSelectionFilter(SelectableChoices[] p_item_types)
   {
     this.values = new boolean[SelectableChoices.values().length];
-    for (int i = 0; i < p_item_types.length; ++i)
+    for (int i = 0; i < p_item_types.length; i++)
     {
       values[p_item_types[i].ordinal()] = true;
     }

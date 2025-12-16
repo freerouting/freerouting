@@ -1,8 +1,8 @@
 package app.freerouting.board;
 
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.*;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 
@@ -43,7 +43,7 @@ public class ConductionArea extends ObstacleArea implements Connectable
   public Set<Item> get_normal_contacts()
   {
     Set<Item> result = new TreeSet<>();
-    for (int i = 0; i < tile_shape_count(); ++i)
+    for (int i = 0; i < tile_shape_count(); i++)
     {
       TileShape curr_shape = get_tile_shape(i);
       Set<SearchTreeObject> overlaps = board.overlapping_objects(curr_shape, get_layer());
@@ -61,8 +61,7 @@ public class ConductionArea extends ObstacleArea implements Connectable
             {
               result.add(curr_item);
             }
-          }
-          else if (curr_item instanceof DrillItem curr_drill_item)
+          } else if (curr_item instanceof DrillItem curr_drill_item)
           {
             if (curr_shape.contains(curr_drill_item.get_center()))
             {
@@ -92,7 +91,7 @@ public class ConductionArea extends ObstacleArea implements Connectable
     Point[] result;
     FloatPoint[] corners = this.get_area().corner_approx_arr();
     result = new Point[corners.length];
-    for (int i = 0; i < corners.length; ++i)
+    for (int i = 0; i < corners.length; i++)
     {
       result[i] = corners[i].round();
     }

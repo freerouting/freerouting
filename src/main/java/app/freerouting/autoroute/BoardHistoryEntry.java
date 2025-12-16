@@ -13,7 +13,7 @@ public class BoardHistoryEntry implements Comparable<BoardHistoryEntry>
   public final String hash;
   public final BoardStatistics statistics;
   public final Instant timestamp;
-  public int restoreCount = 0;
+  public int restoreCount;
 
   public BoardHistoryEntry(RoutingBoard board, RouterScoringSettings scoringSettings)
   {

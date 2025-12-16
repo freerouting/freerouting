@@ -172,15 +172,14 @@ public class Circle implements ConvexShape, Serializable
       return this.bounding_octagon();
     }
     Line[] tangent_line_arr = new Line[quadrant_division_count * 4];
-    for (int i = 0; i < quadrant_division_count; ++i)
+    for (int i = 0; i < quadrant_division_count; i++)
     {
       // calculate the tangential points in the first quadrant
       Vector border_delta;
       if (i == 0)
       {
         border_delta = new IntVector(this.radius, 0);
-      }
-      else
+      } else
       {
         double curr_angle = i * Math.PI / (2.0 * quadrant_division_count);
         int curr_x = (int) Math.ceil(Math.sin(curr_angle) * this.radius);
@@ -394,7 +393,7 @@ public class Circle implements ConvexShape, Serializable
   public String to_string(Locale p_locale)
   {
     String result = "Circle: ";
-    if (!(center.equals(Point.ZERO)))
+    if (!center.equals(Point.ZERO))
     {
       String center_string = "center " + center;
       result += center_string;

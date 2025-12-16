@@ -30,7 +30,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom imple
    * The list of doors to items of the own net
    */
   private Collection<TargetItemExpansionDoor> target_doors;
-  private boolean room_is_net_dependent = false;
+  private boolean room_is_net_dependent;
 
   /**
    * Creates a new instance of CompleteFreeSpaceExpansionRoom

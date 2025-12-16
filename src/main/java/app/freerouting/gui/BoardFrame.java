@@ -76,7 +76,7 @@ public class BoardFrame extends WindowBase
   /**
    * The panel with the graphical representation of the board.
    */
-  BoardPanel board_panel = null;
+  BoardPanel board_panel;
   WindowAbout about_window;
   WindowRouteParameter route_parameter_window;
   WindowAutorouteParameter autoroute_parameter_window;
@@ -308,7 +308,7 @@ public class BoardFrame extends WindowBase
       };
       logEntries.addLogEntryAddedListener(log_entry_added_listener);
 
-      int messageType = (filteredLogEntries.getErrorCount() > 0) ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+      int messageType = filteredLogEntries.getErrorCount() > 0 ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
 
       JOptionPane.showMessageDialog(null, scrollPane, tm.getText("logs_window_title"), messageType);
     });
@@ -378,7 +378,7 @@ public class BoardFrame extends WindowBase
 
     board_panel.reset_board_handling(routingJob);
     // close all previous windows
-    for (int i = 0; i < this.permanent_subwindows.length; ++i)
+    for (int i = 0; i < this.permanent_subwindows.length; i++)
     {
       if (this.permanent_subwindows[i] != null)
       {
@@ -437,7 +437,7 @@ public class BoardFrame extends WindowBase
 
       allocate_permanent_subwindows();
 
-      for (int i = 0; i < this.permanent_subwindows.length; ++i)
+      for (int i = 0; i < this.permanent_subwindows.length; i++)
       {
         this.permanent_subwindows[i].read(object_stream);
       }
@@ -565,11 +565,11 @@ public class BoardFrame extends WindowBase
 
   public boolean is_intermediate_stage_file_available()
   {
-    return (this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot
+    return this.routingJob.snapshot.getFile() != null && this.routingJob.snapshot
         .getFile()
         .exists() && this.routingJob.snapshot
         .getFile()
-        .canRead());
+        .canRead();
   }
 
   public LocalDateTime get_intermediate_stage_file_modification_time()
@@ -602,7 +602,7 @@ public class BoardFrame extends WindowBase
     objectStream.writeObject(this.getBounds());
 
     // (3) Save the permanent subwindows as binary file
-    for (int i = 0; i < this.permanent_subwindows.length; ++i)
+    for (int i = 0; i < this.permanent_subwindows.length; i++)
     {
       this.permanent_subwindows[i].save(objectStream);
     }
@@ -915,7 +915,7 @@ public class BoardFrame extends WindowBase
   @Override
   public void dispose()
   {
-    for (int i = 0; i < this.permanent_subwindows.length; ++i)
+    for (int i = 0; i < this.permanent_subwindows.length; i++)
     {
       if (this.permanent_subwindows[i] != null)
       {
@@ -1054,7 +1054,7 @@ public class BoardFrame extends WindowBase
    */
   public void refresh_windows()
   {
-    for (int i = 0; i < this.permanent_subwindows.length; ++i)
+    for (int i = 0; i < this.permanent_subwindows.length; i++)
     {
       if (permanent_subwindows[i] != null)
       {
@@ -1144,7 +1144,7 @@ public class BoardFrame extends WindowBase
   public void repaint_all()
   {
     this.repaint();
-    for (int i = 0; i < permanent_subwindows.length; ++i)
+    for (int i = 0; i < permanent_subwindows.length; i++)
     {
       permanent_subwindows[i].repaint();
     }
@@ -1217,7 +1217,7 @@ public class BoardFrame extends WindowBase
     @Override
     public void windowIconified(WindowEvent evt)
     {
-      for (int i = 0; i < permanent_subwindows.length; ++i)
+      for (int i = 0; i < permanent_subwindows.length; i++)
       {
         permanent_subwindows[i].parent_iconified();
       }

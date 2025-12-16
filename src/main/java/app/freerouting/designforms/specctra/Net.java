@@ -1,5 +1,7 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.Component;
+import app.freerouting.core.Package;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
@@ -58,13 +60,13 @@ public class Net
 
   public static void write_pin(WriteScopeParameter p_par, app.freerouting.board.Pin p_pin) throws IOException
   {
-    app.freerouting.board.Component curr_component = p_par.board.components.get(p_pin.get_component_no());
+    Component curr_component = p_par.board.components.get(p_pin.get_component_no());
     if (curr_component == null)
     {
       FRLogger.warn("Net.write_scope: component not found at '" + curr_component.name + "'");
       return;
     }
-    app.freerouting.core.Package.Pin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
+    Package.Pin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
     if (lib_pin == null)
     {
       FRLogger.warn("Net.write_scope:  pin number out of range at '" + curr_component.name + "'");

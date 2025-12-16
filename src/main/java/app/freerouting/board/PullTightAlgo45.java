@@ -48,7 +48,7 @@ class PullTightAlgo45 extends PullTightAlgo
     }
     int new_corner_count = 1;
     Point[] curr_corner = new Point[4];
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       curr_corner[i] = p_polyline.corner(i);
       if (!(curr_corner[i] instanceof IntPoint))
@@ -58,13 +58,12 @@ class PullTightAlgo45 extends PullTightAlgo
     }
     boolean[] curr_corner_in_clip_shape = new boolean[4];
 
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       if (curr_clip_shape == null)
       {
         curr_corner_in_clip_shape[i] = true;
-      }
-      else
+      } else
       {
         curr_corner_in_clip_shape[i] = !curr_clip_shape.is_outside(curr_corner[i]);
       }
@@ -241,7 +240,7 @@ class PullTightAlgo45 extends PullTightAlgo
       Line[] line_arr = new Line[result.arr.length];
       System.arraycopy(result.arr, 0, line_arr, 0, line_arr.length);
 
-      for (int i = 1; i < line_arr.length - 2; ++i)
+      for (int i = 1; i < line_arr.length - 2; i++)
       {
         Direction d1 = line_arr[i].direction();
         Direction d2 = line_arr[i + 1].direction();

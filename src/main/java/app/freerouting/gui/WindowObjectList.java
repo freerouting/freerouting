@@ -235,7 +235,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
         return;
       }
       Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
-      for (int i = 0; i < selected_objects.size(); ++i)
+      for (int i = 0; i < selected_objects.size(); i++)
       {
         object_list.add((WindowObjectInfo.Printable) (selected_objects.get(i)));
       }
@@ -274,7 +274,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
       }
       int[] new_selected_indices = new int[list_model.getSize() - list.getSelectedIndices().length];
       int curr_index = 0;
-      for (int i = 0; i < list_model.getSize(); ++i)
+      for (int i = 0; i < list_model.getSize(); i++)
       {
         if (!list.isSelectedIndex(i))
         {

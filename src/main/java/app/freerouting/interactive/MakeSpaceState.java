@@ -28,7 +28,7 @@ public class MakeSpaceState extends DragState
     boolean[] layer_active_arr = new boolean[shove_trace_width_arr.length];
     int shove_trace_width = Math.min(100, hdlg.get_routing_board().get_min_trace_half_width() / 10);
     shove_trace_width = Math.max(shove_trace_width, 5);
-    for (int i = 0; i < shove_trace_width_arr.length; ++i)
+    for (int i = 0; i < shove_trace_width_arr.length; i++)
     {
       shove_trace_width_arr[i] = shove_trace_width;
       layer_active_arr[i] = true;

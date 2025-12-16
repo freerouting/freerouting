@@ -160,7 +160,7 @@ public abstract class Trace extends Item implements Connectable, Serializable
       return true;
     }
     contact_list = this.get_end_contacts();
-    return (contact_list.isEmpty());
+    return contact_list.isEmpty();
   }
 
   @Override
@@ -396,7 +396,7 @@ public abstract class Trace extends Item implements Connectable, Serializable
     {
       result[stub_no] = last_corner();
     }
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       if (result[i] == null)
       {
@@ -435,7 +435,7 @@ public abstract class Trace extends Item implements Connectable, Serializable
       return result;
     }
     Point curr_end_point = this.first_corner();
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       IntOctagon curr_oct = curr_end_point.surrounding_octagon();
       curr_oct = curr_oct.enlarge(this.half_width);

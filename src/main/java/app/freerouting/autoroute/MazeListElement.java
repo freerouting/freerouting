@@ -68,7 +68,7 @@ public class MazeListElement implements Comparable<MazeListElement>
   @Override
   public int compareTo(MazeListElement p_other)
   {
-    double compare_value = (this.sorting_value - p_other.sorting_value);
+    double compare_value = this.sorting_value - p_other.sorting_value;
     // make sure, that the result cannot be 0, so that no element in the set is
     // skipped because of equal size.
     int result;

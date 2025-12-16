@@ -89,8 +89,7 @@ public class ScopeKeyword extends Keyword
             return false;
           }
 
-        }
-        else
+        } else
         {
           // skip unknown scope
           skip_scope(p_par.scanner);

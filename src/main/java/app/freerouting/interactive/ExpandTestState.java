@@ -19,7 +19,7 @@ import java.util.TreeSet;
 public class ExpandTestState extends InteractiveState
 {
 
-  private boolean in_autoroute = false;
+  private boolean in_autoroute;
   private MazeSearchAlgo maze_search_algo;
   private LocateFoundConnectionAlgo autoroute_result;
   private AutorouteControl control_settings;
@@ -96,7 +96,7 @@ public class ExpandTestState extends InteractiveState
       final int max_count = (int) Math.pow(10, d);
       if (in_autoroute)
       {
-        for (int i = 0; i < max_count; ++i)
+        for (int i = 0; i < max_count; i++)
         {
           if (!this.maze_search_algo.occupy_next_element())
           {
@@ -203,7 +203,7 @@ public class ExpandTestState extends InteractiveState
     {
       hdlg.screen_messages.set_status_message("app.freerouting.autoroute test started");
       this.maze_search_algo = MazeSearchAlgo.get_instance(route_start_set, route_dest_set, autoroute_engine, control_settings);
-      this.in_autoroute = (this.maze_search_algo != null);
+      this.in_autoroute = this.maze_search_algo != null;
     }
   }
 
@@ -235,6 +235,6 @@ public class ExpandTestState extends InteractiveState
   private boolean complete_expansion_room(IncompleteFreeSpaceExpansionRoom p_incomplete_room)
   {
     Collection<CompleteFreeSpaceExpansionRoom> completed_rooms = autoroute_engine.complete_expansion_room(p_incomplete_room);
-    return (!completed_rooms.isEmpty());
+    return !completed_rooms.isEmpty();
   }
 }

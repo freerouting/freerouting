@@ -43,7 +43,7 @@ public class DefaultItemClearanceClasses implements Serializable
    */
   public void set_all(int p_index)
   {
-    for (int i = 1; i < this.arr.length; ++i)
+    for (int i = 1; i < this.arr.length; i++)
     {
       arr[i] = p_index;
     }

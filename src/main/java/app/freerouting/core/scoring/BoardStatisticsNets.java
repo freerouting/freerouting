@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class BoardStatisticsNets implements Serializable
 {
   @SerializedName("total_count")
-  public Integer totalCount = null;
+  public Integer totalCount;
   @SerializedName("class_count")
-  public Integer classCount = null;
+  public Integer classCount;
 }

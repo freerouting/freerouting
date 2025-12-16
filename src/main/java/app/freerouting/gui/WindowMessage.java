@@ -24,7 +24,7 @@ public class WindowMessage extends WindowBase
     final GridBagConstraints gridbag_constraints = new GridBagConstraints();
     gridbag_constraints.insets = new Insets(40, 40, 40, 40);
     gridbag_constraints.gridwidth = GridBagConstraints.REMAINDER;
-    for (int i = 0; i < p_message_arr.length; ++i)
+    for (int i = 0; i < p_message_arr.length; i++)
     {
       final JLabel message_label = new JLabel();
       message_label.setText(p_message_arr[i]);

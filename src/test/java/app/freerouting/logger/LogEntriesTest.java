@@ -1,8 +1,8 @@
 package app.freerouting.logger;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import java.util.concurrent.atomic.AtomicInteger;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LogEntriesTest {
 

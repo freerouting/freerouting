@@ -3,6 +3,8 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.ObstacleArea;
+import app.freerouting.board.Pin;
+import app.freerouting.core.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.logger.FRLogger;
 
@@ -64,7 +66,7 @@ public class Component extends ScopeKeyword
     if (p_component.is_placed())
     {
       double[] coor = p_par.coordinate_transform.board_to_dsn(p_component.get_location().to_float());
-      for (int i = 0; i < coor.length; ++i)
+      for (int i = 0; i < coor.length; i++)
       {
         p_par.file.write(" ");
         p_par.file.write(String.valueOf(coor[i]));
@@ -86,7 +88,7 @@ public class Component extends ScopeKeyword
       p_par.file.write(" (lock_type position)");
     }
     int pin_count = p_component.get_package().pin_count();
-    for (int i = 0; i < pin_count; ++i)
+    for (int i = 0; i < pin_count; i++)
     {
       write_pin_info(p_par, p_component, i);
     }
@@ -100,13 +102,13 @@ public class Component extends ScopeKeyword
     {
       return;
     }
-    app.freerouting.core.Package.Pin package_pin = p_component.get_package().get_pin(p_pin_no);
+    Package.Pin package_pin = p_component.get_package().get_pin(p_pin_no);
     if (package_pin == null)
     {
       FRLogger.warn("Component.write_pin_info: package pin not found at '" + p_component.name + "'");
       return;
     }
-    app.freerouting.board.Pin component_pin = p_par.board.get_pin(p_component.no, p_pin_no);
+    Pin component_pin = p_par.board.get_pin(p_component.no, p_pin_no);
     if (component_pin == null)
     {
       FRLogger.warn("Component.write_pin_info: component pin not found at '" + p_component.name + "'");
@@ -132,28 +134,26 @@ public class Component extends ScopeKeyword
     {
       return;
     }
-    app.freerouting.core.Package.Keepout[] curr_keepout_arr;
+    Package.Keepout[] curr_keepout_arr;
     String keepout_type;
-    for (int j = 0; j < 3; ++j)
+    for (int j = 0; j < 3; j++)
     {
       if (j == 0)
       {
         curr_keepout_arr = p_component.get_package().keepout_arr;
         keepout_type = "(keepout ";
-      }
-      else if (j == 1)
+      } else if (j == 1)
       {
         curr_keepout_arr = p_component.get_package().via_keepout_arr;
         keepout_type = "(via_keepout ";
-      }
-      else
+      } else
       {
         curr_keepout_arr = p_component.get_package().place_keepout_arr;
         keepout_type = "(place_keepout ";
       }
-      for (int i = 0; i < curr_keepout_arr.length; ++i)
+      for (int i = 0; i < curr_keepout_arr.length; i++)
       {
-        app.freerouting.core.Package.Keepout curr_keepout = curr_keepout_arr[i];
+        Package.Keepout curr_keepout = curr_keepout_arr[i];
         ObstacleArea curr_obstacle_area = get_keepout(p_par.board, p_component.no, curr_keepout.name);
         if (curr_obstacle_area == null || curr_obstacle_area.clearance_class_no() == 0)
         {
@@ -209,23 +209,20 @@ public class Component extends ScopeKeyword
 
       Object next_token;
       double[] location = new double[2];
-      for (int i = 0; i < 2; ++i)
+      for (int i = 0; i < 2; i++)
       {
         next_token = p_scanner.next_token();
         if (next_token instanceof Double double1)
         {
           location[i] = double1;
-        }
-        else if (next_token instanceof Integer integer)
+        } else if (next_token instanceof Integer integer)
         {
           location[i] = integer;
-        }
-        else if (next_token == CLOSED_BRACKET)
+        } else if (next_token == CLOSED_BRACKET)
         {
           // component is not yet placed
           return new ComponentPlacement.ComponentLocation(name, null, true, 0, false, pin_infos, keepout_infos, via_keepout_infos, place_keepout_infos);
-        }
-        else
+        } else
         {
           FRLogger.warn("Component.read_place_scope: Double was expected as the second and third parameter of the component/place command at '" + p_scanner.get_scope_identifier() + "'");
           return null;

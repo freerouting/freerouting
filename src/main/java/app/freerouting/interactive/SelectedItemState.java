@@ -221,7 +221,7 @@ public class SelectedItemState extends InteractiveState
     // create a new package
     Package.Pin[] pin_arr = new Package.Pin[item_list.size()];
     it = item_list.iterator();
-    for (int i = 0; i < pin_arr.length; ++i)
+    for (int i = 0; i < pin_arr.length; i++)
     {
       Via curr_via = (Via) it.next();
       Vector rel_coor = curr_via
@@ -233,12 +233,12 @@ public class SelectedItemState extends InteractiveState
     Package new_package = board.library.packages.add(pin_arr);
     Component new_component = board.components.add(gravity_point, 0, true, new_package);
     it = item_list.iterator();
-    for (int i = 0; i < pin_arr.length; ++i)
+    for (int i = 0; i < pin_arr.length; i++)
     {
       Via curr_via = (Via) it.next();
       board.remove_item(curr_via);
       int[] net_no_arr = new int[curr_via.net_count()];
-      for (int j = 0; j < net_no_arr.length; ++j)
+      for (int j = 0; j < net_no_arr.length; j++)
       {
         net_no_arr[j] = curr_via.get_net_no(j);
       }
@@ -267,7 +267,7 @@ public class SelectedItemState extends InteractiveState
     {
       if (curr_item instanceof Connectable)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           changed_nets.add(curr_item.get_net_no(i));
         }
@@ -333,7 +333,7 @@ public class SelectedItemState extends InteractiveState
     {
       if (curr_item instanceof Connectable)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           if (!curr_item
               .get_unconnected_set(curr_item.get_net_no(i))
@@ -638,7 +638,7 @@ public class SelectedItemState extends InteractiveState
     {
       if (curr_item instanceof Connectable)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           curr_net_no_set.add(curr_item.get_net_no(i));
         }
@@ -762,7 +762,7 @@ public class SelectedItemState extends InteractiveState
   public InteractiveState toggle_select(FloatPoint p_point)
   {
     Collection<Item> picked_items = hdlg.pick_items(p_point);
-    boolean state_ended = (picked_items.isEmpty());
+    boolean state_ended = picked_items.isEmpty();
     if (picked_items.size() == 1)
     {
       Item picked_item = picked_items

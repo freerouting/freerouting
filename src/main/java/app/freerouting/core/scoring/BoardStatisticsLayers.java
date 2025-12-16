@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class BoardStatisticsLayers implements Serializable
 {
   @SerializedName("total_count")
-  public Integer totalCount = null;
+  public Integer totalCount;
   @SerializedName("signal_count")
-  public Integer signalCount = null;
+  public Integer signalCount;
 }

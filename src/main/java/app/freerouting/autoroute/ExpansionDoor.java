@@ -190,7 +190,7 @@ public class ExpansionDoor implements ExpandableObject
     Point first_corner = null;
     Point second_corner = null;
     int corner_count = p_door_shape.border_line_count();
-    for (int i = 0; i < corner_count; ++i)
+    for (int i = 0; i < corner_count; i++)
     {
       Point curr_corner = p_door_shape.corner(i);
       if (!first_room_shape.contains_inside(curr_corner) && !second_room_shape.contains_inside(curr_corner))
@@ -199,8 +199,7 @@ public class ExpansionDoor implements ExpandableObject
         if (first_corner == null)
         {
           first_corner = curr_corner;
-        }
-        else if (!first_corner.equals(curr_corner))
+        } else if (!first_corner.equals(curr_corner))
         {
           second_corner = curr_corner;
           break;
@@ -239,7 +238,7 @@ public class ExpansionDoor implements ExpandableObject
       return; // already allocated
     }
     section_arr = new MazeSearchElement[p_section_count];
-    for (int i = 0; i < section_arr.length; ++i)
+    for (int i = 0; i < section_arr.length; i++)
     {
       section_arr[i] = new MazeSearchElement();
     }

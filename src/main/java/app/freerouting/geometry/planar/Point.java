@@ -40,7 +40,7 @@ public abstract class Point implements Serializable
       p_y = p_y.negate();
       p_z = p_z.negate();
     }
-    if ((p_x.mod(p_z)).signum() == 0 && (p_x.mod(p_z)).signum() == 0)
+    if (p_x.mod(p_z).signum() == 0 && p_x.mod(p_z).signum() == 0)
     {
       // p_x and p_y can be divided by p_z
       p_x = p_x.divide(p_z);
@@ -49,7 +49,7 @@ public abstract class Point implements Serializable
     }
     if (p_z.equals(BigInteger.ONE))
     {
-      if ((p_x.abs()).compareTo(Limits.CRIT_INT_BIG) <= 0 && (p_y.abs()).compareTo(Limits.CRIT_INT_BIG) <= 0)
+      if (p_x.abs().compareTo(Limits.CRIT_INT_BIG) <= 0 && p_y.abs().compareTo(Limits.CRIT_INT_BIG) <= 0)
       {
         // the Point fits into an IntPoint
         return new IntPoint(p_x.intValue(), p_y.intValue());

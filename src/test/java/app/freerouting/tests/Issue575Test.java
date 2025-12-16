@@ -1,13 +1,13 @@
 package app.freerouting.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Issue575Test extends TestBasedOnAnIssue
 {

@@ -60,7 +60,7 @@ public class ForcedViaAlgo
     int calc_from_side_offset = p_board.get_min_trace_half_width();
     ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
     Padstack via_padstack = p_via_info.get_padstack();
-    for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); ++i)
+    for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); i++)
     {
       Shape curr_pad_shape = via_padstack.get_shape(i);
       if (curr_pad_shape == null)
@@ -72,8 +72,7 @@ public class ForcedViaAlgo
       if (p_board.rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE)
       {
         tile_shape = curr_pad_shape.bounding_box();
-      }
-      else
+      } else
       {
         tile_shape = curr_pad_shape.bounding_octagon();
       }
@@ -100,7 +99,7 @@ public class ForcedViaAlgo
     int calc_from_side_offset = p_board.get_min_trace_half_width();
     ForcedPadAlgo forced_pad_algo = new ForcedPadAlgo(p_board);
     Padstack via_padstack = p_via_info.get_padstack();
-    for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); ++i)
+    for (int i = via_padstack.from_layer(); i <= via_padstack.to_layer(); i++)
     {
       Shape curr_pad_shape = via_padstack.get_shape(i);
       if (curr_pad_shape == null)
@@ -113,8 +112,7 @@ public class ForcedViaAlgo
       if (p_trace_pen_halfwidth_arr[i] > 0 && p_location instanceof IntPoint point)
       {
         start_trace_circle = new Circle(point, p_trace_pen_halfwidth_arr[i]);
-      }
-      else
+      } else
       {
         start_trace_circle = null;
       }
@@ -126,8 +124,7 @@ public class ForcedViaAlgo
         {
           start_trace_shape = start_trace_circle.bounding_box();
         }
-      }
-      else
+      } else
       {
         tile_shape = curr_pad_shape.bounding_octagon();
         if (start_trace_circle != null)
@@ -158,7 +155,7 @@ public class ForcedViaAlgo
   private static CalcFromSide calculate_from_side(FloatPoint p_via_location, TileShape p_via_shape, Simplex p_room_shape, double p_dist, boolean is_90_degree)
   {
     IntBox via_box = p_via_shape.bounding_box();
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       FloatPoint check_point;
       double border_x;
@@ -196,8 +193,7 @@ public class ForcedViaAlgo
         if (is_90_degree)
         {
           from_side_no = i;
-        }
-        else
+        } else
         {
           from_side_no = 2 * i;
         }
@@ -212,7 +208,7 @@ public class ForcedViaAlgo
     // try the diagonal directions
     double dist = p_dist / Limits.sqrt2;
     double border_dist = via_box.max_width() / (2 * Limits.sqrt2);
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       FloatPoint check_point;
       double border_x;
@@ -253,5 +249,8 @@ public class ForcedViaAlgo
       }
     }
     return null;
+  }
+
+  private ForcedViaAlgo() {
   }
 }

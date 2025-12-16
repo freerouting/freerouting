@@ -10,5 +10,5 @@ import java.io.Serializable;
 public class BoardStatisticsPads implements Serializable
 {
   @SerializedName("total_count")
-  public Integer totalCount = null;
+  public Integer totalCount;
 }

@@ -40,7 +40,7 @@ public class MenuState extends InteractiveState
   {
     this.hdlg.display_layer_message();
     Set<Item> picked_items = hdlg.pick_items(p_location);
-    boolean something_found = (!picked_items.isEmpty());
+    boolean something_found = !picked_items.isEmpty();
     InteractiveState result;
     if (something_found)
     {

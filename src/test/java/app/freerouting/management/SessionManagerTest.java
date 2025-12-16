@@ -1,12 +1,12 @@
 package app.freerouting.management;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import app.freerouting.Freerouting;
 import app.freerouting.core.Session;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SessionManagerTest
 {

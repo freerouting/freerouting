@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * A client for Segment's HTTP API.
@@ -54,7 +55,7 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Host", uri.getHost());
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Basic " + java.util.Base64
+        connection.setRequestProperty("Authorization", "Basic " + Base64
             .getEncoder()
             .encodeToString((WRITE_KEY + ":").getBytes()));
         connection.setDoOutput(true);

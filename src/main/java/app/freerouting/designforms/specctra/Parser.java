@@ -123,7 +123,7 @@ public class Parser extends ScopeKeyword
       {
         p_file.new_line();
         p_file.write("(constant ");
-        for (int i = 0; i < curr_constant.length; ++i)
+        for (int i = 0; i < curr_constant.length; i++)
         {
           p_identifier_type.write(curr_constant[i], p_file);
           p_file.write(" ");
@@ -209,34 +209,28 @@ public class Parser extends ScopeKeyword
             return false;
           }
           p_par.string_quote = quote_char;
-        }
-        else if (next_token == HOST_CAD)
+        } else if (next_token == HOST_CAD)
         {
           p_par.host_cad = DsnFile.read_string_scope(p_par.scanner);
-        }
-        else if (next_token == HOST_VERSION)
+        } else if (next_token == HOST_VERSION)
         {
           p_par.host_version = DsnFile.read_string_scope(p_par.scanner);
-        }
-        else if (next_token == CONSTANT)
+        } else if (next_token == CONSTANT)
         {
           String[] curr_constant = read_constant(p_par);
           if (curr_constant != null)
           {
             p_par.constants.add(curr_constant);
           }
-        }
-        else if (next_token == WRITE_RESOLUTION)
+        } else if (next_token == WRITE_RESOLUTION)
         {
           p_par.write_resolution = read_write_solution(p_par);
-        }
-        else if (next_token == GENERATED_BY_FREEROUTING)
+        } else if (next_token == GENERATED_BY_FREEROUTING)
         {
           p_par.dsn_file_generated_by_host = false;
           // skip the closing bracket
           skip_scope(p_par.scanner);
-        }
-        else
+        } else
         {
           skip_scope(p_par.scanner);
         }

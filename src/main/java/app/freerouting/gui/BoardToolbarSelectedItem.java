@@ -206,7 +206,7 @@ class BoardToolbarSelectedItem extends JToolBar
     }
     ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().rules.clearance_matrix;
     Object[] class_name_arr = new Object[clearance_matrix.get_class_count()];
-    for (int i = 0; i < class_name_arr.length; ++i)
+    for (int i = 0; i < class_name_arr.length; i++)
     {
       class_name_arr[i] = clearance_matrix.get_name(i);
     }

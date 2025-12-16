@@ -159,7 +159,7 @@ public class Padstack implements Comparable<Padstack>, ObjectInfoPanel.Printable
 
     p_window.append_bold(tm.getText("padstack") + " ");
     p_window.append_bold(this.name);
-    for (int i = 0; i < shapes.length; ++i)
+    for (int i = 0; i < shapes.length; i++)
     {
       if (shapes[i] != null)
       {

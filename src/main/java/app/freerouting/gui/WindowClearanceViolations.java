@@ -59,7 +59,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter
       return;
     }
     Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_violations.size(); ++i)
+    for (int i = 0; i < selected_violations.size(); i++)
     {
       ClearanceViolation curr_violation = ((ViolationInfo) selected_violations.get(i)).violation;
       selected_items.add(curr_violation.first_item);

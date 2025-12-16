@@ -118,7 +118,7 @@ public class ComponentOutline extends Item implements Serializable
   {
     Color[] color_arr = new Color[this.board.layer_structure.arr.length];
     Color front_draw_color = p_graphics_context.get_component_color(true);
-    for (int i = 0; i < color_arr.length - 1; ++i)
+    for (int i = 0; i < color_arr.length - 1; i++)
     {
       color_arr[i] = front_draw_color;
     }

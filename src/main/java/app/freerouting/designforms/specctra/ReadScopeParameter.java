@@ -3,6 +3,7 @@ package app.freerouting.designforms.specctra;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
+import app.freerouting.board.Unit;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.interactive.BoardManager;
 import app.freerouting.settings.RouterSettings;
@@ -37,7 +38,7 @@ public class ReadScopeParameter
    */
   Collection<String> via_padstack_names;
 
-  boolean via_at_smd_allowed = false;
+  boolean via_at_smd_allowed;
   AngleRestriction snap_angle = AngleRestriction.FORTYFIVE_DEGREE;
 
   /**
@@ -65,7 +66,7 @@ public class ReadScopeParameter
   CoordinateTransform coordinate_transform;
   LayerStructure layer_structure;
   RouterSettings autoroute_settings;
-  app.freerouting.board.Unit unit = app.freerouting.board.Unit.MIL;
+  Unit unit = Unit.MIL;
   int resolution = 100; // default resolution
 
   /**

@@ -101,7 +101,7 @@ public class Pin extends DrillItem implements Serializable
       int from_layer = padstack.from_layer();
       int to_layer = padstack.to_layer();
       Shape curr_shape = null;
-      for (int i = 0; i < to_layer - from_layer + 1; ++i)
+      for (int i = 0; i < to_layer - from_layer + 1; i++)
       {
         curr_shape = this.get_shape(i);
         if (curr_shape != null)
@@ -143,7 +143,7 @@ public class Pin extends DrillItem implements Serializable
   public Item copy(int p_id_no)
   {
     int[] curr_net_no_arr = new int[this.net_count()];
-    for (int i = 0; i < curr_net_no_arr.length; ++i)
+    for (int i = 0; i < curr_net_no_arr.length; i++)
     {
       curr_net_no_arr[i] = get_net_no(i);
     }
@@ -216,7 +216,7 @@ public class Pin extends DrillItem implements Serializable
           .get_location()
           .difference_by(Point.ZERO);
 
-      for (int index = 0; index < this.precalculated_shapes.length; ++index)
+      for (int index = 0; index < this.precalculated_shapes.length; index++)
       {
 
         int padstack_layer = get_padstack_layer(index);
@@ -234,8 +234,7 @@ public class Pin extends DrillItem implements Serializable
           {
             curr_shape = (ConvexShape) curr_shape.turn_90_degree(pin_ninety_degree_factor, Point.ZERO);
           }
-        }
-        else
+        } else
         {
           curr_shape = (ConvexShape) curr_shape.rotate_approx(Math.toRadians(pin_rotation), FloatPoint.ZERO);
         }
@@ -255,8 +254,7 @@ public class Pin extends DrillItem implements Serializable
           {
             translated_shape = (ConvexShape) translated_shape.turn_90_degree(component_ninety_degree_factor, Point.ZERO);
           }
-        }
-        else
+        } else
         {
           translated_shape = (ConvexShape) translated_shape.rotate_approx(Math.toRadians(component_rotation), FloatPoint.ZERO);
         }
@@ -379,7 +377,7 @@ public class Pin extends DrillItem implements Serializable
    */
   public boolean has_trace_exit_restrictions()
   {
-    for (int i = this.first_layer(); i <= this.last_layer(); ++i)
+    for (int i = this.first_layer(); i <= this.last_layer(); i++)
     {
       Collection<TraceExitRestriction> curr_exit_restrictions = get_trace_exit_restrictions(i);
       if (!curr_exit_restrictions.isEmpty())
@@ -396,7 +394,7 @@ public class Pin extends DrillItem implements Serializable
    */
   public boolean drill_allowed()
   {
-    return (this.first_layer() == this.last_layer());
+    return this.first_layer() == this.last_layer();
   }
 
   @Override
@@ -471,7 +469,7 @@ public class Pin extends DrillItem implements Serializable
       return result;
     }
     // look up all part pins with the same gate_name and the same gate_pin_swap_code
-    for (int i = 0; i < logical_part.pin_count(); ++i)
+    for (int i = 0; i < logical_part.pin_count(); i++)
     {
       if (i == this.pin_no)
       {
@@ -484,8 +482,7 @@ public class Pin extends DrillItem implements Serializable
         if (curr_swappeble_pin != null)
         {
           result.add(curr_swappeble_pin);
-        }
-        else
+        } else
         {
           FRLogger.warn("Pin.get_swappable_pins: swappable pin not found");
         }
@@ -741,7 +738,7 @@ public class Pin extends DrillItem implements Serializable
       else if (curr_exit_corner_distance < min_exit_corner_distance + TOLERANCE)
       {
         // the distances are near equal, compare to the previous corners of p_trace_polyline
-        for (int i = 1; i < p_trace_polyline.corner_count(); ++i)
+        for (int i = 1; i < p_trace_polyline.corner_count(); i++)
         {
           FloatPoint curr_trace_corner = p_trace_polyline.corner_approx(i);
           double curr_trace_corner_distance = curr_trace_corner.distance_square(curr_exit_corner);
@@ -750,8 +747,7 @@ public class Pin extends DrillItem implements Serializable
           {
             new_nearest_corner_found = true;
             break;
-          }
-          else if (curr_trace_corner_distance > old_trace_corner_distance + TOLERANCE)
+          } else if (curr_trace_corner_distance > old_trace_corner_distance + TOLERANCE)
           {
             break;
           }

@@ -7,6 +7,8 @@ import app.freerouting.management.analytics.FRAnalytics;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -16,8 +18,8 @@ import java.util.Objects;
 
 public class WindowBase extends JFrame
 {
-  protected TextManager tm = null;
-  private Instant gotFocusAt = null;
+  protected TextManager tm;
+  private Instant gotFocusAt;
 
   WindowBase(int minWidth, int minHeight)
   {
@@ -34,10 +36,10 @@ public class WindowBase extends JFrame
     }
     this.setMinimumSize(new Dimension(minWidth, minHeight));
 
-    addWindowFocusListener(new java.awt.event.WindowFocusListener()
+    addWindowFocusListener(new WindowFocusListener()
     {
       @Override
-      public void windowGainedFocus(java.awt.event.WindowEvent e)
+      public void windowGainedFocus(WindowEvent e)
       {
         Window window = e.getWindow();
         String className = window.getClass().getName();
@@ -59,7 +61,7 @@ public class WindowBase extends JFrame
       }
 
       @Override
-      public void windowLostFocus(java.awt.event.WindowEvent e)
+      public void windowLostFocus(WindowEvent e)
       {
         Window window = e.getWindow();
         String className = window.getClass().getName();

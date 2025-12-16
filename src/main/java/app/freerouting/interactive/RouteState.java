@@ -19,7 +19,7 @@ public class RouteState extends InteractiveState
 {
 
   protected Route route;
-  protected boolean observers_activated = false;
+  protected boolean observers_activated;
   private Set<Item> routing_target_set;
 
   /**
@@ -62,7 +62,7 @@ public class RouteState extends InteractiveState
     else
     {
       route_net_no_arr = new int[net_count];
-      for (int i = 0; i < net_count; ++i)
+      for (int i = 0; i < net_count; i++)
       {
         route_net_no_arr[i] = picked_item.get_net_no(i);
       }
@@ -74,11 +74,11 @@ public class RouteState extends InteractiveState
     RoutingBoard routing_board = p_board_handling.get_routing_board();
     int[] trace_half_widths = new int[routing_board.get_layer_count()];
     boolean[] layer_active_arr = new boolean[trace_half_widths.length];
-    for (int i = 0; i < trace_half_widths.length; ++i)
+    for (int i = 0; i < trace_half_widths.length; i++)
     {
       trace_half_widths[i] = p_board_handling.get_trace_halfwidth(route_net_no_arr[0], i);
       layer_active_arr[i] = false;
-      for (int j = 0; j < route_net_no_arr.length; ++j)
+      for (int j = 0; j < route_net_no_arr.length; j++)
       {
         if (p_board_handling.is_active_routing_layer(route_net_no_arr[j], i))
         {
@@ -192,7 +192,7 @@ public class RouteState extends InteractiveState
       // prefer signal layers
       if (picked_item == null)
       {
-        for (int i = 1; i < layer_count - 1; ++i)
+        for (int i = 1; i < layer_count - 1; i++)
         {
           if (routing_board.layer_structure.arr[i].is_signal)
           {
@@ -206,7 +206,7 @@ public class RouteState extends InteractiveState
       }
       if (picked_item == null)
       {
-        for (int i = 1; i < layer_count - 1; ++i)
+        for (int i = 1; i < layer_count - 1; i++)
         {
           if (!routing_board.layer_structure.arr[i].is_signal)
           {
@@ -244,7 +244,7 @@ public class RouteState extends InteractiveState
   static int[] get_route_net_numbers_at_tie_pin(Pin p_pin, int p_layer)
   {
     Set<Integer> net_number_list = new TreeSet<>();
-    for (int i = 0; i < p_pin.net_count(); ++i)
+    for (int i = 0; i < p_pin.net_count(); i++)
     {
       net_number_list.add(p_pin.get_net_no(i));
     }
@@ -253,7 +253,7 @@ public class RouteState extends InteractiveState
     {
       if (curr_contact.first_layer() <= p_layer && curr_contact.last_layer() >= p_layer)
       {
-        for (int i = 0; i < curr_contact.net_count(); ++i)
+        for (int i = 0; i < curr_contact.net_count(); i++)
         {
           net_number_list.remove(curr_contact.get_net_no(i));
         }

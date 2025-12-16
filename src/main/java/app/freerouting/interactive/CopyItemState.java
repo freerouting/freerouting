@@ -1,7 +1,7 @@
 package app.freerouting.interactive;
+import app.freerouting.board.*;
 
 import app.freerouting.board.Component;
-import app.freerouting.board.*;
 import app.freerouting.core.Package;
 import app.freerouting.core.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -90,7 +90,7 @@ public class CopyItemState extends InteractiveState
       // Create a new padstack.
       ConvexShape[] new_shapes = new ConvexShape[p_board.get_layer_count()];
       int layer_diff = old_layer - p_new_layer;
-      for (int i = 0; i < new_shapes.length; ++i)
+      for (int i = 0; i < new_shapes.length; i++)
       {
         int new_layer_no = i + layer_diff;
         if (new_layer_no >= 0 && new_layer_no < new_shapes.length)
@@ -208,7 +208,7 @@ public class CopyItemState extends InteractiveState
           {
             // create a new package with changed layers of the padstacks.
             Package.Pin[] new_pin_arr = new Package.Pin[old_component.get_package().pin_count()];
-            for (int i = 0; i < new_pin_arr.length; ++i)
+            for (int i = 0; i < new_pin_arr.length; i++)
             {
               Package.Pin old_pin = old_component.get_package().get_pin(i);
               Padstack old_padstack = board.library.padstacks.get(old_pin.padstack_no);

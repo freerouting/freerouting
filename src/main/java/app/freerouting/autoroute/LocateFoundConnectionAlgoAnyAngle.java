@@ -144,8 +144,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         {
           new_door_ind = left_ind;
           result_corner = left_turn_next_corner(this.current_from_point, trace_halfwidth_max, door_left_corner, door_right_corner);
-        }
-        else
+        } else
         {
           new_door_ind = right_ind;
           result_corner = right_turn_next_corner(this.current_from_point, trace_halfwidth_max, door_right_corner, door_left_corner);
@@ -204,7 +203,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
           break;
         }
       }
-      boolean visability_range_gets_smaller_on_the_right_side = (door_right_corner == null);
+      boolean visability_range_gets_smaller_on_the_right_side = door_right_corner == null;
       if (door_right_corner != null && next_right_corner.side_of(this.current_from_point, door_right_corner) != Side.ON_THE_RIGHT)
       {
         FloatPoint curr_tangential_point = this.current_from_point.left_tangential_point(next_right_corner, trace_halfwidth_max);
@@ -223,7 +222,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
         door_right_corner = next_right_corner;
         right_ind = curr_door_ind;
       }
-      boolean visability_range_gets_smaller_on_the_left_side = (door_left_corner == null);
+      boolean visability_range_gets_smaller_on_the_left_side = door_left_corner == null;
       if (door_left_corner != null && next_left_corner.side_of(this.current_from_point, door_left_corner) != Side.ON_THE_LEFT)
       {
         FloatPoint curr_tangential_point = this.current_from_point.right_tangential_point(next_left_corner, trace_halfwidth_max);
@@ -286,7 +285,7 @@ class LocateFoundConnectionAlgoAnyAngle extends LocateFoundConnectionAlgo
     int check_from_door_index = Math.max(this.current_to_door_index - 5, this.current_from_door_index + 1);
     FloatPoint corrected_result = null;
     int corrected_door_ind = 0;
-    for (int i = check_from_door_index; i < new_door_ind; ++i)
+    for (int i = check_from_door_index; i < new_door_ind; i++)
     {
       FloatPoint curr_left_corner = calc_door_left_corner(this.backtrack_array[i]);
       double curr_dist = check_line.segment_distance(curr_left_corner);

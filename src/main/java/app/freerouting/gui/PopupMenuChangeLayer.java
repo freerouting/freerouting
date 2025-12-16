@@ -28,7 +28,7 @@ class PopupMenuChangeLayer extends JMenu
     this.setText(tm.getText("change_layer"));
     this.setToolTipText(tm.getText("change_layer_tooltip"));
     int curr_signal_layer_no = 0;
-    for (int i = 0; i < layer_structure.arr.length; ++i)
+    for (int i = 0; i < layer_structure.arr.length; i++)
     {
       if (layer_structure.arr[i].is_signal)
       {
@@ -45,7 +45,7 @@ class PopupMenuChangeLayer extends JMenu
    */
   void disable_item(int p_no)
   {
-    for (int i = 0; i < item_arr.length; ++i)
+    for (int i = 0; i < item_arr.length; i++)
     {
       this.item_arr[i].setEnabled(i != p_no);
     }

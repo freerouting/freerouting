@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class BoardStatisticsConnections implements Serializable
 {
   @SerializedName("maximum_count")
-  public Integer maximumCount = null;
+  public Integer maximumCount;
   @SerializedName("incomplete_count")
-  public Integer incompleteCount = null;
+  public Integer incompleteCount;
 }

@@ -2,8 +2,8 @@ package app.freerouting.board;
 
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.*;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 
@@ -279,7 +279,7 @@ public class ObstacleArea extends Item implements Serializable
     if (intensity > 0 && display_tree_shapes)
     {
       ShapeSearchTree default_tree = this.board.search_tree_manager.get_default_tree();
-      for (int i = 0; i < this.tree_shape_count(default_tree); ++i)
+      for (int i = 0; i < this.tree_shape_count(default_tree); i++)
       {
         p_graphics_context.draw_boundary(this.get_tree_shape(default_tree, i), 1, Color.white, p_g, 1);
       }

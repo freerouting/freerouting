@@ -49,7 +49,7 @@ public class IntVector extends Vector implements Serializable
       return false;
     }
     IntVector other = (IntVector) p_ob;
-    return (x == other.x && y == other.y);
+    return x == other.x && y == other.y;
   }
 
   /**
@@ -73,13 +73,13 @@ public class IntVector extends Vector implements Serializable
   @Override
   public boolean is_orthogonal()
   {
-    return (x == 0 || y == 0);
+    return x == 0 || y == 0;
   }
 
   @Override
   public boolean is_diagonal()
   {
-    return (Math.abs(x) == Math.abs(y));
+    return Math.abs(x) == Math.abs(y);
   }
 
   /**

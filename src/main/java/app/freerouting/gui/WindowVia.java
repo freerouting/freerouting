@@ -226,14 +226,14 @@ public class WindowVia extends BoardSavableSubWindow
     {
       Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
       BoardLibrary board_library = board_frame.board_panel.board_handling.get_routing_board().library;
-      for (int i = 0; i < board_library.via_padstack_count(); ++i)
+      for (int i = 0; i < board_library.via_padstack_count(); i++)
       {
         object_list.add(board_library.get_via_padstack(i));
       }
       CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window = WindowObjectInfo.display(tm.getText("available_via_padstacks"), object_list, board_frame, coordinate_transform);
-      java.awt.Point loc = getLocation();
-      java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      Point loc = getLocation();
+      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
       new_window.setLocation(new_window_location);
       subwindows.add(new_window);
     }
@@ -321,7 +321,7 @@ public class WindowVia extends BoardSavableSubWindow
       ConvexShape[] padstack_shapes = new ConvexShape[pcb.layer_structure.arr.length];
       CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
       boolean shape_exists = false;
-      for (int i = from_layer_no; i <= to_layer_no; ++i)
+      for (int i = from_layer_no; i <= to_layer_no; i++)
       {
         Object input = padstack_input_panel.circle_radius[i - from_layer_no].getValue();
         double radius = default_radius;
@@ -365,7 +365,7 @@ public class WindowVia extends BoardSavableSubWindow
       int layer_count = to_layer_no - from_layer_no + 1;
       layer_names = new JLabel[layer_count];
       circle_radius = new JFormattedTextField[layer_count];
-      for (int i = 0; i < layer_count; ++i)
+      for (int i = 0; i < layer_count; i++)
       {
         String label_string = tm.getText("radius_on_layer") + " " + layer_structure.arr[from_layer_no + i].name + ": ";
         layer_names[i] = new JLabel(label_string);
@@ -398,7 +398,7 @@ public class WindowVia extends BoardSavableSubWindow
       }
       Padstack selected_padstack = (Padstack) selected_value;
       ViaInfo via_with_selected_padstack = null;
-      for (int i = 0; i < pcb.rules.via_infos.count(); ++i)
+      for (int i = 0; i < pcb.rules.via_infos.count(); i++)
       {
         if (pcb.rules.via_infos
             .get(i)
@@ -425,14 +425,14 @@ public class WindowVia extends BoardSavableSubWindow
     {
       Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
       ViaInfos via_infos = board_frame.board_panel.board_handling.get_routing_board().rules.via_infos;
-      for (int i = 0; i < via_infos.count(); ++i)
+      for (int i = 0; i < via_infos.count(); i++)
       {
         object_list.add(via_infos.get(i));
       }
       CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window = WindowObjectInfo.display(tm.getText("available_vias"), object_list, board_frame, coordinate_transform);
-      java.awt.Point loc = getLocation();
-      java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      Point loc = getLocation();
+      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
       new_window.setLocation(new_window_location);
       subwindows.add(new_window);
     }
@@ -460,8 +460,8 @@ public class WindowVia extends BoardSavableSubWindow
       Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>(selected_objects);
       CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
       WindowObjectInfo new_window = WindowObjectInfo.display(tm.getText("selected_rule"), object_list, board_frame, coordinate_transform);
-      java.awt.Point loc = getLocation();
-      java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      Point loc = getLocation();
+      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
       new_window.setLocation(new_window_location);
       subwindows.add(new_window);
     }
@@ -479,8 +479,8 @@ public class WindowVia extends BoardSavableSubWindow
       }
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
       WindowViaRule new_window = new WindowViaRule(selected_object, board_rules.via_infos, board_frame);
-      java.awt.Point loc = getLocation();
-      java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
+      Point loc = getLocation();
+      Point new_window_location = new Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
       new_window.setLocation(new_window_location);
       subwindows.add(new_window);
     }

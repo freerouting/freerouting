@@ -85,7 +85,7 @@ public class SortedRoomNeighbours
   private static void calculate_incomplete_rooms_with_empty_neighbours(ObstacleExpansionRoom p_room, AutorouteEngine p_autoroute_engine)
   {
     TileShape room_shape = p_room.get_shape();
-    for (int i = 0; i < room_shape.border_line_count(); ++i)
+    for (int i = 0; i < room_shape.border_line_count(); i++)
     {
       Line curr_line = room_shape.border_line(i);
       if (SortedRoomNeighbours.insert_door_ok(p_room, curr_line))
@@ -282,7 +282,7 @@ public class SortedRoomNeighbours
       Item first_item = room.get_item();
       Item second_item = room1.get_item();
       // insert only overlap_doors between items of the same net for performance reasons.
-      return (first_item.shares_net(second_item));
+      return first_item.shares_net(second_item);
     }
     if (!(p_room_1 instanceof ObstacleExpansionRoom) && !(p_room_2 instanceof ObstacleExpansionRoom))
     {
@@ -293,7 +293,7 @@ public class SortedRoomNeighbours
     Line door_line = null;
     Point prev_corner = p_door_shape.corner(0);
     int corner_count = p_door_shape.border_line_count();
-    for (int i = 1; i < corner_count; ++i)
+    for (int i = 1; i < corner_count; i++)
     {
       Point curr_corner = p_door_shape.corner(i);
       if (!curr_corner.equals(prev_corner))
@@ -557,8 +557,7 @@ public class SortedRoomNeighbours
               // Maybe there is a 1 point touch.
               end_edge_line = null;
             }
-          }
-          else
+          } else
           {
             end_edge_line = null;
           }

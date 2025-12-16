@@ -46,7 +46,7 @@ public class ComboBoxLayer extends JComboBox<ComboBoxLayer.Layer>
       this.layer_arr[1] = new Layer(tm.getText("inner"), INNER_LAYER_INDEX);
       ++curr_layer_no;
     }
-    for (int i = 0; i < signal_layer_count; ++i)
+    for (int i = 0; i < signal_layer_count; i++)
     {
       ++curr_layer_no;
       app.freerouting.board.Layer curr_signal_layer = p_layer_structure.get_signal_layer(i);

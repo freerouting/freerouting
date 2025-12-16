@@ -10,9 +10,9 @@ import java.io.Serializable;
 public class BoardStatisticsItems implements Serializable
 {
   @SerializedName("total_count")
-  public Integer totalCount = null;
+  public Integer totalCount;
   @SerializedName("trace_count")
-  public Integer traceCount = null;
+  public Integer traceCount;
   @SerializedName("via_count")
   public Integer viaCount;
   @SerializedName("conduction_area_count")

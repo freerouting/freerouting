@@ -56,7 +56,7 @@ public class Communication implements Serializable
 
   public boolean host_cad_is_eagle()
   {
-    return specctra_parser_info != null && specctra_parser_info.host_cad != null && specctra_parser_info.host_cad.equalsIgnoreCase("CadSoft");
+    return specctra_parser_info != null && specctra_parser_info.host_cad != null && "CadSoft".equalsIgnoreCase(specctra_parser_info.host_cad);
   }
 
   public boolean host_is_old_kicad()

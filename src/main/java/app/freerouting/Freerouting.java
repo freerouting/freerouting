@@ -1,6 +1,7 @@
 package app.freerouting;
 
 import app.freerouting.api.AppContextListener;
+import app.freerouting.board.BoardLoader;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -26,6 +27,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
@@ -272,8 +274,8 @@ public class Freerouting
     if (globalSettings.apiServerSettings.isEnabled)
     {
       apiServer = InitializeAPI(globalSettings.apiServerSettings);
-      globalSettings.apiServerSettings.isEnabled = (apiServer != null);
-      globalSettings.apiServerSettings.isRunning = (apiServer != null);
+      globalSettings.apiServerSettings.isEnabled = apiServer != null;
+      globalSettings.apiServerSettings.isRunning = apiServer != null;
     }
 
     // Initialize the GUI
@@ -419,7 +421,7 @@ public class Freerouting
     }
 
     // Load the board without routing
-    if (!app.freerouting.board.BoardLoader.loadBoardIfNeeded(drcJob))
+    if (!BoardLoader.loadBoardIfNeeded(drcJob))
     {
       FRLogger.error("Failed to load board for DRC check", null);
       System.exit(1);
@@ -443,7 +445,7 @@ public class Freerouting
       try
       {
         Path outputFilePath = Path.of(outputFileName);
-        Files.write(outputFilePath, drcReportJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        Files.write(outputFilePath, drcReportJson.getBytes(StandardCharsets.UTF_8));
         FRLogger.info("DRC report written to: " + outputFileName);
       } catch (IOException e)
       {
@@ -499,21 +501,21 @@ public class Freerouting
       int port = Integer.parseInt(hostAndPortParts[1]);
 
       // Check if the protocol is HTTP or HTTPS
-      if (!protocol.equals("http") && !protocol.equals("https"))
+      if (!"http".equals(protocol) && !"https".equals(protocol))
       {
         FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS.".formatted(endpointUrl));
         continue;
       }
 
       // Check if the http is allowed
-      if (!apiServerSettings.isHttpAllowed && protocol.equals("http"))
+      if (!apiServerSettings.isHttpAllowed && "http".equals(protocol))
       {
         FRLogger.warn("Can't use the endpoint '%s' for the API server, because HTTP is not allowed.".formatted(endpointUrl));
         continue;
       }
 
       // Warn the user that HTTPS is not implemented yet
-      if (protocol.equals("https"))
+      if ("https".equals(protocol))
       {
         FRLogger.warn("HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
       }

@@ -65,7 +65,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     }
     // Invalidate the free space expansion rooms touching a shape of p_item.
     int shape_count = p_item.tree_shape_count(this.autoroute_engine.autoroute_search_tree);
-    for (int i = 0; i < shape_count; ++i)
+    for (int i = 0; i < shape_count; i++)
     {
       TileShape curr_shape = p_item.get_tree_shape(this.autoroute_engine.autoroute_search_tree, i);
       this.autoroute_engine.invalidate_drill_pages(curr_shape);
@@ -94,7 +94,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     if (p_tidy_width < Integer.MAX_VALUE)
     {
       tidy_region = IntOctagon.EMPTY;
-      calculate_tidy_region = (p_tidy_width > 0);
+      calculate_tidy_region = p_tidy_width > 0;
     }
     else
     {
@@ -112,7 +112,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
       }
       else
       {
-        for (int i = 0; i < curr_item.tile_shape_count(); ++i)
+        for (int i = 0; i < curr_item.tile_shape_count(); i++)
         {
           TileShape curr_shape = curr_item.get_tile_shape(i);
           changed_area.join(curr_shape, curr_item.shape_layer(i));
@@ -122,7 +122,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
           }
         }
         remove_item(curr_item);
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           changed_nets.add(curr_item.get_net_no(i));
         }
@@ -173,9 +173,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     board_corners[1] = new FloatPoint(bounding_box.ur.x, bounding_box.ll.y);
     board_corners[2] = bounding_box.ur.to_float();
     board_corners[3] = new FloatPoint(bounding_box.ll.x, bounding_box.ur.y);
-    for (int i = 0; i < get_layer_count(); ++i)
+    for (int i = 0; i < get_layer_count(); i++)
     {
-      for (int j = 0; j < 4; ++j)
+      for (int j = 0; j < 4; j++)
       {
         join_changed_area(board_corners[j], i);
       }
@@ -334,7 +334,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     {
       p_ignore_items.add(p_item);
     }
-    for (int i = 0; i < p_item.tile_shape_count(); ++i)
+    for (int i = 0; i < p_item.tile_shape_count(); i++)
     {
       TileShape moved_shape = (TileShape) p_item
           .get_tile_shape(i)
@@ -355,8 +355,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
               return false;
             }
           }
-        }
-        else if (curr_item != p_item)
+        } else if (curr_item != p_item)
         {
           if (curr_item.is_obstacle(p_item))
           {
@@ -375,7 +374,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
   {
     int[] net_no_arr = new int[1];
     net_no_arr[0] = p_new_net_no;
-    for (int i = 0; i < p_item.tile_shape_count(); ++i)
+    for (int i = 0; i < p_item.tile_shape_count(); i++)
     {
       TileShape curr_shape = p_item.get_tile_shape(i);
       Set<Item> obstacles = this.overlapping_items_with_clearance(curr_shape, p_item.shape_layer(i), net_no_arr, p_item.clearance_class_no());
@@ -413,7 +412,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     if (p_tidy_width < Integer.MAX_VALUE)
     {
       tidy_region = IntOctagon.EMPTY;
-      calculate_tidy_region = (p_tidy_width > 0);
+      calculate_tidy_region = p_tidy_width > 0;
     }
     else
     {
@@ -603,9 +602,9 @@ public class RoutingBoard extends BasicBoard implements Serializable
     ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
     int compensated_half_width = p_half_width + search_tree.clearance_compensation_value(p_clearance_class_no, p_layer);
     TileShape[] trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.arr.length - 1);
-    boolean orthogonal_mode = (rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE);
+    boolean orthogonal_mode = rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE;
     ShoveTraceAlgo shove_trace_algo = new ShoveTraceAlgo(this);
-    for (int i = 0; i < trace_shapes.length; ++i)
+    for (int i = 0; i < trace_shapes.length; i++)
     {
       TileShape curr_trace_shape = trace_shapes[i];
       if (orthogonal_mode)
@@ -686,8 +685,8 @@ public class RoutingBoard extends BasicBoard implements Serializable
     // calculate the last shapes of combined_polyline for checking
     TileShape[] trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.arr.length - 1);
     int last_shape_no = trace_shapes.length;
-    boolean orthogonal_mode = (rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE);
-    for (int i = 0; i < trace_shapes.length; ++i)
+    boolean orthogonal_mode = rules.get_trace_angle_restriction() == AngleRestriction.NINETY_DEGREE;
+    for (int i = 0; i < trace_shapes.length; i++)
     {
       TileShape curr_trace_shape = trace_shapes[i];
       if (orthogonal_mode)
@@ -774,7 +773,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
       }
     }
     // insert the new trace segment
-    for (int i = 0; i < new_polyline.corner_count(); ++i)
+    for (int i = 0; i < new_polyline.corner_count(); i++)
     {
       join_changed_area(new_polyline.corner_approx(i), p_layer);
     }
@@ -994,7 +993,7 @@ public class RoutingBoard extends BasicBoard implements Serializable
     }
     if (this.changed_area != null)
     {
-      for (int i = 0; i < connection_line.corner_count(); ++i)
+      for (int i = 0; i < connection_line.corner_count(); i++)
       {
         this.changed_area.join(connection_line.corner_approx(i), trace_layer);
       }
@@ -1205,11 +1204,10 @@ public class RoutingBoard extends BasicBoard implements Serializable
             }
           }
 
-        }
-        else if (curr_ob instanceof Trace curr_trace)
+        } else if (curr_ob instanceof Trace curr_trace)
         {
           Collection<Item> contacts = curr_trace.get_start_contacts();
-          for (int i = 0; i < 2; ++i)
+          for (int i = 0; i < 2; i++)
           {
             for (int curr_net_no : curr_item.net_no_arr)
             {

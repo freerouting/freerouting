@@ -94,16 +94,13 @@ public class NetClass
             if (next_token == Keyword.RULE)
             {
               rules.addAll(Rule.read_scope(p_scanner));
-            }
-            else if (next_token == Keyword.LAYER_RULE)
+            } else if (next_token == Keyword.LAYER_RULE)
             {
               layer_rules.add(Rule.read_layer_rule_scope(p_scanner));
-            }
-            else if (next_token == Keyword.VIA_RULE)
+            } else if (next_token == Keyword.VIA_RULE)
             {
               via_rule = DsnFile.read_string_scope(p_scanner);
-            }
-            else if (next_token == Keyword.CIRCUIT)
+            } else if (next_token == Keyword.CIRCUIT)
             {
               Circuit.ReadScopeResult curr_rule = Circuit.read_scope(p_scanner);
               if (curr_rule != null)
@@ -113,24 +110,20 @@ public class NetClass
                 use_via.addAll(curr_rule.use_via);
                 use_layer.addAll(curr_rule.use_layer);
               }
-            }
-            else if (next_token == Keyword.CLEARANCE_CLASS)
+            } else if (next_token == Keyword.CLEARANCE_CLASS)
             {
               trace_clearance_class = DsnFile.read_string_scope(p_scanner);
               if (trace_clearance_class == null)
               {
                 return null;
               }
-            }
-            else if (next_token == Keyword.SHOVE_FIXED)
+            } else if (next_token == Keyword.SHOVE_FIXED)
             {
               shove_fixed = DsnFile.read_on_off_scope(p_scanner);
-            }
-            else if (next_token == Keyword.PULL_TIGHT)
+            } else if (next_token == Keyword.PULL_TIGHT)
             {
               pull_tight = DsnFile.read_on_off_scope(p_scanner);
-            }
-            else
+            } else
             {
               ScopeKeyword.skip_scope(p_scanner);
             }
@@ -172,12 +165,10 @@ public class NetClass
           if (next_token == Keyword.CLASSES)
           {
             classes.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
-          }
-          else if (next_token == Keyword.RULE)
+          } else if (next_token == Keyword.RULE)
           {
             rules.addAll(Rule.read_scope(p_scanner));
-          }
-          else if (next_token == Keyword.LAYER_RULE)
+          } else if (next_token == Keyword.LAYER_RULE)
           {
             layer_rules.add(Rule.read_layer_rule_scope(p_scanner));
           }

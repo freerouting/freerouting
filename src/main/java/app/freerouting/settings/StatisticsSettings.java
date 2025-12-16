@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter;
 public class StatisticsSettings implements Serializable
 {
   @SerializedName("start_time")
-  public String startTime = null;
+  public String startTime;
   @SerializedName("end_time")
-  public String endTime = null;
+  public String endTime;
   @SerializedName("sessions_total")
   public Integer sessionsTotal = 0;
   @SerializedName("jobs_started")

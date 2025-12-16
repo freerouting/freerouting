@@ -1,11 +1,17 @@
 package app.freerouting.api.v1;
 
+import static app.freerouting.management.gson.GsonProvider.GSON;
+
 import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.BoardFilePayload;
+import app.freerouting.board.BoardLoader;
+import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.drc.DesignRulesChecker;
+import app.freerouting.gui.FileFormat;
+import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.RoutingJobScheduler;
 import app.freerouting.management.SessionManager;
@@ -27,8 +33,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static app.freerouting.management.gson.GsonProvider.GSON;
 
 @Path("/v1/jobs")
 public class JobControllerV1 extends BaseController
@@ -126,7 +130,7 @@ public class JobControllerV1 extends BaseController
 
     RoutingJob[] result;
     // If the session does not exist, list all jobs
-    if ((session == null) || (sessionId.isEmpty()) || (sessionId.equals("all")))
+    if ((session == null) || (sessionId.isEmpty()) || ("all".equals(sessionId)))
     {
       result = RoutingJobScheduler
           .getInstance()
@@ -437,7 +441,7 @@ public class JobControllerV1 extends BaseController
     }
 
     // Decode the base64 encoded input data to a byte array
-    byte[] inputByteArray = java.util.Base64
+    byte[] inputByteArray = Base64
         .getDecoder()
         .decode(input.dataBase64);
     if (!job.setInput(inputByteArray))
@@ -521,7 +525,7 @@ public class JobControllerV1 extends BaseController
     result.setData(job.output
         .getData()
         .readAllBytes());
-    result.dataBase64 = java.util.Base64
+    result.dataBase64 = Base64
         .getEncoder()
         .encodeToString(result
             .getData()
@@ -766,15 +770,15 @@ public class JobControllerV1 extends BaseController
     }
 
     // Check if the job has a board loaded, and load it if needed
-    if (!app.freerouting.board.BoardLoader.loadBoardIfNeeded(job))
+    if (!BoardLoader.loadBoardIfNeeded(job))
     {
       // Try to load the board if input is available
-      if (job.input != null && job.input.format == app.freerouting.gui.FileFormat.DSN)
+      if (job.input != null && job.input.format == FileFormat.DSN)
       {
         try
         {
-          app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(null, job);
-          boardManager.loadFromSpecctraDsn(job.input.getData(), null, new app.freerouting.board.ItemIdentificationNumberGenerator());
+          HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
+          boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
           job.board = boardManager.get_routing_board();
         } catch (Exception e)
         {

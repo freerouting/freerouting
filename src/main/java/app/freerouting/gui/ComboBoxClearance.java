@@ -18,7 +18,7 @@ public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClas
   public ComboBoxClearance(ClearanceMatrix p_clearance_matrix)
   {
     this.class_arr = new ClearanceClass[p_clearance_matrix.get_class_count()];
-    for (int i = 0; i < this.class_arr.length; ++i)
+    for (int i = 0; i < this.class_arr.length; i++)
     {
       this.class_arr[i] = new ClearanceClass(p_clearance_matrix.get_name(i), i);
     }
@@ -33,7 +33,7 @@ public class ComboBoxClearance extends JComboBox<ComboBoxClearance.ClearanceClas
   {
     int old_index = this.get_selected_class_index();
     this.class_arr = new ClearanceClass[p_new_clearance_matrix.get_class_count()];
-    for (int i = 0; i < this.class_arr.length; ++i)
+    for (int i = 0; i < this.class_arr.length; i++)
     {
       this.class_arr[i] = new ClearanceClass(p_new_clearance_matrix.get_name(i), i);
     }

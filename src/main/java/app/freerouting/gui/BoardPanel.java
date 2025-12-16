@@ -407,8 +407,8 @@ public class BoardPanel extends JPanel
 
     Point view_position = get_viewport_position();
 
-    double x = (view_position.x + delta_x);
-    double y = (view_position.y + delta_y);
+    double x = view_position.x + delta_x;
+    double y = view_position.y + delta_y;
 
     Dimension panel_size = this.getSize();
     x = Math.min(x, panel_size.getWidth() - this.get_viewport_bounds().getWidth());

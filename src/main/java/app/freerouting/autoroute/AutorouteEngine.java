@@ -61,7 +61,7 @@ public class AutorouteEngine
   /**
    * The count of expansion rooms created so far
    */
-  private int expansion_room_instance_count = 0;
+  private int expansion_room_instance_count;
 
   /**
    * Creates a new instance of BoardAutorouteEngine If p_maintain_database, the autorouter database
@@ -217,7 +217,7 @@ public class AutorouteEngine
     for (Item curr_ripped_item : p_ripped_item_list)
     {
       ripped_connections.addAll(curr_ripped_item.get_connection_items(stop_connection_option));
-      for (int i = 0; i < curr_ripped_item.net_count(); ++i)
+      for (int i = 0; i < curr_ripped_item.net_count(); i++)
       {
         changed_nets.add(curr_ripped_item.get_net_no(i));
       }

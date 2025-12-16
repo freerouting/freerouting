@@ -1,5 +1,6 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.Component;
 import app.freerouting.core.LogicalParts;
 import app.freerouting.logger.FRLogger;
 
@@ -32,7 +33,7 @@ public class PartLibrary extends ScopeKeyword
 
     // write the logical part mappings
 
-    for (int i = 1; i <= logical_parts.count(); ++i)
+    for (int i = 1; i <= logical_parts.count(); i++)
     {
       app.freerouting.core.LogicalPart curr_part = logical_parts.get(i);
       p_par.file.start_scope();
@@ -40,9 +41,9 @@ public class PartLibrary extends ScopeKeyword
       p_par.identifier_type.write(curr_part.name, p_par.file);
       p_par.file.new_line();
       p_par.file.write("(comp");
-      for (int j = 1; j <= p_par.board.components.count(); ++j)
+      for (int j = 1; j <= p_par.board.components.count(); j++)
       {
-        app.freerouting.board.Component curr_component = p_par.board.components.get(j);
+        Component curr_component = p_par.board.components.get(j);
         if (curr_component.get_logical_part() == curr_part)
         {
           p_par.file.write(" ");
@@ -55,7 +56,7 @@ public class PartLibrary extends ScopeKeyword
 
     // write the logical parts.
 
-    for (int i = 1; i <= logical_parts.count(); ++i)
+    for (int i = 1; i <= logical_parts.count(); i++)
     {
       app.freerouting.core.LogicalPart curr_part = logical_parts.get(i);
 
@@ -63,7 +64,7 @@ public class PartLibrary extends ScopeKeyword
       p_par.file.write("logical_part ");
       p_par.identifier_type.write(curr_part.name, p_par.file);
       p_par.file.new_line();
-      for (int j = 0; j < curr_part.pin_count(); ++j)
+      for (int j = 0; j < curr_part.pin_count(); j++)
       {
         p_par.file.new_line();
         app.freerouting.core.LogicalPart.PartPin curr_pin = curr_part.get_pin(j);
@@ -121,8 +122,7 @@ public class PartLibrary extends ScopeKeyword
             return false;
           }
           p_par.logical_part_mappings.add(next_mapping);
-        }
-        else if (next_token == LOGICAL_PART)
+        } else if (next_token == LOGICAL_PART)
         {
           LogicalPart next_part = read_logical_part(p_par.scanner);
           if (next_part == null)
@@ -130,8 +130,7 @@ public class PartLibrary extends ScopeKeyword
             return false;
           }
           p_par.logical_parts.add(next_part);
-        }
-        else
+        } else
         {
           skip_scope(p_par.scanner);
         }
@@ -245,8 +244,7 @@ public class PartLibrary extends ScopeKeyword
             return null;
           }
           part_pins.add(curr_part_pin);
-        }
-        else
+        } else
         {
           skip_scope(p_scanner);
         }

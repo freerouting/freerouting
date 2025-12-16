@@ -33,9 +33,9 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable
   /**
    * if null, all signal layers may be used for routing
    */
-  private boolean shove_fixed = false;
+  private boolean shove_fixed;
   private boolean pull_tight = true;
-  private boolean ignore_cycles_with_areas = false;
+  private boolean ignore_cycles_with_areas;
   private double minimum_trace_length = 0;
   private double maximum_trace_length = 0;
 
@@ -49,7 +49,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable
     this.clearance_matrix = p_clearance_matrix;
     this.trace_half_width_arr = new int[p_layer_structure.arr.length];
     this.active_routing_layer_arr = new boolean[p_layer_structure.arr.length];
-    for (int i = 0; i < p_layer_structure.arr.length; ++i)
+    for (int i = 0; i < p_layer_structure.arr.length; i++)
     {
       this.active_routing_layer_arr[i] = p_layer_structure.arr[i].is_signal;
     }
@@ -91,7 +91,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable
    */
   public void set_trace_half_width_on_inner(int p_value)
   {
-    for (int i = 1; i < trace_half_width_arr.length - 1; ++i)
+    for (int i = 1; i < trace_half_width_arr.length - 1; i++)
     {
       trace_half_width_arr[i] = p_value;
     }
@@ -276,7 +276,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable
    */
   public void set_all_inner_layers_active(boolean p_value)
   {
-    for (int i = 1; i < trace_half_width_arr.length - 1; ++i)
+    for (int i = 1; i < trace_half_width_arr.length - 1; i++)
     {
       active_routing_layer_arr[i] = p_value;
     }
@@ -301,7 +301,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable
     p_window.append(via_rule.name, tm.getText("via_rule_2"), via_rule);
     if (trace_width_is_layer_dependent())
     {
-      for (int i = 0; i < trace_half_width_arr.length; ++i)
+      for (int i = 0; i < trace_half_width_arr.length; i++)
       {
         p_window.newline();
         p_window.indent();
@@ -325,7 +325,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable
   public boolean trace_width_is_layer_dependent()
   {
     int compare_value = trace_half_width_arr[0];
-    for (int i = 1; i < trace_half_width_arr.length; ++i)
+    for (int i = 1; i < trace_half_width_arr.length; i++)
     {
       if (this.board_layer_structure.arr[i].is_signal)
       {
@@ -358,7 +358,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable
       return false;
     }
     int compare_width = trace_half_width_arr[first_inner_layer_no];
-    for (int i = first_inner_layer_no + 1; i < trace_half_width_arr.length - 1; ++i)
+    for (int i = first_inner_layer_no + 1; i < trace_half_width_arr.length - 1; i++)
     {
       if (this.board_layer_structure.arr[i].is_signal)
       {

@@ -1,10 +1,10 @@
 package app.freerouting.rules;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ClearanceMatrixTest {
 

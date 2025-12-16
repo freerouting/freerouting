@@ -22,7 +22,7 @@ public class ShapeTraceEntries
   private EntryPoint list_anchor;
   private int trace_piece_count;
   private int max_stack_level;
-  private boolean shape_contains_trace_tails = false;
+  private boolean shape_contains_trace_tails;
   private Item found_obstacle;
 
   /**
@@ -79,7 +79,7 @@ public class ShapeTraceEntries
     else
     {
       board.remove_item(p_trace);
-      for (int i = 0; i < pieces.length; ++i)
+      for (int i = 0; i < pieces.length; i++)
       {
         board.insert_trace_without_cleaning(pieces[i], p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), FixedState.NOT_FIXED);
       }
@@ -244,14 +244,13 @@ public class ShapeTraceEntries
     // fill the interior lines of piece_lines with the appropriate edge
     // lines of the offset shape
     int curr_edge_no = entries[0].edge_no % edge_count;
-    for (int i = 1; i < piece_lines.length - 1; ++i)
+    for (int i = 1; i < piece_lines.length - 1; i++)
     {
       piece_lines[i] = offset_shape.border_line(curr_edge_no);
       if (curr_edge_no == edge_count - 1)
       {
         curr_edge_no = 0;
-      }
-      else
+      } else
       {
         ++curr_edge_no;
       }
@@ -337,7 +336,7 @@ public class ShapeTraceEntries
     // using enlarge here instead offset causes problems because of a
     // comparison in the constructor of class EntryPoint
     int[][] entries = offset_shape.entrance_points(p_trace.polyline());
-    for (int i = 0; i < entries.length; ++i)
+    for (int i = 0; i < entries.length; i++)
     {
       int[] entry_tuple = entries[i];
       FloatPoint entry_approx = p_trace.polyline().arr[entry_tuple[0]].intersection_approx(offset_shape.border_line(entry_tuple[1]));
@@ -349,21 +348,20 @@ public class ShapeTraceEntries
 
     if (!p_trace.shares_net_no(own_net_nos))
     {
-      if (!(p_trace.nets_normal()))
+      if (!p_trace.nets_normal())
       {
         return false;
       }
       Point end_corner = p_trace.first_corner();
       Collection<Item> contact_list;
-      for (int i = 0; i < 2; ++i)
+      for (int i = 0; i < 2; i++)
       {
         if (offset_shape.contains(end_corner))
         {
           if (i == 0)
           {
             contact_list = p_trace.get_start_contacts();
-          }
-          else
+          } else
           {
             contact_list = p_trace.get_end_contacts();
           }
@@ -389,8 +387,7 @@ public class ShapeTraceEntries
                   return false;
                 }
               }
-            }
-            else if (contact_item instanceof Via via)
+            } else if (contact_item instanceof Via via)
             {
               TileShape via_shape = via.get_tile_shape_on_layer(layer);
 
@@ -430,8 +427,7 @@ public class ShapeTraceEntries
               if (i == 0)
               {
                 trace_line_segment_no = 0;
-              }
-              else
+              } else
               {
                 trace_line_segment_no = p_trace.polyline().arr.length - 1;
               }
@@ -441,8 +437,7 @@ public class ShapeTraceEntries
                 insert_entry_point(p_trace, trace_line_segment_no, projection_side, projection.to_float());
               }
             }
-          }
-          else if (contact_count == 0 && offset_shape.contains_inside(end_corner))
+          } else if (contact_count == 0 && offset_shape.contains_inside(end_corner))
           {
             shape_contains_trace_tails = true;
           }

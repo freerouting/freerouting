@@ -31,7 +31,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public static TileShape get_instance(Point[] p_convex_polygon)
   {
     Line[] line_arr = new Line[p_convex_polygon.length];
-    for (int j = 0; j < line_arr.length - 1; ++j)
+    for (int j = 0; j < line_arr.length - 1; j++)
     {
       line_arr[j] = new Line(p_convex_polygon[j], p_convex_polygon[j + 1]);
     }
@@ -148,7 +148,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int corner_count = border_line_count();
     FloatPoint prev_corner = corner_approx(corner_count - 2);
     FloatPoint curr_corner = corner_approx(corner_count - 1);
-    for (int i = 0; i < corner_count; ++i)
+    for (int i = 0; i < corner_count; i++)
     {
       FloatPoint next_corner = corner_approx(i);
       result += curr_corner.x * (next_corner.y - prev_corner.y);
@@ -170,7 +170,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     {
       return true;
     }
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       if (border_line(i).side_of(p_point) == Side.ON_THE_LEFT)
       {
@@ -197,7 +197,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     {
       return false;
     }
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       if (border_line(i).side_of(p_point) != Side.ON_THE_RIGHT)
       {
@@ -228,7 +228,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     {
       return false;
     }
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       if (border_line(i).side_of(p_point, p_tolerance) != Side.ON_THE_RIGHT)
       {
@@ -253,14 +253,13 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       return Side.COLLINEAR;
     }
     Side result = Side.ON_THE_RIGHT; // point is inside
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       Side curr_side = border_line(i).side_of(p_point, p_tolerance);
       if (curr_side == Side.ON_THE_LEFT)
       {
         return Side.ON_THE_LEFT; // point is outside
-      }
-      else if (curr_side == Side.COLLINEAR)
+      } else if (curr_side == Side.COLLINEAR)
       {
         result = curr_side;
       }
@@ -280,7 +279,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       return -1;
     }
     int containing_line_no = -1;
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       Side side_of = border_line(i).side_of(p_point);
       if (side_of == Side.ON_THE_LEFT)
@@ -302,7 +301,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   @Override
   public boolean contains_on_border(Point p_point)
   {
-    return (contains_on_border_line_no(p_point) >= 0);
+    return contains_on_border_line_no(p_point) >= 0;
   }
 
   /**
@@ -327,7 +326,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
    */
   public boolean contains(TileShape p_other)
   {
-    for (int i = 0; i < p_other.border_line_count(); ++i)
+    for (int i = 0; i < p_other.border_line_count(); i++)
     {
       if (!this.contains(p_other.corner(i)))
       {
@@ -406,7 +405,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int min_dist_ind = 0;
 
     // calculate the distance to the nearest corner first
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       FloatPoint curr_corner_f = corner_approx(i);
       double curr_dist = curr_corner_f.distance_square(from_point_f);
@@ -422,7 +421,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int prev_ind = line_count - 2;
     int curr_ind = line_count - 1;
 
-    for (int next_ind = 0; next_ind < line_count; ++next_ind)
+    for (int next_ind = 0; next_ind < line_count; next_ind++)
     {
       Point projection = border_line(curr_ind).perpendicular_projection(p_from_point);
       if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == Side.ON_THE_RIGHT) && (!corner_is_bounded(next_ind) || border_line(next_ind).side_of(projection) == Side.ON_THE_RIGHT))
@@ -488,17 +487,17 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     Arrays.fill(min_dists, Double.MAX_VALUE);
 
     // calculate the distances to the nearest corners first
-    for (int i = 0; i < line_count; ++i)
+    for (int i = 0; i < line_count; i++)
     {
       if (corner_is_bounded(i))
       {
         FloatPoint curr_corner = corner_approx(i);
         double curr_dist = curr_corner.distance_square(p_from_point);
-        for (int j = 0; j < result_count; ++j)
+        for (int j = 0; j < result_count; j++)
         {
           if (curr_dist < min_dists[j])
           {
-            for (int k = j + 1; k < result_count; ++k)
+            for (int k = j + 1; k < result_count; k++)
             {
               min_dists[k] = min_dists[k - 1];
               nearest_points[k] = nearest_points[k - 1];
@@ -514,17 +513,17 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int prev_ind = line_count - 2;
     int curr_ind = line_count - 1;
 
-    for (int next_ind = 0; next_ind < line_count; ++next_ind)
+    for (int next_ind = 0; next_ind < line_count; next_ind++)
     {
       FloatPoint projection = p_from_point.projection_approx(border_line(curr_ind));
       if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == Side.ON_THE_RIGHT) && (!corner_is_bounded(next_ind) || border_line(next_ind).side_of(projection) == Side.ON_THE_RIGHT))
       {
         double curr_dist = projection.distance_square(p_from_point);
-        for (int j = 0; j < result_count; ++j)
+        for (int j = 0; j < result_count; j++)
         {
           if (curr_dist < min_dists[j])
           {
-            for (int k = j + 1; k < result_count; ++k)
+            for (int k = j + 1; k < result_count; k++)
             {
               min_dists[k] = min_dists[k - 1];
               nearest_points[k] = nearest_points[k - 1];
@@ -550,7 +549,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int result = 0;
     int corner_count = border_line_count();
     double min_dist = Double.MIN_VALUE;
-    for (int i = 0; i < corner_count; ++i)
+    for (int i = 0; i < corner_count; i++)
     {
       double curr_dist = corner_approx(i).distance(from_point_f);
       if (curr_dist < min_dist)
@@ -600,11 +599,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
     int other_line_count = p_shape.border_line_count();
 
-    for (int next_ind = 0; next_ind < line_count; ++next_ind)
+    for (int next_ind = 0; next_ind < line_count; next_ind++)
     {
       double curr_max_dist = 0;
       FloatPoint curr_translate_coor = FloatPoint.ZERO;
-      for (int corner_no = 0; corner_no < other_line_count; ++corner_no)
+      for (int corner_no = 0; corner_no < other_line_count; corner_no++)
       {
         FloatPoint curr_corner = p_shape.corner_approx(corner_no);
         if (border_line(curr_ind).side_of(curr_corner) == Side.ON_THE_RIGHT)
@@ -619,11 +618,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
         }
       }
 
-      for (int j = 0; j < result_count; ++j)
+      for (int j = 0; j < result_count; j++)
       {
         if (curr_max_dist < min_dists[j])
         {
-          for (int k = j + 1; k < result_count; ++k)
+          for (int k = j + 1; k < result_count; k++)
           {
             min_dists[k] = min_dists[k - 1];
             translate_coors[k] = translate_coors[k - 1];
@@ -672,15 +671,14 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     double max_distance = -1;
     double max_distance_2 = -1;
     FloatPoint gravity_point = this.centre_of_gravity();
-    for (int i = 0; i < border_line_count(); ++i)
+    for (int i = 0; i < border_line_count(); i++)
     {
       double curr_distance = Math.abs(border_line(i).signed_distance(gravity_point));
       if (curr_distance > max_distance)
       {
         max_distance_2 = max_distance;
         max_distance = curr_distance;
-      }
-      else if (curr_distance > max_distance_2)
+      } else if (curr_distance > max_distance_2)
       {
         max_distance_2 = curr_distance;
       }
@@ -699,7 +697,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
     int side_no_2 = -1;
     Direction dir2 = null;
-    for (int i = 0; i < p_other.border_line_count(); ++i)
+    for (int i = 0; i < p_other.border_line_count(); i++)
     {
       Direction curr_dir = p_other.border_line(i).direction();
       if (curr_dir.compareTo(Direction.LEFT) >= 0)
@@ -718,7 +716,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     Direction dir1 = this.border_line(0).direction();
     final int max_ind = this.border_line_count() + p_other.border_line_count();
 
-    for (int i = 0; i < max_ind; ++i)
+    for (int i = 0; i < max_ind; i++)
     {
       int compare = dir2.compareTo(dir1);
       if (compare == 0)
@@ -735,8 +733,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       {
         side_no_1 = (side_no_1 + 1) % this.border_line_count();
         dir1 = this.border_line(side_no_1).direction();
-      }
-      else // dir1 is bigger than dir2
+      } else // dir1 is bigger than dir2
       {
         side_no_2 = (side_no_2 + 1) % p_other.border_line_count();
         dir2 = p_other.border_line(side_no_2).direction().opposite();
@@ -753,7 +750,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public double distance_to_the_left(Line p_line)
   {
     double result = Integer.MAX_VALUE;
-    for (int i = 0; i < this.border_line_count(); ++i)
+    for (int i = 0; i < this.border_line_count(); i++)
     {
       FloatPoint curr_corner = this.corner_approx(i);
       Side line_side = p_line.side_of(curr_corner, 1);
@@ -781,14 +778,13 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   {
     boolean on_the_left = false;
     boolean on_the_right = false;
-    for (int i = 0; i < this.border_line_count(); ++i)
+    for (int i = 0; i < this.border_line_count(); i++)
     {
       Side curr_side = p_line.side_of(this.corner(i));
       if (curr_side == Side.ON_THE_LEFT)
       {
         on_the_right = true;
-      }
-      else if (curr_side == Side.ON_THE_RIGHT)
+      } else if (curr_side == Side.ON_THE_RIGHT)
       {
         on_the_left = true;
       }
@@ -813,7 +809,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public TileShape turn_90_degree(int p_factor, IntPoint p_pole)
   {
     Line[] new_lines = new Line[border_line_count()];
-    for (int i = 0; i < new_lines.length; ++i)
+    for (int i = 0; i < new_lines.length; i++)
     {
       new_lines[i] = this.border_line(i).turn_90_degree(p_factor, p_pole);
     }
@@ -828,7 +824,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       return this;
     }
     IntPoint[] new_corners = new IntPoint[border_line_count()];
-    for (int i = 0; i < new_corners.length; ++i)
+    for (int i = 0; i < new_corners.length; i++)
     {
 
       new_corners[i] = this.corner_approx(i).rotate(p_angle, p_pole).round();
@@ -861,7 +857,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public TileShape mirror_vertical(IntPoint p_pole)
   {
     Line[] new_lines = new Line[border_line_count()];
-    for (int i = 0; i < new_lines.length; ++i)
+    for (int i = 0; i < new_lines.length; i++)
     {
       new_lines[i] = this.border_line(i).mirror_vertical(p_pole);
     }
@@ -872,7 +868,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
   public TileShape mirror_horizontal(IntPoint p_pole)
   {
     Line[] new_lines = new Line[border_line_count()];
-    for (int i = 0; i < new_lines.length; ++i)
+    for (int i = 0; i < new_lines.length; i++)
     {
       new_lines[i] = this.border_line(i).mirror_horizontal(p_pole);
     }
@@ -895,7 +891,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     FloatPoint second_line_point = intersection_line.b.to_float();
     int result = -1;
     double min_distance = Float.MAX_VALUE;
-    for (int i = 0; i < this.border_line_count(); ++i)
+    for (int i = 0; i < this.border_line_count(); i++)
     {
       Line curr_border_line = this.border_line(i);
       FloatPoint curr_intersection = curr_border_line.intersection_approx(intersection_line);
@@ -935,11 +931,11 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     int intersection_count = 0;
     int prev_intersection_line_no = -1;
     int prev_intersection_edge_no = -1;
-    for (int line_no = 1; line_no < p_polyline.arr.length - 1; ++line_no)
+    for (int line_no = 1; line_no < p_polyline.arr.length - 1; line_no++)
     {
       LineSegment curr_line_seg = new LineSegment(p_polyline, line_no);
       int[] curr_intersections = curr_line_seg.border_intersections(this);
-      for (int i = 0; i < curr_intersections.length; ++i)
+      for (int i = 0; i < curr_intersections.length; i++)
       {
         int edge_no = curr_intersections[i];
         if (line_no != prev_intersection_line_no || edge_no != prev_intersection_edge_no)
@@ -1016,7 +1012,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       // between this intersections is completely contained in the border
       // and can be ignored
       boolean insert_piece = false;
-      for (int i = curr_intersection_no_of_polyline + 1; i < next_intersection_no_of_polyline; ++i)
+      for (int i = curr_intersection_no_of_polyline + 1; i < next_intersection_no_of_polyline; i++)
       {
         if (this.is_outside(p_polyline.corner(i)))
         {
@@ -1055,7 +1051,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     }
     Polyline[] result = new Polyline[pieces.size()];
     Iterator<Polyline> it = pieces.iterator();
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = it.next();
     }
@@ -1084,7 +1080,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     }
     TileShape[] section_boxes = this.bounding_box().divide_into_sections(p_max_section_width);
     Collection<TileShape> section_list = new LinkedList<>();
-    for (int i = 0; i < section_boxes.length; ++i)
+    for (int i = 0; i < section_boxes.length; i++)
     {
       TileShape curr_section = this.intersection_with_simplify(section_boxes[i]);
       if (curr_section.dimension() == 2)
@@ -1094,7 +1090,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     }
     TileShape[] result = new TileShape[section_list.size()];
     Iterator<TileShape> it = section_list.iterator();
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = it.next();
     }
@@ -1111,7 +1107,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
 
     Side[] border_line_side_of_start_point_arr = new Side[this.border_line_count()];
     Side[] border_line_side_of_end_point_arr = new Side[border_line_side_of_start_point_arr.length];
-    for (int i = 0; i < border_line_side_of_start_point_arr.length; ++i)
+    for (int i = 0; i < border_line_side_of_start_point_arr.length; i++)
     {
       Line curr_border_line = this.border_line(i);
       Side border_line_side_of_start_point = curr_border_line.side_of(float_start_point, 1);
@@ -1134,7 +1130,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       border_line_side_of_end_point_arr[i] = border_line_side_of_end_point;
     }
     boolean start_point_is_inside = true;
-    for (int i = 0; i < border_line_side_of_start_point_arr.length; ++i)
+    for (int i = 0; i < border_line_side_of_start_point_arr.length; i++)
     {
       if (border_line_side_of_start_point_arr[i] != Side.ON_THE_RIGHT)
       {
@@ -1147,7 +1143,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
       return true;
     }
     boolean end_point_is_inside = true;
-    for (int i = 0; i < border_line_side_of_end_point_arr.length; ++i)
+    for (int i = 0; i < border_line_side_of_end_point_arr.length; i++)
     {
       if (border_line_side_of_end_point_arr[i] != Side.ON_THE_RIGHT)
       {
@@ -1161,7 +1157,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
     }
     Line segment_line = p_line_segment.get_line();
     // Check, if this line segments intersect a border line of p_shape.
-    for (int i = 0; i < border_line_side_of_start_point_arr.length; ++i)
+    for (int i = 0; i < border_line_side_of_start_point_arr.length; i++)
     {
       Side border_line_side_of_start_point = border_line_side_of_start_point_arr[i];
       Side border_line_side_of_end_point = border_line_side_of_end_point_arr[i];
@@ -1181,8 +1177,7 @@ public abstract class TileShape extends PolylineShape implements ConvexShape, Se
         if (i == border_line_side_of_start_point_arr.length - 1)
         {
           next_corner_index = 0;
-        }
-        else
+        } else
         {
           next_corner_index = i + 1;
         }

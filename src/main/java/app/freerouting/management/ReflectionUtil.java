@@ -72,15 +72,15 @@ public class ReflectionUtil
     if (targetType == boolean.class || targetType == Boolean.class)
     {
       // convert "0" and "1" into their boolean values
-      if (value
-          .toString()
-          .equals("0"))
+      if ("0"
+          .equals(value
+          .toString()))
       {
         value = "false";
       }
-      else if (value
-          .toString()
-          .equals("1"))
+      else if ("1"
+          .equals(value
+          .toString()))
       {
         value = "true";
       }
@@ -296,5 +296,8 @@ public class ReflectionUtil
     }
 
     return result;
+  }
+
+  private ReflectionUtil() {
   }
 }

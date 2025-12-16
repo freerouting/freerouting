@@ -27,9 +27,9 @@ import java.util.List;
 public class BoardStatistics implements Serializable
 {
   @SerializedName("host")
-  public String host = null;
+  public String host;
   @SerializedName("unit")
-  public String unit = null;
+  public String unit;
   @SerializedName("board")
   public BoardStatisticsBoard board = new BoardStatisticsBoard();
   @SerializedName("layers")
@@ -110,28 +110,22 @@ public class BoardStatistics implements Serializable
       if (curr_item instanceof Trace)
       {
         this.items.traceCount++;
-      }
-      else if (curr_item instanceof Via)
+      } else if (curr_item instanceof Via)
       {
         this.items.viaCount++;
-      }
-      else if (curr_item instanceof ConductionArea)
+      } else if (curr_item instanceof ConductionArea)
       {
         this.items.conductionAreaCount++;
-      }
-      else if (curr_item instanceof DrillItem)
+      } else if (curr_item instanceof DrillItem)
       {
         this.items.drillItemCount++;
-      }
-      else if (curr_item instanceof Pin)
+      } else if (curr_item instanceof Pin)
       {
         this.items.pinCount++;
-      }
-      else if (curr_item instanceof ComponentOutline)
+      } else if (curr_item instanceof ComponentOutline)
       {
         this.items.componentOutlineCount++;
-      }
-      else
+      } else
       {
         this.items.otherCount++;
       }
@@ -173,7 +167,7 @@ public class BoardStatistics implements Serializable
     for (Trace trace : board.get_traces())
     {
       // Calculate segments for this trace
-      if (trace instanceof app.freerouting.board.PolylineTrace polylineTrace)
+      if (trace instanceof PolylineTrace polylineTrace)
       {
         Polyline polyline = polylineTrace.polyline();
         int cornerCount = polyline.corner_count();
@@ -243,10 +237,10 @@ public class BoardStatistics implements Serializable
     this.bends.otherAngleCount = 0;
     for (Trace trace : board.get_traces())
     {
-      if (trace instanceof app.freerouting.board.PolylineTrace polylineTrace)
+      if (trace instanceof PolylineTrace polylineTrace)
       {
         // Polyline traces can have bends between consecutive line segments
-        app.freerouting.geometry.planar.Polyline polyline = polylineTrace.polyline();
+        Polyline polyline = polylineTrace.polyline();
         int cornerCount = polyline.corner_count();
 
         // We have (cornerCount - 2) internal corners, each representing a potential bend
@@ -279,18 +273,16 @@ public class BoardStatistics implements Serializable
             double angle = Math.abs(Math.toDegrees(Math.atan2(dy2, dx2) - Math.atan2(dy1, dx1)));
             // Normalize the angle to [0, 180]
             angle = Math.min(angle, 360 - angle);
-            angle = (angle > 180) ? 360 - angle : angle;
+            angle = angle > 180 ? 360 - angle : angle;
 
             // Classify the bend - use a small tolerance for comparison
             if (Math.abs(angle - 90) < 1)
             {
               this.bends.ninetyDegreeCount++;
-            }
-            else if (Math.abs(angle - 45) < 1 || Math.abs(angle - 135) < 1)
+            } else if (Math.abs(angle - 45) < 1 || Math.abs(angle - 135) < 1)
             {
               this.bends.fortyFiveDegreeCount++;
-            }
-            else
+            } else
             {
               this.bends.otherAngleCount++;
             }

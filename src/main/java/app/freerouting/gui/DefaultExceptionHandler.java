@@ -1,12 +1,12 @@
 package app.freerouting.gui;
 
+import static javax.swing.JOptionPane.OK_OPTION;
+
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static javax.swing.JOptionPane.OK_OPTION;
 
 public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler
 {

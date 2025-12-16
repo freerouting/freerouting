@@ -1,9 +1,9 @@
 package app.freerouting.boardgraphics;
 
 import app.freerouting.board.LayerStructure;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Shape;
-import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 
 import java.awt.Polygon;
@@ -40,7 +40,7 @@ public class GraphicsContext implements Serializable
   /**
    * The layer, which is not automatically dimmed.
    */
-  private int fully_visible_layer = 0;
+  private int fully_visible_layer;
 
   public GraphicsContext(IntBox p_design_bounds, Dimension p_panel_bounds, LayerStructure p_layer_structure, Locale p_locale)
   {
@@ -49,13 +49,12 @@ public class GraphicsContext implements Serializable
     other_color_table = new OtherColorTableModel(p_locale);
     color_intensity_table = new ColorIntensityTable();
     layer_visibility_arr = new double[p_layer_structure.arr.length];
-    for (int i = 0; i < layer_visibility_arr.length; ++i)
+    for (int i = 0; i < layer_visibility_arr.length; i++)
     {
       if (p_layer_structure.arr[i].is_signal)
       {
         layer_visibility_arr[i] = 1.00;
-      }
-      else
+      } else
       {
         layer_visibility_arr[i] = 0.25;
       }
@@ -174,8 +173,7 @@ public class GraphicsContext implements Serializable
       if (show_line_segments)
       {
         g2.draw(line);
-      }
-      else
+      } else
       {
         draw_path.append(line, false);
       }
@@ -262,7 +260,7 @@ public class GraphicsContext implements Serializable
   {
     draw_boundary(p_area.get_border(), p_draw_half_width, p_color, p_g, p_translucency_factor);
     Shape[] holes = p_area.get_holes();
-    for (int i = 0; i < holes.length; ++i)
+    for (int i = 0; i < holes.length; i++)
     {
       draw_boundary(holes[i], p_draw_half_width, p_color, p_g, p_translucency_factor);
     }
@@ -389,7 +387,7 @@ public class GraphicsContext implements Serializable
       return;
     }
     GeneralPath draw_path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-    for (int j = 0; j < p_point_lists.length; ++j)
+    for (int j = 0; j < p_point_lists.length; j++)
     {
       Polygon draw_polygon = new Polygon();
       FloatPoint[] curr_point_list = p_point_lists[j];
@@ -437,20 +435,19 @@ public class GraphicsContext implements Serializable
       Shape[] holes = p_area.get_holes();
 
       FloatPoint[][] draw_polygons = new FloatPoint[holes.length + 1][];
-      for (int j = 0; j < draw_polygons.length; ++j)
+      for (int j = 0; j < draw_polygons.length; j++)
       {
         PolylineShape curr_draw_shape;
         if (j == 0)
         {
           curr_draw_shape = border;
-        }
-        else
+        } else
         {
           curr_draw_shape = (PolylineShape) holes[j - 1];
         }
         draw_polygons[j] = new FloatPoint[curr_draw_shape.border_line_count() + 1];
         FloatPoint[] curr_draw_polygon = draw_polygons[j];
-        for (int i = 0; i < curr_draw_polygon.length - 1; ++i)
+        for (int i = 0; i < curr_draw_polygon.length - 1; i++)
         {
           curr_draw_polygon[i] = curr_draw_shape.corner_approx(i);
         }
@@ -462,11 +459,11 @@ public class GraphicsContext implements Serializable
     if (show_area_division)
     {
       TileShape[] tiles = p_area.split_to_convex();
-      for (int i = 0; i < tiles.length; ++i)
+      for (int i = 0; i < tiles.length; i++)
       {
         FloatPoint[] corners = new FloatPoint[tiles[i].border_line_count() + 1];
         TileShape curr_tile = tiles[i];
-        for (int j = 0; j < corners.length - 1; ++j)
+        for (int j = 0; j < corners.length - 1; j++)
         {
           corners[j] = curr_tile.corner_approx(j);
         }

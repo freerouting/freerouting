@@ -1,5 +1,8 @@
 package app.freerouting.api.v1;
 
+import static app.freerouting.Freerouting.globalSettings;
+import static app.freerouting.management.gson.GsonProvider.GSON;
+
 import app.freerouting.constants.Constants;
 import app.freerouting.management.analytics.BigQueryClient;
 import app.freerouting.management.analytics.dto.Payload;
@@ -8,9 +11,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import static app.freerouting.Freerouting.globalSettings;
-import static app.freerouting.management.gson.GsonProvider.GSON;
 
 @Path("/v1/analytics")
 public class AnalyticsControllerV1

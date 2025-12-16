@@ -34,7 +34,7 @@ public class Sorted45DegreeRoomNeighbours
     sorted_neighbours = new TreeSet<>();
 
     edge_interior_touches_obstacle = new boolean[8];
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 8; i++)
     {
       edge_interior_touches_obstacle[i] = false;
     }
@@ -338,7 +338,7 @@ public class Sorted45DegreeRoomNeighbours
     double room_area = room_oct.area();
 
     boolean try_remove_edge_lines = false;
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 8; i++)
     {
       if (!this.edge_interior_touches_obstacle[i])
       {

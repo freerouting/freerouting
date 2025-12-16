@@ -94,8 +94,7 @@ public class Connection
           {
             start_point = prev_contact_point;
             start_layer = prev_contact_layer;
-          }
-          else if (!prev_contact_point.equals(start_point))
+          } else if (!prev_contact_point.equals(start_point))
           {
             end_point = prev_contact_point;
             end_layer = prev_contact_layer;

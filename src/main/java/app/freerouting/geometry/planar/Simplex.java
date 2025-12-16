@@ -60,7 +60,7 @@ public class Simplex extends TileShape implements Serializable
   @Override
   public boolean is_empty()
   {
-    return (arr.length == 0);
+    return arr.length == 0;
   }
 
   /**
@@ -127,7 +127,7 @@ public class Simplex extends TileShape implements Serializable
     IntVector curr_dir = (IntVector) arr[no]
         .direction()
         .get_vector();
-    return (prev_dir.determinant(curr_dir) > 0);
+    return prev_dir.determinant(curr_dir) > 0;
   }
 
   /**
@@ -144,7 +144,7 @@ public class Simplex extends TileShape implements Serializable
     {
       return false;
     }
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (!corner_is_bounded(i))
       {
@@ -265,7 +265,7 @@ public class Simplex extends TileShape implements Serializable
     {
       precalculated_float_corners = new FloatPoint[arr.length];
     }
-    for (int i = 0; i < precalculated_float_corners.length; ++i)
+    for (int i = 0; i < precalculated_float_corners.length; i++)
     {
       if (precalculated_float_corners[i] == null)
       // corner is not yet calculated
@@ -274,8 +274,7 @@ public class Simplex extends TileShape implements Serializable
         if (i == 0)
         {
           prev = arr[arr.length - 1];
-        }
-        else
+        } else
         {
           prev = arr[i - 1];
         }
@@ -390,7 +389,7 @@ public class Simplex extends TileShape implements Serializable
     double max_distance_2 = Integer.MIN_VALUE;
     FloatPoint gravity_point = this.centre_of_gravity();
 
-    for (int i = 0; i < border_line_count(); ++i)
+    for (int i = 0; i < border_line_count(); i++)
     {
       double curr_distance = Math.abs(arr[i].signed_distance(gravity_point));
 
@@ -398,8 +397,7 @@ public class Simplex extends TileShape implements Serializable
       {
         max_distance_2 = max_distance;
         max_distance = curr_distance;
-      }
-      else if (curr_distance > max_distance_2)
+      } else if (curr_distance > max_distance_2)
       {
         max_distance_2 = curr_distance;
       }
@@ -418,7 +416,7 @@ public class Simplex extends TileShape implements Serializable
     double min_distance_2 = Integer.MAX_VALUE;
     FloatPoint gravity_point = this.centre_of_gravity();
 
-    for (int i = 0; i < border_line_count(); ++i)
+    for (int i = 0; i < border_line_count(); i++)
     {
       double curr_distance = Math.abs(arr[i].signed_distance(gravity_point));
 
@@ -426,8 +424,7 @@ public class Simplex extends TileShape implements Serializable
       {
         min_distance_2 = min_distance;
         min_distance = curr_distance;
-      }
-      else if (curr_distance < min_distance_2)
+      } else if (curr_distance < min_distance_2)
       {
         min_distance_2 = curr_distance;
       }
@@ -441,7 +438,7 @@ public class Simplex extends TileShape implements Serializable
   @Override
   public boolean is_IntBox()
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       Line curr_line = arr[i];
       if (!(curr_line.a instanceof IntPoint && curr_line.b instanceof IntPoint))
@@ -466,7 +463,7 @@ public class Simplex extends TileShape implements Serializable
   @Override
   public boolean is_IntOctagon()
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       Line curr_line = arr[i];
       if (!(curr_line.a instanceof IntPoint && curr_line.b instanceof IntPoint))
@@ -513,7 +510,7 @@ public class Simplex extends TileShape implements Serializable
     int ly = -Limits.CRIT_INT;
     int llx = -Limits.CRIT_INT;
     int ulx = -Limits.CRIT_INT;
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       Line curr_line = arr[i];
       IntPoint a = (IntPoint) curr_line.a;
@@ -550,21 +547,18 @@ public class Simplex extends TileShape implements Serializable
         {
           // lower right boundary line
           lrx = a.x - a.y;
-        }
-        else if (a.x > b.x)
+        } else if (a.x > b.x)
         {
           // upper right boundary line
           urx = a.x + a.y;
         }
-      }
-      else if (a.y > b.y)
+      } else if (a.y > b.y)
       {
         if (a.x < b.x)
         {
           // lower left boundary line
           llx = a.x + a.y;
-        }
-        else if (a.x > b.x)
+        } else if (a.x > b.x)
         {
           // upper left boundary line
           ulx = a.x - a.y;
@@ -586,7 +580,7 @@ public class Simplex extends TileShape implements Serializable
       return this;
     }
     Line[] new_arr = new Line[arr.length];
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       new_arr[i] = arr[i].translate_by(p_vector);
     }
@@ -610,7 +604,7 @@ public class Simplex extends TileShape implements Serializable
       double lly = Integer.MAX_VALUE;
       double urx = Integer.MIN_VALUE;
       double ury = Integer.MIN_VALUE;
-      for (int i = 0; i < arr.length; ++i)
+      for (int i = 0; i < arr.length; i++)
       {
         FloatPoint curr = corner_approx(i);
         llx = Math.min(llx, curr.x);
@@ -641,7 +635,7 @@ public class Simplex extends TileShape implements Serializable
       double lrx = Integer.MIN_VALUE;
       double llx = Integer.MAX_VALUE;
       double urx = Integer.MIN_VALUE;
-      for (int i = 0; i < arr.length; ++i)
+      for (int i = 0; i < arr.length; i++)
       {
         FloatPoint curr = corner_approx(i);
         lx = Math.min(lx, curr.x);
@@ -691,7 +685,7 @@ public class Simplex extends TileShape implements Serializable
       return this;
     }
     Line[] new_arr = new Line[arr.length];
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       new_arr[i] = arr[i].translate(-p_width);
     }
@@ -733,7 +727,7 @@ public class Simplex extends TileShape implements Serializable
     Point pole = p_from_point;
     Point right_most_corner = corner(0);
     int result = 0;
-    for (int i = 1; i < arr.length; ++i)
+    for (int i = 1; i < arr.length; i++)
     {
       Point curr_corner = corner(i);
       if (curr_corner.side_of(pole, right_most_corner) == Side.ON_THE_RIGHT)
@@ -800,7 +794,7 @@ public class Simplex extends TileShape implements Serializable
   @Override
   public int border_line_index(Line p_line)
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (p_line.equals(arr[i]))
       {
@@ -867,7 +861,7 @@ public class Simplex extends TileShape implements Serializable
     }
     int inner_corner_count = inner_simplex.arr.length;
     Line[][] division_line_arr = new Line[inner_corner_count][];
-    for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no)
+    for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; inner_corner_no++)
     {
       division_line_arr[inner_corner_no] = inner_simplex.calc_division_lines(inner_corner_no, p_outer_simplex);
       if (division_line_arr[inner_corner_no] == null)
@@ -884,14 +878,13 @@ public class Simplex extends TileShape implements Serializable
     IntDirection first_direction = (IntDirection) first_division_line.direction();
     Collection<Simplex> result_list = new LinkedList<>();
 
-    for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no)
+    for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; inner_corner_no++)
     {
       Line next_division_line;
       if (inner_corner_no == inner_simplex.arr.length - 1)
       {
         next_division_line = division_line_arr[0][0];
-      }
-      else
+      } else
       {
         next_division_line = division_line_arr[inner_corner_no + 1][0];
       }
@@ -918,7 +911,7 @@ public class Simplex extends TileShape implements Serializable
         }
         if (!check_cross_first_line)
         {
-          check_cross_first_line = (inner_corner_no > 0 && curr_dir.determinant(first_direction) > 0);
+          check_cross_first_line = inner_corner_no > 0 && curr_dir.determinant(first_direction) > 0;
         }
         if (check_cross_first_line)
         {
@@ -1042,7 +1035,7 @@ public class Simplex extends TileShape implements Serializable
     }
     Simplex[] result = new Simplex[result_list.size()];
     Iterator<Simplex> it = result_list.iterator();
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = it.next();
     }
@@ -1073,7 +1066,7 @@ public class Simplex extends TileShape implements Serializable
     int new_length = 1;
     line_arr[0] = arr[0];
     Line prev = line_arr[0];
-    for (int i = 1; i < arr.length; ++i)
+    for (int i = 1; i < arr.length; i++)
     {
       if (!arr[i].fast_equals(prev))
       {
@@ -1097,13 +1090,12 @@ public class Simplex extends TileShape implements Serializable
       Line prev_line = line_arr[prev_ind];
       Line curr_line = line_arr[0];
       Line next_line;
-      for (int ind = 0; ind < new_length; ++ind)
+      for (int ind = 0; ind < new_length; ind++)
       {
         if (ind == new_length - 1)
         {
           next_ind = 0;
-        }
-        else
+        } else
         {
           next_ind = ind + 1;
         }
@@ -1126,9 +1118,8 @@ public class Simplex extends TileShape implements Serializable
             // if the intersection of prev_line and next_line
             // is on the left of curr_line, curr_line does not
             // contribute to the shape of the simplex
-            remove_line = (intersection_sides[ind] != Side.ON_THE_LEFT);
-          }
-          else
+            remove_line = intersection_sides[ind] != Side.ON_THE_LEFT;
+          } else
           // direction of next_line is smaller than direction of prev_line
           {
 
@@ -1147,8 +1138,7 @@ public class Simplex extends TileShape implements Serializable
               }
             }
           }
-        }
-        else // prev_line and next_line are parallel
+        } else // prev_line and next_line are parallel
         {
           if (prev_line.side_of(next_line.a) == Side.ON_THE_LEFT)
           // prev_line is to the left of next_line,
@@ -1164,7 +1154,7 @@ public class Simplex extends TileShape implements Serializable
         {
           try_again = true;
           --new_length;
-          for (int i = ind; i < new_length; ++i)
+          for (int i = ind; i < new_length; i++)
           {
             line_arr[i] = line_arr[i + 1];
             intersection_sides[i] = intersection_sides[i + 1];
@@ -1184,16 +1174,14 @@ public class Simplex extends TileShape implements Serializable
           if (ind >= new_length)
           {
             next_ind = 0;
-          }
-          else
+          } else
           {
             next_ind = ind;
           }
           intersection_sides[next_ind] = null;
           --ind;
           index_of_last_removed_line = ind;
-        }
-        else
+        } else
         {
           prev_line = curr_line;
           prev_ind = ind;
@@ -1317,7 +1305,7 @@ public class Simplex extends TileShape implements Serializable
 
     double min_distance = Integer.MAX_VALUE;
 
-    for (int ind = 0; ind < p_outer_simplex.arr.length; ++ind)
+    for (int ind = 0; ind < p_outer_simplex.arr.length; ind++)
     {
       Line outer_line = p_outer_simplex.arr[outer_line_no];
       IntDirection curr_projection_dir = (IntDirection) inner_corner.perpendicular_direction(outer_line);
@@ -1346,8 +1334,7 @@ public class Simplex extends TileShape implements Serializable
             if (tmp_outer_line_no == p_outer_simplex.arr.length - 1)
             {
               tmp_outer_line_no = 0;
-            }
-            else
+            } else
             {
               ++tmp_outer_line_no;
             }
@@ -1384,8 +1371,7 @@ public class Simplex extends TileShape implements Serializable
       if (outer_line_no == p_outer_simplex.arr.length - 1)
       {
         outer_line_no = 0;
-      }
-      else
+      } else
       {
         ++outer_line_no;
       }

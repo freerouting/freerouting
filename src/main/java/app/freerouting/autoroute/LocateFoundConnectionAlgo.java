@@ -65,7 +65,7 @@ public abstract class LocateFoundConnectionAlgo
     Collection<BacktrackElement> backtrack_list = backtrack(p_maze_search_result, p_ripped_item_list);
     this.backtrack_array = new BacktrackElement[backtrack_list.size()];
     Iterator<BacktrackElement> it = backtrack_list.iterator();
-    for (int i = 0; i < backtrack_array.length; ++i)
+    for (int i = 0; i < backtrack_array.length; i++)
     {
       this.backtrack_array[i] = it.next();
     }
@@ -250,8 +250,7 @@ public abstract class LocateFoundConnectionAlgo
       if (curr_backtrack_door instanceof ExpansionDrill curr_drill)
       {
         curr_next_room = curr_drill.room_arr[curr_section_no];
-      }
-      else
+      } else
       {
         curr_next_room = curr_backtrack_door.other_room(curr_next_room);
       }
@@ -438,7 +437,7 @@ public abstract class LocateFoundConnectionAlgo
     // Construct the result item
     IntPoint[] corner_arr = new IntPoint[rounded_corner_list.size()];
     Iterator<IntPoint> it2 = rounded_corner_list.iterator();
-    for (int i = 0; i < corner_arr.length; ++i)
+    for (int i = 0; i < corner_arr.length; i++)
     {
       corner_arr[i] = it2.next();
     }
@@ -458,7 +457,7 @@ public abstract class LocateFoundConnectionAlgo
    */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context)
   {
-    for (int i = 0; i < backtrack_array.length; ++i)
+    for (int i = 0; i < backtrack_array.length; i++)
     {
       CompleteExpansionRoom next_room = backtrack_array[i].next_room;
       if (next_room != null)

@@ -87,7 +87,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
    */
   public int get_pin_no(String p_name)
   {
-    for (int i = 0; i < pin_arr.length; ++i)
+    for (int i = 0; i < pin_arr.length; i++)
     {
       if (pin_arr[i].name.equals(p_name))
       {
@@ -118,7 +118,7 @@ public class Package implements Comparable<Package>, ObjectInfoPanel.Printable, 
 
     p_window.append_bold(tm.getText("package") + " ");
     p_window.append_bold(this.name);
-    for (int i = 0; i < this.pin_arr.length; ++i)
+    for (int i = 0; i < this.pin_arr.length; i++)
     {
       Pin curr_pin = this.pin_arr[i];
       p_window.newline();

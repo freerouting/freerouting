@@ -1,10 +1,12 @@
 package app.freerouting.designforms.specctra;
 
+import app.freerouting.board.Layer;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
+import app.freerouting.rules.NetClass;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -54,13 +56,11 @@ public abstract class Rule
         {
           // this is a "(width" rule
           curr_rule = read_width_rule(p_scanner);
-        }
-        else if (current_token == Keyword.CLEARANCE)
+        } else if (current_token == Keyword.CLEARANCE)
         {
           // this is a "(clear" rule
           curr_rule = read_clearance_rule(p_scanner);
-        }
-        else
+        } else
         {
           ScopeKeyword.skip_scope(p_scanner);
         }
@@ -134,7 +134,7 @@ public abstract class Rule
     return new WidthRule(value);
   }
 
-  public static void write_scope(app.freerouting.rules.NetClass p_net_class, WriteScopeParameter p_par) throws IOException
+  public static void write_scope(NetClass p_net_class, WriteScopeParameter p_par) throws IOException
   {
     p_par.file.start_scope();
     p_par.file.write("rule");
@@ -147,7 +147,7 @@ public abstract class Rule
     p_par.file.write(String.valueOf(trace_width));
     p_par.file.write(")");
     p_par.file.end_scope();
-    for (int i = 1; i < p_par.board.layer_structure.arr.length; ++i)
+    for (int i = 1; i < p_par.board.layer_structure.arr.length; i++)
     {
       if (p_net_class.get_trace_half_width(i) != default_trace_half_width)
       {
@@ -156,12 +156,12 @@ public abstract class Rule
     }
   }
 
-  private static void write_layer_rule(app.freerouting.rules.NetClass p_net_class, int p_layer_no, WriteScopeParameter p_par) throws IOException
+  private static void write_layer_rule(NetClass p_net_class, int p_layer_no, WriteScopeParameter p_par) throws IOException
   {
     p_par.file.start_scope();
     p_par.file.write("layer_rule ");
 
-    app.freerouting.board.Layer curr_board_layer = p_par.board.layer_structure.arr[p_layer_no];
+    Layer curr_board_layer = p_par.board.layer_structure.arr[p_layer_no];
 
     p_par.file.write(curr_board_layer.name);
     p_par.file.start_scope();
@@ -224,9 +224,9 @@ public abstract class Rule
     ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
 
-    for (int i = 1; i <= cl_count; ++i)
+    for (int i = 1; i <= cl_count; i++)
     {
-      for (int j = i; j < cl_count; ++j)
+      for (int j = i; j < cl_count; j++)
       {
         int curr_board_clearance = cl_matrix.get_value(i, j, p_layer, false);
 
@@ -257,7 +257,7 @@ public abstract class Rule
     ClearanceMatrix cl_matrix = p_par.board.rules.clearance_matrix;
     int cl_count = p_par.board.rules.clearance_matrix.get_class_count();
 
-    for (int i = 1; i < cl_count; ++i)
+    for (int i = 1; i < cl_count; i++)
     {
       if (Objects.equals(cl_matrix.get_name(i), "default"))
       {

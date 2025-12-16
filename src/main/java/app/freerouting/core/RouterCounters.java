@@ -11,23 +11,23 @@ public class RouterCounters implements Serializable
 {
   // The number of items on the board that are in the queue to be routed in the current pass
   @SerializedName("pass_count")
-  public Integer passCount = null;
+  public Integer passCount;
   // The number of items on the board that are in the queue to be routed in the current pass
   @SerializedName("queued_to_be_routed_count")
-  public Integer queuedToBeRoutedCount = null;
+  public Integer queuedToBeRoutedCount;
   // The number of items on the board that got successfully routed in this pass
   @SerializedName("routed_count")
-  public Integer routedCount = null;
+  public Integer routedCount;
   // The number of items on the board that were skipped in this pass
   @SerializedName("skipped_count")
-  public Integer skippedCount = null;
+  public Integer skippedCount;
   // The number of items on the board that were ripped in this pass
   @SerializedName("ripped_count")
-  public Integer rippedCount = null;
+  public Integer rippedCount;
   // The number of items on the board that were failed to be routed in this pass
   @SerializedName("failed_to_be_routed_count")
-  public Integer failedToBeRoutedCount = null;
+  public Integer failedToBeRoutedCount;
   // The number of items on the board that are still in the ratsnest (so they are not yet routed)
   @SerializedName("incomplete_count")
-  public Integer incompleteCount = null;
+  public Integer incompleteCount;
 }

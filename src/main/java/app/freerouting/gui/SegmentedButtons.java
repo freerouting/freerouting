@@ -114,8 +114,7 @@ public class SegmentedButtons extends JPanel
           this.setForeground(selectedTextColor);
           this.setBackground(selectedColor);
           this.setOpaque(true);
-        }
-        else
+        } else
         {
           this.setFont(new Font("Dialog", Font.PLAIN, 12));
           this.setForeground(textColor);
@@ -145,8 +144,7 @@ public class SegmentedButtons extends JPanel
           button.setForeground(selectedTextColor);
           button.setBackground(selectedAndHoverColor);
           button.setOpaque(true);
-        }
-        else
+        } else
         {
           button.setForeground(textColor);
           button.setBackground(hoverColor);
@@ -163,8 +161,7 @@ public class SegmentedButtons extends JPanel
           button.setForeground(selectedTextColor);
           button.setBackground(selectedColor);
           button.setOpaque(true);
-        }
-        else
+        } else
         {
           button.setForeground(textColor);
           button.setOpaque(false);

@@ -1,6 +1,7 @@
 package app.freerouting.board;
 
 import app.freerouting.core.RoutingJob;
+import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 
@@ -31,7 +32,7 @@ public class BoardLoader
     }
     
     // Only DSN format is supported for now
-    if (job.input.format != app.freerouting.gui.FileFormat.DSN)
+    if (job.input.format != FileFormat.DSN)
     {
       FRLogger.error("Cannot load board: only DSN format is supported, got " + job.input.format, null);
       return false;
@@ -52,5 +53,8 @@ public class BoardLoader
       FRLogger.error("Failed to load board from DSN file", e);
       return false;
     }
+  }
+
+  private BoardLoader() {
   }
 }

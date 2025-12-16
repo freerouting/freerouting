@@ -44,7 +44,7 @@ public class PolylineTrace extends Trace implements Serializable
   public Item copy(int p_id_no)
   {
     int[] curr_net_no_arr = new int[this.net_count()];
-    for (int i = 0; i < curr_net_no_arr.length; ++i)
+    for (int i = 0; i < curr_net_no_arr.length; i++)
     {
       curr_net_no_arr[i] = get_net_no(i);
     }
@@ -263,7 +263,7 @@ public class PolylineTrace extends Trace implements Serializable
     if (reverse_order)
     {
       other_lines = new Line[other_trace.lines.arr.length];
-      for (int i = 0; i < other_lines.length; ++i)
+      for (int i = 0; i < other_lines.length; i++)
       {
         other_lines[i] = other_trace.lines.arr[other_lines.length - 1 - i].opposite();
       }
@@ -375,7 +375,7 @@ public class PolylineTrace extends Trace implements Serializable
     if (reverse_order)
     {
       other_lines = new Line[other_trace.lines.arr.length];
-      for (int i = 0; i < other_lines.length; ++i)
+      for (int i = 0; i < other_lines.length; i++)
       {
         other_lines[i] = other_trace.lines.arr[other_lines.length - 1 - i].opposite();
       }
@@ -453,7 +453,7 @@ public class PolylineTrace extends Trace implements Serializable
     }
     boolean own_trace_split = false;
     ShapeSearchTree default_tree = board.search_tree_manager.get_default_tree();
-    for (int i = 0; i < this.lines.arr.length - 2; ++i)
+    for (int i = 0; i < this.lines.arr.length - 2; i++)
     {
       if (p_clip_shape != null)
       {
@@ -498,8 +498,7 @@ public class PolylineTrace extends Trace implements Serializable
             {
               continue;
             }
-          }
-          else
+          } else
           {
             if (lines
                 .corner(found_entry.shape_index_in_object + 1)
@@ -524,14 +523,14 @@ public class PolylineTrace extends Trace implements Serializable
 
           if (found_trace != this)
           {
-            for (int j = 0; j < intersecting_lines.length; ++j)
+            for (int j = 0; j < intersecting_lines.length; j++)
             {
               int line_no = found_entry.shape_index_in_object + 1;
               PolylineTrace[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[j]);
               if (curr_split_pieces != null)
               {
 
-                for (int k = 0; k < 2; ++k)
+                for (int k = 0; k < 2; k++)
                 {
                   if (curr_split_pieces[k] != null)
                   {
@@ -557,7 +556,7 @@ public class PolylineTrace extends Trace implements Serializable
           // now try splitting the own trace
 
           intersecting_lines = curr_line_segment.intersection(found_line_segment);
-          for (int j = 0; j < intersecting_lines.length; ++j)
+          for (int j = 0; j < intersecting_lines.length; j++)
           {
             PolylineTrace[] curr_split_pieces = split(i + 1, intersecting_lines[j]);
             if (curr_split_pieces != null)
@@ -580,7 +579,7 @@ public class PolylineTrace extends Trace implements Serializable
             // something was split,
             // remove cycles containing a split piece
             Iterator<PolylineTrace> it2 = split_pieces.iterator();
-            for (int j = 0; j < 2; ++j)
+            for (int j = 0; j < 2; j++)
             {
               while (it2.hasNext())
               {
@@ -597,8 +596,7 @@ public class PolylineTrace extends Trace implements Serializable
           {
             break;
           }
-        }
-        else if (found_item instanceof DrillItem curr_drill_item)
+        } else if (found_item instanceof DrillItem curr_drill_item)
         {
           Point split_point = curr_drill_item.get_center();
           if (curr_line_segment.contains(split_point))
@@ -610,8 +608,7 @@ public class PolylineTrace extends Trace implements Serializable
             Line split_line = new Line(split_point, split_line_direction);
             split(i + 1, split_line);
           }
-        }
-        else if (!this.is_user_fixed() && (found_item instanceof ConductionArea))
+        } else if (!this.is_user_fixed() && (found_item instanceof ConductionArea))
         {
           boolean ignore_areas = false;
           if (this.net_no_arr.length > 0)
@@ -709,7 +706,7 @@ public class PolylineTrace extends Trace implements Serializable
   @Override
   public Trace[] split(Point p_point)
   {
-    for (int i = 0; i < this.lines.arr.length - 2; ++i)
+    for (int i = 0; i < this.lines.arr.length - 2; i++)
     {
       LineSegment curr_line_segment = new LineSegment(this.lines, i + 1);
       if (curr_line_segment.contains(p_point))
@@ -799,7 +796,7 @@ public class PolylineTrace extends Trace implements Serializable
       }
     }
     Collection<PolylineTrace> split_pieces = this.split(p_clip_shape);
-    boolean result = (split_pieces.size() != 1);
+    boolean result = split_pieces.size() != 1;
     for (PolylineTrace curr_split_trace : split_pieces)
     {
       if (curr_split_trace.is_on_the_board())
@@ -994,7 +991,7 @@ public class PolylineTrace extends Trace implements Serializable
     // the lines of the existing trace
     int last_index = Math.min(p_new_polyline.arr.length, lines.arr.length);
     int index_of_first_different_line = last_index;
-    for (int i = 0; i < last_index; ++i)
+    for (int i = 0; i < last_index; i++)
     {
       if (p_new_polyline.arr[i] != lines.arr[i])
       {
@@ -1009,7 +1006,7 @@ public class PolylineTrace extends Trace implements Serializable
     // look for the last line in p_new_polyline different from
     // the lines of the existing trace
     int index_of_last_different_line = -1;
-    for (int i = 1; i <= last_index; ++i)
+    for (int i = 1; i <= last_index; i++)
     {
       if (p_new_polyline.arr[p_new_polyline.arr.length - i] != lines.arr[lines.arr.length - i])
       {
@@ -1232,7 +1229,7 @@ public class PolylineTrace extends Trace implements Serializable
       else if (curr_exit_corner_distance < min_exit_corner_distance + TOLERANCE)
       {
         // the distances are near equal, compare to the previous corners of p_trace_polyline
-        for (int i = 1; i < trace_polyline.corner_count(); ++i)
+        for (int i = 1; i < trace_polyline.corner_count(); i++)
         {
           FloatPoint curr_trace_corner = trace_polyline.corner_approx(i);
           double curr_trace_corner_distance = curr_trace_corner.distance_square(curr_exit_corner);
@@ -1241,8 +1238,7 @@ public class PolylineTrace extends Trace implements Serializable
           {
             new_nearest_corner_found = true;
             break;
-          }
-          else if (curr_trace_corner_distance > old_trace_corner_distance + TOLERANCE)
+          } else if (curr_trace_corner_distance > old_trace_corner_distance + TOLERANCE)
           {
             break;
           }
@@ -1269,7 +1265,7 @@ public class PolylineTrace extends Trace implements Serializable
     if (counter_clock_wise_side_diff <= clock_wise_side_diff)
     {
       curr_lines = new Line[counter_clock_wise_side_diff + 3];
-      for (int i = 0; i <= counter_clock_wise_side_diff; ++i)
+      for (int i = 0; i <= counter_clock_wise_side_diff; i++)
       {
         curr_lines[i + 1] = offset_pin_shape.border_line(curr_border_line_no);
         curr_border_line_no = (curr_border_line_no + 1) % corner_count;
@@ -1278,7 +1274,7 @@ public class PolylineTrace extends Trace implements Serializable
     else
     {
       curr_lines = new Line[clock_wise_side_diff + 3];
-      for (int i = 0; i <= clock_wise_side_diff; ++i)
+      for (int i = 0; i <= clock_wise_side_diff; i++)
       {
         curr_lines[i + 1] = offset_pin_shape.border_line(curr_border_line_no);
         curr_border_line_no = (curr_border_line_no - 1 + corner_count) % corner_count;
@@ -1372,9 +1368,9 @@ public class PolylineTrace extends Trace implements Serializable
           .distance_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
       {
         // check also for sharp angle with the second line
-        check_swap = (contact_last_line
+        check_swap = contact_last_line
             .direction()
-            .projection(trace_polyline.arr[2].direction()) == Signum.NEGATIVE);
+            .projection(trace_polyline.arr[2].direction()) == Signum.NEGATIVE;
       }
     }
     if (!check_swap)

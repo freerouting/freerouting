@@ -76,7 +76,7 @@ public class BatchOptimizer extends NamedAlgorithm
       String current_board_hash = this.board.get_hash();
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));
 
-      boolean with_preferred_directions = (curr_pass_no % 2 != 0); // to create more variations
+      boolean with_preferred_directions = curr_pass_no % 2 != 0; // to create more variations
       route_improved = opt_route_pass(curr_pass_no, with_preferred_directions);
     }
 
@@ -120,7 +120,7 @@ public class BatchOptimizer extends NamedAlgorithm
         BoardStatistics boardStatisticsAfter = board.get_statistics();
         this.fireBoardUpdatedEvent(boardStatisticsAfter, routerCounters, board);
 
-        route_improved = (float) ((boardStatisticsBefore.items.viaCount != 0 && boardStatisticsBefore.traces.totalLength != 0) ? 1.0 - (((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount) + (boardStatisticsAfter.traces.totalLength / boardStatisticsBefore.traces.totalLength)) / 2)) : 0);
+        route_improved = (float) (boardStatisticsBefore.items.viaCount != 0 && boardStatisticsBefore.traces.totalLength != 0 ? 1.0 - ((((float) boardStatisticsAfter.items.viaCount / boardStatisticsBefore.items.viaCount) + (boardStatisticsAfter.traces.totalLength / boardStatisticsBefore.traces.totalLength)) / 2) : 0);
       }
     }
 
@@ -169,7 +169,7 @@ public class BatchOptimizer extends NamedAlgorithm
       // add also the fork items, especially because not all fork items may be
       // returned by ReadSortedRouteItems because of matching end points.
       Set<Item> curr_contact_list = curr_trace.get_start_contacts();
-      for (int i = 0; i < 2; ++i)
+      for (int i = 0; i < 2; i++)
       {
         if (contains_only_unfixed_traces(curr_contact_list))
         {
@@ -203,7 +203,7 @@ public class BatchOptimizer extends NamedAlgorithm
 
     // remove the items to be re-routed
     routingBoard.remove_items(ripped_connections);
-    for (int i = 0; i < p_item.net_count(); ++i)
+    for (int i = 0; i < p_item.net_count(); i++)
     {
       routingBoard.combine_traces(p_item.get_net_no(i));
     }
@@ -375,8 +375,7 @@ public class BatchOptimizer extends NamedAlgorithm
             if (first_corner.x < last_corner.x || first_corner.x == last_corner.x && first_corner.y < last_corner.y)
             {
               compare_corner = last_corner;
-            }
-            else
+            } else
             {
               compare_corner = first_corner;
             }

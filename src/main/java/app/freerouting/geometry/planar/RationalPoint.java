@@ -96,7 +96,7 @@ public class RationalPoint extends Point implements Serializable
     }
     det = BigIntAux.determinant(y, other.y, z, other.z);
 
-    return (det.signum() == 0);
+    return det.signum() == 0;
   }
 
   @Override
@@ -281,7 +281,7 @@ public class RationalPoint extends Point implements Serializable
         proj_x = proj_x.negate();
         proj_y = proj_y.negate();
       }
-      if ((proj_x.mod(denominator)).signum() == 0 && (proj_y.mod(denominator)).signum() == 0)
+      if (proj_x.mod(denominator).signum() == 0 && proj_y.mod(denominator).signum() == 0)
       {
         proj_x = proj_x.divide(denominator);
         proj_y = proj_y.divide(denominator);

@@ -51,16 +51,13 @@ public class Circuit
             min_trace_length = length_rule.min_length;
             max_trace_length = length_rule.max_length;
           }
-        }
-        else if (next_token == Keyword.USE_VIA)
+        } else if (next_token == Keyword.USE_VIA)
         {
           use_via.addAll(Structure.read_via_padstacks(p_scanner));
-        }
-        else if (next_token == Keyword.USE_LAYER)
+        } else if (next_token == Keyword.USE_LAYER)
         {
           use_layer.addAll(Arrays.stream(DsnFile.read_string_list_scope(p_scanner)).toList());
-        }
-        else
+        } else
         {
           ScopeKeyword.skip_scope(p_scanner);
         }
@@ -74,7 +71,7 @@ public class Circuit
     LengthMatchingRule result;
     double[] length_arr = new double[2];
     Object next_token = null;
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       try
       {
@@ -87,12 +84,10 @@ public class Circuit
       if (next_token instanceof Double double1)
       {
         length_arr[i] = double1;
-      }
-      else if (next_token instanceof Integer integer)
+      } else if (next_token instanceof Integer integer)
       {
         length_arr[i] = integer;
-      }
-      else
+      } else
       {
         FRLogger.warn("Circuit.read_length_scope: number expected at '" + p_scanner.get_scope_identifier() + "'");
         return null;
@@ -160,5 +155,8 @@ public class Circuit
       max_length = p_max_length;
       min_length = p_min_length;
     }
+  }
+
+  private Circuit() {
   }
 }

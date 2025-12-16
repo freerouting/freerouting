@@ -1,5 +1,7 @@
 package app.freerouting.interactive;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.autoroute.*;
 import app.freerouting.autoroute.events.*;
 import app.freerouting.board.AngleRestriction;
@@ -20,8 +22,6 @@ import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 import java.util.Objects;
-
-import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * GUI interactive thread for the batch auto-router + route optimizer.

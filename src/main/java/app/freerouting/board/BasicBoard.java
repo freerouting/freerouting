@@ -265,7 +265,7 @@ public class BasicBoard implements Serializable
    */
   public void insert_trace(Point[] p_points, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, FixedState p_fixed_state)
   {
-    for (int i = 0; i < p_points.length; ++i)
+    for (int i = 0; i < p_points.length; i++)
     {
       if (!this.bounding_box.contains(p_points[i]))
       {
@@ -286,7 +286,7 @@ public class BasicBoard implements Serializable
     insert_item(new_via);
     int from_layer = p_padstack.from_layer();
     int to_layer = p_padstack.to_layer();
-    for (int i = from_layer; i < to_layer; ++i)
+    for (int i = from_layer; i < to_layer; i++)
     {
       for (int curr_net_no : p_net_no_arr)
       {
@@ -869,8 +869,7 @@ public class BasicBoard implements Serializable
           {
             something_changed = true;
             result = true;
-          }
-          else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace))
+          } else if (!curr_trace.is_user_fixed() && this.remove_if_cycle(curr_trace))
           {
             something_changed = true;
             result = true;
@@ -975,7 +974,7 @@ public class BasicBoard implements Serializable
   {
     Set<Item> result = new TreeSet<>();
     TileShape[] tile_shapes = p_area.split_to_convex();
-    for (int i = 0; i < tile_shapes.length; ++i)
+    for (int i = 0; i < tile_shapes.length; i++)
     {
       Set<SearchTreeObject> curr_overlaps = overlapping_objects(tile_shapes[i], p_layer);
       for (SearchTreeObject curr_overlap : curr_overlaps)
@@ -997,7 +996,7 @@ public class BasicBoard implements Serializable
   {
     TileShape[] tiles = p_shape.split_to_convex();
     ShapeSearchTree default_tree = this.search_tree_manager.get_default_tree();
-    for (int i = 0; i < tiles.length; ++i)
+    for (int i = 0; i < tiles.length; i++)
     {
       TileShape curr_shape = tiles[i];
       if (!curr_shape.is_contained_in(bounding_box))
@@ -1009,7 +1008,7 @@ public class BasicBoard implements Serializable
       for (SearchTreeObject curr_ob : obstacles)
       {
         boolean is_obstacle = true;
-        for (int j = 0; j < p_net_no_arr.length; ++j)
+        for (int j = 0; j < p_net_no_arr.length; j++)
         {
           if (!curr_ob.is_obstacle(p_net_no_arr[j]))
           {
@@ -1068,7 +1067,7 @@ public class BasicBoard implements Serializable
         }
       }
       boolean is_obstacle = true;
-      for (int i = 0; i < p_net_no_arr.length; ++i)
+      for (int i = 0; i < p_net_no_arr.length; i++)
       {
         if (!curr_item.is_trace_obstacle(p_net_no_arr[i]))
         {
@@ -1114,7 +1113,7 @@ public class BasicBoard implements Serializable
   {
     Trace tmp_trace = new PolylineTrace(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, 0, FixedState.NOT_FIXED, this);
     Set<Pin> contact_pins = tmp_trace.touching_pins_at_end_corners();
-    for (int i = 0; i < tmp_trace.tile_shape_count(); ++i)
+    for (int i = 0; i < tmp_trace.tile_shape_count(); i++)
     {
       if (!this.check_trace_shape(tmp_trace.get_tile_shape(i), p_layer, p_net_no_arr, p_clearance_class, contact_pins))
       {
@@ -1145,7 +1144,7 @@ public class BasicBoard implements Serializable
     }
 
     // draw all items on the board
-    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MIDDLE_DRAW_PRIORITY; ++curr_priority)
+    for (int curr_priority = Drawable.MIN_DRAW_PRIORITY; curr_priority <= Drawable.MIDDLE_DRAW_PRIORITY; curr_priority++)
     {
       Iterator<UndoableObjects.UndoableObjectNode> it = item_list.start_read_object();
       for (; ; )
@@ -1398,7 +1397,7 @@ public class BasicBoard implements Serializable
 
       if (p_changed_nets != null)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           p_changed_nets.add(curr_item.get_net_no(i));
         }
@@ -1418,7 +1417,7 @@ public class BasicBoard implements Serializable
       }
       if (p_changed_nets != null)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           p_changed_nets.add(curr_item.get_net_no(i));
         }
@@ -1447,7 +1446,7 @@ public class BasicBoard implements Serializable
       communication.observers.notify_deleted(curr_item);
       if (p_changed_nets != null)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           p_changed_nets.add(curr_item.get_net_no(i));
         }
@@ -1467,7 +1466,7 @@ public class BasicBoard implements Serializable
       }
       if (p_changed_nets != null)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           p_changed_nets.add(curr_item.get_net_no(i));
         }
@@ -1559,14 +1558,14 @@ public class BasicBoard implements Serializable
     end_corners[0] = p_trace.first_corner();
     end_corners[1] = p_trace.last_corner();
     tail_at_endpoint_before = new boolean[2];
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       Trace tail = get_trace_tail(end_corners[i], curr_layer, curr_net_no_arr);
-      tail_at_endpoint_before[i] = (tail != null);
+      tail_at_endpoint_before[i] = tail != null;
     }
     Set<Item> connection_items = p_trace.get_connection_items();
     this.remove_items(connection_items);
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       if (!tail_at_endpoint_before[i])
       {

@@ -1,13 +1,13 @@
 package app.freerouting.management;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.core.Session;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static app.freerouting.Freerouting.globalSettings;
 
 /*
  * This class is responsible for maintaining the list of active and past sessions.

@@ -72,7 +72,7 @@ public class CoordinateTransform implements Serializable
   public double[] board_to_dsn(FloatPoint[] p_points)
   {
     double[] result = new double[2 * p_points.length];
-    for (int i = 0; i < p_points.length; ++i)
+    for (int i = 0; i < p_points.length; i++)
     {
       result[2 * i] = board_to_dsn(p_points[i].x) + base_x;
       result[2 * i + 1] = board_to_dsn(p_points[i].y) + base_y;
@@ -87,7 +87,7 @@ public class CoordinateTransform implements Serializable
   public double[] board_to_dsn(Line[] p_lines)
   {
     double[] result = new double[4 * p_lines.length];
-    for (int i = 0; i < p_lines.length; ++i)
+    for (int i = 0; i < p_lines.length; i++)
     {
       FloatPoint a = p_lines[i].a.to_float();
       FloatPoint b = p_lines[i].b.to_float();
@@ -106,7 +106,7 @@ public class CoordinateTransform implements Serializable
   public double[] board_to_dsn_rel(FloatPoint[] p_points)
   {
     double[] result = new double[2 * p_points.length];
-    for (int i = 0; i < p_points.length; ++i)
+    for (int i = 0; i < p_points.length; i++)
     {
       result[2 * i] = board_to_dsn(p_points[i].x);
       result[2 * i + 1] = board_to_dsn(p_points[i].y);

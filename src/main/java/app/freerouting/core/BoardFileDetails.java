@@ -22,10 +22,10 @@ public class BoardFileDetails implements Serializable
   protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners = new ArrayList<>();
   // The size of the file in bytes
   @SerializedName("size")
-  public long size = 0;
+  public long size;
   // The CRC32 checksum of the data
   @SerializedName("crc32")
-  public long crc32 = 0;
+  public long crc32;
   // The format of the file
   @SerializedName("format")
   public FileFormat format = FileFormat.UNKNOWN;

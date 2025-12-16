@@ -18,4 +18,7 @@ public class GsonProvider
       .serializeNulls()
       .setStrictness(Strictness.LENIENT)
       .create();
+
+  private GsonProvider() {
+  }
 }

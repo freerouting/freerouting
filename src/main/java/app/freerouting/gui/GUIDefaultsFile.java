@@ -180,22 +180,19 @@ public class GUIDefaultsFile
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.WINDOWS)
+        } else if (next_token == Keyword.WINDOWS)
         {
           if (!read_windows_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.PARAMETER)
+        } else if (next_token == Keyword.PARAMETER)
         {
           if (!read_parameter_scope())
           {
             return false;
           }
-        }
-        else
+        } else
         {
           // overread all scopes except the routes scope for the time being
           skip_scope(this.scanner);
@@ -304,7 +301,7 @@ public class GUIDefaultsFile
     {
       return false;
     }
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; i++)
     {
       next_token = this.scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET)
@@ -360,7 +357,7 @@ public class GUIDefaultsFile
   private Rectangle read_rectangle() throws IOException
   {
     int[] coor = new int[4];
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       Object next_token = this.scanner.next_token();
       if (!(next_token instanceof Integer))
@@ -437,113 +434,97 @@ public class GUIDefaultsFile
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.CONDUCTION)
+        } else if (next_token == Keyword.CONDUCTION)
         {
           if (!read_conduction_colors())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.HILIGHT)
+        } else if (next_token == Keyword.HILIGHT)
         {
           if (!read_hilight_color())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.INCOMPLETES)
+        } else if (next_token == Keyword.INCOMPLETES)
         {
           if (!read_incompletes_color())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.KEEPOUT)
+        } else if (next_token == Keyword.KEEPOUT)
         {
           if (!read_keepout_colors())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.OUTLINE)
+        } else if (next_token == Keyword.OUTLINE)
         {
           if (!read_outline_color())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.COMPONENT_FRONT)
+        } else if (next_token == Keyword.COMPONENT_FRONT)
         {
           if (!read_component_color(true))
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.COMPONENT_BACK)
+        } else if (next_token == Keyword.COMPONENT_BACK)
         {
           if (!read_component_color(false))
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.LENGTH_MATCHING)
+        } else if (next_token == Keyword.LENGTH_MATCHING)
         {
           if (!read_length_matching_color())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.PINS)
+        } else if (next_token == Keyword.PINS)
         {
           if (!read_pin_colors())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.TRACES)
+        } else if (next_token == Keyword.TRACES)
         {
           if (!read_trace_colors(false))
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.FIXED_TRACES)
+        } else if (next_token == Keyword.FIXED_TRACES)
         {
           if (!read_trace_colors(true))
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.VIA_KEEPOUT)
+        } else if (next_token == Keyword.VIA_KEEPOUT)
         {
           if (!read_via_keepout_colors())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.VIAS)
+        } else if (next_token == Keyword.VIAS)
         {
           if (!read_via_colors(false))
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.FIXED_VIAS)
+        } else if (next_token == Keyword.FIXED_VIAS)
         {
           if (!read_via_colors(true))
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.VIOLATIONS)
+        } else if (next_token == Keyword.VIOLATIONS)
         {
           if (!read_violations_color())
           {
             return false;
           }
-        }
-        else
+        } else
         {
           // skip unknown scope
           skip_scope(this.scanner);
@@ -819,7 +800,7 @@ public class GUIDefaultsFile
   private Color read_color() throws IOException
   {
     int[] rgb_color_arr = new int[3];
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; i++)
     {
       Object next_token = this.scanner.next_token();
       if (!(next_token instanceof Integer))
@@ -853,7 +834,7 @@ public class GUIDefaultsFile
     }
     Color[] result = new Color[color_list.size()];
     Iterator<Color> it = color_list.iterator();
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = it.next();
     }
@@ -965,7 +946,7 @@ public class GUIDefaultsFile
 
   private void write_color(Color[] p_colors) throws IOException
   {
-    for (int i = 0; i < p_colors.length; ++i)
+    for (int i = 0; i < p_colors.length; i++)
     {
       write_color_scope(p_colors[i]);
     }
@@ -999,92 +980,79 @@ public class GUIDefaultsFile
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.VIA_SNAP_TO_SMD_CENTER)
+        } else if (next_token == Keyword.VIA_SNAP_TO_SMD_CENTER)
         {
           if (!read_via_snap_to_smd_center_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.SHOVE_ENABLED)
+        } else if (next_token == Keyword.SHOVE_ENABLED)
         {
           if (!read_shove_enabled_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.DRAG_COMPONENTS_ENABLED)
+        } else if (next_token == Keyword.DRAG_COMPONENTS_ENABLED)
         {
           if (!read_drag_components_enabled_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.ROUTE_MODE)
+        } else if (next_token == Keyword.ROUTE_MODE)
         {
           if (!read_route_mode_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.PULL_TIGHT_REGION)
+        } else if (next_token == Keyword.PULL_TIGHT_REGION)
         {
           if (!read_pull_tight_region_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.PULL_TIGHT_ACCURACY)
+        } else if (next_token == Keyword.PULL_TIGHT_ACCURACY)
         {
           if (!read_pull_tight_accuracy_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.IGNORE_CONDUCTION_AREAS)
+        } else if (next_token == Keyword.IGNORE_CONDUCTION_AREAS)
         {
           if (!read_ignore_conduction_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.AUTOMATIC_LAYER_DIMMING)
+        } else if (next_token == Keyword.AUTOMATIC_LAYER_DIMMING)
         {
           if (!read_automatic_layer_dimming_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.CLEARANCE_COMPENSATION)
+        } else if (next_token == Keyword.CLEARANCE_COMPENSATION)
         {
           if (!read_clearance_compensation_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.HILIGHT_ROUTING_OBSTACLE)
+        } else if (next_token == Keyword.HILIGHT_ROUTING_OBSTACLE)
         {
           if (!read_hilight_routing_obstacle_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.SELECTABLE_ITEMS)
+        } else if (next_token == Keyword.SELECTABLE_ITEMS)
         {
           if (!read_selectable_item_scope())
           {
             return false;
           }
-        }
-        else if (next_token == Keyword.DESELECTED_SNAPSHOT_ATTRIBUTES)
+        } else if (next_token == Keyword.DESELECTED_SNAPSHOT_ATTRIBUTES)
         {
           if (!read_deselected_snapshot_attributes())
           {
             return false;
           }
-        }
-        else
+        } else
         {
           // skip unknown scope
           skip_scope(this.scanner);
@@ -1567,36 +1535,28 @@ public class GUIDefaultsFile
       if (next_token == Keyword.TRACES)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.TRACES, true);
-      }
-      else if (next_token == Keyword.VIAS)
+      } else if (next_token == Keyword.VIAS)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.VIAS, true);
-      }
-      else if (next_token == Keyword.PINS)
+      } else if (next_token == Keyword.PINS)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.PINS, true);
-      }
-      else if (next_token == Keyword.CONDUCTION)
+      } else if (next_token == Keyword.CONDUCTION)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.CONDUCTION, true);
-      }
-      else if (next_token == Keyword.KEEPOUT)
+      } else if (next_token == Keyword.KEEPOUT)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.KEEPOUT, true);
-      }
-      else if (next_token == Keyword.VIA_KEEPOUT)
+      } else if (next_token == Keyword.VIA_KEEPOUT)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.VIA_KEEPOUT, true);
-      }
-      else if (next_token == Keyword.FIXED)
+      } else if (next_token == Keyword.FIXED)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.FIXED, true);
-      }
-      else if (next_token == Keyword.UNFIXED)
+      } else if (next_token == Keyword.UNFIXED)
       {
         item_selection_filter.set_selected(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
-      }
-      else
+      } else
       {
         FRLogger.warn("GUIDefaultsFile.read_selectable_item_scope: unexpected token");
         return false;
@@ -1612,7 +1572,7 @@ public class GUIDefaultsFile
     out_file.new_line();
     ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
     ItemSelectionFilter.SelectableChoices[] selectable_choices = ItemSelectionFilter.SelectableChoices.values();
-    for (int i = 0; i < selectable_choices.length; ++i)
+    for (int i = 0; i < selectable_choices.length; i++)
     {
       if (item_selection_filter.is_selected(selectable_choices[i]))
       {
@@ -1714,60 +1674,46 @@ public class GUIDefaultsFile
       if (next_token == Keyword.OBJECT_COLORS)
       {
         attributes.object_colors = false;
-      }
-      else if (next_token == Keyword.OBJECT_VISIBILITY)
+      } else if (next_token == Keyword.OBJECT_VISIBILITY)
       {
         attributes.object_visibility = false;
-      }
-      else if (next_token == Keyword.LAYER_VISIBILITY)
+      } else if (next_token == Keyword.LAYER_VISIBILITY)
       {
         attributes.layer_visibility = false;
-      }
-      else if (next_token == Keyword.DISPLAY_REGION)
+      } else if (next_token == Keyword.DISPLAY_REGION)
       {
         attributes.display_region = false;
-      }
-      else if (next_token == Keyword.INTERACTIVE_STATE)
+      } else if (next_token == Keyword.INTERACTIVE_STATE)
       {
         attributes.interactive_state = false;
-      }
-      else if (next_token == Keyword.SELECTION_LAYERS)
+      } else if (next_token == Keyword.SELECTION_LAYERS)
       {
         attributes.selection_layers = false;
-      }
-      else if (next_token == Keyword.SELECTABLE_ITEMS)
+      } else if (next_token == Keyword.SELECTABLE_ITEMS)
       {
         attributes.selectable_items = false;
-      }
-      else if (next_token == Keyword.CURRENT_LAYER)
+      } else if (next_token == Keyword.CURRENT_LAYER)
       {
         attributes.current_layer = false;
-      }
-      else if (next_token == Keyword.RULE_SELECTION)
+      } else if (next_token == Keyword.RULE_SELECTION)
       {
         attributes.rule_selection = false;
-      }
-      else if (next_token == Keyword.MANUAL_RULE_SETTINGS)
+      } else if (next_token == Keyword.MANUAL_RULE_SETTINGS)
       {
         attributes.manual_rule_settings = false;
-      }
-      else if (next_token == Keyword.PUSH_AND_SHOVE_ENABLED)
+      } else if (next_token == Keyword.PUSH_AND_SHOVE_ENABLED)
       {
         attributes.push_and_shove_enabled = false;
-      }
-      else if (next_token == Keyword.DRAG_COMPONENTS_ENABLED)
+      } else if (next_token == Keyword.DRAG_COMPONENTS_ENABLED)
       {
         attributes.drag_components_enabled = false;
-      }
-      else if (next_token == Keyword.PULL_TIGHT_REGION)
+      } else if (next_token == Keyword.PULL_TIGHT_REGION)
       {
         attributes.pull_tight_region = false;
-      }
-      else if (next_token == Keyword.COMPONENT_GRID)
+      } else if (next_token == Keyword.COMPONENT_GRID)
       {
         attributes.component_grid = false;
-      }
-      else
+      } else
       {
         FRLogger.warn("GUIDefaultsFile.read_deselected_snapshot_attributes: unexpected token");
         return false;

@@ -1,5 +1,10 @@
 package app.freerouting.gui;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 @SuppressWarnings("all")
 
     /**
@@ -60,7 +65,7 @@ class GUIDefaultsScanner
   /**
    * the input device
    */
-  private java.io.Reader zzReader;
+  private Reader zzReader;
   /**
    * the current state of the DFA
    */
@@ -119,7 +124,7 @@ class GUIDefaultsScanner
    *
    * @param in the java.io.Reader to read input from.
    */
-  GUIDefaultsScanner(java.io.Reader in)
+  GUIDefaultsScanner(Reader in)
   {
     this.zzReader = in;
   }
@@ -129,9 +134,9 @@ class GUIDefaultsScanner
    *
    * @param in the java.io.Inputstream to read input from.
    */
-  GUIDefaultsScanner(java.io.InputStream in)
+  GUIDefaultsScanner(InputStream in)
   {
-    this(new java.io.InputStreamReader(in));
+    this(new InputStreamReader(in));
   }
 
   private static int[] zzUnpackAction()
@@ -260,7 +265,7 @@ class GUIDefaultsScanner
    * @return <code>false</code>, iff there was new input.
    * @throws java.io.IOException if any I/O-Error occurs
    */
-  private boolean zzRefill() throws java.io.IOException
+  private boolean zzRefill() throws IOException
   {
 
     /* first: make room (if you can) */
@@ -302,7 +307,7 @@ class GUIDefaultsScanner
   /**
    * Closes the input stream.
    */
-  public final void yyclose() throws java.io.IOException
+  public final void yyclose() throws IOException
   {
     zzAtEOF = true; /* indicate end of file */
     zzEndRead = zzStartRead; /* invalidate buffer    */
@@ -321,7 +326,7 @@ class GUIDefaultsScanner
    *
    * @param reader the new input stream
    */
-  public final void yyreset(java.io.Reader reader)
+  public final void yyreset(Reader reader)
   {
     zzReader = reader;
     zzAtBOL = true;
@@ -430,7 +435,7 @@ class GUIDefaultsScanner
    * @return the next token
    * @throws java.io.IOException if any I/O-Error occurs
    */
-  public Object next_token() throws java.io.IOException
+  public Object next_token() throws IOException
   {
     int zzInput;
     int zzAction;
@@ -956,6 +961,7 @@ class GUIDefaultsScanner
           break;
         case 2:
         {
+          break;
           /* ignore */
         }
         case 158:

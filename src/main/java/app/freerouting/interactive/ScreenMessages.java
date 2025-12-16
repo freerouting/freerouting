@@ -33,7 +33,7 @@ public class ScreenMessages
   private final JLabel unit_label;
   private final TextManager tm;
   private String prev_target_layer_name = empty_string;
-  private boolean write_protected = false;
+  private boolean write_protected;
 
   /**
    * Creates a new instance of ScreenMessages

@@ -28,9 +28,9 @@ public class Placement extends ScopeKeyword
 
     if (p_par.board.library.packages != null)
     {
-      for (int i = 1; i <= p_par.board.library.packages.count(); ++i)
+      for (int i = 1; i <= p_par.board.library.packages.count(); i++)
       {
-        app.freerouting.designforms.specctra.Package.write_placement_scope(p_par, p_par.board.library.packages.get(i));
+        Package.write_placement_scope(p_par, p_par.board.library.packages.get(i));
       }
     }
     p_par.file.end_scope();

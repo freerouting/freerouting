@@ -105,7 +105,7 @@ public class Padstacks implements Serializable
     ConvexShape[] shape_arr = new ConvexShape[board_layer_structure.arr.length];
     int from_layer = Math.max(p_from_layer, 0);
     int to_layer = Math.min(p_to_layer, board_layer_structure.arr.length - 1);
-    for (int i = from_layer; i <= to_layer; ++i)
+    for (int i = from_layer; i <= to_layer; i++)
     {
       shape_arr[i] = p_shape;
     }

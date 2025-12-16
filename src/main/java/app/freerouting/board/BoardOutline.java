@@ -33,7 +33,7 @@ public class BoardOutline extends Item implements Serializable
    * Used instead of keepout_area if only the line shapes of the outlines are inserted as keepout.
    */
   private TileShape[] keepout_lines;
-  private boolean keepout_outside_outline = false;
+  private boolean keepout_outside_outline;
 
   /**
    * Creates a new instance of BoardOutline

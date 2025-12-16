@@ -1,5 +1,7 @@
 package app.freerouting.api.v1;
 
+import static app.freerouting.management.gson.GsonProvider.GSON;
+
 import app.freerouting.api.BaseController;
 import app.freerouting.core.Session;
 import app.freerouting.logger.FRLogger;
@@ -12,8 +14,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
-
-import static app.freerouting.management.gson.GsonProvider.GSON;
 
 @Path("/v1/sessions")
 public class SessionControllerV1 extends BaseController

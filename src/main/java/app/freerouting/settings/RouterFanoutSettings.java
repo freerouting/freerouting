@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class RouterFanoutSettings implements Serializable
 {
   @SerializedName("enabled")
-  public boolean enabled = false;
+  public boolean enabled;
   @SerializedName("algorithm")
   public String algorithm = "freerouting-fanout";
   @SerializedName("max_passes")

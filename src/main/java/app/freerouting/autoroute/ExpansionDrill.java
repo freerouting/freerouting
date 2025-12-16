@@ -49,7 +49,7 @@ public class ExpansionDrill implements ExpandableObject
     int layer_count = p_last_layer - p_first_layer + 1;
     room_arr = new CompleteExpansionRoom[layer_count];
     maze_search_info_arr = new MazeSearchElement[layer_count];
-    for (int i = 0; i < maze_search_info_arr.length; ++i)
+    for (int i = 0; i < maze_search_info_arr.length; i++)
     {
       maze_search_info_arr[i] = new MazeSearchElement();
     }
@@ -64,7 +64,7 @@ public class ExpansionDrill implements ExpandableObject
   {
     TileShape search_shape = TileShape.get_instance(location);
     Collection<SearchTreeObject> overlaps = p_autoroute_engine.autoroute_search_tree.overlapping_objects(search_shape, -1);
-    for (int i = this.first_layer; i <= this.last_layer; ++i)
+    for (int i = this.first_layer; i <= this.last_layer; i++)
     {
       CompleteExpansionRoom found_room = null;
       Iterator<SearchTreeObject> it = overlaps.iterator();

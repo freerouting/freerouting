@@ -70,7 +70,7 @@ public class MoveItemState extends InteractiveState
     {
       // Copy the items in p_item_list, because otherwise the undo algorithm will not work.
       Item copied_item = curr_item.copy(0);
-      for (int i = 0; i < curr_item.net_count(); ++i)
+      for (int i = 0; i < curr_item.net_count(); i++)
       {
         add_to_net_items_list(copied_item, curr_item.get_net_no(i));
       }

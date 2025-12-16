@@ -1,9 +1,13 @@
 package app.freerouting.drc;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import app.freerouting.Freerouting;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
+import app.freerouting.gui.FileFormat;
+import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import com.google.gson.JsonObject;
@@ -14,8 +18,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class DesignRulesCheckerTest
 {
@@ -122,9 +124,9 @@ public class DesignRulesCheckerTest
       job.setInput(testFile);
 
       // Load the board
-      if (job.input.format == app.freerouting.gui.FileFormat.DSN)
+      if (job.input.format == FileFormat.DSN)
       {
-        app.freerouting.interactive.HeadlessBoardManager boardManager = new app.freerouting.interactive.HeadlessBoardManager(null, job);
+        HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
         boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
         job.board = boardManager.get_routing_board();
       }

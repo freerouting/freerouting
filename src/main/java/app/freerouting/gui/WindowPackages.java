@@ -33,12 +33,12 @@ public class WindowPackages extends WindowObjectListWithFilter
   {
     Packages packages = this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
     Package[] sorted_arr = new Package[packages.count()];
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       sorted_arr[i] = packages.get(i + 1);
     }
     Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       this.add_to_list(sorted_arr[i]);
     }
@@ -63,7 +63,7 @@ public class WindowPackages extends WindowObjectListWithFilter
         Component curr_component = routing_board.components.get(curr_item.get_component_no());
         Package curr_package = curr_component.get_package();
         boolean package_matches = false;
-        for (int i = 0; i < selected_packages.size(); ++i)
+        for (int i = 0; i < selected_packages.size(); i++)
         {
           if (curr_package == selected_packages.get(i))
           {

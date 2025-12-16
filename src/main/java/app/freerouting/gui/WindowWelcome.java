@@ -322,8 +322,7 @@ public class WindowWelcome extends WindowBase
               if (--secondsLeft > 0)
               {
                 startNowButton.setText(START_NOW_TEXT + " (" + secondsLeft + ")");
-              }
-              else
+              } else
               {
                 auto_start_routing_dialog.setValue(options[0]);
                 FRAnalytics.buttonClicked("auto_start_routing_dialog_start_with_timeout", startNowButton.getText());

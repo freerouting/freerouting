@@ -3,10 +3,10 @@ package app.freerouting.board;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 
 import java.awt.*;
@@ -131,7 +131,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     connect_point_list.add(new_center);
     Point[] connect_points = new Point[connect_point_list.size()];
     Iterator<Point> it3 = connect_point_list.iterator();
-    for (int i = 0; i < connect_points.length; ++i)
+    for (int i = 0; i < connect_points.length; i++)
     {
       connect_points[i] = it3.next();
     }
@@ -199,7 +199,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   public IntBox bounding_box()
   {
     IntBox result = IntBox.EMPTY;
-    for (int i = 0; i < tile_shape_count(); ++i)
+    for (int i = 0; i < tile_shape_count(); i++)
     {
       Shape curr_shape = this.get_shape(i);
       if (curr_shape != null)
@@ -232,7 +232,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   {
     double result = Double.MAX_VALUE;
     FloatPoint c = get_center().to_float();
-    for (int i = 0; i < tile_shape_count(); ++i)
+    for (int i = 0; i < tile_shape_count(); i++)
     {
       Shape curr_shape = get_shape(i);
       if (curr_shape != null)
@@ -401,7 +401,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       double min_width = Integer.MAX_VALUE;
       int begin_layer = this.first_layer();
       int end_layer = this.last_layer();
-      for (int curr_layer = begin_layer; curr_layer <= end_layer; ++curr_layer)
+      for (int curr_layer = begin_layer; curr_layer <= end_layer; curr_layer++)
       {
         if (this.board != null && !this.board.layer_structure.arr[curr_layer].is_signal)
         {
@@ -445,7 +445,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     int to_layer = last_layer();
     // Decrease the drawing intensity for items with many layers.
     double visibility_factor = 0;
-    for (int i = from_layer; i <= to_layer; ++i)
+    for (int i = from_layer; i <= to_layer; i++)
     {
       visibility_factor += p_graphics_context.get_layer_visibility(i);
     }
@@ -455,7 +455,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       return;
     }
     double intensity = p_intensity / Math.max(visibility_factor, 1);
-    for (int i = 0; i <= to_layer - from_layer; ++i)
+    for (int i = 0; i <= to_layer - from_layer; i++)
     {
       Shape curr_shape = this.get_shape(i);
       if (curr_shape == null)

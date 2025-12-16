@@ -86,7 +86,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow
 
     this.settings_select_item_selection_choices = new JCheckBox[filter_values.length];
 
-    for (int i = 0; i < filter_values.length; ++i)
+    for (int i = 0; i < filter_values.length; i++)
     {
       this.settings_select_item_selection_choices[i] = new JCheckBox(tm.getText(filter_values[i].toString()));
       gridbag.setConstraints(this.settings_select_item_selection_choices[i], gridbag_constraints);
@@ -111,7 +111,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow
     this.settings_select_layer_name_arr = new JRadioButton[layer_count];
     ButtonGroup current_layer_button_group = new ButtonGroup();
     gridbag_constraints.gridheight = 1;
-    for (int i = 0; i < layer_count; ++i)
+    for (int i = 0; i < layer_count; i++)
     {
       Layer curr_layer = layer_structure.arr[i];
       settings_select_layer_name_arr[i] = new JRadioButton();
@@ -161,7 +161,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow
     else
     {
       final ItemSelectionFilter.SelectableChoices[] filter_values = ItemSelectionFilter.SelectableChoices.values();
-      for (int i = 0; i < filter_values.length; ++i)
+      for (int i = 0; i < filter_values.length; i++)
       {
         this.settings_select_item_selection_choices[i].setSelected(item_selection_filter.is_selected(filter_values[i]));
       }

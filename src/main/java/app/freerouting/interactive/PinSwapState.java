@@ -106,11 +106,11 @@ public class PinSwapState extends InteractiveState
     }
     hdlg.get_routing_board().generate_snapshot();
     this.from_pin.swap(this.to_pin);
-    for (int i = 0; i < this.from_pin.net_count(); ++i)
+    for (int i = 0; i < this.from_pin.net_count(); i++)
     {
       hdlg.update_ratsnest(this.from_pin.get_net_no(i));
     }
-    for (int i = 0; i < this.to_pin.net_count(); ++i)
+    for (int i = 0; i < this.to_pin.net_count(); i++)
     {
       hdlg.update_ratsnest(this.to_pin.get_net_no(i));
     }

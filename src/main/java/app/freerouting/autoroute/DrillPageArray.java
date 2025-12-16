@@ -49,17 +49,16 @@ public class DrillPageArray
     this.PAGE_WIDTH = (int) Math.ceil(length / COLUMN_COUNT);
     this.PAGE_HEIGHT = (int) Math.ceil(height / ROW_COUNT);
     this.page_arr = new DrillPage[ROW_COUNT][COLUMN_COUNT];
-    for (int j = 0; j < this.ROW_COUNT; ++j)
+    for (int j = 0; j < this.ROW_COUNT; j++)
     {
-      for (int i = 0; i < this.COLUMN_COUNT; ++i)
+      for (int i = 0; i < this.COLUMN_COUNT; i++)
       {
         int ll_x = bounds.ll.x + i * PAGE_WIDTH;
         int ur_x;
         if (i == COLUMN_COUNT - 1)
         {
           ur_x = bounds.ur.x;
-        }
-        else
+        } else
         {
           ur_x = ll_x + PAGE_WIDTH;
         }
@@ -68,8 +67,7 @@ public class DrillPageArray
         if (j == ROW_COUNT - 1)
         {
           ur_y = bounds.ur.y;
-        }
-        else
+        } else
         {
           ur_y = ll_y + PAGE_HEIGHT;
         }
@@ -106,9 +104,9 @@ public class DrillPageArray
     int min_i = (int) Math.floor(((double) (shape_box.ll.x - bounds.ll.x)) / (double) PAGE_WIDTH);
     double max_i = ((double) (shape_box.ur.x - bounds.ll.x)) / (double) PAGE_WIDTH;
 
-    for (int j = min_j; j < max_j; ++j)
+    for (int j = min_j; j < max_j; j++)
     {
-      for (int i = min_i; i < max_i; ++i)
+      for (int i = min_i; i < max_i; i++)
       {
         DrillPage curr_page = this.page_arr[j][i];
         TileShape intersection = p_shape.intersection(curr_page.shape);
@@ -126,10 +124,10 @@ public class DrillPageArray
    */
   public void reset()
   {
-    for (int j = 0; j < page_arr.length; ++j)
+    for (int j = 0; j < page_arr.length; j++)
     {
       DrillPage[] curr_row = page_arr[j];
-      for (int i = 0; i < curr_row.length; ++i)
+      for (int i = 0; i < curr_row.length; i++)
       {
         curr_row[i].reset();
       }
@@ -141,10 +139,10 @@ public class DrillPageArray
    */
   public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity)
   {
-    for (int j = 0; j < page_arr.length; ++j)
+    for (int j = 0; j < page_arr.length; j++)
     {
       DrillPage[] curr_row = page_arr[j];
-      for (int i = 0; i < curr_row.length; ++i)
+      for (int i = 0; i < curr_row.length; i++)
       {
         curr_row[i].draw(p_graphics, p_graphics_context, p_intensity);
       }

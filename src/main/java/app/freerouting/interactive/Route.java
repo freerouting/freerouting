@@ -4,8 +4,8 @@ import app.freerouting.board.*;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.TimeLimit;
-import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.*;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
@@ -175,7 +175,7 @@ public class Route
       // database may be damaged, restore previous situation
       board.undo(null);
       // end routing in case it is dynamic
-      return (!is_stitch_mode);
+      return !is_stitch_mode;
     }
 
     if (ok_point == prev_corner)
@@ -265,7 +265,7 @@ public class Route
     int min_layer = Math.min(this.layer, p_to_layer);
     int max_layer = Math.max(this.layer, p_to_layer);
     boolean via_found = false;
-    for (int i = 0; i < this.via_rule.via_count(); ++i)
+    for (int i = 0; i < this.via_rule.via_count(); i++)
     {
       ViaInfo curr_via_info = this.via_rule.get_via(i);
       Padstack curr_via_padstack = curr_via_info.get_padstack();
@@ -370,7 +370,7 @@ public class Route
   {
     Point[] corners = angled_connection(p_from_point, p_to_point);
     boolean connection_succeeded = true;
-    for (int i = 1; i < corners.length; ++i)
+    for (int i = 1; i < corners.length; i++)
     {
       Point from_corner = corners[i - 1];
       Point to_corner = corners[i];

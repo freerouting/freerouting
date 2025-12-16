@@ -62,9 +62,9 @@ public class GlobalSettings implements Serializable
   };
   @SerializedName("version")
   public String version = Constants.FREEROUTING_VERSION;
-  public transient boolean show_help_option = false;
+  public transient boolean show_help_option;
   // DRC report file details that we got from the command line arguments.
-  public transient BoardFileDetails drc_report_file = null;
+  public transient BoardFileDetails drc_report_file;
   /**
    * The design_input_filename field is deprecated and should not be used. They are kept here for compatibility reasons.
    * Its function is now moved to the input.getFilename() method of RoutingJob object.
@@ -132,7 +132,7 @@ public class GlobalSettings implements Serializable
     if (loadedSettings != null)
     {
       // If the version numbers are different, we must save the file again to update it
-      boolean isSaveNeeded = (!loadedSettings.version.equals(defaultSettings.version));
+      boolean isSaveNeeded = !loadedSettings.version.equals(defaultSettings.version);
 
       // Apply all the loaded settings to the result if they are not null
       loadedSettings.version = null;
@@ -230,7 +230,7 @@ public class GlobalSettings implements Serializable
 
   public void applyCommandLineArguments(String[] p_args)
   {
-    for (int i = 0; i < p_args.length; ++i)
+    for (int i = 0; i < p_args.length; i++)
     {
       try
       {
@@ -244,31 +244,27 @@ public class GlobalSettings implements Serializable
           {
             setValue(parts[0], parts[1]);
           }
-        }
-        else if (p_args[i].startsWith("-de"))
+        } else if (p_args[i].startsWith("-de"))
         {
           // the design file is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             design_input_filename = p_args[i + 1];
           }
-        }
-        else if (p_args[i].startsWith("-di"))
+        } else if (p_args[i].startsWith("-di"))
         {
           // the design directory is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             guiSettings.inputDirectory = p_args[i + 1];
           }
-        }
-        else if (p_args[i].startsWith("-do"))
+        } else if (p_args[i].startsWith("-do"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             design_output_filename = p_args[i + 1];
           }
-        }
-        else if (p_args[i].startsWith("-drc"))
+        } else if (p_args[i].startsWith("-drc"))
         {
           // DRC-only mode (must be checked before -dr)
           routerSettings.enabled = false;
@@ -279,15 +275,13 @@ public class GlobalSettings implements Serializable
             drc_report_file.format = FileFormat.DRC_JSON;
             drc_report_file.setFilename(p_args[i + 1]);
           }
-        }
-        else if (p_args[i].startsWith("-dr"))
+        } else if (p_args[i].startsWith("-dr"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             design_rules_filename = p_args[i + 1];
           }
-        }
-        else if (p_args[i].startsWith("-mp"))
+        } else if (p_args[i].startsWith("-mp"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
@@ -302,8 +296,7 @@ public class GlobalSettings implements Serializable
               routerSettings.maxPasses = 99998;
             }
           }
-        }
-        else if (p_args[i].startsWith("-mt"))
+        } else if (p_args[i].startsWith("-mt"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
@@ -318,8 +311,7 @@ public class GlobalSettings implements Serializable
               routerSettings.optimizer.maxThreads = 1024;
             }
           }
-        }
-        else if (p_args[i].startsWith("-oit"))
+        } else if (p_args[i].startsWith("-oit"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
@@ -330,18 +322,16 @@ public class GlobalSettings implements Serializable
               routerSettings.optimizer.optimizationImprovementThreshold = 0;
             }
           }
-        }
-        else if (p_args[i].startsWith("-us"))
+        } else if (p_args[i].startsWith("-us"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             String op = p_args[i + 1]
                 .toLowerCase()
                 .trim();
-            routerSettings.optimizer.boardUpdateStrategy = op.equals("global") ? BoardUpdateStrategy.GLOBAL_OPTIMAL : (op.equals("hybrid") ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
+            routerSettings.optimizer.boardUpdateStrategy = "global".equals(op) ? BoardUpdateStrategy.GLOBAL_OPTIMAL : ("hybrid".equals(op) ? BoardUpdateStrategy.HYBRID : BoardUpdateStrategy.GREEDY);
           }
-        }
-        else if (p_args[i].startsWith("-is"))
+        } else if (p_args[i].startsWith("-is"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
@@ -350,15 +340,13 @@ public class GlobalSettings implements Serializable
                 .trim();
             routerSettings.optimizer.itemSelectionStrategy = op.indexOf("seq") == 0 ? ItemSelectionStrategy.SEQUENTIAL : (op.indexOf("rand") == 0 ? ItemSelectionStrategy.RANDOM : ItemSelectionStrategy.PRIORITIZED);
           }
-        }
-        else if (p_args[i].startsWith("-hr"))
+        } else if (p_args[i].startsWith("-hr"))
         { // hybrid ratio
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             routerSettings.optimizer.hybridRatio = p_args[i + 1].trim();
           }
-        }
-        else if (p_args[i].equals("-l"))
+        } else if ("-l".equals(p_args[i]))
         {
           String localeString = "";
           if (p_args.length > i + 1)
@@ -372,100 +360,80 @@ public class GlobalSettings implements Serializable
           if (localeString.startsWith("en"))
           {
             currentLocale = Locale.ENGLISH;
-          }
-          else if (localeString.startsWith("de"))
+          } else if (localeString.startsWith("de"))
           {
             currentLocale = Locale.GERMAN;
-          }
-          else if (localeString.startsWith("zh_tw"))
+          } else if (localeString.startsWith("zh_tw"))
           {
             currentLocale = Locale.TRADITIONAL_CHINESE;
-          }
-          else if (localeString.startsWith("zh"))
+          } else if (localeString.startsWith("zh"))
           {
             currentLocale = Locale.SIMPLIFIED_CHINESE;
-          }
-          else if (localeString.startsWith("hi"))
+          } else if (localeString.startsWith("hi"))
           {
             //current_locale = Locale.HINDI;
             currentLocale = Locale.forLanguageTag("hi-IN");
-          }
-          else if (localeString.startsWith("es"))
+          } else if (localeString.startsWith("es"))
           {
             //current_locale = Locale.SPANISH;
             currentLocale = Locale.forLanguageTag("es-ES");
-          }
-          else if (localeString.startsWith("it"))
+          } else if (localeString.startsWith("it"))
           {
             //current_locale = Locale.ITALIAN;
             currentLocale = Locale.forLanguageTag("it-IT");
-          }
-          else if (localeString.startsWith("fr"))
+          } else if (localeString.startsWith("fr"))
           {
             currentLocale = Locale.FRENCH;
-          }
-          else if (localeString.startsWith("ar"))
+          } else if (localeString.startsWith("ar"))
           {
             //current_locale = Locale.ARABIC;
             currentLocale = Locale.forLanguageTag("ar-EG");
-          }
-          else if (localeString.startsWith("bn"))
+          } else if (localeString.startsWith("bn"))
           {
             //current_locale = Locale.BENGALI;
             currentLocale = Locale.forLanguageTag("bn-BD");
-          }
-          else if (localeString.startsWith("ru"))
+          } else if (localeString.startsWith("ru"))
           {
             //current_locale = Locale.RUSSIAN;
             currentLocale = Locale.forLanguageTag("ru-RU");
-          }
-          else if (localeString.startsWith("pt"))
+          } else if (localeString.startsWith("pt"))
           {
             //current_locale = Locale.PORTUGUESE;
             currentLocale = Locale.forLanguageTag("pt-PT");
-          }
-          else if (localeString.startsWith("ja"))
+          } else if (localeString.startsWith("ja"))
           {
             currentLocale = Locale.JAPANESE;
-          }
-          else if (localeString.startsWith("ko"))
+          } else if (localeString.startsWith("ko"))
           {
             currentLocale = Locale.KOREAN;
           }
-        }
-        else if (p_args[i].startsWith("-im"))
+        } else if (p_args[i].startsWith("-im"))
         {
           featureFlags.snapshots = true;
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
-            featureFlags.snapshots = !(Objects.equals(p_args[i + 1], "0"));
+            featureFlags.snapshots = !Objects.equals(p_args[i + 1], "0");
           }
-        }
-        else if (p_args[i].startsWith("-dl"))
+        } else if (p_args[i].startsWith("-dl"))
         {
           featureFlags.logging = false;
-        }
-        else if (p_args[i].startsWith("-da"))
+        } else if (p_args[i].startsWith("-da"))
         {
           usageAndDiagnosticData.disableAnalytics = true;
-        }
-        else if (p_args[i].startsWith("-host"))
+        } else if (p_args[i].startsWith("-host"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
             environmentSettings.host = p_args[i + 1].trim();
           }
-        }
-        else if (p_args[i].startsWith("-help"))
+        } else if (p_args[i].startsWith("-help"))
         {
           show_help_option = true;
-        }
-        else if (p_args[i].startsWith("-inc"))
+        } else if (p_args[i].startsWith("-inc"))
         {
           // ignore net class(es)
           routerSettings.ignoreNetClasses = p_args[i + 1].split(",");
-        }
-        else if (p_args[i].startsWith("-dct"))
+        } else if (p_args[i].startsWith("-dct"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {
@@ -476,8 +444,7 @@ public class GlobalSettings implements Serializable
               guiSettings.dialogConfirmationTimeout = 0;
             }
           }
-        }
-        else if (p_args[i].startsWith("-random_seed"))
+        } else if (p_args[i].startsWith("-random_seed"))
         {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
           {

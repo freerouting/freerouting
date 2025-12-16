@@ -30,7 +30,7 @@ public class OptViaAlgo
       return false;
     }
     Collection<Item> contacts = p_via.get_normal_contacts();
-    boolean is_plane_or_fanout_via = (contacts.size() == 1);
+    boolean is_plane_or_fanout_via = contacts.size() == 1;
     PolylineTrace first_trace = null;
     PolylineTrace second_trace = null;
     if (!is_plane_or_fanout_via)
@@ -593,5 +593,8 @@ public class OptViaAlgo
       }
     }
     return null;
+  }
+
+  private OptViaAlgo() {
   }
 }

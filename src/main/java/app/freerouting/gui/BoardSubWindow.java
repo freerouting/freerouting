@@ -6,7 +6,7 @@ package app.freerouting.gui;
 public class BoardSubWindow extends WindowBase
 {
 
-  private boolean visible_before_iconifying = false;
+  private boolean visible_before_iconifying;
 
   public BoardSubWindow()
   {

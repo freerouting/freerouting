@@ -8,13 +8,13 @@ public class MazeSearchElement
   /**
    * true, if this door is already occupied by the maze expanding algorithm
    */
-  public boolean is_occupied = false;
+  public boolean is_occupied;
   /**
    * Used for backtracking in the maze expanding algorithm
    */
   public ExpandableObject backtrack_door;
-  public int section_no_of_backtrack_door = 0;
-  public boolean room_ripped = false;
+  public int section_no_of_backtrack_door;
+  public boolean room_ripped;
   public Adjustment adjustment = Adjustment.NONE;
 
   /**

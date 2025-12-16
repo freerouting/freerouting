@@ -4,9 +4,9 @@ import app.freerouting.autoroute.ExpansionDrill;
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.core.Padstack;
+import app.freerouting.geometry.planar.*;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
-import app.freerouting.geometry.planar.*;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 
@@ -62,7 +62,7 @@ public class Via extends DrillItem implements Serializable
     if (this.precalculated_shapes == null)
     {
       this.precalculated_shapes = new Shape[padstack.to_layer() - padstack.from_layer() + 1];
-      for (int i = 0; i < this.precalculated_shapes.length; ++i)
+      for (int i = 0; i < this.precalculated_shapes.length; i++)
       {
         int padstack_layer = i + this.first_layer();
         Vector translate_vector = get_center().difference_by(Point.ZERO);
@@ -71,8 +71,7 @@ public class Via extends DrillItem implements Serializable
         if (curr_shape == null)
         {
           this.precalculated_shapes[i] = null;
-        }
-        else
+        } else
         {
           this.precalculated_shapes[i] = (Shape) curr_shape.translate_by(translate_vector);
         }
@@ -171,7 +170,7 @@ public class Via extends DrillItem implements Serializable
       TileShape curr_drill_shape = TileShape.get_instance(this.get_center());
       this.autoroute_drill_info = new ExpansionDrill(curr_drill_shape, this.get_center(), this.first_layer(), this.last_layer());
       int via_layer_count = this.last_layer() - this.first_layer() + 1;
-      for (int i = 0; i < via_layer_count; ++i)
+      for (int i = 0; i < via_layer_count; i++)
       {
         this.autoroute_drill_info.room_arr[i] = via_autoroute_info.get_expansion_room(i, p_autoroute_tree);
       }

@@ -57,7 +57,7 @@ public class IntPoint extends Point implements Serializable
       return false;
     }
     IntPoint other = (IntPoint) p_ob;
-    return (x == other.x && y == other.y);
+    return x == other.x && y == other.y;
   }
 
   @Override
@@ -103,7 +103,7 @@ public class IntPoint extends Point implements Serializable
   @Override
   Point translate_by(IntVector p_vector)
   {
-    return (new IntPoint(x + p_vector.x, y + p_vector.y));
+    return new IntPoint(x + p_vector.x, y + p_vector.y);
   }
 
   @Override
@@ -196,7 +196,7 @@ public class IntPoint extends Point implements Serializable
         proj_x = proj_x.negate();
         proj_y = proj_y.negate();
       }
-      if ((proj_x.mod(denominator)).signum() == 0 && (proj_y.mod(denominator)).signum() == 0)
+      if (proj_x.mod(denominator).signum() == 0 && proj_y.mod(denominator).signum() == 0)
       {
         proj_x = proj_x.divide(denominator);
         proj_y = proj_y.divide(denominator);
@@ -272,7 +272,7 @@ public class IntPoint extends Point implements Serializable
     dist_arr[2] = Math.abs(diagonal_1);
     dist_arr[3] = Math.abs(diagonal_2);
     double min_dist = dist_arr[0];
-    for (int i = 1; i < 4; ++i)
+    for (int i = 1; i < 4; i++)
     {
       if (dist_arr[i] < min_dist)
       {

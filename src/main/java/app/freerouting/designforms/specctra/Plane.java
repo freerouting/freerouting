@@ -53,7 +53,7 @@ public class Plane extends ScopeKeyword
     {
       dsn_shape.write_scope(p_par.file, p_par.identifier_type);
     }
-    for (int i = 0; i < holes.length; ++i)
+    for (int i = 0; i < holes.length; i++)
     {
       Shape dsn_hole = p_par.coordinate_transform.board_to_dsn(holes[i], plane_layer);
       dsn_hole.write_hole_scope(p_par.file, p_par.identifier_type);
@@ -66,7 +66,7 @@ public class Plane extends ScopeKeyword
   {
     // read the net name
     String net_name;
-    boolean skip_window_scopes = p_par.host_cad != null && p_par.host_cad.equalsIgnoreCase("allegro");
+    boolean skip_window_scopes = "allegro".equalsIgnoreCase(p_par.host_cad);
     // Cadence Allegro cutouts the pins on power planes, which leads to performance problems
     // when dividing a conduction area into convex pieces.
     Shape.ReadAreaScopeResult conduction_area;

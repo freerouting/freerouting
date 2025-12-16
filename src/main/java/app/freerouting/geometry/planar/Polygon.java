@@ -91,7 +91,7 @@ public class Polygon implements Serializable
     int corner_count = corners.size();
     Point[] result = new Point[corner_count];
     Iterator<Point> it = corners.iterator();
-    for (int i = 0; i < corner_count; ++i)
+    for (int i = 0; i < corner_count; i++)
     {
       result[i] = it.next();
     }
@@ -105,7 +105,7 @@ public class Polygon implements Serializable
   {
     Point[] corner_arr = corner_array();
     Point[] reverse_corner_arr = new Point[corner_arr.length];
-    for (int i = 0; i < corner_arr.length; ++i)
+    for (int i = 0; i < corner_arr.length; i++)
     {
       reverse_corner_arr[i] = corner_arr[corner_arr.length - i - 1];
     }
@@ -133,18 +133,16 @@ public class Polygon implements Serializable
       --corner_count;
     }
     double angle_sum = 0;
-    for (int i = 1; i <= corner_count; ++i)
+    for (int i = 1; i <= corner_count; i++)
     {
       Vector next_side_vector;
       if (i == corner_count - 1)
       {
         next_side_vector = corner_arr[0].difference_by(corner_arr[i]);
-      }
-      else if (i == corner_count)
+      } else if (i == corner_count)
       {
         next_side_vector = first_side_vector;
-      }
-      else
+      } else
       {
         next_side_vector = corner_arr[i + 1].difference_by(corner_arr[i]);
       }

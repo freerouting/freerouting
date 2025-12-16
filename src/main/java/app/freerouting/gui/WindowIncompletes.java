@@ -33,7 +33,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter
     RatsNest.AirLine[] sorted_arr = ratsnest.get_airlines();
 
     Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       this.add_to_list(sorted_arr[i]);
     }
@@ -49,7 +49,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter
       return;
     }
     Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_incompletes.size(); ++i)
+    for (int i = 0; i < selected_incompletes.size(); i++)
     {
       RatsNest.AirLine curr_airline = (RatsNest.AirLine) selected_incompletes.get(i);
       selected_items.add(curr_airline.from_item);

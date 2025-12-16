@@ -14,7 +14,7 @@ import java.util.*;
 public class WindowUnconnectedRoute extends CleanupWindows
 {
 
-  private int max_unconnected_route_info_id_no = 0;
+  private int max_unconnected_route_info_id_no;
 
   /**
    * Creates a new instance of WindowUnconnectedRoute
@@ -95,7 +95,7 @@ public class WindowUnconnectedRoute extends CleanupWindows
       return;
     }
     Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_list_values.size(); ++i)
+    for (int i = 0; i < selected_list_values.size(); i++)
     {
       selected_items.addAll(((UnconnectedRouteInfo) selected_list_values.get(i)).item_list);
     }

@@ -51,7 +51,7 @@ public class FloatPoint implements Serializable
     double lrx = Integer.MIN_VALUE;
     double llx = Integer.MAX_VALUE;
     double urx = Integer.MIN_VALUE;
-    for (int i = 0; i < p_point_arr.length; ++i)
+    for (int i = 0; i < p_point_arr.length; i++)
     {
       FloatPoint curr = p_point_arr[i];
       lx = Math.min(lx, curr.x);
@@ -267,7 +267,7 @@ public class FloatPoint implements Serializable
     double dx_2 = p_2.x - this.x;
     double dy_1 = p_1.y - this.y;
     double dy_2 = p_2.y - this.y;
-    return (dx_1 * dx_2 + dy_1 * dy_2);
+    return dx_1 * dx_2 + dy_1 * dy_2;
   }
 
   /**
@@ -444,7 +444,7 @@ public class FloatPoint implements Serializable
       min_y = p_2.y;
       max_y = p_1.y;
     }
-    return (this.y >= min_y - p_tolerance && this.y <= max_y + p_tolerance);
+    return this.y >= min_y - p_tolerance && this.y <= max_y + p_tolerance;
   }
 
   /**
@@ -473,7 +473,7 @@ public class FloatPoint implements Serializable
 
     double dx = Math.abs(this.x - p_to_point.x);
     double dy = Math.abs(this.y - p_to_point.y);
-    boolean situation_turned = (dy > dx);
+    boolean situation_turned = dy > dx;
     FloatPoint pole;
     FloatPoint circle_center;
 
@@ -604,14 +604,14 @@ public class FloatPoint implements Serializable
   {
     FloatPoint center = p_1.circle_center(p_2, p_3);
     double radius_square = center.distance_square(p_1);
-    return (this.distance_square(center) < radius_square - 1); // - 1 is a tolerance for numerical stability.
+    return this.distance_square(center) < radius_square - 1; // - 1 is a tolerance for numerical stability.
   }
 
   public String to_string(Locale p_locale)
   {
     NumberFormat nf = NumberFormat.getInstance(p_locale);
     nf.setMaximumFractionDigits(4);
-    return ("(" + nf.format(x) + " , " + nf.format(y) + ")");
+    return "(" + nf.format(x) + " , " + nf.format(y) + ")";
   }
 
   public String to_string(Locale p_locale, int fractionDigits, int padding)
@@ -619,7 +619,7 @@ public class FloatPoint implements Serializable
     NumberFormat nf = NumberFormat.getInstance(p_locale);
     nf.setMinimumFractionDigits(fractionDigits);
     nf.setMaximumFractionDigits(fractionDigits);
-    return ("X " + String.format("%" + padding + "s", nf.format(x)) + "   Y " + String.format("%" + padding + "s", nf.format(-y)));
+    return "X " + String.format("%" + padding + "s", nf.format(x)) + "   Y " + String.format("%" + padding + "s", nf.format(-y));
   }
 
   @Override

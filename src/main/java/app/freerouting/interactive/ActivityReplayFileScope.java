@@ -159,7 +159,7 @@ public abstract class ActivityReplayFileScope
    */
   public static ActivityReplayFileScope get_scope(String p_name)
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (arr[i].name.equals(p_name))
       {
@@ -225,8 +225,7 @@ public abstract class ActivityReplayFileScope
             return_state = new_state;
             break;
           }
-        }
-        else
+        } else
         {
           // end of corner list, process the next interior scope
           ActivityReplayFileScope next_scope = p_activityReplayFile.start_read_scope();
@@ -1182,7 +1181,7 @@ public abstract class ActivityReplayFileScope
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       int new_value = p_activityReplayFile.read_int();
-      p_board_handling.settings.select_on_all_visible_layers = (new_value != 0);
+      p_board_handling.settings.select_on_all_visible_layers = new_value != 0;
       return p_return_state;
     }
   }
@@ -1198,7 +1197,7 @@ public abstract class ActivityReplayFileScope
     public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
     {
       int new_value = p_activityReplayFile.read_int();
-      p_board_handling.settings.is_stitch_route = (new_value != 0);
+      p_board_handling.settings.is_stitch_route = new_value != 0;
       return p_return_state;
     }
   }

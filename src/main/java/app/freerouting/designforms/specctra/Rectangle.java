@@ -48,7 +48,7 @@ public class Rectangle extends Shape
   public app.freerouting.geometry.planar.Shape transform_to_board_rel(CoordinateTransform p_coordinate_transform)
   {
     int[] box_coor = new int[4];
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
       box_coor[i] = (int) Math.round(p_coordinate_transform.dsn_to_board(this.coor[i]));
     }
@@ -89,7 +89,7 @@ public class Rectangle extends Shape
     p_file.new_line();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);
-    for (int i = 0; i < coor.length; ++i)
+    for (int i = 0; i < coor.length; i++)
     {
       p_file.write(" ");
       p_file.write(String.valueOf(coor[i]));
@@ -103,7 +103,7 @@ public class Rectangle extends Shape
     p_file.new_line();
     p_file.write("(rect ");
     p_identifier.write(this.layer.name, p_file);
-    for (int i = 0; i < coor.length; ++i)
+    for (int i = 0; i < coor.length; i++)
     {
       p_file.write(" ");
       int curr_coor = (int) Math.round(coor[i]);

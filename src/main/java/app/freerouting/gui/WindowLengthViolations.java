@@ -34,7 +34,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter
     RatsNest ratsnest = this.board_frame.board_panel.board_handling.get_ratsnest();
     Nets net_list = this.board_frame.board_panel.board_handling.get_routing_board().rules.nets;
     SortedSet<LengthViolation> length_violations = new TreeSet<>();
-    for (int net_index = 1; net_index <= net_list.max_net_no(); ++net_index)
+    for (int net_index = 1; net_index <= net_list.max_net_no(); net_index++)
     {
       double curr_violation_length = ratsnest.get_length_violation(net_index);
       if (curr_violation_length != 0)
@@ -60,9 +60,9 @@ public class WindowLengthViolations extends WindowObjectListWithFilter
       return;
     }
     Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_violations.size(); ++i)
+    for (int i = 0; i < selected_violations.size(); i++)
     {
-      LengthViolation curr_violation = ((LengthViolation) selected_violations.get(i));
+      LengthViolation curr_violation = (LengthViolation) selected_violations.get(i);
       selected_items.addAll(curr_violation.net.get_items());
     }
     GuiBoardManager board_handling = board_frame.board_panel.board_handling;

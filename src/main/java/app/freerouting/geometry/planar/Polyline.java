@@ -42,7 +42,7 @@ public class Polyline implements Serializable
       return;
     }
     arr = new Line[point_arr.length + 1];
-    for (int i = 1; i < point_arr.length; ++i)
+    for (int i = 1; i < point_arr.length; i++)
     {
       arr[i] = new Line(point_arr[i - 1], point_arr[i]);
     }
@@ -97,7 +97,7 @@ public class Polyline implements Serializable
 
     // turn evtl the direction of the lines that they point always
     // from the previous corner to the next corner
-    for (int i = 1; i < lines.length - 1; ++i)
+    for (int i = 1; i < lines.length - 1; i++)
     {
       precalculated_float_corners[i] = lines[i].intersection_approx(lines[i + 1]);
       Side side_of_line = lines[i - 1].side_of(precalculated_float_corners[i]);
@@ -125,7 +125,7 @@ public class Polyline implements Serializable
     Line[] tmp_arr = new Line[p_line_arr.length];
     int new_length = 0;
     tmp_arr[0] = p_line_arr[0];
-    for (int i = 1; i < p_line_arr.length; ++i)
+    for (int i = 1; i < p_line_arr.length; i++)
     {
       // skip multiple lines
       if (!tmp_arr[new_length].is_parallel(p_line_arr[i]))
@@ -169,14 +169,13 @@ public class Polyline implements Serializable
     // else  skip the first line
     tmp_arr[new_length] = p_line_arr[1];
     ++new_length;
-    for (int i = 2; i < p_line_arr.length - 2; ++i)
+    for (int i = 2; i < p_line_arr.length - 2; i++)
     {
       if (tmp_arr[new_length - 1].is_equal_or_opposite(p_line_arr[i + 1]))
       {
         // skip 2 lines
         --new_length;
-      }
-      else
+      } else
       {
         tmp_arr[new_length] = p_line_arr[i];
         ++new_length;
@@ -228,9 +227,9 @@ public class Polyline implements Serializable
       return true;
     }
     Point first_corner = this.corner(0);
-    for (int i = 1; i < arr.length - 1; ++i)
+    for (int i = 1; i < arr.length - 1; i++)
     {
-      if (!(this.corner(i).equals(first_corner)))
+      if (!this.corner(i).equals(first_corner))
       {
         return false;
       }
@@ -243,7 +242,7 @@ public class Polyline implements Serializable
    */
   public boolean is_orthogonal()
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (!arr[i].is_orthogonal())
       {
@@ -258,7 +257,7 @@ public class Polyline implements Serializable
    */
   public boolean is_multiple_of_45_degree()
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (!arr[i].is_multiple_of_45_degree())
       {
@@ -298,7 +297,7 @@ public class Polyline implements Serializable
     {
       precalculated_corners = new Point[arr.length - 1];
     }
-    for (int i = 0; i < precalculated_corners.length; ++i)
+    for (int i = 0; i < precalculated_corners.length; i++)
     {
       if (precalculated_corners[i] == null)
       {
@@ -322,7 +321,7 @@ public class Polyline implements Serializable
     {
       precalculated_float_corners = new FloatPoint[arr.length - 1];
     }
-    for (int i = 0; i < precalculated_float_corners.length; ++i)
+    for (int i = 0; i < precalculated_float_corners.length; i++)
     {
       if (precalculated_float_corners[i] == null)
       {
@@ -410,7 +409,7 @@ public class Polyline implements Serializable
   public Polyline reverse()
   {
     Line[] reversed_lines = new Line[arr.length];
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       reversed_lines[i] = arr[arr.length - i - 1].opposite();
     }
@@ -425,7 +424,7 @@ public class Polyline implements Serializable
     int from_corner = Math.max(p_from_corner, 0);
     int to_corner = Math.min(p_to_corner, arr.length - 2);
     double result = 0;
-    for (int i = from_corner; i < to_corner; ++i)
+    for (int i = from_corner; i < to_corner; i++)
     {
       result += this.corner_approx(i + 1).distance(this.corner_approx(i));
     }
@@ -466,7 +465,7 @@ public class Polyline implements Serializable
     }
     Vector prev_dir = arr[from_no].direction().get_vector();
     Vector curr_dir = arr[from_no + 1].direction().get_vector();
-    for (int i = from_no + 1; i < to_no; ++i)
+    for (int i = from_no + 1; i < to_no; i++)
     {
       Vector next_dir = arr[i + 1].direction().get_vector();
 
@@ -482,8 +481,7 @@ public class Polyline implements Serializable
       {
         lines[1] = arr[i + 1].translate(-p_half_width);
         // next right line
-      }
-      else
+      } else
       {
         lines[1] = arr[i + 1].opposite().translate(-p_half_width);
         // next left line in opposite direction
@@ -499,8 +497,7 @@ public class Polyline implements Serializable
       {
         lines[3] = arr[i - 1].translate(-p_half_width);
         // previous line translated to the right
-      }
-      else
+      } else
       {
         lines[3] = arr[i - 1].opposite().translate(-p_half_width);
         // previous left line in opposite direction
@@ -512,8 +509,7 @@ public class Polyline implements Serializable
       if (next_dir_from_curr_dir == Side.ON_THE_LEFT)
       {
         check_line = lines[2];
-      }
-      else
+      } else
       {
         check_line = lines[0];
       }
@@ -522,7 +518,7 @@ public class Polyline implements Serializable
       Collection<Line> cut_dog_ear_lines = new LinkedList<>();
       Vector tmp_curr_dir = next_dir;
       boolean direction_changed = false;
-      for (int j = i + 2; j < arr.length - 1; ++j)
+      for (int j = i + 2; j < arr.length - 1; j++)
       {
         if (corner_approx(j - 1).distance_square(check_distance_corner) > check_dist_square)
         {
@@ -541,8 +537,7 @@ public class Polyline implements Serializable
           if (tmp_next_dir_from_tmp_curr_dir == Side.ON_THE_LEFT)
           {
             next_border_line = arr[j].translate(-p_half_width);
-          }
-          else
+          } else
           {
             next_border_line = arr[j].opposite().translate(-p_half_width);
           }
@@ -561,15 +556,14 @@ public class Polyline implements Serializable
       if (curr_dir_from_prev_dir == Side.ON_THE_LEFT)
       {
         check_line = lines[2];
-      }
-      else
+      } else
       {
         check_line = lines[0];
       }
       curr_line = lines[3];
       tmp_curr_dir = prev_dir;
       direction_changed = false;
-      for (int j = i - 2; j >= 1; --j)
+      for (int j = i - 2; j >= 1; j--)
       {
         if (corner_approx(j).distance_square(check_distance_corner) > check_dist_square)
         {
@@ -588,8 +582,7 @@ public class Polyline implements Serializable
           if (tmp_curr_dir.side_of(tmp_prev_dir) == Side.ON_THE_LEFT)
           {
             prev_border_line = arr[j].translate(-p_half_width);
-          }
-          else
+          } else
           {
             prev_border_line = arr[j].opposite().translate(-p_half_width);
           }
@@ -608,7 +601,7 @@ public class Polyline implements Serializable
       {
         Line[] cut_lines = new Line[cut_line_count];
         Iterator<Line> it = cut_dog_ear_lines.iterator();
-        for (int j = 0; j < cut_line_count; ++j)
+        for (int j = 0; j < cut_line_count; j++)
         {
           cut_lines[j] = it.next();
         }
@@ -622,8 +615,7 @@ public class Polyline implements Serializable
         IntOctagon surr_oct = bounding_octagon(i - 1, i);
         bounding_shape = surr_oct.offset(p_half_width);
 
-      }
-      else
+      } else
       // intersect with the bounding box
       {
         IntBox surr_box = bounding_box(i - 1, i);
@@ -679,7 +671,7 @@ public class Polyline implements Serializable
       return this;
     }
     Line[] new_arr = new Line[arr.length];
-    for (int i = 0; i < new_arr.length; ++i)
+    for (int i = 0; i < new_arr.length; i++)
     {
       new_arr[i] = arr[i].translate_by(p_vector);
     }
@@ -692,7 +684,7 @@ public class Polyline implements Serializable
   public Polyline turn_90_degree(int p_factor, IntPoint p_pole)
   {
     Line[] new_arr = new Line[arr.length];
-    for (int i = 0; i < new_arr.length; ++i)
+    for (int i = 0; i < new_arr.length; i++)
     {
       new_arr[i] = arr[i].turn_90_degree(p_factor, p_pole);
     }
@@ -706,7 +698,7 @@ public class Polyline implements Serializable
       return this;
     }
     IntPoint[] new_corners = new IntPoint[this.corner_count()];
-    for (int i = 0; i < new_corners.length; ++i)
+    for (int i = 0; i < new_corners.length; i++)
     {
 
       new_corners[i] = this.corner_approx(i).rotate(p_angle, p_pole).round();
@@ -720,7 +712,7 @@ public class Polyline implements Serializable
   public Polyline mirror_vertical(IntPoint p_pole)
   {
     Line[] new_arr = new Line[arr.length];
-    for (int i = 0; i < new_arr.length; ++i)
+    for (int i = 0; i < new_arr.length; i++)
     {
       new_arr[i] = arr[i].mirror_vertical(p_pole);
     }
@@ -733,7 +725,7 @@ public class Polyline implements Serializable
   public Polyline mirror_horizontal(IntPoint p_pole)
   {
     Line[] new_arr = new Line[arr.length];
-    for (int i = 0; i < new_arr.length; ++i)
+    for (int i = 0; i < new_arr.length; i++)
     {
       new_arr[i] = arr[i].mirror_horizontal(p_pole);
     }
@@ -752,7 +744,7 @@ public class Polyline implements Serializable
     double lly = llx;
     double urx = Integer.MIN_VALUE;
     double ury = urx;
-    for (int i = from_corner_no; i <= to_corner_no; ++i)
+    for (int i = from_corner_no; i <= to_corner_no; i++)
     {
       FloatPoint curr_corner = corner_approx(i);
       llx = Math.min(llx, curr_corner.x);
@@ -793,7 +785,7 @@ public class Polyline implements Serializable
     double lrx = Integer.MIN_VALUE;
     double llx = Integer.MAX_VALUE;
     double urx = Integer.MIN_VALUE;
-    for (int i = from_corner_no; i <= to_corner_no; ++i)
+    for (int i = from_corner_no; i <= to_corner_no; i++)
     {
       FloatPoint curr = corner_approx(i);
       lx = Math.min(lx, curr.x);
@@ -820,7 +812,7 @@ public class Polyline implements Serializable
     FloatPoint nearest_point = null;
     // calculate the nearest corner point
     FloatPoint[] corners = corner_approx_arr();
-    for (int i = 0; i < corners.length; ++i)
+    for (int i = 0; i < corners.length; i++)
     {
       double curr_distance = corners[i].distance(p_from_point);
       if (curr_distance < min_distance)
@@ -830,7 +822,7 @@ public class Polyline implements Serializable
       }
     }
     final double c_tolerance = 1;
-    for (int i = 1; i < arr.length - 1; ++i)
+    for (int i = 1; i < arr.length - 1; i++)
     {
       FloatPoint projection = p_from_point.projection_approx(arr[i]);
       double curr_distance = projection.distance(p_from_point);
@@ -902,7 +894,7 @@ public class Polyline implements Serializable
       if (combine_other_at_start)
       {
         // insert in reverse order, skip the first line of p_other
-        for (int i = 0; i < p_other.arr.length - 1; ++i)
+        for (int i = 0; i < p_other.arr.length - 1; i++)
         {
           line_arr[i] = p_other.arr[p_other.arr.length - i - 1].opposite();
         }
@@ -927,7 +919,7 @@ public class Polyline implements Serializable
       else
       {
         // insert in reverse order, skip the last line of p_other
-        for (int i = 1; i < p_other.arr.length; ++i)
+        for (int i = 1; i < p_other.arr.length; i++)
         {
           line_arr[arr.length + i - 2] = p_other.arr[p_other.arr.length - i - 1].opposite();
         }
@@ -1016,7 +1008,7 @@ public class Polyline implements Serializable
 
   public boolean contains(Point p_point)
   {
-    for (int i = 1; i < arr.length - 1; ++i)
+    for (int i = 1; i < arr.length - 1; i++)
     {
       LineSegment curr_segment = new LineSegment(this, i);
       if (curr_segment.contains(p_point))
@@ -1038,7 +1030,7 @@ public class Polyline implements Serializable
     double min_distance = Double.MAX_VALUE;
     Line result_line = null;
     Line nearest_line = null;
-    for (int i = 1; i < arr.length - 1; ++i)
+    for (int i = 1; i < arr.length - 1; i++)
     {
       FloatPoint projection = from_point.projection_approx(arr[i]);
       double curr_distance = projection.distance(from_point);

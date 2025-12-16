@@ -51,7 +51,7 @@ public class DestinationDistance
     min_normal_via_cost = p_min_normal_via_cost;
     min_cheap_via_cost = p_min_cheap_via_cost;
     int curr_active_layer_count = 0;
-    for (int ind = 0; ind < layer_count; ++ind)
+    for (int ind = 0; ind < layer_count; ind++)
     {
       if (layer_active[ind])
       {
@@ -92,7 +92,7 @@ public class DestinationDistance
 
     // Note: for inner layers we assume, that cost in preferred direction is 1
     max_inner_side_trace_cost = Math.min(max_component_side_trace_cost, max_solder_side_trace_cost);
-    for (int ind2 = 1; ind2 < layer_count - 1; ++ind2)
+    for (int ind2 = 1; ind2 < layer_count - 1; ind2++)
     {
       if (!layer_active[ind2])
       {

@@ -5,11 +5,12 @@ import app.freerouting.core.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.geometry.planar.Polygon;
 import app.freerouting.geometry.planar.*;
+import app.freerouting.geometry.planar.Polygon;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
+import app.freerouting.rules.NetClass;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -59,7 +60,7 @@ class Wiring extends ScopeKeyword
       {
         continue;
       }
-      if (!(p_par.board.layer_structure.arr[curr_area.get_layer()].is_signal))
+      if (!p_par.board.layer_structure.arr[curr_area.get_layer()].is_signal)
       {
         // This conduction areas arw written in the structure scope.
         continue;
@@ -89,7 +90,7 @@ class Wiring extends ScopeKeyword
     p_par.file.start_scope();
     p_par.file.write("via ");
     p_par.identifier_type.write(via_padstack.name, p_par.file);
-    for (int i = 0; i < via_coor.length; ++i)
+    for (int i = 0; i < via_coor.length; i++)
     {
       p_par.file.write(" ");
       p_par.file.write(String.valueOf(via_coor[i]));
@@ -131,7 +132,7 @@ class Wiring extends ScopeKeyword
     {
       Point[] corner_arr = curr_wire.polyline().corner_arr();
       FloatPoint[] float_corner_arr = new FloatPoint[corner_arr.length];
-      for (int i = 0; i < corner_arr.length; ++i)
+      for (int i = 0; i < corner_arr.length; i++)
       {
         float_corner_arr[i] = corner_arr[i].to_float();
       }
@@ -183,7 +184,7 @@ class Wiring extends ScopeKeyword
     {
       dsn_shape.write_scope(p_par.file, p_par.identifier_type);
     }
-    for (int i = 0; i < holes.length; ++i)
+    for (int i = 0; i < holes.length; i++)
     {
       Shape dsn_hole = p_par.coordinate_transform.board_to_dsn(holes[i], conduction_layer);
       dsn_hole.write_hole_scope(p_par.file, p_par.identifier_type);
@@ -354,12 +355,10 @@ class Wiring extends ScopeKeyword
         if (next_token == WIRE)
         {
           read_wire_scope(p_par);
-        }
-        else if (next_token == VIA)
+        } else if (next_token == VIA)
         {
           read_ok = read_via_scope(p_par);
-        }
-        else
+        } else
         {
           skip_scope(p_par.scanner);
         }
@@ -370,7 +369,7 @@ class Wiring extends ScopeKeyword
       }
     }
     RoutingBoard board = p_par.board_handling.get_routing_board();
-    for (int i = 1; i <= board.rules.nets.max_net_no(); ++i)
+    for (int i = 1; i <= board.rules.nets.max_net_no(); i++)
     {
       try
       {
@@ -418,27 +417,22 @@ class Wiring extends ScopeKeyword
         if (next_token == POLYGON_PATH)
         {
           path = Shape.read_polygon_path_scope(p_par.scanner, p_par.layer_structure);
-        }
-        else if (next_token == POLYLINE_PATH)
+        } else if (next_token == POLYLINE_PATH)
         {
           path = Shape.read_polyline_path_scope(p_par.scanner, p_par.layer_structure);
-        }
-        else if (next_token == RECTANGLE)
+        } else if (next_token == RECTANGLE)
         {
 
           border_shape = Shape.read_rectangle_scope(p_par.scanner, p_par.layer_structure);
-        }
-        else if (next_token == POLYGON)
+        } else if (next_token == POLYGON)
         {
 
           border_shape = Shape.read_polygon_scope(p_par.scanner, p_par.layer_structure);
-        }
-        else if (next_token == CIRCLE)
+        } else if (next_token == CIRCLE)
         {
 
           border_shape = Shape.read_circle_scope(p_par.scanner, p_par.layer_structure);
-        }
-        else if (next_token == WINDOW)
+        } else if (next_token == WINDOW)
         {
           Shape hole_shape = Shape.read_scope(p_par.scanner, p_par.layer_structure);
           hole_list.add(hole_shape);
@@ -456,20 +450,16 @@ class Wiring extends ScopeKeyword
             FRLogger.warn("Wiring.read_wire_scope: closing bracket expected at '" + p_par.scanner.get_scope_identifier() + "'");
             return null;
           }
-        }
-        else if (next_token == NET)
+        } else if (next_token == NET)
         {
           net_id = read_net_id(p_par.scanner);
-        }
-        else if (next_token == CLEARANCE_CLASS)
+        } else if (next_token == CLEARANCE_CLASS)
         {
           clearance_class_name = DsnFile.read_string_scope(p_par.scanner);
-        }
-        else if (next_token == TYPE)
+        } else if (next_token == TYPE)
         {
           fixed = calc_fixed(p_par.scanner);
-        }
-        else
+        } else
         {
           skip_scope(p_par.scanner);
         }
@@ -482,7 +472,7 @@ class Wiring extends ScopeKeyword
     }
     RoutingBoard board = p_par.board_handling.get_routing_board();
 
-    app.freerouting.rules.NetClass net_class = board.rules.get_default_net_class();
+    NetClass net_class = board.rules.get_default_net_class();
     Collection<app.freerouting.rules.Net> found_nets = get_subnets(net_id, board.rules);
     int[] net_no_arr = new int[found_nets.size()];
     int curr_index = 0;
@@ -546,7 +536,7 @@ class Wiring extends ScopeKeyword
       }
       IntPoint[] corner_arr = new IntPoint[path.coordinate_arr.length / 2];
       double[] curr_point = new double[2];
-      for (int i = 0; i < corner_arr.length; ++i)
+      for (int i = 0; i < corner_arr.length; i++)
       {
         curr_point[0] = path.coordinate_arr[2 * i];
         curr_point[1] = path.coordinate_arr[2 * i + 1];
@@ -577,7 +567,7 @@ class Wiring extends ScopeKeyword
       }
       Line[] line_arr = new Line[path.coordinate_arr.length / 4];
       double[] curr_point = new double[2];
-      for (int i = 0; i < line_arr.length; ++i)
+      for (int i = 0; i < line_arr.length; i++)
       {
         curr_point[0] = path.coordinate_arr[4 * i];
         curr_point[1] = path.coordinate_arr[4 * i + 1];
@@ -644,18 +634,16 @@ class Wiring extends ScopeKeyword
       p_par.scanner.set_scope_identifier(padstack_name);
       // read the location
       double[] location = new double[2];
-      for (int i = 0; i < 2; ++i)
+      for (int i = 0; i < 2; i++)
       {
         next_token = p_par.scanner.next_token();
         if (next_token instanceof Double double1)
         {
           location[i] = double1;
-        }
-        else if (next_token instanceof Integer integer)
+        } else if (next_token instanceof Integer integer)
         {
           location[i] = integer;
-        }
-        else
+        } else
         {
           FRLogger.warn("Wiring.read_via_scope: number expected at '" + p_par.scanner.get_scope_identifier() + "'");
           return false;
@@ -682,16 +670,13 @@ class Wiring extends ScopeKeyword
           if (next_token == NET)
           {
             net_id = read_net_id(p_par.scanner);
-          }
-          else if (next_token == CLEARANCE_CLASS)
+          } else if (next_token == CLEARANCE_CLASS)
           {
             clearance_class_name = DsnFile.read_string_scope(p_par.scanner);
-          }
-          else if (next_token == TYPE)
+          } else if (next_token == TYPE)
           {
             fixed = calc_fixed(p_par.scanner);
-          }
-          else
+          } else
           {
             skip_scope(p_par.scanner);
           }
@@ -704,7 +689,7 @@ class Wiring extends ScopeKeyword
         FRLogger.warn("Wiring.read_via_scope: via padstack not found at '" + p_par.scanner.get_scope_identifier() + "'");
         return false;
       }
-      app.freerouting.rules.NetClass net_class = board.rules.get_default_net_class();
+      NetClass net_class = board.rules.get_default_net_class();
       Collection<app.freerouting.rules.Net> found_nets = get_subnets(net_id, board.rules);
       if (net_id != null && found_nets.isEmpty())
       {

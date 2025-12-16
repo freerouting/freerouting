@@ -1,5 +1,7 @@
 package app.freerouting.gui;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.management.gson.GsonProvider;
@@ -13,8 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.io.IOException;
-
-import static app.freerouting.Freerouting.globalSettings;
+import java.net.URI;
 
 /**
  * Startup window visible when the program is loading.
@@ -237,7 +238,7 @@ public class WindowUserSettings extends WindowBase
     {
       try
       {
-        Desktop.getDesktop().browse(new java.net.URI("https://github.com/sponsors/andrasfuchs"));
+        Desktop.getDesktop().browse(new URI("https://github.com/sponsors/andrasfuchs"));
       } catch (Exception ex)
       {
         FRLogger.error("Failed to open sponsor link", ex);

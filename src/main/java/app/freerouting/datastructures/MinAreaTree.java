@@ -53,8 +53,7 @@ public class MinAreaTree extends ShapeTree
         if (curr_node instanceof Leaf leaf)
         {
           found_overlaps.add(leaf);
-        }
-        else
+        } else
         {
           this.node_stack.push(((InnerNode) curr_node).first_child);
           this.node_stack.push(((InnerNode) curr_node).second_child);

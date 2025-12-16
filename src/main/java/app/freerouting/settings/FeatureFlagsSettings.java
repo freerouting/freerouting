@@ -11,15 +11,15 @@ public class FeatureFlagsSettings implements Serializable
   @SerializedName("multi_threading")
   public boolean multiThreading = true;
   @SerializedName("select_mode")
-  public boolean selectMode = false;
+  public boolean selectMode;
   @SerializedName("macros")
-  public boolean macros = false;
+  public boolean macros;
   @SerializedName("other_menu")
-  public boolean otherMenu = false;
+  public boolean otherMenu;
   @SerializedName("snapshots")
-  public boolean snapshots = false;
+  public boolean snapshots;
   @SerializedName("file_load_dialog_at_startup")
-  public boolean fileLoadDialogAtStartup = false;
+  public boolean fileLoadDialogAtStartup;
   @SerializedName("save_jobs")
-  public boolean saveJobs = false;
+  public boolean saveJobs;
 }

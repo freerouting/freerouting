@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * A client for Segment's HTTP API.
@@ -49,7 +50,7 @@ public class SegmentClient implements AnalyticsClient
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
-        connection.setRequestProperty("Authorization", "Basic " + java.util.Base64.getEncoder().encodeToString((WRITE_KEY + ":").getBytes()));
+        connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((WRITE_KEY + ":").getBytes()));
         connection.setDoOutput(true);
 
         // Write JSON payload to request

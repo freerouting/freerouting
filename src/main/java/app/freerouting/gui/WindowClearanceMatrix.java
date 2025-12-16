@@ -162,10 +162,10 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     result.add(scroll_pane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if (p_board_frame
+    if ("de"
+        .equalsIgnoreCase(p_board_frame
         .get_locale()
-        .getLanguage()
-        .equalsIgnoreCase("de"))
+        .getLanguage()))
     {
       JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle als Punkt eingegeben werden!");
       result.add(bug_label, BorderLayout.SOUTH);
@@ -195,7 +195,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
 
     // Check, if the name exists already.
     boolean name_exists = false;
-    for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
+    for (int i = 0; i < clearance_matrix.get_class_count(); i++)
     {
       if (new_name.equals(clearance_matrix.get_name(i)))
       {
@@ -222,9 +222,9 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
   {
     final BasicBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
     ClearanceMatrix clearance_matrix = routing_board.rules.clearance_matrix;
-    for (int i = clearance_matrix.get_class_count() - 1; i >= 2; --i)
+    for (int i = clearance_matrix.get_class_count() - 1; i >= 2; i--)
     {
-      for (int j = clearance_matrix.get_class_count() - 1; j >= 0; --j)
+      for (int j = clearance_matrix.get_class_count() - 1; j >= 0; j--)
       {
         if (i == j)
         {
@@ -276,7 +276,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
     {
       return false;
     }
-    for (int i = 0; i < reserved_name_chars.length; ++i)
+    for (int i = 0; i < reserved_name_chars.length; i++)
     {
       if (p_string.contains(reserved_name_chars[i]))
       {
@@ -290,7 +290,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
   {
     int result = 1;
     ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().rules.clearance_matrix;
-    for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
+    for (int i = 0; i < clearance_matrix.get_class_count(); i++)
     {
       result = Math.max(result, clearance_matrix
           .get_name(i)
@@ -342,7 +342,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
       column_names[0] = tm.getText("class");
 
       data = new Object[clearance_matrix.get_class_count()][];
-      for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
+      for (int i = 0; i < clearance_matrix.get_class_count(); i++)
       {
         this.column_names[i + 1] = clearance_matrix.get_name(i);
         this.data[i] = new Object[clearance_matrix.get_class_count() + 1];
@@ -453,7 +453,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
       fireTableCellUpdated(p_row, p_col);
       fireTableCellUpdated(p_col - 1, p_row + 1);
 
-      int board_value = (int) Math.round(board_handling.coordinate_transform.user_to_board((number_value).doubleValue()));
+      int board_value = (int) Math.round(board_handling.coordinate_transform.user_to_board(number_value.doubleValue()));
       int layer_no = rules_clearance_layer_combo_box.get_selected_layer().index;
       if (layer_no == ComboBoxLayer.ALL_LAYER_INDEX)
       {
@@ -506,9 +506,9 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
       GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
 
-      for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
+      for (int i = 0; i < clearance_matrix.get_class_count(); i++)
       {
-        for (int j = 0; j < clearance_matrix.get_class_count(); ++j)
+        for (int j = 0; j < clearance_matrix.get_class_count(); j++)
         {
           if (p_layer == ComboBoxLayer.ALL_LAYER_INDEX)
           {
@@ -517,28 +517,24 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow
             if (clearance_matrix.is_layer_dependent(i, j))
             {
               this.data[i][j + 1] = -1;
-            }
-            else
+            } else
             {
               float curr_table_value = (float) board_handling.coordinate_transform.board_to_user(clearance_matrix.get_value(i, j, 0, false));
               this.data[i][j + 1] = curr_table_value;
             }
-          }
-          else if (p_layer == ComboBoxLayer.INNER_LAYER_INDEX)
+          } else if (p_layer == ComboBoxLayer.INNER_LAYER_INDEX)
           {
             // all layers
 
             if (clearance_matrix.is_inner_layer_dependent(i, j))
             {
               this.data[i][j + 1] = -1;
-            }
-            else
+            } else
             {
               float curr_table_value = (float) board_handling.coordinate_transform.board_to_user(clearance_matrix.get_value(i, j, 1, false));
               this.data[i][j + 1] = curr_table_value;
             }
-          }
-          else
+          } else
           {
             float curr_table_value = (float) board_handling.coordinate_transform.board_to_user(clearance_matrix.get_value(i, j, p_layer, false));
             this.data[i][j + 1] = curr_table_value;

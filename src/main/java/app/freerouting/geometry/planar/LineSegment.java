@@ -411,7 +411,7 @@ public class LineSegment implements Serializable
 
     if (function_of_x)
     {
-      stair_width = (int) Math.round(((p_width * (double) abs_dx) / (double) abs_dy));
+      stair_width = (int) Math.round((p_width * (double) abs_dx) / (double) abs_dy);
       stair_count = (abs_dx - 1) / stair_width + 1;
       if (end_point.x < start_point.x)
       {
@@ -436,7 +436,7 @@ public class LineSegment implements Serializable
 
     int prev_line_point_x = start_point.x;
     int prev_line_point_y = start_point.y;
-    for (int i = 1; i < stair_count; ++i)
+    for (int i = 1; i < stair_count; i++)
     {
       int curr_line_point_x;
       int curr_line_point_y;
@@ -444,8 +444,7 @@ public class LineSegment implements Serializable
       {
         curr_line_point_x = start_point.x + i * stair_width;
         curr_line_point_y = (int) Math.round(this.get_line().function_value_approx(curr_line_point_x));
-      }
-      else
+      } else
       {
         curr_line_point_y = start_point.y + i * stair_width;
         curr_line_point_x = (int) Math.round(this.get_line().function_in_y_value_approx(curr_line_point_y));
@@ -454,8 +453,7 @@ public class LineSegment implements Serializable
       if (change_x_first)
       {
         result[curr_index] = new IntPoint(curr_line_point_x, prev_line_point_y);
-      }
-      else
+      } else
       {
         result[curr_index] = new IntPoint(prev_line_point_x, curr_line_point_y);
       }
@@ -527,7 +525,7 @@ public class LineSegment implements Serializable
     result[0] = start_point;
     IntPoint prev_line_point = start_point;
     int curr_index = 0;
-    for (int i = 1; i <= stair_count; ++i)
+    for (int i = 1; i <= stair_count; i++)
     {
       IntPoint curr_line_point;
       int curr_x;
@@ -535,15 +533,13 @@ public class LineSegment implements Serializable
       if (i == stair_count)
       {
         curr_line_point = end_point;
-      }
-      else
+      } else
       {
         if (function_of_x)
         {
           curr_x = start_point.x + i * stair_width;
           curr_y = (int) Math.round(this.get_line().function_value_approx(curr_x));
-        }
-        else
+        } else
         {
           curr_y = start_point.y + i * stair_width;
           curr_x = (int) Math.round(this.get_line().function_value_approx(curr_y));
@@ -558,15 +554,13 @@ public class LineSegment implements Serializable
         {
           curr_x = prev_line_point.x + Signum.as_int(stair_width) * Math.abs(curr_line_point.y - prev_line_point.y);
           curr_y = curr_line_point.y;
-        }
-        else
+        } else
         // horizontal first
         {
           curr_x = curr_line_point.x - Signum.as_int(stair_width) * Math.abs(curr_line_point.y - prev_line_point.y);
           curr_y = prev_line_point.y;
         }
-      }
-      else
+      } else
       // function of y
       {
         boolean diagonal_first = p_to_the_right && det > 0 || !p_to_the_right && det < 0;
@@ -575,8 +569,7 @@ public class LineSegment implements Serializable
         {
           curr_x = curr_line_point.x;
           curr_y = prev_line_point.y + Signum.as_int(stair_width) * Math.abs(curr_line_point.x - prev_line_point.x);
-        }
-        else
+        } else
         {
           curr_x = prev_line_point.x;
           curr_y = curr_line_point.y - Signum.as_int(stair_width) * Math.abs(curr_line_point.x - prev_line_point.x);
@@ -615,14 +608,13 @@ public class LineSegment implements Serializable
     Point line_start = this.start_point();
     Point line_end = this.end_point();
 
-    for (int edge_line_no = 0; edge_line_no < edge_count; ++edge_line_no)
+    for (int edge_line_no = 0; edge_line_no < edge_count; edge_line_no++)
     {
       Line next_line;
       if (edge_line_no == edge_count - 1)
       {
         next_line = p_shape.border_line(0);
-      }
-      else
+      } else
       {
         next_line = p_shape.border_line(edge_line_no + 1);
       }
@@ -678,8 +670,7 @@ public class LineSegment implements Serializable
             if (edge_line_no == 0)
             {
               prev_prev_corner = p_shape.corner(edge_count - 1);
-            }
-            else
+            } else
             {
               prev_prev_corner = p_shape.corner(edge_line_no - 1);
             }
@@ -688,8 +679,7 @@ public class LineSegment implements Serializable
             if (edge_line_no == edge_count - 1)
             {
               next_corner = p_shape.corner(0);
-            }
-            else
+            } else
             {
               next_corner = p_shape.corner(edge_line_no + 1);
             }
@@ -713,12 +703,10 @@ public class LineSegment implements Serializable
             if (edge_line_no == edge_count - 2)
             {
               next_next_corner = p_shape.corner(0);
-            }
-            else if (edge_line_no == edge_count - 1)
+            } else if (edge_line_no == edge_count - 1)
             {
               next_next_corner = p_shape.corner(1);
-            }
-            else
+            } else
             {
               next_next_corner = p_shape.corner(edge_line_no + 2);
             }
@@ -732,7 +720,7 @@ public class LineSegment implements Serializable
             }
           }
           boolean intersection_already_handled = false;
-          for (int i = 0; i < intersection_count; ++i)
+          for (int i = 0; i < intersection_count; i++)
           {
             if (is.equals(intersection[i]))
             {
@@ -748,8 +736,7 @@ public class LineSegment implements Serializable
               result[intersection_count] = edge_line_no;
               intersection[intersection_count] = is;
               ++intersection_count;
-            }
-            else
+            } else
             {
               FRLogger.warn("border_intersections: intersection_count (" + intersection_count + ") is too big!");
             }
@@ -799,7 +786,7 @@ public class LineSegment implements Serializable
    */
   public LineSegment sort_endpoints_in_x_y()
   {
-    boolean swap_endlines = (start_point().compare_x_y(end_point()) > 0);
+    boolean swap_endlines = start_point().compare_x_y(end_point()) > 0;
     LineSegment result;
 
     if (swap_endlines)

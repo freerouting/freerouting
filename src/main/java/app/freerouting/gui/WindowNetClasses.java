@@ -162,10 +162,10 @@ public class WindowNetClasses extends BoardSavableSubWindow
     this.center_panel.add(scroll_pane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if (board_frame
+    if ("de"
+        .equalsIgnoreCase(board_frame
         .get_locale()
-        .getLanguage()
-        .equalsIgnoreCase("de"))
+        .getLanguage()))
     {
       JLabel bug_label = new JLabel("Wegen eines Java-System-Bugs muss das Dezimalkomma in dieser Tabelle zur Zeit als Punkt eingegeben werden!");
       this.center_panel.add(bug_label, BorderLayout.SOUTH);
@@ -190,7 +190,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
   private void add_combobox_items()
   {
     RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-    for (int i = 0; i < routing_board.rules.clearance_matrix.get_class_count(); ++i)
+    for (int i = 0; i < routing_board.rules.clearance_matrix.get_class_count(); i++)
     {
       cl_class_combo_box.addItem(routing_board.rules.clearance_matrix.get_name(i));
     }
@@ -254,7 +254,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
       NetClass net_rule = board_rules.net_classes.get((String) net_class_name);
       // Check, if net_rule is used in a net of the net list
-      for (int i = 1; i < board_rules.nets.max_net_no(); ++i)
+      for (int i = 1; i < board_rules.nets.max_net_no(); i++)
       {
         Net curr_net = board_rules.nets.get(i);
         if (curr_net.get_class() == net_rule)
@@ -296,7 +296,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
       }
       RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
-      for (int i = 0; i < selected_class_arr.length; ++i)
+      for (int i = 0; i < selected_class_arr.length; i++)
       {
         selected_class_arr[i] = routing_board.rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
       }
@@ -306,7 +306,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
       for (Item curr_item : board_items)
       {
         boolean item_matches = false;
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           NetClass curr_net_class = nets
               .get(curr_item.get_net_no(i))
@@ -315,7 +315,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
           {
             continue;
           }
-          for (int j = 0; j < selected_class_arr.length; ++j)
+          for (int j = 0; j < selected_class_arr.length; j++)
           {
             if (curr_net_class == selected_class_arr[i])
             {
@@ -352,18 +352,18 @@ public class WindowNetClasses extends BoardSavableSubWindow
       GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       BoardRules board_rules = board_handling.get_routing_board().rules;
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
-      for (int i = 0; i < selected_class_arr.length; ++i)
+      for (int i = 0; i < selected_class_arr.length; i++)
       {
         selected_class_arr[i] = board_rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
       }
       int max_net_no = board_rules.nets.max_net_no();
-      for (int i = 1; i <= max_net_no; ++i)
+      for (int i = 1; i <= max_net_no; i++)
       {
         board_handling.set_incompletes_filter(i, true);
         NetClass curr_net_class = board_rules.nets
             .get(i)
             .get_class();
-        for (int j = 0; j < selected_class_arr.length; ++j)
+        for (int j = 0; j < selected_class_arr.length; j++)
         {
           if (curr_net_class == selected_class_arr[j])
           {
@@ -390,17 +390,17 @@ public class WindowNetClasses extends BoardSavableSubWindow
       GuiBoardManager board_handling = board_frame.board_panel.board_handling;
       BoardRules board_rules = board_handling.get_routing_board().rules;
       NetClass[] selected_class_arr = new NetClass[selected_rows.length];
-      for (int i = 0; i < selected_class_arr.length; ++i)
+      for (int i = 0; i < selected_class_arr.length; i++)
       {
         selected_class_arr[i] = board_rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
       }
       Collection<Printable> contained_nets = new LinkedList<>();
       int max_net_no = board_rules.nets.max_net_no();
-      for (int i = 1; i <= max_net_no; ++i)
+      for (int i = 1; i <= max_net_no; i++)
       {
         Net curr_net = board_rules.nets.get(i);
         NetClass curr_net_class = curr_net.get_class();
-        for (int j = 0; j < selected_class_arr.length; ++j)
+        for (int j = 0; j < selected_class_arr.length; j++)
         {
           if (curr_net_class == selected_class_arr[j])
           {
@@ -471,7 +471,7 @@ public class WindowNetClasses extends BoardSavableSubWindow
     {
       column_names = new String[ColumnName.values().length];
 
-      for (int i = 0; i < column_names.length; ++i)
+      for (int i = 0; i < column_names.length; i++)
       {
         column_names[i] = tm.getText(ColumnName.values()[i].toString());
       }
@@ -485,11 +485,11 @@ public class WindowNetClasses extends BoardSavableSubWindow
     {
       BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().rules;
       this.data = new Object[board_rules.net_classes.count()][];
-      for (int i = 0; i < data.length; ++i)
+      for (int i = 0; i < data.length; i++)
       {
         this.data[i] = new Object[ColumnName.values().length];
       }
-      for (int i = 0; i < data.length; ++i)
+      for (int i = 0; i < data.length; i++)
       {
         NetClass curr_net_class = board_rules.net_classes.get(i);
         this.data[i][ColumnName.NAME.ordinal()] = curr_net_class.get_name();

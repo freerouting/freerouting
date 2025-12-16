@@ -18,7 +18,7 @@ public class LayerStructure
   {
     arr = new Layer[p_layer_list.size()];
     Iterator<Layer> it = p_layer_list.iterator();
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       arr[i] = it.next();
     }
@@ -30,7 +30,7 @@ public class LayerStructure
   public LayerStructure(app.freerouting.board.LayerStructure p_board_layer_structure)
   {
     arr = new Layer[p_board_layer_structure.arr.length];
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       app.freerouting.board.Layer board_layer = p_board_layer_structure.arr[i];
       arr[i] = new Layer(board_layer.name, i, board_layer.is_signal);
@@ -42,7 +42,7 @@ public class LayerStructure
    */
   public int get_no(String p_name)
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (p_name.equals(arr[i].name))
       {

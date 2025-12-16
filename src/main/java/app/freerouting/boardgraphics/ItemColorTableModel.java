@@ -15,7 +15,7 @@ import java.util.Locale;
 public class ItemColorTableModel extends ColorTableModel implements Serializable
 {
 
-  private transient boolean item_colors_precalculated = false;
+  private transient boolean item_colors_precalculated;
   private transient Color[][] precalculated_item_colors;
 
   // Create the default color table for the layers
@@ -26,7 +26,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     int row_count = p_layer_structure.arr.length;
     final int item_type_count = ColumnNames.values().length - 1;
     int signal_layer_no = 0;
-    for (int layer = 0; layer < row_count; ++layer)
+    for (int layer = 0; layer < row_count; layer++)
     {
       boolean is_signal_layer = p_layer_structure.arr[layer].is_signal;
       data[layer] = new Object[item_type_count + 1];
@@ -40,8 +40,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
         curr_row[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(0, 150, 0);
         curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
         curr_row[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(150, 50, 0);
-      }
-      else if (layer == row_count - 1)
+      } else if (layer == row_count - 1)
       {
         // B.Cu
         curr_row[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
@@ -49,8 +48,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
         curr_row[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(100, 100, 0);
         curr_row[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
         curr_row[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(160, 80, 0);
-      }
-      else
+      } else
       {
         // Inner layers like In1.Cu, In2.Cu, etc.
         if (is_signal_layer)
@@ -67,8 +65,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
             case 5 -> new Color(167, 165, 198);
             default -> new Color(40, 204, 217);
           };
-        }
-        else // power layer
+        } else // power layer
         {
           curr_row[ColumnNames.TRACES.ordinal()] = Color.BLACK;
         }
@@ -99,7 +96,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   public ItemColorTableModel(ItemColorTableModel p_item_color_model)
   {
     super(p_item_color_model.data.length, p_item_color_model.locale);
-    for (int i = 0; i < this.data.length; ++i)
+    for (int i = 0; i < this.data.length; i++)
     {
       this.data[i] = new Object[p_item_color_model.data[i].length];
       System.arraycopy(p_item_color_model.data[i], 0, this.data[i], 0, this.data[i].length);
@@ -275,7 +272,7 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
 
   private void set_colors(int p_item_type, Color[] p_color_arr)
   {
-    for (int layer = 0; layer < this.data.length - 1; ++layer)
+    for (int layer = 0; layer < this.data.length - 1; layer++)
     {
       int color_index = layer % p_color_arr.length;
       this.data[layer][p_item_type] = p_color_arr[color_index];
@@ -287,11 +284,11 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   private void precalculate_item_colors()
   {
     precalculated_item_colors = new Color[ColumnNames.values().length - 1][];
-    for (int i = 0; i < precalculated_item_colors.length; ++i)
+    for (int i = 0; i < precalculated_item_colors.length; i++)
     {
       precalculated_item_colors[i] = new Color[data.length];
       Color[] curr_row = precalculated_item_colors[i];
-      for (int j = 0; j < data.length; ++j)
+      for (int j = 0; j < data.length; j++)
       {
         curr_row[j] = (Color) getValueAt(j, i + 1);
       }

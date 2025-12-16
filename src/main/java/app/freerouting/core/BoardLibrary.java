@@ -97,7 +97,7 @@ public class BoardLibrary implements Serializable
       return new Padstack[0];
     }
     Padstack[] result = new Padstack[via_padstacks.size()];
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = via_padstacks.get(i);
     }
@@ -188,10 +188,10 @@ public class BoardLibrary implements Serializable
         }
       }
     }
-    for (int i = 1; i <= this.packages.count(); ++i)
+    for (int i = 1; i <= this.packages.count(); i++)
     {
       Package curr_package = this.packages.get(i);
-      for (int j = 0; j < curr_package.pin_count(); ++j)
+      for (int j = 0; j < curr_package.pin_count(); j++)
       {
         if (curr_package.get_pin(j).padstack_no == p_padstack.no)
         {

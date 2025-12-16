@@ -31,7 +31,7 @@ public class BigIntDirection extends Direction implements Serializable
   @Override
   public boolean is_orthogonal()
   {
-    return (x.signum() == 0 || y.signum() == 0);
+    return x.signum() == 0 || y.signum() == 0;
   }
 
   @Override

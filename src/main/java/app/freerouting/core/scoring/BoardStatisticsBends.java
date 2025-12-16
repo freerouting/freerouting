@@ -10,11 +10,11 @@ import java.io.Serializable;
 public class BoardStatisticsBends implements Serializable
 {
   @SerializedName("total_count")
-  public Integer totalCount = null;
+  public Integer totalCount;
   @SerializedName("90_degree_count")
-  public Integer ninetyDegreeCount = null;
+  public Integer ninetyDegreeCount;
   @SerializedName("45_degree_count")
-  public Integer fortyFiveDegreeCount = null;
+  public Integer fortyFiveDegreeCount;
   @SerializedName("other_angle_count")
-  public Integer otherAngleCount = null;
+  public Integer otherAngleCount;
 }

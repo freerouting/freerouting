@@ -24,7 +24,7 @@ public class LayerStructure implements Serializable
    */
   public int get_no(String p_name)
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (p_name.equals(arr[i].name))
       {
@@ -39,7 +39,7 @@ public class LayerStructure implements Serializable
    */
   public int get_no(Layer p_layer)
   {
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (p_layer == arr[i])
       {
@@ -55,7 +55,7 @@ public class LayerStructure implements Serializable
   public int signal_layer_count()
   {
     int found_signal_layers = 0;
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (arr[i].is_signal)
       {
@@ -71,7 +71,7 @@ public class LayerStructure implements Serializable
   public Layer get_signal_layer(int p_no)
   {
     int found_signal_layers = 0;
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (arr[i].is_signal)
       {
@@ -91,7 +91,7 @@ public class LayerStructure implements Serializable
   public int get_signal_layer_no(Layer p_layer)
   {
     int found_signal_layers = 0;
-    for (int i = 0; i < arr.length; ++i)
+    for (int i = 0; i < arr.length; i++)
     {
       if (arr[i] == p_layer)
       {

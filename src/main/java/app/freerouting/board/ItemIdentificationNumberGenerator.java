@@ -12,7 +12,7 @@ public class ItemIdentificationNumberGenerator implements IdentificationNumberGe
 {
 
   private static final int c_max_id_no = Integer.MAX_VALUE / 2;
-  private int last_generated_id_no = 0;
+  private int last_generated_id_no;
 
   /**
    * Creates a new ItemIdNoGenerator

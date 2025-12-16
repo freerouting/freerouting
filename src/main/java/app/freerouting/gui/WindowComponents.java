@@ -32,12 +32,12 @@ public class WindowComponents extends WindowObjectListWithFilter
   {
     Components components = this.board_frame.board_panel.board_handling.get_routing_board().components;
     Component[] sorted_arr = new Component[components.count()];
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       sorted_arr[i] = components.get(i + 1);
     }
     Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; ++i)
+    for (int i = 0; i < sorted_arr.length; i++)
     {
       this.add_to_list(sorted_arr[i]);
     }
@@ -61,7 +61,7 @@ public class WindowComponents extends WindowObjectListWithFilter
       {
         Component curr_component = routing_board.components.get(curr_item.get_component_no());
         boolean component_matches = false;
-        for (int i = 0; i < selected_components.size(); ++i)
+        for (int i = 0; i < selected_components.size(); i++)
         {
           if (curr_component == selected_components.get(i))
           {

@@ -222,7 +222,7 @@ public class ForcedPadAlgo
       {
         break;
       }
-      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); i++)
       {
         Line curr_line = curr_substitute_trace.polyline().arr[i + 1];
         Direction curr_dir = curr_line.direction();
@@ -230,8 +230,7 @@ public class ForcedPadAlgo
         if (p_check_only_front)
         {
           is_in_front = in_front_of_pad(curr_line, p_pad_shape, p_from_side.no, curr_substitute_trace.get_half_width(), true);
-        }
-        else
+        } else
         {
           is_in_front = true;
         }
@@ -310,7 +309,7 @@ public class ForcedPadAlgo
         continue;
       }
       int[] curr_net_no_arr = curr_substitute_trace.net_no_arr;
-      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+      for (int i = 0; i < curr_substitute_trace.tile_shape_count(); i++)
       {
         CalcShapeAndFromSide curr = new CalcShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, false);
         if (!shove_trace_algo.insert(curr.shape, curr.from_side, p_layer, curr_net_no_arr, curr_substitute_trace.clearance_class_no(), p_ignore_items, p_max_recursion_depth - 1, p_max_via_recursion_depth, 0))
@@ -318,7 +317,7 @@ public class ForcedPadAlgo
           return false;
         }
       }
-      for (int i = 0; i < curr_substitute_trace.corner_count(); ++i)
+      for (int i = 0; i < curr_substitute_trace.corner_count(); i++)
       {
         board.join_changed_area(curr_substitute_trace
             .polyline()
@@ -336,8 +335,7 @@ public class ForcedPadAlgo
       if (board.changed_area != null)
       {
         opt_area = board.changed_area.get_area(p_layer);
-      }
-      else
+      } else
       {
         opt_area = null;
       }
@@ -352,7 +350,7 @@ public class ForcedPadAlgo
 
       if (!tails_exist_before)
       {
-        for (int i = 0; i < 2; ++i)
+        for (int i = 0; i < 2; i++)
         {
           Trace tail = board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
           if (tail != null)
@@ -377,7 +375,7 @@ public class ForcedPadAlgo
   {
     int[] empty_arr = new int[0];
     TileShape offset_shape = (TileShape) p_shape.offset(p_offset);
-    for (int i = 0; i < offset_shape.border_line_count(); ++i)
+    for (int i = 0; i < offset_shape.border_line_count(); i++)
     {
       TileShape check_shape = calc_check_shape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
 
@@ -387,7 +385,7 @@ public class ForcedPadAlgo
       }
     }
     // try second check without clearance
-    for (int i = 0; i < offset_shape.border_line_count(); ++i)
+    for (int i = 0; i < offset_shape.border_line_count(); i++)
     {
       TileShape check_shape = calc_check_shape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
       if (board.check_trace_shape(check_shape, p_layer, empty_arr, 0, null))

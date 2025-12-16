@@ -1,5 +1,7 @@
 package app.freerouting.management;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchFanout;
 import app.freerouting.autoroute.BatchOptimizer;
@@ -9,12 +11,11 @@ import app.freerouting.core.*;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
+import com.sun.management.ThreadMXBean;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
-
-import static app.freerouting.Freerouting.globalSettings;
 
 /**
  * Used for running an action in a separate thread, that can be stopped by the user.
@@ -159,7 +160,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread
   private void monitorCpuAndMemoryUsage(RoutingJob job)
   {
     // Get the ThreadMXBean instance and cast it to com.sun.management.ThreadMXBean
-    com.sun.management.ThreadMXBean threadMXBean = (com.sun.management.ThreadMXBean) ManagementFactory.getThreadMXBean();
+    ThreadMXBean threadMXBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
 
     // Get all live thread IDs
     long[] threadIds = threadMXBean.getAllThreadIds();

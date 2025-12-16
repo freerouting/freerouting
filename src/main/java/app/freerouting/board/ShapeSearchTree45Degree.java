@@ -31,7 +31,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     int curr_border_line_no = p_obstacle_border_line_no;
     int curr_obstacle_corner_x = p_obstacle_shape.corner_x(p_obstacle_border_line_no);
     int curr_obstacle_corner_y = p_obstacle_shape.corner_y(p_obstacle_border_line_no);
-    for (int j = 0; j < 5; ++j)
+    for (int j = 0; j < 5; j++)
     {
 
       if (p_room_shape.side_of_border_line(curr_obstacle_corner_x, curr_obstacle_corner_y, curr_border_line_no) != Side.ON_THE_LEFT)
@@ -45,7 +45,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     int next_obstacle_corner_x = p_obstacle_shape.corner_x(next_obstacle_border_line_no);
     int next_obstacle_corner_y = p_obstacle_shape.corner_y(next_obstacle_border_line_no);
     curr_border_line_no = (p_obstacle_border_line_no + 5) % 8;
-    for (int j = 0; j < 3; ++j)
+    for (int j = 0; j < 3; j++)
     {
       if (p_room_shape.side_of_border_line(next_obstacle_corner_x, next_obstacle_corner_y, curr_border_line_no) != Side.ON_THE_LEFT)
       {
@@ -158,7 +158,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
       {
         octagon_room_shape = octagon;
       }
-      else if (room_shape instanceof app.freerouting.geometry.planar.Simplex)
+      else if (room_shape instanceof Simplex)
       {
         octagon_room_shape = room_shape.bounding_octagon();
         if (octagon_room_shape == null)
@@ -236,8 +236,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
                       .get_shape()
                       .bounding_box());
                 }
-              }
-              else
+              } else
               {
                 new_result.add(curr_room);
                 new_bounding_shape = new_bounding_shape.union(curr_shape.bounding_box());
@@ -246,8 +245,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
             result = new_result;
             bounding_shape = new_bounding_shape;
           }
-        }
-        else
+        } else
         {
           this.node_stack.push(((InnerNode) curr_node).first_child);
           this.node_stack.push(((InnerNode) curr_node).second_child);
@@ -313,7 +311,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     {
       shape_to_be_contained = contained_shape.bounding_octagon();
     }
-    else if (contained_shape instanceof app.freerouting.geometry.planar.Simplex)
+    else if (contained_shape instanceof Simplex)
     {
       shape_to_be_contained = contained_shape.bounding_octagon();
       if (shape_to_be_contained == null)
@@ -335,7 +333,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
           .get_shape()
           .bounding_octagon();
     }
-    else if (p_incomplete_room.get_shape() instanceof app.freerouting.geometry.planar.Simplex)
+    else if (p_incomplete_room.get_shape() instanceof Simplex)
     {
       room_shape = p_incomplete_room
           .get_shape()
@@ -355,7 +353,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     double cut_line_distance = -1;
     int restraining_line_no = -1;
 
-    for (int obstacle_line_no = 0; obstacle_line_no < 8; ++obstacle_line_no)
+    for (int obstacle_line_no = 0; obstacle_line_no < 8; obstacle_line_no++)
     {
       double curr_distance = signed_line_distance(p_obstacle_shape, obstacle_line_no, shape_to_be_contained);
       if (curr_distance > cut_line_distance)
@@ -384,7 +382,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
     }
 
     restraining_line_no = -1;
-    for (int obstacle_line_no = 0; obstacle_line_no < 8; ++obstacle_line_no)
+    for (int obstacle_line_no = 0; obstacle_line_no < 8; obstacle_line_no++)
     {
       if (obstacle_segment_touches_inside(p_obstacle_shape, obstacle_line_no, room_shape))
       {
@@ -498,14 +496,13 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
       return new TileShape[0];
     }
     TileShape[] result = new TileShape[p_drill_item.tile_shape_count()];
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       Shape curr_shape = p_drill_item.get_shape(i);
       if (curr_shape == null)
       {
         result[i] = null;
-      }
-      else
+      } else
       {
         TileShape curr_tile_shape = curr_shape.bounding_octagon();
         if (curr_tile_shape.is_IntBox())
@@ -528,7 +525,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
   TileShape[] calculate_tree_shapes(ObstacleArea p_obstacle_area)
   {
     TileShape[] result = super.calculate_tree_shapes(p_obstacle_area);
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = result[i].bounding_octagon();
     }
@@ -539,7 +536,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree
   TileShape[] calculate_tree_shapes(BoardOutline p_outline)
   {
     TileShape[] result = super.calculate_tree_shapes(p_outline);
-    for (int i = 0; i < result.length; ++i)
+    for (int i = 0; i < result.length; i++)
     {
       result[i] = result[i].bounding_octagon();
     }

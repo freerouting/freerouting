@@ -19,7 +19,7 @@ public class BoardValidator
 {
   private static int[] last_violation_count;
   private static boolean first_time = true;
-  private static int prev_stub_count = 0;
+  private static int prev_stub_count;
 
   /**
    * Does some consistency checking on the routing board and may be some other actions. Returns
@@ -35,7 +35,7 @@ public class BoardValidator
     {
       last_violation_count = new int[layer_count];
     }
-    for (int layer = 0; layer < layer_count; ++layer)
+    for (int layer = 0; layer < layer_count; layer++)
     {
       if (first_time)
       {
@@ -113,7 +113,7 @@ public class BoardValidator
   public static boolean check(String p_s, BasicBoard p_board, Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_cl_type)
   {
     TileShape[] offset_shapes = p_polyline.offset_shapes(p_half_width, 0, p_polyline.arr.length - 1);
-    for (int i = 0; i < offset_shapes.length; ++i)
+    for (int i = 0; i < offset_shapes.length; i++)
     {
       Collection<Item> obstacles = p_board.search_tree_manager.get_default_tree().overlapping_items_with_clearance(offset_shapes[i], p_layer, p_net_no_arr, p_cl_type);
       for (Item curr_obs : obstacles)
@@ -174,7 +174,7 @@ public class BoardValidator
 
   public static boolean corners_on_grid(String p_s, Polyline p_polyline)
   {
-    for (int i = 0; i < p_polyline.corner_count(); ++i)
+    for (int i = 0; i < p_polyline.corner_count(); i++)
     {
       if (!(p_polyline.corner(i) instanceof IntPoint))
       {
@@ -286,5 +286,8 @@ public class BoardValidator
       }
     }
     return false;
+  }
+
+  private BoardValidator() {
   }
 }

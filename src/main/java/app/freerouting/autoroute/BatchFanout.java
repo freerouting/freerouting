@@ -35,7 +35,7 @@ public class BatchFanout extends NamedAlgorithm
 
     Collection<app.freerouting.board.Pin> board_smd_pin_list = board.get_smd_pins();
     this.sorted_components = new TreeSet<>();
-    for (int i = 1; i <= board.components.count(); ++i)
+    for (int i = 1; i <= board.components.count(); i++)
     {
       app.freerouting.board.Component curr_board_component = board.components.get(i);
       Component curr_component = new Component(curr_board_component, board_smd_pin_list);
@@ -51,7 +51,7 @@ public class BatchFanout extends NamedAlgorithm
     this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.STARTED, 0, this.board.get_hash()));
 
     int curr_pass_no;
-    for (curr_pass_no = 0; curr_pass_no < this.settings.maxPasses; ++curr_pass_no)
+    for (curr_pass_no = 0; curr_pass_no < this.settings.maxPasses; curr_pass_no++)
     {
       String current_board_hash = this.board.get_hash();
       this.fireTaskStateChangedEvent(new TaskStateChangedEvent(this, TaskState.RUNNING, curr_pass_no, current_board_hash));

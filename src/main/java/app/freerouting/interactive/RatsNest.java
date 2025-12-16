@@ -19,7 +19,7 @@ public class RatsNest
   public final int max_connections;
   private final NetIncompletes[] net_incompletes;
   private final boolean[] is_filtered;
-  public boolean hidden = false;
+  public boolean hidden;
 
   /**
    * Creates a new instance of RatsNest
@@ -29,7 +29,7 @@ public class RatsNest
     int max_net_no = p_board.rules.nets.max_net_no();
     // Create the net item lists at once for performance reasons.
     Vector<Collection<Item>> net_item_lists = new Vector<>(max_net_no);
-    for (int i = 0; i < max_net_no; ++i)
+    for (int i = 0; i < max_net_no; i++)
     {
       net_item_lists.add(new LinkedList<>());
     }
@@ -43,7 +43,7 @@ public class RatsNest
       }
       if (curr_item instanceof Connectable)
       {
-        for (int i = 0; i < curr_item.net_count(); ++i)
+        for (int i = 0; i < curr_item.net_count(); i++)
         {
           net_item_lists
               .get(curr_item.get_net_no(i) - 1)
@@ -57,7 +57,7 @@ public class RatsNest
         .sum() - net_item_lists.size();
     this.net_incompletes = new NetIncompletes[max_net_no];
     this.is_filtered = new boolean[max_net_no];
-    for (int i = 0; i < net_incompletes.length; ++i)
+    for (int i = 0; i < net_incompletes.length; i++)
     {
       net_incompletes[i] = new NetIncompletes(i + 1, net_item_lists.get(i), p_board);
       is_filtered[i] = false;
@@ -96,7 +96,7 @@ public class RatsNest
   public int incomplete_count()
   {
     int result = 0;
-    for (int i = 0; i < net_incompletes.length; ++i)
+    for (int i = 0; i < net_incompletes.length; i++)
     {
       result += net_incompletes[i].count();
     }
@@ -115,7 +115,7 @@ public class RatsNest
   public int length_violation_count()
   {
     int result = 0;
-    for (int i = 0; i < net_incompletes.length; ++i)
+    for (int i = 0; i < net_incompletes.length; i++)
     {
       if (net_incompletes[i].get_length_violation() != 0)
       {
@@ -146,7 +146,7 @@ public class RatsNest
   {
     AirLine[] result = new AirLine[incomplete_count()];
     int curr_index = 0;
-    for (int i = 0; i < net_incompletes.length; ++i)
+    for (int i = 0; i < net_incompletes.length; i++)
     {
       Collection<AirLine> curr_list = net_incompletes[i].incompletes;
       for (AirLine curr_line : curr_list)
@@ -175,7 +175,7 @@ public class RatsNest
   public boolean recalculate_length_violations()
   {
     boolean result = false;
-    for (int i = 0; i < net_incompletes.length; ++i)
+    for (int i = 0; i < net_incompletes.length; i++)
     {
       if (net_incompletes[i].calc_length_violation())
       {
@@ -209,7 +209,7 @@ public class RatsNest
   {
     boolean draw_length_violations_only = this.hidden;
 
-    for (int i = 0; i < net_incompletes.length; ++i)
+    for (int i = 0; i < net_incompletes.length; i++)
     {
       if (!is_filtered[i])
       {
