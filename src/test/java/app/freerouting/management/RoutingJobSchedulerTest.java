@@ -1,50 +1,48 @@
 package app.freerouting.management;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.settings.GlobalSettings;
+import java.util.LinkedList;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedList;
-import java.util.UUID;
-
-public class RoutingJobSchedulerTest
-{
+public class RoutingJobSchedulerTest {
 
   private RoutingJobScheduler scheduler;
 
   @BeforeEach
-  void setUp()
-  {
+  void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
 
   }
 
   @AfterEach
-  void tearDown()
-  {
+  void tearDown() {
     // Clear the job queue after each test
     scheduler.jobs.clear();
   }
 
   @Test
-  void testGetInstance()
-  {
+  void testGetInstance() {
     RoutingJobScheduler instance1 = RoutingJobScheduler.getInstance();
     RoutingJobScheduler instance2 = RoutingJobScheduler.getInstance();
     assertSame(instance1, instance2, "RoutingJobScheduler should be a singleton.");
   }
 
   @Test
-  void testEnqueueJob()
-  {
+  void testEnqueueJob() {
     // Create a test session
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
@@ -64,8 +62,7 @@ public class RoutingJobSchedulerTest
   }
 
   @Test
-  void testGetQueuePosition()
-  {
+  void testGetQueuePosition() {
     // Create test jobs
     RoutingJob job1 = createTestJob();
     RoutingJob job2 = createTestJob();
@@ -83,8 +80,7 @@ public class RoutingJobSchedulerTest
   }
 
   @Test
-  void testListJobs()
-  {
+  void testListJobs() {
     // Create test jobs
     RoutingJob job1 = createTestJob();
     RoutingJob job2 = createTestJob();
@@ -101,8 +97,7 @@ public class RoutingJobSchedulerTest
   }
 
   @Test
-  void testGetJob()
-  {
+  void testGetJob() {
     // Create a test job
     RoutingJob job = createTestJob();
 
@@ -115,8 +110,7 @@ public class RoutingJobSchedulerTest
   }
 
   @Test
-  void testClearJobs()
-  {
+  void testClearJobs() {
     // Create a test session
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
@@ -144,8 +138,7 @@ public class RoutingJobSchedulerTest
   }
 
   // Helper method to create a test job with a random session ID
-  private RoutingJob createTestJob()
-  {
+  private RoutingJob createTestJob() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
     Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
@@ -153,20 +146,16 @@ public class RoutingJobSchedulerTest
   }
 
   // Helper method to create a test job with a specific session ID
-  private RoutingJob createTestJob(UUID sessionId)
-  {
+  private RoutingJob createTestJob(UUID sessionId) {
     RoutingJob job = new RoutingJob();
     job.sessionId = sessionId;
     return job;
   }
 
   // Helper method to check if a job array contains a specific job
-  private boolean containsJob(RoutingJob[] jobs, RoutingJob targetJob)
-  {
-    for (RoutingJob job : jobs)
-    {
-      if (job == targetJob)
-      {
+  private boolean containsJob(RoutingJob[] jobs, RoutingJob targetJob) {
+    for (RoutingJob job : jobs) {
+      if (job == targetJob) {
         return true;
       }
     }
@@ -174,8 +163,7 @@ public class RoutingJobSchedulerTest
   }
 
   // Helper method to check if a job list contains a specific job
-  private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob)
-  {
+  private boolean containsJob(LinkedList<RoutingJob> jobs, RoutingJob targetJob) {
     return jobs.contains(targetJob);
   }
 }

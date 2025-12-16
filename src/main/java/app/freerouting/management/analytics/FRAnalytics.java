@@ -6,7 +6,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.dto.Properties;
 import app.freerouting.management.analytics.dto.Traits;
 import app.freerouting.management.gson.GsonProvider;
-
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Locale;
@@ -16,10 +15,9 @@ import java.util.Objects;
 /**
  * A class to manage analytics for the application.
  */
-public class FRAnalytics
-{
-  private static final HashMap<String, String> appLocationTable = new HashMap<String, String>()
-  {
+public class FRAnalytics {
+
+  private static final HashMap<String, String> appLocationTable = new HashMap<String, String>() {
     {
       put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
       put("app.freerouting.gui.WindowObjectVisibility", "app.freerouting.gui/Appearance/ObjectTransparency");
@@ -103,66 +101,56 @@ public class FRAnalytics
   private static long autorouterStartedAt;
   private static long routeOptimizerStartedAt;
 
-  public static void setAccessKey(String libraryVersion, String key)
-  {
+  private FRAnalytics() {
+  }
+
+  public static void setAccessKey(String libraryVersion, String key) {
     //analytics = new SegmentClient(libraryVersion, key);
     //analytics = new BigQueryClient(libraryVersion, key);
     analytics = new FreeroutingAnalyticsClient(libraryVersion, key);
   }
 
-  public static void setUserId(String userId, String userEmail)
-  {
+  public static void setUserId(String userId, String userEmail) {
     permanent_user_id = userId;
     permanent_user_email = userEmail;
   }
 
-  private static void identifyUser(String userId, Map<String, String> traits)
-  {
-    if (analytics == null)
-    {
+  private static void identifyUser(String userId, Map<String, String> traits) {
+    if (analytics == null) {
       return;
     }
 
-    try
-    {
+    try {
       Traits t = new Traits();
       t.putAll(traits);
 
       analytics.identify(userId, null, t);
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       FRLogger.error("Exception in FRAnalytics.identifyUser: " + e.getMessage(), e);
     }
   }
 
-  private static void identifyAnonymous(String anonymousId, Map<String, String> traits)
-  {
-    if (analytics == null)
-    {
+  private static void identifyAnonymous(String anonymousId, Map<String, String> traits) {
+    if (analytics == null) {
       return;
     }
 
-    try
-    {
+    try {
       Traits t = new Traits();
       t.putAll(traits);
 
       analytics.identify(null, anonymousId, t);
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       FRLogger.error("Exception in FRAnalytics.identifyAnonymous: " + e.getMessage(), e);
     }
   }
 
-  private static void trackAnonymousAction(String anonymousId, String action, Map<String, String> properties)
-  {
-    if (analytics == null)
-    {
+  private static void trackAnonymousAction(String anonymousId, String action, Map<String, String> properties) {
+    if (analytics == null) {
       return;
     }
 
-    try
-    {
+    try {
       Properties p = new Properties();
       p.put("current_time_utc", Instant
           .now()
@@ -172,20 +160,17 @@ public class FRAnalytics
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
-      if (properties != null)
-      {
+      if (properties != null) {
         p.putAll(properties);
       }
 
       analytics.track(null, anonymousId, action, p);
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       FRLogger.error("Exception in FRAnalytics.trackAnonymousAction: " + e.getMessage(), e);
     }
   }
 
-  public static void identify()
-  {
+  public static void identify() {
     Map<String, String> traits = new HashMap<>();
     traits.put("anonymous", "true");
     traits.put("user_id", permanent_user_id);
@@ -194,12 +179,10 @@ public class FRAnalytics
     identifyAnonymous(permanent_user_id, traits);
   }
 
-  public static void setAppLocation(String windowClassName, String windowTitle)
-  {
+  public static void setAppLocation(String windowClassName, String windowTitle) {
     windowClassName = translateClassNameToUrl(windowClassName);
 
-    if (Objects.equals(appPreviousLocation, windowClassName))
-    {
+    if (Objects.equals(appPreviousLocation, windowClassName)) {
       return;
     }
 
@@ -211,8 +194,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Window Changed", p);
   }
 
-  public static void buttonClicked(String buttonClassName, String buttonText)
-  {
+  public static void buttonClicked(String buttonClassName, String buttonText) {
     buttonClassName = translateClassNameToUrl(buttonClassName);
 
     Properties p = new Properties();
@@ -221,30 +203,24 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Button Clicked", p);
   }
 
-  private static String translateClassNameToUrl(String appLocation)
-  {
-    if (appLocationTable.containsKey(appLocation))
-    {
+  private static String translateClassNameToUrl(String appLocation) {
+    if (appLocationTable.containsKey(appLocation)) {
       return appLocationTable.get(appLocation);
-    }
-    else
-    {
+    } else {
       return appLocation.replace("app.freerouting.gui.", "app.freerouting.gui/");
     }
   }
 
-  public static void setEnabled(boolean enabled)
-  {
-    if (analytics == null)
-    {
+  public static void setEnabled(boolean enabled) {
+    if (analytics == null) {
       return;
     }
 
     analytics.setEnabled(enabled);
   }
 
-  public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments, String osName, String osArchitecture, String osVersion, String javaVersion, String javaVendor, Locale systemLanguage, Locale guiLanguage, int cpuCoreCount, long ramAmount, String host, int width, int height, int dpi)
-  {
+  public static void appStarted(String freeroutingVersion, String freeroutingBuildDate, String commandLineArguments, String osName, String osArchitecture, String osVersion, String javaVersion,
+      String javaVendor, Locale systemLanguage, Locale guiLanguage, int cpuCoreCount, long ramAmount, String host, int width, int height, int dpi) {
     appStartedAt = Instant
         .now()
         .getEpochSecond();
@@ -269,8 +245,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Application Started", properties);
   }
 
-  public static void appClosed()
-  {
+  public static void appClosed() {
     long appClosedAt = Instant
         .now()
         .getEpochSecond();
@@ -287,17 +262,14 @@ public class FRAnalytics
     properties.put("statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
 
     trackAnonymousAction(permanent_user_id, "Application Closed", properties);
-    try
-    {
+    try {
       Thread.sleep(500);
-    } catch (InterruptedException e)
-    {
+    } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public static void autorouterStarted()
-  {
+  public static void autorouterStarted() {
     autorouterStartedAt = Instant
         .now()
         .getEpochSecond();
@@ -310,8 +282,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Auto-router Started", properties);
   }
 
-  public static void autorouterFinished()
-  {
+  public static void autorouterFinished() {
     long autorouterFinishedAt = Instant
         .now()
         .getEpochSecond();
@@ -326,8 +297,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Auto-router Finished", properties);
   }
 
-  public static void routeOptimizerStarted()
-  {
+  public static void routeOptimizerStarted() {
     routeOptimizerStartedAt = Instant
         .now()
         .getEpochSecond();
@@ -338,8 +308,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Route Optimizer Started", properties);
   }
 
-  public static void routeOptimizerFinished()
-  {
+  public static void routeOptimizerFinished() {
     long routeOptimizerFinishedAt = Instant
         .now()
         .getEpochSecond();
@@ -354,8 +323,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Route Optimizer Finished", properties);
   }
 
-  public static void fileLoaded(String fileFormat, String fileDetails)
-  {
+  public static void fileLoaded(String fileFormat, String fileDetails) {
     Map<String, String> properties = new HashMap<>();
     properties.put("file_format", fileFormat);
     properties.put("file_details", fileDetails);
@@ -363,8 +331,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "File Loaded", properties);
   }
 
-  public static void boardLoaded(String hostName, String hostVersion, int layerCount, int componentCount, int netCount)
-  {
+  public static void boardLoaded(String hostName, String hostVersion, int layerCount, int componentCount, int netCount) {
     Map<String, String> properties = new HashMap<>();
     properties.put("host_name", hostName);
     properties.put("host_version", hostVersion);
@@ -375,8 +342,7 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Board Loaded", properties);
   }
 
-  public static void fileSaved(String fileFormat, String fileDetails)
-  {
+  public static void fileSaved(String fileFormat, String fileDetails) {
     Map<String, String> properties = new HashMap<>();
     properties.put("file_format", fileFormat);
     properties.put("file_details", fileDetails);
@@ -384,11 +350,9 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "File Saved", properties);
   }
 
-  public static void exceptionThrown(String localizedMessage, Throwable e)
-  {
+  public static void exceptionThrown(String localizedMessage, Throwable e) {
     StringBuilder sb = new StringBuilder();
-    for (StackTraceElement ste : e.getStackTrace())
-    {
+    for (StackTraceElement ste : e.getStackTrace()) {
       sb.append(ste.toString());
       sb.append("\n");
     }
@@ -401,16 +365,12 @@ public class FRAnalytics
     trackAnonymousAction(permanent_user_id, "Exception Thrown", properties);
   }
 
-  public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody)
-  {
+  public static void apiEndpointCalled(String apiMethod, String requestBody, String responseBody) {
     Map<String, String> properties = new HashMap<>();
     properties.put("api_method", apiMethod);
     properties.put("api_request", requestBody);
     properties.put("api_response", responseBody);
 
     trackAnonymousAction(permanent_user_id, "API Endpoint Called", properties);
-  }
-
-  private FRAnalytics() {
   }
 }

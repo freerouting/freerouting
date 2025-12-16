@@ -9,25 +9,20 @@ import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Server;
 
 @WebListener
-public class AppContextListener implements ServletContextListener
-{
+public class AppContextListener implements ServletContextListener {
+
   @Override
-  public void contextInitialized(ServletContextEvent sce)
-  {
+  public void contextInitialized(ServletContextEvent sce) {
     String fullUrl = "http://localhost:37864";
 
     // Try to get the Jetty server instance from the ServletContext and extract the host and port
     Server server = (Server) sce.getServletContext().getAttribute("org.eclipse.jetty.server.Server");
-    if (server != null)
-    {
+    if (server != null) {
       Connector[] connectors = server.getConnectors();
-      for (Connector connector : connectors)
-      {
-        if (connector instanceof NetworkConnector networkConnector)
-        {
+      for (Connector connector : connectors) {
+        if (connector instanceof NetworkConnector networkConnector) {
           String host = networkConnector.getHost();
-          if (host == null)
-          {
+          if (host == null) {
             host = "localhost"; // Default host if not specified
           }
           int port = networkConnector.getPort();
@@ -37,9 +32,7 @@ public class AppContextListener implements ServletContextListener
           break;
         }
       }
-    }
-    else
-    {
+    } else {
       FRLogger.warn("Could not retrieve Jetty Server instance from ServletContext.");
     }
 
@@ -47,8 +40,7 @@ public class AppContextListener implements ServletContextListener
   }
 
   @Override
-  public void contextDestroyed(ServletContextEvent sce)
-  {
+  public void contextDestroyed(ServletContextEvent sce) {
     FRLogger.info("API web server stopped.");
   }
 }

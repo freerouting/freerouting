@@ -1,11 +1,10 @@
 package app.freerouting.autoroute;
 
 import app.freerouting.geometry.planar.TileShape;
-
 import java.util.List;
 
-public interface ExpansionRoom
-{
+public interface ExpansionRoom {
+
   /**
    * Adds p_door to the list of doors of this room.
    */

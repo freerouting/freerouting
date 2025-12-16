@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class Issue229Test extends TestBasedOnAnIssue
-{
+public class Issue229Test extends TestBasedOnAnIssue {
+
   @Test
-  void test_Issue_229_Keepout_zone_was_not_exported_correctly()
-  {
+  void test_Issue_229_Keepout_zone_was_not_exported_correctly() {
     var job = GetRoutingJob("Issue229-display-8-digit-hc595.dsn");
 
     job = RunRoutingJob(job, job.routerSettings);

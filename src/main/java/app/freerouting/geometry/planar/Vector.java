@@ -1,16 +1,13 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
-
 import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
- * Abstract class describing functionality of Vectors. Vectors are used for translating Points in
- * the plane.
+ * Abstract class describing functionality of Vectors. Vectors are used for translating Points in the plane.
  */
-public abstract class Vector implements Serializable
-{
+public abstract class Vector implements Serializable {
 
   /**
    * Standard implementation of the zero vector .
@@ -20,40 +17,32 @@ public abstract class Vector implements Serializable
   /**
    * Creates a Vector (p_x, p_y) in the plane.
    */
-  public static Vector get_instance(int p_x, int p_y)
-  {
+  public static Vector get_instance(int p_x, int p_y) {
     IntVector result = new IntVector(p_x, p_y);
-    if (Math.abs(p_x) > Limits.CRIT_INT || Math.abs(p_y) > Limits.CRIT_INT)
-    {
+    if (Math.abs(p_x) > Limits.CRIT_INT || Math.abs(p_y) > Limits.CRIT_INT) {
       return new RationalVector(result);
     }
     return result;
   }
 
   /**
-   * Creates a 2-dimensional Vector from the 3 input values. If p_z != 0 it correspondents to the
-   * Vector in the plane with rational number coordinates (p_x / p_z, p_y / p_z).
+   * Creates a 2-dimensional Vector from the 3 input values. If p_z != 0 it correspondents to the Vector in the plane with rational number coordinates (p_x / p_z, p_y / p_z).
    */
-  public static Vector get_instance(BigInteger p_x, BigInteger p_y, BigInteger p_z)
-  {
-    if (p_z.signum() < 0)
-    {
+  public static Vector get_instance(BigInteger p_x, BigInteger p_y, BigInteger p_z) {
+    if (p_z.signum() < 0) {
       // the dominator z of a RationalVector is expected to be positive
       p_x = p_x.negate();
       p_y = p_y.negate();
       p_z = p_z.negate();
     }
-    if (p_x.mod(p_z).signum() == 0 && p_x.mod(p_z).signum() == 0)
-    {
+    if (p_x.mod(p_z).signum() == 0 && p_x.mod(p_z).signum() == 0) {
       // p_x and p_y can be divided by p_z
       p_x = p_x.divide(p_z);
       p_y = p_y.divide(p_z);
       p_z = BigInteger.ONE;
     }
-    if (p_z.equals(BigInteger.ONE))
-    {
-      if (p_x.abs().compareTo(Limits.CRIT_INT_BIG) <= 0 && p_y.abs().compareTo(Limits.CRIT_INT_BIG) <= 0)
-      {
+    if (p_z.equals(BigInteger.ONE)) {
+      if (p_x.abs().compareTo(Limits.CRIT_INT_BIG) <= 0 && p_y.abs().compareTo(Limits.CRIT_INT_BIG) <= 0) {
         // the Point fits into an IntPoint
         return new IntVector(p_x.intValue(), p_y.intValue());
       }
@@ -77,8 +66,7 @@ public abstract class Vector implements Serializable
   public abstract Vector add(Vector p_other);
 
   /**
-   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if
-   * this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
+   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   public abstract Side side_of(Vector p_other);
@@ -96,15 +84,13 @@ public abstract class Vector implements Serializable
   /**
    * Returns true, if the vector is orthogonal or diagonal
    */
-  public boolean is_multiple_of_45_degree()
-  {
+  public boolean is_multiple_of_45_degree() {
     return is_orthogonal() || is_diagonal();
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other
-   * {@literal >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and
-   * Signum.ZERO, if the scalar product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other {@literal >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and Signum.ZERO, if the
+   * scalar product is equal 0.
    */
   public abstract Signum projection(Vector p_other);
 
@@ -136,17 +122,14 @@ public abstract class Vector implements Serializable
   /**
    * returns an approximation of the Euclidean length of this vector
    */
-  public double length_approx()
-  {
+  public double length_approx() {
     return this.to_float().size();
   }
 
   /**
-   * Returns an approximation of the cosinus of the angle between this vector and p_other by a
-   * double.
+   * Returns an approximation of the cosinus of the angle between this vector and p_other by a double.
    */
-  public double cos_angle(Vector p_other)
-  {
+  public double cos_angle(Vector p_other) {
     double result = this.scalar_product(p_other);
     result /= this.to_float().size() * p_other.to_float().size();
     return result;
@@ -155,11 +138,9 @@ public abstract class Vector implements Serializable
   /**
    * Returns an approximation of the signed angle between this vector and p_other.
    */
-  public double angle_approx(Vector p_other)
-  {
+  public double angle_approx(Vector p_other) {
     double result = Math.acos(cos_angle(p_other));
-    if (this.side_of(p_other) == Side.ON_THE_LEFT)
-    {
+    if (this.side_of(p_other) == Side.ON_THE_LEFT) {
       result = -result;
     }
     return result;
@@ -168,8 +149,7 @@ public abstract class Vector implements Serializable
   /**
    * Returns an approximation of the signed angle between this vector and the x axis.
    */
-  public double angle_approx()
-  {
+  public double angle_approx() {
     Vector other = new IntVector(1, 0);
     return other.angle_approx(this);
   }

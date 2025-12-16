@@ -3,8 +3,8 @@ package app.freerouting.autoroute;
 /**
  * Describes the structure of a section of an ExpandableObject.
  */
-public class MazeSearchElement
-{
+public class MazeSearchElement {
+
   /**
    * true, if this door is already occupied by the maze expanding algorithm
    */
@@ -20,8 +20,7 @@ public class MazeSearchElement
   /**
    * Resets this MazeSearchElement for autorouting the next connection.
    */
-  public void reset()
-  {
+  public void reset() {
     is_occupied = false;
     backtrack_door = null;
     section_no_of_backtrack_door = 0;
@@ -29,8 +28,7 @@ public class MazeSearchElement
     adjustment = Adjustment.NONE;
   }
 
-  public enum Adjustment
-  {
+  public enum Adjustment {
     NONE, RIGHT, LEFT
   }
 }

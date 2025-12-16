@@ -1,17 +1,11 @@
 package app.freerouting.core;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 class StoppableThreadTest {
-
-  private static class TestStoppableThread extends StoppableThread {
-    @Override
-    protected void thread_action() {
-      // Do nothing
-    }
-  }
 
   @Test
   void testStopRequest() {
@@ -42,5 +36,13 @@ class StoppableThreadTest {
     thread.requestStop();
     assertTrue(thread.isStopRequested());
     assertTrue(thread.is_stop_auto_router_requested());
+  }
+
+  private static class TestStoppableThread extends StoppableThread {
+
+    @Override
+    protected void thread_action() {
+      // Do nothing
+    }
   }
 }

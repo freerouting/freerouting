@@ -3,12 +3,11 @@ package app.freerouting.management.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.Strictness;
-
 import java.nio.file.Path;
 import java.time.Instant;
 
-public class GsonProvider
-{
+public class GsonProvider {
+
   public static final Gson GSON = new GsonBuilder()
       .setPrettyPrinting()
       .disableHtmlEscaping()

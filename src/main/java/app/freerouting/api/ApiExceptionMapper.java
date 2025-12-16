@@ -10,12 +10,11 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class ApiExceptionMapper implements ExceptionMapper<Throwable>
-{
+public class ApiExceptionMapper implements ExceptionMapper<Throwable> {
+
   @Override
   @Produces(MediaType.APPLICATION_JSON)
-  public Response toResponse(Throwable exception)
-  {
+  public Response toResponse(Throwable exception) {
     JsonObject errorMessage = new JsonObject();
     errorMessage.addProperty("error", exception.getMessage());
     errorMessage.addProperty("documentation", "https://github.com/freerouting/freerouting/blob/master/docs/API_v1.md");

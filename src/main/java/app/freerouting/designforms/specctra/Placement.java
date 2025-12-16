@@ -5,31 +5,25 @@ import java.io.IOException;
 /**
  * Class for writing placement scopes from dsn-files.
  */
-public class Placement extends ScopeKeyword
-{
+public class Placement extends ScopeKeyword {
 
   /**
    * Creates a new instance of Placement
    */
-  public Placement()
-  {
+  public Placement() {
     super("placement");
   }
 
-  public static void write_scope(WriteScopeParameter p_par) throws IOException
-  {
+  public static void write_scope(WriteScopeParameter p_par) throws IOException {
     p_par.file.start_scope();
     p_par.file.write("placement");
-    if (p_par.board.components.get_flip_style_rotate_first())
-    {
+    if (p_par.board.components.get_flip_style_rotate_first()) {
       p_par.file.new_line();
       p_par.file.write("(place_control (flip_style rotate_first))");
     }
 
-    if (p_par.board.library.packages != null)
-    {
-      for (int i = 1; i <= p_par.board.library.packages.count(); i++)
-      {
+    if (p_par.board.library.packages != null) {
+      for (int i = 1; i <= p_par.board.library.packages.count(); i++) {
         Package.write_placement_scope(p_par, p_par.board.library.packages.get(i));
       }
     }

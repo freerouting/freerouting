@@ -6,10 +6,14 @@ import app.freerouting.datastructures.Stoppable;
  * Used for running an interactive action in a separate thread, that can be stopped by the user.
  */
 public abstract class StoppableThread extends Thread implements Stoppable {
+
   private StopRequestState stopRequestState = StopRequestState.NONE;
 
-  /** Creates a new instance of InteractiveActionThread */
-  protected StoppableThread() {}
+  /**
+   * Creates a new instance of InteractiveActionThread
+   */
+  protected StoppableThread() {
+  }
 
   protected abstract void thread_action();
 

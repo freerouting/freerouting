@@ -5,29 +5,23 @@ import java.io.Serializable;
 /**
  * Describes the layer structure of the board.
  */
-public class LayerStructure implements Serializable
-{
+public class LayerStructure implements Serializable {
 
   public final Layer[] arr;
 
   /**
    * Creates a new instance of LayerStructure
    */
-  public LayerStructure(Layer[] p_layer_arr)
-  {
+  public LayerStructure(Layer[] p_layer_arr) {
     arr = p_layer_arr;
   }
 
   /**
-   * Returns the index of the layer with the name p_name in the array arr, -1, if arr contains no
-   * layer with name p_name.
+   * Returns the index of the layer with the name p_name in the array arr, -1, if arr contains no layer with name p_name.
    */
-  public int get_no(String p_name)
-  {
-    for (int i = 0; i < arr.length; i++)
-    {
-      if (p_name.equals(arr[i].name))
-      {
+  public int get_no(String p_name) {
+    for (int i = 0; i < arr.length; i++) {
+      if (p_name.equals(arr[i].name)) {
         return i;
       }
     }
@@ -37,12 +31,9 @@ public class LayerStructure implements Serializable
   /**
    * Returns the index of p_layer in the array arr, or -1, if arr does not contain p_layer.
    */
-  public int get_no(Layer p_layer)
-  {
-    for (int i = 0; i < arr.length; i++)
-    {
-      if (p_layer == arr[i])
-      {
+  public int get_no(Layer p_layer) {
+    for (int i = 0; i < arr.length; i++) {
+      if (p_layer == arr[i]) {
         return i;
       }
     }
@@ -52,13 +43,10 @@ public class LayerStructure implements Serializable
   /**
    * Returns the count of signal layers of this layer_structure.
    */
-  public int signal_layer_count()
-  {
+  public int signal_layer_count() {
     int found_signal_layers = 0;
-    for (int i = 0; i < arr.length; i++)
-    {
-      if (arr[i].is_signal)
-      {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i].is_signal) {
         ++found_signal_layers;
       }
     }
@@ -68,15 +56,11 @@ public class LayerStructure implements Serializable
   /**
    * Gets the p_no-th signal layer of this layer structure.
    */
-  public Layer get_signal_layer(int p_no)
-  {
+  public Layer get_signal_layer(int p_no) {
     int found_signal_layers = 0;
-    for (int i = 0; i < arr.length; i++)
-    {
-      if (arr[i].is_signal)
-      {
-        if (p_no == found_signal_layers)
-        {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i].is_signal) {
+        if (p_no == found_signal_layers) {
           return arr[i];
         }
         ++found_signal_layers;
@@ -88,17 +72,13 @@ public class LayerStructure implements Serializable
   /**
    * Returns the count of signal layers with a smaller number than p_layer
    */
-  public int get_signal_layer_no(Layer p_layer)
-  {
+  public int get_signal_layer_no(Layer p_layer) {
     int found_signal_layers = 0;
-    for (int i = 0; i < arr.length; i++)
-    {
-      if (arr[i] == p_layer)
-      {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == p_layer) {
         return found_signal_layers;
       }
-      if (arr[i].is_signal)
-      {
+      if (arr[i].is_signal) {
         ++found_signal_layers;
       }
     }
@@ -108,8 +88,7 @@ public class LayerStructure implements Serializable
   /**
    * Gets the layer number of the p_signal_layer_no-th signal layer in this layer structure
    */
-  public int get_layer_no(int p_signal_layer_no)
-  {
+  public int get_layer_no(int p_signal_layer_no) {
     Layer curr_signal_layer = get_signal_layer(p_signal_layer_no);
     return get_no(curr_signal_layer);
   }

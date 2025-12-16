@@ -1,12 +1,16 @@
 package app.freerouting.gui;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
-public abstract class Cursor
-{
+public abstract class Cursor {
 
   private static final double MAX_COOR = 1000;
   private static final Line2D VERTICAL_LINE = new Line2D.Double(0, -MAX_COOR, 0, MAX_COOR);
@@ -17,13 +21,11 @@ public abstract class Cursor
   double y_coor;
   boolean location_initialized;
 
-  public static Cursor get_45_degree_cross_hair_cursor()
-  {
+  public static Cursor get_45_degree_cross_hair_cursor() {
     return new FortyfiveDegreeCrossHairCursor();
   }
 
-  protected static void init_graphics(Graphics2D p_graphics)
-  {
+  protected static void init_graphics(Graphics2D p_graphics) {
     BasicStroke bs = new BasicStroke(0, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     p_graphics.setStroke(bs);
     p_graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -33,22 +35,18 @@ public abstract class Cursor
 
   public abstract void draw(Graphics p_graphics);
 
-  public void set_location(Point2D p_location)
-  {
+  public void set_location(Point2D p_location) {
     this.x_coor = p_location.getX();
     this.y_coor = p_location.getY();
     location_initialized = true;
   }
 
-  private static class FortyfiveDegreeCrossHairCursor extends Cursor
-  {
+  private static class FortyfiveDegreeCrossHairCursor extends Cursor {
 
     @Override
-    public void draw(Graphics p_graphics)
-    {
+    public void draw(Graphics p_graphics) {
 
-      if (!location_initialized)
-      {
+      if (!location_initialized) {
         return;
       }
       Graphics2D g2 = (Graphics2D) p_graphics;

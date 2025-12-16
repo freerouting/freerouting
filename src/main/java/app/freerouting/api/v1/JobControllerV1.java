@@ -19,14 +19,19 @@ import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.RouterSettings;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.sse.OutboundSseEvent;
 import jakarta.ws.rs.sse.Sse;
 import jakarta.ws.rs.sse.SseEventSink;
-
 import java.util.Base64;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,12 +40,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Path("/v1/jobs")
-public class JobControllerV1 extends BaseController
-{
+public class JobControllerV1 extends BaseController {
+
   private static final ConcurrentHashMap<String, Long> previousOutputChecksums = new ConcurrentHashMap<>();
 
-  public JobControllerV1()
-  {
+  public JobControllerV1() {
   }
 
   /* Enqueue a new job with the given session id. In order to start the job, both an input file and its settings must be uploaded first. */
@@ -48,14 +52,12 @@ public class JobControllerV1 extends BaseController
   @Path("/enqueue")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response enqueueJob(String requestBody)
-  {
+  public Response enqueueJob(String requestBody) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
     RoutingJob job = GSON.fromJson(requestBody, RoutingJob.class);
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The job data is invalid.\"}")
@@ -66,8 +68,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -75,8 +76,7 @@ public class JobControllerV1 extends BaseController
     }
 
     var request = GSON.toJson(job);
-    try
-    {
+    try {
       // Enqueue the job
       job = RoutingJobScheduler
           .getInstance()
@@ -95,8 +95,7 @@ public class JobControllerV1 extends BaseController
       job.addOutputUpdatedEventListener(e -> RoutingJobScheduler
           .getInstance()
           .saveJob(e.getJob()));
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"" + e.getMessage() + "\"}")
@@ -118,8 +117,7 @@ public class JobControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response listJobs(
       @PathParam("sessionId")
-      String sessionId)
-  {
+      String sessionId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -130,14 +128,11 @@ public class JobControllerV1 extends BaseController
 
     RoutingJob[] result;
     // If the session does not exist, list all jobs
-    if ((session == null) || (sessionId.isEmpty()) || ("all".equals(sessionId)))
-    {
+    if ((session == null) || (sessionId.isEmpty()) || ("all".equals(sessionId))) {
       result = RoutingJobScheduler
           .getInstance()
           .listJobs(null, userId);
-    }
-    else
-    {
+    } else {
       result = RoutingJobScheduler
           .getInstance()
           .listJobs(sessionId);
@@ -157,8 +152,7 @@ public class JobControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response getJob(
       @PathParam("jobId")
-      String jobId)
-  {
+      String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -168,8 +162,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{}")
@@ -180,8 +173,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -201,8 +193,7 @@ public class JobControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response startJob(
       @PathParam("jobId")
-      String jobId)
-  {
+      String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -212,8 +203,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{}")
@@ -224,8 +214,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -233,8 +222,7 @@ public class JobControllerV1 extends BaseController
     }
 
     // Check if the job is queued and have not started yet
-    if (job.state != RoutingJobState.QUEUED)
-    {
+    if (job.state != RoutingJobState.QUEUED) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The job is already started and cannot be changed.\"}")
@@ -259,8 +247,7 @@ public class JobControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response cancelJob(
       @PathParam("jobId")
-      String jobId)
-  {
+      String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -270,8 +257,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{}")
@@ -282,8 +268,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -313,8 +298,7 @@ public class JobControllerV1 extends BaseController
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changeSettings(
       @PathParam("jobId")
-      String jobId, String requestBody)
-  {
+      String jobId, String requestBody) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -324,8 +308,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{}")
@@ -336,8 +319,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -345,8 +327,7 @@ public class JobControllerV1 extends BaseController
     }
 
     // Check if the job is queued and have not started yet
-    if (job.state != RoutingJobState.QUEUED)
-    {
+    if (job.state != RoutingJobState.QUEUED) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The job is already started and cannot be changed.\"}")
@@ -354,8 +335,7 @@ public class JobControllerV1 extends BaseController
     }
 
     RouterSettings routerSettings = GSON.fromJson(requestBody, RouterSettings.class);
-    if (routerSettings == null)
-    {
+    if (routerSettings == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The router settings are invalid.\"}")
@@ -374,8 +354,8 @@ public class JobControllerV1 extends BaseController
   }
 
   /**
-   * Upload the input of the job, typically in Specctra DSN format.
-   * Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core web server.
+   * Upload the input of the job, typically in Specctra DSN format. Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core
+   * web server.
    */
   @POST
   @Path("/{jobId}/input")
@@ -383,8 +363,7 @@ public class JobControllerV1 extends BaseController
   @Consumes(MediaType.APPLICATION_JSON)
   public Response uploadInput(
       @PathParam("jobId")
-      String jobId, String requestBody)
-  {
+      String jobId, String requestBody) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -394,8 +373,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{}")
@@ -406,8 +384,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -415,8 +392,7 @@ public class JobControllerV1 extends BaseController
     }
 
     // Check if the job is queued and have not started yet
-    if (job.state != RoutingJobState.QUEUED)
-    {
+    if (job.state != RoutingJobState.QUEUED) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The job is already started and cannot be changed.\"}")
@@ -424,16 +400,14 @@ public class JobControllerV1 extends BaseController
     }
 
     BoardFilePayload input = GSON.fromJson(requestBody, BoardFilePayload.class);
-    if (input == null)
-    {
+    if (input == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The input data is invalid.\"}")
           .build();
     }
 
-    if ((input.dataBase64 == null) || (input.dataBase64.isEmpty()))
-    {
+    if ((input.dataBase64 == null) || (input.dataBase64.isEmpty())) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The input data must be base-64 encoded and put into the data_base64 field.\"}")
@@ -444,19 +418,15 @@ public class JobControllerV1 extends BaseController
     byte[] inputByteArray = Base64
         .getDecoder()
         .decode(input.dataBase64);
-    if (!job.setInput(inputByteArray))
-    {
+    if (!job.setInput(inputByteArray)) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The input data is invalid.\"}")
           .build();
-    }
-    else
-    {
+    } else {
       if (job.input
           .getFilename()
-          .isEmpty())
-      {
+          .isEmpty()) {
         job.input.setFilename(job.name);
       }
 
@@ -479,8 +449,7 @@ public class JobControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response downloadOutput(
       @PathParam("jobId")
-      String jobId)
-  {
+      String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -490,8 +459,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{}")
@@ -502,8 +470,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -511,8 +478,7 @@ public class JobControllerV1 extends BaseController
     }
 
     // Check if the job is completed
-    if (job.state != RoutingJobState.COMPLETED)
-    {
+    if (job.state != RoutingJobState.COMPLETED) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The job hasn't finished yet.\"}")
@@ -548,8 +514,7 @@ public class JobControllerV1 extends BaseController
       @Context
       SseEventSink eventSink,
       @Context
-      Sse sse)
-  {
+      Sse sse) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -561,8 +526,7 @@ public class JobControllerV1 extends BaseController
     // If the job does not exist or session is invalid, close the connection
     if (job == null || SessionManager
         .getInstance()
-        .getSession(job.sessionId.toString(), userId) == null)
-    {
+        .getSession(job.sessionId.toString(), userId) == null) {
       eventSink.close();
       return;
     }
@@ -573,10 +537,8 @@ public class JobControllerV1 extends BaseController
     // Schedule periodic updates every 250ms
     executor.scheduleAtFixedRate(() ->
     {
-      try
-      {
-        if (job.output != null && job.output.getData() != null)
-        {
+      try {
+        if (job.output != null && job.output.getData() != null) {
           var result = new BoardFilePayload();
           result.jobId = job.id;
           result.setFilename(job.output.getFilename());
@@ -591,8 +553,7 @@ public class JobControllerV1 extends BaseController
 
           Long previousOutputChecksum = previousOutputChecksums.get(jobId);
 
-          if ((previousOutputChecksum == null) || (result.crc32 != previousOutputChecksum))
-          {
+          if ((previousOutputChecksum == null) || (result.crc32 != previousOutputChecksum)) {
             previousOutputChecksums.put(jobId, result.crc32);
 
             OutboundSseEvent event = sse
@@ -606,13 +567,11 @@ public class JobControllerV1 extends BaseController
         }
 
         // Close the connection if the job is completed or cancelled
-        if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED)
-        {
+        if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
           eventSink.close();
           executor.shutdown();
         }
-      } catch (Exception e)
-      {
+      } catch (Exception e) {
         FRLogger.error("Error while streaming output", e);
         eventSink.close();
         executor.shutdown();
@@ -628,8 +587,7 @@ public class JobControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response logs(
       @PathParam("jobId")
-      String jobId)
-  {
+      String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -639,8 +597,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{}")
@@ -651,8 +608,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -679,8 +635,7 @@ public class JobControllerV1 extends BaseController
       @Context
       SseEventSink eventSink,
       @Context
-      Sse sse)
-  {
+      Sse sse) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -692,8 +647,7 @@ public class JobControllerV1 extends BaseController
     // If the job does not exist or session is invalid, close the connection
     if (job == null || SessionManager
         .getInstance()
-        .getSession(job.sessionId.toString(), userId) == null)
-    {
+        .getSession(job.sessionId.toString(), userId) == null) {
       eventSink.close();
     }
 
@@ -703,8 +657,7 @@ public class JobControllerV1 extends BaseController
     // stream a new log entry when the job logsEntryAdded event was fired
     job.addLogEntryAddedEventListener(e ->
     {
-      try
-      {
+      try {
         var result = e.getLogEntry();
         OutboundSseEvent event = sse
             .newEventBuilder()
@@ -715,13 +668,11 @@ public class JobControllerV1 extends BaseController
         eventSink.send(event);
 
         // Close the connection if the job is completed or cancelled
-        if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED)
-        {
+        if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
           eventSink.close();
           executor.shutdown();
         }
-      } catch (Exception ex)
-      {
+      } catch (Exception ex) {
         FRLogger.error("Error while streaming logs", ex);
         eventSink.close();
         executor.shutdown();
@@ -738,8 +689,7 @@ public class JobControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response getDrcReport(
       @PathParam("jobId")
-      String jobId)
-  {
+      String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -749,8 +699,7 @@ public class JobControllerV1 extends BaseController
         .getJob(jobId);
 
     // If the job does not exist, return a 404 response
-    if (job == null)
-    {
+    if (job == null) {
       return Response
           .status(Response.Status.NOT_FOUND)
           .entity("{\"error\":\"Job not found.\"}")
@@ -761,8 +710,7 @@ public class JobControllerV1 extends BaseController
     Session session = SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
@@ -770,27 +718,21 @@ public class JobControllerV1 extends BaseController
     }
 
     // Check if the job has a board loaded, and load it if needed
-    if (!BoardLoader.loadBoardIfNeeded(job))
-    {
+    if (!BoardLoader.loadBoardIfNeeded(job)) {
       // Try to load the board if input is available
-      if (job.input != null && job.input.format == FileFormat.DSN)
-      {
-        try
-        {
+      if (job.input != null && job.input.format == FileFormat.DSN) {
+        try {
           HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
           boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
           job.board = boardManager.get_routing_board();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
           FRLogger.error("Couldn't load the board for DRC check", e);
           return Response
               .status(Response.Status.INTERNAL_SERVER_ERROR)
               .entity("{\"error\":\"Failed to load board: " + e.getMessage() + "\"}")
               .build();
         }
-      }
-      else
-      {
+      } else {
         return Response
             .status(Response.Status.BAD_REQUEST)
             .entity("{\"error\":\"Failed to load board for DRC check.\"}")

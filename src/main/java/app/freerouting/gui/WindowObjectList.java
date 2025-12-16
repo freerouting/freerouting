@@ -3,22 +3,32 @@ package app.freerouting.gui;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  * Abstract class for windows displaying a list of objects
  */
-public abstract class WindowObjectList extends BoardSavableSubWindow
-{
+public abstract class WindowObjectList extends BoardSavableSubWindow {
 
   protected static final int DEFAULT_TABLE_SIZE = 20;
   protected final BoardFrame board_frame;
@@ -37,8 +47,7 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
   /**
    * Creates a new instance of ObjectListWindow
    */
-  public WindowObjectList(BoardFrame p_board_frame)
-  {
+  public WindowObjectList(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_frame = p_board_frame;
 
@@ -93,30 +102,24 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     this.list_empty_message.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
     // Dispose this window and all subwindows when closing the window.
-    this.addWindowListener(new WindowAdapter()
-    {
+    this.addWindowListener(new WindowAdapter() {
       @Override
-      public void windowClosing(WindowEvent evt)
-      {
+      public void windowClosing(WindowEvent evt) {
         dispose();
       }
     });
   }
 
   @Override
-  public void setVisible(boolean p_value)
-  {
-    if (p_value)
-    {
+  public void setVisible(boolean p_value) {
+    if (p_value) {
       recalculate();
     }
     super.setVisible(p_value);
   }
 
-  protected void recalculate()
-  {
-    if (this.list_scroll_pane != null)
-    {
+  protected void recalculate() {
+    if (this.list_scroll_pane != null) {
       main_panel.remove(this.list_scroll_pane);
     }
     main_panel.remove(this.list_empty_message);
@@ -125,24 +128,18 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
     this.list = new JList<>(this.list_model);
     this.list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     this.fill_list();
-    if (this.list.getVisibleRowCount() > 0)
-    {
+    if (this.list.getVisibleRowCount() > 0) {
       list_scroll_pane = new JScrollPane(this.list);
       main_panel.add(list_scroll_pane, BorderLayout.CENTER);
-    }
-    else
-    {
+    } else {
       main_panel.add(list_empty_message, BorderLayout.CENTER);
     }
     this.pack();
 
-    this.list.addMouseListener(new MouseAdapter()
-    {
+    this.list.addMouseListener(new MouseAdapter() {
       @Override
-      public void mouseClicked(MouseEvent evt)
-      {
-        if (evt.getClickCount() > 1)
-        {
+      public void mouseClicked(MouseEvent evt) {
+        if (evt.getClickCount() > 1) {
           select_instances();
         }
       }
@@ -150,20 +147,16 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
   }
 
   @Override
-  public void dispose()
-  {
-    for (WindowObjectInfo curr_subwindow : this.subwindows)
-    {
-      if (curr_subwindow != null)
-      {
+  public void dispose() {
+    for (WindowObjectInfo curr_subwindow : this.subwindows) {
+      if (curr_subwindow != null) {
         curr_subwindow.dispose();
       }
     }
     super.dispose();
   }
 
-  protected void add_to_list(Object p_object)
-  {
+  protected void add_to_list(Object p_object) {
     this.list_model.addElement(p_object);
   }
 
@@ -178,42 +171,32 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
    * Saves also the filter string to disk.
    */
   @Override
-  public void save(ObjectOutputStream p_object_stream)
-  {
+  public void save(ObjectOutputStream p_object_stream) {
     int[] selected_indices;
-    if (this.list != null)
-    {
+    if (this.list != null) {
       selected_indices = this.list.getSelectedIndices();
-    }
-    else
-    {
+    } else {
       selected_indices = new int[0];
     }
-    try
-    {
+    try {
       p_object_stream.writeObject(selected_indices);
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("WindowObjectList.save: save failed", e);
     }
     super.save(p_object_stream);
   }
 
   @Override
-  public boolean read(ObjectInputStream p_object_stream)
-  {
+  public boolean read(ObjectInputStream p_object_stream) {
     int[] saved_selected_indices;
-    try
-    {
+    try {
       saved_selected_indices = (int[]) p_object_stream.readObject();
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       FRLogger.error("WindowObjectListWithFilter.read: read failed", e);
       return false;
     }
     boolean result = super.read(p_object_stream);
-    if (this.list != null && saved_selected_indices.length > 0)
-    {
+    if (this.list != null && saved_selected_indices.length > 0) {
       this.list.setSelectedIndices(saved_selected_indices);
     }
     return result;
@@ -222,21 +205,18 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
   /**
    * Listens to the button for showing the selected padstacks
    */
-  private class ShowListener implements ActionListener
-  {
+  private class ShowListener implements ActionListener {
+
     private static final int WINDOW_OFFSET = 30;
 
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       List<Object> selected_objects = list.getSelectedValuesList();
-      if (selected_objects.isEmpty())
-      {
+      if (selected_objects.isEmpty()) {
         return;
       }
       Collection<WindowObjectInfo.Printable> object_list = new LinkedList<>();
-      for (int i = 0; i < selected_objects.size(); i++)
-      {
+      for (int i = 0; i < selected_objects.size(); i++) {
         object_list.add((WindowObjectInfo.Printable) (selected_objects.get(i)));
       }
       CoordinateTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
@@ -251,11 +231,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
   /**
    * Listens to the button for showing the selected incompletes
    */
-  private class SelectListener implements ActionListener
-  {
+  private class SelectListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       select_instances();
     }
   }
@@ -263,21 +242,17 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
   /**
    * Listens to the button for inverting the selection
    */
-  private class InvertListener implements ActionListener
-  {
+  private class InvertListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
-      if (list_model == null)
-      {
+    public void actionPerformed(ActionEvent p_evt) {
+      if (list_model == null) {
         return;
       }
       int[] new_selected_indices = new int[list_model.getSize() - list.getSelectedIndices().length];
       int curr_index = 0;
-      for (int i = 0; i < list_model.getSize(); i++)
-      {
-        if (!list.isSelectedIndex(i))
-        {
+      for (int i = 0; i < list_model.getSize(); i++) {
+        if (!list.isSelectedIndex(i)) {
           new_selected_indices[curr_index] = i;
           ++curr_index;
         }
@@ -289,11 +264,10 @@ public abstract class WindowObjectList extends BoardSavableSubWindow
   /**
    * Listens to the button for recalculating the content of the window
    */
-  private class RecalculateListener implements ActionListener
-  {
+  private class RecalculateListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       recalculate();
     }
   }

@@ -5,8 +5,8 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.logger.FRLogger;
 
-public class OptimizeRouteTask implements Runnable
-{
+public class OptimizeRouteTask implements Runnable {
+
   public final RoutingBoard board;
   private final BatchOptimizerMultiThreaded optimizer;
   private final int pass_no;
@@ -15,8 +15,7 @@ public class OptimizeRouteTask implements Runnable
   private Item itemToOptimize;
   private ItemRouteResult optimizationResult;
 
-  public OptimizeRouteTask(BatchOptimizerMultiThreaded p_optimizer, RoutingJob job, int item_id, int p_pass_no, boolean p_with_preferred_directions)
-  {
+  public OptimizeRouteTask(BatchOptimizerMultiThreaded p_optimizer, RoutingJob job, int item_id, int p_pass_no, boolean p_with_preferred_directions) {
     optimizer = p_optimizer;
 
     this.job = job;
@@ -28,12 +27,10 @@ public class OptimizeRouteTask implements Runnable
   }
 
   @Override
-  public void run()
-  {
+  public void run() {
     long startTime = System.currentTimeMillis();
 
-    if (itemToOptimize == null)
-    {
+    if (itemToOptimize == null) {
       return;
     }
 
@@ -45,26 +42,26 @@ public class OptimizeRouteTask implements Runnable
     long minutes = duration / 60000;
     float sec = (duration % 60000) / 1000.0F;
 
-    FRLogger.debug("Finished   task #" + optimizer.get_num_tasks_finished() + " of " + optimizer.get_num_tasks() + " for item #" + itemToOptimize.get_id_no() + " on pass " + pass_no + " in " + minutes + " m " + sec + "s." + " Best so far: " + winning_candidate + ", improved: " + optimizationResult.improved() + ", via reduction: " + optimizationResult.via_count_reduced() + (winning_candidate ? (", length reduction: " + (int) optimizationResult.length_reduced()) : "") + ", incomplete trace reduction: " + (optimizationResult.incomplete_count_before() - optimizationResult.incomplete_count()));
+    FRLogger.debug(
+        "Finished   task #" + optimizer.get_num_tasks_finished() + " of " + optimizer.get_num_tasks() + " for item #" + itemToOptimize.get_id_no() + " on pass " + pass_no + " in " + minutes + " m "
+            + sec + "s." + " Best so far: " + winning_candidate + ", improved: " + optimizationResult.improved() + ", via reduction: " + optimizationResult.via_count_reduced() + (winning_candidate ? (
+            ", length reduction: " + (int) optimizationResult.length_reduced()) : "") + ", incomplete trace reduction: " + (optimizationResult.incomplete_count_before()
+            - optimizationResult.incomplete_count()));
 
-    if (!winning_candidate)
-    {
+    if (!winning_candidate) {
       clean();
     }
   }
 
-  public ItemRouteResult getRouteResult()
-  {
+  public ItemRouteResult getRouteResult() {
     return this.optimizationResult;
   }
 
-  public Item getItem()
-  {
+  public Item getItem() {
     return itemToOptimize;
   }
 
-  public void clean()
-  { // try to speed up memory release
+  public void clean() { // try to speed up memory release
     itemToOptimize.board = null;
     itemToOptimize = null;
   }

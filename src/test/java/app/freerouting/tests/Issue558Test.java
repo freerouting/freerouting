@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class Issue558Test extends TestBasedOnAnIssue
-{
+public class Issue558Test extends TestBasedOnAnIssue {
+
   @Test
-  void test_Issue_558_Clearance_violation_at_board_edge()
-  {
+  void test_Issue_558_Clearance_violation_at_board_edge() {
     var job = GetRoutingJob("Issue558-dev-board.dsn");
 
     job = RunRoutingJob(job, job.routerSettings);

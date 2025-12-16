@@ -4,17 +4,15 @@ import app.freerouting.interactive.InteractiveState;
 import app.freerouting.interactive.MoveItemState;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
-import javax.swing.*;
-
-public class PopupMenuMove extends PopupMenuDisplay
-{
+public class PopupMenuMove extends PopupMenuDisplay {
 
   /**
    * Creates a new instance of PopupMenuMove
    */
-  public PopupMenuMove(BoardFrame p_board_frame)
-  {
+  public PopupMenuMove(BoardFrame p_board_frame) {
     super(p_board_frame);
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
 
@@ -78,8 +76,7 @@ public class PopupMenuMove extends PopupMenuDisplay
     popup_reset_rotation_menuitem.addActionListener(_ ->
     {
       InteractiveState interactive_state = board_panel.board_handling.get_interactive_state();
-      if (interactive_state instanceof MoveItemState state)
-      {
+      if (interactive_state instanceof MoveItemState state) {
         state.reset_rotation();
       }
     });
@@ -102,8 +99,7 @@ public class PopupMenuMove extends PopupMenuDisplay
     this.add(popup_cancel_menuitem, 4);
   }
 
-  private void turn_45_degree(int p_factor)
-  {
+  private void turn_45_degree(int p_factor) {
     board_panel.board_handling.turn_45_degree(p_factor);
     board_panel.move_mouse(board_panel.right_button_click_location);
   }

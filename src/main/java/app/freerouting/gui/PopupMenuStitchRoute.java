@@ -4,29 +4,23 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
+import javax.swing.JMenuItem;
 
-import javax.swing.*;
-
-public class PopupMenuStitchRoute extends PopupMenuDisplay
-{
+public class PopupMenuStitchRoute extends PopupMenuDisplay {
 
   private final PopupMenuChangeLayer change_layer_menu;
 
   /**
    * Creates a new instance of PopupMenuStitchRoute
    */
-  public PopupMenuStitchRoute(BoardFrame p_board_frame)
-  {
+  public PopupMenuStitchRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
     LayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
 
-    if (layer_structure.arr.length > 0)
-    {
+    if (layer_structure.arr.length > 0) {
       change_layer_menu = new PopupMenuChangeLayer(p_board_frame);
       this.add(change_layer_menu, 0);
-    }
-    else
-    {
+    } else {
       change_layer_menu = null;
     }
 
@@ -60,10 +54,8 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay
   /**
    * Disables the p_no-th item in the change_layer_menu.
    */
-  void disable_layer_item(int p_no)
-  {
-    if (this.change_layer_menu != null)
-    {
+  void disable_layer_item(int p_no) {
+    if (this.change_layer_menu != null) {
       this.change_layer_menu.disable_item(p_no);
     }
   }

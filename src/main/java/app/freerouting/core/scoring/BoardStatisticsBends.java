@@ -1,14 +1,13 @@
 package app.freerouting.core.scoring;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
  * Statistics of the bends (of traces) of a board.
  */
-public class BoardStatisticsBends implements Serializable
-{
+public class BoardStatisticsBends implements Serializable {
+
   @SerializedName("total_count")
   public Integer totalCount;
   @SerializedName("90_degree_count")

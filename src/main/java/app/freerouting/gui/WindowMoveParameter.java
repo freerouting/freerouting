@@ -2,17 +2,26 @@ package app.freerouting.gui;
 
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
+import javax.swing.ButtonGroup;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 /**
  * Window with the parameters for moving components.
  */
-public class WindowMoveParameter extends BoardSavableSubWindow
-{
+public class WindowMoveParameter extends BoardSavableSubWindow {
 
   private final GuiBoardManager board_handling;
   private final JFormattedTextField horizontal_grid_field;
@@ -24,8 +33,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow
   /**
    * Creates a new instance of WindowMoveParameter
    */
-  public WindowMoveParameter(BoardFrame p_board_frame)
-  {
+  public WindowMoveParameter(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
 
@@ -97,12 +105,9 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     ButtonGroup button_group = new ButtonGroup();
     button_group.add(settings_controls_zoom_radiobutton);
     button_group.add(settings_controls_rotate_radiobutton);
-    if (this.board_handling.settings.get_zoom_with_wheel())
-    {
+    if (this.board_handling.settings.get_zoom_with_wheel()) {
       settings_controls_zoom_radiobutton.setSelected(true);
-    }
-    else
-    {
+    } else {
       settings_controls_rotate_radiobutton.setSelected(true);
     }
 
@@ -118,68 +123,52 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     this.setResizable(false);
   }
 
-  private void set_horizontal_grid_field(double p_value)
-  {
-    if (p_value <= 0)
-    {
+  private void set_horizontal_grid_field(double p_value) {
+    if (p_value <= 0) {
       this.horizontal_grid_field.setValue(0);
-    }
-    else
-    {
+    } else {
       Float grid_width = (float) board_handling.coordinate_transform.board_to_user(p_value);
       this.horizontal_grid_field.setValue(grid_width);
     }
   }
 
-  private void set_vertical_grid_field(double p_value)
-  {
-    if (p_value <= 0)
-    {
+  private void set_vertical_grid_field(double p_value) {
+    if (p_value <= 0) {
       this.vertical_grid_field.setValue(0);
-    }
-    else
-    {
+    } else {
       Float grid_width = (float) board_handling.coordinate_transform.board_to_user(p_value);
       this.vertical_grid_field.setValue(grid_width);
     }
   }
 
-  private class HorizontalGridFieldKeyListener extends KeyAdapter
-  {
+  private class HorizontalGridFieldKeyListener extends KeyAdapter {
+
     @Override
-    public void keyTyped(KeyEvent p_evt)
-    {
-      if (p_evt.getKeyChar() == '\n')
-      {
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
         Object input = horizontal_grid_field.getValue();
         double input_value;
-        if (!(input instanceof Number))
-        {
+        if (!(input instanceof Number)) {
           input_value = 0;
         }
         input_value = ((Number) input).doubleValue();
-        if (input_value < 0)
-        {
+        if (input_value < 0) {
           input_value = 0;
         }
         board_handling.settings.set_horizontal_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
         set_horizontal_grid_field(board_handling.settings.get_horizontal_component_grid());
-      }
-      else
-      {
+      } else {
         key_input_completed = false;
       }
     }
   }
 
-  private class HorizontalGridFieldFocusListener implements FocusListener
-  {
+  private class HorizontalGridFieldFocusListener implements FocusListener {
+
     @Override
-    public void focusLost(FocusEvent p_evt)
-    {
-      if (!key_input_completed)
-      {
+    public void focusLost(FocusEvent p_evt) {
+      if (!key_input_completed) {
         // restore the text field.
         set_horizontal_grid_field(board_handling.settings.get_horizontal_component_grid());
         key_input_completed = true;
@@ -187,47 +176,38 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt)
-    {
+    public void focusGained(FocusEvent p_evt) {
     }
   }
 
-  private class VerticalGridFieldKeyListener extends KeyAdapter
-  {
+  private class VerticalGridFieldKeyListener extends KeyAdapter {
+
     @Override
-    public void keyTyped(KeyEvent p_evt)
-    {
-      if (p_evt.getKeyChar() == '\n')
-      {
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
         Object input = vertical_grid_field.getValue();
         double input_value;
-        if (!(input instanceof Number))
-        {
+        if (!(input instanceof Number)) {
           input_value = 0;
         }
         input_value = ((Number) input).doubleValue();
-        if (input_value < 0)
-        {
+        if (input_value < 0) {
           input_value = 0;
         }
         board_handling.settings.set_vertical_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
         set_vertical_grid_field(board_handling.settings.get_vertical_component_grid());
-      }
-      else
-      {
+      } else {
         key_input_completed = false;
       }
     }
   }
 
-  private class VerticalGridFieldFocusListener implements FocusListener
-  {
+  private class VerticalGridFieldFocusListener implements FocusListener {
+
     @Override
-    public void focusLost(FocusEvent p_evt)
-    {
-      if (!key_input_completed)
-      {
+    public void focusLost(FocusEvent p_evt) {
+      if (!key_input_completed) {
         // restore the text field.
         set_vertical_grid_field(board_handling.settings.get_vertical_component_grid());
         key_input_completed = true;
@@ -235,25 +215,22 @@ public class WindowMoveParameter extends BoardSavableSubWindow
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt)
-    {
+    public void focusGained(FocusEvent p_evt) {
     }
   }
 
-  private class ZoomButtonListener implements ActionListener
-  {
+  private class ZoomButtonListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_zoom_with_wheel(true);
     }
   }
 
-  private class RotateButtonListener implements ActionListener
-  {
+  private class RotateButtonListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_zoom_with_wheel(false);
     }
   }

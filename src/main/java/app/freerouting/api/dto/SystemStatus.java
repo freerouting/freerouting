@@ -2,8 +2,8 @@ package app.freerouting.api.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SystemStatus
-{
+public class SystemStatus {
+
   @SerializedName("status")
   public String status;
   @SerializedName("cpu_load")

@@ -1,6 +1,6 @@
 package app.freerouting.core.events;
 
-public interface RoutingJobLogEntryAddedEventListener
-{
+public interface RoutingJobLogEntryAddedEventListener {
+
   void onLogEntryAdded(RoutingJobLogEntryAddedEvent event);
 }

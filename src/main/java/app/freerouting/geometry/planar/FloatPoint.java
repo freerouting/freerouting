@@ -1,17 +1,14 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
-
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * Implements a point in the plane as a tuple of double's. Because arithmetic calculations with
- * doubles are in general not exact, FloatPoint is not derived from the abstract class Point.
+ * Implements a point in the plane as a tuple of double's. Because arithmetic calculations with doubles are in general not exact, FloatPoint is not derived from the abstract class Point.
  */
-public class FloatPoint implements Serializable
-{
+public class FloatPoint implements Serializable {
 
   public static final FloatPoint ZERO = new FloatPoint(0, 0);
   /**
@@ -26,14 +23,12 @@ public class FloatPoint implements Serializable
   /**
    * creates an instance of class FloatPoint from two doubles,
    */
-  public FloatPoint(double p_x, double p_y)
-  {
+  public FloatPoint(double p_x, double p_y) {
     x = p_x;
     y = p_y;
   }
 
-  public FloatPoint(IntPoint p_pt)
-  {
+  public FloatPoint(IntPoint p_pt) {
     x = p_pt.x;
     y = p_pt.y;
   }
@@ -41,8 +36,7 @@ public class FloatPoint implements Serializable
   /**
    * Calculates the smallest IntOctagon containing all the input points
    */
-  public static IntOctagon bounding_octagon(FloatPoint[] p_point_arr)
-  {
+  public static IntOctagon bounding_octagon(FloatPoint[] p_point_arr) {
     double lx = Integer.MAX_VALUE;
     double ly = Integer.MAX_VALUE;
     double rx = Integer.MIN_VALUE;
@@ -51,8 +45,7 @@ public class FloatPoint implements Serializable
     double lrx = Integer.MIN_VALUE;
     double llx = Integer.MAX_VALUE;
     double urx = Integer.MIN_VALUE;
-    for (int i = 0; i < p_point_arr.length; i++)
-    {
+    for (int i = 0; i < p_point_arr.length; i++) {
       FloatPoint curr = p_point_arr[i];
       lx = Math.min(lx, curr.x);
       ly = Math.min(ly, curr.y);
@@ -65,31 +58,29 @@ public class FloatPoint implements Serializable
       llx = Math.min(llx, tmp);
       urx = Math.max(urx, tmp);
     }
-    IntOctagon surrounding_octagon = new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx), (int) Math.floor(llx), (int) Math.ceil(urx));
+    IntOctagon surrounding_octagon = new IntOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx),
+        (int) Math.floor(llx), (int) Math.ceil(urx));
     return surrounding_octagon;
   }
 
   /**
    * returns the square of the distance from this point to the zero point
    */
-  public final double size_square()
-  {
+  public final double size_square() {
     return x * x + y * y;
   }
 
   /**
    * returns the distance from this point to the zero point
    */
-  public final double size()
-  {
+  public final double size() {
     return Math.sqrt(size_square());
   }
 
   /**
    * returns the square of the distance from this Point to the Point p_other
    */
-  public final double distance_square(FloatPoint p_other)
-  {
+  public final double distance_square(FloatPoint p_other) {
     double dx = p_other.x - x;
     double dy = p_other.y - y;
     return dx * dx + dy * dy;
@@ -98,16 +89,14 @@ public class FloatPoint implements Serializable
   /**
    * returns the distance from this point to the point p_other
    */
-  public final double distance(FloatPoint p_other)
-  {
+  public final double distance(FloatPoint p_other) {
     return Math.sqrt(distance_square(p_other));
   }
 
   /**
    * Computes the weighted distance to p_other.
    */
-  public double weighted_distance(FloatPoint p_other, double p_horizontal_weight, double p_vertical_weight)
-  {
+  public double weighted_distance(FloatPoint p_other, double p_horizontal_weight, double p_vertical_weight) {
     double delta_x = this.x - p_other.x;
     double delta_y = this.y - p_other.y;
     delta_x *= p_horizontal_weight;
@@ -118,111 +107,78 @@ public class FloatPoint implements Serializable
   /**
    * rounds the coordinates from an object of class Point_double to an object of class IntPoint
    */
-  public IntPoint round()
-  {
+  public IntPoint round() {
     return new IntPoint((int) Math.round(x), (int) Math.round(y));
   }
 
   /**
-   * Rounds this point, so that if this point is on the right side of any directed line with
-   * direction p_dir, the result point will also be on the right side.
+   * Rounds this point, so that if this point is on the right side of any directed line with direction p_dir, the result point will also be on the right side.
    */
-  public IntPoint round_to_the_right(Direction p_dir)
-  {
+  public IntPoint round_to_the_right(Direction p_dir) {
     FloatPoint dir = p_dir.get_vector().to_float();
     int rounded_x;
 
-    if (dir.y > 0)
-    {
+    if (dir.y > 0) {
       rounded_x = (int) Math.ceil(x);
-    }
-    else if (dir.y < 0)
-    {
+    } else if (dir.y < 0) {
       rounded_x = (int) Math.floor(x);
-    }
-    else
-    {
+    } else {
       rounded_x = (int) Math.round(x);
     }
 
     int rounded_y;
 
-    if (dir.x > 0)
-    {
+    if (dir.x > 0) {
       rounded_y = (int) Math.floor(y);
-    }
-    else if (dir.x < 0)
-    {
+    } else if (dir.x < 0) {
       rounded_y = (int) Math.ceil(y);
-    }
-    else
-    {
+    } else {
       rounded_y = (int) Math.round(y);
     }
     return new IntPoint(rounded_x, rounded_y);
   }
 
   /**
-   * Round this Point so the x coordinate of the result will be a multiple of p_horizontal_grid and
-   * the y coordinate a multiple of p_vertical_grid.
+   * Round this Point so the x coordinate of the result will be a multiple of p_horizontal_grid and the y coordinate a multiple of p_vertical_grid.
    */
-  public IntPoint round_to_grid(int p_horizontal_grid, int p_vertical_grid)
-  {
+  public IntPoint round_to_grid(int p_horizontal_grid, int p_vertical_grid) {
     double rounded_x;
-    if (p_horizontal_grid > 0)
-    {
+    if (p_horizontal_grid > 0) {
       rounded_x = Math.rint(this.x / p_horizontal_grid) * p_horizontal_grid;
-    }
-    else
-    {
+    } else {
       rounded_x = this.x;
     }
     double rounded_y;
-    if (p_vertical_grid > 0)
-    {
+    if (p_vertical_grid > 0) {
       rounded_y = Math.rint(this.y / p_vertical_grid) * p_vertical_grid;
-    }
-    else
-    {
+    } else {
       rounded_y = this.y;
     }
     return new IntPoint((int) rounded_x, (int) rounded_y);
   }
 
   /**
-   * Rounds this point, so that if this point is on the left side of any directed line with
-   * direction p_dir, the result point will also be on the left side.
+   * Rounds this point, so that if this point is on the left side of any directed line with direction p_dir, the result point will also be on the left side.
    */
-  public IntPoint round_to_the_left(Direction p_dir)
-  {
+  public IntPoint round_to_the_left(Direction p_dir) {
     FloatPoint dir = p_dir.get_vector().to_float();
     int rounded_x;
 
-    if (dir.y > 0)
-    {
+    if (dir.y > 0) {
       rounded_x = (int) Math.floor(x);
-    }
-    else if (dir.y < 0)
-    {
+    } else if (dir.y < 0) {
       rounded_x = (int) Math.ceil(x);
-    }
-    else
-    {
+    } else {
       rounded_x = (int) Math.round(x);
     }
 
     int rounded_y;
 
-    if (dir.x > 0)
-    {
+    if (dir.x > 0) {
       rounded_y = (int) Math.ceil(y);
-    }
-    else if (dir.x < 0)
-    {
+    } else if (dir.x < 0) {
       rounded_y = (int) Math.floor(y);
-    }
-    else
-    {
+    } else {
       rounded_y = (int) Math.round(y);
     }
     return new IntPoint(rounded_x, rounded_y);
@@ -231,24 +187,21 @@ public class FloatPoint implements Serializable
   /**
    * Adds the coordinates of this FloatPoint and p_other.
    */
-  public FloatPoint add(FloatPoint p_other)
-  {
+  public FloatPoint add(FloatPoint p_other) {
     return new FloatPoint(this.x + p_other.x, this.y + p_other.y);
   }
 
   /**
    * Substracts the coordinates of p_other from this FloatPoint.
    */
-  public FloatPoint substract(FloatPoint p_other)
-  {
+  public FloatPoint substract(FloatPoint p_other) {
     return new FloatPoint(this.x - p_other.x, this.y - p_other.y);
   }
 
   /**
    * Returns an approximation of the perpendicular projection of this point onto p_line
    */
-  public FloatPoint projection_approx(Line p_line)
-  {
+  public FloatPoint projection_approx(Line p_line) {
     FloatLine line = new FloatLine(p_line.a.to_float(), p_line.b.to_float());
     return line.perpendicular_projection(this);
   }
@@ -256,10 +209,8 @@ public class FloatPoint implements Serializable
   /**
    * Calculates the scalar product of (p_1 - this). with (p_2 - this).
    */
-  public double scalar_product(FloatPoint p_1, FloatPoint p_2)
-  {
-    if (p_1 == null || p_2 == null)
-    {
+  public double scalar_product(FloatPoint p_1, FloatPoint p_2) {
+    if (p_1 == null || p_2 == null) {
       FRLogger.warn("FloatPoint.scalar_product: parameter point is null");
       return 0;
     }
@@ -271,13 +222,10 @@ public class FloatPoint implements Serializable
   }
 
   /**
-   * Approximates a FloatPoint on the line from zero to this point with distance p_new_length from
-   * zero.
+   * Approximates a FloatPoint on the line from zero to this point with distance p_new_length from zero.
    */
-  public FloatPoint change_size(double p_new_size)
-  {
-    if (x == 0 && y == 0)
-    {
+  public FloatPoint change_size(double p_new_size) {
+    if (x == 0 && y == 0) {
       // the size of the zero point cannot be changed
       return this;
     }
@@ -288,15 +236,12 @@ public class FloatPoint implements Serializable
   }
 
   /**
-   * Approximates a FloatPoint on the line from this point to p_to_point with distance p_new_length
-   * from this point.
+   * Approximates a FloatPoint on the line from this point to p_to_point with distance p_new_length from this point.
    */
-  public FloatPoint change_length(FloatPoint p_to_point, double p_new_length)
-  {
+  public FloatPoint change_length(FloatPoint p_to_point, double p_new_length) {
     double dx = p_to_point.x - this.x;
     double dy = p_to_point.y - this.y;
-    if (dx == 0 && dy == 0)
-    {
+    if (dx == 0 && dy == 0) {
       FRLogger.warn("IntPoint.change_length: Points are equal");
       return p_to_point;
     }
@@ -309,10 +254,8 @@ public class FloatPoint implements Serializable
   /**
    * Returns the middle point between this point and p_to_point.
    */
-  public FloatPoint middle_point(FloatPoint p_to_point)
-  {
-    if (p_to_point == this)
-    {
+  public FloatPoint middle_point(FloatPoint p_to_point) {
+    if (p_to_point == this) {
       return this;
     }
     double middle_x = 0.5 * (this.x + p_to_point.x);
@@ -321,12 +264,10 @@ public class FloatPoint implements Serializable
   }
 
   /**
-   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
-   * p_2; and Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2.
-   * Collinearity is not defined, because numerical calculations ar not exact for FloatPoints.
+   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; and Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2. Collinearity is
+   * not defined, because numerical calculations ar not exact for FloatPoints.
    */
-  public Side side_of(FloatPoint p_1, FloatPoint p_2)
-  {
+  public Side side_of(FloatPoint p_1, FloatPoint p_2) {
     double d21_x = p_2.x - p_1.x;
     double d21_y = p_2.y - p_1.y;
     double d01_x = this.x - p_1.x;
@@ -338,10 +279,8 @@ public class FloatPoint implements Serializable
   /**
    * Rotates this FloatPoints by p_angle ( in radian ) around the p_pole.
    */
-  public FloatPoint rotate(double p_angle, FloatPoint p_pole)
-  {
-    if (p_angle == 0)
-    {
+  public FloatPoint rotate(double p_angle, FloatPoint p_pole) {
+    if (p_angle == 0) {
       return this;
     }
 
@@ -357,43 +296,34 @@ public class FloatPoint implements Serializable
   /**
    * Turns this FloatPoint by p_factor times 90 degree around ZERO.
    */
-  public FloatPoint turn_90_degree(int p_factor)
-  {
+  public FloatPoint turn_90_degree(int p_factor) {
     int n = p_factor;
-    while (n < 0)
-    {
+    while (n < 0) {
       n += 4;
     }
-    while (n >= 4)
-    {
+    while (n >= 4) {
       n -= 4;
     }
     double new_x;
     double new_y;
-    switch (n)
-    {
-      case 0 ->
-      { // 0 degree
+    switch (n) {
+      case 0 -> { // 0 degree
         new_x = x;
         new_y = y;
       }
-      case 1 ->
-      { // 90 degree
+      case 1 -> { // 90 degree
         new_x = -y;
         new_y = x;
       }
-      case 2 ->
-      { // 180 degree
+      case 2 -> { // 180 degree
         new_x = -x;
         new_y = -y;
       }
-      case 3 ->
-      { // 270 degree
+      case 3 -> { // 270 degree
         new_x = y;
         new_y = -x;
       }
-      default ->
-      {
+      default -> {
         new_x = 0;
         new_y = 0;
       }
@@ -404,8 +334,7 @@ public class FloatPoint implements Serializable
   /**
    * Turns this FloatPoint by p_factor times 90 degree around p_pole.
    */
-  public FloatPoint turn_90_degree(int p_factor, FloatPoint p_pole)
-  {
+  public FloatPoint turn_90_degree(int p_factor, FloatPoint p_pole) {
     FloatPoint v = this.substract(p_pole);
     v = v.turn_90_degree(p_factor);
     return p_pole.add(v);
@@ -414,33 +343,25 @@ public class FloatPoint implements Serializable
   /**
    * Checks, if this point is contained in the box spanned by p_1 and p_2 with the input tolerance.
    */
-  public boolean is_contained_in_box(FloatPoint p_1, FloatPoint p_2, double p_tolerance)
-  {
+  public boolean is_contained_in_box(FloatPoint p_1, FloatPoint p_2, double p_tolerance) {
     double min_x;
     double max_x;
-    if (p_1.x < p_2.x)
-    {
+    if (p_1.x < p_2.x) {
       min_x = p_1.x;
       max_x = p_2.x;
-    }
-    else
-    {
+    } else {
       min_x = p_2.x;
       max_x = p_1.x;
     }
-    if (this.x < min_x - p_tolerance || this.x > max_x + p_tolerance)
-    {
+    if (this.x < min_x - p_tolerance || this.x > max_x + p_tolerance) {
       return false;
     }
     double min_y;
     double max_y;
-    if (p_1.y < p_2.y)
-    {
+    if (p_1.y < p_2.y) {
       min_y = p_1.y;
       max_y = p_2.y;
-    }
-    else
-    {
+    } else {
       min_y = p_2.y;
       max_y = p_1.y;
     }
@@ -450,24 +371,18 @@ public class FloatPoint implements Serializable
   /**
    * Creates the smallest IntBox containing this point.
    */
-  public IntBox bounding_box()
-  {
+  public IntBox bounding_box() {
     IntPoint lower_left = new IntPoint((int) Math.floor(this.x), (int) Math.floor(this.y));
     IntPoint upper_right = new IntPoint((int) Math.ceil(this.x), (int) Math.ceil(this.y));
     return new IntBox(lower_left, upper_right);
   }
 
   /**
-   * Calculates the touching points of the tangents from this point to a circle around p_to_point
-   * with radius p_distance. Solves the quadratic equation, which results by substituting x by the
-   * term in y from the equation of the polar line of a circle with center p_to_point and radius
-   * p_distance and putting it into the circle equation. The polar line is the line through the 2
-   * tangential points of the circle looked at from this point and has the equation (this.x -
-   * p_to_point.x) * (x - p_to_point.x) + (this.y - p_to_point.y) * (y - p_to_point.y) = p_distance
-   * **2
+   * Calculates the touching points of the tangents from this point to a circle around p_to_point with radius p_distance. Solves the quadratic equation, which results by substituting x by the term in
+   * y from the equation of the polar line of a circle with center p_to_point and radius p_distance and putting it into the circle equation. The polar line is the line through the 2 tangential points
+   * of the circle looked at from this point and has the equation (this.x - p_to_point.x) * (x - p_to_point.x) + (this.y - p_to_point.y) * (y - p_to_point.y) = p_distance **2
    */
-  public FloatPoint[] tangential_points(FloatPoint p_to_point, double p_distance)
-  {
+  public FloatPoint[] tangential_points(FloatPoint p_to_point, double p_distance) {
     // turn the situation 90 degree if the x difference is smaller
     // than the y difference for better numerical stability
 
@@ -477,14 +392,11 @@ public class FloatPoint implements Serializable
     FloatPoint pole;
     FloatPoint circle_center;
 
-    if (situation_turned)
-    {
+    if (situation_turned) {
       // turn the situation by 90 degree
       pole = new FloatPoint(-this.y, this.x);
       circle_center = new FloatPoint(-p_to_point.y, p_to_point.x);
-    }
-    else
-    {
+    } else {
       pole = this;
       circle_center = p_to_point;
     }
@@ -497,8 +409,7 @@ public class FloatPoint implements Serializable
     double radius_square = p_distance * p_distance;
     double discriminant = radius_square * dy_square - (radius_square - dx_square) * dist_square;
 
-    if (discriminant <= 0)
-    {
+    if (discriminant <= 0) {
       // pole is inside the circle.
       return new FloatPoint[0];
     }
@@ -515,14 +426,11 @@ public class FloatPoint implements Serializable
     double second_point_y = dy2 + circle_center.y;
     double second_point_x = (radius_square - dy * dy2) / dx + circle_center.x;
 
-    if (situation_turned)
-    {
+    if (situation_turned) {
       // turn the result by 270 degree
       result[0] = new FloatPoint(first_point_y, -first_point_x);
       result[1] = new FloatPoint(second_point_y, -second_point_x);
-    }
-    else
-    {
+    } else {
       result[0] = new FloatPoint(first_point_x, first_point_y);
       result[1] = new FloatPoint(second_point_x, second_point_y);
     }
@@ -530,66 +438,50 @@ public class FloatPoint implements Serializable
   }
 
   /**
-   * Calculates the left tangential point of the line from this point to a circle around p_to_point
-   * with radius p_distance. Returns null, if this point is inside this circle.
+   * Calculates the left tangential point of the line from this point to a circle around p_to_point with radius p_distance. Returns null, if this point is inside this circle.
    */
-  public FloatPoint left_tangential_point(FloatPoint p_to_point, double p_distance)
-  {
-    if (p_to_point == null)
-    {
+  public FloatPoint left_tangential_point(FloatPoint p_to_point, double p_distance) {
+    if (p_to_point == null) {
       return null;
     }
     FloatPoint[] tangent_points = tangential_points(p_to_point, p_distance);
-    if (tangent_points.length < 2)
-    {
+    if (tangent_points.length < 2) {
       return null;
     }
     FloatPoint result;
-    if (p_to_point.side_of(this, tangent_points[0]) == Side.ON_THE_RIGHT)
-    {
+    if (p_to_point.side_of(this, tangent_points[0]) == Side.ON_THE_RIGHT) {
       result = tangent_points[0];
-    }
-    else
-    {
+    } else {
       result = tangent_points[1];
     }
     return result;
   }
 
   /**
-   * Calculates the right tangential point of the line from this point to a circle around p_to_point
-   * with radius p_distance. Returns null, if this point is inside this circle.
+   * Calculates the right tangential point of the line from this point to a circle around p_to_point with radius p_distance. Returns null, if this point is inside this circle.
    */
-  public FloatPoint right_tangential_point(FloatPoint p_to_point, double p_distance)
-  {
-    if (p_to_point == null)
-    {
+  public FloatPoint right_tangential_point(FloatPoint p_to_point, double p_distance) {
+    if (p_to_point == null) {
       return null;
     }
     FloatPoint[] tangent_points = tangential_points(p_to_point, p_distance);
-    if (tangent_points.length < 2)
-    {
+    if (tangent_points.length < 2) {
       return null;
     }
     FloatPoint result;
-    if (p_to_point.side_of(this, tangent_points[0]) == Side.ON_THE_LEFT)
-    {
+    if (p_to_point.side_of(this, tangent_points[0]) == Side.ON_THE_LEFT) {
       result = tangent_points[0];
-    }
-    else
-    {
+    } else {
       result = tangent_points[1];
     }
     return result;
   }
 
   /**
-   * Calculates the center of the circle through this point, p_1 and p_2 by calculating the
-   * intersection of the two lines perpendicular to and passing through the midpoints of the lines
-   * (this, p_1) and (p_1, p_2).
+   * Calculates the center of the circle through this point, p_1 and p_2 by calculating the intersection of the two lines perpendicular to and passing through the midpoints of the lines (this, p_1)
+   * and (p_1, p_2).
    */
-  public FloatPoint circle_center(FloatPoint p_1, FloatPoint p_2)
-  {
+  public FloatPoint circle_center(FloatPoint p_1, FloatPoint p_2) {
     double slope_1 = (p_1.y - this.y) / (p_1.x - this.x);
     double slope_2 = (p_2.y - p_1.y) / (p_2.x - p_1.x);
     double x_center = (slope_1 * slope_2 * (this.y - p_2.y) + slope_2 * (this.x + p_1.x) - slope_1 * (p_1.x + p_2.x)) / (2 * (slope_2 - slope_1));
@@ -600,22 +492,19 @@ public class FloatPoint implements Serializable
   /**
    * Returns true, if this point is contained in the circle through p_1, p_2 and p_3.
    */
-  public boolean inside_circle(FloatPoint p_1, FloatPoint p_2, FloatPoint p_3)
-  {
+  public boolean inside_circle(FloatPoint p_1, FloatPoint p_2, FloatPoint p_3) {
     FloatPoint center = p_1.circle_center(p_2, p_3);
     double radius_square = center.distance_square(p_1);
     return this.distance_square(center) < radius_square - 1; // - 1 is a tolerance for numerical stability.
   }
 
-  public String to_string(Locale p_locale)
-  {
+  public String to_string(Locale p_locale) {
     NumberFormat nf = NumberFormat.getInstance(p_locale);
     nf.setMaximumFractionDigits(4);
     return "(" + nf.format(x) + " , " + nf.format(y) + ")";
   }
 
-  public String to_string(Locale p_locale, int fractionDigits, int padding)
-  {
+  public String to_string(Locale p_locale, int fractionDigits, int padding) {
     NumberFormat nf = NumberFormat.getInstance(p_locale);
     nf.setMinimumFractionDigits(fractionDigits);
     nf.setMaximumFractionDigits(fractionDigits);
@@ -623,8 +512,7 @@ public class FloatPoint implements Serializable
   }
 
   @Override
-  public String toString()
-  {
+  public String toString() {
     return to_string(Locale.ENGLISH);
   }
 }

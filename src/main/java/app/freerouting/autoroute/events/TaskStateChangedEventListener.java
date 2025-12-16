@@ -1,6 +1,6 @@
 package app.freerouting.autoroute.events;
 
-public interface TaskStateChangedEventListener
-{
+public interface TaskStateChangedEventListener {
+
   void onTaskStateChangedEvent(TaskStateChangedEvent event);
 }

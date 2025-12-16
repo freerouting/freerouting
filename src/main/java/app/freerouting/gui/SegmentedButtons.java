@@ -1,10 +1,13 @@
 package app.freerouting.gui;
 
 import app.freerouting.management.TextManager;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -12,9 +15,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 
-public class SegmentedButtons extends JPanel
-{
+public class SegmentedButtons extends JPanel {
+
   private final ButtonGroup buttonGroup;
   private final Map<JToggleButton, String> buttonValues;
   private final Color textColor = new Color(0, 0, 0); // Text color
@@ -27,8 +36,7 @@ public class SegmentedButtons extends JPanel
   private final List<Consumer<String>> valueChangedEventListeners = new ArrayList<>();
   private String selectedValue;
 
-  public SegmentedButtons(TextManager tm, String heading, String... values)
-  {
+  public SegmentedButtons(TextManager tm, String heading, String... values) {
     setLayout(new BorderLayout());
 
     // Set an empty border as a margin around the component
@@ -46,19 +54,16 @@ public class SegmentedButtons extends JPanel
     buttonPanel.setLayout(new GridBagLayout()); // Set layout of buttonPanel to BoxLayout
     add(buttonPanel, BorderLayout.CENTER); // Add the buttonPanel to the CENTER
 
-
     buttonGroup = new ButtonGroup();
     buttonValues = new LinkedHashMap<>();
 
     Map<String, String> valueTextMap = new LinkedHashMap<>();
-    for (String value : values)
-    {
+    for (String value : values) {
       valueTextMap.put(value, tm.getText(value));
     }
 
     int maximumWidth = 0;
-    for (Map.Entry<String, String> entry : valueTextMap.entrySet())
-    {
+    for (Map.Entry<String, String> entry : valueTextMap.entrySet()) {
       JToggleButton button = createSegmentButton(entry.getValue(), entry.getKey());
 
       String tooltip = tm.getText(entry.getKey() + "_tooltip");
@@ -70,8 +75,7 @@ public class SegmentedButtons extends JPanel
 
       // Get the button width
       int buttonWidth = button.getPreferredSize().width;
-      if (buttonWidth > maximumWidth)
-      {
+      if (buttonWidth > maximumWidth) {
         maximumWidth = buttonWidth;
       }
     }
@@ -81,8 +85,7 @@ public class SegmentedButtons extends JPanel
     // Iterate over the buttons and update the border
     int buttonCount = buttonGroup.getButtonCount();
     int buttonIndex = 0;
-    for (JToggleButton button : buttonValues.keySet())
-    {
+    for (JToggleButton button : buttonValues.keySet()) {
       // Check if the button is the first or last in the group
       boolean isFirst = buttonIndex == 0;
       boolean isLast = buttonIndex == buttonCount - 1;
@@ -91,8 +94,7 @@ public class SegmentedButtons extends JPanel
       button.setPreferredSize(new Dimension((int) (maximumWidth * 1.1), button.getPreferredSize().height));
 
       // Set the selected button
-      if (isFirst)
-      {
+      if (isFirst) {
         this.setSelectedValue(buttonValues.get(button));
       }
 
@@ -100,22 +102,17 @@ public class SegmentedButtons extends JPanel
     }
   }
 
-  private JToggleButton createSegmentButton(String text, String value)
-  {
-    JToggleButton button = new JToggleButton(text)
-    {
+  private JToggleButton createSegmentButton(String text, String value) {
+    JToggleButton button = new JToggleButton(text) {
       @Override
-      public void setSelected(boolean selected)
-      {
+      public void setSelected(boolean selected) {
         super.setSelected(selected);
-        if (selected)
-        {
+        if (selected) {
           this.setFont(new Font("Dialog", Font.BOLD, 12));
           this.setForeground(selectedTextColor);
           this.setBackground(selectedColor);
           this.setOpaque(true);
-        } else
-        {
+        } else {
           this.setFont(new Font("Dialog", Font.PLAIN, 12));
           this.setForeground(textColor);
           this.setOpaque(false);
@@ -133,19 +130,15 @@ public class SegmentedButtons extends JPanel
     button.setBorderPainted(false);
 
     // Hover effect
-    button.addMouseListener(new MouseAdapter()
-    {
+    button.addMouseListener(new MouseAdapter() {
       @Override
-      public void mouseEntered(MouseEvent e)
-      {
+      public void mouseEntered(MouseEvent e) {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        if (button.isSelected())
-        {
+        if (button.isSelected()) {
           button.setForeground(selectedTextColor);
           button.setBackground(selectedAndHoverColor);
           button.setOpaque(true);
-        } else
-        {
+        } else {
           button.setForeground(textColor);
           button.setBackground(hoverColor);
           button.setOpaque(true);
@@ -153,16 +146,13 @@ public class SegmentedButtons extends JPanel
       }
 
       @Override
-      public void mouseExited(MouseEvent e)
-      {
+      public void mouseExited(MouseEvent e) {
         button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        if (button.isSelected())
-        {
+        if (button.isSelected()) {
           button.setForeground(selectedTextColor);
           button.setBackground(selectedColor);
           button.setOpaque(true);
-        } else
-        {
+        } else {
           button.setForeground(textColor);
           button.setOpaque(false);
         }
@@ -172,8 +162,7 @@ public class SegmentedButtons extends JPanel
     // Action listener for selection changes
     button.addActionListener(_ ->
     {
-      for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet())
-      {
+      for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet()) {
         JToggleButton btn = entry.getKey();
         btn.setFont(new Font("Dialog", Font.PLAIN, 12)); // reset font for all
         btn.setForeground(textColor);
@@ -193,29 +182,23 @@ public class SegmentedButtons extends JPanel
   }
 
   @Override
-  public void setEnabled(boolean enabled)
-  {
+  public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
-    for (JToggleButton button : buttonValues.keySet())
-    {
+    for (JToggleButton button : buttonValues.keySet()) {
       button.setEnabled(enabled);
     }
   }
 
-  public void addValueChangedEventListener(Consumer<String> listener)
-  {
+  public void addValueChangedEventListener(Consumer<String> listener) {
     valueChangedEventListeners.add(listener);
   }
 
-  public String getSelectedValue()
-  {
+  public String getSelectedValue() {
     return selectedValue;
   }
 
-  public void setSelectedValue(String value)
-  {
-    for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet())
-    {
+  public void setSelectedValue(String value) {
+    for (Map.Entry<JToggleButton, String> entry : buttonValues.entrySet()) {
       JToggleButton button = entry.getKey();
       button.setSelected(entry
           .getValue()
@@ -223,8 +206,7 @@ public class SegmentedButtons extends JPanel
     }
 
     // Call the event listeners
-    if (this.valueChangedEventListeners != null)
-    {
+    if (this.valueChangedEventListeners != null) {
       this.valueChangedEventListeners.forEach(listener -> listener.accept(value));
     }
   }

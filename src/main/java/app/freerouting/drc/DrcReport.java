@@ -1,18 +1,16 @@
 package app.freerouting.drc;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a complete DRC report in KiCad's JSON schema format.
- * Based on https://schemas.kicad.org/drc.v1.json
+ * Represents a complete DRC report in KiCad's JSON schema format. Based on https://schemas.kicad.org/drc.v1.json
  */
-public class DrcReport
-{
+public class DrcReport {
+
   /**
    * JSON schema URL
    */
@@ -67,8 +65,7 @@ public class DrcReport
   @SerializedName("schematic_parity")
   public final List<Object> schematic_parity;
 
-  public DrcReport(String coordinateUnits, String source, String version)
-  {
+  public DrcReport(String coordinateUnits, String source, String version) {
     this.coordinate_units = coordinateUnits;
     this.source = source;
     this.freerouting_version = version;
@@ -83,16 +80,14 @@ public class DrcReport
   /**
    * Add a violation to the report
    */
-  public void addViolation(DrcViolation violation)
-  {
+  public void addViolation(DrcViolation violation) {
     this.violations.add(violation);
   }
 
   /**
    * Add an unconnected item to the report
    */
-  public void addUnconnectedItem(DrcViolation item)
-  {
+  public void addUnconnectedItem(DrcViolation item) {
     this.unconnected_items.add(item);
   }
 }

@@ -5,8 +5,7 @@ import java.util.Date;
 /**
  * Class used to cancel a performance critical algorithm after a time limit is exceeded.
  */
-public class TimeLimit
-{
+public class TimeLimit {
 
   private final long time_stamp;
   private int time_limit;
@@ -14,8 +13,7 @@ public class TimeLimit
   /**
    * Creates a new instance with a time limit of p_milli_seconds milliseconds
    */
-  public TimeLimit(int p_milli_seconds)
-  {
+  public TimeLimit(int p_milli_seconds) {
     this.time_limit = p_milli_seconds;
     this.time_stamp = new Date().getTime();
   }
@@ -23,8 +21,7 @@ public class TimeLimit
   /**
    * Returns true, if the time limit provided in the constructor of this class is exceeded.
    */
-  public boolean limit_exceeded()
-  {
+  public boolean limit_exceeded() {
     long curr_time = new Date().getTime();
     return curr_time - this.time_stamp > this.time_limit;
   }
@@ -32,10 +29,8 @@ public class TimeLimit
   /**
    * Multiplies this TimeLimit by p_factor.
    */
-  public void multiply(double p_factor)
-  {
-    if (p_factor <= 0)
-    {
+  public void multiply(double p_factor) {
+    if (p_factor <= 0) {
       return;
     }
     double new_limit = p_factor * this.time_limit;

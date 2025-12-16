@@ -2,20 +2,17 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Item;
 import app.freerouting.interactive.RatsNest;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class WindowIncompletes extends WindowObjectListWithFilter
-{
+public class WindowIncompletes extends WindowObjectListWithFilter {
 
   /**
    * Creates a new instance of IncompletesWindow
    */
-  public WindowIncompletes(BoardFrame p_board_frame)
-  {
+  public WindowIncompletes(BoardFrame p_board_frame) {
     super(p_board_frame);
     setLanguage(p_board_frame.get_locale());
 
@@ -27,30 +24,25 @@ public class WindowIncompletes extends WindowObjectListWithFilter
    * Fills the list with the board incompletes.
    */
   @Override
-  protected void fill_list()
-  {
+  protected void fill_list() {
     RatsNest ratsnest = board_frame.board_panel.board_handling.get_ratsnest();
     RatsNest.AirLine[] sorted_arr = ratsnest.get_airlines();
 
     Arrays.sort(sorted_arr);
-    for (int i = 0; i < sorted_arr.length; i++)
-    {
+    for (int i = 0; i < sorted_arr.length; i++) {
       this.add_to_list(sorted_arr[i]);
     }
     this.list.setVisibleRowCount(Math.min(sorted_arr.length, DEFAULT_TABLE_SIZE));
   }
 
   @Override
-  protected void select_instances()
-  {
+  protected void select_instances() {
     List<Object> selected_incompletes = list.getSelectedValuesList();
-    if (selected_incompletes.isEmpty())
-    {
+    if (selected_incompletes.isEmpty()) {
       return;
     }
     Set<Item> selected_items = new TreeSet<>();
-    for (int i = 0; i < selected_incompletes.size(); i++)
-    {
+    for (int i = 0; i < selected_incompletes.size(); i++) {
       RatsNest.AirLine curr_airline = (RatsNest.AirLine) selected_incompletes.get(i);
       selected_items.add(curr_airline.from_item);
       selected_items.add(curr_airline.to_item);

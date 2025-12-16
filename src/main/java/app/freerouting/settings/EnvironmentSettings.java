@@ -1,12 +1,11 @@
 package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.time.Instant;
 
-public class EnvironmentSettings implements Serializable
-{
+public class EnvironmentSettings implements Serializable {
+
   @SerializedName("freerouting_version")
   public String freeroutingVersion;
   @SerializedName("app_started_at")

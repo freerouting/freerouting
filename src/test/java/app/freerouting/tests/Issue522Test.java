@@ -8,14 +8,12 @@ import app.freerouting.settings.RouterSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-public class Issue522Test extends TestBasedOnAnIssue
-{
+public class Issue522Test extends TestBasedOnAnIssue {
 
   private RoutingJob job;
 
   @Test
-  public void test_Issue_522_Max_passes_setting_is_respected()
-  {
+  public void test_Issue_522_Max_passes_setting_is_respected() {
     // Get a routing job
     job = GetRoutingJob("Issue026-J2_reference.dsn");
 
@@ -36,10 +34,8 @@ public class Issue522Test extends TestBasedOnAnIssue
   }
 
   @AfterEach
-  public void tearDown()
-  {
-    if (job != null)
-    {
+  public void tearDown() {
+    if (job != null) {
       RoutingJobScheduler
           .getInstance()
           .clearJobs(job.sessionId.toString());

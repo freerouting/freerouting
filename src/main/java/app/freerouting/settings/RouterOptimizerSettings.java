@@ -3,11 +3,10 @@ package app.freerouting.settings;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
-public class RouterOptimizerSettings implements Serializable
-{
+public class RouterOptimizerSettings implements Serializable {
+
   @SerializedName("enabled")
   public transient boolean enabled;
   @SerializedName("algorithm")

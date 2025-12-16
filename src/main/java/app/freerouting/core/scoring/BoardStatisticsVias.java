@@ -1,14 +1,13 @@
 package app.freerouting.core.scoring;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
  * Statistics of the vias of a board.
  */
-public class BoardStatisticsVias implements Serializable
-{
+public class BoardStatisticsVias implements Serializable {
+
   // Total count of vias
   @SerializedName("total_count")
   public Integer totalCount;

@@ -6,27 +6,37 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.net.URI;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * Startup window visible when the program is loading.
  */
-public class WindowUserSettings extends WindowBase
-{
+public class WindowUserSettings extends WindowBase {
+
   /**
    * Creates a new instance of WindowMessage
    */
-  private WindowUserSettings(BoardFrame p_board_frame)
-  {
+  private WindowUserSettings(BoardFrame p_board_frame) {
     super(480, 355);
 
     setLanguage(p_board_frame.get_locale());
@@ -101,17 +111,13 @@ public class WindowUserSettings extends WindowBase
     updateButton.setPreferredSize(buttonSize);
     updateButton.setMaximumSize(buttonSize);
     updateButton.setEnabled(false);
-    updateButton.addActionListener(new ActionListener()
-    {
+    updateButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e)
-      {
+      public void actionPerformed(ActionEvent e) {
         globalSettings.userProfileSettings.userEmail = emailField.getText();
-        try
-        {
+        try {
           GlobalSettings.saveAsJson(globalSettings);
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
           FRLogger.error("Failed to save user profile settings", ex);
         }
         profileDialog.dispose();
@@ -121,23 +127,19 @@ public class WindowUserSettings extends WindowBase
     profileDialog.add(updateButton, gbc);
 
     // Enable the Update button if email or checkboxes change
-    DocumentListener documentListener = new DocumentListener()
-    {
+    DocumentListener documentListener = new DocumentListener() {
       @Override
-      public void insertUpdate(DocumentEvent e)
-      {
+      public void insertUpdate(DocumentEvent e) {
         validateEmail(emailField, updateButton);
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
-      {
+      public void removeUpdate(DocumentEvent e) {
         validateEmail(emailField, updateButton);
       }
 
       @Override
-      public void changedUpdate(DocumentEvent e)
-      {
+      public void changedUpdate(DocumentEvent e) {
         validateEmail(emailField, updateButton);
       }
     };
@@ -148,13 +150,10 @@ public class WindowUserSettings extends WindowBase
     allowContactCheckbox.addItemListener(itemListener);
 
     validateEmail(emailField, updateButton);
-    if (globalSettings.userProfileSettings.userEmail.isEmpty())
-    {
+    if (globalSettings.userProfileSettings.userEmail.isEmpty()) {
       emailField.requestFocus();
       emailField.setBorder(BorderFactory.createLineBorder(Color.RED));
-    }
-    else
-    {
+    } else {
       updateButton.requestFocus();
     }
 
@@ -236,11 +235,9 @@ public class WindowUserSettings extends WindowBase
     sponsorButton.setMaximumSize(new Dimension(150, sponsorButton.getPreferredSize().height));
     sponsorButton.addActionListener(_ ->
     {
-      try
-      {
+      try {
         Desktop.getDesktop().browse(new URI("https://github.com/sponsors/andrasfuchs"));
-      } catch (Exception ex)
-      {
+      } catch (Exception ex) {
         FRLogger.error("Failed to open sponsor link", ex);
       }
     });
@@ -253,13 +250,11 @@ public class WindowUserSettings extends WindowBase
   /**
    * Displays a window with the input message at the center of the screen.
    */
-  public static WindowUserSettings show(BoardFrame p_board_frame)
-  {
+  public static WindowUserSettings show(BoardFrame p_board_frame) {
     return new WindowUserSettings(p_board_frame);
   }
 
-  private void validateEmail(JTextField emailField, JButton updateButton)
-  {
+  private void validateEmail(JTextField emailField, JButton updateButton) {
     String email = emailField.getText();
     boolean isValid = email.isEmpty() || email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     emailField.setBorder(isValid ? BorderFactory.createLineBorder(Color.GRAY) : BorderFactory.createLineBorder(Color.RED));

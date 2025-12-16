@@ -1,14 +1,13 @@
 package app.freerouting.core;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
  * Router-related counters that reflect the progress of the router.
  */
-public class RouterCounters implements Serializable
-{
+public class RouterCounters implements Serializable {
+
   // The number of items on the board that are in the queue to be routed in the current pass
   @SerializedName("pass_count")
   public Integer passCount;

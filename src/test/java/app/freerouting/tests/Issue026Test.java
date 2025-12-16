@@ -5,11 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class Issue026Test extends TestBasedOnAnIssue
-{
+public class Issue026Test extends TestBasedOnAnIssue {
+
   @Test
-  void test_Issue_026_Autorouter_interrupted_and_connections_not_found()
-  {
+  void test_Issue_026_Autorouter_interrupted_and_connections_not_found() {
     var job = GetRoutingJob("Issue026-J2_reference.dsn", 12345L);
 
     job = RunRoutingJob(job, job.routerSettings);

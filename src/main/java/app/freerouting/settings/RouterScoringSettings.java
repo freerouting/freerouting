@@ -1,11 +1,10 @@
 package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
-public class RouterScoringSettings implements Serializable
-{
+public class RouterScoringSettings implements Serializable {
+
   // The cost of 1 mm of trace length if the trace is routed in the preferred direction, defined for each layer.
   public transient double[] preferredDirectionTraceCost;
   // The cost of 1 mm of trace length if the trace is routed in the undesired direction, defined for each layer.

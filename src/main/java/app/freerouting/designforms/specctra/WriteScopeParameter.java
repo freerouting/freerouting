@@ -8,8 +8,7 @@ import app.freerouting.settings.RouterSettings;
 /**
  * Default parameter type used while writing a Specctra dsn-file.
  */
-public class WriteScopeParameter
-{
+public class WriteScopeParameter {
 
   final BasicBoard board;
   final RouterSettings autoroute_settings;
@@ -19,12 +18,9 @@ public class WriteScopeParameter
   final IdentifierType identifier_type;
 
   /**
-   * Creates a new instance of WriteScopeParameter. If p_compat_mode is true, only standard
-   * specctra dsb scopes are written, so that any host system with a specctra interface can read
-   * them.
+   * Creates a new instance of WriteScopeParameter. If p_compat_mode is true, only standard specctra dsb scopes are written, so that any host system with a specctra interface can read them.
    */
-  WriteScopeParameter(BasicBoard p_board, RouterSettings p_autoroute_settings, IndentFileWriter p_file, String p_string_quote, CoordinateTransform p_coordinate_transform, boolean p_compat_mode)
-  {
+  WriteScopeParameter(BasicBoard p_board, RouterSettings p_autoroute_settings, IndentFileWriter p_file, String p_string_quote, CoordinateTransform p_coordinate_transform, boolean p_compat_mode) {
     board = p_board;
     autoroute_settings = p_autoroute_settings;
     file = p_file;

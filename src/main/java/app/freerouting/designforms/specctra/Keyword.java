@@ -3,8 +3,7 @@ package app.freerouting.designforms.specctra;
 /**
  * Enumeration class for keywords of the specctra dsn file format
  */
-public class Keyword
-{
+public class Keyword {
 
   /**
    * The only instances of the internal classes:
@@ -122,16 +121,14 @@ public class Keyword
   /**
    * prevents creating more instances
    */
-  protected Keyword(String p_name)
-  {
+  protected Keyword(String p_name) {
     name = p_name;
   }
 
   /**
    * Returns the name string of this Keyword. The name is used for debugging purposes.
    */
-  public String get_name()
-  {
+  public String get_name() {
     return name;
   }
 }

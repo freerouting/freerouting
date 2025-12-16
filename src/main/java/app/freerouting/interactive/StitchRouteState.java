@@ -3,41 +3,36 @@ package app.freerouting.interactive;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.NetClass;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JPopupMenu;
 
 /**
  * State for interactive routing by adding corners with the left mouse button.
  */
-public class StitchRouteState extends RouteState
-{
+public class StitchRouteState extends RouteState {
 
   /**
    * Creates a new instance of StitchRouteState
    */
-  protected StitchRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
-  {
+  protected StitchRouteState(InteractiveState p_parent_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
     super(p_parent_state, p_board_handling, p_activityReplayFile);
   }
 
   @Override
-  public InteractiveState left_button_clicked(FloatPoint p_location)
-  {
+  public InteractiveState left_button_clicked(FloatPoint p_location) {
     return add_corner(p_location);
   }
 
   @Override
-  public InteractiveState add_corner(FloatPoint p_location)
-  {
+  public InteractiveState add_corner(FloatPoint p_location) {
     // make the current situation restorable by undo
     hdlg.get_routing_board().generate_snapshot();
     return super.add_corner(p_location);
   }
 
   @Override
-  public InteractiveState mouse_moved()
-  {
+  public InteractiveState mouse_moved() {
     super.mouse_moved();
     this.route.calc_nearest_target_point(hdlg.get_current_mouse_position());
     hdlg.repaint();
@@ -45,23 +40,19 @@ public class StitchRouteState extends RouteState
   }
 
   @Override
-  public JPopupMenu get_popup_menu()
-  {
+  public JPopupMenu get_popup_menu() {
     return hdlg.get_panel().popup_menu_stitch_route;
   }
 
   @Override
-  public String get_help_id()
-  {
+  public String get_help_id() {
     return "RouteState_StitchingRouteState";
   }
 
   @Override
-  public void draw(Graphics p_graphics)
-  {
+  public void draw(Graphics p_graphics) {
     super.draw(p_graphics);
-    if (route == null)
-    {
+    if (route == null) {
       return;
     }
     // draw a line from the routing end point to the cursor

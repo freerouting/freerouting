@@ -2,11 +2,10 @@ package app.freerouting.settings;
 
 import app.freerouting.management.TextManager;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
-public class UsageAndDiagnosticDataSettings implements Serializable
-{
+public class UsageAndDiagnosticDataSettings implements Serializable {
+
   @SerializedName("disable_analytics")
   public boolean disableAnalytics;
   @SerializedName("segment_write_key")

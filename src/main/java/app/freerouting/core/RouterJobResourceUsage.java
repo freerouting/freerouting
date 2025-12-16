@@ -2,8 +2,8 @@ package app.freerouting.core;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RouterJobResourceUsage
-{
+public class RouterJobResourceUsage {
+
   // Total CPU time used in seconds
   @SerializedName("cpu_time")
   public float cpuTimeUsed = 0.0f;

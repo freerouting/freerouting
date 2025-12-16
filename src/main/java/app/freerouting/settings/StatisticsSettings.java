@@ -1,14 +1,13 @@
 package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class StatisticsSettings implements Serializable
-{
+public class StatisticsSettings implements Serializable {
+
   @SerializedName("start_time")
   public String startTime;
   @SerializedName("end_time")
@@ -20,32 +19,27 @@ public class StatisticsSettings implements Serializable
   @SerializedName("jobs_completed")
   public Integer jobsCompleted = 0;
 
-  public StatisticsSettings()
-  {
+  public StatisticsSettings() {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
     startTime = formatter.format(Instant.now());
   }
 
-  private void setEndTime()
-  {
+  private void setEndTime() {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
     endTime = formatter.format(Instant.now());
   }
 
-  public void incrementSessionsTotal()
-  {
+  public void incrementSessionsTotal() {
     sessionsTotal++;
     setEndTime();
   }
 
-  public void incrementJobsStarted()
-  {
+  public void incrementJobsStarted() {
     jobsStarted++;
     setEndTime();
   }
 
-  public void incrementJobsCompleted()
-  {
+  public void incrementJobsCompleted() {
     jobsCompleted++;
     setEndTime();
   }

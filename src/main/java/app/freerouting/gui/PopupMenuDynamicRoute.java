@@ -4,22 +4,19 @@ import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-
-import javax.swing.*;
+import javax.swing.JMenuItem;
 
 /**
  * Popup menu used in the interactive route state.
  */
-public class PopupMenuDynamicRoute extends PopupMenuDisplay
-{
+public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
   private final PopupMenuChangeLayer change_layer_menu;
 
   /**
    * Creates a new instance of RoutePopupMenu
    */
-  PopupMenuDynamicRoute(BoardFrame p_board_frame)
-  {
+  PopupMenuDynamicRoute(BoardFrame p_board_frame) {
     super(p_board_frame);
 
     TextManager tm = new TextManager(this.getClass(), p_board_frame.get_locale());
@@ -47,13 +44,10 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
 
     this.add(popup_snapshot_menuitem, 2);
 
-    if (layer_structure.arr.length > 0)
-    {
+    if (layer_structure.arr.length > 0) {
       this.change_layer_menu = new PopupMenuChangeLayer(p_board_frame);
       this.add(change_layer_menu, 0);
-    }
-    else
-    {
+    } else {
       this.change_layer_menu = null;
     }
 
@@ -64,10 +58,8 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
   /**
    * Disables the p_no-th item in the change_layer_menu.
    */
-  void disable_layer_item(int p_no)
-  {
-    if (this.change_layer_menu != null)
-    {
+  void disable_layer_item(int p_no) {
+    if (this.change_layer_menu != null) {
       this.change_layer_menu.disable_item(p_no);
     }
   }

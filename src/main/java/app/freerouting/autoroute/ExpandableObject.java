@@ -5,8 +5,7 @@ import app.freerouting.geometry.planar.TileShape;
 /**
  * An object, which can be expanded by the maze expansion algorithm.
  */
-public interface ExpandableObject
-{
+public interface ExpandableObject {
 
   /**
    * Calculates the intersection of the shapes of the 2 objects belonging to this door.
@@ -14,14 +13,12 @@ public interface ExpandableObject
   TileShape get_shape();
 
   /**
-   * Returns the dimension ot the intersection of the shapes of the 2 objects belonging to this
-   * door.
+   * Returns the dimension ot the intersection of the shapes of the 2 objects belonging to this door.
    */
   int get_dimension();
 
   /**
-   * Returns the other room to p_room if this is a door and the other room is a
-   * CompleteExpansionRoom. Else null is returned.
+   * Returns the other room to p_room if this is a door and the other room is a CompleteExpansionRoom. Else null is returned.
    */
   CompleteExpansionRoom other_room(CompleteExpansionRoom p_room);
 

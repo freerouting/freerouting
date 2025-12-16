@@ -6,15 +6,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class LogEntries
-{
+public class LogEntries {
+
   private final List<LogEntry> entries = new ArrayList<>();
   private final List<LogEntryAddedListener> listeners = new ArrayList<>();
 
-  public int getWarningCount()
-  {
-    synchronized (entries)
-    {
+  public int getWarningCount() {
+    synchronized (entries) {
       return (int) entries
           .stream()
           .filter(e -> e.type == LogEntryType.Warning)
@@ -22,10 +20,8 @@ public class LogEntries
     }
   }
 
-  public int getErrorCount()
-  {
-    synchronized (entries)
-    {
+  public int getErrorCount() {
+    synchronized (entries) {
       return (int) entries
           .stream()
           .filter(e -> e.type == LogEntryType.Error)
@@ -33,18 +29,14 @@ public class LogEntries
     }
   }
 
-  public void clear()
-  {
-    synchronized (entries)
-    {
+  public void clear() {
+    synchronized (entries) {
       entries.clear();
     }
   }
 
-  public String getAsString()
-  {
-    synchronized (entries)
-    {
+  public String getAsString() {
+    synchronized (entries) {
       return entries
           .stream()
           .map(LogEntry::toString)
@@ -52,10 +44,8 @@ public class LogEntries
     }
   }
 
-  public String[] get()
-  {
-    synchronized (entries)
-    {
+  public String[] get() {
+    synchronized (entries) {
       return entries
           .stream()
           .map(LogEntry::toString)
@@ -63,10 +53,8 @@ public class LogEntries
     }
   }
 
-  public LogEntry[] getEntries(Instant entriesSince, UUID topic)
-  {
-    synchronized (entries)
-    {
+  public LogEntry[] getEntries(Instant entriesSince, UUID topic) {
+    synchronized (entries) {
       return entries
           .stream()
           .filter(e -> ((entriesSince == null) || e.timestamp.isAfter(entriesSince)) && (topic == null || ((e.topic != null) && e.topic.equals(topic))))
@@ -74,44 +62,38 @@ public class LogEntries
     }
   }
 
-  public LogEntry add(LogEntryType type, String message, UUID topic)
-  {
+  public LogEntry add(LogEntryType type, String message, UUID topic) {
     LogEntry logEntry = this.add(type, message, topic, null);
 
     return logEntry;
   }
 
-  public LogEntry add(LogEntryType type, String message, UUID topic, Throwable exception)
-  {
+  public LogEntry add(LogEntryType type, String message, UUID topic, Throwable exception) {
     LogEntry logEntry = new LogEntry(type, message, exception, topic);
 
-    synchronized (entries)
-    {
+    synchronized (entries) {
       entries.add(logEntry);
     }
 
     // Raise the event
-    for (LogEntryAddedListener listener : listeners)
-    {
+    for (LogEntryAddedListener listener : listeners) {
       listener.logEntryAdded(logEntry);
     }
 
     return logEntry;
   }
 
-  public void addLogEntryAddedListener(LogEntryAddedListener listener)
-  {
+  public void addLogEntryAddedListener(LogEntryAddedListener listener) {
     listeners.add(listener);
   }
 
-  public void removeLogEntryAddedListener(LogEntryAddedListener listener)
-  {
+  public void removeLogEntryAddedListener(LogEntryAddedListener listener) {
     listeners.remove(listener);
   }
 
   // Event to be raised when a log entry is added
-  public interface LogEntryAddedListener
-  {
+  public interface LogEntryAddedListener {
+
     void logEntryAdded(LogEntry logEntry);
   }
 }

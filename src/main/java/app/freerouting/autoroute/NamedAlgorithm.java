@@ -1,12 +1,16 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.autoroute.events.*;
+import app.freerouting.autoroute.events.BoardSnapshotEvent;
+import app.freerouting.autoroute.events.BoardSnapshotEventListener;
+import app.freerouting.autoroute.events.BoardUpdatedEvent;
+import app.freerouting.autoroute.events.BoardUpdatedEventListener;
+import app.freerouting.autoroute.events.TaskStateChangedEvent;
+import app.freerouting.autoroute.events.TaskStateChangedEventListener;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.settings.RouterSettings;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +18,8 @@ import java.util.List;
 /**
  * Interface for named algorithms, e.g. "Freerouting Classic Fast Auto-router v1.0" for auto-router, "Freerouting Classic Optimizer v1.0" for route-optimization.
  */
-public abstract class NamedAlgorithm implements Serializable
-{
+public abstract class NamedAlgorithm implements Serializable {
+
   protected final transient StoppableThread thread;
   protected final transient List<BoardSnapshotEventListener> boardSnapshotEventListeners = new ArrayList<>();
   protected final transient List<BoardUpdatedEventListener> boardUpdatedEventListeners = new ArrayList<>();
@@ -25,8 +29,7 @@ public abstract class NamedAlgorithm implements Serializable
   // TODO: This should be a transient field, but it is not possible to serialize the board with the JSON serializer.
   protected transient RoutingBoard board;
 
-  protected NamedAlgorithm(StoppableThread thread, RoutingBoard board, RouterSettings settings)
-  {
+  protected NamedAlgorithm(StoppableThread thread, RoutingBoard board, RouterSettings settings) {
     this.thread = thread;
     this.board = board;
     this.settings = settings;
@@ -67,49 +70,40 @@ public abstract class NamedAlgorithm implements Serializable
    */
   protected abstract NamedAlgorithmType getType();
 
-  public void addBoardSnapshotEventListener(BoardSnapshotEventListener listener)
-  {
+  public void addBoardSnapshotEventListener(BoardSnapshotEventListener listener) {
     boardSnapshotEventListeners.add(listener);
   }
 
-  public void fireBoardSnapshotEvent(RoutingBoard board)
-  {
+  public void fireBoardSnapshotEvent(RoutingBoard board) {
     BoardSnapshotEvent event = new BoardSnapshotEvent(this, board);
-    for (BoardSnapshotEventListener listener : boardSnapshotEventListeners)
-    {
+    for (BoardSnapshotEventListener listener : boardSnapshotEventListeners) {
       listener.onBoardSnapshotEvent(event);
     }
   }
 
-  public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener)
-  {
+  public void addBoardUpdatedEventListener(BoardUpdatedEventListener listener) {
     boardUpdatedEventListeners.add(listener);
   }
 
   /**
    * Fires a board updated event. This happens when the board has been updated, e.g. after a route has been added.
    */
-  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RouterCounters routerCounters, RoutingBoard board)
-  {
+  public void fireBoardUpdatedEvent(BoardStatistics boardStatistics, RouterCounters routerCounters, RoutingBoard board) {
     BoardUpdatedEvent event = new BoardUpdatedEvent(this, boardStatistics, routerCounters, board);
-    for (BoardUpdatedEventListener listener : boardUpdatedEventListeners)
-    {
+    for (BoardUpdatedEventListener listener : boardUpdatedEventListeners) {
       listener.onBoardUpdatedEvent(event);
     }
   }
 
-  public void addTaskStateChangedEventListener(TaskStateChangedEventListener listener)
-  {
+  public void addTaskStateChangedEventListener(TaskStateChangedEventListener listener) {
     taskStateChangedEventListeners.add(listener);
   }
 
   /**
    * Fires a task state changed event. This happens when the state of the task changes, e.g. from running to stopped, or we start a new pass of the current process.
    */
-  public void fireTaskStateChangedEvent(TaskStateChangedEvent event)
-  {
-    for (TaskStateChangedEventListener listener : taskStateChangedEventListeners)
-    {
+  public void fireTaskStateChangedEvent(TaskStateChangedEvent event) {
+    for (TaskStateChangedEventListener listener : taskStateChangedEventListeners) {
       listener.onTaskStateChangedEvent(event);
     }
   }

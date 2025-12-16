@@ -5,16 +5,14 @@ import app.freerouting.board.Item;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
-
 import java.awt.geom.Point2D;
 import java.util.Collection;
 
 /**
- * Enumeration class defining scopes in a logfile, Each Object of the class must implement the
- * read_scope method.
+ * Enumeration class defining scopes in a logfile, Each Object of the class must implement the read_scope method.
  */
-public abstract class ActivityReplayFileScope
-{
+public abstract class ActivityReplayFileScope {
+
   /**
    * The only instances of the internal classes:
    */
@@ -86,9 +84,8 @@ public abstract class ActivityReplayFileScope
   public static final ActivityReplayFileScope ZOOM_FRAME = new ZoomFrameScope("zoom_frame");
 
   /**
-   * This array contains all (above) created objects of this class. Initializing this static array
-   * automatically by the program did not work correctly, so the programmer has to keep it
-   * up-to-date by hand.
+   * This array contains all (above) created objects of this class. Initializing this static array automatically by the program did not work correctly, so the programmer has to keep it up-to-date by
+   * hand.
    */
   private static final ActivityReplayFileScope[] arr = {
       UNDO,
@@ -149,20 +146,16 @@ public abstract class ActivityReplayFileScope
   /**
    * prevents creating more instances
    */
-  private ActivityReplayFileScope(String p_name)
-  {
+  private ActivityReplayFileScope(String p_name) {
     name = p_name;
   }
 
   /**
    * Returns the LogfileScope with name p_name if it exists, else null.
    */
-  public static ActivityReplayFileScope get_scope(String p_name)
-  {
-    for (int i = 0; i < arr.length; i++)
-    {
-      if (arr[i].name.equals(p_name))
-      {
+  public static ActivityReplayFileScope get_scope(String p_name) {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i].name.equals(p_name)) {
         return arr[i];
       }
     }
@@ -170,72 +163,59 @@ public abstract class ActivityReplayFileScope
   }
 
   /**
-   * Reads the scope from the input logfile. Returns the active interactive state after reading the
-   * scope.
+   * Reads the scope from the input logfile. Returns the active interactive state after reading the scope.
    */
   public abstract InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling);
 
   /**
    * Scopes marking the end of a cornerlist scope.
    */
-  private boolean is_end_scope()
-  {
+  private boolean is_end_scope() {
     return this == COMPLETE_SCOPE || this == CANCEL_SCOPE;
   }
 
   /**
    * A logfile scope containing a list of points.
    */
-  private abstract static class CornerlistScope extends ActivityReplayFileScope
-  {
-    public CornerlistScope(String p_name)
-    {
+  private abstract static class CornerlistScope extends ActivityReplayFileScope {
+
+    public CornerlistScope(String p_name) {
       super(p_name);
     }
 
     /**
-     * Reads the next corner list scope together with its interior scopes (layer change for example)
-     * from the input logfile. Returns the active interactive state after reading the scope.
+     * Reads the next corner list scope together with its interior scopes (layer change for example) from the input logfile. Returns the active interactive state after reading the scope.
      */
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       FloatPoint location = p_activityReplayFile.read_corner();
-      if (location == null)
-      {
+      if (location == null) {
         return null;
       }
       InteractiveState interactive_state = this.start_scope(location, p_return_state, p_board_handling);
-      if (interactive_state == null)
-      {
+      if (interactive_state == null) {
         return null;
       }
       p_board_handling.interactive_state = interactive_state;
       InteractiveState return_state = p_return_state;
-      for (; ; )
-      {
+      for (; ; ) {
         location = p_activityReplayFile.read_corner();
-        if (location != null)
-        {
+        if (location != null) {
           // process corner list
           InteractiveState new_state = interactive_state.process_logfile_point(location);
-          if (new_state != interactive_state)
-          {
+          if (new_state != interactive_state) {
             // state ended
             return_state = new_state;
             break;
           }
-        } else
-        {
+        } else {
           // end of corner list, process the next interior scope
           ActivityReplayFileScope next_scope = p_activityReplayFile.start_read_scope();
-          if (next_scope == null)
-          {
+          if (next_scope == null) {
             break; // end of logfile
           }
           InteractiveState new_state = next_scope.read_scope(p_activityReplayFile, interactive_state, p_board_handling);
-          if (next_scope.is_end_scope())
-          {
+          if (next_scope.is_end_scope()) {
             return_state = new_state;
             break;
           }
@@ -250,122 +230,103 @@ public abstract class ActivityReplayFileScope
     public abstract InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling);
   }
 
-  private static class CreateTraceScope extends CornerlistScope
-  {
-    public CreateTraceScope(String p_name)
-    {
+  private static class CreateTraceScope extends CornerlistScope {
+
+    public CreateTraceScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return RouteState.get_instance(p_location, p_return_state, p_board_handling, null);
     }
   }
 
-  private static class CreateTileScope extends CornerlistScope
-  {
-    public CreateTileScope(String p_name)
-    {
+  private static class CreateTileScope extends CornerlistScope {
+
+    public CreateTileScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return TileConstructionState.get_instance(p_location, p_return_state, p_board_handling, null);
     }
   }
 
-  private static class CreateCircleScope extends CornerlistScope
-  {
-    public CreateCircleScope(String p_name)
-    {
+  private static class CreateCircleScope extends CornerlistScope {
+
+    public CreateCircleScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return CircleConstructionState.get_instance(p_location, p_return_state, p_board_handling, null);
     }
   }
 
-  private static class CreatePolygonShapeScope extends CornerlistScope
-  {
-    public CreatePolygonShapeScope(String p_name)
-    {
+  private static class CreatePolygonShapeScope extends CornerlistScope {
+
+    public CreatePolygonShapeScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return PolygonShapeConstructionState.get_instance(p_location, p_return_state, p_board_handling, null);
     }
   }
 
-  private static class AddHoleScope extends CornerlistScope
-  {
-    public AddHoleScope(String p_name)
-    {
+  private static class AddHoleScope extends CornerlistScope {
+
+    public AddHoleScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return HoleConstructionState.get_instance(p_location, p_return_state, p_board_handling, null);
     }
   }
 
-  private static class DragItemScope extends CornerlistScope
-  {
-    public DragItemScope(String p_name)
-    {
+  private static class DragItemScope extends CornerlistScope {
+
+    public DragItemScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return DragItemState.get_instance(p_location, p_return_state, p_board_handling, null);
     }
   }
 
-  private static class MakeSpaceScope extends CornerlistScope
-  {
-    public MakeSpaceScope(String p_name)
-    {
+  private static class MakeSpaceScope extends CornerlistScope {
+
+    public MakeSpaceScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return MakeSpaceState.get_instance(p_location, p_return_state, p_board_handling, null);
     }
   }
 
-  private static class CopyItemScope extends CornerlistScope
-  {
-    public CopyItemScope(String p_name)
-    {
+  private static class CopyItemScope extends CornerlistScope {
+
+    public CopyItemScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         Collection<Item> item_list = state.get_item_list();
         result = CopyItemState.get_instance(p_location, item_list, p_return_state.return_state, p_board_handling, null);
-      }
-      else
-      {
+      } else {
         FRLogger.warn("CopyItemScope.start_scope: unexpected p_return_state");
         result = null;
       }
@@ -373,24 +334,19 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class MoveItemScope extends CornerlistScope
-  {
-    public MoveItemScope(String p_name)
-    {
+  private static class MoveItemScope extends CornerlistScope {
+
+    public MoveItemScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState start_scope(FloatPoint p_location, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         Collection<Item> item_list = state.get_item_list();
         result = MoveItemState.get_instance(p_location, item_list, p_return_state.return_state, p_board_handling, null);
-      }
-      else
-      {
+      } else {
         FRLogger.warn("MoveComponent.start_scope: unexpected p_return_state");
         result = null;
       }
@@ -398,29 +354,24 @@ public abstract class ActivityReplayFileScope
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState new_state = super.read_scope(p_activityReplayFile, p_return_state, p_board_handling);
-      if (new_state == null)
-      {
+      if (new_state == null) {
         return null;
       }
       return new_state.return_state;
     }
   }
 
-  private static class Turn90DegreeScope extends ActivityReplayFileScope
-  {
-    public Turn90DegreeScope(String p_name)
-    {
+  private static class Turn90DegreeScope extends ActivityReplayFileScope {
+
+    public Turn90DegreeScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (p_return_state instanceof MoveItemState state)
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (p_return_state instanceof MoveItemState state) {
         int factor = p_activityReplayFile.read_int();
         state.turn_90_degree(factor);
         return p_return_state;
@@ -431,18 +382,15 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class RotateScope extends ActivityReplayFileScope
-  {
-    public RotateScope(String p_name)
-    {
+  private static class RotateScope extends ActivityReplayFileScope {
+
+    public RotateScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (p_return_state instanceof MoveItemState state)
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (p_return_state instanceof MoveItemState state) {
         int angle = p_activityReplayFile.read_int();
         state.rotate(angle);
         return p_return_state;
@@ -453,18 +401,15 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class ChangePlacementSideScope extends ActivityReplayFileScope
-  {
-    public ChangePlacementSideScope(String p_name)
-    {
+  private static class ChangePlacementSideScope extends ActivityReplayFileScope {
+
+    public ChangePlacementSideScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (p_return_state instanceof MoveItemState state)
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (p_return_state instanceof MoveItemState state) {
         state.change_placement_side();
         return p_return_state;
       }
@@ -474,18 +419,15 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class SetZoomWithWheelScope extends ActivityReplayFileScope
-  {
-    public SetZoomWithWheelScope(String p_name)
-    {
+  private static class SetZoomWithWheelScope extends ActivityReplayFileScope {
+
+    public SetZoomWithWheelScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (p_return_state instanceof MoveItemState)
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (p_return_state instanceof MoveItemState) {
         int int_value = p_activityReplayFile.read_int();
         p_board_handling.settings.set_zoom_with_wheel(int_value != 0);
         return p_return_state;
@@ -496,40 +438,34 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class ChangeLayerScope extends ActivityReplayFileScope
-  {
-    public ChangeLayerScope(String p_name)
-    {
+  private static class ChangeLayerScope extends ActivityReplayFileScope {
+
+    public ChangeLayerScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_layer = p_activityReplayFile.read_int();
       p_return_state.change_layer_action(new_layer);
       return p_return_state;
     }
   }
 
-  private static class StartSelectScope extends ActivityReplayFileScope
-  {
-    public StartSelectScope(String p_name)
-    {
+  private static class StartSelectScope extends ActivityReplayFileScope {
+
+    public StartSelectScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      while (!(p_return_state instanceof MenuState))
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      while (!(p_return_state instanceof MenuState)) {
         FRLogger.warn("StartSelectScope.read_scope: menu state expected");
         p_return_state = p_return_state.return_state;
       }
       FloatPoint location = p_activityReplayFile.read_corner();
-      if (location == null)
-      {
+      if (location == null) {
         FRLogger.warn("StartSelectScope.read_scope: unable to read corner");
         return null;
       }
@@ -537,24 +473,20 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class ToggleSelectScope extends ActivityReplayFileScope
-  {
-    public ToggleSelectScope(String p_name)
-    {
+  private static class ToggleSelectScope extends ActivityReplayFileScope {
+
+    public ToggleSelectScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (!(p_return_state instanceof SelectedItemState))
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (!(p_return_state instanceof SelectedItemState)) {
         FRLogger.warn("ToggleSelectScope.read_scope: SelectedItemState expected");
         return null;
       }
       FloatPoint location = p_activityReplayFile.read_corner();
-      if (location == null)
-      {
+      if (location == null) {
         FRLogger.warn("ToggleSelectScope.read_scope: unable to read corner");
         return null;
       }
@@ -562,30 +494,25 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class SelectRegionScope extends ActivityReplayFileScope
-  {
-    public SelectRegionScope(String p_name)
-    {
+  private static class SelectRegionScope extends ActivityReplayFileScope {
+
+    public SelectRegionScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (!(p_return_state instanceof MenuState))
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (!(p_return_state instanceof MenuState)) {
         FRLogger.warn("SelectRegionScope.read_scope: menu state expected");
       }
       FloatPoint lower_left = p_activityReplayFile.read_corner();
-      if (lower_left == null)
-      {
+      if (lower_left == null) {
         FRLogger.warn("SelectRegionScope.read_scope: unable to read corner");
         return null;
       }
       InteractiveState curr_state = SelectItemsInRegionState.get_instance(lower_left, p_return_state, p_board_handling, null);
       FloatPoint upper_right = p_activityReplayFile.read_corner();
-      if (upper_right == null)
-      {
+      if (upper_right == null) {
         // user may have cancelled the state after the first corner
         return curr_state;
       }
@@ -594,31 +521,26 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class CutoutRouteScope extends ActivityReplayFileScope
-  {
-    public CutoutRouteScope(String p_name)
-    {
+  private static class CutoutRouteScope extends ActivityReplayFileScope {
+
+    public CutoutRouteScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (!(p_return_state instanceof SelectedItemState))
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (!(p_return_state instanceof SelectedItemState)) {
         FRLogger.warn("CutoutRouteScope.read_scope: electedItemState expected");
       }
       Collection<Item> item_list = ((SelectedItemState) p_return_state).get_item_list();
       FloatPoint lower_left = p_activityReplayFile.read_corner();
-      if (lower_left == null)
-      {
+      if (lower_left == null) {
         FRLogger.warn("CutoutRouteScope.read_scope: unable to read corner");
         return null;
       }
       InteractiveState curr_state = CutoutRouteState.get_instance(item_list, lower_left, p_return_state.return_state, p_board_handling, null);
       FloatPoint upper_right = p_activityReplayFile.read_corner();
-      if (upper_right == null)
-      {
+      if (upper_right == null) {
         // user may have cancelled the state after the first corner
         return curr_state;
       }
@@ -627,24 +549,19 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class DeleteSelectedScope extends ActivityReplayFileScope
-  {
-    public DeleteSelectedScope(String p_name)
-    {
+  private static class DeleteSelectedScope extends ActivityReplayFileScope {
+
+    public DeleteSelectedScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         result = state.delete_items();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("DeleteSelectedScope.read_scope: SelectedItemState expected");
         result = null;
       }
@@ -652,24 +569,19 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class OptimizeSelectedScope extends ActivityReplayFileScope
-  {
-    public OptimizeSelectedScope(String p_name)
-    {
+  private static class OptimizeSelectedScope extends ActivityReplayFileScope {
+
+    public OptimizeSelectedScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         result = state.pull_tight(null);
-      }
-      else
-      {
+      } else {
         FRLogger.warn("DeleteSelectedScope.read_scope: SelectedItemState expected");
         result = null;
       }
@@ -677,24 +589,19 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class AutorouteSelectedScope extends ActivityReplayFileScope
-  {
-    public AutorouteSelectedScope(String p_name)
-    {
+  private static class AutorouteSelectedScope extends ActivityReplayFileScope {
+
+    public AutorouteSelectedScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         result = state.autoroute(null);
-      }
-      else
-      {
+      } else {
         FRLogger.warn("AutorouteSelectedScope.read_scope: SelectedItemState expected");
         result = null;
       }
@@ -702,24 +609,19 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class FanoutSelectedScope extends ActivityReplayFileScope
-  {
-    public FanoutSelectedScope(String p_name)
-    {
+  private static class FanoutSelectedScope extends ActivityReplayFileScope {
+
+    public FanoutSelectedScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         result = state.fanout(null);
-      }
-      else
-      {
+      } else {
         FRLogger.warn("FanoutSelectedScope.read_scope: SelectedItemState expected");
         result = null;
       }
@@ -730,25 +632,20 @@ public abstract class ActivityReplayFileScope
   /**
    * Scope calling the single method SelectedItemState.assign_clearance_class
    */
-  private static class AssignClearanceClassScope extends ActivityReplayFileScope
-  {
-    public AssignClearanceClassScope(String p_name)
-    {
+  private static class AssignClearanceClassScope extends ActivityReplayFileScope {
+
+    public AssignClearanceClassScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         int int_value = p_activityReplayFile.read_int();
         result = state.assign_clearance_class(int_value);
-      }
-      else
-      {
+      } else {
         FRLogger.warn("AssignSelectedToNewNetScope.read_scope: SelectedItemState expected");
         result = null;
       }
@@ -759,24 +656,19 @@ public abstract class ActivityReplayFileScope
   /**
    * Scope calling the single method SelectedItemState.assign_items_to_new_net
    */
-  private static class AssignSelectedToNewNetScope extends ActivityReplayFileScope
-  {
-    public AssignSelectedToNewNetScope(String p_name)
-    {
+  private static class AssignSelectedToNewNetScope extends ActivityReplayFileScope {
+
+    public AssignSelectedToNewNetScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         result = state.assign_items_to_new_net();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("AssignSelectedToNewNetScope.read_scope: SelectedItemState expected");
         result = null;
       }
@@ -787,24 +679,19 @@ public abstract class ActivityReplayFileScope
   /**
    * Scope calling the single method SelectedItemState.assign_items_to_new_group
    */
-  private static class AssignSelectedToNewGroupScope extends ActivityReplayFileScope
-  {
-    public AssignSelectedToNewGroupScope(String p_name)
-    {
+  private static class AssignSelectedToNewGroupScope extends ActivityReplayFileScope {
+
+    public AssignSelectedToNewGroupScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState result;
 
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         result = state.assign_items_to_new_group();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("AssignSelectedToNewGroupScope.read_scope: SelectedItemState expected");
         result = null;
       }
@@ -812,180 +699,144 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class ExtendToWholeConnectedSetsScope extends ActivityReplayFileScope
-  {
-    public ExtendToWholeConnectedSetsScope(String p_name)
-    {
+  private static class ExtendToWholeConnectedSetsScope extends ActivityReplayFileScope {
+
+    public ExtendToWholeConnectedSetsScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         return_state = state.extent_to_whole_connected_sets();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("ExtendToWholeConnectedSetsScope.read_scope: SelectedItemState expected");
       }
       return return_state;
     }
   }
 
-  private static class ExtendToWholeComponentsScope extends ActivityReplayFileScope
-  {
-    public ExtendToWholeComponentsScope(String p_name)
-    {
+  private static class ExtendToWholeComponentsScope extends ActivityReplayFileScope {
+
+    public ExtendToWholeComponentsScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         return_state = state.extent_to_whole_components();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("ExtendToWholeGroupsScope.read_scope: SelectedItemState expected");
       }
       return return_state;
     }
   }
 
-  private static class ExtendToWholeNetsScope extends ActivityReplayFileScope
-  {
-    public ExtendToWholeNetsScope(String p_name)
-    {
+  private static class ExtendToWholeNetsScope extends ActivityReplayFileScope {
+
+    public ExtendToWholeNetsScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         return_state = state.extent_to_whole_nets();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("ExtendToWholeNetsScope.read_scope: SelectedItemState expected");
       }
       return return_state;
     }
   }
 
-  private static class ExtendToWholeConnectionsScope extends ActivityReplayFileScope
-  {
-    public ExtendToWholeConnectionsScope(String p_name)
-    {
+  private static class ExtendToWholeConnectionsScope extends ActivityReplayFileScope {
+
+    public ExtendToWholeConnectionsScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       InteractiveState return_state = null;
-      if (p_return_state instanceof SelectedItemState state)
-      {
+      if (p_return_state instanceof SelectedItemState state) {
         return_state = state.extent_to_whole_connections();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("ExtendToWholeConnectionsScope.read_scope: SelectedItemState expected");
       }
       return return_state;
     }
   }
 
-  private static class FixSelectedScope extends ActivityReplayFileScope
-  {
-    public FixSelectedScope(String p_name)
-    {
+  private static class FixSelectedScope extends ActivityReplayFileScope {
+
+    public FixSelectedScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (p_return_state instanceof SelectedItemState state)
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (p_return_state instanceof SelectedItemState state) {
         state.fix_items();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("FixSelectedScope.read_scope: SelectedItemState expected");
       }
       return p_return_state;
     }
   }
 
-  private static class UnfixSelectedScope extends ActivityReplayFileScope
-  {
-    public UnfixSelectedScope(String p_name)
-    {
+  private static class UnfixSelectedScope extends ActivityReplayFileScope {
+
+    public UnfixSelectedScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
-      if (p_return_state instanceof SelectedItemState state)
-      {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
+      if (p_return_state instanceof SelectedItemState state) {
         state.unfix_items();
-      }
-      else
-      {
+      } else {
         FRLogger.warn("UnfixSelectedScope.read_scope: SelectedItemState expected");
       }
       return p_return_state;
     }
   }
 
-  private static class CompleteScope extends ActivityReplayFileScope
-  {
-    public CompleteScope(String p_name)
-    {
+  private static class CompleteScope extends ActivityReplayFileScope {
+
+    public CompleteScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return p_return_state.complete();
     }
   }
 
-  private static class CancelScope extends ActivityReplayFileScope
-  {
-    public CancelScope(String p_name)
-    {
+  private static class CancelScope extends ActivityReplayFileScope {
+
+    public CancelScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       return p_return_state.cancel();
     }
   }
 
-  private static class SetTraceHalfWidthScope extends ActivityReplayFileScope
-  {
-    public SetTraceHalfWidthScope(String p_name)
-    {
+  private static class SetTraceHalfWidthScope extends ActivityReplayFileScope {
+
+    public SetTraceHalfWidthScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int layer = p_activityReplayFile.read_int();
       int new_half_width = p_activityReplayFile.read_int();
       p_board_handling.get_routing_board().rules.set_default_trace_half_width(layer, new_half_width);
@@ -993,128 +844,112 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class SetPullTightRegionWidthScope extends ActivityReplayFileScope
-  {
-    public SetPullTightRegionWidthScope(String p_name)
-    {
+  private static class SetPullTightRegionWidthScope extends ActivityReplayFileScope {
+
+    public SetPullTightRegionWidthScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_tidy_width = p_activityReplayFile.read_int();
       p_board_handling.settings.trace_pull_tight_region_width = new_tidy_width;
       return p_return_state;
     }
   }
 
-  private static class SetPushEnabledScope extends ActivityReplayFileScope
-  {
-    public SetPushEnabledScope(String p_name)
-    {
+  private static class SetPushEnabledScope extends ActivityReplayFileScope {
+
+    public SetPushEnabledScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int int_value = p_activityReplayFile.read_int();
       p_board_handling.settings.push_enabled = int_value != 0;
       return p_return_state;
     }
   }
 
-  private static class SetDragComponentsEnabledScope extends ActivityReplayFileScope
-  {
-    public SetDragComponentsEnabledScope(String p_name)
-    {
+  private static class SetDragComponentsEnabledScope extends ActivityReplayFileScope {
+
+    public SetDragComponentsEnabledScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int int_value = p_activityReplayFile.read_int();
       p_board_handling.settings.drag_components_enabled = int_value != 0;
       return p_return_state;
     }
   }
 
-  private static class SetPullTightAccuracyScope extends ActivityReplayFileScope
-  {
-    public SetPullTightAccuracyScope(String p_name)
-    {
+  private static class SetPullTightAccuracyScope extends ActivityReplayFileScope {
+
+    public SetPullTightAccuracyScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_accuracy = p_activityReplayFile.read_int();
       p_board_handling.settings.autoroute_settings.trace_pull_tight_accuracy = new_accuracy;
       return p_return_state;
     }
   }
 
-  private static class SetIgnoreConductionScope extends ActivityReplayFileScope
-  {
-    public SetIgnoreConductionScope(String p_name)
-    {
+  private static class SetIgnoreConductionScope extends ActivityReplayFileScope {
+
+    public SetIgnoreConductionScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int int_value = p_activityReplayFile.read_int();
       p_board_handling.get_routing_board().change_conduction_is_obstacle(int_value == 0);
       return p_return_state;
     }
   }
 
-  private static class SetLayerScope extends ActivityReplayFileScope
-  {
-    public SetLayerScope(String p_name)
-    {
+  private static class SetLayerScope extends ActivityReplayFileScope {
+
+    public SetLayerScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_layer = p_activityReplayFile.read_int();
       p_board_handling.set_layer(new_layer);
       return p_return_state;
     }
   }
 
-  private static class SetClearanceCompensationScope extends ActivityReplayFileScope
-  {
-    public SetClearanceCompensationScope(String p_name)
-    {
+  private static class SetClearanceCompensationScope extends ActivityReplayFileScope {
+
+    public SetClearanceCompensationScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_clearance_type = p_activityReplayFile.read_int();
       p_board_handling.get_routing_board().search_tree_manager.set_clearance_compensation_used(new_clearance_type != 0);
       return p_return_state;
     }
   }
 
-  private static class SetManualTraceHalfWidthScope extends ActivityReplayFileScope
-  {
-    public SetManualTraceHalfWidthScope(String p_name)
-    {
+  private static class SetManualTraceHalfWidthScope extends ActivityReplayFileScope {
+
+    public SetManualTraceHalfWidthScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int layer = p_activityReplayFile.read_int();
       int half_width = p_activityReplayFile.read_int();
       p_board_handling.settings.manual_trace_half_width_arr[layer] = half_width;
@@ -1122,172 +957,148 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class SetManualTraceClearanceClassScope extends ActivityReplayFileScope
-  {
-    public SetManualTraceClearanceClassScope(String p_name)
-    {
+  private static class SetManualTraceClearanceClassScope extends ActivityReplayFileScope {
+
+    public SetManualTraceClearanceClassScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int index = p_activityReplayFile.read_int();
       p_board_handling.settings.manual_trace_clearance_class = index;
       return p_return_state;
     }
   }
 
-  private static class SetManualTraceWidthSelectionScope extends ActivityReplayFileScope
-  {
-    public SetManualTraceWidthSelectionScope(String p_name)
-    {
+  private static class SetManualTraceWidthSelectionScope extends ActivityReplayFileScope {
+
+    public SetManualTraceWidthSelectionScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int manual_selection = p_activityReplayFile.read_int();
       p_board_handling.settings.manual_rule_selection = manual_selection != 0;
       return p_return_state;
     }
   }
 
-  private static class SetSnapAngleScope extends ActivityReplayFileScope
-  {
-    public SetSnapAngleScope(String p_name)
-    {
+  private static class SetSnapAngleScope extends ActivityReplayFileScope {
+
+    public SetSnapAngleScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_snap_angle_no = p_activityReplayFile.read_int();
       p_board_handling.get_routing_board().rules.set_trace_angle_restriction(AngleRestriction.valueOf(new_snap_angle_no));
       return p_return_state;
     }
   }
 
-  private static class SetSelectOnAllLayerScope extends ActivityReplayFileScope
-  {
-    public SetSelectOnAllLayerScope(String p_name)
-    {
+  private static class SetSelectOnAllLayerScope extends ActivityReplayFileScope {
+
+    public SetSelectOnAllLayerScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_value = p_activityReplayFile.read_int();
       p_board_handling.settings.select_on_all_visible_layers = new_value != 0;
       return p_return_state;
     }
   }
 
-  private static class SetStitchRouteScope extends ActivityReplayFileScope
-  {
-    public SetStitchRouteScope(String p_name)
-    {
+  private static class SetStitchRouteScope extends ActivityReplayFileScope {
+
+    public SetStitchRouteScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int new_value = p_activityReplayFile.read_int();
       p_board_handling.settings.is_stitch_route = new_value != 0;
       return p_return_state;
     }
   }
 
-  private static class SetSelectableScope extends ActivityReplayFileScope
-  {
-    public SetSelectableScope(String p_name)
-    {
+  private static class SetSelectableScope extends ActivityReplayFileScope {
+
+    public SetSelectableScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       int item_type_no = p_activityReplayFile.read_int();
       int selection = p_activityReplayFile.read_int();
       ItemSelectionFilter.SelectableChoices item_type = ItemSelectionFilter.SelectableChoices.values()[item_type_no];
-      if (selection == 0)
-      {
+      if (selection == 0) {
         p_board_handling.settings.item_selection_filter.set_selected(item_type, false);
-        if (p_return_state instanceof SelectedItemState state)
-        {
+        if (p_return_state instanceof SelectedItemState state) {
           state.filter();
         }
-      }
-      else
-      {
+      } else {
         p_board_handling.settings.item_selection_filter.set_selected(item_type, true);
       }
       return p_return_state;
     }
   }
 
-  private static class UndoScope extends ActivityReplayFileScope
-  {
-    public UndoScope(String p_name)
-    {
+  private static class UndoScope extends ActivityReplayFileScope {
+
+    public UndoScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       p_board_handling.get_routing_board().undo(null);
       p_board_handling.repaint();
       return p_return_state;
     }
   }
 
-  private static class RedoScope extends ActivityReplayFileScope
-  {
-    public RedoScope(String p_name)
-    {
+  private static class RedoScope extends ActivityReplayFileScope {
+
+    public RedoScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       p_board_handling.get_routing_board().redo(null);
       p_board_handling.repaint();
       return p_return_state;
     }
   }
 
-  private static class GenerateSnapshotScope extends ActivityReplayFileScope
-  {
-    public GenerateSnapshotScope(String p_name)
-    {
+  private static class GenerateSnapshotScope extends ActivityReplayFileScope {
+
+    public GenerateSnapshotScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       p_board_handling.get_routing_board().generate_snapshot();
       return p_return_state;
     }
   }
 
-  private static class CenterDisplayScope extends ActivityReplayFileScope
-  {
-    public CenterDisplayScope(String p_name)
-    {
+  private static class CenterDisplayScope extends ActivityReplayFileScope {
+
+    public CenterDisplayScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       FloatPoint curr_location = p_activityReplayFile.read_corner();
       Point2D new_center = new Point2D.Double(curr_location.x, curr_location.y);
       p_board_handling.get_panel().center_display(new_center);
@@ -1295,16 +1106,14 @@ public abstract class ActivityReplayFileScope
     }
   }
 
-  private static class ZoomFrameScope extends ActivityReplayFileScope
-  {
-    public ZoomFrameScope(String p_name)
-    {
+  private static class ZoomFrameScope extends ActivityReplayFileScope {
+
+    public ZoomFrameScope(String p_name) {
       super(p_name);
     }
 
     @Override
-    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling)
-    {
+    public InteractiveState read_scope(ActivityReplayFile p_activityReplayFile, InteractiveState p_return_state, GuiBoardManager p_board_handling) {
       Point2D lower_left = p_board_handling.graphics_context.coordinate_transform.board_to_screen(p_activityReplayFile.read_corner());
       Point2D upper_right = p_board_handling.graphics_context.coordinate_transform.board_to_screen(p_activityReplayFile.read_corner());
       p_board_handling.get_panel().zoom_frame(lower_left, upper_right);

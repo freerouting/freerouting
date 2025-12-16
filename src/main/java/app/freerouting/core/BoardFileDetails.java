@@ -8,8 +8,13 @@ import app.freerouting.gui.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
 
-public class BoardFileDetails implements Serializable
-{
+public class BoardFileDetails implements Serializable {
+
   protected final transient List<BoardFileDetailsUpdatedEventListener> updatedEventListeners = new ArrayList<>();
   // The size of the file in bytes
   @SerializedName("size")
@@ -40,22 +45,18 @@ public class BoardFileDetails implements Serializable
   protected transient byte[] dataBytes = new byte[0];
 
 
-  public BoardFileDetails()
-  {
+  public BoardFileDetails() {
   }
 
   /**
    * Creates a new BoardDetails object from a file.
    */
-  public BoardFileDetails(File file)
-  {
+  public BoardFileDetails(File file) {
     this.setFilename(file.getAbsolutePath());
 
-    try (FileInputStream fis = new FileInputStream(file))
-    {
+    try (FileInputStream fis = new FileInputStream(file)) {
       this.setData(fis.readAllBytes());
-    } catch (IOException _)
-    {
+    } catch (IOException _) {
       // Ignore the exception and continue with the default values
     }
   }
@@ -63,23 +64,18 @@ public class BoardFileDetails implements Serializable
   /**
    * Creates a new BoardDetails object from a RoutingBoard object.
    */
-  public BoardFileDetails(BasicBoard board)
-  {
+  public BoardFileDetails(BasicBoard board) {
     this.statistics = new BoardStatistics(board);
   }
 
-  public static CRC32 calculateCrc32(InputStream inputStream)
-  {
+  public static CRC32 calculateCrc32(InputStream inputStream) {
     CRC32 crc = new CRC32();
-    try
-    {
+    try {
       int cnt;
-      while ((cnt = inputStream.read()) != -1)
-      {
+      while ((cnt = inputStream.read()) != -1) {
         crc.update(cnt);
       }
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error(e.getLocalizedMessage(), e);
     }
     return crc;
@@ -88,28 +84,23 @@ public class BoardFileDetails implements Serializable
   /**
    * Saves this object to a UTF-8 JSON file.
    */
-  public void saveAs(String filename) throws IOException
-  {
-    try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8))
-    {
+  public void saveAs(String filename) throws IOException {
+    try (Writer writer = Files.newBufferedWriter(Path.of(filename), StandardCharsets.UTF_8)) {
       writer.write(this.toString());
     }
   }
 
-  public String getAbsolutePath()
-  {
+  public String getAbsolutePath() {
     return Path
         .of(this.directoryPath, this.filename)
         .toString();
   }
 
-  public ByteArrayInputStream getData()
-  {
+  public ByteArrayInputStream getData() {
     return new ByteArrayInputStream(this.dataBytes);
   }
 
-  public void setData(byte[] data)
-  {
+  public void setData(byte[] data) {
     this.dataBytes = data;
     this.size = data.length;
     InputStream inputStream = new ByteArrayInputStream(this.dataBytes);
@@ -129,15 +120,12 @@ public class BoardFileDetails implements Serializable
   /**
    * Returns a JSON representation of this object.
    */
-  public String toString()
-  {
+  public String toString() {
     return GsonProvider.GSON.toJson(this);
   }
 
-  public File getFile()
-  {
-    if (!this.filename.isEmpty())
-    {
+  public File getFile() {
+    if (!this.filename.isEmpty()) {
       return new File(Path
           .of(this.directoryPath, this.filename)
           .toString());
@@ -145,13 +133,11 @@ public class BoardFileDetails implements Serializable
     return null;
   }
 
-  public String getDirectoryPath()
-  {
+  public String getDirectoryPath() {
     return this.directoryPath;
   }
 
-  public String getFilename()
-  {
+  public String getFilename() {
     return this.filename;
   }
 
@@ -160,10 +146,8 @@ public class BoardFileDetails implements Serializable
    *
    * @param filename The filename to set, optionally with its path.
    */
-  public void setFilename(String filename)
-  {
-    if (filename == null)
-    {
+  public void setFilename(String filename) {
+    if (filename == null) {
       this.directoryPath = "";
       this.filename = "";
       return;
@@ -173,8 +157,7 @@ public class BoardFileDetails implements Serializable
         .of(filename)
         .toAbsolutePath();
 
-    if (filename.contains(File.separator))
-    {
+    if (filename.contains(File.separator)) {
       // separate the filename into its absolute path and its filename only
       this.directoryPath = path
           .getParent()
@@ -185,9 +168,7 @@ public class BoardFileDetails implements Serializable
       this.directoryPath = this.directoryPath.replaceAll("[/\\\\]+$", "");
       // remove the "\." from the end of the directory path
       this.directoryPath = this.directoryPath.replaceAll("\\\\.$", "");
-    }
-    else
-    {
+    } else {
       this.directoryPath = "";
     }
 
@@ -196,18 +177,15 @@ public class BoardFileDetails implements Serializable
         .getFileName()
         .toString();
 
-    if (this.format == FileFormat.UNKNOWN)
-    {
+    if (this.format == FileFormat.UNKNOWN) {
       // try to read the file contents to determine the file format
       this.format = RoutingJob.getFileFormat(Path.of(this.filename));
     }
 
     // add the default file extension if it is missing
-    if ((this.format != FileFormat.UNKNOWN) && (!this.filename.contains(".")))
-    {
+    if ((this.format != FileFormat.UNKNOWN) && (!this.filename.contains("."))) {
       String extension = "";
-      switch (this.format)
-      {
+      switch (this.format) {
         case SES:
           extension = "ses";
           break;
@@ -227,8 +205,7 @@ public class BoardFileDetails implements Serializable
           break;
       }
 
-      if (!extension.isEmpty())
-      {
+      if (!extension.isEmpty()) {
         this.filename = this.filename + "." + extension;
       }
     }
@@ -236,25 +213,20 @@ public class BoardFileDetails implements Serializable
     fireUpdatedEvent();
   }
 
-  public String getFilenameWithoutExtension()
-  {
-    if (this.filename.contains("."))
-    {
+  public String getFilenameWithoutExtension() {
+    if (this.filename.contains(".")) {
       return this.filename.substring(0, this.filename.lastIndexOf('.'));
     }
     return this.filename;
   }
 
-  public void addUpdatedEventListener(BoardFileDetailsUpdatedEventListener listener)
-  {
+  public void addUpdatedEventListener(BoardFileDetailsUpdatedEventListener listener) {
     updatedEventListeners.add(listener);
   }
 
-  public void fireUpdatedEvent()
-  {
+  public void fireUpdatedEvent() {
     BoardFileDetailsUpdatedEvent event = new BoardFileDetailsUpdatedEvent(this, this);
-    for (BoardFileDetailsUpdatedEventListener listener : updatedEventListeners)
-    {
+    for (BoardFileDetailsUpdatedEventListener listener : updatedEventListeners) {
       listener.onBoardFileDetailsUpdated(event);
     }
   }

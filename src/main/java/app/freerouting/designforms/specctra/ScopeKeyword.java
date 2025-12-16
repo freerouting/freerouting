@@ -1,47 +1,37 @@
 package app.freerouting.designforms.specctra;
 
 import app.freerouting.logger.FRLogger;
-
 import java.io.IOException;
 
 /**
  * Keywords defining a scope object
  */
-public class ScopeKeyword extends Keyword
-{
-  public ScopeKeyword(String p_name)
-  {
+public class ScopeKeyword extends Keyword {
+
+  public ScopeKeyword(String p_name) {
     super(p_name);
   }
 
   /**
    * Skips the current scope while reading a dsn file. Returns false, if no legal scope was found.
    */
-  public static boolean skip_scope(IJFlexScanner p_scanner)
-  {
+  public static boolean skip_scope(IJFlexScanner p_scanner) {
     int open_bracked_count = 1;
-    while (open_bracked_count > 0)
-    {
+    while (open_bracked_count > 0) {
       p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
       Object curr_token;
-      try
-      {
+      try {
         curr_token = p_scanner.next_token();
-      } catch (Exception e)
-      {
+      } catch (Exception e) {
         FRLogger.error("ScopeKeyword.skip_scope: Error while scanning file", e);
         return false;
       }
-      if (curr_token == null)
-      {
+      if (curr_token == null) {
         return false; // end of file
       }
-      if (curr_token == Keyword.OPEN_BRACKET)
-      {
+      if (curr_token == Keyword.OPEN_BRACKET) {
         ++open_bracked_count;
-      }
-      else if (curr_token == Keyword.CLOSED_BRACKET)
-      {
+      } else if (curr_token == Keyword.CLOSED_BRACKET) {
         --open_bracked_count;
       }
     }
@@ -51,46 +41,36 @@ public class ScopeKeyword extends Keyword
   /**
    * Reads the next scope of this keyword from dsn file.
    */
-  public boolean read_scope(ReadScopeParameter p_par)
-  {
+  public boolean read_scope(ReadScopeParameter p_par) {
     Object next_token = null;
-    for (; ; )
-    {
+    for (; ; ) {
       Object prev_token = next_token;
-      try
-      {
+      try {
         next_token = p_par.scanner.next_token();
-      } catch (IOException e)
-      {
+      } catch (IOException e) {
         FRLogger.error("ScopeKeyword.read_scope: IO error scanning file", e);
         return false;
       }
-      if (next_token == null)
-      {
+      if (next_token == null) {
         // end of file
         return true;
       }
-      if (next_token == CLOSED_BRACKET)
-      {
+      if (next_token == CLOSED_BRACKET) {
         // end of scope
         break;
       }
 
-      if (prev_token == OPEN_BRACKET)
-      {
+      if (prev_token == OPEN_BRACKET) {
         ScopeKeyword next_scope;
         // a new scope is expected
-        if (next_token instanceof ScopeKeyword keyword)
-        {
+        if (next_token instanceof ScopeKeyword keyword) {
           // read the next scope, which is the "structure" part of the DSN file
           next_scope = keyword;
-          if (!next_scope.read_scope(p_par))
-          {
+          if (!next_scope.read_scope(p_par)) {
             return false;
           }
 
-        } else
-        {
+        } else {
           // skip unknown scope
           skip_scope(p_par.scanner);
         }

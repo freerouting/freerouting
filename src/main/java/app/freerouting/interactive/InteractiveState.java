@@ -3,17 +3,16 @@ package app.freerouting.interactive;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.management.TextManager;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import javax.swing.JPopupMenu;
 
 /**
  * Common base class of all interaction states with the graphical interface
  */
-public class InteractiveState
-{
+public class InteractiveState {
+
   /**
    * board setting access handler for the derived classes
    */
@@ -34,8 +33,7 @@ public class InteractiveState
   /**
    * Creates a new instance of InteractiveState
    */
-  protected InteractiveState(InteractiveState p_return_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile)
-  {
+  protected InteractiveState(InteractiveState p_return_state, GuiBoardManager p_board_handling, ActivityReplayFile p_activityReplayFile) {
     this.return_state = p_return_state;
     this.hdlg = p_board_handling;
     this.activityReplayFile = p_activityReplayFile;
@@ -46,16 +44,13 @@ public class InteractiveState
   /**
    * default draw function to be overwritten in derived classes
    */
-  public void draw(Graphics p_graphics)
-  {
+  public void draw(Graphics p_graphics) {
   }
 
   /**
-   * Default function to be overwritten in derived classes. Returns the return_state of this state,
-   * if the state is left after the method, or else this state.
+   * Default function to be overwritten in derived classes. Returns the return_state of this state, if the state is left after the method, or else this state.
    */
-  public InteractiveState left_button_clicked(FloatPoint p_location)
-  {
+  public InteractiveState left_button_clicked(FloatPoint p_location) {
     return this;
   }
 
@@ -65,51 +60,42 @@ public class InteractiveState
    * Returns the return_state of this state, if the state is left
    * after the method, or else this state.
    */
-  public InteractiveState button_released()
-  {
+  public InteractiveState button_released() {
     return this;
   }
 
   /**
-   * Actions to be taken, when the location of the mouse pointer changes. Default function to be
-   * overwritten in derived classes. Returns the return_state of this state, if the state ends after
-   * the method, or else this state.
+   * Actions to be taken, when the location of the mouse pointer changes. Default function to be overwritten in derived classes. Returns the return_state of this state, if the state ends after the
+   * method, or else this state.
    */
-  public InteractiveState mouse_moved()
-  {
+  public InteractiveState mouse_moved() {
     FloatPoint mouse_position = hdlg.coordinate_transform.board_to_user(hdlg.get_current_mouse_position());
     hdlg.screen_messages.set_mouse_position(mouse_position);
     return this;
   }
 
   /**
-   * Actions to be taken when the mouse moves with a button pressed down. Default function to be
-   * overwritten in derived classes. Returns the return_state of this state, if the state is left
-   * after the method, or else this state.
+   * Actions to be taken when the mouse moves with a button pressed down. Default function to be overwritten in derived classes. Returns the return_state of this state, if the state is left after the
+   * method, or else this state.
    */
-  public InteractiveState mouse_dragged(FloatPoint p_point)
-  {
+  public InteractiveState mouse_dragged(FloatPoint p_point) {
     return this;
   }
 
   /**
-   * Actions to be taken when the left mouse button is pressed down. Default function to be
-   * overwritten in derived classes. Returns the return_state of this state, if the state is left
-   * after the method, or else this state.
+   * Actions to be taken when the left mouse button is pressed down. Default function to be overwritten in derived classes. Returns the return_state of this state, if the state is left after the
+   * method, or else this state.
    */
-  public InteractiveState mouse_pressed(FloatPoint p_point)
-  {
+  public InteractiveState mouse_pressed(FloatPoint p_point) {
     return this;
   }
 
   /**
    * Action to be taken, when the mouse wheel was turned.
    */
-  public InteractiveState mouse_wheel_moved(int p_rotation)
-  {
+  public InteractiveState mouse_wheel_moved(int p_rotation) {
     FloatPoint mousePosition = hdlg.get_current_mouse_position();
-    if (mousePosition != null)
-    {
+    if (mousePosition != null) {
       Point2D screen_mouse_pos = hdlg.graphics_context.coordinate_transform.board_to_screen(mousePosition);
       hdlg.get_panel().zoom_with_mouse_wheel(screen_mouse_pos, p_rotation);
     }
@@ -117,15 +103,12 @@ public class InteractiveState
   }
 
   /**
-   * Default actions when a key shortcut is pressed. Overwritten in derived classes for other key
-   * shortcut actions.
+   * Default actions when a key shortcut is pressed. Overwritten in derived classes for other key shortcut actions.
    */
-  public InteractiveState key_typed(char p_key_char)
-  {
+  public InteractiveState key_typed(char p_key_char) {
     InteractiveState result = this;
     Point2D screen_mouse_pos = hdlg.graphics_context.coordinate_transform.board_to_screen(hdlg.get_current_mouse_position());
-    switch (p_key_char)
-    {
+    switch (p_key_char) {
       case 'a' -> hdlg.get_panel().board_frame.zoom_all();
       case 'c' -> hdlg.get_panel().center_display(screen_mouse_pos);
       case 'f' -> result = ZoomRegionState.get_instance(hdlg.get_current_mouse_position(), this, hdlg, activityReplayFile);
@@ -139,10 +122,8 @@ public class InteractiveState
           hdlg.get_panel().set_custom_crosshair_cursor(!hdlg.get_panel().is_custom_cross_hair_cursor());
       case '\n', ' ' -> result = this.complete();
       case KeyEvent.VK_ESCAPE -> result = this.cancel();
-      default ->
-      {
-        if (Character.isDigit(p_key_char))
-        {
+      default -> {
+        if (Character.isDigit(p_key_char)) {
           // change the current layer to the p_key_char-ths signal layer
           LayerStructure layer_structure = hdlg.get_routing_board().layer_structure;
           int d = Character.digit(p_key_char, 10);
@@ -158,78 +139,63 @@ public class InteractiveState
   }
 
   /**
-   * Action to be taken, when this state is completed and exited. Default function to be overwritten
-   * in derived classes. Returns the return_state of this state.
+   * Action to be taken, when this state is completed and exited. Default function to be overwritten in derived classes. Returns the return_state of this state.
    */
-  public InteractiveState complete()
-  {
-    if (this.return_state != this && activityReplayFile != null)
-    {
+  public InteractiveState complete() {
+    if (this.return_state != this && activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.COMPLETE_SCOPE);
     }
     return this.return_state;
   }
 
   /**
-   * Actions to be taken, when this state gets cancelled. Default function to be overwritten in
-   * derived classes. Returns the parent state of this state.
+   * Actions to be taken, when this state gets cancelled. Default function to be overwritten in derived classes. Returns the parent state of this state.
    */
-  public InteractiveState cancel()
-  {
-    if (this.return_state != this && activityReplayFile != null)
-    {
+  public InteractiveState cancel() {
+    if (this.return_state != this && activityReplayFile != null) {
       activityReplayFile.start_scope(ActivityReplayFileScope.CANCEL_SCOPE);
     }
     return this.return_state;
   }
 
   /**
-   * Action to be taken, when the current layer is changed. returns false, if the layer could not be
-   * changed, Default function to be overwritten in derived classes.
+   * Action to be taken, when the current layer is changed. returns false, if the layer could not be changed, Default function to be overwritten in derived classes.
    */
-  public boolean change_layer_action(int p_new_layer)
-  {
+  public boolean change_layer_action(int p_new_layer) {
     hdlg.set_layer(p_new_layer);
     return true;
   }
 
   /**
-   * Used when reading the next point from a logfile. Default function to be overwritten in derived
-   * classes.
+   * Used when reading the next point from a logfile. Default function to be overwritten in derived classes.
    */
-  public InteractiveState process_logfile_point(FloatPoint p_point)
-  {
+  public InteractiveState process_logfile_point(FloatPoint p_point) {
     return this;
   }
 
   /**
    * The default message displayed, when this state is active.
    */
-  public void display_default_message()
-  {
+  public void display_default_message() {
   }
 
   /**
    * Gets the identifier for displaying help for the user about this state.
    */
-  public String get_help_id()
-  {
+  public String get_help_id() {
     return "MenuState";
   }
 
   /**
-   * Returns the popup menu from board_panel, which is used in this interactive state. Default
-   * function to be overwritten in derived classes.
+   * Returns the popup menu from board_panel, which is used in this interactive state. Default function to be overwritten in derived classes.
    */
-  public JPopupMenu get_popup_menu()
-  {
+  public JPopupMenu get_popup_menu() {
     return null;
   }
 
   /**
    * A state using toolbar must overwrite this function.
    */
-  public void set_toolbar()
-  {
+  public void set_toolbar() {
   }
 }

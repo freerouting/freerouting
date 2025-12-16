@@ -5,17 +5,27 @@ import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  * Used for manual choice of trace widths in interactive routing.
  */
-public class WindowManualRules extends BoardSavableSubWindow
-{
+public class WindowManualRules extends BoardSavableSubWindow {
 
   private static final int max_slider_value = 15000;
   private static final double scale_factor = 1;
@@ -29,8 +39,7 @@ public class WindowManualRules extends BoardSavableSubWindow
   /**
    * Creates a new instance of TraceWidthWindow
    */
-  public WindowManualRules(BoardFrame p_board_frame)
-  {
+  public WindowManualRules(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
     this.board_handling = p_board_frame.board_panel.board_handling;
     setLanguage(p_board_frame.get_locale());
@@ -103,9 +112,10 @@ public class WindowManualRules extends BoardSavableSubWindow
     gridbag.setConstraints(this.settings_routing_manual_rule_selection_layer_combo_box, gridbag_constraints);
     main_panel.add(this.settings_routing_manual_rule_selection_layer_combo_box);
     settings_routing_manual_rule_selection_layer_combo_box.addActionListener(new LayerComboBoxListener());
-    settings_routing_manual_rule_selection_layer_combo_box.addActionListener(_ -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_layer_combo_box", settings_routing_manual_rule_selection_layer_combo_box
-        .getSelectedItem()
-        .toString()));
+    settings_routing_manual_rule_selection_layer_combo_box.addActionListener(
+        _ -> FRAnalytics.buttonClicked("settings_routing_manual_rule_selection_layer_combo_box", settings_routing_manual_rule_selection_layer_combo_box
+            .getSelectedItem()
+            .toString()));
 
     JLabel empty_label = new JLabel();
     gridbag.setConstraints(empty_label, gridbag_constraints);
@@ -119,34 +129,27 @@ public class WindowManualRules extends BoardSavableSubWindow
    * Recalculates the values in the trace width fields.
    */
   @Override
-  public void refresh()
-  {
+  public void refresh() {
     RoutingBoard routing_board = board_handling.get_routing_board();
     ComboBoxModel<ViaRule> new_model = new DefaultComboBoxModel<>(routing_board.rules.via_rules);
     this.settings_routing_manual_rule_selection_via_rule_combo_box.setModel(new_model);
     ClearanceMatrix clearance_matrix = board_handling.get_routing_board().rules.clearance_matrix;
-    if (this.settings_routing_manual_rule_selection_clearance_combo_box.get_class_count() != routing_board.rules.clearance_matrix.get_class_count())
-    {
+    if (this.settings_routing_manual_rule_selection_clearance_combo_box.get_class_count() != routing_board.rules.clearance_matrix.get_class_count()) {
       this.settings_routing_manual_rule_selection_clearance_combo_box.adjust(clearance_matrix);
     }
     this.settings_routing_manual_rule_selection_clearance_combo_box.setSelectedIndex(board_handling.settings.get_manual_trace_clearance_class());
     int via_rule_index = board_handling.settings.get_manual_via_rule_index();
-    if (via_rule_index < this.settings_routing_manual_rule_selection_via_rule_combo_box.getItemCount())
-    {
+    if (via_rule_index < this.settings_routing_manual_rule_selection_via_rule_combo_box.getItemCount()) {
       this.settings_routing_manual_rule_selection_via_rule_combo_box.setSelectedIndex(board_handling.settings.get_manual_via_rule_index());
     }
     this.set_selected_layer(this.settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer());
     this.repaint();
   }
 
-  public void set_trace_width_field(int p_half_width)
-  {
-    if (p_half_width < 0)
-    {
+  public void set_trace_width_field(int p_half_width) {
+    if (p_half_width < 0) {
       this.trace_width_field.setText("");
-    }
-    else
-    {
+    } else {
       Float trace_width = (float) board_handling.coordinate_transform.board_to_user(2 * p_half_width);
       this.trace_width_field.setValue(trace_width);
     }
@@ -155,132 +158,100 @@ public class WindowManualRules extends BoardSavableSubWindow
   /**
    * Sets the selected layer to p_layer.
    */
-  private void set_selected_layer(ComboBoxLayer.Layer p_layer)
-  {
+  private void set_selected_layer(ComboBoxLayer.Layer p_layer) {
     int curr_half_width;
-    if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX)
-    {
+    if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX) {
       // check if the half width is layer_dependent.
       boolean trace_widths_layer_dependent = false;
       int first_half_width = this.board_handling.settings.get_manual_trace_half_width(0);
-      for (int i = 1; i < this.board_handling.get_layer_count(); i++)
-      {
-        if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width)
-        {
+      for (int i = 1; i < this.board_handling.get_layer_count(); i++) {
+        if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width) {
           trace_widths_layer_dependent = true;
           break;
         }
       }
-      if (trace_widths_layer_dependent)
-      {
+      if (trace_widths_layer_dependent) {
         curr_half_width = -1;
-      }
-      else
-      {
+      } else {
         curr_half_width = first_half_width;
       }
-    }
-    else if (p_layer.index == ComboBoxLayer.INNER_LAYER_INDEX)
-    {
+    } else if (p_layer.index == ComboBoxLayer.INNER_LAYER_INDEX) {
       // check if the half width is layer_dependent on the inner layers.
       boolean trace_widths_layer_dependent = false;
       int first_half_width = this.board_handling.settings.get_manual_trace_half_width(1);
-      for (int i = 2; i < this.board_handling.get_layer_count() - 1; i++)
-      {
-        if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width)
-        {
+      for (int i = 2; i < this.board_handling.get_layer_count() - 1; i++) {
+        if (this.board_handling.settings.get_manual_trace_half_width(i) != first_half_width) {
           trace_widths_layer_dependent = true;
           break;
         }
       }
-      if (trace_widths_layer_dependent)
-      {
+      if (trace_widths_layer_dependent) {
         curr_half_width = -1;
-      }
-      else
-      {
+      } else {
         curr_half_width = first_half_width;
       }
-    }
-    else
-    {
+    } else {
       curr_half_width = this.board_handling.settings.get_manual_trace_half_width(p_layer.index);
     }
     set_trace_width_field(curr_half_width);
   }
 
-  private class LayerComboBoxListener implements ActionListener
-  {
+  private class LayerComboBoxListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent evt)
-    {
+    public void actionPerformed(ActionEvent evt) {
       ComboBoxLayer.Layer new_selected_layer = settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer();
       set_selected_layer(new_selected_layer);
     }
   }
 
-  private class ClearanceComboBoxListener implements ActionListener
-  {
+  private class ClearanceComboBoxListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent evt)
-    {
+    public void actionPerformed(ActionEvent evt) {
       int new_index = settings_routing_manual_rule_selection_clearance_combo_box.get_selected_class_index();
       board_handling.settings.set_manual_trace_clearance_class(new_index);
     }
   }
 
-  private class ViaRuleComboBoxListener implements ActionListener
-  {
+  private class ViaRuleComboBoxListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent evt)
-    {
+    public void actionPerformed(ActionEvent evt) {
       int new_index = settings_routing_manual_rule_selection_via_rule_combo_box.getSelectedIndex();
       board_handling.settings.set_manual_via_rule_index(new_index);
     }
   }
 
-  private class TraceWidthFieldKeyListener extends KeyAdapter
-  {
+  private class TraceWidthFieldKeyListener extends KeyAdapter {
 
     @Override
-    public void keyTyped(KeyEvent p_evt)
-    {
-      if (p_evt.getKeyChar() == '\n')
-      {
+    public void keyTyped(KeyEvent p_evt) {
+      if (p_evt.getKeyChar() == '\n') {
         key_input_completed = true;
         Object input = trace_width_field.getValue();
-        if (!(input instanceof Number))
-        {
+        if (!(input instanceof Number)) {
           return;
         }
         double input_value = ((Number) input).doubleValue();
-        if (input_value <= 0)
-        {
+        if (input_value <= 0) {
           return;
         }
         double board_value = board_handling.coordinate_transform.user_to_board(input_value);
         int new_half_width = (int) Math.round(0.5 * board_value);
         board_handling.set_manual_trace_half_width(settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer().index, new_half_width);
         set_trace_width_field(new_half_width);
-      }
-      else
-      {
+      } else {
         key_input_completed = false;
       }
     }
   }
 
-  private class TraceWidthFieldFocusListener implements FocusListener
-  {
+  private class TraceWidthFieldFocusListener implements FocusListener {
 
     @Override
-    public void focusLost(FocusEvent p_evt)
-    {
-      if (!key_input_completed)
-      {
+    public void focusLost(FocusEvent p_evt) {
+      if (!key_input_completed) {
         // restore the text field.
         set_selected_layer(settings_routing_manual_rule_selection_layer_combo_box.get_selected_layer());
         key_input_completed = true;
@@ -288,8 +259,7 @@ public class WindowManualRules extends BoardSavableSubWindow
     }
 
     @Override
-    public void focusGained(FocusEvent p_evt)
-    {
+    public void focusGained(FocusEvent p_evt) {
     }
   }
 }

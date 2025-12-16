@@ -1,14 +1,13 @@
 package app.freerouting.drc;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
  * Represents a single DRC violation, matching KiCad's JSON schema.
  */
-public class DrcViolation
-{
+public class DrcViolation {
+
   /**
    * Human-readable description of the violation
    */
@@ -33,8 +32,7 @@ public class DrcViolation
   @SerializedName("type")
   public final String type;
 
-  public DrcViolation(String type, String description, String severity, List<DrcViolationItem> items)
-  {
+  public DrcViolation(String type, String description, String severity, List<DrcViolationItem> items) {
     this.type = type;
     this.description = description;
     this.severity = severity;

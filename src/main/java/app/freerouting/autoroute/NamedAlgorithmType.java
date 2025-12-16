@@ -1,6 +1,5 @@
 package app.freerouting.autoroute;
 
-public enum NamedAlgorithmType
-{
+public enum NamedAlgorithmType {
   FANOUT, ROUTER, OPTIMIZER
 }

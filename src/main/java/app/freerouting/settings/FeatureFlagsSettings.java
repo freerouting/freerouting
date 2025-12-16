@@ -1,11 +1,10 @@
 package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
-public class FeatureFlagsSettings implements Serializable
-{
+public class FeatureFlagsSettings implements Serializable {
+
   @SerializedName("logging")
   public boolean logging = true;
   @SerializedName("multi_threading")

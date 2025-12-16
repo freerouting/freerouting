@@ -13,8 +13,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/v1/analytics")
-public class AnalyticsControllerV1
-{
+public class AnalyticsControllerV1 {
+
   /**
    * Tracks an action performed by a user.
    *
@@ -24,42 +24,38 @@ public class AnalyticsControllerV1
   @POST
   @Path("/track")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response trackAction(String requestBody)
-  {
+  public Response trackAction(String requestBody) {
     Payload trackPayload = GSON.fromJson(requestBody, Payload.class);
-    if (trackPayload == null)
-    {
+    if (trackPayload == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The input data is invalid.\"}")
           .build();
     }
 
-    if (globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey == null)
-    {
+    if (globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey == null) {
       return Response
           .status(Response.Status.INTERNAL_SERVER_ERROR)
-          .entity("{\"error\":\"The BigQuery service account key is not configured. It must be set to the 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY' environment variable in JSON format.\"}")
+          .entity(
+              "{\"error\":\"The BigQuery service account key is not configured. It must be set to the 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY' environment variable in JSON format.\"}")
           .build();
     }
 
-    try
-    {
+    try {
       // TODO: implement some caching mechanism, and insert the cached items in a batch
 
       // Send the payload to the BigQuery analytics service
       var bigqueryClient = new BigQueryClient(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey);
       bigqueryClient.track(trackPayload.userId, trackPayload.anonymousId, trackPayload.event, trackPayload.properties);
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       return Response
           .status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity("""
-                                {
-                                  "error": "An error occurred while processing the request."
-                                  "message": "%s"
-                                }
-                                """.formatted(e.getMessage()))
+              {
+                "error": "An error occurred while processing the request."
+                "message": "%s"
+              }
+              """.formatted(e.getMessage()))
           .build();
     }
 
@@ -71,22 +67,20 @@ public class AnalyticsControllerV1
   @POST
   @Path("/identify")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response identity(String requestBody)
-  {
+  public Response identity(String requestBody) {
     Payload trackPayload = GSON.fromJson(requestBody, Payload.class);
-    if (trackPayload == null)
-    {
+    if (trackPayload == null) {
       return Response
           .status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The input data is invalid.\"}")
           .build();
     }
 
-    if (globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey == null)
-    {
+    if (globalSettings.usageAndDiagnosticData.bigqueryServiceAccountKey == null) {
       return Response
           .status(Response.Status.INTERNAL_SERVER_ERROR)
-          .entity("{\"error\":\"The BigQuery service account key is not configured. It must be set to the 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY' environment variable in JSON format.\"}")
+          .entity(
+              "{\"error\":\"The BigQuery service account key is not configured. It must be set to the 'FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY' environment variable in JSON format.\"}")
           .build();
     }
 

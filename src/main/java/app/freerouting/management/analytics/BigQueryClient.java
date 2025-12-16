@@ -2,11 +2,18 @@ package app.freerouting.management.analytics;
 
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
-import app.freerouting.management.analytics.dto.*;
+import app.freerouting.management.analytics.dto.Context;
+import app.freerouting.management.analytics.dto.Library;
+import app.freerouting.management.analytics.dto.Payload;
+import app.freerouting.management.analytics.dto.Properties;
+import app.freerouting.management.analytics.dto.Traits;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
-import com.google.cloud.bigquery.*;
-
+import com.google.cloud.bigquery.BigQuery;
+import com.google.cloud.bigquery.BigQueryOptions;
+import com.google.cloud.bigquery.InsertAllRequest;
+import com.google.cloud.bigquery.InsertAllResponse;
+import com.google.cloud.bigquery.TableId;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,11 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A client for Google BigQuery's API.
- * Please note, that identifies, tracks, users tables are NOT updated in BigQuery (unlike Segment).
+ * A client for Google BigQuery's API. Please note, that identifies, tracks, users tables are NOT updated in BigQuery (unlike Segment).
  */
-public class BigQueryClient implements AnalyticsClient
-{
+public class BigQueryClient implements AnalyticsClient {
+
   private static final String BIGQUERY_PROJECT_ID = "freerouting-analytics";
   private static final String BIGQUERY_DATASET_ID = "freerouting_application";
   private static byte[] BIGQUERY_SERVICE_ACCOUNT_KEY;
@@ -28,8 +34,7 @@ public class BigQueryClient implements AnalyticsClient
   private final String LIBRARY_VERSION;
   private boolean enabled = true;
 
-  public BigQueryClient(String libraryVersion, String serviceAccountKey)
-  {
+  public BigQueryClient(String libraryVersion, String serviceAccountKey) {
     BIGQUERY_SERVICE_ACCOUNT_KEY = serviceAccountKey.getBytes();
     LIBRARY_VERSION = libraryVersion;
     // Enable TLS protocols
@@ -37,10 +42,8 @@ public class BigQueryClient implements AnalyticsClient
     bigQuery = createBigQueryClient();
   }
 
-  private BigQuery createBigQueryClient()
-  {
-    try
-    {
+  private BigQuery createBigQueryClient() {
+    try {
       InputStream keyStream = new ByteArrayInputStream(BIGQUERY_SERVICE_ACCOUNT_KEY);
       GoogleCredentials credentials = ServiceAccountCredentials
           .fromStream(keyStream)
@@ -54,16 +57,13 @@ public class BigQueryClient implements AnalyticsClient
           .build();
       // create the BigQuery client
       return bigQueryOptions.getService();
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       throw new RuntimeException("Failed to create BigQuery client", e);
     }
   }
 
-  private void sendPayloadAsync(Payload payload)
-  {
-    if (!enabled)
-    {
+  private void sendPayloadAsync(Payload payload) {
+    if (!enabled) {
       return;
     }
 
@@ -72,8 +72,7 @@ public class BigQueryClient implements AnalyticsClient
 
     new Thread(() ->
     {
-      try
-      {
+      try {
         // table name is the event name with some formatting
         String tableName = payload.event
             .toLowerCase()
@@ -85,7 +84,6 @@ public class BigQueryClient implements AnalyticsClient
         fields.remove("event");
         fields.put("event", tableName);
 
-
         TableId tableId = TableId.of(BIGQUERY_PROJECT_ID, BIGQUERY_DATASET_ID, tableName);
         InsertAllRequest.Builder builder = InsertAllRequest.newBuilder(tableId);
 
@@ -93,8 +91,7 @@ public class BigQueryClient implements AnalyticsClient
         builder.addRow(row);
 
         InsertAllResponse response = bigQuery.insertAll(builder.build());
-        if (response.hasErrors())
-        {
+        if (response.hasErrors()) {
           // Handle errors
           response
               .getInsertErrors()
@@ -104,15 +101,13 @@ public class BigQueryClient implements AnalyticsClient
                 FRLogger.error("Error in BigQueryClient.send_payload_async: (" + tableName + ")" + errors, null);
               });
         }
-      } catch (Exception e)
-      {
+      } catch (Exception e) {
         FRLogger.error("Exception in BigQueryClient.send_payload_async: " + e.getMessage(), e);
       }
     }).start();
   }
 
-  private Map<String, String> generateFieldsFromPayload(Payload payload)
-  {
+  private Map<String, String> generateFieldsFromPayload(Payload payload) {
     // fields are the fields of the payload class, plus the traits and properties map combined formatted for BigQuery
     Map<String, String> fields = new HashMap<String, String>();
 
@@ -136,21 +131,18 @@ public class BigQueryClient implements AnalyticsClient
     fields.put("loaded_at", TextManager.convertInstantToString(payloadUploadedAt, "yyyy-MM-dd HH:mm:ss.SSSSSS") + " UTC");
     fields.put("uuid_ts", TextManager.convertInstantToString(payloadUploadedAt, "yyyy-MM-dd HH:mm:ss.SSSSSS") + " UTC");
 
-    if ((payload.traits != null) && (!payload.traits.isEmpty()))
-    {
+    if ((payload.traits != null) && (!payload.traits.isEmpty())) {
       fields.putAll(payload.traits);
     }
 
-    if ((payload.properties != null) && (!payload.properties.isEmpty()))
-    {
+    if ((payload.properties != null) && (!payload.properties.isEmpty())) {
       fields.putAll(payload.properties);
     }
 
     return fields;
   }
 
-  public void identify(String userId, String anonymousId, Traits traits) throws IOException
-  {
+  public void identify(String userId, String anonymousId, Traits traits) throws IOException {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
@@ -163,8 +155,7 @@ public class BigQueryClient implements AnalyticsClient
     // NOTE: we ignore the identify event in BigQuery (because we have the tracked "application started" event instead)
   }
 
-  public void track(String userId, String anonymousId, String event, Properties properties) throws IOException
-  {
+  public void track(String userId, String anonymousId, String event, Properties properties) throws IOException {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
@@ -178,8 +169,7 @@ public class BigQueryClient implements AnalyticsClient
     sendPayloadAsync(payload);
   }
 
-  public void setEnabled(boolean enabled)
-  {
+  public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
 }

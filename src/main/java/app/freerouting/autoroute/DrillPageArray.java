@@ -4,18 +4,15 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.TileShape;
-
-import java.awt.*;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm.
- * The pages are rectangles of about equal width and height covering the bounding box of
- * the board area.
+ * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm. The pages are rectangles of about equal width and height covering the bounding box of the board
+ * area.
  */
-public class DrillPageArray
-{
+public class DrillPageArray {
 
   private final IntBox bounds;
   /**
@@ -39,8 +36,7 @@ public class DrillPageArray
   /**
    * Creates a new instance of DrillPageArray
    */
-  public DrillPageArray(RoutingBoard p_board, int p_max_page_width)
-  {
+  public DrillPageArray(RoutingBoard p_board, int p_max_page_width) {
     this.bounds = p_board.bounding_box;
     double length = bounds.ur.x - bounds.ll.x;
     double height = bounds.ur.y - bounds.ll.y;
@@ -49,26 +45,20 @@ public class DrillPageArray
     this.PAGE_WIDTH = (int) Math.ceil(length / COLUMN_COUNT);
     this.PAGE_HEIGHT = (int) Math.ceil(height / ROW_COUNT);
     this.page_arr = new DrillPage[ROW_COUNT][COLUMN_COUNT];
-    for (int j = 0; j < this.ROW_COUNT; j++)
-    {
-      for (int i = 0; i < this.COLUMN_COUNT; i++)
-      {
+    for (int j = 0; j < this.ROW_COUNT; j++) {
+      for (int i = 0; i < this.COLUMN_COUNT; i++) {
         int ll_x = bounds.ll.x + i * PAGE_WIDTH;
         int ur_x;
-        if (i == COLUMN_COUNT - 1)
-        {
+        if (i == COLUMN_COUNT - 1) {
           ur_x = bounds.ur.x;
-        } else
-        {
+        } else {
           ur_x = ll_x + PAGE_WIDTH;
         }
         int ll_y = bounds.ll.y + j * PAGE_HEIGHT;
         int ur_y;
-        if (j == ROW_COUNT - 1)
-        {
+        if (j == ROW_COUNT - 1) {
           ur_y = bounds.ur.y;
-        } else
-        {
+        } else {
           ur_y = ll_y + PAGE_HEIGHT;
         }
         page_arr[j][i] = new DrillPage(new IntBox(ll_x, ll_y, ur_x, ur_y), p_board);
@@ -77,14 +67,11 @@ public class DrillPageArray
   }
 
   /**
-   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the
-   * next call of get_ddrills()
+   * Invalidates all drill pages intersecting with p_shape, so they must be recalculated at the next call of get_ddrills()
    */
-  public void invalidate(TileShape p_shape)
-  {
+  public void invalidate(TileShape p_shape) {
     Collection<DrillPage> overlaps = overlapping_pages(p_shape);
-    for (DrillPage curr_page : overlaps)
-    {
+    for (DrillPage curr_page : overlaps) {
       curr_page.invalidate();
     }
   }
@@ -92,8 +79,7 @@ public class DrillPageArray
   /**
    * Collects all drill pages with a 2-dimensional overlap with p_shape.
    */
-  public Collection<DrillPage> overlapping_pages(TileShape p_shape)
-  {
+  public Collection<DrillPage> overlapping_pages(TileShape p_shape) {
     Collection<DrillPage> result = new LinkedList<>();
 
     IntBox shape_box = p_shape.bounding_box().intersection(this.bounds);
@@ -104,14 +90,11 @@ public class DrillPageArray
     int min_i = (int) Math.floor(((double) (shape_box.ll.x - bounds.ll.x)) / (double) PAGE_WIDTH);
     double max_i = ((double) (shape_box.ur.x - bounds.ll.x)) / (double) PAGE_WIDTH;
 
-    for (int j = min_j; j < max_j; j++)
-    {
-      for (int i = min_i; i < max_i; i++)
-      {
+    for (int j = min_j; j < max_j; j++) {
+      for (int i = min_i; i < max_i; i++) {
         DrillPage curr_page = this.page_arr[j][i];
         TileShape intersection = p_shape.intersection(curr_page.shape);
-        if (intersection.dimension() > 1)
-        {
+        if (intersection.dimension() > 1) {
           result.add(this.page_arr[j][i]);
         }
       }
@@ -122,13 +105,10 @@ public class DrillPageArray
   /**
    * Resets all drill pages for autorouting the next connection.
    */
-  public void reset()
-  {
-    for (int j = 0; j < page_arr.length; j++)
-    {
+  public void reset() {
+    for (int j = 0; j < page_arr.length; j++) {
       DrillPage[] curr_row = page_arr[j];
-      for (int i = 0; i < curr_row.length; i++)
-      {
+      for (int i = 0; i < curr_row.length; i++) {
         curr_row[i].reset();
       }
     }
@@ -137,13 +117,10 @@ public class DrillPageArray
   /*
    * Test draw of the all drills
    */
-  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity)
-  {
-    for (int j = 0; j < page_arr.length; j++)
-    {
+  public void draw(Graphics p_graphics, GraphicsContext p_graphics_context, double p_intensity) {
+    for (int j = 0; j < page_arr.length; j++) {
       DrillPage[] curr_row = page_arr[j];
-      for (int i = 0; i < curr_row.length; i++)
-      {
+      for (int i = 0; i < curr_row.length; i++) {
         curr_row[i].draw(p_graphics, p_graphics_context, p_intensity);
       }
     }

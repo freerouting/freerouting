@@ -7,8 +7,7 @@ import java.util.Map;
 /**
  * Describes the placement data of a library component
  */
-public class ComponentPlacement
-{
+public class ComponentPlacement {
 
   /**
    * The name of the corresponding library component
@@ -22,8 +21,7 @@ public class ComponentPlacement
   /**
    * Creates a new instance of ComponentPlacement
    */
-  public ComponentPlacement(String p_lib_name)
-  {
+  public ComponentPlacement(String p_lib_name) {
     lib_name = p_lib_name;
     locations = new LinkedList<>();
   }
@@ -31,16 +29,15 @@ public class ComponentPlacement
   /**
    * The structure of an entry in the list locations.
    */
-  public static class ComponentLocation
-  {
+  public static class ComponentLocation {
+
     public final String name;
     /**
      * the x- and the y-coordinate of the location.
      */
     public final double[] coor;
     /**
-     * True, if the component is placed at the component side. Else the component is placed at the
-     * solder side.
+     * True, if the component is placed at the component side. Else the component is placed at the solder side.
      */
     public final boolean is_front;
     /**
@@ -59,8 +56,8 @@ public class ComponentPlacement
     public final Map<String, ItemClearanceInfo> via_keepout_infos;
     public final Map<String, ItemClearanceInfo> place_keepout_infos;
 
-    ComponentLocation(String p_name, double[] p_coor, boolean p_is_front, double p_rotation, boolean p_position_fixed, Map<String, ItemClearanceInfo> p_pin_infos, Map<String, ItemClearanceInfo> p_keepout_infos, Map<String, ItemClearanceInfo> p_via_keepout_infos, Map<String, ItemClearanceInfo> p_place_keepout_infos)
-    {
+    ComponentLocation(String p_name, double[] p_coor, boolean p_is_front, double p_rotation, boolean p_position_fixed, Map<String, ItemClearanceInfo> p_pin_infos,
+        Map<String, ItemClearanceInfo> p_keepout_infos, Map<String, ItemClearanceInfo> p_via_keepout_infos, Map<String, ItemClearanceInfo> p_place_keepout_infos) {
       name = p_name;
       coor = p_coor;
       is_front = p_is_front;
@@ -73,13 +70,12 @@ public class ComponentPlacement
     }
   }
 
-  public static class ItemClearanceInfo
-  {
+  public static class ItemClearanceInfo {
+
     public final String name;
     public final String clearance_class;
 
-    ItemClearanceInfo(String p_name, String p_clearance_class)
-    {
+    ItemClearanceInfo(String p_name, String p_clearance_class) {
       name = p_name;
       clearance_class = p_clearance_class;
     }

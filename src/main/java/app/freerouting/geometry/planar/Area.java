@@ -1,11 +1,10 @@
 package app.freerouting.geometry.planar;
 
 /**
- * An Area is a not necessarily simply connected Shape, which means, that it may contain holes. The
- * border and the holes of an Area are of class Shape.
+ * An Area is a not necessarily simply connected Shape, which means, that it may contain holes. The border and the holes of an Area are of class Shape.
  */
-public interface Area
-{
+public interface Area {
+
   /**
    * returns true, if the area is empty
    */
@@ -17,8 +16,7 @@ public interface Area
   boolean is_bounded();
 
   /**
-   * returns 2, if the area contains 2 dimensional shapes , 1, if it contains curves, 0, if it is
-   * reduced to a points and -1, if it is empty.
+   * returns 2, if the area contains 2 dimensional shapes , 1, if it contains curves, 0, if it is reduced to a points and -1, if it is empty.
    */
   int dimension();
 
@@ -38,20 +36,17 @@ public interface Area
   Shape[] get_holes();
 
   /**
-   * Returns the smallest surrounding box of the area. If the area is not bounded, some coordinates
-   * of the resulting box may be equal Integer.MAX_VALUE
+   * Returns the smallest surrounding box of the area. If the area is not bounded, some coordinates of the resulting box may be equal Integer.MAX_VALUE
    */
   IntBox bounding_box();
 
   /**
-   * Returns the smallest surrounding octagon of the area. If the area is not bounded, some
-   * coordinates of the resulting octagon may be equal Integer.MAX_VALUE
+   * Returns the smallest surrounding octagon of the area. If the area is not bounded, some coordinates of the resulting octagon may be equal Integer.MAX_VALUE
    */
   IntOctagon bounding_octagon();
 
   /**
-   * Returns true, if p_point is contained in this area, but not inside a hole. Being on the border
-   * is not defined for FloatPoints because of numerical inaccuracy.
+   * Returns true, if p_point is contained in this area, but not inside a hole. Being on the border is not defined for FloatPoints because of numerical inaccuracy.
    */
   boolean contains(FloatPoint p_point);
 

@@ -7,16 +7,14 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.management.TextManager;
-
 import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Describes board components consisting of an array of pins and other stuff like component
- * keepouts.
+ * Describes board components consisting of an array of pins and other stuff like component keepouts.
  */
-public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Printable, Serializable
-{
+public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Printable, Serializable {
+
   /**
    * The name of the component.
    */
@@ -55,20 +53,16 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
   private boolean on_front;
 
   /**
-   * Creates a new instance of Component with the input parameters. If p_on_front is false, the
-   * component will be placed on the back side.
+   * Creates a new instance of Component with the input parameters. If p_on_front is false, the component will be placed on the back side.
    */
-  Component(String p_name, Point p_location, double p_rotation_in_degree, boolean p_on_front, Package p_package_front, Package p_package_back, int p_no, boolean p_position_fixed)
-  {
+  Component(String p_name, Point p_location, double p_rotation_in_degree, boolean p_on_front, Package p_package_front, Package p_package_back, int p_no, boolean p_position_fixed) {
     name = p_name;
     location = p_location;
     rotation_in_degree = p_rotation_in_degree;
-    while (this.rotation_in_degree >= 360)
-    {
+    while (this.rotation_in_degree >= 360) {
       this.rotation_in_degree -= 360;
     }
-    while (this.rotation_in_degree < 0)
-    {
+    while (this.rotation_in_degree < 0) {
       this.rotation_in_degree += 360;
     }
     on_front = p_on_front;
@@ -81,40 +75,33 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
   /**
    * Returns the location of this component.
    */
-  public Point get_location()
-  {
+  public Point get_location() {
     return location;
   }
 
   /**
    * Returns the rotation of this component in degree.
    */
-  public double get_rotation_in_degree()
-  {
+  public double get_rotation_in_degree() {
     return rotation_in_degree;
   }
 
-  public boolean is_placed()
-  {
+  public boolean is_placed() {
     return location != null;
   }
 
   /**
    * If false, the component will be placed on the back side of the board.
    */
-  public boolean placed_on_front()
-  {
+  public boolean placed_on_front() {
     return this.on_front;
   }
 
   /**
-   * Translates the location of this Component by p_p_vector. The Pins in the board must be moved
-   * separately.
+   * Translates the location of this Component by p_p_vector. The Pins in the board must be moved separately.
    */
-  public void translate_by(Vector p_vector)
-  {
-    if (location != null)
-    {
+  public void translate_by(Vector p_vector) {
+    if (location != null) {
       location = location.translate_by(p_vector);
     }
   }
@@ -122,23 +109,18 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
   /**
    * Turns this component by p_factor times 90 degree around p_pole.
    */
-  public void turn_90_degree(int p_factor, IntPoint p_pole)
-  {
-    if (p_factor == 0)
-    {
+  public void turn_90_degree(int p_factor, IntPoint p_pole) {
+    if (p_factor == 0) {
       return;
     }
     this.rotation_in_degree = this.rotation_in_degree + p_factor * 90;
-    while (this.rotation_in_degree >= 360)
-    {
+    while (this.rotation_in_degree >= 360) {
       this.rotation_in_degree -= 360;
     }
-    while (this.rotation_in_degree < 0)
-    {
+    while (this.rotation_in_degree < 0) {
       this.rotation_in_degree += 360;
     }
-    if (location != null)
-    {
+    if (location != null) {
       this.location = this.location.turn_90_degree(p_factor, p_pole);
     }
   }
@@ -146,39 +128,31 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
   /**
    * Rotates this component by p_angle_in_degree around p_pole.
    */
-  public void rotate(double p_angle_in_degree, IntPoint p_pole, boolean p_flip_style_rotate_first)
-  {
-    if (p_angle_in_degree == 0)
-    {
+  public void rotate(double p_angle_in_degree, IntPoint p_pole, boolean p_flip_style_rotate_first) {
+    if (p_angle_in_degree == 0) {
       return;
     }
     double turn_angle = p_angle_in_degree;
-    if (p_flip_style_rotate_first && !this.placed_on_front())
-    {
+    if (p_flip_style_rotate_first && !this.placed_on_front()) {
       // take care of the order of mirroring and rotating on the back side of the board
       turn_angle = 360 - p_angle_in_degree;
     }
     this.rotation_in_degree = this.rotation_in_degree + turn_angle;
-    while (this.rotation_in_degree >= 360)
-    {
+    while (this.rotation_in_degree >= 360) {
       this.rotation_in_degree -= 360;
     }
-    while (this.rotation_in_degree < 0)
-    {
+    while (this.rotation_in_degree < 0) {
       this.rotation_in_degree += 360;
     }
-    if (location != null)
-    {
+    if (location != null) {
       this.location = this.location.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole.to_float()).round();
     }
   }
 
   /**
-   * Changes the placement side of this component and mirrors it at the vertical line through
-   * p_pole.
+   * Changes the placement side of this component and mirrors it at the vertical line through p_pole.
    */
-  public void change_side(IntPoint p_pole)
-  {
+  public void change_side(IntPoint p_pole) {
     this.on_front = !this.on_front;
     this.location = this.location.mirror_vertical(p_pole);
   }
@@ -187,10 +161,8 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
    * Compares 2 components by name. Useful for example to display components in alphabetic order.
    */
   @Override
-  public int compareTo(Object p_other)
-  {
-    if (p_other instanceof Component component)
-    {
+  public int compareTo(Object p_other) {
+    if (p_other instanceof Component component) {
       return this.name.compareToIgnoreCase(component.name);
     }
     return 1;
@@ -200,68 +172,56 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
    * Creates a copy of this component.
    */
   @Override
-  public Component clone()
-  {
+  public Component clone() {
     Component result = new Component(name, location, rotation_in_degree, on_front, lib_package_front, lib_package_back, no, position_fixed);
     result.logical_part = this.logical_part;
     return result;
   }
 
   @Override
-  public String toString()
-  {
+  public String toString() {
     return this.name;
   }
 
   /**
    * Returns information for pin swap and gate swap, if != null.
    */
-  public LogicalPart get_logical_part()
-  {
+  public LogicalPart get_logical_part() {
     return this.logical_part;
   }
 
   /**
    * Sets the information for pin swap and gate swap.
    */
-  public void set_logical_part(LogicalPart p_logical_part)
-  {
+  public void set_logical_part(LogicalPart p_logical_part) {
     this.logical_part = p_logical_part;
   }
 
   @Override
-  public void print_info(ObjectInfoPanel p_window, Locale p_locale)
-  {
+  public void print_info(ObjectInfoPanel p_window, Locale p_locale) {
     TextManager tm = new TextManager(this.getClass(), p_locale);
 
     p_window.append_bold(tm.getText("component") + " ");
     p_window.append_bold(this.name);
-    if (this.location != null)
-    {
+    if (this.location != null) {
       p_window.append(" " + tm.getText("at") + " ");
       p_window.append(this.location.to_float());
 
       p_window.append(", " + tm.getText("rotation") + " ");
       p_window.append_without_transforming(rotation_in_degree);
 
-      if (this.on_front)
-      {
+      if (this.on_front) {
         p_window.append(", " + tm.getText("front"));
-      }
-      else
-      {
+      } else {
         p_window.append(", " + tm.getText("back"));
       }
-    }
-    else
-    {
+    } else {
       p_window.append(" " + tm.getText("not_yet_placed"));
     }
     p_window.append(", " + tm.getText("package"));
     Package lib_package = this.get_package();
     p_window.append(lib_package.name, tm.getText("package_info"), lib_package);
-    if (this.logical_part != null)
-    {
+    if (this.logical_part != null) {
       p_window.append(", " + tm.getText("logical_part") + " ");
       p_window.append(this.logical_part.name, tm.getText("logical_part_info"), this.logical_part);
     }
@@ -271,15 +231,11 @@ public class Component implements UndoableObjects.Storable, ObjectInfoPanel.Prin
   /**
    * Returns the library package of this component.
    */
-  public Package get_package()
-  {
+  public Package get_package() {
     Package result;
-    if (this.on_front)
-    {
+    if (this.on_front) {
       result = lib_package_front;
-    }
-    else
-    {
+    } else {
       result = lib_package_back;
     }
     return result;

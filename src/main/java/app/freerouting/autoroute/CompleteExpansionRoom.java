@@ -2,12 +2,10 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.SearchTreeObject;
 import app.freerouting.boardgraphics.GraphicsContext;
-
-import java.awt.*;
+import java.awt.Graphics;
 import java.util.Collection;
 
-public interface CompleteExpansionRoom extends ExpansionRoom
-{
+public interface CompleteExpansionRoom extends ExpansionRoom {
 
   /**
    * Returns the list of doors to target items of this room

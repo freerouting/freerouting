@@ -1,11 +1,10 @@
 package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
-public class GuiSettings implements Serializable
-{
+public class GuiSettings implements Serializable {
+
   @SerializedName("enabled")
   public Boolean isEnabled = true;
   @SerializedName("running")

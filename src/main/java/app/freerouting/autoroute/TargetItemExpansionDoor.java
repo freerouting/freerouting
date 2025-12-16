@@ -8,8 +8,7 @@ import app.freerouting.geometry.planar.TileShape;
 /**
  * An expansion door leading to a start or destination item of the autoroute algorithm.
  */
-public class TargetItemExpansionDoor implements ExpandableObject
-{
+public class TargetItemExpansionDoor implements ExpandableObject {
 
   public final Item item;
   public final int tree_entry_no;
@@ -20,17 +19,13 @@ public class TargetItemExpansionDoor implements ExpandableObject
   /**
    * Creates a new instance of ItemExpansionInfo
    */
-  public TargetItemExpansionDoor(Item p_item, int p_tree_entry_no, CompleteExpansionRoom p_room, ShapeSearchTree p_search_tree)
-  {
+  public TargetItemExpansionDoor(Item p_item, int p_tree_entry_no, CompleteExpansionRoom p_room, ShapeSearchTree p_search_tree) {
     item = p_item;
     tree_entry_no = p_tree_entry_no;
     room = p_room;
-    if (room == null)
-    {
+    if (room == null) {
       this.shape = Simplex.EMPTY;
-    }
-    else
-    {
+    } else {
       TileShape item_shape = item.get_tree_shape(p_search_tree, tree_entry_no);
       this.shape = item_shape.intersection(room.get_shape());
     }
@@ -38,44 +33,37 @@ public class TargetItemExpansionDoor implements ExpandableObject
   }
 
   @Override
-  public TileShape get_shape()
-  {
+  public TileShape get_shape() {
     return this.shape;
   }
 
   @Override
-  public int get_dimension()
-  {
+  public int get_dimension() {
     return 2;
   }
 
-  public boolean is_destination_door()
-  {
+  public boolean is_destination_door() {
     ItemAutorouteInfo item_info = this.item.get_autoroute_info();
     return !item_info.is_start_info();
   }
 
   @Override
-  public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room)
-  {
+  public CompleteExpansionRoom other_room(CompleteExpansionRoom p_room) {
     return null;
   }
 
   @Override
-  public MazeSearchElement get_maze_search_element(int p_no)
-  {
+  public MazeSearchElement get_maze_search_element(int p_no) {
     return maze_search_info;
   }
 
   @Override
-  public int maze_search_element_count()
-  {
+  public int maze_search_element_count() {
     return 1;
   }
 
   @Override
-  public void reset()
-  {
+  public void reset() {
     maze_search_info.reset();
   }
 }

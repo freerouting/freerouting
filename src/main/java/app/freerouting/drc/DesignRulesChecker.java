@@ -1,26 +1,29 @@
 package app.freerouting.drc;
 
-import app.freerouting.board.*;
+import app.freerouting.board.BasicBoard;
+import app.freerouting.board.ConductionArea;
+import app.freerouting.board.Item;
+import app.freerouting.board.Pin;
+import app.freerouting.board.Trace;
+import app.freerouting.board.Unit;
+import app.freerouting.board.Via;
 import app.freerouting.constants.Constants;
 import app.freerouting.interactive.RatsNest;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.DesignRulesCheckerSettings;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * Design Rules Checker that centralizes DRC functionality.
- * This class is responsible for detecting clearance violations and other design rule issues.
+ * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting clearance violations and other design rule issues.
  */
-public class DesignRulesChecker
-{
+public class DesignRulesChecker {
+
   private final BasicBoard board;
   private final DesignRulesCheckerSettings drcSettings;
 
-  public DesignRulesChecker(BasicBoard board, DesignRulesCheckerSettings drcSettings)
-  {
+  public DesignRulesChecker(BasicBoard board, DesignRulesCheckerSettings drcSettings) {
     this.board = board;
     this.drcSettings = drcSettings;
   }
@@ -30,16 +33,13 @@ public class DesignRulesChecker
    *
    * @return Collection of all clearance violations found
    */
-  public Collection<ClearanceViolation> getAllClearanceViolations()
-  {
+  public Collection<ClearanceViolation> getAllClearanceViolations() {
     List<ClearanceViolation> allViolations = new ArrayList<>();
 
     // Iterate through all items on the board
     Collection<Item> items = board.get_items();
-    for (Item item : items)
-    {
-      if (item != null)
-      {
+    for (Item item : items) {
+      if (item != null) {
         // Get clearance violations for this item
         Collection<ClearanceViolation> itemViolations = item.clearance_violations();
         allViolations.addAll(itemViolations);
@@ -54,15 +54,13 @@ public class DesignRulesChecker
    *
    * @return Collection of all unconnected items found
    */
-  public Collection<UnconnectedItems> getAllUnconnectedItems()
-  {
+  public Collection<UnconnectedItems> getAllUnconnectedItems() {
     List<UnconnectedItems> unconnectedItems = new ArrayList<>();
 
     var ratsnest = new RatsNest(board);
 
     // Iterate through all items on the board
-    for (RatsNest.AirLine airline : ratsnest.get_airlines())
-    {
+    for (RatsNest.AirLine airline : ratsnest.get_airlines()) {
       // Create an unconnected items object
       unconnectedItems.add(new UnconnectedItems(airline.from_item, airline.to_item));
     }
@@ -78,16 +76,14 @@ public class DesignRulesChecker
    * @param coordinateUnit Unit for coordinates (e.g., "mm", "mil")
    * @return DRC report in KiCad JSON format
    */
-  public DrcReport generateReport(String sourceFile, String coordinateUnit)
-  {
+  public DrcReport generateReport(String sourceFile, String coordinateUnit) {
     DrcReport report = new DrcReport(coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
 
     // Get all clearance violations
     Collection<ClearanceViolation> violations = getAllClearanceViolations();
 
     // Convert internal violations to DRC report format
-    for (ClearanceViolation violation : violations)
-    {
+    for (ClearanceViolation violation : violations) {
       DrcViolation drcViolation = convertToDrcViolation(violation, coordinateUnit);
       report.addViolation(drcViolation);
     }
@@ -96,8 +92,7 @@ public class DesignRulesChecker
     Collection<UnconnectedItems> unconnectedItems = getAllUnconnectedItems();
 
     // Convert unconnected items to DRC report format
-    for (UnconnectedItems unconnectedItem : unconnectedItems)
-    {
+    for (UnconnectedItems unconnectedItem : unconnectedItems) {
       DrcViolation drcViolation = convertToDrcViolation(unconnectedItem, coordinateUnit);
       report.addUnconnectedItem(drcViolation);
     }
@@ -112,8 +107,7 @@ public class DesignRulesChecker
    * @param coordinateUnit Unit for coordinates
    * @return DRC violation in report format
    */
-  private DrcViolation convertToDrcViolation(ClearanceViolation violation, String coordinateUnit)
-  {
+  private DrcViolation convertToDrcViolation(ClearanceViolation violation, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
 
     // Convert coordinates based on the unit
@@ -141,13 +135,13 @@ public class DesignRulesChecker
     items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
 
     // Create violation description
-    String description = "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)".formatted(firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit, violation.actual_clearance * unitScale, coordinateUnit);
+    String description = "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)".formatted(firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit,
+        violation.actual_clearance * unitScale, coordinateUnit);
 
     return new DrcViolation("clearance", description, "error", items);
   }
 
-  private DrcViolation convertToDrcViolation(UnconnectedItems unconnectedItems, String coordinateUnit)
-  {
+  private DrcViolation convertToDrcViolation(UnconnectedItems unconnectedItems, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
 
     // Convert coordinates based on the unit
@@ -186,36 +180,25 @@ public class DesignRulesChecker
    * @param item The item to describe
    * @return Description string
    */
-  private String getItemDescription(Item item)
-  {
+  private String getItemDescription(Item item) {
     StringBuilder desc = new StringBuilder();
 
-    if (item instanceof Trace)
-    {
+    if (item instanceof Trace) {
       desc.append("Trace");
-    }
-    else if (item instanceof Via)
-    {
+    } else if (item instanceof Via) {
       desc.append("Via");
-    }
-    else if (item instanceof Pin)
-    {
+    } else if (item instanceof Pin) {
       desc.append("Pin");
-    }
-    else if (item instanceof ConductionArea)
-    {
+    } else if (item instanceof ConductionArea) {
       desc.append("Conduction Area");
-    }
-    else
-    {
+    } else {
       desc.append(item
           .getClass()
           .getSimpleName());
     }
 
     // Add net information
-    if (item.net_count() > 0)
-    {
+    if (item.net_count() > 0) {
       String netName = board.rules.nets.get(item.get_net_no(0)).name;
       desc
           .append(" [")
@@ -232,31 +215,21 @@ public class DesignRulesChecker
    * @param coordinateUnit Target unit ("mm", "mil", etc.)
    * @return Scale factor
    */
-  private double getUnitScale(String coordinateUnit)
-  {
+  private double getUnitScale(String coordinateUnit) {
     // Get the board's native unit
     Unit boardUnit = board.communication.unit;
 
     // Determine target unit
     Unit targetUnit;
-    if ("mm".equals(coordinateUnit))
-    {
+    if ("mm".equals(coordinateUnit)) {
       targetUnit = Unit.MM;
-    }
-    else if ("mil".equals(coordinateUnit))
-    {
+    } else if ("mil".equals(coordinateUnit)) {
       targetUnit = Unit.MIL;
-    }
-    else if ("inch".equals(coordinateUnit))
-    {
+    } else if ("inch".equals(coordinateUnit)) {
       targetUnit = Unit.INCH;
-    }
-    else if ("um".equals(coordinateUnit))
-    {
+    } else if ("um".equals(coordinateUnit)) {
       targetUnit = Unit.UM;
-    }
-    else
-    {
+    } else {
       // Default to board unit if unknown
       targetUnit = boardUnit;
     }
@@ -272,8 +245,7 @@ public class DesignRulesChecker
    * @param coordinateUnit Unit for coordinates
    * @return JSON string of the DRC report
    */
-  public String generateReportJson(String sourceFile, String coordinateUnit)
-  {
+  public String generateReportJson(String sourceFile, String coordinateUnit) {
     DrcReport report = generateReport(sourceFile, coordinateUnit);
     return GsonProvider.GSON.toJson(report);
   }

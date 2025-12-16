@@ -7,29 +7,30 @@ import app.freerouting.core.Session;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.SessionManager;
 import app.freerouting.management.analytics.FRAnalytics;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import java.util.UUID;
 
 @Path("/v1/sessions")
-public class SessionControllerV1 extends BaseController
-{
+public class SessionControllerV1 extends BaseController {
+
   @Context
   private HttpHeaders httpHeaders;
 
-  public SessionControllerV1()
-  {
+  public SessionControllerV1() {
   }
 
   @GET
   @Path("/list")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response listSessions()
-  {
+  public Response listSessions() {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -42,20 +43,16 @@ public class SessionControllerV1 extends BaseController
   @POST
   @Path("/create")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response createSession()
-  {
+  public Response createSession() {
     // Authenticate the user
     UUID userId = AuthenticateUser();
     String host = httpHeaders.getHeaderString("Freerouting-Environment-Host");
 
     // create a new session using the authenticated user as the owner
     Session newSession = SessionManager.getInstance().createSession(userId, host);
-    if (newSession == null)
-    {
+    if (newSession == null) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
-    }
-    else
-    {
+    } else {
       var response = GSON.toJson(newSession);
       FRAnalytics.apiEndpointCalled("POST v1/sessions/create", "", response);
       return Response.ok(response).build();
@@ -67,19 +64,15 @@ public class SessionControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSession(
       @PathParam("sessionId")
-      String sessionId)
-  {
+      String sessionId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
     // Return one session with the id of sessionId
     Session session = SessionManager.getInstance().getSession(sessionId, userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
-    }
-    else
-    {
+    } else {
       var response = GSON.toJson(session);
       FRAnalytics.apiEndpointCalled("GET v1/sessions/" + sessionId, "", response);
       return Response.ok(response).build();
@@ -91,15 +84,13 @@ public class SessionControllerV1 extends BaseController
   @Produces(MediaType.APPLICATION_JSON)
   public Response logs(
       @PathParam("sessionId")
-      String sessionId)
-  {
+      String sessionId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
     // Return one session with the id of sessionId
     Session session = SessionManager.getInstance().getSession(sessionId, userId);
-    if (session == null)
-    {
+    if (session == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
     }
 

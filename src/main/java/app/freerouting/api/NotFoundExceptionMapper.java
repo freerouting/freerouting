@@ -11,12 +11,11 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException>
-{
+public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
+
   @Override
   @Produces(MediaType.APPLICATION_JSON)
-  public Response toResponse(NotFoundException exception)
-  {
+  public Response toResponse(NotFoundException exception) {
     JsonObject errorMessage = new JsonObject();
     errorMessage.addProperty("error", "The requested resource was not found.");
     errorMessage.addProperty("documentation", "https://github.com/freerouting/freerouting/blob/master/docs/API_v1.md");

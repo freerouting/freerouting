@@ -11,18 +11,15 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 @Path("/v1/system")
-public class SystemControllerV1
-{
-  public static double getCpuLoad()
-  {
+public class SystemControllerV1 {
+
+  public static double getCpuLoad() {
     OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-    if (osBean instanceof com.sun.management.OperatingSystemMXBean bean)
-    {
+    if (osBean instanceof com.sun.management.OperatingSystemMXBean bean) {
       return bean.getSystemCpuLoad() * 100;
     }
     return -1;
@@ -31,8 +28,7 @@ public class SystemControllerV1
   @GET
   @Path("/status")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getStatus()
-  {
+  public Response getStatus() {
     Runtime runtime = Runtime.getRuntime();
 
     SystemStatus status = new SystemStatus();
@@ -51,8 +47,7 @@ public class SystemControllerV1
   @GET
   @Path("/environment")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getEnvironment()
-  {
+  public Response getEnvironment() {
     // Serialize the collected environment information to JSON and return it
     var response = GsonProvider.GSON.toJson(Freerouting.globalSettings.environmentSettings);
     FRAnalytics.apiEndpointCalled("GET v1/system/environment", "", response);

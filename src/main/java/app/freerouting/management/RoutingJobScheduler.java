@@ -12,7 +12,6 @@ import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.GlobalSettings;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -24,34 +23,28 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This singleton class is responsible for managing the jobs that will be processed by the router.
- * The jobs are stored in a priority queue where the jobs with the highest priority are processed first.
+ * This singleton class is responsible for managing the jobs that will be processed by the router. The jobs are stored in a priority queue where the jobs with the highest priority are processed first.
  * There is only one instance of this class in the Freerouting process.
  */
-public class RoutingJobScheduler
-{
+public class RoutingJobScheduler {
+
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
   private final int maxParallelJobs = 5;
 
   // Private constructor to prevent instantiation
-  private RoutingJobScheduler()
-  {
+  private RoutingJobScheduler() {
     // start a loop to process the jobs on another thread
     Thread loopThread = new Thread(() ->
     {
-      while (true)
-      {
-        try
-        {
+      while (true) {
+        try {
           // loop through jobs with the READY_TO_START state, order them according to their priority and start them up to the maximum number of parallel jobs
           while (jobs
               .stream()
-              .count() > 0)
-          {
+              .count() > 0) {
             RoutingJob[] jobsArray;
-            synchronized (jobs)
-            {
+            synchronized (jobs) {
               // sort the jobs by priority
               Collections.sort(jobs);
 
@@ -59,32 +52,26 @@ public class RoutingJobScheduler
             }
 
             // start the jobs up to the maximum number of parallel jobs (and make a copy of the list to avoid concurrent modification)
-            for (RoutingJob job : jobsArray)
-            {
-              if (job.state == RoutingJobState.READY_TO_START)
-              {
+            for (RoutingJob job : jobsArray) {
+              if (job.state == RoutingJobState.READY_TO_START) {
                 int parallelJobs = (int) jobs
                     .stream()
                     .filter(j -> j.state == RoutingJobState.RUNNING)
                     .count();
 
-                if (parallelJobs < maxParallelJobs)
-                {
-                  if ((job.input == null) || (job.input.getData() == null))
-                  {
+                if (parallelJobs < maxParallelJobs) {
+                  if ((job.input == null) || (job.input.getData() == null)) {
                     FRLogger.warn("RoutingJob input is null, it is skipped.");
                     job.state = RoutingJobState.INVALID;
                     continue;
                   }
 
                   // load the board from the input into a RoutingBoard object
-                  if (job.input.format == FileFormat.DSN)
-                  {
+                  if (job.input.format == FileFormat.DSN) {
                     HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
                     boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
                     job.board = boardManager.get_routing_board();
-                  } else
-                  {
+                  } else {
                     FRLogger.warn("Only DSN format is supported as an input.");
                     job.state = RoutingJobState.INVALID;
                     continue;
@@ -95,8 +82,7 @@ public class RoutingJobScheduler
                   job.thread = routerThread;
                   job.thread.start();
                   job.state = RoutingJobState.RUNNING;
-                } else
-                {
+                } else {
                   break;
                 }
               }
@@ -105,8 +91,7 @@ public class RoutingJobScheduler
 
           // wait for a short time before checking the queue again
           Thread.sleep(250);
-        } catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
           FRLogger.error("RoutingJobScheduler thread was interrupted.", e);
         }
       }
@@ -120,13 +105,11 @@ public class RoutingJobScheduler
    *
    * @return The singleton instance.
    */
-  public static RoutingJobScheduler getInstance()
-  {
+  public static RoutingJobScheduler getInstance() {
     return instance;
   }
 
-  private String UUIDtoShortCode(UUID uuid)
-  {
+  private String UUIDtoShortCode(UUID uuid) {
     return uuid
         .toString()
         .substring(0, 6)
@@ -139,57 +122,47 @@ public class RoutingJobScheduler
    * @param job The job to enqueue.
    * @return The job that was enqueued.
    */
-  public RoutingJob enqueueJob(RoutingJob job)
-  {
+  public RoutingJob enqueueJob(RoutingJob job) {
     // Get the session object from the SessionManager and user ID from the job
     UUID sessionId = job.sessionId;
-    if (sessionId == null)
-    {
+    if (sessionId == null) {
       throw new IllegalArgumentException("The job must have a session ID.");
     }
 
     var session = SessionManager
         .getInstance()
         .getSession(sessionId.toString());
-    if (session == null)
-    {
+    if (session == null) {
       throw new IllegalArgumentException("The session does not exist.");
     }
 
     UUID userId = session.userId;
-    if (userId == null)
-    {
+    if (userId == null) {
       throw new IllegalArgumentException("The session must have a user ID.");
     }
 
     job.state = RoutingJobState.QUEUED;
 
-    synchronized (jobs)
-    {
+    synchronized (jobs) {
       this.jobs.add(job);
     }
 
     globalSettings.statistics.incrementJobsStarted();
 
-
     return job;
   }
 
-  public void saveJob(RoutingJob job)
-  {
-    if (globalSettings.featureFlags.saveJobs)
-    {
+  public void saveJob(RoutingJob job) {
+    if (globalSettings.featureFlags.saveJobs) {
       String sessionIdString = "null";
       String userIdString = "null";
 
-      try
-      {
+      try {
         Session session = SessionManager
             .getInstance()
             .getSession(job.sessionId.toString());
 
-        if (session == null)
-        {
+        if (session == null) {
           FRLogger.error("Failed to save job in session '%s' to disk, because the session does not exist.".formatted(job.sessionId), null);
         }
 
@@ -197,16 +170,14 @@ public class RoutingJobScheduler
         userIdString = session.userId.toString();
 
         saveJob("U-" + UUIDtoShortCode(session.userId), "S-" + UUIDtoShortCode(session.id), job);
-      } catch (IOException e)
-      {
+      } catch (IOException e) {
         FRLogger.error("Failed to save job for user '%s' in session '%s' to disk.".formatted(userIdString, sessionIdString), e);
       }
     }
 
   }
 
-  private void saveJob(String userFolder, String sessionFolder, RoutingJob job) throws IOException
-  {
+  private void saveJob(String userFolder, String sessionFolder, RoutingJob job) throws IOException {
     // Create the user's folder if it doesn't exist
     Path userFolderPath = GlobalSettings
         .getUserDataPath()
@@ -227,8 +198,7 @@ public class RoutingJobScheduler
         .findFirst()
         .orElse(null);
 
-    if (sessionFolderPath == null)
-    {
+    if (sessionFolderPath == null) {
       // List all directories in the user folder and check if they start with a number
       // If they do, then they are job folders, and we can get the highest number and increment it
       int jobFolderCount = Files
@@ -252,19 +222,16 @@ public class RoutingJobScheduler
     String jobFilename = "FRJ_" + TextManager.convertInstantToString(job.createdAt) + "__J-" + UUIDtoShortCode(job.id) + ".json";
     Path jobFilePath = sessionFolderPath.resolve(jobFilename);
 
-    try (Writer writer = Files.newBufferedWriter(jobFilePath, StandardCharsets.UTF_8))
-    {
+    try (Writer writer = Files.newBufferedWriter(jobFilePath, StandardCharsets.UTF_8)) {
       GsonProvider.GSON.toJson(job, writer);
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       FRLogger.error("Failed to save job '%s' to disk.".formatted(job.id), e);
     }
 
     // Save the input file if the filename is defined and there is data stored in it
     if (job.input != null && job.input.getFilename() != null && !job.input
         .getFilename()
-        .isEmpty() && job.input.getData() != null)
-    {
+        .isEmpty() && job.input.getData() != null) {
       Path inputFilePath = sessionFolderPath.resolve(job.input.getFilename());
       Files.write(inputFilePath, job.input
           .getData()
@@ -274,8 +241,7 @@ public class RoutingJobScheduler
     // Save the output file if the filename is defined and there is data stored in it
     if (job.output != null && job.output.getFilename() != null && !job.output
         .getFilename()
-        .isEmpty() && job.output.getData() != null)
-    {
+        .isEmpty() && job.output.getData() != null) {
       Path outputFilePath = sessionFolderPath.resolve(job.output.getFilename());
       Files.write(outputFilePath, job.output
           .getData()
@@ -289,26 +255,20 @@ public class RoutingJobScheduler
    * @param job The job to get the position of.
    * @return The position of the job in the queue or -1 if the job is not in the queue. 0 means the job is next in line.
    */
-  public int getQueuePosition(RoutingJob job)
-  {
-    synchronized (jobs)
-    {
+  public int getQueuePosition(RoutingJob job) {
+    synchronized (jobs) {
       return this.jobs.indexOf(job);
     }
   }
 
-  public RoutingJob[] listJobs()
-  {
-    synchronized (jobs)
-    {
+  public RoutingJob[] listJobs() {
+    synchronized (jobs) {
       return this.jobs.toArray(RoutingJob[]::new);
     }
   }
 
-  public RoutingJob[] listJobs(String sessionId)
-  {
-    synchronized (jobs)
-    {
+  public RoutingJob[] listJobs(String sessionId) {
+    synchronized (jobs) {
       return this.jobs
           .stream()
           .filter(j -> j.sessionId
@@ -318,31 +278,25 @@ public class RoutingJobScheduler
     }
   }
 
-  public RoutingJob[] listJobs(String sessionId, UUID userId)
-  {
+  public RoutingJob[] listJobs(String sessionId, UUID userId) {
     SessionManager sessionManager = SessionManager.getInstance();
 
-    if (sessionId == null)
-    {
+    if (sessionId == null) {
       // Get all sessions that belong to the user
       Session[] sessions = sessionManager.getSessions(null, userId);
 
       // Iterate through the sessions and list all jobs belonging to them
       List<RoutingJob> result = new LinkedList<>();
-      for (Session session : sessions)
-      {
+      for (Session session : sessions) {
         // List all jobs belonging to the user in the session
         result.addAll(List.of(listJobs(session.id.toString())));
       }
 
       return result.toArray(RoutingJob[]::new);
-    }
-    else
-    {
+    } else {
       Session session = sessionManager.getSession(sessionId, userId);
 
-      if (session != null)
-      {
+      if (session != null) {
         // List all jobs belonging to the user in the session
         return listJobs(session.id.toString());
       }
@@ -351,10 +305,8 @@ public class RoutingJobScheduler
     return new RoutingJob[0];
   }
 
-  public RoutingJob getJob(String jobId)
-  {
-    synchronized (jobs)
-    {
+  public RoutingJob getJob(String jobId) {
+    synchronized (jobs) {
       return this.jobs
           .stream()
           .filter(j -> j.id
@@ -365,10 +317,8 @@ public class RoutingJobScheduler
     }
   }
 
-  public void clearJobs(String sessionId)
-  {
-    synchronized (jobs)
-    {
+  public void clearJobs(String sessionId) {
+    synchronized (jobs) {
       this.jobs.removeIf(j -> j.sessionId
           .toString()
           .equals(sessionId));

@@ -4,7 +4,6 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.settings.RouterScoringSettings;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,90 +12,72 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Records, manages and ranks the boards that were generated during the routing process.
- * This implementation is thread-safe.
+ * Records, manages and ranks the boards that were generated during the routing process. This implementation is thread-safe.
  */
-public class BoardHistory
-{
+public class BoardHistory {
+
   private final List<BoardHistoryEntry> boards = Collections.synchronizedList(new ArrayList<>());
   private final RouterScoringSettings scoringSettings;
   private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
-  public BoardHistory(RouterScoringSettings scoringSettings)
-  {
+  public BoardHistory(RouterScoringSettings scoringSettings) {
     this.scoringSettings = scoringSettings;
   }
 
-  public synchronized void add(RoutingBoard board)
-  {
-    if (contains(board))
-    {
+  public synchronized void add(RoutingBoard board) {
+    if (contains(board)) {
       return;
     }
 
     boards.add(new BoardHistoryEntry(board, scoringSettings));
   }
 
-  public synchronized void clear()
-  {
+  public synchronized void clear() {
     boards.clear();
   }
 
-  public boolean contains(RoutingBoard board)
-  {
+  public boolean contains(RoutingBoard board) {
     String hash = board.get_hash();
     rwLock
         .readLock()
         .lock();
-    try
-    {
-      for (BoardHistoryEntry entry : boards)
-      {
-        if (entry.hash.equals(hash))
-        {
+    try {
+      for (BoardHistoryEntry entry : boards) {
+        if (entry.hash.equals(hash)) {
           return true;
         }
       }
       return false;
-    } finally
-    {
+    } finally {
       rwLock
           .readLock()
           .unlock();
     }
   }
 
-  public synchronized void remove(RoutingBoard board)
-  {
+  public synchronized void remove(RoutingBoard board) {
     String hash = board.get_hash();
-    for (int i = 0; i < boards.size(); i++)
-    {
-      if (boards.get(i).hash.equals(hash))
-      {
+    for (int i = 0; i < boards.size(); i++) {
+      if (boards.get(i).hash.equals(hash)) {
         boards.remove(i);
         return;
       }
     }
   }
 
-  public float getMaxScore()
-  {
+  public float getMaxScore() {
     rwLock
         .readLock()
         .lock();
-    try
-    {
+    try {
       float maxScore = 0;
-      for (BoardHistoryEntry entry : boards)
-      {
-        if (entry.score > maxScore)
-        {
+      for (BoardHistoryEntry entry : boards) {
+        if (entry.score > maxScore) {
           maxScore = entry.score;
         }
       }
       return maxScore;
-    } finally
-    {
+    } finally {
       rwLock
           .readLock()
           .unlock();
@@ -104,13 +85,10 @@ public class BoardHistory
   }
 
   /**
-   * Returns the best board in the history that has a restore count less than or equal to maxAllowedRestoreCount.
-   * Returns null if no such board exists.
+   * Returns the best board in the history that has a restore count less than or equal to maxAllowedRestoreCount. Returns null if no such board exists.
    */
-  public synchronized RoutingBoard restoreBoard(int maxAllowedRestoreCount)
-  {
-    if (maxAllowedRestoreCount <= 0)
-    {
+  public synchronized RoutingBoard restoreBoard(int maxAllowedRestoreCount) {
+    if (maxAllowedRestoreCount <= 0) {
       maxAllowedRestoreCount = Integer.MAX_VALUE;
     }
 
@@ -118,82 +96,68 @@ public class BoardHistory
         .readLock()
         .lock();
 
-    try
-    {
+    try {
       // Sort the boards by score
       boards.sort((o1, o2) -> Float.compare(o2.score, o1.score));
 
-      for (BoardHistoryEntry entry : boards)
-      {
-        if (entry.restoreCount <= maxAllowedRestoreCount)
-        {
+      for (BoardHistoryEntry entry : boards) {
+        if (entry.restoreCount <= maxAllowedRestoreCount) {
           entry.restoreCount++;
           return (RoutingBoard) BasicBoard.deserialize(entry.board);
         }
       }
       return null;
-    } finally
-    {
+    } finally {
       rwLock
           .readLock()
           .unlock();
     }
   }
 
-  public RoutingBoard restoreBestBoard()
-  {
+  public RoutingBoard restoreBestBoard() {
     return restoreBoard(0);
   }
 
-  public int size()
-  {
+  public int size() {
     rwLock
         .readLock()
         .lock();
-    try
-    {
+    try {
       return boards.size();
-    } finally
-    {
+    } finally {
       rwLock
           .readLock()
           .unlock();
     }
   }
 
-  public int getRank(RoutingBoard board)
-  {
+  public int getRank(RoutingBoard board) {
     String hash = board.get_hash();
     rwLock
         .readLock()
         .lock();
-    try
-    {
-      for (int i = 0; i < boards.size(); i++)
-      {
-        if (boards.get(i).hash.equals(hash))
-        {
+    try {
+      for (int i = 0; i < boards.size(); i++) {
+        if (boards.get(i).hash.equals(hash)) {
           return i + 1;
         }
       }
       return -1;
-    } finally
-    {
+    } finally {
       rwLock
           .readLock()
           .unlock();
     }
   }
 
-  private static class BoardHistoryEntry implements Serializable
-  {
+  private static class BoardHistoryEntry implements Serializable {
+
     public final byte[] board;
     public final String hash;
     public final float score;
     public int restoreCount;
 
-    public BoardHistoryEntry(RoutingBoard board, RouterScoringSettings scoringSettings)
-    {
+    public BoardHistoryEntry(RoutingBoard board, RouterScoringSettings scoringSettings) {
       this.board = board.serialize(false);
       this.hash = board.get_hash();
       this.score = new BoardStatistics(board).getNormalizedScore(scoringSettings);

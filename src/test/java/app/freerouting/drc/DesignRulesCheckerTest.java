@@ -1,6 +1,10 @@
 package app.freerouting.drc;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
@@ -12,24 +16,21 @@ import app.freerouting.management.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class DesignRulesCheckerTest
-{
+public class DesignRulesCheckerTest {
+
   @BeforeEach
-  protected void setUp()
-  {
+  protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
   }
 
   @Test
-  void test_DrcReport_Structure()
-  {
+  void test_DrcReport_Structure() {
     // Create a simple routing job with a DSN file
     RoutingJob job = getRoutingJobFromTestFile("BBD_Mars-64.dsn");
 
@@ -54,8 +55,7 @@ public class DesignRulesCheckerTest
   }
 
   @Test
-  void test_DrcReport_JsonFormat()
-  {
+  void test_DrcReport_JsonFormat() {
     // Create a simple routing job with a DSN file
     RoutingJob job = getRoutingJobFromTestFile("BBD_Mars-64.dsn");
 
@@ -86,8 +86,7 @@ public class DesignRulesCheckerTest
     assertTrue(json.has("schematic_parity"), "JSON should have schematic_parity field");
   }
 
-  private RoutingJob getRoutingJobFromTestFile(String filename)
-  {
+  private RoutingJob getRoutingJobFromTestFile(String filename) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
     Session session = SessionManager
@@ -105,11 +104,9 @@ public class DesignRulesCheckerTest
         .of(testDirectory.toString(), "tests", filename)
         .toFile();
 
-    while (!testFile.exists())
-    {
+    while (!testFile.exists()) {
       testDirectory = testDirectory.getParent();
-      if (testDirectory == null)
-      {
+      if (testDirectory == null) {
         fail("Test file not found: " + filename);
       }
 
@@ -119,19 +116,16 @@ public class DesignRulesCheckerTest
     }
 
     // Load the file as input
-    try
-    {
+    try {
       job.setInput(testFile);
 
       // Load the board
-      if (job.input.format == FileFormat.DSN)
-      {
+      if (job.input.format == FileFormat.DSN) {
         HeadlessBoardManager boardManager = new HeadlessBoardManager(null, job);
         boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdentificationNumberGenerator());
         job.board = boardManager.get_routing_board();
       }
-    } catch (Exception e)
-    {
+    } catch (Exception e) {
       fail("Failed to load test file: " + e.getMessage());
     }
 

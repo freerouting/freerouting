@@ -10,35 +10,31 @@ import app.freerouting.management.SessionManager;
 import app.freerouting.management.TextManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.RouterSettings;
-import org.junit.jupiter.api.BeforeEach;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 
-public class TestBasedOnAnIssue
-{
+public class TestBasedOnAnIssue {
+
   protected RoutingJobScheduler scheduler;
   protected RouterSettings settings;
 
   @BeforeEach
-  protected void setUp()
-  {
+  protected void setUp() {
     Freerouting.globalSettings = new GlobalSettings();
     settings = Freerouting.globalSettings.routerSettings;
     scheduler = RoutingJobScheduler.getInstance();
   }
 
-  protected RoutingJob GetRoutingJob(String filename)
-  {
+  protected RoutingJob GetRoutingJob(String filename) {
     RoutingJob job = GetRoutingJob(filename, null);
     job.routerSettings.jobTimeoutString = "00:05:00";
     return job;
   }
 
-  protected RoutingJob GetRoutingJob(String filename, Long seed)
-  {
+  protected RoutingJob GetRoutingJob(String filename, Long seed) {
     // Create a new session
     UUID sessionId = UUID.randomUUID();
     Session session = SessionManager
@@ -47,8 +43,7 @@ public class TestBasedOnAnIssue
 
     // Create a new job
     RoutingJob job = new RoutingJob(session.id);
-    if (seed != null)
-    {
+    if (seed != null) {
       job.routerSettings.random_seed = seed;
     }
 
@@ -59,26 +54,22 @@ public class TestBasedOnAnIssue
     File testFile = Path
         .of(testDirectory.toString(), "tests", filename)
         .toFile();
-    while (!testFile.exists())
-    {
+    while (!testFile.exists()) {
       testDirectory = testDirectory.getParent();
-      if (testDirectory == null)
-      {
+      if (testDirectory == null) {
         break;
       }
 
       testFile = Path
           .of(testDirectory.toString(), "tests", filename)
           .toFile();
-      if (testFile == null)
-      {
+      if (testFile == null) {
         break;
       }
     }
 
     // Load the file as input
-    try
-    {
+    try {
       job.setInput(testFile);
 
       var statsBefore = new BoardStatistics(job.input
@@ -86,18 +77,15 @@ public class TestBasedOnAnIssue
           .readAllBytes(), job.input.format);
       var jobSettings = new RouterSettings(statsBefore.layers.totalCount);
       job.routerSettings.applyNewValuesFrom(jobSettings);
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       throw new RuntimeException(testFile + " not found.", e);
     }
 
     return job;
   }
 
-  protected RoutingJob RunRoutingJob(RoutingJob job, RouterSettings settings)
-  {
-    if (job == null)
-    {
+  protected RoutingJob RunRoutingJob(RoutingJob job, RouterSettings settings) {
+    if (job == null) {
       throw new IllegalArgumentException("The job cannot be null.");
     }
 
@@ -109,19 +97,15 @@ public class TestBasedOnAnIssue
     long startTime = System.currentTimeMillis();
     long timeoutInMillis = TextManager.parseTimespanString(settings.jobTimeoutString) * 1000;
 
-    while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED) && (job.state != RoutingJobState.TERMINATED))
-    {
-      try
-      {
+    while ((job.state != RoutingJobState.COMPLETED) && (job.state != RoutingJobState.CANCELLED) && (job.state != RoutingJobState.TERMINATED)) {
+      try {
         Thread.sleep(100);
-      } catch (InterruptedException e)
-      {
+      } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
 
       // Check for timeout every iteration
-      if (System.currentTimeMillis() - startTime > timeoutInMillis)
-      {
+      if (System.currentTimeMillis() - startTime > timeoutInMillis) {
         float timeoutInMinutes = timeoutInMillis / 60000.0f;
         throw new RuntimeException("Routing job timed out after " + timeoutInMinutes + " minutes.");
       }
@@ -130,10 +114,8 @@ public class TestBasedOnAnIssue
     return job;
   }
 
-  protected BoardStatistics GetBoardStatistics(RoutingJob job)
-  {
-    if ((job == null) || (job.board == null))
-    {
+  protected BoardStatistics GetBoardStatistics(RoutingJob job) {
+    if ((job == null) || (job.board == null)) {
       throw new IllegalArgumentException("The job or its board cannot be null.");
     }
 

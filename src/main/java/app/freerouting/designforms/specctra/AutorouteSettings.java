@@ -5,75 +5,58 @@ import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
-
 import java.io.IOException;
 
-public class AutorouteSettings
-{
+public class AutorouteSettings {
 
-  static RouterSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure)
-  {
+  private AutorouteSettings() {
+  }
+
+  static RouterSettings read_scope(IJFlexScanner p_scanner, LayerStructure p_layer_structure) {
     RouterSettings result = new RouterSettings(p_layer_structure.arr.length);
     boolean with_fanout = false;
     boolean with_autoroute = true;
     boolean with_postroute = true;
     Object next_token = null;
-    for (; ; )
-    {
+    for (; ; ) {
       Object prev_token = next_token;
-      try
-      {
+      try {
         next_token = p_scanner.next_token();
-      } catch (IOException e)
-      {
+      } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_scope: IO error scanning file", e);
         return null;
       }
-      if (next_token == null)
-      {
+      if (next_token == null) {
         FRLogger.warn("AutorouteSettings.read_scope: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
-      if (next_token == Keyword.CLOSED_BRACKET)
-      {
+      if (next_token == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
-      if (prev_token == Keyword.OPEN_BRACKET)
-      {
-        if (next_token == Keyword.FANOUT)
-        {
+      if (prev_token == Keyword.OPEN_BRACKET) {
+        if (next_token == Keyword.FANOUT) {
           with_fanout = DsnFile.read_on_off_scope(p_scanner);
-        } else if (next_token == Keyword.AUTOROUTE)
-        {
+        } else if (next_token == Keyword.AUTOROUTE) {
           with_autoroute = DsnFile.read_on_off_scope(p_scanner);
-        } else if (next_token == Keyword.POSTROUTE)
-        {
+        } else if (next_token == Keyword.POSTROUTE) {
           with_postroute = DsnFile.read_on_off_scope(p_scanner);
-        } else if (next_token == Keyword.VIAS)
-        {
+        } else if (next_token == Keyword.VIAS) {
           result.set_vias_allowed(DsnFile.read_on_off_scope(p_scanner));
-        } else if (next_token == Keyword.VIA_COSTS)
-        {
+        } else if (next_token == Keyword.VIA_COSTS) {
           result.set_via_costs(DsnFile.read_integer_scope(p_scanner));
-        } else if (next_token == Keyword.PLANE_VIA_COSTS)
-        {
+        } else if (next_token == Keyword.PLANE_VIA_COSTS) {
           result.set_plane_via_costs(DsnFile.read_integer_scope(p_scanner));
-        } else if (next_token == Keyword.START_RIPUP_COSTS)
-        {
+        } else if (next_token == Keyword.START_RIPUP_COSTS) {
           result.set_start_ripup_costs(DsnFile.read_integer_scope(p_scanner));
-        } else if (next_token == Keyword.START_PASS_NO)
-        {
+        } else if (next_token == Keyword.START_PASS_NO) {
           result.set_start_pass_no(DsnFile.read_integer_scope(p_scanner));
-        } else if (next_token == Keyword.LAYER_RULE)
-        {
+        } else if (next_token == Keyword.LAYER_RULE) {
           result = read_layer_rule(p_scanner, p_layer_structure, result);
-          if (result == null)
-          {
+          if (result == null) {
             return null;
           }
-        } else
-        {
+        } else {
           ScopeKeyword.skip_scope(p_scanner);
         }
       }
@@ -84,89 +67,68 @@ public class AutorouteSettings
     return result;
   }
 
-  static RouterSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure, RouterSettings p_settings)
-  {
+  static RouterSettings read_layer_rule(IJFlexScanner p_scanner, LayerStructure p_layer_structure, RouterSettings p_settings) {
     p_scanner.yybegin(SpecctraDsnStreamReader.NAME);
     Object next_token;
-    try
-    {
+    try {
       next_token = p_scanner.next_token();
-    } catch (IOException e)
-    {
+    } catch (IOException e) {
       FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
       return null;
     }
-    if (!(next_token instanceof String))
-    {
+    if (!(next_token instanceof String)) {
       FRLogger.warn("AutorouteSettings.read_layer_rule: String expected at '" + p_scanner.get_scope_identifier() + "'");
       return null;
     }
     int layer_no = p_layer_structure.get_no((String) next_token);
-    if (layer_no < 0)
-    {
+    if (layer_no < 0) {
       FRLogger.warn("AutorouteSettings.read_layer_rule: layer not found at '" + p_scanner.get_scope_identifier() + "'");
       return null;
     }
-    for (; ; )
-    {
+    for (; ; ) {
       Object prev_token = next_token;
-      try
-      {
+      try {
         next_token = p_scanner.next_token();
-      } catch (IOException e)
-      {
+      } catch (IOException e) {
         FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
         return null;
       }
-      if (next_token == null)
-      {
+      if (next_token == null) {
         FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected end of file at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
-      if (next_token == Keyword.CLOSED_BRACKET)
-      {
+      if (next_token == Keyword.CLOSED_BRACKET) {
         // end of scope
         break;
       }
-      if (prev_token == Keyword.OPEN_BRACKET)
-      {
-        if (next_token == Keyword.ACTIVE)
-        {
+      if (prev_token == Keyword.OPEN_BRACKET) {
+        if (next_token == Keyword.ACTIVE) {
           p_settings.set_layer_active(layer_no, DsnFile.read_on_off_scope(p_scanner));
-        } else if (next_token == Keyword.PREFERRED_DIRECTION)
-        {
-          try
-          {
+        } else if (next_token == Keyword.PREFERRED_DIRECTION) {
+          try {
             boolean pref_dir_is_horizontal = true;
             next_token = p_scanner.next_token();
-            if (next_token == Keyword.VERTICAL)
-            {
+            if (next_token == Keyword.VERTICAL) {
               pref_dir_is_horizontal = false;
-            } else if (next_token != Keyword.HORIZONTAL)
-            {
+            } else if (next_token != Keyword.HORIZONTAL) {
               FRLogger.warn("AutorouteSettings.read_layer_rule: unexpected key word at '" + p_scanner.get_scope_identifier() + "'");
               return null;
             }
             p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
             next_token = p_scanner.next_token();
-            if (next_token != Keyword.CLOSED_BRACKET)
-            {
+            if (next_token != Keyword.CLOSED_BRACKET) {
               FRLogger.warn("AutorouteSettings.read_layer_rule: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
               return null;
             }
-          } catch (IOException e)
-          {
+          } catch (IOException e) {
             FRLogger.error("AutorouteSettings.read_layer_rule: IO error scanning file", e);
             return null;
           }
-        } else if (next_token == Keyword.PREFERRED_DIRECTION_TRACE_COSTS)
-        {
+        } else if (next_token == Keyword.PREFERRED_DIRECTION_TRACE_COSTS) {
           p_settings.set_preferred_direction_trace_costs(layer_no, DsnFile.read_float_scope(p_scanner));
-        } else if (next_token == Keyword.AGAINST_PREFERRED_DIRECTION_TRACE_COSTS)
-        {
+        } else if (next_token == Keyword.AGAINST_PREFERRED_DIRECTION_TRACE_COSTS) {
           p_settings.set_against_preferred_direction_trace_costs(layer_no, DsnFile.read_float_scope(p_scanner));
-        } else
-        {
+        } else {
           ScopeKeyword.skip_scope(p_scanner);
         }
       }
@@ -174,48 +136,35 @@ public class AutorouteSettings
     return p_settings;
   }
 
-  static void write_scope(IndentFileWriter p_file, RouterSettings p_settings, app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException
-  {
+  static void write_scope(IndentFileWriter p_file, RouterSettings p_settings, app.freerouting.board.LayerStructure p_layer_structure, IdentifierType p_identifier_type) throws IOException {
     p_file.start_scope();
     p_file.write("autoroute_settings");
     p_file.new_line();
     p_file.write("(fanout ");
-    if (p_settings.getRunFanout())
-    {
+    if (p_settings.getRunFanout()) {
       p_file.write("on)");
-    }
-    else
-    {
+    } else {
       p_file.write("off)");
     }
     p_file.new_line();
     p_file.write("(autoroute ");
-    if (p_settings.getRunRouter())
-    {
+    if (p_settings.getRunRouter()) {
       p_file.write("on)");
-    }
-    else
-    {
+    } else {
       p_file.write("off)");
     }
     p_file.new_line();
     p_file.write("(postroute ");
-    if (p_settings.getRunOptimizer())
-    {
+    if (p_settings.getRunOptimizer()) {
       p_file.write("on)");
-    }
-    else
-    {
+    } else {
       p_file.write("off)");
     }
     p_file.new_line();
     p_file.write("(vias ");
-    if (p_settings.get_vias_allowed())
-    {
+    if (p_settings.get_vias_allowed()) {
       p_file.write("on)");
-    }
-    else
-    {
+    } else {
       p_file.write("off)");
     }
     p_file.new_line();
@@ -246,28 +195,23 @@ public class AutorouteSettings
       p_file.write(String.valueOf(pass_no));
     }
     p_file.write(")");
-    for (int i = 0; i < p_layer_structure.arr.length; i++)
-    {
+    for (int i = 0; i < p_layer_structure.arr.length; i++) {
       Layer curr_layer = p_layer_structure.arr[i];
       p_file.start_scope();
       p_file.write("layer_rule ");
       p_identifier_type.write(curr_layer.name, p_file);
       p_file.new_line();
       p_file.write("(active ");
-      if (p_settings.get_layer_active(i))
-      {
+      if (p_settings.get_layer_active(i)) {
         p_file.write("on)");
-      } else
-      {
+      } else {
         p_file.write("off)");
       }
       p_file.new_line();
       p_file.write("(preferred_direction ");
-      if (p_settings.get_preferred_direction_is_horizontal(i))
-      {
+      if (p_settings.get_preferred_direction_is_horizontal(i)) {
         p_file.write("horizontal)");
-      } else
-      {
+      } else {
         p_file.write("vertical)");
       }
       p_file.new_line();
@@ -283,8 +227,5 @@ public class AutorouteSettings
       p_file.end_scope();
     }
     p_file.end_scope();
-  }
-
-  private AutorouteSettings() {
   }
 }

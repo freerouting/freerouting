@@ -2,11 +2,10 @@ package app.freerouting.management.analytics;
 
 import app.freerouting.management.analytics.dto.Properties;
 import app.freerouting.management.analytics.dto.Traits;
-
 import java.io.IOException;
 
-public interface AnalyticsClient
-{
+public interface AnalyticsClient {
+
   /**
    * Identify a user. This is only called once at the beginning of the session.
    *

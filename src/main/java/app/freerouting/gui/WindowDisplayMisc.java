@@ -4,19 +4,23 @@ import app.freerouting.boardgraphics.CoordinateTransform;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Window for interactive changing of miscellaneous display properties.
  */
-public class WindowDisplayMisc extends BoardSavableSubWindow
-{
+public class WindowDisplayMisc extends BoardSavableSubWindow {
 
   private static final int MAX_SLIDER_VALUE = 100;
   private final BoardPanel panel;
@@ -34,8 +38,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
   /**
    * Creates a new instance of DisplayMiscWindow
    */
-  public WindowDisplayMisc(BoardFrame p_board_frame)
-  {
+  public WindowDisplayMisc(BoardFrame p_board_frame) {
     setLanguage(p_board_frame.get_locale());
 
     this.panel = p_board_frame.board_panel;
@@ -125,9 +128,11 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     appearance_misc_rotation_90_degree_checkbox.addActionListener(new Rotation90Listener());
     appearance_misc_rotation_90_degree_checkbox.addActionListener(_ -> FRAnalytics.buttonClicked("appearance_misc_rotation_90_degree_checkbox", appearance_misc_rotation_90_degree_checkbox.getText()));
     appearance_misc_rotation_180_degree_checkbox.addActionListener(new Rotation180Listener());
-    appearance_misc_rotation_180_degree_checkbox.addActionListener(_ -> FRAnalytics.buttonClicked("appearance_misc_rotation_180_degree_checkbox", appearance_misc_rotation_180_degree_checkbox.getText()));
+    appearance_misc_rotation_180_degree_checkbox.addActionListener(
+        _ -> FRAnalytics.buttonClicked("appearance_misc_rotation_180_degree_checkbox", appearance_misc_rotation_180_degree_checkbox.getText()));
     appearance_misc_rotation_270_degree_checkbox.addActionListener(new Rotation270Listener());
-    appearance_misc_rotation_270_degree_checkbox.addActionListener(_ -> FRAnalytics.buttonClicked("appearance_misc_rotation_270_degree_checkbox", appearance_misc_rotation_270_degree_checkbox.getText()));
+    appearance_misc_rotation_270_degree_checkbox.addActionListener(
+        _ -> FRAnalytics.buttonClicked("appearance_misc_rotation_270_degree_checkbox", appearance_misc_rotation_270_degree_checkbox.getText()));
 
     separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
     gridbag.setConstraints(separator, gridbag_constraints);
@@ -192,21 +197,18 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
    * Refreshes the displayed values in this window.
    */
   @Override
-  public void refresh()
-  {
+  public void refresh() {
     appearance_misc_small_cursor_checkbox.setSelected(!panel.is_custom_cross_hair_cursor());
     appearance_misc_big_cursor_checkbox.setSelected(panel.is_custom_cross_hair_cursor());
 
     int ninety_degree_rotation = panel.board_handling.graphics_context.coordinate_transform.get_90_degree_rotation();
 
-    switch (ninety_degree_rotation)
-    {
+    switch (ninety_degree_rotation) {
       case 0 -> appearance_misc_rotation_none_checkbox.setSelected(true);
       case 1 -> appearance_misc_rotation_90_degree_checkbox.setSelected(true);
       case 2 -> appearance_misc_rotation_180_degree_checkbox.setSelected(true);
       case 3 -> appearance_misc_rotation_270_degree_checkbox.setSelected(true);
-      default ->
-      {
+      default -> {
         FRLogger.warn("DisplayMiscWindow: unexpected ninety_degree_rotation");
         appearance_misc_rotation_none_checkbox.setSelected(true);
       }
@@ -223,76 +225,68 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     auto_layer_dim_slider.setValue(curr_slider_value);
   }
 
-  private class SmallCursorListener implements ActionListener
-  {
+  private class SmallCursorListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       panel.set_custom_crosshair_cursor(false);
     }
   }
 
-  private class BigCursorListener implements ActionListener
-  {
+  private class BigCursorListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       panel.set_custom_crosshair_cursor(true);
     }
   }
 
-  private class RotationNoneListener implements ActionListener
-  {
+  private class RotationNoneListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinate_transform = panel.board_handling.graphics_context.coordinate_transform;
       coordinate_transform.set_rotation(0);
       panel.repaint();
     }
   }
 
-  private class Rotation90Listener implements ActionListener
-  {
+  private class Rotation90Listener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinate_transform = panel.board_handling.graphics_context.coordinate_transform;
       coordinate_transform.set_rotation(0.5 * Math.PI);
       panel.repaint();
     }
   }
 
-  private class Rotation180Listener implements ActionListener
-  {
+  private class Rotation180Listener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinate_transform = panel.board_handling.graphics_context.coordinate_transform;
       coordinate_transform.set_rotation(Math.PI);
       panel.repaint();
     }
   }
 
-  private class Rotation270Listener implements ActionListener
-  {
+  private class Rotation270Listener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinate_transform = panel.board_handling.graphics_context.coordinate_transform;
       coordinate_transform.set_rotation(1.5 * Math.PI);
       panel.repaint();
     }
   }
 
-  private class MirrorNoneListener implements ActionListener
-  {
+  private class MirrorNoneListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinate_transform = panel.board_handling.graphics_context.coordinate_transform;
-      if (!(coordinate_transform.is_mirror_left_right() || coordinate_transform.is_mirror_top_bottom()))
-      {
+      if (!(coordinate_transform.is_mirror_left_right() || coordinate_transform.is_mirror_top_bottom())) {
         return; // mirroring already switched off
       }
       // remember the old viewort center to retain the displayed section of the board.
@@ -304,14 +298,12 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     }
   }
 
-  private class VerticalMirrorListener implements ActionListener
-  {
+  private class VerticalMirrorListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinate_transform = panel.board_handling.graphics_context.coordinate_transform;
-      if (coordinate_transform.is_mirror_left_right())
-      {
+      if (coordinate_transform.is_mirror_left_right()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
@@ -323,14 +315,12 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     }
   }
 
-  private class HorizontalMirrorListener implements ActionListener
-  {
+  private class HorizontalMirrorListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       CoordinateTransform coordinate_transform = panel.board_handling.graphics_context.coordinate_transform;
-      if (coordinate_transform.is_mirror_top_bottom())
-      {
+      if (coordinate_transform.is_mirror_top_bottom()) {
         return; // already mirrored
       }
       // remember the old viewport center to retain the displayed section of the board.
@@ -342,11 +332,10 @@ public class WindowDisplayMisc extends BoardSavableSubWindow
     }
   }
 
-  private class SliderChangeListener implements ChangeListener
-  {
+  private class SliderChangeListener implements ChangeListener {
+
     @Override
-    public void stateChanged(ChangeEvent evt)
-    {
+    public void stateChanged(ChangeEvent evt) {
       double new_value = 1 - (double) auto_layer_dim_slider.getValue() / (double) MAX_SLIDER_VALUE;
       panel.board_handling.graphics_context.set_auto_layer_dim_factor(new_value);
       panel.repaint();

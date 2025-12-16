@@ -2,16 +2,17 @@ package app.freerouting.gui;
 
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.FeatureFlagsSettings;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 
 /**
  * Creates the menu bar of a board frame together with its menu items.
  */
-public class BoardMenuBar extends JMenuBar
-{
+public class BoardMenuBar extends JMenuBar {
 
   private final BoardFrame boardFrame;
   public BoardMenuFile fileMenu;
@@ -23,8 +24,7 @@ public class BoardMenuBar extends JMenuBar
   /**
    * Creates a new BoardMenuBar together with its menus
    */
-  public BoardMenuBar(BoardFrame boardFrame, FeatureFlagsSettings featureFlags)
-  {
+  public BoardMenuBar(BoardFrame boardFrame, FeatureFlagsSettings featureFlags) {
     this.boardFrame = boardFrame;
     fileMenu = new BoardMenuFile(boardFrame, !featureFlags.macros);
     add(fileMenu);
@@ -36,8 +36,7 @@ public class BoardMenuBar extends JMenuBar
     add(rulesMenu);
     infoMenu = BoardMenuInfo.get_instance(boardFrame);
     add(infoMenu);
-    if (featureFlags.otherMenu)
-    {
+    if (featureFlags.otherMenu) {
       JMenu other_menu = BoardMenuOther.get_instance(boardFrame);
       add(other_menu);
     }
@@ -47,11 +46,9 @@ public class BoardMenuBar extends JMenuBar
     // Create the Profile button
     JButton profileButton = new JButton("User Settings");
     profileButton.setBorderPainted(false);
-    profileButton.addActionListener(new ActionListener()
-    {
+    profileButton.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e)
-      {
+      public void actionPerformed(ActionEvent e) {
         showProfileDialog();
       }
     });
@@ -65,8 +62,7 @@ public class BoardMenuBar extends JMenuBar
   /**
    * Displays a modal dialog with user information.
    */
-  public void showProfileDialog()
-  {
+  public void showProfileDialog() {
     WindowUserSettings.show(this.boardFrame);
   }
 }

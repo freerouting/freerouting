@@ -2,22 +2,21 @@ package app.freerouting.gui;
 
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 /**
  * Creates the display menu of a board frame.
  */
-public class BoardMenuDisplay extends JMenu
-{
+public class BoardMenuDisplay extends JMenu {
+
   private final BoardFrame board_frame;
   private final TextManager tm;
 
   /**
    * Creates a new instance of BoardDisplayMenu
    */
-  private BoardMenuDisplay(BoardFrame p_board_frame)
-  {
+  private BoardMenuDisplay(BoardFrame p_board_frame) {
     board_frame = p_board_frame;
     tm = new TextManager(this.getClass(), p_board_frame.get_locale());
   }
@@ -25,8 +24,7 @@ public class BoardMenuDisplay extends JMenu
   /**
    * Returns a new display menu for the board frame.
    */
-  public static BoardMenuDisplay get_instance(BoardFrame p_board_frame)
-  {
+  public static BoardMenuDisplay get_instance(BoardFrame p_board_frame) {
     final BoardMenuDisplay display_menu = new BoardMenuDisplay(p_board_frame);
     display_menu.setText(display_menu.tm.getText("display"));
 

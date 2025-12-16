@@ -3,8 +3,8 @@ package app.freerouting.datastructures;
 /**
  * Interface to observe changes on objects for synchronisation purposes.
  */
-public interface Observers<ObjectType>
-{
+public interface Observers<ObjectType> {
+
   /**
    * Tell the observers the deletion p_object.
    */

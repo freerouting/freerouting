@@ -9,15 +9,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class Issue575Test extends TestBasedOnAnIssue
-{
+public class Issue575Test extends TestBasedOnAnIssue {
 
   private RoutingJob job;
 
   @Test
   @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
-  public void test_Issue_575_6_track_and_1_hole_clearance_violations()
-  {
+  public void test_Issue_575_6_track_and_1_hole_clearance_violations() {
     // Get a routing job
     job = GetRoutingJob("Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn");
 
@@ -36,8 +34,7 @@ public class Issue575Test extends TestBasedOnAnIssue
 
   @Test
   @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
-  public void test_Issue_575_4_hole_clearance_violations()
-  {
+  public void test_Issue_575_4_hole_clearance_violations() {
     // Get a routing job
     job = GetRoutingJob("Issue575-drc_dev-board_4_hole_clearance_violations.dsn");
 
@@ -56,8 +53,7 @@ public class Issue575Test extends TestBasedOnAnIssue
 
   @Test
   @Disabled("Temporary disabled: KiCad and Freerouting DRC don't agree.")
-  public void test_Issue_575_7_unconnected_items()
-  {
+  public void test_Issue_575_7_unconnected_items() {
     // Get a routing job
     job = GetRoutingJob("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
 
@@ -75,10 +71,8 @@ public class Issue575Test extends TestBasedOnAnIssue
   }
 
   @AfterEach
-  public void tearDown()
-  {
-    if (job != null)
-    {
+  public void tearDown() {
+    if (job != null) {
       RoutingJobScheduler
           .getInstance()
           .clearJobs(job.sessionId.toString());

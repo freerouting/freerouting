@@ -6,17 +6,21 @@ import app.freerouting.board.LayerStructure;
 import app.freerouting.interactive.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.analytics.FRAnalytics;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 /**
  * Window for the handling of the interactive selection parameters,
  */
-public class WindowSelectParameter extends BoardSavableSubWindow
-{
+public class WindowSelectParameter extends BoardSavableSubWindow {
 
   private final GuiBoardManager board_handling;
   private final JRadioButton[] settings_select_layer_name_arr;
@@ -27,8 +31,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow
   /**
    * Creates a new instance of SelectWindow
    */
-  public WindowSelectParameter(BoardFrame p_board_frame)
-  {
+  public WindowSelectParameter(BoardFrame p_board_frame) {
     this.board_handling = p_board_frame.board_panel.board_handling;
 
     setLanguage(p_board_frame.get_locale());
@@ -86,8 +89,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow
 
     this.settings_select_item_selection_choices = new JCheckBox[filter_values.length];
 
-    for (int i = 0; i < filter_values.length; i++)
-    {
+    for (int i = 0; i < filter_values.length; i++) {
       this.settings_select_item_selection_choices[i] = new JCheckBox(tm.getText(filter_values[i].toString()));
       gridbag.setConstraints(this.settings_select_item_selection_choices[i], gridbag_constraints);
       main_panel.add(this.settings_select_item_selection_choices[i], gridbag_constraints);
@@ -111,15 +113,13 @@ public class WindowSelectParameter extends BoardSavableSubWindow
     this.settings_select_layer_name_arr = new JRadioButton[layer_count];
     ButtonGroup current_layer_button_group = new ButtonGroup();
     gridbag_constraints.gridheight = 1;
-    for (int i = 0; i < layer_count; i++)
-    {
+    for (int i = 0; i < layer_count; i++) {
       Layer curr_layer = layer_structure.arr[i];
       settings_select_layer_name_arr[i] = new JRadioButton();
       settings_select_layer_name_arr[i].setText(curr_layer.name);
       settings_select_layer_name_arr[i].setEnabled(curr_layer.is_signal);
       // Explain in a tooltip why the layer is disabled
-      if (!curr_layer.is_signal)
-      {
+      if (!curr_layer.is_signal) {
         settings_select_layer_name_arr[i].setToolTipText(tm.getText("disabled_layer_tooltip"));
       }
       gridbag.setConstraints(settings_select_layer_name_arr[i], gridbag_constraints);
@@ -143,26 +143,18 @@ public class WindowSelectParameter extends BoardSavableSubWindow
    * Refreshes the displayed values in this window.
    */
   @Override
-  public void refresh()
-  {
-    if (this.board_handling.settings.get_select_on_all_visible_layers())
-    {
+  public void refresh() {
+    if (this.board_handling.settings.get_select_on_all_visible_layers()) {
       settings_select_all_visible_button.setSelected(true);
-    }
-    else
-    {
+    } else {
       settings_select_current_only_button.setSelected(true);
     }
     ItemSelectionFilter item_selection_filter = this.board_handling.settings.get_item_selection_filter();
-    if (item_selection_filter == null)
-    {
+    if (item_selection_filter == null) {
       FRLogger.warn("SelectParameterWindow.refresh: item_selection_filter is null");
-    }
-    else
-    {
+    } else {
       final ItemSelectionFilter.SelectableChoices[] filter_values = ItemSelectionFilter.SelectableChoices.values();
-      for (int i = 0; i < filter_values.length; i++)
-      {
+      for (int i = 0; i < filter_values.length; i++) {
         this.settings_select_item_selection_choices[i].setSelected(item_selection_filter.is_selected(filter_values[i]));
       }
     }
@@ -172,59 +164,52 @@ public class WindowSelectParameter extends BoardSavableSubWindow
   /**
    * Selects the layer with the input signal number.
    */
-  public void select(int p_signal_layer_no)
-  {
+  public void select(int p_signal_layer_no) {
     settings_select_layer_name_arr[p_signal_layer_no].setSelected(true);
   }
 
-  private class CurrentLayerListener implements ActionListener
-  {
+  private class CurrentLayerListener implements ActionListener {
+
     public final int signal_layer_no;
     public final int layer_no;
 
-    public CurrentLayerListener(int p_signal_layer_no, int p_layer_no)
-    {
+    public CurrentLayerListener(int p_signal_layer_no, int p_layer_no) {
       signal_layer_no = p_signal_layer_no;
       layer_no = p_layer_no;
     }
 
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.set_current_layer(layer_no);
     }
   }
 
-  private class AllVisibleListener implements ActionListener
-  {
+  private class AllVisibleListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_select_on_all_visible_layers(true);
     }
   }
 
-  private class CurrentOnlyListener implements ActionListener
-  {
+  private class CurrentOnlyListener implements ActionListener {
+
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       board_handling.settings.set_select_on_all_visible_layers(false);
     }
   }
 
-  private class ItemSelectionListener implements ActionListener
-  {
+  private class ItemSelectionListener implements ActionListener {
+
     private final int item_no;
 
-    public ItemSelectionListener(int p_item_no)
-    {
+    public ItemSelectionListener(int p_item_no) {
       item_no = p_item_no;
     }
 
     @Override
-    public void actionPerformed(ActionEvent p_evt)
-    {
+    public void actionPerformed(ActionEvent p_evt) {
       boolean is_selected = settings_select_item_selection_choices[item_no].isSelected();
 
       ItemSelectionFilter.SelectableChoices item_type = ItemSelectionFilter.SelectableChoices.values()[item_no];
@@ -232,20 +217,15 @@ public class WindowSelectParameter extends BoardSavableSubWindow
       board_handling.set_selectable(item_type, is_selected);
 
       // make sure that from fixed and unfixed items at least one type is selected.
-      if (item_type == ItemSelectionFilter.SelectableChoices.FIXED)
-      {
+      if (item_type == ItemSelectionFilter.SelectableChoices.FIXED) {
         int unfixed_no = ItemSelectionFilter.SelectableChoices.UNFIXED.ordinal();
-        if (!is_selected && !settings_select_item_selection_choices[unfixed_no].isSelected())
-        {
+        if (!is_selected && !settings_select_item_selection_choices[unfixed_no].isSelected()) {
           settings_select_item_selection_choices[unfixed_no].setSelected(true);
           board_handling.set_selectable(ItemSelectionFilter.SelectableChoices.UNFIXED, true);
         }
-      }
-      else if (item_type == ItemSelectionFilter.SelectableChoices.UNFIXED)
-      {
+      } else if (item_type == ItemSelectionFilter.SelectableChoices.UNFIXED) {
         int fixed_no = ItemSelectionFilter.SelectableChoices.FIXED.ordinal();
-        if (!is_selected && !settings_select_item_selection_choices[fixed_no].isSelected())
-        {
+        if (!is_selected && !settings_select_item_selection_choices[fixed_no].isSelected()) {
           settings_select_item_selection_choices[fixed_no].setSelected(true);
           board_handling.set_selectable(ItemSelectionFilter.SelectableChoices.FIXED, true);
         }

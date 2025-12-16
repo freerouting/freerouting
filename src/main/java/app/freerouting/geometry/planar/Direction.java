@@ -1,17 +1,14 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.datastructures.Signum;
-
 import java.io.Serializable;
 
 /**
- * Abstract class defining functionality of directions in the plane. A Direction is an equivalence
- * class of vectors. Two vectors define the same object of class Direction, if they point into the
- * same direction. We prefer using directions instead of angles, because with angles the arithmetic
- * calculations are in general not exact.
+ * Abstract class defining functionality of directions in the plane. A Direction is an equivalence class of vectors. Two vectors define the same object of class Direction, if they point into the same
+ * direction. We prefer using directions instead of angles, because with angles the arithmetic calculations are in general not exact.
  */
-public abstract class Direction implements Comparable<Direction>, Serializable
-{
+public abstract class Direction implements Comparable<Direction>, Serializable {
+
   public static final IntDirection NULL = new IntDirection(0, 0);
 
   /**
@@ -50,18 +47,15 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   /**
    * creates a Direction from the input Vector
    */
-  public static Direction get_instance(Vector p_vector)
-  {
+  public static Direction get_instance(Vector p_vector) {
     return p_vector.to_normalized_direction();
   }
 
   /**
    * Calculates the direction from p_from to p_to. If p_from and p_to are equal, null is returned.
    */
-  public static Direction get_instance(Point p_from, Point p_to)
-  {
-    if (p_from.equals(p_to))
-    {
+  public static Direction get_instance(Point p_from, Point p_to) {
+    if (p_from.equals(p_to)) {
       return null;
     }
     return get_instance(p_to.difference_by(p_from));
@@ -70,8 +64,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   /**
    * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
    */
-  public static Direction get_instance_approx(double p_angle)
-  {
+  public static Direction get_instance_approx(double p_angle) {
     final double scale_factor = 10000;
     int x = (int) Math.round(Math.cos(p_angle) * scale_factor);
     int y = (int) Math.round(Math.sin(p_angle) * scale_factor);
@@ -96,8 +89,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   /**
    * returns true, if the direction is orthogonal or diagonal
    */
-  public boolean is_multiple_of_45_degree()
-  {
+  public boolean is_multiple_of_45_degree() {
     return is_orthogonal() || is_diagonal();
   }
 
@@ -114,19 +106,15 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   /**
    * Returns true, if p_ob is a Direction and this Direction and p_ob point into the same direction
    */
-  public final boolean equals(Direction p_other)
-  {
-    if (this == p_other)
-    {
+  public final boolean equals(Direction p_other) {
+    if (this == p_other) {
       return true;
     }
-    if (p_other == null)
-    {
+    if (p_other == null) {
       return false;
     }
 
-    if (this.side_of(p_other) != Side.COLLINEAR)
-    {
+    if (this.side_of(p_other) != Side.COLLINEAR) {
       return false;
     }
     // check, that dir and other_dir do not point into opposite directions
@@ -136,25 +124,20 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   }
 
   /**
-   * Let L be the line from the Zero Vector to p_other.get_vector(). The function returns
-   * Side.ON_THE_LEFT, if this.get_vector() is on the left of L Side.ON_THE_RIGHT, if
-   * this.get_vector() is on the right of L and Side.COLLINEAR, if this.get_vector() is collinear
-   * with L.
+   * Let L be the line from the Zero Vector to p_other.get_vector(). The function returns Side.ON_THE_LEFT, if this.get_vector() is on the left of L Side.ON_THE_RIGHT, if this.get_vector() is on the
+   * right of L and Side.COLLINEAR, if this.get_vector() is collinear with L.
    */
-  public Side side_of(Direction p_other)
-  {
+  public Side side_of(Direction p_other) {
     return this
         .get_vector()
         .side_of(p_other.get_vector());
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of a vector representing this
-   * direction and a vector representing p_other is {@literal >} 0, Signum.NEGATIVE, if the scalar
-   * product is {@literal <} 0, and Signum.ZERO, if the scalar product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of a vector representing this direction and a vector representing p_other is {@literal >} 0, Signum.NEGATIVE, if the scalar product is
+   * {@literal <} 0, and Signum.ZERO, if the scalar product is equal 0.
    */
-  public Signum projection(Direction p_other)
-  {
+  public Signum projection(Direction p_other) {
     return this
         .get_vector()
         .projection(p_other.get_vector());
@@ -163,8 +146,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   /**
    * calculates an approximation of the direction in the middle of this direction and p_other
    */
-  public Direction middle_approx(Direction p_other)
-  {
+  public Direction middle_approx(Direction p_other) {
     FloatPoint v1 = get_vector().to_float();
     FloatPoint v2 = p_other
         .get_vector()
@@ -179,31 +161,20 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   }
 
   /**
-   * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this
-   * direction, 0, if p_1 is equal to p_2, * and -1 otherwise.
+   * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 0, if p_1 is equal to p_2, * and -1 otherwise.
    */
-  public int compare_from(Direction p_1, Direction p_2)
-  {
+  public int compare_from(Direction p_1, Direction p_2) {
     int result;
-    if (p_1.compareTo(this) >= 0)
-    {
-      if (p_2.compareTo(this) >= 0)
-      {
+    if (p_1.compareTo(this) >= 0) {
+      if (p_2.compareTo(this) >= 0) {
         result = p_1.compareTo(p_2);
-      }
-      else
-      {
+      } else {
         result = -1;
       }
-    }
-    else
-    {
-      if (p_2.compareTo(this) >= 0)
-      {
+    } else {
+      if (p_2.compareTo(this) >= 0) {
         result = 1;
-      }
-      else
-      {
+      } else {
         result = p_1.compareTo(p_2);
       }
     }
@@ -213,8 +184,7 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   /**
    * Returns an approximation of the signed angle corresponding to this direction.
    */
-  public double angle_approx()
-  {
+  public double angle_approx() {
     return this
         .get_vector()
         .angle_approx();
@@ -228,46 +198,26 @@ public abstract class Direction implements Comparable<Direction>, Serializable
   abstract int compareTo(BigIntDirection p_other);
 
   @Override
-  public String toString()
-  {
-    if (this.compareTo(RIGHT) == 0)
-    {
+  public String toString() {
+    if (this.compareTo(RIGHT) == 0) {
       return "RIGHT";
-    }
-    else if (this.compareTo(RIGHT45) == 0)
-    {
+    } else if (this.compareTo(RIGHT45) == 0) {
       return "UP-RIGHT";
-    }
-    else if (this.compareTo(UP) == 0)
-    {
+    } else if (this.compareTo(UP) == 0) {
       return "UP";
-    }
-    else if (this.compareTo(UP45) == 0)
-    {
+    } else if (this.compareTo(UP45) == 0) {
       return "UP-LEFT";
-    }
-    else if (this.compareTo(LEFT) == 0)
-    {
+    } else if (this.compareTo(LEFT) == 0) {
       return "LEFT";
-    }
-    else if (this.compareTo(LEFT45) == 0)
-    {
+    } else if (this.compareTo(LEFT45) == 0) {
       return "DOWN-LEFT";
-    }
-    else if (this.compareTo(DOWN) == 0)
-    {
+    } else if (this.compareTo(DOWN) == 0) {
       return "DOWN";
-    }
-    else if (this.compareTo(DOWN45) == 0)
-    {
+    } else if (this.compareTo(DOWN45) == 0) {
       return "DOWN-RIGHT";
-    }
-    else if (this.compareTo(NULL) == 0)
-    {
+    } else if (this.compareTo(NULL) == 0) {
       return "NULL";
-    }
-    else
-    {
+    } else {
       return "UNKNOWN";
     }
   }

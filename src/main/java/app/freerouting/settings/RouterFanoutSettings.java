@@ -1,11 +1,10 @@
 package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
-public class RouterFanoutSettings implements Serializable
-{
+public class RouterFanoutSettings implements Serializable {
+
   @SerializedName("enabled")
   public boolean enabled;
   @SerializedName("algorithm")

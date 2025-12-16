@@ -3,8 +3,8 @@ package app.freerouting.datastructures;
 /**
  * Interface for stoppable threads.
  */
-public interface Stoppable
-{
+public interface Stoppable {
+
   /**
    * Requests this thread to be stopped.
    */

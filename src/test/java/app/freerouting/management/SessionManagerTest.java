@@ -1,26 +1,28 @@
 package app.freerouting.management;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
 import app.freerouting.core.Session;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+public class SessionManagerTest {
 
-public class SessionManagerTest
-{
   @Test
-  void testGetInstance()
-  {
+  void testGetInstance() {
     SessionManager sessionManager1 = SessionManager.getInstance();
     SessionManager sessionManager2 = SessionManager.getInstance();
     assertSame(sessionManager1, sessionManager2, "SessionManager should be a singleton.");
   }
 
   @Test
-  void testCreateAndGetSession()
-  {
+  void testCreateAndGetSession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
     Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
@@ -34,8 +36,7 @@ public class SessionManagerTest
   }
 
   @Test
-  void testRemoveSession()
-  {
+  void testRemoveSession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
     Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);
@@ -46,8 +47,7 @@ public class SessionManagerTest
   }
 
   @Test
-  void testGetActiveSessionsCount()
-  {
+  void testGetActiveSessionsCount() {
     SessionManager sessionManager = SessionManager.getInstance();
     int initialCount = sessionManager.getActiveSessionsCount();
 
@@ -57,8 +57,7 @@ public class SessionManagerTest
   }
 
   @Test
-  void testListSessionIds()
-  {
+  void testListSessionIds() {
     UUID userId = UUID.randomUUID();
 
     SessionManager sessionManager = SessionManager.getInstance();
@@ -70,8 +69,7 @@ public class SessionManagerTest
   }
 
   @Test
-  void testGetAndSetGuiSession()
-  {
+  void testGetAndSetGuiSession() {
     SessionManager sessionManager = SessionManager.getInstance();
     UUID userId = UUID.randomUUID();
     Session session = sessionManager.createSession(userId, "Freerouting/" + Freerouting.VERSION_NUMBER_STRING);

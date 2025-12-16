@@ -1,8 +1,7 @@
 package app.freerouting.core;
 
 /* The different states a routing job can be in. */
-public enum RoutingJobState
-{
+public enum RoutingJobState {
   INVALID, // The job is in an invalid state
   QUEUED, // The job is waiting to be processed
   READY_TO_START, // The job is ready to start

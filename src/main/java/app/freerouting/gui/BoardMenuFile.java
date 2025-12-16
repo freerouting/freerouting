@@ -5,9 +5,7 @@ import static app.freerouting.Freerouting.globalSettings;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -17,12 +15,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 /**
  * Creates the file menu of a board frame.
  */
-public class BoardMenuFile extends JMenu
-{
+public class BoardMenuFile extends JMenu {
+
   public final JMenuItem file_save_as_menuitem;
   private final TextManager tm;
   private final List<Consumer<File>> openEventListeners = new ArrayList<>();
@@ -31,8 +33,7 @@ public class BoardMenuFile extends JMenu
   /**
    * Creates a new instance of BoardFileMenu
    */
-  public BoardMenuFile(BoardFrame board_frame, boolean p_disable_feature_macros)
-  {
+  public BoardMenuFile(BoardFrame board_frame, boolean p_disable_feature_macros) {
     tm = new TextManager(this.getClass(), board_frame.get_locale());
 
     setText(tm.getText("file"));
@@ -66,8 +67,7 @@ public class BoardMenuFile extends JMenu
 
     add(file_save_as_menuitem);
 
-    if (!p_disable_feature_macros)
-    {
+    if (!p_disable_feature_macros) {
       JMenuItem file_write_logfile_menuitem = new JMenuItem();
       file_write_logfile_menuitem.setText(tm.getText("generate_logfile"));
       file_write_logfile_menuitem.setToolTipText(tm.getText("generate_logfile_tooltip"));
@@ -96,8 +96,7 @@ public class BoardMenuFile extends JMenu
     add(file_exit_menuitem);
   }
 
-  private void write_logfile_action(BoardFrame board_frame)
-  {
+  private void write_logfile_action(BoardFrame board_frame) {
     JFileChooser file_chooser = new JFileChooser();
     File logfile_dir = new File(board_frame.routingJob.input.getDirectoryPath());
     file_chooser.setMinimumSize(new Dimension(500, 250));
@@ -105,20 +104,16 @@ public class BoardMenuFile extends JMenu
     file_chooser.setFileFilter(BoardFrame.logfile_filter);
     file_chooser.showOpenDialog(this);
     File filename = file_chooser.getSelectedFile();
-    if (filename == null)
-    {
+    if (filename == null) {
       board_frame.screen_messages.set_status_message(tm.getText("message_8"));
-    }
-    else
-    {
+    } else {
 
       board_frame.screen_messages.set_status_message(tm.getText("message_9"));
       board_frame.board_panel.board_handling.start_logfile(filename);
     }
   }
 
-  private void read_logfile_action(BoardFrame board_frame)
-  {
+  private void read_logfile_action(BoardFrame board_frame) {
     JFileChooser file_chooser = new JFileChooser();
     File logfile_dir = new File(board_frame.routingJob.input.getDirectoryPath());
     file_chooser.setMinimumSize(new Dimension(500, 250));
@@ -127,31 +122,24 @@ public class BoardMenuFile extends JMenu
     file_chooser.showOpenDialog(this);
 
     File filename = file_chooser.getSelectedFile();
-    if (filename == null)
-    {
+    if (filename == null) {
       board_frame.screen_messages.set_status_message(tm.getText("message_10"));
-    }
-    else
-    {
+    } else {
       InputStream input_stream;
-      try
-      {
+      try {
         input_stream = new FileInputStream(filename);
-      } catch (FileNotFoundException _)
-      {
+      } catch (FileNotFoundException _) {
         return;
       }
       board_frame.read_logfile(input_stream);
     }
   }
 
-  public void addOpenEventListener(Consumer<File> listener)
-  {
+  public void addOpenEventListener(Consumer<File> listener) {
     openEventListeners.add(listener);
   }
 
-  public void addSaveAsEventListener(Consumer<File> listener)
-  {
+  public void addSaveAsEventListener(Consumer<File> listener) {
     saveAsEventListeners.add(listener);
   }
 

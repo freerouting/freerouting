@@ -1,8 +1,11 @@
 package app.freerouting.management.analytics;
 
-import app.freerouting.management.analytics.dto.*;
+import app.freerouting.management.analytics.dto.Context;
+import app.freerouting.management.analytics.dto.Library;
+import app.freerouting.management.analytics.dto.Payload;
+import app.freerouting.management.analytics.dto.Properties;
+import app.freerouting.management.analytics.dto.Traits;
 import app.freerouting.management.gson.GsonProvider;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,31 +19,27 @@ import java.util.Base64;
 /**
  * A client for Segment's HTTP API.
  */
-public class SegmentClient implements AnalyticsClient
-{
+public class SegmentClient implements AnalyticsClient {
+
   private static final String SEGMENT_ENDPOINT = "https://api.segment.io/v1/";
   private final String WRITE_KEY;
   private final String LIBRARY_NAME = "freerouting";
   private final String LIBRARY_VERSION;
   private boolean enabled = true;
 
-  public SegmentClient(String libraryVersion, String writeKey)
-  {
+  public SegmentClient(String libraryVersion, String writeKey) {
     LIBRARY_VERSION = libraryVersion;
     WRITE_KEY = writeKey;
   }
 
-  private void sendPayloadAsync(String endpoint, Payload payload) throws IOException
-  {
-    if (!enabled)
-    {
+  private void sendPayloadAsync(String endpoint, Payload payload) throws IOException {
+    if (!enabled) {
       return;
     }
 
     new Thread(() ->
     {
-      try
-      {
+      try {
         // Serialize to JSON using GSON
         String jsonPayload = GsonProvider.GSON.toJson(payload);
 
@@ -54,32 +53,27 @@ public class SegmentClient implements AnalyticsClient
         connection.setDoOutput(true);
 
         // Write JSON payload to request
-        try (OutputStream os = connection.getOutputStream())
-        {
+        try (OutputStream os = connection.getOutputStream()) {
           byte[] input = jsonPayload.getBytes(StandardCharsets.UTF_8);
           os.write(input, 0, input.length);
         }
 
         // Read the response
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)))
-        {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
           StringBuilder response = new StringBuilder();
           String responseLine;
-          while ((responseLine = br.readLine()) != null)
-          {
+          while ((responseLine = br.readLine()) != null) {
             response.append(responseLine.trim());
           }
           // return response.toString();
         }
-      } catch (Exception _)
-      {
+      } catch (Exception _) {
         //FRLogger.error("Exception in SegmentClient.send_payload_async: " + e.getMessage(), e);
       }
     }).start();
   }
 
-  public void identify(String userId, String anonymousId, Traits traits) throws IOException
-  {
+  public void identify(String userId, String anonymousId, Traits traits) throws IOException {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
@@ -92,8 +86,7 @@ public class SegmentClient implements AnalyticsClient
     sendPayloadAsync(SEGMENT_ENDPOINT + "identify", payload);
   }
 
-  public void track(String userId, String anonymousId, String event, Properties properties) throws IOException
-  {
+  public void track(String userId, String anonymousId, String event, Properties properties) throws IOException {
     Payload payload = new Payload();
     payload.userId = userId;
     payload.anonymousId = anonymousId;
@@ -107,8 +100,7 @@ public class SegmentClient implements AnalyticsClient
     sendPayloadAsync(SEGMENT_ENDPOINT + "track", payload);
   }
 
-  public void setEnabled(boolean enabled)
-  {
+  public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
 }
