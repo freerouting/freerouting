@@ -13,15 +13,14 @@
 
 ### Requirements
 
-- Java >= 21 ([Adoptium Temurin 21 JRE](https://adoptium.net/temurin/releases/))
-- [Gradle 6.x](https://gradle.org/releases/)
+- Java >= 25 ([Adoptium Temurin 25 JRE](https://adoptium.net/temurin/releases/))
+- [Gradle 9.x](https://gradle.org/releases/)
 - Internet connection (dependencies are downloaded automatically)
 - For IDE integration: Gradle extension (not necessary for command line usage)
 
 ### IDE
 
-Open the `freerouting` [Gradle](http://www.gradle.org/) project in your favourite IDE (NB, IntelliJ, Eclipse etc. with Gradle Plugin) and build it
-by calling the `assemble` task.
+Open the `freerouting` [Gradle](http://www.gradle.org/) project in your favourite IDE (NB, IntelliJ, Eclipse etc. with Gradle Plugin) and build it by calling the `assemble` task.
 
 ### Command Line
 
@@ -60,45 +59,60 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 * Run `gradlew.bat assemble` -> this will generate the files in `\build\libs\freerouting*.jar`
 * Rename to `freerouting-executable.jar` to `freerouting-2.3.4.jar` and add it to the release draft
 * Update the `integrations\KiCad`
-	* Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
-	* Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
-	* Update `\integrations\KiCad\kicad-freerouting\metadata.json`
-	* Create a ZIP file from the `kicad-freerouting` folder
-	* Copy this `kicad-freerouting.zip` file to `kicad-freerouting-2.3.4.zip`
-	* Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to get hash and file sizes
-	* Update `\integrations\KiCad\metadata.json` with these values
- 	* Push these changes to GitHub
-  	* Run the "Run Kicad repository validation" command in KiCad Packager
-	* Delete previous fork at https://gitlab.com/freeroutingapp/metadata
-(Settings / General / Delete this project)
-	* Fork https://gitlab.com/kicad/addons/metadata again
-	* Create a new branch, named `freerouting-2.3.4`
-	* Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json with the new one
-	* Create a megre request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
+    * Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
+    * Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
+    * Update `\integrations\KiCad\kicad-freerouting\metadata.json`
+    * Create a ZIP file from the `kicad-freerouting` folder
+    * Copy this `kicad-freerouting.zip` file to `kicad-freerouting-2.3.4.zip`
+    * Use KiCad Packager
+      from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools)
+      to get hash and file sizes
+    * Update `\integrations\KiCad\metadata.json` with these values
+    * Push these changes to GitHub
+        * Run the "Run Kicad repository validation" command in KiCad Packager
+    * Delete previous fork at https://gitlab.com/freeroutingapp/metadata
+      (Settings / General / Delete this project)
+    * Fork https://gitlab.com/kicad/addons/metadata again
+    * Create a new branch, named `freerouting-2.3.4`
+    * Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json
+      with the new one
+    * Create a megre request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
 * Update README
 * Publish the release
 * Check if Windows and Linux installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions)
 * Publish the library to Maven Central
-	* Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
-	![image](https://github.com/user-attachments/assets/90744cab-ced0-47e0-a0db-1ed6c8a40c39)
-	* Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
-	* Release the staging repository
+    * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
+      ![image](https://github.com/user-attachments/assets/90744cab-ced0-47e0-a0db-1ed6c8a40c39)
+    * Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
+    * Release the staging repository
 
 * Update the Docker image on Azure
-	1. build docker image locally for Linux x64 (~2 mins)
-		```
-		docker build -t freerouting:latest .
-  		```
-	3. tag the docker image
-		```
-		docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
-  		```
-	5. push image to Azure as freerouting.azurecr.io/freerouting/api:latest
-		```
-  		az login
-		az acr login --name freerouting
-		docker push freerouting.azurecr.io/freerouting/api:latest
-		```
+    1. build docker image locally for Linux x64 (~2 mins)
+       ```
+       docker build -t freerouting:latest .
+         ```
+    3. tag the docker image
+       ```
+       docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
+         ```
+    5. push image to Azure as freerouting.azurecr.io/freerouting/api:latest
+       ```
+         az login
+       az acr login --name freerouting
+       docker push freerouting.azurecr.io/freerouting/api:latest
+       ```
 * Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
-  
+
 * Test and publish a new version of the Python Freerouting Client on PyPi.org
+
+## Source formatting and cleanup
+
+- Freerouting follows Google coding conventions from Google Java Style, and the configured OpenRewrite recipe
+  `org.openrewrite.staticanalysis.CodeCleanup` applies those rules automatically to the codebase.
+- Run the cleanup recipe locally with the Rewrite task:
+
+```
+  ./gradlew rewriteRun
+```
+
+- Run the same command before committing so formatting stays consistent with the automated checks.
