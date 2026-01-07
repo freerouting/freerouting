@@ -19,30 +19,30 @@ import jakarta.ws.rs.core.Application;
  */
 @ApplicationPath("/api")
 @OpenAPIDefinition(info = @Info(title = "Freerouting API", version = "1.0", description = """
-        The Freerouting API provides a comprehensive interface for automated PCB routing.
+                The Freerouting API provides a comprehensive interface for automated PCB routing.
 
-        This API enables developers and AI agents to:
-        - Create and manage routing sessions
-        - Submit PCB design files for automated routing
-        - Monitor routing job progress in real-time
-        - Retrieve routing results and DRC reports
-        - Track usage analytics
+                This API enables developers and AI agents to:
+                - Create and manage routing sessions
+                - Submit PCB design files for automated routing
+                - Monitor routing job progress in real-time
+                - Retrieve routing results and DRC reports
+                - Track usage analytics
 
-        The API is fully compliant with OpenAPI 3.0 specification, providing standardized,
-        clear, and machine-readable documentation for seamless integration.
-        """, contact = @Contact(name = "Freerouting Team", url = "https://github.com/freerouting/freerouting", email = "support@freerouting.app"), license = @License(name = "GNU General Public License v3.0", url = "https://www.gnu.org/licenses/gpl-3.0.en.html")), servers = {
-        @Server(description = "Production Server", url = "https://api.freerouting.app"),
-        @Server(description = "Local Development Server", url = "http://localhost:37864/api")
+                The API is fully compliant with OpenAPI 3.0 specification, providing standardized,
+                clear, and machine-readable documentation for seamless integration.
+                """, contact = @Contact(name = "Freerouting Team", url = "https://github.com/freerouting/freerouting", email = "support@freerouting.app"), license = @License(name = "GNU General Public License v3.0", url = "https://www.gnu.org/licenses/gpl-3.0.en.html")), servers = {
+                @Server(description = "Production Server", url = "https://api.freerouting.app"),
+                @Server(description = "Local Development Server", url = "http://localhost:37864")
 }, security = {
-        @SecurityRequirement(name = "ApiKeyAuth")
+                @SecurityRequirement(name = "ApiKeyAuth")
 })
 @SecurityScheme(name = "ApiKeyAuth", type = SecuritySchemeType.APIKEY, in = SecuritySchemeIn.HEADER, paramName = "Freerouting-Api-Key", description = """
-        API Key authentication for Freerouting API.
+                API Key authentication for Freerouting API.
 
-        The API key should be included in the 'Freerouting-Api-Key' header for all requests.
-        This key is used to identify and authenticate users accessing the API.
-        """)
+                The API key should be included in the 'Freerouting-Api-Key' header for all requests.
+                This key is used to identify and authenticate users accessing the API.
+                """)
 public class OpenApiConfig extends Application {
-    // This class serves as the OpenAPI configuration holder
-    // The actual API endpoints are defined in the controller classes
+        // This class serves as the OpenAPI configuration holder
+        // The actual API endpoints are defined in the controller classes
 }
