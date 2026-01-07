@@ -1,17 +1,27 @@
 package app.freerouting.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Resource for serving Swagger UI static files.
- * Redirects the root path to the Swagger UI index page.
+ * Resource for serving Swagger UI.
+ * Provides an interactive web interface for exploring and testing the API.
  */
 @Path("/swagger-ui")
+@Tag(name = "API Documentation", description = "Interactive API documentation interface")
 public class SwaggerUIResource {
 
+    @Operation(summary = "Swagger UI interface", description = "Serves the interactive Swagger UI interface for exploring and testing the Freerouting API. Provides a user-friendly way to view all endpoints, their parameters, and try out API calls directly from the browser.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Swagger UI page loaded successfully", content = @Content(mediaType = "text/html"))
+    })
     @GET
     @Produces("text/html")
     public Response redirectToIndex() {
