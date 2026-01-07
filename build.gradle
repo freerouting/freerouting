@@ -126,6 +126,11 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-core-http:2.62.1'
     implementation 'com.google.cloud:google-cloud-bigquery:2.55.3'
 
+    // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.27'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.27'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.27'
+
     // OpenRewrite:
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.23.0'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.23.0'

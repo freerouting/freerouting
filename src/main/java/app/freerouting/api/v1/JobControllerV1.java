@@ -19,6 +19,15 @@ import app.freerouting.management.TextManager;
 import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.management.gson.GsonProvider;
 import app.freerouting.settings.RouterSettings;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -40,6 +49,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Path("/v1/jobs")
+@Tag(name = "Jobs", description = "Routing job management endpoints for creating, monitoring, and controlling PCB routing jobs")
 public class JobControllerV1 extends BaseController {
 
   private static final ConcurrentHashMap<String, Long> previousOutputChecksums = new ConcurrentHashMap<>();
@@ -47,7 +57,16 @@ public class JobControllerV1 extends BaseController {
   public JobControllerV1() {
   }
 
-  /* Enqueue a new job with the given session id. In order to start the job, both an input file and its settings must be uploaded first. */
+  /*
+   * Enqueue a new job with the given session id. In order to start the job, both
+   * an input file and its settings must be uploaded first.
+   */
+  @Operation(summary = "Enqueue new routing job", description = "Creates and enqueues a new PCB routing job within a session. The job must have both input file and settings uploaded before it can be started.")
+  @RequestBody(description = "Routing job configuration", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class)))
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Job enqueued successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
+      @ApiResponse(responseCode = "400", description = "Invalid job data or session ID", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{\"error\":\"The job data is invalid.\"}")))
+  })
   @POST
   @Path("/enqueue")
   @Produces(MediaType.APPLICATION_JSON)
@@ -111,13 +130,19 @@ public class JobControllerV1 extends BaseController {
 
   }
 
-  /* Get a list of all jobs in the session with the given id, returning only basic details about them. */
+  /*
+   * Get a list of all jobs in the session with the given id, returning only basic
+   * details about them.
+   */
+  @Operation(summary = "List routing jobs", description = "Retrieves a list of all routing jobs in the specified session. Use 'all' as sessionId to list all jobs for the authenticated user.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "List of jobs retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob[].class)))
+  })
   @GET
   @Path("/list/{sessionId}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response listJobs(
-      @PathParam("sessionId")
-      String sessionId) {
+      @Parameter(description = "Session ID or 'all' for all jobs", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("sessionId") String sessionId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -146,13 +171,21 @@ public class JobControllerV1 extends BaseController {
         .build();
   }
 
-  /* Get the current detailed status of the job with id, including statistical data about the (partially) completed board is the process already started. */
+  /*
+   * Get the current detailed status of the job with id, including statistical
+   * data about the (partially) completed board is the process already started.
+   */
+  @Operation(summary = "Get job details", description = "Retrieves detailed status and statistics of a routing job, including progress information if the job has started.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Job details retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
+      @ApiResponse(responseCode = "404", description = "Job not found", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{}"))),
+      @ApiResponse(responseCode = "400", description = "Invalid session ID")
+  })
   @GET
   @Path("/{jobId}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getJob(
-      @PathParam("jobId")
-      String jobId) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -188,12 +221,17 @@ public class JobControllerV1 extends BaseController {
   }
 
   /* Start or continue the job with the given id. */
+  @Operation(summary = "Start routing job", description = "Starts or continues a queued routing job. The job must have both input file and settings uploaded before it can be started.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Job started successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Job already started or invalid session")
+  })
   @PUT
   @Path("/{jobId}/start")
   @Produces(MediaType.APPLICATION_JSON)
   public Response startJob(
-      @PathParam("jobId")
-      String jobId) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -242,12 +280,17 @@ public class JobControllerV1 extends BaseController {
   }
 
   /* Stop the job with the given id, and cancels the job. */
+  @Operation(summary = "Cancel routing job", description = "Cancels a routing job. Note: This endpoint is currently not fully implemented.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "501", description = "Not implemented", content = @Content(mediaType = MediaType.APPLICATION_JSON, examples = @ExampleObject(value = "{\"error\":\"This method is not implemented yet.\"}"))),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Invalid session ID")
+  })
   @PUT
   @Path("/{jobId}/cancel")
   @Produces(MediaType.APPLICATION_JSON)
   public Response cancelJob(
-      @PathParam("jobId")
-      String jobId) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -292,13 +335,20 @@ public class JobControllerV1 extends BaseController {
   }
 
   /* Change the settings of the job, such as the router settings. */
+  @Operation(summary = "Update job settings", description = "Updates the router settings for a queued job. The job must be in QUEUED state and not yet started.")
+  @RequestBody(description = "Router settings configuration", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RouterSettings.class)))
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Settings updated successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Invalid settings or job already started")
+  })
   @POST
   @Path("/{jobId}/settings")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changeSettings(
-      @PathParam("jobId")
-      String jobId, String requestBody) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId,
+      String requestBody) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -354,16 +404,25 @@ public class JobControllerV1 extends BaseController {
   }
 
   /**
-   * Upload the input of the job, typically in Specctra DSN format. Note: the input file limit depends on the server configuration, but it is at least 1MB and typically 30MBs if hosted by ASP.NET Core
+   * Upload the input of the job, typically in Specctra DSN format. Note: the
+   * input file limit depends on the server configuration, but it is at least 1MB
+   * and typically 30MBs if hosted by ASP.NET Core
    * web server.
    */
+  @Operation(summary = "Upload job input file", description = "Uploads the input PCB design file for a routing job, typically in Specctra DSN format. The file must be Base64-encoded. Note: File size limit depends on server configuration (typically 1-30MB).")
+  @RequestBody(description = "Board file payload with Base64-encoded data", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class)))
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Input uploaded successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = RoutingJob.class))),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Invalid input data or job already started")
+  })
   @POST
   @Path("/{jobId}/input")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response uploadInput(
-      @PathParam("jobId")
-      String jobId, String requestBody) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId,
+      String requestBody) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -444,12 +503,17 @@ public class JobControllerV1 extends BaseController {
   }
 
   /* Download the output of the job, typically in Specctra SES format. */
+  @Operation(summary = "Download job output file", description = "Downloads the output file of a completed routing job, typically in Specctra SES format. The file is returned as Base64-encoded data.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Output downloaded successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BoardFilePayload.class))),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Job not completed or invalid session")
+  })
   @GET
   @Path("/{jobId}/output")
   @Produces(MediaType.APPLICATION_JSON)
   public Response downloadOutput(
-      @PathParam("jobId")
-      String jobId) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -498,23 +562,25 @@ public class JobControllerV1 extends BaseController {
             .readAllBytes());
 
     var response = GSON.toJson(result);
-    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output", "", response.replace(result.dataBase64, TextManager.shortenString(result.dataBase64, 4)));
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output", "",
+        response.replace(result.dataBase64, TextManager.shortenString(result.dataBase64, 4)));
     return Response
         .ok(response)
         .build();
   }
 
   /* Stream the output of the job in real-time using Server-Sent Events. */
+  @Operation(summary = "Stream job output in real-time", description = "Streams the output file of a routing job in real-time using Server-Sent Events (SSE). Updates are sent every 200ms when the output changes.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "SSE stream established", content = @Content(mediaType = MediaType.SERVER_SENT_EVENTS))
+  })
   @GET
   @Path("/{jobId}/output/stream")
   @Produces(MediaType.SERVER_SENT_EVENTS)
   public void streamOutput(
-      @PathParam("jobId")
-      String jobId,
-      @Context
-      SseEventSink eventSink,
-      @Context
-      Sse sse) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId,
+      @Context SseEventSink eventSink,
+      @Context Sse sse) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -535,8 +601,7 @@ public class JobControllerV1 extends BaseController {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     // Schedule periodic updates every 250ms
-    executor.scheduleAtFixedRate(() ->
-    {
+    executor.scheduleAtFixedRate(() -> {
       try {
         if (job.output != null && job.output.getData() != null) {
           var result = new BoardFilePayload();
@@ -582,12 +647,17 @@ public class JobControllerV1 extends BaseController {
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/output/stream", "", "stream-started");
   }
 
+  @Operation(summary = "Get job logs", description = "Retrieves all log entries associated with a specific routing job.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Logs retrieved successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Invalid session ID")
+  })
   @GET
   @Path("/{jobId}/logs")
   @Produces(MediaType.APPLICATION_JSON)
   public Response logs(
-      @PathParam("jobId")
-      String jobId) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -626,16 +696,17 @@ public class JobControllerV1 extends BaseController {
   }
 
   /* Stream the log entries of the job in real-time using Server-Sent Events. */
+  @Operation(summary = "Stream job logs in real-time", description = "Streams log entries of a routing job in real-time using Server-Sent Events (SSE). New log entries are sent as they are generated.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "SSE stream established", content = @Content(mediaType = MediaType.SERVER_SENT_EVENTS))
+  })
   @GET
   @Path("/{jobId}/logs/stream")
   @Produces(MediaType.SERVER_SENT_EVENTS)
   public void streamLogs(
-      @PathParam("jobId")
-      String jobId,
-      @Context
-      SseEventSink eventSink,
-      @Context
-      Sse sse) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId,
+      @Context SseEventSink eventSink,
+      @Context Sse sse) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
@@ -655,8 +726,7 @@ public class JobControllerV1 extends BaseController {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     // stream a new log entry when the job logsEntryAdded event was fired
-    job.addLogEntryAddedEventListener(e ->
-    {
+    job.addLogEntryAddedEventListener(e -> {
       try {
         var result = e.getLogEntry();
         OutboundSseEvent event = sse
@@ -684,12 +754,18 @@ public class JobControllerV1 extends BaseController {
   }
 
   /* Get DRC report for a job */
+  @Operation(summary = "Get DRC report", description = "Generates and retrieves a Design Rules Check (DRC) report for a routing job. The report includes violations and statistics in JSON format.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "DRC report generated successfully", content = @Content(mediaType = MediaType.APPLICATION_JSON)),
+      @ApiResponse(responseCode = "404", description = "Job not found"),
+      @ApiResponse(responseCode = "400", description = "Invalid session or failed to load board"),
+      @ApiResponse(responseCode = "500", description = "Failed to load board for DRC check")
+  })
   @GET
   @Path("/{jobId}/drc")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getDrcReport(
-      @PathParam("jobId")
-      String jobId) {
+      @Parameter(description = "Unique identifier of the job", example = "550e8400-e29b-41d4-a716-446655440000") @PathParam("jobId") String jobId) {
     // Authenticate the user
     UUID userId = AuthenticateUser();
 
