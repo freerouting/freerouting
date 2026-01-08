@@ -185,7 +185,7 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
   private void abortWithUnauthorized(ContainerRequestContext requestContext, String message) {
     Response response = Response
         .status(Response.Status.UNAUTHORIZED)
-        .entity("{\"error\":\"" + message + "\"}")
+        .entity(java.util.Collections.singletonMap("error", message))
         .type("application/json")
         .build();
     requestContext.abortWith(response);
