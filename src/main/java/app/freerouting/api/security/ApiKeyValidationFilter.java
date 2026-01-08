@@ -13,9 +13,8 @@ import java.io.IOException;
 /**
  * JAX-RS request filter that validates API keys for protected endpoints.
  * <p>
- * This filter intercepts all incoming requests and validates the API key
- * provided in the {@code Authorization: Bearer} header. Certain endpoints are
- * excluded from validation and remain publicly accessible.
+ * This filter intercepts all incoming requests and validates the API key provided in the {@code Authorization: Bearer} header. Certain endpoints are excluded from validation and remain publicly
+ * accessible.
  * </p>
  *
  * <h2>Excluded Endpoints (Public Access)</h2>
@@ -56,8 +55,7 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
   private static boolean isInitialized = false;
 
   /**
-   * Initializes the API key provider. This is called lazily on the first request
-   * to avoid initialization issues.
+   * Initializes the API key provider. This is called lazily on the first request to avoid initialization issues.
    */
   private static synchronized void initializeProvider() {
     if (isInitialized) {
@@ -154,7 +152,7 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
     if (apiKey == null || apiKey.isEmpty()) {
       FRLogger.warn("API key validation failed: missing or invalid Authorization header for path " + path);
       abortWithUnauthorized(requestContext,
-          "Missing API key. Please provide a valid API key in the Authorization header using Bearer scheme (Authorization: Bearer <API_KEY>).");
+          "Missing API key. Please provide a valid API key in the Authorization header using Bearer scheme (Authorization: Bearer <API_KEY>). You can apply for a free API key at https://www.freerouting.app.");
       return;
     }
 
