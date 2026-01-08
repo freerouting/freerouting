@@ -593,7 +593,11 @@ public class JobControllerV1 extends BaseController {
     if (job == null || SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId) == null) {
-      eventSink.close();
+      try {
+        eventSink.close();
+      } catch (Exception e) {
+        FRLogger.error("Error closing SSE event sink", e);
+      }
       return;
     }
 
@@ -633,12 +637,20 @@ public class JobControllerV1 extends BaseController {
 
         // Close the connection if the job is completed or cancelled
         if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
-          eventSink.close();
+          try {
+            eventSink.close();
+          } catch (Exception ex) {
+            FRLogger.error("Error closing SSE event sink", ex);
+          }
           executor.shutdown();
         }
       } catch (Exception e) {
         FRLogger.error("Error while streaming output", e);
-        eventSink.close();
+        try {
+          eventSink.close();
+        } catch (Exception ex) {
+          FRLogger.error("Error closing SSE event sink", ex);
+        }
         executor.shutdown();
       }
     }, 0, 200, TimeUnit.MILLISECONDS);
@@ -719,7 +731,12 @@ public class JobControllerV1 extends BaseController {
     if (job == null || SessionManager
         .getInstance()
         .getSession(job.sessionId.toString(), userId) == null) {
-      eventSink.close();
+      try {
+        eventSink.close();
+      } catch (Exception e) {
+        FRLogger.error("Error closing SSE event sink", e);
+      }
+      return;
     }
 
     // Create a scheduled executor for periodic updates
@@ -739,12 +756,20 @@ public class JobControllerV1 extends BaseController {
 
         // Close the connection if the job is completed or cancelled
         if (job.state == RoutingJobState.COMPLETED || job.state == RoutingJobState.CANCELLED) {
-          eventSink.close();
+          try {
+            eventSink.close();
+          } catch (Exception closeEx) {
+            FRLogger.error("Error closing SSE event sink", closeEx);
+          }
           executor.shutdown();
         }
       } catch (Exception ex) {
         FRLogger.error("Error while streaming logs", ex);
-        eventSink.close();
+        try {
+          eventSink.close();
+        } catch (Exception closeEx) {
+          FRLogger.error("Error closing SSE event sink", closeEx);
+        }
         executor.shutdown();
       }
     });
