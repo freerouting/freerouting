@@ -40,20 +40,24 @@ import org.glassfish.jersey.servlet.ServletContainer;
 public class Freerouting {
 
   public static final String WEB_URL = "https://www.freerouting.app";
-  public static final String VERSION_NUMBER_STRING = "v" + Constants.FREEROUTING_VERSION + " (build-date: " + Constants.FREEROUTING_BUILD_DATE + ")";
+  public static final String VERSION_NUMBER_STRING = "v" + Constants.FREEROUTING_VERSION + " (build-date: "
+      + Constants.FREEROUTING_BUILD_DATE + ")";
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
 
   private static void InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null)) {
-      FRLogger.error("Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.", null);
+      FRLogger.error(
+          "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
+          null);
       System.exit(1);
     }
 
     // Start a new Freerouting session
     var cliSession = SessionManager
         .getInstance()
-        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId),
+            "Freerouting/" + globalSettings.version);
 
     // Create a new routing job
     RoutingJob routingJob = new RoutingJob(cliSession.id);
@@ -74,7 +78,8 @@ public class Freerouting {
     routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
 
     routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-    routingJob.routerSettings.set_stop_pass_no(routingJob.routerSettings.get_start_pass_no() + routingJob.routerSettings.maxPasses - 1);
+    routingJob.routerSettings
+        .set_stop_pass_no(routingJob.routerSettings.get_start_pass_no() + routingJob.routerSettings.maxPasses - 1);
     routingJob.routerSettings.setLayerCount(routingJob.input.statistics.layers.totalCount);
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
@@ -114,7 +119,8 @@ public class Freerouting {
     // Start a new Freerouting session
     var drcSession = SessionManager
         .getInstance()
-        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId),
+            "Freerouting/" + globalSettings.version);
 
     // Create a new routing job (but won't route it)
     RoutingJob drcJob = new RoutingJob(drcSession.id);
@@ -195,13 +201,15 @@ public class Freerouting {
 
       // Check if the protocol is HTTP or HTTPS
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
-        FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS.".formatted(endpointUrl));
+        FRLogger.warn("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP or HTTPS."
+            .formatted(endpointUrl));
         continue;
       }
 
       // Check if the http is allowed
       if (!apiServerSettings.isHttpAllowed && "http".equals(protocol)) {
-        FRLogger.warn("Can't use the endpoint '%s' for the API server, because HTTP is not allowed.".formatted(endpointUrl));
+        FRLogger.warn(
+            "Can't use the endpoint '%s' for the API server, because HTTP is not allowed.".formatted(endpointUrl));
         continue;
       }
 
@@ -230,8 +238,7 @@ public class Freerouting {
     context.addEventListener(new AppContextListener());
 
     // Instead of apiServer.join(), start in a new thread
-    new Thread(() ->
-    {
+    new Thread(() -> {
       try {
         apiServer.start();
         apiServer.join(); // This will now run in the new thread
@@ -251,14 +258,17 @@ public class Freerouting {
   void main(String[] args) {
     FRLogger.traceEntry("MainApplication.main()");
 
-    // the first thing we need to do is to determine the user directory, because all settings and logs will be located there
+    // the first thing we need to do is to determine the user directory, because all
+    // settings and logs will be located there
     // 1, set it to the temp directory by default
     Path userdataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
-    // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH" environment variable value
+    // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH"
+    // environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
       userdataPath = Path.of(System.getenv("FREEROUTING__USER_DATA_PATH"));
     }
-    // 3, check if we need to override it with the "--user_data_path={directory}" command line argument
+    // 3, check if we need to override it with the "--user_data_path={directory}"
+    // command line argument
     if (args.length > 0 && Arrays
         .stream(args)
         .anyMatch(s -> s.startsWith("--user_data_path="))) {
@@ -290,7 +300,8 @@ public class Freerouting {
     // 6, make sure that this settings can't be changed later on
     GlobalSettings.lockUserDataPath();
 
-    // we have a special case if logging must be disabled before the general command line arguments
+    // we have a special case if logging must be disabled before the general command
+    // line arguments
     // are parsed
     if (args.length > 0 && Arrays
         .asList(args)
@@ -311,7 +322,8 @@ public class Freerouting {
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException ex) {
+    } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException
+        | IllegalAccessException ex) {
       FRLogger.error(ex.getLocalizedMessage(), ex);
     }
 
@@ -342,15 +354,19 @@ public class Freerouting {
 
     // if we don't have a GUI enabled then we must use the console as our output
     if ((!globalSettings.guiSettings.isEnabled) && (System.console() == null)) {
-      FRLogger.warn("GUI is disabled and you don't have a console available, so the only feedback from Freerouting is in the log.");
+      FRLogger.warn(
+          "GUI is disabled and you don't have a console available, so the only feedback from Freerouting is in the log.");
     }
 
     // get environment parameters and save them in the settings
-    globalSettings.environmentSettings.freeroutingVersion = Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
+    globalSettings.environmentSettings.freeroutingVersion = Constants.FREEROUTING_VERSION + ","
+        + Constants.FREEROUTING_BUILD_DATE;
     globalSettings.environmentSettings.appStartedAt = Instant.now();
     globalSettings.environmentSettings.commandLineArguments = String.join(" ", args);
-    globalSettings.environmentSettings.architecture = System.getProperty("os.name") + "," + System.getProperty("os.arch") + "," + System.getProperty("os.version");
-    globalSettings.environmentSettings.java = System.getProperty("java.version") + "," + System.getProperty("java.vendor");
+    globalSettings.environmentSettings.architecture = System.getProperty("os.name") + ","
+        + System.getProperty("os.arch") + "," + System.getProperty("os.version");
+    globalSettings.environmentSettings.java = System.getProperty("java.version") + ","
+        + System.getProperty("java.vendor");
     globalSettings.environmentSettings.systemLanguage = Locale
         .getDefault()
         .getLanguage() + "," + Locale.getDefault();
@@ -365,7 +381,8 @@ public class Freerouting {
     FRLogger.debug("Architecture: " + globalSettings.environmentSettings.architecture);
     FRLogger.debug("Java: " + globalSettings.environmentSettings.java);
     FRLogger.debug("System Language: " + globalSettings.environmentSettings.systemLanguage);
-    FRLogger.debug("Hardware: " + globalSettings.environmentSettings.cpuCores + " CPU cores," + globalSettings.environmentSettings.ram + " MB RAM");
+    FRLogger.debug("Hardware: " + globalSettings.environmentSettings.cpuCores + " CPU cores,"
+        + globalSettings.environmentSettings.ram + " MB RAM");
     FRLogger.debug("UTC Time: " + globalSettings.environmentSettings.appStartedAt);
 
     // parse the command line arguments
@@ -393,7 +410,8 @@ public class Freerouting {
         dpi = toolkit.getScreenResolution();
         FRLogger.debug("Screen: " + width + "x" + height + ", " + dpi + " DPI");
       } catch (Exception _) {
-        FRLogger.warn("Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.");
+        FRLogger.warn(
+            "Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.");
         globalSettings.guiSettings.isEnabled = false;
       }
     }
@@ -403,13 +421,17 @@ public class Freerouting {
     // initialize analytics
     FRAnalytics.setAccessKey(Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.loggerKey);
 
-    // this option allows us to disable analytics for some users (enabled for all if it is set to 1, otherwise it is disabled for every Nth user)
+    // this option allows us to disable analytics for some users (enabled for all if
+    // it is set to 1, otherwise it is disabled for every Nth user)
     int analyticsModulo = 1;
-    String userIdString = globalSettings.userProfileSettings.userId.length() >= 4 ? globalSettings.userProfileSettings.userId.substring(0, 4) : "0000";
+    String userIdString = globalSettings.userProfileSettings.userId.length() >= 4
+        ? globalSettings.userProfileSettings.userId.substring(0, 4)
+        : "0000";
     int userIdValue = Integer.parseInt(userIdString, 16);
 
     // if the user has disabled analytics, we don't need to check the modulo
-    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0) && (globalSettings.userProfileSettings.isTelemetryAllowed);
+    allowAnalytics = !globalSettings.usageAndDiagnosticData.disableAnalytics && (userIdValue % analyticsModulo == 0)
+        && (globalSettings.userProfileSettings.isTelemetryAllowed);
 
     if (!allowAnalytics) {
       FRLogger.debug("Analytics are disabled");
@@ -422,9 +444,12 @@ public class Freerouting {
     } catch (Exception _) {
     }
     FRAnalytics.setAppLocation("app.freerouting.gui", "Freerouting");
-    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE + " 00:00", String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"),
-        System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"), Locale.getDefault(), globalSettings.currentLocale,
-        globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram, globalSettings.environmentSettings.host, width, height, dpi);
+    FRAnalytics.appStarted(Constants.FREEROUTING_VERSION, Constants.FREEROUTING_BUILD_DATE + " 00:00",
+        String.join(" ", args), System.getProperty("os.name"), System.getProperty("os.arch"),
+        System.getProperty("os.version"), System.getProperty("java.version"), System.getProperty("java.vendor"),
+        Locale.getDefault(), globalSettings.currentLocale,
+        globalSettings.environmentSettings.cpuCores, globalSettings.environmentSettings.ram,
+        globalSettings.environmentSettings.host, width, height, dpi);
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
