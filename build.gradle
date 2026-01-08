@@ -125,6 +125,10 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-core-http:2.62.1'
     implementation 'com.google.cloud:google-cloud-bigquery:2.55.3'
 
+    // Add Google Sheets API dependencies for API key validation
+    implementation 'com.google.api-client:google-api-client:2.8.1'
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev20240416-2.0.0'
+
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
     implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.27'
     implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.27'

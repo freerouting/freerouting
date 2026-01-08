@@ -13,4 +13,6 @@ public class ApiServerSettings implements Serializable {
   public Boolean isHttpAllowed = false;
   @SerializedName("endpoints")
   public String[] endpoints = {"https://0.0.0.0:37864"};
+  @SerializedName("keys_location")
+  public ApiKeysLocationSettings keysLocation = new ApiKeysLocationSettings();
 }

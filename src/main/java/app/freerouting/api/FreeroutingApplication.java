@@ -22,6 +22,7 @@ public class FreeroutingApplication extends Application {
     classes.add(SystemControllerV1.class);
     classes.add(ApiExceptionMapper.class);
     classes.add(NotFoundExceptionMapper.class);
+    classes.add(app.freerouting.api.security.ApiKeyValidationFilter.class);
     classes.add(SseFeature.class);
     return classes;
   }
