@@ -2,12 +2,15 @@
 
 ## Overview
 
-The Freerouting API implements a modular API key validation system to protect sensitive endpoints from unauthorized access. The system uses a provider-based architecture that allows for multiple API key storage backends while maintaining a consistent validation interface.
+The Freerouting API implements a modular API key validation system to protect sensitive endpoints
+from unauthorized access. The system uses a provider-based architecture that allows for multiple API
+key storage backends while maintaining a consistent validation interface.
 
 ### Key Features
 
 - **Modular Provider Architecture**: Extensible design supports multiple API key storage mechanisms
-- **Google Sheets Integration**: Initial provider reads API keys from a publicly accessible Google Sheet
+- **Google Sheets Integration**: Initial provider reads API keys from a publicly accessible Google
+  Sheet
 - **Intelligent Caching**: 5-minute cache refresh interval minimizes API calls
 - **GUID Validation**: Ensures API keys follow the RFC 4122 GUID format
 - **Selective Endpoint Protection**: Public endpoints remain accessible without authentication
@@ -20,19 +23,19 @@ The Freerouting API implements a modular API key validation system to protect se
 ### Components
 
 1. **ApiKeyProvider Interface** (`app.freerouting.api.security.ApiKeyProvider`)
-   - Defines the contract for API key validation
-   - Supports multiple implementations (Google Sheets, database, file-based, etc.)
-   - Includes health check and refresh capabilities
+    - Defines the contract for API key validation
+    - Supports multiple implementations (Google Sheets, database, file-based, etc.)
+    - Includes health check and refresh capabilities
 
 2. **GoogleSheetsApiKeyProvider** (`app.freerouting.api.security.GoogleSheetsApiKeyProvider`)
-   - Reads API keys from a Google Sheet
-   - Implements caching with automatic refresh
-   - Validates GUID format and access permissions
+    - Reads API keys from a Google Sheet
+    - Implements caching with automatic refresh
+    - Validates GUID format and access permissions
 
 3. **ApiKeyValidationFilter** (`app.freerouting.api.security.ApiKeyValidationFilter`)
-   - JAX-RS request filter that intercepts all API requests
-   - Validates API keys from the `Authorization: Bearer` header
-   - Excludes specific public endpoints from validation
+    - JAX-RS request filter that intercepts all API requests
+    - Validates API keys from the `Authorization: Bearer` header
+    - Excludes specific public endpoints from validation
 
 ---
 
@@ -46,32 +49,32 @@ To create a new API key provider, implement the `ApiKeyProvider` interface:
 package app.freerouting.api.security;
 
 public class MyCustomApiKeyProvider implements ApiKeyProvider {
-    
-    @Override
-    public boolean validateApiKey(String apiKey) {
-        // Implement your validation logic
-        // 1. Validate key format
-        // 2. Check against your data source
-        // 3. Verify access permissions
-        return false;
-    }
-    
-    @Override
-    public void refresh() {
-        // Implement cache refresh logic
-        // Should handle errors gracefully
-    }
-    
-    @Override
-    public String getProviderName() {
-        return "My Custom Provider";
-    }
-    
-    @Override
-    public boolean isHealthy() {
-        // Return true if provider can validate keys
-        return true;
-    }
+
+  @Override
+  public boolean validateApiKey(String apiKey) {
+    // Implement your validation logic
+    // 1. Validate key format
+    // 2. Check against your data source
+    // 3. Verify access permissions
+    return false;
+  }
+
+  @Override
+  public void refresh() {
+    // Implement cache refresh logic
+    // Should handle errors gracefully
+  }
+
+  @Override
+  public String getProviderName() {
+    return "My Custom Provider";
+  }
+
+  @Override
+  public boolean isHealthy() {
+    // Return true if provider can validate keys
+    return true;
+  }
 }
 ```
 
@@ -81,24 +84,24 @@ To use your custom provider, modify `ApiKeyValidationFilter.initializeProvider()
 
 ```java
 private static synchronized void initializeProvider() {
-    if (isInitialized) {
-        return;
+  if (isInitialized) {
+    return;
+  }
+
+  // Add your provider initialization logic
+  String customConfig = Freerouting.globalSettings.apiServerSettings.myCustomConfig;
+
+  if (customConfig != null && !customConfig.trim().isEmpty()) {
+    try {
+      apiKeyProvider = new MyCustomApiKeyProvider(customConfig);
+      FRLogger.info("API key validation enabled with Custom provider");
+    } catch (Exception e) {
+      FRLogger.error("Failed to initialize Custom API key provider", null, e);
+      apiKeyProvider = null;
     }
-    
-    // Add your provider initialization logic
-    String customConfig = Freerouting.globalSettings.apiServerSettings.myCustomConfig;
-    
-    if (customConfig != null && !customConfig.trim().isEmpty()) {
-        try {
-            apiKeyProvider = new MyCustomApiKeyProvider(customConfig);
-            FRLogger.info("API key validation enabled with Custom provider");
-        } catch (Exception e) {
-            FRLogger.error("Failed to initialize Custom API key provider", null, e);
-            apiKeyProvider = null;
-        }
-    }
-    
-    isInitialized = true;
+  }
+
+  isInitialized = true;
 }
 ```
 
@@ -109,6 +112,7 @@ private static synchronized void initializeProvider() {
 ### Configuration
 
 The Google Sheets provider requires:
+
 1. A publicly accessible Google Sheet with API keys
 2. A Google API key for authentication
 
@@ -116,12 +120,13 @@ The Google Sheets provider requires:
 
 The sheet must have the following columns (order doesn't matter):
 
-| API Key | Access granted? | (other columns...) |
-|---------|----------------|-------------------|
-| 550e8400-e29b-41d4-a716-446655440000 | Yes | ... |
-| 660e8400-e29b-41d4-a716-446655440001 | No | ... |
+| API Key                              | Access granted? | (other columns...) |
+|--------------------------------------|-----------------|--------------------|
+| 550e8400-e29b-41d4-a716-446655440000 | Yes             | ...                |
+| 660e8400-e29b-41d4-a716-446655440001 | No              | ...                |
 
 **Required Columns**:
+
 - **API Key**: Must contain valid GUID strings (RFC 4122 format)
 - **Access granted?**: Must contain "Yes" (case-insensitive) to grant access
 
@@ -130,32 +135,34 @@ The sheet must have the following columns (order doesn't matter):
 To access the Google Sheets API, you need a Google API key:
 
 1. **Create API Key**:
-   - Go to [Google Cloud Console - Credentials](https://console.cloud.google.com/apis/credentials)
-   - Click "Create Credentials" → "API Key"
-   - Copy the generated API key
+    - Go to [Google Cloud Console - Credentials](https://console.cloud.google.com/apis/credentials)
+    - Click "Create Credentials" → "API Key"
+    - Copy the generated API key
 
 2. **Restrict API Key** (Recommended):
-   - Click "Restrict Key" on your new API key
-   - Under "API restrictions", select "Restrict key"
-   - Choose "Google Sheets API" from the dropdown
-   - Click "Save"
+    - Click "Restrict Key" on your new API key
+    - Under "API restrictions", select "Restrict key"
+    - Choose "Google Sheets API" from the dropdown
+    - Click "Save"
 
 3. **Enable Google Sheets API**:
-   - Go to [Google Cloud Console - APIs](https://console.cloud.google.com/apis/library)
-   - Search for "Google Sheets API"
-   - Click "Enable" if not already enabled
+    - Go to [Google Cloud Console - APIs](https://console.cloud.google.com/apis/library)
+    - Search for "Google Sheets API"
+    - Click "Enable" if not already enabled
 
 ### Environment Variables
 
 Set both required environment variables:
 
 **Linux/Mac:**
+
 ```bash
 export FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
 export FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
 ```
 
 **Windows PowerShell:**
+
 ```powershell
 $env:FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS="https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
 $env:FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY"
@@ -164,24 +171,25 @@ $env:FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY
 ### Deployment Steps
 
 1. **Create Google Sheet**:
-   - Create a new Google Sheet or use an existing one
-   - Add columns: "API Key" and "Access granted?"
-   - Add your API keys (must be valid GUIDs)
-   - Set "Access granted?" to "Yes" for authorized keys
+    - Create a new Google Sheet or use an existing one
+    - Add columns: "API Key" and "Access granted?"
+    - Add your API keys (must be valid GUIDs)
+    - Set "Access granted?" to "Yes" for authorized keys
 
 2. **Make Sheet Public**:
-   - Click "Share" button
-   - Change to "Anyone with the link" can view
-   - Copy the sheet URL
+    - Click "Share" button
+    - Change to "Anyone with the link" can view
+    - Copy the sheet URL
 
 3. **Configure Freerouting**:
-   - Set the `FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS` environment variable
-   - Set the `FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY` environment variable
-   - Restart the Freerouting API server
+    - Set the `FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS` environment variable
+    - Set the `FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY` environment variable
+    - Restart the Freerouting API server
 
 4. **Verify**:
-   - Check logs for: "API key validation enabled with Google Sheets provider"
-   - Test with a valid API key: `curl -H "Authorization: Bearer YOUR_KEY" http://localhost:37864/v1/sessions/list`
+    - Check logs for: "API key validation enabled with Google Sheets provider"
+    - Test with a valid API key:
+      `curl -H "Authorization: Bearer YOUR_KEY" http://localhost:37864/v1/sessions/list`
 
 ### Caching Behavior
 
@@ -196,13 +204,13 @@ $env:FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY
 
 The following endpoints are **publicly accessible** without API key validation:
 
-| Endpoint Pattern | Description |
-|-----------------|-------------|
-| `/v1/system/*` | System monitoring and health checks |
-| `/v1/analytics/*` | Analytics tracking endpoints |
-| `/dev/*` | Development and testing endpoints |
-| `/openapi/*` | OpenAPI specification (JSON/YAML) |
-| `/swagger-ui` | Swagger UI documentation interface |
+| Endpoint Pattern  | Description                         |
+|-------------------|-------------------------------------|
+| `/v1/system/*`    | System monitoring and health checks |
+| `/v1/analytics/*` | Analytics tracking endpoints        |
+| `/dev/*`          | Development and testing endpoints   |
+| `/openapi/*`      | OpenAPI specification (JSON/YAML)   |
+| `/swagger-ui`     | Swagger UI documentation interface  |
 
 All other endpoints require a valid API key in the `Authorization: Bearer <API_KEY>` header.
 
@@ -219,10 +227,12 @@ xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 Where `x` is a hexadecimal digit (0-9, a-f, A-F).
 
 **Valid Examples**:
+
 - `550e8400-e29b-41d4-a716-446655440000`
 - `A1B2C3D4-E5F6-7890-ABCD-EF1234567890`
 
 **Invalid Examples**:
+
 - `not-a-guid`
 - `12345678-1234-1234-1234-12345678901` (too short)
 - `550e8400e29b41d4a716446655440000` (missing hyphens)
@@ -238,6 +248,7 @@ curl http://localhost:37864/v1/sessions/list
 ```
 
 Response:
+
 ```json
 {
   "error": "Missing API key. Please provide a valid API key in the Authorization header using Bearer scheme (Authorization: Bearer <API_KEY>)."
@@ -251,6 +262,7 @@ curl -H "Authorization: Bearer invalid-key" http://localhost:37864/v1/sessions/l
 ```
 
 Response:
+
 ```json
 {
   "error": "Invalid or unauthorized API key."
@@ -260,6 +272,7 @@ Response:
 ### 401 Unauthorized - Provider Not Configured
 
 Response:
+
 ```json
 {
   "error": "API key validation is not properly configured."
@@ -275,19 +288,21 @@ Response:
 **Symptom**: All protected endpoints return 401 with "API key validation is not properly configured"
 
 **Solutions**:
+
 1. Check both environment variables are set:
-   - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS`
-   - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY`
+    - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS`
+    - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY`
 2. Verify Google Sheet URL is correct and accessible
 3. Verify Google API key is valid and has Sheets API enabled
 4. Check logs for initialization errors
-4. Ensure Google Sheet is publicly readable
+5. Ensure Google Sheet is publicly readable
 
 ### Valid Keys Being Rejected
 
 **Symptom**: Known valid API keys return 401 "Invalid or unauthorized API key"
 
 **Solutions**:
+
 1. Verify API key is a valid GUID format
 2. Check "Access granted?" column contains exactly "Yes" (case-insensitive)
 3. Wait up to 5 minutes for cache refresh if recently added
@@ -298,6 +313,7 @@ Response:
 **Symptom**: New API keys not working after being added to Google Sheet
 
 **Solutions**:
+
 1. Wait up to 5 minutes for automatic refresh
 2. Check Google Sheets API connectivity
 3. Verify sheet permissions haven't changed
@@ -353,10 +369,10 @@ spec:
   template:
     spec:
       containers:
-      - name: freerouting
-        envFrom:
-        - configMapRef:
-            name: freerouting-config
+        - name: freerouting
+          envFrom:
+            - configMapRef:
+                name: freerouting-config
 ```
 
 ### Systemd Service
@@ -384,12 +400,14 @@ WantedBy=multi-user.target
 ### Making Authenticated Requests
 
 #### cURL
+
 ```bash
 curl -H "Authorization: Bearer 550e8400-e29b-41d4-a716-446655440000" \
      http://localhost:37864/v1/sessions/list
 ```
 
 #### Python
+
 ```python
 import requests
 
@@ -406,6 +424,7 @@ print(response.json())
 ```
 
 #### JavaScript (Node.js)
+
 ```javascript
 const axios = require('axios');
 
@@ -421,6 +440,7 @@ axios.get('http://localhost:37864/v1/sessions/list', config)
 ```
 
 #### Java
+
 ```java
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -434,9 +454,11 @@ HttpRequest request = HttpRequest.newBuilder()
     .GET()
     .build();
 
-HttpResponse<String> response = client.send(request, 
+HttpResponse<String> response = client.send(request,
     HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());
+System.out.
+
+println(response.body());
 ```
 
 ---
@@ -448,20 +470,24 @@ System.out.println(response.body());
 The API key validation system logs the following events:
 
 **INFO Level**:
+
 - `"API key validation enabled with Google Sheets provider"` - Provider initialized successfully
 - `"Successfully refreshed X valid API keys from Google Sheets"` - Cache refresh completed
 
 **WARN Level**:
+
 - `"Google Sheets URL not configured"` - Environment variable not set
 - `"API key validation failed: missing API key for path X"` - Request without API key
 - `"API key validation failed: invalid or unauthorized API key for path X"` - Invalid key used
 
 **ERROR Level**:
+
 - `"Failed to initialize Google Sheets API key provider"` - Provider initialization failed
 - `"Failed to refresh API keys from Google Sheets"` - Cache refresh failed
 - `"Required columns not found in Google Sheet"` - Sheet structure invalid
 
 **DEBUG Level**:
+
 - `"API key validation skipped for excluded path: X"` - Public endpoint accessed
 - `"API key validation successful for path: X"` - Valid key used
 - `"Skipping invalid GUID in row X"` - Invalid GUID in sheet
