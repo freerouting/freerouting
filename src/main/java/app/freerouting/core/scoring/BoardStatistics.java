@@ -61,6 +61,8 @@ public class BoardStatistics implements Serializable {
   public BoardStatisticsVias vias = new BoardStatisticsVias();
   @SerializedName("clearance_violations")
   public BoardStatisticsClearanceViolations clearanceViolations = new BoardStatisticsClearanceViolations();
+  @SerializedName("done")
+  public Boolean done;
 
   public BoardStatistics() {
   }
@@ -69,13 +71,21 @@ public class BoardStatistics implements Serializable {
    * Creates a new BoardFileStatistics object from a RoutingBoard object.
    */
   public BoardStatistics(BasicBoard board) {
-    this(board, null);
+    this(board, null, false);
+  }
+
+  /**
+   * Creates a new BoardFileStatistics object from a RoutingBoard object.
+   * This used when application has done.
+   */
+  public BoardStatistics(BasicBoard board, Boolean done) {
+    this(board, null, done);
   }
 
   /**
    * Creates a new BoardFileStatistics object from a RoutingBoard object and defines the preferred unit for the statistics.
    */
-  public BoardStatistics(BasicBoard board, Unit unit) {
+  public BoardStatistics(BasicBoard board, Unit unit, Boolean done) {
     var bb = board.get_bounding_box();
 
     this.host = board.communication.specctra_parser_info.host_cad + "," + board.communication.specctra_parser_info.host_version;
@@ -310,6 +320,9 @@ public class BoardStatistics implements Serializable {
       this.traces.totalHorizontalLength = (float) Unit.scale(this.traces.totalHorizontalLength, fromUnit, toUnit);
       this.traces.totalVerticalLength = (float) Unit.scale(this.traces.totalVerticalLength, fromUnit, toUnit);
       this.traces.totalAngledLength = (float) Unit.scale(this.traces.totalAngledLength, fromUnit, toUnit);
+
+      // Done
+      this.done = done;
     }
   }
 

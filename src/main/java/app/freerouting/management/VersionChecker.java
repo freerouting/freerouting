@@ -22,16 +22,18 @@ public class VersionChecker implements Runnable {
 
   @Override
   public void run() {
-    try (HttpClient client = HttpClient.newHttpClient()) {
+    // Fix if sometime network broken, then throw original exception message
+    try {
+      HttpClient client = HttpClient.newHttpClient();
       HttpRequest request = HttpRequest.newBuilder().uri(URI.create(GITHUB_RELEASES_URL)).build();
 
       client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenAccept(this::processResponse).exceptionally(e ->
       {
-        e.printStackTrace();
+        FRLogger.warn("Failed to check for new version: " + (e == null ? "Unknown error" : e.getMessage()));
         return null;
       });
-    } catch (NoClassDefFoundError e) {
-      FRLogger.warn("Failed to check for new version: " + e.getMessage());
+    } catch (Exception e) { 
+      FRLogger.warn("Failed to check for new version: " + (e == null ? "Unknown error" : e.getMessage()));
     }
   }
 

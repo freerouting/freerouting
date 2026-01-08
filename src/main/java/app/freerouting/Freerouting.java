@@ -87,6 +87,18 @@ public class Freerouting {
     // Wait for the RoutingJobScheduler to do its work
     while ((routingJob.state != RoutingJobState.COMPLETED) && (routingJob.state != RoutingJobState.TERMINATED)) {
       try {
+        // NOTE: reply_interval too long leads to the thread wait too long
+        // NOTE: but it's safe because anyway it will sleep >= 500ms
+        // NOTE: Maybe it's not a good idea :-)
+        // NOTE: But it works :-)
+        if(routingJob.routerSettings.reply_interval > 0){ // reply_interval = 0 means disabled
+          // Sleep a interval
+          Thread.sleep(routingJob.routerSettings.reply_interval);
+          // Print the serialized routingJob statistics to the console
+          if(routingJob.routerSettings.progressed == true){
+            IO.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)).replace("\n", ""));
+          }
+        }
         Thread.sleep(500);
       } catch (InterruptedException _) {
         routingJob.state = RoutingJobState.CANCELLED;
@@ -95,7 +107,9 @@ public class Freerouting {
     }
 
     // Print the serialized routingJob statistics to the console
-    IO.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)));
+    if(routingJob.routerSettings.progressed == true){
+      IO.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board, true)).replace("\n", ""));
+    }
 
     // Save the output file
     if (routingJob.state == RoutingJobState.COMPLETED) {
@@ -460,7 +474,9 @@ public class Freerouting {
 
     // check if the user wants to see the help only
     if (globalSettings.show_help_option) {
-      IO.print(tm.getText("command_line_help"));
+      // fix bug: just display 'command_line_help'
+      TextManager ctm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
+      IO.print(ctm.getText("command_line_help"));
       System.exit(0);
     }
 
