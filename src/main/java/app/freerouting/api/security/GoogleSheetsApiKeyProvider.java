@@ -194,9 +194,16 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
             List<Object> headers = values.get(0);
             int apiKeyColumnIndex = -1;
             int accessGrantedColumnIndex = -1;
+            // Dynamically determine the range of the first sheet
+            Sheets.Spreadsheets.Get spreadsheetRequest = sheetsService.spreadsheets().get(spreadsheetId);
+            spreadsheetRequest.setFields("sheets(properties.title)");
+            com.google.api.services.sheets.v4.model.Spreadsheet spreadsheet = spreadsheetRequest.execute();
+            String firstSheetName = spreadsheet.getSheets().get(0).getProperties().getTitle();
 
-            for (int i = 0; i < headers.size(); i++) {
-                String header = headers.get(i).toString().trim();
+            ValueRange response = sheetsService.spreadsheets().values()
+                    .get(spreadsheetId, firstSheetName) // Use the actual sheet name to get all data
+                    .setKey(googleApiKey) // Authenticate with Google API key
+                    .execute();
                 if ("API Key".equalsIgnoreCase(header)) {
                     apiKeyColumnIndex = i;
                 } else if ("Access granted?".equalsIgnoreCase(header)) {
