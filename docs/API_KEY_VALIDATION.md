@@ -292,7 +292,8 @@ Response:
 1. Check both environment variables are set:
     - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_SHEETS`
     - `echo $FREEROUTING__API_SERVER__KEYS_LOCATION__GOOGLE_API_KEY`
-2. Verify Google Sheet URL is correct and accessible
+2. Verify Google Sheet URL is correct and
+   accessible ([sample](https://docs.google.com/spreadsheets/d/1kQ-U2Aw8yEHcbXccLLdyAtzJvTBm9CG_1DecIsd1JiE))
 3. Verify Google API key is valid and has Sheets API enabled
 4. Check logs for initialization errors
 5. Ensure Google Sheet is publicly readable
