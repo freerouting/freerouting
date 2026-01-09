@@ -23,7 +23,13 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 ### Input and Output Files
 
 - **`-de [design input file]`**  
-  Loads a Specctra design file (`.dsn`) at startup.
+  Loads a design file at startup. The input can be:
+    - Specctra board (`.dsn`)
+    - Specctra session file (`.ses` - optional)
+    - Freerouting design rules file (`.rules` - optional)
+
+  The DSN file is mandatory, while the SES and RULES files are optional.  
+  They can be provided in any order, separately or appended by the `+` sign (e.g. `-de myboard.dsn+myboard.ses+myboard.rules`).
 
 - **`-do [design output file]`**  
   Saves the routing results when the routing is finished. The output can be:
@@ -39,7 +45,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
 - **`-dr [design rules file]`**  
   Reads design rules from a previously saved `.rules` file.
 
-- **`-drc [design rules check json file]`**
+- **`-drc [design rules check json file]`**  
   Writes the design rules check report in KiCad JSON DRC schema format.
 
 ### Routing Parameters
