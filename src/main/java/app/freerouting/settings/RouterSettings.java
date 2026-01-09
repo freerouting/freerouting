@@ -47,12 +47,12 @@ public class RouterSettings implements Serializable {
       .availableProcessors() - 1);
   @SerializedName("random_seed")
   public transient Long random_seed = new Random().nextLong();
-  // This is auto-reply's Interval, Set to 0 means disabled.
-  @SerializedName("reply_interval")
-  public transient int reply_interval = 0;
   // Display Progress
   @SerializedName("progressed")
   public transient Boolean progressed = true;
+  // This is auto-reply's Interval, Set to 0 means disabled.
+  @SerializedName("reply_interval")
+  public transient int reply_interval = 1000;
   // The starting and current pass number.
   private transient int start_pass_no = 1;
   // The stopping pass number.

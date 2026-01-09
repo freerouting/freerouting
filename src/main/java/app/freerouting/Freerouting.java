@@ -45,6 +45,20 @@ public class Freerouting {
   public static GlobalSettings globalSettings;
   private static Server apiServer; // API server instance
 
+  private static void DisplayProgress(RoutingJob routingJob) {
+    if(routingJob.routerSettings.progressed){
+      BoardStatistics job = new BoardStatistics(routingJob.board);
+      float completePercent = (1.0f - (job.connections.incompleteCount / (float)job.connections.maximumCount)) * 100.0f;
+      Integer completed = job.connections.maximumCount - job.connections.incompleteCount;
+      FRLogger.info("[" + String.format("%.0f", completePercent) + "%] " +
+                    "Completed: " + completed + " " +
+                    "Total: " + job.connections.maximumCount + " " +
+                    "Length: " + String.format("%.2f", job.traces.totalLength) + " " + job.unit + " " +
+                    "Vias:" + job.vias.totalCount,
+      null);
+    }
+  }
+
   private static void InitializeCLI(GlobalSettings globalSettings) {
     if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null)) {
       FRLogger.error(
@@ -91,24 +105,15 @@ public class Freerouting {
         // NOTE: but it's safe because anyway it will sleep >= 500ms
         // NOTE: Maybe it's not a good idea :-)
         // NOTE: But it works :-)
-        if(routingJob.routerSettings.reply_interval > 0){ // reply_interval = 0 means disabled
-          // Sleep a interval
-          Thread.sleep(routingJob.routerSettings.reply_interval);
-          // Print the serialized routingJob statistics to the console
-          if(routingJob.routerSettings.progressed == true){
-            IO.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board)).replace("\n", ""));
-          }
-        }
         Thread.sleep(500);
+        if(routingJob.routerSettings.reply_interval > 0){ // reply_interval = 0 means disabled
+          Thread.sleep(routingJob.routerSettings.reply_interval);
+          DisplayProgress(routingJob); // display in the last to ensure progress entirely
+        }
       } catch (InterruptedException _) {
         routingJob.state = RoutingJobState.CANCELLED;
         break;
       }
-    }
-
-    // Print the serialized routingJob statistics to the console
-    if(routingJob.routerSettings.progressed == true){
-      IO.println(GsonProvider.GSON.toJson(new BoardStatistics(routingJob.board, true)).replace("\n", ""));
     }
 
     // Save the output file
