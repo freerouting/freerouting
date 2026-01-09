@@ -66,6 +66,15 @@ public class DesignRulesChecker {
       unconnectedItems.add(new UnconnectedItems(airline.from_item, airline.to_item));
     }
 
+    // Check for dangling items
+    for (Item item : board.get_items()) {
+      if (item instanceof Via via && via.is_tail()) {
+        unconnectedItems.add(new UnconnectedItems(via, null, "via_dangling"));
+      } else if (item instanceof Trace trace && trace.is_tail()) {
+        unconnectedItems.add(new UnconnectedItems(trace, null, "track_dangling"));
+      }
+    }
+
     return unconnectedItems;
   }
 
@@ -147,35 +156,44 @@ public class DesignRulesChecker {
   private DrcViolation convertToDrcViolation(UnconnectedItems unconnectedItems, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
 
-    // Create items for from and to objects
+    // Create items for from object
     String fromItemDesc = getItemDescription(unconnectedItems.first_item);
-    String toItemDesc = getItemDescription(unconnectedItems.second_item);
-
-    // Position is the center of gravity of the item
     var fromItemCenterOfGravity = unconnectedItems.first_item
         .bounding_box()
         .centre_of_gravity();
     DrcPosition fromItemPos = new DrcPosition(
         convertCoordinate(fromItemCenterOfGravity.x, coordinateUnit),
         convertCoordinate(fromItemCenterOfGravity.y, coordinateUnit));
-    var toItemCenterOfGravity = unconnectedItems.second_item
-        .bounding_box()
-        .centre_of_gravity();
-    DrcPosition toItemPos = new DrcPosition(
-        convertCoordinate(toItemCenterOfGravity.x, coordinateUnit),
-        convertCoordinate(toItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
     String fromUuid = String.valueOf(unconnectedItems.first_item.get_id_no());
-    String toUuid = String.valueOf(unconnectedItems.second_item.get_id_no());
 
     items.add(new DrcViolationItem(fromItemDesc, fromItemPos, fromUuid));
-    items.add(new DrcViolationItem(toItemDesc, toItemPos, toUuid));
 
-    // Create violation description
-    String description = "Unconnected items: %s and %s".formatted(fromItemDesc, toItemDesc);
+    String description;
 
-    return new DrcViolation("unconnected", description, "warning", items);
+    if (unconnectedItems.second_item != null) {
+      String toItemDesc = getItemDescription(unconnectedItems.second_item);
+      var toItemCenterOfGravity = unconnectedItems.second_item
+          .bounding_box()
+          .centre_of_gravity();
+      DrcPosition toItemPos = new DrcPosition(
+          convertCoordinate(toItemCenterOfGravity.x, coordinateUnit),
+          convertCoordinate(toItemCenterOfGravity.y, coordinateUnit));
+      String toUuid = String.valueOf(unconnectedItems.second_item.get_id_no());
+      items.add(new DrcViolationItem(toItemDesc, toItemPos, toUuid));
+
+      // Create violation description
+      description = "Unconnected items: %s and %s".formatted(fromItemDesc, toItemDesc);
+    } else {
+      description = switch (unconnectedItems.type) {
+        case "via_dangling" -> "Dangling via: %s".formatted(fromItemDesc);
+        case "track_dangling" -> "Dangling track: %s".formatted(fromItemDesc);
+        default -> "Unconnected item: %s".formatted(fromItemDesc);
+      };
+    }
+
+    return new DrcViolation(unconnectedItems.type, description, "warning", items);
   }
 
   /**
