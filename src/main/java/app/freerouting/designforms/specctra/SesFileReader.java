@@ -48,7 +48,12 @@ public class SesFileReader {
         // Create a scanner for reading the session file
         IJFlexScanner scanner = new SpecctraDsnStreamReader(p_session);
 
-        SesFileReader reader = new SesFileReader(scanner, p_board, p_board.communication.resolution);
+        // SES files use a specific scale factor: dsn_to_board(1) / resolution
+        // This matches how SpecctraSesFileWriter writes SES files (line 69)
+        double scale_factor = p_board.communication.coordinate_transform.dsn_to_board(1)
+                / p_board.communication.resolution;
+
+        SesFileReader reader = new SesFileReader(scanner, p_board, scale_factor);
 
         boolean result;
         try {
