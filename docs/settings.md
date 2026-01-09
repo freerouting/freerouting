@@ -87,7 +87,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`plane_via_costs`**: Cost factor for using vias on plane layers.
 - **`start_ripup_costs`**: Cost factor for ripping up existing traces.
 - **`automatic_neckdown`**: Enables or disables automatic neckdown of traces.
-- **`progress_interval`**: Auto-Reply interval (ms). Set to `0` means disabled. Default `1000`.
+- **`progress_interval`**: Progress report interval (ms). Set to `0` means disabled. Default `1000`.
 
 #### **`usage_and_diagnostic_data` Section**
 
