@@ -62,7 +62,7 @@ public class Freerouting {
   }
 
   private static void InitializeCLI(GlobalSettings globalSettings) {
-    if ((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null)) {
+    if (((globalSettings.design_input_filename == null) || (globalSettings.design_output_filename == null))) {
       FRLogger.error(
           "Both an input file and an output file must be specified with command line arguments if you are running in CLI mode.",
           null);

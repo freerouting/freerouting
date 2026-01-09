@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class ApiServerSettings implements Serializable {
 
   @SerializedName("enabled")
-  public Boolean isEnabled = true;
+  public Boolean isEnabled = false;
   @SerializedName("running")
   public transient Boolean isRunning = false;
   @SerializedName("http_allowed")

@@ -48,7 +48,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "save_jobs": false
   },
   "api_server": {
-    "enabled": true,
+    "enabled": false,
     "http_allowed": true,
     "endpoints": [
       "http://0.0.0.0:37864"
