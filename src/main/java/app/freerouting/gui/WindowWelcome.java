@@ -27,6 +27,7 @@ import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,9 +48,10 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
-
 /**
- * The first GUI window that is shown for creating frames with new or existing board designs. DEPRECATED: This class is deprecated and will be removed in the future. It was a welcome window in the
+ * The first GUI window that is shown for creating frames with new or existing
+ * board designs. DEPRECATED: This class is deprecated and will be removed in
+ * the future. It was a welcome window in the
  * past, but it got replaced by the BoardFrame class.
  */
 public class WindowWelcome extends WindowBase {
@@ -65,8 +67,10 @@ public class WindowWelcome extends WindowBase {
   private final Locale locale;
   private final int max_passes;
   private final BoardUpdateStrategy board_update_strategy;
-  // Issue: adding a new field into AutorouteSettings caused exception when loading
-  // an existing design: "Couldn't read design file", "InvalidClassException", incompatible with
+  // Issue: adding a new field into AutorouteSettings caused exception when
+  // loading
+  // an existing design: "Couldn't read design file", "InvalidClassException",
+  // incompatible with
   // serialized data
   // so choose to pass this parameter through BoardHandling
   private final String hybrid_ratio;
@@ -76,7 +80,8 @@ public class WindowWelcome extends WindowBase {
   private String design_dir_name;
 
   /**
-   * Creates new form MainApplication It takes the directory of the board designs as optional argument.
+   * Creates new form MainApplication It takes the directory of the board designs
+   * as optional argument.
    *
    * @param globalSettings
    */
@@ -114,7 +119,8 @@ public class WindowWelcome extends WindowBase {
     open_board_button.setText(tm.getText("open_own_design"));
     open_board_button.setToolTipText(tm.getText("open_own_design_tooltip"));
     open_board_button.addActionListener(this::open_board_design_action);
-    open_board_button.addActionListener(_ -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
+    open_board_button
+        .addActionListener(_ -> FRAnalytics.buttonClicked("open_board_button", open_board_button.getText()));
 
     gridbag.setConstraints(open_board_button, gridbag_constraints);
     main_panel.add(open_board_button, gridbag_constraints);
@@ -137,7 +143,8 @@ public class WindowWelcome extends WindowBase {
     // Start a new Freerouting session
     var guiSession = SessionManager
         .getInstance()
-        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId), "Freerouting/" + globalSettings.version);
+        .createSession(UUID.fromString(globalSettings.userProfileSettings.userId),
+            "Freerouting/" + globalSettings.version);
     SessionManager
         .getInstance()
         .setGuiSession(guiSession.id);
@@ -178,7 +185,8 @@ public class WindowWelcome extends WindowBase {
       }
 
       if (routingJob.input.format == FileFormat.UNKNOWN) {
-        FRLogger.warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
+        FRLogger
+            .warn(tm.getText("message_6") + " " + globalSettings.design_input_filename + " " + tm.getText("message_7"));
         return false;
       }
       guiSession.addJob(routingJob);
@@ -193,16 +201,22 @@ public class WindowWelcome extends WindowBase {
         return false;
       }
       var bs = new BoardStatistics(new_frame.board_panel.board_handling.get_routing_board());
-      new_frame.board_panel.board_handling.screen_messages.set_board_score(bs.getNormalizedScore(routingJob.routerSettings.scoring), bs.connections.incompleteCount, bs.clearanceViolations.totalCount);
+      new_frame.board_panel.board_handling.screen_messages.set_board_score(
+          bs.getNormalizedScore(routingJob.routerSettings.scoring), bs.connections.incompleteCount,
+          bs.clearanceViolations.totalCount);
       new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(
-          new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + globalSettings.routerSettings.maxPasses - 1);
+          new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no()
+              + globalSettings.routerSettings.maxPasses - 1);
       new_frame.board_panel.board_handling.set_num_threads(globalSettings.routerSettings.optimizer.maxThreads);
-      new_frame.board_panel.board_handling.set_board_update_strategy(globalSettings.routerSettings.optimizer.boardUpdateStrategy);
+      new_frame.board_panel.board_handling
+          .set_board_update_strategy(globalSettings.routerSettings.optimizer.boardUpdateStrategy);
       new_frame.board_panel.board_handling.set_hybrid_ratio(globalSettings.routerSettings.optimizer.hybridRatio);
-      new_frame.board_panel.board_handling.set_item_selection_strategy(globalSettings.routerSettings.optimizer.itemSelectionStrategy);
+      new_frame.board_panel.board_handling
+          .set_item_selection_strategy(globalSettings.routerSettings.optimizer.itemSelectionStrategy);
 
       if (globalSettings.design_output_filename != null) {
-        // if the design_output_filename file exists we need to delete it before setting it
+        // if the design_output_filename file exists we need to delete it before setting
+        // it
         var desiredOutputFile = new File(globalSettings.design_output_filename);
         if ((desiredOutputFile != null) && desiredOutputFile.exists()) {
           if (!desiredOutputFile.delete()) {
@@ -212,7 +226,8 @@ public class WindowWelcome extends WindowBase {
 
         routingJob.tryToSetOutputFile(new File(globalSettings.design_output_filename));
 
-        // we need to set up a listener to save the design file when the autorouter is running
+        // we need to set up a listener to save the design file when the autorouter is
+        // running
         new_frame.board_panel.board_handling.autorouter_listener = new ThreadActionListener() {
           @Override
           public void autorouterStarted() {
@@ -236,7 +251,8 @@ public class WindowWelcome extends WindowBase {
 
             var filenameLowerCase = filename.toLowerCase();
 
-            if (!(filenameLowerCase.endsWith(".dsn") || filenameLowerCase.endsWith(".ses") || filenameLowerCase.endsWith(".scr"))) {
+            if (!(filenameLowerCase.endsWith(".dsn") || filenameLowerCase.endsWith(".ses")
+                || filenameLowerCase.endsWith(".scr"))) {
               FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
               return;
             }
@@ -250,13 +266,16 @@ public class WindowWelcome extends WindowBase {
               OutputStream output_stream = new FileOutputStream(filename);
 
               switch (extension) {
-                case ".dsn" -> new_frame.board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream, design_name, false);
-                case ".ses" -> new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, design_name);
+                case ".dsn" ->
+                  new_frame.board_panel.board_handling.saveAsSpecctraDesignDsn(output_stream, design_name, false);
+                case ".ses" ->
+                  new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(output_stream, design_name);
                 case ".scr" -> {
                   ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
                   new_frame.board_panel.board_handling.saveAsSpecctraSessionSes(session_output_stream, filename);
                   InputStream input_stream = new ByteArrayInputStream(session_output_stream.toByteArray());
-                  new_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(input_stream, output_stream);
+                  new_frame.board_panel.board_handling.saveSpecctraSessionSesAsEagleScriptScr(input_stream,
+                      output_stream);
                 }
               }
 
@@ -273,18 +292,22 @@ public class WindowWelcome extends WindowBase {
       if (new_frame.is_intermediate_stage_file_available()) {
         LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String load_snapshot_confirmation = tm.getText("load_snapshot_confirmation").formatted(modification_time.format(formatter));
+        String load_snapshot_confirmation = tm.getText("load_snapshot_confirmation")
+            .formatted(modification_time.format(formatter));
 
         if (WindowMessage.confirm(load_snapshot_confirmation)) {
           new_frame.load_intermediate_stage_file();
         }
       }
 
-      // start the auto-router automatically if both input and output files were passed as a parameter
+      // start the auto-router automatically if both input and output files were
+      // passed as a parameter
       if ((globalSettings.design_input_filename != null) && (globalSettings.design_output_filename != null)) {
-        // Add a model dialog with timeout to confirm the autorouter start with the default settings
+        // Add a model dialog with timeout to confirm the autorouter start with the
+        // default settings
         final String START_NOW_TEXT = tm.getText("auto_start_routing_startnow_button");
-        JButton startNowButton = new JButton(START_NOW_TEXT + " (" + globalSettings.guiSettings.dialogConfirmationTimeout + ")");
+        JButton startNowButton = new JButton(
+            START_NOW_TEXT + " (" + globalSettings.guiSettings.dialogConfirmationTimeout + ")");
 
         final String CANCEL_TEXT = tm.getText("auto_start_routing_cancel_button");
         Object[] options = {
@@ -293,10 +316,12 @@ public class WindowWelcome extends WindowBase {
         };
 
         final String AUTOSTART_MSG = tm.getText("auto_start_routing_message");
-        JOptionPane auto_start_routing_dialog = new JOptionPane(AUTOSTART_MSG, JOptionPane.WARNING_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+        JOptionPane auto_start_routing_dialog = new JOptionPane(AUTOSTART_MSG, JOptionPane.WARNING_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
 
         startNowButton.addActionListener(_ -> auto_start_routing_dialog.setValue(options[0]));
-        startNowButton.addActionListener(_ -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
+        startNowButton.addActionListener(
+            _ -> FRAnalytics.buttonClicked("auto_start_routing_dialog_start", startNowButton.getText()));
 
         final String AUTOSTART_TITLE = tm.getText("auto_start_routing_title");
 
@@ -331,10 +356,12 @@ public class WindowWelcome extends WindowBase {
         if ((globalSettings.guiSettings.dialogConfirmationTimeout == 0) || (choice == options[0])) {
           // Start the auto-router
           routingJob.routerSettings = Freerouting.globalSettings.routerSettings.clone();
-          InteractiveActionThread thread = new_frame.board_panel.board_handling.start_autorouter_and_route_optimizer(routingJob);
+          InteractiveActionThread thread = new_frame.board_panel.board_handling
+              .start_autorouter_and_route_optimizer(routingJob);
 
           if (new_frame.board_panel.board_handling.autorouter_listener != null) {
-            // Add the auto-router listener to save the design file when the autorouter is running
+            // Add the auto-router listener to save the design file when the autorouter is
+            // running
             thread.addListener(new_frame.board_panel.board_handling.autorouter_listener);
           }
 
@@ -356,7 +383,8 @@ public class WindowWelcome extends WindowBase {
     } else {
       // we didn't have any input file passed as a parameter
       if (!globalSettings.featureFlags.fileLoadDialogAtStartup) {
-        // we don't use the file load dialog at startup anymore, we load a blank board instead
+        // we don't use the file load dialog at startup anymore, we load a blank board
+        // instead
         final BoardFrame new_frame = create_board_frame(null, null, globalSettings);
         if (new_frame == null) {
           FRLogger.warn("Couldn't create window frame");
@@ -372,9 +400,11 @@ public class WindowWelcome extends WindowBase {
   }
 
   /**
-   * Creates a new board frame containing the data of the input design file. Returns null, if an error occurred.
+   * Creates a new board frame containing the data of the input design file.
+   * Returns null, if an error occurred.
    */
-  private static BoardFrame create_board_frame(RoutingJob routingJob, JTextField p_message_field, GlobalSettings globalSettings) {
+  private static BoardFrame create_board_frame(RoutingJob routingJob, JTextField p_message_field,
+      GlobalSettings globalSettings) {
     TextManager tm = new TextManager(WindowWelcome.class, globalSettings.currentLocale);
 
     InputStream input_stream = null;
@@ -398,9 +428,29 @@ public class WindowWelcome extends WindowBase {
 
     BoardFrame new_frame = new BoardFrame(routingJob, globalSettings);
 
-    boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field, routingJob);
+    boolean read_ok = new_frame.load(input_stream, routingJob.input.format.equals(FileFormat.DSN), p_message_field,
+        routingJob);
     if (!read_ok) {
       return null;
+    }
+
+    // Load SES file if specified (after DSN is loaded, before RULES)
+    if (globalSettings.design_session_filename != null && routingJob.input.format.equals(FileFormat.DSN)) {
+      try {
+        File sesFile = new File(globalSettings.design_session_filename);
+        if (sesFile.exists()) {
+          FRLogger.info("Loading SES file: " + globalSettings.design_session_filename);
+          FileInputStream sesStream = new FileInputStream(sesFile);
+          app.freerouting.designforms.specctra.SesFileReader.read(sesStream,
+              new_frame.board_panel.board_handling.get_routing_board());
+          sesStream.close();
+          new_frame.refresh_windows(); // Refresh UI to show loaded routes
+        } else {
+          FRLogger.warn("SES file not found: " + globalSettings.design_session_filename);
+        }
+      } catch (Exception e) {
+        FRLogger.error("Failed to load SES file", e);
+      }
     }
 
     // Change the palette if we loaded the tutorial DSN file
@@ -408,7 +458,7 @@ public class WindowWelcome extends WindowBase {
       var graphicsContext = new_frame.board_panel.board_handling.graphics_context;
 
       graphicsContext.color_intensity_table.set_value(ColorIntensityTable.ObjectNames.CONDUCTION_AREAS.ordinal(), 0.9);
-      graphicsContext.item_color_table.set_conduction_colors(new Color[]{
+      graphicsContext.item_color_table.set_conduction_colors(new Color[] {
           new Color(232, 204, 135),
           new Color(255, 255, 255)
       });
@@ -444,7 +494,8 @@ public class WindowWelcome extends WindowBase {
       File rules_file = new File(parent_folder_name, rules_file_name);
       if (rules_file.exists()) {
         // load the .rules file
-        RoutingJob.read_rules_file(design_name, parent_folder_name, rules_file_name, new_frame.board_panel.board_handling, confirm_import_rules_message);
+        RoutingJob.read_rules_file(design_name, parent_folder_name, rules_file_name,
+            new_frame.board_panel.board_handling, confirm_import_rules_message);
       }
 
       // ignore net classes if they were defined by a command line argument
@@ -471,7 +522,8 @@ public class WindowWelcome extends WindowBase {
   }
 
   /**
-   * Opens a board design from a binary file or a specctra DSN file after the user chooses a file from the file chooser dialog.
+   * Opens a board design from a binary file or a specctra DSN file after the user
+   * chooses a file from the file chooser dialog.
    */
   private void open_board_design_action(ActionEvent evt) {
     File fileToOpen = RoutingJob.showOpenDialog(this.design_dir_name, null);
@@ -500,11 +552,11 @@ public class WindowWelcome extends WindowBase {
       return;
     }
 
-    //    if (design_file == null) {
-    //      // The user didn't choose a file from the file chooser control
-    //      message_field.setText(resources.getString("message_3"));
-    //      return;
-    //    }
+    // if (design_file == null) {
+    // // The user didn't choose a file from the file chooser control
+    // message_field.setText(resources.getString("message_3"));
+    // return;
+    // }
 
     FRLogger.info("Opening '" + routingJob.input.getFilename() + "'...");
 
@@ -518,7 +570,8 @@ public class WindowWelcome extends WindowBase {
       return;
     }
 
-    new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + this.max_passes - 1);
+    new_frame.board_panel.board_handling.settings.autoroute_settings.set_stop_pass_no(
+        new_frame.board_panel.board_handling.settings.autoroute_settings.get_start_pass_no() + this.max_passes - 1);
     new_frame.board_panel.board_handling.set_num_threads(this.num_threads);
     new_frame.board_panel.board_handling.set_board_update_strategy(this.board_update_strategy);
     new_frame.board_panel.board_handling.set_hybrid_ratio(this.hybrid_ratio);
@@ -527,20 +580,22 @@ public class WindowWelcome extends WindowBase {
     if (new_frame.is_intermediate_stage_file_available()) {
       LocalDateTime modification_time = new_frame.get_intermediate_stage_file_modification_time();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      String load_snapshot_confirmation = tm.getText("load_snapshot_confirmation").formatted(modification_time.format(formatter));
+      String load_snapshot_confirmation = tm.getText("load_snapshot_confirmation")
+          .formatted(modification_time.format(formatter));
 
       if (WindowMessage.confirm(load_snapshot_confirmation)) {
         new_frame.load_intermediate_stage_file();
       }
     }
 
-    message_field.setText(tm.getText("message_4") + " " + routingJob.input.getFilename() + " " + tm.getText("message_5"));
+    message_field
+        .setText(tm.getText("message_4") + " " + routingJob.input.getFilename() + " " + tm.getText("message_5"));
     board_frames.add(new_frame);
     new_frame.addWindowListener(new BoardFrameWindowListener(new_frame));
   }
 
-
-  // NOTE: Since we use this Window only to start up the GUI this adapter is not used anymore
+  // NOTE: Since we use this Window only to start up the GUI this adapter is not
+  // used anymore
   private class BoardFrameWindowListener extends WindowAdapter {
 
     private BoardFrame board_frame;
@@ -560,7 +615,8 @@ public class WindowWelcome extends WindowBase {
     }
   }
 
-  // NOTE: Since we use this Window only to start up the GUI this adapter is not used anymore
+  // NOTE: Since we use this Window only to start up the GUI this adapter is not
+  // used anymore
   private class WindowStateListener extends WindowAdapter {
 
     @Override
@@ -568,7 +624,8 @@ public class WindowWelcome extends WindowBase {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       boolean exit_program = true;
       if (!board_frames.isEmpty()) {
-        int application_confirm_exit_dialog = JOptionPane.showConfirmDialog(null, tm.getText("confirm_cancel"), null, JOptionPane.YES_NO_OPTION);
+        int application_confirm_exit_dialog = JOptionPane.showConfirmDialog(null, tm.getText("confirm_cancel"), null,
+            JOptionPane.YES_NO_OPTION);
         if (application_confirm_exit_dialog == JOptionPane.NO_OPTION) {
           setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
           FRAnalytics.buttonClicked("application_confirm_exit_dialog_no", tm.getText("confirm_cancel"));
