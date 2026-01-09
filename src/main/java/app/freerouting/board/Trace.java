@@ -2,17 +2,17 @@ package app.freerouting.board;
 
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
-import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Direction;
-import app.freerouting.geometry.planar.Line;
-import app.freerouting.geometry.planar.LineSegment;
-import app.freerouting.geometry.planar.Polyline;
-import app.freerouting.geometry.planar.Side;
+import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Line;
+import app.freerouting.geometry.planar.LineSegment;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.geometry.planar.Shape;
-import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.geometry.planar.Side;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.TextManager;
 import app.freerouting.rules.Net;
@@ -214,7 +214,8 @@ public abstract class Trace extends Item implements Connectable, Serializable {
             if (dist <= half_width + 1) { // Tolerance of 1 unit
               // Check longitudinal projection
               Direction perp_dir = line.direction().turn_45_degree(2);
-              Line perp_line = new Line(p_point, perp_dir);
+              IntPoint perp_origin = (p_point instanceof IntPoint ip) ? ip : new IntPoint(px, py);
+              Line perp_line = new Line(perp_origin, perp_dir);
               Side s1 = perp_line.side_of(segment.start_point());
               Side s2 = perp_line.side_of(segment.end_point());
               if (s1 != s2 || s1 == Side.COLLINEAR || s2 == Side.COLLINEAR) {
