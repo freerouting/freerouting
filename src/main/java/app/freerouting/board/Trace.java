@@ -211,7 +211,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
             Line line = segment.get_line();
             double dist = Math.abs(line.signed_distance(p_float));
             // Check lateral distance
-            if (dist <= half_width + 100) { // Tolerance of 100 units
+            if (dist <= half_width + 1) { // Tolerance of 1 unit
               // Check longitudinal projection
               Direction perp_dir = line.direction().turn_45_degree(2);
               Line perp_line = new Line(p_point, perp_dir);
