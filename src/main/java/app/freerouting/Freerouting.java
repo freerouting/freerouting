@@ -54,7 +54,7 @@ public class Freerouting {
                     "Completed: " + completed + " " +
                     "Total: " + job.connections.maximumCount + " " +
                     "Length: " + String.format("%.2f", job.traces.totalLength) + " " + job.unit + " " +
-                    "Vias:" + job.vias.totalCount,
+                    "Vias: " + job.vias.totalCount,
       null);
     } catch (NullPointerException e){
       // Maybe it will throw NullPointer Exception, just catch them
