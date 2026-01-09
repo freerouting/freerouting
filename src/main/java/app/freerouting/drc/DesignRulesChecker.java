@@ -16,8 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Design Rules Checker that centralizes DRC functionality. This class is
- * responsible for detecting clearance violations and other design rule issues.
+ * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting clearance violations and other design rule issues.
  */
 public class DesignRulesChecker {
 
@@ -36,6 +35,7 @@ public class DesignRulesChecker {
    */
   public Collection<ClearanceViolation> getAllClearanceViolations() {
     List<ClearanceViolation> allViolations = new ArrayList<>();
+    java.util.Set<String> seenViolations = new java.util.HashSet<>();
 
     // Iterate through all items on the board
     Collection<Item> items = board.get_items();
@@ -43,7 +43,22 @@ public class DesignRulesChecker {
       if (item != null) {
         // Get clearance violations for this item
         Collection<ClearanceViolation> itemViolations = item.clearance_violations();
-        allViolations.addAll(itemViolations);
+
+        // Deduplicate violations - A-B and B-A are the same violation
+        for (ClearanceViolation violation : itemViolations) {
+          int id1 = violation.first_item.get_id_no();
+          int id2 = violation.second_item.get_id_no();
+
+          // Create a unique key using sorted IDs to avoid duplicates
+          String key = id1 < id2
+              ? id1 + "-" + id2 + "-" + violation.layer
+              : id2 + "-" + id1 + "-" + violation.layer;
+
+          if (!seenViolations.contains(key)) {
+            seenViolations.add(key);
+            allViolations.add(violation);
+          }
+        }
       }
     }
 
@@ -66,12 +81,19 @@ public class DesignRulesChecker {
       unconnectedItems.add(new UnconnectedItems(airline.from_item, airline.to_item));
     }
 
-    // Check for dangling items
+    // Check for dangling traces - traces with unconnected ends
     for (Item item : board.get_items()) {
-      if (item instanceof Via via && via.is_tail()) {
-        unconnectedItems.add(new UnconnectedItems(via, null, "via_dangling"));
-      } else if (item instanceof Trace trace && trace.is_tail()) {
-        unconnectedItems.add(new UnconnectedItems(trace, null, "track_dangling"));
+      if (item instanceof Trace trace) {
+        Collection<Item> startContacts = trace.get_start_contacts();
+        Collection<Item> endContacts = trace.get_end_contacts();
+
+        // A trace is dangling if either its start or end has no contacts
+        if (startContacts.isEmpty() || endContacts.isEmpty()) {
+          // Only add if not already in the list
+          if (!unconnectedItems.stream().anyMatch(ui -> ui.first_item == trace)) {
+            unconnectedItems.add(new UnconnectedItems(trace, null, "track_dangling"));
+          }
+        }
       }
     }
 
@@ -175,16 +197,35 @@ public class DesignRulesChecker {
     if (item instanceof Via) {
       return true;
     }
-    if (item instanceof Pin) {
-      // Pins are treated as holes for DRC classification to match expected output,
-      // although this might include SMT pins (DrillItem).
-      return true;
-    }
-    return false;
+    // Pins are treated as holes for DRC classification to match expected output,
+    // although this might include SMT pins (DrillItem).
+    return item instanceof Pin;
   }
 
   private DrcViolation convertToDrcViolation(UnconnectedItems unconnectedItems, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
+
+    String description;
+
+    if ("track_dangling".equals(unconnectedItems.type)) {
+      // For track_dangling, show only the track item with layer and length info
+      Item item = unconnectedItems.first_item;
+
+      // Get detailed track description with layer and length
+      String trackDesc = getDetailedTraceDescription(item, coordinateUnit);
+
+      var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
+      DrcPosition itemPos = new DrcPosition(
+          convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
+          convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
+
+      String uuid = String.valueOf(item.get_id_no());
+      items.add(new DrcViolationItem(trackDesc, itemPos, uuid));
+
+      description = "Track has unconnected end";
+
+      return new DrcViolation(unconnectedItems.type, description, "warning", items);
+    }
 
     // Create items for from object
     String fromItemDesc = getItemDescription(unconnectedItems.first_item);
@@ -199,8 +240,6 @@ public class DesignRulesChecker {
     String fromUuid = String.valueOf(unconnectedItems.first_item.get_id_no());
 
     items.add(new DrcViolationItem(fromItemDesc, fromItemPos, fromUuid));
-
-    String description;
 
     if (unconnectedItems.second_item != null) {
       String toItemDesc = getItemDescription(unconnectedItems.second_item);
@@ -218,7 +257,6 @@ public class DesignRulesChecker {
     } else {
       description = switch (unconnectedItems.type) {
         case "via_dangling" -> "Dangling via: %s".formatted(fromItemDesc);
-        case "track_dangling" -> "Dangling track: %s".formatted(fromItemDesc);
         default -> "Unconnected item: %s".formatted(fromItemDesc);
       };
     }
@@ -262,8 +300,41 @@ public class DesignRulesChecker {
   }
 
   /**
-   * Converts a coordinate value from board's internal coordinate system to the
-   * specified unit.
+   * Gets a detailed description of a trace including net, layer, and length.
+   *
+   * @param item           The trace item to describe
+   * @param coordinateUnit Unit for coordinates
+   * @return Detailed description string
+   */
+  private String getDetailedTraceDescription(Item item, String coordinateUnit) {
+    StringBuilder desc = new StringBuilder("Track");
+
+    // Add net information
+    if (item.net_count() > 0) {
+      String netName = board.rules.nets.get(item.get_net_no(0)).name;
+      desc
+          .append(" [")
+          .append(netName)
+          .append("]");
+    }
+
+    // Add layer information
+    if (item instanceof Trace trace) {
+      int layer = trace.get_layer();
+      String layerName = board.layer_structure.arr[layer].name;
+      desc.append(" on ").append(layerName);
+
+      // Add length information
+      double lengthInBoardUnits = trace.get_length();
+      double lengthInTargetUnits = convertCoordinate(lengthInBoardUnits, coordinateUnit);
+      desc.append(", length ").append(String.format("%.4f", lengthInTargetUnits)).append(" ").append(coordinateUnit);
+    }
+
+    return desc.toString();
+  }
+
+  /**
+   * Converts a coordinate value from board's internal coordinate system to the specified unit.
    *
    * @param boardCoordinate Coordinate in board's internal system
    * @param coordinateUnit  Target unit ("mm", "mil", etc.)
