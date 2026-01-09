@@ -16,7 +16,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting clearance violations and other design rule issues.
+ * Design Rules Checker that centralizes DRC functionality. This class is
+ * responsible for detecting clearance violations and other design rule issues.
  */
 public class DesignRulesChecker {
 
@@ -68,7 +69,6 @@ public class DesignRulesChecker {
     return unconnectedItems;
   }
 
-
   /**
    * Generates a DRC report in KiCad JSON format.
    *
@@ -110,9 +110,6 @@ public class DesignRulesChecker {
   private DrcViolation convertToDrcViolation(ClearanceViolation violation, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
 
-    // Convert coordinates based on the unit
-    double unitScale = getUnitScale(coordinateUnit);
-
     // Create items for first and second objects
     String firstItemDesc = getItemDescription(violation.first_item);
     String secondItemDesc = getItemDescription(violation.second_item);
@@ -121,11 +118,15 @@ public class DesignRulesChecker {
     var firstItemCenterOfGravity = violation.first_item
         .bounding_box()
         .centre_of_gravity();
-    DrcPosition firstItemPos = new DrcPosition(firstItemCenterOfGravity.x * unitScale, firstItemCenterOfGravity.y * unitScale);
+    DrcPosition firstItemPos = new DrcPosition(
+        convertCoordinate(firstItemCenterOfGravity.x, coordinateUnit),
+        convertCoordinate(firstItemCenterOfGravity.y, coordinateUnit));
     var secondItemCenterOfGravity = violation.second_item
         .bounding_box()
         .centre_of_gravity();
-    DrcPosition secondItemPos = new DrcPosition(secondItemCenterOfGravity.x * unitScale, secondItemCenterOfGravity.y * unitScale);
+    DrcPosition secondItemPos = new DrcPosition(
+        convertCoordinate(secondItemCenterOfGravity.x, coordinateUnit),
+        convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
     String firstUuid = String.valueOf(violation.first_item.get_id_no());
@@ -135,17 +136,16 @@ public class DesignRulesChecker {
     items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
 
     // Create violation description
-    String description = "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)".formatted(firstItemDesc, secondItemDesc, violation.expected_clearance * unitScale, coordinateUnit,
-        violation.actual_clearance * unitScale, coordinateUnit);
+    String description = "Clearance violation between %s and %s (expected: %.4f %s, actual: %.4f %s)".formatted(
+        firstItemDesc, secondItemDesc,
+        convertCoordinate(violation.expected_clearance, coordinateUnit), coordinateUnit,
+        convertCoordinate(violation.actual_clearance, coordinateUnit), coordinateUnit);
 
     return new DrcViolation("clearance", description, "error", items);
   }
 
   private DrcViolation convertToDrcViolation(UnconnectedItems unconnectedItems, String coordinateUnit) {
     List<DrcViolationItem> items = new ArrayList<>();
-
-    // Convert coordinates based on the unit
-    double unitScale = getUnitScale(coordinateUnit);
 
     // Create items for from and to objects
     String fromItemDesc = getItemDescription(unconnectedItems.first_item);
@@ -155,11 +155,15 @@ public class DesignRulesChecker {
     var fromItemCenterOfGravity = unconnectedItems.first_item
         .bounding_box()
         .centre_of_gravity();
-    DrcPosition fromItemPos = new DrcPosition(fromItemCenterOfGravity.x * unitScale, fromItemCenterOfGravity.y * unitScale);
+    DrcPosition fromItemPos = new DrcPosition(
+        convertCoordinate(fromItemCenterOfGravity.x, coordinateUnit),
+        convertCoordinate(fromItemCenterOfGravity.y, coordinateUnit));
     var toItemCenterOfGravity = unconnectedItems.second_item
         .bounding_box()
         .centre_of_gravity();
-    DrcPosition toItemPos = new DrcPosition(toItemCenterOfGravity.x * unitScale, toItemCenterOfGravity.y * unitScale);
+    DrcPosition toItemPos = new DrcPosition(
+        convertCoordinate(toItemCenterOfGravity.x, coordinateUnit),
+        convertCoordinate(toItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
     String fromUuid = String.valueOf(unconnectedItems.first_item.get_id_no());
@@ -210,12 +214,18 @@ public class DesignRulesChecker {
   }
 
   /**
-   * Gets the scale factor to convert from board units to the specified unit.
+   * Converts a coordinate value from board's internal coordinate system to the
+   * specified unit.
    *
-   * @param coordinateUnit Target unit ("mm", "mil", etc.)
-   * @return Scale factor
+   * @param boardCoordinate Coordinate in board's internal system
+   * @param coordinateUnit  Target unit ("mm", "mil", etc.)
+   * @return Coordinate value in the target unit
    */
-  private double getUnitScale(String coordinateUnit) {
+  private double convertCoordinate(double boardCoordinate, String coordinateUnit) {
+    // First, convert from board's internal coordinate system to DSN coordinates (in
+    // the board's unit)
+    double dsnCoordinate = board.communication.coordinate_transform.board_to_dsn(boardCoordinate);
+
     // Get the board's native unit
     Unit boardUnit = board.communication.unit;
 
@@ -234,8 +244,12 @@ public class DesignRulesChecker {
       targetUnit = boardUnit;
     }
 
-    // Use the board's scale method to convert 1 unit
-    return Unit.scale(1.0, boardUnit, targetUnit);
+    // If the target unit is different from the board unit, convert
+    if (targetUnit != boardUnit) {
+      return Unit.scale(dsnCoordinate, boardUnit, targetUnit);
+    }
+
+    return dsnCoordinate;
   }
 
   /**
