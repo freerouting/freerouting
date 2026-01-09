@@ -18,6 +18,7 @@ bin/
 
 #/tests/*.ses
 /tests/*.bin
+/tests/**/*.zip
 
 .jdk
 
