@@ -50,7 +50,7 @@ public class Freerouting {
       BoardStatistics job = new BoardStatistics(routingJob.board);
       float completePercent = (1.0f - (job.connections.incompleteCount / (float)job.connections.maximumCount)) * 100.0f;
       Integer completed = job.connections.maximumCount - job.connections.incompleteCount;
-      FRLogger.info("[" + String.format("%.0f", completePercent) + "%] " +
+      FRLogger.info("[" + String.format("%.2f", completePercent) + "%] " +
                     "Completed: " + completed + " " +
                     "Total: " + job.connections.maximumCount + " " +
                     "Length: " + String.format("%.2f", job.traces.totalLength) + " " + job.unit + " " +
