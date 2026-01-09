@@ -16,7 +16,7 @@ bin/
 /distribution/runtime
 /distribution/Freerouting*
 
-/tests/*.ses
+#/tests/*.ses
 /tests/*.bin
 
 .jdk

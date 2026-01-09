@@ -1,0 +1,88 @@
+
+(rules PCB Issue593-BBD_Mars-64.dsn
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (autoroute on)
+    (postroute off)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 1)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 4.7)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 3.0)
+    )
+  )
+  (rule
+    (width 250.0)
+    (clearance 200.0)
+    (clearance 125.0 (type smd_to_turn_gap))
+    (clearance 50.0 (type smd))
+    (clearance 250.0 (type "kicad_default"))
+  )
+  (padstack "Via[0-1]_800:400_um"
+    (shape
+      (circle F.Cu 800.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 800.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_800:400_um" "Via[0-1]_800:400_um" default
+  )
+  (via 
+    "Via[0-1]_800:400_um-kicad_default" "Via[0-1]_800:400_um" "kicad_default"
+  )
+  (via_rule
+    default "Via[0-1]_800:400_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_800:400_um-kicad_default"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    "/~{SPI_CE}" "/SPI_MOSI" "/SPI_CLK" GND /VCC3V3 /AGND /DA /DB
+    "Net-(TP101-Pad1)" "Net-(TP102-Pad1)" "Net-(TP103-Pad1)" "Net-(TP104-Pad1)" "Net-(TP105-Pad1)" "Net-(TP106-Pad1)" "Net-(TP107-Pad1)" "Net-(TP108-Pad1)"
+    "Net-(TP109-Pad1)" "Net-(TP110-Pad1)" "Net-(TP111-Pad1)" "Net-(TP112-Pad1)" "Net-(TP113-Pad1)" "Net-(TP114-Pad1)" "Net-(TP115-Pad1)" "Net-(TP116-Pad1)"
+    "Net-(TP117-Pad1)" "Net-(TP118-Pad1)" "Net-(TP119-Pad1)" "Net-(TP120-Pad1)" "Net-(TP121-Pad1)" "Net-(TP122-Pad1)" "Net-(TP123-Pad1)" "Net-(TP124-Pad1)"
+    "Net-(TP125-Pad1)" "Net-(TP126-Pad1)" "Net-(TP127-Pad1)" "Net-(TP128-Pad1)" "Net-(TP129-Pad1)" "Net-(TP130-Pad1)" "Net-(TP131-Pad1)" "Net-(TP132-Pad1)"
+    "Net-(TP201-Pad1)" "Net-(TP202-Pad1)" "Net-(TP203-Pad1)" "Net-(TP204-Pad1)" "Net-(TP205-Pad1)" "Net-(TP206-Pad1)" "Net-(TP207-Pad1)" "Net-(TP208-Pad1)"
+    "Net-(TP209-Pad1)" "Net-(TP210-Pad1)" "Net-(TP211-Pad1)" "Net-(TP212-Pad1)" "Net-(TP213-Pad1)" "Net-(TP214-Pad1)" "Net-(TP215-Pad1)" "Net-(TP216-Pad1)"
+    "Net-(TP217-Pad1)" "Net-(TP218-Pad1)" "Net-(TP219-Pad1)" "Net-(TP220-Pad1)" "Net-(TP221-Pad1)" "Net-(TP222-Pad1)" "Net-(TP223-Pad1)" "Net-(TP224-Pad1)"
+    "Net-(TP225-Pad1)" "Net-(TP226-Pad1)" "Net-(TP227-Pad1)" "Net-(TP228-Pad1)" "Net-(TP229-Pad1)" "Net-(TP230-Pad1)" "Net-(TP231-Pad1)" "Net-(TP232-Pad1)"
+    "Net-(J101-Pad2)" /VSS "Net-(PmodF2-Pad10)" "Net-(PmodF2-Pad9)" "Net-(PmodF2-Pad3)" "Net-(PmodM1-Pad3)" "Net-(U101-Pad15)" "Net-(U101-Pad16)"
+    "Net-(U101-Pad20)" "Net-(U101-Pad21)" "Net-(U101-Pad22)" "Net-(U101-Pad41)" "Net-(U101-Pad42)" "Net-(U101-Pad44)" "Net-(U102-Pad44)" "Net-(U102-Pad42)"
+    "Net-(U102-Pad41)" "Net-(U102-Pad22)" "Net-(U102-Pad21)" "Net-(U102-Pad20)" "Net-(U102-Pad16)" "Net-(U102-Pad15)"
+    (clearance_class "kicad_default")
+    (via_rule "kicad_default")
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)
