@@ -46,7 +46,7 @@ public class Freerouting {
   private static Server apiServer; // API server instance
 
   private static void DisplayProgress(RoutingJob routingJob) {
-    if(routingJob.routerSettings.progressed){
+    try{
       BoardStatistics job = new BoardStatistics(routingJob.board);
       float completePercent = (1.0f - (job.connections.incompleteCount / (float)job.connections.maximumCount)) * 100.0f;
       Integer completed = job.connections.maximumCount - job.connections.incompleteCount;
@@ -56,6 +56,8 @@ public class Freerouting {
                     "Length: " + String.format("%.2f", job.traces.totalLength) + " " + job.unit + " " +
                     "Vias:" + job.vias.totalCount,
       null);
+    } catch (NullPointerException e){
+      // Maybe it will throw NullPointer Exception, just catch them
     }
   }
 
@@ -101,13 +103,14 @@ public class Freerouting {
     // Wait for the RoutingJobScheduler to do its work
     while ((routingJob.state != RoutingJobState.COMPLETED) && (routingJob.state != RoutingJobState.TERMINATED)) {
       try {
-        // NOTE: reply_interval too long leads to the thread wait too long
+        // NOTE: progress_interval too long leads to the thread wait too long
         // NOTE: but it's safe because anyway it will sleep >= 500ms
         // NOTE: Maybe it's not a good idea :-)
         // NOTE: But it works :-)
         Thread.sleep(500);
-        if(routingJob.routerSettings.reply_interval > 0){ // reply_interval = 0 means disabled
-          Thread.sleep(routingJob.routerSettings.reply_interval);
+        if(routingJob.routerSettings.progress_interval > 0 && routingJob.state == RoutingJobState.RUNNING){ 
+          // progress_interval = 0 means disabled
+          Thread.sleep(routingJob.routerSettings.progress_interval);
           DisplayProgress(routingJob); // display in the last to ensure progress entirely
         }
       } catch (InterruptedException _) {
