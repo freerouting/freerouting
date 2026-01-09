@@ -107,7 +107,7 @@ public abstract class Shape {
         corner_list.add(next_token);
       }
       if (corner_list.size() < 5) {
-        FRLogger.warn("PolylinePath.read_scope: to few numbers in scope at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn("PolylinePath.read_scope: too few numbers in scope at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       Iterator<Object> it = corner_list.iterator();
@@ -404,7 +404,7 @@ public abstract class Shape {
         corner_list.add(next_token);
       }
       if (corner_list.size() < 5) {
-        FRLogger.warn("Shape.read_polygon_path_scope: to few numbers in scope at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn("Shape.read_polygon_path_scope: too few numbers in scope at '" + p_scanner.get_scope_identifier() + "'");
         return null;
       }
       if (layer == null) {
