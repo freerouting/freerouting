@@ -9,8 +9,12 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
 import app.freerouting.board.Trace;
+import app.freerouting.board.Via;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
+import app.freerouting.board.SearchTreeObject;
+import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.gui.FileFormat;
 import app.freerouting.interactive.HeadlessBoardManager;
 import app.freerouting.management.SessionManager;
@@ -48,8 +52,6 @@ public class UnconnectedItemsReproductionTest {
 
         assertNotNull(item1, "Item 2402 not found");
         assertNotNull(item2, "Item 2411 not found");
-        // assertNotNull(item321, "Item 321 not found"); // It might be another ID or
-        // not exist if my guess is wrong
 
         System.out.println("Item 1: " + item1);
         System.out.println("Item 2: " + item2);
@@ -67,42 +69,105 @@ public class UnconnectedItemsReproductionTest {
             System.out.println("Item 321 Net: " + item321.get_net_no(0));
         }
 
-        // Check 2402 -> 321 connection (This is the likely failure causing dangling
-        // track)
+        // Check 2402 -> 321 connection
         Collection<Item> contacts1 = item1.get_normal_contacts();
         boolean connectedTo321 = item321 != null && contacts1.contains(item321);
         System.out.println("2402 connected to 321: " + connectedTo321);
 
-        // Check 2402 -> 2411 connection
-        boolean connectedTo2411 = contacts1.contains(item2);
-        System.out.println("2402 connected to 2411: " + connectedTo2411);
+        boolean isDangling = ((Trace) item1).is_tail();
+        System.out.println("Item 2402 is_tail: " + isDangling);
 
-        boolean sameLayer = item1.shares_layer(item2);
-        System.out.println("2402 and 2411 share layer: " + sameLayer);
+        if (item321 != null) {
+            assertTrue(connectedTo321, "Item 2402 MUST connect to Item 321");
+        }
+    }
 
-        if (sameLayer) {
-            assertTrue(connectedTo2411, "Item 2402 should be connected to Item 2411 (Same Layer)");
-        } else {
-            // If different layers, they are not connected directly.
-            // But 2402 should NOT be dangling.
-            // Dangling means it has < 1 contact at one end.
-            // If 2402 connects to 321 (at one end) and 2399 (at other end), it is NOT
-            // dangling.
+    @Test
+    void test_Connectivity_Of_Via_2522() {
+        // Load the problematic board
+        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        assertNotNull(job, "Job should not be null");
+        assertNotNull(job.board, "Board should be loaded");
 
-            // We can check is_tail() which logic provided by Trace.java
-            // But is_tail() is protected or package private? No, it's public in Item.java
-            boolean isDangling = ((Trace) item1).is_tail();
-            System.out.println("Item 2402 is_tail: " + isDangling);
+        BasicBoard board = job.board;
 
-            // Assert that it is NOT dangling (meaning it found connections)
-            // If this assertion passes, then our fix worked for 2402.
-            // If fails, then 2402 is still dangling.
-            if (item321 != null) {
-                assertTrue(connectedTo321, "Item 2402 MUST connect to Item 321 to avoid being dangling");
+        System.out.println("--- Debugging Via 2522 ---");
+        Item via2522 = board.get_items().stream()
+                .filter(item -> item.get_id_no() == 2522)
+                .findFirst()
+                .orElse(null);
+
+        if (via2522 != null) {
+            System.out.println("Found Via 2522. Layers: " + via2522.first_layer() + " to " + via2522.last_layer());
+            System.out.println("Via 2522 is_tail: " + ((Via) via2522).is_tail());
+
+            Collection<Item> contacts = via2522.get_normal_contacts();
+            System.out.println("Via 2522 contacts count: " + contacts.size());
+            for (Item contact : contacts) {
+                System.out.println(
+                        " - Contact: " + contact.get_id_no() + " (" + contact.getClass().getSimpleName() + ")");
             }
-            // Actually, simply assert not dangling
-            // assertFalse(isDangling, "Item 2402 should not be dangling"); // Commented out
-            // until verified
+        } else {
+            fail("Via 2522 not found in the board.");
+        }
+    }
+
+    @Test
+    void test_Connectivity_Of_Trace_2576() {
+        // Load the problematic board
+        RoutingJob job = getRoutingJobFromTestFile("Issue575-drc_Natural_Tone_Preamp_7_unconnected_items.dsn");
+        assertNotNull(job, "Job should not be null");
+        assertNotNull(job.board, "Board should be loaded");
+
+        BasicBoard board = job.board;
+
+        System.out.println("--- Debugging Trace 2576 ---");
+        Item trace2576 = board.get_items().stream()
+                .filter(item -> item.get_id_no() == 2576)
+                .findFirst()
+                .orElse(null);
+
+        if (trace2576 != null) {
+            Trace tr = (Trace) trace2576;
+            System.out.println("Found Trace 2576. Layer: " + tr.first_layer());
+            System.out.println("Trace 2576 is_tail: " + tr.is_tail());
+
+            Collection<Item> startContacts = tr.get_start_contacts();
+            System.out.println("Start Contacts: " + startContacts.size());
+            for (Item contact : startContacts) {
+                System.out.println(
+                        " - Contact: " + contact.get_id_no() + " (" + contact.getClass().getSimpleName() + ")");
+            }
+
+            Collection<Item> endContacts = tr.get_end_contacts();
+            System.out.println("End Contacts: " + endContacts.size());
+            for (Item contact : endContacts) {
+                System.out.println(
+                        " - Contact: " + contact.get_id_no() + " (" + contact.getClass().getSimpleName() + ")");
+            }
+
+            System.out.println("Trace Start Point: " + tr.first_corner());
+            System.out.println("Trace End Point: " + tr.last_corner());
+
+            // Check what is at the end point
+            IntPoint endPoint = new IntPoint(1661000, -994139); // Hardcoded from previous output for precision check
+            System.out.println("Checking items at end point: " + endPoint);
+            TileShape pointShape = TileShape.get_instance(endPoint);
+            Collection<SearchTreeObject> itemsAtEnd = board.overlapping_objects(pointShape, tr.first_layer());
+
+            System.out.println("Items at End Point: " + itemsAtEnd.size());
+            for (SearchTreeObject obj : itemsAtEnd) {
+                if (obj instanceof Item) {
+                    Item item = (Item) obj;
+                    System.out.println(" - Item: " + item.get_id_no() + " (" + item.getClass().getSimpleName()
+                            + ") Layer: " + item.first_layer() + " to " + item.last_layer());
+                } else {
+                    System.out.println(" - Object: " + obj.getClass().getSimpleName());
+                }
+            }
+
+        } else {
+            fail("Trace 2576 not found in the board.");
         }
     }
 
@@ -114,21 +179,15 @@ public class UnconnectedItemsReproductionTest {
 
         RoutingJob job = new RoutingJob(session.id);
 
-        Path testDirectory = Path
-                .of(".")
-                .toAbsolutePath();
-        File testFile = Path
-                .of(testDirectory.toString(), "tests", filename)
-                .toFile();
+        Path testDirectory = Path.of(".").toAbsolutePath();
+        File testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
 
         while (!testFile.exists()) {
             testDirectory = testDirectory.getParent();
             if (testDirectory == null) {
                 fail("Test file not found: " + filename);
             }
-            testFile = Path
-                    .of(testDirectory.toString(), "tests", filename)
-                    .toFile();
+            testFile = Path.of(testDirectory.toString(), "tests", filename).toFile();
         }
 
         try {

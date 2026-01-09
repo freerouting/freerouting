@@ -3,6 +3,11 @@ package app.freerouting.board;
 import app.freerouting.boardgraphics.Drawable;
 import app.freerouting.boardgraphics.GraphicsContext;
 import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.geometry.planar.Direction;
+import app.freerouting.geometry.planar.Line;
+import app.freerouting.geometry.planar.LineSegment;
+import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
@@ -195,7 +200,36 @@ public abstract class Trace extends Item implements Connectable, Serializable {
       }
 
       if (curr_item != this && curr_item.shares_layer(this) && (p_ignore_net || curr_item.shares_net(this))) {
-        if (curr_item instanceof Trace curr_trace) {
+        if (curr_item instanceof PolylineTrace curr_poly_trace) {
+          boolean connected = false;
+          Polyline polyline = curr_poly_trace.polyline();
+          FloatPoint p_float = p_point.to_float();
+          double half_width = curr_poly_trace.get_half_width();
+          // Check all segments
+          for (int i = 1; i < polyline.arr.length - 1; i++) {
+            LineSegment segment = new LineSegment(polyline, i);
+            Line line = segment.get_line();
+            double dist = Math.abs(line.signed_distance(p_float));
+            // Check lateral distance
+            if (dist <= half_width + 100) { // Tolerance of 100 units
+              // Check longitudinal projection
+              Direction perp_dir = line.direction().turn_45_degree(2);
+              Line perp_line = new Line(p_point, perp_dir);
+              Side s1 = perp_line.side_of(segment.start_point());
+              Side s2 = perp_line.side_of(segment.end_point());
+              if (s1 != s2 || s1 == Side.COLLINEAR || s2 == Side.COLLINEAR) {
+                connected = true;
+                break;
+              }
+            }
+          }
+          if (connected) {
+            result.add(curr_item);
+          }
+          // Also check endpoints for legacy/robustness (keeping old logic as fallback or
+          // additional check if needed, but the segment check covers it)
+          // actually, segment logic covers endpoints too.
+        } else if (curr_item instanceof Trace curr_trace) {
           double dist1 = p_point.to_float().distance(curr_trace.first_corner().to_float());
           double dist2 = p_point.to_float().distance(curr_trace.last_corner().to_float());
           if (dist1 <= 100 || dist2 <= 100) {
