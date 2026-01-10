@@ -33,7 +33,9 @@ public class NetIncompletes {
   private final Net net;
   private final double draw_marker_radius;
   /**
-   * The length of the violation of the length restriction of the net, > 0, if the cumulative trace length is too big, < 0, if the trace length is too small, 0, if the trace length is ok or the net
+   * The length of the violation of the length restriction of the net, > 0, if the
+   * cumulative trace length is too big, < 0, if the trace length is too small, 0,
+   * if the trace length is ok or the net
    * has no length restrictions
    */
   private double length_violation = 0;
@@ -46,8 +48,21 @@ public class NetIncompletes {
     this.incompletes = new LinkedList<>();
     this.net = p_board.rules.nets.get(p_net_no);
 
+    // Filter out dangling items (vias and tracks with is_tail() == true)
+    // These are DRC violations, not unrouted connections, and should not be counted
+    // as incompletes
+    Collection<Item> filtered_items = new LinkedList<>();
+    for (Item item : p_net_items) {
+      // Skip dangling vias and traces - they're violations, not incomplete
+      // connections
+      if (item.is_tail()) {
+        continue;
+      }
+      filtered_items.add(item);
+    }
+
     // Create an array of Item-connected_set pairs.
-    NetItem[] net_items = calculate_net_items(p_net_items);
+    NetItem[] net_items = calculate_net_items(filtered_items);
     if (net_items.length <= 1) {
       return;
     }
@@ -61,11 +76,13 @@ public class NetIncompletes {
     SortedSet<Edge> sorted_edges = new TreeSet<>();
 
     for (PlanarDelaunayTriangulation.ResultEdge curr_line : triangulation_lines) {
-      Edge new_edge = new Edge((NetItem) curr_line.start_object, curr_line.start_point.to_float(), (NetItem) curr_line.end_object, curr_line.end_point.to_float());
+      Edge new_edge = new Edge((NetItem) curr_line.start_object, curr_line.start_point.to_float(),
+          (NetItem) curr_line.end_object, curr_line.end_point.to_float());
       sorted_edges.add(new_edge);
     }
 
-    // Create the Airlines. Skip edges, whose from_item and to_item are already in the same
+    // Create the Airlines. Skip edges, whose from_item and to_item are already in
+    // the same
     // connected set
     // or whose connected sets have already an airline.
     Net curr_net = p_board.rules.nets.get(p_net_no);
@@ -73,13 +90,15 @@ public class NetIncompletes {
       if (curr_edge.from_item.connected_set == curr_edge.to_item.connected_set) {
         continue; // airline exists already
       }
-      this.incompletes.add(new RatsNest.AirLine(curr_net, curr_edge.from_item.item, curr_edge.from_corner, curr_edge.to_item.item, curr_edge.to_corner));
+      this.incompletes.add(new RatsNest.AirLine(curr_net, curr_edge.from_item.item, curr_edge.from_corner,
+          curr_edge.to_item.item, curr_edge.to_corner));
       join_connected_sets(net_items, curr_edge.from_item.connected_set, curr_edge.to_item.connected_set);
     }
     calc_length_violation();
   }
 
-  static void draw_layer_change_marker(FloatPoint p_location, double p_radius, Graphics p_graphics, GraphicsContext p_graphics_context) {
+  static void draw_layer_change_marker(FloatPoint p_location, double p_radius, Graphics p_graphics,
+      GraphicsContext p_graphics_context) {
     final int draw_width = 1;
     Color draw_color = p_graphics_context.get_incomplete_color();
     double draw_intensity = p_graphics_context.get_incomplete_color_intensity();
@@ -92,7 +111,8 @@ public class NetIncompletes {
     p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
   }
 
-  static void draw_length_violation_marker(FloatPoint p_location, double p_diameter, Graphics p_graphics, GraphicsContext p_graphics_context) {
+  static void draw_length_violation_marker(FloatPoint p_location, double p_diameter, Graphics p_graphics,
+      GraphicsContext p_graphics_context) {
     final int draw_width = 1;
     Color draw_color = p_graphics_context.get_incomplete_color();
     double draw_intensity = p_graphics_context.get_incomplete_color_intensity();
@@ -118,7 +138,8 @@ public class NetIncompletes {
   }
 
   /**
-   * Recalculates the length violations. Return false, if the length violation has not changed.
+   * Recalculates the length violations. Return false, if the length violation has
+   * not changed.
    */
   boolean calc_length_violation() {
     double old_violation = this.length_violation;
@@ -145,7 +166,9 @@ public class NetIncompletes {
   }
 
   /**
-   * Returns the length of the violation of the length restriction of the net, > 0, if the cumulative trace length is too big, < 0, if the trace length is too small, 0, if the trace length is ok or
+   * Returns the length of the violation of the length restriction of the net, >
+   * 0, if the cumulative trace length is too big, < 0, if the trace length is too
+   * small, 0, if the trace length is ok or
    * the net has no length restrictions
    */
   double get_length_violation() {
@@ -166,7 +189,8 @@ public class NetIncompletes {
         draw_points[1] = curr_incomplete.to_corner;
         p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
         if (!curr_incomplete.from_item.shares_layer(curr_incomplete.to_item)) {
-          draw_layer_change_marker(curr_incomplete.from_corner, this.draw_marker_radius, p_graphics, p_graphics_context);
+          draw_layer_change_marker(curr_incomplete.from_corner, this.draw_marker_radius, p_graphics,
+              p_graphics_context);
           draw_layer_change_marker(curr_incomplete.to_corner, this.draw_marker_radius, p_graphics, p_graphics_context);
         }
       }
@@ -184,7 +208,8 @@ public class NetIncompletes {
   }
 
   /**
-   * Calculates an array of Item-connected_set pairs for the items of this net. Pairs belonging to the same connected set are located next to each other.
+   * Calculates an array of Item-connected_set pairs for the items of this net.
+   * Pairs belonging to the same connected set are located next to each other.
    */
   private NetItem[] calculate_net_items(Collection<Item> p_item_list) {
     ArrayList<NetItem> result = new ArrayList<>();
@@ -218,9 +243,11 @@ public class NetIncompletes {
   }
 
   /**
-   * Joins p_from_connected_set to p_to_connected_set and updates the connected sets of the items in p_net_items.
+   * Joins p_from_connected_set to p_to_connected_set and updates the connected
+   * sets of the items in p_net_items.
    */
-  private void join_connected_sets(NetItem[] p_net_items, Collection<Item> p_from_connected_set, Collection<Item> p_to_connected_set) {
+  private void join_connected_sets(NetItem[] p_net_items, Collection<Item> p_from_connected_set,
+      Collection<Item> p_to_connected_set) {
     for (int i = 0; i < p_net_items.length; i++) {
       NetItem curr_item = p_net_items[i];
       if (curr_item.connected_set == p_from_connected_set) {
@@ -250,7 +277,8 @@ public class NetIncompletes {
     public int compareTo(Edge p_other) {
       double result = this.length_square - p_other.length_square;
       if (result == 0) {
-        // prevent result 0, so that edges with the same length as another edge are not skipped in
+        // prevent result 0, so that edges with the same length as another edge are not
+        // skipped in
         // the set
         result = this.from_corner.x - p_other.from_corner.x;
         if (result == 0) {
