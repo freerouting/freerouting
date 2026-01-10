@@ -16,7 +16,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting clearance violations and other design rule issues.
+ * Design Rules Checker that centralizes DRC functionality. This class is
+ * responsible for detecting clearance violations and other design rule issues.
  */
 public class DesignRulesChecker {
 
@@ -93,6 +94,16 @@ public class DesignRulesChecker {
           if (!unconnectedItems.stream().anyMatch(ui -> ui.first_item == trace)) {
             unconnectedItems.add(new UnconnectedItems(trace, null, "track_dangling"));
           }
+        }
+      }
+    }
+
+    // Check for dangling vias - vias not connected or connected on only one layer
+    for (Item item : board.get_items()) {
+      if (item instanceof Via via) {
+        // Use the is_tail() method which checks if via has contacts on at most 1 layer
+        if (via.is_tail()) {
+          unconnectedItems.add(new UnconnectedItems(via, null, "via_dangling"));
         }
       }
     }
@@ -207,12 +218,17 @@ public class DesignRulesChecker {
 
     String description;
 
-    if ("track_dangling".equals(unconnectedItems.type)) {
-      // For track_dangling, show only the track item with layer and length info
+    if ("track_dangling".equals(unconnectedItems.type) || "via_dangling".equals(unconnectedItems.type)) {
+      // For dangling items, show only the single item
       Item item = unconnectedItems.first_item;
 
-      // Get detailed track description with layer and length
-      String trackDesc = getDetailedTraceDescription(item, coordinateUnit);
+      String itemDesc;
+      if ("via_dangling".equals(unconnectedItems.type)) {
+        itemDesc = getItemDescription(item);
+      } else {
+        // Get detailed track description with layer and length
+        itemDesc = getDetailedTraceDescription(item, coordinateUnit);
+      }
 
       var itemCenterOfGravity = item.bounding_box().centre_of_gravity();
       DrcPosition itemPos = new DrcPosition(
@@ -220,9 +236,13 @@ public class DesignRulesChecker {
           convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
 
       String uuid = String.valueOf(item.get_id_no());
-      items.add(new DrcViolationItem(trackDesc, itemPos, uuid));
+      items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
 
-      description = "Track has unconnected end";
+      description = switch (unconnectedItems.type) {
+        case "via_dangling" -> "Via is not connected or connected on only one layer";
+        case "track_dangling" -> "Track has unconnected end";
+        default -> "Unconnected item: " + itemDesc;
+      };
 
       return new DrcViolation(unconnectedItems.type, description, "warning", items);
     }
@@ -334,7 +354,8 @@ public class DesignRulesChecker {
   }
 
   /**
-   * Converts a coordinate value from board's internal coordinate system to the specified unit.
+   * Converts a coordinate value from board's internal coordinate system to the
+   * specified unit.
    *
    * @param boardCoordinate Coordinate in board's internal system
    * @param coordinateUnit  Target unit ("mm", "mil", etc.)
