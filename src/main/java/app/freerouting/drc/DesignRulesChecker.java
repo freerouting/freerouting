@@ -74,12 +74,69 @@ public class DesignRulesChecker {
   public Collection<UnconnectedItems> getAllUnconnectedItems() {
     List<UnconnectedItems> unconnectedItems = new ArrayList<>();
 
-    var ratsnest = new RatsNest(board);
+    // Group items by net
+    java.util.Map<Integer, List<Item>> itemsByNet = new java.util.HashMap<>();
+    for (Item item : board.get_items()) {
+      if (item instanceof app.freerouting.board.Connectable && item.net_count() > 0) {
+        int netNo = item.get_net_no(0);
+        itemsByNet.computeIfAbsent(netNo, k -> new ArrayList<>()).add(item);
+      }
+    }
 
-    // Iterate through all items on the board
-    for (RatsNest.AirLine airline : ratsnest.get_airlines()) {
-      // Create an unconnected items object
-      unconnectedItems.add(new UnconnectedItems(airline.from_item, airline.to_item));
+    // For each net, find truly unconnected items
+    for (java.util.Map.Entry<Integer, List<Item>> entry : itemsByNet.entrySet()) {
+      int netNo = entry.getKey();
+      List<Item> netItems = entry.getValue();
+
+      if (netItems.size() <= 1) {
+        continue; // Single item nets are not unconnected
+      }
+
+      // Get all connected sets for this net
+      java.util.List<java.util.Set<Item>> connectedSets = new java.util.ArrayList<>();
+      java.util.Set<Item> processedItems = new java.util.HashSet<>();
+
+      for (Item item : netItems) {
+        if (processedItems.contains(item)) {
+          continue;
+        }
+
+        // Get the connected set for this item
+        Collection<Item> connectedSet = item.get_connected_set(netNo);
+        java.util.Set<Item> setItems = new java.util.HashSet<>(connectedSet);
+
+        // Only add items that are actually in this net
+        setItems.retainAll(netItems);
+
+        if (!setItems.isEmpty()) {
+          connectedSets.add(setItems);
+          processedItems.addAll(setItems);
+        }
+      }
+
+      // If there are multiple connected sets, we have unconnected items
+      // Only report if there are exactly 2 sets (one pair of unconnected groups)
+      // This matches KiCad's behavior of reporting specific unconnected pairs
+      if (connectedSets.size() == 2) {
+        // Find representative items from each set (prefer Pins over other items)
+        Item item1 = findRepresentativeItem(connectedSets.get(0));
+        Item item2 = findRepresentativeItem(connectedSets.get(1));
+
+        if (item1 != null && item2 != null) {
+          unconnectedItems.add(new UnconnectedItems(item1, item2));
+        }
+      } else if (connectedSets.size() > 2) {
+        // Multiple disconnected groups - report each pair
+        // This is a simplified approach; KiCad might use a more sophisticated algorithm
+        for (int i = 0; i < connectedSets.size() - 1; i++) {
+          Item item1 = findRepresentativeItem(connectedSets.get(i));
+          Item item2 = findRepresentativeItem(connectedSets.get(i + 1));
+
+          if (item1 != null && item2 != null) {
+            unconnectedItems.add(new UnconnectedItems(item1, item2));
+          }
+        }
+      }
     }
 
     // Check for dangling traces - traces with unconnected ends
@@ -109,6 +166,30 @@ public class DesignRulesChecker {
     }
 
     return unconnectedItems;
+  }
+
+  /**
+   * Finds a representative item from a connected set, preferring Pins over other
+   * items.
+   *
+   * @param connectedSet The set of connected items
+   * @return A representative item, or null if the set is empty
+   */
+  private Item findRepresentativeItem(java.util.Set<Item> connectedSet) {
+    // Prefer Pins
+    for (Item item : connectedSet) {
+      if (item instanceof Pin) {
+        return item;
+      }
+    }
+    // Then Traces
+    for (Item item : connectedSet) {
+      if (item instanceof Trace) {
+        return item;
+      }
+    }
+    // Finally any item
+    return connectedSet.isEmpty() ? null : connectedSet.iterator().next();
   }
 
   /**
