@@ -128,22 +128,6 @@ public class NetIncompletes {
         continue; // airline exists already
       }
 
-      // Debug logging for phantom incompletes
-      if (this.incompletes.size() == 0 && net_items.length > 1) {
-        app.freerouting.logger.FRLogger.warn(
-            String.format(
-                "NetIncompletes: Creating airline for net %s (%d items, %d dangling filtered). From: %s (tail=%b, contacts=%d) To: %s (tail=%b, contacts=%d)",
-                curr_net.name,
-                p_net_items.size(),
-                dangling_count,
-                curr_edge.from_item.item.getClass().getSimpleName(),
-                curr_edge.from_item.item.is_tail(),
-                curr_edge.from_item.item.get_normal_contacts().size(),
-                curr_edge.to_item.item.getClass().getSimpleName(),
-                curr_edge.to_item.item.is_tail(),
-                curr_edge.to_item.item.get_normal_contacts().size()));
-      }
-
       this.incompletes.add(new RatsNest.AirLine(curr_net, curr_edge.from_item.item, curr_edge.from_corner,
           curr_edge.to_item.item, curr_edge.to_corner));
       join_connected_sets(net_items, curr_edge.from_item.connected_set, curr_edge.to_item.connected_set);
