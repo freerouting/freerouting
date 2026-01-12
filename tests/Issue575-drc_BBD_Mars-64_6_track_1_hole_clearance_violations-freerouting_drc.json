@@ -1,14 +1,14 @@
 {
   "$schema": "https://schemas.kicad.org/drc.v1.json",
   "coordinate_units": "mm",
-  "date": "2026-01-09T18:22:44.9006072+01:00",
+  "date": "2026-01-12T09:09:29.2111764+01:00",
   "kicad_version": "N/A",
   "freerouting_version": "Freerouting 2.1.2-SNAPSHOT",
   "source": "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn",
   "unconnected_items": [],
   "violations": [
     {
-      "description": "Hole clearance violation between Via [Net-(TP232-Pad1)] and Pin [Net-(TP232-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP232-Pad1)] and Pin [Net-(TP232-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP232-Pad1)]",
@@ -31,7 +31,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP231-Pad1)] and Pin [Net-(TP231-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP231-Pad1)] and Pin [Net-(TP231-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP231-Pad1)]",
@@ -54,7 +54,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP230-Pad1)] and Pin [Net-(TP230-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP230-Pad1)] and Pin [Net-(TP230-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP230-Pad1)]",
@@ -77,7 +77,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP229-Pad1)] and Pin [Net-(TP229-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP229-Pad1)] and Pin [Net-(TP229-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP229-Pad1)]",
@@ -100,7 +100,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP228-Pad1)] and Pin [Net-(TP228-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP228-Pad1)] and Pin [Net-(TP228-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP228-Pad1)]",
@@ -123,7 +123,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP227-Pad1)] and Pin [Net-(TP227-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP227-Pad1)] and Pin [Net-(TP227-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP227-Pad1)]",
@@ -146,7 +146,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP226-Pad1)] and Pin [Net-(TP226-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP226-Pad1)] and Pin [Net-(TP226-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP226-Pad1)]",
@@ -169,7 +169,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP225-Pad1)] and Pin [Net-(TP225-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP225-Pad1)] and Pin [Net-(TP225-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP225-Pad1)]",
@@ -192,7 +192,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP224-Pad1)] and Pin [Net-(TP224-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP224-Pad1)] and Pin [Net-(TP224-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP224-Pad1)]",
@@ -215,7 +215,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP223-Pad1)] and Pin [Net-(TP223-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP223-Pad1)] and Pin [Net-(TP223-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP223-Pad1)]",
@@ -238,7 +238,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP222-Pad1)] and Pin [Net-(TP222-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP222-Pad1)] and Pin [Net-(TP222-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP222-Pad1)]",
@@ -261,7 +261,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP221-Pad1)] and Pin [Net-(TP221-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP221-Pad1)] and Pin [Net-(TP221-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP221-Pad1)]",
@@ -284,7 +284,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP220-Pad1)] and Pin [Net-(TP220-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP220-Pad1)] and Pin [Net-(TP220-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP220-Pad1)]",
@@ -307,7 +307,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP219-Pad1)] and Pin [Net-(TP219-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP219-Pad1)] and Pin [Net-(TP219-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP219-Pad1)]",
@@ -330,7 +330,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP218-Pad1)] and Pin [Net-(TP218-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP218-Pad1)] and Pin [Net-(TP218-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP218-Pad1)]",
@@ -353,7 +353,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP217-Pad1)] and Pin [Net-(TP217-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP217-Pad1)] and Pin [Net-(TP217-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP217-Pad1)]",
@@ -376,7 +376,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP216-Pad1)] and Pin [Net-(TP216-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP216-Pad1)] and Pin [Net-(TP216-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP216-Pad1)]",
@@ -399,7 +399,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP215-Pad1)] and Pin [Net-(TP215-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP215-Pad1)] and Pin [Net-(TP215-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP215-Pad1)]",
@@ -422,7 +422,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP214-Pad1)] and Pin [Net-(TP214-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP214-Pad1)] and Pin [Net-(TP214-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP214-Pad1)]",
@@ -445,7 +445,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP213-Pad1)] and Pin [Net-(TP213-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP213-Pad1)] and Pin [Net-(TP213-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP213-Pad1)]",
@@ -468,7 +468,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP212-Pad1)] and Pin [Net-(TP212-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP212-Pad1)] and Pin [Net-(TP212-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP212-Pad1)]",
@@ -491,7 +491,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP211-Pad1)] and Pin [Net-(TP211-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP211-Pad1)] and Pin [Net-(TP211-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP211-Pad1)]",
@@ -514,7 +514,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP210-Pad1)] and Pin [Net-(TP210-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP210-Pad1)] and Pin [Net-(TP210-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP210-Pad1)]",
@@ -537,7 +537,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP209-Pad1)] and Pin [Net-(TP209-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP209-Pad1)] and Pin [Net-(TP209-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP209-Pad1)]",
@@ -560,7 +560,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP208-Pad1)] and Pin [Net-(TP208-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP208-Pad1)] and Pin [Net-(TP208-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP208-Pad1)]",
@@ -583,7 +583,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP207-Pad1)] and Pin [Net-(TP207-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP207-Pad1)] and Pin [Net-(TP207-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP207-Pad1)]",
@@ -606,7 +606,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP206-Pad1)] and Pin [Net-(TP206-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP206-Pad1)] and Pin [Net-(TP206-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP206-Pad1)]",
@@ -629,7 +629,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP205-Pad1)] and Pin [Net-(TP205-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP205-Pad1)] and Pin [Net-(TP205-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP205-Pad1)]",
@@ -652,7 +652,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP204-Pad1)] and Pin [Net-(TP204-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP204-Pad1)] and Pin [Net-(TP204-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP204-Pad1)]",
@@ -675,7 +675,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP203-Pad1)] and Pin [Net-(TP203-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP203-Pad1)] and Pin [Net-(TP203-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP203-Pad1)]",
@@ -698,7 +698,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP202-Pad1)] and Pin [Net-(TP202-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP202-Pad1)] and Pin [Net-(TP202-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP202-Pad1)]",
@@ -721,7 +721,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP201-Pad1)] and Pin [Net-(TP201-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP201-Pad1)] and Pin [Net-(TP201-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP201-Pad1)]",
@@ -744,7 +744,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP132-Pad1)] and Pin [Net-(TP132-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP132-Pad1)] and Pin [Net-(TP132-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP132-Pad1)]",
@@ -767,7 +767,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP131-Pad1)] and Pin [Net-(TP131-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP131-Pad1)] and Pin [Net-(TP131-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP131-Pad1)]",
@@ -790,7 +790,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP130-Pad1)] and Pin [Net-(TP130-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP130-Pad1)] and Pin [Net-(TP130-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP130-Pad1)]",
@@ -813,7 +813,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP129-Pad1)] and Pin [Net-(TP129-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP129-Pad1)] and Pin [Net-(TP129-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP129-Pad1)]",
@@ -836,7 +836,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP128-Pad1)] and Pin [Net-(TP128-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP128-Pad1)] and Pin [Net-(TP128-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP128-Pad1)]",
@@ -859,7 +859,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP127-Pad1)] and Pin [Net-(TP127-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP127-Pad1)] and Pin [Net-(TP127-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP127-Pad1)]",
@@ -882,7 +882,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP126-Pad1)] and Pin [Net-(TP126-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP126-Pad1)] and Pin [Net-(TP126-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP126-Pad1)]",
@@ -905,7 +905,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP125-Pad1)] and Pin [Net-(TP125-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP125-Pad1)] and Pin [Net-(TP125-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP125-Pad1)]",
@@ -928,7 +928,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP124-Pad1)] and Pin [Net-(TP124-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP124-Pad1)] and Pin [Net-(TP124-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP124-Pad1)]",
@@ -951,7 +951,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP123-Pad1)] and Pin [Net-(TP123-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP123-Pad1)] and Pin [Net-(TP123-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP123-Pad1)]",
@@ -974,7 +974,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP122-Pad1)] and Pin [Net-(TP122-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP122-Pad1)] and Pin [Net-(TP122-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP122-Pad1)]",
@@ -997,7 +997,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP121-Pad1)] and Pin [Net-(TP121-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP121-Pad1)] and Pin [Net-(TP121-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP121-Pad1)]",
@@ -1020,7 +1020,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP120-Pad1)] and Pin [Net-(TP120-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP120-Pad1)] and Pin [Net-(TP120-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP120-Pad1)]",
@@ -1043,7 +1043,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP119-Pad1)] and Pin [Net-(TP119-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP119-Pad1)] and Pin [Net-(TP119-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP119-Pad1)]",
@@ -1066,7 +1066,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP118-Pad1)] and Pin [Net-(TP118-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP118-Pad1)] and Pin [Net-(TP118-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP118-Pad1)]",
@@ -1089,7 +1089,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP117-Pad1)] and Pin [Net-(TP117-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP117-Pad1)] and Pin [Net-(TP117-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP117-Pad1)]",
@@ -1112,7 +1112,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP116-Pad1)] and Pin [Net-(TP116-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP116-Pad1)] and Pin [Net-(TP116-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP116-Pad1)]",
@@ -1135,7 +1135,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP115-Pad1)] and Pin [Net-(TP115-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP115-Pad1)] and Pin [Net-(TP115-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP115-Pad1)]",
@@ -1158,7 +1158,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP114-Pad1)] and Pin [Net-(TP114-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP114-Pad1)] and Pin [Net-(TP114-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP114-Pad1)]",
@@ -1181,7 +1181,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP113-Pad1)] and Pin [Net-(TP113-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP113-Pad1)] and Pin [Net-(TP113-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP113-Pad1)]",
@@ -1204,7 +1204,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP112-Pad1)] and Pin [Net-(TP112-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP112-Pad1)] and Pin [Net-(TP112-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP112-Pad1)]",
@@ -1227,7 +1227,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP111-Pad1)] and Pin [Net-(TP111-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP111-Pad1)] and Pin [Net-(TP111-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP111-Pad1)]",
@@ -1250,7 +1250,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP110-Pad1)] and Pin [Net-(TP110-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP110-Pad1)] and Pin [Net-(TP110-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP110-Pad1)]",
@@ -1273,7 +1273,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP109-Pad1)] and Pin [Net-(TP109-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP109-Pad1)] and Pin [Net-(TP109-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP109-Pad1)]",
@@ -1296,7 +1296,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP108-Pad1)] and Pin [Net-(TP108-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP108-Pad1)] and Pin [Net-(TP108-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP108-Pad1)]",
@@ -1319,7 +1319,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP107-Pad1)] and Pin [Net-(TP107-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP107-Pad1)] and Pin [Net-(TP107-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP107-Pad1)]",
@@ -1342,7 +1342,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP106-Pad1)] and Pin [Net-(TP106-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP106-Pad1)] and Pin [Net-(TP106-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP106-Pad1)]",
@@ -1365,7 +1365,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP105-Pad1)] and Pin [Net-(TP105-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP105-Pad1)] and Pin [Net-(TP105-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP105-Pad1)]",
@@ -1388,7 +1388,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP104-Pad1)] and Pin [Net-(TP104-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP104-Pad1)] and Pin [Net-(TP104-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP104-Pad1)]",
@@ -1411,7 +1411,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP103-Pad1)] and Pin [Net-(TP103-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP103-Pad1)] and Pin [Net-(TP103-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP103-Pad1)]",
@@ -1434,7 +1434,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP102-Pad1)] and Pin [Net-(TP102-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP102-Pad1)] and Pin [Net-(TP102-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP102-Pad1)]",
@@ -1457,7 +1457,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Hole clearance violation between Via [Net-(TP101-Pad1)] and Pin [Net-(TP101-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Hole clearance violation between Via [Net-(TP101-Pad1)] and Pin [Net-(TP101-Pad1)] (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Via [Net-(TP101-Pad1)]",
@@ -1480,7 +1480,7 @@
       "type": "hole_clearance"
     },
     {
-      "description": "Clearance violation between Trace [/~{SPI_CE}] and ObstacleArea (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Clearance violation between Trace [/~{SPI_CE}] and ObstacleArea (expected: 0,2000 mm, actual: 0,0000 mm)",
       "items": [
         {
           "description": "Trace [/~{SPI_CE}]",
@@ -1503,7 +1503,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(J101-Pad2)] and ObstacleArea (expected: 0.2000 mm, actual: 0.0682 mm)",
+      "description": "Clearance violation between Trace [Net-(J101-Pad2)] and ObstacleArea (expected: 0,2000 mm, actual: 0,0682 mm)",
       "items": [
         {
           "description": "Trace [Net-(J101-Pad2)]",
@@ -1526,7 +1526,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP222-Pad1)] and Trace [Net-(TP221-Pad1)] (expected: 0.2000 mm, actual: 0.1999 mm)",
+      "description": "Clearance violation between Trace [Net-(TP222-Pad1)] and Trace [Net-(TP221-Pad1)] (expected: 0,2000 mm, actual: 0,1999 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP222-Pad1)]",
@@ -1549,7 +1549,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP221-Pad1)] and Trace [Net-(TP220-Pad1)] (expected: 0.2000 mm, actual: 0.1999 mm)",
+      "description": "Clearance violation between Trace [Net-(TP221-Pad1)] and Trace [Net-(TP220-Pad1)] (expected: 0,2000 mm, actual: 0,1999 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP221-Pad1)]",
@@ -1572,7 +1572,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP220-Pad1)] and Trace [Net-(TP219-Pad1)] (expected: 0.2000 mm, actual: 0.1999 mm)",
+      "description": "Clearance violation between Trace [Net-(TP220-Pad1)] and Trace [Net-(TP219-Pad1)] (expected: 0,2000 mm, actual: 0,1999 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP220-Pad1)]",
@@ -1595,7 +1595,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP219-Pad1)] and Trace [Net-(TP218-Pad1)] (expected: 0.2000 mm, actual: 0.1998 mm)",
+      "description": "Clearance violation between Trace [Net-(TP219-Pad1)] and Trace [Net-(TP218-Pad1)] (expected: 0,2000 mm, actual: 0,1998 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP219-Pad1)]",
@@ -1618,7 +1618,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP218-Pad1)] and Trace [Net-(TP217-Pad1)] (expected: 0.2000 mm, actual: 0.1999 mm)",
+      "description": "Clearance violation between Trace [Net-(TP218-Pad1)] and Trace [Net-(TP217-Pad1)] (expected: 0,2000 mm, actual: 0,1999 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP218-Pad1)]",
@@ -1641,7 +1641,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP217-Pad1)] and ObstacleArea (expected: 0.2000 mm, actual: 0.0758 mm)",
+      "description": "Clearance violation between Trace [Net-(TP217-Pad1)] and ObstacleArea (expected: 0,2000 mm, actual: 0,0758 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP217-Pad1)]",
@@ -1664,7 +1664,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP214-Pad1)] and Trace [Net-(TP213-Pad1)] (expected: 0.2000 mm, actual: 0.1999 mm)",
+      "description": "Clearance violation between Trace [Net-(TP214-Pad1)] and Trace [Net-(TP213-Pad1)] (expected: 0,2000 mm, actual: 0,1999 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP214-Pad1)]",
@@ -1687,7 +1687,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP207-Pad1)] and Trace [Net-(TP206-Pad1)] (expected: 0.2000 mm, actual: 0.1998 mm)",
+      "description": "Clearance violation between Trace [Net-(TP207-Pad1)] and Trace [Net-(TP206-Pad1)] (expected: 0,2000 mm, actual: 0,1998 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP207-Pad1)]",
@@ -1710,7 +1710,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [Net-(TP129-Pad1)] and Trace [Net-(TP128-Pad1)] (expected: 0.2000 mm, actual: 0.1998 mm)",
+      "description": "Clearance violation between Trace [Net-(TP129-Pad1)] and Trace [Net-(TP128-Pad1)] (expected: 0,2000 mm, actual: 0,1998 mm)",
       "items": [
         {
           "description": "Trace [Net-(TP129-Pad1)]",
@@ -1733,7 +1733,7 @@
       "type": "clearance"
     },
     {
-      "description": "Clearance violation between Trace [/VCC3V3] and Trace [/SPI_CLK] (expected: 0.2000 mm, actual: 0.1997 mm)",
+      "description": "Clearance violation between Trace [/VCC3V3] and Trace [/SPI_CLK] (expected: 0,2000 mm, actual: 0,1997 mm)",
       "items": [
         {
           "description": "Trace [/VCC3V3]",
@@ -1756,16 +1756,8 @@
       "type": "clearance"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP232-Pad1)] and Via [Net-(TP232-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP232-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -119.38
-          },
-          "uuid": "717"
-        },
         {
           "description": "Via [Net-(TP232-Pad1)]",
           "pos": {
@@ -1775,20 +1767,12 @@
           "uuid": "1293"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP231-Pad1)] and Via [Net-(TP231-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP231-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -119.38
-          },
-          "uuid": "708"
-        },
         {
           "description": "Via [Net-(TP231-Pad1)]",
           "pos": {
@@ -1798,963 +1782,12 @@
           "uuid": "1291"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP229-Pad1)] and Via [Net-(TP229-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP229-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -119.38
-          },
-          "uuid": "699"
-        },
-        {
-          "description": "Via [Net-(TP229-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -119.38
-          },
-          "uuid": "1288"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP227-Pad1)] and Via [Net-(TP227-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP227-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -119.38
-          },
-          "uuid": "690"
-        },
-        {
-          "description": "Via [Net-(TP227-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -119.38
-          },
-          "uuid": "1286"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP225-Pad1)] and Via [Net-(TP225-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP225-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -119.38
-          },
-          "uuid": "681"
-        },
-        {
-          "description": "Via [Net-(TP225-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -119.38
-          },
-          "uuid": "1284"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP223-Pad1)] and Via [Net-(TP223-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP223-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -114.3
-          },
-          "uuid": "672"
-        },
-        {
-          "description": "Via [Net-(TP223-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -114.3
-          },
-          "uuid": "1282"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP221-Pad1)] and Via [Net-(TP221-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP221-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -114.3
-          },
-          "uuid": "663"
-        },
-        {
-          "description": "Via [Net-(TP221-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -114.3
-          },
-          "uuid": "1280"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP219-Pad1)] and Via [Net-(TP219-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP219-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -114.3
-          },
-          "uuid": "654"
-        },
-        {
-          "description": "Via [Net-(TP219-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -114.3
-          },
-          "uuid": "1278"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP217-Pad1)] and Via [Net-(TP217-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP217-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -114.3
-          },
-          "uuid": "645"
-        },
-        {
-          "description": "Via [Net-(TP217-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -114.3
-          },
-          "uuid": "1276"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP214-Pad1)] and Via [Net-(TP214-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP214-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -109.22
-          },
-          "uuid": "636"
-        },
-        {
-          "description": "Via [Net-(TP214-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -109.22
-          },
-          "uuid": "1273"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP212-Pad1)] and Via [Net-(TP212-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP212-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -109.22
-          },
-          "uuid": "627"
-        },
-        {
-          "description": "Via [Net-(TP212-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -109.22
-          },
-          "uuid": "1271"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP210-Pad1)] and Via [Net-(TP210-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP210-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -109.22
-          },
-          "uuid": "618"
-        },
-        {
-          "description": "Via [Net-(TP210-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -109.22
-          },
-          "uuid": "1268"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP208-Pad1)] and Via [Net-(TP208-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP208-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -104.14
-          },
-          "uuid": "609"
-        },
-        {
-          "description": "Via [Net-(TP208-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -104.14
-          },
-          "uuid": "1264"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP207-Pad1)] and Via [Net-(TP207-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP207-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -104.14
-          },
-          "uuid": "600"
-        },
-        {
-          "description": "Via [Net-(TP207-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -104.14
-          },
-          "uuid": "1263"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP206-Pad1)] and Via [Net-(TP206-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP206-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -104.14
-          },
-          "uuid": "591"
-        },
-        {
-          "description": "Via [Net-(TP206-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -104.14
-          },
-          "uuid": "1262"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP204-Pad1)] and Via [Net-(TP204-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP204-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -104.14
-          },
-          "uuid": "582"
-        },
-        {
-          "description": "Via [Net-(TP204-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -104.14
-          },
-          "uuid": "1259"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP202-Pad1)] and Via [Net-(TP202-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP202-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -104.14
-          },
-          "uuid": "573"
-        },
-        {
-          "description": "Via [Net-(TP202-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -104.14
-          },
-          "uuid": "1256"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP132-Pad1)] and Via [Net-(TP132-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP132-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -99.06
-          },
-          "uuid": "564"
-        },
-        {
-          "description": "Via [Net-(TP132-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -99.06
-          },
-          "uuid": "1253"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP130-Pad1)] and Via [Net-(TP130-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP130-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -99.06
-          },
-          "uuid": "555"
-        },
-        {
-          "description": "Via [Net-(TP130-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -99.06
-          },
-          "uuid": "1251"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP128-Pad1)] and Via [Net-(TP128-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP128-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -99.06
-          },
-          "uuid": "546"
-        },
-        {
-          "description": "Via [Net-(TP128-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -99.06
-          },
-          "uuid": "1249"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP126-Pad1)] and Via [Net-(TP126-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP126-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -99.06
-          },
-          "uuid": "537"
-        },
-        {
-          "description": "Via [Net-(TP126-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -99.06
-          },
-          "uuid": "1247"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP124-Pad1)] and Via [Net-(TP124-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP124-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -93.98
-          },
-          "uuid": "528"
-        },
-        {
-          "description": "Via [Net-(TP124-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -93.98
-          },
-          "uuid": "1244"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP122-Pad1)] and Via [Net-(TP122-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP122-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -93.98
-          },
-          "uuid": "519"
-        },
-        {
-          "description": "Via [Net-(TP122-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -93.98
-          },
-          "uuid": "1242"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP120-Pad1)] and Via [Net-(TP120-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP120-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -93.98
-          },
-          "uuid": "510"
-        },
-        {
-          "description": "Via [Net-(TP120-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -93.98
-          },
-          "uuid": "1240"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP118-Pad1)] and Via [Net-(TP118-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP118-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -93.98
-          },
-          "uuid": "501"
-        },
-        {
-          "description": "Via [Net-(TP118-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -93.98
-          },
-          "uuid": "1238"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP116-Pad1)] and Via [Net-(TP116-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP116-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -88.9
-          },
-          "uuid": "492"
-        },
-        {
-          "description": "Via [Net-(TP116-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -88.9
-          },
-          "uuid": "1235"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP115-Pad1)] and Via [Net-(TP115-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP115-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -88.9
-          },
-          "uuid": "483"
-        },
-        {
-          "description": "Via [Net-(TP115-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -88.9
-          },
-          "uuid": "1234"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP114-Pad1)] and Via [Net-(TP114-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP114-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -88.9
-          },
-          "uuid": "474"
-        },
-        {
-          "description": "Via [Net-(TP114-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -88.9
-          },
-          "uuid": "1233"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP112-Pad1)] and Via [Net-(TP112-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP112-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -88.9
-          },
-          "uuid": "465"
-        },
-        {
-          "description": "Via [Net-(TP112-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -88.9
-          },
-          "uuid": "1231"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP110-Pad1)] and Via [Net-(TP110-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP110-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -88.9
-          },
-          "uuid": "456"
-        },
-        {
-          "description": "Via [Net-(TP110-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -88.9
-          },
-          "uuid": "1228"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP108-Pad1)] and Via [Net-(TP108-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP108-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -83.82
-          },
-          "uuid": "447"
-        },
-        {
-          "description": "Via [Net-(TP108-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -83.82
-          },
-          "uuid": "1226"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP104-Pad1)] and Via [Net-(TP104-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP104-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -83.82
-          },
-          "uuid": "438"
-        },
-        {
-          "description": "Via [Net-(TP104-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -83.82
-          },
-          "uuid": "1220"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP102-Pad1)] and Via [Net-(TP102-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP102-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -83.82
-          },
-          "uuid": "429"
-        },
-        {
-          "description": "Via [Net-(TP102-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -83.82
-          },
-          "uuid": "1217"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP230-Pad1)] and Via [Net-(TP230-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP230-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -119.38
-          },
-          "uuid": "420"
-        },
-        {
-          "description": "Via [Net-(TP230-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -119.38
-          },
-          "uuid": "1289"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP228-Pad1)] and Via [Net-(TP228-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP228-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -119.38
-          },
-          "uuid": "411"
-        },
-        {
-          "description": "Via [Net-(TP228-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -119.38
-          },
-          "uuid": "1287"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP226-Pad1)] and Via [Net-(TP226-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP226-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -119.38
-          },
-          "uuid": "402"
-        },
-        {
-          "description": "Via [Net-(TP226-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -119.38
-          },
-          "uuid": "1285"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP224-Pad1)] and Via [Net-(TP224-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP224-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -114.3
-          },
-          "uuid": "393"
-        },
-        {
-          "description": "Via [Net-(TP224-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -114.3
-          },
-          "uuid": "1283"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP222-Pad1)] and Via [Net-(TP222-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP222-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -114.3
-          },
-          "uuid": "384"
-        },
-        {
-          "description": "Via [Net-(TP222-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -114.3
-          },
-          "uuid": "1281"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP220-Pad1)] and Via [Net-(TP220-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP220-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -114.3
-          },
-          "uuid": "375"
-        },
-        {
-          "description": "Via [Net-(TP220-Pad1)]",
-          "pos": {
-            "x": 76.2,
-            "y": -114.3
-          },
-          "uuid": "1279"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP218-Pad1)] and Via [Net-(TP218-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP218-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -114.3
-          },
-          "uuid": "366"
-        },
-        {
-          "description": "Via [Net-(TP218-Pad1)]",
-          "pos": {
-            "x": 66.04,
-            "y": -114.3
-          },
-          "uuid": "1277"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP216-Pad1)] and Via [Net-(TP216-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP216-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -109.22
-          },
-          "uuid": "357"
-        },
-        {
-          "description": "Via [Net-(TP216-Pad1)]",
-          "pos": {
-            "x": 96.52,
-            "y": -109.22
-          },
-          "uuid": "1275"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP215-Pad1)] and Via [Net-(TP215-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP215-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -109.22
-          },
-          "uuid": "348"
-        },
-        {
-          "description": "Via [Net-(TP215-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -109.22
-          },
-          "uuid": "1274"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP213-Pad1)] and Via [Net-(TP213-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP213-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -109.22
-          },
-          "uuid": "339"
-        },
-        {
-          "description": "Via [Net-(TP213-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -109.22
-          },
-          "uuid": "1272"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP211-Pad1)] and Via [Net-(TP211-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP211-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -109.22
-          },
-          "uuid": "330"
-        },
         {
           "description": "Via [Net-(TP211-Pad1)]",
           "pos": {
@@ -2764,20 +1797,27 @@
           "uuid": "1270"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP209-Pad1)] and Via [Net-(TP209-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
         {
-          "description": "Pin [Net-(TP209-Pad1)]",
+          "description": "Via [Net-(TP210-Pad1)]",
           "pos": {
-            "x": 60.96,
+            "x": 66.04,
             "y": -109.22
           },
-          "uuid": "321"
-        },
+          "uuid": "1268"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
         {
           "description": "Via [Net-(TP209-Pad1)]",
           "pos": {
@@ -2787,20 +1827,12 @@
           "uuid": "1266"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP205-Pad1)] and Via [Net-(TP205-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP205-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -104.14
-          },
-          "uuid": "312"
-        },
         {
           "description": "Via [Net-(TP205-Pad1)]",
           "pos": {
@@ -2810,135 +1842,42 @@
           "uuid": "1261"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP203-Pad1)] and Via [Net-(TP203-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
         {
-          "description": "Pin [Net-(TP203-Pad1)]",
+          "description": "Via [Net-(TP204-Pad1)]",
           "pos": {
-            "x": 71.12,
+            "x": 76.2,
             "y": -104.14
           },
-          "uuid": "303"
-        },
+          "uuid": "1259"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
         {
-          "description": "Via [Net-(TP203-Pad1)]",
+          "description": "Via [Net-(TP202-Pad1)]",
           "pos": {
-            "x": 71.12,
+            "x": 66.04,
             "y": -104.14
           },
-          "uuid": "1257"
+          "uuid": "1256"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP201-Pad1)] and Via [Net-(TP201-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP201-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -104.14
-          },
-          "uuid": "294"
-        },
-        {
-          "description": "Via [Net-(TP201-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -104.14
-          },
-          "uuid": "1254"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP131-Pad1)] and Via [Net-(TP131-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP131-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -99.06
-          },
-          "uuid": "285"
-        },
-        {
-          "description": "Via [Net-(TP131-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -99.06
-          },
-          "uuid": "1252"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP129-Pad1)] and Via [Net-(TP129-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP129-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -99.06
-          },
-          "uuid": "276"
-        },
-        {
-          "description": "Via [Net-(TP129-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -99.06
-          },
-          "uuid": "1250"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP127-Pad1)] and Via [Net-(TP127-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP127-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -99.06
-          },
-          "uuid": "267"
-        },
-        {
-          "description": "Via [Net-(TP127-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -99.06
-          },
-          "uuid": "1248"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP125-Pad1)] and Via [Net-(TP125-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP125-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -99.06
-          },
-          "uuid": "258"
-        },
         {
           "description": "Via [Net-(TP125-Pad1)]",
           "pos": {
@@ -2948,89 +1887,12 @@
           "uuid": "1246"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP123-Pad1)] and Via [Net-(TP123-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP123-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -93.98
-          },
-          "uuid": "249"
-        },
-        {
-          "description": "Via [Net-(TP123-Pad1)]",
-          "pos": {
-            "x": 91.44,
-            "y": -93.98
-          },
-          "uuid": "1243"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP121-Pad1)] and Via [Net-(TP121-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP121-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -93.98
-          },
-          "uuid": "240"
-        },
-        {
-          "description": "Via [Net-(TP121-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -93.98
-          },
-          "uuid": "1241"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP119-Pad1)] and Via [Net-(TP119-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP119-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -93.98
-          },
-          "uuid": "231"
-        },
-        {
-          "description": "Via [Net-(TP119-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -93.98
-          },
-          "uuid": "1239"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP117-Pad1)] and Via [Net-(TP117-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP117-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -93.98
-          },
-          "uuid": "222"
-        },
         {
           "description": "Via [Net-(TP117-Pad1)]",
           "pos": {
@@ -3040,43 +1902,12 @@
           "uuid": "1237"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP113-Pad1)] and Via [Net-(TP113-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP113-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -88.9
-          },
-          "uuid": "213"
-        },
-        {
-          "description": "Via [Net-(TP113-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -88.9
-          },
-          "uuid": "1232"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP111-Pad1)] and Via [Net-(TP111-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP111-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -88.9
-          },
-          "uuid": "204"
-        },
         {
           "description": "Via [Net-(TP111-Pad1)]",
           "pos": {
@@ -3086,43 +1917,27 @@
           "uuid": "1230"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP109-Pad1)] and Via [Net-(TP109-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
         {
-          "description": "Pin [Net-(TP109-Pad1)]",
+          "description": "Via [Net-(TP108-Pad1)]",
           "pos": {
-            "x": 60.96,
-            "y": -88.9
-          },
-          "uuid": "195"
-        },
-        {
-          "description": "Via [Net-(TP109-Pad1)]",
-          "pos": {
-            "x": 60.96,
-            "y": -88.9
-          },
-          "uuid": "1227"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP107-Pad1)] and Via [Net-(TP107-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP107-Pad1)]",
-          "pos": {
-            "x": 91.44,
+            "x": 96.52,
             "y": -83.82
           },
-          "uuid": "186"
-        },
+          "uuid": "1226"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
         {
           "description": "Via [Net-(TP107-Pad1)]",
           "pos": {
@@ -3132,66 +1947,12 @@
           "uuid": "1224"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP106-Pad1)] and Via [Net-(TP106-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
-        {
-          "description": "Pin [Net-(TP106-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -83.82
-          },
-          "uuid": "177"
-        },
-        {
-          "description": "Via [Net-(TP106-Pad1)]",
-          "pos": {
-            "x": 86.36,
-            "y": -83.82
-          },
-          "uuid": "1222"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP105-Pad1)] and Via [Net-(TP105-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP105-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -83.82
-          },
-          "uuid": "168"
-        },
-        {
-          "description": "Via [Net-(TP105-Pad1)]",
-          "pos": {
-            "x": 81.28,
-            "y": -83.82
-          },
-          "uuid": "1221"
-        }
-      ],
-      "severity": "error",
-      "type": "hole_clearance"
-    },
-    {
-      "description": "Hole clearance violation between Pin [Net-(TP103-Pad1)] and Via [Net-(TP103-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
-      "items": [
-        {
-          "description": "Pin [Net-(TP103-Pad1)]",
-          "pos": {
-            "x": 71.12,
-            "y": -83.82
-          },
-          "uuid": "159"
-        },
         {
           "description": "Via [Net-(TP103-Pad1)]",
           "pos": {
@@ -3201,20 +1962,27 @@
           "uuid": "1219"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
     },
     {
-      "description": "Hole clearance violation between Pin [Net-(TP101-Pad1)] and Via [Net-(TP101-Pad1)] (expected: 0.2000 mm, actual: 0.0000 mm)",
+      "description": "Via is not connected or connected on only one layer",
       "items": [
         {
-          "description": "Pin [Net-(TP101-Pad1)]",
+          "description": "Via [Net-(TP102-Pad1)]",
           "pos": {
-            "x": 60.96,
+            "x": 66.04,
             "y": -83.82
           },
-          "uuid": "150"
-        },
+          "uuid": "1217"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
         {
           "description": "Via [Net-(TP101-Pad1)]",
           "pos": {
@@ -3224,8 +1992,23 @@
           "uuid": "1215"
         }
       ],
-      "severity": "error",
-      "type": "hole_clearance"
+      "severity": "warning",
+      "type": "via_dangling"
+    },
+    {
+      "description": "Via is not connected or connected on only one layer",
+      "items": [
+        {
+          "description": "Via [/AGND]",
+          "pos": {
+            "x": 57.785,
+            "y": -80.645
+          },
+          "uuid": "1206"
+        }
+      ],
+      "severity": "warning",
+      "type": "via_dangling"
     }
   ],
   "schematic_parity": []
